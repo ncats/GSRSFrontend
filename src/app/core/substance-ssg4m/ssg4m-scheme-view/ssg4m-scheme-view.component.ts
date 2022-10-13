@@ -8,6 +8,7 @@ import { StructureImageModalComponent, StructureService } from '@gsrs-core/struc
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SubstanceFormSsg4mProcessService } from '../ssg4m-process/substance-form-ssg4m-process.service';
 import { SubstanceDetail, SpecifiedSubstanceG4mProcess } from '@gsrs-core/substance/substance.model';
+import { SubstanceSsg4mService } from '../substance-ssg4m-form.service';
 
 @Component({
   selector: 'app-ssg4m-scheme-view',
@@ -24,6 +25,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   imageLoc: any;
   environment: Environment;
   substance: SubstanceDetail;
+  gsrsHomeBaseUrl: string;
   processList: Array<SpecifiedSubstanceG4mProcess>;
   subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
@@ -31,6 +33,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   constructor(
     private configService: ConfigService,
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
+    private substanceSsg4mService: SubstanceSsg4mService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
   ) { }
@@ -48,6 +51,10 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     this.environment = this.configService.environment;
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/arrow.png`;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    // Get GSRS Frontend URL fron config
+    this.getHomepageUrl();
+    //this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
   }
 
   ngOnDestroy(): void {
@@ -103,6 +110,11 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
 
   updateShowCriticalParameter(event) {
     this.showCriticalParameter = event.checked;
+  }
+
+  getHomepageUrl() {
+    // Get GSRS Frontend URL fron config
+    this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
   }
 
   displayAmountCompose(amt, propertyType: string): string {

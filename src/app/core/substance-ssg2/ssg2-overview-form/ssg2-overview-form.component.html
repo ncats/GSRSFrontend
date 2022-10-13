@@ -1,0 +1,16 @@
+<div class="form-row">
+
+  <app-cv-input class="col-3-1" domain="SSG_STAGE_TYPE" title="Substance Role" name="specifiedSubstanceG2.substanceRole"
+    [model]="specifiedSubstanceG2.substanceRole" (valueChange)="specifiedSubstanceG2.substanceRole = $event">
+  </app-cv-input>
+
+  <app-cv-input class="col-3-1" domain="SSG_STAGE_TYPE" title="Grade" name="specifiedSubstanceG2.grade" [model]="specifiedSubstanceG2.grade"
+    (valueChange)="specifiedSubstanceG2.grade = $event">
+  </app-cv-input>
+
+  <mat-form-field class="col-3-1">
+    <input matInput placeholder="Comments" [(ngModel)]="specifiedSubstanceG2.comments"
+      name="specifiedSubstanceG2.comments" />
+  </mat-form-field>
+
+</div>

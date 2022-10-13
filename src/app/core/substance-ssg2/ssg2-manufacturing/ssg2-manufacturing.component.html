@@ -1,0 +1,76 @@
+<div *ngFor="let manufacture of manufacturing; let manufactureIndex = index">
+
+  <hr *ngIf="manufactureIndex > 0">
+
+  <div class="form-row">
+
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete Manufacturing {{(privateStageIndex+1)}}" (click)="confirmDeleteManufacturing(manufactureIndex)">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+
+    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Manufacturing Type" name="manufacturingType"
+      [model]="manufacture.manufacturingType" (valueChange)="manufacture.manufacturingType = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Product Method Type" name="productionMethodType"
+      [model]="manufacture.productionMethodType" (valueChange)="manufacture.productionMethodType = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Product System Type" name="productionSystemType"
+      [model]="manufacture.productionSystemType" (valueChange)="manufacture.productionSystemType = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Product System" name="productionSystem"
+      [model]="manufacture.productionSystem" (valueChange)="manufacture.productionSystem = $event">
+    </app-cv-input>
+
+  </div>
+
+  <div class="form-row">
+
+    <mat-form-field class="col-1-1">
+      <input matInput placeholder="Product Method Description" [(ngModel)]="manufacture.productionMethodDescription"
+        name="manufacture.productionMethodDescription" />
+    </mat-form-field>
+
+  </div> <!-- form row -->
+
+  <h2>Organization</h2>
+
+  <div class="form-row">
+
+    <mat-form-field class="col-3-1">
+      <input matInput placeholder="Search Organization Name" [(ngModel)]="manufacture.productionMethodDescription"
+        name="manufacture.productionMethodDescription" />
+    </mat-form-field>
+
+    <button mat-button (click)="searchOrganization()">
+      <mat-icon svgIcon="search"></mat-icon>
+      Search
+    </button>
+  </div>
+
+  <b>OR</b>
+
+  <div class="form-row">
+
+    <mat-form-field class="col-3-1">
+      <input matInput placeholder="Manufacturer ID" [(ngModel)]="manufacture.manufacturerId"
+        name="manufacture.manufacturerId" />
+    </mat-form-field>
+
+    <mat-form-field class="col-3-1">
+      <input matInput placeholder="Manufacturer Name" [(ngModel)]="manufacture.manufacturerName"
+        name="manufacture.manufacturerName" />
+    </mat-form-field>
+
+    <app-cv-input class="col-3-1" domain="SSG_STAGE_TYPE" title="Issuer of ID" name="issuerOfID"
+      [model]="manufacture.issuerOfID" (valueChange)="manufacture.issuerOfID = $event">
+    </app-cv-input>
+
+  </div> <!-- form row -->
+
+  <br>
+</div>

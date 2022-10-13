@@ -4,6 +4,12 @@
   justify-content: space-between;
 }
 
+.divflexcenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .divflexright {
   display: flex;
   justify-content: flex-end;
@@ -101,6 +107,12 @@
   width: 33%;
 }
 
+.small-icon {
+  width: 15px;
+  height: 15px;
+  padding-left: 5px;
+}
+
 .textaligncenter {
   text-align: center;
 }
@@ -171,3 +183,11 @@ legend.border-step {
   cursor:zoom-in;
 }
 
+a {
+  color: #0000EE;;;
+}
+
+/*
+.hyperlink-color a:link {
+  color: red;
+}*/

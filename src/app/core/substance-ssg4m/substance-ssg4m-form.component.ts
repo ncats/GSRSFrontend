@@ -19,6 +19,7 @@ import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.j
 import { Title } from '@angular/platform-browser';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 // GSRS Import
+import { ConfigService } from '@gsrs-core/config/config.service';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { DynamicComponentLoader } from '../dynamic-component-loader/dynamic-component-loader.service';
 import { formSections } from '../substance-form/form-sections.constant';
@@ -39,6 +40,7 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
 import { environment } from '@gsrs-core/../../environments/environment';
+import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
 
 @Component({
   selector: 'app-substance-ssg4m-form',
@@ -54,10 +56,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   private subClass: string;
   definitionType: string;
   expandedComponents = [
-    'substance-form-definition',
-    'substance-form-structure',
-    'substance-form-moieties'
-    // 'substance-form-references'
+    'substance-form-ssg4m-process'
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
@@ -98,12 +97,15 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   downloadJsonHref: any;
   jsonFileName: string;
   showHeaderBar = 'true';
+  showRegisterEditTitle = 'true';
+  ssg4mSyntheticPathway: Ssg4mSyntheticPathway;
 
   private jsLibScriptUrls = [
     `${environment.baseHref || ''}assets/pathway/cola.min.js`,
     `${environment.baseHref || ''}assets/pathway/d3v4.js`,
     `${environment.baseHref || ''}assets/pathway/pathwayviz.js`
   ];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
@@ -118,64 +120,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     private dialog: MatDialog,
     private authService: AuthService,
     private titleService: Title,
+    private configService: ConfigService,
     private sanitizer: DomSanitizer
   ) {
-  }
-
-  importDialog(): void {
-    let data: any;
-    data = {
-      title: 'Manufacturing Scheme Import'
-    };
-    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
-      width: '650px',
-      autoFocus: false,
-      data: data
-    });
-    this.overlayContainer.style.zIndex = '1002';
-
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
-      if (response) {
-        this.loadingService.setLoading(true);
-        this.overlayContainer.style.zIndex = null;
-
-        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
-        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
-
-        /* const read = JSON.parse(response);
-         if (this.id && read.uuid && this.id === read.uuid) {
-           this.substanceFormService.importSubstance(read, 'update');
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {
-         if ( read.substanceClass === this.substanceClass) {
-           this.imported = true;
-           this.substanceFormService.importSubstance(read);
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {*/
-        setTimeout(() => {
-          this.router.onSameUrlNavigation = 'reload';
-          this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + this.showHeaderBar, { state: { record: response } });
-
-        }, 1000);
-      }
-      // }
-      // }
-    });
-
-  }
-
-  test() {
-    this.router.navigated = false;
-    this.router.navigate([this.router.url]);
   }
 
   ngOnInit() {
@@ -185,6 +132,11 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
+
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // Get 'showRegisterEditTitle' value from config
+    this.showRegisterEditTitle = configSsg4Form.showRegisterEditTitle;
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -195,9 +147,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             this.gaService.sendPageView(`Substance Edit`);
             const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
             if (newType) {
-              this.getSubstanceDetails(newType);
+              this.getSsg4mDetails(newType);
             } else {
-              this.getSubstanceDetails();
+              this.getSsg4mDetails();
             }
           }
         } else {
@@ -213,7 +165,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
               const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
               this.getPartialSubstanceDetails(this.copy, copyType);
               this.gaService.sendPageView(`Substance Register`);
-            } else {
+            } else {  // new record
               setTimeout(() => {
                 this.gaService.sendPageView(`Substance Register`);
                 this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
@@ -253,6 +205,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.canApprove = this.canBeApproved();
       });
     });
+    // Scheme View loading
     if (!window['schemeUtil']) {
       for (let i = 0; i < this.jsLibScriptUrls.length; i++) {
         const node = document.createElement('script');
@@ -411,6 +364,63 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
   }
 
+
+  importDialog(): void {
+    let data: any;
+    data = {
+      title: 'Manufacturing Scheme Import'
+    };
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false,
+      data: data
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.loadingService.setLoading(true);
+        this.overlayContainer.style.zIndex = null;
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+        /* const read = JSON.parse(response);
+         if (this.id && read.uuid && this.id === read.uuid) {
+           this.substanceFormService.importSubstance(read, 'update');
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {
+         if ( read.substanceClass === this.substanceClass) {
+           this.imported = true;
+           this.substanceFormService.importSubstance(read);
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {*/
+        setTimeout(() => {
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + this.showHeaderBar, { state: { record: response } });
+
+        }, 1000);
+      }
+      // }
+      // }
+    });
+
+  }
+
+  test() {
+    this.router.navigated = false;
+    this.router.navigate([this.router.url]);
+  }
+
   canBeApproved(): boolean {
     const action = this.activatedRoute.snapshot.queryParams['action'] || null;
     if (action && action === 'import') {
@@ -456,20 +466,20 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.jsonFileName = 'SSG4m_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
-  getSubstanceDetails(newType?: string): void {
-    this.substanceService.getSubstanceDetails(this.id).pipe(take(1)).subscribe(response => {
-      if (response._name) {
+  getSsg4mDetails(newType?: string): void {
+    this.substanceSsg4mService.getSsg4mDetails(this.id).pipe(take(1)).subscribe(response => {
+      /*if (response._name) {
         this.titleService.setTitle('Edit - ' + response._name);
-      }
+      }*/
       if (response) {
-        this.definitionType = response.definitionType;
-        // if (newType) {
-        //  response = this.substanceSsg4mService.switchType(response, newType);
-        // }
-        this.substanceClass = response.substanceClass;
-        this.status = response.status;
-        this.substanceSsg4mService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
-          this.setFormSections(formSections[response.substanceClass]);
+        this.ssg4mSyntheticPathway = response;
+        let substanceSsg4mFromDb: SubstanceDetail;
+        if (response.sbmsnDataText) {
+          substanceSsg4mFromDb = JSON.parse(response.sbmsnDataText);
+        }
+        this.substanceClass = substanceSsg4mFromDb.substanceClass;
+        this.substanceFormService.loadSubstance(substanceSsg4mFromDb.substanceClass, substanceSsg4mFromDb).pipe(take(1)).subscribe(() => {
+          this.setFormSections(formSections[substanceSsg4mFromDb.substanceClass]);
         });
       } else {
         this.handleSubstanceRetrivalError();
@@ -477,7 +487,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.loadingService.setLoading(false);
       this.isLoading = false;
     }, error => {
-      this.gaService.sendException('getSubstanceDetails: error from API call');
+      this.gaService.sendException('getSsg4mDetails: error from API call');
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.handleSubstanceRetrivalError();
@@ -577,7 +587,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
   }
 
-
   private setFormSections(sectionNames: Array<string> = []): void {
     this.formSections = [];
     sectionNames.forEach(sectionName => {
@@ -616,27 +625,26 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    /*
-    this.substanceSsg4mService.validateSubstance().pipe(take(1)).subscribe(results => {
-      this.submissionMessage = null;
-      this.validationMessages = results.validationMessages.filter(
-        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-      this.validationResult = results.valid;
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      if (this.validationMessages.length === 0 && results.valid === true) {
-        this.submissionMessage = 'Substance is Valid. Would you like to submit?';
-      }
-      if (validationType && validationType === 'approval') {
-        this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
-      }
-    }, error => {
-      this.addServerError(error);
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    });
-    */
+    //  this.substanceSsg4mService.validateSsg4m().pipe(take(1)).subscribe(results => {
+    this.submissionMessage = null;
+    // this.validationMessages = results.validationMessages.filter(
+    //   message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+    this.validationMessages = [];
+    this.validationResult = true;
+    this.showSubmissionMessages = true;
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
+    if (this.validationMessages.length === 0 && true === true) {
+      this.submissionMessage = 'Specified Substance Group 4 is Valid. Would you like to submit?';
+    }
+    if (validationType && validationType === 'approval') {
+      this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
+    }
+    //  }, error => {
+    //    this.addServerError(error);
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
+    //   });
   }
 
   /*
@@ -781,35 +789,69 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
-    this.substanceSsg4mService.saveSubstance().pipe(take(1)).subscribe(response => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.validationMessages = null;
-      this.showSubmissionMessages = false;
-      this.submissionMessage = '';
-      if (!this.id) {
-        this.id = response.uuid;
-      }
-      this.openSuccessDialog();
-    }, (error: SubstanceFormResults) => {
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.submissionMessage = null;
-      if (error.validationMessages && error.validationMessages.length) {
-        this.validationResult = error.isSuccessfull;
-        this.validationMessages = error.validationMessages
-          .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-        this.showSubmissionMessages = true;
+    this.json = this.substanceFormService.cleanSubstance();
+    let jsonValue = JSON.stringify(this.json);
+
+    // Save SVG/Image as Blob
+    //This is a hacky placeholder way to force viz
+    //TODO finish this
+    const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+    window["schemeUtil"].onFinishedLayout = (svg) => {
+      window["schemeUtil"].onFinishedLayout = (svg)=>{};
+      this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
+
+      // if New Record, initialize object
+      if (this.ssg4mSyntheticPathway == null) {
+        this.ssg4mSyntheticPathway = {};
+        // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
       } else {
-        this.submissionMessage = 'There was a problem with your submission';
-        this.addServerError(error.serverError);
-        setTimeout(() => {
-          this.showSubmissionMessages = false;
-          this.submissionMessage = null;
-        }, 8000);
+        // Existing Record
+        // get the JSON from the SSG4m Form and store as a Clob into the database
+        this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
       }
-    });
+
+      this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        this.validationMessages = null;
+        this.showSubmissionMessages = false;
+        this.validationResult = false;
+        // this.submissionMessage = 'The record was updated successfully';
+        // if (!this.id) {
+        if (response && response.synthPathwaySkey) {
+          // alert("The record was updated successfully");
+          this.id = response.synthPathwaySkey.toString();
+          // this.applicationService.bypassUpdateCheck();
+          this.openSuccessDialog();
+          // Refresh the current page, this will not cause record locking issue
+          /* this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
+          */
+        }
+        // }
+        // this.openSuccessDialog();
+      }, (error: SubstanceFormResults) => {
+        this.showSubmissionMessages = true;
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        this.submissionMessage = null;
+        if (error.validationMessages && error.validationMessages.length) {
+          this.validationResult = error.isSuccessfull;
+          this.validationMessages = error.validationMessages
+            .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+          this.showSubmissionMessages = true;
+        } else {
+          this.submissionMessage = 'There was a problem with your submission';
+          this.addServerError(error.serverError);
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = null;
+          }, 8000);
+        }
+      });
+    };
+    window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
   }
 
   dismissValidationMessage(index: number) {
@@ -995,11 +1037,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       this.substanceSsg4mService.bypassUpdateCheck();
       if (response === 'continue') {
-        this.router.navigate(['/substances', this.id, 'edit']);
-      } else if (response === 'browse') {
-        this.router.navigate(['/browse-substance']);
+        // Refresh the current page, this will not cause record locking issue
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
+        // } else if (response === 'browse') {
+        //  this.router.navigate(['/browse-substance']);
       } else if (response === 'view') {
-        this.router.navigate(['/substances', this.id]);
+        this.router.navigate(['/substances-ssg4m', this.id]);
       } else {
         this.submissionMessage = 'Substance was saved successfully!';
         if (type && type === 'approve') {
@@ -1010,7 +1055,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         setTimeout(() => {
           this.showSubmissionMessages = false;
           this.submissionMessage = '';
-          this.router.navigate(['/substances', this.id, 'edit']);
+          this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         }, 3000);
       }
     });

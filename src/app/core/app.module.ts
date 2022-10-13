@@ -24,6 +24,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -52,6 +53,7 @@ import { EnvironmentModule } from '../../environments/environment';
 import { SubstanceTextSearchModule } from './substance-text-search/substance-text-search.module';
 import { StructureImageModalComponent } from './structure/structure-image-modal/structure-image-modal.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatNativeDateModule } from '@angular/material/core';
 import { SequenceSearchComponent } from './sequence-search/sequence-search.component';
 import { TrackLinkEventDirective } from './google-analytics/track-link-event/track-link-event.directive';
@@ -86,14 +88,15 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { GlobalErrorHandler } from '@gsrs-core/error-handler/error-handler';
 import { ShowMolfileDialogComponent } from
 '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
+import { SubstanceStatusPipe } from '@gsrs-core/utils/substance-status.pipe';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
 import { SubstanceSsg4mModule } from './substance-ssg4m/substance-ssg4m.module';
 import { SubstanceSsg4mProcessModule } from './substance-ssg4m/ssg4m-process/substance-form-ssg4m-process.module';
 import { Ssg4mSitesModule } from './substance-ssg4m/ssg4m-sites/ssg4m-sites.module';
 import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form-ssg4m-stages.module';
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
-import { SubstanceStatusPipe } from '@gsrs-core/utils/substance-status.pipe';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
+import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
 
 @NgModule({
   declarations: [
@@ -153,6 +156,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogModule,
     StructureEditorModule,
     FileSelectModule,
+    MatGridListModule,
     MatListModule,
     DynamicComponentLoaderModule.forRoot(dynamicComponentManifests),
     ScrollToModule,
@@ -183,7 +187,9 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     Ssg4mSitesModule,
     MatProgressSpinnerModule,
     Ssg4mStagesModule,
-    SubstanceFormSsg4mStartingMaterialsModule
+    SubstanceFormSsg4mStartingMaterialsModule,
+    SubstanceSsg2Module,
+    Ssg2ManufacturingModule
   ],
   providers: [
     {

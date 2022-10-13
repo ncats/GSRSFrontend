@@ -134,6 +134,20 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
 
   }
 
+  insertProcess(processIndex: number, insertDirection?: string): void {
+    this.substanceFormSsg4mProcessService.insertProcess(processIndex, insertDirection);
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-process-0`, 'center');
+    });
+  }
+
+  addProcess(): void {
+    this.substanceFormSsg4mProcessService.addProcess();
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-process-0`, 'center');
+    });
+  }
+
   addSite() {
     this.substanceFormSsg4mSitesService.addSite(this.processIndex);
     setTimeout(() => {

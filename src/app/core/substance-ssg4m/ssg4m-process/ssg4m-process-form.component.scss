@@ -149,6 +149,26 @@ hr {
   border: 1px solid red;
 }
 
+.button-insert-before {
+  z-index: 1;
+  position: absolute;
+  top: -40px;
+  margin-right: 400px;
+  color: #007CBA;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
+}
+
+.button-insert-after {
+  z-index: 1;
+  position: absolute;
+  top: -40px;
+  margin-right: 200px;
+  color: #007CBA;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
+}
+
 fieldset.border {
   /*border: solid 2px rgb(99, 99, 91) !important;*/
   border: none;

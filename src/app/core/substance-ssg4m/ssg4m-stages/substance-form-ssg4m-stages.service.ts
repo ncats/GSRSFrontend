@@ -37,6 +37,39 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
     return this.propertyEmitter.asObservable();
   }
 
+  insertStage(processIndex: number, siteIndex: number, stageIndex: number, insertDirection?: string): void {
+    const newStage: SpecifiedSubstanceG4mStage = {
+      stageNumber: '',
+      criticalParameters: [],
+      startingMaterials: [],
+      processingMaterials: [],
+      resultingMaterials: []
+    };
+
+    let stageIndexNew = 0;
+    if (insertDirection && insertDirection === 'before') {
+      this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.splice(stageIndex, 0, newStage);
+      stageIndexNew = stageIndex;
+    } else { // after
+      this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.splice(stageIndex+1, 0, newStage);
+      stageIndexNew = stageIndex + 1;
+    }
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages);
+
+    // When adding a new Stage, and if there is Substance Name in the previous Resulting Material, copy/add to
+    // Starting Material in the new Stage.
+    // Get the last index or push/add/copy to the Starting Material at the Last
+    // Get New/Next Stage
+    /*
+    const lastStageIndex = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.length - 2;
+    // Get Last Stage to copy Resulting Materials
+    if (lastStageIndex >= 0) {
+      const lastStageObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[lastStageIndex];
+      const lastResultIndex = lastStageObj.resultingMaterials.length - 1;
+      this.copyResultingToStarting(processIndex, siteIndex, lastStageIndex, lastResultIndex);
+    } */
+  }
+
   addStage(processIndex: number, siteIndex: number): void {
     const newStage: SpecifiedSubstanceG4mStage = {
       stageNumber: '',

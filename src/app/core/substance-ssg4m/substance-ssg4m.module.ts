@@ -1,5 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
+import { Router, Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
@@ -30,7 +31,6 @@ import { MatButtonToggleModule} from '@angular/material/button-toggle';
 import { JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import { NgxJsonViewerModule} from 'ngx-json-viewer';
 import { AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
-import { RouterModule } from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 // import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 import { MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
@@ -49,8 +49,30 @@ import { SubstanceSsg4mProcessModule } from './ssg4m-process/substance-form-ssg4
 import { Ssg4mSitesModule } from './ssg4m-sites/ssg4m-sites.module';
 import { Ssg4mStepViewDialogModule } from './ssg4m-step-view-dialog/ssg4m-step-view-dialog.module';
 
+
+const ssg4mRoutes: Routes = [
+  {
+    path: 'substances-ssg4m/register',
+    component: SubstanceSsg4ManufactureFormComponent
+    //  canActivate: [CanRegisterSubstanceForm],
+    //  canDeactivate: [CanDeactivateSubstanceFormGuard]
+  },
+  {
+    path: 'substances-ssg4m/:id/edit',
+    component: SubstanceSsg4ManufactureFormComponent,
+    //  canActivate: [CanRegisterSubstanceForm],
+    //  canDeactivate: [CanDeactivateSubstanceFormGuard]
+  }
+  // ,
+  // {
+  //  path: 'substances-ssg4m/:id',
+  //  component: SubstanceSsg4ManufactureFormComponent
+  // }
+];
+
 @NgModule({
   imports: [
+    RouterModule.forChild(ssg4mRoutes),
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
@@ -109,6 +131,12 @@ import { Ssg4mStepViewDialogModule } from './ssg4m-step-view-dialog/ssg4m-step-v
 })
 
 export class SubstanceSsg4mModule {
+  constructor(router: Router) {
+    ssg4mRoutes.forEach(route => {
+      router.config[0].children.push(route);
+    });
+  }
+
   static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: SubstanceSsg4mModule,

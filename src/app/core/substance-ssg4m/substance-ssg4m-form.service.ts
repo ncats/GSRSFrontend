@@ -1,4 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
+import * as _ from 'lodash';
+import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config/config.service';
+import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
 import {
   SubstanceDetail
 } from '../substance/substance.model';
@@ -25,8 +30,6 @@ import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
-import * as _ from 'lodash';
-import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -59,10 +62,14 @@ export class SubstanceSsg4mService implements OnDestroy {
   private _bypassUpdateCheck = false;
   private method?: string;
 
+  apiBaseUrlSsg4mEntityUrl = this.configService.configData.apiSSG4mBaseUrl + 'api/v1/ssg4m' + '/';
+
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
-    private structureService: StructureService
+    private structureService: StructureService,
+    public http: HttpClient,
+    public configService: ConfigService
   ) {
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
   }
@@ -294,59 +301,20 @@ export class SubstanceSsg4mService implements OnDestroy {
     this._bypassUpdateCheck = true;
   }
 
-  saveSubstance(): Observable<SubstanceFormResults> {
-    return new Observable(observer => {
-      const results: SubstanceFormResults = {
-        isSuccessfull: true
-      };
-      if (this.privateSubstance.structure != null && !this.privateSubstance.structure.uuid) {
-        this.privateSubstance.structure.id = this.utilsService.newUUID();
-        this.privateSubstance.structure.uuid = this.privateSubstance.structure.id;
-      }
-      if (this.privateSubstance.moieties != null && this.privateSubstance.moieties.length) {
-        this.privateSubstance.moieties.forEach(moiety => {
-          if (!moiety.uuid) {
-            moiety.id = this.utilsService.newUUID();
-            moiety.uuid = moiety.id;
-          }
-        });
-      }
+  saveSsg4m(ssg4m: Ssg4mSyntheticPathway, type?: string): Observable<Ssg4mSyntheticPathway> {
+    // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m`;
+    const url = this.apiBaseUrlSsg4mEntityUrl;
+    let method = ssg4m.synthPathwaySkey ? 'PUT' : 'POST';
+    const options = {
+      body: ssg4m
+    };
+    return this.http.request(method, url, options);
+  }
 
-      const substanceCopy = this.cleanSubstance();
-      this.substanceService.saveSubstance(substanceCopy, this.method).subscribe(substance => {
-        this.privateSubstance = substance;
-        results.uuid = substance.uuid;
-       // this.definitionEmitter.next(this.getDefinition());
-        if (this.privateSubstance.substanceClass === 'protein') {
-          this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
-        } else if (this.privateSubstance.substanceClass === 'nucleicAcid') {
-          this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
-          this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
-        } else if (this.privateSubstance.substanceClass === 'mixture') {
-          this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
-        }
-        this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
-        this.substanceService.getSubstanceDetails(results.uuid).subscribe(resp => {
-          this.privateSubstance = resp;
-          this.resetState();
-          this.substanceEmitter.next(this.privateSubstance);
-          observer.next(results);
-          observer.complete();
-        }, error => {
-          observer.next(results);
-          observer.complete();
-        });
-      }, error => {
-        results.isSuccessfull = false;
-        if (error && error.error && error.error.validationMessages) {
-          results.validationMessages = error.error.validationMessages;
-        } else {
-          results.serverError = error;
-        }
-        observer.error(results);
-        observer.complete();
-      });
-    });
+  validateSsg4m(ssg4m: Ssg4mSyntheticPathway): Observable<ValidationResults> {
+    // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m/@validate`;
+    const url = this.apiBaseUrlSsg4mEntityUrl + '@validate';
+    return this.http.post(url, ssg4m);
   }
 
   cleanSubstance(): SubstanceDetail {
@@ -359,84 +327,66 @@ export class SubstanceSsg4mService implements OnDestroy {
       }
 
       const toclean = ['organismFamily', 'organismGenus', 'organismSpecies', 'organismAuthor', 'infraSpecificName', 'infraSpecificType', 'fractionMaterialType', 'fractionName', 'developmentalStage'];
-      toclean.forEach( field => {
+      toclean.forEach(field => {
         if (this.privateSubstance.structurallyDiverse[field] && this.privateSubstance.structurallyDiverse[field] !== null &&
           this.privateSubstance.structurallyDiverse[field] !== '') {
-            this.privateSubstance.structurallyDiverse[field] = this.privateSubstance.structurallyDiverse[field].trim();
-          }
+          this.privateSubstance.structurallyDiverse[field] = this.privateSubstance.structurallyDiverse[field].trim();
+        }
       });
     }
-    /*
-    if (this.privateSubstance.nucleicAcid) {
-      if (this.privateSubstance.nucleicAcid.sugars) {
-        this.privateSubstance.nucleicAcid.sugars.forEach((sugar, index) => {
-          if (sugar.sites.length === 0) {
-            this.privateSubstance.nucleicAcid.sugars.splice(index, 1);
-          }
-        });
-      }
-      if (this.privateSubstance.nucleicAcid.linkages) {
-        this.privateSubstance.nucleicAcid.linkages.forEach((linkage, index) => {
-          if (linkage.sites.length === 0) {
-            this.privateSubstance.nucleicAcid.linkages.splice(index, 1);
-          }
-        });
-      }
-    }
-    */
 
     /*the substance API call for view=internal vs the usual 'view=full' adds some properties that should not be submitted
     and can cause errors upon submission. the view change was to allow the stdName property to be visible to the forms*/
     if (this.privateSubstance.structure) {
 
-      if ( this.privateSubstance.structure.properties) {
+      if (this.privateSubstance.structure.properties) {
         delete this.privateSubstance.structure.properties;
       }
-      if ( this.privateSubstance.structure.links) {
+      if (this.privateSubstance.structure.links) {
         delete this.privateSubstance.structure.links;
       }
     }
     if (this.privateSubstance.polymer && this.privateSubstance.polymer.displayStructure) {
 
-      if ( this.privateSubstance.polymer.displayStructure.properties) {
+      if (this.privateSubstance.polymer.displayStructure.properties) {
         delete this.privateSubstance.polymer.displayStructure.properties;
       }
-      if ( this.privateSubstance.polymer.displayStructure.links) {
+      if (this.privateSubstance.polymer.displayStructure.links) {
         delete this.privateSubstance.polymer.displayStructure.links;
       }
     }
     if (this.privateSubstance.polymer && this.privateSubstance.polymer.idealizedStructure) {
 
-      if ( this.privateSubstance.polymer.idealizedStructure.properties) {
+      if (this.privateSubstance.polymer.idealizedStructure.properties) {
         delete this.privateSubstance.polymer.idealizedStructure.properties;
       }
-      if ( this.privateSubstance.polymer.idealizedStructure.links) {
+      if (this.privateSubstance.polymer.idealizedStructure.links) {
         delete this.privateSubstance.polymer.idealizedStructure.links;
       }
     }
 
     if (this.privateSubstance.moieties) {
       this.privateSubstance.moieties.forEach(moiety => {
-          if (moiety.properties) {
-            delete moiety.properties;
-          }
-          if (moiety.links) {
-            delete moiety.links;
-          }
+        if (moiety.properties) {
+          delete moiety.properties;
+        }
+        if (moiety.links) {
+          delete moiety.links;
+        }
       });
     }
 
     if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
-       && this.privateSubstance.protein.disulfideLinks.length > 0) {
-          for ( let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0;  i--) {
-            if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
-              this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
-              Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
-                Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0 ) {
-                  this.privateSubstance.protein.disulfideLinks.splice(i, 1);
-          }
+      && this.privateSubstance.protein.disulfideLinks.length > 0) {
+      for (let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0; i--) {
+        if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
+          this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
+          Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
+          Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0) {
+          this.privateSubstance.protein.disulfideLinks.splice(i, 1);
         }
-       }
+      }
+    }
     // end view=internal changes
 
     let substanceString = JSON.stringify(this.privateSubstance);
@@ -494,5 +444,12 @@ export class SubstanceSsg4mService implements OnDestroy {
         isDeleted: false
       };
     }
+  }
+
+  getSsg4mDetails(id: string, version?: string): Observable<Ssg4mSyntheticPathway> {
+    // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m/${id}`;
+    const url = this.apiBaseUrlSsg4mEntityUrl + id;
+
+    return this.http.get<Ssg4mSyntheticPathway>(url);
   }
 }

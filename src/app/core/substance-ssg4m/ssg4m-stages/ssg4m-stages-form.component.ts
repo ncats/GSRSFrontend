@@ -162,6 +162,13 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  insertStage(processIndex: number, siteIndex: number, stageIndex: number, insertDirection?: string): void {
+    this.substanceFormSsg4mStagesService.insertStage(processIndex, siteIndex, stageIndex, insertDirection);
+    setTimeout(() => {
+      this.scrollToService.scrollToElement(`substance-process-0`, 'center');
+    });
+  }
+
   addCriticalParameter(processIndex: number, siteIndex: number, stageIndex: number) {
     this.substanceFormSsg4mStagesService.addCriticalParameter(processIndex, siteIndex, stageIndex);
     setTimeout(() => {

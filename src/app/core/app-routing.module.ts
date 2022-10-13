@@ -114,13 +114,7 @@ const childRoutes: Routes = [
   {
     path: 'user-downloads/:id',
     component: UserDownloadsComponent
-  },
-  {
-    path: 'substances-ssg4m/register',
-    component: SubstanceSsg4ManufactureFormComponent
-  //  canActivate: [CanRegisterSubstanceForm],
-  //  canDeactivate: [CanDeactivateSubstanceFormGuard]
-  },
+  }
 ];
 
 const routes: Routes = [
