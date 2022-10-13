@@ -27,7 +27,6 @@ export class StructureImageModalComponent implements OnInit {
   constructor(
     private configService: ConfigService,
     private utilsService: UtilsService,
-    private configService: ConfigService,
     private structureService: StructureService,
     public dialogRef: MatDialogRef<StructureImageModalComponent>,
     private router: Router,
