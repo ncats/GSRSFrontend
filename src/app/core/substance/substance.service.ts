@@ -214,7 +214,6 @@ export class SubstanceService extends BaseHttpService {
       if (type && (type === 'flex' || type === 'exact')) {
         sync = true;
       }
-
       if (!sync && this.searchKeys[structureFacetsKey]) {
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
@@ -686,10 +685,20 @@ export class SubstanceService extends BaseHttpService {
         );
   }
 
-  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+
+  test(): Observable<any> {
+    const refuuid = `${this.apiBaseUrl}substances/search?acets=Substance Class*chemical.true&top=10&skip=0&order=$root_lastEdited&fdim=10`;
+
+    return this.http.get<any>(refuuid);
+  }
+  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, pageQuery?: string, otherFacets?: string): Observable<FacetQueryResponse> {
     let url: string;
+
     if (searchTerm) {
       url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      if(pageQuery) {
+        url += `&q=${pageQuery}`;
+      }
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {

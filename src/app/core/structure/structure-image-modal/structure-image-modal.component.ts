@@ -3,6 +3,7 @@ import { UtilsService } from '../../utils/utils.service';
 import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
+import { Router } from '@angular/router';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
@@ -19,6 +20,8 @@ export class StructureImageModalComponent implements OnInit {
   uuid: string;
   displayName: string;
   names: string[] = [];
+  showSelector =false;
+  showSubstanceSelector = false;
   gsrsHomeBaseUrl = '';
 
   constructor(
@@ -26,6 +29,7 @@ export class StructureImageModalComponent implements OnInit {
     private utilsService: UtilsService,
     private structureService: StructureService,
     public dialogRef: MatDialogRef<StructureImageModalComponent>,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -59,11 +63,65 @@ export class StructureImageModalComponent implements OnInit {
     if (this.data && this.data.displayName) {
       this.displayName = this.data.displayName;
     }
+
+    if (this.data.component && this.data.component === 'selector') {
+      this.showSelector = true;
+    }
+
+    if (this.data.component && this.data.component === 'substanceSelector') {
+      this.showSubstanceSelector = true;
+    }
   }
 
   dismissDialog(): void {
     this.dialogRef.close();
   }
+
+
+
+
+
+
+  setMolfile(): void {
+    
+    this.dialogRef.close('molfile');
+  }
+  
+  selectSubstance(): void {
+    this.dialogRef.close('select');
+
+  }
+
+  gotoDetails(): void {
+    let url = '';
+    this.dialogRef.close();
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid;
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/' + this.uuid])
+      );
+    }
+    window.open(url, '_blank');
+  }
+
+  gotoEdit(): void {
+    let url = '';
+    this.dialogRef.close();
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid + '/edit';
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/' + this.uuid + '/edit'])
+      );
+    }
+    window.open(url, '_blank');
+
+  }
+
+
 
   getHomepageUrl() {
     // Get GSRS Frontend URL fron config

@@ -209,6 +209,10 @@ import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent
+  ],
+  exports: [
+    StructureEditorModule,
+    NameResolverModule
   ]
 })
 export class AppModule {}
