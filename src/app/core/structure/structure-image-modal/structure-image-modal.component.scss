@@ -26,6 +26,25 @@ img {
   height: auto;
 }
 
+.icon-super {
+  vertical-align: top;
+height: 20px;
+}
+
+
+.button-row {
+  margin: 10px 5px;
+  width:100%;
+  display: inline-flex;
+    align-items: flex-end;
+  flex-direction: row;
+}
+
+.modal-button {
+  font-size:15px;
+  margin-right: 10px;
+}
+
 .structure-image-content>div {
     max-width: 500px;
     margin: auto;
