@@ -10,7 +10,7 @@
 <br>
 <br>
 <br>
-<div>hello bulk search</div>
+<div>Hello bulk search</div>
 <div>
     {{_bulkSearch|json}}
 </div>
@@ -19,11 +19,9 @@
     <div>_bulkSearch.key {{_bulkSearch.key }}</div>
 </div>
 <div  *ngIf="_bulkSearchResults !== undefined && _bulkSearchResults.summary !== undefined" style="border: 1px solid gray;">
-    <div>1 abc</div>
     <div *ngFor="let summary of _bulkSearchResults.summary">
         <div>{{summary.searchTerm}}</div>
         <div  *ngIf="summary !== undefined && summary.records !== undefined">
-            <div>2 def</div>
            <div *ngFor="let record of summary.records">
             {{record|json}}
             </div> 

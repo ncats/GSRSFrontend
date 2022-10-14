@@ -2,7 +2,7 @@
   <mat-card>
     <h2 style = "font-weight:500">Bulk Query</h2>
     <div class="bulk-editor-actions-container">
-
+      <div>The first select box doesn't do anything yet, the second is set to substances</div>
       <div class="two">
         <mat-form-field matInput class="query-type-select">
           <mat-select required placeholder="Query type"  [formControl]="queryTypeControl" (selectionChange)="queryTypeSelected($event)" value="identifiers">
@@ -44,10 +44,8 @@
           </mat-tab>
         </mat-tab-group -->
       </div>
-
-
       <div class="query-actions">
-        <button mat-flat-button color="primary" (click) = "submitText()">Submit2</button>
+        <button mat-flat-button color="primary" (click) = "submitText()">Submit</button>
         <div *ngIf="_bulkQuery">
           <div>{{_bulkQuery.id}}</div>
         </div>
