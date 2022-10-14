@@ -236,7 +236,7 @@ export class ControlledVocabularyService extends BaseHttpService {
                 };
               }
               // eslint-disable-next-line prefer-arrow-functions
-              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.sort(function(a, b) {
+              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.filter(term => (term.hidden === false && term.deprecated === false)).sort(function(a, b) {
                 const termA = (a.display && a.display.toUpperCase()) || (a.value && a.value.toUpperCase()) || '';
                 const termB = (b.display && b.display.toUpperCase()) || (b.value && b.value.toUpperCase()) || '';
                 if (termA < termB) {
@@ -249,7 +249,7 @@ export class ControlledVocabularyService extends BaseHttpService {
               });
 
 
-              vocabulary.terms.forEach(vocabularyTerm => {
+              vocabulary.terms.filter(term => (term.hidden === false && term.deprecated === false)).forEach(vocabularyTerm => {
                 singleDomainVocabulary[vocabulary.domain].dictionary[vocabularyTerm.value] = vocabularyTerm;
               });
             }
