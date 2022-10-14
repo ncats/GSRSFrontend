@@ -1,20 +1,21 @@
 <div class="text-input-form" style="fxFlex: 60%">
     <p>{{instruction}}</p>
     <div>
-        <div><!-- (change)=""-->
-            <!-- mat-form-field -->
-                <textarea matInput
-                    placeholder="placeholder" 
-                    [formControl]="textControl"
-                    cdkTextareaAutosize
-                    cdkAutosizeMinRows=10
-                    ></textarea>
-            <!-- mat-form-field --> 
+        <div>
+            <textarea matInput
+                placeholder="placeholder" 
+                [formControl]="textControl"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows=10
+                cdkAutosizeMaxRows=30
+            ></textarea>
         </div>
     </div>
+    <div class="file-reader" *ngIf="showLoadTextFileIntoTextarea"> 
+        Select file: <input type="file" (change)="loadTextFileIntoTextareaChangeListener($event)">
+    </div>  
     <div>
-        <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" (click) = "submit()">Submit</button>
+        <button *ngIf="showCancelButton" mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
+        <button *ngIf="showSubmitButton" mat-flat-button color="primary" (click) = "submit()">Submit</button>
     </div>
 </div>

@@ -1,10 +1,12 @@
-export interface BulkQuery {
+export interface BulkSearch {
+    start: string;
     id: number;
-    total: number;
-    count: number;
-    top: number;
-    skip: number;
-    queries: Array<string>;
+    key: string;
+    count: number
+    status: number;
+    finished: number;
+    determined: string;
+    generatingUrl: string;
+    url: string;
 }
-  
 

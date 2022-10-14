@@ -1,63 +1,33 @@
-<div class="search-content-container" #contentContainer>
-  <mat-card>
-    <h2 style = "font-weight:500">Bulk Search</h2>
-    <div class="bulk-editor-actions-container">
-
-      <div class="two">
-        <mat-form-field matInput class="search-type-select">
-          <!-- (selectionChange)="searchTypeSelected($event)" -->
-          <mat-select required placeholder="Search type"  [formControl]="searchTypeControl" value="identifiers">
-            <mat-option value="complex">
-              Complex
-            </mat-option>
-            <mat-option value="identifiers">
-              Indentifiers
-            </mat-option>
-            <mat-option value="or">
-              Indentifiers-OR
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="three">
-        <mat-form-field matInput class="search-entity-select">
-          <!-- (selectionChange)="searchTypeSelected($event)" -->
-          <mat-select required placeholder="Search Entity"  [formControl]="searchEntityControl" value="substances">
-            <mat-option value="complex">
-              Substances
-            </mat-option>
-            <mat-option value="identifiers">
-              Clinial Trials US
-            </mat-option>
-            <mat-option value="exact">
-              Clinical Trials Europe
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="editor-container">
-
-      <mat-tab-group mat-align-tabs="start" style="width: 100%;">
-        <mat-tab label="Text Input" style="width: 100%;">          
-          <app-text-input-form></app-text-input-form>
-        </mat-tab>
-        <mat-tab label="File Input">
-          <div>
-            <app-file-upload-form></app-file-upload-form>            
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-
-      <div class="search-actions">
-
-        <!-- button mat-flat-button color="primary" (click) = "submit2()">Submit2</button -->
- 
-      </div>
-    </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div>hello bulk search</div>
 <div>
+    {{_bulkSearch|json}}
 </div>
-  </mat-card>
+<div>bulkQID {{bulkQID}}</div>
+<div  *ngIf="_bulkSearch !== undefined && _bulkSearch.key  !== undefined">
+    <div>_bulkSearch.key {{_bulkSearch.key }}</div>
+</div>
+<div  *ngIf="_bulkSearchResults !== undefined && _bulkSearchResults.summary !== undefined" style="border: 1px solid gray;">
+    <div>1 abc</div>
+    <div *ngFor="let summary of _bulkSearchResults.summary">
+        <div>{{summary.searchTerm}}</div>
+        <div  *ngIf="summary !== undefined && summary.records !== undefined">
+            <div>2 def</div>
+           <div *ngFor="let record of summary.records">
+            {{record|json}}
+            </div> 
+        </div>
+        <br>
+    </div>
 </div>

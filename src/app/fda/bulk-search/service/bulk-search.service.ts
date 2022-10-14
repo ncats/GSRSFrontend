@@ -3,7 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
-import { BulkQuery } from '../bulk-search.model';
+import { BulkQuery } from '../bulk-query.model';
+import { BulkSearch } from '../bulk-search.model';
+
 
 @Injectable(
   { providedIn: 'root' }
@@ -29,7 +31,7 @@ export class BulkSearchService extends BaseHttpService {
     context: string,
     queryText: string
   ): Observable<BulkQuery> {
-    const url = this.configService.configData.apiBaseUrl + 'api/v1/@bulkQuery';
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
     const params = new HttpParams();
     const options = {
       params: params,
@@ -41,4 +43,55 @@ export class BulkSearchService extends BaseHttpService {
     return this.http.post<BulkQuery>(url, queryText, options);
 
   }
+
+  getBulkQuery(
+    context: string,
+    id: number
+  ): Observable<BulkQuery> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
+    const params = new HttpParams();
+    params.append('bulkQID', id);
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<BulkQuery>(url, options);
+
+  }  
+
+  getBulkSearch(
+    context: string,
+    id: number
+  ): Observable<BulkSearch> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/bulkSearch';
+    let params = new HttpParams();
+    params = params.append('bulkQID', id);
+    params.append('simpleSearchOnly', null);
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<BulkSearch>(url, options);
+  }
+
+  getBulkSearchResults(
+    context: string,
+    key: string
+  ): Observable<any> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';
+    console.log("url def");
+    console.log(url);
+    
+    let params = new HttpParams();
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<any>(url, options);
+  }
+
+
 }

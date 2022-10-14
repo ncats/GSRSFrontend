@@ -1,0 +1,59 @@
+<div class="query-content-container" #contentContainer>
+  <mat-card>
+    <h2 style = "font-weight:500">Bulk Query</h2>
+    <div class="bulk-editor-actions-container">
+
+      <div class="two">
+        <mat-form-field matInput class="query-type-select">
+          <mat-select required placeholder="Query type"  [formControl]="queryTypeControl" (selectionChange)="queryTypeSelected($event)" value="identifiers">
+            <mat-option value="allFields">
+              All Fields
+            </mat-option>
+            <mat-option value="identifiers">
+              Indentifiers
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="three">
+        <mat-form-field matInput class="query-entity-select">          
+          <mat-select required placeholder="Query Entity"  [formControl]="queryEntityControl" (selectionChange)="queryEntitySelected($event)" value="substances">
+            <mat-option value="substances">
+              Substances
+            </mat-option>
+            <mat-option value="clinicaltrialsus">
+              Clinial Trials US
+            </mat-option>
+            <mat-option value="clinicaltrialseurope">
+              Clinical Trials Europe
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="editor-container">
+        <!--mat-tab-group mat-align-tabs="start" style="width: 100%;" -->
+          <!-- mat-tab label="Text Input" style="width: 100%;" -->          
+            <app-text-input-form></app-text-input-form>
+          <!-- /mat-tab -->
+          <!-- mat-tab label="File Input">
+            <div>
+              <app-file-upload-form></app-file-upload-form>            
+            </div>
+          </mat-tab>
+        </mat-tab-group -->
+      </div>
+
+
+      <div class="query-actions">
+        <button mat-flat-button color="primary" (click) = "submitText()">Submit2</button>
+        <div *ngIf="_bulkQuery">
+          <div>{{_bulkQuery.id}}</div>
+        </div>
+      </div>
+    </div>
+<div>
+</div>
+  </mat-card>
+</div>

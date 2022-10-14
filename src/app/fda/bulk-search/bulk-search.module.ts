@@ -32,6 +32,8 @@ import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { BulkSearchComponent } from '../bulk-search/bulk-search.component';
+import { BulkQueryComponent } from '../bulk-search/bulk-query.component';
+
 import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { StructureModule } from '@gsrs-core/structure/structure.module';
@@ -41,6 +43,10 @@ import { FileUploadFormComponent } from '../bulk-search/file-upload-form/file-up
 const bulkSearchRoutes: Routes = [
   {
     path: 'bulk-search',
+    component: BulkQueryComponent
+  },
+  {
+    path: 'bulk-search-results',
     component: BulkSearchComponent
   }
 ];
@@ -84,11 +90,13 @@ const bulkSearchRoutes: Routes = [
     StructureModule
   ],
   declarations: [
+    BulkQueryComponent,
     BulkSearchComponent,
     TextInputFormComponent,
     FileUploadFormComponent
   ],
   exports: [
+    BulkQueryComponent,
     BulkSearchComponent,
     TextInputFormComponent,
     FileUploadFormComponent
