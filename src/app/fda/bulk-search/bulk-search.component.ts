@@ -1,23 +1,18 @@
 import {
-    Component,
-    OnInit,
-    OnDestroy,
-    ViewChild,
-  } from '@angular/core';
-  import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-  import { FormControl } from '@angular/forms';
-  import { Observable, Subscription } from 'rxjs';
-  import { ConfigService, LoadedComponents } from '@gsrs-core/config';
-  import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-  import { MainNotificationService } from '@gsrs-core/main-notification';
-  import { LoadingService } from '@gsrs-core/loading';
-  import { AuthService } from '../../core/auth/auth.service';
-  import { BulkSearchService } from './service/bulk-search.service';
-  import { BulkQuery } from './bulk-query.model';
-  import { BulkSearch } from './bulk-search.model';
-import { Input } from 'hammerjs';
-import { HttpParams } from '@angular/common/http';
-  
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { NavigationExtras,ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { LoadingService } from '@gsrs-core/loading';
+import { AuthService } from '../../core/auth/auth.service';
+import { BulkSearchService } from './service/bulk-search.service';
+import { BulkSearch } from './bulk-search.model';
 
   @Component({
     selector: 'app-bulk-search',

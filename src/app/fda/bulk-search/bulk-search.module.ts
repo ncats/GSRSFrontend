@@ -33,7 +33,6 @@ import { SubstanceSearchSelectorModule } from '../substance-search-select/substa
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { BulkSearchComponent } from '../bulk-search/bulk-search.component';
 import { BulkQueryComponent } from '../bulk-search/bulk-query.component';
-
 import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { StructureModule } from '@gsrs-core/structure/structure.module';

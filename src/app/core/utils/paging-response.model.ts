@@ -24,6 +24,7 @@ export interface PagingResponse<T> {
     exactMatches?: Array<T>;
     facets?: Array<Facet>;
     filter?: string;
+    summary?: Array<any>; // added for bulk search
 }
 
 export interface NarrowSearchSuggestion {

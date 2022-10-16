@@ -10,14 +10,12 @@ import {
   import { ConfigService, LoadedComponents } from '@gsrs-core/config';
   import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
   import { MainNotificationService } from '@gsrs-core/main-notification';
-  import { QueryableSubstanceDictionary } from '@gsrs-core/guided-search/queryable-substance-dictionary.model';
   import { LoadingService } from '@gsrs-core/loading';
   import { TextInputFormComponent } from '@gsrs-core/utils/text-input-form/text-input-form.component';
   import { AuthService } from '../../core/auth/auth.service';
   import { BulkSearchService } from './service/bulk-search.service';
   import { BulkQuery } from './bulk-query.model';
   import { BulkSearch } from './bulk-search.model';
-  import { environment } from '@environment/environment';
   
 
   @Component({
@@ -34,7 +32,12 @@ import {
     showDeprecated = false;
     queryText: string;
     context: string = 'substances';
-    _bulkQuery: BulkQuery;  
+    _bulkQuery: BulkQuery;
+    _bulkQueryId: number;  
+    _bulkSearch: BulkSearch;
+    _bulkSearchResults: any;
+    _bulkSearchResultKey: string;
+
     query: string;
     isError = false;
     isLoading = false;
@@ -71,13 +74,8 @@ import {
     };  
     private queryType: string;
     private queryEntity: string;
-    _querytype: string;
-    _queryentity: string;
     queryTypeControl = new FormControl();
     queryEntityControl = new FormControl();
-
-    @ViewChild('contentContainer', { static: true }) contentContainer;
-    private overlayContainer: HTMLElement;
   
     constructor(
       private loadingService: LoadingService,
@@ -88,9 +86,7 @@ import {
       private router: Router
     ) {
       this.queryType = 'identifiers';
-      this._querytype = 'identifiers';
       this.queryEntity = 'substances';
-      this._queryentity = 'substances';
     }
   
     ngOnInit() {
@@ -110,7 +106,6 @@ import {
       this.showSpinner = false;  // Stop progress spinner
       this.loadingService.setLoading(false);
 
-
       const authSubscription = this.authService.getAuth().subscribe(auth => {
         if (auth) {
           this.isLoggedIn = true;
@@ -118,8 +113,7 @@ import {
           this.showDeprecated = false;
         }
         this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-        this.showAudit = this.authService.hasRoles('admin');
-  
+        this.showAudit = this.authService.hasRoles('admin');  
       });
     }
   
@@ -133,9 +127,8 @@ import {
   
 submitText() {
     this.queryText = this.textInputForm.textControl.value;
-    this.postBulkQuery();
-
-
+    // this.postBulkQuery();
+    this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse()
  }
 
  bulkSearchSubmit(): void {
@@ -172,6 +165,52 @@ postBulkQuery() {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
+  }
+
+  postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse() {
+    this.loadingService.setLoading(true);
+    const s1 = this.bulkSearchService.postBulkQuery(
+      this.context,
+      this.queryText
+    )
+    .subscribe(bulkQuery => {
+      this.isError = false;
+      this._bulkQuery = bulkQuery;
+      this._bulkQueryId = bulkQuery.id;
+      const s2 = this.bulkSearchService
+        .getBulkSearch(this.context, this._bulkQueryId).subscribe(bulkSearch => {
+        this._bulkSearch = bulkSearch;
+        this._bulkSearchResultKey = this._bulkSearch.key;
+        // console.log("here abc qid: " + this._bulkQueryId);
+        // console.log("here abc key: " + this._bulkSearchResultKey);
+
+        const navigationExtras: NavigationExtras = {
+          queryParams: {'bulk_search': this._bulkSearchResultKey}
+        };
+        this.router.navigate(['/browse-substance'], navigationExtras);
+    
+      }, error => {
+        console.log("Error getting bulk search from bulk query id.");
+      }, () => {
+          s2.unsubscribe();
+      })
+    }, error => {
+      console.log("Error trying to post a bulk query.");
+      const notification: AppNotification = {
+        message: 'Error trying to post a bulk query.',
+        type: NotificationType.error,
+        milisecondsToShow: 6000
+      };
+      this.isError = true;
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+      this.notificationService.setNotification(notification);
+    }, () => {
+      s1.unsubscribe();
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+    }
+    );
   }
 
   makeOrQuery(field: string){

@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceSummary } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
 import { LoadingService } from '../loading/loading.service';
@@ -33,7 +33,7 @@ import { Location } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
+import { NarrowSearchSuggestion, PagingResponse } from '@gsrs-core/utils';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
@@ -50,6 +50,7 @@ import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { I } from '@angular/cdk/keycodes';
+import { BulkSearchResultsSummaryComponent } from 'src/app/fda/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 @Component({
   selector: 'app-substances-browse',
@@ -60,12 +61,17 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;
+  private privateBulkSearchTerm?: string;
+  private privateBulkSearchSummaries?: any;
   private privateSearchType?: string;
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
+  
   public substances: Array<SubstanceDetail>;
   public exactMatchSubstances: Array<SubstanceDetail>;
+
+
   pageIndex: number;
   pageSize: number;
   test: any;
@@ -185,11 +191,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
 
     this.setUpPrivateSearchTerm();
+    
 
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
-
+    this.privateBulkSearchTerm = this.activatedRoute.snapshot.queryParams['bulk_search'] || '';
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
     if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
       this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
@@ -408,6 +415,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
       this.privateSequenceSearchTerm,
+      this.privateBulkSearchTerm,
       this.privateSearchCutoff,
       this.privateSearchType,
       this.privateSearchSeqType,
@@ -426,6 +434,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
+        bulkSearchTerm: this.privateBulkSearchTerm,
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
@@ -453,6 +462,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.showExactMatches = true;
           }
 
+          if (pagingResponse.summary && pagingResponse.summary.length > 0
+            && pagingResponse.skip === 0
+            && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
+          ) {
+            this.privateBulkSearchSummaries = pagingResponse.summary;
+          }
+
+
+          // xxxx
+          // console.log(pagingResponse.summary)
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -672,6 +691,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
+    navigationExtras.queryParams['bulk_search'] = this.privateBulkSearchTerm;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
@@ -821,6 +841,41 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.searchSubstances();
   }
 
+  editBulkSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+      `${this.privateBulkSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    navigationExtras.queryParams['bulk'] = this.privateBulkSearchTerm || null;
+    navigationExtras.queryParams['type'] = this.privateSearchType || null;
+
+    if (this.privateSearchType === 'similarity') {
+      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
+    }
+
+    this.router.navigate(['/bulk-search'], navigationExtras);
+  }
+
+  clearBulkSearch(): void {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+      `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
+
+    this.privateBulkSearchTerm = '';
+    this.privateSearchType = '';
+    this.privateSearchCutoff = 0;
+    this.smiles = '';
+    this.pageIndex = 0;
+
+    this.populateUrlQueryParameters();
+    this.searchSubstances();
+  }
+
   clearSearch(): void {
 
     const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
@@ -846,6 +901,8 @@ searchTermOkforBeginsWithSearch(): boolean {
     } else if ((this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') ||
       (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
       this.clearSequenceSearch();
+    } else if (this.privateBulkSearchTerm != null && this.privateBulkSearchTerm !== '') {
+        this.clearBulkSearch();
     } else {
       this.clearSearch();
     }
@@ -872,6 +929,13 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   get sequenceSearchTerm(): string {
     return this.privateSequenceSearchTerm;
+  }
+
+  get bulkSearchTerm(): string {
+    return this.privateBulkSearchTerm;
+  }
+  get bulkSearchSummaries(): string {
+    return this.privateBulkSearchSummaries;
   }
 
   get searchType(): string {

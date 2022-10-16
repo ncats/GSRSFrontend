@@ -1,0 +1,11 @@
+<div class="wrapper">
+<h2 class="summary-title">Bulk Search Summary</h2>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+    <th mat-header-cell *matHeaderCellDef>{{ displayedColumnNames[column] }}</th>
+    <td mat-cell *matCellDef="let cell">{{ cell[column] }}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let cellrow; columns: displayedColumns"></tr>
+</table>
+</div>

@@ -82,6 +82,17 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="bulkSearchTerm">
+      <app-bulk-search-results-summary
+        loadSummaries="false" 
+        [summaries]="bulkSearchSummaries"
+        context="substances"
+        [key]="bulkSearchTerm"      
+      ></app-bulk-search-results-summary>
+    </div>
+
+    <div class="break"></div>
     <div class="side-nav-content" *ngIf="(substances && substances.length) || (matchTypes && matchTypes.length > 0)">
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">

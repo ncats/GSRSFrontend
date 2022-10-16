@@ -87,6 +87,7 @@ export class SubstanceService extends BaseHttpService {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
+    bulkSearchTerm?: string,
     cutoff?: number,
     type?: string,
     seqType?: string,
@@ -129,6 +130,23 @@ export class SubstanceService extends BaseHttpService {
           args.cutoff,
           args.type,
           args.seqType,
+          args.pageSize,
+          args.facets,
+          args.order,
+          args.skip
+        ).subscribe(response => {
+          observer.next(response);
+        }, error => {
+          observer.error(error);
+        }, () => {
+          observer.complete();
+        });
+      } else if ((args.bulkSearchTerm != null && args.bulkSearchTerm !== '')) {
+        this.searchSubstanceBulk(
+          args.bulkSearchTerm,
+          args.searchTerm,
+          args.cutoff,
+          args.type,
           args.pageSize,
           args.facets,
           args.order,
@@ -371,6 +389,44 @@ export class SubstanceService extends BaseHttpService {
         }
       );
     });
+  }
+
+  searchSubstanceBulk(
+    bulkSearchTerm?: string,
+    searchTerm?: string,
+    cutOff?: number,
+    type: string = 'bulk',
+    pageSize: number = 10,
+    facets?: FacetParam,
+    order?: string,
+    skip: number = 0
+  ): Observable<PagingResponse<SubstanceSummary>> {
+
+    let params = new FacetHttpParams({encoder: new CustomEncoder()});
+    let url = this.apiBaseUrl;
+
+    url += 'status/'+bulkSearchTerm+'/results';
+    console.log("url3: "+ url);
+    if (searchTerm != null && searchTerm !== '') {
+       params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets, this.showDeprecated);
+
+    params = params.appendDictionary({
+      top: pageSize && pageSize.toString(),
+      skip: skip && skip.toString()
+    });
+
+    if (order != null && order !== '') {
+      // params = params.append('order', order);
+    }
+    params = params.append('fdim', '10');
+
+    const options = {
+      params: params
+    };
+    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
   private processAsyncSearchResults(

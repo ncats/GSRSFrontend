@@ -76,7 +76,6 @@ import { FacetsManagerModule } from './facets-manager/facets-manager.module';
 import { GuidedSearchModule } from './guided-search/guided-search.module';
 import { CanActivateAdminPage } from '@gsrs-core/admin/can-activate-admin-page';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { TextInputFormComponent } from '@gsrs-core/utils/text-input-form/text-input-form.component';
 import { NamesDisplayPipe } from '@gsrs-core/utils/names-display-order.pipe';
 // eslint-disable-next-line max-len
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
@@ -95,6 +94,7 @@ import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
 import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
+import { BulkSearchResultsSummaryComponent } from '../fda/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 @NgModule({
   declarations: [
@@ -121,7 +121,8 @@ import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
     NamesDisplayPipe,
-    SubstanceStatusPipe
+    SubstanceStatusPipe,
+    BulkSearchResultsSummaryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -213,7 +214,8 @@ import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg
   ],
   exports: [
     StructureEditorModule,
-    NameResolverModule
+    NameResolverModule,
+    BulkSearchResultsSummaryComponent
   ]
 })
 export class AppModule {}

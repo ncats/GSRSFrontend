@@ -33,6 +33,13 @@
       </div>
 
       <div class="editor-container">
+        <div class="query-actions">
+          <button mat-flat-button color="primary" (click) = "submitText()">Submit</button>
+          <div *ngIf="_bulkQuery">
+            <div>{{_bulkQuery.id}}</div>
+          </div>
+        </div>
+   
         <!--mat-tab-group mat-align-tabs="start" style="width: 100%;" -->
           <!-- mat-tab label="Text Input" style="width: 100%;" -->          
             <app-text-input-form></app-text-input-form>
@@ -44,13 +51,7 @@
           </mat-tab>
         </mat-tab-group -->
       </div>
-      <div class="query-actions">
-        <button mat-flat-button color="primary" (click) = "submitText()">Submit</button>
-        <div *ngIf="_bulkQuery">
-          <div>{{_bulkQuery.id}}</div>
-        </div>
-      </div>
-    </div>
+   </div>
 <div>
 </div>
   </mat-card>
