@@ -29,15 +29,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
-import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
-import { BulkSearchComponent } from '../bulk-search/bulk-search.component';
-import { BulkQueryComponent } from '../bulk-search/bulk-query.component';
+import { BulkSearchComponent } from '@gsrs-core/bulk-search/bulk-search.component';
+import { BulkQueryComponent } from '@gsrs-core/bulk-search/bulk-query.component';
 import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { StructureModule } from '@gsrs-core/structure/structure.module';
 import { TextInputFormComponent } from '@gsrs-core/utils/text-input-form/text-input-form.component';
-import { FileUploadFormComponent } from '../bulk-search/file-upload-form/file-upload-form.component';
+import { FileUploadFormComponent } from '@gsrs-core/bulk-search/file-upload-form/file-upload-form.component';
+import { BulkSearchSearchTermsByIdComponent } from './bulk-search-results-summary/misc/bulk-search-search-terms-by-id/bulk-search-search-terms-by-id.component';
+import { BulkSearchResultsSummaryComponent } from './bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 const bulkSearchRoutes: Routes = [
   {
@@ -82,7 +83,6 @@ const bulkSearchRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
-    SubstanceSearchSelectorModule,
     SubstanceFormModule,
     FacetsManagerModule,
     NameResolverModule,
@@ -92,13 +92,17 @@ const bulkSearchRoutes: Routes = [
     BulkQueryComponent,
     BulkSearchComponent,
     TextInputFormComponent,
-    FileUploadFormComponent
+    FileUploadFormComponent,
+    BulkSearchResultsSummaryComponent,
+    BulkSearchSearchTermsByIdComponent
   ],
   exports: [
     BulkQueryComponent,
     BulkSearchComponent,
     TextInputFormComponent,
-    FileUploadFormComponent
+    FileUploadFormComponent,
+    BulkSearchResultsSummaryComponent,
+    BulkSearchSearchTermsByIdComponent
   ]
 })
 

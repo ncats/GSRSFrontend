@@ -75,7 +75,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     if (!this.loadSummaries) {  
       if(this._summaries) { 
         this.summariesToRecordOverviews();
-        this.table.renderRows();
+        if(this.table) { 
+          this.table.renderRows();
+        }  
       }
     }
   }  
@@ -94,7 +96,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
         this._summaries = bulkSearchResults.summary;
         // as Array<Summary>;
         this.summariesToRecordOverviews();
-        this.table.renderRows();
+        if(this.table) { 
+          this.table.renderRows();
+        }
       } 
     }, error => {
         console.log("Error getting bulk search results in summary component.");

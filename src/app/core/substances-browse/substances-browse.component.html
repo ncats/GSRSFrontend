@@ -84,6 +84,13 @@
     </div>
 
     <div *ngIf="bulkSearchTerm">
+      <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
+        <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
+        <span *ngIf="bulkSearchQueryId"> 
+        | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
+        </span>
+        Bulk Search
+      </div> 
       <app-bulk-search-results-summary
         loadSummaries="false" 
         [summaries]="bulkSearchSummaries"
@@ -328,12 +335,15 @@
       <div [ngClass]="view">
 
         <div class="substance-cards">
-          <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
-            (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
-            [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
-            [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
-            [codeSystemVocab]="codeSystem">
-          </app-substance-summary-card>
+          <div *ngFor="let substance of substances">
+          <app-bulk-search-search-terms-by-id [id]="substance.uuid" [summaries]="bulkSearchSummaries"></app-bulk-search-search-terms-by-id>
+            <app-substance-summary-card  [substance]="substance"
+              (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
+              [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
+              [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
+              [codeSystemVocab]="codeSystem">
+            </app-substance-summary-card>
+          </div>
         </div>
         <div class="substance-table">
           <div class="responsive">

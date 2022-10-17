@@ -50,13 +50,15 @@ export class BulkSearchService extends BaseHttpService {
   ): Observable<BulkQuery> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
     const params = new HttpParams();
-    params.append('bulkQID', id);
+    console.log("awd zeq " +id);
+    params.append('id', id); 
+//      params: params,
+
     const options = {
-      params: params,
       type: 'JSON',
       headers: {}
     };
-    return this.http.get<BulkQuery>(url, options);
+    return this.http.get<BulkQuery>(url+'?id='+id, options);
 
   }  
 

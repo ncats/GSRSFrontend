@@ -50,7 +50,6 @@ import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { I } from '@angular/cdk/keycodes';
-import { BulkSearchResultsSummaryComponent } from 'src/app/fda/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 @Component({
   selector: 'app-substances-browse',
@@ -62,6 +61,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;
   private privateBulkSearchTerm?: string;
+  private privateBulkSearchQueryId?: number;
   private privateBulkSearchSummaries?: any;
   private privateSearchType?: string;
   private privateSearchCutoff?: number;
@@ -197,6 +197,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
     this.privateBulkSearchTerm = this.activatedRoute.snapshot.queryParams['bulk_search'] || '';
+    this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
     if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
       this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
@@ -469,9 +470,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.privateBulkSearchSummaries = pagingResponse.summary;
           }
 
-
-          // xxxx
-          // console.log(pagingResponse.summary)
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -692,6 +690,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
     navigationExtras.queryParams['bulk_search'] = this.privateBulkSearchTerm;
+    navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
@@ -847,16 +846,10 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
 
     const navigationExtras: NavigationExtras = {
-      queryParams: {}
+      queryParams: {bulkQID: this.privateBulkSearchQueryId}
     };
-
-    navigationExtras.queryParams['bulk'] = this.privateBulkSearchTerm || null;
-    navigationExtras.queryParams['type'] = this.privateSearchType || null;
-
-    if (this.privateSearchType === 'similarity') {
-      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
-    }
-
+    // awtodo this does not work, seems to be prevented from 
+    // navigating away from browse substances page.
     this.router.navigate(['/bulk-search'], navigationExtras);
   }
 
@@ -867,6 +860,8 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
 
     this.privateBulkSearchTerm = '';
+    this.privateBulkSearchQueryId = null;   
+    this.privateBulkSearchSummaries = null;
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;
     this.smiles = '';
@@ -937,6 +932,10 @@ searchTermOkforBeginsWithSearch(): boolean {
   get bulkSearchSummaries(): string {
     return this.privateBulkSearchSummaries;
   }
+  get bulkSearchQueryId(): number {
+    return this.privateBulkSearchQueryId;
+  }
+
 
   get searchType(): string {
     return this.privateSearchType;

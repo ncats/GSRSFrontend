@@ -94,7 +94,7 @@ import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
 import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
-import { BulkSearchResultsSummaryComponent } from '../fda/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
+import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 
 @NgModule({
   declarations: [
@@ -121,8 +121,7 @@ import { BulkSearchResultsSummaryComponent } from '../fda/bulk-search/bulk-searc
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
     NamesDisplayPipe,
-    SubstanceStatusPipe,
-    BulkSearchResultsSummaryComponent
+    SubstanceStatusPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -187,7 +186,8 @@ import { BulkSearchResultsSummaryComponent } from '../fda/bulk-search/bulk-searc
     Ssg4mStagesModule,
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
-    Ssg2ManufacturingModule
+    Ssg2ManufacturingModule,
+    BulkSearchModule
   ],
   providers: [
     {
@@ -214,8 +214,7 @@ import { BulkSearchResultsSummaryComponent } from '../fda/bulk-search/bulk-searc
   ],
   exports: [
     StructureEditorModule,
-    NameResolverModule,
-    BulkSearchResultsSummaryComponent
+    NameResolverModule
   ]
 })
 export class AppModule {}

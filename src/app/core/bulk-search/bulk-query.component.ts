@@ -16,6 +16,8 @@ import {
   import { BulkSearchService } from './service/bulk-search.service';
   import { BulkQuery } from './bulk-query.model';
   import { BulkSearch } from './bulk-search.model';
+  import * as lodash from 'lodash';
+
   
 
   @Component({
@@ -25,6 +27,7 @@ import {
   })
   
   export class BulkQueryComponent implements OnInit, OnDestroy {
+    _ = lodash;
     loadedComponents: LoadedComponents;
     showAudit: boolean;
     isAdmin = false;
@@ -33,7 +36,8 @@ import {
     queryText: string;
     context: string = 'substances';
     _bulkQuery: BulkQuery;
-    _bulkQueryId: number;  
+    _bulkQueryIdAfterSubmit: number;  
+    _bulkQueryIdOnLoad: number;  
     _bulkSearch: BulkSearch;
     _bulkSearchResults: any;
     _bulkSearchResultKey: string;
@@ -83,6 +87,7 @@ import {
       private notificationService: MainNotificationService,
       private bulkSearchService: BulkSearchService,      
       private configService: ConfigService,
+      private route: ActivatedRoute,
       private router: Router
     ) {
       this.queryType = 'identifiers';
@@ -95,13 +100,11 @@ import {
       this.showSpinner = true;  // Start progress spinner
   
       // Get configration values to hide/show Modules
-      this.loadedComponents = this.configService.configData.loadedComponents || null;
-  
-      if (this.loadedComponents) {
-        if (this.loadedComponents.applications) {
-          // this.getBrowseApplicationDetails();
-        }
-      }  
+      // this.loadedComponents = this.configService.configData.loadedComponents || null;
+      // if (this.loadedComponents) {
+      //  if (this.loadedComponents.applications) {
+      //  }
+      // }  
   
       this.showSpinner = false;  // Stop progress spinner
       this.loadingService.setLoading(false);
@@ -115,6 +118,9 @@ import {
         this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
         this.showAudit = this.authService.hasRoles('admin');  
       });
+
+      this.checkBulkQueryIdParameterOnLoad(); 
+
     }
   
     ngOnDestroy() {
@@ -125,46 +131,44 @@ import {
       });
     }
   
-submitText() {
-    this.queryText = this.textInputForm.textControl.value;
-    // this.postBulkQuery();
-    this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse()
- }
+  submitText() {
+      this.queryText = this.textInputForm.textControl.value;
+      // this.postBulkQuery();
+      this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse()
+  }
 
- bulkSearchSubmit(): void {
-  const eventLabel = 'Bulk search submit `${this.queryEntity}`';
-  // this.gaService.sendEvent('Application Filtering', 'icon-button:bulk-search-submit', eventLabel);
+  bulkSearchSubmit(): void {
+    const eventLabel = 'Bulk search submit `${this.queryEntity}`';
+    // this.gaService.sendEvent('Application Filtering', 'icon-button:bulk-search-submit', eventLabel);
+  }
 
-}
+  checkBulkQueryIdParameterOnLoad() { 
+    const s1 = this.route.queryParams.subscribe(params => {
+      this._bulkQueryIdOnLoad = params.bulkQID;
+      if(this._bulkQueryIdOnLoad != undefined) {
+        const s2 = this.bulkSearchService.getBulkQuery(this.context, this._bulkQueryIdOnLoad)
+        .subscribe(bulkQuery => {
+          if(bulkQuery.queries) {
+            console.log("awd check bulk query param");
+            console.log(bulkQuery.queries);
 
-postBulkQuery() {
-    this.loadingService.setLoading(true);
-    const subscription = this.bulkSearchService.postBulkQuery(
-      this.context,
-      this.queryText
-    )
-      .subscribe(bulkQuery => {
-        this.isError = false;
-        this._bulkQuery = bulkQuery;
-        const navigationExtras: NavigationExtras = {
-          queryParams: {'bulkQID': bulkQuery.id}
-        };
-        this.router.navigate(['/bulk-search-results'], navigationExtras);
-      }, error => {
-        const notification: AppNotification = {
-          message: 'There was an error trying to post a bulk query.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        subscription.unsubscribe();
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
+            this.textInputForm.textControl.setValue(this._.join(bulkQuery.queries, "\n"));
+          }
+        },
+        error => {
+          console.log("Error getting bulk query on load with bulkQID " + this._bulkQueryIdOnLoad);
+        },
+        () => {
+          s2.unsubscribe();
+        })
+      }
+    },
+    error => {
+      console.log("Error checking for bulk query id parameter on load.")  
+    },
+    () => {
+      s1.unsubscribe();
+    });
   }
 
   postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse() {
@@ -176,21 +180,22 @@ postBulkQuery() {
     .subscribe(bulkQuery => {
       this.isError = false;
       this._bulkQuery = bulkQuery;
-      this._bulkQueryId = bulkQuery.id;
+      this._bulkQueryIdAfterSubmit = bulkQuery.id;
       const s2 = this.bulkSearchService
-        .getBulkSearch(this.context, this._bulkQueryId).subscribe(bulkSearch => {
+        .getBulkSearch(this.context, this._bulkQueryIdAfterSubmit).subscribe(bulkSearch => {
         this._bulkSearch = bulkSearch;
         this._bulkSearchResultKey = this._bulkSearch.key;
-        // console.log("here abc qid: " + this._bulkQueryId);
+        // console.log("here abc qid: " + this._bulkQueryIdAfterSubmit);
         // console.log("here abc key: " + this._bulkSearchResultKey);
-
         const navigationExtras: NavigationExtras = {
-          queryParams: {'bulk_search': this._bulkSearchResultKey}
+          queryParams: {
+            'bulk_search': this._bulkSearchResultKey,
+            'bulkQID': this._bulkQueryIdAfterSubmit,
+          }
         };
         this.router.navigate(['/browse-substance'], navigationExtras);
-    
       }, error => {
-        console.log("Error getting bulk search from bulk query id.");
+        console.log("Error posting bulk search and getting bulk search result key.");
       }, () => {
           s2.unsubscribe();
       })
@@ -243,6 +248,39 @@ postBulkQuery() {
 
     queryEntitySelected($event) { 
     }
+
+/*
+
+postBulkQuery() {
+    this.loadingService.setLoading(true);
+    const subscription = this.bulkSearchService.postBulkQuery(
+      this.context,
+      this.queryText
+    )
+      .subscribe(bulkQuery => {
+        this.isError = false;
+        this._bulkQuery = bulkQuery;
+        const navigationExtras: NavigationExtras = {
+          queryParams: {'bulkQID': bulkQuery.id}
+        };
+        this.router.navigate(['/bulk-search-results'], navigationExtras);
+      }, error => {
+        const notification: AppNotification = {
+          message: 'Error trying to post a bulk query.',
+          type: NotificationType.error,
+          milisecondsToShow: 6000
+        };
+        this.isError = true;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.notificationService.setNotification(notification);
+      }, () => {
+        subscription.unsubscribe();
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+      });
+  }
+*/
 
 
   }
