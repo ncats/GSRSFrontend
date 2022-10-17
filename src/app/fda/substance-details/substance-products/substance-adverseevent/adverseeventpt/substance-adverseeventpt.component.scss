@@ -51,23 +51,23 @@ marginleft50px {
 }
 
 .colorblue {
-  color: #4b4572;
+  color: var(--deep-purple-color);
 }
 
 .colorgray {
-  color: gray;
+  color: var(--regular-grey-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .colororange {
-  color: rgb(228, 134, 46);
+  color: var(--orange-color-rgb-2);
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .width120px {
@@ -86,7 +86,7 @@ marginleft50px {
   left: 0;
   bottom: 56px;
   right: 0;
-  background: rgba(150, 148, 148, 0.15);
+  background: var(--spinner-bg-color);
   z-index: 1;
   display: flex;
   align-items: top; /* Verticle align */

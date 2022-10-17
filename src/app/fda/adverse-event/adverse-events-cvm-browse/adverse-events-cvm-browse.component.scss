@@ -16,24 +16,24 @@
 
 .include {
   ::ng-deep .mat-checkbox-frame {
-      border-color: #80CBC4;
+      border-color: var(--include-checkbox-border-color);
   }
 
   ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
   ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-      background-color: #26A69A;
+      background-color: var(--include-checkbox-bg-color);
   }
 }
 
 .exclude {
   margin-left: 5px;
   ::ng-deep .mat-checkbox-frame {
-      border-color: #EF9A9A;
+      border-color: var(--exclude-checkbox-border-color);
   }
 
   ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
   ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-      background-color: #EF5350;
+      background-color: var(--exclude-checkbox-bg-color);
   }
 }
 
@@ -101,7 +101,7 @@
 
 .selected-parameter {
   padding-right:5px;
-  background-color: white;
+  background-color: var(--regular-white-color);
   font-size:14px;
 }
 }
@@ -142,7 +142,7 @@
   padding-right: 25px;
   font-weight: 550;
   padding-top: 10px;
-  color: #4793d1;
+  color: var(--primary-color);
   width: 285px;
   /*
   font-size: 26px;
@@ -150,7 +150,7 @@
   padding-right: 25px;
   font-weight: 550;
   padding-top: 22px;
-  color: #4793d1;
+  color: var(--primary-color);
   width: 285px;
   margin-top: 35px;
   margin-right: 30px;
@@ -168,7 +168,7 @@
 }
 
 .export-button {
-  color: black;
+  color: var(--regular-black-color);
   border-radius: 4px;
 }
 
@@ -193,7 +193,7 @@
 }
 
 .page-label {
-  color:rgba(0, 0, 0, 0.54);
+  color:var(--dark-label-color);
   display:block;
   font-family:Roboto, "Helvetica Neue", sans-serif;
   font-size:14px;
@@ -221,7 +221,7 @@
 }
 
 .bad-page {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .full-paginator {
@@ -285,7 +285,7 @@
 
   .full-paginator {
     min-width: 500px !important;
-    border: 1px solid gray;
+    border: 1px solid var(--regular-grey-color);
   }
 
   .substance-data {
@@ -385,7 +385,7 @@
 @media(max-width: 505px) {
   .full-paginator {
     min-width: 0px !important;
-    border: 1px solid gray;
+    border: 1px solid var(--regular-grey-color);
   }
 
   .controls-container {
@@ -534,12 +534,12 @@
 
   .approval-id {
     font-size: 16px;
-    color: #c7254e;
+    color: var(--pink-span-color);
   }
 
   .center {
     font-size: 15px;
-    color: blue;
+    color: var(--regular-blue-color);
     display: inline-block;
 }
 }
@@ -556,7 +556,7 @@
       padding: 0 3px;
       max-width: 150px;
       overflow: hidden;
-      color: #404040;
+      color: var(--label-color);
       white-space: normal;
   }
 
@@ -665,7 +665,7 @@ height:175px;
 }
 
 .mat-paginator {
-  background: transparent;
+  background: var(--regular-transparent-color);
 }
 
 .image-thumbnail{
@@ -950,7 +950,7 @@ margin:auto;
 */
 
 .title {
-  color: #27288a;
+  color: var(--secondary-title-color);
   font-size: 24px;
   font-weight: 600px;
   padding-left:15px;
@@ -1026,10 +1026,8 @@ margin:auto;
 	min-width: 23%;
 	max-width: 23%;
 	padding: 7px;
-  /*font-size: 12px;*/
-  font-weight: bold;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-	/*background-color: #edeff2;*/
+        font-weight: bold;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .row-property-value-4 {
@@ -1080,35 +1078,35 @@ margin:auto;
 }
 
 .colorgray {
-  color: gray;
+  color: var(--regular-grey-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .colorgreen {
-  color: green;
+  color: var(--regular-green-color);
 }
 
 .colororange {
-  color: orange;
+  color: var(--regular-orange-color);
 }
 
 .colorlightblue {
-  color: #1945bd;
+  color: var(--blue-color);
 }
 
 .bordergray {
-  border:1px solid gray;
+  border:1px solid var(--regular-grey-color);
 }
 
 .borderlightorange-bottom {
-  border-bottom:1px solid #f8cf88;
+  border-bottom:1px solid var(--light-orange-color);
 }
 
 .borderlightgray {
-  border:1px solid #bbc2a4;
+  border:1px solid var(--light-green-color);
 }
 
 .padtop5px {
@@ -1141,10 +1139,10 @@ margin:auto;
 
 .totalApp {
   display:inline-block;
-  color:#FFFFFF;
-  border:1px solid #CCC;
-  background:#60615e;
-  box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+  color:var(--white-color);
+  border:1px solid var(--grey-border-color);
+  background:var(--dark-grey-bg-color);
+  box-shadow: 0 0 5px -1px var(--box-shadow-color);
   vertical-align:middle;
   max-width: 100px;
   font-weight: 500;
@@ -1158,7 +1156,7 @@ margin:auto;
   width: 50px;
   height: 50px;
   padding: 0px;
-  border: 10px solid blue;
+  border: 10px solid var(--regular-blue-color);
 }
 
 .width100percent {

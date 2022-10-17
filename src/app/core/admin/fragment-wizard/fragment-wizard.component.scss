@@ -85,9 +85,9 @@
 
 
 .ERROR {
-    background-color: red;
-    color: #a94442;
-    background-color: #f2dede;
+    background-color: var(--regular-red-color);
+    color: var(--error-dialog-color);
+    background-color: var(--error-dialog-bg-color);
     padding: 4px 5px;
     margin-right: 5px;
     border-radius: 5px;
@@ -95,16 +95,16 @@
 
 
 .WARNING {
-color: #8a6d3b;
-background-color: #fcf8e3;
+color: var(--warning-dialog-color);
+background-color: var(--warning-dialog-bg-color);
 padding: 4px 5px;
 margin-right: 5px;
 border-radius: 5px;
 }
 
 .INFO {
-color: black;
-background-color: lightgray;
+color: var(--regular-black-color);
+background-color: var(--regular-lightgray-color);
 padding: 4px 5px;
 margin-right: 5px;
 border-radius: 5px;

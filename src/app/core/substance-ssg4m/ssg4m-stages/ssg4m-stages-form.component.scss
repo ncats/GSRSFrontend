@@ -11,12 +11,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {
@@ -57,7 +57,7 @@
 .materialborder {
   padding-top: 10px;
   margin-top: 15px;
-  border: 2px solid rgb(182, 175, 175);
+  border: 2px solid var(--pale-border-color-rgb-4);
 }
 
 .materialtitle {
@@ -75,11 +75,11 @@
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .borderorange {
-  border: 1px solid orangered;
+  border: 1px solid var(--regular-orangered-color);
 }
 
 .fontsize18px {
@@ -87,7 +87,7 @@
 }
 
 .colorgreen {
-  color: green;
+  color: var(--regular-green-color);
 }
 
 .margintop10px {

@@ -6,11 +6,11 @@
 .custom {
   padding-bottom: 10px;
   padding-top:10px;
-  border-bottom: 1px solid rgba(0, 0, 0, .45);
+  border-bottom: 1px solid var(--box-shadow-color-6);
 }
 
 .deselect {
-  color: rgba(0, 0, 0, .5);
+  color: var(--text-color);
 }
 
 .add-term {
@@ -34,6 +34,6 @@
 
 
 .add-term {
-  color:#229fdd;
+  color: var(--secondary-blue);
   font-style: italic;
 }

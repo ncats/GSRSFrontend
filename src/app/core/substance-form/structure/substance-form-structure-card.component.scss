@@ -41,8 +41,8 @@
   }
 
   .SUCCESS {
-    color: #3f914c;
-    background-color: #def2de;
+    color: var(--success-green-color);
+    background-color: var(--success-green-bg-color);
 
   }
 
@@ -53,7 +53,7 @@
     transition: all 500ms ease-out;
     max-width: 1028px;
     width: 100%;
-    background-color: white;
+    background-color: var(--regular-white-color);
     display: flex;
     flex-direction: column;
       max-height: 500px;
@@ -81,15 +81,14 @@
   }
 
 .WARNING {
-  color: #8a6d3b;
-  background-color: #fcf8e3;
+  color: var(--warning-dialog-color);
+  background-color: var(--warning-dialog-bg-color);
 
 }
 
-
 .ERROR {
-  color: #a94442;
-  background-color: #f2dede;
+  color: var(--error-dialog-color);
+  background-color: var(--error-dialog-bg-color);
 }
 
 .dupe-check {
@@ -98,7 +97,7 @@
 }
 
 .internal-link {
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 

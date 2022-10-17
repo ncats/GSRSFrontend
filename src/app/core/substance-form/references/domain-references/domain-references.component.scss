@@ -1,3 +1,4 @@
+/* awtodo keep domain-reference ?? */
 .domain-reference {
     display: block;
     padding: 5px 0 10px 0;
@@ -37,8 +38,8 @@
 }
 
 .custom-badge > .mat-badge-content {
-  background-color: white !important;
-  color: rgb(71, 147, 209) !important;
+  background-color: var(--regular-white-color) !important;
+  color: var(--secondary-rgb-blue) !important;
 }
 
 .title-actions {

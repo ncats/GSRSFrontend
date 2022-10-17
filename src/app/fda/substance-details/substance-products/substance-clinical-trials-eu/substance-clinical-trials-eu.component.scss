@@ -22,11 +22,11 @@
 }
 
 .colorgray {
-	color: gray;
+	color: var(--regular-grey-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .padleft25px {
@@ -38,7 +38,7 @@
 }
 
 .colorblue {
-  color: #4b4572;
+  color: var(--deep-purple-color);
 }
 
 .spinnerstyle {
@@ -47,7 +47,7 @@
   left: 0;
   bottom: 56px;
   right: 0;
-  background: rgba(150, 148, 148, 0.15);
+  background: var(--spinner-bg-color);
   z-index: 1;
   display: flex;
   align-items: top; /* Verticle align */

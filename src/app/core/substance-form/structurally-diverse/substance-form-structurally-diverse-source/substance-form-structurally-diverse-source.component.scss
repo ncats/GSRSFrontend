@@ -9,12 +9,11 @@
   padding: 10px;
   align-items: flex-end;
 }
+
 .form-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-
-
 
   .checkbox-container, .radio-container {
     padding-bottom: 18px;
@@ -31,7 +30,6 @@
 
 }
 
-
 .column-radio {
   ::ng-deep .mat-radio-label {
     flex-direction: column-reverse;
@@ -41,19 +39,16 @@
     padding-left: 0;
     font-size: 11px;
     padding-bottom: 4px;
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--dark-label-color);
     font-weight: 400;
     font-family: Roboto, "Helvetica Neue", sans-serif;
   }
 }
 
-
 ::ng-deep .related-substance img {
   max-width:125px !important;
   margin: auto;
 }
-
-
 
 .type {
   ::ng-deep mat-radio-button {

@@ -35,12 +35,12 @@
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .button-style {
-  background-color:rgba(22, 84, 218, 0.753);
-  color: #ffffff;
+  background-color:var(--blue-bg-color-rgb);
+  color: var(--white-color);
   text-decoration: none;
   vertical-align: middle;
   font-weight: 600;
