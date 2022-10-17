@@ -1,7 +1,31 @@
+
 .selected-substance-container {
     max-width: 100%;
     width: 100%;
 }
+
+.zoom {
+    cursor: zoom-in !important;
+}
+
+::ng-deep .zoom:hover {
+    cursor: zoom-in !important;
+
+}
+
+.zoom:hover {
+    cursor: zoom-in !important;
+
+}
+
+
+.centered {
+    text-align: center;
+    margin-left: -42px;
+    margin-top: 5px;
+}
+
+
 
 .selected-substance {
     display: flex;
@@ -14,12 +38,18 @@
         display: block;
         max-width: 200px;
     }
+     img :hover {
+        cursor: zoom-in !important;
+    
+    }
 }
 
 .undo {
     float: right;
     margin-top: -5px;
 }
+
+
 
 .selected-substance-options {
     position: absolute;

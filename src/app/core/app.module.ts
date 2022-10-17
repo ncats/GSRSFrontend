@@ -213,6 +213,10 @@ import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent
+  ],
+  exports: [
+    StructureEditorModule,
+    NameResolverModule
   ]
 })
 export class AppModule {}
