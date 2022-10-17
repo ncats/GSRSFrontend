@@ -9,8 +9,7 @@
     </button>
   </div>
 
-  <div class="selected-substance" *ngIf="selectedSubstance" (mouseenter)="showOptions = true"
-    (mouseleave)="showOptions = false">
+  <div class="selected-substance" *ngIf="selectedSubstance">
     <div class="selected-substance-options" *ngIf="showOptions">
       <button mat-mini-fab (click)="editSelectedSubstance()">
         <mat-icon aria-label="Edit Selected Substance" svgIcon="edit" matTooltip="change selection"></mat-icon>
