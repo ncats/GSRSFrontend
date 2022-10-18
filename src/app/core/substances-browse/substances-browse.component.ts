@@ -62,8 +62,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSequenceSearchTerm?: string;
   private privateBulkSearchTerm?: string;
   private privateBulkSearchQueryId?: number;
-  private privateBulkSearchSummaries?: any;
+  private privateBulkSearchSummary?: any;
   private privateSearchType?: string;
+  private privateSearchStrategy?: string;
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
@@ -192,13 +193,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     this.setUpPrivateSearchTerm();
     
-
-    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
+    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';   
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
     this.privateBulkSearchTerm = this.activatedRoute.snapshot.queryParams['bulk_search'] || '';
     this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
+    
+    this.setUpPrivateSearchStrategy();
+
+
     if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
       this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
       this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
@@ -249,6 +253,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     if (this.privateSearchTerm) {
       this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+  }
+
+  setUpPrivateSearchStrategy() {
+    // Setting privateSearchStrategy for use cards
+    // I think privateSearchType is used differently. 
+    // I see searchType being used for 'similarity'  
+    this.privateSearchStrategy = null;
+    if(this.privateStructureSearchTerm) { 
+      this.privateSearchStrategy = 'structure';
+    } else if(this.privateSequenceSearchTerm) { 
+      this.privateSearchStrategy = 'sequence';
+    } else if(this.privateBulkSearchTerm) {
+      this.privateSearchStrategy = 'bulk';
     }
   }
 
@@ -467,7 +485,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             && pagingResponse.skip === 0
             && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
           ) {
-            this.privateBulkSearchSummaries = pagingResponse.summary;
+            this.privateBulkSearchSummary = pagingResponse.summary;
           }
 
           this.substances = pagingResponse.content;
@@ -861,7 +879,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
     this.privateBulkSearchTerm = '';
     this.privateBulkSearchQueryId = null;   
-    this.privateBulkSearchSummaries = null;
+    this.privateBulkSearchSummary = null;
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;
     this.smiles = '';
@@ -929,8 +947,8 @@ searchTermOkforBeginsWithSearch(): boolean {
   get bulkSearchTerm(): string {
     return this.privateBulkSearchTerm;
   }
-  get bulkSearchSummaries(): string {
-    return this.privateBulkSearchSummaries;
+  get bulkSearchSummary(): string {
+    return this.privateBulkSearchSummary;
   }
   get bulkSearchQueryId(): number {
     return this.privateBulkSearchQueryId;
@@ -940,6 +958,11 @@ searchTermOkforBeginsWithSearch(): boolean {
   get searchType(): string {
     return this.privateSearchType;
   }
+
+  get searchStrategy(): string {
+    return this.privateSearchStrategy;
+  }
+
 
   get searchCutoff(): number {
     return this.privateSearchCutoff;

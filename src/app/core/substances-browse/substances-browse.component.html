@@ -91,9 +91,9 @@
         </span>
         Bulk Search
       </div> 
+      <!--         [summaries]="bulkSearchSummaries" -->
       <app-bulk-search-results-summary
-        loadSummaries="false" 
-        [summaries]="bulkSearchSummaries"
+        loadSummaries=false
         context="substances"
         [key]="bulkSearchTerm"      
       ></app-bulk-search-results-summary>
@@ -333,7 +333,7 @@
       <div class="dynamic container">
       </div>
       <div [ngClass]="view">
-
+        <div>Strategy: {{searchStrategy}} (this is temporary)</div>
         <div class="substance-cards">
           <div *ngFor="let substance of substances">
           <app-bulk-search-search-terms-by-id [id]="substance.uuid" [summaries]="bulkSearchSummaries"></app-bulk-search-search-terms-by-id>
@@ -341,7 +341,7 @@
               (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
               [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
               [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
-              [codeSystemVocab]="codeSystem">
+              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy">
             </app-substance-summary-card>
           </div>
         </div>

@@ -5,6 +5,11 @@
     </a>
     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
     </mat-icon>
+    <span *ngIf="searchStrategy && searchStrategy==='bulk'">
+      <span class="match-context" *ngIf="substance._matchContext?.queries && substance._matchContext.queries.length>0">
+        (matched context: {{_.join(substance._matchContext.queries, ", ")}})
+      </span>
+    </span>
     <span class="middle-fill"></span>
     <div class="approval">
       {{substance.approvalID}}

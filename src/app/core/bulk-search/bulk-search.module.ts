@@ -37,7 +37,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { StructureModule } from '@gsrs-core/structure/structure.module';
 import { TextInputFormComponent } from '@gsrs-core/utils/text-input-form/text-input-form.component';
 import { FileUploadFormComponent } from '@gsrs-core/bulk-search/file-upload-form/file-upload-form.component';
-import { BulkSearchSearchTermsByIdComponent } from './bulk-search-results-summary/misc/bulk-search-search-terms-by-id/bulk-search-search-terms-by-id.component';
 import { BulkSearchResultsSummaryComponent } from './bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 const bulkSearchRoutes: Routes = [
@@ -93,16 +92,14 @@ const bulkSearchRoutes: Routes = [
     BulkSearchComponent,
     TextInputFormComponent,
     FileUploadFormComponent,
-    BulkSearchResultsSummaryComponent,
-    BulkSearchSearchTermsByIdComponent
+    BulkSearchResultsSummaryComponent
   ],
   exports: [
     BulkQueryComponent,
     BulkSearchComponent,
     TextInputFormComponent,
     FileUploadFormComponent,
-    BulkSearchResultsSummaryComponent,
-    BulkSearchSearchTermsByIdComponent
+    BulkSearchResultsSummaryComponent
   ]
 })
 

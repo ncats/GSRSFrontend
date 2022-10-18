@@ -80,12 +80,13 @@ export class BulkSearchService extends BaseHttpService {
 
   getBulkSearchResults(
     context: string,
-    key: string
+    key: string,
+    top?: number,
+    skip?: number,
+    qtop?: number,
+    qSkip?: number
   ): Observable<any> {
-    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';
-    console.log("url def");
-    console.log(url);
-    
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';    
     let params = new HttpParams();
     const options = {
       params: params,
@@ -94,6 +95,4 @@ export class BulkSearchService extends BaseHttpService {
     };
     return this.http.get<any>(url, options);
   }
-
-
 }

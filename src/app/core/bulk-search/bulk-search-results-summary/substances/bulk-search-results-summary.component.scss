@@ -8,7 +8,17 @@ margin-right: auto;
 .summary-title {
     font-size: 16px;
     font-weight: 550;
-    color: rgba(0, 0, 0, 0.87);
+    color: rgba(0, 0, 0, 0.87); /* awtodo */
     margin-bottom: 3px;
-    margin-bottom: 3px;
+}
+
+.export {
+    float: right;
+    margin-top: -10px;
+    font-size: small;
+}
+
+.export-button {
+    color: black;  /* awtodo */
+    border-radius: 4px;
 }

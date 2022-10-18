@@ -33,7 +33,7 @@ export interface RecordOverview {
     searchTerm?: string;
     matches?: number;
     displayName?: string
-    displayCode: string
-    displayCodeName: string
+    displayCode?: string
+    displayCodeName?: string
 }    
 
