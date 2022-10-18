@@ -12,10 +12,10 @@
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
   "authenticateAs": {
-    "apiUsername": "<SOME_SERVICE_ACCOUNT>",
-    "apiPassword": "<API_PASSWORD_HERE>",
-    "apiKey": "<API_KEY>",
-    "apiToken": "<API_TOKEN>"
+    "apiUsername": null,
+    "apiPassword": null,
+    "apiKey": null,
+    "apiToken": null
   },
   "userRegistrationConfigurations": [
     {
