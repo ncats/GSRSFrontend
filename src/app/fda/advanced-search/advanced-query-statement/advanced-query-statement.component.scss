@@ -53,21 +53,21 @@
   font-size: 12px;
 
   a {
-    color: #448aff;
+    color: var(--link-primary-color);
   }
 
   div {
-     color: gray;
+     color: var(--regular-grey-color);
      font-size: 12px; 
   }
 
   span {
-    color: black;
+    color: var(--regular-black-color);
   }
 }
 
 .mat-error {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .marginright20px {
@@ -121,5 +121,5 @@
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }

@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: transparent;
+    background-color: var(--regular-transparent-color);
 }
 
 mat-sidenav {
@@ -13,7 +13,7 @@ mat-sidenav {
 }
 
 .mat-drawer-content {
-    background-color: transparent;
+    background-color: var(--regular-transparent-color);
 }
 
 .expand-sidenav {
@@ -21,7 +21,7 @@ mat-sidenav {
     left: 0;
     top: 80px;
     z-index: 10000;
-    background-color: white;
+    background-color: var(--regular-white-color);
     border: none;
     border-top-right-radius: 25%;
     border-bottom-right-radius: 25%;
@@ -48,6 +48,6 @@ mat-sidenav {
     }
 
     mat-sidenav.mat-drawer {
-        background-color: transparent;
+        background-color: var(--regular-transparent-color);
     }
 }

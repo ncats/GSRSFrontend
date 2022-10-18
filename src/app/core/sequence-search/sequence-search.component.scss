@@ -22,7 +22,7 @@
 
     .mat-error {
         display: block;
-        background-color: white;
+        background-color: var(--regular-white-color);
         padding: 0 2px;
     }
 }
@@ -33,7 +33,7 @@
         box-sizing: border-box;
         width: 100%;
         height: 300px;
-        border: solid 1px rgba(0, 0, 0, 0.42);
+        border: solid 1px var(--textarea-dark-border-color);
         border-radius: 3px;
         padding: 10px;
     }
@@ -55,5 +55,5 @@
 .error-message {
   text-align: center;
   font-size: 16px;
-  color: red;
+  color: var(--regular-red-color);
 }

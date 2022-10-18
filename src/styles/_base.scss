@@ -21,7 +21,7 @@ a:hover, button:hover {
 .multiselect-dropdown .dropdown-btn {
   display: inline-block;
   border: 0px !important;
-  border-bottom: 1px solid rgba(0, 0, 0, .87) !important;
+  border-bottom: 1px solid var(--mat-list-color) !important;
   width: 100%;
   padding: 6px 12px;
   margin-bottom: 0;
@@ -34,9 +34,9 @@ a:hover, button:hover {
   background-image: none;
 
   .dropdown-down {
-    border-top: 5px solid rgba(0, 0, 0, 0.54) !important;
-    border-left: 5px solid transparent !important;
-    border-right: 5px solid transparent !important;
+    border-top: 5px solid var(--dark-label-color) !important;
+    border-left: 5px solid var(--regular-transparent-color) !important;
+    border-right: 5px solid var(--regular-transparent-color) !important;
   }
 }
 
@@ -47,7 +47,7 @@ a:hover, button:hover {
 
 
 .mat-button {
-  color: #1565c0;
+  color: var(--link-color);
 }
 
 .mat-form-field-type-mat-input.mat-focused {
@@ -55,6 +55,6 @@ a:hover, button:hover {
   .mat-form-field-infix {
     transition: all 500ms;
     padding-top: 5px;
-    border: 1px solid #4793d1
+    border: 1px solid var(--primary-color);
   }
 }

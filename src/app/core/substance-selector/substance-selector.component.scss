@@ -1,5 +1,4 @@
 
-
 .selected-substance-container {
     max-width: 100%;
     width: 100%;
@@ -19,10 +18,6 @@
 
 }
 
-div:hover {
-    cursor: zoom-in !important;
-
-}
 
 .centered {
     text-align: center;
@@ -30,20 +25,9 @@ div:hover {
     margin-top: 5px;
 }
 
-.selected-substance:hover {
-    cursor: zoom-in !important;
-}
 
-::ng-deep .related-image:hover {
-    cursor: zoom-in !important;
-}
-
-::ng-deep .related-image {
-    cursor: zoom-in !important;
-}
 
 .selected-substance {
-    cursor: zoom-in !important;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -66,13 +50,6 @@ div:hover {
 }
 
 
-.selected-substance-options :hover { 
-    cursor: zoom-in !important;
-}
-
-::ng-deep .selected-substance-options :hover { 
-    cursor: zoom-in !important;
-}
 
 .selected-substance-options {
     position: absolute;
@@ -80,11 +57,10 @@ div:hover {
     top: 15px;
     display: flex;
     flex-direction: column;
-    cursor: zoom-in !important;
 
     .mat-mini-fab {
-        background-color: rgba(242, 242, 242, .85);
-        color: #404040;
+        background-color: var(--mat-icon-button-bg-color);
+        color: var(--label-color);
         width: 35px;
         height: 35px;
 

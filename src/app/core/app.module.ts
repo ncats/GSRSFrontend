@@ -95,6 +95,8 @@ import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg
 import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
 import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
 import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
+.component';
+import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 
 @NgModule({
   declarations: [
@@ -121,7 +123,9 @@ import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
     SubstanceHistoryDialogComponent,
     ShowMolfileDialogComponent,
     NamesDisplayPipe,
-    SubstanceStatusPipe
+    SubstanceStatusPipe,
+    RegisterComponent,
+    PwdRecoveryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

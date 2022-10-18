@@ -34,12 +34,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {

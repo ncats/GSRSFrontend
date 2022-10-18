@@ -1,11 +1,15 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, Inject } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingService } from '../../loading/loading.service';
 import { MainNotificationService } from '../../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../../main-notification/notification.model';
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import { Subscription } from 'rxjs';
+import { RegisterComponent } from '../../register/register.component';
+import { DOCUMENT } from '@angular/common';
+import { PwdRecoveryComponent } from '@gsrs-core/pwd-recovery/pwd-recovery.component';
 
 @Component({
   selector: 'app-login',
@@ -20,13 +24,16 @@ export class LoginComponent implements OnInit, OnDestroy {
     password: new FormControl('', Validators.required)
   });
   private subscriptions: Array<Subscription> = [];
+  private newuserinfo = {};
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog,
+    @Inject(DOCUMENT) private document: Document 
   ) { }
 
   @HostListener('keyup', ['$event'])
@@ -88,6 +95,36 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       });
     }
+  }
+
+  register() {
+    console.log('user wants to register')
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    const dialogRef = this.dialog.open(RegisterComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(
+      data => {
+        this.newuserinfo = data;
+        let emailText = 'Please register this user: \n Username: ' + data.username + ' \n User email: ' + data.email;
+        console.log('emailText::', emailText);
+        let emailTemplate = '<html><head></head><body><h3>Please register this user in PublicReg:</h3><br><h3>Username: ' + 
+        data.username + '</h3><br><h3>User email: ' + data.email + '</h3></body></html>'
+        this.document.location = "mailto:kesandu.nwokolo@labshare.org"
+        +"?subject=New User Registration"+"&body="+ (emailTemplate);
+        console.log('email sending...');
+      }
+
+    );
+  }
+
+  callPwdPage(type: string) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = type;
+    const dialogRef = this.dialog.open(PwdRecoveryComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe();
   }
 
 }
