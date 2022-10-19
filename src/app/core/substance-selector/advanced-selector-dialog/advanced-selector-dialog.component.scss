@@ -139,7 +139,6 @@ max-width: 1265px;
 
 .tile .image-thumbnail {
   margin:auto;
-  margin-bottom:20px;
   height:175px;
   width:175px;
 }
@@ -228,11 +227,14 @@ max-width: 1265px;
     align-content: center;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
 
     button {
         margin-top: 15px;
     }
+}
+
+.add-height {
+    height: 20px;
 }
 
 .facet-advanced-options-link {

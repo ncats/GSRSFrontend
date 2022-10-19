@@ -440,10 +440,10 @@ private privateSequenceSearchKey?: string;
         this.selectSubstance(substance);
 
       }
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1003';
       subscription.unsubscribe();
     }, () => {
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1003';
       subscription.unsubscribe();
     });
 

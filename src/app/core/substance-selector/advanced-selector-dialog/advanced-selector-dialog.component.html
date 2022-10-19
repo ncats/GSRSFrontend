@@ -116,15 +116,20 @@
                 [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
             </div>
           </div>
-          <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+          <div *ngIf = "substance._matchContext && substance._matchContext.similarity" class = "add-height">
             <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
           </div>
-          <div class="tile-name">
-            <span class="substance-name-2 table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [matTooltip]= "substance._name">
-            </span>
-            <a class="substance-name table-view-name" (click) = "selectSubstance(substance)">Select Substance
-            </a>
-          </div>
+          <div *ngIf = "!substance._matchContext || !substance._matchContext.similarity" class = "add-height">
+            &nbsp;
+            </div>
+            <div class="tile-name">
+                <span class="substance-name-2" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [matTooltip]= "substance._name">
+                </span>
+              </div>
+              <div class="tile-name">
+                <a class="substance-name table-view-name" (click) = "selectSubstance(substance)" >Select Substance
+                </a>
+              </div>
 
         </div>
 
@@ -195,11 +200,8 @@
               [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
           </div>
         </div>
-        <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
-          <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
-        </div>
         <div class="tile-name">
-          <span class="substance-name-2 table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [matTooltip]= "substance._name">
+          <span class="substance-name-2 " [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [matTooltip]= "substance._name">
           </span>
         </div>
         <div class="tile-name">
