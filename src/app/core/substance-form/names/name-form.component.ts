@@ -46,7 +46,6 @@ export class NameFormComponent implements OnInit, OnDestroy {
     });
     definition.unsubscribe();
 
-
   }
 
   ngOnDestroy() {

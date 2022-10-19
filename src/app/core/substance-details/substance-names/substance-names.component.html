@@ -18,7 +18,6 @@
   <span class = "middle-fill"></span>
     <mat-label class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="toggleFilter()">{{showHideFilterText}}</mat-label>
 </div>
-
 <div class="responsive">
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
@@ -27,10 +26,10 @@
       </th>
       <td mat-cell *matCellDef="let name" >
         <span [innerHTML] = "name._nameHTML ? name._nameHTML : name.name"></span>
-        <span *ngIf="name.displayName == true" matTooltip="Display Name">
+        <span *ngIf="name.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>
-        <span *ngIf="name.preferred == true" matTooltip="Additional Listing Name">
+        <span *ngIf="name.preferred == true" matTooltip="{{ 'preferredTitle' | elementLabel : 'substance_names_name' }}">
           <mat-icon class="icon-align grey-font" svgIcon="done"></mat-icon>
         </span>
         <span *ngIf="name.access.length" matTooltip="Not Public">
@@ -43,7 +42,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Std. Name
       </th>
       <td mat-cell *matCellDef="let name" >{{name.stdName}}
-        <span *ngIf="name.displayName == true" matTooltip="Display Name">
+        <span *ngIf="name.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>
         <span *ngIf="name.access.length" matTooltip="Not Public">
@@ -73,7 +72,7 @@
         </div>
       </th>
       <td mat-cell *matCellDef="let name" >{{name.name}}
-        <span *ngIf="name.displayName == true" matTooltip="Display Name">
+        <span *ngIf="name.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>
         <span *ngIf="name.access.length" matTooltip="Not Public">
@@ -91,7 +90,7 @@
         </div>
       </th>
       <td mat-cell *matCellDef="let name" >{{name.stdName}}
-        <span *ngIf="name.displayName == true" matTooltip="Display Name">
+        <span *ngIf="name.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>
         <span *ngIf="name.access.length" matTooltip="Not Public">
@@ -148,7 +147,7 @@
         </div>
       </th>
       <!-- <td mat-cell *matCellDef="let name" >{{name.stdName}}
-        <span *ngIf="name.displayName == true" matTooltip="Display Name">
+        <span *ngIf="name.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
           <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
         </span>
         <span *ngIf="name.access.length" matTooltip="Not Public">
