@@ -134,8 +134,7 @@ private privateSequenceSearchKey?: string;
   this.overlayContainer = this.overlayContainerService.getContainerElement();
 
   if(this.dat && this.dat.uuid && this.data.tab !== 1) {
-   // this.structureService.getMolfile(this.dat.uuid);
-   console.log(this.data.tab);
+    this.structureService.getMolfile(this.dat.uuid);
   }
 
   if(this.dat && this.dat.name) {
