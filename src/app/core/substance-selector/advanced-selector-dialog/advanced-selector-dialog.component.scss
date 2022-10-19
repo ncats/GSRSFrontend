@@ -155,12 +155,21 @@ max-width: 1265px;
   overflow: hidden;
   width:100%;
   height:25px;
+  text-align: center;
 }
 
 .tile-name ::ng-deep {
     svg {
         margin-bottom: -10px;
     }
+}
+
+.expand-button {
+    align-content: flex-end;
+    color: #448aff;
+}
+.mat-expansion-panel {
+    box-shadow: none !important;
 }
 
 .substance-tiles{

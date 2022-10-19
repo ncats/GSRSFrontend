@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';
 import { InterpretStructureResponse } from './structure-post-response.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -54,7 +53,7 @@ export class StructureService {
 
   resolveName(name: string): Observable<ResolverResponse[]> {
     const url = `${this.configService.configData.apiBaseUrl}resolve?name=${encodeURIComponent(name)}`;
-    return this.http.get<ResolverResponse[]>(url);
+    return this.http.get<ResolverResponse[]>(url).pipe(timeout(15000));
   }
 
   formatFormula(structure: SubstanceStructure ):string {

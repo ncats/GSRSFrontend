@@ -5,7 +5,7 @@ import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controll
 import { LoadingService } from '@gsrs-core/loading';
 import { EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { StructureService, InterpretStructureResponse, StructureImageModalComponent } from '@gsrs-core/structure';
+import { StructureService, InterpretStructureResponse, StructureImageModalComponent, StructureImportComponent } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
@@ -13,6 +13,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { ConfigService } from '@gsrs-core/config';
+import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 @Component({
   selector: 'app-advanced-selector-dialog',
   templateUrl: './advanced-selector-dialog.component.html',
@@ -57,6 +58,8 @@ substances?: Array<any>;
 nameSubstances?: Array<any>;
 nameResponse: any;
 response: any;
+
+panelOpenState = true;
 private overlayContainer: HTMLElement;
 
 private privateSearchTerm = '';
@@ -120,7 +123,6 @@ private privateSequenceSearchKey?: string;
   }
 
   ngOnInit(): void {  
-    this.activeTab = this.data.tab;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   
     if (this.privateTerm.simplifiedStructure) {
@@ -131,13 +133,18 @@ private privateSequenceSearchKey?: string;
   }
   this.overlayContainer = this.overlayContainerService.getContainerElement();
 
-  if(this.dat && this.dat.uuid) {
-    this.structureService.getMolfile(this.dat.uuid);
+  if(this.dat && this.dat.uuid && this.data.tab !== 1) {
+   // this.structureService.getMolfile(this.dat.uuid);
+   console.log(this.data.tab);
   }
 
   if(this.dat && this.dat.name) {
     this.searchValue = this.dat.name;
   }
+  this.activeTab = this.data.tab;
+  setTimeout(() => {
+    this.activeTab = this.data.tab;
+  }, 10);
 
   }
 
@@ -302,6 +309,9 @@ private privateSequenceSearchKey?: string;
           } else {
             this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
             this.totalSubstances = pagingResponse.total;
+            if (this.totalSubstances > 0) {
+              this.panelOpenState = false;
+            }
           }
 
           if (pagingResponse.total % this.pageSize === 0) {
@@ -327,19 +337,56 @@ private privateSequenceSearchKey?: string;
         });
 
       }
-  getPossibleSmiles(smi) {
 
+      openStructureImportDialog(): void {
+        const dialogRef = this.dialog.open(StructureImportComponent, {
+          height: 'auto',
+          width: '650px',
+          data: {}
+        });
+      //  this.overlayContainer.style.zIndex = '1002';
     
-  }
-
-  fragmentType(domain: any, current?: any) {
-  
-  }
-
-  getFragmentCV() {
-   
+        dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+          if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
+            this.editor.setMolecule(structurePostResponse.structure.molfile);
+          }
+        }, () => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+        });
+      }
     
-  }
+      openStructureExportDialog(): void {
+        const dialogRef = this.dialog.open(StructureExportComponent, {
+          height: 'auto',
+          width: '650px',
+          data: {
+            molfile: this.editor.getMolfile(),
+            smiles: this.editor.getSmiles()
+          }
+        });
+      //  this.overlayContainer.style.zIndex = '1002';
+    
+        dialogRef.afterClosed().subscribe(() => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+        }, () => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+        });
+      }
+
+
   checkImg(term: any) {
     term.fragmentSrc = this.CVService.getStructureUrlFragment(term.fragmentStructure);
     term.simpleSrc = this.CVService.getStructureUrlFragment(term.simplifiedStructure);
@@ -411,7 +458,7 @@ private privateSequenceSearchKey?: string;
     if (type && type === 'name') {
       this.namePageSize = pageEvent.pageSize;
       this.namePageIndex = pageEvent.pageIndex;
-        this.searchSubstances();
+        this.searchSubstances(null, null, 'name');
   
       
 
