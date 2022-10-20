@@ -45,6 +45,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
       this.substanceType = def.substanceClass;
     });
     definition.unsubscribe();
+    
 
   }
 

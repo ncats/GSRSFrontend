@@ -18,6 +18,7 @@
   <span class = "middle-fill"></span>
     <mat-label class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="toggleFilter()">{{showHideFilterText}}</mat-label>
 </div>
+
 <div class="responsive">
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
