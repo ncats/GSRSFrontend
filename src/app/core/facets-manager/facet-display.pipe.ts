@@ -66,7 +66,20 @@ export class FacetDisplayPipe implements PipeTransform {
     if (name === 'GInAS Domain') {
       return 'Domain';
     }
+    if (args === 'relationships') {
+      if (name.indexOf('->') >= 0) {
+        let temp = name.split ('->');
+        if (temp[0].trim() === 'PARENT') {
+          return temp[1].trim() + ' (PARENT)';
+        } else {
+          return temp[0].trim() + ' -> ' + temp[1].trim();
+        }
+      }
+    }
+    
     return name.trim();
   }
+
+  
 
 }

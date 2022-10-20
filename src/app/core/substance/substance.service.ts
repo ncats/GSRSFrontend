@@ -175,7 +175,6 @@ export class SubstanceService extends BaseHttpService {
     if (searchTerm != null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
-
     params = params.appendFacetParams(facets, this.showDeprecated);
 
     params = params.appendDictionary({
@@ -686,11 +685,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
 
-  test(): Observable<any> {
-    const refuuid = `${this.apiBaseUrl}substances/search?acets=Substance Class*chemical.true&top=10&skip=0&order=$root_lastEdited&fdim=10`;
 
-    return this.http.get<any>(refuuid);
-  }
   getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, pageQuery?: string, otherFacets?: string): Observable<FacetQueryResponse> {
     let url: string;
 
@@ -703,6 +698,14 @@ export class SubstanceService extends BaseHttpService {
       url = nextUrl;
     } else {
       url = facet._self;
+    }
+    if (otherFacets) {
+      let temp = facet._self.split('&');
+      temp.forEach(val => {
+        if (val.indexOf('facet') >= 0) {
+          url += '&' + val;
+        }
+      });
     }
     return this.http.get<FacetQueryResponse>(url);
   }

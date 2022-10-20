@@ -173,7 +173,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngOnInit() {
-    this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
     this.gaService.sendPageView('Browse Substances');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
@@ -221,6 +220,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     if (deprecated && deprecated === 'true' && this.showAudit) {
       this.showDeprecated = true;
     }
+    this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets );
 
     this.subscriptions.push(authSubscription);
     this.isComponentInit = true;

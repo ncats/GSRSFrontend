@@ -28,7 +28,7 @@
 }
 
 .colorgray {
-	color: gray;
+	color: var(--regular-grey-color);
 }
 
 .padleft25px {
@@ -40,16 +40,16 @@
 }
 
 .colorblue {
-  color: #4b4572;
+  color: var(--deep-purple-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .btn1 {
-  color : rgb(49, 46, 46);
-  background-color: rgba(255, 222, 121, 0.96);
+  color : var(--maroon-color);
+  background-color: var(--light-yellow-color-3);
   border-radius: 10px 0 0 10px;
   font-size: 16px;
 }
@@ -60,16 +60,9 @@
   left: 0;
   bottom: 56px;
   right: 0;
-  background: rgba(150, 148, 148, 0.15);
+  background: var(--spinner-bg-color);
   z-index: 1;
   display: flex;
   align-items: top; /* Verticle align */
   justify-content: center; /* horizonal align */
 }
-
-/*
-.mat-raised-button.mat-primary {
-  line-height: 25px;
-  padding: 2px 8px; 
-}
-*/

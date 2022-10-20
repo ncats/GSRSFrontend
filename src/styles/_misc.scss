@@ -17,10 +17,7 @@
 
 
 body {
- /* background-color: rgba(119, 150, 202, .05);
- background-color: rgba(94, 145, 186, .08)*/
-
- background-color: rgba(94, 145, 186, 0.12);
+ background-color: var(--body-bg-color);
 }
 .name-value {
     display: flex;
@@ -48,11 +45,11 @@ body {
 }
 
 .blue-font {
-    color: #1565C0
+    color: var(--link-color);
 }
 
 .grey-font {
-  color: grey;
+  color: var(--regular-grey-color);
 }
 
 .capitalized {
@@ -94,7 +91,7 @@ body {
 }
 
 .link {
-    color: #1E88E5;
+    color: var(--link-color);
 }
 
 .font-medium-bold {
@@ -132,30 +129,30 @@ body {
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
-  color: #fff;
+  color: var(--tabstyle-bg-img-start-color);
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  background-color: #777;
+  background-color: var(--light-grey-color);
   border-radius: 10px;
 }
 
 .black-pill, .gray-pill, .blue-pill {
-  color: white;
+  color: var(--regular-white-color);
   padding: 1px 7px;
   border-radius: 11px;
 }
 
 .black-pill {
-  background-color: black;
+  background-color: var(--regular-black-color);
 }
 
 .gray-pill {
-  background-color: gray;
+  background-color: var(--regular-grey-color);
 }
 
 .blue-pill {
-  background-color:#448aff;
+  background-color: var(--link-primary-color);
 }
 
 .dialog-close{
@@ -242,7 +239,7 @@ body {
   font-size: 11px;
   padding-bottom: 3.5px;
   line-height: 11px;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--dark-label-color);
   font-weight: 400;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
@@ -250,12 +247,12 @@ body {
 textarea {
   box-sizing: border-box;
   width: 100%;
-  border: solid 1.5px rgba(0, 0, 0, 0.42);
+  border: solid 1.5px var(--textarea-dark-border-color);
   border-radius: 3px;
   padding: 10px;
 
   ::placeholder {
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--dark-label-color);
     font-weight: 400;
     font-size: 14px;
   }
@@ -293,12 +290,12 @@ textarea {
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .hidden {
@@ -317,7 +314,7 @@ textarea {
 .disabled {
   pointer-events: none !important;
   cursor: default !important;
-  color: #595959 !important;
+  color: var(--structure-import-color) !important;
   text-decoration: none;
 }
 

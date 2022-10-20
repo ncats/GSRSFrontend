@@ -1,0 +1,31 @@
+.container {
+    width: 100%;
+    //display: flex;
+    align-items: center;
+    justify-content: center;
+    //padding: 86px 20px 20px 20px;
+}
+
+.mat-card {
+    max-width: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 20px;
+}
+
+.mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.exitBtn {
+    float: right;
+    width: 1px;
+    cursor: pointer;
+}

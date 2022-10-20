@@ -1,3 +1,4 @@
+/* awtodo not sure about differences */
 .message {
     padding: 10px;
 }
@@ -18,7 +19,7 @@
 
 .italics {
     font-style: italic;
-    color: rgba(0, 0, 0, .5);
+    color: var(--text-color);
 }
 
 .file-name {
@@ -28,8 +29,7 @@
     margin-top: auto;
     margin-bottom: auto;
     font-size: 15px;
-    color: rgba(0, 0, 0, .8);
-    font-weight: bold;
+    color: var(--deprecated-color);
 }
 
 .full-row {

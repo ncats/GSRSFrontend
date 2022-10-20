@@ -58,9 +58,9 @@
 }
 
 .error-msg {
-    background: red;
-    color: white;
-    border: 1px solid black;
+    background: var(--regular-red-color);
+    color: var(--regular-white-color);
+    border: 1px solid var(--regular-black-color);
 }
 
 .box-label {

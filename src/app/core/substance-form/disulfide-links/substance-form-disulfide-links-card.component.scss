@@ -12,12 +12,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row2 {
@@ -64,23 +64,23 @@
 .alternate-backgrounds2 {
 
   &:nth-child(4n) {
-    background-color: rgba(68, 138, 255, .07);
+    background-color: var(--nth-child-color-2);
 
     ::ng-deep {
 
       .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-        background-color: rgba(68, 138, 255, .15);
+        background-color: var(--nth-child-color-3);
       }
     }
   }
 
   &:nth-child(4n + 3) {
-    background-color: rgba(68, 138, 255, .07);
+    background-color: var(--nth-child-color-2);
 
     ::ng-deep {
 
       .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-        background-color: rgba(68, 138, 255, .15);
+        background-color: var(--nth-child-color-3);
       }
     }
   }
@@ -89,7 +89,7 @@
     ::ng-deep {
 
       .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-        background-color: rgba(128, 128, 128, .15);
+        background-color: var(--nth-child-color-1);
       }
     }
   }
@@ -98,14 +98,14 @@
     ::ng-deep {
 
       .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-        background-color: rgba(128, 128, 128, .15);
+        background-color: var(--nth-child-color-1);
       }
     }
   }
 
   ::ng-deep {
     .mat-expansion-panel, .mat-table, textarea {
-      background-color: transparent;
+      background-color: var(--regular-transparent-color);
     }
   }
 }
