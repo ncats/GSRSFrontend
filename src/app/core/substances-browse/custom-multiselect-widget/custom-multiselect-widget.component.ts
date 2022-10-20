@@ -18,6 +18,9 @@ export class CustomMultiselectWidgetComponent extends SelectWidget implements On
   }
 
   ngOnInit(): void {
+    if (this.schema.CVDomain) {
+
+   
     this.cvService.fetchFullVocabulary(this.schema.CVDomain).subscribe(response => {
       console.log(response);
       if (response.content && response.content.length > 0) {
@@ -27,5 +30,6 @@ export class CustomMultiselectWidgetComponent extends SelectWidget implements On
 
     
   }
+}
 
 }
