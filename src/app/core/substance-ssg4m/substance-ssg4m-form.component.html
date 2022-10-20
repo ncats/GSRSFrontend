@@ -91,10 +91,16 @@
     <div *ngIf="showRegisterEditTitle === 'true'">
     -->
   <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
+
     <div>
-      <span class="colorbluefda fontbold padleft25px">{{(uuid && !imported) ? 'Editing ' : 'Registering New '}} -
+      <span class="colorbluefda fontbold padleft25px">{{(id && !imported) ? 'Editing ' : 'Registering New '}} -
         Specified Substance Group 4 Manufacturing
       </span>
+    </div>
+
+    <!-- If Error Message exists, display here -->
+    <div *ngIf="errorMessage"  class="bordergray colorred margintop10px padleft25px fontsize16px padall25px bkcoloryellow">
+      <div [innerHTML]="errorMessage"></div>
     </div>
 
     <div class="scrollable-container">

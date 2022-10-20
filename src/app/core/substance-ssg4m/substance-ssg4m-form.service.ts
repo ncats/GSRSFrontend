@@ -301,6 +301,18 @@ export class SubstanceSsg4mService implements OnDestroy {
     this._bypassUpdateCheck = true;
   }
 
+  checkSsg4mServerStatus(): Observable<String> {
+    const url = this.apiBaseUrlSsg4mEntityUrl;
+    return this.http.get<String>(url);
+  }
+
+  getSsg4mDetails(id: string, version?: string): Observable<Ssg4mSyntheticPathway> {
+    // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m/${id}`;
+    const url = this.apiBaseUrlSsg4mEntityUrl + id;
+
+    return this.http.get<Ssg4mSyntheticPathway>(url);
+  }
+
   saveSsg4m(ssg4m: Ssg4mSyntheticPathway, type?: string): Observable<Ssg4mSyntheticPathway> {
     // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m`;
     const url = this.apiBaseUrlSsg4mEntityUrl;
@@ -446,10 +458,4 @@ export class SubstanceSsg4mService implements OnDestroy {
     }
   }
 
-  getSsg4mDetails(id: string, version?: string): Observable<Ssg4mSyntheticPathway> {
-    // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m/${id}`;
-    const url = this.apiBaseUrlSsg4mEntityUrl + id;
-
-    return this.http.get<Ssg4mSyntheticPathway>(url);
-  }
 }
