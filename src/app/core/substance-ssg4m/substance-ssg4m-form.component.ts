@@ -1095,10 +1095,15 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {});
+    let data = {
+      isCoreSubstance: 'false'
+    };
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: data
+    });
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue') => {
 
       this.substanceSsg4mService.bypassUpdateCheck();
       if (response === 'continue') {
@@ -1108,13 +1113,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         // } else if (response === 'browse') {
         //  this.router.navigate(['/browse-substance']);
-      } else if (response === 'view') {
-        this.router.navigate(['/substances-ssg4m', this.id]);
-      } else {
-        this.submissionMessage = 'Substance was saved successfully!';
-        if (type && type === 'approve') {
-          this.submissionMessage = 'Substance was approved successfully';
-        }
+    //  } else if (response === 'home') {
+     //   this.router.navigate(['/home']);
+    //  } else {
         this.showSubmissionMessages = true;
         this.validationResult = false;
         setTimeout(() => {
