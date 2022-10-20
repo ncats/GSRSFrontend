@@ -29,7 +29,6 @@
     }
   ],
   "elementLabelDisplay": {
-    "configuration": {}, 
     "labels": {
       "substance_names_name": {
           "displayNameTitle": "Display Name",
