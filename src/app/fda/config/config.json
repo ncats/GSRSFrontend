@@ -17,17 +17,6 @@
     "apiKey": null,
     "apiToken": null
   },
-  "userRegistrationConfigurations": [
-    {
-      "name": "emailForm",
-      "active": true,
-      "adminRecipientEmails": ["email1@domain.com", "email1@domain.com"],
-      "instanceApplicationName": "GSRS",
-      "instanceApplicationSubjectTag": "GSRS",
-      "emailSubjectTemplate": "[%s] New User",
-      "emailBodyTemplate": "Please register this user in %s\n\nUsername: %s\nUser email: %s\n"
-    }
-  ],
   "elementLabelDisplay": {
     "labels": {
       "substance_names_name": {
