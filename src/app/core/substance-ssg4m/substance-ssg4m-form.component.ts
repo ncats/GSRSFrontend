@@ -885,7 +885,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         // this.submissionMessage = 'The record was updated successfully';
         // if (!this.id) {
         if (response && response.synthPathwaySkey) {
-          this.id = response.synthPathwaySkey.toString();
+          // this.id = response.synthPathwaySkey.toString();
           // this.applicationService.bypassUpdateCheck();
           this.openSuccessDialog();
           // Refresh the current page, this will not cause record locking issue
@@ -1118,11 +1118,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     //  } else {
         this.showSubmissionMessages = true;
         this.validationResult = false;
+        this.submissionMessage = '';
+        /*
         setTimeout(() => {
           this.showSubmissionMessages = false;
           this.submissionMessage = '';
           this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         }, 3000);
+        */
       }
     });
     this.subscriptions.push(dialogSubscription);
