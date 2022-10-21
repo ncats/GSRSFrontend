@@ -85,6 +85,7 @@ import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-dis
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { MatSortModule } from '@angular/material/sort';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
 @NgModule({
   imports: [
@@ -119,7 +120,8 @@ import { MatSortModule } from '@angular/material/sort';
     SubstanceImageModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    MatSortModule
+    MatSortModule,
+    ElementLabelDisplayModule
   ],
   declarations: [
     SubstanceFormComponent,

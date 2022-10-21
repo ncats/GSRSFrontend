@@ -96,6 +96,8 @@ import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
 import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
 import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
+import { ElementLabelDisplayModule } from './utils/element-label-display.module';
+
 
 @NgModule({
   declarations: [
@@ -189,7 +191,8 @@ import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
     Ssg4mStagesModule,
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
-    Ssg2ManufacturingModule
+    Ssg2ManufacturingModule,
+    ElementLabelDisplayModule
   ],
   providers: [
     {

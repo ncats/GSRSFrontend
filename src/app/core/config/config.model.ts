@@ -50,6 +50,7 @@ export interface Config {
     autoSaveWait?: number;
     authenticateAs?: AuthenticateAs;
     userRegistration?: any
+    elementLabelDisplay?:any;
 }
 
 export interface LoadedComponents {

@@ -20,6 +20,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
 
 @NgModule({
@@ -42,12 +43,14 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatTableModule,
     MatBadgeModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ElementLabelDisplayModule
   ],
   declarations: [
     SubstanceFormNamesCardComponent,
     NameFormComponent,
     NameOrgsComponent
+    
   ]
 })
 export class SubstanceFormNamesModule { }
