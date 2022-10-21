@@ -1,7 +1,13 @@
-<div class="padtop5px padleft25px font15px colorblue">
-  <b>Clinical Trials Europe</b>
-  &nbsp;&nbsp;&nbsp;
+<div *ngIf="!clinicalTrialEuCount" class="padtop5px padleft25px font15px colorblue">
+  <b>No Clinical Trial Europe Found</b>
+</div>
 
+<div *ngIf="clinicalTrialEuCount && clinicalTrialEuCount>0">
+  <div class="padtop5px padleft25px font15px colorblue">
+    <b>Clinical Trials Europe</b>
+    &nbsp;&nbsp;&nbsp;
+  </div>   
+  <div>
   <!-- Export Button -->
   <span class="export" *ngIf="isAdmin" >
     <button matTooltip="Export Search Results" mat-button (click)="export()" class="mat-button export-button mat-raised-button">
@@ -51,3 +57,4 @@
 <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
   (page)="getSubstanceClinicalTrialsEurope($event)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
+</div>
