@@ -51,13 +51,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.loadingService.setLoading(true);
-
     // As we develop more types of userRegistration, make a utility service to provide configuration information.  
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    console.log("loadedComponents");
-
     if(typeof this.configService.configData.userRegistration !== "undefined" ) {
       this.emailFormUserRegConf =
         this.configService.configData.userRegistration.configurations?.emailForm;
@@ -154,7 +150,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     );
   }
-/*
+
+  /*
   callPwdPage(type: string) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -163,5 +160,5 @@ export class LoginComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(PwdRecoveryComponent, dialogConfig);
     dialogRef.afterClosed().subscribe();
   }
-*/  
+  */  
 }
