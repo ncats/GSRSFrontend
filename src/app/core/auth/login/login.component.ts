@@ -10,9 +10,8 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import { Subscription } from 'rxjs';
 import { RegisterComponent } from '../../register/register.component';
 import { DOCUMENT } from '@angular/common';
-import { PwdRecoveryComponent } from '@gsrs-core/pwd-recovery/pwd-recovery.component';
+import { LoadedComponents } from '@gsrs-core/config'
 import * as _ from 'lodash';
-import { UserRegistrationConfigurations } from '@gsrs-core/config';
 import {sprintf} from "sprintf-js";
 
 @Component({
@@ -23,13 +22,14 @@ import {sprintf} from "sprintf-js";
 export class LoginComponent implements OnInit, OnDestroy {
   isLoaded = false;
   isLoading = true;
+  loadedComponents: LoadedComponents;
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)
   });
   private subscriptions: Array<Subscription> = [];
   private newuserinfo = {};
-  private emailFormUserRegConf: UserRegistrationConfigurations = undefined;
+  private emailFormUserRegConf: any = undefined;
   public emailFormUserRegActive: boolean = false;
 
   constructor(
@@ -51,16 +51,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     this.loadingService.setLoading(true);
 
     // As we develop more types of userRegistration, make a utility service to provide configuration information.  
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
+    console.log("loadedComponents");
 
-    if(typeof this.configService.configData.userRegistrationConfigurations !== "undefined" ) {
-      this.emailFormUserRegConf = this.configService.configData.userRegistrationConfigurations.find(c=>c.active === true && c.name === 'emailForm'); 
+    if(typeof this.configService.configData.userRegistration !== "undefined" ) {
+      this.emailFormUserRegConf =
+        this.configService.configData.userRegistration.configurations?.emailForm;
       if(typeof this.emailFormUserRegConf !== "undefined" ) {
-        this.emailFormUserRegActive = this.emailFormUserRegConf.active; 
+        this.emailFormUserRegActive = this.emailFormUserRegConf?.active; 
       }
     }
+ 
     const subscription = this.authService.getAuth().subscribe(auth => {
       this.loadingService.setLoading(false);
       if (auth) {
@@ -119,20 +124,37 @@ export class LoginComponent implements OnInit, OnDestroy {
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(RegisterComponent, dialogConfig);
     const c = this.emailFormUserRegConf;
+    const confOk =(
+      c &&
+      c.userAdminRecipientEmails &&
+      c.instanceApplicationName &&
+      c.instanceApplicationSubjectTag &&
+      c.registrationAccessEmailSubjectTemplate &&
+      c.registrationAccessEmailBodyTemplate
+    );  
+    if (!confOk) {
+      alert("ERROR: the 'emailForm' registration configuration is missing values.");
+      return;
+    }
+
     dialogRef.afterClosed().subscribe(
       data => {
-        this.newuserinfo = data;
-        const recipients = c.adminRecipientEmails.join(",");
-        let text = sprintf(c.emailBodyTemplate, c.instanceApplicationName, data.username, data.email); 
-        const linefeed = "%0D%0A";
-        text = text.replace(/\n/g, linefeed);
-        const subject = sprintf(c.emailSubjectTemplate, c.instanceApplicationSubjectTag);  
-        this.document.location = "mailto:"+recipients +"?subject=" + (subject) + "&body=" + (text);
-        console.log('email sending...');
+        if(data) { 
+            this.newuserinfo = data;
+            const recipients = c.userAdminRecipientEmails.join(",");
+            let text = sprintf(c.registrationAccessEmailBodyTemplate, c.instanceApplicationName, data.username, data.email); 
+            const linefeed = "%0D%0A";
+            text = text.replace(/\n/g, linefeed);
+            const subject = sprintf(c.registrationAccessEmailSubjectTemplate, c.instanceApplicationSubjectTag);  
+            this.document.location = "mailto:"+recipients +"?subject=" + (subject) + "&body=" + (text);
+            console.log('Generating mailto email ...');
+        } else { 
+          console.log('Request registration form closed without data submission.');
+        }
       }
     );
   }
-
+/*
   callPwdPage(type: string) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -141,4 +163,5 @@ export class LoginComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(PwdRecoveryComponent, dialogConfig);
     dialogRef.afterClosed().subscribe();
   }
+*/  
 }

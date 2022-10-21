@@ -17,17 +17,18 @@
     "apiKey": null,
     "apiToken": null
   },
-  "userRegistrationConfigurations": [
-    {
-      "name": "emailForm",
-      "active": true,
-      "adminRecipientEmails": ["email1@domain.com", "email1@domain.com"],
-      "instanceApplicationName": "GSRS",
-      "instanceApplicationSubjectTag": "GSRS",
-      "emailSubjectTemplate": "[%s] New User",
-      "emailBodyTemplate": "Please register this user in %s\n\nUsername: %s\nUser email: %s\n"
+  "userRegistration": {
+    "configurations": {
+      "emailForm": {
+        "active": false,
+        "userAdminRecipientEmails": ["email1@domain.com", "email1@domain.com"],
+        "instanceApplicationName": "GSRS",
+        "instanceApplicationSubjectTag": "GSRS",
+        "registrationAccessEmailSubjectTemplate": "[%s] User registration/access issue",
+        "registrationAccessEmailBodyTemplate": "Please register this new user OR resolve login access issue in %s\n\nUsername: %s\nUser email: %s\n\nTo the USER making the request, please provide below any details that will help the Admin facilitate your request:\n\n"
+      }
     }
-  ],
+  },
   "filteredDuplicationCodes": [
     "BDNUM",
     "FDA UNII"
@@ -46,7 +47,8 @@
     "adverseevents": true,
     "impurities": true,
     "ssg2": true,
-    "ssg4m": true
+    "ssg4m": true,
+    "userRegistration": false
   },
   "usefulLinks": [
     {

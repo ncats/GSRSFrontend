@@ -20,7 +20,6 @@ export class RegisterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('Register component init.')
     this.regForm.controls.email.markAsTouched();
     // this.regForm = this.fb.group({
     //   username: '',

@@ -20,17 +20,11 @@
   </mat-card>
   
   <br>
-  <div *ngIf="emailFormUserRegActive" class="button-div">
-    <div class="reg-link">
-      <button (click)="register()">REQUEST ACCESS</button>
+  <div *ngIf="loadedComponents.userRegistration" class="button-div">
+    <div *ngIf="emailFormUserRegActive" class="button-div">
+      <div class="reg-link">
+        <button (click)="register()">REQUEST ACCESS/LOGIN HELP</button>
+      </div>
     </div>
-    <br>
-    <div class="reg-link">
-      <button (click)="callPwdPage('reset')">RESET PASSWORD</button>
-    </div>
-    <br>
-    <div class="reg-link">
-      <button (click)="callPwdPage('forgot')">FORGOT PASSWORD?</button>
-    </div>
-  </div>
+  <div>
 </div>
