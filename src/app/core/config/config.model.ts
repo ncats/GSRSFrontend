@@ -49,6 +49,7 @@ export interface Config {
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
     authenticateAs?: AuthenticateAs;
+    elementLabelDisplay?:any;
 }
 
 export interface LoadedComponents {

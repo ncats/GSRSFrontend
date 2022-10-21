@@ -17,6 +17,16 @@
     "apiKey": null,
     "apiToken": null
   },
+  "elementLabelDisplay": {
+    "labels": {
+      "substance_names_name": {
+          "displayNameTitle": "Display Name",
+          "displayNameShortTitle":"DN",
+          "preferredTitle": "Additional Listing Name",
+          "preferredShortTitle": "AL"
+      }
+    }
+  },
   "filteredDuplicationCodes": [
     "BDNUM",
     "FDA UNII"
