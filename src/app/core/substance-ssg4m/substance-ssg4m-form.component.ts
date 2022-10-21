@@ -74,6 +74,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   isAdmin: boolean;
   isUpdater: boolean;
   messageField: string;
+  errorMessage: string;
+  microserviceStatusUp = false;
   uuid: string;
   substanceClass: string;
   status: string;
@@ -145,42 +147,45 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
           if (id !== this.id) {
             this.id = id;
             this.gaService.sendPageView(`Substance Edit`);
+            this.titleService.setTitle('Edit - Specified Substance Group 4 Manufacturing');
+            this.substanceClass = 'specifiedSubstanceG4m';
             const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
             if (newType) {
               this.getSsg4mDetails(newType);
             } else {
               this.getSsg4mDetails();
             }
+
+
           }
-        } else {
+        } /*else { // Import JSON
           const action = this.activatedRoute.snapshot.queryParams['action'] || null;
           if (action && action === 'import' && window.history.state) {
             const record = window.history.state;
             this.imported = true;
             this.getDetailsFromImport(record.record);
-            this.gaService.sendPageView(`Substance Register`);
+            this.gaService.sendPageView(`Substance Import`);
           } else {
             this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
             if (this.copy) {
               const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
               this.getPartialSubstanceDetails(this.copy, copyType);
               this.gaService.sendPageView(`Substance Register`);
-            } else {  // new record
-              setTimeout(() => {
-                this.gaService.sendPageView(`Substance Register`);
-                this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
-                this.substanceClass = this.subClass;
-                this.titleService.setTitle('Register - Specified Substance Group 4 Manufacturing');
-                this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-                  // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-                  this.setFormSections(formSections[this.subClass]);
-                  this.loadingService.setLoading(false);
-                  this.isLoading = false;
-                });
-              });
-            }
-          }
+            } */ else {  // new record
+          setTimeout(() => {
+            this.gaService.sendPageView(`Substance Register`);
+            this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
+            this.substanceClass = this.subClass;
+            this.titleService.setTitle('Register - Specified Substance Group 4 Manufacturing');
+            this.substanceFormService.loadSubstance(this.substanceClass).pipe(take(1)).subscribe(() => {
+              this.setFormSections(formSections[this.substanceClass]);
+              this.loadingService.setLoading(false);
+              this.isLoading = false;
+            });
+          });
         }
+        //  }
+        // }
       });
     this.subscriptions.push(routeSubscription);
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
@@ -406,8 +411,11 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         setTimeout(() => {
           this.router.onSameUrlNavigation = 'reload';
           this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + this.showHeaderBar, { state: { record: response } });
-
+          if (this.id) {
+            this.router.navigateByUrl('/substances-ssg4m/' + this.id + '/edit?action=import&header=' + this.showHeaderBar, { state: { record: response } });
+          } else { // new record
+            this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + this.showHeaderBar, { state: { record: response } });
+          }
         }, 1000);
       }
       // }
@@ -466,31 +474,87 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.jsonFileName = 'SSG4m_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
+  checkSsg4mServerStatus(): void {
+    // Check Microservice Server Status
+    this.substanceSsg4mService.checkSsg4mServerStatus().pipe(take(1)).subscribe(responseCheck => {
+      if (responseCheck) {
+        if (responseCheck["status"]) {
+          if (responseCheck["status"] === 'OK') {
+            this.microserviceStatusUp = true;
+          }
+        }
+      } else {
+        this.microserviceStatusUp = false;
+      }
+    }, error => {
+        this.microserviceStatusUp = false;
+    });
+  }
+
   getSsg4mDetails(newType?: string): void {
+    let generateErrorMessage = "Unable to load the data for Record ID " + this.id + "<br>";
+
+    // Check if SSG4m microservice server is UP or not
+    this.checkSsg4mServerStatus();
+
     this.substanceSsg4mService.getSsg4mDetails(this.id).pipe(take(1)).subscribe(response => {
       /*if (response._name) {
         this.titleService.setTitle('Edit - ' + response._name);
       }*/
       if (response) {
-        this.ssg4mSyntheticPathway = response;
+        // Check for import in URL
+        const action = this.activatedRoute.snapshot.queryParams['action'] || null;
         let substanceSsg4mFromDb: SubstanceDetail;
-        if (response.sbmsnDataText) {
-          substanceSsg4mFromDb = JSON.parse(response.sbmsnDataText);
+
+        this.ssg4mSyntheticPathway = response;
+
+        if (action && action === 'import' && window.history.state) {
+          this.gaService.sendPageView(`Substance Import`);
+          const record = window.history.state.record;
+          // this.imported = true;
+          // this.getDetailsFromImport(record.record);
+          if ((record) && this.jsonValid(record)) {
+            const responseImport = JSON.parse(record);
+            if (responseImport) {
+              this.substanceFormService.loadSubstance(this.substanceClass, responseImport).pipe(take(1)).subscribe(() => {
+                // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+                this.setFormSections(formSections[this.substanceClass]);
+              });
+            }
+          }
         }
-        this.substanceClass = substanceSsg4mFromDb.substanceClass;
-        this.substanceFormService.loadSubstance(substanceSsg4mFromDb.substanceClass, substanceSsg4mFromDb).pipe(take(1)).subscribe(() => {
-          this.setFormSections(formSections[substanceSsg4mFromDb.substanceClass]);
-        });
-      } else {
-        this.handleSubstanceRetrivalError();
+        else if (response.sbmsnDataText) { // If JSON form data found into the database, load into the form
+          substanceSsg4mFromDb = JSON.parse(response.sbmsnDataText);
+
+          this.substanceFormService.loadSubstance(substanceSsg4mFromDb.substanceClass, substanceSsg4mFromDb).pipe(take(1)).subscribe(() => {
+            this.setFormSections(formSections[this.substanceClass]);
+          });
+        } else if (!response.sbmsnDataText) { // AS NEW FORM, If JSON form data NOT found into the database, Load the Form as a new Form
+          this.substanceFormService.loadSubstance(this.substanceClass).pipe(take(1)).subscribe(() => {
+            // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+            this.setFormSections(formSections[this.substanceClass]);
+          });
+        }
+      } else if (response === null) {
+        this.errorMessage = "There is no data found in the database for ID: " + this.id;
       }
+      //else {
+      //  this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br> Please ask your system administrator to examine the website logs and: <br>- verify that the SSG4m microservice is running without error, <br>- check if there are any database connection issues,<br>- make sure the system is using valid authentication credentials into the database.";
+        // this.handleSubstanceRetrivalError();
+     // }
       this.loadingService.setLoading(false);
       this.isLoading = false;
     }, error => {
+      this.errorMessage = generateErrorMessage;
+      if (this.microserviceStatusUp === false) {
+        this.errorMessage = this.errorMessage + "It looks like the SSG4m microservice is not running.<br>";
+      }
+      this.errorMessage = this.errorMessage + "Please ask your system administrator to verify that the SSG4m microservice is running without error, and also to examine the website logs to:<br>- check if there are any database connection issues, and<br>- make sure the system is using valid authentication credentials into the database";
+      //  this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br> Please ask your system administrator to examine the website logs and: <br>- verify that the SSG4m microservice is running without error, <br>- check if there are any database connection issues,<br>- make sure the system is using valid authentication credentials into the database.";
       this.gaService.sendException('getSsg4mDetails: error from API call');
       this.loadingService.setLoading(false);
       this.isLoading = false;
-      this.handleSubstanceRetrivalError();
+      //  this.handleSubstanceRetrivalError();
     });
   }
 
@@ -606,8 +670,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       milisecondsToShow: 4000
     };
     this.mainNotificationService.setNotification(notification);
+    this.errorMessage = "Unable to load the data. Please verify if the SSG4m microservice is up, or if there is any database connection issue, or if an authentication issue.";
     setTimeout(() => {
-      this.router.navigate(['/substances/register']);
+      this.router.navigate(['/home']);
       this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
         this.setFormSections(formSections.chemical);
         this.loadingService.setLoading(false);
@@ -797,18 +862,19 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     //TODO finish this
     const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
     window["schemeUtil"].onFinishedLayout = (svg) => {
-      window["schemeUtil"].onFinishedLayout = (svg)=>{};
-      this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
+      window["schemeUtil"].onFinishedLayout = (svg) => { };
 
       // if New Record, initialize object
       if (this.ssg4mSyntheticPathway == null) {
         this.ssg4mSyntheticPathway = {};
         // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
-      } else {
-        // Existing Record
-        // get the JSON from the SSG4m Form and store as a Clob into the database
-        this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
       }
+      // Existing Record
+      // get the JSON from the SSG4m Form and store as a Clob into the database
+      this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
+
+      // Save SVG as blob
+      this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
       this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
         this.loadingService.setLoading(false);
@@ -819,7 +885,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         // this.submissionMessage = 'The record was updated successfully';
         // if (!this.id) {
         if (response && response.synthPathwaySkey) {
-          // alert("The record was updated successfully");
           this.id = response.synthPathwaySkey.toString();
           // this.applicationService.bypassUpdateCheck();
           this.openSuccessDialog();
@@ -1030,10 +1095,15 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {});
+    let data = {
+      isCoreSubstance: 'false'
+    };
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: data
+    });
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue') => {
 
       this.substanceSsg4mService.bypassUpdateCheck();
       if (response === 'continue') {
@@ -1043,13 +1113,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         // } else if (response === 'browse') {
         //  this.router.navigate(['/browse-substance']);
-      } else if (response === 'view') {
-        this.router.navigate(['/substances-ssg4m', this.id]);
-      } else {
-        this.submissionMessage = 'Substance was saved successfully!';
-        if (type && type === 'approve') {
-          this.submissionMessage = 'Substance was approved successfully';
-        }
+    //  } else if (response === 'home') {
+     //   this.router.navigate(['/home']);
+    //  } else {
         this.showSubmissionMessages = true;
         this.validationResult = false;
         setTimeout(() => {

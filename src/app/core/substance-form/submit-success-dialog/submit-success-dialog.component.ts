@@ -8,15 +8,22 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class SubmitSuccessDialogComponent implements OnInit {
 
+  public isCoreSubstance = 'true';
+
   constructor(
     public dialogRef: MatDialogRef<SubmitSuccessDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
+    if (this.data) {
+      if (this.data.isCoreSubstance) {
+        this.isCoreSubstance = this.data.isCoreSubstance;
+      }
+    }
   }
 
-  dismissDialog(action: 'continue'|'browse'|'view'): void {
+  dismissDialog(action: 'continue' | 'browse' | 'view' | 'home'): void {
     this.dialogRef.close(action);
   }
 
