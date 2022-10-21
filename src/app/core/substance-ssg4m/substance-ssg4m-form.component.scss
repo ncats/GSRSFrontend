@@ -199,8 +199,16 @@ mat-select-panel{
   padding-right:5px;
 }
 
+.fontsize16px {
+  font-size: 16px;
+}
+
 .fontsize20px {
   font-size: 20px;
+}
+
+.padall25px {
+  padding: 25px;
 }
 
 .padtop90px {
@@ -209,6 +217,10 @@ mat-select-panel{
 
 .padleft25px {
   padding-left: 25px;
+}
+
+.margintop10px {
+  margin-top: 10px;
 }
 
 .bordergray {
@@ -226,6 +238,14 @@ mat-select-panel{
 /* FDA COLOR BLUE CODE Hex: #007CBA */
 .colorbluefda {
   color: #007CBA;
+}
+
+.colorred {
+  color: red;
+}
+
+.bkcoloryellow {
+  background-color: rgb(247, 247, 216);
 }
 
 ::ng-deep .custom-menu{

@@ -71,7 +71,7 @@
               {{value.label | codeSystemDisplay | async }}
             </span>
             <span *ngIf="facet.name === 'Relationships'">
-              {{value.label | facetDisplay: 'relationships'}}
+              {{value.label | relationshipDisplay | async }}
             </span>
           </div>
           <div class="middle-fill"></div>

@@ -6,7 +6,7 @@
     <span class = "approval" *ngIf = "definition.approvalID && definition.approvalID !== ''">{{definition.approvalID}}</span>
   </div>
   <div class="substance-form-row form-name" *ngIf = "definition._name">
-    <div>Display Name: <span class = "name" [innerHTML] = "definition._nameHTML ? definition._nameHTML : definition._name"></span></div>
+    <div>{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}: <span class = "name" [innerHTML] = "definition._nameHTML ? definition._nameHTML : definition._name"></span></div>
   </div>
   <div class="substance-form-row">
     <mat-form-field *ngIf = 'definition.substanceClass !== "concept"' style = "margin-right: 5px">

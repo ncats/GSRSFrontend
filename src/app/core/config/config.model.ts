@@ -49,6 +49,8 @@ export interface Config {
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
     authenticateAs?: AuthenticateAs;
+    userRegistration?: any
+    elementLabelDisplay?:any;
 }
 
 export interface LoadedComponents {
@@ -57,6 +59,7 @@ export interface LoadedComponents {
     clinicaltrials?: boolean;
     adverseevents?: boolean;
     impurities?: boolean;
+    userRegistration?: boolean;
 }
 
 export interface SubstanceDetailsCard {
