@@ -192,7 +192,8 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     Ssg4mStagesModule,
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
-    Ssg2ManufacturingModule
+    Ssg2ManufacturingModule,
+    BulkSearchModule
   ],
   providers: [
     {

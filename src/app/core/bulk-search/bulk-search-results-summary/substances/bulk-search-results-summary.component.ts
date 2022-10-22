@@ -10,6 +10,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { MatPaginator } from '@angular/material/paginator';
 import { F } from '@angular/cdk/keycodes';
 
+
 @Component({
   selector: 'app-bulk-search-results-summary',
   templateUrl: './bulk-search-results-summary.component.html',
@@ -65,117 +66,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     private bulkSearchService: BulkSearchService,      
     private configService: ConfigService
   ) {
-
-    const data:any = JSON.parse(`{
-    "summary": {
-    "qTop":100,
-    "qSkip":0,
-    "qTotal":2,
-    "totalMatched":1,
-    "totalUnmatched":1,
-    "queries": [{
-      "searchTerm": "faketerm",
-      "records": []
-    }, {         
-      "searchTerm": "sodium chloride",
-      "records": [{
-        "id": "306d24b9-a6b8-4091-8024-02f9ec24b705",
-        "displayName": "SODIUM CHLORIDE",
-        "displayCode": "451W47IQ8X",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "bd953285-a7a4-2965-cc7d-73bdceb7abd0",
-        "displayName": "CAVROTOLIMOD SODIUM",
-        "displayCode": "Y50W8NUZ1O",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "79dbcc59-e887-40d1-a0e3-074379b755e4",
-        "displayName": "SODIUM ACETATE",
-        "displayCode": "4550K0SC9B",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "5b611b0d-b798-45ed-ba02-6f0a2f85986b",
-        "displayName": "POTASSIUM CHLORIDE",
-        "displayCode": "660YQ98I10",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "90e9191d-1a81-4a53-b7ee-560bf9e68109",
-        "displayName": "SODIUM GLUCONATE",
-        "displayCode": "R6Q3791S76",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "302cedcc-895f-421c-acf4-1348bbdb31f4",
-        "displayName": "MAGNESIUM CHLORIDE",
-        "displayCode": "02F3473H9O",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "e92bc4ad-250a-4eef-8cd7-0b0b1e3b6cf0",
-        "displayName": "THIOFLAVIN S2",
-        "displayCode": "FDK4QJ64TS",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "0d1371fc-904f-45e9-b073-ba55dacc4f30",
-        "displayName": "THIOFLAVIN S1",
-        "displayCode": "2R5VJA8RQB",
-        "displayCodeName": "UNII"
-      }]
-    }, {
-      "searchTerm": "sodium gluconate",
-      "records": [{
-        "id": "90e9191d-1a81-4a53-b7ee-560bf9e68109",
-        "displayName": "SODIUM GLUCONATE",
-        "displayCode": "R6Q3791S76",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "bd953285-a7a4-2965-cc7d-73bdceb7abd0",
-        "displayName": "CAVROTOLIMOD SODIUM",
-        "displayCode": "Y50W8NUZ1O",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "306d24b9-a6b8-4091-8024-02f9ec24b705",
-        "displayName": "SODIUM CHLORIDE",
-        "displayCode": "451W47IQ8X",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "79dbcc59-e887-40d1-a0e3-074379b755e4",
-        "displayName": "SODIUM ACETATE",
-        "displayCode": "4550K0SC9B",
-        "displayCodeName": "UNII"
-      }]
-    }, {
-      "searchTerm": "potasium chloride",
-      "records": [{
-        "id": "5b611b0d-b798-45ed-ba02-6f0a2f85986b",
-        "displayName": "POTASSIUM CHLORIDE",
-        "displayCode": "660YQ98I10",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "306d24b9-a6b8-4091-8024-02f9ec24b705",
-        "displayName": "SODIUM CHLORIDE",
-        "displayCode": "451W47IQ8X",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "302cedcc-895f-421c-acf4-1348bbdb31f4",
-        "displayName": "MAGNESIUM CHLORIDE",
-        "displayCode": "02F3473H9O",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "e92bc4ad-250a-4eef-8cd7-0b0b1e3b6cf0",
-        "displayName": "THIOFLAVIN S2",
-        "displayCode": "FDK4QJ64TS",
-        "displayCodeName": "UNII"
-      }, {
-        "id": "0d1371fc-904f-45e9-b073-ba55dacc4f30",
-        "displayName": "THIOFLAVIN S1",
-        "displayCode": "2R5VJA8RQB",
-        "displayCodeName": "UNII"
-      }]
-    }]
-  }}
-    `);
-      this._summary = data.summary;
-
-
+    // const data:any = JSON.parse(``);
+    // this._summary = data.summary;
   }
 
   ngAfterViewInit() {
@@ -186,7 +78,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     if (this.loadSummary) {  
       this.getBulkSearchResults();
     }
- 
+  }
+  ngOnChanges() {   
     // move this to ngOnChanges 
     if (!this.loadSummary) {  
       if(this._summary.queries) {
@@ -196,8 +89,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
         }  
       }
     }
-  }
-  ngOnChanges() {   
   }  
 
 

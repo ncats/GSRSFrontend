@@ -93,7 +93,7 @@
       </div> 
       <!--         [summaries]="bulkSearchSummaries" -->
       <app-bulk-search-results-summary
-        loadSummaries=false
+        loadSummaries=true
         context="substances"
         [key]="bulkSearchTerm"      
       ></app-bulk-search-results-summary>
@@ -333,10 +333,9 @@
       <div class="dynamic container">
       </div>
       <div [ngClass]="view">
-        <div>Strategy: {{searchStrategy}} (this is temporary)</div>
         <div class="substance-cards">
           <div *ngFor="let substance of substances">
-          <app-bulk-search-search-terms-by-id [id]="substance.uuid" [summaries]="bulkSearchSummaries"></app-bulk-search-search-terms-by-id>
+          <app-bulk-search-search-terms-by-id [id]="substance.uuid"></app-bulk-search-search-terms-by-id>
             <app-substance-summary-card  [substance]="substance"
               (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
               [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
