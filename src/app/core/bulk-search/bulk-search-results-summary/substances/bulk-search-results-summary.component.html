@@ -18,6 +18,16 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let cellrow; columns: displayedColumns"></tr>
 </table>
-<mat-paginator #paginator [pageSizeOptions]="[2, 4, 6]" 
-showFirstLastButtons></mat-paginator>
+
+<mat-paginator #paginator [length]="totalQueries" [pageIndex]="qPageIndex" [pageSize]="qPageSize" [pageSizeOptions]="[2, 5, 10, 50, 100]"
+(page)="changePage($event)"></mat-paginator>
+<br>
+totalQueries {{totalQueries}}<br>
+qPageSize {{qPageSize}}<br>
+qPageIndex {{qPageIndex}}<br>
+<br>
+recordOverviewsShownOnPage {{recordOverviewsShownOnPage}}<br>
+recordOverviews.length {{recordOverviews.length}}<br>
+
+<!-- mat-paginator #paginator [pageSizeOptions]="[2, 4, 6]"  showFirstLastButtons></mat-paginator -->
 </div>

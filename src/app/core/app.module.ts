@@ -99,7 +99,6 @@ import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -193,7 +192,8 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
     Ssg2ManufacturingModule,
-    BulkSearchModule
+    BulkSearchModule,
+   ElementLabelDisplayModule
   ],
   providers: [
     {

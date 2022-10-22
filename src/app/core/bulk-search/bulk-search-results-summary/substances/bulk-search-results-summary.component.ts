@@ -7,8 +7,10 @@ import { LoadingService } from '@gsrs-core/loading';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { F } from '@angular/cdk/keycodes';
+import { NavigationExtras, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -19,19 +21,26 @@ import { F } from '@angular/cdk/keycodes';
 
 export class BulkSearchResultsSummaryComponent implements OnInit {
 /*
-   [summary]      -- expects any if this is provided then loadSummaries should be false.  
+   [summary]      -- expects any if this is provided then loadSummary should be false.  
    loadSummary    -- if true will run a data load procedure in the component
    context        -- expects the entity CONTEXT being browsed (e.g. substances)
    [key]          -- the bulk search results key  
 */
   @Input() key: string = null;
   @Input() context: string = 'substances';
-  // if false, then we expect summaries to be passed as a parameter 
-  @Input() loadSummary:boolean = false;
+
+  // if false, then we expect the summary to be passed as a parameter 
+  @Input() loadSummary:boolean = true;
   @ViewChild(MatTable, {static: false}) table : MatTable<RecordOverview>; // initialize
-    @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
 
   private _summary: any = null;
+  qPageSize: number;
+  qPageIndex: number;
+  recordOverviewsShownOnPage: number;
+  recordOverviews: Array<RecordOverview> = [];
+  totalRecordOverviews: number; 
+  totalQueries: number; 
 
   @Input() set summary(value: Array<any>) {
     this.summary=value;
@@ -41,7 +50,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     return this._summary;
   }
   
-  recordOverviews: Array<RecordOverview> = [];
 
   displayedColumns: string[] = [
     'searchTerm',
@@ -64,7 +72,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     public authService: AuthService,
     private notificationService: MainNotificationService,
     private bulkSearchService: BulkSearchService,      
-    private configService: ConfigService
+    private configService: ConfigService,
+    private router: Router,
+    private location: Location
   ) {
     // const data:any = JSON.parse(``);
     // this._summary = data.summary;
@@ -75,6 +85,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.qPageSize = 10;
+    this.qPageIndex = 0;
     if (this.loadSummary) {  
       this.getBulkSearchResults();
     }
@@ -83,17 +95,86 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     // move this to ngOnChanges 
     if (!this.loadSummary) {  
       if(this._summary.queries) {
-        this.summariesToRecordOverviews();
+        this.summaryToRecordOverviews();
         if(this.table) { 
-          this.table.renderRows();
+          // this.table.renderRows();
         }  
       }
     }
   }  
 
+  changePage(pageEvent: PageEvent) {
+
+    let eventAction: any;
+    let eventValue: any;
+
+    if (this.qPageSize !== pageEvent.pageSize) {
+
+      console.log("awd pageEvent.pageSize: "+ pageEvent.pageSize);
+      eventAction = 'select:page-size';
+      eventValue = pageEvent.pageSize;
+    } else if (this.qPageIndex !== pageEvent.pageIndex) {
+      console.log("awd pageEvent.pageIndex: "+ pageEvent.pageIndex);
+
+      eventAction = 'icon-button:page-number';
+      eventValue = pageEvent.pageIndex + 1;
+    }
+    // this.gaService.sendEvent('substancesContent', eventAction, 'pager', eventValue);
+
+    this.qPageSize = pageEvent.pageSize;
+    this.qPageIndex = pageEvent.pageIndex;
+    this.getBulkSearchResults();
+  }
+
+
+  // move
+  qOrder: number;
+
+  // see substances code
+  populateUrlQueryParameters(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    // navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    // navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
+    // navigationExtras.queryParams['type'] = this.privateSearchType;
+    navigationExtras.queryParams['order'] = this.qOrder;
+    navigationExtras.queryParams['qTop'] = this.qPageSize;
+    navigationExtras.queryParams['qTop'] = this.qPageIndex;
+    navigationExtras.queryParams['qSkip'] = this.qPageIndex * this.qPageSize;
+
+    const urlTree = this.router.createUrlTree([], {
+      queryParams: navigationExtras.queryParams,
+      queryParamsHandling: 'merge',
+      preserveFragment: true
+    });
+    this.location.go(urlTree.toString());
+  }
+
+  // see substances code
+  clearSearch(): void {
+    // const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    // this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
+    // this.privateSearchTerm = '';
+    this.qPageIndex = 0;
+    this.populateUrlQueryParameters();
+    this.getBulkSearchResults();
+  }
+
 
   getBulkSearchResults() {
-    const subscription = this.bulkSearchService.getBulkSearchResults(this.context, this.key)
+    const qSkip = this.qPageIndex * this.qPageSize;
+    console.log("awd qSkip: " + qSkip);
+    console.log("awd this.qPageSize: " + this.qPageSize);
+    console.log("awd this.qPageIndex: " + this.qPageIndex);
+
+    const subscription = this.bulkSearchService.getBulkSearchResults(
+      this.context,
+      this.key,
+      this.qPageSize,
+      qSkip
+    )
     .subscribe(bulkSearchResults => {
       if (!this.key) {
         console.log("Warning, key is null or undefined in getBulkSearchResults");
@@ -103,9 +184,12 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
       }
       if(bulkSearchResults?.summary) {
         this._summary = bulkSearchResults.summary;
-        // as Array<Summary>;
-        this.summariesToRecordOverviews();
+        this.totalQueries = this._summary.qTotal; 
+        this.summaryToRecordOverviews();
         if(this.table) { 
+          this.table.dataSource = this.recordOverviews;
+          this.recordOverviewsShownOnPage = this.recordOverviews.length;
+          // this.dataSource.paginator = this.paginator;
           this.table.renderRows();
         }
       } 
@@ -116,7 +200,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     });
   }
 
-summariesToRecordOverviews() {
+summaryToRecordOverviews() {
+  this.recordOverviews = [];
   this._summary.queries.forEach( q => {
     let o: RecordOverview = <RecordOverview>{};
     o.searchTerm = q.searchTerm;
@@ -137,24 +222,15 @@ summariesToRecordOverviews() {
     }
     this.recordOverviews.push(o);
   });
+  this.recordOverviews = this.recordOverviews;
+
+
 }
 
   testMakeTsvTextFromSummaryQueries() { 
     const s =  this.makeTsvTextFromSummaryQueries(this._summary);
     console.log(s);
   }
-
-testExtractLiberally(){
-  this.extractLiberally(['a', 'd', 'c'],{a:'1', b: '2', 'c': 3});
-}
-
-  extractLiberally(keys, object) {
-    const a: Array<any> = keys.map(k=>{
-      return object[k]||'';
-    });
-    console.log(a);
-  }
-
 
   makeTsvTextFromSummaryQueries(json: any): string {
     console.log(json);
@@ -213,11 +289,9 @@ testExtractLiberally(){
 
   getBulkSearchResultsForDownload(): void {
     const filename: string = this.context + '-testing.tsv';
-    const top = 1;
-    const skip = 0;
     const qTop = 20000;
     const qSkip = 0;
-    this.bulkSearchService.getBulkSearchResults(this.context, this.key, top, skip, qTop, qSkip).subscribe(response => {
+    this.bulkSearchService.getBulkSearchResults(this.context, this.key, qTop, qSkip).subscribe(response => {
     this.downloadSummaryQueriesFile(response, filename);      
     }, error => {
       console.log("Error downloading file in getBulkSearchResultsForDownload.");
@@ -236,6 +310,4 @@ testExtractLiberally(){
     document.body.appendChild(downloadLink);
     downloadLink.click();
   }
-
-
 }

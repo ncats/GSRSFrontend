@@ -175,7 +175,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
 
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
-    this.populateUrlQueryParameters();
+    // this.populateUrlQueryParameters();
     this.searchClinicalTrials();
   }
 
