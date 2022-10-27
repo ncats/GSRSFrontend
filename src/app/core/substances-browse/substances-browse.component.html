@@ -269,10 +269,6 @@
           <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.link.url, option.extension)">
             {{option.displayname}}
           </a>
-          <mat-checkbox class="menu-checkbox mat-menu-item"
-            (click)="privateExport = !privateExport; $event.stopPropagation()">
-            Include Private Data
-          </mat-checkbox>
         </mat-menu>
 
         <div class="export ">
