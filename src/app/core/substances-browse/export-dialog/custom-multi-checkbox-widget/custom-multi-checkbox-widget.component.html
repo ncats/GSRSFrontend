@@ -1,0 +1,92 @@
+<div class="widget form-group" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'"  *ngIf = "!schema.CVDomain && (!schema.items || !schema.items.enum)">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+        {{ schema.title }}
+    </label>
+	<div *ngIf="schema.type!='array'" class="checkbox">
+		<label class="horizontal control-label">
+			<input [formControl]="control" [attr.name]="name" [attr.id]="id" [indeterminate]="control.value !== false && control.value !== true ? true :null" type="checkbox" [disableControl]="schema.readOnly">
+			<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+            {{schema.description}} 
+            <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+		</label>
+	</div>
+	<ng-container *ngIf="schema.type==='array'">
+		<div *ngFor="let option of schema.items.oneOf" class="checkbox">
+			<label class="horizontal control-label">
+				<input [attr.name]="name"
+					value="{{option.enum[0]}}" type="checkbox" 
+					[attr.disabled]="schema.readOnly"
+					(change)="onCheck($event.target)"
+					[attr.checked]="checked[option.enum[0]] ? true : null"
+					[attr.id]="id + '.' + option.enum[0]"
+					>
+                {{option.description ? option.description : option.enum[0]}}
+                
+			</label>
+		</div>
+	</ng-container>
+</div>
+
+
+<div class="widget form-group" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'" *ngIf = "!schema.CVDomain && schema.items && schema.items.enum">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+        {{ schema.title }}
+        <sup *ngIf = "schema.comments && !schema.description" ><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+    </label>
+	<div *ngIf="schema.type!='array'" class="checkbox">
+		<label class="horizontal control-label">
+			<input [formControl]="control" [attr.name]="name" [attr.id]="id" [indeterminate]="control.value !== false && control.value !== true ? true :null" type="checkbox" [disableControl]="schema.readOnly">
+			<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+            {{schema.description}} 
+            <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+		</label>
+	</div>
+	<ng-container *ngIf="schema.type==='array'">
+		<div *ngFor="let option of schema.items.enum" class="checkbox">
+			<label class="horizontal control-label">
+				<input [attr.name]="name"
+					value="{{option}}" type="checkbox" 
+					[attr.disabled]="schema.readOnly"
+					(change)="onCheck($event.target)"
+					[attr.checked]="checked[option] ? true : null"
+					[attr.id]="id + '.' + option"
+					>
+                    {{option.description ? option.description : option}}
+			</label>
+		</div>
+	</ng-container>
+</div>
+
+<div class="widget form-group" *ngIf = "schema.CVDomain"  [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+        {{ schema.title }}
+        <sup *ngIf = "schema.comments && !schema.description"  ><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+
+    </label>
+	<div *ngIf="schema.type!='array'" class="checkbox">
+		<label class="horizontal control-label">
+			<input [formControl]="control" [attr.name]="name" [attr.id]="id" [indeterminate]="control.value !== false && control.value !== true ? true :null" type="checkbox" [disableControl]="schema.readOnly">
+			<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+            {{schema.description}}
+            <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+		</label>
+	</div>
+	<ng-container *ngIf="schema.type==='array'">
+		<div *ngFor="let option of options" class="checkbox">
+			<label class="horizontal control-label">
+				<input [attr.name]="name"
+					value="{{option.value}}" type="checkbox" 
+					[attr.disabled]="schema.readOnly"
+					(change)="onCheck($event.target)"
+					[attr.checked]="checked[option.value] ? true : null"
+					[attr.id]="id + '.' + option.value"
+					>
+				{{option.display}}
+			</label>
+		</div>
+	</ng-container>
+</div>
+
+<ng-template #info let-data>
+    {{data.comment}}
+  </ng-template>

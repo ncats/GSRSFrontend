@@ -43,32 +43,13 @@
   .no-indent {
     padding-left: 25px;
   }
-  
-  .form-group {
-    padding-top: 5px;
-  }
-
 
   .form-group {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-
-  }
-
-  .cv-select {
-    min-width: 25%;
-    max-width: 50%;
-      margin-left:5px;
-      margin-right:5px;
-      padding: 8px;
-      border-bottom:1px solid darkgray;
-      margin-bottom: 5px;
+    margin-top: 7px;
   }
 
   .help-icon {
     height: 18px;
     cursor: pointer;
+    color: #4793d1;
   }
-  

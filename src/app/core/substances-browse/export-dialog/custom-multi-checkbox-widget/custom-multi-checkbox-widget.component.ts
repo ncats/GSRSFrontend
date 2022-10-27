@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectWidget } from 'ngx-schema-form';
+import { CheckboxWidget } from 'ngx-schema-form';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-multiselect-widget',
-  templateUrl: './custom-multiselect-widget.component.html',
-  styleUrls: ['./custom-multiselect-widget.component.scss']
+  selector: 'app-custom-multi-checkbox-widget',
+  templateUrl: './custom-multi-checkbox-widget.component.html',
+  styleUrls: ['./custom-multi-checkbox-widget.component.scss']
 })
-export class CustomMultiselectWidgetComponent extends SelectWidget implements OnInit {
+export class CustomMultiCheckboxWidgetComponent  extends CheckboxWidget implements OnInit {
   options = [];
 
   constructor(
@@ -31,14 +31,12 @@ export class CustomMultiselectWidgetComponent extends SelectWidget implements On
     });
 
     
+    }
   }
-}
+  openModal(templateRef, comments) {
+    let dialogRef = this.dialog.open(templateRef, {
+    width: '300px', data: {comment: comments}
+  });
 
-openModal(templateRef, comments) {
-  let dialogRef = this.dialog.open(templateRef, {
-   width: '300px', data: {comment: comments}
- });
-
-}
-
+  }
 }

@@ -3,7 +3,7 @@
         TESTING
     </label>-->
 	<div *ngIf="schema.type!='array'" class="checkbox" [ngClass] ="schema.visibleIf ? 'tabbed': ''" > 
-		<label class="horizontal control-label" [matTooltip] = "schema.comments">
+		<label class="horizontal control-label" >
             <span style = "width:24px; height: 24px; display:inline-block; vertical-align: bottom">
                     <mat-icon *ngIf = "schema.children && control.value !== true" svgIcon="chevron_right"></mat-icon>
                     <mat-icon *ngIf = "schema.children && control.value === true" svgIcon="chevron_down"></mat-icon>
@@ -11,7 +11,7 @@
             </span>
 			<input [formControl]="control" [attr.name]="name" [attr.id]="id"  type="checkbox" [disableControl]="schema.readOnly">
 			<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
-			{{schema.title ? schema.title : schema.description}}
+			{{schema.title ? schema.title : schema.description}} <sup *ngIf = "schema.comments"  ><mat-icon color="primary" class = "help-icon" (click) = " openModal(info, schema.comments); $event.preventDefault();" style ="height: 18px;" svgIcon="help"></mat-icon></sup>
 		</label>
 	</div>
 	<ng-container *ngIf="schema.type==='array'">
@@ -29,3 +29,7 @@
 		</div>
 	</ng-container>
 </div>
+
+<ng-template #info let-data>
+    {{data.comment}}
+  </ng-template>

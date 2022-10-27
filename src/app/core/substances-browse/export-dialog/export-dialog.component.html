@@ -79,7 +79,7 @@
             <mat-form-field style = "margin-right:10px"><input style = "margin-right:10px" matInput placeholder="Config Name" [(ngModel)]="configName" name="Config Name" /></mat-form-field>
 
             <button mat-flat-button color="primary" (click) = "saveConfig()" style = "margin-right:15px;" [disabled] = "!showOptions">Save New Config</button>
-            <button mat-flat-button color="primary" (click) = "updateConfig()" [disabled] = "!loadedConfig" style = "margin-right:15px;">Save Changes</button>
+            <button mat-flat-button color="primary" (click) = "updateConfig()" [disabled] = "!loadedConfig || loadedConfig.exporterKey === 'PUBLIC_DATA_ONLY' || loadedConfig.exporterKey === 'ALL_DATA'" style = "margin-right:15px;">Save Changes</button>
 
             <button mat-flat-button color="primary" (click) = "save()" >Export{{loadedConfig? '' : ' (no config)'}}</button>
         </mat-dialog-actions>

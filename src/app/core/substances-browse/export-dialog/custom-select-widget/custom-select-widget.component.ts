@@ -4,11 +4,11 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-multiselect-widget',
-  templateUrl: './custom-multiselect-widget.component.html',
-  styleUrls: ['./custom-multiselect-widget.component.scss']
+  selector: 'app-custom-select-widget',
+  templateUrl: './custom-select-widget.component.html',
+  styleUrls: ['./custom-select-widget.component.scss']
 })
-export class CustomMultiselectWidgetComponent extends SelectWidget implements OnInit {
+export class CustomSelectWidgetComponent extends SelectWidget implements OnInit {
   options = [];
 
   constructor(
@@ -33,12 +33,10 @@ export class CustomMultiselectWidgetComponent extends SelectWidget implements On
     
   }
 }
-
 openModal(templateRef, comments) {
   let dialogRef = this.dialog.open(templateRef, {
    width: '300px', data: {comment: comments}
  });
 
 }
-
 }

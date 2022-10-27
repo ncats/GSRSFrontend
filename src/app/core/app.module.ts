@@ -103,6 +103,10 @@ import {
 import { MyWidgetRegistry } from '@gsrs-core/substances-browse/export-dialog/custom-checkbox-widget/custom-checkbox-registry';
 import { CustomTextWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-text-widget/custom-text-widget.component';
 import { CustomMultiselectWidgetComponent } from '@gsrs-core/substances-browse/custom-multiselect-widget/custom-multiselect-widget.component';
+import { CustomSelectWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-select-widget/custom-select-widget.component';
+import { CustomRadioWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-radio-widget/custom-radio-widget.component';
+import { CustomMultiCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-multi-checkbox-widget/custom-multi-checkbox-widget.component';
+import { CustomTextareaWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-textarea-widget/custom-textarea-widget.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -131,7 +135,11 @@ import { CustomMultiselectWidgetComponent } from '@gsrs-core/substances-browse/c
     SubstanceStatusPipe,
     CustomCheckboxWidgetComponent,
     CustomTextWidgetComponent,
-    CustomMultiselectWidgetComponent
+    CustomMultiselectWidgetComponent,
+    CustomSelectWidgetComponent,
+    CustomRadioWidgetComponent,
+    CustomMultiCheckboxWidgetComponent,
+    CustomTextareaWidgetComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -226,7 +234,11 @@ import { CustomMultiselectWidgetComponent } from '@gsrs-core/substances-browse/c
     ShowMolfileDialogComponent,
     CustomCheckboxWidgetComponent,
     CustomTextWidgetComponent,
-    CustomMultiselectWidgetComponent
+    CustomMultiselectWidgetComponent,
+    CustomSelectWidgetComponent,
+    CustomRadioWidgetComponent,
+    CustomMultiCheckboxWidgetComponent,
+    CustomTextareaWidgetComponent
   ],
   exports: [
     StructureEditorModule,

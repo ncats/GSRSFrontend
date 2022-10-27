@@ -29,7 +29,185 @@ export class ExportDialogComponent implements OnInit {
   temp: any;
   
 
- scrubberSchema: any;
+ scrubberSchema = {
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://gsrs.ncats.nih.gov/#/export.scrubber.schema.json",
+	"title": "JSON Schema Settings",
+	"description": "This is a debugging form",
+	"type": "object",
+	"properties": {
+
+		"option1CheckboxOnly": {
+			"title": "Option 1 Checkbox Only",
+			"comments": "comment about option 1 checkbox",
+			"type": "boolean"
+    },
+    "removeAllLocked1": {
+      "comments": "When true, remove any data element that is marked as non-public",
+      "title": "Remove all Locked",
+      "type": "boolean"
+    },
+		"option2StringTextbox": {
+			"title": "Option 2 String textbox only",
+			"comments": "comment about Option 2 String textbox only",
+      "type": "string",
+      "visibleIf": {
+        "removeAllLocked1": [
+          true
+        ]}
+    },
+    "removeAllLocked2": {
+      "comments": "When true, remove any data element that is marked as non-public",
+      "title": "Remove all Locked",
+      "type": "boolean"
+    },
+		"option3StringTextbox": {
+			"title": "Option 3 String text AREA only",
+			"comments": "comment about Option 3 String text AREA only",
+			"type": "string",
+			"widget": {
+				"id": "textarea"
+      },
+      "visibleIf": {
+        "removeAllLocked2": [
+          true
+        ]}
+		},
+		"option4SingleSelectHardCoded": {
+			"title": "Option 4 single-select dropdown, hard-coded list",
+			"comments": "comment about Option 4 single-select dropdown, hard-coded list",
+			"type": "string",
+			"widget": {
+				"id": "select"
+			},
+			"enum": [
+				"option 1",
+				"option 2",
+				"option 3",
+				"option 4"
+			]
+		},
+		"option5SingleSelectCV": {
+			"title": "Option 5 single-select dropdown, CV list",
+			"comments": "comment about Option 5 single-select dropdown, CV list",
+			"type": "string",
+			"widget": {
+				"id": "select"
+			},
+			"CVDomain": "ACCESS_GROUP"
+    },
+    
+		"option6MultiSelectHardCoded": {
+			"title": "Option 6 multi-select dropdown, hard-coded list",
+			"comments": "comment about Option 6 multi-select dropdown, hard-coded list",
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"option 1",
+					"option 2",
+					"option 3",
+					"option 4"
+				]
+			},
+			"widget": {
+				"id": "multi-select"
+			}
+    },
+    "removeAllLocked3": {
+      "comments": "When true, remove any data element that is marked as non-public",
+      "title": "Remove all Locked",
+      "type": "boolean"
+    },
+		"option7MultiSelectCV": {
+			"title": "Option 7 multi-select dropdown, CV list",
+			"comments": "comment about Option 7 multi-select dropdown, CV list",
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"widget": {
+				"id": "multi-select"
+			},
+      "CVDomain": "ACCESS_GROUP",
+      "visibleIf": {
+        "removeAllLocked3": [
+          true
+        ]}
+		},
+		"option8SingleSelectRadioHardCoded": {
+			"title": "Option 8 single-select radio, hard-coded list",
+			"comments": "comment about Option 8 single-select radio, hard-coded list",
+			"type": "string",
+			"enum": [
+				"option 1",
+				"option 2",
+				"option 3",
+				"option 4"
+			],
+			"widget": {
+				"id": "radio"
+			}
+    },
+    "removeAllLocked4": {
+      "comments": "When true, remove any data element that is marked as non-public",
+      "title": "Remove all Locked",
+      "type": "boolean"
+    },
+		"option9SingleSelectRadioCV": {
+			"title": "Option 9 single-select radio, CV list",
+			"comments": "comment about Option 9 single-select radio, CV list",
+			"widget": {
+				"id": "radio"
+      },
+      "type": "string",
+
+      "CVDomain": "ACCESS_GROUP",
+      "visibleIf": {
+        "removeAllLocked4": [
+          true
+        ]}
+		},
+		"option10MultiSelectCheckboxHardCoded": {
+			"title": "Option 10 multi-select checkbox, hard-coded list",
+			"comments": "comment about Option 10 multi-select checkbox, hard-coded list",
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"option 1",
+					"option 2",
+					"option 3",
+					"option 4"
+				]
+			},
+			"widget": {
+				"id": "checkbox"
+			}
+    },
+    "removeAllLocked5": {
+      "comments": "When true, remove any data element that is marked as non-public",
+      "title": "Remove all Locked",
+      "type": "boolean"
+    },
+		"option11MultiSelectCheckboxCV": {
+			"title": "Option 11 multi-select checkbox, CV list",
+			"comments": "comment about Option 11 multi-select checkbox, CV list",
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"widget": {
+				"id": "checkbox"
+			},
+      "CVDomain": "ACCESS_GROUP",
+      "visibleIf": {
+        "removeAllLocked5": [
+          true
+        ]}
+		}
+	}
+};
 
   constructor(
     public dialogRef: MatDialogRef<ExportDialogComponent>,
@@ -44,26 +222,25 @@ export class ExportDialogComponent implements OnInit {
     this.substanceService.getSchema('scrubber').subscribe(response => {
       
         console.log(response);
-      this.scrubberSchema = response;
+    //  this.scrubberSchema = response;
     console.log(this.scrubberSchema);
         Object.keys(this.scrubberSchema.properties).forEach(val => {
         //  console.log(val);
         console.log(val);
-        if (response.properties[val] && response.properties[val]['visibleIf']) {
-          Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
-          if (response.properties[vis]) {
-            response.properties[vis]['children'] = 1;
+        if (this.scrubberSchema.properties[val] && this.scrubberSchema.properties[val]['visibleIf']) {
+          Object.keys(this.scrubberSchema.properties[val]['visibleIf']).forEach(vis => {
+          if (this.scrubberSchema.properties[vis]) {
+            this.scrubberSchema.properties[vis]['children'] = 1;
           }
         });
           
           
         }
         })
+        this.scrubberSchema = response;
         
     });
     this.substanceService.getSchema('expander').subscribe(response => {
-      this.expanderSchema = response;
-      console.log(response);
       Object.keys(response.properties).forEach(val => {
         if (response.properties[val] && response.properties[val]['visibleIf']) {
           Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
@@ -74,11 +251,12 @@ export class ExportDialogComponent implements OnInit {
           
           
         }
-      })
+      });
+      this.expanderSchema = response;
+
   });
   this.substanceService.getExportOptions(this.data.extension).subscribe(response => {
     console.log(response);
-    this.exporterSchema = response;
     Object.keys(response.properties).forEach(val => {
       if (response.properties[val] && response.properties[val]['visibleIf']) {
         Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
@@ -89,7 +267,9 @@ export class ExportDialogComponent implements OnInit {
         
         
       }
-    })
+    });
+    this.exporterSchema = response;
+
 });
     const date = new Date();
     if (this.data.type && this.data.type !== null && this.data.type !== '') {
@@ -102,6 +282,7 @@ export class ExportDialogComponent implements OnInit {
 
 
   setValue(event: any, model?: string ): void {
+    console.log(event);
     if (model && model === 'expander') {
       this.privateExpanderModel = event;
     } else if( model === 'scrubber') {
@@ -136,6 +317,13 @@ export class ExportDialogComponent implements OnInit {
       this.options = response;
       console.log(response);
       this.privateOptions = response;
+
+      this.privateOptions.forEach(conf => {
+        if (conf.exporterKey === 'PUBLIC_DATA_ONLY') {
+          this.switchConfig(conf);
+          this.loadedConfig = conf;
+        }
+      })
     });
   }
 
@@ -143,10 +331,18 @@ export class ExportDialogComponent implements OnInit {
     console.log(this.scrubberModel);
     console.log(this.privateScrubberModel);
     this.message = null;
+    let found = false;
     const test = {"exporterKey":this.configName,
     "scrubberSettings": this.privateScrubberModel,
     "expanderSettings": this.privateExpanderModel,
     "exporterSettings": this.privateExporterModel};
+    this.privateOptions.forEach(conf => {
+      if (conf.exporterKey === this.configName) {
+        alert('Cannot Save: config name "' + this.configName + "' already exists");
+        found = true;
+      }
+    })
+    if (!found){
     this.substanceService.storeNewConfig(test).subscribe(response => {
       console.log(response);
       if (response.Result) {
@@ -161,6 +357,7 @@ export class ExportDialogComponent implements OnInit {
       }
     });
   }
+  }
 
   updateConfig() {
     this.message = null;
@@ -169,7 +366,7 @@ export class ExportDialogComponent implements OnInit {
     console.log(this.privateScrubberModel);
     this.loadedConfig.scrubberSettings = this.privateScrubberModel;
     this.loadedConfig.expanderSettings = this.privateExpanderModel;
-    this.loadedConfig.exporterSettings = this.privateExpanderModel;
+    this.loadedConfig.exporterSettings = this.privateExporterModel;
 
     this.substanceService.updateConfig(this.loadedConfig.configurationId, this.loadedConfig).subscribe(response => {
       console.log(response);
