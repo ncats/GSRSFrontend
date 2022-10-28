@@ -143,7 +143,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     CustomSelectWidgetComponent,
     CustomRadioWidgetComponent,
     CustomMultiCheckboxWidgetComponent,
-    CustomTextareaWidgetComponent
+    CustomTextareaWidgetComponent,
     RegisterComponent,
     PwdRecoveryComponent
   ],
