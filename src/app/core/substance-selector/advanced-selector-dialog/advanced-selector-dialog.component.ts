@@ -1,9 +1,7 @@
-import { Component, OnInit, Input, Output, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Editor } from '@gsrs-core/structure-editor';
-import * as _ from 'lodash';
-import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
-import { EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { StructureService, InterpretStructureResponse, StructureImageModalComponent } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -85,7 +83,7 @@ private privateSequenceSearchKey?: string;
   }
 
   close() {
-    // this.dialogRef.close();
+     this.dialogRef.close();
   }
 
   standardize(standard: string): void {
@@ -114,7 +112,6 @@ private privateSequenceSearchKey?: string;
   }
 
   ngOnInit(): void {  
-    console.log(this.data);
     this.activeTab = this.data.tab;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   
@@ -136,12 +133,9 @@ private privateSequenceSearchKey?: string;
 
   }
 
-
   molvecUpdate(mol: any) {
     this.editor.setMolecule(mol);
   }
-
-  
 
   editorOnLoad(editor: Editor): void {
     this.overlayContainer.style.zIndex = '1003';
@@ -167,14 +161,9 @@ private privateSequenceSearchKey?: string;
       }, 100);
   }
 
-  getCombination(ll, i) {
-    
-  }
-
   search(): void {
     const mol = this.editor.getMolfile();
     this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-        console.log(response);
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
     }, () => {});
@@ -190,7 +179,6 @@ private privateSequenceSearchKey?: string;
   }
 
   updateType(event: any) {
-    console.log(event);
     this.searchType = event.value;
     
     this.privateSearchType = event.value;
@@ -242,18 +230,14 @@ private privateSequenceSearchKey?: string;
       navString += '?search=' + navigationExtras.queryParams['search'];
     }
 
-    console.log(navString);
     this.dialogRef.close();
     const url = this.router.serializeUrl(
       this.router.createUrlTree(['/browse-substance'], {
         queryParams: navigationExtras.queryParams})
     );
-
-    console.log(url);
   
     window.open(url, '_blank');
 
-   // this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
 
@@ -287,7 +271,6 @@ private privateSequenceSearchKey?: string;
       })
         .subscribe(pagingResponse => {
           this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
-          console.log(pagingResponse); 
 
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.total % this.pageSize === 0) {
@@ -317,28 +300,12 @@ private privateSequenceSearchKey?: string;
         });
 
       }
-  getPossibleSmiles(smi) {
 
-    
-  }
-
-  fragmentType(domain: any, current?: any) {
-  
-  }
-
-  getFragmentCV() {
-   
-    
-  }
   checkImg(term: any) {
     term.fragmentSrc = this.CVService.getStructureUrlFragment(term.fragmentStructure);
     term.simpleSrc = this.CVService.getStructureUrlFragment(term.simplifiedStructure);
 
   }
-  setTermStructure(structure) {
-   
-  }
-
   openImageModal(substance: SubstanceDetail): void {
 
     let data: any;
@@ -377,7 +344,6 @@ private privateSequenceSearchKey?: string;
     this.overlayContainer.style.zIndex = '1002';
 
     const subscription = dialogRef.afterClosed().subscribe(response => {
-      console.log(response);
       if (response && response === 'molfile') {
         this.editor.setMolecule(molfile);
       }
@@ -399,7 +365,6 @@ private privateSequenceSearchKey?: string;
   }
 
   changePage(pageEvent: PageEvent) {
-    console.log(pageEvent);
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     if (this.activeTab == 0) {

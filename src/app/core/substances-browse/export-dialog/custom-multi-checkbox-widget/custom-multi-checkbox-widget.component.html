@@ -11,6 +11,7 @@
 		</label>
 	</div>
 	<ng-container *ngIf="schema.type==='array'">
+			<div  [ngClass] = "schema.layout && schema.layout === 'horizontal' ? 'row-layout':''">
 		<div *ngFor="let option of schema.items.oneOf" class="checkbox">
 			<label class="horizontal control-label">
 				<input [attr.name]="name"
@@ -23,6 +24,7 @@
                 {{option.description ? option.description : option.enum[0]}}
                 
 			</label>
+		</div>
 		</div>
 	</ng-container>
 </div>
@@ -41,7 +43,8 @@
             <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
 		</label>
 	</div>
-	<ng-container *ngIf="schema.type==='array'">
+	<ng-container *ngIf="schema.type==='array'" >
+		<div  [ngClass] = "schema.layout && schema.layout === 'horizontal' ? 'row-layout':''">
 		<div *ngFor="let option of schema.items.enum" class="checkbox">
 			<label class="horizontal control-label">
 				<input [attr.name]="name"
@@ -54,6 +57,7 @@
                     {{option.description ? option.description : option}}
 			</label>
 		</div>
+	</div>
 	</ng-container>
 </div>
 
@@ -71,7 +75,8 @@
             <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
 		</label>
 	</div>
-	<ng-container *ngIf="schema.type==='array'">
+	<ng-container *ngIf="schema.type==='array'" >
+			<div  [ngClass] = "schema.layout && schema.layout === 'horizontal' ? 'row-layout':''">
 		<div *ngFor="let option of options" class="checkbox">
 			<label class="horizontal control-label">
 				<input [attr.name]="name"
@@ -83,6 +88,7 @@
 					>
 				{{option.display}}
 			</label>
+		</div>
 		</div>
 	</ng-container>
 </div>

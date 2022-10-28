@@ -583,7 +583,6 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   export(url: string, extension: string) {
-    console.log(url);
     if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
         maxHeight: '80%',
@@ -597,14 +596,12 @@ searchTermOkforBeginsWithSearch(): boolean {
       const exportSub = dialogReference.afterClosed().subscribe(response => {
         const name = response.name;
         const id = response.id;
-        console.log(id);
         this.overlayContainer.style.zIndex = null;
         if (name && name !== '') {
           this.loadingService.setLoading(true);
           const fullname = name + '.' + extension;
           this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
             this.substanceService.getConfigByID(id).subscribe(resp =>{
-              console.log(resp);
             });
             this.loadingService.setLoading(false);
             this.loadingService.setLoading(false);

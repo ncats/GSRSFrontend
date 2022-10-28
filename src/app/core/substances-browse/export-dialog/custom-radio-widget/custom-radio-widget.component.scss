@@ -53,3 +53,14 @@
     cursor: pointer;
     color: #4793d1;
   }
+
+  .row-layout {
+    color: black;
+    width: 100%;
+display: flex;
+flex-wrap: wrap;
+
+    .radio {
+      margin-left:10px;
+    }
+  }

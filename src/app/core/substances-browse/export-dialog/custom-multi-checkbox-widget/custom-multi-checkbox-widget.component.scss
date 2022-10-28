@@ -18,3 +18,14 @@
     height: 18px;
     cursor: pointer;
   }
+
+  .row-layout {
+    color: black;
+    width: 100%;
+display: flex;
+flex-wrap: wrap;
+
+    .checkbox {
+      margin-left:10px;
+    }
+  }

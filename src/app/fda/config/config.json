@@ -11,9 +11,45 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName":"UNII",
   "primaryCode": "BDNUM",
-
-  "filteredDuplicationCodes": [ "BDNUM", "FDA UNII" ],
-  "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID" ],
+  "authenticateAs": {
+    "apiUsername": null,
+    "apiPassword": null,
+    "apiKey": null,
+    "apiToken": null
+  },
+"userRegistration": {
+    "configurations": {
+      "emailForm": {
+        "active": false,
+        "userAdminRecipientEmails": ["email1@domain.com", "email1@domain.com"],
+        "instanceApplicationName": "GSRS",
+        "instanceApplicationSubjectTag": "GSRS",
+        "registrationAccessEmailSubjectTemplate": "[%s] User registration/access issue",
+        "registrationAccessEmailBodyTemplate": "Please register this new user OR resolve login access issue in %s\n\nUsername: %s\nUser email: %s\n\nTo the USER making the request, please provide below any details that will help the Admin facilitate your request:\n\n"
+      }
+    }
+  },
+  "elementLabelDisplay": {
+    "labels": {
+      "substance_names_name": {
+          "displayNameTitle": "Display Name",
+          "displayNameShortTitle":"DN",
+          "preferredTitle": "Additional Listing Name",
+          "preferredShortTitle": "AL"
+      }
+    }
+  },
+  "filteredDuplicationCodes": [
+    "BDNUM",
+    "FDA UNII"
+  ],
+  "typeaheadFields": [
+    "Standardized_Name",
+    "Display_Name",
+    "CAS",
+    "Name",
+    "Approval_ID"
+  ],
   "loadedComponents": {
     "applications": true,
     "products": true,

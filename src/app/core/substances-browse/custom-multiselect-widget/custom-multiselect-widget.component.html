@@ -3,7 +3,7 @@
         {{ schema.title }}
         <sup *ngIf = "schema.comments && !schema.description" ><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
     </label>
-    <span *ngIf="schema.description" class="formHelp">
+    <span *ngIf="schema.description" class="formHelp" >
         {{schema.description}}
         <sup *ngIf = "schema.comments"  ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
     </span>
@@ -23,7 +23,7 @@
 
 
 <div class="widget form-group" *ngIf = "!schema.CVDomain" [ngClass] ="schema.visibleIf ? 'tabbed': 'no-indent'">
-    <label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal label control-label">
         {{ schema.title }}
         <sup *ngIf = "schema.comments && !schema.description"><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
     </label>
