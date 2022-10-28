@@ -37,7 +37,7 @@
 }
 
 .deselect {
-    color: rgba(0, 0, 0, .5);
+    color: var(--text-color);
   }
 
 .other-container {
@@ -46,7 +46,7 @@
 }
 
 .custom {
-  border-bottom: 1px solid rgba(0, 0, 0, .35);
+  border-bottom: 1px solid var(--box-shadow-color-4);
 
 }
 .amount-form {

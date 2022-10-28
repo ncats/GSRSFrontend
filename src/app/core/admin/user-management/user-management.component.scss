@@ -36,17 +36,17 @@
 }
 .dropdown-content {
     display: none;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px var(--box-shadow-color);
 }
 .dropdown-content a {
     font-size: 12px;
-    color: black;
+    color: var(--regular-black-color);;
     display: block;
     padding: 12px 16px;
     width: 170px;
 }
 .dropdown-content a:hover {
-    background-color: #f1f1f1
+    background-color: var(--lightgray-color);
 }
 .show {
     display: block !important;

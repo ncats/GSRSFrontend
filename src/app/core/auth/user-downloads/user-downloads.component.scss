@@ -16,7 +16,7 @@
 .job-container {
     padding:10px;
     margin: 20px;
-    border: 1px solid rgba(0, 0, 0, .1);
+    border: 1px solid var(--border-color);
 }
 
 
@@ -49,5 +49,5 @@
 
 .a-link {
     text-decoration:none;
-    color: #1565C0;
+    color: var(--link-color);
   }

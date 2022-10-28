@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 import { SafeUrl } from '@angular/platform-browser';
 import { StructureService } from '../structure.service';
 import { Router } from '@angular/router';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-structure-image-modal',
@@ -21,7 +22,10 @@ export class StructureImageModalComponent implements OnInit {
   names: string[] = [];
   showSelector =false;
   showSubstanceSelector = false;
+  gsrsHomeBaseUrl = '';
+
   constructor(
+    private configService: ConfigService,
     private utilsService: UtilsService,
     private structureService: StructureService,
     public dialogRef: MatDialogRef<StructureImageModalComponent>,
@@ -30,6 +34,9 @@ export class StructureImageModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Load Frontend Home URL from config
+    this.getHomepageUrl();
+    
     this.structure = (this.data && this.data.structure) ? this.data.structure : null;
     if (this.data.smiles) {
       this.smiles = this.data.smiles;
@@ -74,6 +81,7 @@ export class StructureImageModalComponent implements OnInit {
 
 
 
+
   setMolfile(): void {
     
     this.dialogRef.close('molfile');
@@ -85,22 +93,38 @@ export class StructureImageModalComponent implements OnInit {
   }
 
   gotoDetails(): void {
+    let url = '';
     this.dialogRef.close();
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/substances/' + this.uuid])
-    );
-  
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid;
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/' + this.uuid])
+      );
+    }
     window.open(url, '_blank');
-   // this.router.navigate(['/substances/' + this.uuid]);
   }
 
   gotoEdit(): void {
+    let url = '';
     this.dialogRef.close();
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/substances/' + this.uuid + '/edit'])
-    );
-  
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid + '/edit';
+      
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/' + this.uuid + '/edit'])
+      );
+    }
     window.open(url, '_blank');
+
   }
 
+
+
+  getHomepageUrl() {
+    // Get GSRS Frontend URL fron config
+    this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
+  }
 }

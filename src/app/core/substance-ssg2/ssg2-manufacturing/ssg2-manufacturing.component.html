@@ -1,28 +1,34 @@
 <div *ngFor="let manufacture of manufacturing; let manufactureIndex = index">
 
   <hr *ngIf="manufactureIndex > 0">
+  <span *ngIf="manufactureIndex > 0">
+    <br><br>
+  </span>
 
   <div class="form-row">
 
     <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete Manufacturing {{(privateStageIndex+1)}}" (click)="confirmDeleteManufacturing(manufactureIndex)">
+      <button mat-icon-button matTooltip="Delete Manufacturing {{(privateStageIndex+1)}}"
+        (click)="confirmDeleteManufacturing(manufactureIndex)">
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
 
-    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Manufacturing Type" name="manufacturingType"
+    <app-cv-input class="col-4-1" domain="SSG_MANUFACTURING_TYPE" title="Manufacturing Type" name="manufacturingType"
       [model]="manufacture.manufacturingType" (valueChange)="manufacture.manufacturingType = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Product Method Type" name="productionMethodType"
-      [model]="manufacture.productionMethodType" (valueChange)="manufacture.productionMethodType = $event">
+    <app-cv-input class="col-4-1" domain="SSG_PRODUCTION_METHOD_TYPE" title="Production Method Type"
+      name="productionMethodType" [model]="manufacture.productionMethodType"
+      (valueChange)="manufacture.productionMethodType = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Product System Type" name="productionSystemType"
-      [model]="manufacture.productionSystemType" (valueChange)="manufacture.productionSystemType = $event">
+    <app-cv-input class="col-4-1" domain="SSG_PRODUCTION_SYSTEM_TYPE" title="Production System Type"
+      name="productionSystemType" [model]="manufacture.productionSystemType"
+      (valueChange)="manufacture.productionSystemType = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-4-1" domain="SSG_STAGE_TYPE" title="Product System" name="productionSystem"
+    <app-cv-input class="col-4-1" domain="SSG_PRODUCTION_SYSTEM" title="Production System" name="productionSystem"
       [model]="manufacture.productionSystem" (valueChange)="manufacture.productionSystem = $event">
     </app-cv-input>
 
@@ -37,10 +43,10 @@
 
   </div> <!-- form row -->
 
-  <h2>Organization</h2>
-
+  <hr>
+  <br>
+  <span class="fontsize18px"><b>Organization: </b></span>&nbsp;&nbsp;&nbsp;
   <div class="form-row">
-
     <mat-form-field class="col-3-1">
       <input matInput placeholder="Search Organization Name" [(ngModel)]="manufacture.productionMethodDescription"
         name="manufacture.productionMethodDescription" />
@@ -52,25 +58,90 @@
     </button>
   </div>
 
-  <b>OR</b>
+  <br>
+  <b>OR Enter a new Organization</b>
 
   <div class="form-row">
 
-    <mat-form-field class="col-3-1">
-      <input matInput placeholder="Manufacturer ID" [(ngModel)]="manufacture.manufacturerId"
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization ID" [(ngModel)]="manufacture.manufacturerId"
         name="manufacture.manufacturerId" />
     </mat-form-field>
 
-    <mat-form-field class="col-3-1">
-      <input matInput placeholder="Manufacturer Name" [(ngModel)]="manufacture.manufacturerName"
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Organization Name" [(ngModel)]="manufacture.manufacturerName"
         name="manufacture.manufacturerName" />
     </mat-form-field>
 
-    <app-cv-input class="col-3-1" domain="SSG_STAGE_TYPE" title="Issuer of ID" name="issuerOfID"
+    <app-cv-input class="col-4-1" domain="SSG_ISSUER_OF_ID" title="Issuer of ID" name="issuerOfID"
       [model]="manufacture.issuerOfID" (valueChange)="manufacture.issuerOfID = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-4-1" domain="SSG_ORGANIZATION_ROLE" title="Organization Role" name="manufacturerRole"
+      [model]="manufacture.manufacturerRole" (valueChange)="manufacture.manufacturerRole = $event">
     </app-cv-input>
 
   </div> <!-- form row -->
 
+
+  <!-- ***** SITES -->
+  <hr>
+  <br>
+  <span class="fontsize18px"><b>Sites: </b></span>&nbsp;&nbsp;&nbsp;
+  <button mat-stroked-button color="primary" (click)="addSite()">
+    Add Site <mat-icon svgIcon="add_circle_outline"></mat-icon>
+  </button>
+  <!--
+  <div class="margintop10px" [ngClass]="{'marginbottom25px': showAdvancedSettings === true}"
+    *ngFor="let site of process.sites; let siteIndex = index">
+  -->
+  <!--
+  <fieldset class="border">
+    <legend class="border">Site</legend>
+  -->
+    <!-- Another Add Button-->
+    <!-- (process.sites && process.sites.length > 0) &&  -->
+    <div class="divflex">
+      <span class="middle-fill"></span>
+
+    </div>
+
+    <div class="form-row">
+      <!-- Form row -->
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Site Address" [(ngModel)]="manufacture.manufacturerAddress"
+          name="manufacture.manufacturerAddress" />
+      </mat-form-field>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Site City" [(ngModel)]="manufacture.manufacturerCity"
+          name="manufacture.manufacturerCity" />
+      </mat-form-field>
+
+      <app-cv-input class="col-3-1" domain="SSG_STAGE_STATE" title="Site State" name="siteState"
+        [model]="manufacture.siteState" (valueChange)="manufacture.siteState = $event">
+      </app-cv-input>
+
+    </div> <!-- form row -->
+
+    <div class="form-row">
+      <!-- Form row -->
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Site Zipcode" [(ngModel)]="manufacture.manufacturerZipcode"
+          name="manufacture.manufacturerZipcode" />
+      </mat-form-field>
+
+      <app-cv-input class="col-3-1" domain="PROD_COUNTRY_CODE" title="Site Country" name="siteCountry"
+        [model]="manufacture.siteCountry" (valueChange)="manufacture.siteCountry = $event">
+      </app-cv-input>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Site GEO Code" [(ngModel)]="manufacture.siteGeoCode"
+          name="manufacture.siteGeoCode" />
+      </mat-form-field>
+    </div>
+    <!--
+  </fieldset>
+    -->
   <br>
 </div>

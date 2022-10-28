@@ -1,6 +1,7 @@
 export interface Config {
     apiBaseUrl?: string;
-    apiSecondBaseUrl?: string;
+    gsrsHomeBaseUrl?: string;
+    apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;
     googleAnalyticsId?: string;
     version?: string;
@@ -47,6 +48,9 @@ export interface Config {
     ssg4Form?: string;
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
+    authenticateAs?: AuthenticateAs;
+    userRegistration?: any
+    elementLabelDisplay?:any;
 }
 
 export interface LoadedComponents {
@@ -55,6 +59,7 @@ export interface LoadedComponents {
     clinicaltrials?: boolean;
     adverseevents?: boolean;
     impurities?: boolean;
+    userRegistration?: boolean;
 }
 
 export interface SubstanceDetailsCard {
@@ -91,4 +96,11 @@ export interface UsefulLink {
     imageFile: string;
     linkHref: string;
     templateDescription?: string;
+}
+
+export interface AuthenticateAs {
+    apiUsername?: string,
+    apiPassword?: string,
+    apiKey?: string,
+    apiToken?: string;
 }

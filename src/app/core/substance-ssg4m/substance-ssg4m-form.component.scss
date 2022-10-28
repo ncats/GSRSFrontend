@@ -4,10 +4,10 @@
     flex-direction: column;
     /*top: 64px; */
     width: 100%;
-    background-color: white;
+    background-color: var(--regular-white-color);
     align-items: center;
     /*justify-content: center;*/
-    box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+    box-shadow:     0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
     z-index: 1001;
     justify-content: flex-end;
 }
@@ -19,7 +19,7 @@
 .actions-container {
   max-width: 100%;
   width: 100%;
-  background-color: white;
+  background-color: var(--regular-white-color);
   padding: 10px 45px;
   display: flex;
   justify-content: flex-end;
@@ -78,7 +78,7 @@ mat-select-panel{
   margin-left: 30px;
   margin-right: 5px;
   margin-top: -10px;
-  color: #4793d1;
+  color: var(--primary-color);
 
 
   ::ng-deep .mat-form-field-wrapper {
@@ -118,7 +118,7 @@ mat-select-panel{
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: white;
+  background-color: var(--regular-white-color);
   display: flex;
   flex-direction: column;
 
@@ -156,14 +156,14 @@ mat-select-panel{
   }
 
   .warning-message {
-    color: #8a6d3b;
-    background-color: #fcf8e3;
+    color: var(--warning-dialog-color);
+    background-color: var(--warning-dialog-bg-color);
 
   }
 
   .error-message {
-    color: #a94442;
-    background-color: #f2dede;
+    color: var(--error-dialog-color);
+    background-color: var(--error-dialog-bg-color);
   }
 
 }
@@ -182,7 +182,7 @@ mat-select-panel{
 }
 
 .internal-link {
-  color: #448aff;
+  color: var(--link-primary-color);
 }
 
 .import-button {
@@ -199,8 +199,16 @@ mat-select-panel{
   padding-right:5px;
 }
 
+.fontsize16px {
+  font-size: 16px;
+}
+
 .fontsize20px {
   font-size: 20px;
+}
+
+.padall25px {
+  padding: 25px;
 }
 
 .padtop90px {
@@ -209,6 +217,10 @@ mat-select-panel{
 
 .padleft25px {
   padding-left: 25px;
+}
+
+.margintop10px {
+  margin-top: 10px;
 }
 
 .bordergray {
@@ -226,6 +238,14 @@ mat-select-panel{
 /* FDA COLOR BLUE CODE Hex: #007CBA */
 .colorbluefda {
   color: #007CBA;
+}
+
+.colorred {
+  color: red;
+}
+
+.bkcoloryellow {
+  background-color: rgb(247, 247, 216);
 }
 
 ::ng-deep .custom-menu{

@@ -3,13 +3,15 @@ import { Editor } from '@gsrs-core/structure-editor';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { StructureService, InterpretStructureResponse, StructureImageModalComponent } from '@gsrs-core/structure';
+import { StructureService, InterpretStructureResponse, StructureImageModalComponent, StructureImportComponent } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
+import { ConfigService } from '@gsrs-core/config';
+import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 @Component({
   selector: 'app-advanced-selector-dialog',
   templateUrl: './advanced-selector-dialog.component.html',
@@ -35,6 +37,9 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   totalSubstances = 0;
   pageIndex = 0;
   pageSize = 10;
+  nameTotalSubstances = 0;
+  namePageIndex = 0;
+  namePageSize = 10;
   lastPage: number;
   searchValue: string;
 
@@ -48,7 +53,11 @@ _searchtype: string;
 similarityCutoff?: number;
 showSimilarityCutoff = false;
 substances?: Array<any>;
+nameSubstances?: Array<any>;
+nameResponse: any;
 response: any;
+
+panelOpenState = true;
 private overlayContainer: HTMLElement;
 
 private privateSearchTerm = '';
@@ -66,6 +75,7 @@ private privateSequenceSearchKey?: string;
     private structureService: StructureService,
     private overlayContainerService: OverlayContainer,
     private substanceService: SubstanceService,
+    private configService: ConfigService,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<AdvancedSelectorDialogComponent>,
     private router: Router,
@@ -96,7 +106,6 @@ private privateSequenceSearchKey?: string;
   }
 
   onTabChanged(event: any): void {
-    console.log(event);
     
   }
 
@@ -108,11 +117,10 @@ private privateSequenceSearchKey?: string;
     this.searchValue = event;
     this.privateSearchTerm = event;
     this.privateStructureSearchTerm = null;
-    this.searchSubstances();
+    this.searchSubstances(null, null, 'name');
   }
 
   ngOnInit(): void {  
-    this.activeTab = this.data.tab;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   
     if (this.privateTerm.simplifiedStructure) {
@@ -123,13 +131,17 @@ private privateSequenceSearchKey?: string;
   }
   this.overlayContainer = this.overlayContainerService.getContainerElement();
 
-  if(this.dat && this.dat.uuid) {
+  if(this.dat && this.dat.uuid && this.data.tab !== 1) {
     this.structureService.getMolfile(this.dat.uuid);
   }
 
   if(this.dat && this.dat.name) {
     this.searchValue = this.dat.name;
   }
+  this.activeTab = this.data.tab;
+  setTimeout(() => {
+    this.activeTab = this.data.tab;
+  }, 10);
 
   }
 
@@ -167,10 +179,6 @@ private privateSequenceSearchKey?: string;
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
     }, () => {});
-  /*  this.substanceService.test().subscribe(response => {
-      this.substances = (response && response.content) ? response.content : [];
-      console.log(response);
-    })*/
   }
 
 
@@ -231,18 +239,24 @@ private privateSequenceSearchKey?: string;
     }
 
     this.dialogRef.close();
-    const url = this.router.serializeUrl(
-      this.router.createUrlTree(['/browse-substance'], {
-        queryParams: navigationExtras.queryParams})
-    );
+    let url = '';
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/browse-substance' + navString;
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/browse-substance'], {
+          queryParams: navigationExtras.queryParams})
+      );
+    }
   
     window.open(url, '_blank');
 
   }
 
 
-  searchSubstances(structureSearchTerm?: string, smiles?: string) {
-    
+  searchSubstances(structureSearchTerm?: string, smiles?: string, type?: string) {
+    let size = this.pageSize;
+    let index = this.pageIndex;
     if (structureSearchTerm){
       this.privateStructureSearchTerm = structureSearchTerm || null;
       this.privateSearchType = this.searchType || 'substructure';
@@ -250,8 +264,12 @@ private privateSequenceSearchKey?: string;
       if (this.searchType === 'similarity') {
         this.privateSearchCutoff = this.similarityCutoff || 0;
       }
+
+
     } else {
       this.privateStructureSearchTerm = null;
+      size = this.namePageSize;
+      index = this.namePageIndex;
     }
    
       this.loadingService.setLoading(true);
@@ -263,16 +281,29 @@ private privateSequenceSearchKey?: string;
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
         order: null,
-        pageSize: this.pageSize,
+        pageSize: size,
         facets: this.privateFacetParams,
-        skip: this.pageIndex,
+        skip: index,
         sequenceSearchKey: this.privateSequenceSearchKey,
         deprecated: false
       })
         .subscribe(pagingResponse => {
-          this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
 
-          this.totalSubstances = pagingResponse.total;
+         // this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+
+         // this.totalSubstances = pagingResponse.total;
+          
+          if(type && type === 'name') {
+            this.nameSubstances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+            this.nameTotalSubstances = pagingResponse.total;
+          } else {
+            this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+            this.totalSubstances = pagingResponse.total;
+            if (this.totalSubstances > 0) {
+              this.panelOpenState = false;
+            }
+          }
+
           if (pagingResponse.total % this.pageSize === 0) {
             this.lastPage = (pagingResponse.total / this.pageSize);
           } else {
@@ -280,14 +311,10 @@ private privateSequenceSearchKey?: string;
           }
 
           
-
-          this.substances = pagingResponse.content;
-          this.totalSubstances = pagingResponse.total;
           this.overlayContainer.style.zIndex = '1003';
         
             this.overlayContainer.style.zIndex = '10003';
           this.loadingService.setLoading(false);
-          this.overlayContainer.style.zIndex = '1003';
         
             this.overlayContainer.style.zIndex = '10003';
           setTimeout(() => {
@@ -300,6 +327,55 @@ private privateSequenceSearchKey?: string;
         });
 
       }
+
+      openStructureImportDialog(): void {
+        const dialogRef = this.dialog.open(StructureImportComponent, {
+          height: 'auto',
+          width: '650px',
+          data: {}
+        });
+      //  this.overlayContainer.style.zIndex = '1002';
+    
+        dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+          if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
+            this.editor.setMolecule(structurePostResponse.structure.molfile);
+          }
+        }, () => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+        });
+      }
+    
+      openStructureExportDialog(): void {
+        const dialogRef = this.dialog.open(StructureExportComponent, {
+          height: 'auto',
+          width: '650px',
+          data: {
+            molfile: this.editor.getMolfile(),
+            smiles: this.editor.getSmiles()
+          }
+        });
+      //  this.overlayContainer.style.zIndex = '1002';
+    
+        dialogRef.afterClosed().subscribe(() => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+        }, () => {
+          setTimeout(() => {
+            this.overlayContainer.style.zIndex = '1003';
+            this.overlayContainer.style.zIndex = '10003';
+            });
+        });
+      }
+
 
   checkImg(term: any) {
     term.fragmentSrc = this.CVService.getStructureUrlFragment(term.fragmentStructure);
@@ -351,10 +427,10 @@ private privateSequenceSearchKey?: string;
         this.selectSubstance(substance);
 
       }
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1003';
       subscription.unsubscribe();
     }, () => {
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1003';
       subscription.unsubscribe();
     });
 
@@ -364,15 +440,20 @@ private privateSequenceSearchKey?: string;
     this.dialogRef.close(substance);
   }
 
-  changePage(pageEvent: PageEvent) {
-    this.pageSize = pageEvent.pageSize;
-    this.pageIndex = pageEvent.pageIndex;
-    if (this.activeTab == 0) {
-      this.searchSubstances(this.response);
 
+  changePage(pageEvent: PageEvent, type?: string) {
+    if (type && type === 'name') {
+      this.namePageSize = pageEvent.pageSize;
+      this.namePageIndex = pageEvent.pageIndex;
+        this.searchSubstances(null, null, 'name');
+  
     } else {
-      this.searchSubstances;
+      this.pageSize = pageEvent.pageSize;
+      this.pageIndex = pageEvent.pageIndex;
+        this.searchSubstances(this.response);
+   
     }
+    
   }
 }
 

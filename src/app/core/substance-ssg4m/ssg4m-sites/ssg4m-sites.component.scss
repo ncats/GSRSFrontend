@@ -82,24 +82,24 @@
 
 hr {
   border: none;
-  border-top: 3px dotted orangered;
-  color: #333;
+  border-top: 3px dotted var(--regular-orangered-color);
+  color: var(--hr-color);
   overflow: visible;
   text-align: center;
   height: 5px;
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .buttonstyle {
-  border: 2px solid rgb(65, 72, 167);
-  background-color: rgb(241, 241, 250);
+  border: 2px solid var(--deep-purple-border-color-rgb);
+  background-color: var(--pale-border-color-rgb-3);
 }
 
 .bordergreen {
-  border: 1px solid green;
+  border: 1px solid var(--regular-green-color);
 }
 
 .margintop10px {
@@ -147,14 +147,14 @@ hr {
 }
 
 fieldset.border {
-  border: solid 2px #0BA711 !important;
+  border: solid 2px var(--fieldset-green-border-color) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   /*border-radius: 8px;*/
   min-width: 0;  /* override the default value of min-content */
-  /*-webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
-  box-shadow: 2px 2px 3px 1px rgba(110,104,110,0.64);*/
+/*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);*/
 }
 
 legend.border {
@@ -162,8 +162,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 15px;
-  /* FDA COLOR BLUE CODE Hex: #007CBA */
-  color: #007CBA;
+  color: var(--legend-blue-border-color-2);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 20px;

@@ -6,7 +6,7 @@
 }
 
 .bordergray {
-  border:1px solid gray;
+  border:1px solid var(--regular-grey-color);
 }
 
 .font10px {
@@ -22,23 +22,23 @@
 }
 
 .colorgray {
-	color: gray;
+	color: var(--regular-grey-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .colorgreen {
-  color: green;
+  color: var(--regular-green-color);
 }
 
 .colorpurple {
-  color: purple;
+  color: var(--regular-purple-color);
 }
 
 .colorblue {
-  color: rgb(56, 40, 201);
+  color: var(--royal-blue-color);
 }
 
 .padleft25px {
@@ -68,7 +68,7 @@ ol, li {
   left: 0;
   bottom: 56px;
   right: 0;
-  background: rgba(150, 148, 148, 0.15);
+  background: var(--spinner-bg-color);
   z-index: 1;
   display: flex;
   align-items: top; /* Verticle align */

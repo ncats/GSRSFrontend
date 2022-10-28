@@ -5,8 +5,12 @@
     </button>
     <div class="approval" *ngIf="approvalID">
       <div *ngIf="uuid !== null; else noUuid">
-        <a [routerLink]="['/substances', uuid]" target="_blank">
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
           <span class="viewrecord">{{approvalID}}</span>
+        </a>&nbsp;
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
+          </mat-icon>
         </a>
       </div>
       <ng-template #noUuid>
@@ -18,11 +22,15 @@
     </div>
     <div class="displayname" *ngIf="displayName">
       <div *ngIf="uuid !== null; else noDisplayUuid">
-        <a [routerLink]="['/substances', uuid]" target="_blank">
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
           <span class="viewrecord">{{displayName}}</span>
         </a>&nbsp;
-        <a [routerLink]="['/substances', uuid]" target="_blank">
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
           <span class="viewrecord">(view record)</span>
+        </a>&nbsp;
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
+          </mat-icon>
         </a>
       </div>
       <ng-template #noDisplayUuid>

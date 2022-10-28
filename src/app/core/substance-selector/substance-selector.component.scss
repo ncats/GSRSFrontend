@@ -1,6 +1,3 @@
-.substance-selector-container {
-  /*margin-top: 10px;*/
-}
 
 .selected-substance-container {
     max-width: 100%;
@@ -11,16 +8,24 @@
     cursor: zoom-in !important;
 }
 
-.zoom :hover {
+::ng-deep .zoom:hover {
     cursor: zoom-in !important;
 
 }
+
+.zoom:hover {
+    cursor: zoom-in !important;
+
+}
+
 
 .centered {
     text-align: center;
     margin-left: -42px;
     margin-top: 5px;
 }
+
+
 
 .selected-substance {
     display: flex;
@@ -33,6 +38,10 @@
         display: block;
         max-width: 200px;
     }
+     img :hover {
+        cursor: zoom-in !important;
+    
+    }
 }
 
 .undo {
@@ -41,9 +50,6 @@
 }
 
 
-.selected-substance-options:hover { 
-    cursor: zoom-in !important;
-}
 
 .selected-substance-options {
     position: absolute;
@@ -51,11 +57,10 @@
     top: 15px;
     display: flex;
     flex-direction: column;
-    cursor: zoom-in !important;
 
     .mat-mini-fab {
-        background-color: rgba(242, 242, 242, .85);
-        color: #404040;
+        background-color: var(--mat-icon-button-bg-color);
+        color: var(--label-color);
         width: 35px;
         height: 35px;
 

@@ -2,7 +2,8 @@
 <mat-tab-group [selectedIndex] = "activeTab" (selectedTabChange)="onTabChanged($event)" class = "tab-group">
     <mat-tab  label= "Structure Search">
 
-
+      <mat-expansion-panel (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false" [expanded]="panelOpenState">
   <div class = "form-row upper-padding">
     <div class="editor-container">
         <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
@@ -41,10 +42,10 @@
             <button class="search-button" name = "search" mat-raised-button color="primary" (click)="search()" style = "font-size: 18px;">Search</button>
           </div>
           <div class="action-button-container one">
-            <button class="import-button" name = "export" mat-raised-button color="primary">Import</button>
+            <button class="import-button" name = "export" (click)="openStructureImportDialog()" mat-raised-button color="primary">Import</button>
           </div>
           <div class="action-button-container one">
-            <button class="export-button" name = "import" mat-raised-button color="primary" >Export</button>
+            <button class="export-button" name = "import" (click)="openStructureExportDialog()" mat-raised-button color="primary" >Export</button>
           </div>
       </div>
       </div>
@@ -53,24 +54,30 @@
 
 
 
-  <div *ngIf = "!totalSubstances || totalSubstances < 1" >
+  <div *ngIf = "!nameTotalSubstances || nameTotalSubstances < 1" >
     <h4>
       Get Structure From Name
     </h4>
     <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
   </div>
-
-  <div class = "form-row paginator-row" *ngIf = "totalSubstances && totalSubstances > 0">
+ 
+  </mat-expansion-panel>
+  <div class = "form-row paginator-row" *ngIf = "totalSubstances &&totalSubstances > 0">
       <button mat-button (click) = "navigateToBrowseSubstance('structure')">
           View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
       </button>
        <span class = "middle-fill"></span>
-      <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
-    </mat-paginator>
+       <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+       [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+     </mat-paginator>
   </div>
-
+<div class = "form-row expand-button"><span class ="middle-fill"></span>
+   <a (click) = "panelOpenState = !panelOpenState"> <span>{{!panelOpenState ? 'Show': 'Hide'}} search options </span>
+       <span><mat-icon [svgIcon]="!panelOpenState ? 'chevron_down' : 'chevron_up'" class = "chevron"></mat-icon></span></a>
+</div>
   <div class = "form-row2">
+    
+    
         <mat-card *ngFor="let substance of substances" class="tile">
                 <mat-card-title>
                   <div class='tile-title'>
@@ -109,13 +116,20 @@
                 [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
             </div>
           </div>
-          <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+          <div *ngIf = "substance._matchContext && substance._matchContext.similarity" class = "add-height">
             <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
           </div>
-          <div class="tile-name">
-            <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
-            </a>
-          </div>
+          <div *ngIf = "!substance._matchContext || !substance._matchContext.similarity" class = "add-height">
+            &nbsp;
+            </div>
+            <div class="tile-name">
+                <span class="substance-name-2" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [matTooltip]= "substance._name">
+                </span>
+              </div>
+              <div class="tile-name">
+                <a class="substance-name table-view-name" (click) = "selectSubstance(substance)" >Select Substance
+                </a>
+              </div>
 
         </div>
 
@@ -136,18 +150,19 @@
   </app-substance-text-search>
 </div>
 
-  <div class = "form-row paginator-row" *ngIf = "totalSubstances && totalSubstances > 0">
+  <div class = "form-row paginator-row" *ngIf = "nameTotalSubstances && nameTotalSubstances > 0">
       <button mat-button (click) = "navigateToBrowseSubstance('names')">
           View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
       </button>
       <span class = "middle-fill"></span>
-      <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+      
+    <mat-paginator #paginator [length]="nameTotalSubstances" [pageIndex]="namePageIndex" [pageSize]="namePageSize"
+      [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event, 'name')" [showFirstLastButtons]="true">
     </mat-paginator>
   </div>
 
   <div class = "form-row2">
-      <mat-card *ngFor="let substance of substances" class="tile">
+      <mat-card *ngFor="let substance of nameSubstances" class="tile">
               <mat-card-title>
                 <div class='tile-title'>
                   <a class="approval-id">
@@ -185,14 +200,14 @@
               [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
           </div>
         </div>
-        <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
-          <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+        <div class="tile-name">
+          <span class="substance-name-2 " [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [matTooltip]= "substance._name">
+          </span>
         </div>
         <div class="tile-name">
-          <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
+          <a class="substance-name table-view-name" (click) = "selectSubstance(substance)" >Select Substance
           </a>
         </div>
-
       </div>
 
     </div>

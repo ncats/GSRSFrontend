@@ -18,6 +18,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { MatSliderModule } from '@angular/material/slider';
     MatRadioModule,
     MatPaginatorModule,
     MatTabsModule,
-    MatSliderModule
+    MatSliderModule,
+    MatExpansionModule
   ],
   declarations: [
     SubstanceSelectorComponent,

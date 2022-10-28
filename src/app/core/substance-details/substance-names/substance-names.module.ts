@@ -16,6 +16,7 @@ import { TableModule } from 'primeng/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
 @NgModule({
   imports: [
@@ -35,7 +36,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatSortModule,
     TableModule,
     MatTooltipModule,
-    MatRadioModule
+    MatRadioModule,
+    ElementLabelDisplayModule
   ],
   declarations: [SubstanceNamesComponent,
   ]

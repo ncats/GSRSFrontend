@@ -11,7 +11,7 @@
   padding-right: .5em;
 }
 .clinical-trials-browse-del {
-  color: red;
+  color: var(--regular-red-color);
   cursor: pointer;
 }
 
@@ -70,7 +70,7 @@ table td.mat-cell {
   top: 15px;
 }
 .clinical-trials-browse-button-cell .mat-button-wrapper {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .clinical-trials-browse-wrapper mat-expansion-panel-header {
@@ -82,7 +82,7 @@ table td.mat-cell {
 }
 .clinical-trials-browse-wrapper .mat-expansion-panel-header[aria-disabled="true"],
 .clinical-trials-browse-wrapper .mat-expansion-panel-header[aria-disabled="false"] {
-  color: black;
+  color: var(--regular-black-color);
 }
 
 .clinical-trials-browse-wrapper  mat-expansion-panel.clinical-trials-browse-peak-substances-expansion-panel {
@@ -134,13 +134,13 @@ table td.mat-cell {
 
 .selected-parameter {
   padding-right:5px;
-  background-color: white;
+  background-color: var(--regular-white-color);
   font-size:14px;
 }
 }
 
 .page-label {
-  color:rgba(0, 0, 0, 0.54);
+  color:var(--dark-label-color);
   display:block;
   font-family:Roboto, "Helvetica Neue", sans-serif;
   font-size:14px;
@@ -157,12 +157,12 @@ table td.mat-cell {
 @media(max-width: 1100px) {
   .controls-container, .search-parameters {
     padding-left: 30px;
-    border:5px solid magenta;
+    border:5px solid var(--regular-magenta-color);
   }
 
   .controls-container {
     flex-wrap: wrap;
-    border:5px solid yellow;
+    border:5px solid var(--regular-yellow-color);
   }
 
   .side-nav-content {
@@ -190,7 +190,7 @@ table td.mat-cell {
 
   .full-paginator {
     min-width: 500px !important;
-    border: 1px solid gray;
+    border: 1px solid var(--regular-grey-color);
   }
 
   .substance-data {
@@ -290,7 +290,7 @@ table td.mat-cell {
 @media(max-width: 505px) {
   .full-paginator {
     min-width: 0px !important;
-    border: 1px solid gray;
+    border: 1px solid var(--regular-grey-color);
   }
 
   .controls-container {

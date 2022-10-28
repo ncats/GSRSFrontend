@@ -107,6 +107,10 @@ import { CustomSelectWidgetComponent } from '@gsrs-core/substances-browse/export
 import { CustomRadioWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-radio-widget/custom-radio-widget.component';
 import { CustomMultiCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-multi-checkbox-widget/custom-multi-checkbox-widget.component';
 import { CustomTextareaWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-textarea-widget/custom-textarea-widget.component';
+import { RegisterComponent } from './register/register.component';
+import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
+import { ElementLabelDisplayModule } from './utils/element-label-display.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -140,6 +144,8 @@ import { CustomTextareaWidgetComponent } from '@gsrs-core/substances-browse/expo
     CustomRadioWidgetComponent,
     CustomMultiCheckboxWidgetComponent,
     CustomTextareaWidgetComponent
+    RegisterComponent,
+    PwdRecoveryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -205,8 +211,8 @@ import { CustomTextareaWidgetComponent } from '@gsrs-core/substances-browse/expo
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
     Ssg2ManufacturingModule,
-    SchemaFormModule.forRoot(),
-    
+    SchemaFormModule.forRoot(),   
+    ElementLabelDisplayModule
   ],
   providers: [
     {

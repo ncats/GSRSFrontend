@@ -1,7 +1,7 @@
 @import '../../../styles/variables';
 
 .version {
-  color: #182c4d;
+  color: var(--version-text-color);
   font-size: 10pt;
   line-height: 10px;
   text-align: right;
