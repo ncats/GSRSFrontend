@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { RecordOverview } from '@gsrs-core/bulk-search/bulk-search.model';
-import { Summary } from '@gsrs-core/bulk-search/bulk-search.model';
 import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { F } from '@angular/cdk/keycodes';
 import { NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-bulk-search-results-summary',
@@ -35,8 +33,11 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
 
   private _summary: any = null;
+  private _summaryForDownload: any = null;
+  
   qPageSize: number;
   qPageIndex: number;
+  qOrder: number;
   recordOverviewsShownOnPage: number;
   recordOverviews: Array<RecordOverview> = [];
   totalRecordOverviews: number; 
@@ -50,7 +51,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     return this._summary;
   }
   
-
   displayedColumns: string[] = [
     'searchTerm',
     'matches',
@@ -88,47 +88,34 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     this.qPageSize = 10;
     this.qPageIndex = 0;
     if (this.loadSummary) {  
-      this.getBulkSearchResults();
+      this.getBulkSearchStatusResults();
     }
   }
-  ngOnChanges() {   
-    // move this to ngOnChanges 
+  ngOnChanges() { 
+    // This approach was tested early on but not later on in developemnt.
     if (!this.loadSummary) {  
       if(this._summary.queries) {
         this.summaryToRecordOverviews();
-        if(this.table) { 
-          // this.table.renderRows();
-        }  
       }
     }
   }  
 
   changePage(pageEvent: PageEvent) {
-
     let eventAction: any;
     let eventValue: any;
-
     if (this.qPageSize !== pageEvent.pageSize) {
-
-      console.log("awd pageEvent.pageSize: "+ pageEvent.pageSize);
       eventAction = 'select:page-size';
       eventValue = pageEvent.pageSize;
     } else if (this.qPageIndex !== pageEvent.pageIndex) {
-      console.log("awd pageEvent.pageIndex: "+ pageEvent.pageIndex);
-
       eventAction = 'icon-button:page-number';
       eventValue = pageEvent.pageIndex + 1;
     }
     // this.gaService.sendEvent('substancesContent', eventAction, 'pager', eventValue);
-
     this.qPageSize = pageEvent.pageSize;
     this.qPageIndex = pageEvent.pageIndex;
-    this.getBulkSearchResults();
+    this.getBulkSearchStatusResults();
   }
 
-
-  // move
-  qOrder: number;
 
   // see substances code
   populateUrlQueryParameters(): void {
@@ -159,28 +146,25 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     // this.privateSearchTerm = '';
     this.qPageIndex = 0;
     this.populateUrlQueryParameters();
-    this.getBulkSearchResults();
+    this.getBulkSearchStatusResults();
   }
 
 
-  getBulkSearchResults() {
+  getBulkSearchStatusResults() {
     const qSkip = this.qPageIndex * this.qPageSize;
-    console.log("awd qSkip: " + qSkip);
-    console.log("awd this.qPageSize: " + this.qPageSize);
-    console.log("awd this.qPageIndex: " + this.qPageIndex);
-
-    const subscription = this.bulkSearchService.getBulkSearchResults(
-      this.context,
+    const subscription = this.bulkSearchService.getBulkSearchStatusResults(
       this.key,
+      0, // we don't need content here just the summaries
+      0,
       this.qPageSize,
       qSkip
     )
     .subscribe(bulkSearchResults => {
       if (!this.key) {
-        console.log("Warning, key is null or undefined in getBulkSearchResults");
+        console.log("Warning, key is null or undefined in getBulkSearchStatusResults.");
       }
       if (!this.context) {
-        console.log("Warning, context is null or undefined in getBulkSearchResults");
+        console.log("Warning, context is null or undefined in getBulkSearchStatusResults.");
       }
       if(bulkSearchResults?.summary) {
         this._summary = bulkSearchResults.summary;
@@ -189,7 +173,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
         if(this.table) { 
           this.table.dataSource = this.recordOverviews;
           this.recordOverviewsShownOnPage = this.recordOverviews.length;
-          // this.dataSource.paginator = this.paginator;
           this.table.renderRows();
         }
       } 
@@ -223,17 +206,9 @@ summaryToRecordOverviews() {
     this.recordOverviews.push(o);
   });
   this.recordOverviews = this.recordOverviews;
-
-
 }
 
-  testMakeTsvTextFromSummaryQueries() { 
-    const s =  this.makeTsvTextFromSummaryQueries(this._summary);
-    console.log(s);
-  }
-
   makeTsvTextFromSummaryQueries(json: any): string {
-    console.log(json);
     const _fieldHeaders =
     'searchTerm|id|idName|displayCode|displayCodeName'; 
     const _fields =
@@ -242,8 +217,6 @@ summaryToRecordOverviews() {
     const searchTermIndex = fields.indexOf('searchTerm');
     const fieldHeaders = _fieldHeaders.split('|');
     let tsvText = fieldHeaders.join("\t")+"\r\n";
-    
-    
 
     json.queries.forEach(q => {
       if (q.records.length === 0) {
@@ -268,39 +241,48 @@ summaryToRecordOverviews() {
           });
           tsvText+=row.join("\t")+"\r\n"; 
         });
+
       }
     });
-    /*
-    this._summary.queries.forEach( q => {
-      q.records.forEach( r => {
-        fields.forEach( (f,i) => {
-          if(i===0) {
-            tsvText+=q.searchTerm;
-          } else { 
-            tsvText+=r[f]||'';
-          }
-          if (i+1 < fields.length) { tsvText+="\t"; }  else { tsvText += "\r\n"; }
-        });  
-      });
-    });
-  */
     return tsvText;
   }
 
-  getBulkSearchResultsForDownload(): void {
-    const filename: string = this.context + '-testing.tsv';
+  getBulkSearchStatusResultsSummaryForDownload(): void {
+    let filename: string = '';
+    let context: string;
+    let finished: boolean = false;
     const qTop = 20000;
     const qSkip = 0;
-    this.bulkSearchService.getBulkSearchResults(this.context, this.key, qTop, qSkip).subscribe(response => {
-    this.downloadSummaryQueriesFile(response, filename);      
-    }, error => {
-      console.log("Error downloading file in getBulkSearchResultsForDownload.");
+    let s1: Subscription;
+    let s2: Subscription;
+     s1 = this.bulkSearchService.getBulkSearchStatus(this.key).subscribe(response => {
+      context = response.context;
+      finished = response.finished;
+      if (context === undefined) {
+        alert("Context (entity type) must be defined in the JSON response.");
+      } else if (finished !== true) { 
+        alert("The seach is not yet finshed. Please try clicking again after a time.");
+      } else {        
+        // top and skip are zero because we don't need the content array for the download. 
+        s2 = this.bulkSearchService.getBulkSearchStatusResults(this.key, 0, 0, qTop, qSkip).subscribe(response => {
+          this._summaryForDownload = response.summary;
+          filename =  context + '-bulk-search-summary-' + this.key + '.tsv';  
+          this.downloadSummaryQueriesFile(response, filename);     
+        }, error => {
+          console.log("Error downloading file in getBulkSearchStatusResultsSummaryForDownload.");
+        }
+        );
+      }  
+    },
+    ()=> { 
+      s1.unsubscribe();
+      s2.unsubscribe()
     }
     );
   }
 
   downloadSummaryQueriesFile(response: any, filename: string): void {
-    const tsvText = this.makeTsvTextFromSummaryQueries(this._summary);
+    const tsvText = this.makeTsvTextFromSummaryQueries(this._summaryForDownload);
     const dataType = response.type;
     // const binaryData = [];
     // binaryData.push(response);

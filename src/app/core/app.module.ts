@@ -22,6 +22,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import {MatRadioModule} from '@angular/material/radio';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -154,6 +155,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     MatTableModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatRadioModule,
     MatSliderModule,
     MatDialogModule,
     StructureEditorModule,

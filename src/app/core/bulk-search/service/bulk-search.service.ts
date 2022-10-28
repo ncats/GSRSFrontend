@@ -6,7 +6,6 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { BulkQuery } from '../bulk-query.model';
 import { BulkSearch } from '../bulk-search.model';
 
-
 @Injectable(
   { providedIn: 'root' }
 )
@@ -46,29 +45,29 @@ export class BulkSearchService extends BaseHttpService {
 
   getBulkQuery(
     context: string,
-    id: number
+    id: number,
+    top: number = 10,
+    skip: number = 0 
   ): Observable<BulkQuery> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
-    const params = new HttpParams();
-    console.log("awd zeq " +id);
-    params.append('id', id); 
-//      params: params,
-
     const options = {
+      params: { 'top': top, 'skip': skip },
       type: 'JSON',
       headers: {}
     };
     return this.http.get<BulkQuery>(url+'?id='+id, options);
-
   }  
-
+  
   getBulkSearch(
     context: string,
-    id: number
+    id: number,
+    searchOnIdentifiers: boolean = false
   ): Observable<BulkSearch> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/bulkSearch';
     let params = new HttpParams();
     params = params.append('bulkQID', id);
+    params = params.append('searchOnIdentifiers', searchOnIdentifiers);
+
     params.append('simpleSearchOnly', null);
     const options = {
       params: params,
@@ -78,21 +77,30 @@ export class BulkSearchService extends BaseHttpService {
     return this.http.get<BulkSearch>(url, options);
   }
 
-  getBulkSearchResults(
-    context: string,
+
+  getBulkSearchStatus(
     key: string,
+  ): Observable<any> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key;    
+    let params = new HttpParams();
+    const options = {
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<any>(url, options);
+  }
+
+  getBulkSearchStatusResults(
+    key: string,
+    top?: number,
+    skip?: number,
     qTop?: number,
     qSkip?: number
   ): Observable<any> {
-    console.log("awd qTop: "+ qTop);
-    console.log("awd qSkip: "+ qSkip);
     const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';    
     let params = new HttpParams();
-//    params.append('qTop', qTop);
-//    params.append('qSkip', qSkip);
-//    console.log(params);
     const options = {
-      params: {'qTop': qTop, 'qSkip': qSkip},
+      params: {'top': top, 'skip': skip, 'qTop': qTop, 'qSkip': qSkip},
       type: 'JSON',
       headers: {}
     };

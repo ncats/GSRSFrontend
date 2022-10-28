@@ -2,23 +2,18 @@
   <mat-card>
     <h2 style = "font-weight:500">Bulk Query</h2>
     <div class="bulk-editor-actions-container">
-      <div>The first select box doesn't do anything yet, the second is set to substances</div>
       <div class="two">
-        <mat-form-field matInput class="query-type-select">
-          <mat-select required placeholder="Query type"  [formControl]="queryTypeControl" (selectionChange)="queryTypeSelected($event)" value="identifiers">
-            <mat-option value="allFields">
-              All Fields
-            </mat-option>
-            <mat-option value="identifiers">
-              Indentifiers
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <label id="search-on-identifiers">Search Type</label>
+        <mat-radio-group panelOpen="true" aria-labelledby="search-on-identifiers-label" class="search-on-identifiers-radio-group" [(ngModel)]="searchOnIdentifiers">
+          <mat-radio-button  [value]="true">Identifiers</mat-radio-button>
+          <mat-radio-button  [value]="false">All Fields</mat-radio-button>
+        </mat-radio-group>
       </div>
 
       <div class="three">
-        <mat-form-field matInput class="query-entity-select">          
-          <mat-select required placeholder="Query Entity"  [formControl]="queryEntityControl" (selectionChange)="queryEntitySelected($event)" value="substances">
+        <mat-form-field matInput appearance="fill" class="query-entity-select">          
+          <mat-select 
+          required placeholder="Query Entity"  [formControl]="queryEntityControl" (selectionChange)="queryEntitySelected($event)" value="substances">
             <mat-option value="substances">
               Substances
             </mat-option>

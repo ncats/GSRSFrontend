@@ -1,24 +1,22 @@
 import {
-    Component,
-    OnInit,
-    OnDestroy,
-    ViewChild,
-  } from '@angular/core';
-  import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-  import { FormControl } from '@angular/forms';
-  import { Subscription } from 'rxjs';
-  import { ConfigService, LoadedComponents } from '@gsrs-core/config';
-  import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-  import { MainNotificationService } from '@gsrs-core/main-notification';
-  import { LoadingService } from '@gsrs-core/loading';
-  import { TextInputFormComponent } from '@gsrs-core/utils/text-input-form/text-input-form.component';
-  import { AuthService } from '../../core/auth/auth.service';
-  import { BulkSearchService } from './service/bulk-search.service';
-  import { BulkQuery } from './bulk-query.model';
-  import { BulkSearch } from './bulk-search.model';
-  import * as lodash from 'lodash';
-
-  
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { Subscription, Observable } from 'rxjs';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { LoadingService } from '@gsrs-core/loading';
+import { TextInputFormComponent } from '@gsrs-core/utils/text-input-form/text-input-form.component';
+import { AuthService } from '../../core/auth/auth.service';
+import { BulkSearchService } from './service/bulk-search.service';
+import { BulkQuery } from './bulk-query.model';
+import { BulkSearch } from './bulk-search.model';
+import * as lodash from 'lodash';
 
   @Component({
     selector: 'app-bulk-query',
@@ -26,155 +24,207 @@ import {
     styleUrls: ['./bulk-query.component.scss']
   })
   
-  export class BulkQueryComponent implements OnInit, OnDestroy {
-    _ = lodash;
-    loadedComponents: LoadedComponents;
-    showAudit: boolean;
-    isAdmin = false;
-    isLoggedIn = false;
-    showDeprecated = false;
-    queryText: string;
-    context: string = 'substances';
-    _bulkQuery: BulkQuery;
-    _bulkQueryIdAfterSubmit: number;  
-    _bulkQueryIdOnLoad: number;  
-    _bulkSearch: BulkSearch;
-    _bulkSearchResults: any;
-    _bulkSearchResultKey: string;
+export class BulkQueryComponent implements OnInit, OnDestroy {
+  _ = lodash;
+  loadedComponents: LoadedComponents;
+  showAudit: boolean;
+  isAdmin = false;
+  isLoggedIn = false;
+  showDeprecated = false;
+  queryText: string;
+  _bulkQuery: BulkQuery;
+  _bulkQueryIdAfterSubmit: number;  
+  _bulkQueryIdOnLoad: number;  
+  _bulkSearchIdOnLoad: number;
+  _bulkSearchKeyOnLoad: string;
+  _bulkSearch: BulkSearch;
+  _bulkSearchResults: any;
+  _bulkSearchResultKey: string;
+  searchOnIdentifiers: boolean = true;
+  query: string;
+  isError = false;
+  isLoading = false;
+  displayProperties: Array<string>;
+  displayPropertiesCommon: Array<string>;
+  facetViewControl = new FormControl();
+  structureEditor: string;
+  anchorElement: HTMLAnchorElement;
+  smiles: string;
+  mol: string;
+  height = 0;
+  width = 0;
+  canvasToggle = true;
+  canvasMessage = '';
+  tempClass = '';
+  categoryOptions = [
+    'Substance',
+    'Application',
+    'Product',
+    'Clinical Trial',
+    'Adverse Event'
+  ];
+  tabSelectedIndex = 0;
+  category = 'Substance';
+  configName: 'substances';
+  tabClicked = false;
 
-    query: string;
-    isError = false;
-    isLoading = false;
-    displayProperties: Array<string>;
-    displayPropertiesCommon: Array<string>;
-    facetViewControl = new FormControl();
-    structureEditor: string;
-    anchorElement: HTMLAnchorElement;
-    smiles: string;
-    mol: string;
-    height = 0;
-    width = 0;
-    canvasToggle = true;
-    canvasMessage = '';
-    tempClass = '';
-    categoryOptions = [
-      'Substance',
-      'Application',
-      'Product',
-      'Clinical Trial',
-      'Adverse Event'
-    ];
-    tabSelectedIndex = 0;
-    category = 'Substance';
-    configName: 'substances';
-    tabClicked = false;
+  @ViewChild(TextInputFormComponent, {static:true}) textInputForm: TextInputFormComponent;
 
-    @ViewChild(TextInputFormComponent, {static:true}) textInputForm: TextInputFormComponent;
+  showSpinner = false;
+  private subscriptions: Array<Subscription> = [];
+  navigationExtrasFacet: NavigationExtras = {
+    queryParams: {}
+  };  
+  private queryEntity: string;
+  queryEntityControl = new FormControl();
 
-    showSpinner = false;
-    private subscriptions: Array<Subscription> = [];
-    navigationExtrasFacet: NavigationExtras = {
-      queryParams: {}
-    };  
-    private queryType: string;
-    private queryEntity: string;
-    queryTypeControl = new FormControl();
-    queryEntityControl = new FormControl();
+  constructor(
+    private loadingService: LoadingService,
+    public authService: AuthService,
+    private notificationService: MainNotificationService,
+    private bulkSearchService: BulkSearchService,      
+    private configService: ConfigService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
   
-    constructor(
-      private loadingService: LoadingService,
-      public authService: AuthService,
-      private notificationService: MainNotificationService,
-      private bulkSearchService: BulkSearchService,      
-      private configService: ConfigService,
-      private route: ActivatedRoute,
-      private router: Router
-    ) {
-      this.queryType = 'identifiers';
-      this.queryEntity = 'substances';
-    }
-  
-    ngOnInit() {
+  ngOnInit() {
 
-      this.loadingService.setLoading(true);
-      this.showSpinner = true;  // Start progress spinner
-  
-      // Get configration values to hide/show Modules
-      // this.loadedComponents = this.configService.configData.loadedComponents || null;
-      // if (this.loadedComponents) {
-      //  if (this.loadedComponents.applications) {
-      //  }
-      // }  
-  
-      this.showSpinner = false;  // Stop progress spinner
-      this.loadingService.setLoading(false);
+    this.loadingService.setLoading(true);
+    this.showSpinner = true;  // Start progress spinner
 
-      const authSubscription = this.authService.getAuth().subscribe(auth => {
-        if (auth) {
-          this.isLoggedIn = true;
-        } else {
-          this.showDeprecated = false;
-        }
-        this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-        this.showAudit = this.authService.hasRoles('admin');  
-      });
+    // Get configration values to hide/show Modules
+    // this.loadedComponents = this.configService.configData.loadedComponents || null;
+    // if (this.loadedComponents) {
+    //  if (this.loadedComponents.applications) {
+    //  }
+    // }  
 
-      this.checkBulkQueryIdParameterOnLoad(); 
+    this.showSpinner = false;  // Stop progress spinner
+    this.loadingService.setLoading(false);
 
-    }
-  
-    ngOnDestroy() {
-      this.subscriptions.forEach(subscription => {
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-      });
-    }
-  
-  submitText() {
-      this.queryText = this.textInputForm.textControl.value;
-      // this.postBulkQuery();
-      this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse()
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      } else {
+        this.showDeprecated = false;
+      }
+      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+      this.showAudit = this.authService.hasRoles('admin');  
+    });
+
+    this.checkBulkQueryIdParameterOnLoad(); 
+
   }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
+  }
+
+submitText() {
+    this.queryText = this.textInputForm.textControl.value;
+    this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse()
+}
 
   bulkSearchSubmit(): void {
     const eventLabel = 'Bulk search submit `${this.queryEntity}`';
     // this.gaService.sendEvent('Application Filtering', 'icon-button:bulk-search-submit', eventLabel);
   }
 
-  checkBulkQueryIdParameterOnLoad() { 
-    const s1 = this.route.queryParams.subscribe(params => {
-      this._bulkQueryIdOnLoad = params.bulkQID;
-      if(this._bulkQueryIdOnLoad != undefined) {
-        const s2 = this.bulkSearchService.getBulkQuery(this.context, this._bulkQueryIdOnLoad)
-        .subscribe(bulkQuery => {
-          if(bulkQuery.queries) {
-            console.log("awd check bulk query param");
-            console.log(bulkQuery.queries);
+  checkBulkQueryIdParameterOnLoad() {
+    // We need to get the query id from the URL query parameter, then extract the queries 
+    // from the response. Queries come back as array, The number query terms in the 
+    // array is determined by `top`, so we may need to process multiple responses to get
+    // the full list of queries for editing in the textarea. 
+    let top: number = 10000;
+    let skip: number = 0;
+    let subscriptions = [];
 
-            this.textInputForm.textControl.setValue(this._.join(bulkQuery.queries, "\n"));
-          }
-        },
-        error => {
-          console.log("Error getting bulk query on load with bulkQID " + this._bulkQueryIdOnLoad);
-        },
-        () => {
-          s2.unsubscribe();
-        })
-      }
-    },
-    error => {
-      console.log("Error checking for bulk query id parameter on load.")  
+    // Part A: get url query param values
+    subscriptions[0] = this.route.queryParams.subscribe(params => {
+      this._bulkQueryIdOnLoad = params.bulkQID;
+      this._bulkSearchKeyOnLoad = params.bulkSearchKey;
+      let observables: Array<Observable<BulkQuery>> = [];
+      let texts: string[] = [];
+
+      // Part B: get status for context and searchOnIdentifiers
+      subscriptions[1] = this.bulkSearchService.getBulkSearchStatus(
+        this._bulkSearchKeyOnLoad
+      ).subscribe( response => {
+        this.setQueryEntity(response.context);
+        this.searchOnIdentifiers = this.checkSearchOnIdentifiers(response.generatingUrl);
+
+          // Get the first reponse so we know the values for top, skip, total.
+          // Then loop through the rest of the reponses and store in order in the texts array. 
+          // However, the looping part does not work as expected perhaps due asyncronousity, 
+          // so instead I am for now setting top to 10000.
+   
+          // Part C: load queries terms
+          subscriptions[1] = this.bulkSearchService.getBulkQuery(
+            this.queryEntity,
+            this._bulkQueryIdOnLoad,
+            top,
+            skip
+          )
+          .subscribe((bulkQuery) => {
+            if(bulkQuery.queries) {
+              texts.push(bulkQuery.queries.join("\n"));            
+              const left =  bulkQuery.total - bulkQuery.count;
+              // Turning this off and using big top value for now.
+              const off = true;
+              if(!off && left>0) {
+                const x = Math.floor(left/top);
+                for (let i = 1; i <= x; i++) {
+                  skip = skip + top;
+                  const observable = this.bulkSearchService
+                    .getBulkQuery(this.queryEntity, this._bulkQueryIdOnLoad, top, skip);
+                  observables.push(observable);
+                  const s = observable.subscribe((bulkQuery1) => {
+                    texts.push(bulkQuery1.queries.join("\n"));
+                    console.log(bulkQuery1.queries);
+                    subscriptions.push(s);
+                  });
+                }
+              }
+            }
+          },
+          (error) => {console.log( "Error getting data");},
+          () => {
+            // completed
+            // Join all values in the texts array and insert into form text area 
+            this.textInputForm.textControl.setValue(texts.join(""));
+          });
+          // Part C End   
+      },
+      error => {
+        console.log("awd bad adddd");
+      });
+      // Part B End
     },
     () => {
-      s1.unsubscribe();
+      subscriptions.forEach( o => {o.unsubscribe();} );          
     });
+    // Part A (Params) end)
+  }
+    
+  checkSearchOnIdentifiers(url: string): boolean {
+    if(url && url.indexOf('searchOnIdentifiers=true')>-1) {
+      console.log("awd returning true");
+      return true; 
+    } else {
+      console.log("awd returning true");
+      return false; 
+    }
   }
 
   postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse() {
     this.loadingService.setLoading(true);
     const s1 = this.bulkSearchService.postBulkQuery(
-      this.context,
+      this.queryEntity,
       this.queryText
     )
     .subscribe(bulkQuery => {
@@ -182,11 +232,9 @@ import {
       this._bulkQuery = bulkQuery;
       this._bulkQueryIdAfterSubmit = bulkQuery.id;
       const s2 = this.bulkSearchService
-        .getBulkSearch(this.context, this._bulkQueryIdAfterSubmit).subscribe(bulkSearch => {
+        .getBulkSearch(this.queryEntity, this._bulkQueryIdAfterSubmit, this.searchOnIdentifiers).subscribe(bulkSearch => {
         this._bulkSearch = bulkSearch;
         this._bulkSearchResultKey = this._bulkSearch.key;
-        // console.log("here abc qid: " + this._bulkQueryIdAfterSubmit);
-        // console.log("here abc key: " + this._bulkSearchResultKey);
         const navigationExtras: NavigationExtras = {
           queryParams: {
             'bulk_search': this._bulkSearchResultKey,
@@ -218,70 +266,13 @@ import {
     );
   }
 
-  makeOrQuery(field: string){
-      const text = this.textInputForm.textControl.value;
-      console.log("text");
-      
-      console.log(text);
-
-      let a:Array<string> = [];
-      let b:Array<string> = [];
-      let query = "";
-      alert(text);
-      const re1 = new RegExp(/\n/);
-      const re2 = new RegExp(/^\s*$/);
-      if(text) {
-        query = text.split(re1).map(function(element) {
-          if(!re2.test(element)) {
-            return field + ':"^' +  element +'$"';          
-          } else { 
-            return '';
-          }
-        }).filter(x => typeof x === 'string' && x.length > 0).join(' OR ');
-        console.log("QUERY: "+ query);
-      }
-      return query;
-    }
-
-    queryTypeSelected($event) { 
-    }
-
-    queryEntitySelected($event) { 
-    }
-
-/*
-
-postBulkQuery() {
-    this.loadingService.setLoading(true);
-    const subscription = this.bulkSearchService.postBulkQuery(
-      this.context,
-      this.queryText
-    )
-      .subscribe(bulkQuery => {
-        this.isError = false;
-        this._bulkQuery = bulkQuery;
-        const navigationExtras: NavigationExtras = {
-          queryParams: {'bulkQID': bulkQuery.id}
-        };
-        this.router.navigate(['/bulk-search-results'], navigationExtras);
-      }, error => {
-        const notification: AppNotification = {
-          message: 'Error trying to post a bulk query.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        subscription.unsubscribe();
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
+  setQueryEntity(value: string) {
+    this.queryEntity = value;
+    this.queryEntityControl.setValue(value);
   }
-*/
 
-
+  queryEntitySelected($event) {
+    this.setQueryEntity($event.value);
   }
-  
+
+}

@@ -864,10 +864,11 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
 
     const navigationExtras: NavigationExtras = {
-      queryParams: {bulkQID: this.privateBulkSearchQueryId}
+      queryParams: {
+        bulkQID: this.privateBulkSearchQueryId,
+        bulkSearchKey: this.privateBulkSearchTerm
+      }
     };
-    // awtodo this does not work, seems to be prevented from 
-    // navigating away from browse substances page.
     this.router.navigate(['/bulk-search'], navigationExtras);
   }
 

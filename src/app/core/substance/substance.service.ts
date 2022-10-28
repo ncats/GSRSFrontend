@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { Observable, Observer, Subject } from 'rxjs';
+import { interval, Observable, Observer, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -18,7 +18,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
 import { FacetHttpParams } from '../facets-manager/facet-http-params';
 import { UtilsService } from '../utils/utils.service';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, takeWhile } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
@@ -390,6 +390,9 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
+
+
+  
   searchSubstanceBulk(
     bulkSearchTerm?: string,
     searchTerm?: string,
@@ -405,7 +408,6 @@ export class SubstanceService extends BaseHttpService {
     let url = this.apiBaseUrl;
 
     url += 'status/'+bulkSearchTerm+'/results';
-    console.log("url3: "+ url);
     if (searchTerm != null && searchTerm !== '') {
        params = params.append('q', searchTerm);
     }

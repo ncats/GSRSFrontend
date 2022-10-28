@@ -30,6 +30,11 @@ import { BulkSearch } from './bulk-search.model';
     _bulkSearch: BulkSearch;  
     _bulkSearchResults: any;
     bulkQID: number;
+    searchOnIdentifiers: boolean;
+    bulkSearchResultsTop: number = 10;
+    bulkSearchResultsSkip: number = 0;
+    bulkSearchResultsQTop: number = 10;
+    bulkSearchResultsQSkip: number = 0;
     isError = false;
     isLoading = false;
     anchorElement: HTMLAnchorElement;
@@ -87,15 +92,19 @@ import { BulkSearch } from './bulk-search.model';
          this.bulkQID = params.bulkQID;
          const subscription = this.bulkSearchService.getBulkSearch(
           this.context,
-          this.bulkQID
+          this.bulkQID,
+          this.searchOnIdentifiers
         ).subscribe(bulkSearch => {
             this._bulkSearch = bulkSearch;
-            const subscription = this.bulkSearchService.getBulkSearchResults(
-              this.context,
-              this._bulkSearch.key
+            const subscription = this.bulkSearchService.getBulkSearchStatusResults(
+              this._bulkSearch.key,
+              this.bulkSearchResultsTop,
+              this.bulkSearchResultsSkip,
+              this.bulkSearchResultsQTop,
+              this.bulkSearchResultsQSkip
             ).subscribe(bulkSearchResults => {
-                this._bulkSearchResults = bulkSearchResults;
-              });
+              this._bulkSearchResults = bulkSearchResults;
+            });
           })      
     }
     );
@@ -160,12 +169,20 @@ import { BulkSearch } from './bulk-search.model';
         });
     }
 
-    getBulkSearchResults(context: string, key: string) {
-      console.log("3 ABC");
+    getBulkSearchStatusResults(
+      key: string, 
+      top: number,
+      skip: number,
+      qTop: number,
+      qSkip: number
+    ) {
       this.loadingService.setLoading(true); 
-      const subscription = this.bulkSearchService.getBulkSearchResults(
-        context,
-        key
+      const subscription = this.bulkSearchService.getBulkSearchStatusResults(
+        key,
+        top,
+        skip,
+        qTop,
+        qSkip
       )
         .subscribe(bulkSearchResults => {
           this.isError = false;

@@ -8,12 +8,12 @@
 }
 
 .mat-card-title {
-  display: flex;
-  box-sizing: border-box;
-  width: 100%;
-  flex-direction: row;
-  align-items: center;
-  white-space: nowrap;
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
 }
 
 .mat-card {
@@ -21,6 +21,15 @@
     box-sizing: border-box;
     max-width:1170px;
     overflow-y:auto;
+}
+
+.mat-radio-group {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.mat-radio-button {
+    margin-right: 10px;
 }
 
 .editor-container {
