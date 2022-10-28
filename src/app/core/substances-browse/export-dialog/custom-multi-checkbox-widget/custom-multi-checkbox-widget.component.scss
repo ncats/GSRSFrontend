@@ -1,0 +1,31 @@
+.tabbed {
+    padding-left: 55px;
+  }
+
+  .indent {
+    padding-left: 55px;
+  }
+  .no-indent {
+    padding-left: 25px;
+  }
+
+
+  .form-group {
+      padding-top:5px;
+  }
+
+  .help-icon {
+    height: 18px;
+    cursor: pointer;
+  }
+
+  .row-layout {
+    color: black;
+    width: 100%;
+display: flex;
+flex-wrap: wrap;
+
+    .checkbox {
+      margin-left:10px;
+    }
+  }

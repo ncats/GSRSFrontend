@@ -1,9 +1,7 @@
-import { Component, OnInit, Input, Output, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Editor } from '@gsrs-core/structure-editor';
-import * as _ from 'lodash';
-import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { LoadingService } from '@gsrs-core/loading';
-import { EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { StructureService, InterpretStructureResponse, StructureImageModalComponent, StructureImportComponent } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -95,7 +93,7 @@ private privateSequenceSearchKey?: string;
   }
 
   close() {
-    // this.dialogRef.close();
+     this.dialogRef.close();
   }
 
   standardize(standard: string): void {
@@ -147,12 +145,9 @@ private privateSequenceSearchKey?: string;
 
   }
 
-
   molvecUpdate(mol: any) {
     this.editor.setMolecule(mol);
   }
-
-  
 
   editorOnLoad(editor: Editor): void {
     this.overlayContainer.style.zIndex = '1003';
@@ -176,10 +171,6 @@ private privateSequenceSearchKey?: string;
   
       this.overlayContainer.style.zIndex = '10003';
       }, 100);
-  }
-
-  getCombination(ll, i) {
-    
   }
 
   search(): void {
@@ -260,7 +251,6 @@ private privateSequenceSearchKey?: string;
   
     window.open(url, '_blank');
 
-   // this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
 
@@ -298,6 +288,7 @@ private privateSequenceSearchKey?: string;
         deprecated: false
       })
         .subscribe(pagingResponse => {
+
          // this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
 
          // this.totalSubstances = pagingResponse.total;
@@ -391,10 +382,6 @@ private privateSequenceSearchKey?: string;
     term.simpleSrc = this.CVService.getStructureUrlFragment(term.simplifiedStructure);
 
   }
-  setTermStructure(structure) {
-   
-  }
-
   openImageModal(substance: SubstanceDetail): void {
 
     let data: any;
@@ -453,14 +440,13 @@ private privateSequenceSearchKey?: string;
     this.dialogRef.close(substance);
   }
 
+
   changePage(pageEvent: PageEvent, type?: string) {
     if (type && type === 'name') {
       this.namePageSize = pageEvent.pageSize;
       this.namePageIndex = pageEvent.pageIndex;
         this.searchSubstances(null, null, 'name');
   
-      
-
     } else {
       this.pageSize = pageEvent.pageSize;
       this.pageIndex = pageEvent.pageIndex;

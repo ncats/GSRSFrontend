@@ -22,7 +22,7 @@
           <mat-label>Advanced Features</mat-label>
           <mat-select name="Feature" [ngModel]="feature" (openedChange)="openedChange($event)"
             (selectionChange)="useFeature($event)" disableOptionCentering>
-            <ng-container *ngIf="isAdmin === true">
+            <ng-container >
               <mat-option value="changeClass" [disabled]="!id">
                 Change Substance Class
               </mat-option>

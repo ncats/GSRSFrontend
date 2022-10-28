@@ -81,6 +81,7 @@ export class SubstanceSelectorComponent implements OnInit {
     if (uuid) {
       this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
         this.selectedSubstance = response;
+        this.errorMessage = '';
       }, error => {
         if (this.name && this.name !== '') {
           this.selectedSubstance = {_name: this.name};
@@ -129,6 +130,7 @@ export class SubstanceSelectorComponent implements OnInit {
       if (result) {
         this.selectedSubstance = result;
         this.selectionUpdated.emit(result);
+        this.errorMessage = '';
       }
       
       this.overlayContainer.style.zIndex = null;

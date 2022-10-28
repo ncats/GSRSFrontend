@@ -94,10 +94,22 @@ import { Ssg4mStagesModule } from './substance-ssg4m/ssg4m-stages/substance-form
 import { SubstanceFormSsg4mStartingMaterialsModule } from './substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 import { SubstanceSsg2Module } from './substance-ssg2/substance-ssg2.module';
 import { Ssg2ManufacturingModule } from './substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module';
+import { CustomCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-checkbox-widget/custom-checkbox-widget.component';
+import {
+  WidgetRegistry,
+  DefaultWidgetRegistry,
+  SchemaFormModule,
+} from "ngx-schema-form";
+import { MyWidgetRegistry } from '@gsrs-core/substances-browse/export-dialog/custom-checkbox-widget/custom-checkbox-registry';
+import { CustomTextWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-text-widget/custom-text-widget.component';
+import { CustomMultiselectWidgetComponent } from '@gsrs-core/substances-browse/custom-multiselect-widget/custom-multiselect-widget.component';
+import { CustomSelectWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-select-widget/custom-select-widget.component';
+import { CustomRadioWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-radio-widget/custom-radio-widget.component';
+import { CustomMultiCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-multi-checkbox-widget/custom-multi-checkbox-widget.component';
+import { CustomTextareaWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-textarea-widget/custom-textarea-widget.component';
 import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
-
 
 @NgModule({
   declarations: [
@@ -125,6 +137,13 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     ShowMolfileDialogComponent,
     NamesDisplayPipe,
     SubstanceStatusPipe,
+    CustomCheckboxWidgetComponent,
+    CustomTextWidgetComponent,
+    CustomMultiselectWidgetComponent,
+    CustomSelectWidgetComponent,
+    CustomRadioWidgetComponent,
+    CustomMultiCheckboxWidgetComponent,
+    CustomTextareaWidgetComponent,
     RegisterComponent,
     PwdRecoveryComponent
   ],
@@ -192,6 +211,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
     Ssg2ManufacturingModule,
+    SchemaFormModule.forRoot(),   
     ElementLabelDisplayModule
   ],
   providers: [
@@ -199,6 +219,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
     },
+    { provide: WidgetRegistry, useClass: DefaultWidgetRegistry },
     CanActivateAdminPage,
     ConfigService,
     {
@@ -207,7 +228,8 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
         deps: [ConfigService],
         multi: true
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {provide: WidgetRegistry, useClass: MyWidgetRegistry}
   ],
   bootstrap: [AppComponent],
   entryComponents: [
@@ -215,7 +237,14 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     ExportDialogComponent,
     SubstanceEditImportDialogComponent,
     SubstanceHistoryDialogComponent,
-    ShowMolfileDialogComponent
+    ShowMolfileDialogComponent,
+    CustomCheckboxWidgetComponent,
+    CustomTextWidgetComponent,
+    CustomMultiselectWidgetComponent,
+    CustomSelectWidgetComponent,
+    CustomRadioWidgetComponent,
+    CustomMultiCheckboxWidgetComponent,
+    CustomTextareaWidgetComponent
   ],
   exports: [
     StructureEditorModule,
