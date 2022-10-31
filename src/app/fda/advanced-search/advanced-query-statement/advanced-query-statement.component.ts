@@ -113,7 +113,16 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
   @Input()
   set category(cat) {
     this.categoryinput = cat;
-    //  this.loadSearchField();
+    // Set the Dropdown 'Search In Fields' to default 'All', when user clicks on the tab, clear the previous criteria
+    this.queryablePropertiesControl.setValue('All');
+    // Set the Dropdown 'For' to default 'Contains'.
+    this.commandControl.setValue('Contains');
+    // Set the Search Text Box to default, empty/clear the textbox.
+    this.searchControl.setValue('');
+    let inputType: string;
+    let queryablePropertyType = 'string';
+   // this.commandInputValueDict[queryablePropertyType] = 'TEst';
+   this.loadAdvancedSearchInitial();
   }
 
   @Input()
@@ -146,6 +155,16 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.loadAdvancedSearchInitial();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
+  loadAdvancedSearchInitial() {
 
     inputTypes.forEach(key => {
       this.commandInputValueDict[key] = [];
@@ -188,7 +207,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
         queryStatement = JSON.parse(queryStatementString);
       }
     }
-    
+
     // if queryStatement exists from hashcode
     // queryStatement returns something like this:
     // {"queryHash":1638073503,"condition":"OR ","queryableProperty":"CAS RN","command":"Contains","commandInputValues":["15475 56 6"],"query":"OR root_codes_CAS:\"*15475 56 6*\""}
@@ -265,12 +284,6 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
       console.log(error);
     });
 
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
   }
 
   queryablePropertySelected(queryableProperty: string): void {

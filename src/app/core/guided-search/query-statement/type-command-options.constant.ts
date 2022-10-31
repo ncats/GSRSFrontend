@@ -571,7 +571,8 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'number that begins with': {
+        //'number that begins with': {
+            'Greater Than': {
             commandInputs: [
                 {
                     type: 'number',
@@ -586,7 +587,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'number that begins with',
+                           // command: 'number that begins with',
+                            command: 'Greater Than',
                             commandInputValues: [queryValue],
                             query: query
                         });
@@ -594,7 +596,8 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'number that ends with': {
+        //'number that ends with': {
+            'Less Than': {
             commandInputs: [
                 {
                     type: 'number',
@@ -609,7 +612,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'number that ends with',
+                            // command: 'number that ends with',
+                            command: 'Less Than',
                             commandInputValues: [queryValue],
                             query: query
                         });
