@@ -111,6 +111,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
   panelExpanded = false;
   numFacetsLoaded = 0;
+  queryHash: number;
   queryStatementHashes: Array<number>;
   private privateFacetParams: FacetParam;
   privateFacetParamsUrl: string;
@@ -207,6 +208,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(`Advanced Search`);
     const advancedSearchHash = Number(this.activatedRoute.snapshot.queryParams['g-search-hash']) || null;
 
+    this.getStoredCriteriaFromLocalStorage(advancedSearchHash);
+
+    /*
     // Get Stored Search Criteria
     // For example: -681458537
     if (advancedSearchHash) {
@@ -237,6 +241,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
       }
     }
+    */
 
     this.getBrowseSubstanceDetails();
 
@@ -452,9 +457,19 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
   tabSelectedUpdated(event: MatTabChangeEvent) {
     if (event) {
+      // When clicked on the tab or switching between tabs, save the previous Criteria in Local Storage to retrieve
+      this.storeCriteriaInLocalStorage();
+
+      this.tabSelectedIndex = event.index;
       this.category = event.tab.textLabel;
       if (this.category) {
         this.tabClicked = true;
+
+        // Create a HashCode for current tabSelectedIndex, and restore the criteria from Local Storage
+        const tabSelectedHash = this.utilitiesService.hashCode(this.tabSelectedIndex);
+        this.getStoredCriteriaFromLocalStorage(tabSelectedHash);
+
+        // Load File based on Category selected on tab (Substance, Application, etc)
         this.loadFileName();
       }
     }
@@ -723,7 +738,83 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     });
   }
 
+  storeCriteriaInLocalStorage() {
+    const queryStatementHashes = [];
+
+    // Store in cookies, Category tab (Substance, Application, etc)
+    // Creates as HashCode from the Utilities
+    const categoryHash = this.utilitiesService.hashCode(this.category);
+    // Store the value with the HashCode Key
+    localStorage.setItem(categoryHash.toString(), this.category);
+    queryStatementHashes.push(categoryHash);
+
+    // Generate Hash Code for Query Statement
+    this.queryStatements.forEach(queryStatement => {
+      const queryStatementString = JSON.stringify(queryStatement);
+      const hash = this.utilitiesService.hashCode(queryStatementString);
+
+      // Store in cookies, Each Query Statement is stored in separate hash
+      localStorage.setItem(hash.toString(), queryStatementString);
+
+      // Push Query Statements Hashes in Array
+      queryStatementHashes.push(hash);
+    });
+
+    // Generate Hash Code for Query and Save QueryStatments in localStorage
+    this.queryHash = this.utilitiesService.hashCode(this.query);
+
+    const queryStatementHashesString = JSON.stringify(queryStatementHashes);
+
+    // Store in cookies,  store in Query Hash - Query Statement Hashes Array
+    localStorage.setItem(this.queryHash.toString(), queryStatementHashesString);
+
+    // Create a HashCode for tabSelectedIndex
+    const tabSelectedHash = this.utilitiesService.hashCode(this.tabSelectedIndex);
+    
+    // Store the same Query Statment Hashes Array into tab Selected Hash
+    localStorage.setItem(tabSelectedHash.toString(), queryStatementHashesString);
+  }
+
+  getStoredCriteriaFromLocalStorage(advancedSearchHash: any, type?: string): void {
+    // Get Stored Search Criteria
+    /* const hashCode = advancedSearchHash;
+     if (type && type === 'tabSelectedIndex') {
+       hashCode =
+     }*/
+    // For example: -681458537
+    if (advancedSearchHash) {
+      const queryStatementHashesString = localStorage.getItem(advancedSearchHash.toString());
+      // Found previous stored search criteria in local Storage
+      // For example: [-900654012,1838576297]
+      if (queryStatementHashesString != null) {
+        // For example: [-900654012,1838576297]
+        this.queryStatementHashes = JSON.parse(queryStatementHashesString);
+        // Get Category from Stored Cookies
+        if (this.queryStatementHashes[0] != null) {
+          const categoryStored = localStorage.getItem(this.queryStatementHashes[0].toString());
+          if (categoryStored != null) {
+            this.category = categoryStored;
+            this.categoryOptions.forEach((cat, index) => {
+              if (cat != null) {
+                if (cat === categoryStored) {
+                  this.tabSelectedIndex = index;
+                }
+              }
+            });
+            this.queryStatementHashes.splice(0, 1);
+          }
+        }
+      } else {
+        // NOT FOUND: could not find this search criteria in local Storage. Use this search critieria
+        // with 'Manual Query Entry' in dropdown 'Search in Field'.
+      }
+    }
+  }
+
   processSearch(): void {
+    this.storeCriteriaInLocalStorage();
+
+    /*
     const queryStatementHashes = [];
 
     // Store in cookies, Category tab (Substance, Application, etc)
@@ -750,6 +841,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
     // Store in cookies,  store in Query Hash - Query Statement Hashes Array
     localStorage.setItem(queryHash.toString(), queryStatementHashesString);
+    */
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
@@ -762,7 +854,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           navigationExtras.queryParams['searchTerm'] = this.query;
         } else {
           navigationExtras.queryParams['search'] = this.query;
-          navigationExtras.queryParams['g-search-hash'] = queryHash.toString();
+          navigationExtras.queryParams['g-search-hash'] = this.queryHash.toString();
         }
       } else if (Object.keys(this.privateFacetParams).length > 0) {
         navigationExtras.queryParams['facets'] = this.navigationExtrasFacet.queryParams['facets'];
@@ -774,7 +866,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
       const navigationExtras2: NavigationExtras = {
         queryParams: {
-          'g-search-hash': queryHash.toString()
+          'g-search-hash': this.queryHash.toString()
         }
       };
 

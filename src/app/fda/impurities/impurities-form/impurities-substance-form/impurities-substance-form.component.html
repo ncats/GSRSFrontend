@@ -18,24 +18,24 @@
       <div class="width25percent textaligncenter marginright30px">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
           eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
-          header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid">
+          header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid" [showMorelinks]=true>
         </app-substance-selector>
         <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.approvalID">
           {{impuritiesSubstance.approvalID}}
         </div>
+        <!--
         <div class="divflex">
           <div class="col marginleft50px">
-            <!-- Register Subtance -->
             <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
               <span class="font11px">Register New</span>
             </a>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <!-- Structure search -->
             <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
               <span class="font11px">Search By Structure</span>
             </a>
           </div>
         </div>
+        -->
       </div>
 
       <!-- Right Side -->
@@ -49,8 +49,8 @@
             <input matInput placeholder="Assay High" [(ngModel)]="impuritiesSubstance.high" name="high" />
           </mat-form-field>
 
-          <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit"
-            [model]="impuritiesSubstance.unit" (valueChange)="impuritiesSubstance.unit = $event">
+          <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesSubstance.unit"
+            (valueChange)="impuritiesSubstance.unit = $event">
           </app-cv-input>
         </div>
 

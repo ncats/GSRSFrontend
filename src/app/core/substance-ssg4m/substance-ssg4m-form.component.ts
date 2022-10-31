@@ -155,8 +155,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             } else {
               this.getSsg4mDetails();
             }
-
-
           }
         } /*else { // Import JSON
           const action = this.activatedRoute.snapshot.queryParams['action'] || null;
@@ -204,12 +202,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
     this.subscriptions.push(definitionSubscription);
     */
+    /*
     this.authService.getAuth().pipe(take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
       });
     });
+    */
     // Scheme View loading
     if (!window['schemeUtil']) {
       for (let i = 0; i < this.jsLibScriptUrls.length; i++) {
@@ -487,12 +487,25 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.microserviceStatusUp = false;
       }
     }, error => {
-        this.microserviceStatusUp = false;
+      this.microserviceStatusUp = false;
+      this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br><br>";
+      if (error && error.error && error.error.message) {
+        this.errorMessage =  this.errorMessage + 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
+      } else if (error && error.error && (typeof error.error) === 'string') {
+        this.errorMessage =  this.errorMessage + '<br>Server Error ' + (error.status + ': ' || '') + error.error;
+      } else if (error && error.message) {
+        this.errorMessage = this.errorMessage + '<br>Server Error ' + (error.status + ': ' || '') + error.message;
+        this.errorMessage = this.errorMessage + "<br>It looks like the SSG4m microservice is not running.<br>";
+        this.errorMessage = this.errorMessage + "Please ask your system administrator to verify that the SSG4m microservice is running without error, and also to examine the website logs to:<br>- check if there are any database connection issues, and<br>- make sure the system is using valid authentication credentials into the database";
+      }
+      else {
+        this.errorMessage = this.errorMessage + 'There could be an authentication issue. <br>-Make sure that you are logged into the GSRS website.<br>-Clear your browser cache.<br>-Reload your SSG4 page or Appian';
+      }
     });
   }
 
   getSsg4mDetails(newType?: string): void {
-    let generateErrorMessage = "Unable to load the data for Record ID " + this.id + "<br>";
+    let generateErrorMessage = "Unable to load the data for Record ID " + this.id + "<br><br>";
 
     // Check if SSG4m microservice server is UP or not
     this.checkSsg4mServerStatus();
@@ -540,16 +553,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       }
       //else {
       //  this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br> Please ask your system administrator to examine the website logs and: <br>- verify that the SSG4m microservice is running without error, <br>- check if there are any database connection issues,<br>- make sure the system is using valid authentication credentials into the database.";
-        // this.handleSubstanceRetrivalError();
-     // }
+      // this.handleSubstanceRetrivalError();
+      // }
       this.loadingService.setLoading(false);
       this.isLoading = false;
-    }, error => {
-      this.errorMessage = generateErrorMessage;
+    }, error => {   // Getting Error while getting Record
+     // this.errorMessage = generateErrorMessage;
       if (this.microserviceStatusUp === false) {
-        this.errorMessage = this.errorMessage + "It looks like the SSG4m microservice is not running.<br>";
       }
-      this.errorMessage = this.errorMessage + "Please ask your system administrator to verify that the SSG4m microservice is running without error, and also to examine the website logs to:<br>- check if there are any database connection issues, and<br>- make sure the system is using valid authentication credentials into the database";
       //  this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br> Please ask your system administrator to examine the website logs and: <br>- verify that the SSG4m microservice is running without error, <br>- check if there are any database connection issues,<br>- make sure the system is using valid authentication credentials into the database.";
       this.gaService.sendException('getSsg4mDetails: error from API call');
       this.loadingService.setLoading(false);
@@ -670,7 +681,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       milisecondsToShow: 4000
     };
     this.mainNotificationService.setNotification(notification);
-    this.errorMessage = "Unable to load the data. Please verify if the SSG4m microservice is up, or if there is any database connection issue, or if an authentication issue.";
+    this.errorMessage = "Unable to load the data.";
     setTimeout(() => {
       this.router.navigate(['/home']);
       this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
@@ -941,6 +952,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       message: 'Unknown Server Error'
     };
     if (error && error.error && error.error.message) {
+      alert("HERER HERE");
       message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error && error.error && (typeof error.error) === 'string') {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
@@ -1113,9 +1125,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         // } else if (response === 'browse') {
         //  this.router.navigate(['/browse-substance']);
-    //  } else if (response === 'home') {
-     //   this.router.navigate(['/home']);
-    //  } else {
+        //  } else if (response === 'home') {
+        //   this.router.navigate(['/home']);
+        //  } else {
         this.showSubmissionMessages = true;
         this.validationResult = false;
         this.submissionMessage = '';

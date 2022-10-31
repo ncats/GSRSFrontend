@@ -95,11 +95,28 @@ export class AuthService {
       }
 
       this._authUpdate.subscribe(auth => {
-
+        console.log("Updated user auth:");
+        console.log(auth);
+        try{
+          observer.next(auth);
+        }catch(e){
+          console.log("Error calling observer");
+        }
+      }, error => {
+        console.log("Error calling observer, registered error");
+        try{
+          observer.next(null);
+        }catch(e){
+          console.log("Error calling observer, registered error, passed null");
+        }
+      });
+      /*
+      this._authUpdate.subscribe(auth => {
         observer.next(auth);
       }, error => {
         observer.next(null);
       });
+      */
     });
   }
 

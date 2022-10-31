@@ -18,8 +18,8 @@
       <!-- Left Side -->
       <div class="width25percent textaligncenter">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
-          eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
-          header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid">
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
+          header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid" [showMorelinks]=true>
         </app-substance-selector>
         <div class="textaligncenter font11px colororange" *ngIf="impuritiesDetails.relatedSubstanceUnii">
           {{impuritiesDetails.relatedSubstanceUnii}}
@@ -30,11 +30,12 @@
             <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
               <span class="font11px">Register New</span>
             </a>
+            <!--
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <!-- Structure search -->
             <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
               <span class="font11px">Search By Structure</span>
             </a>
+            -->
           </div>
         </div>
       </div>

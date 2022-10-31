@@ -33,7 +33,7 @@
 
     <app-cv-input class="col-5-1"
       *ngIf="configSettingsDisplay['propertyName'] || (configSettingsDisplay['propertyName'] === undefined && true)"
-      domain="SSG_CRITICAL_PROPERTY_NAME" required='true' title="Property Name" [model]="criticalParameter.name"
+      domain="SSG_CRITICAL_PROPERTY_NAME" title="Property Name" [model]="criticalParameter.name"
       (valueChange)="updatePropertyName($event)">
     </app-cv-input>
 
@@ -83,7 +83,7 @@
       *ngIf="configSettingsDisplay['referencedSubstance'] || (configSettingsDisplay['referencedSubstance'] === undefined && true)">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Referenced Substance" header="Reference Substance"
-        [subuuid]="relatedSubstanceUuid">
+        [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
     </div>
 
