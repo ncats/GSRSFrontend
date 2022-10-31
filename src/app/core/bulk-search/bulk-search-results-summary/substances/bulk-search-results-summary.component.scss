@@ -1,6 +1,6 @@
 .wrapper {
     margin-bottom: 20px;
-    width: 50%;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -22,4 +22,21 @@
 .export-button {
     color: var(--regular-black-color);
     border-radius: 4px;
+}
+
+
+table th, table td  {
+    text-align: left;
+    padding: 21px 0;
+    justify-content: flex-end; 
+}
+table tr td:nth-child(3) {
+    text-align: center;
+    padding: 5px 5px 5px 5px ;
+    justify-content: flex-end; 
+}
+table tr th:nth-child(3) {
+    text-align: center;
+    padding: 5px 5px 5px 5px ;
+    justify-content: flex-end; 
 }

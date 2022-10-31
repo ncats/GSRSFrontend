@@ -4,9 +4,11 @@
     <div class="editor-container">
       <div class="two">
         <label id="search-on-identifiers">Search Type</label>
-        <mat-radio-group panelOpen="true" aria-labelledby="search-on-identifiers-label" class="search-on-identifiers-radio-group" [(ngModel)]="searchOnIdentifiers">
-          <mat-radio-button  [value]="true">Identifiers</mat-radio-button>
-          <mat-radio-button  [value]="false">All Fields</mat-radio-button>
+        <mat-radio-group  required aria-labelledby="search-on-identifiers-label" 
+        class="search-on-identifiers-radio-group" 
+        [(ngModel)]="searchOnIdentifiers" name="searchOnIdentifiers">
+          <mat-radio-button [value]="true">Identifiers</mat-radio-button>
+          <mat-radio-button [value]="false">All Fields</mat-radio-button>
         </mat-radio-group>
       </div>
       <div class="three">

@@ -1,6 +1,7 @@
 <div *ngIf="!isPolling" class="wrapper">
-
-<h2 class="summary-title">Bulk Search Summary (Full Results)</h2>
+<div *ngIf="showTitle && showTitle===true">
+  <h2 class="summary-title">Bulk Search Summary (Full Results)</h2>
+</div>
 <div class="export">
   <div *ngIf="recordOverviews && recordOverviews.length>0 && isLoggedIn">
     <button matTooltip="Export Bulk Search Results" (click)="getBulkSearchStatusResultsSummaryForDownload()"
@@ -10,13 +11,54 @@
   </div>
 </div>
 <table mat-table [dataSource]="dataSource" class="">
-  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+  <!-- ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
     <th mat-header-cell *matHeaderCellDef>{{ displayedColumnNames[column] }}</th>
     <td mat-cell *matCellDef="let cell">{{ cell[column] }}</td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let cellrow; columns: displayedColumns"></tr>
+  <tr mat-row *matRowDef="let cellrow; columns: displayedColumns"></tr -->
+
+
+
+  <ng-container matColumnDef="searchTerm">
+    <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['searchTerm']}}</th>
+    <td mat-cell *matCellDef="let element">{{element.searchTerm}}</td>
+  </ng-container>
+  <ng-container matColumnDef="displayName">
+    <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['displayName']}}</th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="element.matches===0">
+        {{element.displayName}}
+      </span>
+      <span *ngIf="element.matches===1">
+        <a target="_blank" [routerLink]="['/', context, element.id]">{{element.displayName}}</a>
+      </span>
+      <span *ngIf="element.matches>1">
+        <a target="_blank" [routerLink]="['/browse-substance']" [queryParams]="{search: element.searchTerm}">{{element.displayName}}</a>
+      </span>
+
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="matches">
+    <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['matches']}}</th>
+    <td mat-cell *matCellDef="let element">{{element.matches}}</td>
+  </ng-container>
+  <ng-container matColumnDef="displayCode">
+    <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['displayCode']}}</th>
+    <td mat-cell *matCellDef="let element">{{element.displayCode}}</td>
+  </ng-container>  
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+ 
 </table>
+
+
+
+
+
+
+
+
 <mat-paginator #paginator [length]="totalQueries" [pageIndex]="qPageIndex" [pageSize]="qPageSize" [pageSizeOptions]="[5, 10, 50, 100]"
 (page)="changePage($event)"></mat-paginator>
 </div>

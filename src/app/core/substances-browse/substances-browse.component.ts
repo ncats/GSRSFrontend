@@ -304,8 +304,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
     this.subscriptions.push(dynamicSubscription);
 
-    this.bulkSearchPanelOpen = ((this.privateSearchTerm !==undefined && this.privateSearchTerm !=='')
-    || (this.displayFacets && this.displayFacets.length>0));
   }
 
   ngOnDestroy() {
@@ -322,9 +320,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private loadComponent(): void {
 
-    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) {
+    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) { 
       this.searchSubstances();
     } else {
+
+      // There should be a better way to do this.
+      this.bulkSearchPanelOpen = 
+      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
+      && (this.displayFacets && this.displayFacets.length===0);
     }
   }
 
@@ -438,6 +441,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   searchSubstances() {
+      // There should be a better way to do this.
+      this.bulkSearchPanelOpen = 
+      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
+      && (this.displayFacets && this.displayFacets.length===0);
+
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,

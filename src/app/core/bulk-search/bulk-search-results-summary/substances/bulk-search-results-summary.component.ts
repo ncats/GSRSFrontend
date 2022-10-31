@@ -20,6 +20,7 @@ import { HttpParams } from '@angular/common/http';
 
 export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit, OnChanges {
 /*
+   showTitle      -- Show the table header title
    [summary]      -- expects any if this is provided then loadSummary should be false.
    loadSummary    -- if true will run a data load procedure in the component
    context        -- expects the entity CONTEXT being browsed (e.g. substances)
@@ -31,6 +32,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
 
   // if false, then we expect the summary to be passed as a parameter
   @Input() loadSummary = true;
+  @Input() showTitle = true;
   @Input() isCollapsed = false;
   @ViewChild(MatTable, {static: false}) table: MatTable<RecordOverview>; // initialize
   @ViewChild('paginator') paginator: MatPaginator;
@@ -47,21 +49,25 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   isAdmin = false;
   showAudit = false;
   isPolling = true;
+  
   private pollingInterval = 2500;
-
+  private displayCodeNameHeader: string;
+  private defaultDisplayCodeNameHeader = 'Code';
 
   displayedColumns: string[] = [
     'searchTerm',
+    'displayName',
     'matches',
-    'displayCode',
-    'displayCodeName'
+    'displayCode'
+    // , 'displayCodeName'
   ];
 
   displayedColumnNames = {
     searchTerm: 'Search Term',
+    displayName: 'Display Name',
     matches: 'Matches',
-    displayCode: 'Record UNII',
-    displayCodeName: 'Record Name'
+    displayCode: 'Code',
+    // displayCodeName: 'Code Name' // replace first row that has data or "Code" 
   };
 
   dataSource = new MatTableDataSource(this.recordOverviews);
@@ -212,6 +218,13 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
         this._summary = bulkSearchResults.summary;
         this.totalQueries = this._summary.qTotal;
         this.summaryToRecordOverviews();
+        if(this.displayCodeNameHeader=='') {
+          this.displayedColumnNames['displayCode'] = 
+            this.defaultDisplayCodeNameHeader;
+        } else { 
+          this.displayedColumnNames['displayCode'] = 
+            this.displayCodeNameHeader;
+        }
         if(this.table) {
           this.table.dataSource = this.recordOverviews;
           this.recordOverviewsShownOnPage = this.recordOverviews.length;
@@ -224,8 +237,10 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       subscription.unsubscribe();
     });
   }
-
+  
 summaryToRecordOverviews() {
+
+  this.displayCodeNameHeader = '';
   this.recordOverviews = [];
   this._summary.queries.forEach( q => {
     const o: RecordOverview = {} as RecordOverview;
@@ -233,14 +248,24 @@ summaryToRecordOverviews() {
     if (q.records) {
       o.matches = q.records.length;
       if(q.records.length === 0) {
+      o.displayName = '(no match)';
+      o.id = '(no match)';
       o.displayCode = '(no match)';
       o.displayCodeName = '(no match)';
       } else
         if(q.records.length === 1) {
+          o.displayName = q.records[0].displayName;
+          o.id = q.records[0].id;;
           o.displayCode = q.records[0].displayCode;
           o.displayCodeName = q.records[0].displayCodeName;
+          // get this for summary table header 
+          if(this.displayCodeNameHeader==='') {
+            this.displayCodeNameHeader = q.records[0].displayCodeName;
+          }
       } else
         if (q.records.length>1) {
+          o.displayName = 'multiple';
+          o.id = 'multiple';
           o.displayCode = 'multiple';
           o.displayCodeName = 'multiple';
       }
@@ -252,9 +277,9 @@ summaryToRecordOverviews() {
 
   makeTsvTextFromSummaryQueries(json: any): string {
     const _fieldHeaders =
-    'searchTerm|id|idName|displayCode|displayCodeName';
+    'searchTerm|displayName|id|idName|displayCode|displayCodeName';
     const _fields =
-    'searchTerm|id|idName|displayCode|displayCodeName';
+    'searchTerm|displayName|id|idName|displayCode|displayCodeName';
     const fields = _fields.split('|');
     const searchTermIndex = fields.indexOf('searchTerm');
     const fieldHeaders = _fieldHeaders.split('|');

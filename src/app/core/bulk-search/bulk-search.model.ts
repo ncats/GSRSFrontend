@@ -31,8 +31,9 @@ export interface Record {
 
 export interface RecordOverview {
     searchTerm?: string;
-    matches?: number;
     displayName?: string;
+    id?: string;
+    matches?: number;
     displayCode?: string;
     displayCodeName?: string;
 }

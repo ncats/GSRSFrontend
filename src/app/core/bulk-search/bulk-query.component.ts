@@ -40,7 +40,7 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
   _bulkSearch: BulkSearch;
   _bulkSearchResults: any;
   _bulkSearchResultKey: string;
-  searchOnIdentifiers: boolean;
+  searchOnIdentifiers: boolean = true;
   query: string;
   isError = false;
   isLoading = false;
