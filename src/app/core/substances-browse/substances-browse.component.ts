@@ -11,7 +11,7 @@ import {
   ViewChildren,
   QueryList
 } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceSummary } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
@@ -63,6 +63,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateBulkSearchTerm?: string;
   private privateBulkSearchQueryId?: number;
   private privateBulkSearchSummary?: any;
+  private privateBulkSearchAlwaysShowSummary = false;
   private privateSearchType?: string;
   private privateSearchStrategy?: string;
   private privateSearchCutoff?: number;
@@ -132,6 +133,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetViewCategory: Array<String> = [];
   facetViewControl = new FormControl();
   private wildCardText: string;
+  bulkSearchPanelOpen = false;
+
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -196,6 +200,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
     this.privateBulkSearchTerm = this.activatedRoute.snapshot.queryParams['bulk_search'] || '';
+    this.privateBulkSearchAlwaysShowSummary = this.activatedRoute.snapshot.queryParams['bulk_sass'] || false;
     this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
     
@@ -239,6 +244,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.loadComponent();
 
     this.loadFacetViewFromConfig();
+
   }
 
   setUpPrivateSearchTerm() {
@@ -257,7 +263,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   setUpPrivateSearchStrategy() {
-    // Setting privateSearchStrategy for use cards
+    // Setting privateSearchStrategy so we know what 
+    // search strategy is used, for example so we can 
+    // pass a value for use in cards.
     // I think privateSearchType is used differently. 
     // I see searchType being used for 'similarity'  
     this.privateSearchStrategy = null;
@@ -296,7 +304,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
     this.subscriptions.push(dynamicSubscription);
 
-
+    this.bulkSearchPanelOpen = ((this.privateSearchTerm !==undefined && this.privateSearchTerm !=='')
+    || (this.displayFacets && this.displayFacets.length>0));
   }
 
   ngOnDestroy() {
@@ -708,6 +717,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
     navigationExtras.queryParams['bulk_search'] = this.privateBulkSearchTerm;
+    navigationExtras.queryParams['bulk_sass'] = this.privateBulkSearchAlwaysShowSummary;    
     navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
@@ -858,6 +868,15 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.searchSubstances();
   }
 
+  
+  setBulkSearchAlwaysShowSummary(b: boolean): void {
+    
+    console.log("$event.value" + b);
+    this.privateBulkSearchAlwaysShowSummary = b;
+  }
+
+
+
   editBulkSearch(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
       `${this.privateBulkSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
@@ -907,6 +926,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearFilters(): void {
     // for facets
+    // Does this removal work?  When I (aw) click reset button the facet is cleared buy this.displayFacets still has the value.  
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
@@ -931,6 +951,9 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clickToCancel() {
     this.emitService.setCancel(true);
+  }
+  get bulkSearchAlwaysShowSummary(): boolean {
+    return this.privateBulkSearchAlwaysShowSummary;
   }
 
   get searchTerm(): string {

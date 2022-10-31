@@ -1,7 +1,7 @@
 <div class="query-content-container" #contentContainer>
   <mat-card>
-    <h2 style = "font-weight:500">Bulk Query</h2>
-    <div class="bulk-editor-actions-container">
+    <h2 class="component-title">Bulk Query</h2>
+    <div class="editor-container">
       <div class="two">
         <label id="search-on-identifiers">Search Type</label>
         <mat-radio-group panelOpen="true" aria-labelledby="search-on-identifiers-label" class="search-on-identifiers-radio-group" [(ngModel)]="searchOnIdentifiers">
@@ -9,39 +9,27 @@
           <mat-radio-button  [value]="false">All Fields</mat-radio-button>
         </mat-radio-group>
       </div>
-
       <div class="three">
-        <mat-form-field matInput appearance="fill" class="query-entity-select">          
-          <mat-select 
-          required placeholder="Query Entity"  [formControl]="queryEntityControl" (selectionChange)="queryEntitySelected($event)" value="substances">
-            <mat-option value="substances">
-              Substances
-            </mat-option>
-            <mat-option value="clinicaltrialsus">
-              Clinial Trials US
-            </mat-option>
-            <mat-option value="clinicaltrialseurope">
-              Clinical Trials Europe
+        <label id="search-on-entity">Search Entity</label>
+
+        <mat-form-field matInput appearance="fill" class="query-entity-select"> 
+          <mat-select required placeholder="Query Entity" aria-labelledby="search-on-entity-label" 
+          class="search-on-entity-select-box" [formControl]="queryEntityControl" 
+          (selectionChange)="queryEntitySelected($event)"  value="substances">
+            <mat-option *ngFor="let entity of queryEntities;" value="{{entity.name}}">
+              {{entity.title}}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-
-      <div class="editor-container">
+      <div>   
+            <app-text-input-form
+              instruction="Enter queries, one per line."
+              placeholder="{{textInputFormPlaceholder}}"
+            ></app-text-input-form>
         <div class="query-actions">
           <button mat-flat-button color="primary" (click) = "submitText()">Submit</button>
         </div>
-   
-        <!--mat-tab-group mat-align-tabs="start" style="width: 100%;" -->
-          <!-- mat-tab label="Text Input" style="width: 100%;" -->          
-            <app-text-input-form></app-text-input-form>
-          <!-- /mat-tab -->
-          <!-- mat-tab label="File Input">
-            <div>
-              <app-file-upload-form></app-file-upload-form>            
-            </div>
-          </mat-tab>
-        </mat-tab-group -->
       </div>
    </div>
 <div>

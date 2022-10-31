@@ -49,8 +49,9 @@ export interface Config {
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
     authenticateAs?: AuthenticateAs;
-    userRegistration?: any
-    elementLabelDisplay?:any;
+    userRegistration?: any;
+    elementLabelDisplay?: any;
+    bulkSearch?: any;
 }
 
 export interface LoadedComponents {

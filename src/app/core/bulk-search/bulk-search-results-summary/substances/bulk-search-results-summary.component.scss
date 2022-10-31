@@ -1,15 +1,16 @@
-.wrapper { 
-margin-bottom: 20px;
-width: 50%;
-margin-left: auto;
-margin-right: auto;
+.wrapper {
+    margin-bottom: 20px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .summary-title {
     font-size: 16px;
     font-weight: 550;
-    color: rgba(0, 0, 0, 0.87); /* awtodo */
+    color: var(--lighter-title-color);
     margin-bottom: 3px;
+    float: left;
 }
 
 .export {
@@ -19,6 +20,6 @@ margin-right: auto;
 }
 
 .export-button {
-    color: black;  /* awtodo */
+    color: var(--regular-black-color);
     border-radius: 4px;
 }

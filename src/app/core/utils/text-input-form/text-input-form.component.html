@@ -1,13 +1,10 @@
-<div class="text-input-form" style="fxFlex: 60%">
+<div class="text-input-form">
     <p>{{instruction}}</p>
     <div>
         <div>
             <textarea matInput
-                placeholder="placeholder" 
+                placeholder="{{placeholder}}" 
                 [formControl]="textControl"
-                cdkTextareaAutosize
-                cdkAutosizeMinRows=10
-                cdkAutosizeMaxRows=30
             ></textarea>
         </div>
     </div>

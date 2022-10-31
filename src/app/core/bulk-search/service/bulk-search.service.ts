@@ -33,31 +33,33 @@ export class BulkSearchService extends BaseHttpService {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
     const params = new HttpParams();
     const options = {
+      // eslint-disable-next-line object-shorthand
       params: params,
       type: 'JSON',
       headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'Content-type': 'text/plain'
       }
     };
     return this.http.post<BulkQuery>(url, queryText, options);
-
   }
 
   getBulkQuery(
     context: string,
     id: number,
     top: number = 10,
-    skip: number = 0 
+    skip: number = 0
   ): Observable<BulkQuery> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
     const options = {
-      params: { 'top': top, 'skip': skip },
+      // eslint-disable-next-line object-shorthand
+      params: { top: top, skip: skip },
       type: 'JSON',
       headers: {}
     };
     return this.http.get<BulkQuery>(url+'?id='+id, options);
-  }  
-  
+  }
+
   getBulkSearch(
     context: string,
     id: number,
@@ -70,6 +72,7 @@ export class BulkSearchService extends BaseHttpService {
 
     params.append('simpleSearchOnly', null);
     const options = {
+      // eslint-disable-next-line object-shorthand
       params: params,
       type: 'JSON',
       headers: {}
@@ -77,12 +80,11 @@ export class BulkSearchService extends BaseHttpService {
     return this.http.get<BulkSearch>(url, options);
   }
 
-
   getBulkSearchStatus(
     key: string,
   ): Observable<any> {
-    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key;    
-    let params = new HttpParams();
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key;
+    // let params = new HttpParams();
     const options = {
       type: 'JSON',
       headers: {}
@@ -97,10 +99,11 @@ export class BulkSearchService extends BaseHttpService {
     qTop?: number,
     qSkip?: number
   ): Observable<any> {
-    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';    
-    let params = new HttpParams();
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';
+    // let params = new HttpParams();
     const options = {
-      params: {'top': top, 'skip': skip, 'qTop': qTop, 'qSkip': qSkip},
+      // eslint-disable-next-line object-shorthand
+      params: {top: top, skip: skip, qTop: qTop, qSkip: qSkip},
       type: 'JSON',
       headers: {}
     };

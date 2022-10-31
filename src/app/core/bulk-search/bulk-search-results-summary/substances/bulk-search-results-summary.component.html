@@ -1,14 +1,13 @@
-<div class="wrapper">
+<div *ngIf="!isPolling" class="wrapper">
 
-
-
-<h2 style="float: left;" class="summary-title">Bulk Search Summary</h2>
-<div class="export" style="float: right; ">
-  <!-- *ngIf="exportOptions && exportOptions.length > 0 && isLoggedIn" -->
-  <button  matTooltip="Export Bulk Search Results" (click)="getBulkSearchStatusResultsSummaryForDownload()"
-    mat-button class="mat-button export-button mat-raised-button">
-    <mat-icon svgIcon="get_app"></mat-icon> Export
-  </button>
+<h2 class="summary-title">Bulk Search Summary (Full Results)</h2>
+<div class="export">
+  <div *ngIf="recordOverviews && recordOverviews.length>0 && isLoggedIn">
+    <button matTooltip="Export Bulk Search Results" (click)="getBulkSearchStatusResultsSummaryForDownload()"
+      mat-button class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Export
+    </button>
+  </div>
 </div>
 <table mat-table [dataSource]="dataSource" class="">
   <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
@@ -18,7 +17,6 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let cellrow; columns: displayedColumns"></tr>
 </table>
-
 <mat-paginator #paginator [length]="totalQueries" [pageIndex]="qPageIndex" [pageSize]="qPageSize" [pageSizeOptions]="[5, 10, 50, 100]"
 (page)="changePage($event)"></mat-paginator>
 </div>

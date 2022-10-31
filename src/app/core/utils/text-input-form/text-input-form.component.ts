@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
-import * as moment from 'moment';
 import { FormControl } from '@angular/forms';
-import { split } from 'lodash';
+
 @Component({
   selector: 'app-text-input-form',
   templateUrl: './text-input-form.component.html',
@@ -9,26 +8,22 @@ import { split } from 'lodash';
 })
 
 export class TextInputFormComponent implements OnInit {
-  @Input() placeholder: string = "Input";
-  @Input() instruction: string = "Enter text";
-  @Input() showSubmitButton: boolean = false;
-  @Input() showCancelButton: boolean = false;
-  @Input() showLoadTextFileIntoTextarea: boolean = true;
+  @Input() placeholder = 'placeholder';
+  @Input() instruction = 'Enter text';
+  @Input() maxCount = 10000;
+  @Input() showSubmitButton = false;
+  @Input() showCancelButton = false;
+  @Input() showLoadTextFileIntoTextarea = true;
 
   query: string;
   lineCount: number;
-  maxCount: number = 10000;
   textControl = new FormControl();
-  loadTextFileIntoTextareaError: String = ''; 
+  loadTextFileIntoTextareaError = '';
 
   constructor(
-//    public dialogRef: MatDialogRef<TextInputFormComponent>,
-//    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
-    // console.log("Temporarily setting a default value for Bulk Search text input form.")
-    // this.textControl.setValue("sodium chloride\nsodium gluconate");
   }
 
   submit(): void {
@@ -37,23 +32,23 @@ export class TextInputFormComponent implements OnInit {
   cancel(): void {
   }
 
-  loadTextFileIntoTextareaChangeListener($event) : void {
+  loadTextFileIntoTextareaChangeListener($event): void {
     this.readTextFile($event.target);
   }
 
-  readTextFile(inputValue: any) : void {
+  readTextFile(inputValue: any): void {
     this.loadTextFileIntoTextareaError = '';
-    var file:File = inputValue.files[0];
-    if(file.type == 'text/plain') {
-      var textFileReader:FileReader = new FileReader();
-      var fc = this.textControl;
+    const file: File = inputValue.files[0];
+    if(file.type === 'text/plain') {
+      const textFileReader: FileReader = new FileReader();
+      const fc = this.textControl;
 
-      textFileReader.onloadend = function(e){
+      textFileReader.onloadend = (e) => {
         fc.setValue(textFileReader.result);
-      }
+      };
       textFileReader.readAsText(file);
     } else {
-      this.loadTextFileIntoTextareaError = "File of type 'text/plain' is required."; 
+      this.loadTextFileIntoTextareaError = 'File of type \'text/plain\' is required.';
     }
   }
 }

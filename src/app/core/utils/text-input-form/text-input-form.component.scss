@@ -12,8 +12,10 @@
 }
 
 .text-input-form textarea  {
-    width:80%;
-    border: 2px solid gray; /* awtodo */
+    width: 100%;
+    border: 2px solid var(--regular-lightgray-color);
+    height: 300px;
+    overflow-y: auto;
 }
 
 

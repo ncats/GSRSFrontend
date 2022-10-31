@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, AfterViewInit, OnChanges } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { RecordOverview } from '@gsrs-core/bulk-search/bulk-search.model';
 import { AuthService } from '@gsrs-core/auth';
@@ -9,7 +9,8 @@ import { ConfigService } from '@gsrs-core/config';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-bulk-search-results-summary',
@@ -17,40 +18,38 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./bulk-search-results-summary.component.scss']
 })
 
-export class BulkSearchResultsSummaryComponent implements OnInit {
+export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit, OnChanges {
 /*
-   [summary]      -- expects any if this is provided then loadSummary should be false.  
+   [summary]      -- expects any if this is provided then loadSummary should be false.
    loadSummary    -- if true will run a data load procedure in the component
    context        -- expects the entity CONTEXT being browsed (e.g. substances)
-   [key]          -- the bulk search results key  
+   [key]          -- the bulk search results key
+   [isCollapsed]  -- hide the summary if true. 
 */
   @Input() key: string = null;
-  @Input() context: string = 'substances';
+  @Input() context = 'substances';
 
-  // if false, then we expect the summary to be passed as a parameter 
-  @Input() loadSummary:boolean = true;
-  @ViewChild(MatTable, {static: false}) table : MatTable<RecordOverview>; // initialize
+  // if false, then we expect the summary to be passed as a parameter
+  @Input() loadSummary = true;
+  @Input() isCollapsed = false;
+  @ViewChild(MatTable, {static: false}) table: MatTable<RecordOverview>; // initialize
   @ViewChild('paginator') paginator: MatPaginator;
 
-  private _summary: any = null;
-  private _summaryForDownload: any = null;
-  
   qPageSize: number;
   qPageIndex: number;
   qOrder: number;
   recordOverviewsShownOnPage: number;
   recordOverviews: Array<RecordOverview> = [];
-  totalRecordOverviews: number; 
-  totalQueries: number; 
+  totalRecordOverviews: number;
+  totalQueries: number;
+  isLoggedIn = false;
+  showDeprecated: boolean;
+  isAdmin = false;
+  showAudit = false;
+  isPolling = true;
+  private pollingInterval = 2500;
 
-  @Input() set summary(value: Array<any>) {
-    this.summary=value;
-  }
 
-  get summary(): Array<any> { 
-    return this._summary;
-  }
-  
   displayedColumns: string[] = [
     'searchTerm',
     'matches',
@@ -59,19 +58,24 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
   ];
 
   displayedColumnNames = {
-    'searchTerm': 'Search Term', 
-    'matches': 'Matches',
-    'displayCode': 'Record UNII',
-    'displayCodeName': 'Record Name'
+    searchTerm: 'Search Term',
+    matches: 'Matches',
+    displayCode: 'Record UNII',
+    displayCodeName: 'Record Name'
   };
 
   dataSource = new MatTableDataSource(this.recordOverviews);
+
+
+  private _summary: any = null;
+  private _summaryForDownload: any = null;
+
 
   constructor(
     private loadingService: LoadingService,
     public authService: AuthService,
     private notificationService: MainNotificationService,
-    private bulkSearchService: BulkSearchService,      
+    private bulkSearchService: BulkSearchService,
     private configService: ConfigService,
     private router: Router,
     private location: Location
@@ -79,26 +83,45 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     // const data:any = JSON.parse(``);
     // this._summary = data.summary;
   }
+  get summary(): Array<any> {
+    return this._summary;
+  }
+
+  @Input() set summary(value: Array<any>) {
+    this.summary=value;
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {
+
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      } else {
+        this.showDeprecated = false;
+      }
+      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+      this.showAudit = this.authService.hasRoles('admin');
+    });
+
     this.qPageSize = 10;
     this.qPageIndex = 0;
-    if (this.loadSummary) {  
-      this.getBulkSearchStatusResults();
+    if (this.loadSummary) {
+      this.pollUntillCompleted();
     }
   }
-  ngOnChanges() { 
+
+  ngOnChanges() {
     // This approach was tested early on but not later on in developemnt.
-    if (!this.loadSummary) {  
+    if (!this.loadSummary) {
       if(this._summary.queries) {
         this.summaryToRecordOverviews();
       }
     }
-  }  
+  }
 
   changePage(pageEvent: PageEvent) {
     let eventAction: any;
@@ -149,6 +172,25 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     this.getBulkSearchStatusResults();
   }
 
+  pollUntillCompleted() {
+    interval(this.pollingInterval)
+      .pipe(
+        switchMap(() =>this.bulkSearchService.getBulkSearchStatus(this.key)),
+        takeWhile(( response ) => {
+          if (response?.finished === true) {
+            return false;
+          }
+          return true;
+        })
+      ).subscribe(
+        _ => {},
+        _ => {},
+        () => {
+          this.isPolling = false;
+          this.getBulkSearchStatusResults();
+        }
+      );
+  }
 
   getBulkSearchStatusResults() {
     const qSkip = this.qPageIndex * this.qPageSize;
@@ -161,23 +203,23 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
     )
     .subscribe(bulkSearchResults => {
       if (!this.key) {
-        console.log("Warning, key is null or undefined in getBulkSearchStatusResults.");
+        console.log('Warning, key is null or undefined in getBulkSearchStatusResults.');
       }
       if (!this.context) {
-        console.log("Warning, context is null or undefined in getBulkSearchStatusResults.");
+        console.log('Warning, context is null or undefined in getBulkSearchStatusResults.');
       }
       if(bulkSearchResults?.summary) {
         this._summary = bulkSearchResults.summary;
-        this.totalQueries = this._summary.qTotal; 
+        this.totalQueries = this._summary.qTotal;
         this.summaryToRecordOverviews();
-        if(this.table) { 
+        if(this.table) {
           this.table.dataSource = this.recordOverviews;
           this.recordOverviewsShownOnPage = this.recordOverviews.length;
           this.table.renderRows();
         }
-      } 
+      }
     }, error => {
-        console.log("Error getting bulk search results in summary component.");
+        console.log('Error getting bulk search results in summary component.');
     }, () => {
       subscription.unsubscribe();
     });
@@ -186,22 +228,22 @@ export class BulkSearchResultsSummaryComponent implements OnInit {
 summaryToRecordOverviews() {
   this.recordOverviews = [];
   this._summary.queries.forEach( q => {
-    let o: RecordOverview = <RecordOverview>{};
+    const o: RecordOverview = {} as RecordOverview;
     o.searchTerm = q.searchTerm;
     if (q.records) {
       o.matches = q.records.length;
-      if(q.records.length==0) {
+      if(q.records.length === 0) {
       o.displayCode = '(no match)';
       o.displayCodeName = '(no match)';
-      } else 
-        if(q.records.length==1) {
+      } else
+        if(q.records.length === 1) {
           o.displayCode = q.records[0].displayCode;
           o.displayCodeName = q.records[0].displayCodeName;
-      } else 
+      } else
         if (q.records.length>1) {
           o.displayCode = 'multiple';
           o.displayCodeName = 'multiple';
-      }  
+      }
     }
     this.recordOverviews.push(o);
   });
@@ -210,36 +252,36 @@ summaryToRecordOverviews() {
 
   makeTsvTextFromSummaryQueries(json: any): string {
     const _fieldHeaders =
-    'searchTerm|id|idName|displayCode|displayCodeName'; 
+    'searchTerm|id|idName|displayCode|displayCodeName';
     const _fields =
-    'searchTerm|id|idName|displayCode|displayCodeName'; 
+    'searchTerm|id|idName|displayCode|displayCodeName';
     const fields = _fields.split('|');
     const searchTermIndex = fields.indexOf('searchTerm');
     const fieldHeaders = _fieldHeaders.split('|');
-    let tsvText = fieldHeaders.join("\t")+"\r\n";
+    let tsvText = fieldHeaders.join('\t')+'\r\n';
 
     json.queries.forEach(q => {
       if (q.records.length === 0) {
         const row = [];
         fields.forEach( (f,i) => {
-          if (i===searchTermIndex) { 
-           row.push(q[f]||''); 
+          if (i===searchTermIndex) {
+           row.push(q[f]||'');
           } else {
-           row.push('');  
+           row.push('');
           }
         });
-        tsvText+=row.join("\t")+"\r\n"; 
-      } else { 
+        tsvText+=row.join('\t')+'\r\n';
+      } else {
         q.records.forEach( r => {
           const row = [];
           fields.forEach( (f,i) => {
-            if (i===searchTermIndex) { 
-              row.push(q[f]||''); 
+            if (i===searchTermIndex) {
+              row.push(q[f]||'');
             } else {
-             row.push(r[f]||'');  
+             row.push(r[f]||'');
             }
           });
-          tsvText+=row.join("\t")+"\r\n"; 
+          tsvText+=row.join('\t')+'\r\n';
         });
 
       }
@@ -248,35 +290,36 @@ summaryToRecordOverviews() {
   }
 
   getBulkSearchStatusResultsSummaryForDownload(): void {
-    let filename: string = '';
+    let filename = '';
     let context: string;
-    let finished: boolean = false;
+    let finished = false;
     const qTop = 20000;
     const qSkip = 0;
-    let s1: Subscription;
+
     let s2: Subscription;
-     s1 = this.bulkSearchService.getBulkSearchStatus(this.key).subscribe(response => {
-      context = response.context;
-      finished = response.finished;
+     const s1 = this.bulkSearchService.getBulkSearchStatus(this.key).subscribe(response1 => {
+      context = response1.context;
+      finished = response1.finished;
       if (context === undefined) {
-        alert("Context (entity type) must be defined in the JSON response.");
-      } else if (finished !== true) { 
-        alert("The seach is not yet finshed. Please try clicking again after a time.");
-      } else {        
-        // top and skip are zero because we don't need the content array for the download. 
-        s2 = this.bulkSearchService.getBulkSearchStatusResults(this.key, 0, 0, qTop, qSkip).subscribe(response => {
-          this._summaryForDownload = response.summary;
-          filename =  context + '-bulk-search-summary-' + this.key + '.tsv';  
-          this.downloadSummaryQueriesFile(response, filename);     
+        alert('Context (entity type) must be defined in the JSON response.');
+      } else if (finished !== true) {
+        alert('The seach is not yet finshed. Please try clicking again after a time.');
+      } else {
+        // top and skip are zero because we don't need the content array for the download.
+        s2 = this.bulkSearchService.getBulkSearchStatusResults(this.key, 0, 0, qTop, qSkip)
+        .subscribe(response2 => {
+          this._summaryForDownload = response2.summary;
+          filename =  context + '-bulk-search-summary-' + this.key + '.tsv';
+          this.downloadSummaryQueriesFile(response2, filename);
         }, error => {
-          console.log("Error downloading file in getBulkSearchStatusResultsSummaryForDownload.");
+          console.log('Error downloading file in getBulkSearchStatusResultsSummaryForDownload.');
         }
         );
-      }  
+      }
     },
-    ()=> { 
+    ()=> {
       s1.unsubscribe();
-      s2.unsubscribe()
+      s2.unsubscribe();
     }
     );
   }

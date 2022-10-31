@@ -1,3 +1,6 @@
+
+// This should probably be deleted.
+
 import {
   Component,
   OnInit,
@@ -26,55 +29,52 @@ import { BulkSearch } from './bulk-search.model';
     isLoggedIn = false;
     showDeprecated = false;
     queryText: string;
-    context: string = 'substances';
-    _bulkSearch: BulkSearch;  
+    context: 'substances';
+    _bulkSearch: BulkSearch;
     _bulkSearchResults: any;
     bulkQID: number;
     searchOnIdentifiers: boolean;
-    bulkSearchResultsTop: number = 10;
-    bulkSearchResultsSkip: number = 0;
-    bulkSearchResultsQTop: number = 10;
-    bulkSearchResultsQSkip: number = 0;
+    bulkSearchResultsTop = 10;
+    bulkSearchResultsSkip = 0;
+    bulkSearchResultsQTop = 10;
+    bulkSearchResultsQSkip = 0;
     isError = false;
     isLoading = false;
     anchorElement: HTMLAnchorElement;
     showSpinner = false;
-    JSON: any; 
-    
-    private subscriptions: Array<Subscription> = [];
     navigationExtrasFacet: NavigationExtras = {
       queryParams: {}
-    };  
+    };
+
+    private subscriptions: Array<Subscription> = [];
     private searchType: string;
     private searchEntity: string;
-  
+
     constructor(
       private loadingService: LoadingService,
       public authService: AuthService,
       private notificationService: MainNotificationService,
-      private bulkSearchService: BulkSearchService,      
+      private bulkSearchService: BulkSearchService,
       private configService: ConfigService,
       private route: ActivatedRoute
     ) {
-      this.JSON = JSON;
     }
-  
+
     ngOnInit() {
 
       this.loadingService.setLoading(true);
       this.showSpinner = true;  // Start progress spinner
-  
+
       // Get configration values to hide/show Modules
       this.loadedComponents = this.configService.configData.loadedComponents || null;
-  
+
       if (this.loadedComponents) {
         if (this.loadedComponents.applications) {
         }
-      }  
-  
+      }
+
       this.showSpinner = false;  // Stop progress spinner
       this.loadingService.setLoading(false);
-
 
       const authSubscription = this.authService.getAuth().subscribe(auth => {
         if (auth) {
@@ -86,17 +86,18 @@ import { BulkSearch } from './bulk-search.model';
         this.showAudit = this.authService.hasRoles('admin');
       });
 
-      const s1 = this.route.queryParams.subscribe(params => {
-        // this.loadingService.setLoading(true);   
-         // this.isError = false;    
-         this.bulkQID = params.bulkQID;
-         const subscription = this.bulkSearchService.getBulkSearch(
+      this.route.queryParams.subscribe(params => {
+        // this.loadingService.setLoading(true);
+        // this.isError = false;
+        this.bulkQID = params.bulkQID;
+        let subscription2: Subscription;
+        this.bulkSearchService.getBulkSearch(
           this.context,
           this.bulkQID,
           this.searchOnIdentifiers
         ).subscribe(bulkSearch => {
             this._bulkSearch = bulkSearch;
-            const subscription = this.bulkSearchService.getBulkSearchStatusResults(
+            subscription2 = this.bulkSearchService.getBulkSearchStatusResults(
               this._bulkSearch.key,
               this.bulkSearchResultsTop,
               this.bulkSearchResultsSkip,
@@ -105,10 +106,9 @@ import { BulkSearch } from './bulk-search.model';
             ).subscribe(bulkSearchResults => {
               this._bulkSearchResults = bulkSearchResults;
             });
-          })      
-    }
-    );
-    }
+        });
+    });
+  }
 /*
 ,
     error => {
@@ -128,9 +128,9 @@ import { BulkSearch } from './bulk-search.model';
     }
 
 */
-   
-   
-   
+
+
+
     ngOnDestroy() {
       this.subscriptions.forEach(subscription => {
         if (subscription) {
@@ -138,13 +138,13 @@ import { BulkSearch } from './bulk-search.model';
         }
       });
     }
- 
-    
+
+
 
 
 
     getBulkSearch(context: string, id: number) {
-      this.loadingService.setLoading(true); 
+      this.loadingService.setLoading(true);
       const subscription = this.bulkSearchService.getBulkSearch(
         context,
         id
@@ -170,13 +170,13 @@ import { BulkSearch } from './bulk-search.model';
     }
 
     getBulkSearchStatusResults(
-      key: string, 
+      key: string,
       top: number,
       skip: number,
       qTop: number,
       qSkip: number
     ) {
-      this.loadingService.setLoading(true); 
+      this.loadingService.setLoading(true);
       const subscription = this.bulkSearchService.getBulkSearchStatusResults(
         key,
         top,
@@ -187,10 +187,6 @@ import { BulkSearch } from './bulk-search.model';
         .subscribe(bulkSearchResults => {
           this.isError = false;
           this._bulkSearchResults = bulkSearchResults;
-          console.log("this._bulkSearchResults");
-          
-          console.log(this._bulkSearchResults);
-
         }, error => {
           const notification: AppNotification = {
             message: 'There was an error trying to get a bulk search results.',
@@ -211,4 +207,3 @@ import { BulkSearch } from './bulk-search.model';
 
 
   }
-  

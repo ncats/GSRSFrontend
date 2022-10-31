@@ -392,7 +392,7 @@ export class SubstanceService extends BaseHttpService {
 
 
 
-  
+
   searchSubstanceBulk(
     bulkSearchTerm?: string,
     searchTerm?: string,
@@ -484,6 +484,7 @@ export class SubstanceService extends BaseHttpService {
 
   private getAsyncSearchResults(
     querySearchTerm: string,
+    // this is a status
     structureSearchKey: string,
     pageSize?: number,
     facets?: FacetParam,

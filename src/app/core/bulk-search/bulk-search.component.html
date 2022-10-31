@@ -1,38 +1,4 @@
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div>Hello bulk search</div>
-<div>
-    {{_bulkSearch|json}}
-</div>
-<div>bulkQID {{bulkQID}}</div>
-<div  *ngIf="_bulkSearch !== undefined && _bulkSearch.key  !== undefined">
-    <div>_bulkSearch.key {{_bulkSearch.key }}</div>
-</div>
-<div  *ngIf="_bulkSearchResults !== undefined && _bulkSearchResults.summary !== undefined" style="border: 1px solid gray;">
-    <div *ngFor="let summary of _bulkSearchResults.summary">
-        <div>{{summary.searchTerm}}</div>
-        <div  *ngIf="summary !== undefined && summary.records !== undefined">
-           <div *ngFor="let record of summary.records">
-            {{record|json}}
-            </div> 
-        </div>
-        <br>
-    </div>
-</div>
-
-
-<div>
-    
-<!-- app-bulk-search-results-summary ></app-bulk-search-results-summary -->
-
+<div>Bulk Search Summary</div>
+<div>   
+    <!-- app-bulk-search-results-summary ></app-bulk-search-results-summary -->
 </div>

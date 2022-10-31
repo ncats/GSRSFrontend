@@ -82,21 +82,51 @@
         </div>
       </div>
     </div>
-
+    
     <div *ngIf="bulkSearchTerm">
-      <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
-        <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
-        <span *ngIf="bulkSearchQueryId"> 
-        | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
-        </span>
-        Bulk Search
-      </div> 
-      <!--         [summaries]="bulkSearchSummaries" -->
-      <app-bulk-search-results-summary
-        loadSummaries=true
-        context="substances"
-        [key]="bulkSearchTerm"      
-      ></app-bulk-search-results-summary>
+
+<mat-expansion-panel [expanded]="bulkSearchPanelOpen"
+(opened)="bulkSearchPanelOpen = true"
+                       (closed)="bulkSearchPanelOpen = false"
+
+style="max-width: 1000px; margin-left: auto; margin-right: auto;">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <h2>Bulk Search Summary (Full Results)</h2>
+    </mat-panel-title>
+    <mat-panel-description>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+       <div [hidden]="bulkSearchAlwaysShowSummary || !(searchTerm || (displayFacets && displayFacets.length>0))"  style="margin-top: 10px; text-align: center">
+        <div (click)="setBulkSearchAlwaysShowSummary(true)">
+          Show Bulk Search Summary
+        </div>
+
+      </div>
+      <div [hidden]="!bulkSearchAlwaysShowSummary && (searchTerm || (displayFacets && displayFacets.length>0))" style="margin-top: 10px; text-align: center">
+        <div (click)="setBulkSearchAlwaysShowSummary(false)">
+          Hide
+        </div>
+
+        <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
+          <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
+          <span *ngIf="bulkSearchQueryId"> 
+          | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
+          </span>
+          Bulk Search
+          
+
+        </div>   
+
+        <app-bulk-search-results-summary
+          loadSummaries=true
+          context="substances"
+          [key]="bulkSearchTerm"
+          [isCollapsed]="isBulkSearchCollapsed"
+        ></app-bulk-search-results-summary>
+      </div>
+    </mat-expansion-panel>           
+
     </div>
 
     <div class="break"></div>
@@ -335,7 +365,6 @@
       <div [ngClass]="view">
         <div class="substance-cards">
           <div *ngFor="let substance of substances">
-          <app-bulk-search-search-terms-by-id [id]="substance.uuid"></app-bulk-search-search-terms-by-id>
             <app-substance-summary-card  [substance]="substance"
               (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
               [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"

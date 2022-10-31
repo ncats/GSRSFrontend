@@ -23,7 +23,7 @@ import * as lodash from 'lodash';
     templateUrl: './bulk-query.component.html',
     styleUrls: ['./bulk-query.component.scss']
   })
-  
+
 export class BulkQueryComponent implements OnInit, OnDestroy {
   _ = lodash;
   loadedComponents: LoadedComponents;
@@ -33,14 +33,14 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
   showDeprecated = false;
   queryText: string;
   _bulkQuery: BulkQuery;
-  _bulkQueryIdAfterSubmit: number;  
-  _bulkQueryIdOnLoad: number;  
+  _bulkQueryIdAfterSubmit: number;
+  _bulkQueryIdOnLoad: number;
   _bulkSearchIdOnLoad: number;
   _bulkSearchKeyOnLoad: string;
   _bulkSearch: BulkSearch;
   _bulkSearchResults: any;
   _bulkSearchResultKey: string;
-  searchOnIdentifiers: boolean = true;
+  searchOnIdentifiers: boolean;
   query: string;
   isError = false;
   isLoading = false;
@@ -53,41 +53,29 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
   mol: string;
   height = 0;
   width = 0;
-  canvasToggle = true;
-  canvasMessage = '';
-  tempClass = '';
-  categoryOptions = [
-    'Substance',
-    'Application',
-    'Product',
-    'Clinical Trial',
-    'Adverse Event'
-  ];
-  tabSelectedIndex = 0;
-  category = 'Substance';
-  configName: 'substances';
-  tabClicked = false;
-
+  textInputFormPlaceholder = 'ASPIRIN\n50-00-0\nroot_names_name:\"^parsley\$"\nR6Q3791S76\n1cf410f9-3eeb-41ed-ab69-eeb5076901e5\n';
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   @ViewChild(TextInputFormComponent, {static:true}) textInputForm: TextInputFormComponent;
 
   showSpinner = false;
-  private subscriptions: Array<Subscription> = [];
   navigationExtrasFacet: NavigationExtras = {
     queryParams: {}
-  };  
-  private queryEntity: string;
+  };
   queryEntityControl = new FormControl();
+  queryEntities: any;
+  private subscriptions: Array<Subscription> = [];
+  private queryEntity: string;
 
   constructor(
     private loadingService: LoadingService,
     public authService: AuthService,
     private notificationService: MainNotificationService,
-    private bulkSearchService: BulkSearchService,      
+    private bulkSearchService: BulkSearchService,
     private configService: ConfigService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
-  
+
   ngOnInit() {
 
     this.loadingService.setLoading(true);
@@ -98,11 +86,15 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
     // if (this.loadedComponents) {
     //  if (this.loadedComponents.applications) {
     //  }
-    // }  
+    // }
 
     this.showSpinner = false;  // Stop progress spinner
     this.loadingService.setLoading(false);
-
+    const bsConfig = this.configService.configData.bulkSearch;
+    this.queryEntities = bsConfig.entities;
+    if (!this.queryEntities) {
+//      this.queryEntities = {name: 'substances', title: 'Substances'};
+    }
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -110,11 +102,10 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
         this.showDeprecated = false;
       }
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');  
+      this.showAudit = this.authService.hasRoles('admin');
     });
-
-    this.checkBulkQueryIdParameterOnLoad(); 
-
+    this.setQueryEntity('substances');
+    this.checkBulkQueryIdParameterOnLoad();
   }
 
   ngOnDestroy() {
@@ -127,7 +118,7 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
 
 submitText() {
     this.queryText = this.textInputForm.textControl.value;
-    this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse()
+    this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse();
 }
 
   bulkSearchSubmit(): void {
@@ -136,20 +127,20 @@ submitText() {
   }
 
   checkBulkQueryIdParameterOnLoad() {
-    // We need to get the query id from the URL query parameter, then extract the queries 
-    // from the response. Queries come back as array, The number query terms in the 
+    // We need to get the query id from the URL query parameter, then extract the queries
+    // from the response. Queries come back as array, The number query terms in the
     // array is determined by `top`, so we may need to process multiple responses to get
-    // the full list of queries for editing in the textarea. 
-    let top: number = 10000;
-    let skip: number = 0;
-    let subscriptions = [];
+    // the full list of queries for editing in the textarea.
+    const top = 10000;
+    let skip = 0;
+    const subscriptions = [];
 
     // Part A: get url query param values
     subscriptions[0] = this.route.queryParams.subscribe(params => {
       this._bulkQueryIdOnLoad = params.bulkQID;
       this._bulkSearchKeyOnLoad = params.bulkSearchKey;
-      let observables: Array<Observable<BulkQuery>> = [];
-      let texts: string[] = [];
+      const observables: Array<Observable<BulkQuery>> = [];
+      const texts: string[] = [];
 
       // Part B: get status for context and searchOnIdentifiers
       subscriptions[1] = this.bulkSearchService.getBulkSearchStatus(
@@ -159,10 +150,10 @@ submitText() {
         this.searchOnIdentifiers = this.checkSearchOnIdentifiers(response.generatingUrl);
 
           // Get the first reponse so we know the values for top, skip, total.
-          // Then loop through the rest of the reponses and store in order in the texts array. 
-          // However, the looping part does not work as expected perhaps due asyncronousity, 
+          // Then loop through the rest of the reponses and store in order in the texts array.
+          // However, the looping part does not work as expected perhaps due asyncronousity,
           // so instead I am for now setting top to 10000.
-   
+
           // Part C: load queries terms
           subscriptions[1] = this.bulkSearchService.getBulkQuery(
             this.queryEntity,
@@ -172,7 +163,7 @@ submitText() {
           )
           .subscribe((bulkQuery) => {
             if(bulkQuery.queries) {
-              texts.push(bulkQuery.queries.join("\n"));            
+              texts.push(bulkQuery.queries.join('\n'));
               const left =  bulkQuery.total - bulkQuery.count;
               // Turning this off and using big top value for now.
               const off = true;
@@ -184,7 +175,7 @@ submitText() {
                     .getBulkQuery(this.queryEntity, this._bulkQueryIdOnLoad, top, skip);
                   observables.push(observable);
                   const s = observable.subscribe((bulkQuery1) => {
-                    texts.push(bulkQuery1.queries.join("\n"));
+                    texts.push(bulkQuery1.queries.join('\n'));
                     console.log(bulkQuery1.queries);
                     subscriptions.push(s);
                   });
@@ -192,32 +183,35 @@ submitText() {
               }
             }
           },
-          (error) => {console.log( "Error getting data");},
+          (error) => {
+            console.log( 'Error getting bulk search status results data.');
+          },
           () => {
             // completed
-            // Join all values in the texts array and insert into form text area 
-            this.textInputForm.textControl.setValue(texts.join(""));
+            // Join all values in the texts array and insert into form text area.
+            this.textInputForm.textControl.setValue(texts.join(''));
           });
-          // Part C End   
+          // Part C End
       },
       error => {
-        console.log("awd bad adddd");
+        console.log('Error getting bulk search status data.');
       });
       // Part B End
     },
     () => {
-      subscriptions.forEach( o => {o.unsubscribe();} );          
+      subscriptions.forEach(
+        (o) => {
+          o.unsubscribe();
+        });
     });
     // Part A (Params) end)
   }
-    
+
   checkSearchOnIdentifiers(url: string): boolean {
     if(url && url.indexOf('searchOnIdentifiers=true')>-1) {
-      console.log("awd returning true");
-      return true; 
+      return true;
     } else {
-      console.log("awd returning true");
-      return false; 
+      return false;
     }
   }
 
@@ -237,18 +231,19 @@ submitText() {
         this._bulkSearchResultKey = this._bulkSearch.key;
         const navigationExtras: NavigationExtras = {
           queryParams: {
-            'bulk_search': this._bulkSearchResultKey,
-            'bulkQID': this._bulkQueryIdAfterSubmit,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            bulk_search: this._bulkSearchResultKey,
+            bulkQID: this._bulkQueryIdAfterSubmit,
           }
         };
         this.router.navigate(['/browse-substance'], navigationExtras);
       }, error => {
-        console.log("Error posting bulk search and getting bulk search result key.");
+        console.log('Error posting bulk search and getting bulk search result key.');
       }, () => {
           s2.unsubscribe();
-      })
+      });
     }, error => {
-      console.log("Error trying to post a bulk query.");
+      console.log('Error trying to post a bulk query.');
       const notification: AppNotification = {
         message: 'Error trying to post a bulk query.',
         type: NotificationType.error,
