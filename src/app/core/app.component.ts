@@ -190,6 +190,9 @@ export class AppComponent {
         iconRegistry.addSvgIcon(
           'paste',
           sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-paste-24px.svg'));
+          iconRegistry.addSvgIcon(
+            'help',
+            sanitizer.bypassSecurityTrustResourceUrl('assets/icons/help-outline-24px.svg'));
   }
 
 }

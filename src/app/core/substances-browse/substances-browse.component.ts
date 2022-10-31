@@ -585,19 +585,24 @@ searchTermOkforBeginsWithSearch(): boolean {
   export(url: string, extension: string) {
     if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
-        height: '215x',
-        width: '550px',
+        maxHeight: '80%',
+        
+        width: '60%',
         data: { 'extension': extension }
       });
 
       this.overlayContainer.style.zIndex = '1002';
 
-      const exportSub = dialogReference.afterClosed().subscribe(name => {
+      const exportSub = dialogReference.afterClosed().subscribe(response => {
+        const name = response.name;
+        const id = response.id;
         this.overlayContainer.style.zIndex = null;
         if (name && name !== '') {
           this.loadingService.setLoading(true);
           const fullname = name + '.' + extension;
-          this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+          this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+            this.substanceService.getConfigByID(id).subscribe(resp =>{
+            });
             this.loadingService.setLoading(false);
             this.loadingService.setLoading(false);
             const navigationExtras: NavigationExtras = {
