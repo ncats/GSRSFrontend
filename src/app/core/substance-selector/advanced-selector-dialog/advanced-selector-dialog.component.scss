@@ -674,3 +674,19 @@ margin-left: 20px;
 .cdk-overlay-backdrop, .cdk-global-overlay-wrapper {
     display: none !important;
 }
+
+
+.mat-mini-fab {
+    background-color: var(--mat-icon-button-bg-color);
+    color: var(--label-color);
+    width: 35px;
+    height: 35px;
+  
+    &:not(:first-child) {
+        margin-top: 3px;
+    }
+  
+    ::ng-deep .mat-button-wrapper {
+        padding: 0;
+    }
+  }

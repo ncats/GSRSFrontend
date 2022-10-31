@@ -1,4 +1,8 @@
-
+    <div style = "display:flex"><span class = "middle-fill"></span>
+        <button mat-mini-fab (click)="dialogRef.close()">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+</div>
 <mat-tab-group [selectedIndex] = "activeTab" (selectedTabChange)="onTabChanged($event)" class = "tab-group">
     <mat-tab  label= "Structure Search">
 

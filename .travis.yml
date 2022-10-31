@@ -2,7 +2,7 @@ dist: trusty
 
 language: node_js
 node_js:
-  - lts/*
+  - 18.11.0
 
 install:
 
