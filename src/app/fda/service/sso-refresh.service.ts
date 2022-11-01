@@ -1,6 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { take } from 'rxjs/operators';
 import { AuthService } from '@gsrs-core/auth';
 import { UtilsService } from '@gsrs-core/utils';
 import { ConfigService } from '@gsrs-core/config/config.service';
@@ -10,13 +11,13 @@ export class SsoRefreshService implements OnDestroy {
   private iframe: HTMLIFrameElement;
   private refreshInterval: any;
   private baseHref: string;
-
+  private showHeaderBar = 'true';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private authService: AuthService,
     private utilsService: UtilsService,
     private configService: ConfigService,
+    private authService: AuthService,
     private activatedRoute: ActivatedRoute
   ) {
     if (isPlatformBrowser(this.platformId)) {
@@ -42,52 +43,34 @@ export class SsoRefreshService implements OnDestroy {
   }
 
   setup() {
-    const homeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || null;
-    if (homeBaseUrl) {
-      this.baseHref = homeBaseUrl;
-      this.updateIframe();
-    }
-    clearInterval(this.refreshInterval);
-    this.refreshInterval = setInterval(() => {
-      this.updateIframe();
-    }, 120000);
+    this.configService.afterLoad().then(cd => {
+      const homeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || null;
+      if (homeBaseUrl) {
+        this.baseHref = homeBaseUrl;
+        this.updateIframe();
+      }
+      clearInterval(this.refreshInterval);
+      this.refreshInterval = setInterval(() => {
+        console.log("REFRESHING iFrame");
+        this.updateIframe();
+      }, 120000);
+    });
   }
 
   init(): any {
-    let showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
-    if (showHeaderBar === 'false') {
+    if (new URLSearchParams(window.location.search).get("header") === 'false') {
       this.setup();
     } else {
       this.authService.getAuth().subscribe(auth => {
         if (auth != null && this.refreshInterval == null) {
           this.setup();
-        } else {
+        } else if (auth === null){
           clearInterval(this.refreshInterval);
           this.refreshInterval = null;
         }
       });
-    }
+    } //else
   }
-
-  /*  init(): any {
-    this.authService.getAuth().subscribe(auth => {
-      if (auth != null && this.refreshInterval == null) {
-        const homeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || null;
-        if (homeBaseUrl) {
-          this.baseHref = homeBaseUrl;
-          this.updateIframe();
-        }
-        clearInterval(this.refreshInterval);
-        this.refreshInterval = setInterval(() => {
-          this.updateIframe();
-        }, 120000);
-      } else {
-        clearInterval(this.refreshInterval);
-        this.refreshInterval = null;
-      }
-    });
-  }
-  */
 
   ngOnDestroy() {
     clearInterval(this.refreshInterval);
