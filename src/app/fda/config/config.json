@@ -279,6 +279,16 @@
       "title": "audit info"
     },
     {
+      "card": "substance-relationships-visualization",
+      "title": "Relationships Visualization",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "relationships"
+        }
+      ]
+    },
+    {
       "card": "substance-references",
       "title": "references",
       "filters": [
@@ -615,5 +625,6 @@
     "root_codes_BDNUM",
     "root_codes_CAS",
     "root_codes_ECHA\\ \\(EC\\/EINECS\\)"
-  ]
+  ],
+  "relationshipsVisualizationUri": "https://gsrs3d.conceptant.com/index.html?uuid="
 }

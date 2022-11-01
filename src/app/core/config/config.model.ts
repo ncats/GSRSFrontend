@@ -16,6 +16,7 @@ export interface Config {
     navItems?: Array<NavItem>;
     substanceSelectorProperties?: Array<string>;
     displayMatchApplication?: string;
+    relationshipsVisualizationUri?: string;
 }
 
 export interface SubstanceDetailsCard {
