@@ -19,6 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatPaginatorModule,
     MatTabsModule,
     MatSliderModule,
-    MatExpansionModule
+    MatExpansionModule,
+    FormsModule
   ],
   declarations: [
     SubstanceSelectorComponent,

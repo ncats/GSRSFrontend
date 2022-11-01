@@ -71,7 +71,7 @@
           View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
       </button>
        <span class = "middle-fill"></span>
-       <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+       <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize" 
        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
      </mat-paginator>
   </div>
@@ -154,11 +154,20 @@
   </app-substance-text-search>
 </div>
 
-  <div class = "form-row paginator-row" *ngIf = "nameTotalSubstances && nameTotalSubstances > 0">
+  <div class = "form-row paginator-row"  *ngIf = "nameTotalSubstances && nameTotalSubstances > 0">
+     
       <button mat-button (click) = "navigateToBrowseSubstance('names')">
           View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
       </button>
       <span class = "middle-fill"></span>
+      <mat-form-field class="sort">
+          <mat-label>Sort By</mat-label>
+          <mat-select (selectionChange)="reSort()"  [(ngModel)]="order">
+            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       
     <mat-paginator #paginator [length]="nameTotalSubstances" [pageIndex]="namePageIndex" [pageSize]="namePageSize"
       [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event, 'name')" [showFirstLastButtons]="true">

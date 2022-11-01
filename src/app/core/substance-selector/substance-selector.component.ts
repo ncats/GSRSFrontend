@@ -156,7 +156,8 @@ export class SubstanceSelectorComponent implements OnInit {
       data = {
         structure: substance.uuid,
         names: substance.names,
-        component: 'substanceSelector'
+        component: 'substanceSelector',
+        uuid: substance.uuid,
       };
       if (substance.polymer) {
         molfile = substance.polymer.idealizedStructure.molfile;
