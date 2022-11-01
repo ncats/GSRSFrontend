@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
@@ -294,7 +295,19 @@ export class ExportDialogComponent implements OnInit {
       'name': this.name,
       'id': this.loadedConfig? this.loadedConfig.configurationId : null
     };
-    this.dialogRef.close(response);
+  
+
+    if (!_.isEqual(this.loadedConfig.scrubberSettings, this.privateScrubberModel) || 
+     !_.isEqual(this.loadedConfig.exporterSettings, this.privateExporterModel) ||
+     !_.isEqual(this.loadedConfig.expanderSettings, this.privateExpanderModel)) {
+      
+      if (confirm('Warning: Unsaved changes to the configuration will not be applied. Continue?')) {
+        this.dialogRef.close(response);
+      }
+    } else {
+      this.dialogRef.close(response);
+    }
+   // this.dialogRef.close(response);
   }
 
   cancel(): void {
@@ -305,7 +318,7 @@ export class ExportDialogComponent implements OnInit {
     let response = {
       'name': this.name,
     };
-    this.dialogRef.close(response);
+   // this.dialogRef.close(response);
   }
 
 
