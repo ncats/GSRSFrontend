@@ -118,11 +118,11 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
 
 submitText() {
     this.queryText = this.textInputForm.textControl.value;
-    this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse();
+    // this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse();
 }
 submitText2() {
   this.queryText = this.textInputForm.textControl.value;
-  this.postBulkQueryAndNavigateToBrowse();
+  this.postOrPutBulkQueryAndNavigateToBrowse();
 }
 
   bulkSearchSubmit(): void {
@@ -131,6 +131,125 @@ submitText2() {
   }
 
   checkBulkQueryIdParameterOnLoad() {
+    // We need to get the query id from the URL query parameter, then extract the queries
+    // from the response. Queries come back as array, The number query terms in the
+    // array is determined by `top`, so we may need to process multiple responses to get
+    // the full list of queries for editing in the textarea.
+    const top = 10000;
+    let skip = 0;
+    const subscriptions = [];
+
+    // Part A: get url query param values
+    subscriptions[0] = this.route.queryParams.subscribe(params => {
+      this._bulkQueryIdOnLoad = params.bulkQID;
+      if(params.searchOnIdentifiers && params.searchOnIdentifiers === "false") { 
+        this.searchOnIdentifiers = false;
+      } else {
+        this.searchOnIdentifiers = true;
+      }
+      this.setQueryEntity(params.queryEntity);
+      const observables: Array<Observable<BulkQuery>> = [];
+      const texts: string[] = [];
+          // Part B: load queries terms
+          subscriptions[1] = this.bulkSearchService.getBulkQuery(
+            this.queryEntity,
+            this._bulkQueryIdOnLoad,
+            top,
+            skip
+          )
+          .subscribe((bulkQuery) => {
+            if(bulkQuery.queries) {
+              texts.push(bulkQuery.queries.join('\n'));
+              const left =  bulkQuery.total - bulkQuery.count;
+              // Turning this off and using big top value for now.
+              const off = true;
+              if(!off && left>0) {
+                const x = Math.floor(left/top);
+                for (let i = 1; i <= x; i++) {
+                  skip = skip + top;
+                  const observable = this.bulkSearchService
+                    .getBulkQuery(this.queryEntity, this._bulkQueryIdOnLoad, top, skip);
+                  observables.push(observable);
+                  const s = observable.subscribe((bulkQuery1) => {
+                    texts.push(bulkQuery1.queries.join('\n'));
+                    console.log(bulkQuery1.queries);
+                    subscriptions.push(s);
+                  });
+                }
+              }
+            }
+          },
+          (error) => {
+            console.log( 'Error getting bulk search status results data.');
+          },
+          () => {
+            // completed
+            // Join all values in the texts array and insert into form text area.
+            this.textInputForm.textControl.setValue(texts.join(''));
+          });
+          // Part B End
+      },
+    () => {
+      subscriptions.forEach(
+        (o) => {
+          o.unsubscribe();
+        });
+    });
+    // Part A (Params) end)
+  }
+
+
+  postOrPutBulkQueryAndNavigateToBrowse() {
+    // This assumes we post/put the query and launch the search FROM the browse page. 
+    this.loadingService.setLoading(true);
+    const s1 = this.bulkSearchService.postOrPutBulkQuery(
+      // this._bulkQueryIdOnLoad,      
+      this.queryEntity,
+      this.queryText
+    )
+    .subscribe(bulkQuery => {
+      this.isError = false;
+      this._bulkQuery = bulkQuery;
+      this._bulkQueryIdAfterSubmit = bulkQuery.id;
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          bulkQID: this._bulkQueryIdAfterSubmit,
+          searchOnIdentifiers: this.searchOnIdentifiers,
+          queryEntity: this.queryEntity
+        }
+      };
+      this.router.navigate(['/browse-substance'], navigationExtras);
+    }, error => {
+      console.log('Error trying to post/put a bulk query.');
+      const notification: AppNotification = {
+        message: 'Error trying to post/put a bulk query.',
+        milisecondsToShow: 6000
+      };
+      this.isError = true;
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+      this.notificationService.setNotification(notification);
+    }, () => {
+      s1.unsubscribe();
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+    }
+    );
+  }
+
+  setQueryEntity(value: string) {
+    this.queryEntity = value;
+    this.queryEntityControl.setValue(value);
+  }
+
+  queryEntitySelected($event) {
+    this.setQueryEntity($event.value);
+  }
+
+
+/*
+  checkBulkQueryIdParameterOnLoad_OLD() {
     // We need to get the query id from the URL query parameter, then extract the queries
     // from the response. Queries come back as array, The number query terms in the
     // array is determined by `top`, so we may need to process multiple responses to get
@@ -211,6 +330,7 @@ submitText2() {
     // Part A (Params) end)
   }
 
+
   checkSearchOnIdentifiers(url: string): boolean {
     if(url && url.indexOf('searchOnIdentifiers=true')>-1) {
       return true;
@@ -218,10 +338,10 @@ submitText2() {
       return false;
     }
   }
+*/
 
 
-
-  
+/*  
   postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse() {
     // This assumes we post the query, launch a search, and get the resulk key  
     // before going to the browse page. 
@@ -269,52 +389,8 @@ submitText2() {
     }
     );
   }
+*/
 
-  postBulkQueryAndNavigateToBrowse() {
-    // This assumes we post the query and launch the search FROM the browse page. 
-    this.loadingService.setLoading(true);
-    const s1 = this.bulkSearchService.postBulkQuery(
-      this.queryEntity,
-      this.queryText
-    )
-    .subscribe(bulkQuery => {
-      this.isError = false;
-      this._bulkQuery = bulkQuery;
-      this._bulkQueryIdAfterSubmit = bulkQuery.id;
-      const navigationExtras: NavigationExtras = {
-        queryParams: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          // bulk_search: 'null',
-          bulkQID: this._bulkQueryIdAfterSubmit,
-        }
-      };
-      this.router.navigate(['/browse-substance'], navigationExtras);
-    }, error => {
-      console.log('Error trying to post a bulk query.');
-      const notification: AppNotification = {
-        message: 'Error trying to post a bulk query.',
-        // type: NotificationType.error,
-        milisecondsToShow: 6000
-      };
-      this.isError = true;
-      this.isLoading = false;
-      this.loadingService.setLoading(this.isLoading);
-      this.notificationService.setNotification(notification);
-    }, () => {
-      s1.unsubscribe();
-      this.isLoading = false;
-      this.loadingService.setLoading(this.isLoading);
-    }
-    );
-  }
 
-  setQueryEntity(value: string) {
-    this.queryEntity = value;
-    this.queryEntityControl.setValue(value);
-  }
-
-  queryEntitySelected($event) {
-    this.setQueryEntity($event.value);
-  }
 
 }

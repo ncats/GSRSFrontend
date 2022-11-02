@@ -26,12 +26,16 @@ export class BulkSearchService extends BaseHttpService {
     return this.configService.environment.baseHref;
   }
 
-  postBulkQuery(
+  postOrPutBulkQuery(
+    // id: number,
     context: string,
     queryText: string
   ): Observable<BulkQuery> {
+    // NOTE PUTs are resulting in errors during search turning off for now.
+    // All new queries are getting a new bulkQID   
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
-    const params = new HttpParams();
+    const params = {};
+    // if (id !== null && id !== undefined) { params['id'] = id };
     const options = {
       // eslint-disable-next-line object-shorthand
       params: params,
@@ -41,7 +45,11 @@ export class BulkSearchService extends BaseHttpService {
         'Content-type': 'text/plain'
       }
     };
+    // if (id !== null && id !== undefined) {
+    //  return this.http.put<BulkQuery>(url, queryText, options);
+    // }
     return this.http.post<BulkQuery>(url, queryText, options);
+
   }
 
   getBulkQuery(

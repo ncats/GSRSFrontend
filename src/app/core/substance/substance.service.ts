@@ -87,10 +87,10 @@ export class SubstanceService extends BaseHttpService {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
-    bulkSearchTerm?: string,
+    // bulkSearchTerm?: string,
     bulkQID?: number,
     searchOnIdentifiers?: boolean,
-    searchEntity?: string,
+    queryEntity?: string,
     cutoff?: number,
     type?: string,
     seqType?: string,
@@ -144,13 +144,13 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
-      } else if ((args.bulkQID != null &&  args.bulkQID.toString() != '') || (args.bulkSearchTerm != null && args.bulkSearchTerm !== '')) {
+      } else if ((args.bulkQID != null &&  args.bulkQID.toString() != '')) {
         this.searchSubstanceBulk(
-          args.bulkSearchTerm,
+//          args.bulkSearchTerm,
           args.searchTerm,
           args.bulkQID,
           args.searchOnIdentifiers,
-          args.searchEntity,
+          args.queryEntity,
           args.cutoff,
           args.type,
           args.pageSize,
@@ -397,11 +397,11 @@ export class SubstanceService extends BaseHttpService {
   }
 
   searchSubstanceBulk(
-    bulkSearchTerm?: string,
+//    bulkSearchTerm?: string,
     querySearchTerm?: string,
     bulkQID?: number,
     searchOnIdentifiers?: boolean,
-    searchEntity?: string,
+    queryEntity?: string,
     cutoff?: number,
     type: string = 'bulk',
     pageSize: number = 10,
@@ -413,10 +413,10 @@ export class SubstanceService extends BaseHttpService {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
       let url = this.apiBaseUrl;
       let bulkFacetsKey: number;
-      bulkFacetsKey = this.utilsService.hashCode(bulkSearchTerm, type, cutoff);
+      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, queryEntity);
       console.log("awd 1 "+ bulkFacetsKey);
       if (this.searchKeys[bulkFacetsKey]) {
-        url += `status(${bulkSearchTerm})/results`;
+        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
         if(querySearchTerm.length > 0) {
           console.log("awd 2 "+ querySearchTerm);
@@ -437,7 +437,10 @@ export class SubstanceService extends BaseHttpService {
       } else {
         console.log( "awd .bulkQID " + bulkQID);
         params = params.append('bulkQID', bulkQID.toString());
-        // params = params.append('searchOnIdentifiers', searchOnIdentifiers.toString());    
+        let v  = "false";
+        if(searchOnIdentifiers===true) { v= "true"; }   
+        params = params.append('searchOnIdentifiers', v);    
+        params = params.append('queryEntity', queryEntity);    
         // params = params.append('simpleSearchOnly', 'true');
         url += `substances/bulkSearch`;
       }
