@@ -42,8 +42,9 @@ export class UtilsService {
     }
     const apiBaseUrl = this.configService.configData.apiBaseUrl;
     const randomKey = Math.random().toString(36).replace('0.', '');
-    let url = `${apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&cache-control=${randomKey}`;
-    if (atomMaps != null) {
+   // let url = `${apiBaseUrl}img/${structureId}.svg?size=${size.toString()}&stereo=${stereo}&cache-control=${randomKey}`;
+   let url = `${apiBaseUrl}api/v1/substances/render(${structureId})?format=svg&size=${size.toString()}&stereo=${stereo}&cache-control=${randomKey}`;
+   if (atomMaps != null) {
       url = `${url}&context=${atomMaps.toString()}`;
     }
     if (version != null) {
@@ -281,17 +282,17 @@ export class UtilsService {
     // e.g. root_names_name:Aspirin
     const regexp : RegExp = /_.*:/g;
     // The AND/OR checks were in a previous version but may be unneeded/confounding
-    // unless we're considering draft searchTerms that may have forgotten the complex search syntax. 
+    // unless we're considering draft searchTerms that may have forgotten the complex search syntax.
     if (regexp.test(searchTerm) || (searchTerm.indexOf(' AND ') > -1) || (searchTerm.indexOf(' OR ') > -1)){
-      return true;  
+      return true;
     }
     return false;
   }
 
   looksLikeComplexSearchTermOrContainsStrings(searchTerm:string, strings:Array<String>): boolean {
-    // often you'll want to check if the string has a double quote or * 
+    // often you'll want to check if the string has a double quote or *
     if (this.looksLikeComplexSearchTerm){
-      return true;  
+      return true;
     }
     strings.forEach(function(value) {
       if (searchTerm.indexOf(value.valueOf())>-1) { return true; };
@@ -300,9 +301,9 @@ export class UtilsService {
   }
 
   makeBeginsWithSearchTerm(targetField: string, searchTerm:string): string {
-    // Make and clean a begins-with search term from a non-complex search term that may 
-    // have a wildcard or quotes.     
-    // Remove extra carets ^ and double quotes " before adding them here.  
+    // Make and clean a begins-with search term from a non-complex search term that may
+    // have a wildcard or quotes.
+    // Remove extra carets ^ and double quotes " before adding them here.
     var s: string = searchTerm.replace(/(^"|"$)/g, '');
     s = s.replace(/(^^)/g, '');
     const lq  =targetField + ':"^' + s +'"';
