@@ -11,6 +11,7 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
+  "useDataUrl": false,
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,

@@ -114,6 +114,15 @@
         </fieldset>
       </div>
 
+      <!-- Show Add Site button when Site length is 0 -->
+      <div class="divflexright" *ngIf="!showAdvancedSettings && (process.sites && process.sites.length === 0)"><b>Click on Show All Parameters checkbox to add a Site</b></div>
+      <div class="divflexright" *ngIf="showAdvancedSettings && (process.sites && process.sites.length === 0)">
+        <span class="middle-fill"></span>
+        <button mat-stroked-button color="primary" class="" (click)="addSite()">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Site
+        </button>
+      </div>
+
       <!--
       <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
       <fieldset [ngClass]="showAdvancedSettings ? 'border': 'border minimize'">

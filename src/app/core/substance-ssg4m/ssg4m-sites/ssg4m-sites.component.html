@@ -133,6 +133,13 @@
     </div> <!-- for Loop -->
     <!-- STAGES LIST END -->
 
+    <div class="divflexright" *ngIf="site.stages && site.stages.length === 0">
+      <span class="middle-fill"></span>
+      <button mat-stroked-button color="primary" class="" (click)="addStage(processIndex, siteIndex)">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
+      </button>
+    </div>
+
     <!-- Sites List -->
     <!--
     <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
