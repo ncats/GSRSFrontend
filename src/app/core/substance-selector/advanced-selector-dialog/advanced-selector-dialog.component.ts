@@ -12,6 +12,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { ConfigService } from '@gsrs-core/config';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
+import { searchSortValues } from '@gsrs-core/utils';
 @Component({
   selector: 'app-advanced-selector-dialog',
   templateUrl: './advanced-selector-dialog.component.html',
@@ -42,6 +43,9 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   namePageSize = 10;
   lastPage: number;
   searchValue: string;
+
+  order = "default";
+  public sortValues = searchSortValues;
 
   activeTab: number;
   current: string;
@@ -117,6 +121,10 @@ private privateSequenceSearchKey?: string;
     this.searchValue = event;
     this.privateSearchTerm = event;
     this.privateStructureSearchTerm = null;
+    this.searchSubstances(null, null, 'name');
+  }
+
+  reSort() {
     this.searchSubstances(null, null, 'name');
   }
 
@@ -271,7 +279,11 @@ private privateSequenceSearchKey?: string;
       size = this.namePageSize;
       index = this.namePageIndex;
     }
+    let sort = null;
+    if(type && type === 'name') {
+      sort = this.order;
    
+          }
       this.loadingService.setLoading(true);
       const subscription = this.substanceService.getSubstancesSummaries({
         searchTerm: this.privateSearchTerm,
@@ -280,7 +292,7 @@ private privateSequenceSearchKey?: string;
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
-        order: null,
+        order: sort,
         pageSize: size,
         facets: this.privateFacetParams,
         skip: index,
