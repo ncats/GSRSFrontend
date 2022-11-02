@@ -35,10 +35,10 @@ export class SsoRefreshService implements OnDestroy {
       this.iframe.name = 'refresher';
       this.iframe.style.height = '0';
       this.iframe.style.opacity = '0';
-      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}`;
+      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}&noWarningBox`;
       document.body.appendChild(this.iframe);
     } else {
-      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}`;
+      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}&noWarningBox`;
     }
   }
 
