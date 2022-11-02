@@ -60,7 +60,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;
-  // private privateBulkSearchTerm?: string;
   private privateBulkSearchQueryId?: number;
   private privateBulkSearchStatusKey?: string;
   private privateBulkSearchSummary?: any;
@@ -73,7 +72,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   public substances: Array<SubstanceDetail>;
   public exactMatchSubstances: Array<SubstanceDetail>;
 
-
+  searchOnIdentifiers: boolean;
+  searchEntity: string;
   pageIndex: number;
   pageSize: number;
   test: any;
@@ -199,7 +199,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';   
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
-    // this.privateBulkSearchTerm = this.activatedRoute.snapshot.queryParams['bulk_search'] || '';
     this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
     this.searchOnIdentifiers = this.activatedRoute.snapshot.queryParams['searchOnIdentifiers'] || '';
     this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
@@ -472,7 +471,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
-        // bulkSearchTerm: this.privateBulkSearchTerm,
         bulkQID: this.bulkSearchQueryId,
         searchOnIdentifiers: this.searchOnIdentifiers,
         searchEntity: this.searchEntity,
@@ -723,9 +721,7 @@ searchTermOkforBeginsWithSearch(): boolean {
       this.loadingService.setLoading(false);
     });
   }
-  
-  searchOnIdentifiers: boolean;
-  searchEntity: string;
+ 
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -735,7 +731,6 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
-//    navigationExtras.queryParams['bulk_search'] = this.privateBulkSearchTerm;
     navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
     navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
     navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
@@ -907,10 +902,9 @@ searchTermOkforBeginsWithSearch(): boolean {
   clearBulkSearch(): void {
 
     const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
-      `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
+    `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
 
-    // this.privateBulkSearchTerm = '';
     this.privateBulkSearchQueryId = null;   
     this.privateBulkSearchSummary = null;
     this.searchEntity = '';
@@ -941,7 +935,8 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearFilters(): void {
     // for facets
-    // Does this removal work?  When I (aw) click reset button the facet is cleared buy this.displayFacets still has the value.  
+    // Does this facet remove work completely?  When I (aw) click RESET button the facet 
+    // is cleared but this.displayFacets still has the value.  
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
@@ -980,9 +975,6 @@ searchTermOkforBeginsWithSearch(): boolean {
     return this.privateSequenceSearchTerm;
   }
 
-//  get bulkSearchTerm(): string {
-//    return this.privateBulkSearchTerm;
-//  }
   get bulkSearchSummary(): string {
     return this.privateBulkSearchSummary;
   }

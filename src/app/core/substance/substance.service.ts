@@ -414,12 +414,10 @@ export class SubstanceService extends BaseHttpService {
       let url = this.apiBaseUrl;
       let bulkFacetsKey: number;
       bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
-      console.log("awd 1 "+ bulkFacetsKey);
       if (this.searchKeys[bulkFacetsKey]) {
         url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
         if(querySearchTerm.length > 0) {
-          console.log("awd 2 "+ querySearchTerm);
           params = params.appendDictionary({
             top: pageSize.toString(),
             skip: skip.toString(),
@@ -435,20 +433,17 @@ export class SubstanceService extends BaseHttpService {
           params = params.append('order', order);
         }
       } else {
-        console.log( "awd .bulkQID " + bulkQID);
         params = params.append('bulkQID', bulkQID.toString());
         let v  = "false";
         if(searchOnIdentifiers===true) { v= "true"; }   
         params = params.append('searchOnIdentifiers', v);    
         params = params.append('searchEntity', searchEntity);    
-        // params = params.append('simpleSearchOnly', 'true');
         url += `substances/bulkSearch`;
       }
 
       const options = {
         params: params
       };
-      console.log("awd 4 "+ url);
 
       this.http.get<any>(url, options).subscribe(
         response => {
@@ -457,8 +452,6 @@ export class SubstanceService extends BaseHttpService {
           if (response.results) {
             const resultKey = response.key;
             this.searchKeys[bulkFacetsKey] = resultKey;
-            // console.log('awd this.searchKeys[bulkFacetsKey] 1 ' +this.searchKeys[bulkFacetsKey]);
-
             this.processAsyncSearchResults(
               querySearchTerm,
               url,
@@ -471,9 +464,6 @@ export class SubstanceService extends BaseHttpService {
               skip
             );
           } else {
-            // console.log('awd this.searchKeys[bulkFacetsKey] 2 ' +this.searchKeys[bulkFacetsKey]);
-            // response.statusKey=this.searchKeys[bulkFacetsKey];
-
             observer.next(response);
             observer.complete();
           }
@@ -483,43 +473,6 @@ export class SubstanceService extends BaseHttpService {
         }
       );
     });
-  }
-
-  searchSubstanceBulk_OLD(
-    bulkSearchTerm?: string,
-    searchTerm?: string,
-    cutOff?: number,
-    type: string = 'bulk',
-    pageSize: number = 10,
-    facets?: FacetParam,
-    order?: string,
-    skip: number = 0
-  ): Observable<PagingResponse<SubstanceSummary>> {
-
-    let params = new FacetHttpParams({encoder: new CustomEncoder()});
-    let url = this.apiBaseUrl;
-
-    url += 'status/'+bulkSearchTerm+'/results';
-    if (searchTerm != null && searchTerm !== '') {
-       params = params.append('q', searchTerm);
-    }
-
-    params = params.appendFacetParams(facets, this.showDeprecated);
-
-    params = params.appendDictionary({
-      top: pageSize && pageSize.toString(),
-      skip: skip && skip.toString()
-    });
-
-    if (order != null && order !== '') {
-      // params = params.append('order', order);
-    }
-    params = params.append('fdim', '10');
-
-    const options = {
-      params: params
-    };
-    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
   private processAsyncSearchResults(
