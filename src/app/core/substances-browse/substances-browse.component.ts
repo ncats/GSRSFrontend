@@ -485,8 +485,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         deprecated: this.showDeprecated
       })
         .subscribe(pagingResponse => {
-          console.log("pagingResponse");
-          console.log(pagingResponse);
           this.privateBulkSearchStatusKey = pagingResponse.statusKey;
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
