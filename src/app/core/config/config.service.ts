@@ -11,6 +11,12 @@ export class ConfigService {
     private _configData: Config;
     private _environment: Environment;
 
+    // these are a set of callback methods which can be registered
+    // to trigger on data load. These are each called exactly once
+    // after a successful load, and are used to resolve promises from
+    // the afterLoad method
+    private _triggers: Array<any> = [];
+
     constructor(private http: HttpClient) { }
 
     get configData(): Config {
@@ -86,7 +92,37 @@ export class ConfigService {
                 }
                 config.navItems = navItemsCopy;
                 this._configData = config;
+                //this tells the service to resolve any outstanding Promises for loaded data
+                this.executeOnLoadTriggers();
             })
             .catch((err: any) => Promise.resolve());
     }
+
+    // this is the method that gets by the load process itself and is called
+    // once after the config service is loaded, going through each registered
+    // trigger and executing it, then clearing the trigger list. It shouldn't be
+    // called more than once.
+    executeOnLoadTriggers() {
+        this._triggers.map(cb => cb());
+        this._triggers.length = 0;
+    }
+
+    // this returns a Promise to return the configData after loading,
+    // effectively giving a callback for when the config service is
+    // fully loaded. If the service is already loaded it returns
+    // a promise which resolves immediately.
+    afterLoad(): Promise<any> {
+        if (this._configData) {
+            return new Promise((resolve, reject) => {
+                resolve(this._configData);
+            });
+        } else {
+            return new Promise((resolve, reject) => {
+                this._triggers.push(() => {
+                    resolve(this._configData);
+                });
+            });
+        }
+    };
+
 }

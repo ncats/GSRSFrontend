@@ -1,0 +1,53 @@
+<div class="widget form-group multiselect " *ngIf = "schema.CVDomain" [ngClass] ="schema.visibleIf ? 'tabbed': 'no-indent'">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal label control-label">
+        {{ schema.title }}
+        <sup *ngIf = "schema.comments && !schema.description" ><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+    </label>
+    <span *ngIf="schema.description" class="formHelp" >
+        {{schema.description}}
+        <sup *ngIf = "schema.comments"  ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+    </span>
+    <mat-select  *ngIf="schema.type!='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id" 
+    [disableControl]="schema.readOnly" class="form-control cv-select" >
+        <ng-container>
+            <mat-option *ngFor="let option of options" [value]="option.value">{{option.display}}</mat-option>
+        </ng-container>
+    </mat-select>
+    <mat-select  *ngIf="schema.type==='array'" multiple [formControl]="control" [attr.name]="name" [attr.id]="id"
+     [disableControl]="schema.readOnly" class="form-control cv-select">
+
+        <mat-option *ngFor="let option of options" [value]="option.value" >{{option.display}}</mat-option>
+    </mat-select>
+    <input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+</div>
+
+
+<div class="widget form-group" *ngIf = "!schema.CVDomain" [ngClass] ="schema.visibleIf ? 'tabbed': 'no-indent'">
+    <label *ngIf="schema.title" [attr.for]="id" class="horizontal label control-label">
+        {{ schema.title }}
+        <sup *ngIf = "schema.comments && !schema.description"><mat-icon style ="height: 18px;" color="primary" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+    </label>
+    <span *ngIf="schema.description" class="formHelp">
+        {{schema.description}}
+        <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+    </span>
+    <mat-select *ngIf="schema.type!='array'" [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control cv-select">
+        <ng-container *ngIf="schema.oneOf; else use_enum">
+            <mat-option *ngFor="let option of schema.oneOf" [value]="option.enum[0]" >{{option.description}}</mat-option>
+        </ng-container>
+        <ng-template #use_enum>
+            <mat-option *ngFor="let option of schema.enum" [value]="option" >{{option}}</mat-option>
+        </ng-template>
+    </mat-select>
+    <mat-select *ngIf="schema.type==='array' && schema.items && schema.items.enum" multiple [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control  cv-select">
+    <mat-option *ngFor="let option of schema.items.enum" [value]="option" [disabled]="option.readOnly">{{option}}</mat-option>
+    </mat-select>
+    <mat-select *ngIf="schema.type==='array' && (!schema.items || !schema.items.enum)" multiple [formControl]="control" [attr.name]="name" [attr.id]="id" [disableControl]="schema.readOnly" class="form-control  cv-select">
+        <mat-option *ngFor="let option of schema.items.oneOf" [value]="option.enum[0]" [disabled]="option.readOnly">{{option.description}}</mat-option>
+        </mat-select>
+    <input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+</div>
+
+<ng-template #info let-data>
+    {{data.comment}}
+  </ng-template>

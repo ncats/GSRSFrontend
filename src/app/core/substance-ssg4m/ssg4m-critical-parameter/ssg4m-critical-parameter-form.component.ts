@@ -115,6 +115,12 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
     this.privateSubstanceAmount = this.criticalParameter.value;
     this.setSubstanceAmount();
     this.getVocabularies();
+
+    // Load Referenced Substance Name
+    if (this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].criticalParameters[this.criticalParameterIndex].referencedSubstance) {
+      let referencedSubstance = this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].criticalParameters[this.criticalParameterIndex].referencedSubstance;
+      this.relatedSubstanceUuid = referencedSubstance.refuuid;
+    }
   }
 
   ngOnDestroy(): void {
@@ -171,8 +177,7 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
         substanceClass: 'reference',
         approvalID: substance.approvalID
       };
-
-      //   this.privateCriticalParameter.substanceName = relatedSubstance;
+      this.privateCriticalParameter.referencedSubstance = relatedSubstance;
     }
   }
 
@@ -295,7 +300,7 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
   }
 
   updatePropertyName(event: any): void {
-    this.criticalParameter.propertyType = event;
+    this.criticalParameter.name = event;
 
     if (event && event === 'Temperature') {
       // if Temperature is selected, set the Unit value to C

@@ -1,0 +1,20 @@
+<div class="widget form-group" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'">
+	<label *ngIf="schema.title" [attr.for]="id" class="horizontal control-label">
+        {{ schema.title }}
+        <sup *ngIf = "schema.comments && !schema.description"  [matTooltip] = "schema.comments"><mat-icon style ="height: 18px;" svgIcon="help" class = "help-icon" color="primary" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+	</label>
+  <span *ngIf="schema.description" class="formHelp">{{schema.description}} <sup *ngIf = "schema.comments"  [matTooltip] = "schema.comments"><mat-icon style ="height: 18px;" svgIcon="help" color="primary"></mat-icon></sup></span>
+	<textarea [readonly]="schema.readOnly" [name]="name"
+		[attr.id]="id"
+		class="text-widget textarea-widget form-control"
+		[attr.placeholder]="schema.placeholder"
+		[attr.maxLength]="schema.maxLength || null"
+    [attr.minLength]="schema.minLength || null"
+		[formControl]="control"></textarea>
+</div>
+
+
+<ng-template #info let-data>
+    {{data.comment}}
+  </ng-template>
+  

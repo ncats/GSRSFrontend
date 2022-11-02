@@ -11,6 +11,7 @@
   "advancedSearchFacetDisplay": false,
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
+  "useDataUrl": false,
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -958,6 +959,7 @@
         "Submit Date Year",
         "Application Number",
         "Ingredient Name",
+        "Ingredient Name (Preferred)",
         "Provenance (GSRS)",
         "Public Domain",
         "Product Name",

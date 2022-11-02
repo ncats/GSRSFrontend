@@ -16,4 +16,29 @@
 .padding {
     margin-bottom: 15px;
     padding-bottom:5px;
+    padding-top: 12px;
+}
+
+
+::ng-deep sf-string-widget > div {
+    margin-left:50px;
+}
+
+
+::ng-deep .has-success > ::ng-deep sf-string-widget {
+    margin-left:20px;
+ 
+}
+
+
+::ng-deep sf-string-widget > ::ng-deep .control-label {
+    min-width: 250px;
+display: inline-block;
+}
+
+
+.top-label {
+    display: flex;
+    flex-direction:row;
+    width: 100%;
 }

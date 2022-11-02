@@ -1,0 +1,68 @@
+.mat-select-panel {
+
+    mat-option.mat-option {
+      display: flex;
+      word-wrap: normal;
+      white-space: normal;
+      align-items: center;
+      align-content: center;
+      height: auto;
+      min-height: 48px;
+      line-height: 24px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+  }
+  .form-group {
+    padding-top: 5px;
+  }
+
+  .multiselect {
+      width:100%;
+      display: flex;
+  }
+
+  .label {
+      width: 45%;
+      margin-top: 12px;
+  }
+
+  .cv-select {
+      padding: 8px;
+      border-bottom:1px solid darkgray;
+      margin-bottom: 5px;
+  }
+
+
+  .tabbed {
+    padding-left: 55px;
+  }
+
+  .indent {
+    padding-left: 55px;
+  }
+
+  .no-indent {
+    padding-left: 25px;
+  }
+
+  .form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+
+.cv-select {
+    min-width: 25%;
+    max-width: 50%;
+    margin-left:5px;
+    margin-right:5px;
+}
+
+.help-icon {
+  height: 18px;
+  cursor: pointer;
+  color: #4793d1;
+}

@@ -1,5 +1,7 @@
 import { Directive, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { UtilsService } from '../utils/utils.service';
+import { HttpClient } from '@angular/common/http';
+import { ConfigService } from '@gsrs-core/config/config.service';
 
 @Directive({
   selector: '[appSubstanceImage]'
@@ -15,7 +17,9 @@ export class SubstanceImageDirective implements AfterViewInit {
 
   constructor(
     private el: ElementRef,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private configService: ConfigService,
+    private http: HttpClient
   ) {
     this.imageElement = this.el.nativeElement as HTMLImageElement;
   }
@@ -66,17 +70,40 @@ export class SubstanceImageDirective implements AfterViewInit {
   }
 
   private setImageSrc(): void {
+    const useDataUrlConfig = this.configService.configData && this.configService.configData.useDataUrl || false;
     if (this.isAfterViewInit) {
       if (this.privateVersion) {
         const srcUrl = this.utilsService.getStructureImgUrl(
           this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
-        this.imageElement.src = srcUrl;
+        if (useDataUrlConfig === true) {
+          this.setImageSrcAsBlob(srcUrl);
+        } else {
+          this.imageElement.src = srcUrl;
+        }
       } else {
         const srcUrl = this.utilsService.getStructureImgUrl(
           this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
-        this.imageElement.src = srcUrl;
+        if (useDataUrlConfig === true) {
+          this.setImageSrcAsBlob(srcUrl);
+        } else {
+          this.imageElement.src = srcUrl;
+        }
       }
       this.imageElement.alt = 'structure image';
     }
   }
+
+  private setImageSrcAsBlob(srcUrl: any): void {
+    // Getting Image Source as Blob
+    this.http.get(srcUrl, { responseType: "blob" }).subscribe(imgDat => {
+      let reader = new FileReader();
+      reader.addEventListener("load", () => {
+        this.imageElement.src = reader.result.toString();
+      }, false);
+      if (imgDat) {
+        reader.readAsDataURL(imgDat);
+      }
+    });
+  }
+
 }

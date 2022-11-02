@@ -73,7 +73,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.codeSystemVocab);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {

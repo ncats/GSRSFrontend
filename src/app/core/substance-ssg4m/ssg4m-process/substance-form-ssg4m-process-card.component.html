@@ -13,7 +13,7 @@
         </button>
       </div>
       -->
-      <div>
+      <div *ngIf="process && process.length > 0">
         <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
           Show All Parameters
         </mat-checkbox>
@@ -51,6 +51,14 @@
         </div>
       </fieldset>
     </div>
+
+    <!-- Show Add Process button if there is zero Process -->
+    <div class="divflexright bordergray" *ngIf="process && process.length == 0">
+      <button mat-stroked-button color="primary" class="" (click)="addProcess()">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Process
+      </button>
+    </div>
+    <br><br>
 
     <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"
       [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
