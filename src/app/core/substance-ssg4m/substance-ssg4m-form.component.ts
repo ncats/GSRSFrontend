@@ -490,9 +490,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.microserviceStatusUp = false;
       this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br><br>";
       if (error && error.error && error.error.message) {
-        this.errorMessage =  this.errorMessage + 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
+        this.errorMessage = this.errorMessage + 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
       } else if (error && error.error && (typeof error.error) === 'string') {
-        this.errorMessage =  this.errorMessage + '<br>Server Error ' + (error.status + ': ' || '') + error.error;
+        this.errorMessage = this.errorMessage + '<br>Server Error ' + (error.status + ': ' || '') + error.error;
       } else if (error && error.message) {
         this.errorMessage = this.errorMessage + '<br>Server Error ' + (error.status + ': ' || '') + error.message;
         this.errorMessage = this.errorMessage + "<br>It looks like the SSG4m microservice is not running.<br>";
@@ -558,7 +558,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.loadingService.setLoading(false);
       this.isLoading = false;
     }, error => {   // Getting Error while getting Record
-     // this.errorMessage = generateErrorMessage;
+      // this.errorMessage = generateErrorMessage;
       if (this.microserviceStatusUp === false) {
       }
       //  this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br> Please ask your system administrator to examine the website logs and: <br>- verify that the SSG4m microservice is running without error, <br>- check if there are any database connection issues,<br>- make sure the system is using valid authentication credentials into the database.";
@@ -1122,7 +1122,12 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         // Refresh the current page, this will not cause record locking issue
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
-        this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
+        if (this.showHeaderBar && this.showHeaderBar === 'false') {
+          const route = '/substances-ssg4m/' + this.id + '/edit?header=' + this.showHeaderBar;
+         this.router.navigateByUrl(route);
+        } else {
+          this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
+        }
         // } else if (response === 'browse') {
         //  this.router.navigate(['/browse-substance']);
         //  } else if (response === 'home') {
