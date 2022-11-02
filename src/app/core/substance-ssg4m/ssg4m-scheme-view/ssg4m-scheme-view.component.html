@@ -1,11 +1,11 @@
 <div class="divflexright" *ngIf="showProcessIndex == -1">
-  <div>
+  <div *ngIf="processList && processList.length > 0">
     <mat-checkbox [checked]="showSubstanceRole" (change)="updateShowSubstanceRole($event)">
       Show Substance Role
     </mat-checkbox>
   </div>
   &nbsp;&nbsp;&nbsp;
-  <div>
+  <div *ngIf="processList && processList.length > 0">
     <mat-checkbox [checked]="showCriticalParameter" (change)="updateShowCriticalParameter($event)">
       Show Critical Parameter
     </mat-checkbox>
