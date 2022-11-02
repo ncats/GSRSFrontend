@@ -63,7 +63,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateBulkSearchTerm?: string;
   private privateBulkSearchQueryId?: number;
   private privateBulkSearchSummary?: any;
-  private privateBulkSearchAlwaysShowSummary = false;
   private privateSearchType?: string;
   private privateSearchStrategy?: string;
   private privateSearchCutoff?: number;
@@ -200,8 +199,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
     this.privateBulkSearchTerm = this.activatedRoute.snapshot.queryParams['bulk_search'] || '';
-    this.privateBulkSearchAlwaysShowSummary = this.activatedRoute.snapshot.queryParams['bulk_sass'] || false;
-    this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+    // this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
     
     this.setUpPrivateSearchStrategy();
@@ -471,6 +469,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
         bulkSearchTerm: this.privateBulkSearchTerm,
+        bulkQID: this.bulkSearchQueryId,
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
@@ -482,6 +481,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         deprecated: this.showDeprecated
       })
         .subscribe(pagingResponse => {
+          console.log("pagingResponse");
+          console.log(pagingResponse);
+          const sk = pagingResponse.statusKey;
+          this.privateBulkSearchTerm = sk;
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.total % this.pageSize === 0) {
@@ -585,7 +588,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           });
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
-          this.gaService.sendException('getSubstancesDetails: error from API cal');
+          this.gaService.sendException('getSubstancesDetails: error from API call');
           const notification: AppNotification = {
             message: 'There was an error trying to retrieve substances. Please refresh and try again.',
             type: NotificationType.error,
@@ -715,6 +718,9 @@ searchTermOkforBeginsWithSearch(): boolean {
       this.loadingService.setLoading(false);
     });
   }
+  
+  searchOnIdentifiers: boolean;
+  searchEntity: string;
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -724,9 +730,10 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
-    navigationExtras.queryParams['bulk_search'] = this.privateBulkSearchTerm;
-    navigationExtras.queryParams['bulk_sass'] = this.privateBulkSearchAlwaysShowSummary;    
     navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
+    navigationExtras.queryParams['bulk_search'] = this.privateBulkSearchTerm;
+    navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;    
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
@@ -876,15 +883,6 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.searchSubstances();
   }
 
-  
-  setBulkSearchAlwaysShowSummary(b: boolean): void {
-    
-    console.log("$event.value" + b);
-    this.privateBulkSearchAlwaysShowSummary = b;
-  }
-
-
-
   editBulkSearch(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
       `${this.privateBulkSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
@@ -893,6 +891,8 @@ searchTermOkforBeginsWithSearch(): boolean {
     const navigationExtras: NavigationExtras = {
       queryParams: {
         bulkQID: this.privateBulkSearchQueryId,
+        searchOnIdentifiers: this.searchOnIdentifiers,
+        searchEntity: this.searchEntity,
         bulkSearchKey: this.privateBulkSearchTerm
       }
     };
@@ -908,6 +908,8 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.privateBulkSearchTerm = '';
     this.privateBulkSearchQueryId = null;   
     this.privateBulkSearchSummary = null;
+    this.searchEntity = '';
+    this.searchOnIdentifiers = null;
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;
     this.smiles = '';
@@ -959,9 +961,6 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clickToCancel() {
     this.emitService.setCancel(true);
-  }
-  get bulkSearchAlwaysShowSummary(): boolean {
-    return this.privateBulkSearchAlwaysShowSummary;
   }
 
   get searchTerm(): string {
@@ -1061,8 +1060,6 @@ searchTermOkforBeginsWithSearch(): boolean {
         names: this.names[substance.uuid]
       };
     }
-
-    
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       width: '650px',

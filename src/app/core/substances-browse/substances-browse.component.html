@@ -84,7 +84,6 @@
     </div>
     
     <div *ngIf="bulkSearchTerm">
-
       <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true" (closed)="bulkSearchPanelOpen = false"
         style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
         <mat-expansion-panel-header>
@@ -95,25 +94,24 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
-          <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
-          <span *ngIf="bulkSearchQueryId"> 
-          | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
-          </span>
-          Bulk Search
-          
-
-
-        <app-bulk-search-results-summary
-          showTitle=false
-          loadSummaries=true
-          context="substances"
-          [key]="bulkSearchTerm"
-          [isCollapsed]="isBulkSearchCollapsed"
-        ></app-bulk-search-results-summary>
-      </div>
-    </mat-expansion-panel>           
-
+          <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
+            bulkSearchTerm: {{bulkSearchTerm}}<br>
+            <div>
+              <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
+              <span *ngIf="bulkSearchQueryId"> 
+              | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
+              </span>
+              Bulk Search
+            </div>
+            <app-bulk-search-results-summary
+              showTitle=false
+              loadSummaries=true
+              context="substances"
+              [key]="bulkSearchTerm"
+              [isCollapsed]="isBulkSearchCollapsed"
+            ></app-bulk-search-results-summary>
+          </div>
+        </mat-expansion-panel>           
     </div>
 
     <div class="break"></div>

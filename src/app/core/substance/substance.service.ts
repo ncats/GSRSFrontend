@@ -88,6 +88,9 @@ export class SubstanceService extends BaseHttpService {
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
     bulkSearchTerm?: string,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
     cutoff?: number,
     type?: string,
     seqType?: string,
@@ -141,10 +144,13 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
-      } else if ((args.bulkSearchTerm != null && args.bulkSearchTerm !== '')) {
+      } else if ((args.bulkQID != null &&  args.bulkQID.toString() != '') || (args.bulkSearchTerm != null && args.bulkSearchTerm !== '')) {
         this.searchSubstanceBulk(
           args.bulkSearchTerm,
           args.searchTerm,
+          args.bulkQID,
+          args.searchOnIdentifiers,
+          args.searchEntity,
           args.cutoff,
           args.type,
           args.pageSize,
@@ -176,7 +182,6 @@ export class SubstanceService extends BaseHttpService {
       }
     });
   }
-
 
   searchSubstances(
     searchTerm?: string,
@@ -335,6 +340,7 @@ export class SubstanceService extends BaseHttpService {
         } else {
           url += `status(${searchKey})`;
         }
+
         params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({
           top: pageSize.toString(),
@@ -390,10 +396,93 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
-
-
-
   searchSubstanceBulk(
+    bulkSearchTerm?: string,
+    querySearchTerm?: string,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
+    cutoff?: number,
+    type: string = 'bulk',
+    pageSize: number = 10,
+    facets?: FacetParam,
+    order?: string,
+    skip: number = 0,
+  ): Observable<PagingResponse<SubstanceSummary>> {
+    return new Observable(observer => {
+      let params = new FacetHttpParams({encoder: new CustomEncoder()});
+      let url = this.apiBaseUrl;
+      let bulkFacetsKey: number;
+      bulkFacetsKey = this.utilsService.hashCode(bulkSearchTerm, type, cutoff);
+      console.log("awd 1 "+ bulkFacetsKey);
+      if (this.searchKeys[bulkFacetsKey]) {
+        url += `status(${bulkSearchTerm})/results`;
+        params = params.appendFacetParams(facets, this.showDeprecated);
+        if(querySearchTerm.length > 0) {
+          console.log("awd 2 "+ querySearchTerm);
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString(),
+            q: querySearchTerm.toString()
+          });
+        } else {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+        }
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
+      } else {
+        console.log( "awd .bulkQID " + bulkQID);
+        params = params.append('bulkQID', bulkQID.toString());
+        // params = params.append('searchOnIdentifiers', searchOnIdentifiers.toString());    
+        // params = params.append('simpleSearchOnly', 'true');
+        url += `substances/bulkSearch`;
+      }
+
+      const options = {
+        params: params
+      };
+      console.log("awd 4 "+ url);
+
+      this.http.get<any>(url, options).subscribe(
+        response => {
+          // call async
+
+          if (response.results) {
+            const resultKey = response.key;
+            this.searchKeys[bulkFacetsKey] = resultKey;
+            // console.log('awd this.searchKeys[bulkFacetsKey] 1 ' +this.searchKeys[bulkFacetsKey]);
+
+            this.processAsyncSearchResults(
+              querySearchTerm,
+              url,
+              response,
+              observer,
+              resultKey,
+              options,
+              pageSize,
+              facets,
+              skip
+            );
+          } else {
+            // console.log('awd this.searchKeys[bulkFacetsKey] 2 ' +this.searchKeys[bulkFacetsKey]);
+            // response.statusKey=this.searchKeys[bulkFacetsKey];
+
+            observer.next(response);
+            observer.complete();
+          }
+        }, error => {
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  searchSubstanceBulk_OLD(
     bulkSearchTerm?: string,
     searchTerm?: string,
     cutOff?: number,
@@ -451,10 +540,14 @@ export class SubstanceService extends BaseHttpService {
       view
     )
       .subscribe(response => {
+        response.statusKey=searchKey;
+
         observer.next(response);
         if (!asyncCallResponse.finished) {
-          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {     
+       
             setTimeout(() => {
+
               this.processAsyncSearchResults(
                 querySearchTerm,
                 url,

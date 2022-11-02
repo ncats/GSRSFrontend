@@ -120,6 +120,10 @@ submitText() {
     this.queryText = this.textInputForm.textControl.value;
     this.postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse();
 }
+submitText2() {
+  this.queryText = this.textInputForm.textControl.value;
+  this.postBulkQueryAndNavigateToBrowse();
+}
 
   bulkSearchSubmit(): void {
     const eventLabel = 'Bulk search submit `${this.queryEntity}`';
@@ -215,7 +219,12 @@ submitText() {
     }
   }
 
+
+
+  
   postBulkQueryAndGetBulkSearchResultKeyAndNavigateToBrowse() {
+    // This assumes we post the query, launch a search, and get the resulk key  
+    // before going to the browse page. 
     this.loadingService.setLoading(true);
     const s1 = this.bulkSearchService.postBulkQuery(
       this.queryEntity,
@@ -247,6 +256,44 @@ submitText() {
       const notification: AppNotification = {
         message: 'Error trying to post a bulk query.',
         type: NotificationType.error,
+        milisecondsToShow: 6000
+      };
+      this.isError = true;
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+      this.notificationService.setNotification(notification);
+    }, () => {
+      s1.unsubscribe();
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+    }
+    );
+  }
+
+  postBulkQueryAndNavigateToBrowse() {
+    // This assumes we post the query and launch the search FROM the browse page. 
+    this.loadingService.setLoading(true);
+    const s1 = this.bulkSearchService.postBulkQuery(
+      this.queryEntity,
+      this.queryText
+    )
+    .subscribe(bulkQuery => {
+      this.isError = false;
+      this._bulkQuery = bulkQuery;
+      this._bulkQueryIdAfterSubmit = bulkQuery.id;
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          // bulk_search: 'null',
+          bulkQID: this._bulkQueryIdAfterSubmit,
+        }
+      };
+      this.router.navigate(['/browse-substance'], navigationExtras);
+    }, error => {
+      console.log('Error trying to post a bulk query.');
+      const notification: AppNotification = {
+        message: 'Error trying to post a bulk query.',
+        // type: NotificationType.error,
         milisecondsToShow: 6000
       };
       this.isError = true;

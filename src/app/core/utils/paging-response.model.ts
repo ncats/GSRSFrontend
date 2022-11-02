@@ -9,6 +9,7 @@ export interface PagingResponse<T> {
     created: number;
     etag: string;
     path: string;
+    statusKey: string;
     uri: string;
     nextPageUri: string;
     method: string;
@@ -24,7 +25,7 @@ export interface PagingResponse<T> {
     exactMatches?: Array<T>;
     facets?: Array<Facet>;
     filter?: string;
-    summary?: Array<any>; // added for bulk search
+    summary?: any; // added for bulk search
 }
 
 export interface NarrowSearchSuggestion {
