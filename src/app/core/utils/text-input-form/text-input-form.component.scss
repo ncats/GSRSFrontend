@@ -1,0 +1,30 @@
+::ng-deep .mat-form-field-underline {
+    display: none;
+}
+
+.text-input-form mat-form-field { 
+    width:100% !important;
+}
+
+
+.text-input-form mat-form-field { 
+    width:100% !important;
+}
+
+.text-input-form textarea  {
+    width: 100%;
+    border: 2px solid var(--regular-lightgray-color);
+    height: 300px;
+    overflow-y: auto;
+}
+
+
+.file-reader {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.error {
+    padding: 5px;
+}

@@ -1,0 +1,40 @@
+.wrapper {
+    margin-bottom: 20px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.summary-title {
+    font-size: 16px;
+    font-weight: 550;
+    color: var(--lighter-title-color);
+    margin-bottom: 3px;
+    float: left;
+}
+
+.export {
+    float: right;
+    margin-top: -10px;
+    font-size: small;
+}
+
+.export-button {
+    color: var(--regular-black-color);
+    border-radius: 4px;
+}
+
+table th, table td  {
+    text-align: left;
+    justify-content: flex-end; 
+}
+table tr td:nth-child(3) {
+    text-align: center;
+    padding: 5px 5px 5px 5px ;
+    justify-content: flex-end; 
+}
+table tr th:nth-child(3) {
+    text-align: center;
+    padding: 5px 5px 5px 5px ;
+    justify-content: flex-end; 
+}

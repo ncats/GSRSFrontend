@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { Observable, Observer, Subject } from 'rxjs';
+import { interval, Observable, Observer, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -18,7 +18,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
 import { FacetHttpParams } from '../facets-manager/facet-http-params';
 import { UtilsService } from '../utils/utils.service';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, takeWhile } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
@@ -87,6 +87,10 @@ export class SubstanceService extends BaseHttpService {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
+    // bulkSearchTerm?: string,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
     cutoff?: number,
     type?: string,
     seqType?: string,
@@ -140,6 +144,26 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
+      } else if ((args.bulkQID != null &&  args.bulkQID.toString() != '')) {
+        this.searchSubstanceBulk(
+//          args.bulkSearchTerm,
+          args.searchTerm,
+          args.bulkQID,
+          args.searchOnIdentifiers,
+          args.searchEntity,
+          args.cutoff,
+          args.type,
+          args.pageSize,
+          args.facets,
+          args.order,
+          args.skip
+        ).subscribe(response => {
+          observer.next(response);
+        }, error => {
+          observer.error(error);
+        }, () => {
+          observer.complete();
+        });
       } else {
         this.searchSubstances(
           args.searchTerm,
@@ -158,7 +182,6 @@ export class SubstanceService extends BaseHttpService {
       }
     });
   }
-
 
   searchSubstances(
     searchTerm?: string,
@@ -317,6 +340,7 @@ export class SubstanceService extends BaseHttpService {
         } else {
           url += `status(${searchKey})`;
         }
+
         params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({
           top: pageSize.toString(),
@@ -372,6 +396,85 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
+  searchSubstanceBulk(
+//    bulkSearchTerm?: string,
+    querySearchTerm?: string,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
+    cutoff?: number,
+    type: string = 'bulk',
+    pageSize: number = 10,
+    facets?: FacetParam,
+    order?: string,
+    skip: number = 0,
+  ): Observable<PagingResponse<SubstanceSummary>> {
+    return new Observable(observer => {
+      let params = new FacetHttpParams({encoder: new CustomEncoder()});
+      let url = this.apiBaseUrl;
+      let bulkFacetsKey: number;
+      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
+      if (this.searchKeys[bulkFacetsKey]) {
+        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
+        params = params.appendFacetParams(facets, this.showDeprecated);
+        if(querySearchTerm.length > 0) {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString(),
+            q: querySearchTerm.toString()
+          });
+        } else {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+        }
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
+      } else {
+        params = params.append('bulkQID', bulkQID.toString());
+        let v  = "false";
+        if(searchOnIdentifiers===true) { v= "true"; }   
+        params = params.append('searchOnIdentifiers', v);    
+        params = params.append('searchEntity', searchEntity);    
+        url += `substances/bulkSearch`;
+      }
+
+      const options = {
+        params: params
+      };
+
+      this.http.get<any>(url, options).subscribe(
+        response => {
+          // call async
+
+          if (response.results) {
+            const resultKey = response.key;
+            this.searchKeys[bulkFacetsKey] = resultKey;
+            this.processAsyncSearchResults(
+              querySearchTerm,
+              url,
+              response,
+              observer,
+              resultKey,
+              options,
+              pageSize,
+              facets,
+              skip
+            );
+          } else {
+            observer.next(response);
+            observer.complete();
+          }
+        }, error => {
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+  }
+
   private processAsyncSearchResults(
     querySearchTerm: string,
     url: string,
@@ -393,10 +496,14 @@ export class SubstanceService extends BaseHttpService {
       view
     )
       .subscribe(response => {
+        response.statusKey=searchKey;
+
         observer.next(response);
         if (!asyncCallResponse.finished) {
-          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {     
+       
             setTimeout(() => {
+
               this.processAsyncSearchResults(
                 querySearchTerm,
                 url,
@@ -428,6 +535,7 @@ export class SubstanceService extends BaseHttpService {
 
   private getAsyncSearchResults(
     querySearchTerm: string,
+    // this is a status
     structureSearchKey: string,
     pageSize?: number,
     facets?: FacetParam,

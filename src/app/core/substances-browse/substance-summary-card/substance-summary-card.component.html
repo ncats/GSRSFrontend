@@ -383,6 +383,11 @@
       <app-sequence-alignment *ngFor="let alignment of alignments" [alignmentArray]="alignment">
       </app-sequence-alignment>
     </div>
+    <div *ngIf="searchStrategy && searchStrategy==='bulk'">
+      <span class="match-context" *ngIf="substance._matchContext?.queries && substance._matchContext.queries.length>0">
+        (matched queries: {{_.join(substance._matchContext.queries, ", ")}})
+      </span>
+    </div>
     <div>
       <app-substance-hierarchy [uuid]="this.substance.uuid" [name]="this.substance._name"
         [approvalID]="this.substance.approvalID"></app-substance-hierarchy>

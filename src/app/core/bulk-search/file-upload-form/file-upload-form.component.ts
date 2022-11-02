@@ -1,0 +1,66 @@
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { AdminService } from '@gsrs-core/admin/admin.service';
+import { take } from 'rxjs/operators';
+import * as moment from 'moment';
+import { Router, ActivatedRoute } from '@angular/router';
+import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
+import { LoadingService } from '@gsrs-core/loading';
+
+@Component({
+  selector: 'app-file-upload-form',
+  templateUrl: './file-upload-form.component.html',
+  styleUrls: ['./file-upload-form.component.scss']
+})
+export class FileUploadFormComponent implements OnInit {
+  uploadForm: FormGroup;
+  filename: string;
+  fileType: string;
+  audit = false;
+  processing = false;
+  message: string;
+  constructor(
+    public formBuilder: FormBuilder,
+    public adminService: AdminService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private loadingService: LoadingService
+
+  ) { }
+
+  ngOnInit() {
+    this.uploadForm = this.formBuilder.group({
+      file: [''],
+      fileType: ['TEXT'],
+      audit: [false]
+    });
+    this.fileType = 'TEXT';
+  }
+
+  onSubmit() {
+    const formData = new FormData();
+    this.loadingService.setLoading(true);
+    formData.append('file-name', this.uploadForm.get('file').value);
+    formData.append('file-type', this.fileType);
+
+    this.adminService.loadData(formData).pipe(take(1)).subscribe(response => {
+      this.loadingService.setLoading(false);
+      this.router.navigate(['/monitor/' + response.id]);
+   }, error => {
+    this.message = 'File could not be uploaded';
+    this.loadingService.setLoading(false);
+   });
+}
+
+  onFileSelect(event): void {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.filename = file.name;
+      this.uploadForm.get('file').setValue(file);
+    }
+  }
+
+  openInput(): void {
+    document.getElementById('fileInput').click();
+  }
+}

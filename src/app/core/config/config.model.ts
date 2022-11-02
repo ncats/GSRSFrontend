@@ -51,6 +51,7 @@ export interface Config {
     authenticateAs?: AuthenticateAs;
     userRegistration?: any
     elementLabelDisplay?:any;
+    bulkSearch?: any
     useDataUrl?: any;
 }
 

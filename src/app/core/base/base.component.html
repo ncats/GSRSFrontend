@@ -28,6 +28,9 @@
       <a mat-menu-item [routerLink]="['/advanced-search']">
         Advanced Search
       </a>
+      <a mat-menu-item [routerLink]="['/bulk-search']">
+        Bulk Search
+      </a>
       <div *ngFor="let navItem of navItems">
         <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}

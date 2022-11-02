@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -22,6 +23,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import {MatRadioModule} from '@angular/material/radio';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -107,6 +109,8 @@ import { CustomSelectWidgetComponent } from '@gsrs-core/substances-browse/export
 import { CustomRadioWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-radio-widget/custom-radio-widget.component';
 import { CustomMultiCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-multi-checkbox-widget/custom-multi-checkbox-widget.component';
 import { CustomTextareaWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-textarea-widget/custom-textarea-widget.component';
+
+import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
@@ -173,6 +177,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     MatTableModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatRadioModule,
     MatSliderModule,
     MatDialogModule,
     StructureEditorModule,
@@ -212,6 +217,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     SubstanceSsg2Module,
     Ssg2ManufacturingModule,
     SchemaFormModule.forRoot(),   
+    BulkSearchModule,
     ElementLabelDisplayModule
   ],
   providers: [

@@ -47,9 +47,10 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _relationships?: CountRef;
   _moieties?: CountRef;
   _properties?: CountRef;
-  _matchContext?: MatchContext;
+  _matchContext?: any;
   _mixture?: ParentCountHref;
   _specifiedSubstance?: ParentCountHref;
+  _matchContents?: Array<string>;
   mixture?: any;
   names?: any;
   specifiedSubstance?: any;

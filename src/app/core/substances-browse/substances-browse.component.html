@@ -82,6 +82,38 @@
         </div>
       </div>
     </div>
+    
+    <div *ngIf="bulkSearchQueryId">
+      <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true" (closed)="bulkSearchPanelOpen = false"
+        style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div>Bulk Search Summary (Full Results)</div>
+            <div>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
+
+            <div>
+              <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
+              <span *ngIf="bulkSearchQueryId"> 
+              | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
+              </span>
+              Bulk Search
+            </div>
+            <app-bulk-search-results-summary
+              showTitle=false
+              loadSummaries=true
+              context="substances"
+              [key]="bulkSearchStatusKey"
+              [isCollapsed]="isBulkSearchCollapsed"
+            ></app-bulk-search-results-summary>
+          </div>
+        </mat-expansion-panel>           
+    </div>
+
+    <div class="break"></div>
     <div class="side-nav-content" *ngIf="(substances && substances.length) || (matchTypes && matchTypes.length > 0)">
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
@@ -311,14 +343,15 @@
       <div class="dynamic container">
       </div>
       <div [ngClass]="view">
-
         <div class="substance-cards">
-          <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
-            (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
-            [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
-            [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
-            [codeSystemVocab]="codeSystem">
-          </app-substance-summary-card>
+          <div *ngFor="let substance of substances">
+            <app-substance-summary-card  [substance]="substance"
+              (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
+              [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
+              [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
+              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy">
+            </app-substance-summary-card>
+          </div>
         </div>
         <div class="substance-table">
           <div class="responsive">

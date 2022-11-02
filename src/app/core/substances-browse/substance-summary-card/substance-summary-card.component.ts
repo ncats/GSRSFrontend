@@ -24,6 +24,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
+import * as lodash from 'lodash';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -41,6 +42,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @Input() names?: Array<SubstanceName>;
   @Input() codeSystemNames?: Array<string>;
   @Input() codeSystemVocab?: Vocabulary;
+  @Input() searchStrategy?: string = '';
+  
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
   inxightLink = false;
@@ -53,6 +56,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   allPrimary = [];
   showLessNames = true;
   showLessCodes = true;
+  _ = lodash;
 
   constructor(
     public utilsService: UtilsService,

@@ -299,22 +299,24 @@
           (closed)="removeZindex()">
         </app-substance-text-search>
       </div>
-    <div class = "flex-row even" style = " margin-bottom: 25px;">
+      <div class = "flex-row even" style = " margin-bottom: 25px;">
         <div class="button-container">
-            <a mat-raised-button class="big-button" routerLink="/browse-substance">Browse Substances</a>
-          </div>
-          <div class="button-container" *ngIf="loadedComponents && loadedComponents.applications">
-
-              <a mat-raised-button class="big-button" routerLink="/browse-applications">Browse Applications</a>
-            </div>
-          <div class="button-container">
-              <a mat-raised-button class="big-button" routerLink="/structure-search">Structure Search</a>
-            </div>
-            <div class="button-container">
-                <a mat-raised-button class="big-button" routerLink="/sequence-search">Sequence Search</a>
-              </div>
-            </div>
-          <mat-divider class = "divide-test"></mat-divider>
+          <a mat-raised-button class="big-button" routerLink="/browse-substance">Browse Substances</a>
+        </div>
+        <div class="button-container" *ngIf="loadedComponents && loadedComponents.applications">
+            <a mat-raised-button class="big-button" routerLink="/browse-applications">Browse Applications</a>
+        </div>
+        <div class="button-container">
+            <a mat-raised-button class="big-button" routerLink="/structure-search">Structure Search</a>
+        </div>
+        <div class="button-container">
+            <a mat-raised-button class="big-button" routerLink="/sequence-search">Sequence Search</a>
+        </div>
+        <div class="button-container">
+          <a mat-raised-button class="big-button" routerLink="/bulk-search">Bulk Search</a>
+        </div>
+      </div>
+      <mat-divider class = "divide-test"></mat-divider>
 
     <div class = "flex-row" style = "padding-bottom: 10px;">
       <div class = "data">

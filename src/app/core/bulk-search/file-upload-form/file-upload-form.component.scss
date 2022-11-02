@@ -1,0 +1,288 @@
+.italics {
+    font-style: italic;
+    color: rgba(0, 0, 0, .5);
+}
+
+.file-name {
+    display: flex;
+    text-align: center;
+    margin-left: 15px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.full-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.spinner {
+   
+}
+
+.load-progress {
+    height: 17px;
+    margin-bottom: 5px;
+    font-size:12px;
+    color: black;
+  -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+}
+
+.load-fail {
+    // transform: rotate(180deg);
+    margin-top: -22px;
+    ::ng-deep .mat-progress-bar-fill {
+        background-color: rgb(173, 26, 26);
+        z-index: 1;
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        background-color: rgb(173, 26, 26);
+     //    z-index: 1;
+
+    }
+
+
+      
+    
+    ::ng-deep .mat-progress-bar-buffer {
+        background: rgba(0, 0, 0, 0.01);
+    }
+}
+
+.loading-spinner {
+    width: 70px;
+    mat-progress-spinner {
+        margin: auto;
+    }
+}
+.load-fail-old {
+     transform: rotate(180deg);
+    margin-top: -22px;
+    ::ng-deep .mat-progress-bar-fill {
+        background-color: rgb(173, 26, 26);
+        z-index: 2;
+
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        background-color: rgb(173, 26, 26);
+        z-index: 2;
+
+
+    }
+
+
+      
+    
+    ::ng-deep .mat-progress-bar-buffer {
+        background: rgba(0, 0, 0, 0.01);
+    }
+}
+
+.load-success {
+    ::ng-deep .mat-progress-bar-fill {
+        // background-color: rgb(173, 26, 26);
+         z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        // background-color: rgb(173, 26, 26);
+       //  z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-buffer {
+        background: rgba(0, 0, 0, 0.01);
+    }
+}
+
+
+.load-success-old {
+    ::ng-deep .mat-progress-bar-fill {
+        // background-color: rgb(173, 26, 26);
+        z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        // background-color: rgb(173, 26, 26);
+         z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-buffer {
+        background: rgba(0, 0, 0, 0.01);
+    }
+}
+
+.progress-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .load-progress {
+        width: 100%;
+    }
+
+    .bar-label {
+        font-size: 14px;
+    }
+}
+
+
+
+.spinner-container {
+    display: flex;
+    flex-direction: row;
+
+    .spinner-labels {
+        
+    }
+
+    .spinner-row {
+        width: 33%;
+        flex-direction: column;
+
+        .spinner-labels {
+        display: flex;
+        flex-direction: row;
+
+
+        .spinner {
+            width: 50px;
+        }
+        }
+    }
+}
+
+.count-label {
+margin-top: auto;
+margin-bottom: auto;
+}
+
+.loader-container {
+    width: 70%;
+    margin: 10px;
+}
+
+.lower-body {
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+}
+
+.stat-container {
+    width: 30%;
+    margin:10px;
+    min-width: 250px;
+}
+
+.label-value{
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+    padding-bottom: 10px;
+
+    .label { 
+        width: 50%;
+        min-width: 125px;
+        font-weight: 500;
+    }
+
+    .value {
+        width: 50%;
+    }
+}
+
+.example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+
+
+  .mirror {
+    margin-top: -105px;
+    transform: scale(-1, 1);
+
+    ::ng-deep circle {
+        stroke: rgb(173, 26, 26);
+    }
+      
+ 
+    
+    ::ng-deep .mat-progress-spinner-buffer {
+        background: rgb(212, 212, 212);
+    }
+  }
+
+  .mirror-test {
+    margin-left: -125px;
+    transform: scale(-1, 1);
+
+    ::ng-deep circle {
+        stroke: rgb(173, 26, 26);
+    }
+
+    ::ng-deep .mat-progress-spinner-buffer {
+        background: rgb(212, 212, 212);
+    }
+}
+
+
+  .overlap {
+    ::ng-deep .mat-progress-bar-fill::after {
+        z-index: 2;
+    }
+  }
+
+  .deleted {
+      margin: auto;
+      padding: 10px;
+      color: grey;
+      font-style: italics;
+      font-size: 18px;
+  }
+
+
+  .label-row {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+
+      .count-row-label {
+          margin-left: auto;
+          margin-right: auto;
+      }
+  }
+
+  .count-cont {
+      text-align: center;
+      color: white;
+      margin-top: -22px;
+      font-weight: bold;
+      z-index: 5;
+      font-size: 15px;
+  }
+
+  .file-row {
+      width: 75%;
+      height: 40px;
+        display: flex;
+        flex-direction: row;
+  }
+
+  .options-row {
+      width: 25%;
+      display: flex;
+      flex-direction: column;
+  }
+
+  .bottom {
+      padding-top: 50px;
+  }

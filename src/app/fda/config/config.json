@@ -40,6 +40,14 @@
       }
     }
   },
+  "bulkSearch": {
+    "entities": [
+      {
+        "name":"substances",
+        "title": "Substances"
+      }
+    ]
+  },
   "filteredDuplicationCodes": [
     "BDNUM",
     "FDA UNII"

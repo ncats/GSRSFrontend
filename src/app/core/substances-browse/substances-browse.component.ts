@@ -11,9 +11,9 @@ import {
   ViewChildren,
   QueryList
 } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceSummary } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
 import { LoadingService } from '../loading/loading.service';
@@ -33,7 +33,7 @@ import { Location } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
+import { NarrowSearchSuggestion, PagingResponse } from '@gsrs-core/utils';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
@@ -60,12 +60,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;
+  private privateBulkSearchQueryId?: number;
+  private privateBulkSearchStatusKey?: string;
+  private privateBulkSearchSummary?: any;
   private privateSearchType?: string;
+  private privateSearchStrategy?: string;
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
+  
   public substances: Array<SubstanceDetail>;
   public exactMatchSubstances: Array<SubstanceDetail>;
+
+  searchOnIdentifiers: boolean;
+  searchEntity: string;
   pageIndex: number;
   pageSize: number;
   test: any;
@@ -125,6 +133,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetViewCategory: Array<String> = [];
   facetViewControl = new FormControl();
   private wildCardText: string;
+  bulkSearchPanelOpen = false;
+
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -184,12 +195,19 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
 
     this.setUpPrivateSearchTerm();
-
-    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
+    
+    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';   
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
+    this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+    this.searchOnIdentifiers = this.activatedRoute.snapshot.queryParams['searchOnIdentifiers'] || '';
+    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
+    
+    this.setUpPrivateSearchStrategy();
+
+
     if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
       this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
       this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
@@ -227,6 +245,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.loadComponent();
 
     this.loadFacetViewFromConfig();
+
   }
 
   setUpPrivateSearchTerm() {
@@ -241,6 +260,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     if (this.privateSearchTerm) {
       this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+  }
+
+  setUpPrivateSearchStrategy() {
+    // Setting privateSearchStrategy so we know what 
+    // search strategy is used, for example so we can 
+    // pass a value for use in cards.
+    // I think privateSearchType is used differently. 
+    // I see searchType being used for 'similarity'  
+    this.privateSearchStrategy = null;
+    if(this.privateStructureSearchTerm) { 
+      this.privateSearchStrategy = 'structure';
+    } else if(this.privateSequenceSearchTerm) { 
+      this.privateSearchStrategy = 'sequence';
+    } else if(this.privateBulkSearchQueryId) {
+      this.privateSearchStrategy = 'bulk';
     }
   }
 
@@ -270,7 +305,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
     this.subscriptions.push(dynamicSubscription);
 
-
   }
 
   ngOnDestroy() {
@@ -287,9 +321,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private loadComponent(): void {
 
-    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) {
+    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) { 
       this.searchSubstances();
     } else {
+
+      // There should be a better way to do this.
+      this.bulkSearchPanelOpen = 
+      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
+      && (this.displayFacets && this.displayFacets.length===0);
     }
   }
 
@@ -403,11 +442,17 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   searchSubstances() {
+      // There should be a better way to do this.
+      this.bulkSearchPanelOpen = 
+      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
+      && (this.displayFacets && this.displayFacets.length===0);
+
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
       this.privateSequenceSearchTerm,
+      this.privateBulkSearchQueryId,
       this.privateSearchCutoff,
       this.privateSearchType,
       this.privateSearchSeqType,
@@ -426,6 +471,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
+        bulkQID: this.bulkSearchQueryId,
+        searchOnIdentifiers: this.searchOnIdentifiers,
+        searchEntity: this.searchEntity,
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
@@ -437,6 +485,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         deprecated: this.showDeprecated
       })
         .subscribe(pagingResponse => {
+          this.privateBulkSearchStatusKey = pagingResponse.statusKey;
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.total % this.pageSize === 0) {
@@ -451,6 +500,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           ) {
             this.exactMatchSubstances = pagingResponse.exactMatches;
             this.showExactMatches = true;
+          }
+
+          if (pagingResponse.summary && pagingResponse.summary.length > 0
+            && pagingResponse.skip === 0
+            && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
+          ) {
+            this.privateBulkSearchSummary = pagingResponse.summary;
           }
 
           this.substances = pagingResponse.content;
@@ -533,7 +589,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           });
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
-          this.gaService.sendException('getSubstancesDetails: error from API cal');
+          this.gaService.sendException('getSubstancesDetails: error from API call');
           const notification: AppNotification = {
             message: 'There was an error trying to retrieve substances. Please refresh and try again.',
             type: NotificationType.error,
@@ -668,6 +724,7 @@ searchTermOkforBeginsWithSearch(): boolean {
       this.loadingService.setLoading(false);
     });
   }
+ 
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -677,6 +734,10 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
+    navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
+    navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
+    navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
@@ -826,6 +887,40 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.searchSubstances();
   }
 
+  editBulkSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+      `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        bulkQID: this.privateBulkSearchQueryId,
+        searchOnIdentifiers: this.searchOnIdentifiers,
+        searchEntity: this.searchEntity
+      }
+    };
+    this.router.navigate(['/bulk-search'], navigationExtras);
+  }
+
+  clearBulkSearch(): void {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+    `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
+
+    this.privateBulkSearchQueryId = null;   
+    this.privateBulkSearchSummary = null;
+    this.searchEntity = '';
+    this.searchOnIdentifiers = null;
+    this.privateSearchType = '';
+    this.privateSearchCutoff = 0;
+    this.smiles = '';
+    this.pageIndex = 0;
+
+    this.populateUrlQueryParameters();
+    this.searchSubstances();
+  }
+
   clearSearch(): void {
 
     const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
@@ -843,6 +938,8 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearFilters(): void {
     // for facets
+    // Does this facet remove work completely?  When I (aw) click RESET button the facet 
+    // is cleared but this.displayFacets still has the value.  
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
@@ -851,6 +948,8 @@ searchTermOkforBeginsWithSearch(): boolean {
     } else if ((this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') ||
       (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
       this.clearSequenceSearch();
+    } else if (this.privateBulkSearchQueryId != null && this.privateBulkSearchQueryId !== undefined) {
+        this.clearBulkSearch();
     } else {
       this.clearSearch();
     }
@@ -879,9 +978,24 @@ searchTermOkforBeginsWithSearch(): boolean {
     return this.privateSequenceSearchTerm;
   }
 
+  get bulkSearchSummary(): string {
+    return this.privateBulkSearchSummary;
+  }
+  get bulkSearchQueryId(): number {
+    return this.privateBulkSearchQueryId;
+  }
+  get bulkSearchStatusKey(): string {
+    return this.privateBulkSearchStatusKey;
+  }
+
   get searchType(): string {
     return this.privateSearchType;
   }
+
+  get searchStrategy(): string {
+    return this.privateSearchStrategy;
+  }
+
 
   get searchCutoff(): number {
     return this.privateSearchCutoff;
@@ -948,8 +1062,6 @@ searchTermOkforBeginsWithSearch(): boolean {
         names: this.names[substance.uuid]
       };
     }
-
-    
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       width: '650px',
