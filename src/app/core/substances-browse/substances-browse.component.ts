@@ -202,7 +202,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     // this.privateBulkSearchTerm = this.activatedRoute.snapshot.queryParams['bulk_search'] || '';
     this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
     this.searchOnIdentifiers = this.activatedRoute.snapshot.queryParams['searchOnIdentifiers'] || '';
-    this.queryEntity = this.activatedRoute.snapshot.queryParams['queryEntity'] || '';
+    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
     
@@ -475,7 +475,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         // bulkSearchTerm: this.privateBulkSearchTerm,
         bulkQID: this.bulkSearchQueryId,
         searchOnIdentifiers: this.searchOnIdentifiers,
-        queryEntity: this.queryEntity,
+        searchEntity: this.searchEntity,
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
@@ -725,7 +725,7 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
   
   searchOnIdentifiers: boolean;
-  queryEntity: string;
+  searchEntity: string;
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -737,10 +737,9 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
 //    navigationExtras.queryParams['bulk_search'] = this.privateBulkSearchTerm;
     navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
-    navigationExtras.queryParams['queryEntity'] = this.queryEntity;    
     navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
     navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
-    navigationExtras.queryParams['queryEntity'] = this.queryEntity;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
@@ -892,14 +891,14 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   editBulkSearch(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
-      `${this.queryEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
+      `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
         bulkQID: this.privateBulkSearchQueryId,
         searchOnIdentifiers: this.searchOnIdentifiers,
-        queryEntity: this.queryEntity
+        searchEntity: this.searchEntity
       }
     };
     this.router.navigate(['/bulk-search'], navigationExtras);
@@ -914,7 +913,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     // this.privateBulkSearchTerm = '';
     this.privateBulkSearchQueryId = null;   
     this.privateBulkSearchSummary = null;
-    this.queryEntity = '';
+    this.searchEntity = '';
     this.searchOnIdentifiers = null;
     this.privateSearchType = '';
     this.privateSearchCutoff = 0;

@@ -90,7 +90,7 @@ export class SubstanceService extends BaseHttpService {
     // bulkSearchTerm?: string,
     bulkQID?: number,
     searchOnIdentifiers?: boolean,
-    queryEntity?: string,
+    searchEntity?: string,
     cutoff?: number,
     type?: string,
     seqType?: string,
@@ -150,7 +150,7 @@ export class SubstanceService extends BaseHttpService {
           args.searchTerm,
           args.bulkQID,
           args.searchOnIdentifiers,
-          args.queryEntity,
+          args.searchEntity,
           args.cutoff,
           args.type,
           args.pageSize,
@@ -401,7 +401,7 @@ export class SubstanceService extends BaseHttpService {
     querySearchTerm?: string,
     bulkQID?: number,
     searchOnIdentifiers?: boolean,
-    queryEntity?: string,
+    searchEntity?: string,
     cutoff?: number,
     type: string = 'bulk',
     pageSize: number = 10,
@@ -413,7 +413,7 @@ export class SubstanceService extends BaseHttpService {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
       let url = this.apiBaseUrl;
       let bulkFacetsKey: number;
-      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, queryEntity);
+      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
       console.log("awd 1 "+ bulkFacetsKey);
       if (this.searchKeys[bulkFacetsKey]) {
         url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
@@ -440,7 +440,7 @@ export class SubstanceService extends BaseHttpService {
         let v  = "false";
         if(searchOnIdentifiers===true) { v= "true"; }   
         params = params.append('searchOnIdentifiers', v);    
-        params = params.append('queryEntity', queryEntity);    
+        params = params.append('searchEntity', searchEntity);    
         // params = params.append('simpleSearchOnly', 'true');
         url += `substances/bulkSearch`;
       }

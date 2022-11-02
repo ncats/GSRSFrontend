@@ -15,9 +15,9 @@
         <label id="search-on-entity">Search Entity</label>
 
         <mat-form-field matInput appearance="fill" class="query-entity-select"> 
-          <mat-select required placeholder="Query Entity" aria-labelledby="search-on-entity-label" 
-          class="search-on-entity-select-box" [formControl]="queryEntityControl" 
-          (selectionChange)="queryEntitySelected($event)"  value="substances">
+          <mat-select required placeholder="Search Entity" aria-labelledby="search-on-entity-label" 
+          class="search-on-entity-select-box" [formControl]="searchEntityControl" 
+          (selectionChange)="searchEntitySelected($event)"  value="substances">
             <mat-option *ngFor="let entity of queryEntities;" value="{{entity.name}}">
               {{entity.title}}
             </mat-option>
@@ -31,7 +31,6 @@
             ></app-text-input-form>
         <div class="query-actions">
           <button mat-flat-button color="primary" (click) = "submitText()">Submit</button>
-          <button mat-flat-button color="primary" (click) = "submitText2()">Submit2</button>
 
         </div>
       </div>
