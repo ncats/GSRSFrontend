@@ -3,6 +3,7 @@ import {
   OnInit,
   OnDestroy,
   ViewChild,
+  AfterViewInit,
 } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
@@ -24,7 +25,7 @@ import * as lodash from 'lodash';
     styleUrls: ['./bulk-query.component.scss']
   })
 
-export class BulkQueryComponent implements OnInit, OnDestroy {
+export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   _ = lodash;
   loadedComponents: LoadedComponents;
   showAudit: boolean;
@@ -62,7 +63,7 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
     queryParams: {}
   };
   searchEntityControl = new FormControl();
-  queryEntities: any;
+  searchEntities: any;
   private subscriptions: Array<Subscription> = [];
   private searchEntity: string;
 
@@ -91,9 +92,9 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
     this.showSpinner = false;  // Stop progress spinner
     this.loadingService.setLoading(false);
     const bsConfig = this.configService.configData.bulkSearch;
-    this.queryEntities = bsConfig.entities;
-    if (!this.queryEntities) {
-//      this.queryEntities = {name: 'substances', title: 'Substances'};
+    this.searchEntities = bsConfig.entities;
+    if (!this.searchEntities) {
+      this.searchEntities = {name: 'substances', title: 'Substances'};
     }
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
@@ -116,6 +117,9 @@ export class BulkQueryComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit()  {
+
+  }
 submitText() {
   this.queryText = this.textInputForm.textControl.value;
   this.postOrPutBulkQueryAndNavigateToBrowse();
@@ -137,52 +141,55 @@ submitText() {
 
     // Part A: get url query param values
     subscriptions[0] = this.route.queryParams.subscribe(params => {
-      this._bulkQueryIdOnLoad = params.bulkQID;
-      if(params.searchOnIdentifiers && params.searchOnIdentifiers === "false") { 
-        this.searchOnIdentifiers = false;
-      } else {
-        this.searchOnIdentifiers = true;
-      }
-      this.setSearchEntity(params.searchEntity);
-      const observables: Array<Observable<BulkQuery>> = [];
-      const texts: string[] = [];
-          // Part B: load queries terms
-          subscriptions[1] = this.bulkSearchService.getBulkQuery(
-            this.searchEntity,
-            this._bulkQueryIdOnLoad,
-            top,
-            skip
-          )
-          .subscribe((bulkQuery) => {
-            if(bulkQuery.queries) {
-              texts.push(bulkQuery.queries.join('\n'));
-              const left =  bulkQuery.total - bulkQuery.count;
-              // Turning this off and using big top value for now.
-              const off = true;
-              if(!off && left>0) {
-                const x = Math.floor(left/top);
-                for (let i = 1; i <= x; i++) {
-                  skip = skip + top;
-                  const observable = this.bulkSearchService
-                    .getBulkQuery(this.searchEntity, this._bulkQueryIdOnLoad, top, skip);
-                  observables.push(observable);
-                  const s = observable.subscribe((bulkQuery1) => {
-                    texts.push(bulkQuery1.queries.join('\n'));
-                    subscriptions.push(s);
-                  });
+      if(params.bulkQID !== null && params.bulkQID!==undefined) { 
+        this._bulkQueryIdOnLoad = params.bulkQID;
+
+        if(params.searchOnIdentifiers && params.searchOnIdentifiers === "false") { 
+          this.searchOnIdentifiers = false;
+        } else {
+          this.searchOnIdentifiers = true;
+        }
+        this.setSearchEntity(params.searchEntity);
+        const observables: Array<Observable<BulkQuery>> = [];
+        const texts: string[] = [];
+            // Part B: load queries terms
+            subscriptions[1] = this.bulkSearchService.getBulkQuery(
+              this.searchEntity,
+              this._bulkQueryIdOnLoad,
+              top,
+              skip
+            )
+            .subscribe((bulkQuery) => {
+              if(bulkQuery.queries) {
+                texts.push(bulkQuery.queries.join('\n'));
+                const left =  bulkQuery.total - bulkQuery.count;
+                // Turning this off and using big top value for now.
+                const off = true;
+                if(!off && left>0) {
+                  const x = Math.floor(left/top);
+                  for (let i = 1; i <= x; i++) {
+                    skip = skip + top;
+                    const observable = this.bulkSearchService
+                      .getBulkQuery(this.searchEntity, this._bulkQueryIdOnLoad, top, skip);
+                    observables.push(observable);
+                    const s = observable.subscribe((bulkQuery1) => {
+                      texts.push(bulkQuery1.queries.join('\n'));
+                      subscriptions.push(s);
+                    });
+                  }
                 }
               }
-            }
-          },
-          (error) => {
-            console.log( 'Error getting bulk search status results data.');
-          },
-          () => {
-            // completed
-            // Join all values in the texts array and insert into form text area.
-            this.textInputForm.textControl.setValue(texts.join(''));
-          });
-          // Part B End
+            },
+            (error) => {
+              console.log( 'Error getting bulk search status results data.');
+            },
+            () => {
+              // completed
+              // Join all values in the texts array and insert into form text area.
+              this.textInputForm.textControl.setValue(texts.join(''));
+            });
+            // Part B End
+        } // if params 
       },
     () => {
       subscriptions.forEach(
@@ -191,6 +198,7 @@ submitText() {
         });
     });
     // Part A (Params) end)
+    
   }
 
 

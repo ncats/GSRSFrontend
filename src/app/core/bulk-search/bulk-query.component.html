@@ -18,7 +18,7 @@
           <mat-select required placeholder="Search Entity" aria-labelledby="search-on-entity-label" 
           class="search-on-entity-select-box" [formControl]="searchEntityControl" 
           (selectionChange)="searchEntitySelected($event)"  value="substances">
-            <mat-option *ngFor="let entity of queryEntities;" value="{{entity.name}}">
+            <mat-option *ngFor="let entity of searchEntities;" value="{{entity.name}}">
               {{entity.title}}
             </mat-option>
           </mat-select>
