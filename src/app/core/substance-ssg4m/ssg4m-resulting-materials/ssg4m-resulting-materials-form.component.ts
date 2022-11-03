@@ -138,8 +138,10 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
         substanceClass: 'reference',
         approvalID: substance.approvalID
       };
-
       this.privateResultingMaterial.substanceName = relatedSubstance;
+    }
+    else {
+      this.privateResultingMaterial.substanceName = {};
     }
   }
 

@@ -92,7 +92,7 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
-    if (substance != null) {
+    if (substance !== null) {
       const relatedSubstance: SubstanceRelated = {
         refPname: substance._name,
         name: substance._name,
@@ -100,9 +100,12 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
         substanceClass: 'reference',
         approvalID: substance.approvalID
       };
-
       if (this.substanceClass && this.substanceClass === 'specifiedSubstanceG4m') {
         this.substance.specifiedSubstanceG4m.parentSubstance = relatedSubstance;
+      }
+    } else {
+      if (this.substanceClass && this.substanceClass === 'specifiedSubstanceG4m') {
+        this.substance.specifiedSubstanceG4m.parentSubstance = {};
       }
     }
   }
