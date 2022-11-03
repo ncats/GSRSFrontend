@@ -127,7 +127,7 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
-    if (substance != null) {
+    if (substance !== null) {
       const relatedSubstance: SubstanceRelated = {
         refPname: substance._name,
         name: substance._name,
@@ -135,8 +135,9 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
         substanceClass: 'reference',
         approvalID: substance.approvalID
       };
-
       this.privateStartingMaterial.substanceName = relatedSubstance;
+    } else {
+      this.privateStartingMaterial.substanceName = {};
     }
   }
 
@@ -156,7 +157,7 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials.splice(this.startingMaterialIndex, 1);
   }
 
-  copyResultingToStarting(processIndex:number, siteIndex:number, stageIndex:number) {
+  copyResultingToStarting(processIndex: number, siteIndex: number, stageIndex: number) {
 
   }
 

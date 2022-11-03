@@ -134,8 +134,10 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
         substanceClass: 'reference',
         approvalID: substance.approvalID
       };
-
       this.privateProcessingMaterial.substanceName = relatedSubstance;
+    }
+    else {
+      this.privateProcessingMaterial.substanceName = {};
     }
   }
 
