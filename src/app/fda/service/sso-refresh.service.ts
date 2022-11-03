@@ -35,10 +35,10 @@ export class SsoRefreshService implements OnDestroy {
       this.iframe.name = 'refresher';
       this.iframe.style.height = '0';
       this.iframe.style.opacity = '0';
-      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}&noWarningBox`;
+      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}&noWarningBox=true`;
       document.body.appendChild(this.iframe);
     } else {
-      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}&noWarningBox`;
+      this.iframe.src = `${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}&noWarningBox=true`;
     }
   }
 
@@ -58,6 +58,10 @@ export class SsoRefreshService implements OnDestroy {
   }
 
   init(): any {
+    if(new URLSearchParams(window.location.search).get("noWarningBox") === 'true'){
+      //do not do sso refresher recursively
+      return;
+    }
     if (new URLSearchParams(window.location.search).get("header") === 'false') {
       this.setup();
     } else {
