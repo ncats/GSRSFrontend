@@ -39,7 +39,6 @@ export class SubstanceSummaryCardComponent implements OnInit {
   canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
-  @Input() names?: Array<SubstanceName>;
   @Input() codeSystemNames?: Array<string>;
   @Input() codeSystemVocab?: Vocabulary;
   @Input() searchStrategy?: string = '';
@@ -56,6 +55,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   allPrimary = [];
   showLessNames = true;
   showLessCodes = true;
+  privateNames?: Array<SubstanceName>;
+  nameLoading = true;
   _ = lodash;
 
   constructor(
@@ -113,6 +114,21 @@ export class SubstanceSummaryCardComponent implements OnInit {
     }
   }
 
+  @Input()
+
+  set names(name: any) {
+    if (typeof(name) != "undefined") {
+      this.privateNames = name;
+      this.nameLoading = false;
+    }
+    
+  }
+
+  get names(): any {
+    return this.privateNames;
+  }
+
+
   getApprovalID() {
     if (!this.substance.approvalID) {
       if (this.substance._approvalIDDisplay &&
@@ -166,7 +182,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   }
 
   openImageModal(): void {
-    this.substance.names = this.names
+    this.substance.names = this.privateNames;
     this.openImage.emit(this.substance);
   }
 

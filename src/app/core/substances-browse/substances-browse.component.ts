@@ -678,12 +678,10 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   setSubstanceNames(substanceId: string): void {
-    this.loadingService.setLoading(true);
     this.substanceService.getSubstanceNames(substanceId).pipe(take(1)).subscribe(names => {
       this.names[substanceId] = names;
-      this.loadingService.setLoading(false);
     }, error => {
-      this.loadingService.setLoading(false);
+      this.names[substanceId] = [];
     });
   }
 
