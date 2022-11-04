@@ -113,6 +113,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
   @Input()
   set category(cat) {
     this.categoryinput = cat;
+    /*
     // Set the Dropdown 'Search In Fields' to default 'All', when user clicks on the tab, clear the previous criteria
     this.queryablePropertiesControl.setValue('All');
     // Set the Dropdown 'For' to default 'Contains'.
@@ -123,6 +124,7 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
     let queryablePropertyType = 'string';
    // this.commandInputValueDict[queryablePropertyType] = 'TEst';
    this.loadAdvancedSearchInitial();
+   */
   }
 
   @Input()
@@ -155,16 +157,6 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.loadAdvancedSearchInitial();
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
-  }
-
-  loadAdvancedSearchInitial() {
 
     inputTypes.forEach(key => {
       this.commandInputValueDict[key] = [];
@@ -283,7 +275,13 @@ export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {
       //  this.gaService.sendException('type ahead search suggestion error from API call');
       console.log(error);
     });
+    
+  }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   queryablePropertySelected(queryableProperty: string): void {
