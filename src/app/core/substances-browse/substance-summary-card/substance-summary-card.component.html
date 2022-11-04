@@ -158,19 +158,28 @@
 
       </div>
       <div>
-        <div class="substance-data substance-names" *ngIf="names && names.length">
+      <div *ngIf = "nameLoading" class = "name-loading">
+          <div class="label loading-label">Names: </div>
+          <div><mat-progress-spinner
+            class="spinner"
+            [color]="primary"
+            [diameter]="24"
+            mode = "indeterminate">
+        </mat-progress-spinner></div><div> <i>Loading</i></div>
+          </div>
+        <div class="substance-data substance-names" *ngIf="privateNames && privateNames.length && !nameLoading">
           <div class="label">Names:</div>
           <div [hidden]="!showLessNames">
-            <div class="value space-bottom" *ngFor="let nameObject of names | namesDisplayOrder">
+            <div class="value space-bottom" *ngFor="let nameObject of privateNames | namesDisplayOrder">
               <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
               <span *ngIf="nameObject.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
               </span>
             </div>
-            <div [hidden]="!moreThanNumberCount(names, 5)" (click)="showMoreLessNames()" class="show-more">See {{names.length - 4}} More</div>
+            <div [hidden]="!moreThanNumberCount(privateNames, 5)" (click)="showMoreLessNames()" class="show-more">See {{names.length - 4}} More</div>
           </div>
           <div [hidden]="showLessNames">
-            <div class="value space-bottom" *ngFor="let nameObject of names">
+            <div class="value space-bottom" *ngFor="let nameObject of privateNames">
               <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
                 <span *ngIf="nameObject.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
                 <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
