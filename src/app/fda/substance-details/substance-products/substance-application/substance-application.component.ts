@@ -272,13 +272,14 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       const url = this.getApiExportUrl(this.etagAllExport, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'substanceApplication' }
+         // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'substanceApplication', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
+        dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
