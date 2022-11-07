@@ -441,10 +441,12 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
         dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
           const name = response.name;
+          const id = response.id;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
