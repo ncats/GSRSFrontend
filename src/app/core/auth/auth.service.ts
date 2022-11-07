@@ -111,8 +111,6 @@ export class AuthService {
       }
 
       this._authUpdate.subscribe(auth => {
-        console.log("Updated user auth:");
-        console.log(auth);
         try {
           observer.next(auth);
         } catch (e) {

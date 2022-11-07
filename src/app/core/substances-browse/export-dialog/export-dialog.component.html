@@ -4,7 +4,7 @@
 
      
          <mat-form-field style = "width: 250px" class="testing">
-                <mat-label>Use Export Options: </mat-label> 
+                <mat-label>Use Export Preset Options: </mat-label> 
             <mat-select  name = "fileType" [(ngModel)]="loadedConfig" name="term" (ngModelChange)="switchConfig($event)" >
                   <mat-option *ngFor = "let option of options" [value]="option" > {{option.exporterKey ? option.exporterKey : 'no name'}}
                          </mat-option>
@@ -13,8 +13,8 @@
     
        
            <div style = "margin-top: 10px;margin-left: 50px;">
-               <button mat-flat-button color="primary" (click) = "showOptions = !showOptions">{{ showOptions? 'Hide Options' :'Show / Edit Options'}}</button>
-              &nbsp; <button style = "margin-left:5px" mat-flat-button color="primary" *ngIf = "loadedConfig" (click) = "deleteConfig()"><mat-icon svgIcon="delete_forever"></mat-icon> Delete</button>
+               <button *ngIf = "!data.hideOptionButtons" mat-flat-button color="primary" (click) = "toggleShowOptions()">{{ showOptions? 'Hide Preset Options' :'Edit Preset Options'}}</button>
+              &nbsp; <button style = "margin-left:5px" mat-flat-button color="warn" *ngIf = "!data.hideOptionButtons && loadedConfig && loadedConfig.exporterKey !== 'ALL_DATA' && loadedConfig.exporterKey !== 'PUBLIC_DATA_ONLY' " (click) = "deleteConfig()"><mat-icon svgIcon="delete_forever"></mat-icon> Remove Preset</button>
 
         </div> 
         </div>
@@ -76,10 +76,10 @@
             </div>
             <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
             <span class="middle-fill"></span>
-            <mat-form-field style = "margin-right:10px"><input style = "margin-right:10px" matInput placeholder="Config Name" [(ngModel)]="configName" name="Config Name" /></mat-form-field>
+            <mat-form-field  *ngIf = "showOptions"  style = "margin-right:10px"><input style = "margin-right:10px" matInput placeholder="Config Name" [(ngModel)]="configName" name="Config Name" /></mat-form-field>
 
-            <button mat-flat-button color="primary" (click) = "saveConfig()" style = "margin-right:15px;" [disabled] = "!showOptions">Save New Config</button>
-            <button mat-flat-button color="primary" (click) = "updateConfig()" [disabled] = "!loadedConfig || loadedConfig.exporterKey === 'PUBLIC_DATA_ONLY' || loadedConfig.exporterKey === 'ALL_DATA'" style = "margin-right:15px;">Save Changes</button>
+            <button *ngIf = "showOptions" mat-flat-button color="primary" (click) = "saveConfig()" style = "margin-right:15px;" [disabled] = "!showOptions">Save New Config</button>
+            <button  *ngIf = "showOptions" mat-flat-button color="primary" (click) = "updateConfig()" [disabled] = "!loadedConfig || loadedConfig.exporterKey === 'PUBLIC_DATA_ONLY' || loadedConfig.exporterKey === 'ALL_DATA'" style = "margin-right:15px;">Save Changes</button>
 
             <button mat-flat-button color="primary" (click) = "save()" >Export{{loadedConfig? '' : ' (no config)'}}</button>
         </mat-dialog-actions>

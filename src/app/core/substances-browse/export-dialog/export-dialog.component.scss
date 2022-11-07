@@ -19,6 +19,12 @@
     padding-top: 12px;
 }
 
+.mat-warn {
+    color: var(--regular-red-color);
+  background-color: white;
+  border: 1px solid var(--regular-red-color);
+}
+
 
 ::ng-deep sf-string-widget > div {
     margin-left:50px;
