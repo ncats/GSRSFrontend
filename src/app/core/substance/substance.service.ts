@@ -859,39 +859,55 @@ export class SubstanceService extends BaseHttpService {
   }
 
 
-  getSchema(type?: string) {
+  getSchema(type?: string, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
     if(!type) {
       type = 'scrubber';
     }
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/${type}/@schema`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/${type}/@schema`;
     return this.http.get< any>(url);
   }
 
-  getConfigs(id?: string) {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/configs`;
+  getConfigs(id?: string, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/configs`;
     return this.http.get< any>(url);
   }
 
-  getConfigByID(id: string) {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config/${id}`;
+  getConfigByID(id: string, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config/${id}`;
     return this.http.get< any>(url);
   }
 
-  storeNewConfig(config: any) {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config`;
+  storeNewConfig(config: any, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config`;
     return this.http.post< any>(url, config);
   }
 
-  deleteConfig(id: string) {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config(${id})`;
-    console.log(id);
+  deleteConfig(id: string, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config(${id})`;
     return this.http.delete< any>(url);
   }
 
-  updateConfig(id: string, config: any) {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/export/config(${id})`;
-    console.log(id);
-    console.log(config);
+  updateConfig(id: string, config: any, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config(${id})`;
+
     return this.http.put< any>(url, config);
   }
 
