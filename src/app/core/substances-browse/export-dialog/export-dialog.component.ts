@@ -421,9 +421,11 @@ export class ExportDialogComponent implements OnInit {
     this.privateOptions.forEach(opt =>{
       if (opt.configurationId === event.configurationId) {
 
-        this.expanderModel = JSON.parse(JSON.stringify(opt.expanderSettings));
-        this.scrubberModel = JSON.parse(JSON.stringify(opt.scrubberSettings));
-        this.exporterModel = JSON.parse(JSON.stringify(opt.exporterSettings));
+        // added check if the settings are truthy. Sometimes they may be null or undefined. If ther are, set to empty object
+        // to avoid null/undefined reference calls
+        this.expanderModel = (opt.expanderSettings)?JSON.parse(JSON.stringify(opt.expanderSettings)):{};
+        this.scrubberModel = (opt.scrubberSettings)?JSON.parse(JSON.stringify(opt.scrubberSettings)):{};
+        this.exporterModel = (opt.exporterSettings)?JSON.parse(JSON.stringify(opt.exporterSettings)):{};
 
         testing = opt.scrubberSettings;
         this.temp = opt.scrubberSettings;
