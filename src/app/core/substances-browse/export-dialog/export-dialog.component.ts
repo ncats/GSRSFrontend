@@ -171,12 +171,23 @@ export class ExportDialogComponent implements OnInit {
         }
         return test;
       });
+      let found = false;
       this.privateOptions.forEach(conf => {
         if (conf.exporterKey === 'PUBLIC_DATA_ONLY') {
+          found = true;
           this.switchConfig(conf);
           this.loadedConfig = conf;
         }
-      })
+      });
+      if (!found) {
+        this.privateOptions.forEach(conf => {
+          if (conf.exporterKey === 'ALL_DATA') {
+            found = true;
+            this.switchConfig(conf);
+            this.loadedConfig = conf;
+          }
+        })
+      }
     });
   }
 
