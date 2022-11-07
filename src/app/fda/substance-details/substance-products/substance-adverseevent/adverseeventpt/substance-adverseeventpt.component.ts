@@ -166,17 +166,20 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
       const url = this.getApiExportUrl(this.etag, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'substanceAdverseEventPt' }
+         // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'substanceAdverseEventPt', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
+        dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {

@@ -68,7 +68,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
-  
+
   public substances: Array<SubstanceDetail>;
   public exactMatchSubstances: Array<SubstanceDetail>;
 
@@ -195,8 +195,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = 0;
 
     this.setUpPrivateSearchTerm();
-    
-    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';   
+
+    this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
     this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
@@ -204,7 +204,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
-    
+
     this.setUpPrivateSearchStrategy();
 
 
@@ -264,15 +264,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   setUpPrivateSearchStrategy() {
-    // Setting privateSearchStrategy so we know what 
-    // search strategy is used, for example so we can 
+    // Setting privateSearchStrategy so we know what
+    // search strategy is used, for example so we can
     // pass a value for use in cards.
-    // I think privateSearchType is used differently. 
-    // I see searchType being used for 'similarity'  
+    // I think privateSearchType is used differently.
+    // I see searchType being used for 'similarity'
     this.privateSearchStrategy = null;
-    if(this.privateStructureSearchTerm) { 
+    if(this.privateStructureSearchTerm) {
       this.privateSearchStrategy = 'structure';
-    } else if(this.privateSequenceSearchTerm) { 
+    } else if(this.privateSequenceSearchTerm) {
       this.privateSearchStrategy = 'sequence';
     } else if(this.privateBulkSearchQueryId) {
       this.privateSearchStrategy = 'bulk';
@@ -321,12 +321,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private loadComponent(): void {
 
-    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) { 
+    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) {
       this.searchSubstances();
     } else {
 
       // There should be a better way to do this.
-      this.bulkSearchPanelOpen = 
+      this.bulkSearchPanelOpen =
       (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
       && (this.displayFacets && this.displayFacets.length===0);
     }
@@ -443,7 +443,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   searchSubstances() {
       // There should be a better way to do this.
-      this.bulkSearchPanelOpen = 
+      this.bulkSearchPanelOpen =
       (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
       && (this.displayFacets && this.displayFacets.length===0);
 
@@ -538,15 +538,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             });
 
             if(this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
-            
+
               const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
 
               // The match type usually originates from the backend.
-              // But below, it is specified here to make additonal match options(s) in the backend.   
+              // But below, it is specified here to make additonal match options(s) in the backend.
               // Can't figure out why the sort of matchTypes does not work.
               // I am not sure it worked before this change.
               // I would like Additional matches to appear first.
-              
+
               let suggestion: NarrowSearchSuggestion = {
                 matchType: 'ADDITIONAL',
                 count: 0,
@@ -579,7 +579,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.exportOptions = response.filter(exp => {
               if (exp.extension) {
                 //TODO Make this generic somehow, so addditional-type exports are isolated
-                if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') || 
+                if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') ||
                     (exp.extension === 'ctusxlsx')|| (exp.extension === 'cteuxlsx')) {
                   return false;
                 }
@@ -619,7 +619,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
-sortMatchTypes(a:Array<string>) { 
+sortMatchTypes(a:Array<string>) {
     return _.sortBy(a);
 }
 
@@ -642,7 +642,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
         maxHeight: '80%',
-        
+
         width: '60%',
         data: { 'extension': extension }
       });
@@ -657,8 +657,8 @@ searchTermOkforBeginsWithSearch(): boolean {
           this.loadingService.setLoading(true);
           const fullname = name + '.' + extension;
           this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-            this.substanceService.getConfigByID(id).subscribe(resp =>{
-            });
+           // this.substanceService.getConfigByID(id).subscribe(resp =>{
+          //  });
             this.loadingService.setLoading(false);
             this.loadingService.setLoading(false);
             const navigationExtras: NavigationExtras = {
@@ -722,7 +722,7 @@ searchTermOkforBeginsWithSearch(): boolean {
       this.loadingService.setLoading(false);
     });
   }
- 
+
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -906,7 +906,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
 
-    this.privateBulkSearchQueryId = null;   
+    this.privateBulkSearchQueryId = null;
     this.privateBulkSearchSummary = null;
     this.searchEntity = '';
     this.searchOnIdentifiers = null;
@@ -936,8 +936,8 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearFilters(): void {
     // for facets
-    // Does this facet remove work completely?  When I (aw) click RESET button the facet 
-    // is cleared but this.displayFacets still has the value.  
+    // Does this facet remove work completely?  When I (aw) click RESET button the facet
+    // is cleared but this.displayFacets still has the value.
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });

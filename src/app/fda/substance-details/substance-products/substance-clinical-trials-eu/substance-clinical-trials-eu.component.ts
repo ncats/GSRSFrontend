@@ -51,7 +51,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     public authService: AuthService,
     private loadingService: LoadingService,
     private router: Router,
-    private dialog: MatDialog 
+    private dialog: MatDialog
   ) {
     super(gaService, clinicalTrialService);
   }
@@ -81,7 +81,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
       .subscribe(pagingResponse => {
         if (searchType && searchType === 'initial') {
           this.etagAllExport = pagingResponse['etag'];
-        } 
+        }
         this.setResultData(pagingResponse['content']);
         this.clinicalTrialEuCount = pagingResponse['total'];
         this.countClinicalTrialEuOut.emit(this.clinicalTrialEuCount);
@@ -106,17 +106,20 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
       const url = this.getApiExportUrl(this.etagAllExport, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'substanceClinicalTrialEU' }
+        //  height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'substanceClinicalTrialEU', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
+        dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+          //  this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -137,7 +140,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
   }
 
 
-// delete this? 
+// delete this?
 //  clinicalTrialListExportUrl() {
 //    if (this.substanceUuid != null) {
 //      this.exportUrl = this.clinicalTrialService.getClinicalTrialEuropeListExportUrl(this.substanceUuid);
@@ -145,7 +148,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
 //  }
 
   /*
-  // copied from products but has no effect. Make approaoch uniform in future. 
+  // copied from products but has no effect. Make approaoch uniform in future.
   tabSelected($event) {
     if ($event) {
       console.log("EVENT");
@@ -163,5 +166,5 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
       // const a =[{"meddraTerm": "meddraTerm1"}, {"meddraTerm": "meddraTerm2"},{"meddraTerm": "meddraTerm3"},{"meddraTerm": "meddraTerm4"}];
       return _.map(cteu.clinicalTrialEuropeMeddraList, 'meddraTerm').join("|");
     }
-  } 
+  }
 }

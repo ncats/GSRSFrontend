@@ -76,10 +76,13 @@ export class FacetDisplayPipe implements PipeTransform {
         }
       }
     }
-    
+    if (name === 'root_submitDate') {
+      return 'Submit Date';
+    }
+
     return name.trim();
   }
 
-  
+
 
 }

@@ -955,7 +955,7 @@
         "Has Ingredients",
         "Has Products",
         "Status Date Year",
-        "Submit Date",
+        "root_submitDate",
         "Submit Date Year",
         "Application Number",
         "Ingredient Name",

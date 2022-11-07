@@ -54,7 +54,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     public authService: AuthService,
     private loadingService: LoadingService,
     private router: Router,
-    private dialog: MatDialog 
+    private dialog: MatDialog
   ) {
     super(gaService, clinicalTrialService);
   }
@@ -91,16 +91,16 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
       .subscribe(pagingResponse => {
         if (searchType && searchType === 'initial') {
           this.etagAllExport = pagingResponse.etag;
-        } 
-        // AW removed else clause so this runs every time. 
-        // This makes it work, but AW might need to understand the 
-        // intention better. 
+        }
+        // AW removed else clause so this runs every time.
+        // This makes it work, but AW might need to understand the
+        // intention better.
         // else {
         this.clinicalTrialService.totalRecords = pagingResponse.total;
         this.setResultData(pagingResponse.content);
         this.clinicalTrialCount = pagingResponse.total;
         this.etag = pagingResponse.etag;
-        // }    
+        // }
 
         this.countClinicalTrialOut.emit(this.clinicalTrialCount);
         this.showSpinner = false;  // Stop progress spinner
@@ -125,17 +125,20 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
       const url = this.getApiExportUrl(this.etagAllExport, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'substanceClinicalTrialUS' }
+         // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'substanceClinicalTrialUS', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
+        dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -164,7 +167,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   }
 
   /*
-  // copied from products but has no effect. Make approaoch uniform in future. 
+  // copied from products but has no effect. Make approaoch uniform in future.
   tabSelected($event) {
     if ($event) {
       console.log("EVENT");
