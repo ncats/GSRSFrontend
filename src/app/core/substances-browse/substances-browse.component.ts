@@ -200,7 +200,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
     this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
-    this.searchOnIdentifiers = this.activatedRoute.snapshot.queryParams['searchOnIdentifiers'] || '';
+    this.searchOnIdentifiers = (this.activatedRoute.snapshot.queryParams['searchOnIdentifiers']==="true") || false;
     this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
@@ -736,7 +736,6 @@ searchTermOkforBeginsWithSearch(): boolean {
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
     navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
     navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
-    navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
     navigationExtras.queryParams['searchEntity'] = this.searchEntity;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
