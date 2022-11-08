@@ -152,6 +152,11 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
         /*if (response.stdName) {
           name = response.stdName;
         }*/
+        response.names.forEach(current => {
+          if (current.displayName && current.stdName) {
+            name = current.stdName;
+          }
+        });
         name = name.replace(/<[^>]*>?/gm, '');
         this.titleService.setTitle(name);
         this.substance = response;
