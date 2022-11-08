@@ -57,6 +57,9 @@
   <div *ngIf = "showSelector" class = "button-row">
     <button mat-flat-button color="primary" class = "modal-button"  (click) = "setMolfile()">Search Structure</button>
     <button mat-flat-button color="primary" class = "modal-button"  (click) = "selectSubstance()">Select Substance</button>
+    <span style = "margin:8px;"></span>
+    <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+    <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
     <span class = "middle-fill"></span>
     <button  class = "modal-button"  mat-flat-button color="primary" (click)="dialogRef.close()">Close</button>
 

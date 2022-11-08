@@ -226,7 +226,7 @@ private privateSequenceSearchKey?: string;
       navigationExtras2.queryParams['structure'] = this.privateStructureSearchTerm || null;
       navigationExtras2.queryParams['type'] = this.searchType || null;
 
-      navString += '?structure=' + navigationExtras.queryParams['structure_search']
+      navString += '?structure_search=' + navigationExtras.queryParams['structure_search']
         + '&type=' + navigationExtras.queryParams['type'];
   
       if (this.searchType === 'similarity') {
@@ -246,7 +246,6 @@ private privateSequenceSearchKey?: string;
       navString += '?search=' + navigationExtras.queryParams['search'];
     }
 
-    this.dialogRef.close();
     let url = '';
     if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
       url = this.configService.configData.gsrsHomeBaseUrl + '/browse-substance' + navString;
@@ -433,7 +432,11 @@ private privateSequenceSearchKey?: string;
 
     const subscription = dialogRef.afterClosed().subscribe(response => {
       if (response && response === 'molfile') {
-        this.editor.setMolecule(molfile);
+        this.panelOpenState = true;
+        setTimeout(()=> {
+          this.editor.setMolecule(molfile);
+
+        }, 150);
       }
       if (response && response === 'select') {
         this.selectSubstance(substance);

@@ -298,8 +298,8 @@ export class AuthService {
         this.http.get<Auth>(`${url}whoami`)
           .subscribe(
             auth => {
-              console.log("Authorized as");
-              console.log(auth);
+            //  console.log("Authorized as");
+            //  console.log(auth);
               observer.next(auth);
             },
             err => {
