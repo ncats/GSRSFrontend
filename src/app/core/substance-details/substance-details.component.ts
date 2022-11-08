@@ -149,9 +149,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
       if (response) {
         let name = response._name;
-        /*if (response.stdName) {
-          name = response.stdName;
-        }*/
         response.names.forEach(current => {
           if (current.displayName && current.stdName) {
             name = current.stdName;
