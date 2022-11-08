@@ -65,8 +65,8 @@ export class SubstanceSelectorComponent implements OnInit {
       this.selectionUpdated.emit(this.selectedSubstance);
     }
 
-   
-        
+
+    
     if (this.configService.configData.substanceSelectorProperties != null) {
       this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
     } else {

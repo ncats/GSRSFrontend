@@ -5,6 +5,7 @@
 </div>
 <mat-tab-group [selectedIndex] = "activeTab" (selectedTabChange)="onTabChanged($event)" class = "tab-group">
     <mat-tab  label= "Structure Search">
+        <ng-template matTabContent>
 
       <mat-expansion-panel (opened)="panelOpenState = true"
       (closed)="panelOpenState = false" [expanded]="panelOpenState">
@@ -144,6 +145,7 @@
 
       
   </div>
+  </ng-template>
 </mat-tab>
 <mat-tab label= "Name Search">
   
