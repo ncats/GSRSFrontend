@@ -9,10 +9,10 @@ import { RouterModule } from '@angular/router';
 @NgModule({
   imports: [
     CommonModule,
+    RouterModule,
     DynamicComponentLoaderModule.forChild(SubstanceHierarchyComponent),
     MatTreeModule,
-    MatIconModule,
-    RouterModule
+    MatIconModule
   ],
   declarations: [SubstanceHierarchyComponent]
 })
