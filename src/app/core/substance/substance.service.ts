@@ -676,7 +676,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
   getSafeIconImgUrl(substance: SubstanceDetail , size?: number): SafeUrl {
-    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg`;
+    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/images/noimage.svg`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
       const structureId = substance.structure.id;
