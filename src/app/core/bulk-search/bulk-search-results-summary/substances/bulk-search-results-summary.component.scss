@@ -23,6 +23,17 @@
     color: var(--regular-black-color);
     border-radius: 4px;
 }
+.statistics { 
+    margin-top: 6px;
+    margin-top: 5px;
+}
+
+/* Doesn't work? */
+.mat-expansion-panel-header, 
+.mat-expansion-panel-header.mat-expanded {
+    height: 30px !important;
+}
+
 
 table th, table td  {
     text-align: left;

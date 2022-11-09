@@ -10,6 +10,7 @@
     </button>
   </div>
 </div>
+<div class="statistics" *ngIf="totalQueries!==undefined && totalQueries>0">Queries: {{totalQueries}}&nbsp;&nbsp;&nbsp;&nbsp;Matched: {{totalQueriesMatch}}&nbsp;&nbsp;&nbsp;&nbsp;Unmatched: {{totalQueriesUnMatch}}</div>
 <table mat-table [dataSource]="dataSource" class="">
   <ng-container matColumnDef="searchTerm">
     <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['searchTerm']}}</th>

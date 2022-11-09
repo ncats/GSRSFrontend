@@ -44,6 +44,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   recordOverviews: Array<RecordOverview> = [];
   totalRecordOverviews: number;
   totalQueries: number;
+  totalQueriesMatch: number;
+  totalQueriesUnMatch: number;
+  
   isLoggedIn = false;
   showDeprecated: boolean;
   isAdmin = false;
@@ -217,6 +220,10 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       if(bulkSearchResults?.summary) {
         this._summary = bulkSearchResults.summary;
         this.totalQueries = this._summary.qTotal;
+        this.totalQueriesMatch = this._summary.qMatchTotal;
+        this.totalQueriesUnMatch = this._summary.qUnMatchTotal;
+
+
         this.summaryToRecordOverviews();
         if(this.displayCodeNameHeader=='') {
           this.displayedColumnNames['displayCode'] = 
