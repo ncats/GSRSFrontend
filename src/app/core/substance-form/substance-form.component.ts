@@ -617,7 +617,14 @@ getDrafts() {
   getSubstanceDetails(newType?: string): void {
     this.substanceService.getSubstanceDetails(this.id).pipe(take(1)).subscribe(response => {
       if (response._name){
-        this.titleService.setTitle('Edit - ' + response._name);
+        let name = response._name;
+        response.names.forEach(current => {
+          if (current.displayName && current.stdName) {
+            name = current.stdName;
+          }
+        });
+        name = name.replace(/<[^>]*>?/gm, '');
+        this.titleService.setTitle('Edit - ' + name);
       }
       if (response) {
         this.definitionType = response.definitionType;

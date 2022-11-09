@@ -72,23 +72,33 @@ export class SubstanceImageDirective implements AfterViewInit {
   private setImageSrc(): void {
     const useDataUrlConfig = this.configService.configData && this.configService.configData.useDataUrl || false;
     if (this.isAfterViewInit) {
-      if (this.privateVersion) {
-        const srcUrl = this.utilsService.getStructureImgUrl(
-          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
-        if (useDataUrlConfig === true) {
-          this.setImageSrcAsBlob(srcUrl);
+      if (this.privateEntityId) {
+        if (this.privateVersion) {
+          const srcUrl = this.utilsService.getStructureImgUrl(
+            this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
+          if (useDataUrlConfig === true) {
+            this.setImageSrcAsBlob(srcUrl);
+          } else {
+            this.imageElement.src = srcUrl;
+          }
         } else {
-          this.imageElement.src = srcUrl;
+          const srcUrl = this.utilsService.getStructureImgUrl(
+            this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
+          if (useDataUrlConfig === true) {
+            this.setImageSrcAsBlob(srcUrl);
+          } else {
+            this.imageElement.src = srcUrl;
+          }
         }
+    } else { 
+      const srcUrl =`${this.configService.configData.apiBaseUrl}assets/images/noimage.svg`;
+      if (useDataUrlConfig === true) {
+        this.setImageSrcAsBlob(srcUrl);
       } else {
-        const srcUrl = this.utilsService.getStructureImgUrl(
-          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
-        if (useDataUrlConfig === true) {
-          this.setImageSrcAsBlob(srcUrl);
-        } else {
-          this.imageElement.src = srcUrl;
-        }
+        this.imageElement.src = srcUrl;
       }
+
+    }
       this.imageElement.alt = 'structure image';
     }
   }

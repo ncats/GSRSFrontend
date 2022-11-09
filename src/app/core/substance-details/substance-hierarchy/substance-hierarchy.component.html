@@ -8,10 +8,10 @@
               <button mat-icon-button class = "tree-button" disabled [attr.aria-label]="node.text"></button>
               <div class = 'node-container nochild'>
                 <div class = 'title'>
-                  <a tabindex="0" role="link" class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
+                  <a class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
                      [routerLink]="['/substances', node.value.refuuid || '']" aria-label = "view substance" [innerHTML] = "node.value.refPname">
                   </a>
-                  <a tabindex="0" role="link" class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']"
+                  <a  class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']"
                      target = "_blank"  matTooltip = "edit substance in new tab" aria-label="edit substance in new tab"><span hidden>edit in new tab</span>
                     <mat-icon *ngIf ="isAdmin" svgIcon="edit"  color = "primary"></mat-icon>
                   </a>
@@ -38,10 +38,10 @@
                 </button>
                 <div class = 'node-container'>
                   <div class = 'title'>
-                    <a tabindex="0" role="link" class="hierarchy-link"  matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
+                    <a class="hierarchy-link"  matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
                        [routerLink]="['/substances', node.value.refuuid || '']" [innerHTML] = "node.value.refPname"></a>
          
-                    <a tabindex="0" role="link" class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']" aria-label="edit substance in new tab">
+                    <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']" aria-label="edit substance in new tab">
                       <mat-icon *ngIf ="isAdmin" matTooltip = "edit substance in new tab"  svgIcon="edit"  color = "primary"></mat-icon>
                     </a>
                   </div>
