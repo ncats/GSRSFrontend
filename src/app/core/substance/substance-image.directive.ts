@@ -2,6 +2,7 @@ import { Directive, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { UtilsService } from '../utils/utils.service';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '@gsrs-core/config/config.service';
+import { Environment } from '../../../environments';
 
 @Directive({
   selector: '[appSubstanceImage]'
@@ -19,7 +20,8 @@ export class SubstanceImageDirective implements AfterViewInit {
     private el: ElementRef,
     private utilsService: UtilsService,
     private configService: ConfigService,
-    private http: HttpClient
+    private http: HttpClient,
+    private environment: Environment
   ) {
     this.imageElement = this.el.nativeElement as HTMLImageElement;
   }
@@ -91,7 +93,7 @@ export class SubstanceImageDirective implements AfterViewInit {
           }
         }
     } else { 
-      const srcUrl =`${this.configService.configData.apiBaseUrl}assets/images/noimage.svg`;
+      const srcUrl =`${this.environment.baseHref || ''}assets/images/noimage.svg`;
       if (useDataUrlConfig === true) {
         this.setImageSrcAsBlob(srcUrl);
       } else {
