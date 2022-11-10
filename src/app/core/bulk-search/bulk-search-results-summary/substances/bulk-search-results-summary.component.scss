@@ -34,9 +34,7 @@
     height: 30px !important;
 }
 
-
 table th, table td  {
-    max-width: 400px;
     text-align: left;
     justify-content: flex-end; 
 }
@@ -48,7 +46,6 @@ table tr th:nth-child(2), table tr td:nth-child(2) {
     overflow-wrap: anywhere;
     min-width: 35%;
 }
-
 
 table tr td:nth-child(3) {
     text-align: center;
