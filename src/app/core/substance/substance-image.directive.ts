@@ -92,6 +92,13 @@ export class SubstanceImageDirective implements AfterViewInit {
         }
     } else { 
       const srcUrl =`${this.configService.environment.baseHref || ''}assets/images/noimage.svg`;
+      if(this.privateSize){
+        this.imageElement.height = this.privateSize;
+        this.imageElement.width = this.privateSize;
+        }else{
+              this.imageElement.height = 150;
+              this.imageElement.width = 150;
+        }
       if (useDataUrlConfig === true) {
         this.setImageSrcAsBlob(srcUrl);
       } else {
