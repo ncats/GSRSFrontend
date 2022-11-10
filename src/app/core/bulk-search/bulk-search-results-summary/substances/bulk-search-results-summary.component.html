@@ -2,6 +2,7 @@
 <div *ngIf="showTitle && showTitle===true">
   <h2 class="summary-title">Bulk Search Summary (Full Results)</h2>
 </div>
+<div class="statistics" *ngIf="totalQueries!==null && totalQueries>0">Queries: {{totalQueries}}&nbsp;&nbsp;&nbsp;&nbsp;Matched: {{totalQueriesMatch}}&nbsp;&nbsp;&nbsp;&nbsp;Unmatched: {{totalQueriesUnMatch}}</div>
 <div class="export">
   <div *ngIf="recordOverviews && recordOverviews.length>0 && isLoggedIn">
     <button matTooltip="Export Bulk Search Results" (click)="getBulkSearchStatusResultsSummaryForDownload()"
@@ -10,7 +11,6 @@
     </button>
   </div>
 </div>
-<div class="statistics" *ngIf="totalQueries!==null && totalQueries>0">Queries: {{totalQueries}}&nbsp;&nbsp;&nbsp;&nbsp;Matched: {{totalQueriesMatch}}&nbsp;&nbsp;&nbsp;&nbsp;Unmatched: {{totalQueriesUnMatch}}</div>
 <table mat-table [dataSource]="dataSource" class="">
   <ng-container matColumnDef="searchTerm">
     <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['searchTerm']}}</th>
@@ -43,12 +43,6 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
  
 </table>
-
-
-
-
-
-
 
 
 <mat-paginator #paginator [length]="totalQueries" [pageIndex]="qPageIndex" [pageSize]="qPageSize" [pageSizeOptions]="[5, 10, 50, 100]"

@@ -39,6 +39,15 @@ table th, table td  {
     text-align: left;
     justify-content: flex-end; 
 }
+table tr th:nth-child(1), table tr td:nth-child(1) {
+    overflow-wrap: anywhere;
+    width: 35% !important;
+}
+table tr th:nth-child(2), table tr td:nth-child(2) {
+    overflow-wrap: anywhere;
+    width: 35% !important;
+}
+
 table tr td:nth-child(3) {
     text-align: center;
     padding: 5px 5px 5px 5px ;
