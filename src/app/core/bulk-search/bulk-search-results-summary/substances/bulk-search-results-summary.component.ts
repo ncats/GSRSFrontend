@@ -54,8 +54,10 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   isPolling = true;
   
   private pollingInterval = 2500;
-  private displayCodeNameHeader: string;
-  private defaultDisplayCodeNameHeader = 'Code';
+  private displayCodeHeader: string;
+  private defaultDisplayCodeHeader = 'Code';
+  private defaultIdHeader = 'Id';
+  
 
   displayedColumns: string[] = [
     'searchTerm',
@@ -225,12 +227,12 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
 
 
         this.summaryToRecordOverviews();
-        if(this.displayCodeNameHeader=='') {
+        if(this.displayCodeHeader=='') {
           this.displayedColumnNames['displayCode'] = 
-            this.defaultDisplayCodeNameHeader;
+            this.defaultDisplayCodeHeader;
         } else { 
           this.displayedColumnNames['displayCode'] = 
-            this.displayCodeNameHeader;
+            this.displayCodeHeader;
         }
         if(this.table) {
           this.table.dataSource = this.recordOverviews;
@@ -247,7 +249,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   
 summaryToRecordOverviews() {
 
-  this.displayCodeNameHeader = '';
+  this.displayCodeHeader = '';
   this.recordOverviews = [];
   this._summary.queries.forEach( q => {
     const o: RecordOverview = {} as RecordOverview;
@@ -266,8 +268,8 @@ summaryToRecordOverviews() {
           o.displayCode = q.records[0].displayCode;
           o.displayCodeName = q.records[0].displayCodeName;
           // get this for summary table header 
-          if(this.displayCodeNameHeader==='') {
-            this.displayCodeNameHeader = q.records[0].displayCodeName;
+          if(this.displayCodeHeader==='') {
+            this.displayCodeHeader = q.records[0].displayCodeName;
           }
       } else
         if (q.records.length>1) {
@@ -283,42 +285,61 @@ summaryToRecordOverviews() {
 }
 
   makeTsvTextFromSummaryQueries(json: any): string {
-    const _fieldHeaders =
-    'searchTerm|displayName|id|idName|displayCode|displayCodeName';
-    const _fields =
-    'searchTerm|displayName|id|idName|displayCode|displayCodeName';
-    const fields = _fields.split('|');
-    const searchTermIndex = fields.indexOf('searchTerm');
-    const fieldHeaders = _fieldHeaders.split('|');
-    let tsvText = fieldHeaders.join('\t')+'\r\n';
+
+    // searchTerm|displayName|id|idName|displayCode|displayCodeName;
+
+    // replace header for id with the first idName found.
+    // replace header for displayCode with the first displayCodeName found.
+  
+    let _displayCodeHeader = '';
+    let _displayCodeHeaderFound = false;
+    let _idHeader = '';
+    let _idHeaderFound = false;
+
+    let tsvText = '';
 
     json.queries.forEach(q => {
       if (q.records.length === 0) {
-        const row = [];
-        fields.forEach( (f,i) => {
-          if (i===searchTermIndex) {
-           row.push(q[f]||'');
-          } else {
-           row.push('');
-          }
-        });
-        tsvText+=row.join('\t')+'\r\n';
+        tsvText +=
+           (q['searchTerm']||'')+'\t'
+           +''+'\t'
+           +''+'\t'
+           +''+"\n";
       } else {
         q.records.forEach( r => {
-          const row = [];
-          fields.forEach( (f,i) => {
-            if (i===searchTermIndex) {
-              row.push(q[f]||'');
-            } else {
-             row.push(r[f]||'');
-            }
-          });
-          tsvText+=row.join('\t')+'\r\n';
+          if(!_displayCodeHeaderFound && r['displayCodeName']) {
+            _displayCodeHeader = r['displayCodeName'];
+            _displayCodeHeaderFound = true;
+          }
+          if(!_idHeaderFound && r['idName']) {
+            _idHeader = r['idName'];
+            _idHeaderFound = true;
+          }
+          tsvText +=
+          (q['searchTerm']||'')+'\t'
+          +(r['displayName']||'')+'\t'
+          +(r['id']||'')+'\t'
+          +(r['displayCode']||'')+"\n";
         });
 
       }
     });
-    return tsvText;
+
+    if(!_displayCodeHeaderFound)  {
+      _displayCodeHeader = this.defaultDisplayCodeHeader;
+    }
+    if(!_idHeaderFound) {
+      _idHeader = this.defaultIdHeader;
+    }
+
+    const tsvHeaders =
+    'searchTerm'+'\t'
+    +'displayName'+'\t'
+    +_idHeader+'\t'
+    +_displayCodeHeader+"\n";
+
+
+    return tsvHeaders + tsvText;
   }
 
   getBulkSearchStatusResultsSummaryForDownload(): void {
