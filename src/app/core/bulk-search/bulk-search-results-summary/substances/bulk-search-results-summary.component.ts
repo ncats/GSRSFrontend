@@ -254,6 +254,7 @@ summaryToRecordOverviews() {
   this._summary.queries.forEach( q => {
     const o: RecordOverview = {} as RecordOverview;
     o.searchTerm = q.searchTerm;
+    o.modifiedSearchTerm = q.modifiedSearchTerm;
     if (q.records) {
       o.matches = q.records.length;
       if(q.records.length === 0) {

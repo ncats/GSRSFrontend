@@ -26,9 +26,8 @@
         <a target="_blank" [routerLink]="['/', context, element.id]">{{element.displayName}}</a>
       </span>
       <span *ngIf="element.matches>1">
-        <a target="_blank" [routerLink]="['/browse-substance']" [queryParams]="{search: element.searchTerm}">{{element.displayName}}</a>
+        <a target="_blank" [routerLink]="['/browse-substance']" [queryParams]="{search: element.modifiedSearchTerm}">{{element.displayName}}</a>
       </span>
-
     </td>
   </ng-container>
   <ng-container matColumnDef="matches">
