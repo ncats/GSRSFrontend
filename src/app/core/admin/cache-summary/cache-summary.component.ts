@@ -11,7 +11,7 @@ import * as moment from 'moment';
   styleUrls: ['./cache-summary.component.scss']
 })
 export class CacheSummaryComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['database', 'driver', 'product', 'latency', 'connected'];
+  displayedColumns: string[] = ['database', 'driver', 'product', 'latency', 'connected', 'max', 'active', 'usage'];
   health: HealthInfo;
   sub: Subscription;
   runtime = '';
@@ -22,6 +22,7 @@ export class CacheSummaryComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.adminService.getEnvironmentHealth().subscribe(response => {
           this.health = response;
+
           this.setStart();
       });
   }

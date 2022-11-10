@@ -25,6 +25,8 @@ export interface DatabaseInfo {
         driver: string;
         product: string;
         connected: boolean;
+        maxConnectionPool?: number;
+        activeConnection?: number;
         latency: number;
 }
 
