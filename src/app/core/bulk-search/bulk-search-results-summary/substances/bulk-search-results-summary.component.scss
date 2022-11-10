@@ -34,17 +34,18 @@
     height: 30px !important;
 }
 
+
 table th, table td  {
     text-align: left;
     justify-content: flex-end; 
 }
 table tr th:nth-child(1), table tr td:nth-child(1) {
     overflow-wrap: anywhere;
-    min-width: 35%;
+    width: 35% !important;
 }
 table tr th:nth-child(2), table tr td:nth-child(2) {
     overflow-wrap: anywhere;
-    min-width: 35%;
+    width: 35% !important;
 }
 
 table tr td:nth-child(3) {
