@@ -2,7 +2,9 @@
 <div *ngIf="showTitle && showTitle===true">
   <h2 class="summary-title">Bulk Search Summary (Full Results)</h2>
 </div>
-<div class="statistics" *ngIf="totalQueries!==null && totalQueries>0">Queries: {{totalQueries}}&nbsp;&nbsp;&nbsp;&nbsp;Matched: {{totalQueriesMatch}}&nbsp;&nbsp;&nbsp;&nbsp;Unmatched: {{totalQueriesUnMatch}}</div>
+<div class="statistics" *ngIf="totalQueries!==null && totalQueries>0">
+  Queries: {{totalQueries}}&nbsp;&nbsp;&nbsp;&nbsp;Matched: {{totalQueriesMatch}}&nbsp;&nbsp;&nbsp;&nbsp;Unmatched: {{totalQueriesUnMatch}}
+</div>
 <div class="export">
   <div *ngIf="recordOverviews && recordOverviews.length>0 && isLoggedIn">
     <button matTooltip="Export Bulk Search Results" (click)="getBulkSearchStatusResultsSummaryForDownload()"
@@ -23,12 +25,11 @@
         {{element.displayName}}
       </span>
       <span *ngIf="element.matches===1">
-        <a target="_blank" [routerLink]="['/', context, element.id]">{{element.displayName}}</a>
+        <a target="_blank" title="View substance in new tab."  [routerLink]="['/', context, element.id]">{{element.displayName}}</a>
       </span>
       <span *ngIf="element.matches>1">
-        <a target="_blank" [routerLink]="['/browse-substance']" [queryParams]="{search: element.searchTerm}">{{element.displayName}}</a>
+        <a target="_blank" title="Perform partial search in new tab."  [routerLink]="['/browse-substance']" [queryParams]="{search: element.modifiedSearchTerm}">{{element.displayName}}</a>
       </span>
-
     </td>
   </ng-container>
   <ng-container matColumnDef="matches">

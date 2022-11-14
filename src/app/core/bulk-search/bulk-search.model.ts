@@ -31,6 +31,7 @@ export interface Record {
 
 export interface RecordOverview {
     searchTerm?: string;
+    modifiedSearchTerm?: string;
     displayName?: string;
     id?: string;
     matches?: number;
