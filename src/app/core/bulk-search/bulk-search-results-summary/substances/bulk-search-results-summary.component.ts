@@ -13,7 +13,7 @@ import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 
 @Component({
-  selector: 'app-bulk-search-results-summary',
+  selector: 'app-bulk-search-results-summary[context][key]',
   templateUrl: './bulk-search-results-summary.component.html',
   styleUrls: ['./bulk-search-results-summary.component.scss']
 })
@@ -64,15 +64,13 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     'displayName',
     'matches',
     'displayCode'
-    // , 'displayCodeName'
   ];
 
   displayedColumnNames = {
     searchTerm: 'Search Term',
     displayName: 'Display Name',
     matches: 'Matches',
-    displayCode: 'Code',
-    // displayCodeName: 'Code Name' // replace first row that has data or "Code" 
+    displayCode: 'Code' // replace with the value in the first row of displayCodeName that has data or "Code"
   };
 
   dataSource = new MatTableDataSource(this.recordOverviews);
