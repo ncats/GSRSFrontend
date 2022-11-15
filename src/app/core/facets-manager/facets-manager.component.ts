@@ -238,14 +238,12 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           const newHash = this.utilsService.hashCode(paramsString,
             this.facetBuilder[category].isAllMatch.toString(),
             this.showDeprecated.toString());
-
           this.facetBuilder[category].currentStateHash = newHash;
         }
       }
       this.privateFacetParams = this.facetBuilder;
       this.previousFacets.push(JSON.parse(JSON.stringify(this.privateFacetParams)));
     }
-
   }
 
   toggleDeprecated(): void {
@@ -319,7 +317,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               }
             });
           } else if (this._facetDisplayType === 'facetView' && this._facetViewCategorySelected !== 'All') {
-
             if (this._configName && this._configName === 'substances') {
               this.facetsConfig['facetView'].forEach(categoryRow => {
                 const category = categoryRow['category'];
@@ -374,7 +371,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             }
           }
         }
-        
+
         // Set any facets being used to filter results to the top of the facet display
         Object.keys(this.privateFacetParams).forEach(key => {
           const position = newFacets.map(object => object.name).indexOf(key);
@@ -448,7 +445,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       }
     });
   }
-
 
   populateUrlQueryParameters(deprecated?: boolean): void {
     const navigationExtras: NavigationExtras = {
