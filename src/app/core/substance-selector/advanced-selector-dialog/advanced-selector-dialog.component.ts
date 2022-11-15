@@ -184,7 +184,7 @@ private privateSequenceSearchKey?: string;
       }
     
     setTimeout(() => {
-      // re-adjust z-index after editor messes it up
+      // re-adjust z-index after editor messes it up (to adjust relative index for periodic table, right click)
       this.overlayContainer.style.zIndex = '1003';
   
       this.overlayContainer.style.zIndex = '10003';
@@ -254,6 +254,11 @@ private privateSequenceSearchKey?: string;
     } else {
       navigationExtras.queryParams['search'] = this.searchValue;
       navString += '?search=' + navigationExtras.queryParams['search'];
+      if (this.order) {
+        navigationExtras.queryParams['order'] = this.order;
+
+        navString += '&order=' + this.order;
+      }
     }
 
     let url = '';
@@ -273,7 +278,7 @@ private privateSequenceSearchKey?: string;
 
   searchSubstances(structureSearchTerm?: string, smiles?: string, type?: string) {
     let size = this.pageSize;
-    let index = this.pageIndex;
+    let index = this.pageIndex * this.pageSize;
     if (structureSearchTerm){
       this.privateStructureSearchTerm = structureSearchTerm || null;
       this.privateSearchType = this.searchType || 'substructure';
@@ -286,7 +291,7 @@ private privateSequenceSearchKey?: string;
     } else {
       this.privateStructureSearchTerm = null;
       size = this.namePageSize;
-      index = this.namePageIndex;
+      index = this.namePageIndex * this.namePageSize;
     }
     let sort = null;
     if(type && type === 'name') {
@@ -310,11 +315,7 @@ private privateSequenceSearchKey?: string;
         deprecated: false
       })
         .subscribe(pagingResponse => {
-
-         // this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
-
-         // this.totalSubstances = pagingResponse.total;
-          
+ 
           if(type && type === 'name') {
             this.nameSubstances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
             this.nameTotalSubstances = pagingResponse.total;
