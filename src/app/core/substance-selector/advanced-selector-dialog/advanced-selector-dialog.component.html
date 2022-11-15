@@ -175,7 +175,10 @@
       [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event, 'name')" [showFirstLastButtons]="true">
     </mat-paginator>
   </div>
-
+  <div  *ngIf = "nameTotalSubstances == 0 && nameSearched && !loading">
+     <i> No results found for '{{searchValue}}' </i>
+    </div>
+    
   <div class = "form-row2">
       <mat-card *ngFor="let substance of nameSubstances" class="tile">
               <mat-card-title>
@@ -187,6 +190,7 @@
               </mat-card-title>
   
               <mat-card-content>
+                
   <div class="substance-content">
       <div class="structure-container">
           <div *ngIf="substance.structure">

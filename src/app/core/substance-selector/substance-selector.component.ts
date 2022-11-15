@@ -8,6 +8,7 @@ import { AdvancedSelectorDialogComponent } from '@gsrs-core/substance-selector/a
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { Router } from '@angular/router';
+import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 
 @Component({
   selector: 'app-substance-selector',
@@ -46,6 +47,7 @@ export class SubstanceSelectorComponent implements OnInit {
     private substanceFormService: SubstanceFormService,
     public configService: ConfigService,
     private overlayContainerService: OverlayContainer,
+    public scrollToService: ScrollToService,
     private dialog: MatDialog,
     private router: Router
   ) { }
@@ -112,12 +114,18 @@ export class SubstanceSelectorComponent implements OnInit {
 
   advanced(type: string): void {
 
+    let thisy = window.pageYOffset;
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'auto' });
+
     let active = 0;
     if (type === 'name') {
       active = 1;
     } 
     const dialogRef = this.dialog.open(AdvancedSelectorDialogComponent, {
-      minWidth: '75%',
+      minWidth: '80%',
       maxWidth: '90%',
       height: '92%',
       data: {uuid: this.selectedSubstance ? this.selectedSubstance.uuid : null,
@@ -127,6 +135,10 @@ export class SubstanceSelectorComponent implements OnInit {
     this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(result => {
+      window.scroll({ 
+        top: thisy, 
+        left: 0, 
+        behavior: 'auto' });
       if (result) {
         this.selectedSubstance = result;
         this.selectionUpdated.emit(result);
