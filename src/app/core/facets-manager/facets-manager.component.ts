@@ -238,12 +238,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           const newHash = this.utilsService.hashCode(paramsString,
             this.facetBuilder[category].isAllMatch.toString(),
             this.showDeprecated.toString());
+
           this.facetBuilder[category].currentStateHash = newHash;
         }
       }
       this.privateFacetParams = this.facetBuilder;
       this.previousFacets.push(JSON.parse(JSON.stringify(this.privateFacetParams)));
     }
+
   }
 
   toggleDeprecated(): void {
@@ -317,6 +319,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               }
             });
           } else if (this._facetDisplayType === 'facetView' && this._facetViewCategorySelected !== 'All') {
+
             if (this._configName && this._configName === 'substances') {
               this.facetsConfig['facetView'].forEach(categoryRow => {
                 const category = categoryRow['category'];
@@ -371,7 +374,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             }
           }
         }
-
+        
         // Set any facets being used to filter results to the top of the facet display
         Object.keys(this.privateFacetParams).forEach(key => {
           const position = newFacets.map(object => object.name).indexOf(key);
@@ -380,6 +383,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           }
         });
         this.facets = newFacets;
+        this.setShowAdvancedFacetStates();
         this.facetsLoaded.emit(this.facets.length);
         this.cleanFacets();
         this.setDisplayFacets();
@@ -424,6 +428,27 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       });
     }
   }
+
+  setShowAdvancedFacetStates() {
+    // When there is at least one facet param value that is false (aka red/negative)
+    // set the advancedState to true. This is run so the user doesn't get confused 
+    // by negative selections not showing on page reload. 
+
+    this.facets.forEach( f => {
+      if (this.privateFacetParams[f.name] && this.privateFacetParams[f.name].params) {
+        Object.keys(this.privateFacetParams[f.name].params).every(sub => {
+          if (this.privateFacetParams[f.name].params[sub] !== undefined 
+            && this.privateFacetParams[f.name].params[sub] === false  
+            ) {
+              f.$showAdvanced = true;
+              return false;
+            }
+            return true;
+        });
+      }
+    });
+  }
+
 
   populateUrlQueryParameters(deprecated?: boolean): void {
     const navigationExtras: NavigationExtras = {
