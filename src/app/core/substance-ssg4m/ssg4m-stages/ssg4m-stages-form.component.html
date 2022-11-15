@@ -13,18 +13,59 @@
     </div>
 
     <div class="divflexright">
-      <button mat-stroked-button color="primary" class="button-insert-before" matTooltip="Insert {{configTitleStage}} Before"
+      <!--
+      <button mat-stroked-button color="primary" class="button-insert-before"
+        matTooltip="Insert {{configTitleStage}} Before"
         (click)="insertStage(processIndex, siteIndex, stageIndex, 'before')">
         <mat-icon>arrow_upward</mat-icon>Insert {{configTitleStage}} Before
       </button>
 
-      <button mat-stroked-button color="primary" class="button-insert-after" matTooltip="Insert {{configTitleStage}} After"
+      <button mat-stroked-button color="primary" class="button-insert-after"
+        matTooltip="Insert {{configTitleStage}} After"
         (click)="insertStage(processIndex, siteIndex, stageIndex, 'after')">
         <mat-icon>arrow_downward</mat-icon>Insert {{configTitleStage}} After
       </button>
+      -->
+
+      <!-- Drop down menu with sub menu -->
+      <button mat-stroked-button color="primary" class="borderblue button-insert-before"
+        [matMenuTriggerFor]="menu"><span class="colorbluefda">Insert Step </span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" x-position="before" class="custom-menu">
+        <!--
+        <a mat-menu-item [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+          <span>Save Local Copy</span>
+        </a>
+        <button mat-menu-item (click)="importDialog()">Import Local Copy</button>
+        <button mat-menu-item (click)="showJSON()">Show Data Structure</button>
+        -->
+        <button mat-menu-item color="primary" class="" matTooltip="Insert {{configTitleStage}} Before"
+          (click)="insertStage(processIndex, siteIndex, stageIndex, 'before')">
+          <mat-icon>arrow_upward</mat-icon>Insert {{configTitleStage}} Before
+        </button>
+
+        <button mat-menu-item color="primary" class="" matTooltip="Insert {{configTitleStage}} After"
+          (click)="insertStage(processIndex, siteIndex, stageIndex, 'after')">
+          <mat-icon>arrow_downward</mat-icon>Insert {{configTitleStage}} After
+        </button>
+
+        <!--
+        <button mat-menu-item color="primary" class="" matTooltip="Duplicate {{configTitleStage}} Before"
+          (click)="copyStage(processIndex, siteIndex, stageIndex, 'before')">
+          <mat-icon>arrow_upward</mat-icon>Duplicate {{configTitleStage}} Before
+        </button>
+
+        <button mat-menu-item color="primary" class="" matTooltip="Duplicate {{configTitleStage}} After"
+          (click)="copyStage(processIndex, siteIndex, stageIndex, 'after')">
+          <mat-icon>arrow_downward</mat-icon>Duplicate {{configTitleStage}} After
+        </button>
+        -->
+      </mat-menu>
+      <!-- Drop down menu end -->
 
       <button mat-stroked-button color="primary" class="button-delete-stage"
-        matTooltip="Delete Stage {{(privateStageIndex+1)}}" (click)="confirmDeleteStage()">
+        matTooltip="Delete Stage  {{(privateStageIndex+1)}}" (click)="confirmDeleteStage()">
         <mat-icon svgIcon="delete_forever"></mat-icon>Delete Step {{(privateStageIndex+1)}}
       </button>
     </div>

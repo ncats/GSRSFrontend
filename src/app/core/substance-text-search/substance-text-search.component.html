@@ -13,7 +13,7 @@
         (closed)="autoCompleteClosed()">
         <div *ngFor="let field of suggestionsFields">
           <div class="substance-suggestion-field"><span class='field-styling'><b>{{field['display']}}</b></span></div>
-          <mat-option *ngFor="let suggestion of substanceSuggestionsGroup[field['value']]" [value]="suggestion.key">
+          <mat-option *ngFor="let suggestion of substanceSuggestionsGroup[field['value']]" [value]="suggestion.key" title="{{suggestion.key}}">
             <div [innerHTML]="highlight(suggestion.key)" class="suggestion-styling">{{suggestion.key}}</div>
           </mat-option>
         </div>

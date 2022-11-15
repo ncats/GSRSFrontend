@@ -99,6 +99,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   downloadJsonHref: any;
   jsonFileName: string;
   showHeaderBar = 'true';
+  showFormReadOnly = 'false';
   showRegisterEditTitle = 'true';
   ssg4mSyntheticPathway: Ssg4mSyntheticPathway;
 
@@ -129,6 +130,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
   ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
+    this.showFormReadOnly = this.activatedRoute.snapshot.queryParams['readonly'] || 'false';
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
