@@ -115,10 +115,11 @@ export class ExportDialogComponent implements OnInit {
     };
   
     if (this.unsavedChanges()) {
+              // if options are hidden and there are changes, they should have already seen the confirm
       if(this.showOptions) {
         if (confirm('Warning: Unsaved changes to the configuration will not be applied. Continue?')) {
           this.dialogRef.close(response);
-        }
+        } 
       } else {
         this.dialogRef.close(response);
       }
@@ -126,7 +127,7 @@ export class ExportDialogComponent implements OnInit {
     } else {
       this.dialogRef.close(response);
     }
-    this.dialogRef.close(response);
+    
   }
 
   cancel(): void {
@@ -248,15 +249,17 @@ export class ExportDialogComponent implements OnInit {
   }
   }
 
-  unsavedChanges(): boolean {
+  unsavedChangeCheck(config: any, model: any): boolean {
+    // check a given saved config to the current model used by a form, return true if unsaved changes detected
     // we need to treat properties that are undefined, null, false, or empty arrays as the same value for the sake of detecting differences
+
     let result = false;
-    if (!_.isEqual(this.loadedConfig.scrubberSettings, this.privateScrubberModel)) {
-      if ((!this.loadedConfig.scrubberSettings || Object.keys(this.loadedConfig.scrubberSettings).length === 0) && 
-      (!this.privateScrubberModel || Object.keys(this.privateScrubberModel).length === 0)) {
+    if (!_.isEqual(config, model)) {
+      if ((!config || Object.keys(config).length === 0) && 
+      (!model || Object.keys(model).length === 0)) {
       } else {
-        let check1 = (this.loadedConfig.scrubberSettings)?JSON.parse(JSON.stringify(this.loadedConfig.scrubberSettings)):{};
-        let check2 = (this.privateScrubberModel)?JSON.parse(JSON.stringify(this.privateScrubberModel)):{};
+        let check1 = (config)?JSON.parse(JSON.stringify(config)):{};
+        let check2 = (model)?JSON.parse(JSON.stringify(model)):{};
 
         Object.keys(check1).forEach(key => {
           if (!check1[key] || check1[key].length === 0) {
@@ -273,58 +276,20 @@ export class ExportDialogComponent implements OnInit {
         }
       }
     }
-
-    if (!_.isEqual(this.loadedConfig.exporterSettings, this.privateExporterModel)) {
-      if ((!this.loadedConfig.exporterSettings || Object.keys(this.loadedConfig.exporterSettings).length === 0) && 
-      (!this.privateExporterModel || Object.keys(this.privateExporterModel).length === 0)) {
-      } else {
-        let check1 = (this.loadedConfig.exporterSettings)?JSON.parse(JSON.stringify(this.loadedConfig.exporterSettings)):{};
-        let check2 = (this.privateExporterModel)?JSON.parse(JSON.stringify(this.privateExporterModel)):{};
-
-        Object.keys(check1).forEach(key => {
-          if (!check1[key] || check1[key].length === 0) {
-            delete check1[key];
-          }
-        });
-        Object.keys(check2).forEach(key => {
-          if (!check2[key] || check2[key].length === 0) {
-            delete check2[key];
-          }
-        });
-        if (!_.isEqual(check1, check2)) {
-          result = true;
-        }
-      }
-    }
-
-    if (!_.isEqual(this.loadedConfig.expanderSettings, this.privateExpanderModel)) {
-      if ((!this.loadedConfig.expanderSettings || Object.keys(this.loadedConfig.expanderSettings).length === 0) && 
-      (!this.privateExpanderModel || Object.keys(this.privateExpanderModel).length === 0)) {
-      } else {
-        let check1 = (this.loadedConfig.expanderSettings)?JSON.parse(JSON.stringify(this.loadedConfig.expanderSettings)):{};
-        let check2 = (this.privateExpanderModel)?JSON.parse(JSON.stringify(this.privateExpanderModel)):{};
-
-        Object.keys(check1).forEach(key => {
-          if (!check1[key] || check1[key].length === 0) {
-            delete check1[key];
-          }
-        });
-        Object.keys(check2).forEach(key => {
-          if (!check2[key] || check2[key].length === 0) {
-            delete check2[key];
-          }
-        });
-        if (!_.isEqual(check1, check2)) {
-          result = true;
-        }
-      }
-    }
-
     return result;
+  }
 
-
-    
-
+  unsavedChanges(): boolean {
+    if (
+      this.unsavedChangeCheck(this.loadedConfig.scrubberSettings, this.privateScrubberModel) ||
+      this.unsavedChangeCheck(this.loadedConfig.exporterSettings, this.privateExporterModel) || 
+      this.unsavedChangeCheck(this.loadedConfig.expanderSettings, this.privateExpanderModel)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+ 
   }
 
   switchConfig(event: any) {
