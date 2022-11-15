@@ -131,7 +131,7 @@
   z-index: 1;
   position: absolute;
   top: -60px;
-  margin-right: 360px;
+  margin-right: 180px;
   color: #007CBA;
   background-color: #FFFFFF;
   border: 1px solid #007CBA;
@@ -170,4 +170,8 @@ legend.border {
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+.mat-menu-item {
+  color: #007CBA !important;
 }

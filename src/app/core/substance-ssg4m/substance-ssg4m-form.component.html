@@ -39,8 +39,8 @@
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
 
-    <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Save</button>
-
+    <button mat-flat-button color="primary" class="validate-button" (click)="validate()"
+      [disabled]="showFormReadOnly === 'true'">Save</button>
     <!--
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
       *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
@@ -84,22 +84,23 @@
   </div>
 </div>
 
-<div class="form-content-container" [ngClass]="{'padtop90px': showHeaderBar === 'false'}">
+<div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}">
   <!--
   <div class="form-header"
     [ngClass]="{'form-header-no-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'false'), 'form-header-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'true')}">
     <div *ngIf="showRegisterEditTitle === 'true'">
     -->
   <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
-
-    <div>
+    <!-- Only show the title when passed parameter header=true in the Url -->
+    <div *ngIf="showHeaderBar === 'true'">
       <span class="colorbluefda fontbold padleft25px">{{(id && !imported) ? 'Editing ' : 'Registering New '}} -
         Specified Substance Group 4 Manufacturing
       </span>
     </div>
 
     <!-- If Error Message exists, display here -->
-    <div *ngIf="errorMessage"  class="bordergray colorred margintop10px padleft25px fontsize16px padall25px bkcoloryellow">
+    <div *ngIf="errorMessage"
+      class="bordergray colorred margintop10px padleft25px fontsize16px padall25px bkcoloryellow">
       <div [innerHTML]="errorMessage"></div>
     </div>
 
