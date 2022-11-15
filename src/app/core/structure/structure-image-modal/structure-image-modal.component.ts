@@ -94,7 +94,7 @@ export class StructureImageModalComponent implements OnInit {
 
   gotoDetails(): void {
     let url = '';
-    this.dialogRef.close();
+   // this.dialogRef.close();
     if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
       url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid;
       
@@ -108,7 +108,7 @@ export class StructureImageModalComponent implements OnInit {
 
   gotoEdit(): void {
     let url = '';
-    this.dialogRef.close();
+   // this.dialogRef.close();
     if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
       url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + this.uuid + '/edit';
       

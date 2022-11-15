@@ -380,6 +380,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           }
         });
         this.facets = newFacets;
+        this.setShowAdvancedFacetStates();
         this.facetsLoaded.emit(this.facets.length);
         this.cleanFacets();
         this.setDisplayFacets();
@@ -423,6 +424,26 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         }
       });
     }
+  }
+
+  setShowAdvancedFacetStates() {
+    // When there is at least one facet param value that is false (aka red/negative)
+    // set the advancedState to true. This is run so the user doesn't get confused 
+    // by negative selections not showing on page reload. 
+
+    this.facets.forEach( f => {
+      if (this.privateFacetParams[f.name] && this.privateFacetParams[f.name].params) {
+        Object.keys(this.privateFacetParams[f.name].params).every(sub => {
+          if (this.privateFacetParams[f.name].params[sub] !== undefined 
+            && this.privateFacetParams[f.name].params[sub] === false  
+            ) {
+              f.$showAdvanced = true;
+              return false;
+            }
+            return true;
+        });
+      }
+    });
   }
 
   populateUrlQueryParameters(deprecated?: boolean): void {

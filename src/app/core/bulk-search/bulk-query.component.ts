@@ -91,11 +91,13 @@ export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.showSpinner = false;  // Stop progress spinner
     this.loadingService.setLoading(false);
-    const bsConfig = this.configService.configData.bulkSearch;
-    this.searchEntities = bsConfig.entities;
+    const bsConfig = this.configService.configData?.bulkSearch;
+    this.searchEntities = bsConfig?.entities;
+
     if (!this.searchEntities) {
-      this.searchEntities = {name: 'substances', title: 'Substances'};
+      this.searchEntities = [{name: 'substances', title: 'Substances'}];
     }
+
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;

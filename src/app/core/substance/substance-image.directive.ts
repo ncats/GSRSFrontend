@@ -72,23 +72,40 @@ export class SubstanceImageDirective implements AfterViewInit {
   private setImageSrc(): void {
     const useDataUrlConfig = this.configService.configData && this.configService.configData.useDataUrl || false;
     if (this.isAfterViewInit) {
-      if (this.privateVersion) {
-        const srcUrl = this.utilsService.getStructureImgUrl(
-          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
-        if (useDataUrlConfig === true) {
-          this.setImageSrcAsBlob(srcUrl);
+      if (this.privateEntityId) {
+        if (this.privateVersion) {
+          const srcUrl = this.utilsService.getStructureImgUrl(
+            this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
+          if (useDataUrlConfig === true) {
+            this.setImageSrcAsBlob(srcUrl);
+          } else {
+            this.imageElement.src = srcUrl;
+          }
         } else {
-          this.imageElement.src = srcUrl;
+          const srcUrl = this.utilsService.getStructureImgUrl(
+            this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
+          if (useDataUrlConfig === true) {
+            this.setImageSrcAsBlob(srcUrl);
+          } else {
+            this.imageElement.src = srcUrl;
+          }
         }
+    } else { 
+      const srcUrl =`${this.configService.environment.baseHref || ''}assets/images/noimage.svg`;
+      if(this.privateSize){
+        this.imageElement.height = this.privateSize;
+        this.imageElement.width = this.privateSize;
+        }else{
+              this.imageElement.height = 150;
+              this.imageElement.width = 150;
+        }
+      if (useDataUrlConfig === true) {
+        this.setImageSrcAsBlob(srcUrl);
       } else {
-        const srcUrl = this.utilsService.getStructureImgUrl(
-          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
-        if (useDataUrlConfig === true) {
-          this.setImageSrcAsBlob(srcUrl);
-        } else {
-          this.imageElement.src = srcUrl;
-        }
+        this.imageElement.src = srcUrl;
       }
+
+    }
       this.imageElement.alt = 'structure image';
     }
   }

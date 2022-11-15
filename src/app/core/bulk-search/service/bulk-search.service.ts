@@ -34,7 +34,7 @@ export class BulkSearchService extends BaseHttpService {
     // NOTE PUTs are resulting in errors during search turning off for now.
     // All new queries are getting a new bulkQID   
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/@bulkQuery';
-    const params = {};
+    let params = {};
     // if (id !== null && id !== undefined) { params['id'] = id };
     const options = {
       // eslint-disable-next-line object-shorthand
