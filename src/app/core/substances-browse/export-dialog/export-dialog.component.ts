@@ -39,7 +39,7 @@ export class ExportDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.testing();
+    this.sortConfigs();
     this.scrubberModel = { };
         this.expanderModel = {};
     this.substanceService.getSchema('scrubber').subscribe(response => {
@@ -114,8 +114,7 @@ export class ExportDialogComponent implements OnInit {
       'id': this.loadedConfig? this.loadedConfig.configurationId : null
     };
   
-
-    if (!this.unsavedChanges) {
+    if (this.unsavedChanges()) {
       if(this.showOptions) {
         if (confirm('Warning: Unsaved changes to the configuration will not be applied. Continue?')) {
           this.dialogRef.close(response);
@@ -127,7 +126,7 @@ export class ExportDialogComponent implements OnInit {
     } else {
       this.dialogRef.close(response);
     }
-   // this.dialogRef.close(response);
+    this.dialogRef.close(response);
   }
 
   cancel(): void {
@@ -135,7 +134,7 @@ export class ExportDialogComponent implements OnInit {
   }
 
   toggleShowOptions(): void {
-    if (this.showOptions && !this.unsavedChanges()) {
+    if (this.showOptions && this.unsavedChanges()) {
       
       if (confirm('Warning: Unsaved changes to the configuration will not be applied. Continue?')) {
         this.showOptions = !this.showOptions;
@@ -146,15 +145,9 @@ export class ExportDialogComponent implements OnInit {
     
   }
 
-  test2(): void {
-    let response = {
-      'name': this.name,
-    };
-   // this.dialogRef.close(response);
-  }
 
 
-  testing() {
+  sortConfigs() {
     this.substanceService.getConfigs().subscribe(response => {
       this.options = response;
       this.privateOptions = response.sort((a, b) => {
@@ -257,7 +250,7 @@ export class ExportDialogComponent implements OnInit {
 
   unsavedChanges(): boolean {
     // we need to treat properties that are undefined, null, false, or empty arrays as the same value for the sake of detecting differences
-    let result = true;
+    let result = false;
     if (!_.isEqual(this.loadedConfig.scrubberSettings, this.privateScrubberModel)) {
       if ((!this.loadedConfig.scrubberSettings || Object.keys(this.loadedConfig.scrubberSettings).length === 0) && 
       (!this.privateScrubberModel || Object.keys(this.privateScrubberModel).length === 0)) {
@@ -276,7 +269,7 @@ export class ExportDialogComponent implements OnInit {
           }
         });
         if (!_.isEqual(check1, check2)) {
-          result = false;
+          result = true;
         }
       }
     }
@@ -299,7 +292,7 @@ export class ExportDialogComponent implements OnInit {
           }
         });
         if (!_.isEqual(check1, check2)) {
-          result = false;
+          result = true;
         }
       }
     }
@@ -322,7 +315,7 @@ export class ExportDialogComponent implements OnInit {
           }
         });
         if (!_.isEqual(check1, check2)) {
-          result = false;
+          result = true;
         }
       }
     }
