@@ -37,8 +37,8 @@ schemeUtil.svgResolver=function(c, cb){
 		});
 	}else{
 		var imgtag= c.getAttribute("imgTag");
-		if(imgtag && schemeUtil.icons[imgTag]){
-			cb(schemeUtil.icons[imgTag]);
+		if(imgtag && schemeUtil.icons[imgtag]){
+			cb(schemeUtil.icons[imgtag]);
 		}
 	}
 };
