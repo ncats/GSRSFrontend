@@ -3,7 +3,7 @@
       <div class = "form-row">
 
      
-         <mat-form-field style = "width: 250px" class="testing">
+         <mat-form-field class="preset">
                 <mat-label>Use Export Preset Options: </mat-label> 
             <mat-select  name = "fileType" [(ngModel)]="loadedConfig" name="term" (ngModelChange)="switchConfig($event)" >
                   <mat-option *ngFor = "let option of options" [value]="option" > {{option.exporterKey ? option.exporterKey : 'no name'}}

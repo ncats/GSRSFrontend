@@ -173,7 +173,7 @@ export class ExportDialogComponent implements OnInit {
       this.privateOptions.forEach(conf => {
         if (conf.exporterKey === 'PUBLIC_DATA_ONLY') {
           found = true;
-          this.switchConfig(conf);
+          this.switchConfig(conf, true);
           this.loadedConfig = conf;
         }
       });
@@ -181,7 +181,7 @@ export class ExportDialogComponent implements OnInit {
         this.privateOptions.forEach(conf => {
           if (conf.exporterKey === 'ALL_DATA') {
             found = true;
-            this.switchConfig(conf);
+            this.switchConfig(conf, true);
             this.loadedConfig = conf;
           }
         })
@@ -301,7 +301,8 @@ export class ExportDialogComponent implements OnInit {
     this.switchConfig(this.loadedConfig);
     this.message = "Reloaded saved settings for configuration '" +this.loadedConfig.exporterKey + "'";
   }
-  switchConfig(event: any) {
+
+  switchConfig(event: any, preload?: boolean) {
     this.message = "";
     let testing = {};
     this.unsaved = false;
@@ -328,7 +329,9 @@ export class ExportDialogComponent implements OnInit {
     setTimeout(()=> {
       this.scrubberModel = testing;
     }, 100);
-    this.message = "Export Configuration Switched";
+    if (!preload) {
+      this.message = "Export Configuration " + this.configName + " Loaded";
+    }
   }
 }
 
