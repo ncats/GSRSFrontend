@@ -25,6 +25,7 @@ export class ExportDialogComponent implements OnInit {
   privateExpanderModel: any;
   privateScrubberModel: any;
   privateExporterModel: any;
+  unsaved = false;
 
   private privateOptions: any;
   temp: any;
@@ -101,10 +102,13 @@ export class ExportDialogComponent implements OnInit {
   setValue(event: any, model?: string ): void {
     if (model && model === 'expander') {
       this.privateExpanderModel = event;
+      this.unsaved = this.unsavedChangeCheck(this.loadedConfig.expanderSettings, this.privateExpanderModel)
     } else if( model === 'scrubber') {
       this.privateScrubberModel = event;
+      this.unsaved = this.unsavedChangeCheck(this.loadedConfig.scrubberSettings, this.privateScrubberModel);
     } else {
       this.privateExporterModel = event;
+      this.unsaved = this.unsavedChangeCheck(this.loadedConfig.exporterSettings, this.privateExporterModel);
     }
   }
 
@@ -292,9 +296,15 @@ export class ExportDialogComponent implements OnInit {
  
   }
 
+  undo(): void {
+    this.message = null;
+    this.switchConfig(this.loadedConfig);
+    this.message = "Reloaded saved settings for configuration '" +this.loadedConfig.exporterKey + "'";
+  }
   switchConfig(event: any) {
- 
+    this.message = "";
     let testing = {};
+    this.unsaved = false;
     this.privateOptions.forEach(opt =>{
       if (opt.configurationId === event.configurationId) {
 
@@ -318,6 +328,7 @@ export class ExportDialogComponent implements OnInit {
     setTimeout(()=> {
       this.scrubberModel = testing;
     }, 100);
+    this.message = "Export Configuration Switched";
   }
 }
 

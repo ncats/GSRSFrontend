@@ -1,6 +1,6 @@
 
   <div mat-dialog-header class = "top-label">
-      <div style = "width:100%;display:flex;flex-direction:row;">
+      <div class = "form-row">
 
      
          <mat-form-field style = "width: 250px" class="testing">
@@ -12,9 +12,10 @@
             </mat-form-field>
     
        
-           <div style = "margin-top: 10px;margin-left: 50px;">
+           <div class = "top-button-container">
                <button *ngIf = "!data.hideOptionButtons" mat-flat-button color="primary" (click) = "toggleShowOptions()">{{ showOptions? 'Hide Preset Options' :'Edit Preset Options'}}</button>
-              &nbsp; <button style = "margin-left:5px" mat-flat-button color="warn" *ngIf = "!data.hideOptionButtons && loadedConfig && loadedConfig.exporterKey !== 'ALL_DATA' && loadedConfig.exporterKey !== 'PUBLIC_DATA_ONLY' " (click) = "deleteConfig()"><mat-icon svgIcon="delete_forever"></mat-icon> Remove Preset</button>
+               <button *ngIf = "unsaved" mat-flat-button color="primary" class = "top-button"  (click) = "undo()">Discard Unsaved Changes</button>
+              &nbsp; <button class = "top-button" mat-flat-button color="warn" *ngIf = "!data.hideOptionButtons && loadedConfig && loadedConfig.exporterKey !== 'ALL_DATA' && loadedConfig.exporterKey !== 'PUBLIC_DATA_ONLY' " (click) = "deleteConfig()"><mat-icon svgIcon="delete_forever"></mat-icon> Remove Preset</button>
 
         </div> 
         </div>
@@ -25,7 +26,7 @@
        
        
         <mat-tab  label= "Expander" >
-                <sf-form [schema]="expanderSchema"  [model]="expanderModel" (onChange)="setValue($event.value, 'expander')" style = "margin-top:15px;"></sf-form>
+                <sf-form [schema]="expanderSchema"  [model]="expanderModel" (onChange)="setValue($event.value, 'expander')" class = "top-margin"></sf-form>
 
 
         </mat-tab> 
@@ -34,7 +35,7 @@
          
     <br/>
     
-    <sf-form [schema]="scrubberSchema"  [model]="scrubberModel" (onChange)="setValue($event.value, 'scrubber')" style = "margin-top:15px;"></sf-form>
+    <sf-form [schema]="scrubberSchema"  [model]="scrubberModel" (onChange)="setValue($event.value, 'scrubber')" class = "top-margin"></sf-form>
     
     
     <!--   <h2 matDialogTitle>Enter a Filename</h2>
@@ -53,11 +54,11 @@
 
     </mat-tab>
     <mat-tab  label= "Exporter Settings">
-        <sf-form [schema]="exporterSchema"  [model]="exporterModel" (onChange)="setValue($event.value, 'exporter')" style = "margin-top:15px;"></sf-form>
+        <sf-form [schema]="exporterSchema"  [model]="exporterModel" (onChange)="setValue($event.value, 'exporter')" class = "top-margin"></sf-form>
     </mat-tab> 
     </mat-tab-group>
-    <div style = "width:100%;display:flex;flex-direction:row;margin-top:15px">
-            <div class = "padding" style = "margin-right: 10px;">
+    <div class = "form-row top-margin" >
+            <div class = "padding right-margin">
                 Please enter a file name:
             </div>
             <div class = "dialog-row">
@@ -71,15 +72,17 @@
             </div>
 </mat-dialog-content>
     <mat-dialog-actions align="end">
-            <div style = "width:100%;display:flex;flex-direction:row">
-                <div *ngIf = "message" style = "font-weight: 500;margin:10px">{{message}}</div>
+            <div class = "message-container">
+                <div *ngIf = "message" class = "message">{{message}}</div>
             </div>
             <button mat-flat-button color="primary"(click) = "cancel()">Cancel</button>
             <span class="middle-fill"></span>
-            <mat-form-field  *ngIf = "showOptions"  style = "margin-right:10px"><input style = "margin-right:10px" matInput placeholder="Config Name" [(ngModel)]="configName" name="Config Name" /></mat-form-field>
+            <mat-form-field  *ngIf = "showOptions"  class = "right-margin"><input class = "right-margin" matInput placeholder="Config Name" [(ngModel)]="configName" name="Config Name" /></mat-form-field>
 
-            <button *ngIf = "showOptions" mat-flat-button color="primary" (click) = "saveConfig()" style = "margin-right:15px;" [disabled] = "!showOptions">Save New Config</button>
-            <button  *ngIf = "showOptions" mat-flat-button color="primary" (click) = "updateConfig()" [disabled] = "!loadedConfig || loadedConfig.exporterKey === 'PUBLIC_DATA_ONLY' || loadedConfig.exporterKey === 'ALL_DATA'" style = "margin-right:15px;">Save Changes</button>
+            <button *ngIf = "showOptions" mat-flat-button color="primary" (click) = "saveConfig()" class = "right-margin" [disabled] = "!showOptions">Save New Config</button>
+            <button  *ngIf = "showOptions" mat-flat-button color="primary" (click) = "updateConfig()" class = "right-margin"
+                 [disabled] = "!loadedConfig || loadedConfig.exporterKey === 'PUBLIC_DATA_ONLY' || loadedConfig.exporterKey === 'ALL_DATA'" >Save Changes
+            </button>
 
-            <button mat-flat-button color="primary" (click) = "save()" >Export{{loadedConfig? '' : ' (no config)'}}</button>
+            <button mat-flat-button color="primary" [disabled] = "unsaved" (click) = "save()" >Export{{loadedConfig? '' : ' (no config)'}}</button>
         </mat-dialog-actions>
