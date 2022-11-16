@@ -361,7 +361,7 @@ summaryToRecordOverviews() {
         s2 = this.bulkSearchService.getBulkSearchStatusResults(this.key, 0, 0, qTop, qSkip)
         .subscribe(response2 => {
           this._summaryForDownload = response2.summary;
-          filename =  context + '-bulk-search-summary-' + this.key + '.tsv';
+          filename =  context + '-bulk-search-summary-' + this.key + '.txt';
           this.downloadSummaryQueriesFile(response2, filename);
         }, error => {
           console.log('Error downloading file in getBulkSearchStatusResultsSummaryForDownload.');
