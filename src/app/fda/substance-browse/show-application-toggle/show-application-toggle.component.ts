@@ -130,16 +130,20 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
           }
         }
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': type }
+          // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': type, 'hideOptionButtons': true }
         });
-        dialogReference.afterClosed().subscribe(name => {
+        dialogReference.afterClosed().subscribe(response => {
+          // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
 
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+            // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -163,8 +167,8 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       if (this.exportOptions) {
         this.exportOptions.forEach(element => {
           if (element.extension) {
-            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx') 
-            || (element.extension === 'ctusxlsx') || (element.extension === 'cteuxlsx')
+            if ((element.extension === 'appxlsx') || (element.extension === 'prodxlsx')
+              || (element.extension === 'ctusxlsx') || (element.extension === 'cteuxlsx')
             ) {
               this.hasAdditionalDownloads = true;
               this.additionalExportOptions.push(element.extension);
