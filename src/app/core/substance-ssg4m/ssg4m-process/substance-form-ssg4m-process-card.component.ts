@@ -3,6 +3,7 @@ import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../../substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
@@ -36,7 +37,8 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private http: HttpClient
   ) {
     super(gaService);
     //  this.analyticsEventCategory = 'substance form ssg4m process';
@@ -55,7 +57,15 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         //TODO: make more configurable and standardized
         window['schemeUtil'].debug = false;
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+        const httpp=this.http;
         window['schemeUtil'].apiBaseURL = url;
+
+        //allow resolution of svgs
+        window['schemeUtil'].urlResolver = (u, cb) => {
+            httpp.get(u, {responseType: 'text'}).subscribe(svg=>{
+              cb(svg);
+            });
+        };
         //TODO:
         window['schemeUtil'].onClickReaction = (d) => {
           //Can we add a popup dialog that would show the specific step here?
