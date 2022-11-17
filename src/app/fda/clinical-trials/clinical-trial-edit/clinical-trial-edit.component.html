@@ -49,7 +49,7 @@
 		<ng-container matColumnDef="name">
 			<mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
 			<mat-cell *matCellDef="let element; let i = index;">
-				<span *ngIf="!isAdmin">
+				<span *ngIf="!isAdmin" title="{{element.name}}">
 					{{element.name}}
 				</span>
 				<span *ngIf="isAdmin">

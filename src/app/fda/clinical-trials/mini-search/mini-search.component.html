@@ -4,8 +4,8 @@
 	matInput [formControl]="searchControl" [matAutocomplete]="auto">
 	<mat-autocomplete #auto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)">
 	  <div *ngFor="let field of suggestionsFields">
-		<mat-option *ngFor="let suggestion of suggestions" [value]="suggestion.key">
-		  <div title="{{suggestion.key}}">{{suggestion.key}}</div>
+		<mat-option *ngFor="let suggestion of suggestions" [value]="suggestion.key" title="{{suggestion.key}}">
+		  <div>{{suggestion.key}}</div>
 		</mat-option>
 	  </div>
 	</mat-autocomplete>
