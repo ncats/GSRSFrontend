@@ -63,7 +63,9 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         //allow resolution of svgs
         window['schemeUtil'].urlResolver = (u, cb) => {
             httpp.get(u, {responseType: 'text'}).subscribe(svg=>{
-              cb(svg);
+                 cb(svg);
+            }, error=>{
+                 cb("ERROR");
             });
         };
         //TODO:

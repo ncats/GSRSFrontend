@@ -17,7 +17,9 @@ schemeUtil.urlResolver=function(url, cb){
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       cb(this.responseText);
-    }
+    }else  if (this.readyState == 4 && this.status > 400) {
+	  cb("ERROR");
+	}
   };
   xhttp.open('GET', url, true);
   xhttp.send();
@@ -632,19 +634,31 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 				schemeUtil.renderScheme(nn2, selector, iter - 1, 0, -bbox.y);
 			}
 		} else{
-        document.querySelectorAll('image.node').forEach(c=>{
-          schemeUtil.svgResolver(c, function(foundSvg){
-            var svgGot = foundSvg.replaceAll(/[<][?]xml[^>]*>/g,'')
-            var tsvg=document.createElement('g')
-            tsvg.innerHTML=svgGot;
-            var elm=tsvg.firstElementChild;
-            elm.setAttribute('width',c.getAttribute('width'));
-            elm.setAttribute('height',c.getAttribute('height'));
-            c.parentElement.appendChild(elm);
-            c.remove();
-          });
-        });
-			  schemeUtil.onFinishedLayout(svg);
+				var numIMG=document.querySelectorAll('image.node').length;
+				var tickDownFunction = ()=>{
+					numIMG--;
+					if(numIMG==0){
+					   schemeUtil.onFinishedLayout(svg);
+					}
+				};
+				document.querySelectorAll('image.node').forEach(c=>{
+				  schemeUtil.svgResolver(c, function(foundSvg){
+					if(foundSvg==="ERROR"){
+						tickDownFunction();
+					}else{
+						var svgGot = foundSvg.replaceAll(/[<][?]xml[^>]*>/g,'')
+						var tsvg=document.createElement('g')
+						tsvg.innerHTML=svgGot;
+						var elm=tsvg.firstElementChild;
+						elm.setAttribute('width',c.getAttribute('width'));
+						elm.setAttribute('height',c.getAttribute('height'));
+						c.parentElement.appendChild(elm);
+						c.remove();
+						tickDownFunction();
+					}
+				  });
+				});
+			  
 		}		
 	 })
 	 .on("tick", function () {
