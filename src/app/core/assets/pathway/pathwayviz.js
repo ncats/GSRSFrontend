@@ -372,6 +372,10 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
     if (n.brackets) return 1;
     return 0;
   };
+  var getBracketVisibility =  (n) => {
+    if (n.brackets) return "visible";
+    return "hidden";
+  };
   var getHeight = (n) => {
     if (n.type === "reaction") {
       return "32";
@@ -551,6 +555,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
+	  .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", -paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", -paddingBrack)
@@ -561,6 +566,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
+	  .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", -paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", 0)
@@ -570,6 +576,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
+	  .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", -paddingBrack)
       .attr("y1", (d) => getHeightPx(d) + paddingBrack)
       .attr("x2", 0)
@@ -579,6 +586,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
+	  .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", (d) => getWidthPx(d) + paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", (d) => getWidthPx(d) + paddingBrack)
@@ -589,6 +597,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
+	  .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", (d) => getWidthPx(d) + paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", (d) => getWidthPx(d))
@@ -598,6 +607,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
+	  .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", (d) => getWidthPx(d) + paddingBrack)
       .attr("y1", (d) => getHeightPx(d) + paddingBrack)
       .attr("x2", (d) => getWidthPx(d))
