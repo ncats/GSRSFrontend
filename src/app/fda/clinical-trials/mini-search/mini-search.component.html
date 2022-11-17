@@ -4,7 +4,7 @@
 	<mat-autocomplete #auto="matAutocomplete" (optionSelected)="substanceSearchOptionSelected($event)">
 	  <div *ngFor="let field of suggestionsFields">
 		<mat-option *ngFor="let suggestion of suggestions" [value]="suggestion.key">
-		  <div>{{suggestion.key}}</div>
+		  <div title="{{suggestion.key}}">{{suggestion.key}}</div>
 		</mat-option>
 	  </div>
 	</mat-autocomplete>
