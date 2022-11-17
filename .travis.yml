@@ -22,7 +22,7 @@ install:
   - npm i --save webpack-sources --legacy-peer-deps
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
-  - if [ $TRAVIS_BRANCH = 'develop' ]; then echo "found branch"; else echo "wrong branch"; fi
+  - if [ $TRAVIS_BRANCH = 'travis_test' ]; then echo "found branch"; else echo "wrong branch"; fi
   - npm run build:fda:prod
 after_success:
   - bash travisScript.sh
