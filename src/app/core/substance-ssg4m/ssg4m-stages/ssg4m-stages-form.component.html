@@ -29,7 +29,7 @@
 
       <!-- Drop down menu with sub menu -->
       <button mat-stroked-button color="primary" class="borderblue button-insert-before"
-        [matMenuTriggerFor]="menu"><span class="colorbluefda">Insert Step </span>
+        [matMenuTriggerFor]="menu"><span class="colorbluefda">Insert OR Duplicate Step </span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <mat-menu #menu="matMenu" x-position="before" class="custom-menu">
@@ -47,20 +47,18 @@
 
         <button mat-menu-item color="primary" class="" matTooltip="Insert {{configTitleStage}} After"
           (click)="insertStage(processIndex, siteIndex, stageIndex, 'after')">
-          <mat-icon>arrow_downward</mat-icon>Insert {{configTitleStage}} After
+          <mat-icon>arrow_downward</mat-icon>Insert Step {{configTitleStage}} After
         </button>
 
-        <!--
         <button mat-menu-item color="primary" class="" matTooltip="Duplicate {{configTitleStage}} Before"
-          (click)="copyStage(processIndex, siteIndex, stageIndex, 'before')">
+          (click)="duplicateStage(processIndex, siteIndex, stageIndex, 'before')">
           <mat-icon>arrow_upward</mat-icon>Duplicate {{configTitleStage}} Before
         </button>
 
         <button mat-menu-item color="primary" class="" matTooltip="Duplicate {{configTitleStage}} After"
-          (click)="copyStage(processIndex, siteIndex, stageIndex, 'after')">
+          (click)="duplicateStage(processIndex, siteIndex, stageIndex, 'after')">
           <mat-icon>arrow_downward</mat-icon>Duplicate {{configTitleStage}} After
         </button>
-        -->
       </mat-menu>
       <!-- Drop down menu end -->
 

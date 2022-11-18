@@ -169,8 +169,8 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  copyStage(processIndex: number, siteIndex: number, stageIndex: number, insertDirection?: string): void {
-    this.substanceFormSsg4mStagesService.copyStage(processIndex, siteIndex, stageIndex, insertDirection);
+  duplicateStage(processIndex: number, siteIndex: number, stageIndex: number, insertDirection?: string): void {
+    this.substanceFormSsg4mStagesService.duplicateStage(processIndex, siteIndex, stageIndex, insertDirection);
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-stage-duplicate-0`, 'center');
     });

@@ -70,7 +70,7 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
     }
   }
 
-  copyStage(processIndex: number, siteIndex: number, stageIndex: number, insertDirection?: string): void {
+  duplicateStage(processIndex: number, siteIndex: number, stageIndex: number, insertDirection?: string): void {
     // Get this/current stage record
     const thisStageObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex];
 
