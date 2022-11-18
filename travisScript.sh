@@ -24,7 +24,7 @@ rm -rf ./substanceRelationshipVisualizer
 git status
 git add frontend/src/main/resources/static
 git add -u 
-git commit -m "pushing new frontend build"
+git commit -m "frontend commit ${TRAVIS_COMMIT} build of branch ${TRAVIS_BRANCH} "
 git status
 ls
 echo "pushing"
@@ -55,7 +55,7 @@ rm ./config.json
 rm -rf ./substanceRelationshipVisualizer
 git add frontend/src/main/resources/static
 git add -u 
-git commit -m "travis test before build"
+git commit -m "frontend commit ${TRAVIS_COMMIT} build of branch ${TRAVIS_BRANCH} "
 git status
 ls
 git push -u origin master_staged_sync
