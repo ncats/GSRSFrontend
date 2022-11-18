@@ -132,7 +132,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           // height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': type, 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': type, 'entity': 'applications', 'hideOptionButtons': true }
         });
         dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;

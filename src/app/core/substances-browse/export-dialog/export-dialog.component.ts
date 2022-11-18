@@ -26,6 +26,7 @@ export class ExportDialogComponent implements OnInit {
   privateScrubberModel: any;
   privateExporterModel: any;
   unsaved = false;
+  entity = 'substances';
 
   private privateOptions: any;
   temp: any;
@@ -37,13 +38,17 @@ export class ExportDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ExportDialogComponent>,
     public substanceService: SubstanceService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {
+    if(data.entity) {
+      this.entity = data.entity;
+    }
+   }
 
   ngOnInit() {
     this.sortConfigs();
     this.scrubberModel = { };
         this.expanderModel = {};
-    this.substanceService.getSchema('scrubber').subscribe(response => {
+    this.substanceService.getSchema('scrubber', this.entity).subscribe(response => {
       
         Object.keys(response.properties).forEach(val => {
         if (response.properties[val] && response.properties[val]['visibleIf']) {
@@ -59,7 +64,7 @@ export class ExportDialogComponent implements OnInit {
         this.scrubberSchema = response;
         
     });
-    this.substanceService.getSchema('expander').subscribe(response => {
+    this.substanceService.getSchema('expander', this.entity).subscribe(response => {
       Object.keys(response.properties).forEach(val => {
         if (response.properties[val] && response.properties[val]['visibleIf']) {
           Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
@@ -74,7 +79,7 @@ export class ExportDialogComponent implements OnInit {
       this.expanderSchema = response;
 
   });
-  this.substanceService.getExportOptions(this.data.extension).subscribe(response => {
+  this.substanceService.getExportOptions(this.data.extension, this.entity).subscribe(response => {
     Object.keys(response.properties).forEach(val => {
       if (response.properties[val] && response.properties[val]['visibleIf']) {
         Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
@@ -153,7 +158,7 @@ export class ExportDialogComponent implements OnInit {
 
 
   sortConfigs() {
-    this.substanceService.getConfigs().subscribe(response => {
+    this.substanceService.getConfigs(this.entity).subscribe(response => {
       this.options = response;
       this.privateOptions = response.sort((a, b) => {
 
@@ -202,7 +207,7 @@ export class ExportDialogComponent implements OnInit {
       }
     });
     if (!found){
-    this.substanceService.storeNewConfig(test).subscribe(response => {
+    this.substanceService.storeNewConfig(test, this.entity).subscribe(response => {
       if (response.Result) {
         this.message = response.Result;
       }
@@ -226,7 +231,7 @@ export class ExportDialogComponent implements OnInit {
     this.loadedConfig.expanderSettings = this.privateExpanderModel;
     this.loadedConfig.exporterSettings = this.privateExporterModel;
 
-    this.substanceService.updateConfig(this.loadedConfig.configurationId, this.loadedConfig).subscribe(response => {
+    this.substanceService.updateConfig(this.loadedConfig.configurationId, this.loadedConfig, this.entity).subscribe(response => {
       if (response.Result) {
         this.message = response.Result;
       }
@@ -241,8 +246,8 @@ export class ExportDialogComponent implements OnInit {
     }
     if (confirm("Are you sure you want to delete this configuration?")) {
 
-    this.substanceService.deleteConfig(id).subscribe(response => {
-      this.substanceService.getConfigs().subscribe(response2 => {
+    this.substanceService.deleteConfig(id, this.entity).subscribe(response => {
+      this.substanceService.getConfigs(this.entity).subscribe(response2 => {
         this.options = response2;
       });
       this.loadedConfig = null;
