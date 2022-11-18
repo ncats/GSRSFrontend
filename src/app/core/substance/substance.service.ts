@@ -870,7 +870,7 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get< any>(url);
   }
 
-  getConfigs(id?: string, entity?: string) {
+  getConfigs(entity?: string) {
     if (!entity) {
       entity = 'substances';
     }

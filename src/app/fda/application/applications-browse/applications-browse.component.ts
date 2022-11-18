@@ -476,7 +476,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       const dialogReference = this.dialog.open(ExportDialogComponent, {
       //  height: '215x',
         width: '700px',
-        data: { 'extension': extension, 'type': 'BrowseApplications', 'hideOptionButtons': true }
+        data: { 'extension': extension, 'type': 'BrowseApplications', 'entity': 'applications', 'hideOptionButtons': true }
       });
       // this.overlayContainer.style.zIndex = '1002';
       dialogReference.afterClosed().subscribe(response => {

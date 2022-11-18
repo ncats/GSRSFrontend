@@ -278,7 +278,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
         const dialogReference = this.dialog.open(ExportDialogComponent, {
          // height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': 'substanceImpurities', 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': 'substanceImpurities', 'entity': 'impurities', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(response => {

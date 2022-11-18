@@ -445,7 +445,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
       const dialogReference = this.dialog.open(ExportDialogComponent, {
       //  height: '215x',
         width: '700px',
-        data: { 'extension': extension, 'type': 'browseAdverseEventDme', 'hideOptionButtons': true }
+        data: { 'extension': extension, 'type': 'browseAdverseEventDme', 'entity': 'adverseeventdme', 'hideOptionButtons': true }
       });
       // this.overlayContainer.style.zIndex = '1002';
       dialogReference.afterClosed().subscribe(response => {

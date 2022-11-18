@@ -641,7 +641,7 @@ searchTermOkforBeginsWithSearch(): boolean {
   export(url: string, extension: string) {
     if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
-        maxHeight: '80%',
+        maxHeight: '85%',
 
         width: '60%',
         data: { 'extension': extension }
