@@ -23,7 +23,8 @@ install:
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - echo $TRAVIS_COMMIT
-  - if [ $TRAVIS_BRANCH = 'travis_test' ]; then echo "found branch"; else echo "wrong branch"; fi
+  
   - npm run build:fda:prod
 after_success:
-  - bash travisScript.sh
+  - if [ $TRAVIS_BRANCH = 'travis_test' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
+
