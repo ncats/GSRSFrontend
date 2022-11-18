@@ -22,9 +22,7 @@ install:
   - npm i --save webpack-sources --legacy-peer-deps
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
-  - echo $TRAVIS_COMMIT
-  
   - npm run build:fda:prod
 after_success:
-  - if [ $TRAVIS_BRANCH = 'travis_test' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
+  - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
 
