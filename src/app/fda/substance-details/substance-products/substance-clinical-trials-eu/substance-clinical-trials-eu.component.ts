@@ -108,7 +108,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
         const dialogReference = this.dialog.open(ExportDialogComponent, {
         //  height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': 'substanceClinicalTrialEU', 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': 'substanceClinicalTrialEU', 'entity' : 'clinicaltrialseurope', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(response => {
