@@ -48,7 +48,7 @@
 		<!-- name -->
 		<ng-container matColumnDef="name">
 			<mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-			<mat-cell *matCellDef="let element; let i = index;">
+			<mat-cell *matCellDef="let element; let i = index;" title="{{element.name}}">
 				<span *ngIf="!isAdmin">
 					{{element.name}}
 				</span>

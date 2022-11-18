@@ -25,6 +25,8 @@ export class ExportDialogComponent implements OnInit {
   privateExpanderModel: any;
   privateScrubberModel: any;
   privateExporterModel: any;
+  unsaved = false;
+  entity = 'substances';
 
   private privateOptions: any;
   temp: any;
@@ -36,13 +38,17 @@ export class ExportDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ExportDialogComponent>,
     public substanceService: SubstanceService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {
+    if(data.entity) {
+      this.entity = data.entity;
+    }
+   }
 
   ngOnInit() {
     this.sortConfigs();
     this.scrubberModel = { };
         this.expanderModel = {};
-    this.substanceService.getSchema('scrubber').subscribe(response => {
+    this.substanceService.getSchema('scrubber', this.entity).subscribe(response => {
       
         Object.keys(response.properties).forEach(val => {
         if (response.properties[val] && response.properties[val]['visibleIf']) {
@@ -58,7 +64,7 @@ export class ExportDialogComponent implements OnInit {
         this.scrubberSchema = response;
         
     });
-    this.substanceService.getSchema('expander').subscribe(response => {
+    this.substanceService.getSchema('expander', this.entity).subscribe(response => {
       Object.keys(response.properties).forEach(val => {
         if (response.properties[val] && response.properties[val]['visibleIf']) {
           Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
@@ -73,7 +79,7 @@ export class ExportDialogComponent implements OnInit {
       this.expanderSchema = response;
 
   });
-  this.substanceService.getExportOptions(this.data.extension).subscribe(response => {
+  this.substanceService.getExportOptions(this.data.extension, this.entity).subscribe(response => {
     Object.keys(response.properties).forEach(val => {
       if (response.properties[val] && response.properties[val]['visibleIf']) {
         Object.keys(response.properties[val]['visibleIf']).forEach(vis => {
@@ -101,10 +107,13 @@ export class ExportDialogComponent implements OnInit {
   setValue(event: any, model?: string ): void {
     if (model && model === 'expander') {
       this.privateExpanderModel = event;
+      this.unsaved = this.unsavedChangeCheck(this.loadedConfig.expanderSettings, this.privateExpanderModel)
     } else if( model === 'scrubber') {
       this.privateScrubberModel = event;
+      this.unsaved = this.unsavedChangeCheck(this.loadedConfig.scrubberSettings, this.privateScrubberModel);
     } else {
       this.privateExporterModel = event;
+      this.unsaved = this.unsavedChangeCheck(this.loadedConfig.exporterSettings, this.privateExporterModel);
     }
   }
 
@@ -149,7 +158,7 @@ export class ExportDialogComponent implements OnInit {
 
 
   sortConfigs() {
-    this.substanceService.getConfigs().subscribe(response => {
+    this.substanceService.getConfigs(this.entity).subscribe(response => {
       this.options = response;
       this.privateOptions = response.sort((a, b) => {
 
@@ -169,7 +178,7 @@ export class ExportDialogComponent implements OnInit {
       this.privateOptions.forEach(conf => {
         if (conf.exporterKey === 'PUBLIC_DATA_ONLY') {
           found = true;
-          this.switchConfig(conf);
+          this.switchConfig(conf, true);
           this.loadedConfig = conf;
         }
       });
@@ -177,7 +186,7 @@ export class ExportDialogComponent implements OnInit {
         this.privateOptions.forEach(conf => {
           if (conf.exporterKey === 'ALL_DATA') {
             found = true;
-            this.switchConfig(conf);
+            this.switchConfig(conf, true);
             this.loadedConfig = conf;
           }
         })
@@ -198,7 +207,7 @@ export class ExportDialogComponent implements OnInit {
       }
     });
     if (!found){
-    this.substanceService.storeNewConfig(test).subscribe(response => {
+    this.substanceService.storeNewConfig(test, this.entity).subscribe(response => {
       if (response.Result) {
         this.message = response.Result;
       }
@@ -222,7 +231,7 @@ export class ExportDialogComponent implements OnInit {
     this.loadedConfig.expanderSettings = this.privateExpanderModel;
     this.loadedConfig.exporterSettings = this.privateExporterModel;
 
-    this.substanceService.updateConfig(this.loadedConfig.configurationId, this.loadedConfig).subscribe(response => {
+    this.substanceService.updateConfig(this.loadedConfig.configurationId, this.loadedConfig, this.entity).subscribe(response => {
       if (response.Result) {
         this.message = response.Result;
       }
@@ -237,8 +246,8 @@ export class ExportDialogComponent implements OnInit {
     }
     if (confirm("Are you sure you want to delete this configuration?")) {
 
-    this.substanceService.deleteConfig(id).subscribe(response => {
-      this.substanceService.getConfigs().subscribe(response2 => {
+    this.substanceService.deleteConfig(id, this.entity).subscribe(response => {
+      this.substanceService.getConfigs(this.entity).subscribe(response2 => {
         this.options = response2;
       });
       this.loadedConfig = null;
@@ -292,9 +301,16 @@ export class ExportDialogComponent implements OnInit {
  
   }
 
-  switchConfig(event: any) {
- 
+  undo(): void {
+    this.message = null;
+    this.switchConfig(this.loadedConfig);
+    this.message = "Reloaded saved settings for configuration '" +this.loadedConfig.exporterKey + "'";
+  }
+
+  switchConfig(event: any, preload?: boolean) {
+    this.message = "";
     let testing = {};
+    this.unsaved = false;
     this.privateOptions.forEach(opt =>{
       if (opt.configurationId === event.configurationId) {
 
@@ -318,6 +334,9 @@ export class ExportDialogComponent implements OnInit {
     setTimeout(()=> {
       this.scrubberModel = testing;
     }, 100);
+    if (!preload) {
+      this.message = "Export Configuration " + this.configName + " Loaded";
+    }
   }
 }
 

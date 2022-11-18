@@ -274,7 +274,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         const dialogReference = this.dialog.open(ExportDialogComponent, {
          // height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': 'substanceApplication', 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': 'substanceApplication', 'entity': 'applications', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(response => {

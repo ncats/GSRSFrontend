@@ -4,6 +4,7 @@ language: node_js
 node_js:
   - 12.20.0
 
+
 install:
 
   - cp package.dev.json package.json
@@ -23,4 +24,5 @@ install:
 script:
   - npm run build:fda:prod
 after_success:
-  - bash travisScript.sh
+  - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
+

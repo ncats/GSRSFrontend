@@ -442,7 +442,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
       const dialogReference = this.dialog.open(ExportDialogComponent, {
        // height: '215x',
         width: '700px',
-        data: { 'extension': extension, 'type': 'browseAdverseEventCvm', 'hideOptionButtons': true }
+        data: { 'extension': extension, 'type': 'browseAdverseEventCvm','entity': 'adverseeventcvm', 'hideOptionButtons': true }
       });
       // this.overlayContainer.style.zIndex = '1002';
       dialogReference.afterClosed().subscribe(response => {
