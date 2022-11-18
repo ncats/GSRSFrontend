@@ -121,6 +121,9 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
 schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
   if(!maxSteps)maxSteps = schemeUtil.maxContinuousSteps;
   
+  var restartEachProcess=true;
+  var showProcessNumber=true;
+  
   var nodes = [];
   var links = [];
   var constraints = [];
@@ -134,7 +137,9 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
     var p = g4.specifiedSubstanceG4m.process[i];
     var stg = p.sites[0].stages;
     var pcanMap = {};
-	
+	if(restartEachProcess){
+		canMap={};	
+	}
 	var subSteps=0;
 	var addedNodes=[];
     for (ii = 0; ii < stg.length; ii++) {
@@ -188,8 +193,13 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps) {
         }
       }
 	  
+	  var stepText = "Step " + stage.stageNumber;
+	  
+	  if(showProcessNumber && g4.specifiedSubstanceG4m.process.length>1){
+		stepText = p.processName.trim() + ": " +stepText;
+	  }
 
-      var rn = { type: "reaction", leftText: "Step " + stage.stageNumber };
+      var rn = { type: "reaction", leftText: stepText };
       
       rn.processIndex=i;
       rn.stepIndex=ii;
@@ -548,7 +558,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .text(function (d) {
         return schemeUtil.maxLenAndOffset(d.name, maxText).text;
       })
-	  .attr("dx", (d) => schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.bottomText, maxText).offset)
+	  .attr("dx", (d) => schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.name, maxText).offset)
       .attr("dy", -20)
       .attr("font-family", "monospace");
 
