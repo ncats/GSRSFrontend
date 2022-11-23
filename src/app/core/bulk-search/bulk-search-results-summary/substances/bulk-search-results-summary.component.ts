@@ -285,7 +285,7 @@ summaryToRecordOverviews() {
 
   makeTsvTextFromSummaryQueries(json: any): string {
 
-    // searchTerm|displayName|id|idName|displayCode|displayCodeName;
+    // searchTerm|matches|displayName|id|idName|displayCode|displayCodeName;
 
     // replace header for id with the first idName found.
     // replace header for displayCode with the first displayCodeName found.
@@ -301,6 +301,7 @@ summaryToRecordOverviews() {
       if (q.records.length === 0) {
         tsvText +=
            (q['searchTerm']||'')+'\t'
+           +q.records.length+'\t'
            +''+'\t'
            +''+'\t'
            +''+"\n";
@@ -316,6 +317,7 @@ summaryToRecordOverviews() {
           }
           tsvText +=
           (q['searchTerm']||'')+'\t'
+          +(q.records.length)+'\t'
           +(r['displayName']||'')+'\t'
           +(r['id']||'')+'\t'
           +(r['displayCode']||'')+"\n";
@@ -333,6 +335,7 @@ summaryToRecordOverviews() {
 
     const tsvHeaders =
     'searchTerm'+'\t'
+    +'matches'+'\t'
     +'displayName'+'\t'
     +_idHeader+'\t'
     +_displayCodeHeader+"\n";

@@ -25,7 +25,10 @@
         {{element.displayName}}
       </span>
       <span *ngIf="element.matches===1">
-        <a target="_blank" title="View the entity in new tab."  [routerLink]="['/', context, element.id]">{{element.displayName}}</a>
+        <a target="_blank" *ngIf="element.displayName" title="View the entity in new tab."  [routerLink]="['/', context, element.id]">
+          {{element.displayName}}
+        </a>
+        (<a target="_blank" *ngIf="!(element.displayName)" title="View the entity in new tab."  [routerLink]="['/', context, element.id]">no name</a>)
       </span>
       <span *ngIf="element.matches>1">
         <a target="_blank" title="Perform partial search in new tab."  [routerLink]="['/browse-substance']" [queryParams]="{search: element.modifiedSearchTerm}">{{element.displayName}}</a>
