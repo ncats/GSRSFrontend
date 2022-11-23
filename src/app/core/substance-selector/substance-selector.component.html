@@ -26,6 +26,11 @@
       </button>
     </div>
     <div class="section-header">{{header}}</div>
+    <div class='tile-title'>
+      <span class="approval-id" *ngIf="selectedSubstance.approvalID">
+        {{selectedSubstance.approvalID}}
+      </span>
+    </div>
     <a class="zoom" (click)="openImageModal(substance)">
     <img class="related-image" *ngIf="selectedSubstance.uuid && !hideImage" appSubstanceImage
       [entityId]="selectedSubstance.uuid"></a>
@@ -34,7 +39,13 @@
       <span class='code' *ngIf="errorMessage === 'Not in database'"><br />NOT IN DATABASE</span>
     </div>
     <div  >
-      <a  style = "color: #1565c0;font-weight:550;" (click)="!!editSelectedSubstance()">Change Selection</a> <br/>
+      <a class = "under-link change-link" (click)="!!editSelectedSubstance()">Change Selection</a> 
+      <a *ngIf="selectedSubstance.uuid" class = "under-link" target="_blank"
+        (click) ="openInNewTab(selectedSubstance.uuid)"> Details
+        <mat-icon aria-label="Open in new tab" class = "new-tab" svgIcon="open_in_new" matTooltip="view details in a new tab"></mat-icon>
+      </a>
+      
+      <br/>
 
 
     </div>
