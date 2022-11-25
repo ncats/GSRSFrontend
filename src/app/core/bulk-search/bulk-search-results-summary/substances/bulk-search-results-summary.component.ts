@@ -39,7 +39,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
 
   qPageSize: number;
   qPageIndex: number;
-  qOrder: number;
+  qSort: string;
+  qFilter: string;
   recordOverviewsShownOnPage: number;
   recordOverviews: Array<RecordOverview> = [];
   totalRecordOverviews: number;
@@ -58,6 +59,33 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   private defaultDisplayCodeHeader = 'Code';
   private defaultIdHeader = 'Id';
   
+  
+
+  sortValues: any = [
+    {
+      'value': '^records_length',
+      'display': 'Matches Ascending'
+    },
+    {
+      'value': '$records_length',
+      'display': 'Matches Descending'
+    },
+    {
+      'value': '^searchTerm',
+      'display': 'Search Term Ascending '
+    },
+    {
+      'value': '$searchTerm',
+      'display': 'Search Term Descending'
+    }
+  ];  
+
+  filterValues: any = {
+    'No Matches': "records_length:0",
+    'One or More Matches':"records_length>0",
+    'One Match': "records_length:1",
+    'More than One Match': "records_length>1"
+  }  
 
   displayedColumns: string[] = [
     'searchTerm',
@@ -147,6 +175,18 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     this.qPageIndex = pageEvent.pageIndex;
     this.getBulkSearchStatusResults();
   }
+  openedSortSubstances(event: any) {
+    if (event) {
+//      this.overlayContainer.style.zIndex = '1002';
+    } else {
+//      this.overlayContainer.style.zIndex = '1000';
+    }
+  }
+
+
+
+  
+
 
 
   // see substances code
@@ -158,7 +198,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     // navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
     // navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     // navigationExtras.queryParams['type'] = this.privateSearchType;
-    navigationExtras.queryParams['order'] = this.qOrder;
+    navigationExtras.queryParams['qSort'] = this.qSort;
+    navigationExtras.queryParams['qFilter'] = this.qFilter;
     navigationExtras.queryParams['qTop'] = this.qPageSize;
     navigationExtras.queryParams['qTop'] = this.qPageIndex;
     navigationExtras.queryParams['qSkip'] = this.qPageIndex * this.qPageSize;
@@ -208,7 +249,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       0, // we don't need content here just the summaries
       0,
       this.qPageSize,
-      qSkip
+      qSkip,
+      this.qSort,
+      this.qFilter
     )
     .subscribe(bulkSearchResults => {
       if (!this.key) {

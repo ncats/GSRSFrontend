@@ -13,6 +13,16 @@
     </button>
   </div>
 </div>
+
+<mat-form-field class="sort">
+  <mat-label>Sort By</mat-label>
+  <mat-select (selectionChange)="getBulkSearchStatusResults()" (openedChange)="openedSortSubstances($event)" [(ngModel)]="qSort">
+    <mat-option *ngFor="let option of sortValues" [value]="option.value">
+      {{option.display}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
 <table mat-table [dataSource]="dataSource" class="">
   <ng-container matColumnDef="searchTerm">
     <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['searchTerm']}}</th>
