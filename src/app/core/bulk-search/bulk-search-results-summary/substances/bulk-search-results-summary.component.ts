@@ -264,15 +264,11 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     this.getBulkSearchStatusResults();
   }
 
-  filterData() {
-    this.getBulkSearchStatusResults();
-  }
-
   setAndFilterData(qFilter: string) { 
     this.qFilter=qFilter;
+    this.qPageIndex = 0;
     this.getBulkSearchStatusResults();
   }
-
 
   getBulkSearchStatusResults() {
     const qSkip = this.qPageIndex * this.qPageSize;
