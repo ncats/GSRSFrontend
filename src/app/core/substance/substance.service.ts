@@ -796,7 +796,7 @@ export class SubstanceService extends BaseHttpService {
 
 
 
-  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, pageQuery?: string, otherFacets?: string): Observable<FacetQueryResponse> {
+  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
     let url: string;
 
     if (searchTerm) {
@@ -812,7 +812,7 @@ export class SubstanceService extends BaseHttpService {
     if (otherFacets) {
       let temp = facet._self.split('&');
       temp.forEach(val => {
-        if (val.indexOf('facet') >= 0) {
+        if (val.indexOf('facet=') >= 0) {
           url += '&' + val;
         }
       });

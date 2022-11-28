@@ -56,7 +56,7 @@
               *ngIf="facet.$showAdvanced">
             </mat-checkbox>
           </div>
-          <div class="facet-value-label">
+          <div class="facet-value-label" [ngClass] = "facetParams[facet.name] && facetParams[facet.name].params[value.label] === false ? 'strikethrough':''">
             <span
               *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status' && facet.name !== 'Code System' && facet.name !== 'Relationships'">
               {{value.label}}
