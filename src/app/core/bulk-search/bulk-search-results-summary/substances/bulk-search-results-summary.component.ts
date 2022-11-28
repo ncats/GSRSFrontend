@@ -12,8 +12,6 @@ import { Location } from '@angular/common';
 import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
 import { MatSort, Sort} from '@angular/material/sort';
 
-import { HttpParams } from '@angular/common/http';
-
 @Component({
   selector: 'app-bulk-search-results-summary[context][key]',
   templateUrl: './bulk-search-results-summary.component.html',
@@ -103,8 +101,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       'display': 'One or more matches'
     },
     {
-      'value': 'records_length>4',
-      'display': 'More than one2 match'
+      'value': 'records_length>1',
+      'display': 'More than one match'
     }
   ];
 
@@ -172,8 +170,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     if (this.loadSummary) {
       this.pollUntillCompleted();
     }
-    
-
   }
 
   ngOnChanges() {
@@ -207,13 +203,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       queryParams: {}
     };
 
-    // navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
-    // navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
-    // navigationExtras.queryParams['type'] = this.privateSearchType;
     navigationExtras.queryParams['qSort'] = this.qSort;
     navigationExtras.queryParams['qFilter'] = this.qFilter;
     navigationExtras.queryParams['qTop'] = this.qPageSize;
-    navigationExtras.queryParams['qTop'] = this.qPageIndex;
     navigationExtras.queryParams['qSkip'] = this.qPageIndex * this.qPageSize;
 
     const urlTree = this.router.createUrlTree([], {
@@ -304,11 +296,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
         this._summary = bulkSearchResults.summary;
         this.totalQueries = this._summary.qTotal;
         this.qFilteredTotal = this._summary.qFilteredTotal;
-
-        
         this.totalQueriesMatch = this._summary.qMatchTotal;
         this.totalQueriesUnMatch = this._summary.qUnMatchTotal;
-
 
         this.summaryToRecordOverviews();
         if(this.displayCodeHeader=='') {
