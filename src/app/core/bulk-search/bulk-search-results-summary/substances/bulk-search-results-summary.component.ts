@@ -10,7 +10,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
+import { MatSort, Sort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-bulk-search-results-summary[context][key]',
@@ -36,10 +36,14 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   @Input() isCollapsed = false;
   @ViewChild(MatTable, {static: false}) table: MatTable<RecordOverview>; // initialize
   @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort = new MatSort();
+  // https://code-maze.com/angular-material-table/
 
   qPageSize: number;
   qPageIndex: number;
-  qOrder: number;
+  qSort: string;
+  qFilter: string;
+  qFilteredTotal: number;
   recordOverviewsShownOnPage: number;
   recordOverviews: Array<RecordOverview> = [];
   totalRecordOverviews: number;
@@ -58,6 +62,49 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   private defaultDisplayCodeHeader = 'Code';
   private defaultIdHeader = 'Id';
   
+  
+
+  sortValues: Array<any> = [
+    {
+      'value': '^searchTerm',
+      'display': 'Search Term Ascending '
+    },
+    {
+      'value': '$searchTerm',
+      'display': 'Search Term Descending'
+    },
+    {
+      'value': '^records_length',
+      'display': 'Matches Ascending'
+    },
+    {
+      'value': '$records_length',
+      'display': 'Matches Descending'
+    }
+  ];
+
+  filterValues: Array<any> = [
+    {
+      'value': '',
+      'display': 'No filter'
+    },
+    {
+      'value': 'records_length:0',
+      'display': 'No matches'
+    },
+    {
+      'value': 'records_length:1',
+      'display': 'One match'
+    },
+    {
+      'value': 'records_length>0',
+      'display': 'One or more matches'
+    },
+    {
+      'value': 'records_length>1',
+      'display': 'More than one match'
+    }
+  ];
 
   displayedColumns: string[] = [
     'searchTerm',
@@ -102,9 +149,11 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnInit(): void {
+    
 
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
@@ -148,19 +197,15 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     this.getBulkSearchStatusResults();
   }
 
-
   // see substances code
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
 
-    // navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
-    // navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
-    // navigationExtras.queryParams['type'] = this.privateSearchType;
-    navigationExtras.queryParams['order'] = this.qOrder;
+    navigationExtras.queryParams['qSort'] = this.qSort;
+    navigationExtras.queryParams['qFilter'] = this.qFilter;
     navigationExtras.queryParams['qTop'] = this.qPageSize;
-    navigationExtras.queryParams['qTop'] = this.qPageIndex;
     navigationExtras.queryParams['qSkip'] = this.qPageIndex * this.qPageSize;
 
     const urlTree = this.router.createUrlTree([], {
@@ -201,6 +246,30 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       );
   }
 
+  sortData(sort: Sort) {
+    this.qSort = '';
+    if (sort.active === 'searchTerm') {
+      if (sort.direction === 'asc') {
+        this.qSort = this.sortValues[0].value;
+      } else if (sort.direction === 'desc') { 
+        this.qSort = this.sortValues[1].value;      
+      }
+    } else if (sort.active==='matches') {
+      if (sort.direction === 'asc') {
+        this.qSort = this.sortValues[2].value;
+      } else if (sort.direction === 'desc') { 
+        this.qSort = this.sortValues[3].value;      
+      }
+    }
+    this.getBulkSearchStatusResults();
+  }
+
+  setAndFilterData(qFilter: string) { 
+    this.qFilter=qFilter;
+    this.qPageIndex = 0;
+    this.getBulkSearchStatusResults();
+  }
+
   getBulkSearchStatusResults() {
     const qSkip = this.qPageIndex * this.qPageSize;
     const subscription = this.bulkSearchService.getBulkSearchStatusResults(
@@ -208,7 +277,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       0, // we don't need content here just the summaries
       0,
       this.qPageSize,
-      qSkip
+      qSkip,
+      this.qSort,
+      this.qFilter
     )
     .subscribe(bulkSearchResults => {
       if (!this.key) {
@@ -220,9 +291,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       if(bulkSearchResults?.summary) {
         this._summary = bulkSearchResults.summary;
         this.totalQueries = this._summary.qTotal;
+        this.qFilteredTotal = this._summary.qFilteredTotal;
         this.totalQueriesMatch = this._summary.qMatchTotal;
         this.totalQueriesUnMatch = this._summary.qUnMatchTotal;
-
 
         this.summaryToRecordOverviews();
         if(this.displayCodeHeader=='') {

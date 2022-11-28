@@ -39,7 +39,7 @@ import { TextInputFormComponent } from '@gsrs-core/utils/text-input-form/text-in
 import { FileUploadFormComponent } from '@gsrs-core/bulk-search/file-upload-form/file-upload-form.component';
 import { BulkSearchResultsSummaryComponent } from './bulk-search-results-summary/substances/bulk-search-results-summary.component';
 import {MatRadioModule} from '@angular/material/radio';
-
+import { MatSortModule } from '@angular/material/sort';
 
 const bulkSearchRoutes: Routes = [
   {
@@ -70,6 +70,7 @@ const bulkSearchRoutes: Routes = [
     MatCheckboxModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
     MatSelectModule,
     MatRadioModule,
     MatSliderModule,

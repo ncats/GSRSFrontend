@@ -23,9 +23,11 @@
     color: var(--regular-black-color);
     border-radius: 4px;
 }
+
 .statistics { 
     margin-top: 6px;
     margin-top: 5px;
+    font-weight: 500;
 }
 
 /* Doesn't work? */
@@ -34,15 +36,20 @@
     height: 30px !important;
 }
 
+.linkish { 
+    color: var(--link-primary-color);
+}
 
 table th, table td  {
     text-align: left;
     justify-content: flex-end; 
 }
+
 table tr th:nth-child(1), table tr td:nth-child(1) {
     overflow-wrap: anywhere;
     width: 35% !important;
 }
+
 table tr th:nth-child(2), table tr td:nth-child(2) {
     overflow-wrap: anywhere;
     width: 35% !important;
@@ -53,6 +60,7 @@ table tr td:nth-child(3) {
     padding: 5px 5px 5px 5px ;
     justify-content: flex-end; 
 }
+
 table tr th:nth-child(3) {
     text-align: center;
     padding: 5px 5px 5px 5px ;

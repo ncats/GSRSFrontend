@@ -105,13 +105,15 @@ export class BulkSearchService extends BaseHttpService {
     top?: number,
     skip?: number,
     qTop?: number,
-    qSkip?: number
+    qSkip?: number,
+    qSort: string='',
+    qFilter: string=''
   ): Observable<any> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';
     // let params = new HttpParams();
     const options = {
       // eslint-disable-next-line object-shorthand
-      params: {top: top, skip: skip, qTop: qTop, qSkip: qSkip},
+      params: {top: top, skip: skip, qTop: qTop, qSkip: qSkip, qSort: qSort, qFilter: qFilter},
       type: 'JSON',
       headers: {}
     };
