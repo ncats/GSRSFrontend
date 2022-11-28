@@ -413,6 +413,7 @@ export class SubstanceService extends BaseHttpService {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
       let url = this.apiBaseUrl;
       let bulkFacetsKey: number;
+
       bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
       if (this.searchKeys[bulkFacetsKey]) {
         url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
@@ -446,10 +447,11 @@ export class SubstanceService extends BaseHttpService {
       };
 
       this.http.get<any>(url, options).subscribe(
+
         response => {
           // call async
-
           if (response.results) {
+
             const resultKey = response.key;
             this.searchKeys[bulkFacetsKey] = resultKey;
             this.processAsyncSearchResults(
@@ -464,6 +466,10 @@ export class SubstanceService extends BaseHttpService {
               skip
             );
           } else {
+            // consider making API backend provide statusKey in JSON
+            if(this.searchKeys && this.searchKeys[bulkFacetsKey]) {
+              response.statusKey = this.searchKeys[bulkFacetsKey];
+            }
             observer.next(response);
             observer.complete();
           }
@@ -496,8 +502,8 @@ export class SubstanceService extends BaseHttpService {
       view
     )
       .subscribe(response => {
+        // consider making API backend provide statusKey in JSON
         response.statusKey=searchKey;
-
         observer.next(response);
         if (!asyncCallResponse.finished) {
           this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {     
