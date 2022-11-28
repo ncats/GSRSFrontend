@@ -34,7 +34,7 @@
 <table mat-table [dataSource]="dataSource" class="" matSort (matSortChange)="sortData($event)">
   <ng-container matColumnDef="searchTerm">
     <th mat-header-cell mat-sort-header='searchTerm' *matHeaderCellDef>{{displayedColumnNames['searchTerm']}}</th>
-    <td mat-cell *matCellDef="let element">{{element.searchTerm}}</td>
+    <td mat-cell *matCellDef="let element" title="{{element.modifiedSearchTerm}}">{{element.searchTerm}}</td>
   </ng-container>
   <ng-container matColumnDef="displayName">
     <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['displayName']}}</th>
