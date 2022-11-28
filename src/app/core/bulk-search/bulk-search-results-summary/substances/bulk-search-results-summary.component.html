@@ -1,10 +1,27 @@
 <div *ngIf="!isPolling" class="wrapper">
-<div *ngIf="showTitle && showTitle===true">
+  <div *ngIf="showTitle && showTitle===true">
   <h2 class="summary-title">Bulk Search Summary (Full Results)</h2>
 </div>
+
+
 <div class="statistics" *ngIf="totalQueries!==null && totalQueries>0">
-  Queries: {{totalQueries}}&nbsp;&nbsp;&nbsp;&nbsp;Matched: {{totalQueriesMatch}}&nbsp;&nbsp;&nbsp;&nbsp;Unmatched: {{totalQueriesUnMatch}}
+  <span class="linkish" (click)="setAndFilterData(undefined)">All Queries: {{totalQueries}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+  <span class="linkish" (click)="setAndFilterData('records_length>0')">Matched: {{totalQueriesMatch}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+  <span class="linkish" (click)="setAndFilterData('records_length:0')">Unmatched: {{totalQueriesUnMatch}}</span>
 </div>
+
+<div class="statistics" *ngIf="totalQueries!==null && totalQueries>0">
+  <span *ngIf="qFilter===undefined">
+    Showing all queries
+  </span>
+  <span *ngIf="qFilter==='records_length>0'">
+    Showing {{qFilteredTotal}} matched queries (<span class="linkish" (click)="setAndFilterData(undefined)">show all</span>)
+  </span> 
+  <span *ngIf="qFilter==='records_length:0'">
+    Showing {{qFilteredTotal}} unmatched queries (<span class="linkish" (click)="setAndFilterData(undefined)">show all</span>)
+  </span>
+</div>
+
 <div class="export">
   <div *ngIf="recordOverviews && recordOverviews.length>0 && isLoggedIn">
     <button matTooltip="Export Bulk Search Results" (click)="getBulkSearchStatusResultsSummaryForDownload()"
@@ -13,10 +30,11 @@
     </button>
   </div>
 </div>
-<table mat-table [dataSource]="dataSource" class="">
+
+<table mat-table [dataSource]="dataSource" class="" matSort (matSortChange)="sortData($event)">
   <ng-container matColumnDef="searchTerm">
-    <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['searchTerm']}}</th>
-    <td mat-cell *matCellDef="let element">{{element.searchTerm}}</td>
+    <th mat-header-cell mat-sort-header='searchTerm' *matHeaderCellDef>{{displayedColumnNames['searchTerm']}}</th>
+    <td mat-cell *matCellDef="let element" title="{{element.modifiedSearchTerm}}">{{element.searchTerm}}</td>
   </ng-container>
   <ng-container matColumnDef="displayName">
     <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['displayName']}}</th>
@@ -25,7 +43,10 @@
         {{element.displayName}}
       </span>
       <span *ngIf="element.matches===1">
-        <a target="_blank" title="View the entity in new tab."  [routerLink]="['/', context, element.id]">{{element.displayName}}</a>
+        <a target="_blank" *ngIf="element.displayName" title="View the entity in new tab."  [routerLink]="['/', context, element.id]">
+          {{element.displayName}}
+        </a>
+        <span *ngIf="!(element.displayName)">(<a target="_blank" title="View the entity in new tab."  [routerLink]="['/', context, element.id]">no name</a>)</span>
       </span>
       <span *ngIf="element.matches>1">
         <a target="_blank" title="Perform partial search in new tab."  [routerLink]="['/browse-substance']" [queryParams]="{search: element.modifiedSearchTerm}">{{element.displayName}}</a>
@@ -33,7 +54,7 @@
     </td>
   </ng-container>
   <ng-container matColumnDef="matches">
-    <th mat-header-cell *matHeaderCellDef>{{displayedColumnNames['matches']}}</th>
+    <th mat-header-cell mat-sort-header='matches' *matHeaderCellDef>{{displayedColumnNames['matches']}}</th>
     <td mat-cell *matCellDef="let element">{{element.matches}}</td>
   </ng-container>
   <ng-container matColumnDef="displayCode">
@@ -46,6 +67,7 @@
 </table>
 
 
-<mat-paginator #paginator [length]="totalQueries" [pageIndex]="qPageIndex" [pageSize]="qPageSize" [pageSizeOptions]="[5, 10, 50, 100]"
+<!-- totalQueries -->
+<mat-paginator #paginator [length]="qFilteredTotal" [pageIndex]="qPageIndex" [pageSize]="qPageSize" [pageSizeOptions]="[5, 10, 50, 100]"
 (page)="changePage($event)"></mat-paginator>
 </div>
