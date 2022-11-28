@@ -12,13 +12,11 @@
     margin-bottom: 3px;
     float: left;
 }
-
 .export {
     float: right;
     margin-top: -10px;
     font-size: small;
 }
-
 .export-button {
     color: var(--regular-black-color);
     border-radius: 4px;
@@ -26,6 +24,7 @@
 .statistics { 
     margin-top: 6px;
     margin-top: 5px;
+    font-weight: 500;
 }
 
 /* Doesn't work? */
@@ -33,8 +32,9 @@
 .mat-expansion-panel-header.mat-expanded {
     height: 30px !important;
 }
-
-
+.linkish { 
+    color: var(--link-primary-color);
+}
 table th, table td  {
     text-align: left;
     justify-content: flex-end; 
@@ -47,7 +47,6 @@ table tr th:nth-child(2), table tr td:nth-child(2) {
     overflow-wrap: anywhere;
     width: 35% !important;
 }
-
 table tr td:nth-child(3) {
     text-align: center;
     padding: 5px 5px 5px 5px ;

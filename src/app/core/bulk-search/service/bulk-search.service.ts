@@ -106,8 +106,8 @@ export class BulkSearchService extends BaseHttpService {
     skip?: number,
     qTop?: number,
     qSkip?: number,
-    qSort?: string,
-    qFilter?: string
+    qSort: string='',
+    qFilter: string=''
   ): Observable<any> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';
     // let params = new HttpParams();

@@ -10,6 +10,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { NavigationExtras, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
+import { MatSort, Sort} from '@angular/material/sort';
+
 import { HttpParams } from '@angular/common/http';
 
 @Component({
@@ -36,11 +38,14 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   @Input() isCollapsed = false;
   @ViewChild(MatTable, {static: false}) table: MatTable<RecordOverview>; // initialize
   @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort = new MatSort();
+  // https://code-maze.com/angular-material-table/
 
   qPageSize: number;
   qPageIndex: number;
   qSort: string;
   qFilter: string;
+  qFilteredTotal: number;
   recordOverviewsShownOnPage: number;
   recordOverviews: Array<RecordOverview> = [];
   totalRecordOverviews: number;
@@ -61,15 +66,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   
   
 
-  sortValues: any = [
-    {
-      'value': '^records_length',
-      'display': 'Matches Ascending'
-    },
-    {
-      'value': '$records_length',
-      'display': 'Matches Descending'
-    },
+  sortValues: Array<any> = [
     {
       'value': '^searchTerm',
       'display': 'Search Term Ascending '
@@ -77,15 +74,39 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     {
       'value': '$searchTerm',
       'display': 'Search Term Descending'
+    },
+    {
+      'value': '^records_length',
+      'display': 'Matches Ascending'
+    },
+    {
+      'value': '$records_length',
+      'display': 'Matches Descending'
     }
-  ];  
+  ];
 
-  filterValues: any = {
-    'No Matches': "records_length:0",
-    'One or More Matches':"records_length>0",
-    'One Match': "records_length:1",
-    'More than One Match': "records_length>1"
-  }  
+  filterValues: Array<any> = [
+    {
+      'value': '',
+      'display': 'No filter'
+    },
+    {
+      'value': 'records_length:0',
+      'display': 'No matches'
+    },
+    {
+      'value': 'records_length:1',
+      'display': 'One match'
+    },
+    {
+      'value': 'records_length>0',
+      'display': 'One or more matches'
+    },
+    {
+      'value': 'records_length>4',
+      'display': 'More than one2 match'
+    }
+  ];
 
   displayedColumns: string[] = [
     'searchTerm',
@@ -130,9 +151,11 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnInit(): void {
+    
 
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
@@ -149,6 +172,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     if (this.loadSummary) {
       this.pollUntillCompleted();
     }
+    
+
   }
 
   ngOnChanges() {
@@ -175,19 +200,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
     this.qPageIndex = pageEvent.pageIndex;
     this.getBulkSearchStatusResults();
   }
-  openedSortSubstances(event: any) {
-    if (event) {
-//      this.overlayContainer.style.zIndex = '1002';
-    } else {
-//      this.overlayContainer.style.zIndex = '1000';
-    }
-  }
-
-
-
-  
-
-
 
   // see substances code
   populateUrlQueryParameters(): void {
@@ -242,6 +254,34 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       );
   }
 
+  sortData(sort: Sort) {
+    this.qSort = '';
+    if (sort.active === 'searchTerm') {
+      if (sort.direction === 'asc') {
+        this.qSort = this.sortValues[0].value;
+      } else if (sort.direction === 'desc') { 
+        this.qSort = this.sortValues[1].value;      
+      }
+    } else if (sort.active==='matches') {
+      if (sort.direction === 'asc') {
+        this.qSort = this.sortValues[2].value;
+      } else if (sort.direction === 'desc') { 
+        this.qSort = this.sortValues[3].value;      
+      }
+    }
+    this.getBulkSearchStatusResults();
+  }
+
+  filterData() {
+    this.getBulkSearchStatusResults();
+  }
+
+  setAndFilterData(qFilter: string) { 
+    this.qFilter=qFilter;
+    this.getBulkSearchStatusResults();
+  }
+
+
   getBulkSearchStatusResults() {
     const qSkip = this.qPageIndex * this.qPageSize;
     const subscription = this.bulkSearchService.getBulkSearchStatusResults(
@@ -263,6 +303,9 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       if(bulkSearchResults?.summary) {
         this._summary = bulkSearchResults.summary;
         this.totalQueries = this._summary.qTotal;
+        this.qFilteredTotal = this._summary.qFilteredTotal;
+
+        
         this.totalQueriesMatch = this._summary.qMatchTotal;
         this.totalQueriesUnMatch = this._summary.qUnMatchTotal;
 
