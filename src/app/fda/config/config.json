@@ -1163,6 +1163,23 @@
       ]
     },
     {
+      "display": "Search",
+      "children": [
+        {
+          "component": "",
+          "display": "Advanced Search",
+          "path": "advanced-search",
+          "order": 180
+        },
+        {
+          "component": "",
+          "display": "Bulk Search",
+          "path": "bulk-search",
+          "order": 190
+        }
+      ]
+    },
+    {
       "display": "Help",
       "order": 60,
       "children": [
