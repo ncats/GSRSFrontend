@@ -490,16 +490,6 @@
       ]
     },
     {
-      "card": "substance-relationships-visualization",
-      "title": "Relationships Visualization",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        }
-      ]
-    },
-    {
       "card": "substance-relationships",
       "type": "ACTIVE MOIETY",
       "title": "Relationships: Active Moiety",

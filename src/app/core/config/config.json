@@ -433,31 +433,6 @@
         ]
       },
       {
-        "card": "substance-relationships-visualization",
-        "title": "Relationships Visualization",
-        "filters": [
-          {
-            "filterName": "exists",
-            "propertyToCheck": "relationships"
-          }
-        ]
-      },
-      {
-        "card": "substance-relationships",
-        "type": "ACTIVE MOIETY",
-        "title": "Relationships: Active Moiety",
-        "filters": [
-          {
-            "filterName": "exists",
-            "propertyToCheck": "relationships"
-          },
-          {
-            "filterName": "substanceRelationships",
-            "value": "ACTIVE MOIETY"
-          }
-        ]
-      },
-      {
         "card": "substance-relationships",
         "type": "METABOLITE",
         "title": "Relationships: Metabolites",
