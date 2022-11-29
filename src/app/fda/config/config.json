@@ -67,7 +67,8 @@
     "impurities": true,
     "ssg2": true,
     "ssg4m": true,
-    "userRegistration": false
+    "userRegistration": false,
+    "searchNav": true
   },
   "usefulLinks": [
     {
@@ -1159,6 +1160,23 @@
           "display": "Impurities",
           "path": "impurities/register",
           "order": 220
+        }
+      ]
+    },
+    {
+      "display": "Search",
+      "children": [
+        {
+          "component": "",
+          "display": "Advanced Search",
+          "path": "advanced-search",
+          "order": 180
+        },
+        {
+          "component": "",
+          "display": "Bulk Search",
+          "path": "bulk-search",
+          "order": 190
         }
       ]
     },
