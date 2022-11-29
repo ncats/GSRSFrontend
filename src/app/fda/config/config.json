@@ -67,8 +67,7 @@
     "impurities": true,
     "ssg2": true,
     "ssg4m": true,
-    "userRegistration": false,
-    "searchNav": true
+    "userRegistration": false
   },
   "usefulLinks": [
     {
