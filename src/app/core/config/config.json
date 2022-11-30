@@ -433,16 +433,6 @@
         ]
       },
       {
-        "card": "substance-relationships-visualization",
-        "title": "Relationships Visualization",
-        "filters": [
-          {
-            "filterName": "exists",
-            "propertyToCheck": "relationships"
-          }
-        ]
-      },
-      {
         "card": "substance-relationships",
         "type": "ACTIVE MOIETY",
         "title": "Relationships: Active Moiety",
@@ -639,6 +629,23 @@
   "homeContents": "GSRS has been developed to assist regulators in managing substance information. It was designed to facilitate global monitoring of human and animal medicinal, food, tobacco, and cosmetic products. GSRS provides unique substance identifiers consistent with the ISO 11238 standard. FDA’s GSRS specifically generates the Unique Ingredient Identifiers (UNIIs) used in electronic listing and other regulatory activities.",
   "relationshipsVisualizationUri": "",
   "navItems": [
+    {
+      "display": "Search",
+      "children": [
+        {
+          "component": "",
+          "display": "Advanced Search",
+          "path": "advanced-search",
+          "order": 180
+        },
+        {
+          "component": "",
+          "display": "Bulk Search",
+          "path": "bulk-search",
+          "order": 190
+        }
+      ]
+    },    
     {
       "display": "Help",
       "order": 60,
