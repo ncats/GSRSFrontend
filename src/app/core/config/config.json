@@ -643,6 +643,18 @@
           "display": "Bulk Search",
           "path": "bulk-search",
           "order": 190
+        },
+        {
+          "component": "",
+          "display": "Structure Search",
+          "path": "structure-search",
+          "order": 200
+        },
+        {
+          "component": "",
+          "display": "Sequence Search",
+          "path": "sequence-search",
+          "order": 210
         }
       ]
     },    
