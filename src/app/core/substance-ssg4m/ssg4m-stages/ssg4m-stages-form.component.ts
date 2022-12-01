@@ -82,6 +82,7 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
   set stageIndex(stageIndex: number) {
     this.privateStageIndex = stageIndex;
     // Set the Stage Name
+   // alert("STAGE INDEX: " + stageIndex);
     this.privateStage.stageNumber = String(this.privateStageIndex + 1);
   }
 

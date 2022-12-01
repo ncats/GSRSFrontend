@@ -88,7 +88,7 @@
       -->
       <mat-form-field class="col-4-1"
         *ngIf="configSettingsDisplay['stageNumber'] || (configSettingsDisplay['stageNumber'] === undefined && true)">
-        <input matInput placeholder="{{configTitleStage}} Number" [(ngModel)]="stage.stageNumber"
+        <input matInput placeholder="{{configTitleStage}} Number" [(ngModel)]="stage.stageNumber" [disabled]="true"
           name="stage.stageNumber" />
       </mat-form-field>
 

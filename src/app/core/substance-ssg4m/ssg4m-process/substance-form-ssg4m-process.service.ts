@@ -40,8 +40,9 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
   }
 
   insertProcess(processIndexCurrent: number, insertDirection?: string): void {
+
     const newProcess: SpecifiedSubstanceG4mProcess = {
-      processName: 'Process ',
+      processName: '',
       sites:[{stages:[{"stageNumber": "Stage 1",
       startingMaterials: [],
       processingMaterials: [],
@@ -51,9 +52,11 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
 
     let processIndex = 0;
     if (insertDirection && insertDirection === 'before') {
+      newProcess.processName = 'Process ' + (processIndexCurrent+1).toString();
       this.substance.specifiedSubstanceG4m.process.splice(processIndexCurrent, 0, newProcess);
       processIndex = processIndexCurrent;
     } else { // after
+      newProcess.processName = 'Process ' + (processIndexCurrent+2).toString();
       this.substance.specifiedSubstanceG4m.process.splice(processIndexCurrent+1, 0, newProcess);
       processIndex = processIndexCurrent + 1;
     }
@@ -63,8 +66,9 @@ export class SubstanceFormSsg4mProcessService extends SubstanceFormServiceBase<A
   }
 
   addProcess(): void {
+    const newProcessIndex = this.substance.specifiedSubstanceG4m.process.length + 1;
     const newProcess: SpecifiedSubstanceG4mProcess = {
-      processName: 'Process ',
+      processName: 'Process ' + newProcessIndex,
       sites:[{stages:[{"stageNumber": "Stage 1",
       startingMaterials: [],
       processingMaterials: [],
