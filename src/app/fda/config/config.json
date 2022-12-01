@@ -490,16 +490,6 @@
       ]
     },
     {
-      "card": "substance-relationships-visualization",
-      "title": "Relationships Visualization",
-      "filters": [
-        {
-          "filterName": "exists",
-          "propertyToCheck": "relationships"
-        }
-      ]
-    },
-    {
       "card": "substance-relationships",
       "type": "ACTIVE MOIETY",
       "title": "Relationships: Active Moiety",
@@ -1159,6 +1149,35 @@
           "display": "Impurities",
           "path": "impurities/register",
           "order": 220
+        }
+      ]
+    },
+    {
+      "display": "Search",
+      "children": [
+        {
+          "component": "",
+          "display": "Advanced Search",
+          "path": "advanced-search",
+          "order": 180
+        },
+        {
+          "component": "",
+          "display": "Bulk Search",
+          "path": "bulk-search",
+          "order": 190
+        },
+        {
+          "component": "",
+          "display": "Structure Search",
+          "path": "structure-search",
+          "order": 200
+        },
+        {
+          "component": "",
+          "display": "Sequence Search",
+          "path": "sequence-search",
+          "order": 210
         }
       ]
     },

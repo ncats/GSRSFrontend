@@ -22,15 +22,6 @@
      <span style = "font-size:16px;">Menu &nbsp;</span><mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()" class = "reg-a">
-      <!--
-      <a mat-menu-item [href]="baseDomain + clasicBaseHref + 'advancedSearch'" target="_blank" *ngIf="appId === 'fda'">
-      -->
-      <a mat-menu-item [routerLink]="['/advanced-search']">
-        Advanced Search
-      </a>
-      <a mat-menu-item [routerLink]="['/bulk-search']">
-        Bulk Search
-      </a>
       <div *ngFor="let navItem of navItems">
         <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}
@@ -113,13 +104,23 @@
       </span>
 
       </mat-menu>
-        </div><div>
-      <button class = "top-button extra-item" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="reg" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "canRegister">
+      </div>
+
+      <div>
+        <button class = "top-button extra-item" mat-button mat-primary-button  
+        style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" 
+        [matMenuTriggerFor]="reg" (click)="increaseMenuZindex()" 
+        aria-label="main menu" *ngIf = "canRegister">
           <span style = "font-size:16px;">Register</span>
-         <mat-icon svgIcon="chevron_down"></mat-icon>
-         </button>
-         <button class = "top-button extra-item" mat-button mat-primary-button style = "font-size:16px;color:white; padding-right:10px;margin-right:15px;padding-top:10px; padding-bottom:10px;" class = "menu-button extra-item"
-    [routerLink]="['/advanced-search']" aria-label="advanced search" >Advanced Search</button>
+          <mat-icon svgIcon="chevron_down"></mat-icon>
+        </button>
+
+        <button class = "top-button extra-item" mat-button mat-primary-button
+        style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;"
+        [matMenuTriggerFor]="search" (click)="increaseMenuZindex()" aria-label="search menu">
+          <span style = "font-size:16px;">Search</span>
+          <mat-icon svgIcon="chevron_down"></mat-icon>
+        </button>
 
   </div>
 
@@ -141,7 +142,22 @@
        </div>
      </mat-menu>
     </div>
-  <span class="middle-fill"></span>
+
+    <div>
+      <mat-menu #search="matMenu" (closed)="removeZindex()">
+        <div *ngFor="let navItem of searchNav">
+          <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
+            {{navItem.display}}
+          </a>
+          <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
+            {{navItem.display}}
+          </a>
+ 
+        </div>
+       </mat-menu>
+    </div>
+
+    <span class="middle-fill"></span>
   <app-substance-text-search class="top-search" [searchValue]="searchValue" placeholder = "Search Substances"
     (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
     (closed)="removeZindex()">

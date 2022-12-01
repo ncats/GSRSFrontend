@@ -7,16 +7,6 @@ export const navItems: Array<NavItem> = [
         order: 10
     },
     {
-        display: 'Structure Search',
-        path: 'structure-search',
-        order: 20
-    },
-    {
-        display: 'Sequence Search',
-        path: 'sequence-search',
-        order: 30
-    },
-    {
         display: 'Register',
         order: 40,
         children: [

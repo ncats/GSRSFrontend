@@ -448,7 +448,6 @@ export class SubstanceService extends BaseHttpService {
       this.http.get<any>(url, options).subscribe(
         response => {
           // call async
-
           if (response.results) {
             const resultKey = response.key;
             this.searchKeys[bulkFacetsKey] = resultKey;
@@ -464,6 +463,10 @@ export class SubstanceService extends BaseHttpService {
               skip
             );
           } else {
+            // consider making API backend provide statusKey in JSON
+            if(this.searchKeys && this.searchKeys[bulkFacetsKey]) {
+              response.statusKey = this.searchKeys[bulkFacetsKey];
+            }
             observer.next(response);
             observer.complete();
           }
@@ -496,8 +499,8 @@ export class SubstanceService extends BaseHttpService {
       view
     )
       .subscribe(response => {
+        // consider making API backend provide statusKey in JSON
         response.statusKey=searchKey;
-
         observer.next(response);
         if (!asyncCallResponse.finished) {
           this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {     
@@ -796,7 +799,7 @@ export class SubstanceService extends BaseHttpService {
 
 
 
-  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, pageQuery?: string, otherFacets?: string): Observable<FacetQueryResponse> {
+  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
     let url: string;
 
     if (searchTerm) {
@@ -812,7 +815,7 @@ export class SubstanceService extends BaseHttpService {
     if (otherFacets) {
       let temp = facet._self.split('&');
       temp.forEach(val => {
-        if (val.indexOf('facet') >= 0) {
+        if (val.indexOf('facet=') >= 0) {
           url += '&' + val;
         }
       });

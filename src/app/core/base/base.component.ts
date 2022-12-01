@@ -44,6 +44,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   navItems: Array<NavItem>;
   canRegister = false;
   registerNav: Array<NavItem>;
+  searchNav: Array<NavItem>;
   adverseEventShinyHomepageDisplay = false;
   loadedComponents: LoadedComponents;
   private overlayContainer: HTMLElement;
@@ -180,6 +181,9 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.navItems.forEach(item => {
       if (item.display === 'Register') {
         this.registerNav = item.children;
+      }
+      if (item.display === 'Search') {
+        this.searchNav = item.children;
       }
     });
     if (this.loadedComponents) {
