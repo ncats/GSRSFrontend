@@ -66,7 +66,12 @@ export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
   set processIndex(processIndex: number) {
     this.privateProcessIndex = processIndex;
     // Set the Process Name
-    this.privateProcess.processName = 'Process ' + (this.processIndex + 1);
+    const prevProcessName = 'Process ' + (processIndex + 1).toString();
+    const nextProcessName = 'Process ' + (processIndex).toString();
+
+    if (this.privateProcess.processName && (this.privateProcess.processName === prevProcessName || this.privateProcess.processName === nextProcessName)) {
+      this.privateProcess.processName = 'Process ' + (this.processIndex + 1);
+    }
   }
 
   get processIndex(): number {

@@ -29,7 +29,7 @@
 
       <!-- Drop down menu with sub menu -->
       <button mat-stroked-button color="primary" class="borderblue button-insert-before"
-        [matMenuTriggerFor]="menu"><span class="colorbluefda">Insert Step </span>
+        [matMenuTriggerFor]="menu"><span class="colorbluefda">Insert OR Duplicate Step </span>
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
       <mat-menu #menu="matMenu" x-position="before" class="custom-menu">
@@ -50,17 +50,15 @@
           <mat-icon>arrow_downward</mat-icon>Insert {{configTitleStage}} After
         </button>
 
-        <!--
         <button mat-menu-item color="primary" class="" matTooltip="Duplicate {{configTitleStage}} Before"
-          (click)="copyStage(processIndex, siteIndex, stageIndex, 'before')">
+          (click)="duplicateStage(processIndex, siteIndex, stageIndex, 'before')">
           <mat-icon>arrow_upward</mat-icon>Duplicate {{configTitleStage}} Before
         </button>
 
         <button mat-menu-item color="primary" class="" matTooltip="Duplicate {{configTitleStage}} After"
-          (click)="copyStage(processIndex, siteIndex, stageIndex, 'after')">
+          (click)="duplicateStage(processIndex, siteIndex, stageIndex, 'after')">
           <mat-icon>arrow_downward</mat-icon>Duplicate {{configTitleStage}} After
         </button>
-        -->
       </mat-menu>
       <!-- Drop down menu end -->
 
@@ -90,7 +88,7 @@
       -->
       <mat-form-field class="col-4-1"
         *ngIf="configSettingsDisplay['stageNumber'] || (configSettingsDisplay['stageNumber'] === undefined && true)">
-        <input matInput placeholder="{{configTitleStage}} Number" [(ngModel)]="stage.stageNumber"
+        <input matInput placeholder="{{configTitleStage}} Number" [(ngModel)]="stage.stageNumber" [disabled]="true"
           name="stage.stageNumber" />
       </mat-form-field>
 
