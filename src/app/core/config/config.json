@@ -671,6 +671,14 @@
           "display": "Email GSRS Support",
           "path": "",
           "order": 30
+        },
+        {
+          "component": "",
+          "name": "contact-us",
+          "display": "Contact Us",
+          "mailToPath": "mailto:%s",
+          "queryParams": {"subject" : "Support request"},
+          "order": 2000
         }
       ]
     }

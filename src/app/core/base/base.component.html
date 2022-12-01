@@ -43,7 +43,8 @@
                 *ngIf="childNavItem.href">
                 {{childNavItem.display}}
               </a>
-              <a mat-menu-item [href]="'mailto:' + contactEmail + '?Subject=Support request'" *ngIf="childNavItem.display === 'Email GSRS Support'">
+              <a mat-menu-item [href]="transformMailToPath(childNavItem)" 
+                *ngIf="childNavItem.mailToPath">
                 {{childNavItem.display}}
               </a>
             </div>
@@ -55,9 +56,6 @@
       </div>
       <a mat-menu-item *ngIf="isAdmin" routerLink="/admin">
         Admin Panel
-      </a>
-      <a mat-menu-item [href]="'mailto:' + contactEmail">
-        Contact Us
       </a>
     </mat-menu>
   </span>
