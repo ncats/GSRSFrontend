@@ -630,6 +630,11 @@
   "relationshipsVisualizationUri": "",
   "navItems": [
     {
+      "display": "Browse Substances",
+      "path": "browse-substance",
+      "order": 10
+    },
+    {
       "display": "Search",
       "children": [
         {
