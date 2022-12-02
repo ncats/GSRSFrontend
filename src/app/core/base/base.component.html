@@ -29,6 +29,12 @@
         <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
           {{navItem.display}}
         </a>
+        <a mat-menu-item [href]="transformMailToPath(navItem)" 
+          *ngIf="navItem.mailToPath">
+          {{navItem.display}}
+        </a>
+
+
         <ng-container *ngIf="navItem.children">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
             {{navItem.display}}

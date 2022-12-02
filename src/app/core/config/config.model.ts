@@ -84,6 +84,7 @@ export interface SubstanceCardFilterParameters {
 
 export interface NavItem {
     display: string;
+    kind?: string;
     name?: string; 
     path?: string;
     externalPath?: string;

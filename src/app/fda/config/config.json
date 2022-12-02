@@ -1201,19 +1201,22 @@
           "order": 20
         },
         {
-          "display": "Email GSRS Support",
-          "path": "",
-          "order": 30
-        },
-        {
           "component": "",
-          "name": "contact-us",
-          "display": "Contact Us",
+          "kind": "contact-us",
+          "display": "Email GSRS Support",
           "mailToPath": "mailto:%s",
           "queryParams": {"subject" : "Support request"},
-          "order": 2000
+          "order": 30
         }
       ]
+    },
+    {
+      "component": "",
+      "kind": "contact-us",
+      "display": "Contact Us",
+      "mailToPath": "mailto:%s",
+      "queryParams": {"subject" : "Support request"},
+      "order": 2000
     }
   ],
   "substanceSelectorProperties": [

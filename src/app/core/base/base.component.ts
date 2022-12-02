@@ -357,10 +357,10 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   transformMailToPath(item: NavItem) {
-    if(item?.name && item?.mailToPath) {
+    if(item?.kind && item?.mailToPath) {
       let subject ='';
       let email ='';
-      if(item.name==='contact-us') { 
+      if(item.kind==='contact-us') { 
         email = this.contactEmail;
       }
       if(item?.queryParams) {
