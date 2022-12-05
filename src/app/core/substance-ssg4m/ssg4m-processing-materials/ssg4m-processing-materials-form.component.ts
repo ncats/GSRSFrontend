@@ -143,7 +143,7 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
 
   confirmDeleteProcessingMaterial() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Processing Material ' + (this.processingMaterialIndex + 1) + ' for Stage ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delele Processing Material ' + (this.processingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {

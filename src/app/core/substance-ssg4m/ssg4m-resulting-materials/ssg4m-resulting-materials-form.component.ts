@@ -147,7 +147,7 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
 
   confirmDeleteResultingMaterial() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Resulting Material ' + (this.resultingMaterialIndex + 1) + ' for Stage ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delele Resulting Material ' + (this.resultingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -162,7 +162,9 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
   }
 
   copyResultingToStarting() {
-    this.substanceFormSsg4mStagesService.copyResultingToStarting(this.processIndex, this.siteIndex, this.stageIndex, this.resultingMaterialIndex);
+    this.substanceFormSsg4mStagesService.setSourceStageToCopy(this.processIndex, this.siteIndex, this.stageIndex);
+    this.substanceFormSsg4mStagesService.setSourceResultingToCopy();
+    this.substanceFormSsg4mStagesService.copyResultingToStarting(this.processIndex, this.siteIndex, this.stageIndex + 1);
   }
   /*
   copyResultingToStarting() {

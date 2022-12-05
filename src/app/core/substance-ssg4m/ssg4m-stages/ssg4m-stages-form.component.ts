@@ -207,7 +207,7 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
 
   confirmDeleteStage() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Stage ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delele ' + this.configTitleStage  + ' ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {

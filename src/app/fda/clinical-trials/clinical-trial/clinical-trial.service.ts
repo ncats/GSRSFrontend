@@ -178,12 +178,21 @@ export class ClinicalTrialService extends BaseHttpService {
   }
 
   getSubstanceClinicalTrialsEurope(
-    uuid: string, page: number, pageSize: number
+    uuid: string, page: number, pageSize: number, order: string,
   ): Observable<Array<any>> {
+    let params = new FacetHttpParams();
     const skip = page * pageSize;
 
-    const url = this.baseUrl + 'api/v1/clinicaltrialseurope/search?q=root_clinicalTrialEuropeProductList_clinicalTrialEuropeDrugList_substanceKey:"^'+ uuid +'$"' + '&top=' + pageSize + '&skip=' + skip;      
-    return this.http.get<Array<any>>(url).pipe(
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    const options = {
+      params: params
+    };
+
+    const url = this.baseUrl + 'api/v1/clinicaltrialseurope/search?q=root_clinicalTrialEuropeProductList_clinicalTrialEuropeDrugList_substanceKey:"^'+ uuid +'$"' + '&top=' + pageSize + '&skip=' + skip;
+    return this.http.get<Array<any>>(url, options).pipe(
     map(results => {
         this.totalRecords = results['total'];
         console.log(JSON.stringify(results));
