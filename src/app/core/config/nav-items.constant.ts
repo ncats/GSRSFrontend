@@ -2,11 +2,6 @@ import { NavItem } from '@gsrs-core/config';
 
 export const navItems: Array<NavItem> = [
     {
-        display: 'Browse Substances',
-        path: 'browse-substance',
-        order: 10
-    },
-    {
         display: 'Register',
         order: 40,
         children: [
