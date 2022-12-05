@@ -5,6 +5,7 @@ import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/cl
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
 import { FacetParam } from '@gsrs-core/facets-manager';
+import { Sort } from '@angular/material/sort';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +15,7 @@ import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { take } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
 
 @Component({
   selector: 'app-substance-clinical-trials-eu',
@@ -33,6 +35,9 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
   etagAllExport = '';
   loadedComponents: LoadedComponents;
   loadingStatus = '';
+  public sortValues = clinicalTrialSearchSortValues;
+  order = '$root_trialNumber';
+  ascDescDir = 'desc';
 
   @Input() substanceUuid: string;
   @Output() countClinicalTrialEuOut: EventEmitter<number> = new EventEmitter<number>();
@@ -41,7 +46,7 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     'trialNumber',
     'title',
     'sponsorName',
-    'conditions'
+    'conditionsEU'
   ];
 
   constructor(
@@ -75,8 +80,12 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
   getSubstanceClinicalTrialsEurope(pageEvent?: PageEvent, searchType?: string): void {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
+
     const subscriptionClinical = this.clinicalTrialService.getSubstanceClinicalTrialsEurope(
-      this.substanceUuid, this.page, this.pageSize
+      this.substanceUuid,
+      this.page,
+      this.pageSize,
+      this.order
     )
       .subscribe(pagingResponse => {
         if (searchType && searchType === 'initial') {
@@ -166,5 +175,21 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
       // const a =[{"meddraTerm": "meddraTerm1"}, {"meddraTerm": "meddraTerm2"},{"meddraTerm": "meddraTerm3"},{"meddraTerm": "meddraTerm4"}];
       return _.map(cteu.clinicalTrialEuropeMeddraList, 'meddraTerm').join("|");
     }
+  }
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getSubstanceClinicalTrialsEurope();
+    }
+    return;
   }
 }
