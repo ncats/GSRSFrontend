@@ -64,6 +64,18 @@ export const applicationSearchSortValues = [
     'direction': 'desc'
   },
   {
+    'value': '^root_appStatus',
+    'display': 'Status, A-Z',
+    'displayedColumns': 'appStatus',
+    'direction': 'asc'
+  },
+  {
+    'value': '$root_appStatus',
+    'display': 'Status, Z-A',
+    'displayedColumns': 'appStatus',
+    'direction': 'desc'
+  },
+  {
     'value': '^root_sponsorName',
     'display': 'Sponsor Name, A-Z',
     'displayedColumns': 'sponsorName',
@@ -73,6 +85,18 @@ export const applicationSearchSortValues = [
     'value': '$root_sponsorName',
     'display': 'Sponsor Name, Z-A',
     'displayedColumns': 'sponsorName',
+    'direction': 'desc'
+  },
+  {
+    'value': '^root_appSubType',
+    'display': 'Application Sub Type, A-Z',
+    'displayedColumns': 'applicationSubType',
+    'direction': 'asc'
+  },
+  {
+    'value': '$root_appSubType',
+    'display': 'Application Sub Type, Z-A',
+    'displayedColumns': 'applicationSubType',
     'direction': 'desc'
   },
   {

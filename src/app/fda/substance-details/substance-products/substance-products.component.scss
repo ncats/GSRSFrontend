@@ -71,3 +71,10 @@
   justify-content: center; /* horizonal align */
 }
 
+.divflex {
+  display: flex;
+}
+
+.middle-fill {
+  flex: 1 1 auto;
+}

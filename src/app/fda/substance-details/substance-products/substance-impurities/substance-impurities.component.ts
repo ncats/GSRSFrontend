@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angu
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
@@ -16,6 +17,7 @@ import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } fr
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { impuritiesSearchSortValues } from '../../../impurities/impurities-search-sort-values';
 
 @Component({
   selector: 'app-substance-impurities',
@@ -42,8 +44,11 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   privateExport = false;
   disableExport = false;
   etag = '';
+  public sortValues = impuritiesSearchSortValues;
+  order = '$root_productSubstanceName';
+  ascDescDir = 'desc';
   displayedColumns: string[] = [
-    'productName',
+    'productSubstanceName',
     'sourceType',
     'source',
     'sourceid',
@@ -152,25 +157,33 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       });
   }
 
+
   getImpuritiesBySubstanceUuid(pageEvent?: PageEvent): void {
-    this.setPageEvent(pageEvent);
-
     this.showSpinner = true;  // Start progress spinner
+
+    this.setPageEvent(pageEvent);
+    const skip = this.page * this.pageSize;
+
     // , this.page, this.pageSize
-    this.impuritiesService.getImpuritiesBySubstanceUuid(this.substanceUuid).subscribe(results => {
-      this.impuritiesService.totalRecords = results.total;
-      this.impurities = results.content;
+    this.impuritiesService.getImpuritiesBySubstanceUuid(
+      this.order,
+      skip,
+      this.pageSize,
+      this.substanceUuid,
+      this.privateFacetParams).subscribe(results => {
+        this.impuritiesService.totalRecords = results.total;
+        this.impurities = results.content;
 
-      // Load Impurities Test Details by Substance Uuid
-      this.loadImpuritiesTestDetails();
+        // Load Impurities Test Details by Substance Uuid
+        this.loadImpuritiesTestDetails();
 
-      this.setResultData(this.impurities);
+        this.setResultData(this.impurities);
 
-      this.totalImpurities = results.total;
+        this.totalImpurities = results.total;
 
-      this.etag = results.etag;
-      this.countImpuritiesOut.emit(this.totalImpurities);
-    });
+        this.etag = results.etag;
+        this.countImpuritiesOut.emit(this.totalImpurities);
+      });
     this.showSpinner = false;  // Stop progress spinner
   }
 
@@ -276,7 +289,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
       const url = this.getApiExportUrl(this.etag, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-         // height: '215x',
+          // height: '215x',
           width: '700px',
           data: { 'extension': extension, 'type': 'substanceImpurities', 'entity': 'impurities', 'hideOptionButtons': true }
         });
@@ -289,7 +302,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -315,4 +328,19 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     }
   }
 
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getImpuritiesBySubstanceUuid();
+    }
+    return;
+  }
 }
