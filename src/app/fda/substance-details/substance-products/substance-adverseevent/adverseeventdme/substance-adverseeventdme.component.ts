@@ -91,12 +91,14 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
         this.etag = pagingResponse.etag;
         this.countAdvDmeOut.emit(this.adverseEventCount);
       }, error => {
+        this.showSpinner = false;  // Stop progress spinner
         console.log('error');
       }, () => {
+        this.showSpinner = false;  // Stop progress spinner
         subscription.unsubscribe();
       });
     this.loadingStatus = '';
-    this.showSpinner = false;  // Stop progress spinner
+    // this.showSpinner = false;  // Stop progress spinner
   }
 
   /*

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { take } from 'rxjs/operators';
+import { Sort } from '@angular/material/sort';
 import { AuthService } from '@gsrs-core/auth';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -13,6 +14,7 @@ import { GeneralService } from '../../../service/general.service';
 import { Application } from '../../../application/model/application.model';
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { applicationSearchSortValues } from '../../../application/applications-browse/application-search-sort-values';
 
 @Component({
   selector: 'app-substance-application',
@@ -21,7 +23,6 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 })
 
 export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
-
   application: any;
   applicationCount = 0;
   totalApplication = 0;
@@ -42,9 +43,17 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   etagAllExport = '';
   @Input() bdnum: string;
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
-
+  public sortValues = applicationSearchSortValues;
+  order = '$root_appNumber';
+  ascDescDir = 'desc';
   displayedColumns: string[] = [
-    'appType', 'appNumber', 'productName', 'sponsorName', 'applicationStatus', 'applicationSubType'];
+    'appType',
+    'appNumber',
+    'productName',
+    'sponsorName',
+    'appStatus',
+    'applicationSubType'
+  ];
 
   constructor(
     private router: Router,
@@ -63,64 +72,14 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       this.isAdmin = response;
     });
 
-    /*
-    if (this.substance && this.substance.uuid) {
-      alert(this.substance.uuid);
-      this.generalService.getSubstanceCodesBySubstanceUuid(this.substance.uuid).subscribe(results => {
-        if (results) {
-          const substanceCodes = results;
-          for (let index = 0; index < substanceCodes.length; index++) {
-            if (substanceCodes[index].codeSystem === 'BDNUM') {
-                this.bdnum = substanceCodes[index].code;
-                break;
-            }
-          }
-        }
-      });
-    }
-    */
-
     if (this.bdnum) {
       this.getApplicationCenterList();
 
       this.privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
         + this.bdnum;
       this.getApplicationBySubstanceKeyCenter(null, 'initial');
-      // this.getApplicationCenterByBdnum();
-      // this.getSubstanceApplications();
-      // this.applicationListExportUrl();
     }
   }
-
-  /*
-  searchApplicationBySubstanceKey(): string {
-    this.applicationService.searchApplicationBySubstanceKey(this.bdnum).subscribe(results => {
-      this.results = results;
-      if (results) {
-    //    const content = results.content;
-     //   if (this.centerList && this.centerList.length > 0) {
-    //      this.foundCenterList = true;
-        }
-        this.loadingComplete = true;
-      }
-    });
-  //  return this.centerList;
-  }
-  */
-
-  /* PLAY FRAMEWORK */
-  /*
-  getApplicationCenterByBdnum(): string {
-    this.applicationService.getApplicationCenterByBdnum(this.bdnum).subscribe(results => {
-      this.centerList = results.centerList;
-      if (this.centerList && this.centerList.length > 0) {
-        this.foundCenterList = true;
-      }
-      this.loadingComplete = true;
-    });
-    return this.centerList;
-  }
-  */
 
   getApplicationCenterList(): void {
     this.applicationService.getApplicationCenterList(this.bdnum).subscribe(results => {
@@ -183,25 +142,6 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     }
   }
 
-  /*
-  getApplicationBySubstanceKeyCenter(pageEvent ?: PageEvent): void {
-    this.setPageEvent(pageEvent);
-
-    this.showSpinner = true;  // Start progress spinner
-    // , this.page, this.pageSize
-    this.applicationService.getApplicationBySubstanceKeyCenter(this.bdnum).subscribe(results => {
-      this.setResultData(results.content);
-      this.application = results.content;
-      this.totalApplication = results.total;
-      this.applicationService.totalRecords = results.total;
-      this.etag = results.etag;
-      this.countApplicationOut.emit(this.totalApplication);
-      this.loadingStatus = '';
-      this.showSpinner = false;  // Stop progress spinner
-    });
-  }
-  */
-
   // GSRS 3.0
   getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent, searchType?: string) {
     this.setPageEvent(pageEvent);
@@ -212,14 +152,13 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     //    this.pageSize = 100;
     //  }
     const subscription = this.applicationService.getApplicationAll(
-      'default',
+      this.order,
       skip,
       this.pageSize,
       this.privateSearch,
       this.privateFacetParams
     )
       .subscribe(pagingResponse => {
-
         if (searchType && searchType === 'initial') {
           this.etagAllExport = pagingResponse.etag;
         } else {
@@ -232,12 +171,14 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
           this.countApplicationOut.emit(this.applicationCount);
         }
       }, error => {
+        this.showSpinner = false;  // Stop progress spinner
         console.log('error');
       }, () => {
+        this.showSpinner = false;  // Stop progress spinner
         subscription.unsubscribe();
       });
     this.loadingStatus = '';
-    this.showSpinner = false;  // Stop progress spinner
+    // this.showSpinner = false;  // Stop progress spinner
   }
 
   /*
@@ -272,7 +213,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
       const url = this.getApiExportUrl(this.etagAllExport, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-         // height: '215x',
+          // height: '215x',
           width: '700px',
           data: { 'extension': extension, 'type': 'substanceApplication', 'entity': 'applications', 'hideOptionButtons': true }
         });
@@ -285,7 +226,7 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -315,4 +256,20 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     }
   }
 
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      // Get Sort Values from applicationSearchSortValues
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getApplicationBySubstanceKeyCenter();
+    }
+    return;
+  }
 }

@@ -50,11 +50,35 @@ export class ImpuritiesService extends BaseHttpService {
     this._bypassUpdateCheck = true;
   }
 
-  getImpuritiesBySubstanceUuid(substanceUuid: string): Observable<any> {
-    const query = 'search?q=root_impuritiesSubstanceList_substanceUuid:\"' + substanceUuid + '"' +
-    ' OR root_impuritiesSubstanceList_impuritiesTestList_impuritiesDetailsList_relatedSubstanceUuid:\"' + substanceUuid + '"';
+  getImpuritiesBySubstanceUuid(
+    order: string,
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<any> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    const options = {
+      params: params
+    };
+
+    const query = 'search?q=root_impuritiesSubstanceList_substanceUuid:\"' + searchTerm + '"' +
+      ' OR root_impuritiesSubstanceList_impuritiesTestList_impuritiesDetailsList_relatedSubstanceUuid:\"' + searchTerm + '"';
     const url = this.apiBaseUrlWithEntityContext + query;
-    return this.http.get<Impurities>(url)
+    return this.http.get<Impurities>(url, options)
       .pipe(
         map(result => {
           return result;

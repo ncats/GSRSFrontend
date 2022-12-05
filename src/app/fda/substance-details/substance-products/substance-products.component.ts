@@ -5,6 +5,7 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ProductService } from '../../product/service/product.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
@@ -16,6 +17,7 @@ import { take } from 'rxjs/operators';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { productSearchSortValues } from '../../product/products-browse/product-search-sort-values';
 
 @Component({
   selector: 'app-substance-products',
@@ -50,8 +52,11 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   etag = '';
   etagAllExport = '';
   loadedComponents: LoadedComponents;
+  public sortValues = productSearchSortValues;
+  order = '$root_productNDC';
+  ascDescDir = 'desc';
   public displayedColumns: string[] = [
-    'productId',
+    'productNDC',
     'productName',
     'labelerName',
     'country',
@@ -87,6 +92,18 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
       this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
       this.getSubstanceProducts(null, 'initial');
+
+      /*
+      this.searchControl.valueChanges.subscribe(value => {
+        if (value) {
+          this.privateSearch =  '\"' + value + '\" AND ' + 'root_productIngredientAllList_substanceUuid:\"'
+          + this.substance.uuid + '\" AND root_provenance:' + this.provenance;
+          this.getSubstanceProducts(null);
+        }
+      }, error => {
+        console.log(error);
+      });
+      */
     }
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -149,62 +166,35 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     });
   }
 
-  /* WORKS In PLAY FRAMEWORK
-  getProductProvenanceList(): void {
-    this.productService.getProductProvenanceList(this.substance.uuid).subscribe(results => {
-      this.provenanceList = results.provenanceList;
-      if (this.provenanceList && this.provenanceList.length > 0) {
-        this.foundProvenanceList = true;
-      }
-      this.loadingComplete = true;
-    });
-  }
-  */
-
-  /* WORKS In PLAY FRAMEWORK
-  getSubstanceProducts(pageEvent?: PageEvent): void {
-    this.setPageEvent(pageEvent);
-    this.showSpinner = true;  // Start progress spinner
-    this.productService.getSubstanceProducts(this.substance.uuid, this.provenance, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.productCount = this.totalRecords;
-      this.loadingStatus = '';
-      this.showSpinner = false;  // Stop progress spinner
-    });
-  }
-  */
-
   getSubstanceProducts(pageEvent?: PageEvent, searchType?: string) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
 
-    // Facet Search for "Provenance"
-    // this.privateFacetParams = { 'Provenance': { 'params': { 'SPL': true }, 'isAllMatch': false } };
-
     const subscription = this.productService.getProducts(
-      'default',
+      this.order,
       skip,
       this.pageSize,
       this.privateSearch,
       this.privateFacetParams
-    )
-      .subscribe(pagingResponse => {
-        if (searchType && searchType === 'initial') {
-          this.etagAllExport = pagingResponse.etag;
-        } else {
-          this.productService.totalRecords = pagingResponse.total;
-          this.setResultData(pagingResponse.content);
-          this.productCount = pagingResponse.total;
-          this.etag = pagingResponse.etag;
-        }
-      }, error => {
-        console.log('error');
-      }, () => {
-        subscription.unsubscribe();
-      });
+    ).subscribe(pagingResponse => {
+      if (searchType && searchType === 'initial') {
+        this.etagAllExport = pagingResponse.etag;
+      } else {
+        this.productService.totalRecords = pagingResponse.total;
+        this.setResultData(pagingResponse.content);
+        this.productCount = pagingResponse.total;
+        this.etag = pagingResponse.etag;
+      }
+    }, error => {
+      this.showSpinner = false;  // Stop progress spinner
+      console.log('error');
+    }, () => {
+      this.showSpinner = false;  // Stop progress spinner
+      subscription.unsubscribe();
+    });
     this.loadingStatus = '';
-    this.showSpinner = false;  // Stop progress spinner
+    // this.showSpinner = false;  // Stop progress spinner
   }
 
   export() {
@@ -213,7 +203,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       const url = this.getApiExportUrl(this.etagAllExport, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-         // height: '215x',
+          // height: '215x',
           width: '700px',
           data: { 'extension': extension, 'type': 'substanceProduct', 'entity': 'products', 'hideOptionButtons': true }
         });
@@ -226,7 +216,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -268,6 +258,22 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       }
 
     }
+  }
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getSubstanceProducts();
+    }
+    return;
   }
 
 }
