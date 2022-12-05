@@ -195,7 +195,6 @@ export class ClinicalTrialService extends BaseHttpService {
     return this.http.get<Array<any>>(url, options).pipe(
     map(results => {
         this.totalRecords = results['total'];
-        console.log(JSON.stringify(results));
         return results;
       })
     );
