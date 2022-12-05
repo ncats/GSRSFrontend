@@ -44,7 +44,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
 
   displayedColumns: string[] = [
     'edit',
-    'nctNumber',
+    'trialNumber',
     'title',
     'sponsor',
     'conditions',
