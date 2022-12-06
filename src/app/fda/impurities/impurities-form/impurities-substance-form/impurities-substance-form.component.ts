@@ -1,11 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Impurities, ImpuritiesSubstance, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
-import { ImpuritiesService } from '../../service/impurities.service';
+import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
-import { Subscription } from 'rxjs';
+import { ImpuritiesService } from '../../service/impurities.service';
+import { GeneralService } from '../../../service/general.service';
+import { Impurities, ImpuritiesSubstance, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
+
 
 @Component({
   selector: 'app-impurities-substance-form',
@@ -29,6 +31,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
 
   constructor(
     private impuritiesService: ImpuritiesService,
+    private generalService: GeneralService,
     private loadingService: LoadingService,
     private authService: AuthService,
     private dialog: MatDialog) { }
@@ -39,7 +42,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
   relatedSubstanceUpdated(substance: any): void {
     if (substance != null) {
       this.impuritiesSubstance.substanceUuid = substance.uuid;
-      this.impuritiesSubstance.relatedSubstanceUnii = substance.approvalID;
+      this.impuritiesSubstance.approvalID = substance.approvalID;
     }
   }
 
@@ -53,9 +56,9 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     const substanceUuid = this.impuritiesSubstance.substanceUuid;
     if (substanceUuid) {
       const getRelImpuritySubscribe = this.impuritiesService.getRelationshipImpurity(substanceUuid).subscribe(response => {
-        if (response) {
-          let relImpurities = response.data;
 
+        if (response) {
+          const relImpurities = response;
           if (Object.keys(relImpurities).length > 0) {
             // Remove Duplicate Impurites Substance UUID
             this.existingImpurities = relImpurities.filter((v, i) => relImpurities.findIndex
@@ -99,8 +102,10 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
   }
 
   getSubstancePreferredName(substanceUuid: string): void {
-    const getSubDetailsSubscribe = this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
-      this.searchValue = substanceNames.name;
+    const getSubDetailsSubscribe = this.generalService.getSubstanceBySubstanceUuid(substanceUuid).subscribe(substance => {
+      if (substance) {
+        this.searchValue = substance._name;
+      }
     });
     this.subscriptions.push(getSubDetailsSubscribe);
   }

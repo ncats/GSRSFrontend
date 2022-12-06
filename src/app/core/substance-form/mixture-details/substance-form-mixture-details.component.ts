@@ -13,7 +13,7 @@ import { SubstanceFormBase } from '../base-classes/substance-form-base';
   templateUrl: './substance-form-mixture-details.component.html',
   styleUrls: ['./substance-form-mixture-details.component.scss']
 })
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 
   parent: SubstanceRelated;
@@ -60,15 +60,21 @@ export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase imp
   }
 
   parentSubstanceUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.mixture.parentSubstance = relatedSubstance;
-    this.relatedSubstanceUuid = relatedSubstance && relatedSubstance.refuuid || '';
+
+    if (substance !== null) {
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.mixture.parentSubstance = relatedSubstance;
+      this.relatedSubstanceUuid = relatedSubstance && relatedSubstance.refuuid || '';
+    } else {
+      this.mixture.parentSubstance = null;
+      this.relatedSubstanceUuid = null;
+    }
   }
 
 }

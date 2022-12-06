@@ -94,6 +94,93 @@ export class ControlledVocabularyService extends BaseHttpService {
     });
   }
 
+  getStructure(structure: string) {
+    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
+    return this.http.get(url);
+  }
+  getStructureUrl(structure: string) {
+    structure = structure.replace(/[;]/g, '%3B')
+    .replace(/[#]/g, '%23')
+    .replace(/[+]/g, '%2B')
+    .replace(/[|]/g, '%7C');
+    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
+    return url;
+  }
+
+  getStructureUrlFragment(structure: string) {
+    structure = structure.replace(/%/g, "%25").replace(/#/g, "%23").replace(/[;]/g, "%3B").replace(/[+]/g, "%2B");
+    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
+    return url;
+  }
+  
+  
+  search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
+    return new Observable(observer => {
+      const subscription = this.getDomainVocabulary(domain).subscribe(response => {
+        const filteredTerms = response[domain].list.filter(term => term.value.toLowerCase().indexOf(query.toLowerCase()) > -1);
+        let sortedTerms = [];
+
+        if (filteredTerms != null && filteredTerms.length) {
+          sortedTerms = filteredTerms.sort((termA, termB) => {
+            if (termA < termB) {
+              return -1;
+            }
+            if (termA > termB) {
+              return 1;
+            }
+            return 0;
+          });
+        }
+
+        observer.next(sortedTerms);
+        subscription.unsubscribe();
+      });
+    });
+  }
+
+  public fetchFullVocabulary(domain: string): Observable<any> {
+
+    const url = `${this.apiBaseUrl}vocabularies/search`;
+    let params = new HttpParams();
+    params = params.append('top', '100000');
+
+    let domainLuceneQuery = '';
+    const responseDomainVocabulary: VocabularyDictionary = {};
+    this.vocabularyLoadingIndicators[domain] = true;
+    if (this.vocabularySubject[domain] == null) {
+      this.vocabularySubject[domain] = new Subject();
+    }
+
+    responseDomainVocabulary[domain] = {
+      dictionary: {},
+      list: []
+    };
+
+    domainLuceneQuery += `root_domain:${domain}`;
+    params = params.append('q', domainLuceneQuery);
+    const options = {
+      params: params
+    };
+    return this.http.get<PagingResponse<Vocabulary>>(url, options);
+  }
+
+  public validateVocab(vocab: any): Observable<any> {
+    const url = `${this.apiBaseUrl}vocabularies/@validate`;
+    return this.http.post( url, vocab);
+  }
+
+
+  public addVocabTerm(vocab: any): Observable<any> {
+    const url = `${this.apiBaseUrl}vocabularies`;
+    return this.http.put( url, vocab);
+  }
+
+  public getFragmentCV(): Observable<any> {
+    const url = `${this.apiBaseUrl}vocabularies/search?facet=ix.Class/ix.ginas.models.v1.FragmentControlledVocabulary`;
+    return this.http.get(url);
+  
+  }
+
   private fetchVocabulariesFromServer(...domainArgs: Array<string>): Observable<VocabularyDictionary> {
 
     const url = `${this.apiBaseUrl}vocabularies/search`;
@@ -148,8 +235,8 @@ export class ControlledVocabularyService extends BaseHttpService {
                   dictionary: {}
                 };
               }
-
-              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.sort(function(a, b) {
+              // eslint-disable-next-line prefer-arrow-functions
+              singleDomainVocabulary[vocabulary.domain].list = vocabulary.terms.filter(term => (term.hidden === false && term.deprecated === false)).sort(function(a, b) {
                 const termA = (a.display && a.display.toUpperCase()) || (a.value && a.value.toUpperCase()) || '';
                 const termB = (b.display && b.display.toUpperCase()) || (b.value && b.value.toUpperCase()) || '';
                 if (termA < termB) {
@@ -162,7 +249,7 @@ export class ControlledVocabularyService extends BaseHttpService {
               });
 
 
-              vocabulary.terms.forEach(vocabularyTerm => {
+              vocabulary.terms.filter(term => (term.hidden === false && term.deprecated === false)).forEach(vocabularyTerm => {
                 singleDomainVocabulary[vocabulary.domain].dictionary[vocabularyTerm.value] = vocabularyTerm;
               });
             }
@@ -202,74 +289,5 @@ export class ControlledVocabularyService extends BaseHttpService {
         return responseDomainVocabulary;
       })
     );
-  }
-
-  getStructure(structure: string) {
-    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
-    return this.http.get(url);
-  }
-  getStructureUrl(structure: string) {
-    structure = structure.replace(/[;]/g, '%3B')
-    .replace(/[#]/g, '%23')
-    .replace(/[+]/g, '%2B')
-    .replace(/[|]/g, '%7C');
-    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
-    return url;
-  }
-    
-
-  search(domain: string, query: string): Observable<Array<VocabularyTerm>> {
-    return new Observable(observer => {
-      const subscription = this.getDomainVocabulary(domain).subscribe(response => {
-        const filteredTerms = response[domain].list.filter(term => term.value.toLowerCase().indexOf(query.toLowerCase()) > -1);
-        let sortedTerms = [];
-
-        if (filteredTerms != null && filteredTerms.length) {
-          sortedTerms = filteredTerms.sort((termA, termB) => {
-            if (termA < termB) {
-              return -1;
-            }
-            if (termA > termB) {
-              return 1;
-            }
-            return 0;
-          });
-        }
-
-        observer.next(sortedTerms);
-        subscription.unsubscribe();
-      });
-    });
-  }
-
-  public fetchFullVocabulary(domain: string): Observable<any> {
-
-    const url = `${this.apiBaseUrl}vocabularies/search`;
-    let params = new HttpParams();
-    params = params.append('top', '100000');
-
-    let domainLuceneQuery = '';
-    const responseDomainVocabulary: VocabularyDictionary = {};
-    this.vocabularyLoadingIndicators[domain] = true;
-    if (this.vocabularySubject[domain] == null) {
-      this.vocabularySubject[domain] = new Subject();
-    }
-
-    responseDomainVocabulary[domain] = {
-      dictionary: {},
-      list: []
-    };
-
-    domainLuceneQuery += `root_domain:${domain}`;
-    params = params.append('q', domainLuceneQuery);
-    const options = {
-      params: params
-    };
-    return this.http.get<PagingResponse<Vocabulary>>(url, options);
-  }
-
-  public addVocabTerm(vocab: any): Observable<any> {
-    const url = `${this.apiBaseUrl}vocabularies`;
-    return this.http.put( url, vocab);
   }
 }

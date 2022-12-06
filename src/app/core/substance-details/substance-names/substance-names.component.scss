@@ -14,6 +14,23 @@
   padding: 10px;
 }
 
+.mat-radio-button {
+  padding-left: 30px;
+}
+
+.name-view {
+  margin-top: 16px;
+}
+
+.name-view-label {
+  font-weight: 500;
+}
+
+.right {
+  justify-content: right;
+  align-items: right;
+  padding-top:10px;
+}
 
 td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
   padding-top: 10px;
@@ -36,4 +53,8 @@ width: 150px;
 
 .subval{
 display: inline;
+}
+.disabled-btn {
+  color: var(--box-shadow-color-5);
+  background-color: var(--box-shadow-color-3);
 }

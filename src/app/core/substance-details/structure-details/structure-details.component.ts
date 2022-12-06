@@ -8,8 +8,9 @@ import { UtilsService } from '../../utils/utils.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import { take } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-structure-details',
@@ -32,6 +33,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   showNames = false;
   searchHref: string;
   private overlayContainer: HTMLElement;
+  rounding = '1.0-2';
 
   constructor(
     private utilService: UtilsService,
@@ -39,7 +41,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     public gaService: GoogleAnalyticsService,
     private sanitizer: DomSanitizer,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private configService: ConfigService
   ) {
     super();
   }
@@ -65,6 +68,9 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         this.searchHref = 'structure-search?structure=' + this.structure.id;
       }
       this.overlayContainer = this.overlayContainerService.getContainerElement();
+      if (this.configService.configData && this.configService.configData.molWeightRounding) {
+          this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
+      }
 
   }
 
@@ -84,8 +90,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   openModal(templateRef) {
 
     const dialogRef = this.dialog.open(templateRef, {
-      height: '80%',
-      width: '80%'
+      width: '650px',
+      panelClass: 'structure-image-panel',
     });
     this.overlayContainer.style.zIndex = '1002';
 

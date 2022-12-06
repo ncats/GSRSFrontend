@@ -11,7 +11,7 @@
     </div>
     <div class="name-value">
       <div class="name">Molecular Weight</div>
-      <div class="value blue-font">{{structure.mwt}}</div>
+      <div class="value blue-font">{{structure.mwt | number: rounding}}</div>
     </div>
     <div class="name-value">
       <div class="name">Optical Activity</div>
@@ -39,14 +39,14 @@
     </div>
       <div class="name-value" *ngIf="structure.references?.length > 0" >
         <div class="name">
-          <a (click)="toggleReferences()" class='blue-font references-link'>
+          <a tabindex="0" role="link" (click)="toggleReferences()" class='blue-font references-link'>
             <span>{{showDef === false ? 'Show' : 'Hide'}} References</span><mat-icon svgIcon="{{defIcon}}"></mat-icon>
           </a>
         </div>
       </div>
       <div class="name-value" *ngIf="structure.smiles" >
         <div class="name">
-          <a (click)="toggleSmiles()" class='blue-font references-link'>
+          <a tabindex="0" role="link" (click)="toggleSmiles()" class='blue-font references-link'>
             <span>{{showSmiles === false ? 'Show' : 'Hide'}} SMILES / InChi</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
           </a>
         </div>

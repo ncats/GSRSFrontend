@@ -11,15 +11,16 @@ import {
   ViewChildren,
   QueryList
 } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
-import { SubstanceDetail, SubstanceName, SubstanceCode } from '../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceSummary } from '../substance/substance.model';
 import { ConfigService } from '../config/config.service';
 import * as _ from 'lodash';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { MatDialog, PageEvent } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { StructureImageModalComponent } from '../structure/structure-image-modal/structure-image-modal.component';
@@ -32,20 +33,23 @@ import { Location } from '@angular/common';
 import { StructureService } from '@gsrs-core/structure';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-
+import { NarrowSearchSuggestion, PagingResponse } from '@gsrs-core/utils';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '../facets-manager/facet.model';
 import { FacetsManagerService } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import { BrowseHeaderDynamicSectionDirective } from '@gsrs-core/substances-browse/browse-header-dynamic-section/browse-header-dynamic-section.directive';
 import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
 import { SubstanceBrowseHeaderDynamicContent } from '@gsrs-core/substances-browse/substance-browse-header-dynamic-content.component';
 import { Title } from '@angular/platform-browser';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+import { FormControl } from '@angular/forms';
+import { SubBrowseEmitterService } from './sub-browse-emitter.service';
+import { WildcardService } from '@gsrs-core/utils/wildcard.service';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-substances-browse',
@@ -56,12 +60,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private privateSearchTerm?: string;
   private privateStructureSearchTerm?: string;
   private privateSequenceSearchTerm?: string;
+  private privateBulkSearchQueryId?: number;
+  private privateBulkSearchStatusKey?: string;
+  private privateBulkSearchSummary?: any;
   private privateSearchType?: string;
+  private privateSearchStrategy?: string;
   private privateSearchCutoff?: number;
   private privateSearchSeqType?: string;
   private privateSequenceSearchKey?: string;
+
   public substances: Array<SubstanceDetail>;
   public exactMatchSubstances: Array<SubstanceDetail>;
+
+  searchOnIdentifiers: boolean;
+  searchEntity: string;
   pageIndex: number;
   pageSize: number;
   test: any;
@@ -74,6 +86,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   privateExport = false;
   disableExport = false;
   isError = false;
+  isRefresher = false;
   @ViewChildren(BrowseHeaderDynamicSectionDirective) dynamicContentContainer: QueryList<BrowseHeaderDynamicSectionDirective>;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -101,7 +114,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   narrowSearchSuggestionsCount = 0;
   private isComponentInit = false;
   sequenceID?: string;
-  
+  searchHashFromAdvanced: string;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -115,12 +128,20 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   showDeprecated = false;
   codeSystem: any;
   previousState: Array<string> = [];
+  facetViewCategorySelected = 'Default';
+  facetDisplayType = 'facetView';
+  facetViewCategory: Array<String> = [];
+  facetViewControl = new FormControl();
+  private wildCardText: string;
+  bulkSearchPanelOpen = false;
+
 
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
     public configService: ConfigService,
+    public emitService: SubBrowseEmitterService,
     private loadingService: LoadingService,
     private notificationService: MainNotificationService,
     public utilsService: UtilsService,
@@ -136,45 +157,58 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private substanceTextSearchService: SubstanceTextSearchService,
     private title: Title,
     private cvService: ControlledVocabularyService,
+    private wildCardService: WildcardService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
-  ) { }
+  ) {
+  }
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
-   setTimeout(() => {
-     if (this.router.url === this.previousState[0]) {
-      this.ngOnInit();
-     }
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        this.ngOnInit();
+      }
 
     }, 50);
   }
 
+  saveWildCardText() {
+    this.wildCardService.getWildCardText(this.wildCardText);
+  }
+
+  wildCardSearch() {
+    this.wildCardService.getWildCardText(this.wildCardText);
+    this.setUpPrivateSearchTerm();
+    this.searchSubstances();
+  }
+
   ngOnInit() {
-    this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets);
     this.gaService.sendPageView('Browse Substances');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
 
-      });
+    });
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
     this.pageIndex = 0;
 
-    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
-
-    if (this.privateSearchTerm) {
-      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
-      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
-    }
+    this.setUpPrivateSearchTerm();
 
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
+    this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+    this.searchOnIdentifiers = (this.activatedRoute.snapshot.queryParams['searchOnIdentifiers']==="true") || false;
+    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
 
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || '';
-    if ( this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
+
+    this.setUpPrivateSearchStrategy();
+
+
+    if (this.activatedRoute.snapshot.queryParams['sequence_key'] && this.activatedRoute.snapshot.queryParams['sequence_key'].length > 9) {
       this.sequenceID = this.activatedRoute.snapshot.queryParams['source_id'];
       this.privateSequenceSearchTerm = JSON.parse(sessionStorage.getItem('gsrs_search_sequence_' + this.sequenceID));
     }
@@ -185,6 +219,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
+    this.searchHashFromAdvanced = this.activatedRoute.snapshot.queryParams['g-search-hash'];
     if (this.pageSize > 500) {
       this.pageSize = 500;
     }
@@ -203,10 +238,45 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     if (deprecated && deprecated === 'true' && this.showAudit) {
       this.showDeprecated = true;
     }
+    this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets );
 
     this.subscriptions.push(authSubscription);
     this.isComponentInit = true;
     this.loadComponent();
+
+    this.loadFacetViewFromConfig();
+
+  }
+
+  setUpPrivateSearchTerm() {
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+    if(this.wildCardText && this.wildCardText.length > 0) {
+      if(this.privateSearchTerm.length > 0) {
+        this.privateSearchTerm += ' AND "' + this.wildCardText + '"';
+      } else {
+        this.privateSearchTerm += '"' + this.wildCardText + '"';
+      }
+    }
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+  }
+
+  setUpPrivateSearchStrategy() {
+    // Setting privateSearchStrategy so we know what
+    // search strategy is used, for example so we can
+    // pass a value for use in cards.
+    // I think privateSearchType is used differently.
+    // I see searchType being used for 'similarity'
+    this.privateSearchStrategy = null;
+    if(this.privateStructureSearchTerm) {
+      this.privateSearchStrategy = 'structure';
+    } else if(this.privateSequenceSearchTerm) {
+      this.privateSearchStrategy = 'sequence';
+    } else if(this.privateBulkSearchQueryId) {
+      this.privateSearchStrategy = 'bulk';
+    }
   }
 
   ngAfterViewInit() {
@@ -218,7 +288,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    const dynamicSubscription = this.dynamicContentContainer.changes.pipe(take(1)).subscribe((comps: QueryList<any>) => {
+    const dynamicSubscription = this.dynamicContentContainer.changes.subscribe((comps: QueryList<any>) => {
       const container = this.dynamicContentContainer.toArray();
       const dynamicContentItemsFlat = this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
         .filter(item => item.componentType === 'browseHeader');
@@ -234,7 +304,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     });
     this.subscriptions.push(dynamicSubscription);
-
 
   }
 
@@ -252,10 +321,24 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private loadComponent(): void {
 
-    if (this.isFacetsParamsInit && this.isComponentInit) {
+    if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) {
       this.searchSubstances();
     } else {
+
+      // There should be a better way to do this.
+      this.bulkSearchPanelOpen =
+      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
+      && (this.displayFacets && this.displayFacets.length===0);
     }
+  }
+
+  clipboard(value: string) {
+    document.addEventListener('copy', (e: ClipboardEvent) => {
+      e.clipboardData.setData('text/plain', (value));
+      e.preventDefault();
+      document.removeEventListener('copy', null);
+    });
+    document.execCommand('copy');
   }
 
   changePage(pageEvent: PageEvent) {
@@ -319,6 +402,36 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  facetViewChange(event): void {
+    this.facetViewCategorySelected = event.value;
+  }
+
+  openedSortSubstances(event: any) {
+    if (event) {
+      this.overlayContainer.style.zIndex = '1002';
+    } else {
+      this.overlayContainer.style.zIndex = '1000';
+    }
+  }
+
+  openedFacetViewChange(event: any) {
+    if (event) {
+      this.overlayContainer.style.zIndex = '1002';
+    } else {
+      this.overlayContainer.style.zIndex = '1000';
+    }
+  }
+
+  loadFacetViewFromConfig() {
+    this.facetViewControl.setValue(this.facetViewCategorySelected);
+    const facetConf = this.configService.configData.facets && this.configService.configData.facets['substances'] || {};
+    facetConf['facetView'].forEach(categoryRow => {
+      const category = categoryRow['category'];
+      this.facetViewCategory.push(category);
+    });
+    this.facetViewCategory.push('All');
+  }
+
   // for facets
   facetsLoaded(numFacetsLoaded: number) {
     if (numFacetsLoaded > 0) {
@@ -329,11 +442,17 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   searchSubstances() {
+      // There should be a better way to do this.
+      this.bulkSearchPanelOpen =
+      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
+      && (this.displayFacets && this.displayFacets.length===0);
+
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
       this.privateStructureSearchTerm,
       this.privateSequenceSearchTerm,
+      this.privateBulkSearchQueryId,
       this.privateSearchCutoff,
       this.privateSearchType,
       this.privateSearchSeqType,
@@ -352,6 +471,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         searchTerm: this.privateSearchTerm,
         structureSearchTerm: this.privateStructureSearchTerm,
         sequenceSearchTerm: this.privateSequenceSearchTerm,
+        bulkQID: this.bulkSearchQueryId,
+        searchOnIdentifiers: this.searchOnIdentifiers,
+        searchEntity: this.searchEntity,
         cutoff: this.privateSearchCutoff,
         type: this.privateSearchType,
         seqType: this.privateSearchSeqType,
@@ -363,6 +485,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         deprecated: this.showDeprecated
       })
         .subscribe(pagingResponse => {
+          this.privateBulkSearchStatusKey = pagingResponse.statusKey;
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.total % this.pageSize === 0) {
@@ -379,6 +502,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.showExactMatches = true;
           }
 
+          if (pagingResponse.summary && pagingResponse.summary.length > 0
+            && pagingResponse.skip === 0
+            && (!pagingResponse.sideway || pagingResponse.sideway.length < 2)
+          ) {
+            this.privateBulkSearchSummary = pagingResponse.summary;
+          }
+
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -387,11 +517,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
           this.narrowSearchSuggestionsCount = 0;
+
           if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+
             pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
               if (this.codeSystem && this.codeSystem[suggestion.displayField]) {
                 suggestion.displayField = this.codeSystem[suggestion.displayField].display;
               }
+
               if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                 this.narrowSearchSuggestions[suggestion.matchType] = [];
                 if (suggestion.matchType === 'WORD') {
@@ -403,13 +536,60 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
               this.narrowSearchSuggestionsCount++;
             });
+
+            if(this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
+
+              const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
+
+              // The match type usually originates from the backend.
+              // But below, it is specified here to make additonal match options(s) in the backend.
+              // Can't figure out why the sort of matchTypes does not work.
+              // I am not sure it worked before this change.
+              // I would like Additional matches to appear first.
+
+              let suggestion: NarrowSearchSuggestion = {
+                matchType: 'ADDITIONAL',
+                count: 0,
+                displayField: 'Any Name Begins With',
+                luceneField: 'root_names_name',
+                luceneQuery: lq
+              };
+              this.substanceService.searchSubstances(lq).subscribe(response => {
+                if(response?.total && response.total>0) {
+                  suggestion.count = response.total;
+                  if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+                    this.narrowSearchSuggestions[suggestion.matchType] = [];
+                    if (suggestion.matchType === 'WORD') {
+                      this.matchTypes.unshift(suggestion.matchType);
+                    } else {
+                      this.matchTypes.push(suggestion.matchType);
+                    }
+                  }
+                  this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+                  this.narrowSearchSuggestionsCount++;
+                }
+              });
+            }
+
+            // use method sortMatchTypes in template instead
+            // this.matchTypes.sort();
+
           }
           this.substanceService.getExportOptions(pagingResponse.etag).subscribe(response => {
-            this.exportOptions = response;
+            this.exportOptions = response.filter(exp => {
+              if (exp.extension) {
+                //TODO Make this generic somehow, so addditional-type exports are isolated
+                if ((exp.extension === 'appxlsx') || (exp.extension === 'prodxlsx') ||
+                    (exp.extension === 'ctusxlsx')|| (exp.extension === 'cteuxlsx')) {
+                  return false;
+                }
+              }
+              return true;
+            });
           });
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
-          this.gaService.sendException('getSubstancesDetails: error from API cal');
+          this.gaService.sendException('getSubstancesDetails: error from API call');
           const notification: AppNotification = {
             message: 'There was an error trying to retrieve substances. Please refresh and try again.',
             type: NotificationType.error,
@@ -439,6 +619,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
+sortMatchTypes(a:Array<string>) {
+    return _.sortBy(a);
+}
+
+searchTermOkforBeginsWithSearch(): boolean {
+  return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
+}
+
+
+
   restricSearh(searchTerm: string): void {
     this.privateSearchTerm = searchTerm;
     this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
@@ -451,19 +641,24 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   export(url: string, extension: string) {
     if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
-        height: '215x',
-        width: '550px',
+        maxHeight: '85%',
+
+        width: '60%',
         data: { 'extension': extension }
       });
 
       this.overlayContainer.style.zIndex = '1002';
 
-      const exportSub = dialogReference.afterClosed().subscribe(name => {
+      const exportSub = dialogReference.afterClosed().subscribe(response => {
+        const name = response.name;
+        const id = response.id;
         this.overlayContainer.style.zIndex = null;
         if (name && name !== '') {
           this.loadingService.setLoading(true);
           const fullname = name + '.' + extension;
-          this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+          this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+           // this.substanceService.getConfigByID(id).subscribe(resp =>{
+          //  });
             this.loadingService.setLoading(false);
             this.loadingService.setLoading(false);
             const navigationExtras: NavigationExtras = {
@@ -483,12 +678,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   setSubstanceNames(substanceId: string): void {
-    this.loadingService.setLoading(true);
     this.substanceService.getSubstanceNames(substanceId).pipe(take(1)).subscribe(names => {
       this.names[substanceId] = names;
-      this.loadingService.setLoading(false);
     }, error => {
-      this.loadingService.setLoading(false);
+      this.names[substanceId] = [];
     });
   }
 
@@ -509,12 +702,27 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
         });
         this.codes[substanceId].codeSystemNames = this.sortCodeSystems(this.codes[substanceId].codeSystemNames);
+        this.codes[substanceId].codeSystemNames.forEach(sysName => {
+          this.codes[substanceId].codeSystems[sysName] = this.codes[substanceId].codeSystems[sysName].sort((a, b) => {
+            let test = 0;
+            if (a.type === 'PRIMARY' && b.type !== 'PRIMARY') {
+              test = 1;
+            } else if (a.type !== 'PRIMARY' && b.type === 'PRIMARY') {
+              test = -1;
+            } else {
+              test = 0;
+            }
+            return test;
+          });
+        });
+
       }
       this.loadingService.setLoading(false);
     }, error => {
       this.loadingService.setLoading(false);
     });
   }
+
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
@@ -524,6 +732,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
     navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
+    navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
+    navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
     navigationExtras.queryParams['type'] = this.privateSearchType;
     navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
@@ -543,10 +754,49 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.location.go(urlTree.toString());
   }
 
-  editGuidedSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'guided search term' :
+  editAdvancedSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'advanced search term' :
       `${this.privateSearchTerm}`;
-    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-guided-search', eventLabel);
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
+    // Structure Search
+   // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
+   // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
+   // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
+
+    // ** BEGIN: Store in Local Storage for Advanced Search
+    // storage searchterm in local storage when going from Browse Substance to Advanced Search (NOT COMING FROM ADVANCED SEARCH)
+    if (!this.searchHashFromAdvanced) {
+      const advSearchTerm: Array<String> = [];
+      advSearchTerm[0] = this.privateSearchTerm;
+      const queryStatementHashes = [];
+      const queryStatement = {
+        condition: '',
+        queryableProperty: 'Manual Query Entry',
+        command: 'Manual Query Entry',
+        commandInputValues: advSearchTerm,
+        query: this.privateSearchTerm
+      };
+
+      // Store in cookies, Category tab (Substance, Application, etc)
+      const categoryHash = this.utilsService.hashCode('Substance');
+      localStorage.setItem(categoryHash.toString(), 'Substance');
+      queryStatementHashes.push(categoryHash);
+
+      const queryStatementString = JSON.stringify(queryStatement);
+      const hash = this.utilsService.hashCode(queryStatementString);
+
+      // Store in cookies, Each Query Statement is stored in separate hash
+      localStorage.setItem(hash.toString(), queryStatementString);
+
+      // Push Query Statements Hashes in Array
+      queryStatementHashes.push(hash);
+
+      // Store in cookies,  store in Query Hash - Query Statement Hashes Array
+      const queryStatementHashesString = JSON.stringify(queryStatementHashes);
+
+      localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
+     }
+    // ** END: Store in Local Storage for Advanced Search
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
@@ -554,7 +804,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     };
 
-    this.router.navigate(['/guided-search'], navigationExtras);
+    navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
+    navigationExtras.queryParams['type'] = this.privateSearchType || null;
+
+    if(this.privateSearchType === 'similarity') {
+      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
+    }
+    this.router.navigate(['/advanced-search'], navigationExtras);
   }
 
   editStructureSearch(): void {
@@ -628,12 +884,47 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
   }
 
+  editBulkSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+      `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        bulkQID: this.privateBulkSearchQueryId,
+        searchOnIdentifiers: this.searchOnIdentifiers,
+        searchEntity: this.searchEntity
+      }
+    };
+    this.router.navigate(['/bulk-search'], navigationExtras);
+  }
+
+  clearBulkSearch(): void {
+
+    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+    `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
+    this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
+
+    this.privateBulkSearchQueryId = null;
+    this.privateBulkSearchSummary = null;
+    this.searchEntity = '';
+    this.searchOnIdentifiers = null;
+    this.privateSearchType = '';
+    this.privateSearchCutoff = 0;
+    this.smiles = '';
+    this.pageIndex = 0;
+
+    this.populateUrlQueryParameters();
+    this.searchSubstances();
+  }
+
   clearSearch(): void {
 
     const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
 
     this.privateSearchTerm = '';
+    this.wildCardText = '';
     this.searchTermHash = null;
     this.pageIndex = 0;
 
@@ -644,6 +935,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   clearFilters(): void {
     // for facets
+    // Does this facet remove work completely?  When I (aw) click RESET button the facet
+    // is cleared but this.displayFacets still has the value.
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
@@ -652,10 +945,22 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     } else if ((this.privateSequenceSearchTerm != null && this.privateSequenceSearchTerm !== '') ||
       (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
       this.clearSequenceSearch();
+    } else if (this.privateBulkSearchQueryId != null && this.privateBulkSearchQueryId !== undefined) {
+        this.clearBulkSearch();
     } else {
       this.clearSearch();
     }
     this.facetManagerService.clearSelections();
+  }
+
+  clickToRefreshPreview() {
+    this.emitService.setRefresh(true);
+    this.isRefresher = true;
+    this.loadComponent();
+  }
+
+  clickToCancel() {
+    this.emitService.setCancel(true);
   }
 
   get searchTerm(): string {
@@ -670,9 +975,24 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     return this.privateSequenceSearchTerm;
   }
 
+  get bulkSearchSummary(): string {
+    return this.privateBulkSearchSummary;
+  }
+  get bulkSearchQueryId(): number {
+    return this.privateBulkSearchQueryId;
+  }
+  get bulkSearchStatusKey(): string {
+    return this.privateBulkSearchStatusKey;
+  }
+
   get searchType(): string {
     return this.privateSearchType;
   }
+
+  get searchStrategy(): string {
+    return this.privateSearchStrategy;
+  }
+
 
   get searchCutoff(): number {
     return this.privateSearchCutoff;
@@ -722,27 +1042,25 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   openImageModal(substance: SubstanceDetail): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-
-    this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+        this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;
 
     if (substance.substanceClass === 'chemical') {
       data = {
-        structure: substance.structure.id,
+        structure: substance.uuid,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
-        names: substance.names
+        names: this.names[substance.uuid]
       };
     } else {
       data = {
-        structure: substance.polymer.displayStructure.id,
-        names: substance.names
+        structure: substance.uuid,
+        names: this.names[substance.uuid]
       };
     }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      height: '90%',
       width: '650px',
       panelClass: 'structure-image-panel',
       data: data
@@ -816,6 +1134,28 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+
+  downloadJson(id: string) {
+    this.substanceService.getSubstanceDetails(id).pipe(take(1)).subscribe(response => {
+      this.downloadFile(JSON.stringify(response), id + '.json');
+    });
+
+  }
+
+  copySmiles(val: string) {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
 }

@@ -17,6 +17,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
     confirm = false;
   structurallyDiverse: StructurallyDiverse;
   private subscriptions: Array<Subscription> = [];
+  part?: string;
 
   constructor(
     private substanceFormStructurallyDiverseService: SubstanceFormStructurallyDiverseService,
@@ -36,17 +37,22 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
         if (this.structurallyDiverse.part.length === 1 && this.structurallyDiverse.part[0].toUpperCase() === ('WHOLE')) {
           if (this.checkParts() === false) {
             this.structurallyDiverse.$$diverseType = 'full_fields';
+            this.part = 'full_fields';
 
           } else {
             this.structurallyDiverse.$$diverseType = 'whole';
+            this.part = 'whole';
 
           }
         } else {
           if (this.checkWhole() === false) {
             this.structurallyDiverse.$$diverseType = 'full_fields';
+            this.part = 'full_fields';
 
           } else {
             this.structurallyDiverse.$$diverseType = 'fraction';
+            this.part = 'fraction';
+
 
           }
 
@@ -61,6 +67,10 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
   }
 
   ngAfterViewInit() {
+  }
+
+  updateAccess(access: Array<string>): void {
+    this.structurallyDiverse.access = access;
   }
 
   update(field: string, event: any): void {
@@ -107,6 +117,9 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
 
   updateType(event: any): void {
     this.confirm = false;
+    if (event.value && event.value !== '' && event.value !== null) {
+      this.part = event.value;
+    }
     if (event.value === 'whole') {
       if (this.checkParts()) {
         this.confirm = false;

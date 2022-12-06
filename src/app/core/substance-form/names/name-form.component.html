@@ -14,13 +14,13 @@
     </div>
     <div class="radio-container column-radio">
       <mat-radio-button name="priorityName" value="true" [checked]="name.displayName" (change)="priorityUpdated($event)"
-        matTooltip="Priority Name">
-        PN
+        matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
+        {{ 'displayNameShortTitle' | elementLabel : 'substance_names_name' }}
       </mat-radio-button>
     </div>
     <div class="checkbox-container column-checkbox">
-      <mat-checkbox [(ngModel)]="name.preferred" matTooltip="Additional Listing Name">
-        AL
+      <mat-checkbox [(ngModel)]="name.preferred" matTooltip="{{ 'preferredTitle' | elementLabel : 'substance_names_name' }}">
+        {{ 'preferredShortTitle' | elementLabel : 'substance_names_name' }}
       </mat-checkbox>
     </div>
 

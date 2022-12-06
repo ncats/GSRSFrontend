@@ -1,6 +1,6 @@
 
 <div *ngIf="clinicalTrial">
-  <div *ngIf="clinicalTrial.nctNumber; else noRecord">
+  <div *ngIf="clinicalTrial.trialNumber; else noRecord">
 
     <div class="details-container margintop90px">
 
@@ -9,7 +9,7 @@
           <img [src]="flagIconSrcPath" width="25px" height="30px">
           &nbsp;<b>Clinical Trial US Details</b>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" [queryParams]="{}" target="_blank"
+          <a [routerLink]="['/edit-clinical-trial', clinicalTrial.trialNumber]" [queryParams]="{}" target="_blank"
             *ngIf="isAdmin" title='Edit Clinical Trial US Record'>
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
@@ -18,14 +18,14 @@
 
         <div class="row">
           <div class="row-property-key-2">
-            NCT Number:
+            Trial Number:
           </div>
           <div class="row-property-value-2">
             <a href="{{clinicalTrial.url}}" target="_blank"><span
-                class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
+                class="font14px fontbold colororange">{{clinicalTrial.trialNumber}}</span></a>
             &nbsp;&nbsp;&nbsp;
             <!--
-        <a [routerLink]="['/edit-clinical-trial', clinicalTrial.nctNumber]" target="_blank" title="Update Clinical Trial US">Update</a>
+        <a [routerLink]="['/edit-clinical-trial', clinicalTrial.trialNumber]" target="_blank" title="Update Clinical Trial US">Update</a>
         -->
           </div>
         </div>
@@ -65,11 +65,11 @@
                   <div class="row">
                     <div class="row-property">
                       <div class="row-property-key">
-                        NCT Number:
+                        Trial Number:
                       </div>
                       <div class="row-property-value">
                         <a href="{{clinicalTrial.url}}" target="_blank"><span
-                            class="font14px fontbold colororange">{{clinicalTrial.nctNumber}}</span></a>
+                            class="font14px fontbold colororange">{{clinicalTrial.trialNumber}}</span></a>
                       </div>
                     </div>
                     <div class="row-property">
@@ -354,12 +354,12 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="Substance ({{clinicalTrial.clinicalTrialDrug.length}})">
+          <mat-tab label="Substance ({{clinicalTrial.clinicalTrialUSDrug.length}})">
             <div class="details-container">
               <mat-card>
                 <div class="title">Substances in Clinical Trial </div>
                 <mat-card-content>
-                  <div *ngIf="clinicalTrial.clinicalTrialDrug.length > 0; else noRecordSub">
+                  <div *ngIf="clinicalTrial.clinicalTrialUSDrug.length > 0; else noRecordSub">
                     <table width="98%" class="bordergray blueTable padleft20px">
                       <thead>
                         <tr valign="top">
@@ -369,7 +369,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let x of clinicalTrial.clinicalTrialDrug; let i = index">
+                        <tr *ngFor="let x of clinicalTrial.clinicalTrialUSDrug; let i = index">
                           <td>{{i+1}}</td>
                           <td>
                             <div *ngIf="x.substanceUuid">
@@ -404,7 +404,7 @@
   </div>
   <ng-template #noRecord>
     <br><br><br><br>
-    <div class="colororange padtop50px padleft50px">No Clinical Trial record found for {{this.nctNumber}}</div>
+    <div class="colororange padtop50px padleft50px">No Clinical Trial record found for {{this.trialNumber}}</div>
   </ng-template>
 </div>
 <br><br><br><br>

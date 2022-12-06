@@ -1,6 +1,6 @@
-import {Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '../utils/substance-suggestions-group.model';
 import { UtilsService } from '../utils/utils.service';
@@ -23,7 +23,9 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   private searchContainerElement: HTMLElement;
   private query: string;
   @Input() eventCategory: string;
+  @Input() styling?: string;
   @Output() searchPerformed = new EventEmitter<string>();
+  @Output() searchValueOut = new EventEmitter<string>();
   @Input() placeholder = 'Search';
   @Input() hintMessage = '';
   private privateErrorMessage = '';
@@ -31,6 +33,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   @Output() closed = new EventEmitter<void>();
   @Input() source?: string;
   private CasDisplay = 'CAS';
+  codeSystemVocab?: any;
 
   constructor(
     private utilsService: UtilsService,
@@ -44,45 +47,58 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       let resp;
       resp = response['CODE_SYSTEM'].dictionary;
+      this.codeSystemVocab = response['CODE_SYSTEM'].dictionary;
       if (resp['CAS']) {
         this.CasDisplay = resp['CAS'].display;
-        }
-      });
-        this.searchControl.valueChanges.pipe(
+      }
+    });
+    this.searchControl.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(searchValue => {
         this.query = searchValue;
+        this.searchValueOut.emit(this.query);
         const eventCategory = this.eventCategory || 'substanceTextSearch';
         const eventLabel = !this.configService.environment.isAnalyticsPrivate && searchValue || 'search term';
         this.gaService.sendEvent(eventCategory, 'search:enter-term', eventLabel);
         return this.utilsService.getStructureSearchSuggestions(searchValue.toUpperCase());
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
-      this.substanceSuggestionsGroup = response;
-      const showTypes = [ 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+      this.substanceSuggestionsGroup = response; 
+      let showTypes = ['Standardized_Name', 'Display_Name', 'CAS', 'Name', 'Approval_ID', ];
+      if(this.configService && this.configService.configData && this.configService.configData.typeaheadFields) {
+         showTypes = this.configService.configData.typeaheadFields;
+      }
       this.suggestionsFields =   Object.keys(this.substanceSuggestionsGroup).filter(function(item) {
         return showTypes.indexOf(item) > -1;
       });
-     /* this.suggestionsFields.forEach((value, index) => {
-        if (value === 'Approval_ID') {
-          this.suggestionsFields[index] = 'UNII';
-        }
-        if (value === 'Display_Name') {
-          this.suggestionsFields[index] =  'Preferred Term';
-        }
-      });*/
-      this.suggestionsFields.sort(function(x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
+      /* this.suggestionsFields.forEach((value, index) => {
+         if (value === 'Approval_ID') {
+           this.suggestionsFields[index] = 'UNII';
+         }
+         if (value === 'Display_Name') {
+           this.suggestionsFields[index] =  'Preferred Term';
+         }
+       });*/
+      this.suggestionsFields.sort(function (x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
       this.suggestionsFields.forEach((value, index) => {
         if (value === 'Approval_ID') {
-          this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
+          if(this.configService && this.configService.configData && this.configService.configData.approvalCodeName) {
+            this.suggestionsFields[index] = {value: 'Approval_ID', display: this.configService.configData.approvalCodeName};
+          } else {
+            this.suggestionsFields[index] = {value: 'Approval_ID', display: 'UNII'};
+          }
+        } else if (value === 'Standardized_Name') {
+          this.suggestionsFields[index] = { value: 'Standardized_Name', display: 'Standardized Name' };
         } else if (value === 'Display_Name') {
-          this.suggestionsFields[index] =  {value: 'Display_Name', display: 'Preferred Term'};
-        } else if(value === 'CAS'){
+          this.suggestionsFields[index] = { value: 'Display_Name', display: 'Preferred Term' };
+        } else if (value === 'CAS') {
           this.suggestionsFields[index] =  {value: 'CAS', display: this.CasDisplay};
-
+        } else if(this.codeSystemVocab[value]){
+                 let disp = this.codeSystemVocab[value].display;
+                 this.suggestionsFields[index] =  {value: value, display: disp};
         } else {
-          this.suggestionsFields[index] =  {value: value, display: value};
+          this.suggestionsFields[index] = { value: value, display: value };
         }
       });
 
@@ -98,10 +114,6 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
 
   }
 
-  getCasDisplay() {
-    this.cvService.getDomainVocabulary('CODE_SYSTEM');
-  }
-
   @Input()
   set searchValue(searchValue: string) {
     this.searchControl.setValue(searchValue);
@@ -110,21 +122,21 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   @Input()
   set errorMessage(errorMessage: string) {
     this.searchControl.markAsTouched();
-        if (errorMessage) {
-          this.searchControl.setErrors({
-            error: true
-          });
-        } else {
-          this.searchControl.setErrors(null);
-        }
-        this.privateErrorMessage = errorMessage;
+    if (errorMessage) {
+      this.searchControl.setErrors({
+        error: true
+      });
+    } else {
+      this.searchControl.setErrors(null);
+    }
+    this.privateErrorMessage = errorMessage;
   }
 
   get errorMessage(): string {
     return this.privateErrorMessage;
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   autoCompleteClosed(): void {
     this.matOpen = false;
@@ -168,7 +180,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
           }
         }
       }
-      const query = this.query.replace(/(?=[() ])/g, '\\');
+      const query = this.query.replace(/(?=[() \[\]])/g, '\\');
       return field.replace(new RegExp(query, 'gi'), match => {
         return '<strong>' + match + '</strong>';
       });
@@ -182,7 +194,7 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
     this.gaService.sendEvent(eventCategory, 'search:submit', eventLabel);
 
     if (eventCategory === 'topSearch') {
-     searchTerm = this.topSearchClean(searchTerm);
+      searchTerm = this.topSearchClean(searchTerm);
     }
     this.searchPerformed.emit(searchTerm);
   }
@@ -203,8 +215,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
         this.searchContainerElement.classList.remove('active-' + this.source);
         this.searchContainerElement.classList.remove('deactivate-search');
       } else {
-      this.searchContainerElement.classList.remove('active-search');
-      this.searchContainerElement.classList.remove('deactivate-search');
+        this.searchContainerElement.classList.remove('active-search');
+        this.searchContainerElement.classList.remove('deactivate-search');
       }
     }, 300);
   }
@@ -212,12 +224,34 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
   topSearchClean(searchTerm): string {
     if (searchTerm && searchTerm.length > 0) {
       searchTerm = searchTerm.trim();
-      if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && searchTerm.indexOf(':') < 0
-        && searchTerm.indexOf(' AND ') < 0 && searchTerm.indexOf(' OR ') < 0) {
-        searchTerm = '"' + searchTerm + '"';
-      }
+      // Should rename this util method to looksLikeFieldNameSearchTerm 
+      const looksComplex = this.utilsService.looksLikeComplexSearchTerm(searchTerm);
+      // Removed this condition to allow automatic quoting of OAT-2* type complex searches 
+      // && searchTerm.indexOf('*') < 0
+      if (searchTerm.indexOf('"') < 0 && !looksComplex) {
+        // Put slash in front of brackets, for example:
+        // 1. [INN] to \[INN\]
+        // 2. IBUPROFEN [INN] to IBUPROFEN \[INN\]
+        // 3. *[INN] to *\[INN\]
+        // 4. [INN]* to \[INN\]*
+        // 5. "[INN]" to "\[INN\]"
+        // 6. "IBUPROFEN [INN]" to "IBUPROFEN \[INN\]"
+        // 7. "*[INN]" to "*\[INN\]"
+        // 8. [INN]* to \[INN\]*
+
+        
+        searchTerm = '"' + searchTerm
+          .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
+          .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
+          + '"';
+      } else if (!looksComplex) {
+          searchTerm
+          .replace(/([^\\])\[/g, "$1\\[").replace(/^\[/g, "\\[")
+          .replace(/([^\\])\]/g, "$1\\]").replace(/^\]/g, "\\]")
+      } 
       this.searchControl.setValue(searchTerm);
     }
     return searchTerm;
   }
+
 }

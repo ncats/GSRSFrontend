@@ -1,7 +1,7 @@
 @import '../../../styles/variables';
 
 .version {
-  color: #182c4d;
+  color: var(--version-text-color);
   font-size: 10pt;
   line-height: 10px;
   text-align: right;
@@ -31,8 +31,9 @@
   width: 25px !important;
 }
 
-
-.main-button {
+.top-button {
+  padding-top: 10px;
+    padding-bottom: 10px;
 }
 .user-button {
  margin-bottom:-5px;
@@ -106,7 +107,6 @@
   }
 
 }
-
 
 .mat-toolbar {
   position: fixed;
@@ -200,8 +200,60 @@
 //   }
 // }
 
+
+
 @media(min-width: $nav-breaking-point) {
   .top-search {
     min-width: 500px;
   }
+  .menu-button :hover {
+    background-color: rgb(71, 147, 209) !important;
+  }
 }
+.extra-item {
+  display: inline-block;
+}
+
+// hides extra browse (for half 1920 to save space)
+@media(max-width: 1500px ) {
+  .extra-browse {
+    display: none !important;
+  }
+}
+
+// hides all but main menu
+@media(max-width: 1350px ) {
+  .extra-item {
+    display: none !important;
+  }
+}
+
+
+
+  @media(max-width: 1610px ) {
+    .add-at-low-res{
+      display: inline !important;
+    }
+
+    .hide-at-low-res{
+      display: none !important;
+    }
+  }
+
+    @media(min-width: 1610px ) {
+      .add-at-low-res{
+        display: none !important;
+      }
+
+      .hide-at-low-res{
+        display: inline-block;
+      }
+    }
+
+  @media(max-width: 1650px ) {
+    .extra-item-2 {
+      display: none !important;
+    }
+  }
+
+

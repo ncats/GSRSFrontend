@@ -1,10 +1,18 @@
+<div (click)="showHidePopup()" id="overlay" [ngClass]="{'hide': !hidePopup}"></div>
+<div class="center-screen" [ngClass]="{'hide': !hidePopup}">
+  <span class="close-out" (click)="showHidePopup()">x</span>
+  <img (click)="showHidePopup()" class = "image-popped-up" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
+</div>
 <div class="top-fixed">
   <div class="actions-container">
-    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+      <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
+      <button mat-flat-button color="primary" class="draft-button" (click)="showDrafts()">Show Drafts <span class="chip">{{draftCount}}</span></button>
+
+    <button mat-flat-button color="primary" class="json-button" (click)="showJSON()">Show JSON</button>
     <button mat-flat-button color="primary" class="import-button" (click)="importDialog()">Import JSON</button>
 
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0">
+      *ngIf="(validationMessages && validationMessages.length > 0)">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
@@ -14,7 +22,7 @@
           <mat-label>Advanced Features</mat-label>
           <mat-select name="Feature" [ngModel]="feature" (openedChange)="openedChange($event)"
             (selectionChange)="useFeature($event)" disableOptionCentering>
-            <ng-container *ngIf="isAdmin === true">
+            <ng-container >
               <mat-option value="changeClass" [disabled]="!id">
                 Change Substance Class
               </mat-option>
@@ -33,6 +41,9 @@
               <mat-option value="unapprove">
                 Un-approve record (Remove approval ID)
               </mat-option>
+              <mat-option value="changeApproval" [disabled]="!id || status === 'pending' || (substanceClass === 'concept' && UNII === 'non-approved record')">
+                Change Approval ID
+              </mat-option>
               <mat-option value="concept" [disabled]="substanceClass != 'concept'">
                 Set concept status to non-approved
               </mat-option>
@@ -50,10 +61,46 @@
               <mat-option value="disulfide" [disabled]="substanceClass != 'protein'">
                 Predict disulfide links by monoclonal antibody type
               </mat-option>
+              <mat-option value="fragment" [disabled]="substanceClass != 'protein' && substanceClass != 'nucleicAcid' ">
+                Register a Fragment
+              </mat-option>
             </ng-container>
           </mat-select>
         </mat-form-field>
       </div>
+      <ng-template #demo>
+        <div mat-dialog-header>Saved Drafts</div>
+        <div mat-dialog-content>
+            <div class = "form-row">
+                <div class = "cell"><mat-icon svgIcon="delete_forever"></mat-icon></div>
+                <div class = "cell"><a>d706be08-4015-4fa2-80e6-567cf7e2e23f</a></div>
+                <div class = "cell">April 1, 2022 08:05</div>
+                <div class = "cell"><button mat-button mat-primary-button>Load Draft</button></div>
+              </div> 
+              <div class = "form-row">
+                  <div class = "cell"><mat-icon svgIcon="delete_forever"></mat-icon></div>
+                  <div class = "cell"><a>d706be08-4015-4fa2-80e6-567cf7e2e23f</a></div>
+                  <div class = "cell">April 1, 2022 08:00</div>
+                  <div class = "cell"><button mat-button mat-primary-button>Load Draft</button></div>
+                </div> 
+
+              <div class = "form-row">
+                  <div class = "cell"><mat-icon svgIcon="delete_forever"></mat-icon></div>
+                  <div class = "cell">register = protein</div>
+                  <div class = "cell">April 1, 2022 08:00</div>
+                  <div class = "cell"><button mat-button mat-primary-button>Load Draft</button></div>
+                </div> 
+
+                
+        </div>
+          
+        <div mat-dialog-actions>
+            <span class="middle-fill"></span>
+            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+          </div>
+      </ng-template>
+      
+
       <div class="changeClass advanced" *ngIf="feature === 'changeClass'">
         <mat-form-field>
           <mat-label>New Class</mat-label>
@@ -69,7 +116,7 @@
     <span class="middle-fill"></span>
     <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
-      *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported"
+      *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
       (click)="validate('approval')">Approve</button>
 
   </div>
@@ -82,17 +129,21 @@
         <div class="submission-message" *ngIf='!serverError && !approving'>
           Please correct or dismiss the following errors and submit again:
         </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
+          <span class = "validation-body" >
           <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
             {{message.messageType}}</div>
           <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
-              <a [href]="link.href.replace('ginas/app/substance','ginas/app/beta/substances')" class="internal-link"
+              <a [href]="fixLink(link.href)" class="internal-link"
                 target="_blank">{{link.text}}</a></span>
           </div>
+        </span>
+        <span class = "validation-dismiss">
           <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
             (click)="dismissValidationMessage(i)">
             <mat-icon svgIcon="cancel"></mat-icon>
           </button>
+        </span>
         </div>
       </span>
       <div class="dismiss-container">
@@ -100,6 +151,9 @@
         <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
           [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
           Submit</button>
+          <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false"
+           >
+          Cancel</button> 
         <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
           [disabled]="isLoading || !canApprove"> Confirm Approval</button>
 
@@ -119,8 +173,8 @@
               <h2>{{section.menuLabel}}</h2>
               <div class="middle-fill"></div>
               <div *ngIf="section.canAddItem">
-                <button mat-flat-button color="primary" (click)="section.addItem(); $event.stopPropagation()"
-                  matTooltip="Add new">
+                <button mat-flat-button color="primary" id = "Add new {{section.menuLabel}}" (click)="section.addItem(); $event.stopPropagation()"
+                  matTooltip="Add new {{section.menuLabel}}">
                   Add {{section.menuLabel}}
                   <mat-icon svgIcon="add_circle_outline"></mat-icon>
                 </button>

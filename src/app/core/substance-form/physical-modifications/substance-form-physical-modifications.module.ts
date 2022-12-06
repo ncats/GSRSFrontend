@@ -12,7 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import {SubstanceFormPhysicalModificationsCardComponent} from '@gsrs-core/substance-form/physical-modifications/substance-form-physical-modifications-card.component';
 import { PhysicalModificationFormComponent } from './physical-modification-form.component';
-import { MatListModule } from '@angular/material';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   imports: [

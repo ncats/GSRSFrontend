@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import { InterpretStructureResponse } from '../structure/structure-post-response.model';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
 import { Editor } from '../structure-editor/structure.editor.model';
 import { LoadingService } from '../loading/loading.service';
@@ -22,6 +22,7 @@ import * as _ from 'lodash';
 export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private editor: Editor;
   private searchType: string;
+  _searchtype: string;
   similarityCutoff?: number;
   showSimilarityCutoff = false;
   searchTypeControl = new FormControl();
@@ -41,6 +42,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   ) {
     this.searchType = 'substructure';
+    this._searchtype ='substructure';
   }
 
   ngOnInit() {
@@ -74,6 +76,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
           }
           if (params.has('type')) {
             this.searchType = params.get('type');
+            this._searchtype = params.get('type');
+
           }
 
           if (this.searchType === 'similarity') {
@@ -92,6 +96,15 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
       this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
       this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
+    }, () => {});
+  }
+
+  standardize(standard: string): void {
+    const mol = this.editor.getMolfile();
+    this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
+      if (response && response.structure && response.structure.molfile) {
+        this.editor.setMolecule(response.structure.molfile);
+      }
     }, () => {});
   }
 
@@ -132,6 +145,8 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   searchTypeSelected(event): void {
     this.searchType = event.value;
+    this._searchtype = event.value;
+
 
     this.gaService.sendEvent('structureSearch', 'select:search-type', this.searchType);
 

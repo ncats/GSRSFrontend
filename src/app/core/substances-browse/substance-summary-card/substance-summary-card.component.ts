@@ -19,6 +19,12 @@ import { SubstanceSummaryDynamicContent } from './substance-summary-dynamic-cont
 import {Router} from '@angular/router';
 import {Alignment} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { MatDialog } from '@angular/material/dialog';
+import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
+import { ConfigService } from '@gsrs-core/config';
+import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
+import * as lodash from 'lodash';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -29,15 +35,30 @@ export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
-  isAdmin = false;
+  isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
+  canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
-  @Input() names?: Array<SubstanceName>;
   @Input() codeSystemNames?: Array<string>;
-  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
+  @Input() codeSystemVocab?: Vocabulary;
+  @Input() searchStrategy?: string = '';
+  
+//  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
   inxightLink = false;
   inxightUrl: string;
+  overlayContainer: any;
+  rounding = '1.0-2';
+  showAll = [];
+  privateCodeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
+  privateCodeSystemNames?:  Array<string>;
+  allPrimary = [];
+  showLessNames = true;
+  showLessCodes = true;
+  privateNames?: Array<SubstanceName>;
+  nameLoading = true;
+  _ = lodash;
+
   constructor(
     public utilsService: UtilsService,
     public gaService: GoogleAnalyticsService,
@@ -46,13 +67,23 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private structureService: StructureService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private router: Router,
+    private overlayContainerService: OverlayContainer,
+    private dialog: MatDialog,
+    private configService: ConfigService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
   ngOnInit() {
-    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
       if (response) {
         this.isAdmin = response;
+      }
+    });
+    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'admin').pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.canCreate = response;
       }
     });
     if (this.substance.protein) {
@@ -77,7 +108,26 @@ export class SubstanceSummaryCardComponent implements OnInit {
     } else {
       this.getApprovalID();
     }
+
+    if (this.configService.configData && this.configService.configData.molWeightRounding) {
+      this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
+    }
   }
+
+  @Input()
+
+  set names(name: any) {
+    if (typeof(name) != "undefined") {
+      this.privateNames = name;
+      this.nameLoading = false;
+    }
+    
+  }
+
+  get names(): any {
+    return this.privateNames;
+  }
+
 
   getApprovalID() {
     if (!this.substance.approvalID) {
@@ -102,7 +152,37 @@ export class SubstanceSummaryCardComponent implements OnInit {
     return this.privateSubstance;
   }
 
+  @Input()
+  set codeSystems(codeSystems: any) {
+    if (codeSystems && this.codeSystemNames) {
+      this.privateCodeSystems = codeSystems;
+      this.formatCodeSystems();
+    }
+  }
+
+  get codeSystems(): any {
+    return this.privateCodeSystems;
+  }
+
+  formatCodeSystems() {
+    // sort() function in substance-browse isn't working... pushing this as alternative to get all primary codes first
+    this.codeSystemNames.forEach(sysName => {
+      const testing = [];
+      this.allPrimary[sysName] = 'true';
+      this.codeSystems[sysName].forEach(code => {
+          if (code.type === 'PRIMARY') {
+            testing.unshift(code);
+          } else {
+            this.allPrimary[sysName] = 'false';
+            testing.push(code);
+          }
+      });
+      this.codeSystems[sysName] = testing;
+      });
+  }
+
   openImageModal(): void {
+    this.substance.names = this.privateNames;
     this.openImage.emit(this.substance);
   }
 
@@ -135,12 +215,20 @@ export class SubstanceSummaryCardComponent implements OnInit {
   loadDynamicContent(): void {
     const viewContainerRef = this.dynamicContentContainer.viewContainerRef;
     viewContainerRef.clear();
-    const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
-    .filter(item => item.componentType === 'summary');
-    dynamicContentItemsFlat.forEach(dynamicContentItem => {
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
-      const componentRef = viewContainerRef.createComponent(componentFactory);
-      (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
+    if (this.configService.configData && this.configService.configData.loadedComponents){
+      const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
+      .filter(item => item.componentType === 'summary');
+      dynamicContentItemsFlat.forEach(dynamicContentItem => {
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
+        const componentRef = viewContainerRef.createComponent(componentFactory);
+        (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
+      });
+  }
+  }
+
+  downloadJson() {
+    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1)).subscribe(response => {
+        this.downloadFile(JSON.stringify(response), this.substance.uuid + '.json');
     });
   }
 
@@ -158,4 +246,37 @@ export class SubstanceSummaryCardComponent implements OnInit {
       }
     }
   }
+
+  openMolModal() {
+
+    const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
+      minWidth: '40%',
+      maxWidth: '90%',
+      height: '90%',
+      data: {uuid: this.substance.uuid, approval: this.substance.approvalID}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
+  moreThanNumberCount(names, number) {
+    if(names.length < number) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  showMoreLessNames() {
+    this.showLessNames = !this.showLessNames;
+  }
+
+  showMoreLessCodes() {
+    this.showLessCodes = !this.showLessCodes;
+  }
+
+
 }

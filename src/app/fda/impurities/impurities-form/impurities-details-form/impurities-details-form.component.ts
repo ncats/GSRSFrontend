@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Impurities, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
-import { ImpuritiesService } from '../../service/impurities.service';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+import { ImpuritiesService } from '../../service/impurities.service';
+import { Impurities, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
 
 @Component({
   selector: 'app-impurities-details-form',
@@ -80,7 +80,8 @@ export class ImpuritiesDetailsFormComponent implements OnInit {
   }
 
   deleteIdentityCriteria(identityCriteriaIndex: number) {
-    this.impuritiesService.deleteIdentityCriteria(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, this.impuritiesDetailsIndex, identityCriteriaIndex);
+    this.impuritiesService.deleteIdentityCriteria(this.impuritiesSubstanceIndex,
+      this.impuritiesTestIndex, this.impuritiesDetailsIndex, identityCriteriaIndex);
   }
 
 }

@@ -1,9 +1,9 @@
 <div class="filters-container">
   <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-    <mat-button-toggle value="details">
+    <mat-button-toggle aria-label="View List" value="details">
       <mat-icon svgIcon="list"></mat-icon>
     </mat-button-toggle>
-    <mat-button-toggle value="raw">
+    <mat-button-toggle aria-label="View Raw" value="raw">
       <mat-icon svgIcon="view_stream"></mat-icon>
     </mat-button-toggle>
   </mat-button-toggle-group>
@@ -13,8 +13,10 @@
   <div class = "form-row subunit-row">
     <div class = "subunit-label"> Subunit {{subunitSequence.subunitIndex}}</div>
     <div>
-      <a class = "subunit-title" [routerLink]="['/sequence-search']"
-         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: substanceType}">similarity search</a>
+      <a class = "subunit-title" [routerLink]="['/sequence-search']" target="_blank"
+         [queryParams]="{substance: uuid, subunit: subunitSequence.uuid, seq_type: substanceType}">similarity search
+         <mat-icon class = "icon small-icon" svgIcon="open_in_new"></mat-icon>
+      </a>
     </div>
 
   </div>

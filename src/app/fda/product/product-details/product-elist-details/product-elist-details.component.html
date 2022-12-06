@@ -1,326 +1,255 @@
-<div *ngIf="product">
-  <div *ngIf="product.productId; else noRecordProd">
-    <div class="details-container margintop90px">
-      <mat-card class="bordergray">
-        <mat-card-title>
-          Product Details&nbsp;<span class="font10px colorgray">(SPL)</span>
-        </mat-card-title>
-        <mat-card-content>
+<div *ngIf="message" class="colororange padtop50px padleft50px">
+  <br><br><br><br>
+  {{message}}
+</div>
+<div *ngIf="product && product.productId">
+  <div class="details-container margintop90px">
+    <mat-card class="bordergray">
+      <mat-card-title>
+        Product Details&nbsp;<span class="font10px colorgray">(SPL)</span>
+      </mat-card-title>
+      <mat-card-content>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Product NDC:
-              </div>
-              <div class="row-property-value">
-                <ng-container *ngIf="product.productNDC !== null">
-                  <a href="{{product.prodNDCUrl}}" target="_blank">
-                    {{product.productNDC}}
-                  </a>
-                  &nbsp;&nbsp;
-                  <a href="{{product.prodNDCUrl}}" target="_blank">
-                    <img [src]="iconSrcPath">
-                  </a>
-                </ng-container>
-              </div>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Product NDC:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Application Number:
-              </div>
-              <div class="row-property-value">
-                {{product.applicationNumber}}
-              </div>
+            <div class="row-property-value">
+              <ng-container *ngIf="product.productNDC !== null">
+                <a href="{{dailyMedUrl}}" target="_blank">
+                  {{product.productNDC}}
+                </a>
+                &nbsp;&nbsp;
+                <a href="{{dailyMedUrl}}" target="_blank">
+                  <img [src]="iconSrcPath">
+                </a>
+              </ng-container>
             </div>
           </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Product Name:
-              </div>
-              <div class="row-property-value">
-                <span class="colororange font18px fontbold">{{product.productName}}</span>
-              </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Application Number:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Product Name Type:
-              </div>
-              <div class="row-property-value">
-                {{product.productTypeName}}
-              </div>
+            <div class="row-property-value">
+              {{product.applicationNumber}}
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Non Proprietary Name:
-              </div>
-              <div class="row-property-value">
-                {{product.nonProprietaryName}}
-              </div>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Product Name:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Proprietary Name Suffix:
-              </div>
-              <div class="row-property-value">
-                {{product.proprietaryNameSuffix}}
-              </div>
+            <div class="row-property-value">
+              <span class="colororange font18px fontbold">{{product.productName}}</span>
             </div>
           </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Labeler Name:
-              </div>
-              <div class="row-property-value">
-                {{product.labelerName}}
-              </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Product Type:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Dosage Form Name:
-              </div>
-              <div class="row-property-value">
-                {{product.dosageFormName}}
-              </div>
+            <div class="row-property-value">
+              {{product.productTypeName}}
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Marketing Status:
-              </div>
-              <div class="row-property-value">
-                {{product.marketingStatus}}
-              </div>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Non Proprietary Name:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Marketing Category Code:
-              </div>
-              <div class="row-property-value">
-                {{product.marketingCategoryCode}}
-              </div>
+            <div class="row-property-value">
+              {{product.nonProprietaryName}}
             </div>
           </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Marketing Category Name:
-              </div>
-              <div class="row-property-value">
-                {{product.marketingCategoryName}}
-              </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Proprietary Name Suffix:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Start Marketing Date:
-              </div>
-              <div class="row-property-value">
-                {{product.startMarketingDate|date: 'MM/dd/yyyy'}}
-              </div>
+            <div class="row-property-value">
+              {{product.proprietaryNameSuffix}}
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Route Name:
-              </div>
-              <div class="row-property-value">
-                <div *ngIf="product.prodRouteElistList.length > 0">
-                  <div *ngFor="let x of product.prodRouteElistList; let i = index">
-                    <span *ngIf="i > 0">|</span>{{x.routeName}}
-                  </div>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Labeler Name:
+            </div>
+            <div class="row-property-value">
+              {{product.labelerName}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Dosage Form Name:
+            </div>
+            <div class="row-property-value">
+              {{product.dosageFormName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Marketing Status:
+            </div>
+            <div class="row-property-value">
+              {{product.marketingStatus}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Marketing Category Code:
+            </div>
+            <div class="row-property-value">
+              {{product.marketingCategoryCode}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Marketing Category Name:
+            </div>
+            <div class="row-property-value">
+              {{product.marketingCategoryName}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Start Marketing Date:
+            </div>
+            <div class="row-property-value">
+              {{product.startMarketingDate|date: 'MM/dd/yyyy'}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Route Name:
+            </div>
+            <div class="row-property-value">
+              <div *ngIf="product.prodRouteElistList.length > 0">
+                <div *ngFor="let x of product.prodRouteElistList; let i = index">
+                  <span *ngIf="i > 0">|</span>{{x.routeName}}
                 </div>
               </div>
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                End Marketing Date:
-              </div>
-              <div class="row-property-value">
-                {{product.endMarketingDate|date: 'MM/dd/yyyy'}}
-              </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              End Marketing Date:
+            </div>
+            <div class="row-property-value">
+              {{product.endMarketingDate|date: 'MM/dd/yyyy'}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Color:
+            </div>
+            <div class="row-property-value">
+              {{product.prodCharElist.colorName}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Flavor:
+            </div>
+            <div class="row-property-value">
+              {{product.prodCharElist.flavorName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Shape:
+            </div>
+            <div class="row-property-value">
+              {{product.prodCharElist.shapeName}}
             </div>
           </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Color:
-              </div>
-              <div class="row-property-value">
-                {{product.prodCharElist.colorName}}
-              </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Imprint Text:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Flavor:
-              </div>
-              <div class="row-property-value">
-                {{product.prodCharElist.flavorName}}
-              </div>
+            <div class="row-property-value">
+              {{product.prodCharElist.imprintText}}
             </div>
           </div>
+        </div>
 
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Shape:
-              </div>
-              <div class="row-property-value">
-                {{product.prodCharElist.shapeName}}
-              </div>
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Size (mm):
             </div>
-
-            <div class="row-property">
-              <div class="row-property-key">
-                Imprint Text:
-              </div>
-              <div class="row-property-value">
-                {{product.prodCharElist.imprintText}}
-              </div>
+            <div class="row-property-value">
+              {{product.prodCharElist.sizeMm}}
             </div>
           </div>
-
-          <div class="row">
-            <div class="row-property">
-              <div class="row-property-key">
-                Size (mm):
-              </div>
-              <div class="row-property-value">
-                {{product.prodCharElist.sizeMm}}
-              </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Number of Fragments:
             </div>
-            <div class="row-property">
-              <div class="row-property-key">
-                Number of Fragments:
-              </div>
-              <div class="row-property-value">
-                {{product.prodCharElist.numberOfFragments}}
-              </div>
+            <div class="row-property-value">
+              {{product.prodCharElist.numberOfFragments}}
             </div>
           </div>
+        </div>
 
-        </mat-card-content>
-      </mat-card>
-    </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
-    <!-- Establishment/Labeler Details -->
-    <div *ngIf="product.prodEstablishmentElistList.length > 0">
-      <div class="details-container margintop30px">
-        <mat-card class="bordergray">
-          <mat-card-title class="title2">
-            Product Labeler Details
-          </mat-card-title>
-          <mat-card-content>
-            <table class="tableStyle2">
-              <thead>
-                <tr>
-                  <th>Firm Name</th>
-                  <th>DUNS Number</th>
-                  <th>FEI Number</th>
-                  <th>Address</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Zip</th>
-                  <th>Country</th>
-                  <th>Country Code</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let x of product.prodEstablishmentElistList; let i = index">
-                  <td>{{ x.firmName }}</td>
-                  <td>{{ x.dunsNumber }}</td>
-                  <td>{{ x.feiNumber }}</td>
-                  <td>{{ x.address }}</td>
-                  <td>{{ x.city }}</td>
-                  <td>{{ x.state }}</td>
-                  <td>{{ x.zip }}</td>
-                  <td>{{ x.country }}</td>
-                  <td>{{ x.countryCode }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-
+  <!-- Establishment/Labeler Details -->
+  <div *ngIf="product.prodEstablishmentElistList.length > 0">
     <div class="details-container margintop30px">
       <mat-card class="bordergray">
         <mat-card-title class="title2">
-          Active Ingredient ({{product.prodActiveElistList.length}})
+          Product Labeler Details
         </mat-card-title>
-        <mat-card-content *ngIf="product.prodActiveElistList.length > 0">
-          <table class="blueTable">
+        <mat-card-content>
+          <table class="tableStyle2">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Active Moiety Name</th>
-                <th>Structure</th>
-                <th>Unii</th>
-                <th>Strength Number (Unit)</th>
+                <th>Firm Name</th>
+                <th>DUNS Number</th>
+                <th>FEI Number</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip</th>
+                <th>Country</th>
+                <th>Country Code</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let x of product.prodActiveElistList; let i = index">
-                <td>{{i + 1}}</td>
-                <td>
-                  <div *ngIf="x.substanceId">
-                    <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
-                  </div>
-                </td>
-                <td>{{ x.activeMoietyName }}
-                </td>
-                <td class="textaligncenter">
-                  <div *ngIf="x.substanceId">
-                    <img class="structure-img" appSubstanceImage [entityId]="x.substanceId">
-                  </div>
-                </td>
-                <td>{{ x.unii }}</td>
-                <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <div class="details-container margintop30px">
-      <mat-card class="bordergray marginbottom80px">
-        <mat-card-title class="title2">
-          Inactive Ingredient&nbsp;({{product.prodInactiveElistList.length}})
-        </mat-card-title>
-        <mat-card-content *ngIf="product.prodInactiveElistList.length > 0">
-          <table class="blueTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Unii</th>
-                <th>Strength Number (Unit)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let x of product.prodInactiveElistList; let i = index">
-                <td>{{i + 1}}</td>
-                <td>
-                  <div *ngIf="x.substanceId">
-                    <a [routerLink]="['/substances', x.substanceId]" target="_blank">{{x.name}}</a>
-                  </div>
-                </td>
-                <td>{{ x.unii }}</td>
-                <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+              <tr *ngFor="let x of product.prodEstablishmentElistList; let i = index">
+                <td>{{ x.firmName }}</td>
+                <td>{{ x.dunsNumber }}</td>
+                <td>{{ x.feiNumber }}</td>
+                <td>{{ x.address }}</td>
+                <td>{{ x.city }}</td>
+                <td>{{ x.state }}</td>
+                <td>{{ x.zip }}</td>
+                <td>{{ x.country }}</td>
+                <td>{{ x.countryCode }}</td>
               </tr>
             </tbody>
           </table>
@@ -328,8 +257,103 @@
       </mat-card>
     </div>
   </div>
+
+  <div class="details-container margintop30px">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        Active Ingredient ({{product.prodActiveElistList.length}})
+      </mat-card-title>
+      <mat-card-content *ngIf="product.prodActiveElistList.length > 0">
+        <table class="blueTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Active Moiety Name</th>
+              <th>Structure</th>
+              <th>Unii</th>
+              <th>Strength Number (Unit)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of product.prodActiveElistList; let i = index">
+              <td>{{i + 1}}</td>
+              <td>
+                <div *ngIf="x.name">
+                  <div *ngIf="x._substanceUuid; else noActiveSubUuid">
+                    <a [routerLink]="['/substances', x._substanceUuid]" target="_blank">{{x.name}}</a>
+                  </div>
+                  <ng-template #noActiveSubUuid>
+                    {{x.name}}
+                  </ng-template>
+                </div>
+              </td>
+              <td>{{ x.activeMoietyName }}
+              </td>
+              <td class="textaligncenter">
+                <div *ngIf="x._substanceUuid">
+                  <img class="structure-img" appSubstanceImage [entityId]="x._substanceUuid">
+                </div>
+              </td>
+              <td>{{ x.unii }}</td>
+              <td>
+                <!-- {{ x.strengthNumber }} {{ x.strengthNumeratorUnit}} -->
+                {{x.originalNumeratorNumber}} {{x.originalNumeratorUnit}}
+                <span *ngIf="x.originalDenominatorNumber">
+                  in
+                  {{x.originalDenominatorNumber}}
+                </span>
+                <span *ngIf="x.originalDenominatorUnit && x.originalDenominatorUnit !== '1'">
+                  {{x.originalDenominatorUnit}}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="details-container margintop30px">
+    <mat-card class="bordergray marginbottom80px">
+      <mat-card-title class="title2">
+        Inactive Ingredient&nbsp;({{product.prodInactiveElistList.length}})
+      </mat-card-title>
+      <mat-card-content *ngIf="product.prodInactiveElistList.length > 0">
+        <table class="blueTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Unii</th>
+              <th>Strength Number (Unit)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of product.prodInactiveElistList; let i = index">
+              <td>{{i + 1}}</td>
+              <td>
+                <div *ngIf="x.name">
+                  <div *ngIf="x._substanceUuid; else noInactiveSubUuid">
+                    <a [routerLink]="['/substances', x._substanceUuid]" target="_blank">{{x.name}}</a>
+                  </div>
+                  <ng-template #noInactiveSubUuid>
+                    {{x.name}}
+                  </ng-template>
+                </div>
+              </td>
+              <td>{{ x.unii }}</td>
+              <td>{{ x.strengthNumber }} {{ x.strengthNumeratorUnit}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<!--
   <ng-template #noRecordProd>
     <br><br><br><br>
     <div class="colororange padtop50px padleft50px">There is no Product Data found.</div>
   </ng-template>
-</div>
+-->

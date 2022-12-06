@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, HostListener} from '@angular/core';
 import {MixtureComponents, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
 import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -15,6 +15,15 @@ export class MixtureComponentFormComponent implements OnInit {
   relatedSubstanceUuid: string;
   private overlayContainer: HTMLElement;
   siteDisplay: string;
+  invalid = false;
+
+  @HostListener('focusout') onFocusout() {
+    if (!this.privateComp.type) {
+      this.invalid = true;
+    } else {
+      this.invalid = false;
+    }
+  }
 
   constructor(
     private utilsService: UtilsService,
@@ -39,7 +48,14 @@ export class MixtureComponentFormComponent implements OnInit {
 
   updateType(event: any): void {
     this.privateComp.type = event;
+    if (!this.privateComp.type) {
+      this.invalid = true;
+    } else {
+      this.invalid = false;
+    }
   }
+
+  
 
 
   deleteComponent(): void {

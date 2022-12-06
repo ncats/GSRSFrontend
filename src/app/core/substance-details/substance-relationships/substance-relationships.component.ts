@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import {SubstanceDetail, SubstanceRelationship} from '../../substance/substance.model';
 import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '../../config/config.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {Sort} from '@angular/material';
+import {Sort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-substance-relationships',
@@ -73,9 +73,9 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'relatedRecord': return this.utilService.compare(a.relatedSubstance.name.toUpperCase(),
-          b.relatedSubstance.name.toUpperCase(), isAsc);
-        case 'type': return this.utilService.compare(a.type, b.type, isAsc);
+        case 'relatedRecord': return this.utilService.compare(a.relatedSubstance.name ? a.relatedSubstance.name.toUpperCase() : '',
+        b.relatedSubstance.name ? b.relatedSubstance.name.toUpperCase() : '', isAsc);
+        case 'type': return this.utilService.compare(a.type ? a.type : '', b.type ? b.type : '', isAsc);
         default: return 0;
       }
     });

@@ -16,6 +16,11 @@
   flex-grow: 1;
 }
 
+
+.options {
+  margin-right: 10px;
+}
+
 #canvas-container {
   width:100%;
   text-align:center;
@@ -23,7 +28,7 @@
 
 .canvas-message {
   font-weight:bold;
-  color:red;
+  color:var(--regular-red-color);
 }
 
 .canvas-label {

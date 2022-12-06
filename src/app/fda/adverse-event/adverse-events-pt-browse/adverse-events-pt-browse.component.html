@@ -1,0 +1,393 @@
+<mat-sidenav-container autosize="true" class="margintop90px sidenav-container-size">
+
+  <mat-sidenav #pt mode="side" opened>
+    <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets" configName="adverseeventpt" includeFacetSearch="true">
+    </app-facets-manager>
+  </mat-sidenav>
+
+  <!-- Browse Adverse Event Pt Content -->
+  <mat-sidenav-content>
+    <div class="side-nav-content">
+
+      <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
+      <div class="narrow-search-suggestions-container"
+        *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
+        <div class="flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions" style="margin:auto; background-color: white;">
+            <div>
+              Would you like to restrict this search to a field?
+            </div>&nbsp;
+            <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions" style="padding-right: 5px;"
+              (menuOpened)="increaseOverlayZindex()" (menuClosed)="decreaseOverlayZindex()">
+              <span>Fields </span>&nbsp;
+              {{narrowSearchSuggestionsCount}}
+              <mat-icon svgIcon="drop_down"></mat-icon>
+            </button>
+            <button mat-flat-button color="primary" (click)="clearFilters()">
+              <span>RESET</span>
+            </button>
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
+              <div class="narrow-search-dropdown" *ngFor="let matchType of matchTypes">
+                <div *ngIf="((matchType) && (matchType === 'WORD' || matchType === 'FULL'))">
+                  <div class="match-type">
+                    {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                  </div>
+                  <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
+                    (click)="restricSearh(suggestion.luceneQuery)">
+                    <div class="suggestion-display">
+                      {{suggestion.displayField}}
+                    </div>
+                    <div class="suggestion-count">
+                      {{suggestion.count}}
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </mat-menu>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions"
+            style="margin:auto; background-color: white; margin-top: 12px; ">
+            For more options use the <a routerLink="/advanced-search" style="padding-left: 6px;"> Advanced Search</a>
+          </div>
+        </div>
+      </div>
+      <!-- Narrow Search Suggestion End -->
+
+      <ng-template #filterParameters>
+        <div class="search-parameters">
+
+          <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+            <div>
+              <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+              <span>{{searchTerm}}</span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="clearSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Display Facets selection -->
+          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+            <div class='selected-container'>
+              <span class="capitalized font-medium-bold selected-label">
+                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                {{facet.type}}:
+              </span>
+              <span class="no-break selected-value">
+                {{facet.val}}
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button class="display-button" color="primary"
+                (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+                <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+            <span>RESET</span>
+          </button>
+        </div> <!-- search-parameters -->
+      </ng-template>
+
+      <!-- Title, Views, Export, Pagination -->
+      <div class="controls-container">
+
+        <div class="title-container">
+          <span class="main-title">Browse Adverse Event PT</span>
+        </div>
+
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <!-- Sort By -->
+        <!--
+            <mat-form-field class="sort">
+              <mat-label>Sort By</mat-label>
+              <mat-select (selectionChange)="searchAdverseEventPt()" [(ngModel)]="order">
+                <mat-option *ngFor="let option of sortValues" [value]="option.value">
+                  {{option.display}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            -->
+
+        <!-- Export AdverseEventPt Button -->
+        <div class="export" *ngIf="isAdmin">
+          <button matTooltip="Export Search Results" mat-button (click)="export()"
+            class="mat-button export-button mat-raised-button">
+            <mat-icon svgIcon="get_app"></mat-icon> Export
+          </button>
+        </div>
+
+        <div class="break"></div>
+        <!-- Pagination -->
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
+
+      </div> <!-- controls-container -->
+
+      <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-adverse-event-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)"
+          eventCategory="adverseEventPtSearch">
+        </app-adverse-event-text-search>
+
+        <!-- Search Any Text Text Box -->
+        <!--
+        <mat-form-field class="width350px font13px">
+          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
+            size="50" />
+        </mat-form-field>
+        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
+          <mat-icon svgIcon="search"></mat-icon>
+        </button>
+        -->
+      </div>
+
+      <!-- Display Content Details -->
+      <div [ngClass]="view">
+
+        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <div class="table-view">
+          <div class="responsive">
+            <table mat-table [dataSource]="adverseEventPtList" matSort (matSortChange)="sortData($event)"
+              matSortActive="ptCount" matSortDirection="desc" matSortDisableClear>
+
+              <ng-container matColumnDef="ptTerm">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term </th>
+                <td mat-cell *matCellDef="let adverse">
+                  <div *ngIf="adverse.ptTerm">
+                    <a [routerLink]="['/browse-adverse-events']"
+                      [queryParams]='{search: "\"^" + adverse.ptTerm + "$\""}' target="_blank">
+                      {{adverse.ptTerm}}
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="primSoc">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Prim SOC </th>
+                <td mat-cell *matCellDef="let adverse"> {{adverse.primSoc}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ingredientName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name </th>
+                <td mat-cell *matCellDef="let adverse">
+                  <a [routerLink]="['/substances', adverse.substanceId]" target="_blank">
+                    {{adverse.name}}
+                  </a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="caseCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Case Count </th>
+                <td mat-cell *matCellDef="let adverse"> {{adverse.caseCount}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="ptCount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Count </th>
+                <td mat-cell *matCellDef="let adverse">
+                  <div *ngIf="FAERSDashboardAdverseEventUrl; else noFaersLink">
+                    <a href="{{FAERSDashboardAdverseEventUrl}}{{getDecodeURL(adverse.ptTerm | titlecase)}}{{FAERSDashboardReactionGroup}}{{getDecodeURL(adverse.primSoc | titlecase)}}"
+                      target="_blank" title="FAERS Public Dashboard">
+                      <div [innerHTML]="adverse.ptCount"></div>
+                    </a>
+                    <span class="colorgray font10px">FAERS Public Dashboard</span>
+                  </div>
+                  <ng-template #noFaersLink>
+                    <div [innerHTML]="adverse.ptCount"></div>
+                  </ng-template>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="prr">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> PRR </th>
+                <td mat-cell *matCellDef="let adverse"> {{adverse.prr | number : '.2-2'}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+        <!-- TABLE VIEW END -->
+
+        <!-- CARD VIEW BEGIN -->
+        <div class="cards-view"
+          *ngIf="adverseEventPtList && adverseEventPtList.length > 0; else noRecordAdverseEventPt">
+          <mat-card *ngFor="let adverse of adverseEventPtList">
+            <mat-card-title>
+              <div>
+                <span class="font13px">Adverse Event:</span>&nbsp;
+                {{adverse.ptTerm}}
+              </div>
+              <div>
+              </div>
+              <div>
+              </div>
+            </mat-card-title>
+
+            <mat-card-content>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Ingredient Name:
+                  </div>
+                  <div class="row-property-value">
+                    <a [routerLink]="['/substances', adverse.substanceId]" target="_blank">{{adverse.name}}</a>
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Substance Key:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.substanceKey}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Prim SOC:
+                  </div>
+                  <div class="row-property-value">
+                    {{ adverse.primSoc}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PRR:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.prr | number : '.2-2'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Case Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.caseCount}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    SOC Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.socCount}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PT Count:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.ptCount}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    SOC Count Percent:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.socCountPercent}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PT Count Percent:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.ptCountPercent}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    PT Count Total Vs Drug:
+                  </div>
+                  <div class="row-property-value">
+                    {{adverse.ptCountTotalVsDrug}}
+                  </div>
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
+
+      <!-- Pagination at the bottom of the page -->
+      <div class="controls-container-right">
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalAdverseEventPt" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
+      </div> <!-- Pagination end -->
+
+      <ng-template #noRecordAdverseEventPt>
+        <!-- No Adverse Event PT Record Found. -->
+      </ng-template>
+
+    </div> <!-- class=side-nav-content -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

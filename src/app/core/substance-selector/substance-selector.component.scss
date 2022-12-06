@@ -1,7 +1,58 @@
+
 .selected-substance-container {
     max-width: 100%;
     width: 100%;
 }
+
+.zoom {
+    cursor: zoom-in !important;
+}
+
+::ng-deep .zoom:hover {
+    cursor: zoom-in !important;
+
+}
+
+.zoom:hover {
+    cursor: zoom-in !important;
+
+}
+
+.approval-id {
+    font-size: 16px;
+    color: var(--primary-color);
+}
+
+.name-div {
+    margin-top: -3px;
+    margin-bottom: 7px;
+}
+.change-link {
+    margin-right: 25px;
+    margin-left: -40px;
+}
+
+.under-link {
+    color: var(--link-color);
+    font-weight:550;
+}
+
+.name-link {
+    color: var(--link-color);
+    text-decoration: underline;
+}
+.new-tab {
+    height: 16px !important;
+    width: 16px !important;
+}
+
+.centered {
+    text-align: center;
+    margin-left: -42px;
+    margin-top: 5px;
+}
+
+
 
 .selected-substance {
     display: flex;
@@ -14,12 +65,18 @@
         display: block;
         max-width: 200px;
     }
+     img :hover {
+        cursor: zoom-in !important;
+    
+    }
 }
 
 .undo {
     float: right;
     margin-top: -5px;
 }
+
+
 
 .selected-substance-options {
     position: absolute;
@@ -29,8 +86,8 @@
     flex-direction: column;
 
     .mat-mini-fab {
-        background-color: rgba(242, 242, 242, .85);
-        color: #404040;
+        background-color: var(--mat-icon-button-bg-color);
+        color: var(--label-color);
         width: 35px;
         height: 35px;
 
@@ -46,4 +103,13 @@
 
 .hidden {
     display: none !important;
+}
+
+.divflex {
+    display: flex;
+    font-size: 12px;
+}
+
+.marginright10px {
+    margin-right: 10px;
 }

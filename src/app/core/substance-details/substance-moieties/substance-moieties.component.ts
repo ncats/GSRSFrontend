@@ -6,7 +6,8 @@ import {UtilsService} from '../../utils/utils.service';
 import {Subject} from 'rxjs';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-moieties',
@@ -17,12 +18,14 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
   moieties: Array<SubstanceMoiety> = [];
   substanceUpdated = new Subject<SubstanceDetail>();
   private overlayContainer: HTMLElement;
+  rounding = '1.0-2';
 
   constructor(
               private utilService: UtilsService,
               private overlayContainerService: OverlayContainer,
               private structureService: StructureService,
-              private dialog: MatDialog
+              private dialog: MatDialog,
+              private configService: ConfigService
   ) {
     super();
   }
@@ -31,7 +34,7 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       if (this.substance != null && this.substance.moieties != null) {
-        this.moieties = this.substance.moieties;
+        this.moieties = JSON.parse(JSON.stringify(this.substance.moieties));
         this.moieties.forEach( unit => {
           unit.formula = this.structureService.formatFormula(unit);
 
@@ -40,6 +43,10 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
       this.countUpdate.emit(this.moieties.length);
     });
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    if (this.configService.configData && this.configService.configData.molWeightRounding) {
+      this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
+  }
 
   }
   openImageModal(substance) {

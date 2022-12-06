@@ -1,0 +1,280 @@
+<!--
+<div class="query-statement-container">
+  <div class="width5percent marginright25px">
+    <mat-form-field *ngIf="index > 0">
+      <mat-select [formControl]="conditionControl" (openedChange)="openedChange($event)">
+        <mat-option *ngFor="let option of conditionOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="width27percent marginright20px">
+    <mat-form-field>
+      <mat-select [formControl]="searchFieldControl" (openedChange)="openedChange($event)">
+        <mat-option *ngFor="let option of searchFields" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="width27percent marginright20px">
+    <mat-form-field>
+      <mat-select [formControl]="commandControl" (openedChange)="openedChange($event)">
+        <mat-option *ngFor="let option of commandOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+
+  <div class="query-column">
+    <div class="query-input" *ngFor="let commandInput of commandInputs; index as index">
+      <div *ngIf="commandInput.type == 'text' || commandInput.type == 'boolean' || commandInput.type == 'number'">
+        <mat-form-field floatLabel="never">
+          <input [type]="commandInput.type" [name]="'input_' + index" matInput
+            [(ngModel)]="commandInputValueDict[commandInput.type][index]" required placeholder="Enter search value"
+            (keyup)="commandInput.constructQuery(
+                        $event.target.value.trim(),
+                        selectedCondition,
+                        selectedQueryableProperty,
+                        selectedLucenePath,
+                        queryUpdated,
+                        queryParts,
+                        commandInputValueDict[commandInput.type]
+                    )">
+          <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
+        </mat-form-field>
+      </div>
+      <div *ngIf="commandInput.type == 'datetime'">
+        <mat-form-field floatLabel="never">
+          <input matInput required placeholder="m/d/yyyy" [(ngModel)]="commandInputValueDict[commandInput.type][index]"
+            (dateChange)="commandInput.constructQuery(
+                        $event.value,
+                        selectedCondition,
+                        selectedQueryableProperty,
+                        selectedLucenePath,
+                        queryUpdated,
+                        queryParts,
+                        commandInputValueDict[commandInput.type]
+                    )" (dateInput)="commandInput.constructQuery(
+                        $event.value,
+                        selectedCondition,
+                        selectedQueryableProperty,
+                        selectedLucenePath,
+                        queryUpdated,
+                        queryParts,
+                        commandInputValueDict[commandInput.type]
+                    )" [matDatepicker]="queryDatepicker">
+          <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
+          <mat-datepicker-toggle matSuffix [for]="queryDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #queryDatepicker (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()">
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div *ngIf="commandInput.type == 'select'">
+        <mat-form-field floatLabel="never">
+          <mat-select [(ngModel)]="commandInputValueDict[commandInput.type][index]" required
+            placeholder="Select default option" (openedChange)="openedChange($event)" (selectionChange)="commandInput.constructQuery(
+                    $event.value,
+                    selectedCondition,
+                    selectedQueryableProperty,
+                    selectedLucenePath,
+                    queryUpdated,
+                    queryParts,
+                    commandInputValueDict[commandInput.type]
+                )">
+            <mat-option *ngFor="let option of cvOptions" [value]="option.value" [matTooltip]="option.display">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <mat-form-field class="width33percent marginright20px">
+    <input matInput [(ngModel)]="searchText" name="searchText" required placeholder="Enter search value">
+  </mat-form-field>
+</div>
+-->
+
+<div class="query-statement-container">
+
+  <div class="condition-column">
+    <mat-form-field *ngIf="index > 0">
+      <mat-label>Condition</mat-label>
+      <mat-select [formControl]="conditionControl" (openedChange)="openedChange($event)">
+        <mat-option *ngFor="let option of conditionOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="queryable-property-column">
+    <mat-form-field *ngIf="isShowCommonFields">
+      <mat-label>Search in Fields</mat-label>
+      <mat-select [formControl]="queryablePropertiesControl" (openedChange)="openedChange($event)">
+        <mat-option *ngFor="let option of queryableOptionsCommon" [value]="option" [matTooltip]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+      <span class="middle-fill"></span>
+      <mat-hint class="action-hint">
+        <a tabindex="0" role="link" (click)="showAllFields()">Show all fields</a>
+      </mat-hint>
+    </mat-form-field>
+    <div *ngIf="!isShowCommonFields">
+      <mat-form-field floatLabel="never">
+        <input type="text" matInput [formControl]="queryablePropertiesAutocompleteControl"
+          [matAutocomplete]="queryablePropertyOptions" placeholder="Search for desired field"
+          (blur)="queryablePropertiesAutocompleteBlurred()">
+        <a matSuffix (click)="clearSelectedQueryableProperty()" matTooltip="Clear input and show all options">
+          <mat-icon svgIcon="clear"></mat-icon>
+        </a>
+        <mat-hint class="action-hint">
+          <a (click)="showCommonFields()">Show common fields</a>
+        </mat-hint>
+      </mat-form-field>
+      <mat-autocomplete #queryablePropertyOptions="matAutocomplete"
+        (optionSelected)="queryablePropertySelected($event.option.value)" (opened)="increaseOverlayZindex()"
+        (closed)=queryablePropertiesAutocompleteClosed()>
+        <mat-option *ngFor="let option of queryableOptionsAll" [value]="option" [matTooltip]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+  </div>
+
+  <!-- FOR (Exact Match, Contains, Starts With, etc) -->
+  <div class="command-column">
+    <mat-form-field [matTooltip]="selectedCommandOption">
+      <mat-label>For</mat-label>
+      <mat-select [formControl]="commandControl" (openedChange)="openedChange($event)">
+        <mat-option *ngFor="let option of commandOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+      <mat-hint class="action-hint">
+        <a tabindex="0" role="link" (click)="showAllCommandOptions()">{{isShowAllCommandOptions? 'Hide Some Options':'Show More Options'}}</a>
+      </mat-hint>
+    </mat-form-field>
+  </div>
+
+  <!-- Search Textbox -->
+  <div class="query-column">
+    <div class="query-input" *ngFor="let commandInput of commandInputs; index as index">
+      <!--
+      <div *ngIf="selectedQueryableSuggest">
+        <app-type-ahead-search [category]="categoryinput" [fieldName]="selectedQueryableSuggest"
+          (typeAheadUpdatedOut)="typeAheadUpdated($event)">
+        </app-type-ahead-search>
+      </div>
+      -->
+
+      <!-- TYPE AHEAD Textbox -->
+      <div *ngIf="selectedQueryableSuggest">
+        <mat-form-field [floatLabel]="'never'" class=" search-form-field space-right-small">
+          <input class="search" type="text" placeholder="Enter Search Value (Type Ahead) *" aria-label="Search Text"
+            matInput [formControl]="searchControl" [matAutocomplete]="searchAuto" (focus)="focused()"
+            (keyup.enter)="processSearch()"
+            (keyup)="commandInput.constructQuery(
+              $event.target.value.trim(),
+              selectedCondition,
+              selectedQueryableProperty,
+              selectedLucenePath,
+              queryUpdated,
+              queryParts,
+              commandInputValueDict[commandInput.type]
+          )">
+
+          <!-- Auto Complete -->
+          <mat-autocomplete class="substance-select" panelWidth="auto" #searchAuto="matAutocomplete"
+            (optionSelected)="searchOptionSelected($event)" (closed)="autoCompleteClosed()">
+            <mat-option *ngFor="let suggestion of substanceSuggestionsGroup" [value]="suggestion.key">
+              <div [innerHTML]="highlight(suggestion.key)" class="suggestion-styling">{{suggestion.key}}</div>
+            </mat-option>
+            <!--<pre aria-hidden="true" class="mat-option overflow-comp" id='overflow'></pre>-->
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <!-- Display Text Box if NOT Type Ahead/Suggestion -->
+      <div
+        *ngIf="!selectedQueryableSuggest && (commandInput.type == 'text' || commandInput.type == 'boolean' || commandInput.type == 'number')">
+        <mat-form-field floatLabel="never">
+          <input [type]="commandInput.type" [name]="'input_' + index" matInput
+            [(ngModel)]="commandInputValueDict[commandInput.type][index]" required placeholder="Enter search value"
+            (keyup.enter)="processSearch()"
+            (keyup)="commandInput.constructQuery(
+                          $event.target.value.trim(),
+                          selectedCondition,
+                          selectedQueryableProperty,
+                          selectedLucenePath,
+                          queryUpdated,
+                          queryParts,
+                          commandInputValueDict[commandInput.type]
+                      )">
+          <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
+          <mat-hint class="action-hint">
+            <span *ngIf="commandOptionsExample">{{this.commandOptionsExample}}</span>
+          </mat-hint>
+        </mat-form-field>
+      </div>
+      <div *ngIf="commandInput.type == 'datetime'">
+        <mat-form-field floatLabel="never">
+          <input matInput required placeholder="m/d/yyyy" [(ngModel)]="commandInputValueDict[commandInput.type][index]"
+          (keyup.enter)="processSearch()"
+          (dateChange)="commandInput.constructQuery(
+                          $event.value,
+                          selectedCondition,
+                          selectedQueryableProperty,
+                          selectedLucenePath,
+                          queryUpdated,
+                          queryParts,
+                          commandInputValueDict[commandInput.type]
+                      )" (dateInput)="commandInput.constructQuery(
+                          $event.value,
+                          selectedCondition,
+                          selectedQueryableProperty,
+                          selectedLucenePath,
+                          queryUpdated,
+                          queryParts,
+                          commandInputValueDict[commandInput.type]
+                      )" [matDatepicker]="queryDatepicker">
+          <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
+          <mat-datepicker-toggle matSuffix [for]="queryDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #queryDatepicker (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()">
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div *ngIf="commandInput.type == 'select'">
+        <mat-form-field floatLabel="never">
+          <mat-select [(ngModel)]="commandInputValueDict[commandInput.type][index]" required
+            placeholder="Select default option" (openedChange)="openedChange($event)" (selectionChange)="commandInput.constructQuery(
+                      $event.value,
+                      selectedCondition,
+                      selectedQueryableProperty,
+                      selectedLucenePath,
+                      queryUpdated,
+                      queryParts,
+                      commandInputValueDict[commandInput.type]
+                  )"
+                  (keyup.enter)="processSearch()">
+            <mat-option *ngFor="let option of cvOptions" [value]="option.value" [matTooltip]="option.display">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="!commandInputValueDict[commandInput.type][index]">Required</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+</div>
+

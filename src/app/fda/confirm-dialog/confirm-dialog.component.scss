@@ -18,11 +18,11 @@
 .actions-container {
   max-width: 1028px;
   width: 100%;
-  background-color: white;
+  background-color: var(--regular-white-color);
   padding: 10px;
   display: flex;
 }
 
-.bordergray {
-  border: 1px solid gray;
+.borderlightgray {
+  border: 1px solid var(--regular-lightgray-color);
 }

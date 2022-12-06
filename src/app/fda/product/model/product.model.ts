@@ -113,8 +113,10 @@ export interface ProductLot {
 export interface ProductIngredient {
   id?: number;
   applicantIngredName?: string;
-  bdnum?: string;
-  basisOfStrengthBdnum?: string;
+  substanceKey?: string;
+  substanceKeyType?: string;
+  basisOfStrengthSubstanceKey?: string;
+  basisOfStrengthSubstanceKeyType?: string;
   average?: string;
   low?: string;
   high?: string;
@@ -136,6 +138,8 @@ export interface ProductIngredient {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  $$ingredientNameValidation?: string;
+  $$basisOfStrengthValidation?: string;
 }
 
 export interface ProductAll {

@@ -1,5 +1,6 @@
+/* awtodo not sure about differences */
 .message {
-    padding:20px;
+    padding: 10px;
 }
 
 .info {
@@ -18,7 +19,7 @@
 
 .italics {
     font-style: italic;
-    color: rgba(0, 0, 0, .5);
+    color: var(--text-color);
 }
 
 .file-name {
@@ -28,7 +29,7 @@
     margin-top: auto;
     margin-bottom: auto;
     font-size: 15px;
-    color: rgba(0, 0, 0, .8);
+    color: var(--deprecated-color);
 }
 
 .full-row {
@@ -37,4 +38,57 @@
     flex-direction: row;
     justify-content: flex-start;
     padding: 15px;
+}
+
+.full-row-col {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.button-select-file {
+    color: #007CBA;
+    border: 1px solid #007CBA;
+}
+
+.button-cancel {
+    background-color: #FFFFFF;
+    border: 1px solid #D60036;
+}
+
+.button-import {
+    color: #FFFFFF;
+    background-color: #007CBA;
+    border: 1px solid 007CBA;
+}
+
+.colorwhite {
+    color: #FFFFFF;
+}
+
+.colorred {
+    color: red;
+}
+
+.colorblue {
+    color: #007CBA;
+}
+
+.bordergray {
+    border: 1px solid rgb(37, 34, 34);
+}
+
+.padbottom20px {
+    padding-bottom: 20px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid rgb(126, 131, 126);
+    color: #333;
+    overflow: visible;
+    text-align: center;
+    height: 5px;
 }

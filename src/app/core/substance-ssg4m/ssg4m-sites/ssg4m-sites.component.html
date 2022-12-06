@@ -1,0 +1,156 @@
+<!-- [ngClass]="{'bordergreen': showAdvancedSettings === true}"> -->
+<div class="form-container">
+  <!--
+    <div *ngIf="site.$$deletedCode" class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+    -->
+
+    <div class="divflexright" *ngIf="showAdvancedSettings">
+      <button mat-stroked-button color="primary" class="button-delete" matTooltip="Delete Site {{(siteIndex+1)}}" (click)="confirmDeleteSite()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>Delete Site {{(siteIndex+1)}}
+      </button>
+    </div>
+
+  <div class="form-row">
+    <!--
+    <div class="delete-container" *ngIf="showAdvancedSettings">
+      <button mat-icon-button matTooltip="Delete Site {{(siteIndex+1)}}" (click)="confirmDeleteSite()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+    -->
+
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['siteName'] || (configSettingsDisplay['siteName'] === undefined && showAdvancedSettings)">
+      <input matInput placeholder="Site Name" [(ngModel)]="site.siteName" name="site.siteName" />
+    </mat-form-field>
+
+    <app-cv-input class="col-3-1"
+      *ngIf="configSettingsDisplay['siteIdType'] || (configSettingsDisplay['siteIdType'] === undefined && showAdvancedSettings)"
+      domain="SSG_SITE_ID_TYPE" title="Site ID Type" name="siteIdType" [model]="site.siteIdType"
+      (valueChange)="site.siteIdType = $event">
+    </app-cv-input>
+
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['siteId'] || (configSettingsDisplay['siteId'] === undefined && showAdvancedSettings)">
+      <input matInput placeholder="Site ID" [(ngModel)]="site.siteId" name="site.siteId" />
+    </mat-form-field>
+  </div> <!-- form row -->
+
+  <div class="form-row">
+    <!--
+    <div class="marginleft45px bordergreen">&nbsp;</div>
+    -->
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['siteAddress'] || (configSettingsDisplay['siteAddress'] === undefined && showAdvancedSettings)">
+      <input matInput placeholder="Site Address" [(ngModel)]="site.siteAddress" name="site.siteAddress" />
+    </mat-form-field>
+
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['gpsSiteLocation'] || (configSettingsDisplay['gpsSiteLocation'] === undefined && showAdvancedSettings)">
+      <input matInput placeholder="GPS Site Location" [(ngModel)]="site.gpsSiteLocation" name="site.gpsSiteLocation" />
+    </mat-form-field>
+
+    <app-cv-input class="col-3-1"
+      *ngIf="configSettingsDisplay['siteClearance'] || (configSettingsDisplay['siteClearance'] === undefined && showAdvancedSettings)"
+      domain="SSG_SITE_CLEARANCE" title="Site Clearance" name="siteClearance" [model]="site.siteClearance"
+      (valueChange)="site.siteClearance = $event">
+    </app-cv-input>
+  </div> <!-- form row -->
+
+  <div class="form-row">
+    <!--
+    <div class="marginleft45px">&nbsp;</div>
+    -->
+    <mat-form-field class="col-1-1"
+      *ngIf="configSettingsDisplay['siteComments'] || (configSettingsDisplay['siteComments'] === undefined && showAdvancedSettings)">
+      <textarea matInput placeholder="Comments" [(ngModel)]="site.siteComments" name="site.siteComments"
+        rows="1"></textarea>
+    </mat-form-field>
+  </div> <!-- form row -->
+
+  <!-- STAGES LIST BEGIN -->
+  <!--
+  <hr *ngIf="showAdvancedSettings">
+  -->
+  <div>
+    <!--
+    <span matBadge="{{site.stages.length}}" matBadgeOverlap="false">
+      <span class="fontsize18px"><b>{{configTitleStage}} Information</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    -->
+
+    <!-- Add Button -->
+    <!--
+    <div class="divflexright">
+      <div class="">
+        <span class="middle-fill"></span>
+        <button mat-stroked-button color="primary" class="button-add-top" (click)="addStage(processIndex, siteIndex)"
+          matTooltip="Add New Stage">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
+        </button>
+      </div>
+   </div>
+   -->
+
+    <!--
+    <button mat-raised-button color="primary" (click)="addStage(processIndex, siteIndex)" matTooltip="Add New Stage">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
+    </button>
+    <br><br>
+    -->
+
+    <!-- </div> appScrollToTarget [id]="'stage_' + processIndex + '_' + stageIndex"> -->
+    <div class="marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+      <fieldset class="border">
+        <legend class="border">{{configTitleStage}}&nbsp;
+          <span *ngIf="site.stages.length > 0">
+            <b>{{(stageIndex+1)}} of {{site.stages.length}}</b>
+            &nbsp;&nbsp;
+          </span>
+          <button class="buttonstyle" mat-button (click)="showSchemePreview()">
+            Step View
+          </button>
+        </legend>
+        <app-ssg4m-stages-form [stage]="stage" [processIndex]="processIndex" [siteIndex]="siteIndex"
+          [stageIndex]="stageIndex" [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView">
+        </app-ssg4m-stages-form>
+
+        <!-- Another Add Button-->
+        <!--  *ngIf="site.stages && site.stages.length > 0" -->
+        <div class="divflex">
+          <span class="middle-fill"></span>
+          <button mat-stroked-button color="primary" class="button-add" (click)="addStage(processIndex, siteIndex)">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
+          </button>
+        </div>
+      </fieldset>
+    </div> <!-- for Loop -->
+    <!-- STAGES LIST END -->
+
+    <div class="divflexright" *ngIf="site.stages && site.stages.length === 0">
+      <span class="middle-fill"></span>
+      <button mat-stroked-button color="primary" class="" (click)="addStage(processIndex, siteIndex)">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
+      </button>
+    </div>
+
+    <!-- Sites List -->
+    <!--
+    <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
+    -->
+
+    <!--
+    <div class="form-row" *ngIf="!site.$$deletedCode">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="site.references" #references></app-domain-references>
+    </div>
+    </div>
+    -->
+  </div>
+</div>

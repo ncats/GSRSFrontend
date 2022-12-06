@@ -1,15 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified } from '../model/impurities.model';
-import { ImpuritiesService } from '../service/impurities.service';
-import { GeneralService } from '../../service/general.service';
-import { LoadingService } from '@gsrs-core/loading';
-import { UtilsService } from '../../../core/utils/utils.service';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { UtilsService } from '../../../core/utils/utils.service';
+import { LoadingService } from '@gsrs-core/loading';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { ImpuritiesService } from '../service/impurities.service';
+import { GeneralService } from '../../service/general.service';
+import { Impurities } from '../model/impurities.model';
 
 @Component({
   selector: 'app-impurities-details',
@@ -29,18 +31,26 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
 
   constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService,
+    private utilsService: UtilsService,
+    private loadingService: LoadingService,
+    private gaService: GoogleAnalyticsService,
+    private mainNotificationService: MainNotificationService,
     private impuritiesService: ImpuritiesService,
     private generalService: GeneralService,
-    private activatedRoute: ActivatedRoute,
-    private loadingService: LoadingService,
-    private mainNotificationService: MainNotificationService,
-    private router: Router,
-    private gaService: GoogleAnalyticsService,
-    private utilsService: UtilsService,
+    private titleService: Title
   ) { }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
+
+    const rolesSubscription = this.authService.hasAnyRolesAsync('admin', 'updater', 'superUpdater').subscribe(canEdit => {
+      this.isAdmin = canEdit;
+    });
+    this.subscriptions.push(rolesSubscription);
+
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getImpurities();
@@ -63,32 +73,33 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
       this.impurities = response;
       if (Object.keys(this.impurities).length > 0) {
 
+        this.titleService.setTitle(`Impurities Details`);
+
         // Get Substance Name for SubstanceUuid in SubstanceList
         this.impurities.impuritiesSubstanceList.forEach((elementRel, indexRel) => {
           if (elementRel.substanceUuid) {
-            const impSubNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId(elementRel.substanceUuid).subscribe
-              (substanceNames => {
-                if (substanceNames) {
-                  elementRel.substanceName = substanceNames.name;
-                  elementRel.relatedSubstanceUnii = substanceNames.unii;
+            const impSubNameSubscription = this.generalService.getSubstanceBySubstanceUuid(elementRel.substanceUuid).subscribe
+              (substance => {
+                if (substance) {
+                  elementRel.substanceName = substance._name;
+                  elementRel.approvalID = substance.approvalID;
                 }
               });
             this.subscriptions.push(impSubNameSubscription);
           }
         });
 
-
         // Get Substance Name for SubstanceUuid in ImpuritiesDetailsList
         this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
           elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
             elementRelTest.impuritiesDetailsList.forEach((elementRelImpuDet) => {
               if (elementRelImpuDet.relatedSubstanceUuid) {
-                const impDetNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId
+                const impDetNameSubscription = this.generalService.getSubstanceBySubstanceUuid
                   (elementRelImpuDet.relatedSubstanceUuid)
-                  .subscribe(substanceNames => {
-                    if (substanceNames) {
-                      elementRelImpuDet.substanceName = substanceNames.name;
-                      elementRelImpuDet.relatedSubstanceUnii = substanceNames.unii;
+                  .subscribe(substance => {
+                    if (substance) {
+                      elementRelImpuDet.substanceName = substance._name;
+                      elementRelImpuDet.relatedSubstanceUnii = substance.approvalID;
                     }
                   });
                 this.subscriptions.push(impDetNameSubscription);
@@ -97,16 +108,15 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
           });
         });
 
-
         // Get Substance Name for SubstanceUuid in ImpuritiesResidualSolventsList
         this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
           elementRelSub.impuritiesResidualSolventsList.forEach((elementRelResidual) => {
             if (elementRelResidual.relatedSubstanceUuid) {
-              const impResidualNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId
-                (elementRelResidual.relatedSubstanceUuid).subscribe(substanceNames => {
-                  if (substanceNames) {
-                    elementRelResidual.substanceName = substanceNames.name;
-                    elementRelResidual.relatedSubstanceUnii = substanceNames.unii;
+              const impResidualNameSubscription = this.generalService.getSubstanceBySubstanceUuid
+                (elementRelResidual.relatedSubstanceUuid).subscribe(substance => {
+                  if (substance) {
+                    elementRelResidual.substanceName = substance._name;
+                    elementRelResidual.relatedSubstanceUnii = substance.approvalID;
                   }
                 });
               this.subscriptions.push(impResidualNameSubscription);
@@ -139,8 +149,10 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
   getSubstancePreferredName(substanceUuid: string) {
     let name = '';
-    const getSubDetailsSubscribe = this.impuritiesService.getSubstanceDetailsBySubstanceId(substanceUuid).subscribe(substanceNames => {
-      name = substanceNames.name;
+    const getSubDetailsSubscribe = this.generalService.getSubstanceBySubstanceUuid(substanceUuid).subscribe(substance => {
+      if (substance) {
+        name = substance._name;
+      }
     });
     this.subscriptions.push(getSubDetailsSubscribe);
   }

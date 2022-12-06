@@ -7,10 +7,10 @@ import * as _ from 'lodash';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { PageEvent } from '@angular/material';
+import { PageEvent } from '@angular/material/paginator';
 import { UtilsService } from '@gsrs-core//utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import {AuthService} from '@gsrs-core/auth/auth.service';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { Subscription, Observable, Subject } from 'rxjs';
@@ -24,7 +24,8 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Auth } from '@gsrs-core/auth/auth.model';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
+// import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-clinical-trials-browse',
@@ -70,8 +71,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   public displayFacets: Array<DisplayFacet> = [];
   private isFacetsParamsInit = false;
   public isCollapsed = true;
-
-
+  private searchTermHash: number;
+  isSearchEditable = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -85,7 +86,8 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private authService: AuthService,
     private overlayContainerService: OverlayContainer,
     private location: Location,
-    private facetManagerService: FacetsManagerService
+    private facetManagerService: FacetsManagerService,
+    public gaService: GoogleAnalyticsService,
   ) {}
 
   ngOnInit() {
@@ -95,24 +97,33 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
     this.privateSearchType = this.activatedRoute.snapshot.queryParams['type'] || 'all';
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$trialNumber';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+
+    // Need this to go back to Advanced Search
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+      // testing
+      // this.isAdmin = true;
       // this.showAudit = this.authService.hasRoles('admin');
        if (this.isAdmin) {
-        this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated', 'delete'];
+        this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
        } else {
-         this.displayedColumns = ['edit', 'nctNumber', 'title', 'lastUpdated'];
+         this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
        }
     });
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
       {'title': 'Title', 'value': 'title'},
-      {'title': 'NCT Number', 'value': 'nctNumber'},
-      {'title': 'Substance UUID', 'value': 'substanceUuid'}
+      {'title': 'Trial Number', 'value': 'trialNumber'},
+      {'title': 'Substance Key', 'value': 'substanceKey'}
     ];
     this.isComponentInit = true;
     this.loadComponent();
@@ -127,7 +138,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
       this.utilsService.handleMatSidenavClose();
     });
     this.subscriptions.push(closeSubscription);
-    // this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
   }
 
   ngOnDestroy() {
@@ -201,7 +211,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
       this.privateFacetParams,
       (this.pageIndex * this.pageSize),
     );
-    if (this.argsHash == null || this.argsHash !== newArgsHash) {
+    if (this.argsHash === null || this.argsHash !== newArgsHash) {
       this.isLoading = true;
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
@@ -251,7 +261,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
             });
           }
 */
-        }, error => {
+        }, () => {
           // this.gaService.sendException('getSubstancesDetails: error from API cal');
           const notification: AppNotification = {
             message: 'There was an error trying to retrieve ClinicalTrials. Please refresh and try again.',
@@ -292,21 +302,21 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   deleteClinicalTrial(index: number) {
-    if (typeof this.clinicalTrials[index] === 'undefined' || ! _.has(this.clinicalTrials[index], 'nctNumber')) {
+    if (typeof this.clinicalTrials[index] === 'undefined' || ! _.has(this.clinicalTrials[index], 'trialNumber')) {
         alert('A trial number is required.');
         return;
     }
-    if (!confirm('Are you sure to delete ' + this.clinicalTrials[index].nctNumber + '?')) {
+    if (!confirm('Are you sure to delete ' + this.clinicalTrials[index].trialNumber + '?')) {
       return;
     }
     this.loadingService.setLoading(true);
-    this.clinicalTrialService.deleteClinicalTrial(this.clinicalTrials[index].nctNumber)
-      .subscribe(result => {
+    this.clinicalTrialService.deleteClinicalTrial(this.clinicalTrials[index].trialNumber)
+      .subscribe( () => {
         this.isError = false;
         const deletedClinicalTrials = this.clinicalTrials.splice(index, 1);
         this.dataSource.data = this.clinicalTrials;
         const notification: AppNotification = {
-          message: 'You deleted the clinical trial record for:' + deletedClinicalTrials[0].nctNumber,
+          message: 'You deleted the clinical trial record for:' + deletedClinicalTrials[0].trialNumber,
           type: NotificationType.success,
           milisecondsToShow: 6000
         };
@@ -314,7 +324,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
         this.notificationService.setNotification(notification);
-      }, error => {
+      }, () => {
         const notification: AppNotification = {
           message: 'There was an error trying to delete a clinical trial.',
           type: NotificationType.error,
@@ -365,8 +375,12 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
 
   // see substance code
   clearFilters(): void {
-    this.facetManagerService.clearSelections();
+    // for facets
+    this.displayFacets.forEach(displayFacet => {
+      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+    });
     this.clearSearch();
+    this.facetManagerService.clearSelections();
   }
 
   get searchTerm(): string {
@@ -424,4 +438,17 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.showHelp = !this.showHelp;
   }
 
+  editAdvancedSearch(): void {
+  //  const eventLabel = environment.isAnalyticsPrivate ? 'Browse Clinical Trial search term' :
+  //    `${this.privateSearchTerm}`;
+  //  this.gaService.sendEvent('Clinical Trial Filtering', 'icon-button:edit-advanced-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        'g-search-hash': this.searchTermHash.toString()
+      }
+    };
+
+    this.router.navigate(['/advanced-search'], navigationExtras);
+  }
 }

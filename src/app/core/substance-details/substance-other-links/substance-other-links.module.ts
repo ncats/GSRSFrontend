@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { SubstanceOtherLinksComponent } from './substance-other-links.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import {RouterModule} from '@angular/router';
-import {MatInputModule, MatPaginatorModule, MatTableModule} from '@angular/material';
+import {MatInputModule} from '@angular/material/input';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
 import {CdkTableModule} from '@angular/cdk/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 

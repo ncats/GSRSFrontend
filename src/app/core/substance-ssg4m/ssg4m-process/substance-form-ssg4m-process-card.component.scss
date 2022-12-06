@@ -1,0 +1,168 @@
+/* awtodo come back */
+.bordergray {
+  border: 1px border var(--regular-grey-color);
+}
+
+.mat-divider.mat-divider-inset {
+  margin-left: 0;
+}
+
+.mat-divider {
+  border-top-color: var(--text-color);
+}
+
+.process {
+  margin-bottom: 60px;
+
+  &:nth-child(odd) {
+      background-color: var(--nth-child-color-2);
+
+      ::ng-deep {
+
+          .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+              background-color: var(--nth-child-color-3);
+          }
+      }
+  }
+
+  &:nth-child(even) {
+      ::ng-deep {
+
+          .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+              background-color: var(--nth-child-color-1);
+          }
+      }
+  }
+
+  ::ng-deep {
+      .mat-expansion-panel, .mat-table, textarea {
+          background-color: var(--regular-transparent-color);
+      }
+  }
+}
+
+.search {
+  width: 400px;
+  max-width: 100%;
+}
+
+.paddingleft800px {
+  padding-left: 800px;
+}
+
+.divflex {
+  display: flex;
+}
+
+.divflexright {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+
+.top25px {
+  top: 25px;
+}
+
+.button-add {
+  z-index: 1;
+  position: relative;
+  /*top: 25px;*/
+  margin-right: 25px;
+  background-color: #FFFFFF;
+  border: 1px solid #007CBA;
+}
+
+fieldset.border {
+  border: solid 2px var(--fieldset-blue-border-color) !important;
+  padding: 0 10px 10px 10px;
+  border-bottom: none;
+  /*border-radius: 8px;*/
+  margin-top: 20px;
+  min-width: 0;  /* override the default value of min-content */
+/*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);*/
+}
+
+legend.border {
+  width: auto !important;
+  border: none;
+  border-bottom: none;
+  font-size: 15px;
+  color: var(--legend-blue-border-color-2);
+  font-family: Verdana;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-left: 30px;
+}
+
+:host ::ng-deep .mat-tab-list .mat-tab-label {
+  /*
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;*/
+  /*color: black;*/
+  /*background-color: rgb(247, 241, 241);*/
+  /*border-right: 1px solid rgb(182, 177, 177);*/
+  min-width: 120px;
+  max-width: 120px;
+  text-align: top;
+  margin-bottom: 10px;
+  /* FDA COLOR BLUE CODE Hex: #007CBA */
+  color: #007CBA;
+  opacity: 1 !important;
+  /*
+  margin-left: 5px;
+  border-radius: 10px 10px 0px 0px;
+  flex-wrap: wrap!important;
+  min-width: 120px;
+  max-width: 120px;
+  height: 35px;*/
+}
+
+:host ::ng-deep .mat-tab-label-content {
+  margin-top: -5px;
+}
+/*
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color: red;
+  background-color: green;
+}
+*/
+
+:host ::ng-deep .mat-tab-header {
+  margin-top: 10px;
+  border-bottom: 2px solid rgb(148, 149, 163);
+}
+
+:host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  background: url("../../assets/images/home/tab_active.png");
+  color: #FFFFFF;
+  padding-top: -10px;
+  /*font-weight: bold;*/
+  /*background-color: #FFFFFF;*/
+  /*background-image: url("http://localhost:8081/ginas/app/beta/assets/images/home/tab_active.png");*/
+  /*background-color: rgb(20, 76, 189);*/
+  /*
+   color: rgb(248, 250, 248);
+   background-color: rgb(44, 70, 141);
+
+   opacity: 1;
+     */
+}
+
+:host ::ng-deep .mat-ink-bar {
+  /*background-color: var(--primary-color, --royal-blue-color) !important;
+  height: 3px;*/
+  display: none !important;
+}
+
+/* Tyler trying to make the sites disappear by default */
+fieldset.border.minimize {
+  border: none !important;
+  padding: 0px !important;
+  box-shadow: none !important;
+  margin-top: 0px  !important;
+}
+

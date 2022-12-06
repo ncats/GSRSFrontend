@@ -1,36 +1,149 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
-
+    <mat-form-field style = "margin-left: 30px;" *ngIf="isAdmin" id = "facetView" class = "facetView">
+      <mat-label>Facet View:</mat-label>
+      <mat-select [formControl]="facetViewControl" (openedChange)="openedFacetViewChange($event)" (selectionChange)="facetViewChange($event)">
+        <mat-option *ngFor="let option of facetViewCategory" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
-      [rawFacets]="rawFacets" configName="substances" includeFacetSearch="true">
+      [rawFacets]="rawFacets" [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
+       configName="substances" includeFacetSearch="true">
     </app-facets-manager>
   </mat-sidenav>
   <mat-sidenav-content>
-    <button class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+    <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
-    <div class="side-nav-content" *ngIf="substances && substances.length">
+    <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
+      <div *ngIf="!matchTypes || matchTypes.length === 0">
+        Your search did not return any results. Please try modifying it or
+        <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
+      </div>
+      <div *ngIf="(matchTypes && matchTypes.length > 0)">
+        Your search did not return any results within the default fields. However, this query has some results if you restrict your search to specific fields below.
+      </div>
+      <div class="search-parameters center">
+        <div class="mat-elevation-z2" *ngIf="searchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+            <span>{{this.searchTerm}}</span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit" tooltip="Go to Advanced Search"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="mat-elevation-z2" *ngIf="smiles">
+          <div>
+            <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
+            &nbsp;
+            <span class="no-break">
+                <input readonly [value] = "this.smiles" class = "smiles-input" />
+                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                    <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                  </button>
+              <span *ngIf="searchType && searchType == 'similarity'">
+                &nbsp;&ge; {{searchCutoff}}
+              </span>
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" (click)="editStructureSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearStructureSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
+          <div>
+            <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
+            &nbsp;
+            <span class="no-break">
+              <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
+            </span>
+          </div>
+          <div class="actions-container">
+            <button mat-icon-button color="primary" (click)="editSequenceSearh()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
+              <mat-icon svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="bulkSearchQueryId">
+      <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true" (closed)="bulkSearchPanelOpen = false"
+        style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div>Bulk Search Summary (Full Results)</div>
+            <div>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+          <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
+
+            <div>
+              <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
+              <span *ngIf="bulkSearchQueryId"> 
+              | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
+              </span>
+              Bulk Search
+            </div>
+            <app-bulk-search-results-summary
+              showTitle=false
+              loadSummaries=true
+              context="substances"
+              [key]="bulkSearchStatusKey"
+              [isCollapsed]="isBulkSearchCollapsed"
+            ></app-bulk-search-results-summary>
+          </div>
+        </mat-expansion-panel>           
+    </div>
+
+    <div class="break"></div>
+    <div class="side-nav-content" *ngIf="(substances && substances.length) || (matchTypes && matchTypes.length > 0)">
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
-        <div class="mat-elevation-z2 narrow-search-suggestions">
+        <div class = "flex-row">
+        <div class="mat-elevation-z2 narrow-search-suggestions" style = "margin:auto; background-color: white;">
           <div>
-            Would you like to restrict the search for this to field?
+            Would you like to restrict this search to a field?
           </div>&nbsp;
-          <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions"
+          <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions" style = "padding-right: 5px;"
             (menuOpened)="increaseOverlayZindex()" (menuClosed)="decreaseOverlayZindex()">
-            <span>Matches</span>&nbsp;
+            <span>Fields </span>&nbsp;
             {{narrowSearchSuggestionsCount}}
+            <mat-icon svgIcon = "drop_down"></mat-icon>
           </button>
           <button mat-flat-button color="primary" (click)="clearFilters()">
             <span>RESET</span>
           </button>
-          <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
-            <mat-icon svgIcon="edit"></mat-icon>
+          <button mat-icon-button color="primary" (click)="editAdvancedSearch()">
+            <mat-icon svgIcon="edit" tooltip="Go to Advanced Search"></mat-icon>
           </button>
           <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
-            <div *ngFor="let matchType of matchTypes">
-              <div class="match-type">
-                {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+            <div *ngFor="let matchType of sortMatchTypes(matchTypes)">
+              <div class="match-type" [ngSwitch]="matchType">
+                <div *ngSwitchCase="'ADDITIONAL'">Other Match</div>
+                <div *ngSwitchCase="'FULL'">Exact Match</div>
+                <div *ngSwitchCase="'CONTAINS'">Contains Match</div>
+                <div *ngSwitchCase="'WORD'">Contains Match</div>
+                <div *ngSwitchCase="'WORD_STARTS_WITH'">Contains Match</div>
+                <div *ngSwitchCase="'NO_MATCH'">No Match</div>
+                <div *ngSwitchDefault>Unknown Match</div>
               </div>
               <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
                 (click)="restricSearh(suggestion.luceneQuery)">
@@ -45,6 +158,12 @@
           </mat-menu>
         </div>
       </div>
+        <div class = "flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions" style = "margin:auto; background-color: white; margin-top: 12px; ">
+              For more options use the    <a routerLink="/advanced-search" style = "padding-left: 6px;" title="Go to Advanced Search"> Advanced Search</a>
+          </div>
+      </div>
+      </div>
       <ng-template #filterParameters>
         <div class="search-parameters">
           <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
@@ -52,15 +171,18 @@
               <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
               <span>{{this.searchTerm}}</span>
             </div>
+
+
             <div class="actions-container">
-              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
-                <mat-icon svgIcon="edit"></mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="clearSearch()">
-                <mat-icon svgIcon="delete_forever"></mat-icon>
+              <button mat-icon-button color="primary" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit" matTooltip="Go to Advanced Search"></mat-icon>
+              </button>    
+              <button mat-icon-button color="primary" (click)="clearSearch()" style="width: 25px">
+                <mat-icon svgIcon="delete_forever" matTooltip="Delete search"></mat-icon>
               </button>
             </div>
           </div>
+
           <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
             <div class='selected-container'>
               <span class="capitalized font-medium-bold selected-label">
@@ -86,15 +208,26 @@
               <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
               &nbsp;
               <span class="no-break">
-                <span>{{this.smiles}}</span>
+                <input readonly [value] = "this.smiles" class = "smiles-input" />
+                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                    <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                  </button>
                 <span *ngIf="searchType && searchType == 'similarity'">
                   &nbsp;&ge; {{searchCutoff}}
                 </span>
               </span>
             </div>
             <div class="actions-container">
-              <button mat-icon-button color="primary" (click)="editStructureSearch()">
-                <mat-icon svgIcon="edit"></mat-icon>
+            <!--  <button mat-icon-button color="primary" (click)="clipboard(this.smiles)">
+                    <mat-icon  color="primary" svgIcon="paste"></mat-icon>
+                  </button>-->
+              <!-- if search is coming from Advanced Search -->
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit" matTooltip="Go back to Advanced Search"></mat-icon>
+              </button>
+              <!-- if search is not coming from Advanced Search -->
+              <button mat-icon-button color="primary" *ngIf="!isSearchEditable" (click)="editStructureSearch()">
+                <mat-icon svgIcon="edit" matTooltip="Transfer Structure to Structure Search"></mat-icon>
               </button>
               <button mat-icon-button color="primary" (click)="clearStructureSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>
@@ -120,18 +253,37 @@
           </div>
         </div>
       </ng-template>
+      
+      <div *ngIf="(substances && substances.length)">
+      
+      <div>
+        <div class="sub-search-div">
+          <p class="sub-search-text red-text">Results below are an incomplete preview</p>
+          <div class="sub-search-text-div">
+            <div class="search-spinner">
+              <mat-spinner [diameter]="15"></mat-spinner>
+            </div>
+            <p class="sub-search-text match-txt">searching... {{totalSubstances}} matches</p>
+            <button class="sub-search-ref-btn" (click)="clickToRefreshPreview()">Refresh Preview</button>
+            <button class="sub-search-cancel-btn" (click)="clickToCancel()">Cancel</button>
+          </div>
+          <p class="sub-search-text orange-text">Page will auto-reload when search is complete</p>
+        </div>
+      </div>
       <div class="controls-container">
-
+          <div class = "title-container">
+              <span class = "main-title">Browse Substances</span>
+          </div>
 
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table" matTooltip="Table view">
+          <mat-button-toggle aria-label="Table View" value="table" matTooltip="Table View">
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="cards" matTooltip="full view">
+          <mat-button-toggle aria-label="Full View" value="cards" matTooltip="Full View">
             <mat-icon svgIcon="view_stream"></mat-icon>
           </mat-button-toggle>
-          <mat-button-toggle value="tiles">
-            <mat-icon svgIcon="view_module" matTooltip="Tile view"></mat-icon>
+          <mat-button-toggle aria-label="Tile View" value="tiles">
+            <mat-icon svgIcon="view_module" matTooltip="Tile View"></mat-icon>
           </mat-button-toggle>
         </mat-button-toggle-group>
 
@@ -139,7 +291,7 @@
 
         <mat-form-field class="sort">
           <mat-label>Sort By</mat-label>
-          <mat-select (selectionChange)="searchSubstances()" [(ngModel)]="order">
+          <mat-select (selectionChange)="searchSubstances()" (openedChange)="openedSortSubstances($event)" [(ngModel)]="order">
             <mat-option *ngFor="let option of sortValues" [value]="option.value">
               {{option.display}}
             </mat-option>
@@ -149,48 +301,57 @@
           <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.link.url, option.extension)">
             {{option.displayname}}
           </a>
-          <mat-checkbox class="menu-checkbox mat-menu-item"
-            (click)="privateExport = !privateExport; $event.stopPropagation()">
-            Include Private Data
-          </mat-checkbox>
         </mat-menu>
 
         <div class="export ">
-          <button *ngIf="exportOptions && exportOptions.length > 0 && isLoggedIn" matTooltip="Export Search Results"
+          <button *ngIf="exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
             mat-button class="mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
         </div>
 
         <div class="break"></div>
-        <div class="full-paginator">
-          <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
-          </mat-paginator>
+      </div>
+      <div class="full-paginator">
+        <div class="wildcard-div">
+          <mat-form-field class="search" [floatLabel]="'never'">
+            <input matInput type="text" autocomplete="off" placeholder="Search Within Results" [(ngModel)]="wildCardText" (change)="saveWildCardText()" (keyup.enter)="wildCardSearch()">
+          </mat-form-field>
+          <button aria-label="Search Within Results" mat-icon-button (click)="wildCardSearch()">
+            <mat-icon svgIcon="search"></mat-icon>
+          </button>
+          <!-- <input type="submit"> -->
+        </div>
+        <span class = "middle-fill"></span>
+        <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
+        </mat-paginator>
 
-          <div class="page-selector">
-            <span class="page-label">Page: </span>
-            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
-              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
-                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
-                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
-                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
-            </mat-form-field>
-            <span class="page-label"> of {{lastPage}}</span>
-          </div>
+        <div class="page-selector">
+          <span class="page-label">Page: </span>
+          <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+            <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+              [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+              (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+              aria-label="Page Index"
+              (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+          </mat-form-field>
+          <span class="page-label"> of {{lastPage}}</span>
         </div>
       </div>
       <ng-template appBrowseHeaderDynamicSection></ng-template>
       <div class="dynamic container">
       </div>
       <div [ngClass]="view">
-
         <div class="substance-cards">
-          <app-substance-summary-card *ngFor="let substance of substances" [substance]="substance"
-            (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
-            [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
-            [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems">
-          </app-substance-summary-card>
+          <div *ngFor="let substance of substances">
+            <app-substance-summary-card  [substance]="substance"
+              (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
+              [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
+              [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
+              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy">
+            </app-substance-summary-card>
+          </div>
         </div>
         <div class="substance-table">
           <div class="responsive">
@@ -199,7 +360,8 @@
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name </th>
                 <td mat-cell *matCellDef="let substance"><a class="table-view-name"
-                    [routerLink]="['/substances', substance.uuid]" [innerHTML] = "substance._name"></a></td>
+
+                    [routerLink]="['/substances', substance.uuid]"> <span [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name"></span></a></td>
               </ng-container>
 
               <ng-container matColumnDef="approvalID">
@@ -212,7 +374,7 @@
                 <td mat-cell *matCellDef="let substance">
                   <span *ngIf="names[substance.uuid] && names[substance.uuid].length">
                     <div *ngFor="let nameObject of names[substance.uuid] | take: 4; last as isLast">
-                      {{nameObject.name}}
+                      <span [innerHTML] = "nameObject._nameHTML? nameObject._nameHTML : nameObject.name"></span>
                       <span *ngIf="!isLast">; </span>
                     </div>
                   </span>
@@ -247,7 +409,6 @@
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let substance">
                   <button
-                    *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"
                     mat-icon-button [matMenuTriggerFor]="downloadMenu">
                     <mat-icon svgIcon="get_app"></mat-icon>
                   </button>
@@ -267,6 +428,10 @@
                   </button>
 
                   <mat-menu #downloadMenu="matMenu">
+                      <a mat-menu-item  (click) = "downloadJson(substance.uuid)" >
+                          <span>Download JSON</span>
+                        </a>
+                    <span *ngIf = 'substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer'>
                     <a mat-menu-item *ngIf="substance.structure"
                       (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
                       <span>Download Molfile</span>
@@ -279,6 +444,7 @@
                       (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')">
                       <span>Download Fasta</span>
                     </a>
+                  </span>
                   </mat-menu>
 
                   <mat-menu #searchMenu="matMenu">
@@ -351,39 +517,47 @@
                         [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
                     </div>
                   </div>
+                  <div *ngIf = "substance._matchContext && substance._matchContext.similarity">
+                    <span class = "simlarity-label">similarity:</span> <span class = "similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+                  </div>
                   <div class="tile-name">
-                    <a class="substance-name table-view-name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
-                      {{substance._name}}
+                    <a class="substance-name table-view-name" [innerHTML] = "substance._nameHTML? substance._nameHTML : substance._name" [routerLink]="['/substances', substance.uuid]"  [matTooltip]= "substance._name">
                     </a>
                     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
                     </mat-icon>
                   </div>
                   <div class = "tile-button-container">
                       <button
-                      *ngIf="substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer"
                       mat-icon-button [matMenuTriggerFor]="downloadMenu">
                       <mat-icon svgIcon="get_app"></mat-icon>
                     </button>
-  
+                    <span *ngIf = 'substance.structure || ((substance.protein || substance.nucleicAcid) && !showAudit) || substance.polymer'>
+
                     <button *ngIf="substance.structure || substance.polymer" mat-icon-button
                       [matMenuTriggerFor]="searchMenu">
                       <mat-icon class = "button-link-img" svgIcon="search"></mat-icon>
                     </button>
-  
+
                     <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
                       matTooltip='edit record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
-  
+
                     <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
                       <mat-icon svgIcon="file_copy"></mat-icon>
                     </button>
+                    </span>
                   </div>
 
                 </div>
-                
+
 
                   <mat-menu #downloadMenu="matMenu">
+
+                      <a mat-menu-item  (click) = "downloadJson(substance.uuid)" >
+                          <span>Download JSON</span>
+                        </a>
+
                       <a mat-menu-item *ngIf="substance.structure"
                         (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
                         <span>Download Molfile</span>
@@ -397,7 +571,7 @@
                         <span>Download Fasta</span>
                       </a>
                     </mat-menu>
-  
+
                     <mat-menu #searchMenu="matMenu">
                       <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/structure-search']"
                         [queryParams]="{structure : substance.structure.id}">
@@ -408,7 +582,7 @@
                         <span>Search Structure</span>
                       </a>
                     </mat-menu>
-  
+
                     <mat-menu #editMenu="matMenu">
                       <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
                         [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
@@ -426,75 +600,33 @@
           </mat-card>
         </div>
       </div>
-      <div class="controls-container">
+      <div class = "full-paginator" style = "justify-content: flex-end;">
+        <div>
         <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
           [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
         </mat-paginator>
       </div>
-    </div>
-    <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
-      Your search did not return any results. Please try modifying it or
-      <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.
-      <div class="search-parameters center">
-        <div class="mat-elevation-z2" *ngIf="searchTerm">
-          <div>
-            <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
-            <span>{{this.searchTerm}}</span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editGuidedSearch()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="mat-elevation-z2" *ngIf="smiles">
-          <div>
-            <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
-            &nbsp;
-            <span class="no-break">
-              <span>{{this.smiles}}</span>
-              <span *ngIf="searchType && searchType == 'similarity'">
-                &nbsp;&ge; {{searchCutoff}}
-              </span>
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" (click)="editStructureSearch()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearStructureSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-        <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
-          <div>
-            <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
-            &nbsp;
-            <span class="no-break">
-              <span>{{getSequenceDisplay(sequenceSearchTerm)}}</span>
-            </span>
-          </div>
-          <div class="actions-container">
-            <button mat-icon-button color="primary" (click)="editSequenceSearh()">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="clearSequenceSearch()">
-              <mat-icon svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
+      <div class="page-selector">
+          <span class="page-label">Page: </span>
+          <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+            <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+              [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+              (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+              aria-label="Page Index"
+              (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+          </mat-form-field>
+          <span class="page-label"> of {{lastPage}}</span>
         </div>
       </div>
+      </div>
     </div>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
 <div [ngClass]="{ hidden: !showExactMatches, 'exact-matches-container': true }">
   <div class="exact-match-control">
     <div>
-      There is one exact (name or code) match for {{this.searchTerm}}
+      There is one exact (name, standardized name or code) match for {{this.searchTerm}}
     </div>
     <button mat-raised-button color="primary" (click)="showAllRecords()">
       Show All Records Matching Search

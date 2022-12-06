@@ -12,26 +12,33 @@
 }
 .view-version {
   margin-left:10px;
+}
 
+.version-dropdown {
+  ::ng-deep .mat-form-field-infix{
+    border: 0px;
+  }
 }
-::ng-deep .mat-form-field-infix{
-  border: 0px;
-}
+
 .options-area {
   float:right;
   display: flex;
   flex-direction: column;
 }
 
+.pre {
+  white-space: pre;
+}
+
 .definition-level {
-  color: #1565C0;
+  color: var(--link-color);
   font-size: 16px;
 }
 
 .deprecated {
   margin-left: 10px;
     font-size: 13px;
-    color: #c7254e;
+    color: var(--pink-span-color);
 }
 
 .extra-area {

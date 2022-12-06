@@ -20,9 +20,10 @@ export class SubstanceFormNamesCardComponent
   private subscriptions: Array<Subscription> = [];
   pageSize = 10;
   expanded = true;
-  showStd = false;
+  showStd = true;
   showMore = false;
   appId: string;
+  standardizeButton = false;
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,
@@ -39,9 +40,10 @@ export class SubstanceFormNamesCardComponent
   ngOnInit() {
     this.menuLabelUpdate.emit('Names');
     this.appId = this.configService.environment.appId;
+    this.standardizeButton = this.configService.configData.showNameStandardizeButton || false;
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
-        this.canAddItemUpdate.emit(false);
+      //  this.canAddItemUpdate.emit(false);
         this.hiddenStateUpdate.emit(true);
       } else {
         this.canAddItemUpdate.emit(true);
@@ -50,6 +52,7 @@ export class SubstanceFormNamesCardComponent
       });
     this.subscriptions.push(definitionSubscription);
     const namesSubscription = this.substanceFormNamesService.substanceNames.subscribe(names => {
+
       this.names = names;
       this.filtered = names;
       const searchSubscription = this.searchControl.valueChanges.subscribe(value => {
@@ -65,6 +68,7 @@ export class SubstanceFormNamesCardComponent
   }
 
   ngAfterViewInit() {
+
   }
 
 
@@ -73,7 +77,8 @@ export class SubstanceFormNamesCardComponent
   }
 
   standardize(): void {
-    this.substanceFormNamesService.standardizeNames();
+    // We currently only want the back-end to standardize names
+   // this.substanceFormNamesService.standardizeNames();
   }
 
   ngOnDestroy() {

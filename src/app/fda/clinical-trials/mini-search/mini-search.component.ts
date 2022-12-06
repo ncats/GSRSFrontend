@@ -1,11 +1,11 @@
 import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { NavigationExtras, Router, RouterEvent, NavigationEnd } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils';
-import {MatAutocompleteTrigger} from '@angular/material';
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-mini-search',
@@ -74,7 +74,6 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
       .subscribe(e => {
         const data = {value: this.searchControl.value, myIndex: this.myIndex};
         this.miniSearchOutput.emit(data);
-        this.trigger.closePanel();
       });
   }
 

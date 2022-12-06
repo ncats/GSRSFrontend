@@ -1,49 +1,60 @@
 <div class="search-content-container" #contentContainer>
-  <mat-card>
-    <div class="structure-editor-actions-container">
-      <div class="editor-container">
-        <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
-      </div>
-      <div class="search-actions">
-        <div class="two">
-          <mat-form-field class="search-type-select">
-            <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)" [formControl]="searchTypeControl" value="substructure">
-              <mat-option value="substructure">
-                Substructure
-              </mat-option>
-              <mat-option value="similarity">
-                Similarity
-              </mat-option>
-              <mat-option value="exact">
-                Exact
-              </mat-option>
-              <mat-option value="flex">
-                Flex
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
-            <div>Similarity cutoff (tanimoto)</div>
-            <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
-            <div>{{similarityCutoff}}</div>
+    <mat-card>
+      <h2 style = "font-weight:500">Structure Search</h2>
+      <div class="structure-editor-actions-container">
+        <div class="editor-container">
+          <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
+        </div>
+        <div class="search-actions">
+          <div class="two">
+            <mat-form-field class="search-type-select">
+              <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)" [formControl]="searchTypeControl" value="substructure">
+                <mat-option value="substructure">
+                  Substructure
+                </mat-option>
+                <mat-option value="similarity">
+                  Similarity
+                </mat-option>
+                <mat-option value="exact">
+                  Exact
+                </mat-option>
+                <mat-option value="flex">
+                  Flex
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div *ngIf = "_searchtype === 'substructure'">
+            <div>
+              <button mat-button mat-flat-button  (click) = "standardize('ADD_HYDROGENS')">Add Explicit Hydrogens</button>
+            </div>
+              <div>
+                  <button  mat-button mat-flat-button   (click) = "standardize('STEREO_FLATTEN')">Remove Stereochemistry Bonds</button>
+                </div>
+            </div>
+            <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
+              <div>Similarity cutoff (tanimoto)</div>
+              <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff" (input)="searchCutoffChanged($event)"></mat-slider>
+              <div>{{similarityCutoff}}</div>
+            </div>
           </div>
+          <div class = "action-button-container">
+            <div class="action-button-container three">
+              <button class="search-button" name = "search" mat-raised-button color="primary" (click)="search()" style = "font-size: 18px;">Search</button>
+            </div>
+            <div class="action-button-container one">
+              <button class="import-button" name = "export" mat-raised-button color="primary" (click)="openStructureImportDialog()">Import</button>
+            </div>
+            <div class="action-button-container one">
+              <button class="export-button" name = "import" mat-raised-button color="primary" (click)="openStructureExportDialog()">Export</button>
+            </div>
         </div>
-        <div class="action-button-container three">
-          <button class="search-button" name = "search" mat-raised-button color="primary" (click)="search()">Search</button>
-        </div>
-        <div class="action-button-container one">
-          <button class="import-button" name = "export" mat-raised-button color="primary" (click)="openStructureImportDialog()">Import</button>
-        </div>
-        <div class="action-button-container one">
-          <button class="export-button" name = "import" mat-raised-button color="primary" (click)="openStructureExportDialog()">Export</button>
         </div>
       </div>
-    </div>
-    <div>
-      <h4>
-        Get Structure From Name
-      </h4>
-      <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
-    </div>
-  </mat-card>
-</div>
+      <div>
+        <h4>
+          Get Structure From Name
+        </h4>
+        <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
+      </div>
+    </mat-card>
+  </div>

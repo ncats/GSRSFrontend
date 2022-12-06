@@ -22,12 +22,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {
@@ -60,7 +60,7 @@
     font-size: 11px;
     padding-bottom: 3.5px;
     line-height: 11px;
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--dark-label-color);
     font-weight: 400;
     font-family: Roboto, "Helvetica Neue", sans-serif;
   }
@@ -106,7 +106,7 @@
 }
 
 .group {
-  width: 75px;
+  width: 85px;
 }
 
 .type {
@@ -131,12 +131,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {
@@ -179,7 +179,7 @@
     padding-left: 0;
     font-size: 11px;
     padding-bottom: 4px;
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--dark-label-color);
     font-weight: 400;
     font-family: Roboto, "Helvetica Neue", sans-serif;
   }
@@ -200,7 +200,7 @@
     padding-left: 0;
     font-size: 11px;
     padding-bottom: 2px;
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--dark-label-color);
     font-weight: 400;
     font-family: Roboto, "Helvetica Neue", sans-serif;
   }
@@ -243,3 +243,9 @@
 }
 
 
+.invalid-note {
+  margin-top: 5px;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--regular-red-color);
+}

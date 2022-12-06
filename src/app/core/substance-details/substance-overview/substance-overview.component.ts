@@ -16,7 +16,7 @@ import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
 import {ConfigService} from '@gsrs-core/config';
 import { catchError } from 'rxjs/operators';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 
@@ -32,6 +32,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   defIcon = 'drop_down';
   latestVersion: number;
   canEdit: boolean;
+  defAccess: Array<string>;
   versionControl = new FormControl('', Validators.required);
   versions: string[] = [];
   isEditable = false;
@@ -42,8 +43,10 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   defaultCodeSystem = 'BDNUM';
   defaultCodes: string;
   clasicBaseHref: string;
+  primaryCode = "Validated (UNII)";
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  showlinks = false;
 
 
   constructor(
@@ -88,6 +91,15 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
         this.defaultCodeSystem = this.configService.configData.defaultCodeSystem;
       }
 
+      if (this.configService.configData.primaryCode 
+        && this.configService.configData.primaryCode !== '') {
+          this.primaryCode = 'Validated (' + this.configService.configData.primaryCode + ')';
+        }
+
+    if (this.configService.configData && this.configService.configData.showOldLinks) {
+      this.showlinks = true;
+    }
+    this.getDefAccess();
     if (this.substance.codes != null && this.substance.codes.length > 0) {
       const defaultCodes = [];
       this.substance.codes.forEach(code => {
@@ -113,6 +125,25 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.getVersion();
     });
     this.subscriptions.push(subSubscription);
+
+  }
+
+  getDefAccess() {
+    if (this.substance.structurallyDiverse) {
+     this.defAccess =  this.substance.structurallyDiverse.access;
+    } else if (this.substance.protein) {
+      this.defAccess =  this.substance.protein.access;
+    } else if (this.substance.structure) {
+      this.defAccess =  this.substance.structure.access;
+    } else if (this.substance.mixture) {
+      this.defAccess = this.substance.mixture.access;
+    } else if (this.substance.polymer) {
+      this.defAccess = this.substance.polymer.access;
+    } else if (this.substance.nucleicAcid) {
+      this.defAccess = this.substance.nucleicAcid.access;
+    } else if (this.substance.specifiedSubstance) {
+      this.defAccess = this.substance.specifiedSubstance.access;
+    }
 
   }
 

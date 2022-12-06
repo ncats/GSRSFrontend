@@ -1,0 +1,66 @@
+.query-content-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 65px 5px 0 5px;
+}
+
+.mat-card {
+    margin-top: 15px;
+    box-sizing: border-box;
+    max-width: 1170px;
+    overflow-y: auto;
+}
+
+.mat-radio-group {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.mat-radio-button {
+    margin-right: 10px;
+}
+
+.editor-container {
+    width: 920px;
+    min-height: 460px;
+    height: 390px;
+}
+
+.query-actions {   
+
+    button {
+        float: right;
+        display: block;
+    }
+}
+
+
+.query-actions {
+    flex-direction: row;
+    width: 100%;
+
+}
+.two {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+.three {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+
+@media(max-width: 1175px) { }
+
+@media(max-width: 970px) {
+
+    .editor-container, .query-actions {
+        width: 100%;
+    }
+}
+

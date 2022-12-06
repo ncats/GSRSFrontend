@@ -7,7 +7,7 @@
     (menuClosed)="menuClosed()">
     <mat-icon svgIcon="lock" *ngIf="access.length"></mat-icon>
     <mat-icon svgIcon="lock_open" *ngIf="!access.length"></mat-icon>
-    <span>Access</span>
+    <span>{{label? label: "Access"}}</span>
   </button>
   <mat-menu #accessMenu="matMenu" xPosition="before">
     <form [formGroup]="accessFormGroup">

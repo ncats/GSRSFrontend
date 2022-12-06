@@ -9,17 +9,19 @@
     .structure-img {
         width: 100%;
         height: auto;
-      margin-top:-12%;
-      margin-bottom: -2%;
       cursor: zoom-in;
     }
 }
 
 .structure-img-big {
     width: 100%;
-    height: auto;
+    height: 500px !important;
 }
 
+
+.blue-font ::ng-deep sub {
+    margin-bottom: -10px;
+}
 
 .content-fix {
     min-height: 250px;
@@ -54,17 +56,17 @@
 }
 
 .black-pill, .gray-pill {
-    color: white;
+    color: var(--regular-white-color);
     padding: 1px 7px;
     border-radius: 11px;
 }
 
 .black-pill {
-    background-color: black;
+    background-color: var(--regular-black-color);
 }
 
 .gray-pill {
-    background-color: gray;
+    background-color: var(--regular-grey-color);
 }
 
 .name {

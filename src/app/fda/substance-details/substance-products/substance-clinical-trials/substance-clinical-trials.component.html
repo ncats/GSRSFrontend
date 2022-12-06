@@ -1,56 +1,60 @@
-<div class="padtop5px padleft25px font15px colorblue">
-  <b>Clinical Trial</b>
-  &nbsp;&nbsp;&nbsp;
-  <a [href]="exportUrl" target="_blank" matTooltip='Export Clinical Trial Records' *ngIf="totalRecords > 0">
-    <!--
-    <button mat-raised-button color="primary">
-      <mat-icon>arrow_downward</mat-icon>Export
+<div *ngIf="!clinicalTrialCount" class="padtop5px padleft25px font15px colorblue">
+  <b>No Clinical Trial US Found</b>
+</div>
+
+<div *ngIf="clinicalTrialCount && clinicalTrialCount>0">
+  <div class="padtop5px padleft25px font15px colorblue">
+    <b>Clinical Trials US</b>
+    &nbsp;&nbsp;&nbsp;
+  </div>
+  <div>
+  <!-- Export Button -->
+  <span class="export" *ngIf="isAdmin" >
+    <button matTooltip="Export Search Results" mat-button (click)="export()" class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Export CTs
     </button>
-    -->
-    <button mat-icon-button color="primary">
-      <mat-icon>arrow_downward</mat-icon>Export
-    </button>
-  </a>
+  </span>
 </div>
 
 <div class="responsive mat-table-style">
-
   <!-- Spinner -->
   <div *ngIf="showSpinner" class="spinnerstyle">
     <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
     </mat-progress-spinner>
   </div>
-  
-  <table mat-table [dataSource]="paged">
 
-    <ng-container matColumnDef="nctNumber">
-      <th mat-header-cell *matHeaderCellDef> NCT Number </th>
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)"
+  matSortActive="nctNumber" matSortDirection="desc" matSortDisableClear>
+
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let clinical">
+        <a class="clinical-trials-browse-edit1" target="_blank" title="Edit in new tab" [href]="'edit-clinical-trial/' + clinical.trialNumber">
+          <mat-icon style="width: 20px;  height: 20px;" svgIcon="edit"></mat-icon>
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="trialNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Trial Number</th>
       <td mat-cell *matCellDef="let clinical">
 
-        <div *ngIf="clinical.fromSource === 'EU'">
-          <a [routerLink]="['/clinicalTrialEuropeDetails', clinical.nctNumber, 'eu']"
-            target="_blank">{{clinical.nctNumber}}</a>
-          <br><span class="font10px colorgray">(Europe)</span>
-        </div>
-        <div *ngIf="clinical.fromSource != 'EU'">
-          <a [routerLink]="['/clinicalTrialDetails', clinical.nctNumber, 'srs']"
-            target="_blank">{{clinical.nctNumber}}</a>
-        </div>
+        <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.trialNumber">{{clinical.trialNumber}}</a>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
       <td mat-cell *matCellDef="let clinical"> {{clinical.title}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="sponsorName">
-      <th mat-header-cell *matHeaderCellDef> Sponsor Name </th>
+    <ng-container matColumnDef="sponsor">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sponsor Name </th>
       <td mat-cell *matCellDef="let clinical"> {{clinical.sponsor}} </td>
     </ng-container>
 
     <ng-container matColumnDef="conditions">
-      <th mat-header-cell *matHeaderCellDef> Conditions </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Conditions </th>
       <td mat-cell *matCellDef="let clinical"> {{clinical.conditions}} </td>
     </ng-container>
 
@@ -67,3 +71,4 @@
 <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
   (page)="getSubstanceClinicalTrials($event)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
+</div>

@@ -1,33 +1,41 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ProductService } from '../service/product.service';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
+import { SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
-import { SafeUrl } from '@angular/platform-browser';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { ProductService } from '../service/product.service';
+import { GeneralService } from '../../service/general.service';
 
 @Component({
   selector: 'app-product-details-base',
   template: '',
   styleUrls: ['./product-details-base.component.scss']
 })
-export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
+export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   productId: string;
   src: string;
   product: any;
   iconSrcPath: string;
+  message = '';
+  isAdmin = false;
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public productService: ProductService,
-    private activatedRoute: ActivatedRoute,
-    private loadingService: LoadingService,
+    public generalService: GeneralService,
+    public activatedRoute: ActivatedRoute,
+    public loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    public titleService: Title
   ) { }
 
   ngOnInit() {
@@ -40,24 +48,87 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
     } else {
       this.handleSubstanceRetrivalError();
     }
+    this.loadingService.setLoading(false);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
   }
 
   ngAfterViewInit() { }
 
   getProduct(): void {
-    this.productService.getProduct(this.productId, this.src).subscribe(response => {
-      this.product = response;
-      if (Object.keys(this.product).length > 0) {
-        if ((this.src != null) && (this.src === 'srs')) {
-          this.getSubstanceDetails();
+    const prodSubscription = this.productService.getProduct(this.productId).subscribe(response => {
+      if (response) {
+        this.product = response;
+        if (Object.keys(this.product).length > 0) {
+
+          // Add title on the browser. Concatenate multiple Product Code
+          let prodCode = '';
+          this.product.productCodeList.forEach((elementProdCode, indexProdCode) => {
+            if (elementProdCode != null) {
+              if (elementProdCode.productCode) {
+                if (indexProdCode > 0) {
+                  prodCode = prodCode.concat('|');
+                }
+                prodCode = prodCode.concat(elementProdCode.productCode);
+              }
+            }
+          });
+          this.titleService.setTitle(`Product ` + prodCode);
+
+          this.getSubstanceBySubstanceKey();
         }
       }
-      this.loadingService.setLoading(false);
     }, error => {
-      this.handleSubstanceRetrivalError();
+      this.message = 'No Product record found';
+      // this.handleSubstanceRetrivalError();
     });
+    this.subscriptions.push(prodSubscription);
   }
 
+  getSubstanceBySubstanceKey() {
+    if (this.product != null) {
+      this.product.productComponentList.forEach(elementComp => {
+        if (elementComp != null) {
+          elementComp.productLotList.forEach(elementLot => {
+            if (elementLot != null) {
+              elementLot.productIngredientList.forEach(elementIngred => {
+                if (elementIngred != null) {
+                  // Get Substance Details, uuid, approval_id, substance name
+                  if (elementIngred.substanceKey) {
+                    const subSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+                      if (response) {
+                        elementIngred._substanceUuid = response.uuid;
+                        elementIngred._ingredientName = response._name;
+                      }
+                    });
+                    this.subscriptions.push(subSubscription);
+                  }
+
+                  // Get Basis of Strength
+                  if (elementIngred.basisOfStrengthSubstanceKey) {
+                    const subBasisSubscription = this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey)
+                      .subscribe(response => {
+                        if (response) {
+                          elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
+                          elementIngred._basisOfStrengthIngredientName = response._name;
+                        }
+                      });
+                    this.subscriptions.push(subBasisSubscription);
+                  }
+                }
+              });  // Ingredient Loop
+            }
+          }); // Lot Loop
+        }
+      }); // Component Loop
+    }
+  }
+
+  /*
   getSubstanceDetails() {
     if (this.product != null) {
       this.product.productComponentList.forEach(elementComp => {
@@ -97,6 +168,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  */
 
   private handleSubstanceRetrivalError() {
     this.loadingService.setLoading(false);

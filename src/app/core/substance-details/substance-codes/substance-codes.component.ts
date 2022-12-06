@@ -1,12 +1,13 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import {SubstanceCode, SubstanceDetail} from '../../substance/substance.model';
-import {MatDialog} from '@angular/material';
+import {SubstanceCode, SubstanceDetail, SubstanceName, TableFilterDDModel} from '../../substance/substance.model';
+import {MatDialog} from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import {Subject} from 'rxjs';
-import {Sort} from '@angular/material';
+import {Sort} from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-substance-codes',
@@ -18,6 +19,13 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];
   substanceUpdated = new Subject<SubstanceDetail>();
+  hideFilters = true;
+  showHideFilterText = 'Show Filter';
+  displayedFilterColumns: string[];
+  codeSystemFilter = new FormControl();
+  typeFilter = new FormControl();
+  codeFilter = new FormControl();
+  typeFilterOptions: Array<TableFilterDDModel> = [];
   private overlayContainer: HTMLElement;
 
   constructor(
@@ -34,30 +42,100 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       this.substance = substance;
       this.codes = [];
       if (this.substance != null && this.type != null) {
-        if (this.type === 'classification') {
+        if (this.type === 'Codes - Classifications') {
           this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
+          //this.displayedFilterColumns = ['classTreeFilter', 'codeSystemFilter', 'codeFilter', 'emptyFilter', 'resetFilter'];
         } else {
           this.displayedColumns = ['codeSystem', 'code', 'type', 'comments', 'references'];
+          this.displayedFilterColumns = ['codeSystemFilter', 'codeFilter', 'typeFilter', 'emptyFilter', 'resetFilter'];
         }
 
           this.filterSubstanceCodes();
 
         if (this.codes != null && this.codes.length) {
+          this.codes.forEach(code => {
+            if (code.url) {
+              code.url = code.url.trim();
+            }
+          });
           this.filtered = this.codes;
           this.pageChange();
 
           this.searchControl.valueChanges.subscribe(value => {
             this.filterList(value, this.codes);
           }, error => {
-            console.log(error);
+         //   console.log(error);
           });
+          this.getTypeFilterOptions();
         } else {
           this.filtered = [];
         }
       }
     });
+
+  //  if (this.type === 'identifiers') {
+      this.pageSize = 10;
+  //  }
+    
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.codeSystemFilter.valueChanges.subscribe((codeSystemFilterValue) => {
+      this.filterTable();
+    });
+    this.codeFilter.valueChanges.subscribe((codeFilterValue) => {
+      this.filterTable();
+    });
+    this.typeFilter.valueChanges.subscribe((typeFilterValue) => {
+      this.filterTable();
+    });
   }
+
+  filterTable(type?:string) {
+    const csFilter = this.codeSystemFilter.value === null ? '' : this.codeSystemFilter.value;
+    const cFilter = this.codeFilter.value === null ? '' : this.codeFilter.value;
+    const tFilter = this.typeFilter.value === null ? '' : this.typeFilter.value;
+    this.filtered = [];
+    for(let n of this.codes) {
+      if((n.codeSystem.toLowerCase().includes(csFilter.toLowerCase())) &&
+      (n.code.toLowerCase().includes(cFilter.toLowerCase())) &&
+      (n.type.toLowerCase().includes(tFilter.toLowerCase()))) {
+        this.filtered.push(n);
+      }
+    }
+    
+    this.pageChange();
+  }
+
+  toggleFilter() {
+    this.hideFilters = !this.hideFilters;
+    if(this.hideFilters) {
+      this.showHideFilterText = 'Show Filter';
+    } else {
+      this.showHideFilterText = 'Hide Filter';
+    }
+  }
+
+  getTypeFilterValue(value) {
+    for(let l of this.typeFilterOptions) {
+      if(l.display === value) {
+        return l;
+      }
+    }
+  }
+
+  getTypeFilterOptions() {
+    for(let n of this.codes) {
+        let oneType = n.type;
+        let value: TableFilterDDModel = {
+          value: oneType,
+          display: oneType
+        }
+        if (this.typeFilterOptions.filter(e => e.value === oneType).length > 0) {
+        } else {
+          this.typeFilterOptions.push(value);
+        }
+    }
+  }
+
   sortData(sort: Sort) {
     const data = this.codes.slice();
     if (!sort.active || sort.direction === '') {
@@ -67,9 +145,11 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     }
     this.filtered = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
-      return this.utilsService.compare(a[sort.active], b[sort.active], isAsc);
+      return this.utilsService.compare(a[sort.active] ? a[sort.active].toString().toUpperCase() : null, b[sort.active] ? b[sort.active].toString().toUpperCase() : null, isAsc);
     });
     this.pageChange();
+
+    
   }
 
   ngAfterViewInit(): void {
@@ -78,9 +158,9 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   private filterSubstanceCodes(): void {
     if (this.substance.codes && this.substance.codes.length > 0) {
       this.substance.codes.forEach(code => {
-        if (code.comments && code.comments.indexOf('|') > -1 && this.type === 'classification') {
+        if (code._isClassification && this.type === 'Codes - Classifications') {
           this.codes.push(code);
-        } else if (this.type === 'identifiers') {
+        } else if (!code._isClassification && this.type === 'Codes - Identifiers') {
           this.codes.push(code);
         }
       });
@@ -88,8 +168,26 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     }
   }
 
+  codeIsProtected(access: string[]) {
+    let itIs = false;
+    for(let a of access) {
+      if(a.toLowerCase() === 'protected') {
+        itIs = true;
+      }
+    }
+    return itIs;
+  }
+
   getClassificationTree(comments: string): Array<string> {
     return comments.split('|');
+  }
+
+  resetFilters() {
+    this.pageChange();
+    this.searchControl.setValue('');
+    this.codeFilter.setValue('');
+    this.codeSystemFilter.setValue('');
+    this.typeFilter.setValue('');
   }
 
   openModal(templateRef) {

@@ -1,6 +1,6 @@
 <div class="moiety" *ngFor="let moiety of moieties">
   <div class="moiety-image">
-      <a class="zoom" (click)="openImageModal(moiety)">
+      <a tabindex="0" role="link" class="zoom" (click)="openImageModal(moiety)">
     <img class="structure-image" appSubstanceImage [entityId]="moiety.uuid" stereo = "true">
     </a>
   </div>
@@ -12,7 +12,7 @@
       </div>
       <div class="name-value">
         <div class="name">Molecular Weight:</div>
-        <div class="value">{{moiety.mwt}}</div>
+        <div class="value">{{moiety.mwt | number: rounding}}</div>
       </div>
       <div class="name-value">
         <div class="name">Charge:</div>

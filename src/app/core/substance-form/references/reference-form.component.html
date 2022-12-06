@@ -25,10 +25,10 @@
   <div *ngIf="!reference.$$deletedCode">
     <div class="form-row">
       <mat-form-field class="url">
-        <input matInput placeholder="URL" [(ngModel)]="reference.url" name="url" />
+        <input matInput placeholder="URL" [(ngModel)]="reference.url" name="refUrl" />
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Source Id" [(ngModel)]="reference.id" name="id" />
+        <input matInput placeholder="Source Id" [(ngModel)]="reference.id" name="refId" />
       </mat-form-field>
       <app-tag-selector class="tags" (tagsUpdate)="updateTags($event)" [tags]="reference.tags"
         cvDomain="DOCUMENT_COLLECTION"></app-tag-selector>
@@ -57,6 +57,20 @@
           <button mat-menu-item (click)="reference.uploadedFile = null">Delete</button>
         </mat-menu>
       </div>
+      <div class = "loading-container" *ngIf = "loading === true">
+        <div class = "spinner-container">
+            <mat-progress-spinner
+            class="progress-spinner spinner"
+            [color]="primary"
+            mode = "indeterminate">
+        </mat-progress-spinner>
+        </div>
+        
+      <span>Uploading</span>
+      </div>
+      <div class = "loading-container" *ngIf = "loading === false && error === true">
+          Error: There was a problem uploading this document
+        </div>
       <div *ngIf="!reference.uuid">
           <button mat-button  (click)="showPrev = !showPrev" matTooltip = "use a previously submitted reference">
             <span>{{showPrev? 'Hide':'Use'}} Previous Substance Reference</span>&nbsp;

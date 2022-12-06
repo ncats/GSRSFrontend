@@ -16,7 +16,7 @@
   width: 50%;
 }
 .approval {
-  color: maroon;
+  color: var(--regular-maroon-color);
   flex: 0 0 100%;
 }
 
@@ -29,6 +29,22 @@
   font-style: italic;
   text-overflow: ellipsis;
 
+}
+
+.spinner {
+  height: 24px;
+  width: 24px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: -5px;
+margin-bottom: 5px;
+}
+
+.loading-container {
+  display: flex;
+  width: 300px;
+  flex-direction: row;
+  align-content: flex-start;
 }
 
 .hierarchy-link {
@@ -85,16 +101,16 @@
   border-top:0px;
 }
 .primary {
-  background-color: #cee8fb !important;
+  background-color: var(--sub-hierarchy-bg-color) !important;
 }
 
 .hierarchy-link {
-  color: #448aff;
+  color: var(--link-primary-color);
   font-style: unset;
   max-lines: 2;
 }
 .odd {
-  background-color : rgba(0, 0, 0, .05);
+  background-color: var(--sub-hierarchy-odd-bg-color);
 }
 .node-container {
   display:flex;

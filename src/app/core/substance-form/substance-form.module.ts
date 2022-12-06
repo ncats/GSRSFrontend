@@ -80,8 +80,12 @@ import { SubstanceFormRelationshipsService } from './relationships/substance-for
 import { SubstanceFormStructuralModificationsService } from './structural-modifications/substance-form-structural-modifications.service';
 import { PreviousReferencesComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references.component';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
-import { MatProgressSpinnerModule } from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
+import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import { MatSortModule } from '@angular/material/sort';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
 @NgModule({
   imports: [
@@ -115,7 +119,9 @@ import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-dis
     RouterModule,
     SubstanceImageModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule,
+    ElementLabelDisplayModule
   ],
   declarations: [
     SubstanceFormComponent,
@@ -147,7 +153,8 @@ import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-dis
     MergeConceptDialogComponent,
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
-    CopyDisulfideDialogComponent
+    CopyDisulfideDialogComponent,
+    SubstanceDraftsComponent
   ],
   exports: [
     SubstanceFormComponent,
@@ -177,7 +184,8 @@ import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-dis
     MergeConceptDialogComponent,
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
-    CopyDisulfideDialogComponent
+    CopyDisulfideDialogComponent,
+    SubstanceDraftsComponent
   ],
   entryComponents: [
     RefernceFormDialogComponent,
@@ -196,11 +204,12 @@ import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-dis
     MergeConceptDialogComponent,
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
-    CopyDisulfideDialogComponent
+    CopyDisulfideDialogComponent,
+    SubstanceDraftsComponent
   ]
 })
 export class SubstanceFormModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<any> {
       return {
         ngModule: SubstanceFormModule,
         providers: [

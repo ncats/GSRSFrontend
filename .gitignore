@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/.angular
 
 # dependencies
 /node_modules
@@ -23,6 +24,11 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# IDE - VSCode 2019
+.vs/*
+
+pre-commit 
 
 # misc
 /.sass-cache

@@ -36,13 +36,17 @@
   margin-top: -15px;
 }
 
+.deselect {
+    color: var(--text-color);
+  }
+
 .other-container {
   display: flex;
   flex-direction:column;
 }
 
 .custom {
-  border-bottom: 1px solid rgba(0, 0, 0, .35);
+  border-bottom: 1px solid var(--box-shadow-color-4);
 
 }
 .amount-form {
@@ -50,4 +54,6 @@
     flex-wrap: wrap;
     flex-direction: row;
 }
-
+.right {
+    float: right;
+}

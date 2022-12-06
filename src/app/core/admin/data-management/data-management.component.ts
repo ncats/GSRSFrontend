@@ -49,9 +49,9 @@ export class DataManagementComponent implements OnInit {
       this.loadingService.setLoading(false);
 
       this.router.navigate(['/monitor/' + response.id]);
-   }, error => {this.message = 'File could not be uploaded';
-   this.loadingService.setLoading(false);
-
+   }, error => {
+    this.message = 'File could not be uploaded';
+    this.loadingService.setLoading(false);
    });
 }
 

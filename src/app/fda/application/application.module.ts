@@ -16,7 +16,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
@@ -46,29 +47,48 @@ import { JsonDialogFdaModule } from '../json-dialog-fda/json-dialog-fda.module';
 import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
 // import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { ApplicationTextSearchModule } from './application-text-search/application-text-search.module';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { CanActivateRegisterApplicationFormComponent } from './application-form/can-activate-register-application-form.component';
+import { CanActivateUpdateApplicationFormComponent } from './application-form/can-activate-update-application-form.component';
+import { CanDeactivateApplicationFormComponent } from './application-form/can-deactivate-application-form.component';
+import { ApplicationLoadedComponent } from './application-loaded.component';
+
 // import { AppDateAdapter } from '../format-datepicker/format-datepicker';
 
 const applicationRoutes: Routes = [
   {
     path: 'browse-applications',
-    component: ApplicationsBrowseComponent
-  },
-  {
-    path: 'applicationDetails/:id',
-    component: ApplicationDetailsComponent
-  },
-  {
-    path: 'applicationDarrtsDetails/:appType/:appNumber',
-    component: ApplicationDarrtsDetailsComponent
+    component: ApplicationsBrowseComponent,
+    canActivate: [ApplicationLoadedComponent],
+
   },
   {
     path: 'application/register',
-    component: ApplicationFormComponent
+    component: ApplicationFormComponent,
+    canActivate: [ApplicationLoadedComponent, CanActivateRegisterApplicationFormComponent],
+    canDeactivate: [CanDeactivateApplicationFormComponent]
   },
   {
     path: 'application/:id/edit',
-    component: ApplicationFormComponent
+    component: ApplicationFormComponent,
+    canActivate: [ApplicationLoadedComponent, CanActivateUpdateApplicationFormComponent],
+    canDeactivate: [CanDeactivateApplicationFormComponent]
+  },
+  {
+    path: 'application/:id',
+    component: ApplicationDetailsComponent,
+    canActivate: [ApplicationLoadedComponent]
+  },
+  {
+    path: 'application/:appType/:appNumber',
+    component: ApplicationDetailsComponent,
+    canActivate: [ApplicationLoadedComponent]
+  },
+  {
+    path: 'application-darrts/:appType/:appNumber',
+    component: ApplicationDarrtsDetailsComponent,
+    canActivate: [ApplicationLoadedComponent]
   }
 ];
 
@@ -89,6 +109,7 @@ const applicationRoutes: Routes = [
     MatExpansionModule,
     MatCheckboxModule,
     MatTableModule,
+    MatSortModule,
     MatPaginatorModule,
     MatSelectModule,
     MatSliderModule,
@@ -110,7 +131,8 @@ const applicationRoutes: Routes = [
     FacetsManagerModule,
     JsonDialogFdaModule,
     ConfirmDialogModule,
-    SubstanceFormModule
+    SubstanceFormModule,
+    ApplicationTextSearchModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
@@ -119,26 +141,18 @@ const applicationRoutes: Routes = [
     ApplicationDetailsBaseComponent,
     ApplicationFormComponent,
     ApplicationProductFormComponent,
-    IngredientFormComponent,
- //   CvInputComponent,
-//    JsonDialogFdaComponent,
-//    ConfirmDialogComponent
+    IngredientFormComponent
   ],
   exports: [
     ApplicationsBrowseComponent,
- //   CvInputComponent,
- //   JsonDialogFdaComponent,
-//    ConfirmDialogComponent
   ],
   entryComponents: [
- //   JsonDialogFdaComponent,
-//    ConfirmDialogComponent
-  ]
- // ,
- // providers: [
- //   {provide: DateAdapter, useClass: AppDateAdapter},
- //   {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
-// ]
+  ],
+  providers: [
+    CanActivateRegisterApplicationFormComponent,
+    CanActivateUpdateApplicationFormComponent,
+    ApplicationLoadedComponent
+ ]
 })
 
 export class ApplicationModule {
@@ -148,11 +162,15 @@ export class ApplicationModule {
     });
   }
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: ApplicationModule,
       providers: [
-        ApplicationService
+        ApplicationService,
+        CanActivateRegisterApplicationFormComponent,
+        CanActivateUpdateApplicationFormComponent,
+        ApplicationLoadedComponent,
+        CanDeactivateApplicationFormComponent
       ]
     };
   }

@@ -11,6 +11,7 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Product, ValidationMessage } from '../model/product.model';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -42,6 +43,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isAdmin = false;
   expiryDateMessage = '';
   manufactureDateMessage = '';
+  viewProductUrl = '';
+  message = '';
 
   constructor(
     private productService: ProductService,
@@ -54,7 +57,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private overlayContainerService: OverlayContainer,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private titleService: Title) { }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
@@ -76,6 +80,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.title = 'Register New Product';
           setTimeout(() => {
             this.gaService.sendPageView(`Product Register`);
+            this.titleService.setTitle(`Register Product`);
             this.productService.loadProduct();
             this.product = this.productService.product;
             this.loadingService.setLoading(false);
@@ -90,7 +95,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.applicationService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -99,16 +103,33 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   getProductDetails(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
-      this.productService.getProduct(id, 'srs').subscribe(response => {
+      this.productService.getProduct(id).subscribe(response => {
         if (response) {
           this.productService.loadProduct(response);
           this.product = this.productService.product;
+          // Check if there is not Product Code Object, create one
+          if (this.product.productCodeList.length == 0) {
+            this.product.productCodeList = [{}];
+          }
+          let prodCode = '';
+          if (this.product.productCodeList.length > 0) {
+            for (let codeObj of this.product.productCodeList) {
+              if (codeObj) {
+                if (codeObj.productCode) {
+                  prodCode = codeObj.productCode;
+                  break;
+                }
+              }
+            }
+          }
+          this.titleService.setTitle(`Edit Product ` + prodCode);
         } else {
           this.handleProductRetrivalError();
         }
         this.loadingService.setLoading(false);
         this.isLoading = false;
       }, error => {
+        this.message = 'No Product Record found for Id ' + this.id;
         this.gaService.sendException('getProductDetails: error from API call');
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -155,6 +176,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Validate data in client side first
   validateClient(): void {
+    this.submissionMessage = null;
     this.validationMessages = [];
     this.validationResult = true;
 
@@ -192,6 +214,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (this.isNumber(elementIngred.high) === false) {
                       this.setValidationMessage('High must be a number');
                     }
+                  }
+                  // Ingredient Name Validation
+                  if (elementIngred.$$ingredientNameValidation) {
+                    this.setValidationMessage(elementIngred.$$ingredientNameValidation);
+                  }
+                  // Basis of Strength Validation
+                  if (elementIngred.$$basisOfStrengthValidation) {
+                    this.setValidationMessage(elementIngred.$$basisOfStrengthValidation);
                   }
                 }
               });
@@ -240,6 +270,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
+    // remove non-field form property/field/key from Product object
+    this.product = this.cleanProduct();
     this.productService.saveProduct().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -251,6 +283,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (response.id) {
+          this.productService.bypassUpdateCheck();
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
@@ -294,6 +327,33 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 5000);
   }
 
+  cleanProduct(): Product {
+    let productStr = JSON.stringify(this.product);
+    let productCopy: Product = JSON.parse(productStr);
+    productCopy.productComponentList.forEach(elementComp => {
+      if (elementComp != null) {
+        elementComp.productLotList.forEach(elementLot => {
+          if (elementLot != null) {
+            elementLot.productIngredientList.forEach(elementIngred => {
+              if (elementIngred != null) {
+                // remove property for Ingredient Name Validation. Do not need in the form JSON
+                if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {
+                  delete elementIngred.$$ingredientNameValidation;
+                }
+                // remove property for Basis of Strength Validation. Do not need in the form JSON
+                if (elementIngred.$$basisOfStrengthValidation || elementIngred.$$basisOfStrengthValidation === "") {
+                  delete elementIngred.$$basisOfStrengthValidation;
+                }
+              } // if ingred is not null
+            }); // ingred loop
+          } // if lot is not null
+        }); // lot loop
+      } // if comp is not null
+    }); // comp loop
+
+    return productCopy;
+  }
+
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -308,30 +368,32 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  confirmDeleteProduct() {
+  confirmDeleteProduct(productId: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete this Product?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteProduct();
+        this.deleteProduct(productId);
       }
     });
   }
 
-  deleteProduct(): void {
-    this.productService.deleteProduct().subscribe(response => {
-      if (response) {
-        this.displayMessageAfterDeleteProd();
-      }
-    });
+  deleteProduct(productId: number): void {
+    this.productService.deleteProduct(productId).subscribe(response => {
+      this.productService.bypassUpdateCheck();
+      this.displayMessageAfterDeleteProd();
+    }, (err) => {
+      console.log(err);
+    }
+    );
   }
 
   displayMessageAfterDeleteProd() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: 'This product record was successfully deleted',
+        message: 'This product record was deleted successfully',
         type: 'home'
       }
     });
@@ -440,5 +502,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       return !nan;
     }
     return false;
+  }
+
+  getViewProductUrl(): string {
+    return this.productService.getViewProductUrl(this.id);
   }
 }

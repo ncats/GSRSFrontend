@@ -3,18 +3,18 @@
 }
 
 .mat-divider {
-    border-top-color: rgba(0, 0, 0, .5);
+    border-top-color: var(--text-color);
 }
 
 .relationship {
 
     &:nth-child(odd) {
-        background-color: rgba(68, 138, 255, .07);
+        background-color: var(--nth-child-color-2);
 
         ::ng-deep {
 
             .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-                background-color: rgba(68, 138, 255, .15);
+                background-color: var(--nth-child-color-3);
             }
         }
     }
@@ -23,14 +23,14 @@
         ::ng-deep {
 
             .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-                background-color: rgba(128, 128, 128, .15);
+                background-color: var(--nth-child-color-1);
             }
         }
     }
 
     ::ng-deep {
         .mat-expansion-panel, .mat-table, textarea {
-            background-color: transparent;
+            background-color: var(--regular-transparent-color);
         }
     }
 }

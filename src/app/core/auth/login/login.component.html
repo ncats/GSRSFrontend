@@ -6,7 +6,7 @@
     <mat-card-content>
       <form class="login-form" [formGroup]="loginForm">
         <mat-form-field>
-          <input matInput placeholder="Username" formControlName="username">
+          <input matInput placeholder="Username" formControlName="username" autofocus>
         </mat-form-field>
 
         <mat-form-field>
@@ -18,4 +18,13 @@
       <button color="primary" mat-flat-button [disabled]="loginForm.invalid || isLoading" (click)="login()">Login</button>
     </mat-card-actions>
   </mat-card>
+  
+  <br>
+  <div *ngIf="loadedComponents.userRegistration" class="button-div">
+    <div *ngIf="emailFormUserRegActive" class="button-div">
+      <div class="reg-link">
+        <button (click)="register()">REQUEST ACCESS/LOGIN HELP</button>
+      </div>
+    </div>
+  <div>
 </div>

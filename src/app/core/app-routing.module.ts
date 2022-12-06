@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
 import { HomeComponent } from './home/home.component';
+import { RegistrarsComponent } from './registrars/registrars.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
@@ -19,6 +20,8 @@ import { UserDownloadsComponent } from '@gsrs-core/auth/user-downloads/user-down
 import { MonitorComponent } from '@gsrs-core/admin/monitor/monitor.component';
 import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
+import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
+import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m/substance-ssg4m-form.component';
 
 const childRoutes: Routes = [
   {
@@ -30,8 +33,16 @@ const childRoutes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'unauthorized',
+    component: UnauthorizedComponent
+  },
+  {
     path: 'browse-substance',
     component: SubstancesBrowseComponent
+  },
+  {
+    path: 'registrars',
+    component: RegistrarsComponent,
   },
   {
     path: 'substances/register',
@@ -82,6 +93,12 @@ const childRoutes: Routes = [
 
   },
   {
+    path: 'admin/:function',
+    component: AdminComponent,
+    canActivate: [CanActivateAdmin]
+
+  },
+  {
     path: 'monitor/:id',
     component: MonitorComponent,
     canActivate: [CanActivateAdmin]
@@ -97,7 +114,6 @@ const childRoutes: Routes = [
   {
     path: 'user-downloads/:id',
     component: UserDownloadsComponent
-
   }
 ];
 
@@ -114,7 +130,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    // onSameUrlNavigation: 'ignore',  // default behavior, ingnores same route reload
+    onSameUrlNavigation: 'reload'
+})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

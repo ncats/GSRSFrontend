@@ -1,0 +1,99 @@
+<div *ngIf="resultingMaterialIndex > 0">
+<hr>
+</div>
+<div class="form-container">
+  <div *ngIf="resultingMaterial.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+
+  <div class="">
+    <div class="button-delete">
+      <button mat-icon-button matTooltip=" Copy this Resulting Material to Starting Material in next Step"
+        (click)="copyResultingToStarting()">
+        <mat-icon class="colorbluefda" svgIcon="file_copy"></mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Delete Resulting Material {{(resultingMaterialIndex+1)}}"
+        (click)="confirmDeleteResultingMaterial()">
+        <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <!--
+    <div class="delete-container">
+      <b>{{(resultingMaterialIndex+1)}}</b>
+      <button mat-icon-button matTooltip="Delete Resulting Material {{(resultingMaterialIndex+1)}}"
+        (click)="confirmDeleteResultingMaterial()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+      <br>
+      &nbsp;&nbsp;
+      <button mat-icon-button matTooltip=" Copy this Resulting Material to Starting Material in next Step"
+        (click)="copyResultingToStarting()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+      <br>
+      <div class="padleft15px"><b>{{(resultingMaterialIndex+1)}}</b>
+      </div>
+    </div>
+     -->
+
+    <div class="col related-substance"
+      *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
+      <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
+        header="" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+      </app-substance-selector>
+    </div>
+
+    <!--
+    <div class="col height40px">
+      <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
+        <mat-icon svgIcon="search"></mat-icon>
+      </a>
+      &nbsp;&nbsp;
+      <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
+        <mat-icon svgIcon="edit"></mat-icon>
+      </a>
+    </div>
+    -->
+
+    <mat-form-field class="col"
+      *ngIf="configSettingsDisplay['verbatimName'] || (configSettingsDisplay['verbatimName'] === undefined && true)">
+      <input matInput placeholder="Material Display Name" [(ngModel)]="resultingMaterial.verbatimName"
+        name="resultingMaterial.verbatimName" />
+    </mat-form-field>
+
+    <app-cv-input class="col"
+      *ngIf="configSettingsDisplay['substanceRole'] || (configSettingsDisplay['substanceRole'] === undefined && true)"
+      domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role" [model]="resultingMaterial.substanceRole"
+      (valueChange)="updateSubstanceRole($event)"></app-cv-input>
+  </div> <!-- form row -->
+
+  <!--
+  <div class="form-row">
+    <div class="col">
+      <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
+        <span class="font11px">Register New</span>
+      </a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
+        <span class="font11px">Search By Structure</span>
+      </a>
+    </div>
+  </div>
+  -->
+
+  <div class="form-row"
+    *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
+    <div class="">&nbsp;</div>
+    <mat-form-field class="col-1-1">
+      <textarea matInput placeholder="Comments" [(ngModel)]="resultingMaterial.comments"
+        name="resultingMaterial.comments" rows="1"></textarea>
+    </mat-form-field>
+  </div> <!-- form-row-->
+</div>

@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, Output, EventEmitter, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { JSDraw } from './jsdraw';
+import { JSDraw } from './jsdraw.model';
 
 @Component({
   selector: 'ncats-jsdraw-wrapper',
@@ -24,10 +24,15 @@ export class JsdrawWrapperComponent implements AfterViewInit {
     let count = 0;
 
     if (isPlatformBrowser(this.platformId)) {
-      if (window['JSDraw'] && window['dojo']) {
+      //this will ensure that the extra resources file has been loaded before the full editor is
+      if (window['JSDraw'] && window['dojo'] && window['scil'] && window['scil'].Utils && window['scil'].Utils._loadedAdditions) {
         window['dojo'].ready(() => {
           this.jsdraw = new window['JSDraw'](this.randomId);
           this.jsDrawOnLoad.emit(this.jsdraw);
+          //customization of buttons
+          if(window['afterSketcherMade']){
+            window['afterSketcherMade']();
+          }
         });
       } else if (count < 5000) {
         count++;

@@ -67,10 +67,12 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'the following contained phrase, which must be found as written (no partial words)': {
+        // 'the following contained phrase, which must be found as written (no partial words)': {
+        'Exact Match': {
             commandInputs: [
                 {
                     type: 'text',
+                    example: 'Example: aspirin sodium',
                     constructQuery: (
                         queryValue: string,
                         condition: string,
@@ -78,11 +80,14 @@ export const typeCommandOptions: CommandTypesDict = {
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
-                        const query = queryValue.trim() && `${condition}${lucenePath}"${queryValue.trim()}"` || '';
+                        if (queryValue) {
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                        }
+                        const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}$"` || '';
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'the following contained phrase, which must be found as written (no partial words)',
+                            command: 'Exact Match',
                             commandInputValues: [queryValue],
                             query: query
                         });
@@ -120,10 +125,12 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'a WORD that contains': {
+        // 'a WORD that contains': {
+        'Contains': {
             commandInputs: [
                 {
                     type: 'text',
+                    example: 'Example: sodium',
                     constructQuery: (
                         queryValue: string,
                         condition: string,
@@ -131,11 +138,32 @@ export const typeCommandOptions: CommandTypesDict = {
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
-                        const query = queryValue.trim() && `${condition}${lucenePath}*${queryValue.trim()}*` || '';
+                        if (queryValue) {
+                            // Remove single and double quotes
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                            // Put slash \\ in front of AND in the text for scape
+                            queryValue = queryValue.replace(/[ ]AND[ ]/g, ' \\\\AND ');
+                            // Put slash \\ in front of OR in the text for scape
+                            queryValue = queryValue.replace(/[ ]OR[ ]/g, ' \\\\OR ');
+                            // Put slash \\ in front of OR in the text for scape
+                            queryValue = queryValue.replace(/[ ]NOT[ ]/g, ' \\\\NOT ');
+                            queryValue = queryValue.replace(/^NOT[ ]/g, '\\\\NOT ');
+
+                            //TODO: Fix the underlying issues on backend with this eventually
+                            // Replace hypen - with space for scape
+                            queryValue = queryValue.replace(/[-]+/g, ' ');
+                            // Remove dot . for scape
+                            queryValue = queryValue.replace(/[.]+/g, '');
+                            // Remove parentheses ( for scape
+                            queryValue = queryValue.replace(/[()]+/g, ' ').trim();
+                            // remove commas that are before spaces
+                            queryValue = queryValue.replace(/[,][ ]/g, ' ');
+                        }
+                        const query = queryValue.trim() && `${condition}${lucenePath}"*${queryValue.trim()}*"` || '';
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'a WORD that contains',
+                            command: 'Contains',
                             commandInputValues: [queryValue],
                             query: query
                         });
@@ -143,7 +171,35 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'a WORD that starts with': {
+        // 'a WORD that starts with': {
+        'Starts With': {
+            commandInputs: [
+                {
+                    type: 'text',
+                    example: 'Example: aspir',
+                    constructQuery: (
+                        queryValue: string,
+                        condition: string,
+                        queryableProperty: string,
+                        lucenePath: string,
+                        eventEmitter: EventEmitter<QueryStatement>
+                    ) => {
+                        if (queryValue) {
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                        }
+                        const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}*"` || '';
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'Starts With',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
+                    }
+                }
+            ]
+        },
+        'Ends With': {
             commandInputs: [
                 {
                     type: 'text',
@@ -154,11 +210,40 @@ export const typeCommandOptions: CommandTypesDict = {
                         lucenePath: string,
                         eventEmitter: EventEmitter<QueryStatement>
                     ) => {
-                        const query = queryValue.trim() && `${condition}${lucenePath}${queryValue.trim()}*` || '';
+                        const query = queryValue.trim() && `${condition}${lucenePath}"*${queryValue.trim()}$"` || '';
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'a WORD that contains',
+                            command: 'Ends With',
+                            commandInputValues: [queryValue],
+                            query: query
+                        });
+                    }
+                }
+            ]
+        },
+        // 'the following contained phrase, which must be found as written (no partial words)': {
+        'Manual Query Entry': {
+            commandInputs: [
+                {
+                    type: 'text',
+                    example: 'Example: aspirin sodium',
+                    constructQuery: (
+                        queryValue: string,
+                        condition: string,
+                        queryableProperty: string,
+                        lucenePath: string,
+                        eventEmitter: EventEmitter<QueryStatement>
+                    ) => {
+                        /* if (queryValue) {
+                            queryValue = queryValue.replace(/['"]+/g, '');
+                        } */
+                        const query = queryValue.trim();
+                        // const query = queryValue.trim() && `${condition}${lucenePath}"^${queryValue.trim()}$"` || '';
+                        eventEmitter.emit({
+                            condition: condition,
+                            queryableProperty: queryableProperty,
+                            command: 'Manual Query Entry',
                             commandInputValues: [queryValue],
                             query: query
                         });
@@ -486,7 +571,8 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'number that begins with': {
+        //'number that begins with': {
+            'Greater Than': {
             commandInputs: [
                 {
                     type: 'number',
@@ -501,7 +587,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'number that begins with',
+                           // command: 'number that begins with',
+                            command: 'Greater Than',
                             commandInputValues: [queryValue],
                             query: query
                         });
@@ -509,7 +596,8 @@ export const typeCommandOptions: CommandTypesDict = {
                 }
             ]
         },
-        'number that ends with': {
+        //'number that ends with': {
+            'Less Than': {
             commandInputs: [
                 {
                     type: 'number',
@@ -524,7 +612,8 @@ export const typeCommandOptions: CommandTypesDict = {
                         eventEmitter.emit({
                             condition: condition,
                             queryableProperty: queryableProperty,
-                            command: 'number that ends with',
+                            // command: 'number that ends with',
+                            command: 'Less Than',
                             commandInputValues: [queryValue],
                             query: query
                         });

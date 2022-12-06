@@ -23,17 +23,17 @@
     }
 
     &.default {
-        background-color: #448aff;
-        color: white;
+        background-color: var(--link-primary-color);
+        color: var(--regular-white-color);
     }
 
     &.success {
-        background-color: #A7FFEB;
-        color: #262626;
+        background-color: var(--notif-success-bg-color);
+        color: var(dark-grey-color);
     }
 
     &.error {
-        background-color: #E57373;
-        color: black;
+        background-color: var(--notif-error-bg-color);
+        color: var(--regular-black-color);
     }
 }

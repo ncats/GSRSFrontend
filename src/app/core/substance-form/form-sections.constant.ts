@@ -117,6 +117,13 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-references',
     'substance-form-change-reason'
   ],
+  specifiedSubstanceG2: [
+    'substance-form-ssg2-overview',
+    'substance-form-names',
+    'substance-form-constituents',
+    'substance-form-ssg2-manufacturing',
+    'substance-form-references'
+  ],
   specifiedSubstanceG3: [
     'substance-form-definition',
     'substance-form-names',
@@ -126,5 +133,16 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-codes-card',
     'substance-form-notes',
     'substance-form-references'
+  ],
+  specifiedSubstanceG4m: [
+ //   'substance-form-definition',
+ //   'substance-form-names',
+    'substance-form-ssg-parent-substance',
+    'substance-form-ssg4m-process',
+ //   'substance-form-ssg-definition',
+ //   'substance-form-ssg-grade',
+  //  'substance-form-codes-card',
+  //  'substance-form-notes',
+  //  'substance-form-references'
   ]
 };

@@ -10,7 +10,7 @@ import { Facet, FacetQueryResponse } from './facet.model';
   providedIn: 'root'
 })
 export class FacetsManagerService extends BaseHttpService {
-  getFacetsHandler: (facet: Facet, searchTerm?: string, nextUrl?: string) => Observable<FacetQueryResponse>;
+  getFacetsHandler: (facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: any, pageQuery?: string) => Observable<FacetQueryResponse>;
   private clearSelectionsSubject = new Subject<void>();
 
   constructor(
@@ -21,7 +21,7 @@ export class FacetsManagerService extends BaseHttpService {
     super(configService);
   }
 
-  registerGetFacetsHandler(handler: (facet: Facet, searchTerm?: string, nextUrl?: string) => Observable<FacetQueryResponse>): void {
+  registerGetFacetsHandler(handler: (facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: any, pageQuery?: string) => Observable<FacetQueryResponse>): void {
     this.getFacetsHandler = handler;
   }
 

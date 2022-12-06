@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationService } from '../../service/application.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
+import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationDetailsBaseComponent } from '../application-details-base.component';
+import { ApplicationService } from '../../service/application.service';
+import { GeneralService } from '../../../service/general.service';
 
 @Component({
   selector: 'app-application-details',
@@ -19,6 +21,7 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
 
   constructor(
     applicationService: ApplicationService,
+    public generalService: GeneralService,
     public activatedRoute: ActivatedRoute,
     loadingService: LoadingService,
     mainNotificationService: MainNotificationService,
@@ -26,9 +29,9 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public authService: AuthService,
+    titleService: Title
   ) {
-    super(applicationService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService);
-    // , authService);
+    super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService);
   }
 
   ngOnInit() {
@@ -37,8 +40,10 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     });
 
     this.id = this.activatedRoute.snapshot.params['id'];
-
+    this.appType = this.activatedRoute.snapshot.params['appType'];
+    this.appNumber = this.activatedRoute.snapshot.params['appNumber'];
     super.ngOnInit();
+
   }
 
 }

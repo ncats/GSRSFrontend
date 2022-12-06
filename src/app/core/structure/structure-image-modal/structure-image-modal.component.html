@@ -3,8 +3,41 @@
     <button mat-mini-fab (click)="dismissDialog()">
       <mat-icon svgIcon="close"></mat-icon>
     </button>
-    <img *ngIf="structure" appSubstanceImage [entityId]="structure" size="600" stereo="true">
-    <mat-tab-group *ngIf="smiles || (names && names.length > 0) || inchi">
+    <div class="approval" *ngIf="approvalID">
+      <div *ngIf="uuid !== null; else noUuid">
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
+          <span class="viewrecord">{{approvalID}}</span>
+        </a>&nbsp;
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
+          </mat-icon>
+        </a>
+      </div>
+      <ng-template #noUuid>
+        {{approvalID}}
+      </ng-template>
+    </div>
+    <div style="height:500px;min-height:501px;width:500px;min-width:501px;margin:auto">
+      <img *ngIf="structure" appSubstanceImage [entityId]="structure" size="500" stereo="true">
+    </div>
+    <div class="displayname" *ngIf="displayName">
+      <div *ngIf="uuid !== null; else noDisplayUuid">
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
+          <span class="viewrecord">{{displayName}}</span>
+        </a>&nbsp;
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" title="View Substance Details (opens in a new window)" target="_blank">
+          <span class="viewrecord">(view record)</span>
+        </a>&nbsp;
+        <a href="{{gsrsHomeBaseUrl}}substances/{{uuid}}" target="_blank">
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="View Substance Details (opens in a new window)">
+          </mat-icon>
+        </a>
+      </div>
+      <ng-template #noDisplayUuid>
+        {{displayName}}
+      </ng-template>
+    </div>
+    <mat-tab-group *ngIf="smiles || (names && names.length > 0) || inchi || inchiKey">
       <mat-tab label="Systematic Names" *ngIf="names && names.length > 0">
         <ul>
           <li *ngFor="let name of names">
@@ -13,13 +46,31 @@
         </ul>
       </mat-tab>
       <mat-tab label="SMILES" *ngIf="smiles">
-        <p>{{smiles}}</p>
+        <textarea cdkTextareaAutosize id="smiles" readonly style="height:45px;">{{smiles}}</textarea>
       </mat-tab>
-      <mat-tab label="InChi" *ngIf="inchi">
-        <p>{{inchi}}</p>
+      <mat-tab label="InChi" *ngIf="inchi || inchiKey">
+        <textarea cdkTextareaAutosize id="inchi" readonly style="height:45px;">{{inchi}}</textarea>
+        <textarea cdkTextareaAutosize id="inchiKey" readonly style="height:45px;">{{inchiKey}}</textarea>
       </mat-tab>
     </mat-tab-group>
   </div>
+  <div *ngIf = "showSelector" class = "button-row">
+    <button mat-flat-button color="primary" class = "modal-button"  (click) = "setMolfile()">Search Structure</button>
+    <button mat-flat-button color="primary" class = "modal-button"  (click) = "selectSubstance()">Select Substance</button>
+    <span style = "margin:8px;"></span>
+    <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+    <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+    <span class = "middle-fill"></span>
+    <button  class = "modal-button"  mat-flat-button color="primary" (click)="dialogRef.close()">Close</button>
+
+  </div>
+
+  <div *ngIf = "showSubstanceSelector" class = "button-row">
+      <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Substance Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+      <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Substance Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
+      <span class = "middle-fill"></span>
+      <a  class = "modal-button" mat-button color="primary" (click)="dialogRef.close()">Close</a>
+    </div>
 </div>
 <!-- <div mat-dialog-actions class='flex-row'>
   <span class="middle-fill"></span>

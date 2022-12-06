@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { ApplicationService } from '../service/application.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
+import { SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
-import { SafeUrl } from '@angular/platform-browser';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { ApplicationService } from '../service/application.service';
+import { GeneralService } from '../../service/general.service';
 
 @Component({
   selector: 'app-application-details-base',
@@ -24,15 +27,18 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   isAdmin = false;
   updateApplicationUrl: string;
   message = '';
+  subscriptions: Array<Subscription> = [];
 
   constructor(
     public applicationService: ApplicationService,
+    public generalService: GeneralService,
     public activatedRoute: ActivatedRoute,
     public loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    public titleService: Title
     // private authService: AuthService,
   ) { }
 
@@ -43,53 +49,90 @@ export class ApplicationDetailsBaseComponent implements OnInit {
         this.getApplicationDetails();
       } else {
         this.message = 'The application Id in url should be a number';
-        this.loadingService.setLoading(false);
       }
+    } else if ((this.appType != null) && (this.appNumber != null)) {
+      // get Application Id by Type and Number. To be done soon.
     } else {
       this.handleSubstanceRetrivalError();
     }
+    this.loadingService.setLoading(false);
   }
 
-  getApplicationDetails(): void {
-    this.applicationService.getApplicationDetails(this.id).subscribe(response => {
-      this.application = response;
-      if (Object.keys(this.application).length > 0) {
-        this.getSubstanceDetails();
-      }
-      this.loadingService.setLoading(false);
-    }, error => {
-      this.handleSubstanceRetrivalError();
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
     });
   }
 
-  getSubstanceDetails() {
+  getApplicationDetails(): void {
+    const appIdSubscription = this.applicationService.getApplicationById(this.id).subscribe(response => {
+      this.application = response;
+      if (Object.keys(this.application).length > 0) {
+        this.titleService.setTitle(`Application ` + this.application.appType + ' ' + this.application.appNumber);
+        // Get Substance by Substance Key
+        this.getSubstanceBySubstanceKey();
+
+        // Get Application History
+        const appHistSubscription = this.applicationService.getApplicationHistory(this.id).subscribe(response => {
+          this.application.applicationHistoryList = [];
+          this.application.applicationHistoryList = response;
+        });
+        this.subscriptions.push(appHistSubscription);
+
+        // Get Product Technical Effect
+        const prodTechEffectSubscription = this.applicationService.getProductTechnicalEffect(this.id).subscribe(response => {
+          this.application.productTechEffectList = [];
+          this.application.productTechEffectList = response;
+        });
+        this.subscriptions.push(prodTechEffectSubscription);
+
+        // Get Product Effected
+        const prodEffectedSubscription = this.applicationService.getProductEffected(this.id).subscribe(response => {
+          this.application.productEffectedList = [];
+          this.application.productEffectedList = response;
+        });
+        this.subscriptions.push(prodEffectedSubscription);
+
+        // Get Clinical Trial Application
+        const clinicalSubscription = this.applicationService.getClinicalTrialApplication(this.id).subscribe(response => {
+          this.application.clinicalTrialList = [];
+          this.application.clinicalTrialList = response;
+        });
+        this.subscriptions.push(clinicalSubscription);
+      }
+    }, error => {
+      //  this.message = 'No Application record found';
+      // this.handleSubstanceRetrivalError();
+    });
+    this.subscriptions.push(appIdSubscription);
+  }
+
+  getSubstanceBySubstanceKey() {
     if (this.application != null) {
       this.application.applicationProductList.forEach(elementProd => {
         if (elementProd != null) {
           elementProd.applicationIngredientList.forEach(elementIngred => {
             if (elementIngred != null) {
-              // Get Ingredient Name
-              if (elementIngred.bdnum) {
-                this.applicationService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
+              // Get Substance Details, uuid, approval_id, substance name
+              if (elementIngred.substanceKey) {
+                const ingSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
                   if (response) {
-                    if (response.substanceId) {
-                      elementIngred.substanceId = response.substanceId;
-                      elementIngred.ingredientName = response.name;
-                    }
+                    elementIngred._substanceUuid = response.uuid;
+                    elementIngred._ingredientName = response._name;
                   }
                 });
+                this.subscriptions.push(ingSubscription);
               }
 
               // Get Basis of Strength
-              if (elementIngred.basisOfStrengthBdnum) {
-                this.applicationService.getSubstanceDetailsByBdnum(elementIngred.basisOfStrengthBdnum).subscribe(response => {
+              if (elementIngred.basisOfStrengthSubstanceKey) {
+                const basisSubscription = this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey).subscribe(response => {
                   if (response) {
-                    if (response.substanceId) {
-                      elementIngred.basisOfStrengthSubstanceId = response.substanceId;
-                      elementIngred.basisOfStrengthIngredientName = response.name;
-                    }
+                    elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
+                    elementIngred._basisOfStrengthIngredientName = response._name;
                   }
                 });
+                this.subscriptions.push(basisSubscription);
               }
             }
           });
@@ -116,7 +159,7 @@ export class ApplicationDetailsBaseComponent implements OnInit {
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/browse-substance']);
+      // this.router.navigate(['/browse-substance']);
     }, 5000);
 
   }

@@ -2,6 +2,9 @@
 <div mat-dialog-content>
 
   <div>
+    <div class = 'form-row' *ngIf = "vocabulary.domain === 'NUCLEIC_ACID_LINKAGE' || vocabulary.domain === 'NUCLEIC_ACID_SUGAR'">true
+        <app-fragment-wizard></app-fragment-wizard>
+    </div>
     <div  class = 'form-row'>
       <mat-form-field class="value">
         <input matInput placeholder="Value" [(ngModel)]="term.value" required name="value" />
@@ -16,6 +19,10 @@
 
     <br/><br/>
     <div class = 'message-field'>{{message}}</div>
+    <div class = 'validation' *ngIf = "validationMessages.length > 0"><div><b>CV not valid:</b></div>
+    <div class = 'message' *ngFor = "let message of validationMessages"><span class = "{{message.messageType}} type">{{message.messageType}} :</span>{{message.message}}</div>
+    
+    </div>
     <div class="actions">
       <span class="middle-fill"></span>
       <button mat-button (click)="cancel()">Cancel</button>

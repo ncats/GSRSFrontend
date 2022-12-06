@@ -41,22 +41,62 @@ export class AmountFormComponent implements OnInit {
       });
       this.averageControl.setValue(this.privateSubstanceAmount.average);
       this.averageControl.valueChanges.subscribe(value => {
+        if(value === null) {
+          this.averageControl.setValue('');
+        } else if(value.length === 1 && value.match(/[a-z]/i)) {
+          this.averageControl.setValue('');
+        } else if(value.match(/^[-E0-9,.]*$/)) { // what we want
+        } else {
+          this.averageControl.setValue('');
+        }
         this.privateSubstanceAmount.average = value;
       });
       this.lowControl.setValue(this.privateSubstanceAmount.low);
       this.lowControl.valueChanges.subscribe(value => {
+        if(value === null) {
+          this.lowControl.setValue('');
+        } else if(value.length === 1 && value.match(/[a-z]/i)) {
+          this.lowControl.setValue('');
+        } else if(value.match(/^[-E0-9,.]*$/)) { // what we want
+        } else {
+          this.lowControl.setValue('');
+        }
         this.privateSubstanceAmount.low = value;
       });
       this.highControl.setValue(this.privateSubstanceAmount.high);
       this.highControl.valueChanges.subscribe(value => {
+        if(value === null) {
+          this.highControl.setValue('');
+        } else if(value.length === 1 && value.match(/[a-z]/i)) {
+          this.highControl.setValue('');
+        } else if(value.match(/^[-E0-9,.]*$/)) { // what we want
+        } else {
+          this.highControl.setValue('');
+        }
         this.privateSubstanceAmount.high = value;
       });
       this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit);
       this.lowLimitControl.valueChanges.subscribe(value => {
+        if(value === null) {
+          this.lowLimitControl.setValue('');
+        } else if(value.length === 1 && value.match(/[a-z]/i)) {
+          this.lowLimitControl.setValue('');
+        } else if(value.match(/^[-E0-9,.]*$/)) { // what we want
+        } else {
+          this.lowLimitControl.setValue('');
+        }
         this.privateSubstanceAmount.lowLimit = value;
       });
       this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit);
       this.highLimitControl.valueChanges.subscribe(value => {
+        if(value === null) {
+          this.highLimitControl.setValue('');
+        } else if(value.length === 1 && value.match(/[a-z]/i)) {
+          this.highLimitControl.setValue('');
+        } else if(value.match(/^[-E0-9,.]*$/)) { // what we want
+        } else {
+          this.highLimitControl.setValue('');
+        }
         this.privateSubstanceAmount.highLimit = value;
       });
       this.unitsControl.setValue(this.privateSubstanceAmount.units);
@@ -72,6 +112,11 @@ export class AmountFormComponent implements OnInit {
 
   get substanceAmount(): SubstanceAmount {
     return this.privateSubstanceAmount;
+  }
+
+  updateAccess(access: Array<string>): void {
+    this.privateSubstanceAmount.access = access;
+    this.substanceAmount.access = access;
   }
 
   updateType(event: any) {

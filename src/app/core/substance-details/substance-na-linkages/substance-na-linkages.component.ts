@@ -12,7 +12,7 @@ import {ControlledVocabularyService, VocabularyDictionary, VocabularyTerm} from 
 })
 export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   linkages: Array<Linkage>;
-  displayedColumns: string[] = ['linkage' , 'Site Range' , 'Site Count' ];
+  displayedColumns: string[] = ['linkage' , 'Structure', 'Site Range' , 'Site Count' ];
   siteCount: number;
   vocabulary: any;
   substanceUpdated = new Subject<SubstanceDetail>();
@@ -36,6 +36,13 @@ export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements O
         this.countUpdate.emit(this.linkages.length);
         const cvSubscription =  this.cvService.getDomainVocabulary('NUCLEIC_ACID_LINKAGE').subscribe(response => {
           this.vocabulary = response['NUCLEIC_ACID_LINKAGE'].dictionary;
+          this.linkages.forEach(linkage => {
+            if(this.vocabulary[linkage.linkage]) {
+              linkage.structure = this.cvService.getStructureUrlFragment(this.vocabulary[linkage.linkage].fragmentStructure);
+            } else {
+              linkage.structure = null;
+            }
+          })
         });
         this.subscriptions.push(cvSubscription);
         this.getTotalSites();

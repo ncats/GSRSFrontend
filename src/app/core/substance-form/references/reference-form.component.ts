@@ -8,7 +8,7 @@ import { UtilsService } from '../../utils/utils.service';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormReferencesService } from './substance-form-references.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { Subscription } from 'rxjs';
 
@@ -25,6 +25,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   deleteTimer: any;
   disableReferenceDocumentUpload = false;
   showPrev = false;
+  loading = false;
+  error = false;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
@@ -88,9 +90,17 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   fileSelected(file: File): void {
+    this.error = false;
     if (file != null) {
+      this.loading = true;
       this.utilsService.uploadFile(file).subscribe(response => {
         this.reference.uploadedFile = response;
+        this.loading = false;
+
+      }, error => {
+        this.loading = false;
+        this.error = true;
+
       });
     }
   }

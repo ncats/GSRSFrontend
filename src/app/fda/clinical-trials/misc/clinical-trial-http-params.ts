@@ -9,13 +9,13 @@ export class ClinicalTrialHttpParams extends HttpParams {
 
     appendFacetParams(facets: ClinicalTrialFacetParam): ClinicalTrialHttpParams {
         let clone = new ClinicalTrialHttpParams({ fromString: super.toString() });
-        if (facets != null) {
+        if (facets !== null) {
             const facetsKeys = Object.keys(facets);
             facetsKeys.forEach(facetKey => {
-                if (facets[facetKey] != null) {
+                if (facets[facetKey] !== null) {
                     const facetValueKeys = Object.keys(facets[facetKey].params);
                     facetValueKeys.forEach((facetValueKey) => {
-                        if (facets[facetKey].params[facetValueKey] != null) {
+                        if (facets[facetKey].params[facetValueKey] !== null) {
 
                             const paramPrefix = !facets[facetKey].params[facetValueKey] ? '!' :
                                 facets[facetKey].isAllMatch ? '^' : '';
@@ -28,7 +28,7 @@ export class ClinicalTrialHttpParams extends HttpParams {
                 }
             });
         }
-        clone = clone.append('facet', '!Deprecated/Deprecated');
+        // clone = clone.append('facet', '!Deprecated/Deprecated');
         return clone;
     }
 
@@ -42,12 +42,12 @@ export class ClinicalTrialHttpParams extends HttpParams {
         [name: string]: string
     }): ClinicalTrialHttpParams {
         let clone = new ClinicalTrialHttpParams({ fromString: super.toString() });
-        if (params != null) {
+        if (params !== null) {
             const keys = Object.keys(params);
 
-            if (keys != null && keys.length) {
+            if (keys !== null && keys.length) {
                 keys.forEach(key => {
-                    if (params[key] != null && params[key] !== '') {
+                    if (params[key] !== null && params[key] !== '') {
                         clone = clone.append(key, params[key].toString());
                     }
                 });

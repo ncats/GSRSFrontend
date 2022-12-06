@@ -1,0 +1,292 @@
+<div class="middle-content-container">
+    
+        <mat-card class="search-section">
+          <mat-card-title>
+            Search
+          </mat-card-title>
+      
+          <mat-card-content class="left-search">
+            <mat-nav-list>
+              <h3 class="register-header">
+                <img class="old-icon" [src]="browseAll">
+                Search GSRS</h3>
+              <a mat-list-item routerLink="/browse-substance">
+                <mat-icon matListIcon svgIcon="glasses">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M3 10c-.24 0-.45.09-.59.25c-.14.15-.2.37-.17.61l.5 2.99C2.82 14.5 3.4 15 4 15h3c.64 0 1.36-.56 1.5-1.18l1.06-3.19c.04-.13.01-.32-.06-.44c-.11-.12-.28-.19-.5-.19H3m4 7H4C2.38 17 .96 15.74.76 14.14l-.5-2.99C.15 10.3.39 9.5.91 8.92C1.43 8.34 2.19 8 3 8h6c.83 0 1.58.35 2.06.96c.11.15.21.31.29.49c.43-.09.87-.09 1.29 0c.08-.18.18-.34.3-.49C13.41 8.35 14.16 8 15 8h6c.81 0 1.57.34 2.09.92c.51.58.75 1.38.65 2.19l-.51 3.07C23.04 15.74 21.61 17 20 17h-3c-1.56 0-3.08-1.19-3.46-2.7l-.9-2.71c-.38-.28-.91-.28-1.29 0l-.92 2.78C10.07 15.82 8.56 17 7 17m8-7c-.22 0-.39.07-.5.19c-.08.12-.1.31-.05.51l1.01 3.05c.18.69.9 1.25 1.54 1.25h3c.59 0 1.18-.5 1.25-1.11l.51-3.07c.03-.2-.03-.42-.17-.57A.769.769 0 0 0 21 10h-6z" fill="#626262"/></svg>
+                </mat-icon>
+                Browse Substances
+              </a>
+              <span *ngIf="!loadedComponents">
+                <mat-divider></mat-divider>
+      
+                <a mat-list-item routerLink="/structure-search">
+                  <mat-icon matListIcon svgIcon="search"></mat-icon>
+                  Structure Search
+                </a>
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="/sequence-search">
+                  <mat-icon matListIcon svgIcon="search"></mat-icon>
+                  Sequence Search
+                </a>
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="/advanced-search">
+                  <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+                  Advanced Search
+                </a>
+              </span>
+              <span *ngIf="loadedComponents">
+                <span *ngIf="loadedComponents && loadedComponents.applications">
+                <mat-divider></mat-divider>
+      
+                <a mat-list-item routerLink="/browse-applications">
+                  <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                  Browse Applications
+                </a>
+              </span>
+              <span *ngIf="loadedComponents && loadedComponents.products">
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="/browse-products">
+                  <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                  Browse Products
+                </a>
+              </span>
+              <span *ngIf="loadedComponents && loadedComponents.clinicaltrials">
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="/browse-clinical-trials">
+                  <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                  Browse Clinical Trials
+                </a>
+              </span>
+              <span *ngIf="loadedComponents && loadedComponents.adverseevents">
+                <div *ngIf="adverseEventShinyHomepageDisplay === true">
+                  <mat-divider></mat-divider>
+                  <a mat-list-item [href]="adverseEventShinyHomepageURL" target="_blank">
+                    <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                    Browse Adverse Events
+                  </a>
+                </div>
+                </span>
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="/structure-search">
+                  <mat-icon matListIcon svgIcon="search"></mat-icon>
+                  Structure Search
+                </a>
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="/sequence-search">
+                  <mat-icon matListIcon svgIcon="search"></mat-icon>
+                  Sequence Search
+                </a>
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="/advanced-search">
+                  <mat-icon matListIcon svgIcon="youtube"></mat-icon>
+                  Advanced Search
+                  <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+                </a>
+              </span>
+            </mat-nav-list>
+          </mat-card-content>
+        </mat-card>
+        <mat-card class="register-section">
+          <mat-card-title>
+            Register<span *ngIf="!isAuthenticated"> (Login to Register)</span>
+          </mat-card-title>
+          <mat-card-content>
+            <div class="register-card-content">
+              <div class="register-main">
+                <mat-nav-list class="main-list">
+                  <h3 class="register-header">
+                    <img class="old-icon" [src]="chemicon">
+                    Register a Substance</h3>
+                  <a mat-list-item routerLink="/substances/register/chemical">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Chemical
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/substances/register/protein">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Protein
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/substances/register/polymer">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Polymer
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/substances/register/nucleicAcid">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Nucleic Acid
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/substances/register/structurallyDiverse">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Structurally Diverse
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/substances/register/concept">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Concept
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/substances/register/mixture">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Mixture
+                  </a>
+                  <span>
+                    <mat-divider></mat-divider>
+      
+                    <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
+                      <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+      
+                      Specified Substance Group 1
+                    </a>
+                  </span>
+                  <span *ngIf="loadedComponents">
+                    <span *ngIf="loadedComponents && loadedComponents.products">
+                        <mat-divider></mat-divider>
+                        <a mat-list-item routerLink="/product/register">
+                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          Product
+                        </a>
+                      </span>
+                      <span *ngIf="loadedComponents && loadedComponents.applications">
+                        <mat-divider></mat-divider>
+                        <a mat-list-item routerLink="/application/register">
+                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          Application
+                       </a>
+                      </span>
+                      <span *ngIf="loadedComponents && loadedComponents.impurities">
+                        <mat-divider></mat-divider>
+                        <a mat-list-item routerLink="/impurities/register">
+                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          Impurities
+                        </a>
+                      </span>
+
+          
+                     <!--   <mat-divider></mat-divider>
+                        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
+                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          Biomarker
+                          <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+                        </a>
+          
+                        <mat-divider></mat-divider>
+                        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
+                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          Indication
+                          <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+                        </a>-->
+          
+                      </span>
+      
+                </mat-nav-list>
+              </div>
+             <!--   <mat-divider [vertical]="true" class="divider-vertical" *ngIf="appId === 'fda'"></mat-divider>
+              <div class="register-other" *ngIf="appId === 'fda'">
+                <h3 class="register-header">
+                  <img class="old-icon" [src]="application">
+                  Other Registration</h3>
+                <mat-nav-list class="other-list">
+                  <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+      
+                    Specified Substance Group 1
+                  </a>
+                  <mat-divider></mat-divider>
+                <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG2'">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+      
+                    Specified Substance Group 2
+                    <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+      
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/substances/register/specifiedSubstanceG3">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Specified Substance Group 3
+                  </a>
+                  
+                  <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG3'">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Specified Substance Group 3
+                    <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
+                  </a>
+                 
+                  <mat-divider></mat-divider>
+                  <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4'">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Specified Substance Group 4
+                    <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+                  </a>
+      
+                  <mat-divider></mat-divider>
+                  <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4Manufacturing'">
+                    <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    Specified Substance Group 4 Manufacturing
+                    <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
+                  </a> 
+      
+                  
+      
+                </mat-nav-list>
+              </div>-->
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="register-section">
+                <mat-card-title>
+                       Registrar's Quick Links
+                      </mat-card-title>
+                <mat-card-content>
+                        <div class="register-card-content">
+                                <div class="register-main">
+                        <h3 class="register-header" style = "margin-bottom: 18px;">
+                                <img class="old-icon" [src]="browseAll">
+                                Statistics/ Quick Search</h3>
+                        <mat-nav-list class="other-list" >
+                            <span  *ngFor = "let link of customLinks1; last as isLast; let ind = index">
+                                <a mat-list-item [routerLink] = "['/browse-substance']"  
+                                 [queryParams]="{facets: link.queryParams}"   >
+                                        <div class = "entry2">
+                                                <div class = "label2">
+                                                    {{link.display}}
+                                                  </div>
+                                                  <div class = "value2">
+                                                    {{link.total? link.total : 0 | number:'1.0':'en-US'}}
+                                                  </div>
+                                            </div>
+                                </a>
+                                <mat-divider *ngIf = "!isLast || ind < 13"></mat-divider>
+                            </span>
+                        </mat-nav-list>
+                        </div>
+                        <mat-divider [vertical]="true" class="divider-vertical" *ngIf="customLinks2"></mat-divider>
+              <div class="register-main" >
+                <mat-nav-list class="other-list">
+                        
+                    <div class = "header-padding" style = "height: 61px;" >
+                    </div>
+                    <span  *ngFor = "let link of customLinks2; last as isLast; let ind = index">
+                            <a mat-list-item [routerLink] = "['/browse-substance']"  
+                             [queryParams]="{facets: link.queryParams}"   (click) = "routeToCustom(link)">
+                                    <div class = "entry2">
+                                            <div class = "label2">
+                                                {{link.display}}
+                                              </div>
+                                              <div class = "value2">
+                                                {{link.total? link.total : 0 | number:'1.0':'en-US'}}
+                                              </div>
+                                        </div>
+                            </a>
+                            <mat-divider *ngIf = "!isLast"></mat-divider>
+                    </span>
+                    
+                    </mat-nav-list>
+                </div>
+                </div>
+                </mat-card-content>
+        </mat-card>
+
+      </div>

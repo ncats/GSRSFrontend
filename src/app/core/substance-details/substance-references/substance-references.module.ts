@@ -7,8 +7,12 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import { MatIconModule } from '@angular/material';
+import {MatSortModule} from '@angular/material/sort';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @NgModule({
   imports: [
@@ -18,10 +22,13 @@ import { MatIconModule } from '@angular/material';
     CdkTableModule,
     MatPaginatorModule,
     MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
     ReactiveFormsModule,
     FormsModule,
     MatSortModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   declarations: [SubstanceReferencesComponent]
 })

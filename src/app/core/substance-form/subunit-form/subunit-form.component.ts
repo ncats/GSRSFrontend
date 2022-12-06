@@ -17,7 +17,7 @@ import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import * as deepEqual from 'deep-equal';
 import { SubstanceFormLinksService } from '../links/substance-form-links.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
 import { Router } from '@angular/router';
@@ -150,7 +150,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.cvService.getDomainVocabulary('AMINO_ACID_RESIDUE').subscribe(response => {
         this.vocabulary = response['AMINO_ACID_RESIDUE'].dictionary;
         this.vocabulary.X = nonStandard;
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in this.vocabulary) {
           this.validArray.push(this.vocabulary[key].value);
         }
@@ -160,7 +160,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
       this.cvService.getDomainVocabulary('NUCLEIC_ACID_BASE').subscribe(response => {
         this.vocabulary = response['NUCLEIC_ACID_BASE'].dictionary;
         this.vocabulary.X = nonStandard;
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in this.vocabulary) {
           this.validArray.push(this.vocabulary[key].value);
         }
@@ -194,7 +194,7 @@ export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, After
    }*/
 
   getTooltipMessage(subunitIndex: number, unitIndex: number, unitValue: string, type: string): any {
-    const vocab = (this.vocabulary[unitValue] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue].display);
+    const vocab = (this.vocabulary[unitValue.toUpperCase()] === undefined ? 'UNDEFINED' : this.vocabulary[unitValue.toUpperCase()].display);
     const arr = [];
     const formatted = {
       'modification': 'Structural Modification',
@@ -276,7 +276,7 @@ window.open( url, '_blank');
     let ret = '';
     if (seq) {
       for (let i = 0; i < seq.length; i += 10) {
-        if (i % 60 === 0) {
+        if (i % 50 === 0) {
           ret += '\n';
         }
         ret += seq.substr(i, 10) + '     ';
@@ -289,9 +289,13 @@ window.open( url, '_blank');
     if (!this.toggle[this.subunit.subunitIndex]) {
 
       const toArray = this.subunit.sequence.split('');
-      const cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      let cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
       if (this.toggle[this.subunit.subunitIndex] === false) {
 
+      }
+      if (this.substanceType !== 'protein') {
+          //non-proteins should have sequences be upper-case always
+          cleanedSequence = cleanedSequence.toUpperCase();
       }
       if (cleanedSequence !== this.subunit.sequence) {
         this.subunit.sequence = cleanedSequence;
@@ -300,7 +304,11 @@ window.open( url, '_blank');
       }
     } else {
       const toArray = this.editSequence.replace(/\s/g, '').split('');
-      const cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      let cleanedSequence = toArray.filter(char => this.validArray.indexOf(char.toUpperCase()) >= 0).toString().replace(/,/g, '').trim();
+      if (this.substanceType !== 'protein') {
+          //non-proteins should have sequences be upper-case always
+          cleanedSequence = cleanedSequence.toUpperCase();
+      }
       this.editSequence = this.preformatSeq(cleanedSequence);
     }
   }

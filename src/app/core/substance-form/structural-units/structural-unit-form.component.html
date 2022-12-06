@@ -6,7 +6,7 @@
     </div>
       <div class = "form-row full">
     <div class="flex-column related-substance">
-    <img class = "related-image" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
+    <img (click)="showHidePopup()" class = "related-image" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
     </div>
 
 
@@ -36,7 +36,7 @@
       <div class = "connectivity-container">
         <mat-form-field class = "connectivity">
           <mat-label>Connectivity</mat-label>
-          <textarea matInput [ngModel] = "unit._displayConnectivity" (ngModelChange) = "displayToConnectivity($event)">
+          <textarea matInput cdkTextareaAutosize [ngModel] = "unit._displayConnectivity" (ngModelChange) = "displayToConnectivity($event)">
           </textarea>
         </mat-form-field>
         <div class = "error-container" *ngIf = "errors && errors.length > 0">

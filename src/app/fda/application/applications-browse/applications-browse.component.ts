@@ -1,26 +1,32 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { ApplicationService } from '../service/application.service';
-import { ApplicationSrs } from '../model/application.model';
+import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { Location, LocationStrategy } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ConfigService } from '@gsrs-core/config';
-import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
 import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { PageEvent } from '@angular/material';
+import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { Location, LocationStrategy } from '@angular/common';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { FacetParam } from '@gsrs-core/facets-manager';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { Subscription } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { applicationSearchSortValues } from './application-search-sort-values';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { ApplicationService } from '../service/application.service';
+import { GeneralService } from '../../service/general.service';
+import { Application } from '../model/application.model';
 
 @Component({
   selector: 'app-applications-browse',
@@ -28,9 +34,12 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+ // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+  view = 'cards';
   public privateSearchTerm?: string;
-  public applications: Array<ApplicationSrs>;
+  public applications: Array<Application>;
   order: string;
+  public sortValues = applicationSearchSortValues;
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
@@ -39,7 +48,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   isError = false;
   isAdmin: boolean;
   isLoggedIn = false;
-  displayedColumns: string[];
   dataSource = [];
   hasBackdrop = false;
   appType: string;
@@ -52,7 +60,26 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   private overlayContainer: HTMLElement;
   etag = '';
   environment: any;
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
   previousState: Array<string> = [];
+  private searchTermHash: number;
+  isSearchEditable = false;
+  searchValue: string;
+  lastPage: number;
+  invalidPage = false;
+  ascDescDir = 'desc';
+  displayedColumns: string[] = [
+    'appType',
+    'appNumber',
+    'center',
+    'provenance',
+    'applicationStatus',
+    'productName',
+    'sponsorName',
+    'ingredientName'
+  ];
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -63,6 +90,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   constructor(
     public applicationService: ApplicationService,
+    public generalService: GeneralService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private locationStrategy: LocationStrategy,
@@ -75,7 +103,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     private authService: AuthService,
     private overlayContainerService: OverlayContainer,
     private facetManagerService: FacetsManagerService,
+    private utilsService: UtilsService,
     private dialog: MatDialog,
+    private titleService: Title
   ) { }
 
   @HostListener('window:popstate', ['$event'])
@@ -92,6 +122,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
+    this.titleService.setTitle(`A:Browse Applications`);
+
     this.pageSize = 10;
     this.pageIndex = 0;
 
@@ -99,19 +131,17 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       queryParams: {}
     };
 
-    /*
-    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
-    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
-    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
-    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
-    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
-    */
-
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_appNumber';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
-
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -120,8 +150,15 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     });
     this.subscriptions.push(authSubscription);
 
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
+     // this.setClassicLinkQueryParams(params);
+    });
+    this.subscriptions.push(paramsSubscription);
+
     this.isComponentInit = true;
     this.loadComponent();
+
   }
 
   ngAfterViewInit() {
@@ -146,6 +183,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     const subscription = this.applicationService.getApplications(
+      this.order,
       skip,
       this.pageSize,
       this.privateSearchTerm,
@@ -159,22 +197,45 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         this.dataSource = this.applications;
         this.totalApplications = pagingResponse.total;
         this.etag = pagingResponse.etag;
-        // Export Application Url
-        this.exportUrl = this.applicationService.exportBrowseApplicationsUrl(
-          skip,
-          this.pageSize,
-          this.privateSearchTerm,
-          this.privateFacetParams);
-        this.getSubstanceDetailsByBdnum();
 
-        // this.applicationService.getClinicalTrialApplication(this.applications);
+        // alert('This etag' + this.etag);
+        if (pagingResponse.total % this.pageSize === 0) {
+          this.lastPage = (pagingResponse.total / this.pageSize);
+        } else {
+          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+        }
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
+
+        // Narrow Suggest Search Begin
+        this.narrowSearchSuggestions = {};
+        this.matchTypes = [];
+        this.narrowSearchSuggestionsCount = 0;
+        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+              this.narrowSearchSuggestions[suggestion.matchType] = [];
+              if (suggestion.matchType === 'WORD') {
+                this.matchTypes.unshift(suggestion.matchType);
+              } else {
+                this.matchTypes.push(suggestion.matchType);
+              }
+            }
+            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+            this.narrowSearchSuggestionsCount++;
+          });
+        }
+        this.matchTypes.sort();
+        // Narrow Suggest Search End
+
+        this.getSubstanceBySubstanceKey();
+        // Get Application Clinical Trial Record
+        this.getClinicalTrialApplication();
       }, error => {
         console.log('error');
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve Applicationss. Please refresh and try again.',
+          message: 'There was an error trying to retrieve Applications. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };
@@ -196,7 +257,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   clearSearch(): void {
-
     const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
     this.gaService.sendEvent('applicationFiltering', 'icon-button:clear-search', eventLabel);
 
@@ -244,6 +304,33 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   //   return this.privateFacetParams;
   // }
 
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Applications
+      this.searchApplications();
+    }
+    return;
+  }
+
+  openSideNav() {
+    this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
+   // this.matSideNav.open();
+  }
+
+  updateView(event): void {
+    // this.gaService.sendEvent('adverseeventptsContent', 'button:view-update', event.value);
+    this.view = event.value;
+  }
+
   changePage(pageEvent: PageEvent) {
 
     let eventAction;
@@ -265,6 +352,29 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.searchApplications();
   }
 
+  customPage(event: any): void {
+    if (this.validatePageInput(event)) {
+      this.invalidPage = false;
+      const newpage = Number(event.target.value) - 1;
+      this.pageIndex = newpage;
+      this.gaService.sendEvent('applicationsContent', 'select:page-number', 'pager', newpage);
+      this.populateUrlQueryParameters();
+      this.searchApplications();
+    }
+  }
+
+  validatePageInput(event: any): boolean {
+    if (event && event.target) {
+      const newpage = Number(event.target.value);
+      if (!isNaN(Number(newpage))) {
+        if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
@@ -282,90 +392,113 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   facetsLoaded(numFacetsLoaded: number) {
   }
 
-  getSubstanceDetailsByBdnum(): void {
-    let bdnumName: any;
-    let relationship: any;
-    let substanceId: string;
+  editAdvancedSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'Browse Application search term' :
+      `${this.privateSearchTerm}`;
+    this.gaService.sendEvent('Application Filtering', 'icon-button:edit-advanced-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        'g-search-hash': this.searchTermHash.toString()
+      }
+    };
+
+    this.router.navigate(['/advanced-search'], navigationExtras);
+  }
+
+  getSubstanceBySubstanceKey(): void {
+    // let bdnumName: any;
+    // let relationship: any;
+    // let substanceId: string;
 
     this.applications.forEach((element, index) => {
-
       element.applicationProductList.forEach((elementProd, indexProd) => {
 
         // Sort Product Name by create date descending
         elementProd.applicationProductNameList.sort((a, b) => {
-          return <any>new Date(b.createDate) - <any>new Date(a.createDate);
+          return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
         });
 
         elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
+          if (elementIngred.substanceKey != null) {
 
-          // Get Substance Details such as Name, Substance Id, unii
-          if (elementIngred.bdnum != null) {
-
-            this.applicationService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
-              bdnumName = response;
-              if (bdnumName != null) {
-                if (bdnumName.name != null) {
-                  elementIngred.ingredientName = bdnumName.name;
-
-                  if (bdnumName.substanceId != null) {
-                    substanceId = bdnumName.substanceId;
-                    elementIngred.substanceId = substanceId;
-
-                    // Get Active Moiety - Relationship
-                    this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
-                      relationship = responseRel;
-                      relationship.forEach((elementRel, indexRel) => {
-                        if (elementRel.relationshipName != null) {
-                          elementIngred.activeMoietyName = elementRel.relationshipName;
-                          elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
-                        }
-                      });
-
-                    });
-
-                  }
+            const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+              if (response) {
+                // Get Substance Details, uuid, approval_id, substance name
+                if (elementIngred.substanceKey) {
+                  this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
+                    if (responseInactive) {
+                      elementIngred._substanceUuid = responseInactive.uuid;
+                      elementIngred._ingredientName = responseInactive._name;
+                    }
+                  });
                 }
+
+                // Get Active Moiety - Relationship
+                /*
+                this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+                  relationship = responseRel;
+                  relationship.forEach((elementRel, indexRel) => {
+                    if (elementRel.relationshipName != null) {
+                      elementIngred.activeMoietyName = elementRel.relationshipName;
+                      elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
+                    }
+                  });
+                });
+                */
               }
             });
-
+            this.subscriptions.push(substanceSubscription);
           }
-        });
+        }); // Ingredient forEach
 
-      });
+      }); // Product forEach
 
-    });
+    }); // Application forEach
 
   }
 
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchApplications();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
   export() {
+    // alert('EXPORT etag' + this.etag);
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension);
-      if (this.authService.getUser() !== '') {
-        const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'BrowseApplications' }
-        });
-        // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
-          // this.overlayContainer.style.zIndex = null;
-          if (name && name !== '') {
-            this.loadingService.setLoading(true);
-            const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
-              this.loadingService.setLoading(false);
-              const navigationExtras: NavigationExtras = {
-                queryParams: {
-                  totalSub: this.totalApplications
-                }
-              };
-              const params = { 'total': this.totalApplications };
-              this.router.navigate(['/user-downloads/', response.id]);
-            }, error => this.loadingService.setLoading(false));
-          }
-        });
-      }
+      //  if (this.authService.getUser() !== '') {
+      const dialogReference = this.dialog.open(ExportDialogComponent, {
+      //  height: '215x',
+        width: '700px',
+        data: { 'extension': extension, 'type': 'BrowseApplications', 'entity': 'applications', 'hideOptionButtons': true }
+      });
+      // this.overlayContainer.style.zIndex = '1002';
+      dialogReference.afterClosed().subscribe(response => {
+        // this.overlayContainer.style.zIndex = null;
+        const name = response.name;
+        const id = response.id;
+        if (name && name !== '') {
+          this.loadingService.setLoading(true);
+          const fullname = name + '.' + extension;
+          this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+            this.loadingService.setLoading(false);
+            const navigationExtras: NavigationExtras = {
+              queryParams: {
+                totalSub: this.totalApplications
+              }
+            };
+            const params = { 'total': this.totalApplications };
+            this.router.navigate(['/user-downloads/', response.id]);
+          }, error => { this.loadingService.setLoading(false); });
+        }
+      });
+      //  }
     }
   }
 
@@ -377,27 +510,62 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     return this.applicationService.getUpdateApplicationUrl();
   }
 
-  // appType: string, appNumber: string
-  /*
   getClinicalTrialApplication() {
-    let clinicalTrial: Array<any> = [];
-    let app: any;
+    this.applications.forEach((app, index) => {
+      // Get Clinical Trial Application
+      const clinicalSubscription = this.applicationService.getClinicalTrialApplication(app.id).subscribe(response => {
+        app._clinicalTrialList = [];
+        app._clinicalTrialList = response;
+      })
+      this.subscriptions.push(clinicalSubscription);
+    });
+  }
 
-    console.log('clinical');
-    this.applications.forEach((element, index) => {
-      //app = element;
-      this.applicationService.getClinicalTrialApplication(element.appType, element.appNumber).subscribe(response => {
-        clinicalTrial = response;
-        //element.clinicalTrialList = response;
+  openImageModal($event, subUuid: string): void {
+   // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
 
-        clinicalTrial.forEach(element1 => {
-          if (element1.nctn != null) {
-            element.clinicalTrialList[0].nctNumber = element1.nctn;
-          }
-          console.log("NCT length: " + clinicalTrial.length);
-        });
-        });
-      });
-    }
-*/
+  //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+
+    let data: any;
+
+   // if (substance.substanceClass === 'chemical') {
+      data = {
+        structure: subUuid,
+     //   smiles: substance.structure.smiles,
+        uuid: subUuid,
+    //    names: substance.names
+      };
+   // }
+
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: data
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    const subscription = dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    });
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
 }

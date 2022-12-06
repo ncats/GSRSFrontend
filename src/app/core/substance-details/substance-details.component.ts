@@ -145,12 +145,17 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   checkVersion() {
     return this.substanceService.checkVersion(this.id);
   }
-
-
   getSubstanceDetails(id: string, version?: string) {
     this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
       if (response) {
-        this.titleService.setTitle(response._name);
+        let name = response._name;
+        response.names.forEach(current => {
+          if (current.displayName && current.stdName) {
+            name = current.stdName;
+          }
+        });
+        name = name.replace(/<[^>]*>?/gm, '');
+        this.titleService.setTitle(name);
         this.substance = response;
         this.substanceUpdated.next(response);
         this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
@@ -158,6 +163,26 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
             this.insertSubstanceProperty(substanceProperty);
           }
         });
+          this.substanceService.getMixtureParent(id).subscribe(response2 => {
+            if (response2 && response2.content && response2.content.length > 0) {
+              this.substance.$$mixtureParents = response2.content;
+              this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
+                if (substanceProperty != null) {
+                  this.insertSubstanceProperty(substanceProperty);
+                }
+              });
+            }
+          });
+            this.substanceService.getConstituentParent(id).subscribe(response3 => {
+              if (response3 && response3.content && response3.content.length > 0) {
+                this.substance.$$constituentParents = response3.content;
+                this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
+                  if (substanceProperty != null) {
+                    this.insertSubstanceProperty(substanceProperty);
+                  }
+                });
+              }
+            });
       } else {
         this.handleSubstanceRetrivalError();
       }
@@ -203,6 +228,16 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.insertSubstanceProperty(property, m + 1, end);
       return;
     }
+
+
+    this.substanceDetailsProperties.forEach(prop => {
+      if (prop.title === 'identifiers') {
+        prop.title = 'Codes - Identifiers';
+      }
+      if (prop.title === 'classification') {
+        prop.title = 'Codes - Classification';
+      }
+    });
   }
 
   private handleSubstanceRetrivalError() {

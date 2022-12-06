@@ -7,7 +7,7 @@
 
 .a-link {
   text-decoration:none;
-  color: #1565C0;
+  color: var(--link-color);
 }
 
 
@@ -24,4 +24,9 @@
      width:90%;
    }
    padding-bottom: 25px;
+}
+
+.show-filter-span {
+  display: block;
+  float: right;
 }

@@ -1,29 +1,83 @@
 <div class="substance-selector-container">
-    
-    <app-substance-text-search
-      [ngClass]="{'hidden': selectedSubstance}"
-      (searchPerformed)="processSubstanceSearch($event)" [eventCategory]="eventCategory"
-      [placeholder]="placeholder" source = "form-search">
-    </app-substance-text-search>
-    <div class = "undo" *ngIf = "previousSubstance">
-        <button mat-icon-button (click)="revertEdit()" matTooltip ="revert to previously selected" class = "undo">
-            <mat-icon aria-label="Revert substance edit" [ngClass]="{'hidden': selectedSubstance}" svgIcon="undo"></mat-icon>
-        </button>
+  <app-substance-text-search [ngClass]="{'hidden': selectedSubstance}"
+    (searchPerformed)="processSubstanceSearch($event)" [eventCategory]="eventCategory" [placeholder]="placeholder"
+    source="form-search">
+  </app-substance-text-search>
+  <div class="undo" *ngIf="previousSubstance">
+    <button mat-icon-button (click)="revertEdit()" matTooltip="revert to previously selected" class="undo">
+      <mat-icon aria-label="Revert substance edit" [ngClass]="{'hidden': selectedSubstance}" svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+
+  <div class="selected-substance" *ngIf="selectedSubstance">
+    <div class="selected-substance-options" *ngIf="showOptions">
+      <button mat-mini-fab (click)="editSelectedSubstance()">
+        <mat-icon aria-label="Edit Selected Substance" svgIcon="edit" matTooltip="change selection"></mat-icon>
+      </button>
+      <a *ngIf="selectedSubstance.uuid" mat-mini-fab target="_blank"
+        (click) ="openInNewTab(selectedSubstance.uuid)">
+        <mat-icon aria-label="Open in new tab" svgIcon="open_in_new" matTooltip="view details in a new tab"></mat-icon>
+      </a>
+      <button mat-mini-fab (click)="delete()" matTooltip="delete" class="undo">
+        <mat-icon aria-label="delete selection" svgIcon="cancel"></mat-icon>
+      </button>
+      <button mat-mini-fab (click)="StoreSelection()" matTooltip="Store as default relationship" class="undo">
+        <mat-icon aria-label="Store as default substance for relationship type" svgIcon="move_to_inbox"></mat-icon>
+      </button>
     </div>
-    <div class="selected-substance" *ngIf="selectedSubstance" (mouseenter)="showOptions = true" (mouseleave)="showOptions = false">
-      <div class="selected-substance-options" *ngIf="showOptions">
-        <button mat-mini-fab (click)="editSelectedSubstance()">
-            <mat-icon aria-label="Edit Selected Substance" svgIcon="edit" matTooltip = "change selection"></mat-icon>
-        </button>
-        <a *ngIf = "selectedSubstance.uuid" mat-mini-fab target="_blank" [routerLink]="['/substances', selectedSubstance.uuid]">
-            <mat-icon aria-label="Open in new tab" svgIcon="open_in_new" matTooltip = "view details in a new tab"></mat-icon>
-        </a>
-      </div>
-      <div class="section-header">{{header}}</div>
-      <img class = "related-image" *ngIf = "selectedSubstance.uuid && !hideImage" appSubstanceImage [entityId]="selectedSubstance.uuid">
-      <div>
-        <span [innerHTML] = "selectedSubstance._name"></span>
-        <span class = 'code' *ngIf = "errorMessage === 'Not in database'"><br/>NOT IN DATABASE</span>
-      </div>
+
+    <div class="section-header">{{header}}</div>
+    <div class='tile-title'>
+      <span class="approval-id" *ngIf="selectedSubstance.approvalID">
+        {{selectedSubstance.approvalID}}
+      </span>
+    </div>
+    <a class="zoom" (click)="openImageModal(substance)">
+    <img class="related-image" *ngIf="selectedSubstance.uuid && !hideImage" appSubstanceImage
+      [entityId]="selectedSubstance.uuid"></a>
+    <div class = "name-div">
+      <span >
+        
+      <a  target="_blank" class = "name-link"
+      (click) ="openInNewTab(selectedSubstance.uuid)"  matTooltip="view details in a new tab" >
+        <span  [innerHTML] = "selectedSubstance._name" ></span>
+        <mat-icon aria-label="Open in new tab" class = "new-tab" svgIcon="open_in_new"></mat-icon>
+      </a></span>
+      <span class='code' *ngIf="errorMessage === 'Not in database'"><br />NOT IN DATABASE</span>
+    </div>
+    <div  >
+      <a class = "under-link" (click)="!!editSelectedSubstance()">Change Selection</a> 
+     
+      
+      <br/>
+
+
+    </div>
+
+  </div>
+  <div  *ngIf="previousSubstance && !selectedSubstance">
+      <a (click) = "revertEdit()"  style = "color: #1565c0;font-weight:550;margin-top:5px">Cancel and Revert</a>
+    </div>
+  <div class = "centered">
+      <a style = "color: #1565c0;font-weight:550;margin-top:3px; margin-right: 10px;" (click)="advanced('structure')">Structure Search</a>
+      <a style = "color: #1565c0;font-weight:550;margin-top:3px;" (click)="advanced('name')">Name Search</a>
+
+  </div>
+
+  <span class='code' *ngIf="errorMessage === 'No substances found'"><br />NO SUBSTANCES FOUND</span>
+  <!-- Adding Edit, Register, and Structure links-->
+  <div class="divflex" *ngIf="showMorelinks">
+    <!--
+    <div class="marginright10px" *ngIf="selectedSubstance && selectedSubstance.uuid">
+      <a style = "color: #1565c0;font-weight:550;text-decoration: underline" (click)="!!editSelectedSubstance()">Change Selection</a>
+    </div>
+    --->
+    <div class="marginright10px" *ngIf="errorMessage">
+      <!-- Register Subtance -->
+      <a (click) = "registerNew()" target="_blank" matTooltip='Register New Substance'>
+        <span class="font11px">Register New</span>
+      </a>
     </div>
   </div>
+
+</div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-submit-success-dialog',
@@ -10,6 +10,8 @@ export class SubmitSuccessDialogComponent implements OnInit {
   dialogTitle: string;
   dialogMessage: string = "Update was performed.";
   fileUrl: string = null;
+
+  public isCoreSubstance = 'true';
 
   constructor(
     public dialogRef: MatDialogRef<SubmitSuccessDialogComponent>,
@@ -36,9 +38,15 @@ export class SubmitSuccessDialogComponent implements OnInit {
    }
 
   ngOnInit() {
+    if (this.data) {
+      if (this.data.isCoreSubstance) {
+        this.isCoreSubstance = this.data.isCoreSubstance;
+      }
+    }
   }
 
-  dismissDialog(action: 'continue'|'browse'|'view'|'viewInPfda'): void {
+
+  dismissDialog(action: 'continue' | 'browse' | 'view' | 'home'|'viewInPfda'): void {
     this.dialogRef.close(action);
   }
 

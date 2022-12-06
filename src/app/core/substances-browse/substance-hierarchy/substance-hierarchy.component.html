@@ -1,17 +1,25 @@
 <div>
-  <div class = "label tree-label">Substance Hierarchy</div>
-  <mat-tree *ngIf = "dataSource.data && dataSource.data.length > 0" [dataSource]="dataSource" [treeControl]="treeControl" class="hierarchy-tree">
+  <div class = "label tree-label">Substance Hierarchy </div>
+  <div *ngIf = "loading" class = "loading-container">
+     
+    <div><mat-progress-spinner
+        class="spinner"
+        [color]="primary"
+        [diameter]="24"
+        mode = "indeterminate">
+    </mat-progress-spinner></div><div><i>Loading</i></div>
+  </div>
+  <mat-tree *ngIf = "dataSource.data && dataSource.data.length > 0 && !loading" [dataSource]="dataSource" [treeControl]="treeControl" class="hierarchy-tree">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
       <li class="mat-tree-node" [ngClass] = "{'odd':node.order === 'odd', 'primary': activeNode === node}" (click)="activeNode = node" >
         <button mat-icon-button class = "tree-button" disabled [attr.aria-label]="node.text"></button>
         <div class = 'node-container nochild'>
           <div class = 'title'>
             <a class="hierarchy-link" matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
-               [routerLink]="['/substances', node.value.refuuid || '']" aria-label = "view substance">
-              {{node.value.refPname}}
-            </a>
+               [routerLink]="['/substances', node.value.refuuid || '']" attr.aria-label = "view substance for {{node.value.refPname}}" [innerHTML] = "node.value.refPname"></a>
+             
             <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']"
-               target = "_blank"  matTooltip = "edit substance in new tab"><span hidden>edit in new tab</span>
+               target = "_blank"  matTooltip = "edit substance in new tab" attr.aria-label="edit substance for {{node.value.refPname}} in new tab"><span hidden>edit in new tab</span>
               <mat-icon *ngIf ="isAdmin" svgIcon="edit"  color = "primary"></mat-icon>
             </a>
           </div>
@@ -38,10 +46,9 @@
           <div class = 'node-container'>
             <div class = 'title'>
               <a class="hierarchy-link"  matTooltip="view substance details" [ngClass] = "node.self ? 'current-record':''"
-                 [routerLink]="['/substances', node.value.refuuid || '']">
-                {{node.value.refPname}}
-              </a>
-              <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']">
+                 [routerLink]="['/substances', node.value.refuuid || '']" [innerHTML] = "node.value.refPname"></a>
+               
+              <a class = "hierarchy-edit" [routerLink]="['/substances', node.value.refuuid || '', 'edit']" attr.aria-label="edit substance for {{node.value.refPname}} in new tab">
                 <mat-icon *ngIf ="isAdmin" matTooltip = "edit substance in new tab" svgIcon="edit"  color = "primary"></mat-icon>
               </a>
             </div>

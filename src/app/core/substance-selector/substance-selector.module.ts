@@ -6,7 +6,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
-import { MatTooltipModule } from '@angular/material';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AdvancedSelectorDialogComponent } from '@gsrs-core/substance-selector/advanced-selector-dialog/advanced-selector-dialog.component';
+import { StructureEditorComponent, StructureEditorModule } from '@gsrs-core/structure-editor';
+import { NameResolverModule } from '@gsrs-core/name-resolver/name-resolver.module';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -16,13 +29,28 @@ import { MatTooltipModule } from '@angular/material';
     MatButtonModule,
     MatTooltipModule,
     RouterModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    StructureEditorModule,
+    NameResolverModule,
+    MatOptionModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatCardModule,
+    MatRadioModule,
+    MatPaginatorModule,
+    MatTabsModule,
+    MatSliderModule,
+    MatExpansionModule,
+    FormsModule
   ],
   declarations: [
-    SubstanceSelectorComponent
+    SubstanceSelectorComponent,
+    AdvancedSelectorDialogComponent
+    
   ],
   exports: [
-    SubstanceSelectorComponent
+    SubstanceSelectorComponent,
+    AdvancedSelectorDialogComponent
   ]
 })
 export class SubstanceSelectorModule { }

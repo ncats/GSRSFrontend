@@ -1,6 +1,10 @@
 <div class="top-fixed">
   <div class="actions-container">
     <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+    <!--
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" (click)="showJSON()">Import JSON</button>
+    -->
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -17,9 +21,14 @@
           matTooltip='Register a New Application'>
           Register New Application
         </button>&nbsp;&nbsp;&nbsp;
-        <button mat-flat-button color="primary" [routerLink]="['/applicationDetails', application.id]"
+        <!--
+        <button mat-flat-button color="primary" [routerLink]="['/application', application.id]"
           matTooltip='View this Application Record'>View Application
-        </button>&nbsp;&nbsp;&nbsp;
+        -->
+        <a mat-flat-button color="primary" routerLink="/application/{{application.id}}" target="_blank" matTooltip='Opens in a new window'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View Application</a>
+        &nbsp;&nbsp;&nbsp;
         <span *ngIf="isAdmin">
           <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
             matTooltip='Delete this Application'>
@@ -93,10 +102,9 @@
             <br>
             <div>
               <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span>
-              {{application.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{application.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+              <span class="colorgray">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
             </div>
           </div>
         </div>
@@ -137,7 +145,7 @@
               <mat-form-field class="col-1">
                 <input matInput [disabled]="isDisableData" placeholder="Submit Date (mm/dd/yyyy)"
                   [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
-                <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
+                <mat-hint *ngIf="submitDateMessage"><span class="colorred">{{submitDateMessage}}</span></mat-hint>
               </mat-form-field>
 
               <!--
@@ -148,10 +156,10 @@
                   (dateInput)="dateInputEventSubmitDate($event)">
                 <mat-datepicker-toggle matSuffix [for]="pickerSubmit"></mat-datepicker-toggle>
                 <mat-datepicker #pickerSubmit></mat-datepicker>
-                
+
                 <mat-error *ngIf="appForm.get('submitDateControl').hasError('minlength')">Min 8 characters
                 </mat-error>
-            
+
               <mat-hint *ngIf="submitDateMessage">{{submitDateMessage}}</mat-hint>
               </mat-form-field>
             -->
@@ -168,7 +176,7 @@
               <mat-form-field class="col-1">
                 <input matInput [disabled]="isDisableData" placeholder="Status Date (mm/dd/yyyy)"
                   [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
-                <mat-hint *ngIf="statusDateMessage">{{statusDateMessage}}</mat-hint>
+                <mat-hint *ngIf="statusDateMessage"><span class="colorred">{{statusDateMessage}}</span></mat-hint>
               </mat-form-field>
             </div>
 
@@ -262,7 +270,8 @@
             </div> <!-- Indication Loop-->
 
             <!-- Product Form -->
-            <app-application-product-form [application]="application"></app-application-product-form>
+            <app-application-product-form [application]="application" (ingredientMessageOut)="ingredientMessageOutChange($event)"
+            (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"></app-application-product-form>
 
           </mat-card-content>
 

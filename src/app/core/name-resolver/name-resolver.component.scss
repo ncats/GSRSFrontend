@@ -24,3 +24,10 @@
     width: 500px;
     max-width: 100%;
 }
+
+
+
+.search ::ng-deep .mat-form-field-infix {
+  border-top-width: 1px !important;
+  border-bottom-width: 1px !important;
+}

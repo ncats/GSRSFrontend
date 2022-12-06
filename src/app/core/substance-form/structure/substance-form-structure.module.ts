@@ -10,7 +10,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 import { DragDropPasteDirective } from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
-import { MatMenuModule, MatIconModule, MatButtonModule } from '@angular/material';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   imports: [

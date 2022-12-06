@@ -5,7 +5,8 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
-import { MatChipInputEvent, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatChipInputEvent } from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { AuthService } from '@gsrs-core/auth';

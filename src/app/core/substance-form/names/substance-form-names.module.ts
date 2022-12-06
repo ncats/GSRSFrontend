@@ -13,8 +13,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { NameFormComponent } from './name-form.component';
 import { NameOrgsComponent } from './name-orgs.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatTableModule} from '@angular/material/table';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
-import { MatRadioModule, MatCheckboxModule, MatBadgeModule, MatExpansionModule, MatTableModule, MatSelectModule, MatTooltipModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -36,12 +43,14 @@ import { MatRadioModule, MatCheckboxModule, MatBadgeModule, MatExpansionModule, 
     MatTableModule,
     MatBadgeModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ElementLabelDisplayModule
   ],
   declarations: [
     SubstanceFormNamesCardComponent,
     NameFormComponent,
     NameOrgsComponent
+    
   ]
 })
 export class SubstanceFormNamesModule { }

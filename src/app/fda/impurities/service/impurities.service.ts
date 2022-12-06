@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
+import { PagingResponse } from '@gsrs-core/utils';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { Facet } from '@gsrs-core/facets-manager';
+import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import {
   Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting,
   ImpuritiesUnspecified, ImpuritiesResidualSolvents, ImpuritiesInorganic, ImpuritiesTotal, ValidationResults, IdentityCriteria
 } from '../model/impurities.model';
-import { map, switchMap } from 'rxjs/operators';
 
 @Injectable(
   {
@@ -17,14 +21,107 @@ import { map, switchMap } from 'rxjs/operators';
 
 export class ImpuritiesService extends BaseHttpService {
 
+  private _bypassUpdateCheck = false;
+  private impuritiesStateHash?: number;
   totalRecords: 0;
   impurities: Impurities;
 
+  apiBaseUrlWithEntityContext = this.configService.configData.apiBaseUrl + 'api/v1/impurities' + '/';
+
   constructor(
     public http: HttpClient,
-    public configService: ConfigService
+    public configService: ConfigService,
+    public utilsService: UtilsService
   ) {
     super(configService);
+  }
+
+  get isImpuritiesUpdated(): boolean {
+    const impuritiestring = JSON.stringify(this.impurities);
+    if (this._bypassUpdateCheck) {
+      this._bypassUpdateCheck = false;
+      return false;
+    } else {
+      return this.impuritiesStateHash !== this.utilsService.hashCode(impuritiestring);
+    }
+  }
+
+  bypassUpdateCheck(): void {
+    this._bypassUpdateCheck = true;
+  }
+
+  getImpuritiesBySubstanceUuid(
+    order: string,
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<any> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    const options = {
+      params: params
+    };
+
+    const query = 'search?q=root_impuritiesSubstanceList_substanceUuid:\"' + searchTerm + '"' +
+      ' OR root_impuritiesSubstanceList_impuritiesTestList_impuritiesDetailsList_relatedSubstanceUuid:\"' + searchTerm + '"';
+    const url = this.apiBaseUrlWithEntityContext + query;
+    return this.http.get<Impurities>(url, options)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getImpuritiesByTestImpuritiesDetails(relatedSubstanceUuid: string): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + 'search?root_impuritiesSubstanceList_impuritiesTestList_impuritiesDetailsList_relatedSubstanceUuid:\"' + relatedSubstanceUuid + '"';
+    return this.http.get<Impurities>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  searchImpurities(
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<Impurities>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    const url = this.apiBaseUrlWithEntityContext + 'search';
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<Impurities>>(url, options);
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    const url = this.apiBaseUrlWithEntityContext + 'export/' + etag + '/' + extension;
+    return url;
   }
 
   loadImpurities(impurities?: Impurities): void {
@@ -40,7 +137,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   getImpurities(id: string): Observable<any> {
-    const url = this.apiBaseUrl + `impurities(${id})`;
+    const url = this.apiBaseUrlWithEntityContext + `${id}`;
     return this.http.get<Impurities>(url)
       .pipe(
         map(result => {
@@ -134,7 +231,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   deleteImpurities(): Observable<any> {
-    const url = this.apiBaseUrl + 'impurities(' + this.impurities.id + ')';
+    const url = this.apiBaseUrlWithEntityContext + this.impurities.id;
     const params = new HttpParams();
     const options = {
       params: params
@@ -170,7 +267,7 @@ export class ImpuritiesService extends BaseHttpService {
 
   deleteIdentityCriteriaUnspecified(impuritiesSubstanceIndex: number, impuritiesTestIndex: number,
     impuritiesUnspecifiedIndex: number, identityCriteriaIndex: number): void {
-      const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
+    const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
   }
 
@@ -202,7 +299,7 @@ export class ImpuritiesService extends BaseHttpService {
   getRelationshipImpurity(
     substanceId: string
   ): Observable<any> {
-    const url = this.baseUrl + 'getRelationshipImpurity?substanceId=' + substanceId;
+    const url = this.apiBaseUrlWithEntityContext + 'subRelationship/' + substanceId;
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;

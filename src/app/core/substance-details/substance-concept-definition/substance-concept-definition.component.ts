@@ -29,6 +29,7 @@ export class SubstanceConceptDefinitionComponent extends SubstanceCardBase imple
   }
 
   private getConceptDefinition(): void {
+    this.definitions = [];
     if (this.substance.relationships && this.substance.relationships.length > 0) {
       this.substance.relationships.forEach(relationship => {
         if (relationship.type === 'SUBSTANCE->SUB_CONCEPT') {

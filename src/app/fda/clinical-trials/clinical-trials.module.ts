@@ -22,32 +22,41 @@ import { MiniSearchComponent } from './mini-search/mini-search.component';
 import { ClinicalTrialService } from './clinical-trial/clinical-trial.service';
 import { ClinicalTrialDetailsBaseComponent } from './clinical-trial-details/clinical-trial-details-base.component';
 import { ClinicalTrialDetailsComponent } from './clinical-trial-details/clinical-trial-details/clinical-trial-details.component';
-// tslint:disable-next-line: max-line-length
+// eslint-disable-next-line max-len
 import { ClinicalTrialEuropeDetailsComponent } from './clinical-trial-details/clinical-trial-europe-details/clinical-trial-europe-details.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { MatMenuModule } from '@angular/material/menu';
+import { ActivateClinicalTrialsComponent } from './activate-clinical-trials.component';
 
 const clinicalTrialsRoutes: Routes = [
    {
     path: 'browse-clinical-trials',
-      component: ClinicalTrialsBrowseComponent
+      component: ClinicalTrialsBrowseComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
+
     },
-   {
-    path: 'edit-clinical-trial/:nctNumber',
-      component: ClinicalTrialEditComponent
+    {
+    path: 'edit-clinical-trial/:trialNumber',
+      component: ClinicalTrialEditComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
     },
     {
     path: 'add-clinical-trial',
-      component: ClinicalTrialAddComponent
+      component: ClinicalTrialAddComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
+
     },
     {
-    path: 'clinicalTrialDetails/:nctNumber/:src',
-      component: ClinicalTrialDetailsComponent
+    path: 'clinical-trial/:trialNumber',
+      component: ClinicalTrialDetailsComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
     },
     {
-    path: 'clinicalTrialEuropeDetails/:nctNumber/:src',
-      component: ClinicalTrialEuropeDetailsComponent
+    path: 'clinicalTrialEuropeDetails/:trialNumber/:src',
+      component: ClinicalTrialEuropeDetailsComponent,
+      canActivate: [ActivateClinicalTrialsComponent]
     }
 ];
 // abcd
@@ -72,7 +81,8 @@ const clinicalTrialsRoutes: Routes = [
     RouterModule.forChild(clinicalTrialsRoutes),
     MatProgressBarModule,
     SubstanceImageModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    MatMenuModule
   ],
   declarations: [
     MiniSearchComponent,
@@ -88,6 +98,9 @@ const clinicalTrialsRoutes: Routes = [
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
     ClinicalTrialAddComponent
+  ],
+  providers: [
+    ActivateClinicalTrialsComponent
   ]
 })
 export class ClinicalTrialsModule {
@@ -97,11 +110,12 @@ export class ClinicalTrialsModule {
     });
   }
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: ClinicalTrialsModule,
       providers: [
-        ClinicalTrialService
+        ClinicalTrialService,
+        ActivateClinicalTrialsComponent
       ]
     };
   }
