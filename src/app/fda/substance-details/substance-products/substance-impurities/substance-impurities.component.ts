@@ -51,7 +51,7 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     'productSubstanceName',
     'sourceType',
     'source',
-    'sourceid',
+    'sourceId',
     'type',
     'specType',
     'parentSubstance',

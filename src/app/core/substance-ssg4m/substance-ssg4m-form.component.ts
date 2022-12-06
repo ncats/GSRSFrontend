@@ -490,9 +490,12 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       }
     }, error => {
       // if it is authentication issue or status is 0, reload the current page
-      if (error.status === 0) {
-        window.location.reload();
-      }
+
+      // These lines did not work. Commenting out right now. Caused forever refresh loop.
+      // if (error.status === 0) {
+      //  window.location.reload();
+      // }
+
       this.microserviceStatusUp = false;
       this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br><br>";
       if (error && error.error && error.error.message) {
