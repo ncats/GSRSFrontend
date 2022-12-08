@@ -1,12 +1,12 @@
 import { Router, Event as NavigationEvent, NavigationStart } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
 import { AuthService } from '../auth.service';
 import { SessionExpirationDialogComponent } from './session-expiration-dialog/session-expiration-dialog.component'
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-session-expiration',

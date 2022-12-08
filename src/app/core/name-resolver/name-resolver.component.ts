@@ -7,12 +7,10 @@ import {forkJoin} from 'rxjs';
 import { ResolverResponse } from '../structure/structure-post-response.model';
 import { SubstanceService } from '../substance/substance.service';
 import { StructureService } from '../structure/structure.service';
-import {SafeUrl} from '@angular/platform-browser';
 import { ConfigService, ExternalSiteWarning } from '@gsrs-core/config';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { MatDialog } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ExternalSiteWarningDialogComponent } from './external-site-warning-dialog/external-site-warning-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-name-resolver',
