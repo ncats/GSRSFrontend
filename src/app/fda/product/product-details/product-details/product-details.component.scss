@@ -13,6 +13,10 @@
   margin-bottom: 20px;
 }
 
+.divflex {
+  display: flex;
+}
+
 .divflexrow {
   display: flex;
   flex-direction: row;
@@ -206,7 +210,7 @@
 }
 
 .fontbold {
-  font-weight: 500;	
+  font-weight: 500;
 }
 
 .colorgray {
@@ -325,6 +329,12 @@ table.blueTable tfoot .links a{
   border-radius: 5px;
 }
 
+.small-icon {
+  width: 15px;
+  height: 15px;
+  padding-left: 5px;
+}
+
 @media(max-width: 700px) {
   .mat-card-title {
     flex-direction: column;
@@ -344,7 +354,7 @@ table.blueTable tfoot .links a{
 
   .row {
     flex-direction: column;
-    
+
     &:not(:last-child) {
       border-bottom: none;
 
