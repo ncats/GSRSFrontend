@@ -94,10 +94,12 @@
             </span>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <!-- Copy Product to New Register -->
-            <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copy:product.id}"
-              matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin" target="_blank">
-              <mat-icon svgIcon="file_copy"></mat-icon>
-            </a>
+            <span *ngIf="product.id > 0">
+              <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copy:product.id}"
+                matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin" target="_blank">
+                <mat-icon svgIcon="file_copy"></mat-icon>
+              </a>
+            </span>
           </div>
 
           <div>
