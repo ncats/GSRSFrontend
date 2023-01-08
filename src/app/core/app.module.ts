@@ -223,10 +223,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     ElementLabelDisplayModule
   ],
   providers: [
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler
-    },
+   
     { provide: WidgetRegistry, useClass: DefaultWidgetRegistry },
     CanActivateAdminPage,
     ConfigService,

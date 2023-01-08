@@ -34,6 +34,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.component';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { StructureEditorModule } from '@gsrs-core/structure-editor';
+import { ImportManagementComponent } from '@gsrs-core/admin/import-management/import-management.component';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 
@@ -62,6 +64,7 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor';
     MomentModule,
     MatPaginatorModule,
     MatIconModule,
+    MatRadioModule,
   StructureEditorModule],
   declarations: [
     CvManagementComponent,
@@ -75,7 +78,8 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor';
     DataManagementComponent,
     MonitorComponent,
     AllFilesComponent,
-    FragmentWizardComponent
+    FragmentWizardComponent,
+    ImportManagementComponent
   ],
   exports: [
     CvManagementComponent,
@@ -89,7 +93,9 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor';
     DataManagementComponent,
     MonitorComponent,
     AllFilesComponent,
-    FragmentWizardComponent
+    FragmentWizardComponent,
+    ImportManagementComponent
+
   ],
   entryComponents: [
     CvTermDialogComponent,

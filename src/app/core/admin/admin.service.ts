@@ -118,4 +118,20 @@ export class AdminService extends BaseHttpService {
         public getDownloadLink(name: string): string {
             return `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/files/${name}`;
         }
+
+        public getAdapters(): Observable< UploadObject > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/adapters`;
+          return this.http.get< any >(`${url}`);
+        }
+
+        public postAdapterFile(file: any, adapter?: string, entityType?: string): Observable< UploadObject > {
+          if (!entityType) {
+            entityType = 'ix.ginas.models.v1.Substance';
+          }
+          if (!adapter) {
+            adapter = 'SDF%20Adapter';
+          }
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import?adapter=${adapter}&entityType=${entityType}`;
+          return this.http.post< any >(url, file);
+        }
 }
