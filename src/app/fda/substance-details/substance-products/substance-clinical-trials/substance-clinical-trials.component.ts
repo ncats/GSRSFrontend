@@ -5,6 +5,7 @@ import { ClinicalTrialService } from '../../../clinical-trials/clinical-trial/cl
 import { SubstanceDetailsBaseTableDisplay } from '../../substance-products/substance-details-base-table-display';
 import { PageEvent } from '@angular/material/paginator';
 import { FacetParam } from '@gsrs-core/facets-manager';
+import { Sort } from '@angular/material/sort';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +14,7 @@ import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { take } from 'rxjs/operators';
-
+import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
 
 @Component({
   selector: 'app-substance-clinical-trials',
@@ -34,15 +35,18 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
   etagAllExport = '';
   loadedComponents: LoadedComponents;
   loadingStatus = '';
+  public sortValues = clinicalTrialSearchSortValues;
+  order = '$root_trialNumber';
+  ascDescDir = 'desc';
 
   @Input() substanceUuid: string;
   @Output() countClinicalTrialOut: EventEmitter<number> = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'edit',
-    'nctNumber',
+    'trialNumber',
     'title',
-    'sponsorName',
+    'sponsor',
     'conditions',
     'outcomemeasures'
   ];
@@ -83,7 +87,7 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
       searchTerm: this.substanceUuid,
       cutoff: null,
       type: "substanceKey",
-      order: '$trialNumber',
+      order: this.order,
       pageSize: this.pageSize,
       facets: this.privateFacetParams,
       skip: skip
@@ -164,6 +168,22 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     if (this.substanceUuid != null) {
       this.exportUrl = this.clinicalTrialService.getClinicalTrialListExportUrl(this.substanceUuid);
     }
+  }
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getSubstanceClinicalTrials();
+    }
+    return;
   }
 
   /*

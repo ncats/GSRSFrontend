@@ -19,6 +19,7 @@ import * as moment from 'moment';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import {sprintf} from "sprintf-js";
 
 @Component({
   selector: 'app-base',
@@ -195,7 +196,6 @@ export class BaseComponent implements OnInit, OnDestroy {
               this.navItems[i].children.splice(j, 1);
           }
         }
-
         }
     }
     if (this.navItems[i].component) {
@@ -354,6 +354,28 @@ export class BaseComponent implements OnInit, OnDestroy {
         observer.complete();
       }
     });
+  }
+
+  transformMailToPath(item: NavItem) {
+    if(item?.kind && item?.mailToPath) {
+      let subject ='';
+      let email ='';
+      if(item.kind==='contact-us') { 
+        email = this.contactEmail;
+      }
+      if(item?.queryParams) {
+        if(item?.queryParams?.subject) {
+          subject = item.queryParams.subject;   
+        }
+      } 
+      const part1 = sprintf(item.mailToPath, email);
+      let part2 ='';
+      if(subject) {
+        part2 = 'subject='+subject;
+      }
+      return part1+'?'+part2;
+    }
+    return '';          
   }
 
   setClassicLinkPath(path: string): void {

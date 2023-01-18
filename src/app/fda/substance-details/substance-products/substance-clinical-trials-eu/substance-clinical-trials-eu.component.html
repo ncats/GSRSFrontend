@@ -6,7 +6,7 @@
   <div class="padtop5px padleft25px font15px colorblue">
     <b>Clinical Trials Europe</b>
     &nbsp;&nbsp;&nbsp;
-  </div>   
+  </div>
   <div>
   <!-- Export Button -->
   <span class="export" *ngIf="isAdmin" >
@@ -23,29 +23,30 @@
     </mat-progress-spinner>
   </div>
 
-  <table mat-table [dataSource]="paged">
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)"
+  matSortActive="trialNumber" matSortDirection="desc" matSortDisableClear>
 
     <ng-container  matColumnDef="trialNumber">
-      <th mat-header-cell *matHeaderCellDef>Eudract Number</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Eudract Number</th>
       <td mat-cell *matCellDef="let clinical">
         <div *ngIf="clinical.trialNumber">
-          <a href="{{clinical.url}}">{{clinical.trialNumber}}</a>          
+          <a href="{{clinical.url}}">{{clinical.trialNumber}}</a>
         </div>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
       <td mat-cell *matCellDef="let clinical"> {{clinical.title}} </td>
     </ng-container>
 
     <ng-container matColumnDef="sponsorName">
-      <th mat-header-cell *matHeaderCellDef> Sponsor Name </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sponsor Name </th>
       <td mat-cell *matCellDef="let clinical"> {{clinical.sponsorName}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="conditions">
-      <th mat-header-cell *matHeaderCellDef>Conditions</th>
+    <ng-container matColumnDef="conditionsEU">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Conditions</th>
       <td mat-cell *matCellDef="let clinical">{{joinMeddraTerms(clinical)}}</td>
     </ng-container>
 

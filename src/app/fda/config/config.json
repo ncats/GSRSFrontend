@@ -1094,6 +1094,11 @@
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
   "navItems": [
     {
+      "display": "Browse Substances",
+      "path": "browse-substance",
+      "order": 10
+    },
+    {
       "component": "applications",
       "display": "Browse Applications",
       "path": "browse-applications",
@@ -1196,11 +1201,22 @@
           "order": 20
         },
         {
+          "component": "",
+          "kind": "contact-us",
           "display": "Email GSRS Support",
-          "path": "",
+          "mailToPath": "mailto:%s",
+          "queryParams": {"subject" : "Support request"},
           "order": 30
         }
       ]
+    },
+    {
+      "component": "",
+      "kind": "contact-us",
+      "display": "Contact Us",
+      "mailToPath": "mailto:%s",
+      "queryParams": {"subject" : "Support request"},
+      "order": 2000
     }
   ],
   "substanceSelectorProperties": [

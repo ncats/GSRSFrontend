@@ -7,19 +7,29 @@
     <mat-card class="bordergray">
       <mat-card-title>
         <div class="divflexrow">
-          <div>
-            Product Details &nbsp;&nbsp;&nbsp;&nbsp;
-            <!-- Edit GSRS record button -->
-            <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
-              matTooltip='Edit GSRS Product Record'>
-              <mat-icon svgIcon="edit"></mat-icon>
-            </a>
-            <span>
-              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
-              </mat-icon>
-            </span>
+          <div class="divflex">
+            <div>
+              Product Details &nbsp;&nbsp;&nbsp;&nbsp;
+              <!-- Edit GSRS record button -->
+              <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                matTooltip='Edit GSRS Product Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+            </div>
+            <div class="margintopneg10px">
+              <!-- Copy Product to New Register -->
+              <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copy:product.id}"
+                matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
+                <mat-icon svgIcon="file_copy"></mat-icon>
+              </a>
+            </div>
+            <div>
+              <span>
+                <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+                </mat-icon>
+              </span>
+            </div>
           </div>
-
           <div class="width60percent textalignright font11px" *ngIf="product.id">
             <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Create Date:</span>
@@ -27,8 +37,9 @@
             <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
           </div>
-        </div>
+        </div> <!-- class=divflexrow -->
       </mat-card-title>
+
       <mat-card-content>
 
         <table class="blueTable">

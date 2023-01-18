@@ -11,6 +11,7 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Product, ValidationMessage } from '../model/product.model';
 import { Subscription } from 'rxjs';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -76,17 +77,24 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.gaService.sendPageView(`Product Edit`);
             this.getProductDetails();
           }
-        } else {
+        } else { //Copy Product to register form
           this.title = 'Register New Product';
-          setTimeout(() => {
+          this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
+          if (this.id) {
+            this.getProductDetails('copy');
             this.gaService.sendPageView(`Product Register`);
-            this.titleService.setTitle(`Register Product`);
-            this.productService.loadProduct();
-            this.product = this.productService.product;
-            this.loadingService.setLoading(false);
-            this.isLoading = false;
-          });
-        }
+          } else { // Register New Product
+            this.title = 'Register New Product';
+            setTimeout(() => {
+              this.gaService.sendPageView(`Product Register`);
+              this.titleService.setTitle(`Register Product`);
+              this.productService.loadProduct();
+              this.product = this.productService.product;
+              this.loadingService.setLoading(false);
+              this.isLoading = false;
+            });
+          } // else
+        } // else
       });
     this.subscriptions.push(routeSubscription);
   }
@@ -105,6 +113,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       const id = this.id.toString();
       this.productService.getProduct(id).subscribe(response => {
         if (response) {
+
+          // before copying existing product, delete the id
+          if (newType && newType === 'copy') {
+            this.scrub(response);
+          }
           this.productService.loadProduct(response);
           this.product = this.productService.product;
           // Check if there is not Product Code Object, create one
@@ -506,5 +519,49 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getViewProductUrl(): string {
     return this.productService.getViewProductUrl(this.id);
+  }
+
+  scrub(oldraw: any): any {
+    const old = oldraw;
+    const idHolders = defiant.json.search(old, '//*[id]');
+    for (let i = 0; i < idHolders.length; i++) {
+      if (idHolders[i].id) {
+        delete idHolders[i].id;
+      }
+    }
+
+    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    for (let i = 0; i < createHolders.length; i++) {
+      delete createHolders[i].creationDate;
+    }
+
+    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    for (let i = 0; i < createdByHolders.length; i++) {
+      delete createdByHolders[i].createdBy;
+    }
+
+    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    for (let i = 0; i < modifyHolders.length; i++) {
+      delete modifyHolders[i].lastModifiedDate;
+    }
+
+    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    for (let i = 0; i < modifiedByHolders.length; i++) {
+      delete modifiedByHolders[i].modifiedBy;
+    }
+
+    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    for (let i = 0; i < intVersionHolders.length; i++) {
+      delete intVersionHolders[i].internalVersion;
+    }
+
+    delete old['creationDate'];
+    delete old['createdBy'];
+    delete old['modifiedBy'];
+    delete old['lastModifiedDate'];
+    delete old['internalVersion'];
+    delete old['$$update'];
+
+    return old;
   }
 }
