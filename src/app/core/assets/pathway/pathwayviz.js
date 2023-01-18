@@ -82,9 +82,9 @@ schemeUtil.rep = function(t, n) {
 }
 schemeUtil.maxLenAndOffset =function (txt, len) {
   if (!txt) return {"text":txt, "offset":0};
-  
+
   if (txt.length < len) return {"text":txt, "offset":((len - txt.length) / 2 - 1)};
-  
+
   return {"text": (txt.substr(0, len - 3) + "...") , "offset": 0 };
 };
 
@@ -123,25 +123,25 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
 schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
   if(!maxSteps)maxSteps = schemeUtil.maxContinuousSteps;
   if(!showReagents)showReagents = schemeUtil.showReagents;
-  
+
   var restartEachProcess=true;
   var showProcessNumber=true;
-  
+
   var nodes = [];
   var links = [];
   var constraints = [];
-  
+
   var canMap = {};
   var ppid = [0];
-  
+
   var firstNodes=[];
-  
+
   for (var i = 0; i < g4.specifiedSubstanceG4m.process.length; i++) {
     var p = g4.specifiedSubstanceG4m.process[i];
     var stg = p.sites[0].stages;
     var pcanMap = {};
 	if(restartEachProcess){
-		canMap={};	
+		canMap={};
 	}
 	var subSteps=0;
 	var addedNodes=[];
@@ -161,9 +161,9 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
       var rms = stage.resultingMaterials;
 	  var prs = stage.processingMaterials;
       var smnodes = [];
-	  
-	 
-	 
+
+
+
       //so we need to model a reaction.
       //first check if the substance is a candidate from other cases
       for (var iii = 0; iii < sms.length; iii++) {
@@ -183,7 +183,7 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
         nn.siblingsRight = sms.length - iii - 1;
         if (newNode) {
           addedNodes.push(nodes.length);
-		  nodes.push(nn);		  
+		  nodes.push(nn);
         }
         smnodes.push(nn);
         if (iii < sms.length - 1) {
@@ -196,27 +196,27 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
           smnodes.push(pn);
         }
       }
-	  
+
 	  var stepText = "Step " + stage.stageNumber;
 	  var bottomText = "";
-	  
-	  
+
+
 	  if(showProcessNumber && g4.specifiedSubstanceG4m.process.length>1){
 		stepText = p.processName.trim() + ": " +stepText;
 	  }
-	  
+
 	  if(showReagents){
 		stepText = prs.filter(f=>f.substanceRole.toLowerCase() !== "solvent")
-		              .map(f=>(f.verbatimName)?(f.verbatimName):f.substanceName.refPname)
+    .map(f=>(f.verbatimName)?(f.verbatimName):f.substanceName.refPname + ' (' + f.substanceRole + ')')
 					  .join("\n");
 		bottomText = prs.filter(f=>f.substanceRole.toLowerCase() === "solvent")
-		              .map(f=>(f.verbatimName)?(f.verbatimName):f.substanceName.refPname)
+    .map(f=>(f.verbatimName)?(f.verbatimName):f.substanceName.refPname + ' (' + f.substanceRole + ')')
 					  .join("\n");
 	  }
-	  
+
 
       var rn = { type: "reaction", leftText: stepText, bottomText: bottomText};
-      
+
       rn.processIndex=i;
       rn.stepIndex=ii;
       rn.id = ppid[0];
@@ -245,9 +245,9 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
         nn.siblingsRight = rms.length - iiii - 1;
         if (newNode) {
           addedNodes.push(nodes.length);
-		  nodes.push(nn);		  
+		  nodes.push(nn);
         }
-		
+
         pcanMap[rmat.substanceName.refuuid] = nn;
         var lin = {};
         lin.source = rn.id;
@@ -279,14 +279,14 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
 		firstNodes.push(addedNodes);
 	}
   }
-  
-  
-  
+
+
+
   //calculate constraints
   var lax=schemeUtil.getGapAxis();
   for(var jj=0;jj<firstNodes.length;jj++){
-	var nlist1=firstNodes[jj];	
-	
+	var nlist1=firstNodes[jj];
+
 	for(var kk=jj+1;kk<firstNodes.length;kk++){
 		var nlist2=firstNodes[kk];
 		for(var ll=0;ll<nlist1.length;ll++){
@@ -296,7 +296,7 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
 			}
 		}
 	}
-  }  
+  }
   var ret=JSON.parse(JSON.stringify({ nodes: nodes, links: links, constraints: constraints }));
   return ret;
 }
@@ -317,9 +317,9 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
   var height = schemeUtil.height;
   var paddingBrack = 6;
   var imageScale=1;
-  
-  
-  
+
+
+
   function toggleImageZoom(img) {
         var scale = 1;
         d3.select(img).each(function (d) {
@@ -382,12 +382,12 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
   var getLeftTextHeight = (n) => {
     return 32*getLeftText(n).split("\n").length;
   };
-  
+
   var getLeftTextSVG = (n) => {
 	var txt= getLeftText(n);
 	if(txt==="")return "";
 	var lines = txt.split("\n");
-    var first = -1.2*lines.length;	
+    var first = -1.2*lines.length;
     return txt.split("\n")
 	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2")+  "em\">" + t + "</tspan>").join("\n");;
   };
@@ -401,15 +401,15 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
   var getBottomTextSVG = (n) => {
 	var txt=getBottomText(n);
 	var off=(getHeight(n)-0)+20;
-	
+
 	if(txt==="")return "";
 	var lines = txt.split("\n");
-    var first = off + "px";	
-	
+    var first = off + "px";
+
     return txt.split("\n")
 	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");;
   };
-  
+
   var getWidth = (n) => {
     if (n.type === "reaction") {
       return "32";
@@ -457,9 +457,9 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       if (n.siblingsRight) {
         pad += (ww * n.siblingsRight) / 2 + n.siblingsRight * pwidth;
       }
-      if (n.type === "plus") pad = 0;   
+      if (n.type === "plus") pad = 0;
     }
-    
+
     return n.x - ww / 2 + pad;
   };
   var getY = (n, dy) => {
@@ -474,12 +474,12 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       if (n.siblingsRight) {
         pad += (hh * n.siblingsRight) / 2 + n.siblingsRight * pwidth;
       }
-      if (n.type === "plus") pad = 0;   
+      if (n.type === "plus") pad = 0;
     }
     return n.y - hh / 2  + pad + dy;
   };
   d3.select(selector).select('svg').remove();
-  
+
   var d3cola = cola.d3adaptor(d3)
                    .avoidOverlaps(true)
 				   .size([width, height]);
@@ -489,7 +489,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 	.attr("viewBox", [0, 0, width, height]);
     //.attr("width", width)
     //.attr("height", height);
-	
+
   var svg= svgParent
 	.append("g")
 	.attr("id", "full-scheme");
@@ -508,7 +508,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 
   wrap.load(nn2, function (error, graph) {
     var nodeRadius = 5;
-    
+
 	graph.nodes.forEach(function (v) {
       v.height = v.width = 2 * nodeRadius;
     });
@@ -517,11 +517,11 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
     if(schemeUtil.layout === "horizontal"){
       layoutVar="x";
     }
-	
-	
-	
-	
-    
+
+
+
+
+
     d3cola
       .nodes(graph.nodes)
       .links(graph.links)
@@ -553,17 +553,17 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       })
       .on("mouseover", function (d, i) {
         d3.select(this).style("cursor", "pointer");
-		
+
       })
       .on("mouseout", function (d, i) {
         d3.select(this).style("cursor", "default");
-		
+
       })
       .call(d3cola.drag);
 
     mnode
       .append("text")
-      
+
       .attr("dy", (d) => 0)
 	  .attr("dx", (d) => (d.type!=="reaction")?(schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.bottomText, maxText).offset):0)
       .attr("font-family", "monospace")
@@ -573,7 +573,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 	  .html(function (d) {
         return getBottomTextSVG(d);
       });
-    
+
     mnode
       .append("text")
       .attr(
@@ -599,8 +599,8 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 	  .attr("font-weight", "bold")
 	  .attr("text-decoration","underline")
 	  .html((d) => getLeftTextSVG(d));
-    
-    
+
+
     mnode
       .append("text")
       .text(function (d) {
@@ -684,7 +684,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 	  .attr("r", nodeRadius);
 
     d3cola
-	 .on('end', function() { 
+	 .on('end', function() {
 		if(iter>0){
 			var bboxn = svg.node();
 			if(bboxn){
@@ -716,16 +716,16 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 					}
 				  });
 				});
-			  
-		}		
+
+		}
 	 })
 	 .on("tick", function () {
       path.each(function (d) {
         if (schemeUtil.isIE()) this.parentNode.insertBefore(this, this);
       });
-	  
-	  
-	  
+
+
+
       // draw directed edges with proper padding from node centers
       path.attr("d", function (d) {
         var deltaX = d.target.x - d.source.x,
@@ -741,15 +741,15 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
           targetY = d.target.y - targetPadding * normY;
         return "M" + sourceX + "," + sourceY + "L" + targetX + "," + targetY;
       });
-	  
-	  
+
+
       mnode.attr(
         "transform",
         (d) => "translate(" + getX(d) + "," + (getY(d,ddy)) + ")"
       );
-	 
-	  
-	  
+
+
+
     });
   });
 }
