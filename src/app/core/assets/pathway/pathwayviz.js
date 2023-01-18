@@ -26,7 +26,8 @@ schemeUtil.urlResolver=function(url, cb){
   xhttp.send();
 };
 schemeUtil.icons={
-	'harrow':"<svg version='1.1' width='213' height='71' viewBox='-0.709 -0.235 213 71' enable-background='new -0.709 -0.235 213 71' xml:space='preserve'><defs></defs><polygon points='0,26.488 0,44.144 167.747,44.144 167.747,70.631 211.89,35.316 167.747,0 167.747,26.488 '/></svg>",
+    'harrow':'<svg version="1.1" width="128" height="64" viewBox="-0.709 -0.235 213 71" xml:space="preserve"><defs></defs><polygon points="0,30 0,40 167.747,40 167.747,60.631 211.89,35.316 167.747,10 167.747,30 "></polygon></svg>',
+//	'harrow':"<svg version='1.1' width='213' height='71' viewBox='-0.709 -0.235 213 71' enable-background='new -0.709 -0.235 213 71' xml:space='preserve'><defs></defs><polygon points='0,26.488 0,44.144 167.747,44.144 167.747,70.631 211.89,35.316 167.747,0 167.747,26.488 '/></svg>",
 	'varrow':"<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='71' height='213' viewBox='-0.709 -0.235 71 213' enable-background='new -0.709 -0.235 71 213' xml:space='preserve'><defs xmlns=''/><polygon xmlns='http://www.w3.org/2000/svg' points='26.488,0 44.144,0 44.144,167.747 70.631,167.747 35.316,211.89 0,167.747 26.488,167.747'/></svg>",
     'plus': "<svg xml:space='preserve' enable-background='new -0.709 -0.235 211 211' viewBox='-0.709 -0.235 211 211' height='50' width='50' version='1.1' xmlns:a='http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'><defs></defs><polygon points='97.26563,210.54688  97.26563,113.08594  0,113.08594  0,97.07031  97.26563,97.07031  97.26563,0  112.89063,0  112.89063,97.07031  210.54688,97.07031  210.54688,113.08594  112.89063,113.08594  112.89063,210.54688  97.26563,210.54688  '/></svg>"
 };
@@ -48,12 +49,19 @@ schemeUtil.svgResolver=function(c, cb){
 
 schemeUtil.showApprovalID=false;
 schemeUtil.showReagents=true;
+schemeUtil.showReagentsRoles=false;
 schemeUtil.approvalCode="UNII";
 schemeUtil.width=1500;
 schemeUtil.height=2000;
 schemeUtil.maxTextLen=19;
+schemeUtil.showProcessNames=true;
+schemeUtil.reactionWidth=96;
+schemeUtil.reactionHeight=64;
+schemeUtil.nodeSpacing=200;
 schemeUtil.BREAK_GAP=350; //TODO MAKE DYNAMIC
+schemeUtil.titleFontSize="1.6em";
 schemeUtil.highlightColor="#429ecc";
+schemeUtil.titleHighlightColor="#ff9900";
 schemeUtil.textWidthPx=10;
 schemeUtil.zoomLevel=1.2;
 schemeUtil.getGapAxis = function(){
@@ -138,6 +146,8 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
 
   for (var i = 0; i < g4.specifiedSubstanceG4m.process.length; i++) {
     var p = g4.specifiedSubstanceG4m.process[i];
+	var processName = p.processName.trim();
+	
     var stg = p.sites[0].stages;
     var pcanMap = {};
 	if(restartEachProcess){
@@ -174,6 +184,10 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
         if (typeof nn === "undefined") {
           newNode = true;
           nn=schemeUtil.makeMaterialNode(smat,ppid);
+		  //first node in new process
+		  if(ii==0 && iii===0){
+			nn.titleText = processName;
+		  }
         }
         if ((smat.substanceRole + "").toUpperCase() === schemeUtil.bracketRoleType) {
           nn.brackets = true;
@@ -207,10 +221,10 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
 
 	  if(showReagents){
 		stepText = prs.filter(f=>f.substanceRole.toLowerCase() !== "solvent")
-    .map(f=>(f.verbatimName)?(f.verbatimName):f.substanceName.refPname + ' (' + f.substanceRole + ')')
+    .map(f=>((f.verbatimName)?(f.verbatimName):f.substanceName.refPname) + ((schemeUtil.showReagentsRoles)?(' (' + f.substanceRole + ')'):''))
 					  .join("\n");
 		bottomText = prs.filter(f=>f.substanceRole.toLowerCase() === "solvent")
-    .map(f=>(f.verbatimName)?(f.verbatimName):f.substanceName.refPname + ' (' + f.substanceRole + ')')
+    .map(f=>((f.verbatimName)?(f.verbatimName):f.substanceName.refPname) + ((schemeUtil.showReagentsRoles)?(' (' + f.substanceRole + ')'):''))
 					  .join("\n");
 	  }
 
@@ -388,12 +402,37 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 	if(txt==="")return "";
 	var lines = txt.split("\n");
     var first = -1.2*lines.length;
-    return txt.split("\n")
-	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2")+  "em\">" + t + "</tspan>").join("\n");;
+	var len = schemeUtil.maxTextLen;
+	
+    return lines
+                   .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
+                   .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2")+  "em\">" + t + "</tspan>").join("\n");;
   };
+  
+    var getBottomTextSVG = (n) => {
+	var txt=getBottomText(n);
+	var off=(getHeight(n)-0)+20;
+
+	if(txt==="")return "";
+	var lines = txt.split("\n");
+    var first = off + "px";
+	var len = schemeUtil.maxTextLen;
+
+    return lines
+	               .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
+	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
+  };
+  
   var getBottomText = (n) => {
     if (n.bottomText) {
       return n.bottomText;
+    } else {
+      return "";
+    }
+  };
+  var getTitleText = (n) => {
+    if (n.titleText) {
+      return n.titleText;
     } else {
       return "";
     }
@@ -405,14 +444,31 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 	if(txt==="")return "";
 	var lines = txt.split("\n");
     var first = off + "px";
+	var len = schemeUtil.maxTextLen;
 
-    return txt.split("\n")
-	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");;
+    return lines
+	               .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
+	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
+  };
+  
+  var getTitleTextSVG = (n) => {
+	var txt=getTitleText(n);
+	var off="-60";
+
+	if(txt==="")return "";
+	var lines = txt.split("\n");
+    var first = off + "px";
+	var len = schemeUtil.maxTextLen;
+	var xoff = "-40px";
+
+    return lines
+	               .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
+	               .map((t,i)=>"<tspan x=\"" + xoff + "\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
   };
 
   var getWidth = (n) => {
     if (n.type === "reaction") {
-      return "32";
+      return schemeUtil.reactionWidth + "";
     } else if (n.imgWidth) {
       return n.imgWidth;
     } else if (n.type === "plus") {
@@ -437,7 +493,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
   };
   var getHeight = (n) => {
     if (n.type === "reaction") {
-      return "32";
+      return schemeUtil.reactionHeight + "";
     } else if (n.imgHeight) {
       return n.imgHeight;
     } else if (n.type === "plus") {
@@ -526,7 +582,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .nodes(graph.nodes)
       .links(graph.links)
 	  .constraints(graph.constraints)
-      .flowLayout(layoutVar, 140)
+      .flowLayout(layoutVar, schemeUtil.nodeSpacing)
 	  .avoidOverlaps(false)
       .symmetricDiffLinkLengths(6)
       .start(10, 20, 20);
@@ -573,6 +629,20 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 	  .html(function (d) {
         return getBottomTextSVG(d);
       });
+	  
+	mnode
+      .append("text")
+      .attr("dy", (d) => 0)
+	  .attr("dx", (d) => 0)
+      .attr("font-family", "monospace")
+	  .attr("font-size", schemeUtil.titleFontSize)
+	  .attr("fill", schemeUtil.titleHighlightColor)
+	  .attr("font-weight", "bold")
+	  .attr("text-decoration","underline")
+	  .html(function (d) {
+        return getTitleTextSVG(d);
+      });
+	  
 
     mnode
       .append("text")
