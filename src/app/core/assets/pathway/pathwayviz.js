@@ -20,7 +20,7 @@ schemeUtil.urlResolver=function(url, cb){
   xhttp.send();
 };
 schemeUtil.icons={
-    'harrow':'<svg version="1.1" width="128" height="64" viewBox="-0.709 -0.235 213 71" xml:space="preserve"><defs></defs><polygon points="0,30 0,40 167.747,40 167.747,60.631 211.89,35.316 167.747,10 167.747,30 "></polygon></svg>',
+    'harrow':'<svg version="1.1" width="96" height="64" viewBox="-0.709 -0.235 213 71" xml:space="preserve"><defs></defs><polygon points="0,33 0,37 167.747,37 167.747,50.631 211.89,35 167.747,20 167.747,33 "></polygon></svg>',
     'varrow':"<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='71' height='213' viewBox='-0.709 -0.235 71 213' enable-background='new -0.709 -0.235 71 213' xml:space='preserve'><defs xmlns=''/><polygon xmlns='http://www.w3.org/2000/svg' points='26.488,0 44.144,0 44.144,167.747 70.631,167.747 35.316,211.89 0,167.747 26.488,167.747'/></svg>",
     'plus': "<svg xml:space='preserve' enable-background='new -0.709 -0.235 211 211' viewBox='-0.709 -0.235 211 211' height='50' width='50' version='1.1' xmlns:a='http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'><defs></defs><polygon points='97.26563,210.54688  97.26563,113.08594  0,113.08594  0,97.07031  97.26563,97.07031  97.26563,0  112.89063,0  112.89063,97.07031  210.54688,97.07031  210.54688,113.08594  112.89063,113.08594  112.89063,210.54688  97.26563,210.54688  '/></svg>"
 };
