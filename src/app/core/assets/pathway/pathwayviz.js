@@ -6,12 +6,6 @@
 */
 var schemeUtil={};
 
-//https://gsrs.preprod.fda.gov/ginas/app/api/v1/substances/render(2e2b4b1b-f598-4364-bf49-55bc942e690f)?format=svg&stereo=false&bondLength=10&maxWidth=250&minWidth=50&maxHeight=250&minHeight=50
-
-schemeUtil.layout="horizontal";
-schemeUtil.maxContinuousSteps=3;
-schemeUtil.debug=true;
-schemeUtil.apiBaseURL="";
 
 schemeUtil.urlResolver=function(url, cb){
   var xhttp = new XMLHttpRequest();
@@ -19,33 +13,38 @@ schemeUtil.urlResolver=function(url, cb){
     if (this.readyState == 4 && this.status == 200) {
       cb(this.responseText);
     }else  if (this.readyState == 4 && this.status > 400) {
-	  cb("ERROR");
-	}
+      cb("ERROR");
+    }
   };
   xhttp.open('GET', url, true);
   xhttp.send();
 };
 schemeUtil.icons={
     'harrow':'<svg version="1.1" width="128" height="64" viewBox="-0.709 -0.235 213 71" xml:space="preserve"><defs></defs><polygon points="0,30 0,40 167.747,40 167.747,60.631 211.89,35.316 167.747,10 167.747,30 "></polygon></svg>',
-//	'harrow':"<svg version='1.1' width='213' height='71' viewBox='-0.709 -0.235 213 71' enable-background='new -0.709 -0.235 213 71' xml:space='preserve'><defs></defs><polygon points='0,26.488 0,44.144 167.747,44.144 167.747,70.631 211.89,35.316 167.747,0 167.747,26.488 '/></svg>",
-	'varrow':"<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='71' height='213' viewBox='-0.709 -0.235 71 213' enable-background='new -0.709 -0.235 71 213' xml:space='preserve'><defs xmlns=''/><polygon xmlns='http://www.w3.org/2000/svg' points='26.488,0 44.144,0 44.144,167.747 70.631,167.747 35.316,211.89 0,167.747 26.488,167.747'/></svg>",
+    'varrow':"<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='71' height='213' viewBox='-0.709 -0.235 71 213' enable-background='new -0.709 -0.235 71 213' xml:space='preserve'><defs xmlns=''/><polygon xmlns='http://www.w3.org/2000/svg' points='26.488,0 44.144,0 44.144,167.747 70.631,167.747 35.316,211.89 0,167.747 26.488,167.747'/></svg>",
     'plus': "<svg xml:space='preserve' enable-background='new -0.709 -0.235 211 211' viewBox='-0.709 -0.235 211 211' height='50' width='50' version='1.1' xmlns:a='http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg'><defs></defs><polygon points='97.26563,210.54688  97.26563,113.08594  0,113.08594  0,97.07031  97.26563,97.07031  97.26563,0  112.89063,0  112.89063,97.07031  210.54688,97.07031  210.54688,113.08594  112.89063,113.08594  112.89063,210.54688  97.26563,210.54688  '/></svg>"
 };
 schemeUtil.svgResolver=function(c, cb){
     //this assumes it starts as an image URL
-	var url=c.href.baseVal;
-	//it's a real url
-	if(url.indexOf('http')==0){
-		schemeUtil.urlResolver(url,function(s){
-			cb(s);
-		});
-	}else{
-		var imgtag= c.getAttribute("imgTag");
-		if(imgtag && schemeUtil.icons[imgtag]){
-			cb(schemeUtil.icons[imgtag]);
-		}
-	}
+    var url=c.href.baseVal;
+    //it's a real url
+    if(url.indexOf('http')==0){
+        schemeUtil.urlResolver(url,function(s){
+            cb(s);
+        });
+    }else{
+        var imgtag= c.getAttribute("imgTag");
+        if(imgtag && schemeUtil.icons[imgtag]){
+            cb(schemeUtil.icons[imgtag]);
+        }
+    }
 };
+
+schemeUtil.layout="horizontal";
+schemeUtil.maxContinuousSteps=3;
+schemeUtil.debug=true;
+schemeUtil.apiBaseURL="";
+
 
 schemeUtil.showApprovalID=false;
 schemeUtil.showReagents=true;
@@ -58,18 +57,26 @@ schemeUtil.showProcessNames=true;
 schemeUtil.reactionWidth=96;
 schemeUtil.reactionHeight=64;
 schemeUtil.nodeSpacing=200;
-schemeUtil.BREAK_GAP=350; //TODO MAKE DYNAMIC
+schemeUtil.BREAK_GAP=250; //TODO MAKE DYNAMIC
+schemeUtil.PLUS_GAP=20; //TODO MAKE DYNAMIC
 schemeUtil.titleFontSize="1.6em";
 schemeUtil.highlightColor="#429ecc";
 schemeUtil.titleHighlightColor="#ff9900";
 schemeUtil.textWidthPx=10;
 schemeUtil.zoomLevel=1.2;
 schemeUtil.getGapAxis = function(){
-	if(schemeUtil.layout === "vertical"){
-		return "x";
-	}else{
-		return "y";
-	}
+    if(schemeUtil.layout === "vertical"){
+        return "x";
+    }else{
+        return "y";
+    }
+};
+schemeUtil.getOtherGapAxis = function(){
+    if(schemeUtil.layout === "vertical"){
+        return "y";
+    }else{
+        return "x";
+    }
 };
 
 
@@ -143,90 +150,117 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
   var ppid = [0];
 
   var firstNodes=[];
-
+  var firstNodeSizes=[];
+  
+  var topMostNodes=[];
+  
+  var lax=schemeUtil.getGapAxis();
+  var oax=schemeUtil.getOtherGapAxis();
+  
   for (var i = 0; i < g4.specifiedSubstanceG4m.process.length; i++) {
     var p = g4.specifiedSubstanceG4m.process[i];
-	var processName = p.processName.trim();
-	
+    var processName = p.processName.trim();
+    
     var stg = p.sites[0].stages;
     var pcanMap = {};
-	if(restartEachProcess){
-		canMap={};
-	}
-	var subSteps=0;
-	var addedNodes=[];
+    if(restartEachProcess){
+        canMap={};
+    }
+    var subSteps=0;
+	var maxReagents=0;
+    var addedNodes=[];
     for (ii = 0; ii < stg.length; ii++) {
-	  if(subSteps>=maxSteps){
-		subSteps=0;
-		pcanMap={};
-		canMap={};
-		if(addedNodes.length>0){
-			firstNodes.push(addedNodes);
-		}
-		addedNodes=[];
-	  }
-	  subSteps++;
+	  maxReagents=Math.max(stg[ii].startingMaterials.length,maxReagents);
+	  maxReagents=Math.max(stg[ii].resultingMaterials.length,maxReagents);
+      if(subSteps>=maxSteps){
+        subSteps=0;
+        pcanMap={};
+        canMap={};
+        if(addedNodes.length>0){
+            firstNodes.push(addedNodes);
+			firstNodeSizes.push(maxReagents);
+        }
+        addedNodes=[];
+		maxReagents=0;
+      }
+      subSteps++;
       var stage = stg[ii];
       var sms = stage.startingMaterials;
       var rms = stage.resultingMaterials;
-	  var prs = stage.processingMaterials;
+      var prs = stage.processingMaterials;
       var smnodes = [];
 
+      var nodesToAdd = [];
 
 
       //so we need to model a reaction.
       //first check if the substance is a candidate from other cases
       for (var iii = 0; iii < sms.length; iii++) {
-        var smat = sms[iii];
+		
+	  
+		var smat = sms[iii];
         var nn = pcanMap[smat.substanceName.refuuid];
         var newNode = false;
         if (typeof nn === "undefined") nn = canMap[smat.substanceName.refuuid];
         if (typeof nn === "undefined") {
           newNode = true;
           nn=schemeUtil.makeMaterialNode(smat,ppid);
-		  //first node in new process
-		  if(ii==0 && iii===0){
-			nn.titleText = processName;
-		  }
+          //first node in new process
+          if(ii==0 && iii===0){
+            nn.titleText = processName;
+          }
         }
         if ((smat.substanceRole + "").toUpperCase() === schemeUtil.bracketRoleType) {
           nn.brackets = true;
         }
         //need to think about this in cases where there's more
-        nn.siblingsLeft = iii;
-        nn.siblingsRight = sms.length - iii - 1;
+        nn.siblingsRight = iii;
+        nn.siblingsLeft = sms.length - iii - 1;
         if (newNode) {
-          addedNodes.push(nodes.length);
-		  nodes.push(nn);
+          addedNodes.push(nn.id);
+          nodesToAdd.push(nn);
         }
+		if(subSteps===1){
+			topMostNodes.push(nn);
+		}
         smnodes.push(nn);
+        if(smnodes.length>1){
+            for(var j=smnodes.length-2;j<smnodes.length-1;j++){
+                var con2={"axis":lax, "right":smnodes[j].id, "left":nn.id, "gap":schemeUtil.PLUS_GAP};
+                constraints.push(con2);
+            }
+        }
         if (iii < sms.length - 1) {
           var pn = { type: "plus" };
-          pn.siblingsLeft = iii;
-          pn.siblingsRight = sms.length - iii - 1;
+          pn.siblingsRight = iii;
+          pn.siblingsLeft = sms.length - iii - 1;
           pn.id = ppid[0];
           ppid[0]++;
-          nodes.push(pn);
+          nodesToAdd.push(pn);
           smnodes.push(pn);
+          var con={"axis":lax, "right":nn.id, "left":pn.id, "gap":schemeUtil.PLUS_GAP};
+          constraints.push(con);
         }
       }
+      nodesToAdd.reverse().map(nn=>nodes.push(nn));
+      
+      
+      var stepText = "Step " + stage.stageNumber;
+      var bottomText = "";
 
-	  var stepText = "Step " + stage.stageNumber;
-	  var bottomText = "";
 
+      if(showProcessNumber && g4.specifiedSubstanceG4m.process.length>1){
+        stepText = p.processName.trim() + ": " +stepText;
+      }
 
-	  if(showProcessNumber && g4.specifiedSubstanceG4m.process.length>1){
-		stepText = p.processName.trim() + ": " +stepText;
-	  }
-
-	  if(showReagents){
-		stepText = prs.filter(f=>f.substanceRole.toLowerCase() !== "solvent")
+      if(showReagents){
+        stepText = prs.filter(f=>f.substanceRole.toLowerCase() !== "solvent")
     .map(f=>((f.verbatimName)?(f.verbatimName):f.substanceName.refPname) + ((schemeUtil.showReagentsRoles)?(' (' + f.substanceRole + ')'):''))
-					  .join("\n");
-		bottomText = prs.filter(f=>f.substanceRole.toLowerCase() === "solvent")
+                      .join("\n");
+        bottomText = prs.filter(f=>f.substanceRole.toLowerCase() === "solvent")
     .map(f=>((f.verbatimName)?(f.verbatimName):f.substanceName.refPname) + ((schemeUtil.showReagentsRoles)?(' (' + f.substanceRole + ')'):''))
-					  .join("\n");
-	  }
+                      .join("\n");
+      }
 
 
       var rn = { type: "reaction", leftText: stepText, bottomText: bottomText};
@@ -255,11 +289,11 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
           nn.brackets = true;
         }
         //need to think about this in cases where there's more
-        nn.siblingsLeft = iiii;
-        nn.siblingsRight = rms.length - iiii - 1;
+        nn.siblingsRight = iiii;
+        nn.siblingsLeft = rms.length - iiii - 1;
         if (newNode) {
           addedNodes.push(nodes.length);
-		  nodes.push(nn);
+          nodes.push(nn);
         }
 
         pcanMap[rmat.substanceName.refuuid] = nn;
@@ -270,8 +304,8 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
         links.push(lin);
         if (iiii < rms.length - 1) {
           var pn = { type: "plus" };
-          pn.siblingsLeft = iiii;
-          pn.siblingsRight = rms.length - iiii - 1;
+          pn.siblingsRight = iiii;
+          pn.siblingsLeft = rms.length - iiii - 1;
           pn.id = ppid[0];
           ppid[0]++;
           nodes.push(pn);
@@ -289,28 +323,40 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
         ks.map((kk) => (canMap[kk] = pcanMap[kk]));
       }
     }
-	if(addedNodes.length>0){
-		firstNodes.push(addedNodes);
-	}
+    if(addedNodes.length>0){
+        firstNodes.push(addedNodes);
+		firstNodeSizes.push(maxReagents);
+    }
   }
 
 
 
   //calculate constraints
-  var lax=schemeUtil.getGapAxis();
+  
   for(var jj=0;jj<firstNodes.length;jj++){
-	var nlist1=firstNodes[jj];
+    var nlist1=firstNodes[jj];
 
-	for(var kk=jj+1;kk<firstNodes.length;kk++){
-		var nlist2=firstNodes[kk];
-		for(var ll=0;ll<nlist1.length;ll++){
-			for(var mm=0;mm<nlist2.length;mm++){
-				var con={"axis":lax, "left":nlist1[ll], "right":nlist2[mm], "gap":schemeUtil.BREAK_GAP};
-				constraints.push(con);
-			}
-		}
-	}
+	var mR1=firstNodeSizes[jj];
+
+
+    for(var kk=jj+1;kk<firstNodes.length;kk++){
+        var nlist2=firstNodes[kk];
+		var mR2=firstNodeSizes[kk];
+		var gapDist = schemeUtil.BREAK_GAP*(1 + 0.5*(mR1-1) + 0.5*(mR2-1));
+        for(var ll=0;ll<nlist1.length;ll++){
+            for(var mm=0;mm<nlist2.length;mm++){
+                var con={"axis":lax, "left":nlist1[ll], "right":nlist2[mm], "gap":gapDist};
+                constraints.push(con);
+            }
+        }
+    }
   }
+  
+  var nodeOff = topMostNodes.map(nn=>{return {"node":nn.id, "offset":0}});
+  
+  var con3={"type":"alignment", "axis":oax, "offsets":nodeOff};
+  constraints.push(con3);
+  
   var ret=JSON.parse(JSON.stringify({ nodes: nodes, links: links, constraints: constraints }));
   return ret;
 }
@@ -319,8 +365,8 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
 schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 
   if((typeof iter) === "undefined"){
-	//do 2 iterations
-	iter=1;
+    //do 2 iterations
+    iter=1;
   }
 
 
@@ -346,7 +392,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
         d3.select(img)
             .transition()
             .attr("width", function (d) {
-				var nwid = scale * (cheight);
+                var nwid = scale * (cheight);
                 return nwid;
             })
             .attr("height", function (d) { return scale * (cheight); });
@@ -398,29 +444,29 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
   };
 
   var getLeftTextSVG = (n) => {
-	var txt= getLeftText(n);
-	if(txt==="")return "";
-	var lines = txt.split("\n");
+    var txt= getLeftText(n);
+    if(txt==="")return "";
+    var lines = txt.split("\n");
     var first = -1.2*lines.length;
-	var len = schemeUtil.maxTextLen;
-	
+    var len = schemeUtil.maxTextLen;
+    
     return lines
                    .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
                    .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2")+  "em\">" + t + "</tspan>").join("\n");;
   };
   
     var getBottomTextSVG = (n) => {
-	var txt=getBottomText(n);
-	var off=(getHeight(n)-0)+20;
+    var txt=getBottomText(n);
+    var off=(getHeight(n)-0)+20;
 
-	if(txt==="")return "";
-	var lines = txt.split("\n");
+    if(txt==="")return "";
+    var lines = txt.split("\n");
     var first = off + "px";
-	var len = schemeUtil.maxTextLen;
+    var len = schemeUtil.maxTextLen;
 
     return lines
-	               .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
-	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
+                   .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
+                   .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
   };
   
   var getBottomText = (n) => {
@@ -438,32 +484,32 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
     }
   };
   var getBottomTextSVG = (n) => {
-	var txt=getBottomText(n);
-	var off=(getHeight(n)-0)+20;
+    var txt=getBottomText(n);
+    var off=(getHeight(n)-0)+20;
 
-	if(txt==="")return "";
-	var lines = txt.split("\n");
+    if(txt==="")return "";
+    var lines = txt.split("\n");
     var first = off + "px";
-	var len = schemeUtil.maxTextLen;
+    var len = schemeUtil.maxTextLen;
 
     return lines
-	               .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
-	               .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
+                   .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
+                   .map((t,i)=>"<tspan x=\"0\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
   };
   
   var getTitleTextSVG = (n) => {
-	var txt=getTitleText(n);
-	var off="-60";
+    var txt=getTitleText(n);
+    var off="-60";
 
-	if(txt==="")return "";
-	var lines = txt.split("\n");
+    if(txt==="")return "";
+    var lines = txt.split("\n");
     var first = off + "px";
-	var len = schemeUtil.maxTextLen;
-	var xoff = "-40px";
+    var len = schemeUtil.maxTextLen;
+    var xoff = "-40px";
 
     return lines
-	               .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
-	               .map((t,i)=>"<tspan x=\"" + xoff + "\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
+                   .map(t=>(t.length>len)?(t.substr(0, len - 3) + "..."):t)
+                   .map((t,i)=>"<tspan x=\"" + xoff + "\" dy=\"" + ((i===0)?(first+""):"1.2em")+  "\">" + t + "</tspan>").join("\n");
   };
 
   var getWidth = (n) => {
@@ -538,22 +584,22 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 
   var d3cola = cola.d3adaptor(d3)
                    .avoidOverlaps(true)
-				   .size([width, height]);
+                   .size([width, height]);
   var svgParent = d3
     .select(selector)
     .append("svg")
-	.attr("viewBox", [0, 0, width, height]);
+    .attr("viewBox", [0, 0, width, height]);
     //.attr("width", width)
     //.attr("height", height);
 
   var svg= svgParent
-	.append("g")
-	.attr("id", "full-scheme");
+    .append("g")
+    .attr("id", "full-scheme");
 
   if(iter===0){
-	svgParent.call(d3.zoom().on("zoom", function () {
-	   svg.attr("transform", d3.event.transform)
-	}));
+    svgParent.call(d3.zoom().on("zoom", function () {
+       svg.attr("transform", d3.event.transform)
+    }));
   }
 
   var wrap = {
@@ -565,7 +611,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
   wrap.load(nn2, function (error, graph) {
     var nodeRadius = 5;
 
-	graph.nodes.forEach(function (v) {
+    graph.nodes.forEach(function (v) {
       v.height = v.width = 2 * nodeRadius;
     });
 
@@ -581,9 +627,9 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
     d3cola
       .nodes(graph.nodes)
       .links(graph.links)
-	  .constraints(graph.constraints)
+      .constraints(graph.constraints)
       .flowLayout(layoutVar, schemeUtil.nodeSpacing)
-	  .avoidOverlaps(false)
+      .avoidOverlaps(false)
       .symmetricDiffLinkLengths(6)
       .start(10, 20, 20);
     var path = svg
@@ -621,54 +667,54 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("text")
 
       .attr("dy", (d) => 0)
-	  .attr("dx", (d) => (d.type!=="reaction")?(schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.bottomText, maxText).offset):0)
+      .attr("dx", (d) => (d.type!=="reaction")?(schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.bottomText, maxText).offset):0)
       .attr("font-family", "monospace")
-	  .attr("fill", schemeUtil.highlightColor)
-	  .attr("font-weight", "bold")
-	  .attr("text-decoration","underline")
-	  .html(function (d) {
+      .attr("fill", schemeUtil.highlightColor)
+      .attr("font-weight", "bold")
+      .attr("text-decoration","underline")
+      .html(function (d) {
         return getBottomTextSVG(d);
       });
-	  
-	mnode
+      
+    mnode
       .append("text")
       .attr("dy", (d) => 0)
-	  .attr("dx", (d) => 0)
+      .attr("dx", (d) => 0)
       .attr("font-family", "monospace")
-	  .attr("font-size", schemeUtil.titleFontSize)
-	  .attr("fill", schemeUtil.titleHighlightColor)
-	  .attr("font-weight", "bold")
-	  .attr("text-decoration","underline")
-	  .html(function (d) {
+      .attr("font-size", schemeUtil.titleFontSize)
+      .attr("fill", schemeUtil.titleHighlightColor)
+      .attr("font-weight", "bold")
+      .attr("text-decoration","underline")
+      .html(function (d) {
         return getTitleTextSVG(d);
       });
-	  
+      
 
     mnode
       .append("text")
       .attr(
         "dx",
         (d) => {
-			if(schemeUtil.layout === "vertical"){
-				return -1 * schemeUtil.textWidthPx * getLeftText(d).length - getWidth(d).replace("px", "");
-			}else{
-				return 0;
-			}
-		}
+            if(schemeUtil.layout === "vertical"){
+                return -1 * schemeUtil.textWidthPx * getLeftText(d).length - getWidth(d).replace("px", "");
+            }else{
+                return 0;
+            }
+        }
       )
       .attr("dy", (d) => {
-			if(schemeUtil.layout === "vertical"){
-				return (getHeight(d).replace("px", "")-0) / 2;
-			}else{
-				return -1* ((getHeight(d).replace("px", "")-getLeftTextHeight(d)));
-			}
-		}
-	  )
+            if(schemeUtil.layout === "vertical"){
+                return (getHeight(d).replace("px", "")-0) / 2;
+            }else{
+                return -1* ((getHeight(d).replace("px", "")-getLeftTextHeight(d)));
+            }
+        }
+      )
       .attr("font-family", "monospace")
-	  .attr("fill", schemeUtil.highlightColor)
-	  .attr("font-weight", "bold")
-	  .attr("text-decoration","underline")
-	  .html((d) => getLeftTextSVG(d));
+      .attr("fill", schemeUtil.highlightColor)
+      .attr("font-weight", "bold")
+      .attr("text-decoration","underline")
+      .html((d) => getLeftTextSVG(d));
 
 
     mnode
@@ -676,7 +722,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .text(function (d) {
         return schemeUtil.maxLenAndOffset(d.name, maxText).text;
       })
-	  .attr("dx", (d) => schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.name, maxText).offset)
+      .attr("dx", (d) => schemeUtil.textWidthPx * schemeUtil.maxLenAndOffset(d.name, maxText).offset)
       .attr("dy", -20)
       .attr("font-family", "monospace");
 
@@ -685,7 +731,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
-	  .style("visibility", (d) => getBracketVisibility(d))
+      .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", -paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", -paddingBrack)
@@ -696,7 +742,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
-	  .style("visibility", (d) => getBracketVisibility(d))
+      .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", -paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", 0)
@@ -706,7 +752,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
-	  .style("visibility", (d) => getBracketVisibility(d))
+      .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", -paddingBrack)
       .attr("y1", (d) => getHeightPx(d) + paddingBrack)
       .attr("x2", 0)
@@ -716,7 +762,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
-	  .style("visibility", (d) => getBracketVisibility(d))
+      .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", (d) => getWidthPx(d) + paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", (d) => getWidthPx(d) + paddingBrack)
@@ -727,7 +773,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
-	  .style("visibility", (d) => getBracketVisibility(d))
+      .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", (d) => getWidthPx(d) + paddingBrack)
       .attr("y1", -paddingBrack)
       .attr("x2", (d) => getWidthPx(d))
@@ -737,7 +783,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .append("line")
       .style("stroke", "black")
       .style("stroke-width", (d) => getBracketWidth(d))
-	  .style("visibility", (d) => getBracketVisibility(d))
+      .style("visibility", (d) => getBracketVisibility(d))
       .attr("x1", (d) => getWidthPx(d) + paddingBrack)
       .attr("y1", (d) => getHeightPx(d) + paddingBrack)
       .attr("x2", (d) => getWidthPx(d))
@@ -751,45 +797,45 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
       .attr("imgTag", (d) => getTag(d))
       .attr("width", (d) => getWidth(d))
       .attr("height", (d) => getHeight(d))
-	  .attr("r", nodeRadius);
+      .attr("r", nodeRadius);
 
     d3cola
-	 .on('end', function() {
-		if(iter>0){
-			var bboxn = svg.node();
-			if(bboxn){
-				var bbox=bboxn.getBBox();
-				schemeUtil.renderScheme(nn2, selector, iter - 1, 0, -bbox.y);
-			}
-		} else{
-				var numIMG=document.querySelectorAll('image.node').length;
-				var tickDownFunction = ()=>{
-					numIMG--;
-					if(numIMG==0){
-					   schemeUtil.onFinishedLayout(svg);
-					}
-				};
-				document.querySelectorAll('image.node').forEach(c=>{
-				  schemeUtil.svgResolver(c, function(foundSvg){
-					if(foundSvg==="ERROR"){
-						tickDownFunction();
-					}else{
-						var svgGot = foundSvg.replaceAll(/[<][?]xml[^>]*>/g,'')
-						var tsvg=document.createElement('g')
-						tsvg.innerHTML=svgGot;
-						var elm=tsvg.firstElementChild;
-						elm.setAttribute('width',c.getAttribute('width'));
-						elm.setAttribute('height',c.getAttribute('height'));
-						c.parentElement.appendChild(elm);
-						c.remove();
-						tickDownFunction();
-					}
-				  });
-				});
+     .on('end', function() {
+        if(iter>0){
+            var bboxn = svg.node();
+            if(bboxn){
+                var bbox=bboxn.getBBox();
+                schemeUtil.renderScheme(nn2, selector, iter - 1, 0, -bbox.y);
+            }
+        } else{
+                var numIMG=document.querySelectorAll('image.node').length;
+                var tickDownFunction = ()=>{
+                    numIMG--;
+                    if(numIMG==0){
+                       schemeUtil.onFinishedLayout(svg);
+                    }
+                };
+                document.querySelectorAll('image.node').forEach(c=>{
+                  schemeUtil.svgResolver(c, function(foundSvg){
+                    if(foundSvg==="ERROR"){
+                        tickDownFunction();
+                    }else{
+                        var svgGot = foundSvg.replaceAll(/[<][?]xml[^>]*>/g,'')
+                        var tsvg=document.createElement('g')
+                        tsvg.innerHTML=svgGot;
+                        var elm=tsvg.firstElementChild;
+                        elm.setAttribute('width',c.getAttribute('width'));
+                        elm.setAttribute('height',c.getAttribute('height'));
+                        c.parentElement.appendChild(elm);
+                        c.remove();
+                        tickDownFunction();
+                    }
+                  });
+                });
 
-		}
-	 })
-	 .on("tick", function () {
+        }
+     })
+     .on("tick", function () {
       path.each(function (d) {
         if (schemeUtil.isIE()) this.parentNode.insertBefore(this, this);
       });
