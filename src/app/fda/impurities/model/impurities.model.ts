@@ -37,12 +37,16 @@ export interface ImpuritiesSubstance {
   _parentSubstanceName?: string;
   _parentSubstanceUuid?: string;
   impuritiesTestList?: Array<ImpuritiesTesting>;
-  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>;
+  residualSolventsTestList?: Array<ResidualSolventsTesting>;  //new 3.1
+  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>; //new 3.1, need to remove this for 3.1
   impuritiesInorganicList?: Array<ImpuritiesInorganic>;
 }
 
 export interface ImpuritiesTesting {
   id?: number;
+  sourceType?: string;    //new 3.1
+  source?: string;        //new 3.1
+  sourceId?: string;      //new 3.1
   test?: string;
   testType?: string;
   testDescription?: number;
@@ -103,6 +107,23 @@ export interface ImpuritiesUnspecified {
   modifyDate?: number;
   internalVersion?: number;
   identityCriteriaList?: Array<IdentityCriteria>;
+}
+
+export interface ResidualSolventsTesting {    //new 3.1
+  id?: number;
+  sourceType?: string;
+  source?: string;
+  sourceId?: string;
+  test?: string;
+  testType?: string;
+  testDescription?: number;
+  comments?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  impuritiesResidualSolventsList2?: Array<ImpuritiesResidualSolvents>;
 }
 
 export interface ImpuritiesResidualSolvents {

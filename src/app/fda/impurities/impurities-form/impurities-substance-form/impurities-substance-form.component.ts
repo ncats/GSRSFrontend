@@ -116,6 +116,13 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     this.impuritiesService.addNewTest(this.impuritiesSubstanceIndex);
   }
 
+  //new 3.1
+  addNewResidualSolventsTest(event: Event) {
+    event.stopPropagation();
+
+    this.impuritiesService.addNewResidualSolventsTest(this.impuritiesSubstanceIndex);
+  }
+
   addNewImpuritiesResidualSolvents(event: Event) {
     event.stopPropagation();
 

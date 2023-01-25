@@ -108,6 +108,8 @@
 
 
     <!-- IMPURITIES RESIDUAL SOLVENT LIST BEGIN -->
+    <!-- ORIGINAL Jan, 2023 -->
+    <!--
     <br>
     <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
       <mat-expansion-panel-header>
@@ -137,8 +139,59 @@
         </app-impurities-residual-solvents-form>
       </div>
     </mat-expansion-panel>
+    -->
     <!-- IMPURITIES RESIDUAL SOLVENT LIST END -->
 
+
+    <!-- IMPURITIES RESIDUAL SOLVENT LIST BEGIN -->
+    <!-- //new 3.1 -->
+    <br>
+    <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <div class="divflex">
+            <div class="margintop5px">
+              <span class="titleblue"><b>Residual Solvents</b></span>&nbsp;
+            </div>
+            <div class="margintop15px custom-badge"
+              matBadge="{{impuritiesSubstance.impuritiesResidualSolventsList.length}}" matBadgeColor="warn"
+              matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top">
+            </div>
+          </div>
+        </mat-panel-title>
+        <!--
+        <mat-panel-description>
+          <button mat-raised-button color="primary" (click)="addNewImpuritiesResidualSolvents($event)"
+            matTooltip="Add New Residual Solvent">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual Solvents
+          </button>
+        </mat-panel-description>
+        -->
+        <mat-panel-description>
+          <button mat-raised-button color="primary" (click)="addNewResidualSolventsTest($event)"
+            matTooltip="Add New Test">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Test
+          </button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="marginbottom10px"
+        *ngFor="let residualSolventsTest of impuritiesSubstance.residualSolventsTestList; let residualTestIndex = index">
+        <app-impurities-residual-solvents-test [residualSolventsTest]="residualSolventsTest" [residualTestIndex]="residualTestIndex"
+          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+        </app-impurities-residual-solvents-test>
+      </div>
+
+      <!--
+      <div class="marginbottom10px"
+        *ngFor="let impuritiesResidualSolvents of impuritiesSubstance.impuritiesResidualSolventsList; let impuritiesResidualIndex = index">
+        <app-impurities-residual-solvents-form [impuritiesResidualSolvents]="impuritiesResidualSolvents"
+          [impuritiesResidualIndex]="impuritiesResidualIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+        </app-impurities-residual-solvents-form>
+      </div>
+      -->
+    </mat-expansion-panel>
+    <!-- IMPURITIES RESIDUAL SOLVENT LIST END -->
 
 
     <!-- IMPURITIES ORGANICE LIST BEGIN -->

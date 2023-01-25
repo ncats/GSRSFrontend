@@ -10,7 +10,8 @@ import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import {
   Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting,
-  ImpuritiesUnspecified, ImpuritiesResidualSolvents, ImpuritiesInorganic, ImpuritiesTotal, ValidationResults, IdentityCriteria
+  ImpuritiesUnspecified, ResidualSolventsTesting, ImpuritiesResidualSolvents, ImpuritiesInorganic,
+  ImpuritiesTotal, ValidationResults, IdentityCriteria
 } from '../model/impurities.model';
 
 @Injectable(
@@ -187,7 +188,8 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewImpuritiesSubstance(): void {
-    const newSubstance: ImpuritiesSubstance = { impuritiesTestList: [], impuritiesResidualSolventsList: [], impuritiesInorganicList: [] };
+    //new 3.1
+    const newSubstance: ImpuritiesSubstance = { impuritiesTestList: [], residualSolventsTestList: [], impuritiesResidualSolventsList: [], impuritiesInorganicList: [] };
     this.impurities.impuritiesSubstanceList.unshift(newSubstance);
   }
 
@@ -213,6 +215,12 @@ export class ImpuritiesService extends BaseHttpService {
     const newIdentityCriteria: IdentityCriteria = {};
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
       .impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.unshift(newIdentityCriteria);
+  }
+
+  //new 3.1
+  addNewResidualSolventsTest(impuritiesSubstanceIndex: number): void {
+    const newTest: ResidualSolventsTesting = { impuritiesResidualSolventsList2: []};
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].residualSolventsTestList.unshift(newTest);
   }
 
   addNewImpuritiesResidualSolvents(impuritiesSubstanceIndex: number): void {
