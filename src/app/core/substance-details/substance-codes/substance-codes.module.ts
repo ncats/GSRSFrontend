@@ -16,6 +16,7 @@ import {MatSortModule} from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
+import { forwardSlash } from './codeSearchPipe';
 
 @NgModule({
   imports: [
@@ -38,7 +39,9 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
     CodeDisplayModule
   ],
   declarations: [
-    SubstanceCodesComponent
-  ]
+    SubstanceCodesComponent,
+    forwardSlash
+  ],
+  providers: [forwardSlash]
 })
 export class SubstanceCodesModule { }
