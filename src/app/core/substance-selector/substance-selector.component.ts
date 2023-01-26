@@ -31,6 +31,7 @@ export class SubstanceSelectorComponent implements OnInit {
   displayName: string;
   overlayContainer: any;
   savedRecord: SubstanceSummary;
+  searchVal: string;
 
   // Change to configuration approach.
   private substanceSelectorProperties: Array<string> = null;
@@ -200,6 +201,7 @@ export class SubstanceSelectorComponent implements OnInit {
   editSelectedSubstance(): void {
     this.previousSubstance = JSON.parse(JSON.stringify(this.selectedSubstance));
     this.selectedSubstance = null;
+    this.searchVal = null;
     this.selectionUpdated.emit(this.selectedSubstance);
   }
 
