@@ -41,7 +41,7 @@ import { RelationshipsDownloadButtonComponent } from '@gsrs-core/substance-form/
     RelationshipsDownloadButtonComponent
   ],
   exports: [
-    RelationshipsDownloadButtonComponent    
+    RelationshipsDownloadButtonComponent
   ]
 })
 export class SubstanceRelationshipsModule { }

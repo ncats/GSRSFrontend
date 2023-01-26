@@ -79,13 +79,11 @@ export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewIn
       if (response) {
         this.etag = response.etag;
         this.totalSubstance = response.total;
-        console.log("awd here3 " + this.etag);    
       }
 
       if (this.etag) {
         const extension = 'relationships.txt';
         const url = this.getApiExportUrl(this.etag, extension, source);
-        console.log("awd url "+ url);
         if (this.isAdmin === true) {
           let type = '';
           if (source != null) {
@@ -101,7 +99,6 @@ export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewIn
           dialogReference.afterClosed().subscribe(response => {
             const name = response.name;
             const id = response.id;
-            console.log("awd id configId? " + id);
             if (name && name !== '') {
               this.loadingService.setLoading(true);
               const fullname = name + '.' + extension;
