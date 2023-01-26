@@ -44,6 +44,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   defaultCodes: string;
   clasicBaseHref: string;
   primaryCode = "Validated (UNII)";
+  approvalCode: string;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   showlinks = false;
@@ -89,7 +90,16 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     if (this.configService.configData.defaultCodeSystem != null
       && this.configService.configData.defaultCodeSystem !== '') {
         this.defaultCodeSystem = this.configService.configData.defaultCodeSystem;
-      }
+      } 
+       if (this.configService.configData.approvalCodeName != null
+        && this.configService.configData.approvalCodeName !== '') {
+          this.approvalCode = this.configService.configData.approvalCodeName;
+          this.substance.codes.forEach(code => {
+            if (code.codeSystem == this.approvalCode ) {
+              this.substance._approvalIDDisplay = code.code;
+            }
+          });
+        }
 
       if (this.configService.configData.primaryCode 
         && this.configService.configData.primaryCode !== '') {
