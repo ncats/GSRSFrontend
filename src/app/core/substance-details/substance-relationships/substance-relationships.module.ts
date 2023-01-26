@@ -15,6 +15,7 @@ import {RouterModule} from '@angular/router';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { RelationshipsDownloadButtonComponent } from '@gsrs-core/substance-form/relationships/relationships-download-button/relationships-download-button.component';
 
 @NgModule({
   imports: [
@@ -35,6 +36,12 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MatSortModule,
     SubstanceImageModule
   ],
-  declarations: [SubstanceRelationshipsComponent]
+  declarations: [
+    SubstanceRelationshipsComponent,
+    RelationshipsDownloadButtonComponent
+  ],
+  exports: [
+    RelationshipsDownloadButtonComponent
+  ]
 })
 export class SubstanceRelationshipsModule { }

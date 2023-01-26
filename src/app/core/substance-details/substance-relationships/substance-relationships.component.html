@@ -3,6 +3,7 @@
   <mat-form-field [floatLabel]="'never'" class="search">
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
+  <app-relationships-download-button style="padding-left: 30px" [substance] = "substance"></app-relationships-download-button>
 </div>
 <div class="responsive">
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
