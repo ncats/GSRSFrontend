@@ -37,6 +37,9 @@ import { ConfigService } from '@gsrs-core/config';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { UtilsService } from '@gsrs-core/utils';
+import { ungzip, deflate, inflate } from 'pako';
+import { Buffer } from 'buffer';
+
 
 @Component({
   selector: 'app-substance-form',
@@ -272,6 +275,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.router.navigate([this.router.url]);
   }
 
+
+
   ngOnInit() {
     this.loadingService.setLoading(true);
     if (this.configService.configData && this.configService.configData.approvalType) {
@@ -365,7 +370,35 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     });
 
+    
+
+}
+
+isBase64(str) {
+  let base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+  let result = decodeURIComponent(str);
+  return base64regex.test(str);
+}
+
+setStructureFromUrl(structure: string, type: string):void {
+  // check if structureUR is encoded molfile or raw smiles string, then import into form
+  if (this.isBase64(structure)) {
+    structure = this.gunzip(structure);
+    structure = decodeURIComponent(structure);
+    this.substanceFormService.importStructure(structure, 'molfile');
+  } else {
+    this.substanceFormService.importStructure(structure, 'smiles');
   }
+
+}
+
+gunzip(t): string{
+  
+   const gezipedData = Buffer.from(t, 'base64')
+const gzipedDataArray = Uint8Array.from(gezipedData);
+const ungzipedData = ungzip(gzipedDataArray);
+return new TextDecoder().decode(ungzipedData);
+}
 
 getDrafts() {
   let keys = Object.keys(localStorage);
@@ -392,6 +425,21 @@ getDrafts() {
 
   ngAfterViewInit(): void {
     this.getDrafts();
+    // set structure based on smiles or molfile
+    const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
+    if (structure) {
+     let decode = decodeURIComponent(structure);
+      setTimeout(() => {
+        this.setStructureFromUrl(decode, 'molfile');
+      });
+    }
+    const json = this.activatedRoute.snapshot.queryParams['jsonStructure'] || null;
+    // TODO add json support
+ //   this.setStructureFromUrl(structure, 'json');
+    if (json) {
+     let decode = decodeURI(json);
+    }
+    
     
 
     const subscription = this.dynamicComponents.changes
