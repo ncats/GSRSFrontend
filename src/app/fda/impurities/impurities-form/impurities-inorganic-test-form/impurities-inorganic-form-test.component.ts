@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Impurities, ImpuritiesResidualSolventsTest, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship, ImpuritiesSubstance } from '../../model/impurities.model';
+import { Impurities, ImpuritiesTesting, ImpuritiesDetails,
+         IdentityCriteria, SubRelationship, ImpuritiesSubstance, ImpuritiesInorganicTest } from '../../model/impurities.model';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { LoadingService } from '@gsrs-core/loading';
@@ -7,14 +8,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-impurities-residual-solvents-test',
-  templateUrl: './impurities-residual-solvents-test.component.html',
-  styleUrls: ['./impurities-residual-solvents-test.component.scss']
+  selector: 'app-impurities-inorganic-form-test',
+  templateUrl: './impurities-inorganic-form-test.component.html',
+  styleUrls: ['./impurities-inorganic-form-test.component.scss']
 })
-export class ImpuritiesResidualSolventsTestComponent implements OnInit {
+export class ImpuritiesInorganicFormTestComponent implements OnInit {
 
-  @Input() impuritiesResidualSolventsTest: ImpuritiesResidualSolventsTest;
-  @Input() residualSolventsTestIndex: number;
+  @Input() impuritiesInorganicTest: ImpuritiesInorganicTest;
+  @Input() inorganicTestIndex: number;
   @Input() impuritiesSubstanceIndex: number;
 
   constructor( private impuritiesService: ImpuritiesService,
@@ -25,41 +26,27 @@ export class ImpuritiesResidualSolventsTestComponent implements OnInit {
   ngOnInit() {
   }
 
-  addNewImpuritiesResidualSolvents(event: Event) {
+  addNewImpuritiesInorganic(event: Event) {
     event.stopPropagation();
 
-    this.impuritiesService.addNewImpuritiesResidualSolvents(this.impuritiesSubstanceIndex, this.residualSolventsTestIndex);
+    this.impuritiesService.addNewImpuritiesInorganic(this.impuritiesSubstanceIndex, this.inorganicTestIndex);
   }
 
-  confirmDeleteImpuritiesResdiualSolventTest() {
+  confirmDeleteInorganicTest() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Residual Solvent Test ' + (this.residualSolventsTestIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delele Inorganic Impurities Test ' + (this.inorganicTestIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteImpuritiesResdiualSolventTest();
+        this.deleteInorganicTest();
       }
     });
   }
 
-  deleteImpuritiesResdiualSolventTest() {
-    this.impuritiesService.deleteImpuritiesResdiualSolventTest(this.impuritiesSubstanceIndex, this.residualSolventsTestIndex);
+  deleteInorganicTest() {
+    this.impuritiesService.deleteImpuritiesInorganicTest(this.impuritiesSubstanceIndex, this.inorganicTestIndex);
   }
-
-  confirmDeleteImpuritiesTest() {
-    /*
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Test ' + (this.impuritiesTestIndex + 1) + '?' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteImpuritiesTest();
-      }
-    }); */
-  }
-
 
   /*
   addNewImpuritiesDetails() {

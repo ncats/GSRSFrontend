@@ -17,6 +17,13 @@ export interface Product {
   strengthCharacteristic?: string;
   countryCode?: string;
   language?: string;
+  provenanceProductId?: string; //new 3.1
+  provenanceDocumentId?: string; //new 3.1
+  deaschedule?: string; //new 3.1
+  startMarketingDate?: string; //new 3.1
+  endMarketingDate?: string; //new 3.1
+  marketingCategoryCode?: string; //new 3.1
+  marketingCategoryName?: string; //new 3.1
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -54,6 +61,8 @@ export interface ProductCode {
   productCode?: string;
   productCodeType?: string;
   countryCode?: string;
+ // provenanceSourceProductId?: string; //new 3.1
+ // provenanceSourceProductNdc?: string; //new 3.1
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -71,6 +80,19 @@ export interface ProductCompany {
   companyRole?: string;
   companyCode?: string;
   companyCodeType?: string;
+  registrantName?: string; //new 3.1
+  registrantDUNS?: string; //new 3.1
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  productCompanyCodeList?: Array<ProductCompanyCode>;
+}
+
+export interface ProductCompanyCode {
+  id?: number;
+  companyCode?: string;
+  companyCodeType?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -85,11 +107,13 @@ export interface ProductComponent {
   charFlavor?: string;
   charShape?: string;
   charNumFragments?: string;
+  dosageFormCode?: string;  //new 3.1
   dosageForm?: string;
   amount?: string;
   unit?: string;
   manufactureCode?: string;
   manufactureCodeType?: string;
+  manufactureItemCodeType?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -131,6 +155,11 @@ export interface ProductIngredient {
   releaseCharacteristic?: string;
   notes?: string;
   ingredientLocation?: string;
+  confidentialityCode?: string;
+  originalNumeratorNumber?: string;
+  originalNumeratorUnit?: string;
+  originalDenominatorNumber?: string;
+  originalDenominatorUnit?: string;
   reviewedBy?: string;
   reviewDate?: number;
   internalVersion?: number;

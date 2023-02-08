@@ -49,13 +49,16 @@
   </div>
 
   <div class="form-row">
+    <mat-form-field class="col-1-4" appearance="fill">
+      <input matInput placeholder="Manufacture Item Code Type" [(ngModel)]="productComponent.manufactureItemCodeType" name="manufactureItemCodeType" />
+    </mat-form-field>
     <app-cv-input class="col-1-4" domain="PROD_CHARACTER_SHAPE" title="Shape Name" name="charShape"
       [model]="productComponent.charShape" (valueChange)="productComponent.charShape = $event">
     </app-cv-input>
-    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FRAGMENTS" title="Scoring" name="charNumFragments"
+    <app-cv-input class="col-half-4" domain="PROD_CHARACTER_FRAGMENTS" title="Scoring" name="charNumFragments"
       [model]="productComponent.charNumFragments" (valueChange)="productComponent.charNumFragments = $event">
     </app-cv-input>
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-half-4">
       <input matInput placeholder="Size" [(ngModel)]="productComponent.charSize" name="charSize" />
     </mat-form-field>
     <mat-form-field class="col-1-4">

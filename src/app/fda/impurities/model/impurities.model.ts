@@ -37,9 +37,10 @@ export interface ImpuritiesSubstance {
   _parentSubstanceName?: string;
   _parentSubstanceUuid?: string;
   impuritiesTestList?: Array<ImpuritiesTesting>;
-  residualSolventsTestList?: Array<ResidualSolventsTesting>;  //new 3.1
-  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>; //new 3.1, need to remove this for 3.1
-  impuritiesInorganicList?: Array<ImpuritiesInorganic>;
+  impuritiesResidualSolventsTestList?: Array<ImpuritiesResidualSolventsTest>;  //new 3.1
+ // impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>; //new 3.1, need to remove this for 3.1
+  impuritiesInorganicTestList?: Array<ImpuritiesInorganicTest>;  //new 3.1
+ // impuritiesInorganicList?: Array<ImpuritiesInorganic>;  //new 3.1, need to remove this for 3.1
 }
 
 export interface ImpuritiesTesting {
@@ -47,6 +48,23 @@ export interface ImpuritiesTesting {
   sourceType?: string;    //new 3.1
   source?: string;        //new 3.1
   sourceId?: string;      //new 3.1
+  system?: string;        //new 3.1
+  mode?: string;          //new 3.1
+  detectionType?: string;  //new 3.1
+  detectionDetails?: string; //new 3.1
+  columnPackingType?: string; //new 3.1
+  columnPackingSize?: string;  //new 3.1
+  columnSize?: string;  //new 3.1
+  injectionVolumeAmount?: string;  //new 3.1
+  diluent?: string;  //new 3.1
+  standardSolution?: string;  //new 3.1
+  sampleSolution?: string;   //new 3.1
+  systemSuitabilitySolution?: string; //new 3.1
+  suitabilityReqResolution?: string;  //new 3.1
+  suitabilityReqRelStandardDeviation?: string;  //new 3.1
+  elutionType?: string;   //new 3.1
+  elutionSolvent?: string;   //new 3.1
+  elutionSolventId?: string;   //new 3.1
   test?: string;
   testType?: string;
   testDescription?: number;
@@ -56,8 +74,20 @@ export interface ImpuritiesTesting {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  impuritiesElutionSolventList?: Array<ImpuritiesElutionSolvent>;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
+}
+
+export interface ImpuritiesElutionSolvent {
+  id?: number;
+  elutionSolvent?: string;
+  elutionSolventCode?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
 }
 
 export interface ImpuritiesDetails {
@@ -109,7 +139,7 @@ export interface ImpuritiesUnspecified {
   identityCriteriaList?: Array<IdentityCriteria>;
 }
 
-export interface ResidualSolventsTesting {    //new 3.1
+export interface ImpuritiesResidualSolventsTest {    //new 3.1
   id?: number;
   sourceType?: string;
   source?: string;
@@ -123,7 +153,7 @@ export interface ResidualSolventsTesting {    //new 3.1
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
-  impuritiesResidualSolventsList2?: Array<ImpuritiesResidualSolvents>;
+  impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>;
 }
 
 export interface ImpuritiesResidualSolvents {
@@ -142,6 +172,23 @@ export interface ImpuritiesResidualSolvents {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+}
+
+export interface ImpuritiesInorganicTest {    //new 3.1
+  id?: number;
+  sourceType?: string;
+  source?: string;
+  sourceId?: string;
+  test?: string;
+  testType?: string;
+  testDescription?: number;
+  comments?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+  impuritiesInorganicList?: Array<ImpuritiesInorganic>;
 }
 
 export interface ImpuritiesInorganic {

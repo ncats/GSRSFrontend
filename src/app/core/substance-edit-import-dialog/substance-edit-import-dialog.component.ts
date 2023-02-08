@@ -16,6 +16,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   pastedJSON: string;
   uploaded = false;
   title = 'Substance Import';
+  entity = 'Substance';
 
   constructor(
     private router: Router,
@@ -27,6 +28,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
     if (this.data) {
       if (this.data.title) {
         this.title = this.data.title;
+        this.entity = this.data.entity;
       }
     }
   }
@@ -43,7 +45,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         const response = reader.result.toString();
         if (this.jsonValid(response)) {
           const read = JSON.parse(response);
-          if (!read['substanceClass']) {
+          if (!read['substanceClass'] && this.entity === 'Substance') {
             this.message = 'Error: Invalid JSON format';
             this.loaded = false;
           } else {

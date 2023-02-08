@@ -29,6 +29,7 @@ import { CanActivateUpdateImpuritiesFormComponent } from './impurities-form/can-
 import { CanDeactivateImpuritiesFormComponent } from './impurities-form/can-deactivate-impurities-form.component';
 import { ActivateImpuritiesComponent } from './activate-impurities.component';
 import { ImpuritiesResidualSolventsTestComponent } from './impurities-form/impurities-residual-solvents-test-form/impurities-residual-solvents-test.component';
+import { ImpuritiesInorganicFormTestComponent } from './impurities-form/impurities-inorganic-test-form/impurities-inorganic-form-test.component';
 
 const impurityRoutes: Routes = [
   {
@@ -61,7 +62,8 @@ const impurityRoutes: Routes = [
     ImpuritiesSubstanceFormComponent,
     ImpuritiesResidualSolventsFormComponent,
     ImpuritiesInorganicFormComponent,
-    ImpuritiesResidualSolventsTestComponent
+    ImpuritiesResidualSolventsTestComponent,
+    ImpuritiesInorganicFormTestComponent
   ],
   imports: [
     RouterModule.forChild(impurityRoutes),

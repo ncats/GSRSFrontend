@@ -496,6 +496,26 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.deleteProductCompany(prodCompanyIndex);
   }
 
+  addNewProductCompanyCode(productCompanyIndex: number) {
+    this.productService.addNewProductCompanyCode(productCompanyIndex);
+  }
+
+  confirmDeleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company Code ' + (prodCompanyCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
+  }
+
   addNewProductComponent() {
     this.productService.addNewProductComponent();
   }

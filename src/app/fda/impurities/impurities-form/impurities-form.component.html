@@ -2,7 +2,15 @@
   <div class="top-fixed">
     <div class="actions-container">
 
-      <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+      <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
+      <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
+        download="{{jsonFileName}}.json">
+        <span>Export JSON</span>
+      </a>&nbsp;&nbsp;&nbsp;
+      <!-- Do not show 'Import JSON' button when in Update Impurities page -->
+      <span *ngIf="impurities && !impurities.id">
+        <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+      </span>
       <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
         *ngIf="validationMessages && validationMessages.length > 0">
         {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -71,7 +79,8 @@
         <div class="dismiss-container">
           <span class="middle-fill"></span>
           <button mat-flat-button color="primary" (click)="submit()"
-            [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
+            [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
+            validationMessages.length > 0?'Dismiss All and ':''}}
             Submit</button>
         </div>
       </div>
@@ -137,7 +146,8 @@
               <!-- Second Row -->
               <div class="form-row">
                 <mat-form-field class="col-6-2">
-                  <input matInput placeholder="Submitter Name" [(ngModel)]="impurities.submitterName" name="submitterName" />
+                  <input matInput placeholder="Submitter Name" [(ngModel)]="impurities.submitterName"
+                    name="submitterName" />
                 </mat-form-field>
 
                 <mat-form-field class="col-6-2">
@@ -154,7 +164,9 @@
                   <input matInput placeholder="Date Type Date" [(ngModel)]="impurities.dateTypeDate"
                     name="dateTypeDate" />
                   -->
-                  <input matInput placeholder="Date Type Date" name="dateTypeDate" (ngModelChange)="updateDateTypeDate($event)" [ngModel]="impurities.dateTypeDate |date:'yyyy-MM-dd'" #dateT="ngModel" type="date"/>
+                  <input matInput placeholder="Date Type Date" name="dateTypeDate"
+                    (ngModelChange)="updateDateTypeDate($event)" [ngModel]="impurities.dateTypeDate |date:'yyyy-MM-dd'"
+                    #dateT="ngModel" type="date" />
                 </mat-form-field>
 
               </div>

@@ -1,11 +1,11 @@
 <br>
 <div class="divflex height30px">
   <div class="tabStyle">
-    <div class="tabStyleHeader">Residual Solvents Test &nbsp;{{(residualSolventsTestIndex+1)}}</div>
+    <div class="tabStyleHeader">Inorganic Impurities Test &nbsp;{{(inorganicTestIndex+1)}}</div>
   </div>
   <div class="padleft185px margintopneg10px">
-    <button class="marginleft20px" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesResdiualSolventTest()"
-      matTooltip="Delete Residual Solvents Test {{residualSolventsTestIndex + 1}}">
+    <button class="marginleft20px" mat-icon-button color="primary" (click)="confirmDeleteInorganicTest()"
+      matTooltip="Delete Inorganic Impurities Test {{inorganicTestIndex + 1}}">
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
@@ -16,25 +16,25 @@
 
     <div class="form-row">
       <app-cv-input class="col-2-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
-        [model]="impuritiesResidualSolventsTest.sourceType" (valueChange)="impuritiesResidualSolventsTest.sourceType = $event">
+        [model]="impuritiesInorganicTest.sourceType" (valueChange)="impuritiesInorganicTest.sourceType = $event">
       </app-cv-input>
 
       <app-cv-input class="col-2-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
-        [model]="impuritiesResidualSolventsTest.source" (valueChange)="impuritiesResidualSolventsTest.source = $event">
+        [model]="impuritiesInorganicTest.source" (valueChange)="impuritiesInorganicTest.source = $event">
       </app-cv-input>
 
       <mat-form-field class="col-2-1">
-        <input matInput placeholder="Source ID" [(ngModel)]="impuritiesResidualSolventsTest.sourceId" name="sourceId" />
+        <input matInput placeholder="Source ID" [(ngModel)]="impuritiesInorganicTest.sourceId" name="sourceId" />
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field class="col-2-1">
-        <input matInput placeholder="Test" [(ngModel)]="impuritiesResidualSolventsTest.test" name="test" />
+        <input matInput placeholder="Test" [(ngModel)]="impuritiesInorganicTest.test" name="test" />
       </mat-form-field>
 
       <app-cv-input class="col-2-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
-        [model]="impuritiesResidualSolventsTest.testType" (valueChange)="impuritiesResidualSolventsTest.testType = $event">
+        [model]="impuritiesInorganicTest.testType" (valueChange)="impuritiesInorganicTest.testType = $event">
       </app-cv-input>
     </div>
 
@@ -46,7 +46,7 @@
       -->
     <div class="form-row">
       <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesResidualSolventsTest.testDescription"
+        <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesInorganicTest.testDescription"
           name="testDescription"></textarea>
       </mat-form-field>
       <!--
@@ -57,7 +57,7 @@
           -->
 
       <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesResidualSolventsTest.comments"
+        <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesInorganicTest.comments"
           name="comments"></textarea>
       </mat-form-field>
       <!--
@@ -67,28 +67,28 @@
         -->
     </div>
 
-    <!-- IMPURITIES RESIDUAL SOLVENTS LIST BEGIN -->
+    <!-- IMPURITIES INORGANIC LIST BEGIN -->
     <div class="divflex margintop10px">
       <div class="titleblue">
-        <span matBadge="{{impuritiesResidualSolventsTest.impuritiesResidualSolventsList.length}}" matBadgeColor="accent"
+        <span matBadge="{{impuritiesInorganicTest.impuritiesInorganicList.length}}" matBadgeColor="accent"
           matBadgeSize="medium" matBadgeOverlap="false">
-          <span class="titleblue"><b>Residual Solvents</b></span>
+          <span class="titleblue"><b>Inorganic Impurities</b></span>
         </span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button mat-raised-button color="primary" (click)="addNewImpuritiesResidualSolvents($event)"
-          matTooltip="Add New Residual Solvents">
-          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Residual Solvents
+        <button mat-raised-button color="primary" (click)="addNewImpuritiesInorganic($event)"
+          matTooltip="Add New Inorganic Impurities">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Inorganic Impurities
         </button>
       </div>
     </div>
 
     <div class="marginbottom10px"
-      *ngFor="let impuritiesResidualSolvents of impuritiesResidualSolventsTest.impuritiesResidualSolventsList; let impuritiesResidualIndex = index">
-      <app-impurities-residual-solvents-form [impuritiesResidualSolvents]="impuritiesResidualSolvents"
-        [impuritiesResidualIndex]="impuritiesResidualIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-        [residualSolventsTestIndex]="residualSolventsTestIndex">
-      </app-impurities-residual-solvents-form>
-    </div>
+    *ngFor="let impuritiesInorganic of impuritiesInorganicTest.impuritiesInorganicList; let impuritiesInorganicIndex = index">
+    <app-impurities-inorganic-form [impuritiesInorganic]="impuritiesInorganic"
+      [impuritiesInorganicIndex]="impuritiesInorganicIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
+      [inorganicTestIndex]="inorganicTestIndex">
+    </app-impurities-inorganic-form>
+  </div>
 
     <!--
     <div class="marginbottom10px"
