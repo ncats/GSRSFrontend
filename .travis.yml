@@ -33,7 +33,7 @@ before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
   - export TRAVIS_TAG=${TRAVIS_TAG:-$("deployable-release")-$(date +'%Y%m%d')-$(git log --format=%h -1)}
-  - git tag $TRAVIS_TAG
+  - git tag -a "compiled_release" -m "compiled release"
 deploy:
   provider: releases
   api_key: ${GIT_ACCESS_TOKEN}
