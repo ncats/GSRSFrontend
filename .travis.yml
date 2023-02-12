@@ -31,12 +31,19 @@ after_success:
   - cd ../
   - ls
 before_deploy:
-      # Set up git user name and tag this commit
-      - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-      - git tag $TRAVIS_TAG
-      - travis setup releases
+  # Set up git user name and tag this commit
+  - echo "before deploy"
+  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - git tag $TRAVIS_TAG
+  - travis setup releases
 deploy:
   provider: releases
   api_key: ${GIT_ACCESS_TOKEN}
   file: "test.zip"
   skip_cleanup: true
+  on:
+  repo: ncats/GSRSFrontend
+  branches:    # ← new!
+    only:      # ← new!
+      - development_3.0
+      - zip_test # ← new!
