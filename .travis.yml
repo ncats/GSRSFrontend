@@ -34,7 +34,6 @@ before_deploy:
   - echo "before deploy"
   - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
   - git tag $TRAVIS_TAG
-  - travis setup releases
 deploy:
   provider: releases
   api_key: ${GIT_ACCESS_TOKEN}
