@@ -32,7 +32,7 @@ after_success:
 before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
-  - export TRAVIS_TAG=${TRAVIS_TAG:"compiled_release-$(date +'%Y%m%d%H%M%S')}
+  - export TRAVIS_TAG=${TRAVIS_TAG:"compiled_release"-$(date +'%Y%m%d%H%M%S')}
   - git tag $TRAVIS_TAG
 deploy:
   provider: releases
