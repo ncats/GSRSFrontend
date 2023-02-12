@@ -42,8 +42,4 @@ deploy:
   file: "test.zip"
   skip_cleanup: true
   on:
-  repo: ncats/GSRSFrontend
-  branches:    # ← new!
-    only:      # ← new!
-      - development_3.0
-      - zip_test # ← new!
+    all_branches: true
