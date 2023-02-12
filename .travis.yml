@@ -25,19 +25,19 @@ script:
   - npm run build:fda:prod
 after_success:
   - ls
-  - zip -r test.zip dist
+  - zip -r deployable_binaries.zip dist/browser
   - ls
-  - cp test.zip ../
+  - cp deployable_binaries.zip ../
   - ls
 before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
-  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - export TRAVIS_TAG=${TRAVIS_TAG:"compiled_release-$(date +'%Y%m%d%H%M%S')}
   - git tag $TRAVIS_TAG
 deploy:
   provider: releases
   api_key: ${GIT_ACCESS_TOKEN}
-  file: "../test.zip"
+  file: "../deployable_binaries.zip"
   skip_cleanup: true
   on:
     all_branches: true
