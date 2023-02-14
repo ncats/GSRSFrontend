@@ -1,24 +1,35 @@
-<div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true'}">
-  <div class="actions-container">
+<div class="main-container">
+  <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', zindex2000 : saveDelayedMessage}">
+    <div class="actions-container">
 
-    <!--
-    <button mat-stroked-button color="primary" class="borderblue" (click)="showJSON()">Show Data Structure</button>
-    &nbsp;&nbsp;&nbsp;
-    -->
-    <!-- Drop down menu with sub menu -->
-    <button mat-stroked-button color="primary" class="borderblue" [matMenuTriggerFor]="menu"><span
-        class="colorbluefda">Import and Export</span>
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu" x-position="before" class="custom-menu">
-      <a mat-menu-item [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
-        <span>Save Local Copy</span>
-      </a>
-      <button mat-menu-item (click)="importDialog()">Import Local Copy</button>
-      <button mat-menu-item (click)="showJSON()">Show Data Structure</button>
-    </mat-menu>
+      <!-- SAVING DELAY: Display Cancel button if it is taking too long to save -->
+      <div class="divflex padtop15px colorred padleft25px fontsize16px padall25px marginright75px bkcoloryellow"
+        *ngIf="saveDelayedMessage">
+        <div [innerHTML]="saveDelayedMessage">
+        </div>
 
-    <!--
+        <button mat-flat-button *ngIf="isCancelBtnClicked === false" color="primary" class="validate-button"
+          (click)="cancelSubmit()" [disabled]="showFormReadOnly === 'true'">Cancel
+        </button>
+        <button mat-flat-button *ngIf="isCancelBtnClicked === true && isSavedSuccessful === true" color="primary"
+          class="validate-button" (click)="refreshPage()" [disabled]="showFormReadOnly === 'true'">Refresh
+        </button>
+      </div> <!-- SAVING DELAY -->
+
+      <!-- Drop down menu with sub menu -->
+      <button mat-stroked-button color="primary" class="borderblue" [matMenuTriggerFor]="menu"><span
+          class="colorbluefda">Import and Export</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" x-position="before" class="custom-menu">
+        <a mat-menu-item [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+          <span>Save Local Copy</span>
+        </a>
+        <button mat-menu-item (click)="importDialog()">Import Local Copy</button>
+        <button mat-menu-item (click)="showJSON()">Show Data Structure</button>
+      </mat-menu>
+
+      <!--
     <button mat-stroked-button color="primary" class="borderblue" (click)="showJSON()">Show JSON</button>
 
     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -33,89 +44,94 @@
       JSON</button>
     -->
 
-    <button mat-stroked-button color="primary" class="borderblue hide-show-messages" (click)="toggleValidation()"
-      [disabled]="isLoading" *ngIf="(validationMessages && validationMessages.length > 0)">
-      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
-      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
-    </button>
+      <button mat-stroked-button color="primary" class="borderblue hide-show-messages" (click)="toggleValidation()"
+        [disabled]="isLoading" *ngIf="(validationMessages && validationMessages.length > 0)">
+        {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+      </button>
 
-    <button mat-flat-button color="primary" class="validate-button" (click)="validate()"
-      [disabled]="showFormReadOnly === 'true'">Save</button>
-    <!--
+      <button mat-flat-button color="primary" class="validate-button" (click)="submit()"
+        [disabled]="showFormReadOnly === 'true'">Save</button>
+
+      <!--
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
       *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
       (click)="validate('approval')">Approve
     </button>
     -->
-  </div>
-
-  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
-    <div class="submission-message" *ngIf="submissionMessage">
-      {{submissionMessage}}
     </div>
-    <div *ngIf="validationMessages">
-      <span *ngIf=" validationMessages.length > 0">
-        <div class="submission-message" *ngIf='!serverError && !approving'>
-          Please correct or dismiss the following errors and submit again:
-        </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
-          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
-            {{message.messageType}}</div>
-          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
-              <a [href]="fixLink(link.href)" class="internal-link" target="_blank">{{link.text}}</a></span>
-          </div>
-          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-            (click)="dismissValidationMessage(i)">
-            <mat-icon svgIcon="cancel"></mat-icon>
-          </button>
-        </div>
-      </span>
-      <div class="dismiss-container">
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
-          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
-          Submit</button>
-        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false">
-          Cancel</button>
-        <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
-          [disabled]="isLoading || !canApprove"> Confirm Approval</button>
+
+    <!-- Display Validation Message -->
+    <div
+      [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+      <div class="submission-message" *ngIf="submissionMessage">
+        {{submissionMessage}}
       </div>
-    </div>
+      <div *ngIf="validationMessages">
+        <span *ngIf=" validationMessages.length > 0">
+          <div class="submission-message" *ngIf='!serverError && !approving'>
+            Please correct or dismiss the following errors and submit again:
+          </div>
+          <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+            <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+              {{message.messageType}}</div>
+            <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
+                <a [href]="fixLink(link.href)" class="internal-link" target="_blank">{{link.text}}</a></span>
+            </div>
+            <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+              (click)="dismissValidationMessage(i)">
+              <mat-icon svgIcon="cancel"></mat-icon>
+            </button>
+          </div>
+        </span>
+        <div class="dismiss-container">
+          <span class="middle-fill"></span>
+          <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
+            [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
+            validationMessages.length
+            > 0?'Dismiss All and ':''}}
+            Submit</button>
+          <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false">
+            Cancel</button>
+          <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
+            [disabled]="isLoading || !canApprove"> Confirm Approval</button>
+        </div>
+      </div>
+    </div> <!-- Validation Message -->
   </div>
-</div>
 
-<div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}">
-  <!--
+  <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}">
+    <!--
   <div class="form-header"
     [ngClass]="{'form-header-no-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'false'), 'form-header-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'true')}">
     <div *ngIf="showRegisterEditTitle === 'true'">
     -->
-  <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
-    <!-- Only show the title when passed parameter header=true in the Url -->
-    <div *ngIf="showHeaderBar === 'true'">
-      <span class="colorbluefda fontbold padleft25px">{{(id && !imported) ? 'Editing ' : 'Registering New '}} -
-        Specified Substance Group 4 Manufacturing
-      </span>
-    </div>
+    <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
+      <!-- Only show the title when passed parameter header=true in the Url -->
+      <div *ngIf="showHeaderBar === 'true'">
+        <span class="colorbluefda fontbold padleft25px">{{(id && !imported) ? 'Editing ' : 'Registering New '}} -
+          Specified Substance Group 4 Manufacturing
+        </span>
+      </div>
 
-    <!-- If Error Message exists, display here -->
-    <div *ngIf="errorMessage"
-      class="bordergray colorred margintop10px padleft25px fontsize16px padall25px bkcoloryellow">
-      <div [innerHTML]="errorMessage"></div>
-    </div>
+      <!-- If Error Message exists, display here -->
+      <div class="ontopmessage" *ngIf="errorMessage"
+        class="bordergray colorred margintop10px padleft25px fontsize16px padall25px bkcoloryellow">
+        <div [innerHTML]="errorMessage"></div>
+      </div>
 
-    <div class="scrollable-container">
-      <div class="cards-container maximize-width-card">
-        <mat-accordion multi="true">
-          <mat-expansion-panel togglePosition="before" #expansionPanel
-            [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
-            *ngFor="let section of formSections; index as index; last as isLast" [id]="section.dynamicComponentName"
-            [ngClass]="{'hidden': section.isHidden}">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <span class="fontsize20px colorbluefda fontbold">{{section.menuLabel}}</span>
-                <div class="middle-fill"></div>
-                <!--
+      <div class="scrollable-container">
+        <div class="cards-container maximize-width-card">
+          <mat-accordion multi="true">
+            <mat-expansion-panel togglePosition="before" #expansionPanel
+              [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
+              *ngFor="let section of formSections; index as index; last as isLast" [id]="section.dynamicComponentName"
+              [ngClass]="{'hidden': section.isHidden}">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="fontsize20px colorbluefda fontbold">{{section.menuLabel}}</span>
+                  <div class="middle-fill"></div>
+                  <!--
               <div *ngIf="section.canAddItem">
                 <button mat-flat-button color="primary" id="Add new {{section.menuLabel}}"
                   (click)="section.addItem(); $event.stopPropagation()" matTooltip="Add new {{section.menuLabel}}">
@@ -124,11 +140,12 @@
                 </button>
               </div>
               -->
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div #dynamicComponent></div>
-          </mat-expansion-panel>
-        </mat-accordion>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div #dynamicComponent></div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
       </div>
     </div>
   </div>
