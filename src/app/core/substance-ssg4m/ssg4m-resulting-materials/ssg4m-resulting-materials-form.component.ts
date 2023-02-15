@@ -163,7 +163,7 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
 
   copyResultingToStarting() {
     this.substanceFormSsg4mStagesService.setSourceStageToCopy(this.processIndex, this.siteIndex, this.stageIndex);
-    this.substanceFormSsg4mStagesService.setSourceResultingToCopy();
+    this.substanceFormSsg4mStagesService.setSourceResultingToCopy(this.resultingMaterialIndex);
     this.substanceFormSsg4mStagesService.copyResultingToStarting(this.processIndex, this.siteIndex, this.stageIndex + 1);
   }
   /*
