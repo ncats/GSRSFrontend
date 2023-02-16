@@ -3,3 +3,27 @@
 .wrap{
   flex-wrap: wrap;
 }
+
+.mat-mini-fab {
+  float: right;
+  background-color: var(--mat-icon-button-bg-color);
+  color: var(--label-color);
+  width: 35px;
+  height: 35px;
+
+  .icon {
+    margin-top: 5px;
+  }
+
+  &:not(:first-child) {
+      margin-top: 3px;
+  }
+
+  ::ng-deep .mat-button-wrapper {
+      padding: 0;
+  }
+}
+
+.close-container {
+  width:100%;
+}

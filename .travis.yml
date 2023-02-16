@@ -24,23 +24,6 @@ install:
 script:
   - npm run build:fda:prod
 after_success:
-  - ls
-  - zip -r deployable_binaries.zip dist/browser
-  - ls
-  - cp deployable_binaries.zip ../
-  - ls
-before_deploy:
-  # Set up git user name and tag this commit
-  - echo "before deploy"
-  - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
-  - export TRAVIS_TAG="buildRelease"
-  - git tag $TRAVIS_TAG
-  - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
+  - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
 
-deploy:
-  provider: releases
-  api_key: ${GIT_ACCESS_TOKEN}
-  file: "../deployable_binaries.zip"
-  skip_cleanup: true
-  on:
-    all_branches: true
+  
