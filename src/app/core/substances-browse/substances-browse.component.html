@@ -328,7 +328,7 @@
           </button>
           <!-- <input type="submit"> -->
         </div>
-        <span class = "middle-fill"></span>
+        <span class = "middle-fill"></span><button (click) = "testing()">testing</button>
         <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
           [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
         </mat-paginator>

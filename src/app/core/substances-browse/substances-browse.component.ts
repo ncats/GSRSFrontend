@@ -50,6 +50,7 @@ import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { I } from '@angular/cdk/keycodes';
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 
 @Component({
   selector: 'app-substances-browse',
@@ -115,6 +116,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private isComponentInit = false;
   sequenceID?: string;
   searchHashFromAdvanced: string;
+  bulkSearchFacet: Facet;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -158,6 +160,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private title: Title,
     private cvService: ControlledVocabularyService,
     private wildCardService: WildcardService,
+    private bulkSearchService: BulkSearchService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
   ) {
@@ -183,12 +186,25 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
   }
 
+  testing() {
+    this.bulkSearchService.saveBulkSearch('test','admin').subscribe(response=>{
+      console.log(response)},error => {console.log(error);});
+  }
+
+  fetchBulkLists() {
+    this.bulkSearchService.getBulkSearchLists().subscribe(result => {
+      console.log(result);
+    });
+
+  }
+
   ngOnInit() {
     this.gaService.sendPageView('Browse Substances');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
 
     });
+    
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
@@ -388,6 +404,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
+    console.log('facet param update');
     this.pageIndex = 0;
     if (facetsUpdateEvent.deprecated && facetsUpdateEvent.deprecated === true) {
       this.showDeprecated = true;
@@ -436,6 +453,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   // for facets
   facetsLoaded(numFacetsLoaded: number) {
+    console.log('facetsLoaded');
+    console.log(this.rawFacets);
     if (numFacetsLoaded > 0) {
       this.processResponsiveness();
     } else {
