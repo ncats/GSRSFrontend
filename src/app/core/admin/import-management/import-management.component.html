@@ -144,9 +144,7 @@
             <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putTest()">Submit Settings</button>
         </div>
     </div>
-
-
-
+    </div>
     <div *ngIf = "step && step === 4">
                 <div><h3>Step 3: Import</h3></div>
 
@@ -154,14 +152,16 @@
                 
 
          <div class = "loading-window">
-                        
+                        <i>loading progress somewhere</i>
          </div>  
          
-         <div class = "preview-window">
-                        <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "stagingArea()">Staging WIP</button>
+                <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "stagingArea()">Staging WIP</button>
 
-         </div>
             </div>
+
+
+
+    
 
 
 

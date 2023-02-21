@@ -270,7 +270,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.totalSubstances = response.total;
       response.content.forEach(record => {
         this.adminService.GetStagedRecord(record.recordId).subscribe( response => {
-          this.substances.push(response);
+          this.records.push(response);
         })
       })
 
