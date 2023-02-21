@@ -62,7 +62,7 @@ export class AdminComponent implements OnInit {
       case 5:
         route = 'files';
       break;
-      case 5:
+      case 6:
         route = 'import';
       break;
     }

@@ -12,7 +12,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTreeModule} from '@angular/material/tree';
@@ -36,6 +36,12 @@ import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragme
 import { StructureEditorModule } from '@gsrs-core/structure-editor';
 import { ImportManagementComponent } from '@gsrs-core/admin/import-management/import-management.component';
 import { MatRadioModule } from '@angular/material/radio';
+import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-browse.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { ImportSummaryComponent } from '@gsrs-core/admin/import-browse/import-summary/import-summary.component';
+import { RouterModule } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -57,6 +63,8 @@ import { MatRadioModule } from '@angular/material/radio';
   MatButtonModule,
   MatCheckboxModule,
   MatSelectModule,
+  RouterModule,
+  MatMenuModule,
     MatSortModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
@@ -65,7 +73,10 @@ import { MatRadioModule } from '@angular/material/radio';
     MatPaginatorModule,
     MatIconModule,
     MatRadioModule,
-  StructureEditorModule],
+    MatSidenavModule,
+  StructureEditorModule,
+  FacetsManagerModule,
+],
   declarations: [
     CvManagementComponent,
     ScheduledJobsComponent,
@@ -79,7 +90,9 @@ import { MatRadioModule } from '@angular/material/radio';
     MonitorComponent,
     AllFilesComponent,
     FragmentWizardComponent,
-    ImportManagementComponent
+    ImportManagementComponent,
+    ImportBrowseComponent,
+    ImportSummaryComponent
   ],
   exports: [
     CvManagementComponent,
@@ -94,7 +107,9 @@ import { MatRadioModule } from '@angular/material/radio';
     MonitorComponent,
     AllFilesComponent,
     FragmentWizardComponent,
-    ImportManagementComponent
+    ImportManagementComponent,
+    ImportBrowseComponent,
+    ImportSummaryComponent
 
   ],
   entryComponents: [
@@ -102,7 +117,11 @@ import { MatRadioModule } from '@angular/material/radio';
     UserEditDialogComponent
   ],
   providers: [
-    CanActivateAdmin
+    CanActivateAdmin,
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
   ]
 })
 export class AdminModule { }

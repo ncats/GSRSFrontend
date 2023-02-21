@@ -96,6 +96,7 @@ export class AdminService extends BaseHttpService {
         }
 
         public loadData(form: any) {
+          console.log(form);
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/load`;
           return this.http.post< any >(url, form);
         }
@@ -124,14 +125,53 @@ export class AdminService extends BaseHttpService {
           return this.http.get< any >(`${url}`);
         }
 
+       /* public putAdapter(file: any): Observable< Auth > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import`;
+          return this.http.put< any >(`${url}`, file);
+        }*/
+
+        public previewAdapter(id: string, file: any, adapter?: any): Observable< any > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import(${id})/@preview?adapter=${adapter}`;
+          return this.http.post< any >(`${url}`, file);
+        }
+
+        public executeAdapter(id: string, file: any, adapter?: any): Observable< Auth > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import${id})/@execute?adapter=${adapter}`;
+          return this.http.post< any >(`${url}`, file);
+        }
+
+        //http://localhost:8080/api/v1/substances/import(a446cea4-07ad-4a25-b117-c2e25fee9c9a)/@execute?adapter=SDF
+
         public postAdapterFile(file: any, adapter?: string, entityType?: string): Observable< UploadObject > {
           if (!entityType) {
             entityType = 'ix.ginas.models.v1.Substance';
           }
           if (!adapter) {
-            adapter = 'SDF%20Adapter';
+            adapter = 'SDF';
           }
+          adapter = encodeURI(adapter);
+
+          console.log(adapter);
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import?adapter=${adapter}&entityType=${entityType}`;
+          console.log('posting to ' + url);
+
           return this.http.post< any >(url, file);
+        }
+
+
+        public GetStagedData(index?: any) {
+          console.log(index);
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/data`;
+          if(index) {
+            url += `?skip=${index}`;
+          }
+          return this.http.get< any >(`${url}`);
+
+        }
+        public GetStagedRecord(id:string) {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/importdata/${id}`;
+          
+          return this.http.get< any >(`${url}`);
+
         }
 }

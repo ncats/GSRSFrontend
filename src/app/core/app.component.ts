@@ -23,6 +23,10 @@ export class AppComponent {
       'chevron_right',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_right-24px.svg'));
 
+      iconRegistry.addSvgIcon(
+        'chevron_left',
+        sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_left-24px.svg'));
+
     iconRegistry.addSvgIcon(
       'search',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-search-24px.svg'));

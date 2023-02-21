@@ -8,7 +8,7 @@
             <div class = "file-row ">
                     <div><button mat-raised-button (click)="openInput()">Select File to Upload</button></div>
                     <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
-                    <input id="fileInput" hidden type="file" (change)="onFileSelect($event)" name="file1" accept=".gsrs, .ginas, .txt.gz">
+                    <input id="fileInput" hidden type="file" (change)="onFileSelect($event)" name="file1" accept=".gsrs, .sdf, .sd">
             </div>
 
         
@@ -16,8 +16,8 @@
 
 
 
-        <div class = "full-row bottom" style = "width:850px" *ngIf = "filename && filename !== ''">
-                <div style = "width:100%"><label>Select Importer </label><br/></div>
+        <div class = "full-row bottom" style = "min-width:950px" *ngIf = "filename && filename !== ''">
+                <div style = "width:100%; margin-bottom: 15px;"><label>Select Importer </label><br/></div>
 
             <div class = "half-row importer-radio">
              <mat-radio-group placeholder="Adapter" name = "adapter"  (change) = "setAdapter($event)">
@@ -29,7 +29,7 @@
         </div>
            <div class = "half-row">
                 <label> </label>
-            <div style = "height:32px;" *ngFor = "let adapter of demo">Insert adapter Description, supported extensions: 
+            <div style = "height:32px;" *ngFor = "let adapter of demo">{{adapter.description}}. Supported extensions: 
                 <span *ngFor = "let ext of adapter.fileExtensions last as last">{{ext}}{{!last? ',':''}} </span><br/>
             </div>
 
@@ -40,7 +40,13 @@
               <div class = "full-row bottom">
                    <span class = "middle-fill"></span> 
                    <div><i>{{message}}</i></div>
-                   <button (click) ="onSubmit()"  class = "mat-button mat-primary mat-flat-button" type="submit" [disabled] = "!adapterSettings || !filename">Upload</button>
+                   <button (click) ="onSubmit()"  class = "mat-button mat-primary mat-flat-button" type="submit" >Upload</button> &nbsp;
+
+
+
+
+                  
+
                   <div class = "loading-spinner">
                         <mat-progress-spinner  [color]="accent" mode="indeterminate" diameter = "44" *ngIf = "processing">
                         </mat-progress-spinner>
@@ -58,35 +64,237 @@
 
 
     <div *ngIf = "step && step === 3">
-        <div class = "label-value" *ngFor = "let action of adapterSettings.fileImportActions, index as $index">
-            <div class = "label">
-                {{action.actionName}} 
-            </div>
-            <div class = "value-container">
-                    <button mat-button (click) = "openAction( settingTemplate, $index)">Settings</button>
-            </div>
+        <div><h3>Step 2: Configure Importer Actions</h3></div>
+        <div class = "label-value" >
+                <div class = "label inline-vertical">
+                    <b>Import Action</b>
+                </div>
+                <div class = "value-container inline-vertical">
+                        <b>Action Details</b>
+                </div>
+                <span class = "middle-fill">
+
+                </span>
+                <div class = "label inline-vertical" style = "margin-right:100px;">
+                                <b>Preview</b>   <span style = "width:25px;"> </span>                     
+                                 <button style = "margin:auto" mat-button mat-primary-button (click) = "callPreview()">{{previewTotal > 0? 'Reload Preview':'Load Preview'}}</button>
+
+                            </div>
+                
+        </div>
+        <div class = "full-row">
+                <div class = "action-list">
+                        <div class = "label-value  inline-vertical" *ngFor = "let action of this.demoResp.adapterSettings.actions, index as $index">
+                                        <div class = "label inline-vertical">
+                                            {{action.label? replaceAction(action.label) : "missing label"}} 
+                                        </div>
+                                        <div class = "value-container inline-vertical">
+                                               <i class = "inline-vertical">{{action.fileField ? action.fileField + ' field from file' : 'fileField missing'}}</i> <button class = "mat-button mat-primary mat-flat-button" style = "margin-left: 15px;" (click) = "openAction( settingTemplate, $index)">Settings...</button>
+                                        </div>
+                                    </div>
+        </div>
+        <div class = "preview-window">
+                <div *ngIf = "previewTotal > 0" >
+                        <div style = "width:100%;margin:auto">
+                                <button [disabled] = "previewIndex === 0" mat-button (click)="previewIndex = previewIndex - 1">
+                                         <mat-icon svgIcon="chevron_left"></mat-icon>
+                                </button>
+                                Record {{previewIndex + 1}} of {{previewTotal}}
+                                <button [disabled] = "previewIndex === previewTotal - 1" mat-button (click)="previewIndex = previewIndex + 1">
+                                        <mat-icon svgIcon="chevron_right"></mat-icon>
+                                </button>
+                        </div>
+                                <div>
+                                        <img appSubstanceImage [entityId]="preview[previewIndex].data.uuid"
+                                        [atomMaps]="preview[previewIndex].data._matchContext && preview[previewIndex].data._matchContext.atomMaps || null">
+
+                                        <div class = "substance-data">
+                                                <div class="label">Names:</div>
+                                                <div class="value space-bottom" *ngFor="let nameObject of preview[previewIndex].data.names">
+                                                <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
+                                                <span *ngIf="nameObject.displayName == true" >
+                                                        <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
+                                                </span>
+                                                </div>
+                                        </div>
+                                        <br/>
+                                        <div class = "substance-data">
+                                                <div class="label">Codes:</div>
+                                                <div class="value space-bottom" *ngFor="let code of preview[previewIndex].data.codes">
+                                                <span style = "font-weight:550">{{code.codeSystem}}</span>: {{code.code}}
+                                                </div>
+                                        </div>
+                                        <div class = "substance-data">
+                                                <div *ngIf = "preview[previewIndex].data.structure && preview[previewIndex].data.structure.formula">
+                                                                <b>Formula</b>: {{preview[previewIndex].data.structure.formula}}   
+                                                </div>
+                                                <div *ngIf = "preview[previewIndex].data.structure && preview[previewIndex].data.structure.mwt">
+                                                                <b>Mol Weight</b>: {{preview[previewIndex].data.structure.mwt}}   
+                                                </div>
+                                </div>
+                </div>
+        
+                </div>
+</div>
+        
+        
+
+
+        <div class = "full-row">
+            <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putTest()">Submit Settings</button>
         </div>
     </div>
+
+
+
+    <div *ngIf = "step && step === 4">
+                <div><h3>Step 3: Import</h3></div>
+
+
+                
+
+         <div class = "loading-window">
+                        
+         </div>  
+         
+         <div class = "preview-window">
+                        <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "stagingArea()">Staging WIP</button>
+
+         </div>
+            </div>
+
+
+
+
+
+
+
+
+
 
 
 
 
     <ng-template #settingTemplate>
             <h3>Action Settings</h3>
+            <h4>{{settingsActive.label}}</h4>
 
         <div mat-dialog-content>
+            <div *ngIf = "settingsActive.actionName == 'code_import'">
+                <div class = "label-value"  style = "margin-bottom: 10px;">
+                        <div class = "label">Code System</div>
+                        <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.codeSystem" /></div>
+                </div>
+                <div class = "label-value"  style = "margin-bottom: 10px;">
+                        <div class = "label">Code</div>
+                        <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.code" /></div>
+                </div>
+                <div class = "label-value"  style = "margin-bottom: 10px;">
+                        <div class = "label">Code Type</div>
+                        <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.codeType" /></div>
+                </div>
+            </div>
 
-        <div class = "label-value" *ngFor = "let current of settingsActive.fields">
+            <div *ngIf = "settingsActive.actionName == 'common_name'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Name</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.name" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">name Type</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.nameType" /></div>
+
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Language</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.lang" /></div>
+                    </div>
+                   <!--   <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Language</div>
+                            <div class = "value-container">
+                              <div *ngFor = "let namereference of settingsActive.actionParameters.referenceUUIDs; index as $index3">
+                                        <input mat-input [(ngModel)] = "settingsActive.actionParameters.referenceUUIDs[$index3]" /><br/>
+                                </div>
+                    </div>
+                </div>-->
+            </div>
+
+            <div *ngIf = "settingsActive.actionName == 'property_import'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Name</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.name" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Property Type</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.propertyType" /></div>
+
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Value Range</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.valueRange" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Value Units</div>
+                            <div class = "value-container">
+                                    <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.valueUnits" /></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf = "settingsActive.actionName == 'public_reference'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Document Type</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.docType" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Citation</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.citation" /></div>
+
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Reference ID</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.referenceID" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">UUID</div>
+                            <div class = "value-container">
+                                    <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.uuid" /></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf = "settingsActive.actionName == 'structure_and_moieties'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">molfile</div>
+                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.molfile" /></div>
+                    </div>
+                    <!-- <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Citation</div>
+                           <div class = "value-container">
+                                    <div *ngFor = "let reference of settingsActive.actionParameters.referenceUUIDs, index as index2">
+                                            <input mat-input [(ngModel)] = "reference of settingsActive.actionParameters.referenceUUIDs[index2]" /> <br/>
+                                    </div>  
+                            </div>
+
+                    </div>
+                </div>-->
+            </div>
+
+        <!--<div class = "label-value" *ngFor = "let current of settingsActive.fields" style = "margin-bottom: 10px;">
             <div class = "label">{{current.fieldLabel}}</div>
             <div class = "value-container">
                     <span class = "value" *ngIf = "current.defaultValue"><input mat-input [(ngModel)] = "current.defaultValue" /></span>
                     <span class = "value" *ngIf = "current.required !== undefined"><mat-checkbox [(ngModel)] = "current.required" >Required</mat-checkbox></span>        
             </div>     
-        </div>
+        </div>-->
     </div>
 
         <div mat-dialog-actions align="end">
-                <button mat-button mat-dialog-close>Save and Close (temp button)</button>
+                <button mat-button (click) = "close()">Cancel</button> &nbsp;      
+                         <button mat-button (click) = "close('save')">Save</button>
+
         </div>
 
     </ng-template>
