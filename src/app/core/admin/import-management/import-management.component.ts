@@ -32,6 +32,7 @@ private overlayContainer: HTMLElement;
 demoResp: any;
 save = false;
 preview: any;
+fileID: string;
 previewDemo: any;
 previewIndex = 0;
 previewTotal = 0;
@@ -143,6 +144,7 @@ ngOnInit() {
       this.loadingService.setLoading(false);
      this.step = 3;
       this.demoResp = response;
+      this.fileID = response.id;
     
      // this.adapterSettings = response.adapterSettings;
    }, error => {
@@ -150,6 +152,7 @@ ngOnInit() {
     console.log(error);
     alert('error in upload call, continuing with non-api demo. Error in console');
     this.step = 3;
+    this.fileID = this.demoResp.id;
     this.loadingService.setLoading(false);
    });
   }
@@ -200,8 +203,8 @@ callPreview(): void {
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
       console.log(this.uploadForm.get('file').value);
-     console.log('sending to api service adapter:' + this.adapterKey);
-    this.adminService.previewAdapter(this.adapterKey, formData ).pipe(take(1)).subscribe(response => {
+     console.log('sending to api service adapter:' + this.fileID);
+    this.adminService.previewAdapter(this.fileID, formData ).pipe(take(1)).subscribe(response => {
       console.log(response);
       if (response && response.dataPreview) {
         this.preview = response.dataPreview;
