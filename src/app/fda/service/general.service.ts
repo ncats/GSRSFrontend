@@ -4,7 +4,7 @@ import { Observable, throwError, of } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { map } from 'rxjs/operators';
-import { SubstanceRelationship } from '@gsrs-core/substance/substance.model';
+import { SubstanceSummary, SubstanceRelationship } from '@gsrs-core/substance/substance.model';
 import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
@@ -65,6 +65,35 @@ export class GeneralService extends BaseHttpService {
         return results;
       })
     );
+  }
+
+  getSubstanceByName(
+    searchTerm?: string,
+    getFacets?: boolean,
+    facets?: FacetParam
+  ): Observable<PagingResponse<SubstanceSummary>> {
+    let params = new FacetHttpParams();
+
+    let url = this.apiBaseUrl + 'substances/';
+
+    if (searchTerm) {
+      params = params.append('q', searchTerm);
+    }
+
+    if (searchTerm != null || getFacets === true) {
+      url += 'search';
+    }
+
+    if (facets != null) {
+      let showDeprecated = false;
+      params = params.appendFacetParams(facets, showDeprecated);
+    }
+
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
   /*

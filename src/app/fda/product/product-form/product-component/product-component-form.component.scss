@@ -7,14 +7,14 @@
   */
     /*padding: 20px;*/
   }
-  
+
 .details-box {
   max-width: 1028px;
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 20px;
 }
-  
+
 .form-row {
   display: flex;
   width: 100%;
@@ -24,17 +24,17 @@
     width: calc((100% - 20px * 3) / 4);
     margin-right: 20px;
   }
-  
+
   .col-1-4:last-child {
     margin-right: 0px;
-  }  
-  
+  }
+
   .col-2-4 {
     /* width: 159.333px; */
     width: calc((100% - 20px * 1) / 2);
     margin-right: 20px;
   }
-  
+
   .col-2-4:last-child {
     margin-right: 0px;
   }
@@ -52,7 +52,17 @@
 
 .col-1-4:last-child {
   margin-right: 0px;
-}  
+}
+
+.col-half-4 {
+  /* width: 159.333px; */
+  width: calc((100% - 20px * 7) / 8);
+  margin-right: 20px;
+}
+
+.col-half-4:last-child {
+  margin-right: 0px;
+}
 
 .col-2-4 {
   /* width: 159.333px; */
@@ -62,7 +72,7 @@
 
 .col-2-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .bordergray {
   border: 1px solid var(--regular-grey-color);
@@ -186,7 +196,7 @@ legend.border {
 
 .formfield3columnwidth {
   width: 540px !important;
-}  
+}
 
 .formfieldfullpagewidth {
   width: 900px;
@@ -196,9 +206,9 @@ legend.border {
   width: 40px;
 }
 
-.disabled { 
-  cursor: not-allowed; 
-} 
+.disabled {
+  cursor: not-allowed;
+}
 
 .prodNameField {
   width: calc((100% - 100px) / (5/4));

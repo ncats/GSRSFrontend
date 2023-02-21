@@ -13,6 +13,23 @@
 
 <mat-card class="borderblue">
   <mat-card-content>
+
+    <!-- //new 3.1 start -->
+    <div class="form-row">
+      <app-cv-input class="col-3-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
+        [model]="impuritiesTest.sourceType" (valueChange)="impuritiesTest.sourceType = $event">
+      </app-cv-input>
+
+      <app-cv-input class="col-3-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
+        [model]="impuritiesTest.source" (valueChange)="impuritiesTest.source = $event">
+      </app-cv-input>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Source ID" [(ngModel)]="impuritiesTest.sourceId" name="sourceId" />
+      </mat-form-field>
+    </div>
+    <!-- //new 3.1 end -->
+
     <div class="form-row">
       <mat-form-field class="col-2-1">
         <input matInput placeholder="Test" [(ngModel)]="impuritiesTest.test" name="test" />
@@ -23,33 +40,144 @@
       </app-cv-input>
     </div>
 
-    <!--
-      <div class="col-4-1">
-        <div class="textarea-label">Test Description</div>
-        <textarea placeholder="" [(ngModel)]="impuritiesTest.testDescription" name="testDescription"></textarea>
+    <!-- //new 3.1 start -->
+    <div class="form-row">
+      <app-cv-input class="col-4-1" domain="IMPURITIES_SYSTEM" title="System" name="system"
+        [model]="impuritiesTest.system" (valueChange)="impuritiesTest.system = $event">
+      </app-cv-input>
+
+      <app-cv-input class="col-4-1" domain="IMPURITIES_MODE" title="Mode" name="mode" [model]="impuritiesTest.mode"
+        (valueChange)="impuritiesTest.mode = $event">
+      </app-cv-input>
+
+      <app-cv-input class="col-4-1" domain="IMPURITIES_DETECTION_TYPE" title="Detection Type" name="detectionType"
+        [model]="impuritiesTest.detectionType" (valueChange)="impuritiesTest.detectionType = $event">
+      </app-cv-input>
+
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Detection Details" [(ngModel)]="impuritiesTest.detectionDetails"
+          name="detectionDetails" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <app-cv-input class="col-3-1" domain="IMPURITIES_COLUMN_PACKING_TYPE" title="Column Packing Type"
+        name="columnPackingType" [model]="impuritiesTest.columnPackingType"
+        (valueChange)="impuritiesTest.columnPackingType = $event">
+      </app-cv-input>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Column Packing Size" [(ngModel)]="impuritiesTest.columnPackingSize"
+          name="columnPackingSize" />
+      </mat-form-field>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Column Size" [(ngModel)]="impuritiesTest.columnSize" name="columnSize" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Injection Volume Amount" [(ngModel)]="impuritiesTest.injectionVolumeAmount"
+          name="injectionVolumeAmount" />
+      </mat-form-field>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Diluent" [(ngModel)]="impuritiesTest.diluent" name="diluent" />
+      </mat-form-field>
+
+      <mat-form-field class="col-3-1">
+        <input matInput placeholder="Standard Solution" [(ngModel)]="impuritiesTest.standardSolution"
+          name="standardSolution" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <input matInput placeholder="Sample Solution" [(ngModel)]="impuritiesTest.sampleSolution"
+          name="sampleSolution" />
+      </mat-form-field>
+
+      <mat-form-field class="col-2-1">
+        <input matInput placeholder="System Suitability Solution" [(ngModel)]="impuritiesTest.systemSuitabilitySolution"
+          name="systemSuitabilitySolution" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Suitability Requirements Resolution"
+          [(ngModel)]="impuritiesTest.suitabilityReqResolution" name="suitabilityReqResolution"></textarea>
+      </mat-form-field>
+
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Suitability Requirements Relative Standard Deviation"
+          [(ngModel)]="impuritiesTest.suitabilityReqRelStandardDeviation"
+          name="suitabilityReqRelStandardDeviation"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <div class="divflex col-2-1">
+        <app-cv-input class="width55percent padright20px" domain="IMPURITIES_ELUTION_TYPE" title="Elution Type"
+          name="elutionType" [model]="impuritiesTest.elutionType" (valueChange)="impuritiesTest.elutionType = $event">
+        </app-cv-input>
+
+        <div class="">
+          <button mat-raised-button color="primary" (click)="addNewElutionSolvent($event)"
+            matTooltip="Add New Elution Solvent">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Elution Solvent
+          </button>
+        </div>
       </div>
-      -->
+
+      <!-- Elution Solvent LOOP -->
+      <div class="col-2-1">
+        <div class=""
+          *ngFor="let impuritiesElution of impuritiesTest.impuritiesElutionSolventList; let impuritiesElutionIndex = index">
+          <div class="form-row">
+
+            <app-substance-text-search class="col-2-1" [searchValue]="impuritiesElution.elutionSolvent" placeholder="Search Substances"
+              (searchPerformed)="nameSearch($event, impuritiesTestIndex, impuritiesElutionIndex)" eventCategory="selectorSearch">
+            </app-substance-text-search>
+
+            <!--
+            <mat-form-field class="col-2-1">
+              <input matInput placeholder="Elution Solvent" [(ngModel)]="impuritiesElution.elutionSolvent"
+                name="elutionSolvent" />
+            </mat-form-field>
+            -->
+
+            <mat-form-field class="col-2-1 padright20px">
+              <input matInput placeholder="Elution Solvent Id" [(ngModel)]="impuritiesElution.elutionSolventCode"
+                name="elutionSolventCode" />
+            </mat-form-field>
+
+            <div style="margin-left: -40px;">
+              <button mat-icon-button color="primary" mat-icon-button color="primary"
+                (click)="confirmDeleteImpuritiesElutionSolvent(impuritiesElutionIndex)"
+                matTooltip="Delete Elution Solvent {{impuritiesElutionIndex + 1}}">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div> <!-- Solvent Loop -->
+      </div>
+
+    </div>
+    <!-- //new 3.1 end -->
+
     <div class="form-row">
       <mat-form-field class="col-2-1">
         <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
           name="testDescription"></textarea>
       </mat-form-field>
-      <!--
-          <mat-form-field class="col-4-1">
-           <input matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
-            name="testDescription" />
-          </mat-form-field>
-          -->
 
       <mat-form-field class="col-2-1">
         <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments"></textarea>
       </mat-form-field>
-      <!--
-        <mat-form-field class="col-2-1">
-           <input matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments" />
-        </mat-form-field>
-        -->
     </div>
+
 
     <!-- IMPURITIES DETAILS LIST BEGIN -->
     <div class="divflex margintop10px">

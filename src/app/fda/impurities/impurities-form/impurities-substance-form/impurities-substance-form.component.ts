@@ -62,7 +62,7 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
           if (Object.keys(relImpurities).length > 0) {
             // Remove Duplicate Impurites Substance UUID
             this.existingImpurities = relImpurities.filter((v, i) => relImpurities.findIndex
-            (item => item.relationshipUuid === v.relationshipUuid) === i);
+              (item => item.relationshipUuid === v.relationshipUuid) === i);
             this.loadExistingImpurities();
           } else {
             this.errorMessage = 'No Impurities found';
@@ -116,21 +116,40 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     this.impuritiesService.addNewTest(this.impuritiesSubstanceIndex);
   }
 
+  //new 3.1
+  addNewResidualSolventsTest(event: Event) {
+    event.stopPropagation();
+
+    this.impuritiesService.addNewResidualSolventsTest(this.impuritiesSubstanceIndex);
+  }
+
+  //new 3.1
+  addNewInorganicTest(event: Event) {
+    event.stopPropagation();
+
+    this.impuritiesService.addNewInorganicTest(this.impuritiesSubstanceIndex);
+  }
+
+
+  /* remove in 3.1
   addNewImpuritiesResidualSolvents(event: Event) {
     event.stopPropagation();
 
     this.impuritiesService.addNewImpuritiesResidualSolvents(this.impuritiesSubstanceIndex);
   }
+  */
 
+  /*  remove in 3.1
   addNewImpuritiesInorganic(event: Event) {
     event.stopPropagation();
 
     this.impuritiesService.addNewImpuritiesInorganic(this.impuritiesSubstanceIndex);
   }
+  */
 
   confirmDeleteImpuritiesSubstance() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delele Substance Name ' + (this.impuritiesSubstanceIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delele Substance ' + (this.impuritiesSubstanceIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {

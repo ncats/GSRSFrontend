@@ -109,34 +109,38 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
         });
 
         // Get Substance Name for SubstanceUuid in ImpuritiesResidualSolventsList
-        this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
-          elementRelSub.impuritiesResidualSolventsList.forEach((elementRelResidual) => {
-            if (elementRelResidual.relatedSubstanceUuid) {
-              const impResidualNameSubscription = this.generalService.getSubstanceBySubstanceUuid
-                (elementRelResidual.relatedSubstanceUuid).subscribe(substance => {
-                  if (substance) {
-                    elementRelResidual.substanceName = substance._name;
-                    elementRelResidual.relatedSubstanceUnii = substance.approvalID;
-                  }
-                });
-              this.subscriptions.push(impResidualNameSubscription);
-            }
+        this.impurities.impuritiesSubstanceList.forEach((elementSub) => {
+          elementSub.impuritiesResidualSolventsTestList.forEach((elementResidualSolTest) => {
+            elementResidualSolTest.impuritiesResidualSolventsList.forEach((elementResidual) => {
+              if (elementResidual.relatedSubstanceUuid) {
+                const impResidualNameSubscription = this.generalService.getSubstanceBySubstanceUuid
+                  (elementResidual.relatedSubstanceUuid).subscribe(substance => {
+                    if (substance) {
+                      elementResidual.substanceName = substance._name;
+                      elementResidual.relatedSubstanceUnii = substance.approvalID;
+                    }
+                  });
+                this.subscriptions.push(impResidualNameSubscription);
+              }
+            });
           });
         });
 
         // Get Substance Name for SubstanceUuid in ImpuritiesInorganicList
-        this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
-          elementRelSub.impuritiesInorganicList.forEach((elementRelInorganic) => {
-            if (elementRelInorganic.relatedSubstanceUuid) {
-              const impInorganicNameSubscription = this.impuritiesService.getSubstanceDetailsBySubstanceId
-                (elementRelInorganic.relatedSubstanceUuid).subscribe(substanceNames => {
-                  if (substanceNames) {
-                    elementRelInorganic.substanceName = substanceNames.name;
-                    elementRelInorganic.relatedSubstanceUnii = substanceNames.unii;
-                  }
-                });
-              this.subscriptions.push(impInorganicNameSubscription);
-            }
+        this.impurities.impuritiesSubstanceList.forEach((elementSub) => {
+          elementSub.impuritiesInorganicTestList.forEach((elementInorganicTest) => {
+            elementInorganicTest.impuritiesInorganicList.forEach((elementInorganic) => {
+              if (elementInorganic.relatedSubstanceUuid) {
+                const impInorganicNameSubscription = this.generalService.getSubstanceBySubstanceUuid
+                  (elementInorganic.relatedSubstanceUuid).subscribe(substance => {
+                    if (substance) {
+                      elementInorganic.substanceName = substance._name;
+                      elementInorganic.relatedSubstanceUnii = substance.approvalID;
+                    }
+                  });
+                this.subscriptions.push(impInorganicNameSubscription);
+              }
+            });
           });
         });
 

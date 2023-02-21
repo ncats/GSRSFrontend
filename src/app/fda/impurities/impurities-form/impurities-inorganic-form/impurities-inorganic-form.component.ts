@@ -16,6 +16,7 @@ export class ImpuritiesInorganicFormComponent implements OnInit {
   @Input() impuritiesInorganic: ImpuritiesInorganic;
   @Input() impuritiesInorganicIndex: number;
   @Input() impuritiesSubstanceIndex: number;
+  @Input() inorganicTestIndex: number;
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -35,7 +36,7 @@ export class ImpuritiesInorganicFormComponent implements OnInit {
 
   confirmDeleteImpuritiesInorganic() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delete Inorganic Impurities' + (this.impuritiesInorganicIndex + 1) + '?' }
+      data: { message: 'Are you sure you want to delete Inorganic Impurities ' + (this.impuritiesInorganicIndex + 1) + '?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -46,7 +47,7 @@ export class ImpuritiesInorganicFormComponent implements OnInit {
   }
 
   deleteImpuritiesInorganic() {
-    this.impuritiesService.deleteImpuritiesInorganic(this.impuritiesSubstanceIndex, this.impuritiesInorganicIndex);
+    this.impuritiesService.deleteImpuritiesInorganic(this.impuritiesSubstanceIndex, this.inorganicTestIndex, this.impuritiesInorganicIndex);
   }
 
 }

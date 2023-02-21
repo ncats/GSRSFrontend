@@ -106,6 +106,7 @@
   /* width: 159.333px; */
   width: calc((100% - 30px * 3) / 4);
   margin-right: 30px;
+  color: red;
 }
 
 .col-1:last-child {
@@ -119,6 +120,16 @@
 }
 
 .col-2:last-child {
+  margin-right: 0px;
+}
+
+.col-3 {
+  /* width: 348.667px; calc() value*/
+  width: calc((100% - 30px * 2) / 3);
+  margin-right: 30px;
+}
+
+.col-3:last-child {
   margin-right: 0px;
 }
 
@@ -350,6 +361,10 @@
 
 .colorgray {
   color: var(--regular-grey-color);
+}
+
+.colororange {
+  color: var(--regular-orange-color);
 }
 
 .width95percent {
