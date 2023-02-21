@@ -136,18 +136,27 @@
         <div class=""
           *ngFor="let impuritiesElution of impuritiesTest.impuritiesElutionSolventList; let impuritiesElutionIndex = index">
           <div class="form-row">
+
+            <app-substance-text-search class="col-2-1" [searchValue]="impuritiesElution.elutionSolvent" placeholder="Search Substances"
+              (searchPerformed)="nameSearch($event, impuritiesTestIndex, impuritiesElutionIndex)" eventCategory="selectorSearch">
+            </app-substance-text-search>
+
+            <!--
             <mat-form-field class="col-2-1">
               <input matInput placeholder="Elution Solvent" [(ngModel)]="impuritiesElution.elutionSolvent"
                 name="elutionSolvent" />
             </mat-form-field>
+            -->
 
             <mat-form-field class="col-2-1 padright20px">
               <input matInput placeholder="Elution Solvent Id" [(ngModel)]="impuritiesElution.elutionSolventCode"
                 name="elutionSolventCode" />
             </mat-form-field>
+
             <div style="margin-left: -40px;">
               <button mat-icon-button color="primary" mat-icon-button color="primary"
-                (click)="confirmDeleteImpuritiesElutionSolvent(impuritiesElutionIndex)" matTooltip="Delete Elution Solvent {{impuritiesElutionIndex + 1}}">
+                (click)="confirmDeleteImpuritiesElutionSolvent(impuritiesElutionIndex)"
+                matTooltip="Delete Elution Solvent {{impuritiesElutionIndex + 1}}">
                 <mat-icon>delete_forever</mat-icon>
               </button>
             </div>

@@ -1,6 +1,18 @@
 <div class="top-fixed">
   <div class="actions-container">
-    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
+
+    <span *ngIf="product && !product.id">
+    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+      <span>Export JSON</span>
+    </a>&nbsp;&nbsp;&nbsp;
+    </span>
+    
+    <!-- Do not show 'Import JSON' button when in Update Impurities page -->
+    <span *ngIf="product && !product.id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -449,8 +461,25 @@
                   <input matInput placeholder="Provenance Document ID" [(ngModel)]="product.provenanceDocumentId"
                     name="provenanceDocumentId" />
                 </mat-form-field>
+
+                <mat-form-field class="col-1" appearance="fill">
+                  <input matInput placeholder="Product Code Url" [(ngModel)]="product.productCodeUrl"
+                    name="productCodeUrl" />
+                </mat-form-field>
               </div>
 
+
+              <!-- //new 3.1 -->
+              <div class="form-row">
+                <mat-form-field class="col-1" appearance="fill">
+                  <input matInput placeholder="Shelf Life" [(ngModel)]="product.shelfLife" name="shelfLife" />
+                </mat-form-field>
+
+                <mat-form-field class="col-1" appearance="fill">
+                  <input matInput placeholder="Storage Conditions" [(ngModel)]="product.storageConditions"
+                    name="storageConditions" />
+                </mat-form-field>
+              </div>
 
               <!-- PRODUCT CODE LIST -->
               <div class="bordergray marginleftneg10px marginrightneg10px padleft10px padright10px">
@@ -582,7 +611,8 @@
 
                       <span class="width40px displayinlineblock">
                         <button mat-icon-button color="primary"
-                          (click)="confirmDeleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex)" matTooltip="Delete Product Company">
+                          (click)="confirmDeleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex)"
+                          matTooltip="Delete Product Company">
                           <mat-icon>delete_forever</mat-icon>
                         </button>
                         <!--

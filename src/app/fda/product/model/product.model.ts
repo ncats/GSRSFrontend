@@ -24,6 +24,9 @@ export interface Product {
   endMarketingDate?: string; //new 3.1
   marketingCategoryCode?: string; //new 3.1
   marketingCategoryName?: string; //new 3.1
+  productCodeUrl?: string; //new 3.1
+  shelfLife ?: string; //new 3.1
+  storageConditions?: string;  //new 3.1
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -107,13 +110,15 @@ export interface ProductComponent {
   charFlavor?: string;
   charShape?: string;
   charNumFragments?: string;
-  dosageFormCode?: string;  //new 3.1
+  dosageFormCode?: string;
+  dosageFormCodeType?: string;
   dosageForm?: string;
   amount?: string;
   unit?: string;
   manufactureCode?: string;
   manufactureCodeType?: string;
   manufactureItemCodeType?: string;
+
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

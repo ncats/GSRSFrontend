@@ -24,6 +24,19 @@
     <app-cv-input class="col-2-4" domain="DOSAGE_FORM" title="Dosage Form" name="dosageForm"
       [model]="productComponent.dosageForm" (valueChange)="productComponent.dosageForm = $event">
     </app-cv-input>
+
+    <mat-form-field class="col-1-4" appearance="fill">
+      <input matInput placeholder="Dosage Form Code" [(ngModel)]="productComponent.dosageFormCode"
+        name="dosageFormCode" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4" appearance="fill">
+      <input matInput placeholder="Dosage Form Code Type" [(ngModel)]="productComponent.dosageFormCodeType"
+        name="dosageFormCodeType" />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row margintop10px">
     <app-cv-input class="col-1-4" domain="PROD_CHARACTER_COLOR" title="Color Name" name="charColor"
       [model]="productComponent.charColor" (valueChange)="productComponent.charColor = $event">
     </app-cv-input>
@@ -36,13 +49,16 @@
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Amount" [(ngModel)]="productComponent.amount" name="amount" />
     </mat-form-field>
+
     <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit"
       [model]="productComponent.unit" (valueChange)="productComponent.unit = $event">
     </app-cv-input>
+
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Manufacture Code" [(ngModel)]="productComponent.manufactureCode"
         name="manufactureCode" />
     </mat-form-field>
+
     <app-cv-input class="col-1-4" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacture Code Type" name="manufactureCodeType"
       [model]="productComponent.manufactureCodeType" (valueChange)="productComponent.manufactureCodeType = $event">
     </app-cv-input>

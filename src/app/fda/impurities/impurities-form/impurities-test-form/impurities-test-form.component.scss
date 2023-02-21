@@ -506,3 +506,16 @@ marginleftneg7px {
   padding-top: 5px;
   padding-right: 5px;
 }
+
+.top-search {
+  border: 1px solid red;
+  width: 50px;
+  max-width: 50px;
+
+  ::ng-deep .mat-form-field {
+
+    .mat-form-field-label {
+      font-size: 16px;
+    }
+  }
+}

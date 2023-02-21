@@ -46,6 +46,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   manufactureDateMessage = '';
   viewProductUrl = '';
   message = '';
+  downloadJsonHref: any;
+  jsonFileName: string;
 
   constructor(
     private productService: ProductService,
@@ -378,6 +380,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
+
+  }
+
+  saveJson(): void {
+
+  }
+
+  saveJSON(): void {
 
   }
 
