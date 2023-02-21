@@ -323,6 +323,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           this.application.provenance = 'GSRS';
         }
       }
+      // Set service application
+      this.applicationService.application = this.application;
     }
 
     this.applicationService.saveApplication().subscribe(response => {

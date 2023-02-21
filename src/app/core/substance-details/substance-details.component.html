@@ -1,5 +1,5 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" >
-  <mat-sidenav [disableClose]="true" mode="side" opened #matSideNavInstance class = "white-background">
+  <mat-sidenav [disableClose]="false" mode="side" opened #matSideNavInstance class = "white-background">
     <mat-nav-list>
       <a mat-list-item tabindex="0" role="link" *ngFor="let property of substanceDetailsProperties" appScrollToTrigger [scrollToElementId]="property.dynamicComponentId + (property.type ? property.type : '')" (click)="handleSidenavClick(property.title)"
       vAlign="start">

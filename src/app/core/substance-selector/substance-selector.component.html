@@ -1,6 +1,7 @@
 <div class="substance-selector-container">
   <app-substance-text-search [ngClass]="{'hidden': selectedSubstance}"
     (searchPerformed)="processSubstanceSearch($event)" [eventCategory]="eventCategory" [placeholder]="placeholder"
+    [searchValue] = 'searchVal'
     source="form-search">
   </app-substance-text-search>
   <div class="undo" *ngIf="previousSubstance">
