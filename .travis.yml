@@ -6,7 +6,6 @@ node_js:
 
 
 install:
-
   - cp package.dev.json package.json
   - rm -rf node_modules
   - rm -rf package-lock.json
