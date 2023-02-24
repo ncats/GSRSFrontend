@@ -148,7 +148,8 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
 
     // If Substance Name exists in Resulting Materials in Current/Source Stage, then copy to Starting Material in next/new Stage
     // If new Stage is first one in the list, do not copy Resulting Material
-    if ((this.sourceResultingMatObj && this.sourceResultingMatRefUuid && newStageIndex > 0) && (insertDirection && insertDirection === 'after')) {
+ //   if ((this.sourceResultingMatObj && this.sourceResultingMatRefUuid && newStageIndex > 0) && (insertDirection && insertDirection === 'after')) {
+    if ((this.sourceResultingMatList.length > 0 && newStageIndex > 0) && (insertDirection && insertDirection === 'after')) {
       this.copyResultingToStarting(processIndex, siteIndex, newStageIndex);
 
       // if Inserting before, and the current Stage is not the first Stage, copy the Resulting Material to Starting Material in new stage.
@@ -284,14 +285,11 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
     // let resultMatRefUuid = '';
     let startMatRefUuid = '';
 
-    alert("Process " + processIndex + " siteIndex: " + siteIndex + " stageIndex: " + stageIndex);
-
     // Get New Stage Object
     const newStageObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex];
 
     // If New Stage exists
     if (newStageObj !== null && newStageObj !== undefined) {
-      alert("GGGGGGGG");
       // check if Starting Materials exists in the New Stage
       if (newStageObj.startingMaterials.length == 0) {
         // if there is no Starting Material, add a new one and copy
