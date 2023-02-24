@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpParameterCodec } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
 import { Observable, Subject, forkJoin, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
@@ -9,7 +9,23 @@ import { FacetHttpParams } from '@gsrs-core/facets-manager';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { Auth } from '@gsrs-core/auth';
 import { UserEditObject, UploadObject, DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
+class CustomEncoder implements HttpParameterCodec {
+  encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
 
+  encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
+}
 
  @Injectable({
   providedIn: 'root'
@@ -22,6 +38,8 @@ export class AdminService extends BaseHttpService {
   ) {
     super(configService);
   }
+
+  
 
   public fetchJobs(): Observable< any > {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
@@ -172,6 +190,23 @@ export class AdminService extends BaseHttpService {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/importdata/${id}`;
           
           return this.http.get< any >(`${url}`);
+
+        }
+
+        public SearchStagedData(skip: any, facets?: any) {
+          let params = new FacetHttpParams({encoder: new CustomEncoder()});
+          if (facets){
+            params = params.appendFacetParams(facets, false);
+
+          }
+
+          
+          const options = {
+            params: params
+          };
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/importdata/search?skip=${skip}`;
+          
+          return this.http.get< any >(url, options);
 
         }
 }

@@ -11,6 +11,7 @@ export class FacetDisplayPipe implements PipeTransform {
   ) { }
 
   transform(name: any, args?: any): any {
+    console.log(name);
     //TODO: move this snippet to the constructor to be run only once
     let codeTerm = 'UNII';
     if (this.configService.configData && this.configService.configData.approvalCodeName) {

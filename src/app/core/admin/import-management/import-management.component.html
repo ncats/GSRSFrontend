@@ -85,29 +85,31 @@
         <div class = "full-row">
                 <div class = "action-list">
                         <div class = "label-value  inline-vertical" *ngFor = "let action of this.demoResp.adapterSettings.actions, index as $index">
-                                        <div class = "label inline-vertical">
+                                        <div class = "label inline-vertical ">
                                             {{action.label? replaceAction(action.label) : "missing label"}} 
                                         </div>
                                         <div class = "value-container inline-vertical">
-                                               <i class = "inline-vertical">{{action.fileField ? action.fileField + ' field from file' : 'fileField missing'}}</i> <button class = "mat-button mat-primary mat-flat-button" style = "margin-left: 15px;" (click) = "openAction( settingTemplate, $index)">Settings...</button>
+                                               <i class = "inline-vertical  set-width-label">{{action.fileField ? action.fileField + ' field from file' : 'fileField missing'}}</i> <button class = "mat-button mat-primary mat-flat-button" style = "margin-left: 15px;" (click) = "openAction( settingTemplate, $index)">Settings...</button>
                                         </div>
                                     </div>
         </div>
-        <div class = "preview-window">
+        <div class = "preview-window"><img appSubstanceImage entityId="preview[previewIndex].data.structureID"
+                >
                 <div *ngIf = "previewTotal > 0" >
                         <div style = "width:100%;margin:auto">
-                                <button [disabled] = "previewIndex === 0" mat-button (click)="previewIndex = previewIndex - 1">
+                                <button [disabled] = "previewIndex === 0" mat-button (click)="changePreview('back')">
                                          <mat-icon svgIcon="chevron_left"></mat-icon>
                                 </button>
                                 Record {{previewIndex + 1}} of {{previewTotal}}
-                                <button [disabled] = "previewIndex === previewTotal - 1" mat-button (click)="previewIndex = previewIndex + 1">
+                                <button [disabled] = "previewIndex === previewTotal - 1" mat-button (click)="changePreview('forward')">
                                         <mat-icon svgIcon="chevron_right"></mat-icon>
                                 </button>
                         </div>
-                                <div>
-                                        <img appSubstanceImage [entityId]="preview[previewIndex].data.uuid"
-                                        [atomMaps]="preview[previewIndex].data._matchContext && preview[previewIndex].data._matchContext.atomMaps || null">
-
+                                <div>  <span *ngIf = "preview[previewIndex].data.structureID">
+                                        
+                                        <img appSubstanceImage entityId="preview[previewIndex].data.structureID"
+                                        >
+                                </span>
                                         <div class = "substance-data">
                                                 <div class="label">Names:</div>
                                                 <div class="value space-bottom" *ngFor="let nameObject of preview[previewIndex].data.names">
@@ -152,7 +154,21 @@
                 
 
          <div class = "loading-window">
-                        <i>loading progress somewhere</i>
+                        <div class = "loader-container">
+
+                                        <div class = "progress-container">
+                                          <div class = "bar-label">Progress</div>
+                                              <div>  
+                                          <mat-progress-bar class = "load-progress" color="accent" mode="determinate" [value] = "loading? 0: 100" >
+                                          </mat-progress-bar>
+                                          <div class = "label-row">
+                                              <div [style.width.%] = "(dynamic / max)*(100)"  class = "count-cont">
+                                                      <span class = "count-row-label">{{loading? '0': previewTotal}} / {{previewTotal}}</span>
+                                              </div>
+                                              </div>
+                                      </div>
+                                                 
+                                      </div>
          </div>  
          
                 <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "stagingArea()">Staging WIP</button>

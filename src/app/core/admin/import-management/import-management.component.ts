@@ -8,6 +8,7 @@ import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { StructureService } from '@gsrs-core/structure';
 
 
 @Component({
@@ -46,6 +47,7 @@ constructor(
   private overlayContainerService: OverlayContainer,
   private dialog: MatDialog,
   public dialogRef: MatDialogRef<any>,
+  private structureService: StructureService
 
   
 
@@ -92,6 +94,25 @@ openAction(templateRef:any, index: number):void  {
       console.log(result);
       
     });
+}
+
+changePreview(direction: string) {
+  if (direction === 'back') {
+    this.previewIndex-=1;
+  } else {
+    this.previewIndex += 1;
+  }
+  if (this.preview[this.previewIndex].data.structure && this.preview[this.previewIndex].data.structure.molfile) {
+    console.log('true');
+    this.structureService.interpretStructure(this.preview[this.previewIndex].data.structure.molfile).subscribe(response => {
+      console.log(response);
+      this.preview[this.previewIndex].data.structureID = response.structure.id;
+      console.log(this.preview[this.previewIndex].data.structureID);
+    });
+  } else {
+    console.log('false');
+  }
+  
 }
 
 ngOnInit() {
@@ -204,20 +225,48 @@ callPreview(): void {
      formData.append('file-type', this.fileType);
       console.log(this.uploadForm.get('file').value);
      console.log('sending to api service adapter:' + this.fileID);
+     this.preview = [];
+
     this.adminService.previewAdapter(this.fileID, formData ).pipe(take(1)).subscribe(response => {
       console.log(response);
       if (response && response.dataPreview) {
+        console.log('true!')
         this.preview = response.dataPreview;
         this.previewTotal = this.preview.length;
-      }
+        this.preview.forEach(entry => {
+          if (entry.data && entry.data.structure) {
+            this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
+              entry.data.structureID = response.structure.id;
+              console.log('setting structure ID from server:');
+              console.log(entry.data.structureID);
+              //this.preview.push(entry);
+            });
+        }
+        console.log(this.preview);
+      });
+    }
       this.loadingService.setLoading(false);
 
     }, error => {
       console.log(error);
-      this.preview = this.previewDemo.dataPreview;
+    
+    //  console.log(this.preview);
+      console.log(this.previewTotal);
+      this.preview = this.previewDemo;
       this.previewTotal = this.preview.length;
-      console.log(this.preview);
-      console.log(this.previewTotal)
+      this.previewDemo.dataPreview.forEach(entry => {
+        console.log(entry);
+        if (entry.data && entry.data.structure) {
+          this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
+            entry.data.structureID = response.structure.id;
+            console.log(entry.data.structureID);
+           // this.preview.push(entry);
+          });
+         console.log(this.preview);
+       
+        }
+       
+      });
 ;      this.loadingService.setLoading(false);
 
     });

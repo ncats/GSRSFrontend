@@ -20,7 +20,7 @@
     *ngFor="let facet of facets; index as topIndex">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{facet.name | facetDisplay}}
+        {{facet.name }}
       </mat-panel-title>
     </mat-expansion-panel-header>
 
@@ -62,16 +62,16 @@
               {{value.label}}
             </span>
             <span *ngIf="facet.name === 'Substance Class'">
-              {{value.label | facetDisplay: 'types'}}
+              {{value.label }}
             </span>
             <span *ngIf="facet.name === 'Record Status'">
-              {{value.label | facetDisplay: 'status'}}
+              {{value.label }}
             </span>
             <span *ngIf="facet.name === 'Code System'">
-              {{value.label | codeSystemDisplay | async }}
+              {{value.label }}
             </span>
             <span *ngIf="facet.name === 'Relationships'">
-              {{value.label | relationshipDisplay | async }}
+              {{value.label}}
             </span>
           </div>
           <div class="middle-fill"></div>

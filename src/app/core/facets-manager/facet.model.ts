@@ -11,13 +11,13 @@ export interface Facet {
     values: Array<FacetValue>;
     enhanced: boolean;
     prefix: string;
-    _self: string;
+    _self?: string;
     $fdim?: number;
     $total?: number;
     $fskip?: number;
     $next?: string;
     $previous?: string;
-    $fetched: Array<FacetValue>;
+    $fetched?: Array<FacetValue>;
     $showAdvanced?: boolean;
     $isLoading?: boolean;
 }
