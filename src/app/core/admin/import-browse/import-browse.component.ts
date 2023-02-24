@@ -532,6 +532,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getRecord(entry.recordId).subscribe(response => {
               this.substances.push(response);
               this.records.push(response);
+              console.log(response);
             });
           });
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -569,6 +570,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getRecord(entry.recordId).subscribe(response => {
               this.substances.push(response);
               this.records.push(response);
+              console.log(response);
+
             });
           });
          // this.substances = pagingResponse.content;

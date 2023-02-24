@@ -407,10 +407,10 @@
             </div>
             <div class = "">
                     <span>Matches:</span>
-
-                    <div *ngIf = "substance._matches.matches && substance._matches.matches.matchingRecords && substance.matches._matches.matchingRecords.length > 0">
-                        test: matchingRecords.length = {{substance._matches.matches.matchingRecords.length}}
-                      <table mat-table [dataSource]="substance._matches.matches.matchingRecords">
+                    test: matches.length = {{substance._matches.matches.length}}
+                    <div *ngIf = "substance._matches.matches && substance._matches.matches">
+                      <div *ngFor = "let record of substance._matches.matches">
+                     <!-- <table mat-table [dataSource]="record.matchingRecords">
 
                     
                         <ng-container matColumnDef="name">
@@ -433,9 +433,10 @@
                     
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                      </table>
+                      </table>-->
 
                     </div>
+                  </div>
                 </div>
           </div>
         </mat-card-content>
