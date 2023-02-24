@@ -512,7 +512,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
      // this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip)
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams)
         .subscribe(pagingResponse => {
           pagingResponse = this.setDemo2();
           this.isError = false;

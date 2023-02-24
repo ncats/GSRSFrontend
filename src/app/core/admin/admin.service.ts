@@ -200,7 +200,7 @@ export class AdminService extends BaseHttpService {
 
           }
 
-          
+          console.log(params);
           const options = {
             params: params
           };
