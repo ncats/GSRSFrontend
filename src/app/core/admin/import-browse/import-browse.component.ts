@@ -1617,7 +1617,7 @@ searchTermOkforBeginsWithSearch(): boolean {
               {
                 "recordId": {
                   "kind": "ix.ginas.models.v1.ChemicalSubstance",
-                  "idString": "4673c329-569b-4068-8700-d661376a454d"
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
                 },
                 "sourceName": "GSRS",
                 "matchedKey": "Substance Name"
@@ -1625,7 +1625,7 @@ searchTermOkforBeginsWithSearch(): boolean {
               {
                 "recordId": {
                   "kind": "ix.ginas.models.v1.ChemicalSubstance",
-                  "idString": "3924bf03-1013-4cb0-8fb5-494219e136e4"
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
                 },
                 "sourceName": "GSRS",
                 "matchedKey": "Substance Name"
@@ -1651,7 +1651,7 @@ searchTermOkforBeginsWithSearch(): boolean {
               {
                 "recordId": {
                   "kind": "ix.ginas.models.v1.ChemicalSubstance",
-                  "idString": "3924bf03-1013-4cb0-8fb5-494219e136e4"
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
                 },
                 "sourceName": "GSRS",
                 "matchedKey": "Primary Name"
@@ -1659,7 +1659,7 @@ searchTermOkforBeginsWithSearch(): boolean {
               {
                 "recordId": {
                   "kind": "ix.ginas.models.v1.ChemicalSubstance",
-                  "idString": "8669cf29-b311-456d-a172-96151a031f52"
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
                 },
                 "sourceName": "Staging Area",
                 "matchedKey": "Primary Name"

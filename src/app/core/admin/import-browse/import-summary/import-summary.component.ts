@@ -142,9 +142,10 @@ export class ImportSummaryComponent implements OnInit {
     this.substance.matchedRecords.forEach(record => {
       this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
         
-        record.substance = response;
+        record._name = response._name;
       });
-    })
+    });
+    console.log(this.substance.matchedRecords);
     
   }
 
@@ -170,7 +171,7 @@ export class ImportSummaryComponent implements OnInit {
 
       this.setCodeSystems();
       this.processValidation();
-
+      this.getMatchSummary();
       this.loadDynamicContent();
     }
   }

@@ -1,6 +1,6 @@
 <mat-card>
         <mat-card-title>
-          <a class="substance-name" [routerLink]="['/substances', substance.uuid]" matTooltip = "View substance details" >
+          <a class="substance-name">
             <span [innerHTML] = "substance._name"></span>
       
           </a>
@@ -31,9 +31,9 @@
                 </div>
               </div>
               <div class="image-thumbnail">
-                <div *ngIf="substance.structureID">
+                <div *ngIf="substance.uuid">
                   <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(substance)">
-                    <img appSubstanceImage [entityId]="substance.structureID"
+                    <img appSubstanceImage [entityId]="substance.uuid"
                       [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
                   </a>
                 </div>
@@ -421,7 +421,12 @@
                     
                         <ng-container matColumnDef="name">
                           <th mat-header-cell *matHeaderCellDef> Name </th>
-                          <td mat-cell *matCellDef="let record"> {{record.ID}} </td>
+                          <td mat-cell *matCellDef="let record">
+                            
+                              <span *ngIf = "record._name"> <a [innerHTML] = "record._name" class = "match-link" [routerLink] = "['/substances', record.uuid]"></a></span>
+                              <span *ngIf = "!record._name"> {{record.ID}} </span>
+                          
+                          </td>
                         </ng-container>
                     
                         <ng-container matColumnDef="keys">
