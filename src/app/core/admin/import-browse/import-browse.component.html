@@ -9,7 +9,7 @@
         </mat-select>
       </mat-form-field>
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
-        [rawFacets]="rawFacets" [calledFrom] = "staging" 
+        [rawFacets]="rawFacets" calledFrom = "staging" 
         [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
          configName="substances" includeFacetSearch="true">
       </app-facets-manager>
