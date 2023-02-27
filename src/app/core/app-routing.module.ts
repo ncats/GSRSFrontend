@@ -116,7 +116,8 @@ const childRoutes: Routes = [
   },
   {
     path: 'staging-area',
-    component: ImportBrowseComponent
+    component: ImportBrowseComponent,
+    canActivate: [CanActivateAdmin]
 
   },
 ];

@@ -31,9 +31,9 @@
                 </div>
               </div>
               <div class="image-thumbnail">
-                <div *ngIf="substance.structure || substance.polymer">
+                <div *ngIf="substance.structureID">
                   <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(substance)">
-                    <img appSubstanceImage [entityId]="substance.uuid"
+                    <img appSubstanceImage [entityId]="substance.structureID"
                       [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
                   </a>
                 </div>
@@ -403,24 +403,30 @@
           </div>-->
           <div>
             <div class = "">
-                <span>Actions:</span>
+                <span class = "action-label">Actions:        
+                </span>
+                <span ><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button 
+                  (click) = "doAction('create')">Create</button></span>
+                <span><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button
+                   (click) = "doAction('merge')">Merge</button></span>
+                <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
+                  (click) = "doAction('ignore')">Reject</button></span>
+
             </div>
             <div class = "">
                     <span>Matches:</span>
-                    test: matches.length = {{substance._matches.matches.length}}
-                    <div *ngIf = "substance._matches.matches && substance._matches.matches">
-                      <div *ngFor = "let record of substance._matches.matches">
-                     <!-- <table mat-table [dataSource]="record.matchingRecords">
+                    <div *ngIf = "substance.matchedRecords ">
+                    <table mat-table [dataSource]="substance.matchedRecords">
 
                     
                         <ng-container matColumnDef="name">
                           <th mat-header-cell *matHeaderCellDef> Name </th>
-                          <td mat-cell *matCellDef="let record"> {{record.recordId.idString}} </td>
+                          <td mat-cell *matCellDef="let record"> {{record.ID}} </td>
                         </ng-container>
                     
-                        <ng-container matColumnDef="key">
+                        <ng-container matColumnDef="keys">
                           <th mat-header-cell *matHeaderCellDef> Match Keys </th>
-                          <td mat-cell *matCellDef="let record"> {{record.matchedKey}} </td>
+                          <td mat-cell *matCellDef="let record"> <span *ngFor = "let item of record.records; last as last">{{item}} {{last?'':','}} &nbsp;</span> </td>
                         </ng-container>
                         <ng-container matColumnDef="confidence">
                           <th mat-header-cell *matHeaderCellDef> Match Confidence </th>
@@ -433,11 +439,38 @@
                     
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                      </table>-->
-
-                    </div>
+                      </table>
                   </div>
-                </div>
+              </div>
+              <div class = "" *ngIf = "substance.validations">
+                  <span>Validation ({{substance.validations.warnings}} warnings, {{substance.validations.errors}} errors )</span>
+                <!--  <div *ngIf = "substance.matchedRecords ">
+                  <table mat-table [dataSource]="substance.matchedRecords">
+
+                  
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Name </th>
+                        <td mat-cell *matCellDef="let record"> {{record.ID}} </td>
+                      </ng-container>
+                  
+                      <ng-container matColumnDef="keys">
+                        <th mat-header-cell *matHeaderCellDef> Match Keys </th>
+                        <td mat-cell *matCellDef="let record"> <span *ngFor = "let item of record.records">{{item}} &nbsp;</span> </td>
+                      </ng-container>
+                      <ng-container matColumnDef="confidence">
+                        <th mat-header-cell *matHeaderCellDef> Match Confidence </th>
+                        <td mat-cell *matCellDef="let record"> <span ></span></td>
+                      </ng-container>
+                      <ng-container matColumnDef="merge">
+                        <th mat-header-cell *matHeaderCellDef>  </th>
+                        <td mat-cell *matCellDef="let record"> <span ><button mat-primary-button>Merge</button></span></td>
+                      </ng-container>
+                  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>-->
+            </div>
           </div>
         </mat-card-content>
       </mat-card>

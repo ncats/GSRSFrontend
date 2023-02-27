@@ -209,4 +209,40 @@ export class AdminService extends BaseHttpService {
           return this.http.get< any >(url, options);
 
         }
+
+        public stagedRecordAction(id:string, record: string, action: string) {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/1/@act?matchedEntityId=${record}&view=internal&persistChangedObject=true`;
+          let toput = {};
+          if (action === 'create') {
+            toput = {
+              "processingActions": [
+                {
+                  "processingActionClass": "gsrs.dataexchange.processing_actions.CreateProcessingAction"
+                }
+              ]
+            };
+          } else if (action === 'merge') {
+            toput = {
+              "processingActions": [
+                {
+                        "parameters": {
+                  "MergeNames": true,
+                            "MergeCodes": true
+                  },
+                  "processingActionClass": "gsrs.dataexchange.processing_actions.MergeProcessingAction"
+                }
+              ]
+            }
+          } else if (action === 'ignore') {
+            toput = {
+              "processingActions": [
+                {
+                  "processingActionClass": "gsrs.dataexchange.processing_actions.IgnoreProcessingAction"
+                }
+              ]
+            }
+          }
+          return this.http.put< any >(url, toput);
+
+        }
 }

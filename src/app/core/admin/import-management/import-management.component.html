@@ -1,4 +1,8 @@
-<h3>WIP: Import Demo </h3>
+<h3>Record Import </h3>
+<div class = "top-button-row">
+        <button  class = "top-button" mat-flat-button mat-button color = "primary">New Data Import</button>
+        <button class = "top-button" mat-flat-button mat-button color = "primary" (click) = "stagingArea()">Staging Area</button>
+</div>
 <div *ngIf = "!step || step === 1">
 
 <div class = "file-select-container">
@@ -93,8 +97,7 @@
                                         </div>
                                     </div>
         </div>
-        <div class = "preview-window"><img appSubstanceImage entityId="preview[previewIndex].data.structureID"
-                >
+        <div class = "preview-window">
                 <div *ngIf = "previewTotal > 0" >
                         <div style = "width:100%;margin:auto">
                                 <button [disabled] = "previewIndex === 0" mat-button (click)="changePreview('back')">
@@ -143,7 +146,7 @@
 
 
         <div class = "full-row">
-            <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putTest()">Submit Settings</button>
+            <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putTest()">Use Settings and Continue</button>
         </div>
     </div>
     </div>
@@ -162,7 +165,7 @@
                                           <mat-progress-bar class = "load-progress" color="accent" mode="determinate" [value] = "loading? 0: 100" >
                                           </mat-progress-bar>
                                           <div class = "label-row">
-                                              <div [style.width.%] = "(dynamic / max)*(100)"  class = "count-cont">
+                                              <div [style.width.%] = "(1)*(100)"  class = "count-cont">
                                                       <span class = "count-row-label">{{loading? '0': previewTotal}} / {{previewTotal}}</span>
                                               </div>
                                               </div>
@@ -191,126 +194,4 @@
 
 
 
-    <ng-template #settingTemplate>
-            <h3>Action Settings</h3>
-            <h4>{{settingsActive.label}}</h4>
-
-        <div mat-dialog-content>
-            <div *ngIf = "settingsActive.actionName == 'code_import'">
-                <div class = "label-value"  style = "margin-bottom: 10px;">
-                        <div class = "label">Code System</div>
-                        <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.codeSystem" /></div>
-                </div>
-                <div class = "label-value"  style = "margin-bottom: 10px;">
-                        <div class = "label">Code</div>
-                        <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.code" /></div>
-                </div>
-                <div class = "label-value"  style = "margin-bottom: 10px;">
-                        <div class = "label">Code Type</div>
-                        <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.codeType" /></div>
-                </div>
-            </div>
-
-            <div *ngIf = "settingsActive.actionName == 'common_name'">
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Name</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.name" /></div>
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">name Type</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.nameType" /></div>
-
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Language</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.lang" /></div>
-                    </div>
-                   <!--   <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Language</div>
-                            <div class = "value-container">
-                              <div *ngFor = "let namereference of settingsActive.actionParameters.referenceUUIDs; index as $index3">
-                                        <input mat-input [(ngModel)] = "settingsActive.actionParameters.referenceUUIDs[$index3]" /><br/>
-                                </div>
-                    </div>
-                </div>-->
-            </div>
-
-            <div *ngIf = "settingsActive.actionName == 'property_import'">
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Name</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.name" /></div>
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Property Type</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.propertyType" /></div>
-
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Value Range</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.valueRange" /></div>
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Value Units</div>
-                            <div class = "value-container">
-                                    <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.valueUnits" /></div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf = "settingsActive.actionName == 'public_reference'">
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Document Type</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.docType" /></div>
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Citation</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.citation" /></div>
-
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Reference ID</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.referenceID" /></div>
-                    </div>
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">UUID</div>
-                            <div class = "value-container">
-                                    <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.uuid" /></div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf = "settingsActive.actionName == 'structure_and_moieties'">
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">molfile</div>
-                            <div class = "value-container"><input mat-input [(ngModel)] = "settingsActive.actionParameters.molfile" /></div>
-                    </div>
-                    <!-- <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Citation</div>
-                           <div class = "value-container">
-                                    <div *ngFor = "let reference of settingsActive.actionParameters.referenceUUIDs, index as index2">
-                                            <input mat-input [(ngModel)] = "reference of settingsActive.actionParameters.referenceUUIDs[index2]" /> <br/>
-                                    </div>  
-                            </div>
-
-                    </div>
-                </div>-->
-            </div>
-
-        <!--<div class = "label-value" *ngFor = "let current of settingsActive.fields" style = "margin-bottom: 10px;">
-            <div class = "label">{{current.fieldLabel}}</div>
-            <div class = "value-container">
-                    <span class = "value" *ngIf = "current.defaultValue"><input mat-input [(ngModel)] = "current.defaultValue" /></span>
-                    <span class = "value" *ngIf = "current.required !== undefined"><mat-checkbox [(ngModel)] = "current.required" >Required</mat-checkbox></span>        
-            </div>     
-        </div>-->
-    </div>
-
-        <div mat-dialog-actions align="end">
-                <button mat-button (click) = "close()">Cancel</button> &nbsp;      
-                         <button mat-button (click) = "close('save')">Save</button>
-
-        </div>
-
-    </ng-template>
+    

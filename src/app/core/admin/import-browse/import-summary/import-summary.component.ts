@@ -23,22 +23,27 @@ import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
 import * as lodash from 'lodash';
 import { CardDynamicSectionDirective } from '@gsrs-core/substances-browse/card-dynamic-section/card-dynamic-section.directive';
+import { AdminService } from '@gsrs-core/admin/admin.service';
+import { LoadingService } from '@gsrs-core/loading';
 @Component({
   selector: 'app-import-summary',
   templateUrl: './import-summary.component.html',
   styleUrls: ['./import-summary.component.scss']
 })
 export class ImportSummaryComponent implements OnInit {
-  private privateSubstance: SubstanceSummary;
+  private privateSubstance: any;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
+  @Output() doneAction = new EventEmitter< any >();
   showAudit = false;
   isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
   canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
-  @Input() codeSystemNames?: Array<string> = [];
+ codeSystemNames?: Array<string> = [];
   @Input() codeSystemVocab?: Vocabulary;
   @Input() searchStrategy?: string = '';
+  private codes: Array <any >;
+
   
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
@@ -48,15 +53,17 @@ export class ImportSummaryComponent implements OnInit {
   rounding = '1.0-2';
   showAll = [];
   privateCodeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
-  privateCodeSystemNames?:  Array<string>;
+  privateCodeSystemNames = [];
   allPrimary = [];
   showLessNames = true;
   showLessCodes = true;
   privateNames?: Array<SubstanceName>;
   nameLoading = true;
   _ = lodash;
-  codeSystems: Array<any>;
-  displayedColumns = ['match', 'keys', 'confidence', 'merge'];
+  codeSystems = [];
+  displayedColumns = ['name', 'keys', 'confidence', 'merge'];
+  disabled = false;
+  performedAction: string;
 
   constructor(
     public utilsService: UtilsService,
@@ -68,7 +75,9 @@ export class ImportSummaryComponent implements OnInit {
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
+    private adminService: AdminService,
     private configService: ConfigService,
+    private loadingService: LoadingService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
@@ -144,6 +153,10 @@ export class ImportSummaryComponent implements OnInit {
       this.privateSubstance = substance;
       this.codeSystems = substance.codes;
       console.log(substance);
+      this.codes = substance.codes;
+      this.setCodeSystems();
+      this.processValidation();
+      this.getStructureID();
 
       this.loadDynamicContent();
     }
@@ -153,7 +166,95 @@ export class ImportSummaryComponent implements OnInit {
     return this.privateSubstance;
   }
 
- 
+  getStructureID() {
+    if(this.substance && this.substance.structure && this.substance.molfile) {
+        this.structureService.interpretStructure(this.privateSubstance.structure.molfile).subscribe(response => {
+          this.privateSubstance.structureID = response.structure.id;
+          console.log(this.privateSubstance.data.structureID);
+        });
+      }
+  }
+  processValidation() {
+    let validation = {warnings: 0, errors: 0, validations: []};
+    
+    if(this.privateSubstance._metadata && this.privateSubstance._metadata.validations){
+      this.privateSubstance._metadata.validations.forEach (entry => {
+        console.log(entry);
+        if(entry.validationType === 'error') {
+          validation.errors++;
+        } else if (entry.validationType === 'warning') {
+          validation.warnings++;
+        }
+        validation.validations.push(validation);
+      });
+      
+    }
+    this.privateSubstance.validations = validation;
+  }
+
+  doAction(action: string) {
+    this.loadingService.setLoading(true);
+    this.adminService.stagedRecordAction(this.privateSubstance.uuid, this.privateSubstance.uuid, action).subscribe(result => {
+      if (result) {
+        this.disabled = true;
+        this.performedAction = action;
+      }
+      this.doneAction.emit(this.privateSubstance.uuid);
+      this.loadingService.setLoading(false);
+    }, error => {
+      this.loadingService.setLoading(false);
+    });
+  }
+
+  setCodeSystems() {
+    console.log('setting');
+    console.log(this.codes);
+    if (this.codes && this.codes.length > 0) {
+      const substanceId = this.substance.uuid;
+      
+      this.codes.forEach(code => {
+        if (this.codeSystems[code.codeSystem]) {
+          this.codeSystems[code.codeSystem].push(code);
+        } else {
+          this.codeSystems[code.codeSystem] = [code];
+          this.codeSystemNames.push(code.codeSystem);
+        }
+      });
+      this.codeSystemNames = this.sortCodeSystems(this.codeSystemNames);
+      this.codeSystemNames.forEach(sysName => {
+        this.codeSystems[sysName] = this.codeSystems[sysName].sort((a, b) => {
+          let test = 0;
+          if (a.type === 'PRIMARY' && b.type !== 'PRIMARY') {
+            test = 1;
+          } else if (a.type !== 'PRIMARY' && b.type === 'PRIMARY') {
+            test = -1;
+          } else {
+            test = 0;
+          }
+          return test;
+        });
+      });
+  
+    }
+    console.log(this.codeSystemNames);
+  }
+
+  sortCodeSystems(codes: Array<string>): Array<string> {
+    if (this.configService.configData && this.configService.configData.codeSystemOrder &&
+      this.configService.configData.codeSystemOrder.length > 0) {
+      const order = this.configService.configData.codeSystemOrder;
+      for (let i = order.length - 1; i >= 0; i--) {
+        for (let j = 0; j <= codes.length; j++) {
+          if (order[i] === codes[j]) {
+            const a = codes.splice(j, 1);   // removes the item
+            codes.unshift(a[0]);         // adds it back to the beginning
+            break;
+          }
+        }
+      }
+    }
+    return codes;
+  }
 
   formatCodeSystems() {
     // sort() function in substance-browse isn't working... pushing this as alternative to get all primary codes first

@@ -42,6 +42,7 @@ import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { ImportSummaryComponent } from '@gsrs-core/admin/import-browse/import-summary/import-summary.component';
 import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
+import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 
 
 
@@ -92,7 +93,8 @@ import { MatMenuModule } from '@angular/material/menu';
     FragmentWizardComponent,
     ImportManagementComponent,
     ImportBrowseComponent,
-    ImportSummaryComponent
+    ImportSummaryComponent,
+    ImportDialogComponent
   ],
   exports: [
     CvManagementComponent,
@@ -109,12 +111,14 @@ import { MatMenuModule } from '@angular/material/menu';
     FragmentWizardComponent,
     ImportManagementComponent,
     ImportBrowseComponent,
-    ImportSummaryComponent
+    ImportSummaryComponent,
+    ImportDialogComponent
 
   ],
   entryComponents: [
     CvTermDialogComponent,
-    UserEditDialogComponent
+    UserEditDialogComponent,
+    ImportDialogComponent
   ],
   providers: [
     CanActivateAdmin,

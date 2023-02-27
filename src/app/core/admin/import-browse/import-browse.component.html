@@ -9,7 +9,8 @@
         </mat-select>
       </mat-form-field>
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
-        [rawFacets]="rawFacets" [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
+        [rawFacets]="rawFacets" [calledFrom] = "staging" 
+        [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
          configName="substances" includeFacetSearch="true">
       </app-facets-manager>
     </mat-sidenav>
@@ -275,7 +276,7 @@
                 <span class = "main-title">Staged Substances</span>
             </div>
   
-          <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+         <!-- <mat-button-toggle-group [value]="view" (change)="updateView($event)">
             <mat-button-toggle aria-label="Table View" value="table" matTooltip="Table View">
               <mat-icon svgIcon="list"></mat-icon>
             </mat-button-toggle>
@@ -285,7 +286,7 @@
             <mat-button-toggle aria-label="Tile View" value="tiles">
               <mat-icon svgIcon="view_module" matTooltip="Tile View"></mat-icon>
             </mat-button-toggle>
-          </mat-button-toggle-group>
+          </mat-button-toggle-group>-->
   
   
   
@@ -623,14 +624,6 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
   <div >
-    <div class="exact-match-control">
-      <div>
-        There is one exact (name, standardized name or code) match for {{this.searchTerm}}
-      </div>
-      <button mat-raised-button color="primary" (click)="showAllRecords()">
-        Show All Records Matching Search
-      </button>
-    </div>
     <div class="substance-cards">
       <app-substance-summary-card *ngFor="let substance of exactMatchSubstances" [substance]="substance"
         (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"

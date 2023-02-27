@@ -105,7 +105,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
     this._configName = configName;
     if (configName === 'applications' || configName === 'clinicaltrialsus' || configName === 'products'
-    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm') {
+    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm' || configName === 'staging') {
       this.hideDeprecatedCheckbox = true;
     } else {
       this.hideDeprecatedCheckbox = false;
@@ -260,6 +260,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private populateFacets(): void {
+    console.log(this.privateRawFacets);
     if (this.privateRawFacets && this.facetsConfig) {
       if (this.facetsAuthSubscription != null) {
         this.facetsAuthSubscription.unsubscribe();
@@ -269,10 +270,15 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const facetsCopy = this.privateRawFacets.slice();
         const newFacets = [];
         this.showAudit = this.authService.hasRoles('admin');
-        const facetKeys = Object.keys(this.facetsConfig) || [];
+        let facetKeys = Object.keys(this.facetsConfig) || [];
+        if(this._facetDisplayType === 'staging') {
+          Object.keys(this.configService.configData.facets['default']).forEach(key => {
+            facetKeys.push(key);
+          });
+        } 
 
         if (this._facetDisplayType) {
-          if (this._facetDisplayType === 'default') {
+          if (this._facetDisplayType === 'default' || 'staging') {
             facetKeys.forEach(facetKey => {
               if (this.facetsConfig[facetKey].length
                 && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {

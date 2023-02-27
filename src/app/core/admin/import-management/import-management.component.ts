@@ -9,6 +9,7 @@ import { LoadingService } from '@gsrs-core/loading';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure';
+import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 
 
 @Component({
@@ -73,19 +74,20 @@ openAction(templateRef:any, index: number):void  {
     console.log('template opened for adapter of index ' + index);
     console.log(this.settingsActive.actionParameters);
 
-    const dialogRef = this.dialog.open(templateRef, {
-      height: '400px',
+    const dialogref = this.dialog.open(ImportDialogComponent, {
+      height: '500px',
       width: '800px',
       data: {
-        active: this.settingsActive
+        settingsActive: this.settingsActive
       }
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    dialogRef.afterClosed().subscribe(result => {
-      if(this.save) {
+    dialogref.afterClosed().subscribe(result => {
+      console.log(result);
+      if(result) {
         this.overlayContainer.style.zIndex = null;
-        this.demoResp.adapterSettings.actions[index] = this.settingsActive;
+        this.demoResp.adapterSettings.actions[index] = result;
         console.log('new adapter settings set:');
         console.log(this.demoResp.adapterSettings.actions[index]);
       } else {
@@ -227,46 +229,61 @@ callPreview(): void {
      console.log('sending to api service adapter:' + this.fileID);
      this.preview = [];
 
-    this.adminService.previewAdapter(this.fileID, formData ).pipe(take(1)).subscribe(response => {
+    this.adminService.previewAdapter(this.fileID, formData, this.adapterKey ).pipe(take(1)).subscribe(response => {
       console.log(response);
-      if (response && response.dataPreview) {
-        console.log('true!')
-        this.preview = response.dataPreview;
-        this.previewTotal = this.preview.length;
-        this.preview.forEach(entry => {
-          if (entry.data && entry.data.structure) {
-            this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
-              entry.data.structureID = response.structure.id;
-              console.log('setting structure ID from server:');
-              console.log(entry.data.structureID);
-              //this.preview.push(entry);
-            });
+      this.preview = [];
+      
+      console.log(this.previewTotal);
+      response.dataPreview.forEach(entry => {
+        console.log(entry);
+        if (entry.data && entry.data.structure) {
+          this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
+            entry.data.structureID = response.structure.id;
+            console.log(entry.data.structureID);
+            this.preview.push(entry);
+            this.previewTotal = this.preview.length;
+
+          });
+         console.log(this.preview);
+       
+        } else {
+          if (entry.data) {
+            this.preview.push(entry);
+            this.previewTotal = this.preview.length;
+          }
         }
-        console.log(this.preview);
-      });
-    }
+      console.log(this.preview);
+    });
       this.loadingService.setLoading(false);
 
     }, error => {
       console.log(error);
     
     //  console.log(this.preview);
+      this.preview = [];
+      
       console.log(this.previewTotal);
-      this.preview = this.previewDemo;
-      this.previewTotal = this.preview.length;
       this.previewDemo.dataPreview.forEach(entry => {
         console.log(entry);
         if (entry.data && entry.data.structure) {
           this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
             entry.data.structureID = response.structure.id;
             console.log(entry.data.structureID);
-           // this.preview.push(entry);
+            this.preview.push(entry);
+            this.previewTotal = this.preview.length;
+
           });
          console.log(this.preview);
        
+        } else {
+          if (entry.data) {
+            this.preview.push(entry);
+            this.previewTotal = this.preview.length;
+          }
         }
        
       });
+      this.previewTotal = this.preview.length;
 ;      this.loadingService.setLoading(false);
 
     });

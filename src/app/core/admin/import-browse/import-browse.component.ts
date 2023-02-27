@@ -135,6 +135,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   bulkSearchPanelOpen = false;
   substanceList: any;
   demoResp: any;
+  matches: Array<any>;
 
 
 
@@ -478,12 +479,66 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getRecord(id: string): Observable<any> { 
     let subject = new Subject<string>();
+    let ids = [];
     this.adminService.GetStagedRecord(id).subscribe(response => {
+      response._matches.matches.forEach(match => {
+        match.matchingRecords.forEach(matchRec => {
+          if (!ids[matchRec.recordId.idString]) {
+            ids[matchRec.recordId.idString] = [matchRec.matchedKey];
+          } else {
+            ids[matchRec.recordId.idString].push(matchRec.matchedKey);
+
+          }
+        });
+      });
+      let items = [];
+      Object.keys(ids).forEach(key => {
+        let temp = {'ID':key,
+                    'records':ids[key]};
+                    items.push(temp);
+      });
+      response.matchedRecords = items;
       subject.next(response);
     }, error => {
-      subject.next(this.demoResp)
+      let response = JSON.parse(JSON.stringify(this.demoResp));
+      response._matches.matches.forEach(match => {
+        match.matchingRecords.forEach(matchRec => {
+          if (!ids[matchRec.recordId.idString]) {
+            ids[matchRec.recordId.idString] = [matchRec.matchedKey];
+          } else {
+            ids[matchRec.recordId.idString].push(matchRec.matchedKey);
+
+          }
+        });
+      });
+      let items = [];
+      Object.keys(ids).forEach(key => {
+        let temp = {'ID':key,
+                    'records':ids[key]};
+                    items.push(temp);
+      });
+
+      response.matchedRecords = items;
+      subject.next(response);
     });
     return subject.asObservable();
+  }
+
+  organizeMatches() {
+    this.matches = [];
+    this.records.forEach(record => {
+      let ids = [];
+      record._matches.matches.forEach(match => {
+        match.matchingRecords.forEach(matchRec => {
+          if (!ids[matchRec]) {
+            ids[matchRec] = [matchRec.matchedKey];
+          } else {
+            ids[matchRec].push(matchRec.matchedKey);
+          }
+        });
+      });
+      record.matchedRecords = ids;
+    });
   }
 
   searchSubstances() {
@@ -535,13 +590,13 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
               console.log(response);
             });
           });
+          this.organizeMatches();
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
           }
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
           this.narrowSearchSuggestionsCount = 0;
-
          
         //  this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
@@ -574,6 +629,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
             });
           });
+          this.organizeMatches();
          // this.substances = pagingResponse.content;
           this.totalSubstances = this.substances.length;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
