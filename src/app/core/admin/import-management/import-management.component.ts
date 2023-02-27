@@ -234,8 +234,9 @@ callPreview(): void {
    //   console.log(this.uploadForm.get('file').value);
   //   console.log('sending to api service adapter:' + this.fileID);
      this.preview = [];
+     console.log(this.adapterSettings);
 
-    this.adminService.previewAdapter(this.fileID, formData, this.adapterKey ).pipe(take(1)).subscribe(response => {
+    this.adminService.previewAdapter(this.fileID, this.adapterSettings, this.adapterKey ).pipe(take(1)).subscribe(response => {
       console.log(response);
       this.preview = [];
       
