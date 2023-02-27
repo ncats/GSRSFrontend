@@ -192,7 +192,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.records = [];
     let temp = this.loadDemo();
     let temp2 = temp["dataPreview"];
-    console.log(temp2);
     temp2.forEach(record => {
       if (record.data){
       //  record.data.matches = record.matches;
@@ -201,8 +200,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       }
      
     });
-    console.log(this.substances);
-    console.log(temp2);
     this.gaService.sendPageView('Staging Area');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;

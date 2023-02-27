@@ -2,7 +2,7 @@
             <h4>{{settingsActive.label}}</h4>
         </div>
 
-        <div mat-dialog-content>
+        <div mat-dialog-content style = "min-height: 300px;">
             <div *ngIf = "settingsActive.actionName == 'code_import'">
                 <div class = "label-value"  style = "margin-bottom: 10px;">
                         <div class = "label">Code System</div>
@@ -114,10 +114,10 @@
         </div>-->
     </div>
 
-        <div mat-dialog-actions align="end">
+        <span mat-dialog-actions align="end">
                 <button mat-button (click) = "close()">Cancel</button> 
                 &nbsp; 
 
                          <button mat-button (click) = "close('save')">Save</button>
 
-        </div>
+        </span>

@@ -47,7 +47,6 @@ constructor(
   private loadingService: LoadingService,
   private overlayContainerService: OverlayContainer,
   private dialog: MatDialog,
-  public dialogRef: MatDialogRef<any>,
   private structureService: StructureService
 
   
@@ -75,7 +74,7 @@ openAction(templateRef:any, index: number):void  {
     console.log(this.settingsActive.actionParameters);
 
     const dialogref = this.dialog.open(ImportDialogComponent, {
-      height: '500px',
+      minHeight: '500px',
       width: '800px',
       data: {
         settingsActive: this.settingsActive
@@ -130,9 +129,11 @@ ngOnInit() {
       console.log('successfully fetched adapters');
       console.log(result);
       if(result) {
-        this.setDemo();
+     //   this.setDemo();
+     this.demo = result;
       } else {
-        this.demo = result;
+        alert('adapters set but invalid response');
+        this.setDemo();
       }
 
   }, error => {
@@ -198,7 +199,7 @@ onFileSelect(event): void {
     const file = event.target.files[0];
     this.filename = file.name;
     this.uploadForm.get('file').setValue(file);
-    console.log(file);
+   // console.log(file);
    // this.step = 2;
 
   }
@@ -216,6 +217,11 @@ stagingArea(): void {
 
 }
 
+ImportReload(): void {
+  const currentUrl = this.router.url;
+        this.router.navigate(['/admin/import']);
+}
+
 
 callPreview(): void {
 
@@ -225,26 +231,28 @@ callPreview(): void {
   
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
-      console.log(this.uploadForm.get('file').value);
-     console.log('sending to api service adapter:' + this.fileID);
+   //   console.log(this.uploadForm.get('file').value);
+  //   console.log('sending to api service adapter:' + this.fileID);
      this.preview = [];
 
     this.adminService.previewAdapter(this.fileID, formData, this.adapterKey ).pipe(take(1)).subscribe(response => {
       console.log(response);
       this.preview = [];
       
-      console.log(this.previewTotal);
+     // console.log(this.previewTotal);
       response.dataPreview.forEach(entry => {
-        console.log(entry);
+     //   console.log(entry);
         if (entry.data && entry.data.structure) {
+          console.log('has structure, calling interpret');
           this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
             entry.data.structureID = response.structure.id;
+            console.log(response);
+            console.log('above is interpret response, below is set ID')
             console.log(entry.data.structureID);
             this.preview.push(entry);
             this.previewTotal = this.preview.length;
 
           });
-         console.log(this.preview);
        
         } else {
           if (entry.data) {
@@ -262,12 +270,13 @@ callPreview(): void {
     //  console.log(this.preview);
       this.preview = [];
       
-      console.log(this.previewTotal);
       this.previewDemo.dataPreview.forEach(entry => {
-        console.log(entry);
         if (entry.data && entry.data.structure) {
+          console.log('error processing: has structure, calling interpret');
           this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
             entry.data.structureID = response.structure.id;
+            console.log(response);
+            console.log('above is interpret response, below is set ID')
             console.log(entry.data.structureID);
             this.preview.push(entry);
             this.previewTotal = this.preview.length;

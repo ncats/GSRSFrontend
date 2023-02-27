@@ -150,7 +150,7 @@ export class AdminService extends BaseHttpService {
 
         public previewAdapter(id: string, file: any, adapter?: any): Observable< any > {
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import(${id})/@preview?adapter=${adapter}`;
-          return this.http.post< any >(`${url}`, file);
+          return this.http.put< any >(`${url}`, file);
         }
 
         public executeAdapter(id: string, file: any, adapter?: any): Observable< Auth > {

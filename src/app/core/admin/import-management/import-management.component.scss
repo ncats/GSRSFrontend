@@ -32,7 +32,8 @@
     }
     
     .preview-window {
-        max-width: 29%;
+        max-width: 28%;
+        margin-right:25px;
         width: 500px;
     }
 }
@@ -68,12 +69,12 @@
 
 .top-button-row {
     width: 100%;
-    margin: auto;
     margin-top: -130px;
     margin-bottom: 100px;
 display: flex;
 flex-direction: row;
-margin-left: 35%;
+align-items: center;
+  justify-content: center;
 
 .top-button {
     font-size: 20px;
@@ -101,7 +102,7 @@ width: 180px;
 }
 
 .set-width-label {
-    width: 220px;
+    min-width: 325px;
 }
 
 .load-progress {

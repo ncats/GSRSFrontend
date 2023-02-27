@@ -1,8 +1,8 @@
 <h3>Record Import </h3>
 <div class = "top-button-row">
-        <button  class = "top-button" mat-flat-button mat-button color = "primary">New Data Import</button>
-        <button class = "top-button" mat-flat-button mat-button color = "primary" (click) = "stagingArea()">Staging Area</button>
-</div>
+                <button  class = "top-button" mat-flat-button mat-button color = "primary" (click) = "ImportReload()">New Data Import</button>
+                <button class = "top-button" mat-flat-button mat-button color = "primary" (click) = "stagingArea()">Staging Area</button>
+        </div>
 <div *ngIf = "!step || step === 1">
 
 <div class = "file-select-container">
@@ -110,7 +110,7 @@
                         </div>
                                 <div>  <span *ngIf = "preview[previewIndex].data.structureID">
                                         
-                                        <img appSubstanceImage entityId="preview[previewIndex].data.structureID"
+                                        <img appSubstanceImage [entityId]="preview[previewIndex].data.structureID"
                                         >
                                 </span>
                                         <div class = "substance-data">

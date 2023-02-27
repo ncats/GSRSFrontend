@@ -61,7 +61,9 @@ export class ImportSummaryComponent implements OnInit {
   nameLoading = true;
   _ = lodash;
   codeSystems = [];
-  displayedColumns = ['name', 'keys', 'confidence', 'merge'];
+  displayedColumns = ['name', 'keys', 'merge'];
+  displayedColumns2 = ['type', 'message'];
+
   disabled = false;
   performedAction: string;
 
@@ -136,6 +138,16 @@ export class ImportSummaryComponent implements OnInit {
     return this.privateNames;
   }
 
+  getMatchSummary() {
+    this.substance.matchedRecords.forEach(record => {
+      this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
+        
+        record.substance = response;
+      });
+    })
+    
+  }
+
 
   getApprovalID() {
     if (!this.substance.approvalID) {
@@ -154,9 +166,10 @@ export class ImportSummaryComponent implements OnInit {
       this.codeSystems = substance.codes;
       console.log(substance);
       this.codes = substance.codes;
+      this.getStructureID();
+
       this.setCodeSystems();
       this.processValidation();
-      this.getStructureID();
 
       this.loadDynamicContent();
     }
@@ -167,10 +180,13 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   getStructureID() {
-    if(this.substance && this.substance.structure && this.substance.molfile) {
+    console.log('getting ID');
+    if(this.privateSubstance && this.privateSubstance.structure && this.privateSubstance.structure.molfile) {
         this.structureService.interpretStructure(this.privateSubstance.structure.molfile).subscribe(response => {
+          console.log(response);
           this.privateSubstance.structureID = response.structure.id;
-          console.log(this.privateSubstance.data.structureID);
+          this.substance.structureID = response.structure.id;
+          console.log(this.privateSubstance.structureID);
         });
       }
   }
@@ -185,8 +201,9 @@ export class ImportSummaryComponent implements OnInit {
         } else if (entry.validationType === 'warning') {
           validation.warnings++;
         }
-        validation.validations.push(validation);
+        validation.validations.push(entry);
       });
+      console.log(validation);
       
     }
     this.privateSubstance.validations = validation;
