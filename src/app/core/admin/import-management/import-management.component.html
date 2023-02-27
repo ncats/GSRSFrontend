@@ -99,7 +99,7 @@
         </div>
         <div class = "preview-window">
                 <div *ngIf = "previewTotal > 0" >
-                        <div style = "width:100%;margin:auto">
+                        <div style = "width:100%;margin-left: 100px;">
                                 <button [disabled] = "previewIndex === 0" mat-button (click)="changePreview('back')">
                                          <mat-icon svgIcon="chevron_left"></mat-icon>
                                 </button>
@@ -108,10 +108,10 @@
                                         <mat-icon svgIcon="chevron_right"></mat-icon>
                                 </button>
                         </div>
-                                <div>  <span *ngIf = "preview[previewIndex].data.structureID">
+                                <div>  <span>
                                         
                                         <img appSubstanceImage [entityId]="preview[previewIndex].data.structureID"
-                                        >
+                                        style = "margin-left: 150px;" >
                                 </span>
                                         <div class = "substance-data">
                                                 <div class="label">Names:</div>

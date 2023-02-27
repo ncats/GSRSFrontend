@@ -43,6 +43,7 @@ import { ImportSummaryComponent } from '@gsrs-core/admin/import-browse/import-su
 import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 
 
@@ -77,6 +78,7 @@ import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import
     MatSidenavModule,
   StructureEditorModule,
   FacetsManagerModule,
+  SubstanceImageModule
 ],
   declarations: [
     CvManagementComponent,
