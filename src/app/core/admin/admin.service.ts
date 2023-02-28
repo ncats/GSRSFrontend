@@ -149,6 +149,7 @@ export class AdminService extends BaseHttpService {
         }*/
 
         public previewAdapter(id: string, file: any, adapter?: any): Observable< any > {
+          console.log(file);
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import(${id})/@preview?adapter=${adapter}`;
           return this.http.put< any >(`${url}`, file);
         }

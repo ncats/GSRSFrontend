@@ -44,6 +44,7 @@ import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-mport.component';
 
 
 
@@ -96,7 +97,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     ImportManagementComponent,
     ImportBrowseComponent,
     ImportSummaryComponent,
-    ImportDialogComponent
+    ImportDialogComponent,
+    CvImportComponent
   ],
   exports: [
     CvManagementComponent,
@@ -114,13 +116,16 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     ImportManagementComponent,
     ImportBrowseComponent,
     ImportSummaryComponent,
-    ImportDialogComponent
+    ImportDialogComponent,
+    CvImportComponent
 
   ],
   entryComponents: [
     CvTermDialogComponent,
     UserEditDialogComponent,
-    ImportDialogComponent
+    ImportDialogComponent,
+    CvImportComponent
+
   ],
   providers: [
     CanActivateAdmin,

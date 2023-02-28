@@ -347,7 +347,7 @@
         <div [ngClass]="view">
           <div class="substance-cards">
             <div *ngFor="let substance of records">
-              <app-import-summary  [substance]="substance"
+              <app-import-summary  [substance]="substance" [recordID] = "idMapping[substance.uuid]"
                 (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="substance.names" [codes] = "substance.codes"
                
                 [codeSystemVocab]="codeSystem" [searchStrategy]="null">

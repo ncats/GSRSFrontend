@@ -1,0 +1,39 @@
+.risen {
+  margin-top: -15px;
+}
+
+
+.custom {
+  padding-bottom: 10px;
+  padding-top:10px;
+  border-bottom: 1px solid var(--box-shadow-color-6);
+}
+
+.deselect {
+  color: var(--text-color);
+}
+
+.add-term {
+  margin-left: -7px;
+  margin-bottom: -10px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.value, .display, .description {
+  flex-grow: 1;
+  padding-right: 15px;
+}
+.cv-field {
+  width:100%;
+}
+
+
+.add-term {
+  color: var(--secondary-blue);
+  font-style: italic;
+}

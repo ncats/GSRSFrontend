@@ -134,6 +134,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private wildCardText: string;
   bulkSearchPanelOpen = false;
   substanceList: any;
+  idMapping: Array< any > = [];
   demoResp: any;
   matches: Array<any>;
 
@@ -272,11 +273,13 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.substanceList = response.content;
       this.totalSubstances = response.total;
       response.content.forEach(record => {
-        this.adminService.GetStagedRecord(record.recordId).subscribe( response => {
-          this.records.push(response);
-        })
-      })
-
+        this.adminService.GetStagedRecord(record.recordId).subscribe( resp => {
+          this.records.push(resp);
+          this.idMapping[resp.uuid] = record.recordId;
+          
+        });
+      });
+      console.log(this.idMapping);
     }); 
   }
 

@@ -42,6 +42,7 @@ export class ImportSummaryComponent implements OnInit {
  codeSystemNames?: Array<string> = [];
   @Input() codeSystemVocab?: Vocabulary;
   @Input() searchStrategy?: string = '';
+  @Input() recordID: string = null;
   private codes: Array <any >;
 
   
