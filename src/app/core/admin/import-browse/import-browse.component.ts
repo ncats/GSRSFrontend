@@ -276,6 +276,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.adminService.GetStagedRecord(record.recordId).subscribe( resp => {
           this.records.push(resp);
           this.idMapping[resp.uuid] = record.recordId;
+          console.log(this.idMapping[resp.uuid]);
           
         });
       });
@@ -481,6 +482,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     let subject = new Subject<string>();
     let ids = [];
     this.adminService.GetStagedRecord(id).subscribe(response => {
+      this.idMapping[response.uuid] = id;
       response._matches.matches.forEach(match => {
         match.matchingRecords.forEach(matchRec => {
           if (!ids[matchRec.recordId.idString]) {
@@ -499,7 +501,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       response.matchedRecords = items;
       subject.next(response);
+      console.log(this.idMapping);
+
     }, error => {
+      this.idMapping[this.demoResp.uuid] = id;
       let response = JSON.parse(JSON.stringify(this.demoResp));
       response._matches.matches.forEach(match => {
         match.matchingRecords.forEach(matchRec => {
@@ -520,6 +525,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
       response.matchedRecords = items;
       subject.next(response);
+      console.log(this.idMapping);
+
     });
     return subject.asObservable();
   }

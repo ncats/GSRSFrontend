@@ -38,6 +38,7 @@
             </div>
 
         </div>
+       
            </div>
 
               
@@ -69,17 +70,21 @@
 
     <div *ngIf = "step && step === 3">
         <div><h3>Step 2: Configure Importer Actions</h3></div>
-        <div class = "label-value" >
-                <div class = "label inline-vertical">
+        <div class = "label-value"  style = "width:100%">
+                <div class = "action-list" style = "display:flex">
+                <div class = "label inline-vertical" style = "padding-left:25px;">
                     <b>Import Action</b>
                 </div>
-                <div class = "value-container inline-vertical">
+                <div class = "value-container inline-vertical" style = "padding-left: 125px; width: 52%;">
                         <b>Action Details</b>
                 </div>
-                <span class = "middle-fill">
-
-                </span>
-                <div class = "label inline-vertical" style = "margin-right:100px;">
+                <div class = "ignore-container inline-vertical" style = "">
+                        <b>Ignore Field</b>
+                </div>
+        </div>
+               
+                
+                <div class = "label inline-vertical preview-container ">
                                 <b>Preview</b>   <span style = "width:25px;"> </span>                     
                                  <button style = "margin:auto" mat-button mat-primary-button (click) = "callPreview()">{{previewTotal > 0? 'Reload Preview':'Load Preview'}}</button>
 
@@ -94,6 +99,9 @@
                                         </div>
                                         <div class = "value-container inline-vertical">
                                                <i class = "inline-vertical  set-width-label">{{action.fileField ? action.fileField + ' field from file' : 'fileField missing'}}</i> <button class = "mat-button mat-primary mat-flat-button" style = "margin-left: 15px;" (click) = "openAction( settingTemplate, $index)">Settings...</button>
+                                        </div>
+                                        <div style = "margin: auto;margin-left:0px;">
+                                                        <mat-checkbox [(ngModel)] = "toIgnore[action.fileField]"></mat-checkbox>
                                         </div>
                                     </div>
         </div>

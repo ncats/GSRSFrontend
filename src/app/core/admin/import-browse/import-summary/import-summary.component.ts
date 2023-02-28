@@ -85,6 +85,7 @@ export class ImportSummaryComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(this.recordID);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
@@ -168,6 +169,7 @@ export class ImportSummaryComponent implements OnInit {
       this.codeSystems = substance.codes;
       console.log(substance);
       this.codes = substance.codes;
+      console.log(substance._metadata.recordId);
       this.getStructureID();
 
       this.setCodeSystems();
@@ -214,6 +216,7 @@ export class ImportSummaryComponent implements OnInit {
   doAction(action: string) {
     this.loadingService.setLoading(true);
     this.adminService.stagedRecordAction(this.privateSubstance.uuid, this.privateSubstance.uuid, action).subscribe(result => {
+      alert('temp alert: successful action: ' + action);
       if (result) {
         this.disabled = true;
         this.performedAction = action;
@@ -221,6 +224,8 @@ export class ImportSummaryComponent implements OnInit {
       this.doneAction.emit(this.privateSubstance.uuid);
       this.loadingService.setLoading(false);
     }, error => {
+      alert('temp alert: failed action - error in console');
+      console.log(error);
       this.loadingService.setLoading(false);
     });
   }
