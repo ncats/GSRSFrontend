@@ -216,7 +216,7 @@ export class AdminService extends BaseHttpService {
         }
 
         public stagedRecordAction(id:string, record: string, action: string) {
-          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/1/@act?matchedEntityId=${record}&view=internal&persistChangedObject=true`;
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/0/@act?matchedEntityId=${record}&view=internal&persistChangedObject=true`;
           let toput = {};
           if (action === 'create') {
             toput = {
@@ -242,7 +242,7 @@ export class AdminService extends BaseHttpService {
             toput = {
               "processingActions": [
                 {
-                  "processingActionClass": "gsrs.dataexchange.processing_actions.IgnoreProcessingAction"
+                  "processingActionClass": "gsrs.dataexchange.processing_actions.RejectProcessingAction"
                 }
               ]
             }
