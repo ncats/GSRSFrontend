@@ -317,7 +317,54 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.getDetailsFromImport(record.record);
             this.gaService.sendPageView(`Substance Register`);
 
-          } else {
+          } else if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+            this.substanceService.GetStagedRecord(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
+              response.uuid = null;
+
+
+                if (response._name){
+                  let name = response._name;
+                  response.names.forEach(current => {
+                    if (current.displayName && current.stdName) {
+                      name = current.stdName;
+                    }
+                  });
+                  name = name.replace(/<[^>]*>?/gm, '');
+                  this.titleService.setTitle('Edit - ' + name);
+                }
+                if (response) {
+                  this.definitionType = response.definitionType;
+                  this.substanceClass = response.substanceClass;
+                  this.status = response.status;
+                  this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+                    this.setFormSections(formSections[response.substanceClass]);
+                  });
+                
+              }
+            }, error => {
+              let response = this.setDemo();
+              response.uuid = null;
+              if (response._name){
+                let name = response._name;
+                response.names.forEach(current => {
+                  if (current.displayName && current.stdName) {
+                    name = current.stdName;
+                  }
+                });
+                name = name.replace(/<[^>]*>?/gm, '');
+                this.titleService.setTitle('Edit - ' + name);
+              }
+              if (response) {
+                this.definitionType = response.definitionType;
+                this.substanceClass = response.substanceClass;
+                this.status = response.status;
+                this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+                  this.setFormSections(formSections[response.substanceClass]);
+                });
+              
+            }
+            });      
+        } else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
           if (this.copy) {
             const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
@@ -1205,5 +1252,592 @@ mergeConcept() {
 
     
 
+  }
+
+  setDemo() {
+    return {
+      "deprecated": false,
+      "uuid": "eb17b78c-1e4b-4dca-bdef-6d64a0013aec",
+      "definitionType": "PRIMARY",
+      "definitionLevel": "COMPLETE",
+      "substanceClass": "chemical",
+      "status": "pending",
+      "version": "1",
+      "names": [
+        {
+          "deprecated": false,
+          "uuid": "3204c8dc-8bc4-487e-8d74-91a2f5d49fb7",
+          "name": "EINECS 245-123-2",
+          "stdName": "EINECS 245-123-2",
+          "type": "cn",
+          "domains": [],
+          "languages": [
+            "en"
+          ],
+          "nameJurisdiction": [],
+          "nameOrgs": [],
+          "preferred": false,
+          "displayName": true,
+          "references": [
+            "8b47627f-e78e-46ea-9d27-7cdfb80bb391"
+          ],
+          "access": []
+        }
+      ],
+      "codes": [
+        {
+          "deprecated": false,
+          "codeSystem": "CAS",
+          "code": "22615-60-7",
+          "type": "PRIMARY",
+          "_isClassification": false,
+          "references": [
+            "7a8afac4-4448-4d8f-babe-cef3a85d5f2a"
+          ],
+          "access": []
+        }
+      ],
+      "notes": [
+        {
+          "deprecated": false,
+          "note": "[Validation]WARNING:Each fragment should be present as a separate record in the database. Please register: [Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]",
+          "references": [
+            "58e0915e-137d-48cc-997d-248474c8830b"
+          ],
+          "access": [
+            "admin"
+          ]
+        }
+      ],
+      "properties": [],
+      "relationships": [],
+      "references": [
+        {
+          "deprecated": false,
+          "uuid": "7a8afac4-4448-4d8f-babe-cef3a85d5f2a",
+          "citation": "System generated",
+          "docType": "SYSTEM",
+          "publicDomain": true,
+          "tags": [
+            "PUBLIC_DOMAIN_RELEASE"
+          ],
+          "access": []
+        },
+        {
+          "deprecated": false,
+          "uuid": "8b47627f-e78e-46ea-9d27-7cdfb80bb391",
+          "citation": "File null imported on Tue Feb 21 13:33:01 EST 2023",
+          "docType": "CATALOG",
+          "publicDomain": true,
+          "tags": [],
+          "access": []
+        },
+        {
+          "deprecated": false,
+          "uuid": "58e0915e-137d-48cc-997d-248474c8830b",
+          "citation": "GSRS System-generated Validation messages",
+          "docType": "VALIDATION_MESSAGE",
+          "documentDate": 1677004382385,
+          "publicDomain": false,
+          "tags": [],
+          "access": [
+            "admin"
+          ]
+        }
+      ],
+      "tags": [],
+      "structure": {
+        "deprecated": false,
+        "digest": "22dbfd7e56a5f5b642d9fb10746cee508e278dd7",
+        "molfile": "\n  CDK     02212313332D\n\n 10  7  0  0  0  0  0  0  0  0999 V2000\n    2.3750   -3.7292    0.0000 Ru  0  2  0  0  0  0  0  0  0  0  0  0\n    1.6708   -3.7292    0.0000 Cl  0  0  0  0  0  0  0  0  0  0  0  0\n    3.5542   -3.7125    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    4.2708   -3.7125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    1.8958   -2.9875    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8917   -4.4958    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    1.7125   -4.5250    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8708   -2.8833    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    5.5375   -3.8875    0.0000 Cl  0  5  0  0  0  0  0  0  0  0  0  0\n   -0.6125   -3.7958    0.0000 Cl  0  5  0  0  0  0  0  0  0  0  0  0\n  1  5  1  0  0  0  0\n  1  2  1  0  0  0  0\n  1  6  1  0  0  0  0\n  1  7  1  0  0  0  0\n  1  3  1  0  0  0  0\n  1  8  1  0  0  0  0\n  3  4  2  0  0  0  0\nM  CHG  1   1   2\nM  CHG  1   9  -1\nM  CHG  1  10  -1\nM  END",
+        "smiles": "[Cl-].[Cl-].[Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]",
+        "formula": "2Cl.ClH<sub>8</sub>N<sub>5</sub>ORu",
+        "opticalActivity": "NONE",
+        "atropisomerism": "No",
+        "stereoCenters": 0,
+        "definedStereo": 0,
+        "ezCenters": 0,
+        "charge": 0,
+        "mwt": 301.5202,
+        "properties": [
+          {
+            "label": "SMILES",
+            "text": "[Cl-].[Cl-].[Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]"
+          },
+          {
+            "label": "InChI_Key",
+            "term": "MYPLXICLEQNWLS_UHFFFAOYSA_K"
+          },
+          {
+            "label": "EXACT_HASH",
+            "term": "MYPLXICLEQNWLS_UHFFFAOYSA_K"
+          },
+          {
+            "label": "STEREO_INSENSITIVE_HASH",
+            "term": "MYPLXICLEQNWLS"
+          }
+        ],
+        "links": [],
+        "count": 1,
+        "stereochemistry": "ACHIRAL",
+        "stereoChemistry": "ACHIRAL",
+        "access": [],
+        "references": [
+          "8b47627f-e78e-46ea-9d27-7cdfb80bb391"
+        ],
+        "hash": "MYPLXICLEQNWLS_UHFFFAOYSA_K"
+      },
+      "moieties": [
+        {
+          "deprecated": false,
+          "digest": "d0c87fddbea1426d6f72954f3472043800d74085",
+          "molfile": "\n  CDK     02212313332D\n\n  8  7  0  0  0  0  0  0  0  0999 V2000\n    2.3750   -3.7292    0.0000 Ru  0  2  0  0  0  0  0  0  0  0  0  0\n    1.6708   -3.7292    0.0000 Cl  0  0  0  0  0  0  0  0  0  0  0  0\n    3.5542   -3.7125    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    4.2708   -3.7125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    1.8958   -2.9875    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8917   -4.4958    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    1.7125   -4.5250    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    2.8708   -2.8833    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n  1  5  1  0  0  0  0\n  1  2  1  0  0  0  0\n  1  6  1  0  0  0  0\n  1  7  1  0  0  0  0\n  1  3  1  0  0  0  0\n  1  8  1  0  0  0  0\n  3  4  2  0  0  0  0\nM  CHG  1   1   2\nM  END",
+          "smiles": "[Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]",
+          "formula": "ClH8N5ORu",
+          "opticalActivity": "NONE",
+          "atropisomerism": "No",
+          "stereoCenters": 0,
+          "definedStereo": 0,
+          "ezCenters": 0,
+          "charge": 2,
+          "mwt": 230.6143,
+          "properties": [
+            {
+              "label": "SMILES",
+              "text": "[Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]"
+            },
+            {
+              "label": "InChI_Key",
+              "term": "YRVVILPTLZEWRT_UHFFFAOYSA_M"
+            },
+            {
+              "label": "EXACT_HASH",
+              "term": "YRVVILPTLZEWRT_UHFFFAOYSA_M"
+            },
+            {
+              "label": "STEREO_INSENSITIVE_HASH",
+              "term": "YRVVILPTLZEWRT"
+            }
+          ],
+          "links": [],
+          "count": 1,
+          "stereochemistry": "ACHIRAL",
+          "stereoChemistry": "ACHIRAL",
+          "access": [],
+          "references": [],
+          "hash": "YRVVILPTLZEWRT_UHFFFAOYSA_M",
+          "countAmount": {
+            "deprecated": false,
+            "type": "MOL RATIO",
+            "average": 1,
+            "units": "MOL RATIO",
+            "references": [],
+            "access": []
+          }
+        },
+        {
+          "deprecated": false,
+          "digest": "d542d8767d587637cd9c5293fb6d3c5b0b8911b2",
+          "molfile": "\n  CDK     02212313332D\n\n  1  0  0  0  0  0  0  0  0  0999 V2000\n    5.5375   -3.8875    0.0000 Cl  0  5  0  0  0  0  0  0  0  0  0  0\nM  CHG  1   1  -1\nM  END",
+          "smiles": "[Cl-]",
+          "formula": "Cl",
+          "opticalActivity": "NONE",
+          "atropisomerism": "No",
+          "stereoCenters": 0,
+          "definedStereo": 0,
+          "ezCenters": 0,
+          "charge": -1,
+          "mwt": 35.4529,
+          "properties": [
+            {
+              "label": "SMILES",
+              "text": "[Cl-]"
+            },
+            {
+              "label": "InChI_Key",
+              "term": "VEXZGXHMUGYJMC_UHFFFAOYSA_M"
+            },
+            {
+              "label": "EXACT_HASH",
+              "term": "VEXZGXHMUGYJMC_UHFFFAOYSA_M"
+            },
+            {
+              "label": "STEREO_INSENSITIVE_HASH",
+              "term": "VEXZGXHMUGYJMC"
+            }
+          ],
+          "links": [],
+          "count": 2,
+          "stereochemistry": "ACHIRAL",
+          "stereoChemistry": "ACHIRAL",
+          "access": [],
+          "references": [],
+          "hash": "VEXZGXHMUGYJMC_UHFFFAOYSA_M",
+          "countAmount": {
+            "deprecated": false,
+            "type": "MOL RATIO",
+            "average": 2,
+            "units": "MOL RATIO",
+            "references": [],
+            "access": []
+          }
+        }
+      ],
+      "_name": "EINECS 245-123-2",
+      "_approvalIDDisplay": "pending record",
+      "access": [],
+      "_metadata": {
+        "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+        "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+        "version": 1,
+        "sourceName": "nlm_2 part 22m.sdf",
+        "versionCreationDate": 1677004381837,
+        "importStatus": "merged",
+        "importType": "create",
+        "versionStatus": "current",
+        "validationStatus": "warning",
+        "processStatus": "loaded",
+        "entityClassName": "ix.ginas.models.v1.Substance",
+        "keyValueMappings": [
+          {
+            "mappingId": "79df508c-121d-45f0-b7c3-457c8dfbcbdc",
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+            "key": "CAS NUMBER",
+            "value": "22615-60-7",
+            "dataLocation": "Staging Area",
+            "entityClass": "ix.ginas.models.v1.Substance"
+          },
+          {
+            "mappingId": "fafde51e-3b6a-4a7b-acd1-9df0d5187c76",
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+            "key": "Substance Name",
+            "value": "EINECS 245-123-2",
+            "dataLocation": "Staging Area",
+            "entityClass": "ix.ginas.models.v1.Substance"
+          },
+          {
+            "mappingId": "93e91be3-c924-4867-bac8-af576062fe0c",
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+            "key": "Primary Name",
+            "value": "EINECS 245-123-2",
+            "dataLocation": "Staging Area",
+            "entityClass": "ix.ginas.models.v1.Substance"
+          },
+          {
+            "mappingId": "1c4ffb1a-f4d9-4175-8946-4ca1469e32a8",
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+            "key": "Definitional Hash - Layer 1",
+            "value": "e4530fce3e163ba464763e873f6df801188284f5",
+            "dataLocation": "Staging Area",
+            "entityClass": "ix.ginas.models.v1.Substance"
+          },
+          {
+            "mappingId": "f1ce2517-99da-48ca-a6b6-8e0a0efe0098",
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+            "key": "Definitional Hash - Layer 2",
+            "value": "fd8d4dcba08581303eed2c2ca9dc1d81cfcee0e4",
+            "dataLocation": "Staging Area",
+            "entityClass": "ix.ginas.models.v1.Substance"
+          },
+          {
+            "mappingId": "3dfd49bb-5037-462b-8c17-98841428994d",
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+            "key": "CODE",
+            "value": "22615-60-7",
+            "dataLocation": "Staging Area",
+            "entityClass": "ix.ginas.models.v1.Substance"
+          },
+          {
+            "mappingId": "3fe53378-16a5-47ab-9fbf-2dceda290945",
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "recordId": "8669cf29-b311-456d-a172-96151a031f52",
+            "key": "UUID",
+            "value": "eb17b78c-1e4b-4dca-bdef-6d64a0013aec",
+            "dataLocation": "Staging Area",
+            "entityClass": "ix.ginas.models.v1.Substance"
+          }
+        ],
+        "validations": [
+          {
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "version": 1,
+            "validationDate": 1677004382386,
+            "validationMessage": "Each fragment should be present as a separate record in the database. Please register: [Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]",
+            "validationJson": "ValidationResponse{validationMessages=[INFO: No moieties found in submission. They will be generated automatically., WARNING: Each fragment should be present as a separate record in the database. Please register: [Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]], valid=true, newObject=Substance{uuid=eb17b78c-1e4b-4dca-bdef-6d64a0013aec, substanceClass=chemical, version='1'}}",
+            "validationType": "warning",
+            "validationId": "72bd0cbc-12a0-46a0-9718-b7971bad0491"
+          },
+          {
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "version": 1,
+            "validationDate": 1677004382389,
+            "validationMessage": "No moieties found in submission. They will be generated automatically.",
+            "validationJson": "ValidationResponse{validationMessages=[INFO: No moieties found in submission. They will be generated automatically., WARNING: Each fragment should be present as a separate record in the database. Please register: [Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]], valid=true, newObject=Substance{uuid=eb17b78c-1e4b-4dca-bdef-6d64a0013aec, substanceClass=chemical, version='1'}}",
+            "validationType": "info",
+            "validationId": "afebceda-e15a-4a9a-a270-7b3787e58678"
+          }
+        ],
+        "dataFormat": "application/octet-stream",
+        "importAdapter": "SDF Adapter",
+        "access": []
+      },
+      "_matches": {
+        "query": [
+          {
+            "key": "CAS NUMBER",
+            "value": "22615-60-7",
+            "qualifier": "CAS",
+            "layer": 1
+          },
+          {
+            "key": "Substance Name",
+            "value": "EINECS 245-123-2",
+            "qualifier": "name type: cn",
+            "layer": 1
+          },
+          {
+            "key": "Primary Name",
+            "value": "EINECS 245-123-2",
+            "qualifier": "Display Name",
+            "layer": 0
+          },
+          {
+            "key": "Definitional Hash - Layer 1",
+            "value": "801bdccb80fe39f42eb7ec2ba029adb91bd76479",
+            "layer": 1
+          },
+          {
+            "key": "Definitional Hash - Layer 2",
+            "value": "142616304821caf525b137f43414aad6f61e58c3",
+            "layer": 2
+          },
+          {
+            "key": "CODE",
+            "value": "22615-60-7",
+            "qualifier": "Code system: CAS; type: PRIMARY",
+            "layer": 0
+          }
+        ],
+        "matches": [
+          {
+            "tupleUsedInMatching": {
+              "key": "CAS NUMBER",
+              "value": "22615-60-7",
+              "qualifier": "CAS",
+              "layer": 1
+            },
+            "matchingRecords": [
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "4673c329-569b-4068-8700-d661376a454d"
+                },
+                "sourceName": "GSRS",
+                "matchedKey": "CAS NUMBER"
+              },
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "3924bf03-1013-4cb0-8fb5-494219e136e4"
+                },
+                "sourceName": "GSRS",
+                "matchedKey": "CAS NUMBER"
+              },
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "8669cf29-b311-456d-a172-96151a031f52"
+                },
+                "sourceName": "Staging Area",
+                "matchedKey": "CAS NUMBER"
+              }
+            ]
+          },
+          {
+            "tupleUsedInMatching": {
+              "key": "Substance Name",
+              "value": "EINECS 245-123-2",
+              "qualifier": "name type: cn",
+              "layer": 1
+            },
+            "matchingRecords": [
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
+                },
+                "sourceName": "GSRS",
+                "matchedKey": "Substance Name"
+              },
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
+                },
+                "sourceName": "GSRS",
+                "matchedKey": "Substance Name"
+              },
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "8669cf29-b311-456d-a172-96151a031f52"
+                },
+                "sourceName": "Staging Area",
+                "matchedKey": "Substance Name"
+              }
+            ]
+          },
+          {
+            "tupleUsedInMatching": {
+              "key": "Primary Name",
+              "value": "EINECS 245-123-2",
+              "qualifier": "Display Name",
+              "layer": 0
+            },
+            "matchingRecords": [
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
+                },
+                "sourceName": "GSRS",
+                "matchedKey": "Primary Name"
+              },
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "90e9191d-1a81-4a53-b7ee-560bf9e68109"
+                },
+                "sourceName": "Staging Area",
+                "matchedKey": "Primary Name"
+              }
+            ]
+          },
+          {
+            "tupleUsedInMatching": {
+              "key": "Definitional Hash - Layer 1",
+              "value": "801bdccb80fe39f42eb7ec2ba029adb91bd76479",
+              "layer": 1
+            },
+            "matchingRecords": []
+          },
+          {
+            "tupleUsedInMatching": {
+              "key": "Definitional Hash - Layer 2",
+              "value": "142616304821caf525b137f43414aad6f61e58c3",
+              "layer": 2
+            },
+            "matchingRecords": []
+          },
+          {
+            "tupleUsedInMatching": {
+              "key": "CODE",
+              "value": "22615-60-7",
+              "qualifier": "Code system: CAS; type: PRIMARY",
+              "layer": 0
+            },
+            "matchingRecords": [
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "4673c329-569b-4068-8700-d661376a454d"
+                },
+                "sourceName": "GSRS",
+                "matchedKey": "CODE"
+              },
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "3924bf03-1013-4cb0-8fb5-494219e136e4"
+                },
+                "sourceName": "GSRS",
+                "matchedKey": "CODE"
+              },
+              {
+                "recordId": {
+                  "kind": "ix.ginas.models.v1.ChemicalSubstance",
+                  "idString": "8669cf29-b311-456d-a172-96151a031f52"
+                },
+                "sourceName": "Staging Area",
+                "matchedKey": "CODE"
+              }
+            ]
+          }
+        ],
+        "multiplyMatchedKeys": [],
+        "uniqueMatchingKeys": [
+          "CAS NUMBER",
+          "Substance Name",
+          "Primary Name",
+          "Definitional Hash - Layer 1",
+          "Definitional Hash - Layer 2",
+          "CODE"
+        ]
+      },
+      "matchedRecords": [
+        {
+          "ID": "4673c329-569b-4068-8700-d661376a454d",
+          "records": [
+            "CAS NUMBER",
+            "CODE"
+          ]
+        },
+        {
+          "ID": "3924bf03-1013-4cb0-8fb5-494219e136e4",
+          "records": [
+            "CAS NUMBER",
+            "CODE"
+          ]
+        },
+        {
+          "ID": "8669cf29-b311-456d-a172-96151a031f52",
+          "records": [
+            "CAS NUMBER",
+            "Substance Name",
+            "CODE"
+          ]
+        },
+        {
+          "ID": "90e9191d-1a81-4a53-b7ee-560bf9e68109",
+          "records": [
+            "Substance Name",
+            "Substance Name",
+            "Primary Name",
+            "Primary Name"
+          ],
+          "_name": "SODIUM <b>GLUCONATE</b>"
+        }
+      ],
+      "validations": {
+        "warnings": 1,
+        "errors": 0,
+        "validations": [
+          {
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "version": 1,
+            "validationDate": 1677004382386,
+            "validationMessage": "Each fragment should be present as a separate record in the database. Please register: [Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]",
+            "validationJson": "ValidationResponse{validationMessages=[INFO: No moieties found in submission. They will be generated automatically., WARNING: Each fragment should be present as a separate record in the database. Please register: [Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]], valid=true, newObject=Substance{uuid=eb17b78c-1e4b-4dca-bdef-6d64a0013aec, substanceClass=chemical, version='1'}}",
+            "validationType": "warning",
+            "validationId": "72bd0cbc-12a0-46a0-9718-b7971bad0491"
+          },
+          {
+            "instanceId": "402260f4-5c9c-4e96-ac1b-87c597191638",
+            "version": 1,
+            "validationDate": 1677004382389,
+            "validationMessage": "No moieties found in submission. They will be generated automatically.",
+            "validationJson": "ValidationResponse{validationMessages=[INFO: No moieties found in submission. They will be generated automatically., WARNING: Each fragment should be present as a separate record in the database. Please register: [Cl-].[N-]=O.[NH2-].[NH2-].[NH2-].[NH2-].[Ru+8]], valid=true, newObject=Substance{uuid=eb17b78c-1e4b-4dca-bdef-6d64a0013aec, substanceClass=chemical, version='1'}}",
+            "validationType": "info",
+            "validationId": "afebceda-e15a-4a9a-a270-7b3787e58678"
+          }
+        ]
+      }
+    };
   }
 }
