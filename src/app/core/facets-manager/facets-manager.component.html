@@ -20,7 +20,7 @@
     *ngFor="let facet of facets; index as topIndex">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        {{facet.name }}
+        {{facet.name | facetDisplay}}
       </mat-panel-title>
     </mat-expansion-panel-header>
 
