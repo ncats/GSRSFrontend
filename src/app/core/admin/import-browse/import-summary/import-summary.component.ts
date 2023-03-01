@@ -34,6 +34,7 @@ export class ImportSummaryComponent implements OnInit {
   private privateSubstance: any;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Output() doneAction = new EventEmitter< any >();
+  privateDummyID: string;
   showAudit = false;
   isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
   canCreate = false; //meant to allow creating new records
@@ -84,8 +85,17 @@ export class ImportSummaryComponent implements OnInit {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
+  @Input()
+  set dummyID(dummyID: any) {
+    console.log(dummyID);
+    this.privateDummyID = dummyID;
+  }
+
+  get dummyID(): any {
+    return this.privateDummyID;
+  }
+
   ngOnInit() {
-    console.log(this.recordID);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
@@ -147,7 +157,7 @@ export class ImportSummaryComponent implements OnInit {
         record._name = response._name;
       });
     });
-    console.log(this.substance.matchedRecords);
+   // console.log(this.substance.matchedRecords);
     
   }
 
@@ -167,10 +177,10 @@ export class ImportSummaryComponent implements OnInit {
     if (substance != null) {
       this.privateSubstance = substance;
       this.codeSystems = substance.codes;
-      console.log(substance);
+     // console.log(substance);
       this.codes = substance.codes;
-      console.log(substance._metadata.recordId);
-      this.getStructureID();
+     // console.log(substance._metadata.recordId);
+    //  this.getStructureID();
 
       this.setCodeSystems();
       this.processValidation();
@@ -184,13 +194,13 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   getStructureID() {
-    console.log('getting ID');
+  //  console.log('getting ID');
     if(this.privateSubstance && this.privateSubstance.structure && this.privateSubstance.structure.molfile) {
         this.structureService.interpretStructure(this.privateSubstance.structure.molfile).subscribe(response => {
-          console.log(response);
+        //  console.log(response);
           this.privateSubstance.structureID = response.structure.id;
           this.substance.structureID = response.structure.id;
-          console.log(this.privateSubstance.structureID);
+       //   console.log(this.privateSubstance.structureID);
         });
       }
   }
@@ -199,7 +209,7 @@ export class ImportSummaryComponent implements OnInit {
     
     if(this.privateSubstance._metadata && this.privateSubstance._metadata.validations){
       this.privateSubstance._metadata.validations.forEach (entry => {
-        console.log(entry);
+     //   console.log(entry);
         if(entry.validationType === 'error') {
           validation.errors++;
         } else if (entry.validationType === 'warning') {
@@ -207,15 +217,21 @@ export class ImportSummaryComponent implements OnInit {
         }
         validation.validations.push(entry);
       });
-      console.log(validation);
+    //  console.log(validation);
       
     }
     this.privateSubstance.validations = validation;
   }
 
-  doAction(action: string) {
+  doAction(action: string, mergeID?: string) {
+    console.log(this.privateDummyID);
+    if (!mergeID) {
+      console.log('no mergeID sent');
+      mergeID = this.privateDummyID;
+    }
     this.loadingService.setLoading(true);
-    this.adminService.stagedRecordAction(this.privateSubstance.uuid, this.privateSubstance.uuid, action).subscribe(result => {
+    console.log(mergeID);
+    this.adminService.stagedRecordAction(this.privateSubstance._metadata.recordId, mergeID, action).subscribe(result => {
       alert('temp alert: successful action: ' + action);
       if (result) {
         this.disabled = true;
@@ -225,14 +241,14 @@ export class ImportSummaryComponent implements OnInit {
       this.loadingService.setLoading(false);
     }, error => {
       alert('temp alert: failed action - error in console');
-      console.log(error);
+    //  console.log(error);
       this.loadingService.setLoading(false);
     });
   }
 
   setCodeSystems() {
-    console.log('setting');
-    console.log(this.codes);
+  //  console.log('setting');
+  //  console.log(this.codes);
     if (this.codes && this.codes.length > 0) {
       const substanceId = this.substance.uuid;
       
@@ -260,7 +276,7 @@ export class ImportSummaryComponent implements OnInit {
       });
   
     }
-    console.log(this.codeSystemNames);
+    //console.log(this.codeSystemNames);
   }
 
   sortCodeSystems(codes: Array<string>): Array<string> {

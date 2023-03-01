@@ -93,7 +93,7 @@
         </div>
         <div class = "full-row">
                 <div class = "action-list">
-                        <div class = "label-value  inline-vertical" *ngFor = "let action of this.demoResp.adapterSettings.actions, index as $index">
+                        <div class = "label-value  inline-vertical" *ngFor = "let action of postResp.adapterSettings.actions, index as $index">
                                         <div class = "label inline-vertical ">
                                             {{action.label? replaceAction(action.label) : "missing label"}} 
                                         </div>

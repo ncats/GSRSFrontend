@@ -201,7 +201,6 @@ export class AdminService extends BaseHttpService {
 
           }
 
-          console.log(params);
           const options = {
             params: params
           };
@@ -209,6 +208,11 @@ export class AdminService extends BaseHttpService {
           
           return this.http.get< any >(url, options);
 
+        }
+
+        public GetSingleUUID() {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/search?top=1`;
+          return this.http.get< any >(url);
         }
 
         public stagedRecordAction(id:string, record: string, action: string) {

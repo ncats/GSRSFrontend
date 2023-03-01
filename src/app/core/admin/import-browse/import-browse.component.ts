@@ -137,6 +137,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   idMapping: Array< any > = [];
   demoResp: any;
   matches: Array<any>;
+  dummyUUID: string;
 
 
 
@@ -193,6 +194,12 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.records = [];
     let temp = this.loadDemo();
     let temp2 = temp["dataPreview"];
+    this.adminService.GetSingleUUID().subscribe(response => {
+      console.log('getting single');
+      console.log(response);
+      this.dummyUUID =response.content[0].uuid;
+      console.log(this.dummyUUID);
+    });
     temp2.forEach(record => {
       if (record.data){
       //  record.data.matches = record.matches;
@@ -485,12 +492,14 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.idMapping[response.uuid] = id;
       response._matches.matches.forEach(match => {
         match.matchingRecords.forEach(matchRec => {
-          if (!ids[matchRec.recordId.idString]) {
-            ids[matchRec.recordId.idString] = [matchRec.matchedKey];
-          } else {
-            ids[matchRec.recordId.idString].push(matchRec.matchedKey);
-
+          if (matchRec.sourceName == 'GSRS') {
+            if (!ids[matchRec.recordId.idString]) {
+              ids[matchRec.recordId.idString] = [matchRec.matchedKey];
+            } else {
+              ids[matchRec.recordId.idString].push(matchRec.matchedKey);
+            }
           }
+          
         });
       });
       let items = [];
@@ -576,7 +585,13 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       const skip = this.pageIndex * this.pageSize;
       const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams)
         .subscribe(pagingResponse => {
-          pagingResponse = this.setDemo2();
+          console.log(pagingResponse);
+          if (pagingResponse.total == 0 && pagingResponse.count == 0) {
+            pagingResponse = this.setDemo2();
+            alert('temp alert: response had a count and total of 0, using dummy data');
+            pagingResponse = this.setDemo2();
+          }
+         // pagingResponse = this.setDemo2();
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
           this.pageSize = 10;

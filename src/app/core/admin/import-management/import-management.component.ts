@@ -31,7 +31,7 @@ settingsIndex: number;
 settingsActive: any;
 step = 1;
 private overlayContainer: HTMLElement;
-demoResp: any;
+postResp: any;
 save = false;
 preview: any;
 fileID: string;
@@ -70,8 +70,8 @@ setAdapter(event?: any) {
 
 openAction(templateRef:any, index: number):void  {
   this.save = false;
-  console.log(this.demoResp);
-    this.settingsActive = this.demoResp.adapterSettings.actions[index];
+  console.log(this.postResp);
+    this.settingsActive = this.postResp.adapterSettings.actions[index];
     console.log('template opened for adapter of index ' + index);
     console.log(this.settingsActive.actionParameters);
 
@@ -88,9 +88,9 @@ openAction(templateRef:any, index: number):void  {
       console.log(result);
       if(result) {
         this.overlayContainer.style.zIndex = null;
-        this.demoResp.adapterSettings.actions[index] = result;
+        this.postResp.adapterSettings.actions[index] = result;
         console.log('new adapter settings set:');
-        console.log(this.demoResp.adapterSettings.actions[index]);
+        console.log(this.postResp.adapterSettings.actions[index]);
       } else {
         console.log('closed without saving');
       }
@@ -169,9 +169,9 @@ ngOnInit() {
     this.adminService.postAdapterFile(formData, this.adapterKey).pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
      this.step = 3;
-      this.demoResp = response;
+      this.postResp = response;
       this.fileID = response.id;
-      this.demoResp.adapterSettings.actions.forEach(action => {
+      this.postResp.adapterSettings.actions.forEach(action => {
         this.toIgnore[action.fileField] = false;
       });
     
@@ -181,7 +181,7 @@ ngOnInit() {
     console.log(error);
     alert('error in upload call, continuing with non-api demo. Error in console');
     this.step = 3;
-    this.fileID = this.demoResp.id;
+    this.fileID = this.postResp.id;
     this.loadingService.setLoading(false);
    });
   }
@@ -189,7 +189,7 @@ ngOnInit() {
   putTest(): void {
     this.loadingService.setLoading(true);
     this.step = 4;
-    let tosend = JSON.parse(JSON.stringify(this.demoResp));
+    let tosend = JSON.parse(JSON.stringify(this.postResp));
      for (let  i = (tosend.adapterSettings.actions.length - 1); i>=0 ; i--) {
        
         let current = tosend.adapterSettings.actions[i];
@@ -252,7 +252,7 @@ callPreview(): void {
    //   console.log(this.uploadForm.get('file').value);
   //   console.log('sending to api service adapter:' + this.fileID);
      this.preview = [];
-     let tosend = JSON.parse(JSON.stringify(this.demoResp));
+     let tosend = JSON.parse(JSON.stringify(this.postResp));
      for (let  i = (tosend.adapterSettings.actions.length - 1); i>=0 ; i--) {
        
         let current = tosend.adapterSettings.actions[i];
@@ -266,30 +266,19 @@ callPreview(): void {
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey ).pipe(take(1)).subscribe(response => {
       console.log(response);
       this.preview = [];
-      
-     // console.log(this.previewTotal);
       response.dataPreview.forEach(entry => {
-     //   console.log(entry);
-        if (entry.data && entry.data.structure) {
-          console.log('has structure, calling interpret');
-          this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
-            entry.data.structureID = response.structure.id;
-            console.log(response);
-            console.log('above is interpret response, below is set ID')
-            console.log(entry.data.structureID);
-            this.preview.push(entry);
-            this.previewTotal = this.preview.length;
-
-          });
        
-        } else {
-          if (entry.data) {
-            this.preview.push(entry);
-            this.previewTotal = this.preview.length;
-          }
-        }
-      console.log(this.preview);
+      if (entry.data) {
+        this.preview.push(entry);
+        this.previewTotal = this.preview.length;
+      }
+        
     });
+    if (this.preview[0].data.structure) {
+      this.structureService.interpretStructure(this.preview[0].data.structure.molfile).subscribe(response => {
+        this.preview[0].data.structureID = response.structure.id;
+      });
+    }
       this.loadingService.setLoading(false);
 
     }, error => {
@@ -299,29 +288,20 @@ callPreview(): void {
       this.preview = [];
       console.log(this.previewDemo);
       this.previewDemo.dataPreview.forEach(entry => {
-        if (entry.data && entry.data.structure) {
-          console.log('error processing: has structure, calling interpret');
-          this.structureService.interpretStructure(entry.data.structure.molfile).subscribe(response => {
-            entry.data.structureID = response.structure.id;
-            console.log(response);
-            console.log('above is interpret response, below is set ID')
-            console.log(entry.data.structureID);
-            this.preview.push(entry);
-            this.previewTotal = this.preview.length;
-
-          });
-         console.log(this.preview);
-       
-        } else {
-          if (entry.data) {
-            this.preview.push(entry);
-            this.previewTotal = this.preview.length;
-          }
+        if (entry.data) {
+          this.preview.push(entry);
+          this.previewTotal = this.preview.length;
         }
-       
+          
       });
+      if (this.preview[0].data.structure) {
+        this.structureService.interpretStructure(this.preview[0].data.structure.molfile).subscribe(response => {
+          this.preview[0].data.structureID = response.structure.id;
+        });
+      }
+       
       this.previewTotal = this.preview.length;
-;      this.loadingService.setLoading(false);
+     this.loadingService.setLoading(false);
 
     });
 }
@@ -831,7 +811,7 @@ setDemo() {
         }
       ];
 
-      this.demoResp = {
+      this.postResp = {
         "adapter": "SDF Adapter",
         "adapterSettings": {
           "actions": [

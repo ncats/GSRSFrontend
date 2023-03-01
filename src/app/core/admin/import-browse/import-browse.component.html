@@ -107,8 +107,10 @@
                 showTitle=false
                 loadSummaries=true
                 context="substances"
+
                 [key]="bulkSearchStatusKey"
                 [isCollapsed]="isBulkSearchCollapsed"
+                
               ></app-bulk-search-results-summary>
             </div>
           </mat-expansion-panel>           
@@ -349,7 +351,7 @@
             <div *ngFor="let substance of records">
               <app-import-summary  [substance]="substance" [recordID] = "idMapping[substance.uuid]"
                 (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="substance.names" [codes] = "substance.codes"
-               
+               [dummyID] = "dummyUUID"
                 [codeSystemVocab]="codeSystem" [searchStrategy]="null">
               </app-import-summary>
             </div>
