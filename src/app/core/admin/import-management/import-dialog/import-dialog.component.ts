@@ -12,6 +12,7 @@ import { FormControl } from '@angular/forms';
 export class ImportDialogComponent implements OnInit {
   settingsActive: any;
   setType: string;
+  fieldList: Array <any>;
  formControl = new FormControl();
   codeActions: any = {
     "codeSystem": "",
@@ -40,10 +41,12 @@ export class ImportDialogComponent implements OnInit {
   ) {
     this.settingsActive = data.settingsActive;
     this.setType = data.settingsActive.label;
+    this.fieldList = data.fieldList;
  
   }
 
   ngOnInit(): void {
+    console.log(this.fieldList);
   }
 
   switchAction(action?: any) {

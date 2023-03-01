@@ -53,6 +53,7 @@ export class FacetDisplayPipe implements PipeTransform {
         return returned;
       }
     }
+    console.log(name);
     if (name.toLowerCase() === 'substancestereochemistry') {
       return 'Stereochemistry';
     }
@@ -81,6 +82,24 @@ export class FacetDisplayPipe implements PipeTransform {
     if (name === 'GInAS Domain') {
       return 'Domain';
     }
+    if (name === 'root_importmetadata_source') {
+      return 'Source';
+    }
+    if (name === 'root_importmetadata_matchcount') {
+          return 'Match Count';
+        }
+    if (name === 'root_importmetadata_matchkey') {
+          return ' Match Key';
+        }
+    if (name === 'root_importmetadata_status') {
+          return 'Import Status';
+        }
+    if (name === 'root_importmetadata_validationmessage') {
+          return 'Validation Message';
+        }
+    if (name === 'root_importmetadata_validationtype') {
+          return 'Validation Type';
+        }
     if (args === 'relationships') {
       if (name.indexOf('->') >= 0) {
         let temp = name.split ('->');

@@ -39,6 +39,7 @@ previewDemo: any;
 previewIndex = 0;
 previewTotal = 0;
 toIgnore = [];
+fieldList: Array<any>;
 
 constructor(
   public formBuilder: FormBuilder,
@@ -68,18 +69,33 @@ setAdapter(event?: any) {
 
 }
 
-openAction(templateRef:any, index: number):void  {
+createFieldList(values: Array<string>): void {
+this.fieldList = [];
+  values.forEach(item => {
+    item = item.replace(/\(/g,"{").replace(/\)/g,"}");
+    let temp = {value: null, display: null};
+    temp.value = '{{'+item+'}}';
+    temp.display = item;
+    this.fieldList.push(temp);
+  });
+  console.log(this.fieldList);
+}
+
+openAction(templateRef:any, index: number): void  {
   this.save = false;
   console.log(this.postResp);
     this.settingsActive = this.postResp.adapterSettings.actions[index];
     console.log('template opened for adapter of index ' + index);
     console.log(this.settingsActive.actionParameters);
 
+
+
     const dialogref = this.dialog.open(ImportDialogComponent, {
       minHeight: '500px',
       width: '800px',
       data: {
-        settingsActive: this.settingsActive
+        settingsActive: this.settingsActive,
+        fieldList: this.fieldList
       }
     });
     this.overlayContainer.style.zIndex = '1002';
@@ -174,6 +190,11 @@ ngOnInit() {
       this.postResp.adapterSettings.actions.forEach(action => {
         this.toIgnore[action.fileField] = false;
       });
+      if (this.postResp.adapterSchema.fields) {
+        this.createFieldList(this.postResp.adapterSchema.fields);
+      } else if (this.postResp.adapterSchema['SDF Fields']) {
+        this.createFieldList(this.postResp.adapterSchema['SDF Fields']);
+      }
     
      // this.adapterSettings = response.adapterSettings;
    }, error => {
@@ -183,6 +204,11 @@ ngOnInit() {
     this.step = 3;
     this.fileID = this.postResp.id;
     this.loadingService.setLoading(false);
+    if (this.postResp.adapterSchema.fields) {
+      this.createFieldList(this.postResp.adapterSchema.fields);
+    } else if (this.postResp.adapterSchema['SDF Fields']) {
+      this.createFieldList(this.postResp.adapterSchema['SDF Fields']);
+    }
    });
   }
 

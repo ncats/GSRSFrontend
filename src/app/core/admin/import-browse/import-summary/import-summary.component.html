@@ -7,8 +7,9 @@
           <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
           </mat-icon>
           <span class="middle-fill"></span>
-          <div class="approval">
-            {{substance.approvalID}}
+          <div class="">
+            <span class = "status-label">Status: </span>
+            <span class = "status">{{substance._metadata.importStatus}}</span>
           </div>
         </mat-card-title>
       
@@ -407,14 +408,17 @@
                 </span>
                 <span ><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button 
                   (click) = "doAction('create')">Create</button></span>
-                <span><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button
+                  <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
+                    (click) = "editRecord()">Edit</button></span>
+                <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
                    (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
                 <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
                   (click) = "doAction('ignore')">Reject</button></span>
 
             </div>
-            <div class = "">
-                    <span class = "action-label">Matches:</span>
+            <mat-card class = "tab-container">
+                <mat-tab-group animationDuration="0ms" class = "tab-group">
+                    <mat-tab label="Matches"  labelClass = "summary-tab-label">
                     <div *ngIf = "substance.matchedRecords ">
                     <table mat-table [dataSource]="substance.matchedRecords">
 
@@ -446,16 +450,21 @@
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                       </table>
                   </div>
-              </div>
+                </mat-tab>
+                
+                <mat-tab class = "summary-tab-label" style = "font-size: 17px">
+                    <ng-template mat-tab-label style = "font-size: 17px">
+                        Validation ({{substance.validations.warnings}}&nbsp;<span class = "warning-label">warnings</span>, &nbsp;
+                        {{substance.validations.errors}}&nbsp;<span class = "error-label">errors</span> )
+                    </ng-template>
               <div class = "validation-container" *ngIf = "substance.validations">
-                  <span class = "action-label">Validation ({{substance.validations.warnings}} warnings, {{substance.validations.errors}} errors )</span>
                 <div *ngIf = "substance.validations ">
                   <table mat-table [dataSource]="substance.validations.validations">
 
                   
                       <ng-container matColumnDef="type">
                         <th mat-header-cell *matHeaderCellDef> Type </th>
-                        <td mat-cell *matCellDef="let item"> {{item.validationType}} </td>
+                        <td mat-cell *matCellDef="let item" > <span [ngClass] = "{'warning-label':item.validationType === 'warning', 'error-label':item.validationType === 'error'}"> {{item.validationType}}</span> </td>
                       </ng-container>
                   
                       <ng-container matColumnDef="message">
@@ -468,6 +477,10 @@
                     </table>
                 </div>
             </div>
+            </mat-tab>
+            </mat-tab-group>
+          </mat-card>
+
           </div>
         </mat-card-content>
       </mat-card>

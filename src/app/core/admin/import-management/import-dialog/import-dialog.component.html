@@ -23,7 +23,10 @@
                 </div>
                 <div class = "label-value"  style = "margin-bottom: 10px;">
                         <div class = "label">Code</div>
-                        <div class = "value-container"><input  class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.code" /></div>
+                        <div class = "value-container"  class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList"  title = "Code" [model] = "settingsActive.actionParameters.code" 
+                                        (valueChange)="updateType($event, 'codeSystem')" ></app-cv-import>
+                                </div>
                 </div>
                
                 <div class = "label-value"  style = "margin-bottom: 10px;">
@@ -39,7 +42,11 @@
             <div *ngIf = "settingsActive.actionName == 'common_name'">
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Name</div>
-                            <div class = "value-container"><input mat-input  class = "set-width label-padding" [(ngModel)] = "settingsActive.actionParameters.name" /></div>
+                            <div class = "value-container"  class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList" title = "Property Type" [model] = "settingsActive.actionParameters.name" 
+                                        (valueChange)="updateType($event, 'propertyType')" ></app-cv-import>      
+                                
+                               </div>
                     </div>
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">name Type</div>
@@ -85,8 +92,12 @@
                     </div>
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Value Units</div>
-                            <div class = "value-container">
-                                    <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.valueUnits" /></div>
+
+                            <div class = "value-container"  class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList"  title = "Value Units" [model] = "settingsActive.actionParameters.valueUnits" 
+                                        (valueChange)="updateType($event, 'codeSystem')" ></app-cv-import>
+                                </div>
+                            
 
                     </div>
                 </div>

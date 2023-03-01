@@ -76,11 +76,41 @@ font-size: 18px;
         padding-right: 10px;
     }
 
-      .approval {
-        font-size: 16px;
+    .status-label {
+        font-size:18px;
+        margin-right: 10px;
+    }
+
+      .status {
+        font-size: 24px;
         color: var(--pink-span-color);
+        margin-right: 25px;
       }
 
+}
+
+.warning-label {
+    color: var(--warning-dialog-color);
+  //  background-color: var(--warning-dialog-bg-color);
+
+  }
+
+
+  .error-label {
+    color: var(--error-dialog-color);
+   // background-color: var(--error-dialog-bg-color);
+  }
+
+.tab-container {
+    margin-top: 15px;
+}
+
+::ng-deep .mat-tab-label-content {
+    font-size: 17px !important;
+}
+
+.summary-tab-label {
+    font-size: 17px;
 }
 
 .substance-content {
