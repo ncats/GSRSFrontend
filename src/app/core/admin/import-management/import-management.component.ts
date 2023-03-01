@@ -216,15 +216,6 @@ ngOnInit() {
     this.loadingService.setLoading(true);
     this.step = 4;
     let tosend = JSON.parse(JSON.stringify(this.postResp));
-     for (let  i = (tosend.adapterSettings.actions.length - 1); i>=0 ; i--) {
-       
-        let current = tosend.adapterSettings.actions[i];
-        if (current.fileField && this.toIgnore[current.fileField]) {
-          console.log('found');
-          tosend.adapterSettings.actions.shift(i, 1);
-        }
-     }
-    
     this.adminService.executeAdapter(this.fileID, tosend, this.adapterKey ).subscribe(response => {
       console.log(response);
       this.loadingService.setLoading(false);
@@ -279,14 +270,14 @@ callPreview(): void {
   //   console.log('sending to api service adapter:' + this.fileID);
      this.preview = [];
      let tosend = JSON.parse(JSON.stringify(this.postResp));
-     for (let  i = (tosend.adapterSettings.actions.length - 1); i>=0 ; i--) {
+   /*  for (let  i = (tosend.adapterSettings.actions.length - 1); i>=0 ; i--) {
        
         let current = tosend.adapterSettings.actions[i];
         if (current.fileField && this.toIgnore[current.fileField]) {
           console.log('found');
           tosend.adapterSettings.actions.shift(i, 1);
         }
-     }
+     }*/
      console.log(tosend);
 
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey ).pipe(take(1)).subscribe(response => {
