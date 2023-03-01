@@ -223,6 +223,10 @@ export class ImportSummaryComponent implements OnInit {
     this.privateSubstance.validations = validation;
   }
 
+  editRecord() {
+    
+  }
+
   doAction(action: string, mergeID?: string) {
     console.log(this.privateDummyID);
     if (!mergeID) {
