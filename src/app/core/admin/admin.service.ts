@@ -70,6 +70,7 @@ export class AdminService extends BaseHttpService {
     }
 
     public deleteUser(user: string): Observable< Auth > {
+      console.log('deleting ' + user);
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.delete< Auth >(`${url}users/${user}`);
     }
