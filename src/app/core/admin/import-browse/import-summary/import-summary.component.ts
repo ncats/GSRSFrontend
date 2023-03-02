@@ -92,7 +92,6 @@ export class ImportSummaryComponent implements OnInit {
 
   @Input()
   set dummyID(dummyID: any) {
-    console.log(dummyID);
     this.privateDummyID = dummyID;
   }
 

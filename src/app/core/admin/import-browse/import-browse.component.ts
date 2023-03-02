@@ -196,10 +196,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     let temp = this.loadDemo();
     let temp2 = temp["dataPreview"];
     this.adminService.GetSingleUUID().subscribe(response => {
-      console.log('getting single');
-      console.log(response);
       this.dummyUUID =response.content[0].uuid;
-      console.log(this.dummyUUID);
     });
     temp2.forEach(record => {
       if (record.data){
@@ -270,8 +267,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadComponent();
 
     this.loadFacetViewFromConfig();
-
-    this.searchSubstances();
+   // console.log('calling form onInit');
+    //this.searchSubstances();
     
 
   }
@@ -366,7 +363,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadComponent(): void {
 
     if (this.isFacetsParamsInit && this.isComponentInit || this.isRefresher) {
+      console.log('calling from loadComponent');
+
       this.searchSubstances();
+
     } else {
 
       // There should be a better way to do this.
@@ -403,6 +403,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
+    console.log('calling from pageChange');
+
     this.searchSubstances();
   }
 
@@ -443,6 +445,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isFacetsParamsInit = true;
       this.loadComponent();
     } else {
+      console.log('calling from facetsparamsupdated');
+
       this.searchSubstances();
     }
   }
@@ -560,10 +564,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   searchSubstances() {
       // There should be a better way to do this.
+      console.log('searching substances');
       console.log(this.privateFacetParams);
-      this.bulkSearchPanelOpen =
-      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
-      && (this.displayFacets && this.displayFacets.length===0);
 
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
@@ -588,10 +590,14 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams)
         .subscribe(pagingResponse => {
           console.log(pagingResponse);
+         // this.substances = pagingResponse.content;
+          this.totalSubstances = this.substances.length;
+          this.substances = [];
+          this.records = [];
           if (pagingResponse.total == 0 && pagingResponse.count == 0) {
-            pagingResponse = this.setDemo2();
-            alert('temp alert: response had a count and total of 0, using dummy data');
-            pagingResponse = this.setDemo2();
+          //  pagingResponse = this.setDemo2();
+          //  alert('Error: response had a count and total of 0, using demonstration data');
+          //  pagingResponse = this.setDemo2();
           }
          // pagingResponse = this.setDemo2();
           this.isError = false;
@@ -603,10 +609,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
             this.lastPage = Math.floor(this.totalSubstances / this.pageSize + 1);
           }
 
-          this.substances = pagingResponse.content;
-          this.totalSubstances = this.substances.length;
-          this.substances = [];
-          this.records = [];
+          
           pagingResponse.content.forEach(entry => {
             this.getRecord(entry.recordId).subscribe(response => {
               this.substances.push(response);
@@ -990,7 +993,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
     this.populateUrlQueryParameters();
     this.substanceTextSearchService.setSearchValue('main-substance-search');
-   // this.searchSubstances();
+    this.searchSubstances();
   }
 
   clearFilters(): void {
