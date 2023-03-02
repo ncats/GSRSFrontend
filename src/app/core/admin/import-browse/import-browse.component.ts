@@ -559,6 +559,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   searchSubstances() {
       // There should be a better way to do this.
+      console.log(this.privateFacetParams);
       this.bulkSearchPanelOpen =
       (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
       && (this.displayFacets && this.displayFacets.length===0);

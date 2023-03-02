@@ -244,10 +244,12 @@ openInput(): void {
   document.getElementById('fileInput').click();
 }
 
-stagingArea(): void {
-  const navigationExtras: NavigationExtras = {
-    queryParams: {}
-  };
+stagingArea(sendFile?: boolean): void {
+  let navigationExtras: NavigationExtras = {queryParams: {}};
+  if(sendFile) {
+    navigationExtras.queryParams = {'facets': 'Source*' + this.postResp.filename.replace(/^.*[\\\/]/, '') + '.true'};
+
+  }
   this.router.navigate(['/staging-area'], navigationExtras);
 
 }
