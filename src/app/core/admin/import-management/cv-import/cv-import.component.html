@@ -9,7 +9,7 @@
     {{term.display}}
   </mat-option>
   <mat-option *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== ''"
-              value = "{{privateMod}}">{{privateMod}} (not in CV)</mat-option>
+              value = "{{privateMod}}">{{privateMod}} ({{domain ? 'not in CV' : 'not in field list'}})</mat-option>
 </mat-select>
 </mat-form-field>
  <!-- <a class = "add-term" mat-icon-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other' && isAdmin"

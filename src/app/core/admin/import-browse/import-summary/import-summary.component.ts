@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild, TemplateRef } from '@angular/core';
 import {
   SubstanceDetail,
   SubstanceName,
@@ -17,7 +17,7 @@ import {Router} from '@angular/router';
 import {Alignment, UtilsService} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
@@ -45,6 +45,7 @@ export class ImportSummaryComponent implements OnInit {
   @Input() searchStrategy?: string = '';
   @Input() recordID: string = null;
   private codes: Array <any >;
+  displayAction: string;
 
   
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
@@ -65,9 +66,13 @@ export class ImportSummaryComponent implements OnInit {
   codeSystems = [];
   displayedColumns = ['name', 'keys', 'merge'];
   displayedColumns2 = ['type', 'message'];
+  message = "";
 
   disabled = false;
   performedAction: string;
+  @ViewChild('infoDialog', { static: true }) infoDialog: TemplateRef<any>;
+  dialogRef: MatDialogRef<any>;
+
 
   constructor(
     public utilsService: UtilsService,
@@ -179,8 +184,10 @@ export class ImportSummaryComponent implements OnInit {
       this.codeSystems = substance.codes;
      // console.log(substance);
       this.codes = substance.codes;
-     // console.log(substance._metadata.recordId);
     //  this.getStructureID();
+    if (substance._metadata.importStatus === 'merged') {
+      this.disabled = true;
+    }
 
       this.setCodeSystems();
       this.processValidation();
@@ -224,29 +231,42 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   editRecord() {
-    
+
   }
 
   doAction(action: string, mergeID?: string) {
-    console.log(this.privateDummyID);
     if (!mergeID) {
-      console.log('no mergeID sent');
       mergeID = this.privateDummyID;
     }
+    this.displayAction = action;
     this.loadingService.setLoading(true);
-    console.log(mergeID);
     this.adminService.stagedRecordAction(this.privateSubstance._metadata.recordId, mergeID, action).subscribe(result => {
-      alert('temp alert: successful action: ' + action);
+      this.doneAction.emit(this.privateSubstance.uuid);
+      this.loadingService.setLoading(false);
+      this.message = "Record successfully " + action + "d";
       if (result) {
         this.disabled = true;
         this.performedAction = action;
       }
-      this.doneAction.emit(this.privateSubstance.uuid);
-      this.loadingService.setLoading(false);
+
+
+      this.dialogRef =  this.dialog.open(this.infoDialog,
+        {data: {'message': 'Record successfuly Created', 'action': action},
+      width: '600px'});
+       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+        this.router.navigate(['/staging-area/'], {queryParamsHandling: "preserve"});
+       });
     }, error => {
-      alert('temp alert: failed action - error in console');
-    //  console.log(error);
+      this.message = "Error: failed to " + action + " record";
       this.loadingService.setLoading(false);
+      this.dialogRef =  this.dialog.open(this.infoDialog,
+        {data: {'message': 'Error: failed to', 'action': action},
+      width: '600px'});
+       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+      //  this.router.navigate(['/staging-area/'], {queryParamsHandling: "preserve"});
+
+       });
+    //  console.log(error);
     });
   }
 

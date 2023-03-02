@@ -486,3 +486,16 @@
         </mat-card-content>
       </mat-card>
       
+
+      <ng-template #infoDialog>
+        <h3>Record Action: {{displayAction}}</h3>
+        <br/><br/>
+         &nbsp; &nbsp; {{message}}
+          
+          <br/><br/>
+
+          <div style = "width:100%; display:flex; flex-direction:row;">
+            <span class = "middle-fill"></span>
+            <button mat-button mat-flat-button mat-primary-button mat-dialog-close (click) = "dialogRef.close()">Close</button>
+            </div>
+        </ng-template>

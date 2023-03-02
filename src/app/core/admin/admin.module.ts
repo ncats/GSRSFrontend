@@ -44,7 +44,7 @@ import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
-import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-mport.component';
+import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-import.component';
 import { MatChipsModule } from '@angular/material/chips';
 
 

@@ -86,7 +86,8 @@ openAction(templateRef:any, index: number): void  {
   console.log(this.postResp);
     this.settingsActive = this.postResp.adapterSettings.actions[index];
     console.log('template opened for adapter of index ' + index);
-    console.log(this.settingsActive.actionParameters);
+    console.log(this.settingsActive);
+    console.log(JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions[index])));
 
 
 
@@ -94,7 +95,7 @@ openAction(templateRef:any, index: number): void  {
       minHeight: '500px',
       width: '800px',
       data: {
-        settingsActive: this.settingsActive,
+        settingsActive: JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions[index])),
         fieldList: this.fieldList
       }
     });

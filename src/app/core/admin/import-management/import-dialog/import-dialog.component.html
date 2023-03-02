@@ -25,7 +25,7 @@
                         <div class = "label">Code</div>
                         <div class = "value-container"  class = "set-width">
                                         <app-cv-import [vocabulary] = "fieldList"  title = "Code" [model] = "settingsActive.actionParameters.code" 
-                                        (valueChange)="updateType($event, 'codeSystem')" ></app-cv-import>
+                                        (valueChange)="updateType($event, 'code')" ></app-cv-import>
                                 </div>
                 </div>
                
@@ -44,7 +44,7 @@
                             <div class = "label">Name</div>
                             <div class = "value-container"  class = "set-width">
                                         <app-cv-import [vocabulary] = "fieldList" title = "Property Type" [model] = "settingsActive.actionParameters.name" 
-                                        (valueChange)="updateType($event, 'propertyType')" ></app-cv-import>      
+                                        (valueChange)="updateType($event, 'name')" ></app-cv-import>      
                                 
                                </div>
                     </div>
@@ -88,14 +88,17 @@
                     </div>
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Value Range</div>
-                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.valueRange" /></div>
+                            <div class = "value-container" class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList"  title = "Value Range" [model] = "settingsActive.actionParameters.valueRange" 
+                                        (valueChange)="updateType($event, 'valueRange')" ></app-cv-import>
+                                    </div>
                     </div>
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Value Units</div>
 
                             <div class = "value-container"  class = "set-width">
                                         <app-cv-import [vocabulary] = "fieldList"  title = "Value Units" [model] = "settingsActive.actionParameters.valueUnits" 
-                                        (valueChange)="updateType($event, 'codeSystem')" ></app-cv-import>
+                                        (valueChange)="updateType($event, 'valueUnits')" ></app-cv-import>
                                 </div>
                             
 

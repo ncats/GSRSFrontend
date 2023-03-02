@@ -83,6 +83,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   lastPage: number;
   etag: string;
   privateExport = false;
+  message: string;
   disableExport = false;
   isError = false;
   isRefresher = false;
