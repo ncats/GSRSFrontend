@@ -124,7 +124,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   exportOptions: Array<any>;
   private searchTermHash: number;
   isSearchEditable = false;
-  showDeprecated = false;
+  showDeprecated = true;
   codeSystem: any;
   previousState: Array<string> = [];
   facetViewCategorySelected = 'Default';
@@ -242,7 +242,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
-    const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
+  //  const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
     this.searchHashFromAdvanced = this.activatedRoute.snapshot.queryParams['g-search-hash'];
     if (this.pageSize > 500) {
       this.pageSize = 500;
@@ -253,15 +253,15 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       if (auth) {
         this.isLoggedIn = true;
       } else {
-        this.showDeprecated = false;
+        this.showDeprecated = true;
       }
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
       this.showAudit = this.authService.hasRoles('admin');
 
     });
-    if (deprecated && deprecated === 'true' && this.showAudit) {
+   /* if (deprecated && deprecated === 'true' && this.showAudit) {
       this.showDeprecated = true;
-    }
+    }*/
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets );
 
     this.subscriptions.push(authSubscription);

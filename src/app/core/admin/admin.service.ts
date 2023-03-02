@@ -197,7 +197,7 @@ export class AdminService extends BaseHttpService {
         public SearchStagedData(skip: any, facets?: any) {
           let params = new FacetHttpParams({encoder: new CustomEncoder()});
           if (facets){
-            params = params.appendFacetParams(facets, false);
+            params = params.appendFacetParams(facets, true);
 
           }
 
