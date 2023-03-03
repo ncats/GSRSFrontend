@@ -46,6 +46,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   manufactureDateMessage = '';
   viewProductUrl = '';
   message = '';
+  downloadJsonHref: any;
+  jsonFileName: string;
 
   constructor(
     private productService: ProductService,
@@ -381,6 +383,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  saveJson(): void {
+
+  }
+
+  saveJSON(): void {
+
+  }
+
   confirmDeleteProduct(productId: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete this Product?' }
@@ -494,6 +504,26 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteProductCompany(prodCompanyIndex: number) {
     this.productService.deleteProductCompany(prodCompanyIndex);
+  }
+
+  addNewProductCompanyCode(productCompanyIndex: number) {
+    this.productService.addNewProductCompanyCode(productCompanyIndex);
+  }
+
+  confirmDeleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company Code ' + (prodCompanyCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
   }
 
   addNewProductComponent() {

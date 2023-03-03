@@ -45,6 +45,8 @@ schemeUtil.maxContinuousSteps=3;
 schemeUtil.debug=true;
 schemeUtil.apiBaseURL="";
 
+schemeUtil.defaultImgSize=150;
+schemeUtil.expectedImgPadding=70;
 
 schemeUtil.showApprovalID=false;
 schemeUtil.showReagents=true;
@@ -58,7 +60,7 @@ schemeUtil.showProcessNames=true;
 schemeUtil.reactionWidth=96;
 schemeUtil.reactionHeight=64;
 schemeUtil.nodeSpacing=200;
-schemeUtil.BREAK_GAP=300; //TODO MAKE DYNAMIC
+schemeUtil.BREAK_GAP=100; //TODO MAKE DYNAMIC
 schemeUtil.PLUS_GAP=20; //TODO MAKE DYNAMIC
 schemeUtil.titleFontSize="1.6em";
 schemeUtil.highlightColor="#429ecc";
@@ -349,7 +351,11 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
     for(var kk=jj+1;kk<firstNodes.length;kk++){
         var nlist2=firstNodes[kk];
 		var mR2=firstNodeSizes[kk];
-		var gapDist = schemeUtil.BREAK_GAP*(1 + 0.0*(mR1-1) + 0.0*(mR2-1));
+		
+		var gapPer= schemeUtil.defaultImgSize+schemeUtil.expectedImgPadding;
+		
+
+		var gapDist = gapPer*mR1*0.5 +  gapPer*mR2*0.5 +schemeUtil.BREAK_GAP ;
         for(var ll=0;ll<nlist1.length;ll++){
             for(var mm=0;mm<nlist2.length;mm++){
                 var con={"axis":lax, "left":nlist1[ll], "right":nlist2[mm], "gap":gapDist};
@@ -382,7 +388,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
   }
 
 
-  var cheight = 150;
+  var cheight = schemeUtil.defaultImgSize;
   var pwidth = 32;
   var maxText = schemeUtil.maxTextLen;
   var width = schemeUtil.width;

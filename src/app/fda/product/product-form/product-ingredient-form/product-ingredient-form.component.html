@@ -156,16 +156,6 @@
     <app-cv-input class="col-1-4" domain="INGREDIENT_TYPE" title="Ingredient Type" name="ingredientType"
       [model]="ingredient.ingredientType" (valueChange)="ingredient.ingredientType = $event">
     </app-cv-input>
-    <!--
-    <mat-form-field class="col-1-4">
-      <mat-label>Ingredient Type</mat-label>
-      <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
-        <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
-          {{ingredientType.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    -->
 
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
@@ -182,17 +172,28 @@
     <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit" [model]="ingredient.unit"
       (valueChange)="ingredient.unit = $event">
     </app-cv-input>
+  </div>
 
-    <!--
-    <mat-form-field class="col-1-4">
-      <mat-label>Unit</mat-label>
-      <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
-        <mat-option *ngFor="let unit of unitList" [value]="unit.value">
-          {{unit.display}}
-        </mat-option>
-      </mat-select>
+  <div class="form-row margintop10px">
+    <mat-form-field class="col-1-4" appearance="fill">
+      <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode" name="confidentialityCode" />
     </mat-form-field>
-     -->
+
+    <mat-form-field class="col-1-4" appearance="fill">
+      <input matInput placeholder="Original Numerator Number" [(ngModel)]="ingredient.originalNumeratorNumber" name="originalNumeratorNumber" />
+    </mat-form-field>
+
+    <mat-form-field class="col-half-4" appearance="fill">
+      <input matInput placeholder="Original Numerator Unit" [(ngModel)]="ingredient.originalNumeratorUnit" name="originalNumeratorUnit" />
+    </mat-form-field>
+
+    <mat-form-field class="col-half-4" appearance="fill">
+      <input matInput placeholder="Original Denominator Number" [(ngModel)]="ingredient.originalDenominatorNumber" name="originalDenominatorNumber" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4" appearance="fill">
+      <input matInput placeholder="Original Denominator Unit" [(ngModel)]="ingredient.originalDenominatorUnit" name="originalDenominatorUnit" />
+    </mat-form-field>
   </div>
 
   <div class="form-row">

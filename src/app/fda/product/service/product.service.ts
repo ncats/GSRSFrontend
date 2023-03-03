@@ -9,7 +9,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
-import { ProductCompany, ProductComponent, ProductLot, ProductIngredient } from '../model/product.model';
+import { ProductCompany, ProductCompanyCode, ProductComponent, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
@@ -171,7 +171,7 @@ export class ProductService extends BaseHttpService {
       this.product = {
         productNameList: [{}],
         productCodeList: [{}],
-        productCompanyList: [{}],
+        productCompanyList: [{productCompanyCodeList: []}],
         productComponentList: [{
           productLotList: [{
             productIngredientList: [{}]
@@ -263,6 +263,15 @@ export class ProductService extends BaseHttpService {
 
   deleteProductCompany(prodCompanyIndex: number): void {
     this.product.productCompanyList.splice(prodCompanyIndex, 1);
+  }
+
+  addNewProductCompanyCode(productCompanyIndex: number): void {
+    const newProductCompanyCode: ProductCompanyCode = {};
+    this.product.productCompanyList[productCompanyIndex].productCompanyCodeList.push(newProductCompanyCode);
+  }
+
+  deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number): void {
+    this.product.productCompanyList[prodCompanyIndex].productCompanyCodeList.splice(prodCompanyCodeIndex, 1);
   }
 
   addNewProductComponent(): void {

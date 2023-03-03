@@ -10,14 +10,17 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
+import { take, map } from 'rxjs/operators';
 import { DatePipe, formatDate } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { FormBuilder } from '@angular/forms';
+import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
@@ -53,6 +56,8 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   substanceName: string;
   substanceNameHintMessage = '';
   panelExpanded = true;
+  downloadJsonHref: any;
+  jsonFileName: string;
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -68,7 +73,8 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
     private fb: FormBuilder,
-    private titleService: Title) { }
+    private titleService: Title,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
@@ -93,8 +99,31 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           }
         } else { //Copy Impurities to register form
           this.title = 'Register Impurities';
+          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
           this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
-          if (this.id) {
+          if (action && action === 'import' && window.history.state) {
+            this.gaService.sendPageView(`Impurities Import`);
+            const record = window.history.state.record;
+            // this.imported = true;
+            // this.getDetailsFromImport(record.record);
+            // if ((record) && this.jsonValid(record)) {
+            const response = JSON.parse(record);
+            if (response) {
+              this.scrub(response);
+
+              this.impuritiesService.loadImpurities(response);
+              this.impurities = this.impuritiesService.impurities;
+
+              this.loadingService.setLoading(false);
+              this.isLoading = false;
+            }
+            //this.substanceFormService.loadSubstance(this.substanceClass, responseImport).pipe(take(1)).subscribe(() => {
+            // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+            // this.setFormSections(formSections[this.substanceClass]);
+            // });
+            //  }
+            //  }
+          } else if (this.id) { //copy
             this.getImpurities('copy');
             this.gaService.sendPageView(`Impurities Register`);
           } else {
@@ -309,6 +338,15 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  addNewImpuritiesSubstance(event: Event) {
+    event.stopPropagation();
+
+    this.impuritiesService.addNewImpuritiesSubstance();
+  }
+
+  addNewImpuritiesTotal() {
+    this.impuritiesService.addNewImpuritiesTotal();
+  }
 
   confirmDeleteImpurities() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -356,17 +394,70 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
-
   }
 
-  addNewImpuritiesSubstance(event: Event) {
-    event.stopPropagation();
+  saveJSON(): void {
+    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
+    let json = this.impurities;
+    // this.json = this.cleanObject(substanceCopy);
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
 
-    this.impuritiesService.addNewImpuritiesSubstance();
+    const date = new Date();
+    this.jsonFileName = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
-  addNewImpuritiesTotal() {
-    this.impuritiesService.addNewImpuritiesTotal();
+  importJSON(): void {
+    let data: any;
+    data = {
+      title: 'Impurities Record Import',
+      entity: 'Impurities',
+    };
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false,
+      data: data
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.loadingService.setLoading(true);
+        this.overlayContainer.style.zIndex = null;
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+        /* const read = JSON.parse(response);
+         if (this.id && read.uuid && this.id === read.uuid) {
+           this.substanceFormService.importSubstance(read, 'update');
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {
+         if ( read.substanceClass === this.substanceClass) {
+           this.imported = true;
+           this.substanceFormService.importSubstance(read);
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {*/
+        setTimeout(() => {
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          if (!this.id) {
+            // new record
+            this.router.navigateByUrl('/impurities/register?action=import', { state: { record: response } });
+          }
+        }, 1000);
+      }
+      // }
+      // }
+    });
   }
 
   scrub(oldraw: any): any {
@@ -409,6 +500,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     delete old['lastModifiedDate'];
     delete old['internalVersion'];
     delete old['$$update'];
+    delete old['_self'];
 
     return old;
   }

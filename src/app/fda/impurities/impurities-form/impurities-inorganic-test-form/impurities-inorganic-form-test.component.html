@@ -1,0 +1,132 @@
+<br>
+<div class="divflex height30px">
+  <div class="tabStyle">
+    <div class="tabStyleHeader">Inorganic Impurities Test &nbsp;{{(inorganicTestIndex+1)}}</div>
+  </div>
+  <div class="padleft185px margintopneg10px">
+    <button class="marginleft20px" mat-icon-button color="primary" (click)="confirmDeleteInorganicTest()"
+      matTooltip="Delete Inorganic Impurities Test {{inorganicTestIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-card class="borderblue">
+  <mat-card-content>
+
+    <div class="form-row">
+      <app-cv-input class="col-2-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
+        [model]="impuritiesInorganicTest.sourceType" (valueChange)="impuritiesInorganicTest.sourceType = $event">
+      </app-cv-input>
+
+      <app-cv-input class="col-2-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
+        [model]="impuritiesInorganicTest.source" (valueChange)="impuritiesInorganicTest.source = $event">
+      </app-cv-input>
+
+      <mat-form-field class="col-2-1">
+        <input matInput placeholder="Source ID" [(ngModel)]="impuritiesInorganicTest.sourceId" name="sourceId" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <input matInput placeholder="Test" [(ngModel)]="impuritiesInorganicTest.test" name="test" />
+      </mat-form-field>
+
+      <app-cv-input class="col-2-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
+        [model]="impuritiesInorganicTest.testType" (valueChange)="impuritiesInorganicTest.testType = $event">
+      </app-cv-input>
+    </div>
+
+    <!--
+      <div class="col-4-1">
+        <div class="textarea-label">Test Description</div>
+        <textarea placeholder="" [(ngModel)]="impuritiesTest.testDescription" name="testDescription"></textarea>
+      </div>
+      -->
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesInorganicTest.testDescription"
+          name="testDescription"></textarea>
+      </mat-form-field>
+      <!--
+          <mat-form-field class="col-4-1">
+           <input matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
+            name="testDescription" />
+          </mat-form-field>
+          -->
+
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesInorganicTest.comments"
+          name="comments"></textarea>
+      </mat-form-field>
+      <!--
+        <mat-form-field class="col-2-1">
+           <input matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments" />
+        </mat-form-field>
+        -->
+    </div>
+
+    <!-- IMPURITIES INORGANIC LIST BEGIN -->
+    <div class="divflex margintop10px">
+      <div class="titleblue">
+        <span matBadge="{{impuritiesInorganicTest.impuritiesInorganicList.length}}" matBadgeColor="accent"
+          matBadgeSize="medium" matBadgeOverlap="false">
+          <span class="titleblue"><b>Inorganic Impurities</b></span>
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button mat-raised-button color="primary" (click)="addNewImpuritiesInorganic($event)"
+          matTooltip="Add New Inorganic Impurities">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Inorganic Impurities
+        </button>
+      </div>
+    </div>
+
+    <div class="marginbottom10px"
+    *ngFor="let impuritiesInorganic of impuritiesInorganicTest.impuritiesInorganicList; let impuritiesInorganicIndex = index">
+    <app-impurities-inorganic-form [impuritiesInorganic]="impuritiesInorganic"
+      [impuritiesInorganicIndex]="impuritiesInorganicIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
+      [inorganicTestIndex]="inorganicTestIndex">
+    </app-impurities-inorganic-form>
+  </div>
+
+    <!--
+    <div class="marginbottom10px"
+      *ngFor="let impuritiesDetails of impuritiesTest.impuritiesDetailsList; let impuritiesDetailsIndex = index">
+      <app-impurities-details-form [impuritiesDetails]="impuritiesDetails"
+        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex" [impuritiesDetailsIndex]="impuritiesDetailsIndex"
+        [impuritiesTestIndex]="impuritiesTestIndex" [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid">
+      </app-impurities-details-form>
+    </div>
+    -->
+    <!-- IMPURITIES DETAILS LIST END -->
+
+
+    <br><br>
+    <!-- IMPURITIES UNSPECIFIED LIST BEGIN -->
+    <!--
+    <span matBadge="{{impuritiesTest.impuritiesUnspecifiedList.length}}" matBadgeColor="accent" matBadgeSize="medium"
+      matBadgeOverlap="false">
+      <span class="titleblue"><b>Unspecified Impurities</b></span>
+    </span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-raised-button color="primary" (click)="addNewImpuritiesUnspecified()"
+      matTooltip="Add New Unspecified Impurities">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Unspecified Impurities
+    </button>
+
+    <br>
+    <div class="marginbottom10px"
+      *ngFor="let impuritiesUnspecified of impuritiesTest.impuritiesUnspecifiedList; let impuritiesUnspecifiedIndex = index">
+      <app-impurities-unspecified-form [impuritiesUnspecified]="impuritiesUnspecified"
+        [impuritiesUnspecifiedIndex]="impuritiesUnspecifiedIndex" [impuritiesTestIndex]="impuritiesTestIndex"
+        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+      </app-impurities-unspecified-form>
+    </div>
+    -->
+    <!-- IMPURITIES UNSPECIFIED LIST END -->
+
+
+  </mat-card-content>
+</mat-card>
+<br>
