@@ -48,19 +48,81 @@
       (valueChange)="updateSubstanceRole($event)"></app-cv-input>
   </div> <!-- form row -->
 
-  <!--
+
   <div class="form-row">
-    <div class="col">
-      <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
-        <span class="font11px">Register New</span>
-      </a>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
-        <span class="font11px">Search By Structure</span>
-      </a>
+    <mat-form-field class="col"
+      *ngIf="configSettingsDisplay['acceptanceCriteria'] || (configSettingsDisplay['acceptanceCriteria'] === undefined && true)">
+      <input matInput placeholder="Acceptance Criteria" [(ngModel)]="processingMaterial.acceptanceCriteria"
+        name="processingMaterial.acceptanceCriteria" />
+    </mat-form-field>
+
+    <app-cv-input class="col"
+      *ngIf="configSettingsDisplay['specificationType'] || (configSettingsDisplay['specificationType'] === undefined && true)"
+      domain="SSG_SPECIFICATION_TYPE" required='true' title="Specification Type"
+      [model]="processingMaterial.specificationType" (valueChange)="updateSpecificationType($event)">
+    </app-cv-input>
+
+    <app-cv-input class="col"
+      *ngIf="configSettingsDisplay['substanceGrade'] || (configSettingsDisplay['substanceGrade'] === undefined && true)"
+      domain="SSG_SUBSTANCE_GRADE" required='true' title="Substance Grade" [model]="processingMaterial.substanceGrade"
+      (valueChange)="updateSubstanceGrade($event)">
+    </app-cv-input>
+  </div>
+
+  <div class="form-row">
+    <div class='col'>
+      <div class="label amt-label">
+        Amount
+        <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        </button>
+      </div>
+      <div class="amount-display">
+        <div *ngIf="processingMaterial.amount">
+          {{displayAmount(processingMaterial.amount)}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Specification Type -->
+    <div class="col" *ngIf="!processingMaterial.specificationReference">
+      <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
+        <span>Specification Reference</span>&nbsp;
+        <mat-icon svgIcon="cloud_upload"></mat-icon>
+      </button>
+    </div>
+    <div *ngIf="processingMaterial.specificationReference">
+      <button mat-button [matMenuTriggerFor]="documentMenu">
+        Specification Reference: &nbsp;&nbsp;See Attachment
+        <mat-icon svgIcon="attachment"></mat-icon>
+      </button>
+      <mat-menu #documentMenu="matMenu">
+        <a mat-menu-item (click)="downloadDocument(processingMaterial.specificationReference)">Download</a>
+        <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
+        <button mat-menu-item (click)="processingMaterial.specificationReference = null">Delete</button>
+      </mat-menu>
+    </div>
+    <div class="loading-container" *ngIf="loading === true">
+      <div class="spinner-container">
+        <mat-progress-spinner class="progress-spinner spinner" [color]="primary" mode="indeterminate">
+        </mat-progress-spinner>
+      </div>
+
+      <span>Uploading</span>
+    </div>
+    <div class="loading-container" *ngIf="loading === false && error === true">
+      Error: There was a problem uploading this document
+    </div>
+
+    <div class="middle-fill"></div>
+
+  </div> <!-- form-row-->
+
+  <div class="form-row">
+    <div class="references-container">
+      <app-domain-references [referencesUuids]="processingMaterial.references" #references></app-domain-references>
     </div>
   </div>
-  -->
 
   <div class="form-row margintop10px"
     *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">

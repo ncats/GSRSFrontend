@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfigService } from '@gsrs-core/config/config.service';
+import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
-import { SpecifiedSubstanceG4mStartingMaterial } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mStartingMaterial, SubstanceAmount } from '@gsrs-core/substance/substance.model';
+import { AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -24,10 +27,15 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
   privateStartingMaterial: SpecifiedSubstanceG4mStartingMaterial;
   relatedSubstanceUuid: string;
   substance: SubstanceDetail;
+  private overlayContainer: HTMLElement;
+  loading = false;
+  error = false;
   subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
+    private overlayContainerService: OverlayContainer,
+    private utilsService: UtilsService,
     public configService: ConfigService,
     private dialog: MatDialog
   ) { }
@@ -80,6 +88,7 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     const subscription = this.substanceFormService.substance.subscribe(substance => {
       this.substance = substance;
     });
@@ -126,6 +135,14 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.privateStartingMaterial.substanceRole = role;
   }
 
+  updateSubstanceGrade(grade: string): void {
+    this.privateStartingMaterial.substanceGrade = grade;
+  }
+
+  updateSpecificationType(specificationType: string): void {
+    this.privateStartingMaterial.specificationType = specificationType;
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance !== null) {
       const relatedSubstance: SubstanceRelated = {
@@ -157,17 +174,51 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials.splice(this.startingMaterialIndex, 1);
   }
 
+  openAmountDialog(): void {
+    if (!this.privateStartingMaterial.amount) {
+      this.privateStartingMaterial.amount = {};
+    }
+    const dialogRef = this.dialog.open(AmountFormDialogComponent, {
+      data: {'subsAmount': this.privateStartingMaterial.amount},
+      width: '990px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
+      this.overlayContainer.style.zIndex = null;
+      this.privateStartingMaterial.amount = newAmount;
+    });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  displayAmount(amt: SubstanceAmount): string {
+    return this.utilsService.displayAmount(amt);
+  }
+
+
+  fileSelected(file: File): void {
+    this.error = false;
+    if (file != null) {
+      this.loading = true;
+      this.utilsService.uploadFile(file).subscribe(response => {
+        this.privateStartingMaterial.specificationReference = response;
+        this.loading = false;
+
+      }, error => {
+        this.loading = false;
+        this.error = true;
+
+      });
+    }
+  }
+
+  downloadDocument(url: string): void {
+    this.substanceFormService.bypassUpdateCheck();
+    window.open(url);
+  }
+  
   copyResultingToStarting(processIndex: number, siteIndex: number, stageIndex: number) {
 
   }
 
-  /*
-  deleteProductLot(prodComponentIndex: number, prodLotIndex: number) {
-    this.productService.deleteProductLot(prodComponentIndex, prodLotIndex);
-  }
-
-  deleteProductLot(prodComponentIndex: number, prodLotIndex: number): void {
-    this.product.productComponentList[prodComponentIndex].productLotList.splice(prodLotIndex, 1);
-  }
-  */
 }

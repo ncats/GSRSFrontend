@@ -44,11 +44,6 @@
   width: 100%;
 }
 
-.related-substance {
-  width: 300px;
-  max-width: 300px;
-}
-
 ::ng-deep .selected-substance {
   display: flex;
   flex-direction: column;
@@ -127,4 +122,27 @@ hr {
   overflow: visible;
   text-align: center;
   height: 5px;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.related-substance {
+  width: 300px;
+  max-width: 300px;
+}
+
+.amount {
+  width: 100%;
+  display: flex;
+}
+
+.amount-display {
+  padding-top:11px;
+}
+
+.middle-fill {
+  flex: 1 1 auto;
 }

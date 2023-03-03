@@ -573,6 +573,12 @@ export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  substanceGrade?: string;
+  acceptanceCriteria?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
   comments?: string;
 }
 
@@ -581,6 +587,12 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  substanceGrade?: string;
+  acceptanceCriteria?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
   comments?: string;
 }
 
@@ -589,6 +601,12 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  substanceGrade?: string;
+  acceptanceCriteria?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
   comments?: string;
 }
 

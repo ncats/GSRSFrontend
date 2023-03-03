@@ -1475,19 +1475,37 @@
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "simple",
+        "acceptanceCriteria": "simple",
+        "specificationType": "simple",
+        "specificationReference": "simple",
+        "amount": "simple",
+        "references": "simple"
       },
       "processingMaterial": {
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "simple",
+        "acceptanceCriteria": "simple",
+        "specificationType": "simple",
+        "specificationReference": "simple",
+        "amount": "simple",
+        "references": "simple"
       },
       "resultingMaterial": {
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "simple",
+        "acceptanceCriteria": "simple",
+        "specificationType": "simple",
+        "specificationReference": "simple",
+        "amount": "simple",
+        "references": "simple"
       }
     }
   }

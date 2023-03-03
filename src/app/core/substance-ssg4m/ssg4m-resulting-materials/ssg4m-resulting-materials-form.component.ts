@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfigService } from '@gsrs-core/config/config.service';
+import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
-import { SpecifiedSubstanceG4mResultingMaterial } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mResultingMaterial, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
+import { AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
-import { forEach } from 'lodash';
 
 @Component({
   selector: 'app-ssg4m-resulting-materials-form',
@@ -26,11 +28,16 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
   privateResultingMaterial: SpecifiedSubstanceG4mResultingMaterial;
   relatedSubstanceUuid: string;
   substance: SubstanceDetail;
+  private overlayContainer: HTMLElement;
+  loading = false;
+  error = false;
   subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
     private substanceFormSsg4mStagesService: SubstanceFormSsg4mStagesService,
+    private overlayContainerService: OverlayContainer,
+    private utilsService: UtilsService,
     public configService: ConfigService,
     private dialog: MatDialog
   ) { }
@@ -129,6 +136,14 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
     this.privateResultingMaterial.substanceRole = role;
   }
 
+  updateSubstanceGrade(grade: string): void {
+    this.privateResultingMaterial.substanceGrade = grade;
+  }
+
+  updateSpecificationType(specificationType: string): void {
+    this.privateResultingMaterial.specificationType = specificationType;
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {
@@ -166,6 +181,49 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
     this.substanceFormSsg4mStagesService.setSourceResultingToCopy(this.resultingMaterialIndex);
     this.substanceFormSsg4mStagesService.copyResultingToStarting(this.processIndex, this.siteIndex, this.stageIndex + 1);
   }
+
+  openAmountDialog(): void {
+    if (!this.privateResultingMaterial.amount) {
+      this.privateResultingMaterial.amount = {};
+    }
+    const dialogRef = this.dialog.open(AmountFormDialogComponent, {
+      data: {'subsAmount': this.privateResultingMaterial.amount},
+      width: '990px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
+      this.overlayContainer.style.zIndex = null;
+      this.privateResultingMaterial.amount = newAmount;
+    });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  displayAmount(amt: SubstanceAmount): string {
+    return this.utilsService.displayAmount(amt);
+  }
+
+  fileSelected(file: File): void {
+    this.error = false;
+    if (file != null) {
+      this.loading = true;
+      this.utilsService.uploadFile(file).subscribe(response => {
+        this.privateResultingMaterial.specificationReference = response;
+        this.loading = false;
+
+      }, error => {
+        this.loading = false;
+        this.error = true;
+
+      });
+    }
+  }
+
+  downloadDocument(url: string): void {
+    this.substanceFormService.bypassUpdateCheck();
+    window.open(url);
+  }
+
   /*
   copyResultingToStarting() {
     let found = false;
