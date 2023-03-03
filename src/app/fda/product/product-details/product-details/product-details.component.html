@@ -231,16 +231,120 @@
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
+              Start Marketing Date:
+            </div>
+            <div class="row-property-value">
+              {{product.startMarketingDate}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              End Marketing Date:
+            </div>
+            <div class="row-property-value">
+              {{product.endMarketingDate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Marketing Category Code:
+            </div>
+            <div class="row-property-value">
+              {{product.marketingCategoryCode}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Marketing Category Name:
+            </div>
+            <div class="row-property-value">
+              {{product.marketingCategoryName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Deaschedule:
+            </div>
+            <div class="row-property-value">
+              {{product.deaschedule}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Provenance Product ID:
+            </div>
+            <div class="row-property-value">
+              {{product.provenanceProductId}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Provenance Document ID:
+            </div>
+            <div class="row-property-value">
+              {{product.provenanceDocumentId}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Product Url:
+            </div>
+            <div class="row-property-value">
+              {{product.productUrl}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Shelf Life:
+            </div>
+            <div class="row-property-value">
+              {{product.shelfLife}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Storage Conditions:
+            </div>
+            <div class="row-property-value">
+              {{product.storageConditions}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <!--
+          <div class="row-property">
+            <div class="row-property-key">
               Product ID/Code:<br>
-              Product Type:
+              Product Type:<br>
+              Juridictions:
             </div>
             <div class="row-property-value">
               <div *ngFor="let prodCode of product.productCodeList; let indexCode = index">
                 <span class="font14px"><b>{{prodCode.productCode}}</b></span><br>
                 {{prodCode.productCodeType}}<br>
+                {{prodCode.juridictions}}<br>
               </div>
             </div>
           </div>
+          -->
           <div class="row-property">
             <div class="row-property-key">
               Provenance:
@@ -255,6 +359,36 @@
     </mat-card>
   </div>
 
+  <!-- Product Code -->
+  <div class="details-container margintop30px">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        Product Code ({{product.productCodeList.length}})
+      </mat-card-title>
+      <mat-card-content>
+        <table class="blueTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product Code</th>
+              <th>Product Code Type</th>
+              <th>Juridictions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of product.productCodeList; let i = index">
+              <td>{{i + 1}}</td>
+              <td>{{ x.productCode }}</td>
+              <td>{{ x.productCodeType }}</td>
+              <td>{{ x.juridictions }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Product Company -->
   <div class="details-container margintop30px">
     <mat-card class="bordergray">
       <mat-card-title class="title2">
@@ -271,10 +405,13 @@
               <th>State</th>
               <th>Zip</th>
               <th>Company Country</th>
+              <!--
               <th>Company Code</th>
               <th>Company Code Type</th>
+              -->
               <th>Company Role</th>
             </tr>
+
           </thead>
           <tbody>
             <tr *ngFor="let x of product.productCompanyList; let i = index">
@@ -285,10 +422,47 @@
               <td>{{ x.companyState }}</td>
               <td>{{ x.companyZip }}</td>
               <td>{{ x.companyCountry }} </td>
+              <!--
               <td>{{ x.companyCode }}</td>
               <td>{{ x.companyCodeType }}</td>
+              -->
               <td>{{ x.companyRole }}</td>
             </tr>
+
+
+            <!-- Product Company Code Begin -->
+            <!--
+            <tr>
+              <td colspan="10">
+                <div class="details-container margintop30px">
+                  <mat-card class="bordergray">
+                    <mat-card-title class="title2">
+                      Company Code ({{x.productCompanyCodeList.length}})
+                    </mat-card-title>
+                    <mat-card-content>
+                      <table class="blueTable">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Company Code</th>
+                            <th>Company Code Type</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let compCode of x.productCompanyCodeList; let icomp = index">
+                            <td>{{icomp + 1}}</td>
+                            <td>{{ compCode.companyCode }}</td>
+                            <td>{{ compCode.companyCodeType }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </td>
+            </tr>
+            -->
+            <!-- Product Company Code End -->
           </tbody>
         </table>
       </mat-card-content>
@@ -334,6 +508,41 @@
                   </div>
                   <div class="row-property-value-4">
                     {{prodComp.unit}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property-4">
+                  <div class="row-property-key-4">
+                    Dosage Form Code:
+                  </div>
+                  <div class="row-property-value-4">
+                    {{prodComp.dosageFormCode}}
+                  </div>
+                </div>
+                <div class="row-property-4">
+                  <div class="row-property-key-4">
+                    Dosage Form Code Type:
+                  </div>
+                  <div class="row-property-value-4">
+                    {{prodComp.dosageFormCodeType}}
+                  </div>
+                </div>
+                <div class="row-property-4">
+                  <div class="row-property-key-4">
+                    Manufacture Item Code:
+                  </div>
+                  <div class="row-property-value-4">
+                    {{prodComp.manufactureItemCode}}
+                  </div>
+                </div>
+                <div class="row-property-4">
+                  <div class="row-property-key-4">
+                    Manufacture Item Code:
+                  </div>
+                  <div class="row-property-value-4">
+                    {{prodComp.manufactureItemCodeType}}
                   </div>
                 </div>
               </div>
@@ -422,6 +631,14 @@
                     <div class="row">
                       <div class="row-property">
                         <div class="row-property-key">
+                          Lot Type:
+                        </div>
+                        <div class="row-property-value">
+                          {{ lot.lotType }}
+                        </div>
+                      </div>
+                      <div class="row-property">
+                        <div class="row-property-key">
                           Lot Number:
                         </div>
                         <div class="row-property-value">
@@ -477,6 +694,11 @@
                                 <th>Low</th>
                                 <th>High</th>
                                 <th>Unit</th>
+                                <th>Confidentiality Code</th>
+                                <th>Original Numerator Number</th>
+                                <th>Original Numerator Unit</th>
+                                <th>Original Denominator Number</th>
+                                <th>Original Denominator Unit</th>
                                 <th>Manufacture</th>
                                 <th>Lot No</th>
                                 <th>Grade</th>
@@ -517,6 +739,11 @@
                                 <td>{{ ingred.low }}</td>
                                 <td>{{ ingred.high }}</td>
                                 <td>{{ ingred.unit }}</td>
+                                <td>{{ ingred.confidentialityCode }}</td>
+                                <td>{{ ingred.originalNumeratorNumber }}</td>
+                                <td>{{ ingred.originalNumeratorUnit }} </td>
+                                <td>{{ ingred.originalDenominatorNumber }} </td>
+                                <td>{{ ingred.originalDenominatorUnit }} </td>
                                 <td>{{ ingred.manufacturer }}</td>
                                 <td>{{ ingred.ingredLotNo }}</td>
                                 <td>{{ ingred.grade }}</td>

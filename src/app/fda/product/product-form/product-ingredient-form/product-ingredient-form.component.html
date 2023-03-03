@@ -175,23 +175,19 @@
   </div>
 
   <div class="form-row margintop10px">
-    <mat-form-field class="col-1-4" appearance="fill">
-      <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode" name="confidentialityCode" />
-    </mat-form-field>
-
-    <mat-form-field class="col-1-4" appearance="fill">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Original Numerator Number" [(ngModel)]="ingredient.originalNumeratorNumber" name="originalNumeratorNumber" />
     </mat-form-field>
 
-    <mat-form-field class="col-half-4" appearance="fill">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Original Numerator Unit" [(ngModel)]="ingredient.originalNumeratorUnit" name="originalNumeratorUnit" />
     </mat-form-field>
 
-    <mat-form-field class="col-half-4" appearance="fill">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Original Denominator Number" [(ngModel)]="ingredient.originalDenominatorNumber" name="originalDenominatorNumber" />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4" appearance="fill">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Original Denominator Unit" [(ngModel)]="ingredient.originalDenominatorUnit" name="originalDenominatorUnit" />
     </mat-form-field>
   </div>
@@ -217,8 +213,12 @@
       <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-half-4">
       <input matInput placeholder="Lot No" [(ngModel)]="ingredient.ingredLotNo" name="ingredLotNo" />
+    </mat-form-field>
+
+    <mat-form-field class="col-half-4">
+      <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode" name="confidentialityCode" />
     </mat-form-field>
 
     <mat-form-field class="col-1-4">

@@ -24,7 +24,7 @@ export interface Product {
   endMarketingDate?: string; //new 3.1
   marketingCategoryCode?: string; //new 3.1
   marketingCategoryName?: string; //new 3.1
-  productCodeUrl?: string; //new 3.1
+  productUrl?: string; //new 3.1
   shelfLife ?: string; //new 3.1
   storageConditions?: string;  //new 3.1
   createdBy?: string;
@@ -63,9 +63,7 @@ export interface ProductCode {
   id?: number;
   productCode?: string;
   productCodeType?: string;
-  countryCode?: string;
- // provenanceSourceProductId?: string; //new 3.1
- // provenanceSourceProductNdc?: string; //new 3.1
+  juridictions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -117,6 +115,7 @@ export interface ProductComponent {
   unit?: string;
   manufactureCode?: string;
   manufactureCodeType?: string;
+  manufactureItemCode?: string;
   manufactureItemCodeType?: string;
 
   createdBy?: string;
@@ -130,6 +129,7 @@ export interface ProductLot {
   id?: number;
   lotNo?: string;
   lotSize?: string;
+  lotType?: string;
   expiryDate?: Date;
   manufactureDate?: Date;
   createdBy?: string;

@@ -16,8 +16,8 @@
 
 <!-- Display Component/Manufacture -->
 <fieldset class="border">
-  <legend class="border">Manufacture Item Details&nbsp;<b><span
-        class="colorgreen font17px">{{prodComponentIndex + 1}}</span></b>
+  <legend class="border">Manufacture Item Details&nbsp;<b><span class="colorgreen font17px">{{prodComponentIndex +
+        1}}</span></b>
   </legend>
 
   <div class="form-row margintop10px">
@@ -25,62 +25,75 @@
       [model]="productComponent.dosageForm" (valueChange)="productComponent.dosageForm = $event">
     </app-cv-input>
 
-    <mat-form-field class="col-1-4" appearance="fill">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Dosage Form Code" [(ngModel)]="productComponent.dosageFormCode"
         name="dosageFormCode" />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4" appearance="fill">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Dosage Form Code Type" [(ngModel)]="productComponent.dosageFormCodeType"
         name="dosageFormCodeType" />
     </mat-form-field>
   </div>
 
   <div class="form-row margintop10px">
-    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_COLOR" title="Color Name" name="charColor"
-      [model]="productComponent.charColor" (valueChange)="productComponent.charColor = $event">
-    </app-cv-input>
-    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FLAVOR" title="Flavor Name" name="charFlavor"
-      [model]="productComponent.charFlavor" (valueChange)="productComponent.charFlavor = $event">
-    </app-cv-input>
-  </div>
-
-  <div class="form-row">
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Amount" [(ngModel)]="productComponent.amount" name="amount" />
-    </mat-form-field>
-
-    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit"
-      [model]="productComponent.unit" (valueChange)="productComponent.unit = $event">
-    </app-cv-input>
-
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Manufacture Code" [(ngModel)]="productComponent.manufactureCode"
         name="manufactureCode" />
     </mat-form-field>
 
-    <app-cv-input class="col-1-4" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacture Code Type" name="manufactureCodeType"
-      [model]="productComponent.manufactureCodeType" (valueChange)="productComponent.manufactureCodeType = $event">
+    <app-cv-input class="col-1-4" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacture Code Type"
+      name="manufactureCodeType" [model]="productComponent.manufactureCodeType"
+      (valueChange)="productComponent.manufactureCodeType = $event">
+    </app-cv-input>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Manufacture Item Code" [(ngModel)]="productComponent.manufactureItemCode"
+        name="manufactureItemCode" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Manufacture Item Code Type" [(ngModel)]="productComponent.manufactureItemCodeType"
+        name="manufactureItemCodeType" />
+    </mat-form-field>
+  </div>
+
+  <div class="form-row">
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_COLOR" title="Color Name" name="charColor"
+      [model]="productComponent.charColor" (valueChange)="productComponent.charColor = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FLAVOR" title="Flavor Name" name="charFlavor"
+      [model]="productComponent.charFlavor" (valueChange)="productComponent.charFlavor = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_SHAPE" title="Shape Name" name="charShape"
+      [model]="productComponent.charShape" (valueChange)="productComponent.charShape = $event">
+    </app-cv-input>
+
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FRAGMENTS" title="Scoring" name="charNumFragments"
+      [model]="productComponent.charNumFragments" (valueChange)="productComponent.charNumFragments = $event">
     </app-cv-input>
   </div>
 
   <div class="form-row">
-    <mat-form-field class="col-1-4" appearance="fill">
-      <input matInput placeholder="Manufacture Item Code Type" [(ngModel)]="productComponent.manufactureItemCodeType" name="manufactureItemCodeType" />
-    </mat-form-field>
-    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_SHAPE" title="Shape Name" name="charShape"
-      [model]="productComponent.charShape" (valueChange)="productComponent.charShape = $event">
-    </app-cv-input>
-    <app-cv-input class="col-half-4" domain="PROD_CHARACTER_FRAGMENTS" title="Scoring" name="charNumFragments"
-      [model]="productComponent.charNumFragments" (valueChange)="productComponent.charNumFragments = $event">
-    </app-cv-input>
-    <mat-form-field class="col-half-4">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Size" [(ngModel)]="productComponent.charSize" name="charSize" />
     </mat-form-field>
+
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Imprint Text" [(ngModel)]="productComponent.charImprintText"
         name="charImprintText" />
     </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Amount" [(ngModel)]="productComponent.amount" name="amount" />
+    </mat-form-field>
+
+    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit" [model]="productComponent.unit"
+      (valueChange)="productComponent.unit = $event">
+    </app-cv-input>
+
   </div>
 
   <!-- PRODUCT LOT LIST BEGIN -->

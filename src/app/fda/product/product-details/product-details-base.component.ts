@@ -77,7 +77,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
               }
             }
           });
-          this.titleService.setTitle(`Product ` + prodCode);
+          this.titleService.setTitle(`View Product ` + prodCode);
 
           this.getSubstanceBySubstanceKey();
         }

@@ -171,7 +171,7 @@ export class ProductService extends BaseHttpService {
       this.product = {
         productNameList: [{}],
         productCodeList: [{}],
-        productCompanyList: [{productCompanyCodeList: []}],
+        productCompanyList: [{productCompanyCodeList: [{}]}],
         productComponentList: [{
           productLotList: [{
             productIngredientList: [{}]
@@ -257,7 +257,7 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductCompany(): void {
-    const newProductCompany: ProductCompany = {};
+    const newProductCompany: ProductCompany = {productCompanyCodeList: [{}]};
     this.product.productCompanyList.unshift(newProductCompany);
   }
 
