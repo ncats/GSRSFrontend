@@ -48,15 +48,43 @@
     </mat-form-field>
 
     <app-cv-input class="col"
+      *ngIf="configSettingsDisplay['acceptanceCriteriaType'] || (configSettingsDisplay['acceptanceCriteriaType'] === undefined && true)"
+      domain="SSG_ACCEPTANCE_CRITERIA_TYPE" required='true' title="Acceptance Criteria Type"
+      [model]="startingMaterial.acceptanceCriteriaType" (valueChange)="updateAcceptanceCriteriaType($event)">
+    </app-cv-input>
+
+    <!--
+    <app-cv-input class="col"
       *ngIf="configSettingsDisplay['specificationType'] || (configSettingsDisplay['specificationType'] === undefined && true)"
       domain="SSG_SPECIFICATION_TYPE" required='true' title="Specification Type"
       [model]="startingMaterial.specificationType" (valueChange)="updateSpecificationType($event)">
     </app-cv-input>
+    -->
 
     <app-cv-input class="col"
       *ngIf="configSettingsDisplay['substanceGrade'] || (configSettingsDisplay['substanceGrade'] === undefined && true)"
       domain="SSG_SUBSTANCE_GRADE" required='true' title="Substance Grade" [model]="startingMaterial.substanceGrade"
       (valueChange)="updateSubstanceGrade($event)">
+    </app-cv-input>
+  </div>
+
+  <div class="form-row">
+    <mat-form-field class="col"
+      *ngIf="configSettingsDisplay['manufactureName'] || (configSettingsDisplay['manufactureName'] === undefined && true)">
+      <input matInput placeholder="Manufacture Name" [(ngModel)]="startingMaterial.manufactureName"
+        name="startingMaterial.manufactureName" />
+    </mat-form-field>
+
+    <mat-form-field class="col"
+      *ngIf="configSettingsDisplay['manufactureId'] || (configSettingsDisplay['manufactureId'] === undefined && true)">
+      <input matInput placeholder="Manufacture ID" [(ngModel)]="startingMaterial.manufactureId"
+        name="startingMaterial.manufactureId" />
+    </mat-form-field>
+
+    <app-cv-input class="col"
+      *ngIf="configSettingsDisplay['manufactureIdType'] || (configSettingsDisplay['manufactureIdType'] === undefined && true)"
+      domain="SSG_MANUFACTURE_ID_TYPE" required='true' title="Manufacture ID Type"
+      [model]="startingMaterial.manufactureIdType" (valueChange)="updateManufactureIdType($event)">
     </app-cv-input>
   </div>
 

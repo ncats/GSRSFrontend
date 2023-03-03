@@ -141,6 +141,10 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
     this.privateProcessingMaterial.specificationType = specificationType;
   }
 
+  updateAcceptanceCriteriaType(acceptanceCriteriaType: string): void {
+    this.privateProcessingMaterial.acceptanceCriteriaType = acceptanceCriteriaType;
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {

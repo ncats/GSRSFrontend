@@ -143,6 +143,14 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.privateStartingMaterial.specificationType = specificationType;
   }
 
+  updateManufactureIdType(manufactureIdType: string): void {
+    this.privateStartingMaterial.manufactureIdType = manufactureIdType;
+  }
+
+  updateAcceptanceCriteriaType(acceptanceCriteriaType: string): void {
+    this.privateStartingMaterial.acceptanceCriteriaType = acceptanceCriteriaType;
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance !== null) {
       const relatedSubstance: SubstanceRelated = {
@@ -216,7 +224,7 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.substanceFormService.bypassUpdateCheck();
     window.open(url);
   }
-  
+
   copyResultingToStarting(processIndex: number, siteIndex: number, stageIndex: number) {
 
   }

@@ -575,10 +575,14 @@ export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
   substanceRole?: string;
   substanceGrade?: string;
   acceptanceCriteria?: string;
+  acceptanceCriteriaType?: string;
   specificationType?: string;
   specificationReference?: string;
   amount?: SubstanceAmount;
   references?: Array<string>;
+  manufactureName?: string;
+  manufactureId?: string;
+  manufactureIdType?: string;
   comments?: string;
 }
 
@@ -589,10 +593,14 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   substanceRole?: string;
   substanceGrade?: string;
   acceptanceCriteria?: string;
+  acceptanceCriteriaType?: string;
   specificationType?: string;
   specificationReference?: string;
   amount?: SubstanceAmount;
   references?: Array<string>;
+  manufactureName?: string;
+  manufactureId?: string;
+  manufactureIdType?: string;
   comments?: string;
 }
 
@@ -603,6 +611,7 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
   substanceRole?: string;
   substanceGrade?: string;
   acceptanceCriteria?: string;
+  acceptanceCriteriaType?: string;
   specificationType?: string;
   specificationReference?: string;
   amount?: SubstanceAmount;
