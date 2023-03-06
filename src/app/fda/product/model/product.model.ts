@@ -17,6 +17,7 @@ export interface Product {
   strengthCharacteristic?: string;
   countryCode?: string;
   language?: string;
+  provenance?: string;
   provenanceProductId?: string; //new 3.1
   provenanceDocumentId?: string; //new 3.1
   deaschedule?: string; //new 3.1

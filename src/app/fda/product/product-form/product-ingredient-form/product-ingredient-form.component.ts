@@ -53,6 +53,7 @@ export class ProductIngredientFormComponent implements OnInit {
   basisofStrengthSubstanceKeyOld: string;
   ingredientNameMessage = '';
   basisOfStrengthMessage = '';
+  newRecordMessage = '';
   relationship: any;
   ingredientNameActiveMoiety = new Array<String>();
   basisOfStrengthActiveMoiety = new Array<String>();

@@ -163,23 +163,17 @@ export class ProductService extends BaseHttpService {
   }
 
   loadProduct(product?: Product): void {
-    // if Update/Exist Application
-    // setTimeout(() => {
+    // if Product Exists
     if (product != null) {
       this.product = product;
-    } else {
+    } else { // new Product
       this.product = {
-        productNameList: [{}],
-        productCodeList: [{}],
-        productCompanyList: [{productCompanyCodeList: [{}]}],
-        productComponentList: [{
-          productLotList: [{
-            productIngredientList: [{}]
-          }]
-        }]
+        productNameList: [],
+        productCodeList: [],
+        productCompanyList: [],
+        productComponentList: []
       };
     }
-    //  });
   }
 
   saveProduct(): Observable<Product> {
@@ -257,7 +251,7 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductCompany(): void {
-    const newProductCompany: ProductCompany = {productCompanyCodeList: [{}]};
+    const newProductCompany: ProductCompany = { productCompanyCodeList: [{}] };
     this.product.productCompanyList.unshift(newProductCompany);
   }
 
@@ -307,56 +301,73 @@ export class ProductService extends BaseHttpService {
 
   copyProductComponent(productComp: any): void {
     const newProduct = JSON.parse(JSON.stringify(productComp));
-    /*
+
     newProduct.id = null;
-    newProduct.createdBy = null;
-    newProduct.creationDate = null;
-    newProduct.createdBy = null;
-    newProduct.lastModifiedDate = null;
-    */
-    this.product.productComponentList.unshift(newProduct);
-  }
-
-  copyProductLot(productLot: any, prodComponentIndex: number): void {
-    /*
-    let newProduct: any;
-
-    newProduct = productLot;
-
-    if (newProduct != null) {
-      newProduct.id = null;
-      newProduct.createdBy = null;
-      newProduct.creationDate = null;
-      newProduct.modifiedBy = null;
-      newProduct.lastModifiedDate = null;
-
-      newProduct.productIngredientList.forEach(elementIngred => {
-        if (elementIngred != null) {
-          elementIngred.id = null;
-          elementIngred.createdBy = null;
-          elementIngred.creationDate = null;
-          elementIngred.modifiedBy = null;
-          elementIngred.lastModifiedDate = null;
-        }
-      });
-      */
-    const newProduct = JSON.parse(JSON.stringify(productLot));
-
-    this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
-    // }
-  }
-
-  copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
-    const newProduct = JSON.parse(JSON.stringify(productIngredient));
-    /*
-    newProduct.id = null;
+    newProduct.internalVersion = null;
     newProduct.createdBy = null;
     newProduct.creationDate = null;
     newProduct.modifiedBy = null;
+    newProduct.createdBy = null;
     newProduct.lastModifiedDate = null;
-    */
-    this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
+
+    newProduct.productLotList.forEach(elementLot => {
+      if (elementLot != null) {
+        elementLot.id = null;
+        elementLot.internalVersion = null;
+        elementLot.createdBy = null;
+        elementLot.creationDate = null;
+        elementLot.modifiedBy = null;
+        elementLot.lastModifiedDate = null;
+
+        elementLot.productIngredientList.forEach(elementIngred => {
+          if (elementIngred != null) {
+            elementIngred.id = null;
+            elementIngred.internalVersion = null;
+            elementIngred.createdBy = null;
+            elementIngred.creationDate = null;
+            elementIngred.modifiedBy = null;
+            elementIngred.lastModifiedDate = null;
+          }
+        });
+      }
+    });
+
+    this.product.productComponentList.unshift(newProduct);
   }
+
+copyProductLot(productLot: any, prodComponentIndex: number): void {
+  const newProduct = JSON.parse(JSON.stringify(productLot));
+
+  newProduct.id = null;
+  newProduct.createdBy = null;
+  newProduct.creationDate = null;
+  newProduct.modifiedBy = null;
+  newProduct.lastModifiedDate = null;
+
+  newProduct.productIngredientList.forEach(elementIngred => {
+    if (elementIngred != null) {
+      elementIngred.id = null;
+      elementIngred.createdBy = null;
+      elementIngred.creationDate = null;
+      elementIngred.modifiedBy = null;
+      elementIngred.lastModifiedDate = null;
+    }
+  });
+
+  this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
+}
+
+copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
+  const newProduct = JSON.parse(JSON.stringify(productIngredient));
+
+  newProduct.id = null;
+  newProduct.createdBy = null;
+  newProduct.creationDate = null;
+  newProduct.modifiedBy = null;
+  newProduct.lastModifiedDate = null;
+
+  this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
+}
 
   /*
   reviewProduct(prodIndex: number): void {

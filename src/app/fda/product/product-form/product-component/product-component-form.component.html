@@ -1,18 +1,19 @@
 <!-- Buttons: delete, review -->
-
-<div class="marginbottomminus17px padleft250px">
-  <button mat-icon-button [ngStyle]="{'color':'green'}" [disabled]="totalComponent == 1"
-    (click)="confirmDeleteComponent(prodComponentIndex)"
-    matTooltip="Delete Component Details {{prodComponentIndex + 1}}">
-    <mat-icon [class.disabled]="totalComponent == 1">delete_forever</mat-icon>
-  </button>
-  &nbsp;&nbsp;
-  <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="copyProductComponent()"
-    matTooltip="Copy Manufacture Item Details {{prodComponentIndex + 1}} to New Manufacture Item">
-    <mat-icon>file_copy</mat-icon>
-  </button>
+<div class="divflexend marginbottomminus12px padleft250px">
+  <div class="maringright10px">
+    <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="copyProductComponent()"
+      matTooltip="Copy Manufacture Item Details {{prodComponentIndex + 1}} to New Manufacture Item">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+  </div>
+  <div class="maringright10px">
+    <button mat-icon-button [ngStyle]="{'color':'green'}"
+      (click)="confirmDeleteComponent(prodComponentIndex)"
+      matTooltip="Delete Component Details {{prodComponentIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
 </div>
-
 
 <!-- Display Component/Manufacture -->
 <fieldset class="border">
@@ -120,4 +121,3 @@
   <!-- PRODUCT LOT LIST END -->
 
 </fieldset>
-<br><br>

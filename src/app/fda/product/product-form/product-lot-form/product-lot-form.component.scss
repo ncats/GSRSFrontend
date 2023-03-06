@@ -169,8 +169,12 @@
   margin-top: -5px;
 }
 
-.marginbottomminus17px {
-  margin-bottom: -17px;
+.marginbottomminus12px {
+  margin-bottom: -12px;
+}
+
+.maringright10px {
+  margin-right: 10px;
 }
 
 .padall5px {
@@ -213,6 +217,7 @@ hr {
 fieldset.border {
   border: solid 1px var(--fieldset-brown-border-color) !important;
   padding: 0 10px 10px 10px;
+  margin-bottom: 10px;
   border-bottom: none;
   min-width: 0;  /* override the default value of min-content */
 }
@@ -229,6 +234,12 @@ legend.border {
 }
 
 .disabled { cursor: not-allowed; }
+
+.divflexend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
 
 .divflexrow {
   display: flex;

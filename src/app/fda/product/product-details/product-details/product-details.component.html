@@ -18,7 +18,7 @@
             </div>
             <div class="margintopneg10px">
               <!-- Copy Product to New Register -->
-              <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copy:product.id}"
+              <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
                 matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
                 <mat-icon svgIcon="file_copy"></mat-icon>
               </a>

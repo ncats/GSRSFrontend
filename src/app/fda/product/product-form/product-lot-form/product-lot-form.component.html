@@ -1,15 +1,19 @@
 <!-- Buttons: delete, review -->
-<div class="marginbottomminus17px padleft235px">
-  <button mat-icon-button [ngStyle]="{'color':'brown'}" [disabled]="totalLot == 1"
-    (click)="confirmDeleteProductLot(prodComponentIndex, prodLotIndex)"
-    matTooltip="Delete Lot Details {{prodLotIndex + 1}}">
-    <mat-icon [class.disabled]="totalLot == 1">delete_forever</mat-icon>
-  </button>
-  &nbsp;&nbsp;
-  <button mat-icon-button [ngStyle]="{'color':'brown'}" (click)="copyProductLot()"
-    matTooltip="Copy Lot Details {{prodLotIndex + 1}} to New Lot">
-    <mat-icon>file_copy</mat-icon>
-  </button>
+<div class="divflexend marginbottomminus12px padleft235px">
+  <div class="maringright10px">
+    <button mat-icon-button [ngStyle]="{'color':'brown'}" (click)="copyProductLot()"
+      matTooltip="Copy Lot Details {{prodLotIndex + 1}} to New Lot">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+  </div>
+  <div>
+    <button mat-icon-button [ngStyle]="{'color':'brown'}"
+      (click)="confirmDeleteProductLot(prodComponentIndex, prodLotIndex)"
+      matTooltip="Delete Lot Details {{prodLotIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
+
   <!--
     &nbsp;&nbsp;
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
@@ -29,8 +33,8 @@
   </legend>
 
   <div class="form-row margintop10px">
-    <app-cv-input class="col-5" domain="PROD_LOT_TYPE" title="Lot Type" name="lotType"
-      [model]="productLot.lotType" (valueChange)="productLot.lotType = $event">
+    <app-cv-input class="col-5" domain="PROD_LOT_TYPE" title="Lot Type" name="lotType" [model]="productLot.lotType"
+      (valueChange)="productLot.lotType = $event">
     </app-cv-input>
 
     <mat-form-field class="col-5">
@@ -40,7 +44,7 @@
     <mat-form-field class="col-5">
       <input matInput placeholder="Lot Size" [(ngModel)]="productLot.lotSize" name="lotSize" />
     </mat-form-field>
-    
+
     <mat-form-field class="col-5">
       <input matInput placeholder="Expiry Date (mm/dd/yyyy)" (change)="validateExpiryDate()"
         [(ngModel)]="productLot.expiryDate" name="expiryDate" />

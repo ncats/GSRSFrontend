@@ -1,16 +1,30 @@
 <!-- Buttons: delete, review -->
-<div class="marginbottomminus17px padleft220px">
-  <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="totalIngredient == 1"
-    (click)="confirmDeleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex)"
-    matTooltip="Delete Ingredient Details {{prodIngredientIndex + 1}}">
-    <mat-icon [class.disabled]="totalIngredient == 1">delete_forever</mat-icon>
-  </button>
-  &nbsp;&nbsp;
-  <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyProductIngredient()"
-    matTooltip="Copy Ingredient Details {{prodIngredientIndex + 1}} to New Ingredient">
-    <mat-icon>file_copy</mat-icon>
-  </button>
-  <!--
+<div class="divflexend marginbottomminus12px padleft220px">
+  <div class="maringright10px">
+    <span class="font11px textalignright" *ngIf="ingredient">
+      <span *ngIf="ingredient.id">
+        <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
+        {{ingredient.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+        <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
+        {{ingredient.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+      </span>
+    </span>
+  </div>
+  <div class="maringright10px">
+    <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyProductIngredient()"
+      matTooltip="Copy Ingredient Details {{prodIngredientIndex + 1}} to New Ingredient">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+  </div>
+  <div>
+    <button mat-icon-button [ngStyle]="{'color':'orangered'}"
+      (click)="confirmDeleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex)"
+      matTooltip="Delete Ingredient Details {{prodIngredientIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
+</div>
+<!--
     &nbsp;&nbsp;
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
       matTooltip="Click to Confirm Ingredient Details {{prodIngredientIndex + 1}} data has been Reviewed">
@@ -20,22 +34,11 @@
       By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
     </span>
   -->
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <span class="font11px textalignright" *ngIf="ingredient">
-    <span *ngIf="ingredient.id">
-      <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
-      {{ingredient.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-      <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
-      {{ingredient.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-    </span>
-  </span>
-</div>
-
 
 <!-- Display Ingredient -->
 <fieldset class="border">
-  <legend class="border">Ingredient Details&nbsp;<b><span
-        class="colorgreen font17px">{{prodIngredientIndex + 1}}</span></b>
+  <legend class="border">Ingredient Details&nbsp;<b><span class="colorgreen font17px">{{prodIngredientIndex +
+        1}}</span></b>
   </legend>
 
   <div class="divflexrow">
@@ -79,7 +82,8 @@
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
           (showMessage)="showMessageBasisOfStrength($event)" (searchValueOut)="searchValueBasisOutChange($event)"
-          eventCategory="substanceRelationshipRelatedSub" placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="basisOfStrengthSubstanceUuid">
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Basis Of Strength" header="Basis Of Strength"
+          [subuuid]="basisOfStrengthSubstanceUuid">
         </app-substance-search-selector>
 
         <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
@@ -127,7 +131,8 @@
     <div>
       <label>Ingredient Location</label><br>
       <span *ngFor="let data of locationList; let i=index">
-        <mat-checkbox class="font11px" #checkBox [value]="data.value" [(ngModel)]="data.checked" name="data.value" (change)="setSelectedIngredientLocation(data, checkBox)">
+        <mat-checkbox class="font11px" #checkBox [value]="data.value" [(ngModel)]="data.checked" name="data.value"
+          (change)="setSelectedIngredientLocation(data, checkBox)">
           {{data.value}}
         </mat-checkbox>
         &nbsp;
@@ -176,19 +181,23 @@
 
   <div class="form-row margintop10px">
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Original Numerator Number" [(ngModel)]="ingredient.originalNumeratorNumber" name="originalNumeratorNumber" />
+      <input matInput placeholder="Original Numerator Number" [(ngModel)]="ingredient.originalNumeratorNumber"
+        name="originalNumeratorNumber" />
     </mat-form-field>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Original Numerator Unit" [(ngModel)]="ingredient.originalNumeratorUnit" name="originalNumeratorUnit" />
+      <input matInput placeholder="Original Numerator Unit" [(ngModel)]="ingredient.originalNumeratorUnit"
+        name="originalNumeratorUnit" />
     </mat-form-field>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Original Denominator Number" [(ngModel)]="ingredient.originalDenominatorNumber" name="originalDenominatorNumber" />
+      <input matInput placeholder="Original Denominator Number" [(ngModel)]="ingredient.originalDenominatorNumber"
+        name="originalDenominatorNumber" />
     </mat-form-field>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Original Denominator Unit" [(ngModel)]="ingredient.originalDenominatorUnit" name="originalDenominatorUnit" />
+      <input matInput placeholder="Original Denominator Unit" [(ngModel)]="ingredient.originalDenominatorUnit"
+        name="originalDenominatorUnit" />
     </mat-form-field>
   </div>
 
@@ -218,7 +227,8 @@
     </mat-form-field>
 
     <mat-form-field class="col-half-4">
-      <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode" name="confidentialityCode" />
+      <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode"
+        name="confidentialityCode" />
     </mat-form-field>
 
     <mat-form-field class="col-1-4">

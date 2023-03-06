@@ -1,17 +1,17 @@
 <div class="top-fixed">
   <div class="actions-container">
-    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" *ngIf="!message" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
 
-    <span *ngIf="product && !product.id">
+    <span *ngIf="product && product.id">
       <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
         download="{{jsonFileName}}.json">
-        <span>Export JSON</span>
+        <mat-icon svgIcon="get_app"></mat-icon><span>Export JSON</span>
       </a>&nbsp;&nbsp;&nbsp;
     </span>
 
     <!-- Do not show 'Import JSON' button when in Update Impurities page -->
     <span *ngIf="product && !product.id">
-      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+      <button mat-flat-button color="primary" (click)="importJSON()"><mat-icon> publish</mat-icon>Import JSON</button>
     </span>
 
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
@@ -51,7 +51,7 @@
 
     <!-- Validate and Submit Button -->
     &nbsp;
-    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    <button mat-flat-button color="warn" *ngIf="!message" (click)="validate()">Validate and Submit</button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
   </div> <!-- actions-container -->
@@ -92,23 +92,28 @@
   </div> <!-- Submission Message -->
 </div> <!-- top-fixed -->
 
-
 <!-- Display Form Fields -->
-
 <div class="form-content-container mat-form-field-style">
   <div class="scrollable-container">
-    <div class="cards-container">
 
+    <!-- Display Message-->
+    <div class="message-style bordergray" *ngIf="message">
+      {{message}}
+    </div>
+
+    <div class="cards-container">
       <div class="" *ngIf="product">
         <div class="title_box">
-          <div>
+          <div class="width260px">
             <span class="title">
               {{title}}
             </span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+
+          <div class="marginright60px">
             <!-- Copy Product to New Register -->
             <span *ngIf="product.id > 0">
-              <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copy:product.id}"
+              <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
                 matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin" target="_blank">
                 <mat-icon svgIcon="file_copy"></mat-icon>
               </a>
@@ -116,18 +121,22 @@
           </div>
 
           <div class="font11px" *ngIf="product.id">
-            <br>
-            <div class="font11px">
-              <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span> {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss
-              a'}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+            <div class="textalignright">
+              <span *ngIf="product.provenance" class="font12px colorred">
+                Provenance: {{product.provenance}}
+              </span>
             </div>
+            <br>
+            <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Create Date:</span> {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss
+            a'}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
           </div>
         </div>
 
-        <mat-card class="bordergray" *ngIf="product">
+        <!-- Product FORM  -->
+        <mat-card class="" *ngIf="product">
           <mat-card-content>
 
             <mat-accordion multi="true">
@@ -190,10 +199,11 @@
                       </button>
                       </span>
                       -->
-
-                      <button mat-icon-button color="primary" [disabled]="product.productNameList.length == 1"
-                        (click)="confirmDeleteProductName(prodNameIndex)" matTooltip="Delete Product Name">
-                        <mat-icon [class.disabled]="product.productNameList.length == 1">delete_forever</mat-icon>
+                      <!-- [disabled]="product.productNameList.length == 1"
+                       [class.disabled]="product.productNameList.length == 1" -->
+                      <button mat-icon-button color="primary" (click)="confirmDeleteProductName(prodNameIndex)"
+                        matTooltip="Delete Product Name">
+                        <mat-icon>delete_forever</mat-icon>
                       </button>
                     </div>
 
@@ -244,7 +254,7 @@
                   </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <div class="row">
+                <div class="width100percent">
                   <mat-form-field class="col-2">
                     <input matInput placeholder="Non Proprietary Name/INN/USAN Name/Generic Name"
                       [(ngModel)]="product.nonProprietaryName" name="nonProprietaryName" />
@@ -542,7 +552,7 @@
                   <mat-panel-title>
                     <span class="font17px"><b>Product Code</b></span>
                     <span class="badge">
-                      {{(product.productCompanyList.length)}}
+                      {{(product.productCodeList.length)}}
                     </span>
                     <div class="middle-fill"></div>
                     <button mat-button class="marginright30px bordergreen" color="primary"
@@ -571,10 +581,9 @@
                       </app-cv-input>
                     </div>
 
-                    <button mat-icon-button color="primary" [disabled]="product.productCodeList.length == 1"
-                      (click)="confirmDeleteProductCode(prodCodeIndex)"
+                    <button mat-icon-button color="primary" (click)="confirmDeleteProductCode(prodCodeIndex)"
                       [matTooltipDisabled]="product.productCodeList.length == 1" matTooltip="Delete Product Code">
-                      <mat-icon [class.disabled]="product.productCodeList.length == 1">delete_forever</mat-icon>
+                      <mat-icon>delete_forever</mat-icon>
                     </button>
                     <br>
                   </div>
@@ -670,10 +679,9 @@
                 <div class="" *ngFor="let prodCompany of product.productCompanyList; let prodCompanyIndex = index">
                   <div class="divflexend margintopneg10px">
                     <div class="middle-fill"></div>
-                    <button class="padtop9px" mat-icon-button color="primary"
-                      [disabled]="product.productCompanyList.length == 1"
+                    <button class="padtop9px marginright10px" mat-icon-button color="primary"
                       (click)="confirmDeleteProductCompany(prodCompanyIndex)" matTooltip="Delete Product Company">
-                      <mat-icon [class.disabled]="product.productCompanyList.length == 1">delete_forever</mat-icon>
+                      <mat-icon>delete_forever</mat-icon>
                     </button>
                   </div>
                   <fieldset class="border">
@@ -696,22 +704,22 @@
                     </div>
 
                     <div class="form-row">
-                      <mat-form-field class="col-1">
+                      <mat-form-field class="col-3">
                         <input matInput placeholder="Company City" [(ngModel)]="prodCompany.companyCity"
                           name="companyCity" />
                       </mat-form-field>
 
-                      <mat-form-field class="col-1">
+                      <mat-form-field class="col-half-3">
                         <input matInput placeholder="Company State" [(ngModel)]="prodCompany.companyState"
                           name="companyState" />
                       </mat-form-field>
 
-                      <mat-form-field class="col-1">
+                      <mat-form-field class="col-half-3">
                         <input matInput placeholder="Company Zip" [(ngModel)]="prodCompany.companyZip"
                           name="companyZip" />
                       </mat-form-field>
 
-                      <app-cv-input class="col-1" domain="PROD_COUNTRY_CODE" title="Company Country"
+                      <app-cv-input class="col-3" domain="PROD_COUNTRY_CODE" title="Company Country"
                         name="companyCountry" [model]="prodCompany.companyCountry"
                         (valueChange)="prodCompany.companyCountry = $event">
                       </app-cv-input>
@@ -762,6 +770,9 @@
                 <mat-expansion-panel-header>
                   <mat-panel-title>
                     <span class="font17px"><b>Manufacture Item
+                        <span class="badge">
+                          {{(product.productComponentList.length)}}
+                        </span>
                         <mat-icon>arrow_right_alt</mat-icon> Lot
                         <mat-icon>arrow_right_alt</mat-icon> Ingredient
                       </b>
@@ -790,12 +801,13 @@
                           </button>
                           <br><br>
                           -->
+
+                <!--
                 <span matBadge="{{product.productComponentList.length}}" matBadgeOverlap="false">
                   <span class="titlegreen">MANUFACTURE ITEM </span>
                 </span>
-
-                <div class="marginbottom10px"
-                  *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
+                 -->
+                <div *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
                   <app-product-component-form [productComponent]="productComponent"
                     [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
                     (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
@@ -903,8 +915,7 @@
             </mat-accordion>
           </mat-card-content>
         </mat-card>
-        <br><br><br>
-
+        <br>
       </div> <!-- ngIf= product -->
     </div> <!-- cards- container -->
   </div>
