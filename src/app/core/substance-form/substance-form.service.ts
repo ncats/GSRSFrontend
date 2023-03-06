@@ -1497,6 +1497,28 @@ export class SubstanceFormService implements OnDestroy {
     return this.privateSubstance._approvalIDDisplay;
   }
 
+  importStructure(structure, type) {
+    // import a structure from mol or smiles
+    if(this.privateSubstance) {
+      if (type === 'molfile') {
+        this.privateSubstance.structure.molfile = structure;
+        this.substanceEmitter.next(this.privateSubstance);
+      } else {
+        this.privateSubstance.structure.smiles = structure;
+
+        this.structureService.interpretStructure(structure).pipe(take(1)).subscribe(response => {
+          if (response && response.structure && response.structure.molfile) {
+          this.privateSubstance.structure.molfile = response.structure.molfile;
+          this.substanceEmitter.next(this.privateSubstance);
+          }
+        });
+      }
+    } else {
+      // service substance loaded improperly
+    }
+    
+  }
+
   approveSubstance(): Observable<any> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
