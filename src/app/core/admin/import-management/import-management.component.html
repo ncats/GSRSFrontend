@@ -12,7 +12,7 @@
             <div class = "file-row ">
                     <div><button mat-raised-button (click)="openInput()">Select File to Upload</button></div>
                     <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
-                    <input id="fileInput" hidden type="file" (change)="onFileSelect($event)" name="file1" accept=".gsrs, .sdf, .sd">
+                    <input id="fileInput" hidden type="file" (change)="onFileSelect($event)" name="file1" accept="{{extension}}">
             </div>
 
         

@@ -40,7 +40,7 @@ previewIndex = 0;
 previewTotal = 0;
 toIgnore = [];
 fieldList: Array<any>;
-
+extension: string;
 constructor(
   public formBuilder: FormBuilder,
   public adminService: AdminService,
@@ -154,11 +154,16 @@ ngOnInit() {
         alert('adapters set but invalid response');
         this.setDemo();
       }
+      this.getExtensions();
 
   }, error => {
       alert('failed to fetch adapters, using demo vals. error in console');
       console.log(error);
     this.setDemo();
+    this.getExtensions();
+
+ console.log(this.extension);
+
   });
   
 
@@ -172,6 +177,25 @@ ngOnInit() {
       this.save = true;
     }
     this.dialog.closeAll();
+  }
+
+  getExtensions() {
+    let extArr = [];
+
+    this.demo.forEach(entry => {
+      entry.fileExtensions.forEach(ext => {
+        if (!extArr.includes(ext)) {
+          extArr.push(ext);
+        }
+      });
+    });
+      this.extension = "";
+     for (let i = 0; i < extArr.length; i++) {
+       this.extension += "." + extArr[i];
+        if (i !== extArr.length - 1) {
+          this.extension += ", ";
+        }
+     }
   }
 
 
@@ -325,7 +349,6 @@ callPreview(): void {
 
     });
 }
-
 
 
 

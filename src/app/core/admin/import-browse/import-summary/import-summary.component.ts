@@ -157,7 +157,7 @@ export class ImportSummaryComponent implements OnInit {
   getMatchSummary() {
     this.substance.matchedRecords.forEach(record => {
       this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
-        
+        record.uuid = response.uuid;
         record._name = response._name;
       });
     });

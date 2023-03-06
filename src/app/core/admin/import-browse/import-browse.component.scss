@@ -11,6 +11,11 @@
     z-index: 1002 !important;
 }
 
+::ng-deep .facet-value-label {
+    overflow: auto;
+    overflow-wrap: break-word;
+}
+
 .smiles-input {
     max-width:350px;
 }

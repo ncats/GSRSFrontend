@@ -595,7 +595,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           this.substances = [];
           this.records = [];
           if (pagingResponse.total == 0 && pagingResponse.count == 0) {
-          //  pagingResponse = this.setDemo2();
+            pagingResponse = this.setDemo2();
           //  alert('Error: response had a count and total of 0, using demonstration data');
           //  pagingResponse = this.setDemo2();
           }

@@ -9,7 +9,7 @@
           <span class="middle-fill"></span>
           <div class="">
             <span class = "status-label">Status: </span>
-            <span class = "status">{{substance._metadata.importStatus}}</span>
+            <span class = "status">{{substance._metadata.importStatus | uppercase}}</span>
           </div>
         </mat-card-title>
       
@@ -32,7 +32,7 @@
                 </div>
               </div>
               <div class="image-thumbnail">
-                <div *ngIf="substance._metadata.recordId">
+                <div *ngIf="substance.structure || substance.polymer">
                   <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(substance)">
                     <img appSubstanceImage [entityId]="substance._metadata.recordId"
                       [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
@@ -406,14 +406,14 @@
             <div class = "">
                 <span class = "action-label">Actions:        
                 </span>
-                <span ><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button 
+                <span ><button class ="action-button" color = "primary" [disabled] = "substance._metadata.importStatus === 'merged'" mat-button mat-flat-button mat-primary-button 
                   (click) = "doAction('create')">Create</button></span>
-                  <span><a class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
+                  <span><a class ="action-button" color = "primary" [disabled] = "substance._metadata.importStatus === 'merged'"  mat-button mat-flat-button mat-primary-button 
                     [routerLink]="['/substances/register']"
                   [queryParams]="{stagingID : substance._metadata.recordId}">Edit</a></span>
                 <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
                    (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
-                <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
+                <span><button class ="action-button" color = "primary" [disabled] = "substance._metadata.importStatus === 'merged'"  mat-button mat-flat-button mat-primary-button 
                   (click) = "doAction('ignore')">Reject</button></span>
 
             </div>
