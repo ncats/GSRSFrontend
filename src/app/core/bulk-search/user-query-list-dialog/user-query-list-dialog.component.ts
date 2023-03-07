@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user-query-list-dialog',
@@ -17,9 +18,13 @@ export class UserQueryListDialogComponent implements OnInit {
 
 
   constructor(
-    private bulkSearchService: BulkSearchService
-
-  ) { }
+    private bulkSearchService: BulkSearchService,
+    public dialogRef: MatDialogRef<UserQueryListDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.view = data.view || 'all';
+    this.activeName = data.activeName || null;
+  }
 
   ngOnInit(): void {
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {

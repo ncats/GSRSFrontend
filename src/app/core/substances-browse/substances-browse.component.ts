@@ -534,6 +534,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.totalSubstances = pagingResponse.total;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
+              
+           
+            let test: Facet =   {"$fetched": null, "name":"User List","values":[{"label":"ADMIN:testList1","count":3},{"label":"ADMIN:testList2","count":3}],"enhanced":true,"prefix":"","_self":"http://localhost:7081/api/v1/substances/search/@facets?defaultField=identifiers&wait=false&kind=ix.ginas.models.v1.Substance&skip=0&promoteSpecialMatches=true&fdim=10&includeFacets=true&qSkip=0&simpleSearchOnly=false&qTop=10&sideway=true&field=User+List&top=10&fskip=0&fetch=100&includeBreakdown=true&facet=Deprecated%2FNot+Deprecated&order=%24root_lastEdited"};
+          //  this.rawFacets.push(test);
+            console.log(this.rawFacets);
+
           }
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];

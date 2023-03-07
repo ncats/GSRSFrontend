@@ -19,6 +19,13 @@ export class FacetDisplayPipe implements PipeTransform {
 
 
     if (args) {
+      if (args === 'userList') {
+        if (name.includes(':')){
+          return name.split(':')[1];
+        } else {
+          return name;
+        }
+      }
       if (args === 'types') {
         if (name === 'structurallyDiverse') {
           return 'Structurally Diverse';
