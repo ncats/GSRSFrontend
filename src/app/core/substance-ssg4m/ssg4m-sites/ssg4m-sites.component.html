@@ -63,6 +63,27 @@
   </div> <!-- form row -->
 
   <div class="form-row">
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['companyName'] || (configSettingsDisplay['companyName'] === undefined && true)">
+      <input matInput placeholder="Company Name" [(ngModel)]="site.companyName"
+        name="site.companyName" />
+    </mat-form-field>
+
+    <mat-form-field class="col-3-1"
+      *ngIf="configSettingsDisplay['CompanyId'] || (configSettingsDisplay['CompanyId'] === undefined && true)">
+      <input matInput placeholder="Company ID" [(ngModel)]="site.CompanyId"
+        name="site.CompanyId" />
+    </mat-form-field>
+
+    <app-cv-input class="col-3-1"
+      *ngIf="configSettingsDisplay['CompanyIdType'] || (configSettingsDisplay['CompanyIdType'] === undefined && true)"
+      domain="SSG_COMPANY_ID_TYPE" required='true' title="Company ID Type"
+      [model]="site.CompanyIdType" (valueChange)="updateManufactureIdType($event)">
+    </app-cv-input>
+  </div>
+
+
+  <div class="form-row">
     <!--
     <div class="marginleft45px">&nbsp;</div>
     -->

@@ -2,13 +2,12 @@
   <div class="form-row">
     <div class="related-substance">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header="Parent Substance"
-        [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
+        header="Parent Substance" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
     </div>
-  </div>
 
-  <!--
+    <!--
   <div class="form-row">
     <div class="col">
       <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
@@ -22,4 +21,4 @@
   </div>
   -->
 
-</div>
+  </div>

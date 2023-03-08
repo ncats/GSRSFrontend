@@ -48,7 +48,7 @@ import { SubstanceFormComponent } from '../substance-form/substance-form.compone
 import { SubstanceSsg4mProcessModule } from './ssg4m-process/substance-form-ssg4m-process.module';
 import { Ssg4mSitesModule } from './ssg4m-sites/ssg4m-sites.module';
 import { Ssg4mStepViewDialogModule } from './ssg4m-step-view-dialog/ssg4m-step-view-dialog.module';
-
+import { SsgParentSubstanceFormModule } from '../substance-form/ssg-parent-substance-form/ssg-parent-substance-form.module';
 
 const ssg4mRoutes: Routes = [
   {

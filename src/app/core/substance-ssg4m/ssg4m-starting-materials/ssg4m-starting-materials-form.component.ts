@@ -10,6 +10,7 @@ import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SpecifiedSubstanceG4mStartingMaterial, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
+import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
 
 @Component({
   selector: 'app-ssg4m-starting-materials-form',
@@ -34,6 +35,7 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private substanceFormService: SubstanceFormService,
+    private substanceFormSsg4mStagesService: SubstanceFormSsg4mStagesService,
     private overlayContainerService: OverlayContainer,
     private utilsService: UtilsService,
     public configService: ConfigService,
@@ -149,6 +151,10 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
 
   updateAcceptanceCriteriaType(acceptanceCriteriaType: string): void {
     this.privateStartingMaterial.acceptanceCriteriaType = acceptanceCriteriaType;
+  }
+
+  addManufacture(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addStartingManufactureDetails(processIndex, siteIndex, stageIndex, this.startingMaterialIndex);
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {

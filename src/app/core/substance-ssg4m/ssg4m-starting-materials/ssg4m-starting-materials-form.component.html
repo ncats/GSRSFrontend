@@ -68,25 +68,36 @@
     </app-cv-input>
   </div>
 
-  <div class="form-row">
-    <mat-form-field class="col"
-      *ngIf="configSettingsDisplay['manufactureName'] || (configSettingsDisplay['manufactureName'] === undefined && true)">
-      <input matInput placeholder="Manufacture Name" [(ngModel)]="startingMaterial.manufactureName"
-        name="startingMaterial.manufactureName" />
-    </mat-form-field>
+  <b>Manufacturer Details: </b> <!--{{startingMaterial.manufactureDetails.length}} -->
+  <button mat-stroked-button color="primary" class="button-insert-before" matTooltip="Add Manufacture"
+    (click)="addManufacture(processIndex, siteIndex, stageIndex)">
+    <mat-icon>add_circle_outline</mat-icon>Add Manufacturer
+  </button>
 
-    <mat-form-field class="col"
-      *ngIf="configSettingsDisplay['manufactureId'] || (configSettingsDisplay['manufactureId'] === undefined && true)">
-      <input matInput placeholder="Manufacture ID" [(ngModel)]="startingMaterial.manufactureId"
-        name="startingMaterial.manufactureId" />
-    </mat-form-field>
+  <div class="marginbottom10px"
+    *ngFor="let manufactureDetails of startingMaterial.manufactureDetails; let manufactureIndex = index">
 
-    <app-cv-input class="col"
-      *ngIf="configSettingsDisplay['manufactureIdType'] || (configSettingsDisplay['manufactureIdType'] === undefined && true)"
-      domain="SSG_MANUFACTURE_ID_TYPE" required='true' title="Manufacture ID Type"
-      [model]="startingMaterial.manufactureIdType" (valueChange)="updateManufactureIdType($event)">
-    </app-cv-input>
-  </div>
+    <div class="form-row">
+      <mat-form-field class="col"
+        *ngIf="configSettingsDisplay['manufactureName'] || (configSettingsDisplay['manufactureName'] === undefined && true)">
+        <input matInput placeholder="Manufacturer Name" [(ngModel)]="manufactureDetails.manufactureName"
+          name="manufactureDetails.manufactureName" />
+      </mat-form-field>
+
+      <app-cv-input class="col"
+        *ngIf="configSettingsDisplay['manufactureIdType'] || (configSettingsDisplay['manufactureIdType'] === undefined && true)"
+        domain="SSG_MANUFACTURE_ID_TYPE" required='true' title="Manufacturer ID Type"
+        [model]="manufactureDetails.manufactureIdType" (valueChange)="updateManufactureIdType($event)">
+      </app-cv-input>
+
+      <mat-form-field class="col"
+        *ngIf="configSettingsDisplay['manufactureId'] || (configSettingsDisplay['manufactureId'] === undefined && true)">
+        <input matInput placeholder="Manufacturer ID" [(ngModel)]="manufactureDetails.manufactureId"
+          name="manufactureDetails.manufactureId" />
+      </mat-form-field>
+    </div>
+  </div> <!-- loop Manufacture Details -->
+
 
   <div class="form-row">
     <div class='col'>
@@ -106,13 +117,13 @@
     <!-- Specification Type -->
     <div class="col" *ngIf="!startingMaterial.specificationReference">
       <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
-        <span>Specification Reference</span>&nbsp;
+        <span>Certification Of Analysis</span>&nbsp;
         <mat-icon svgIcon="cloud_upload"></mat-icon>
       </button>
     </div>
     <div *ngIf="startingMaterial.specificationReference">
       <button mat-button [matMenuTriggerFor]="documentMenu">
-        Specification Reference: &nbsp;&nbsp;See Attachment
+        Certification Of Analysis: &nbsp;&nbsp;See Attachment
         <mat-icon svgIcon="attachment"></mat-icon>
       </button>
       <mat-menu #documentMenu="matMenu">

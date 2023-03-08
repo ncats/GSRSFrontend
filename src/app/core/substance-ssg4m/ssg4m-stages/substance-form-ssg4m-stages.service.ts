@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../../substance-form/base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SpecifiedSubstanceG4mCriticalParameter, SpecifiedSubstanceG4mStage, SpecifiedSubstanceG4mStartingMaterial } from '@gsrs-core/substance/substance.model';
-import { SpecifiedSubstanceG4mProcessingMaterial, SpecifiedSubstanceG4mResultingMaterial } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mProcessingMaterial, SpecifiedSubstanceG4mResultingMaterial, SpecifiedSubstanceG4mManufactureDetails } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mResultingMaterialsModule } from '../ssg4m-resulting-materials/substance-form-ssg4m-resulting-materials.module';
 
 @Injectable({
@@ -51,21 +51,34 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
   }
 
   addStartingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newStartMat: SpecifiedSubstanceG4mStartingMaterial = { substanceRole: 'Starting Material' };
+    const newStartMat: SpecifiedSubstanceG4mStartingMaterial = { substanceRole: 'Starting Material', manufactureDetails:[], references: [] };
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials.push(newStartMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials);
   }
 
   addProcessingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = { substanceRole: 'Solvent' };
+    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = { substanceRole: 'Solvent', manufactureDetails:[], references: []};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials.push(newProcessMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials);
   }
 
   addResultingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newResultingMat: SpecifiedSubstanceG4mResultingMaterial = { substanceRole: 'Intermediate' };
+    const newResultingMat: SpecifiedSubstanceG4mResultingMaterial = { substanceRole: 'Intermediate', manufactureDetails:[], references: [] };
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials.push(newResultingMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials);
+  }
+
+  addStartingManufactureDetails(processIndex: number, siteIndex: number, stageIndex: number, startingMaterialIndex: number): void {
+    const newStartingManuDetail: SpecifiedSubstanceG4mManufactureDetails = {};
+
+   // alert(JSON.stringify(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex]));
+    const newStartObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex];
+    newStartObj.manufactureDetails = [];
+    newStartObj.manufactureDetails.push(newStartingManuDetail);
+
+   // this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufactureDetails.push(newStartingManuDetail);
+
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufactureDetails);
   }
 
   addStage(processIndex: number, siteIndex: number): void {

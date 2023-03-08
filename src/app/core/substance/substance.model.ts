@@ -524,6 +524,9 @@ export interface SpecifiedSubstanceG4m extends SubstanceBase {
   // references?: Array<string>;
   parentSubstance?: SpecifiedSubstanceParent;
   process?: Array<SpecifiedSubstanceG4mProcess>;
+  manufactureName?: string;
+  ManufactureId?: string;
+  manufactureIdType?: string;
   _svg?: string;
 }
 
@@ -544,6 +547,9 @@ export interface SpecifiedSubstanceG4mSite extends SubstanceBase {
   siteAddress?: string;
   gpsSiteLocation?: string;
   siteClearance?: string;
+  companyName?: string;
+  CompanyId?: string;
+  CompanyIdType?: string;
   siteComments?: string;
   stages?: Array<SpecifiedSubstanceG4mStage>;
 }
@@ -584,6 +590,7 @@ export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
   manufactureId?: string;
   manufactureIdType?: string;
   comments?: string;
+  manufactureDetails?: Array<SpecifiedSubstanceG4mManufactureDetails>;
 }
 
 export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
@@ -602,6 +609,7 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   manufactureId?: string;
   manufactureIdType?: string;
   comments?: string;
+  manufactureDetails?: Array<SpecifiedSubstanceG4mManufactureDetails>;
 }
 
 export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
@@ -617,6 +625,13 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
   amount?: SubstanceAmount;
   references?: Array<string>;
   comments?: string;
+  manufactureDetails?: Array<SpecifiedSubstanceG4mManufactureDetails>;
+}
+
+export interface SpecifiedSubstanceG4mManufactureDetails extends SubstanceBase {
+  manufactureName?: String;
+  manufactureId?: string;
+  manufactureIdType?: string;
 }
 
 export interface TableFilterDDModel {

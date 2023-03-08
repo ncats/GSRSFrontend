@@ -1429,7 +1429,7 @@
   "ssg4Form": {
     "showRegisterEditTitle": "true",
     "titles": {
-      "parentSubstance": "Search or Register a New Substance",
+      "parentSubstance": "Search for Manufactured Substance",
       "stage": "Step",
       "processingMaterials": "Solvents and Catalysts"
     },
