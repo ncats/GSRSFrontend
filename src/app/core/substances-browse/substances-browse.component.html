@@ -49,6 +49,9 @@
                 <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
                     <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
                   </button>
+                  <button mat-icon-button color="primary" (click)="seedSmiles(this.smiles)">
+                    <mat-icon svgIcon="file_copy" matTooltip = "Start new registration using this Smiles"></mat-icon>
+                  </button>
               <span *ngIf="searchType && searchType == 'similarity'">
                 &nbsp;&ge; {{searchCutoff}}
               </span>
@@ -228,6 +231,9 @@
               <!-- if search is not coming from Advanced Search -->
               <button mat-icon-button color="primary" *ngIf="!isSearchEditable" (click)="editStructureSearch()">
                 <mat-icon svgIcon="edit" matTooltip="Transfer Structure to Structure Search"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="seedSmiles(this.smiles)">
+                <mat-icon svgIcon="file_copy" matTooltip = "Start new registration using this Smiles"></mat-icon>
               </button>
               <button mat-icon-button color="primary" (click)="clearStructureSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>

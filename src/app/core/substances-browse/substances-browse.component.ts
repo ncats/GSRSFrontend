@@ -850,6 +850,15 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.searchSubstances();
   }
 
+  seedSmiles(smiles: string) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        importStructure: encodeURIComponent(smiles)
+      }
+    };
+    this.router.navigate(['/substances/register/chemical'], navigationExtras);
+  }
+
   editSequenceSearh(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'sequence search term' :
       `${this.privateSequenceSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}-${this.privateSearchSeqType}`;

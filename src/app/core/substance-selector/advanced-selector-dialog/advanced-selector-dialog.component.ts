@@ -64,6 +64,7 @@ nameSubstances?: Array<any>;
 nameResponse: any;
 response: any;
 
+
 panelOpenState = true;
 private overlayContainer: HTMLElement;
 
@@ -97,6 +98,25 @@ private privateSequenceSearchKey?: string;
 
   get standardized(): boolean {
     return this.privateTerm;
+  }
+
+  seedSmiles(smiles: string) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        importStructure: encodeURIComponent(smiles)
+      }
+    };
+    let url = '';
+    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/register/chemical' + '?importStructure=' + encodeURIComponent(smiles);
+    } else {
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/substances/register/chemical'], {
+          queryParams: navigationExtras.queryParams})
+      );
+    }
+  
+    window.open(url, '_blank');
   }
 
   close() {
@@ -194,6 +214,7 @@ private privateSequenceSearchKey?: string;
   search(): void {
     const mol = this.editor.getMolfile();
     this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+      this.smiles = response.structure.smiles;
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
     }, () => {});
