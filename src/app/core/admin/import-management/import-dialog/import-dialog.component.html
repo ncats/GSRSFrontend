@@ -1,0 +1,163 @@
+<div mat-dialog-header><h3>Action Settings</h3>
+            <h4 *ngIf = "setType != 'Create Name Action' && setType != 'Create Code Action' && setType != 'Create Property Action'">{{settingsActive.label}}</h4>
+        </div>
+
+        <div mat-dialog-content style = "min-height: 320px;padding-left:40px">
+
+                        <mat-form-field style = "width:200px;font-weight:bold;margin-top: -15px;
+                        margin-bottom: 20px;margin-left:-20px;" *ngIf = "setType == 'Create Name Action' || setType == 'Create Code Action' || setType == 'Create Property Action'">
+                        <mat-select [(ngModel)]="settingsActive.label"
+                        required
+                        (selectionChange)="switchAction($event)">
+                                <mat-option *ngFor="let type of settingTypes" [value]="type" [selected]="type === settingsActive.label">{{type}}</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+
+            <div *ngIf = "settingsActive.actionName == 'code_import'">
+                <div class = "label-value"  style = "margin-bottom: 10px;">
+                        <div class = "label">Code System</div>
+                        <div class = "value-container"  class = "set-width">
+                                <app-cv-import domain = "CODE_SYSTEM"  title = "Code System" [model] = "settingsActive.actionParameters.codeSystem" 
+                                (valueChange)="updateType($event, 'codeSystem')" ></app-cv-import>
+                        </div>
+                </div>
+                <div class = "label-value"  style = "margin-bottom: 10px;">
+                        <div class = "label">Code</div>
+                        <div class = "value-container"  class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList"  title = "Code" [model] = "settingsActive.actionParameters.code" 
+                                        (valueChange)="updateType($event, 'code')" ></app-cv-import>
+                                </div>
+                </div>
+               
+                <div class = "label-value"  style = "margin-bottom: 10px;">
+                        <div class = "label">Code Type</div>
+                        <div class = "value-container"   class = "set-width">
+                                <app-cv-import domain = "CODE_TYPE"  title = "Code Type" [model] = "settingsActive.actionParameters.codeType" 
+                                (valueChange)="updateType($event, 'codeType')" ></app-cv-import> 
+                        </div>  
+                                
+                </div>
+            </div>
+
+            <div *ngIf = "settingsActive.actionName == 'common_name'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Name</div>
+                            <div class = "value-container"  class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList" title = "Property Type" [model] = "settingsActive.actionParameters.name" 
+                                        (valueChange)="updateType($event, 'name')" ></app-cv-import>      
+                                
+                               </div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">name Type</div>
+                            <div class = "value-container"  class = "set-width">
+                                        <app-cv-import domain = "NAME_TYPE"  title = "Name Type" [model] = "settingsActive.actionParameters.nameType" 
+                                        (valueChange)="updateType($event, 'nameType')" ></app-cv-import> 
+                                </div> 
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Language</div>
+                            <div class = "value-container"  class = "set-width">
+                                        <app-cv-import domain = "LANGUAGE"  title = "Language" [model] = "settingsActive.actionParameters.lang" 
+                                        (valueChange)="updateType($event, 'lang')" ></app-cv-import> 
+                                </div> 
+                            <div class = "value-container"><input mat-input class = "set-width label-padding" [(ngModel)] = "settingsActive.actionParameters.lang" /></div>
+                    </div>
+                   <!--   <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Language</div>
+                            <div class = "value-container">
+                              <div *ngFor = "let namereference of settingsActive.actionParameters.referenceUUIDs; index as $index3">
+                                        <input mat-input [(ngModel)] = "settingsActive.actionParameters.referenceUUIDs[$index3]" /><br/>
+                                </div>
+                    </div>
+                </div>-->
+            </div>
+
+            <div *ngIf = "settingsActive.actionName == 'property_import'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Name</div>
+                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.name" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Property Type</div>
+                            <div class = "value-container"  class = "set-width">
+                                        <app-cv-import domain = "PROPERTY_TYPE" title = "Property Type" [model] = "settingsActive.actionParameters.propertyType" 
+                                        (valueChange)="updateType($event, 'propertyType')" ></app-cv-import> 
+                                </div> 
+
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Value Range</div>
+                            <div class = "value-container" class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList"  title = "Value Range" [model] = "settingsActive.actionParameters.valueRange" 
+                                        (valueChange)="updateType($event, 'valueRange')" ></app-cv-import>
+                                    </div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Value Units</div>
+
+                            <div class = "value-container"  class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList"  title = "Value Units" [model] = "settingsActive.actionParameters.valueUnits" 
+                                        (valueChange)="updateType($event, 'valueUnits')" ></app-cv-import>
+                                </div>
+                            
+
+                    </div>
+                </div>
+
+            <div *ngIf = "settingsActive.actionName == 'public_reference'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Document Type</div>
+                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.docType" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Citation</div>
+                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.citation" /></div>
+
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Reference ID</div>
+                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.referenceID" /></div>
+                    </div>
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">UUID</div>
+                            <div class = "value-container">
+                                    <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.uuid" /></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf = "settingsActive.actionName == 'structure_and_moieties'">
+                    <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">molfile</div>
+                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.molfile" /></div>
+                    </div>
+                    <!-- <div class = "label-value"  style = "margin-bottom: 10px;">
+                            <div class = "label">Citation</div>
+                           <div class = "value-container">
+                                    <div *ngFor = "let reference of settingsActive.actionParameters.referenceUUIDs, index as index2">
+                                            <input mat-input [(ngModel)] = "reference of settingsActive.actionParameters.referenceUUIDs[index2]" /> <br/>
+                                    </div>  
+                            </div>
+
+                    </div>
+                </div>-->
+            </div>
+
+        <!--<div class = "label-value" *ngFor = "let current of settingsActive.fields" style = "margin-bottom: 10px;">
+            <div class = "label">{{current.fieldLabel}}</div>
+            <div class = "value-container">
+                    <span class = "value" *ngIf = "current.defaultValue"><input mat-input [(ngModel)] = "current.defaultValue" /></span>
+                    <span class = "value" *ngIf = "current.required !== undefined"><mat-checkbox [(ngModel)] = "current.required" >Required</mat-checkbox></span>        
+            </div>     
+        </div>-->
+    </div>
+
+        <span mat-dialog-actions align="end">
+                <button mat-button (click) = "close()">Cancel</button> 
+                &nbsp; 
+
+                         <button mat-button (click) = "close('save')">Save</button>
+
+        </span>
