@@ -10,7 +10,7 @@ git status
 git fetch
 git branch -a
 git status
-git checkout -B bulkQuery_frontend
+git checkout bulkQuery_build
   git pull
   git merge origin/fda
   cd gsrs-ci
@@ -28,7 +28,7 @@ git commit -m "frontend commit ${TRAVIS_COMMIT} build of branch ${TRAVIS_BRANCH}
 git status
 ls
 echo "pushing"
-git push -u origin bulkQuery_frontend
+git push -u origin bulkQuery_build
 
 
  cd ../
