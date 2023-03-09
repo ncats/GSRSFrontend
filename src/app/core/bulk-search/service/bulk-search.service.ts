@@ -121,46 +121,44 @@ export class BulkSearchService extends BaseHttpService {
   }
 
 
-  saveBulkSearch(list?: string, name?: string) {
-    const url = this.apiBaseUrl + `substances/@bulkQueryResultList?listName=${name}`;
-    if(!list){
-      list = '1cf410f9-3eeb-41ed-ab69-eeb5076901e5,bd953285-a7a4-2965-cc7d-73bdceb7abd0,18de6ee4-3005-4785-9d11-dd8ccc589eb4';
-    }
+  saveBulkSearch(list: string, name: string, etag?: string) {
+    const url = this.apiBaseUrl + `substances/@userList/etag/${etag}?listName=${name}`;
+   
     return this.http.post<any>(url, list);
   }
 
   getBulkSearchLists() {
-    const url = this.apiBaseUrl + `substances/@bulkQueryResultLists/currentUser`;
+    const url = this.apiBaseUrl + `substances/@userList/currentUser`;
     return this.http.get<any>(url);
   }
 
   getUserBulkSearchLists(name: string) {
     // Get any users all saved lists.
-    const url = this.apiBaseUrl + `substances/@bulkQueryResultLists/otherUser?name=${name}`;
+    const url = this.apiBaseUrl + `substances/@userList/otherUser?name=${name}`;
     return this.http.get<any>(url);
   }
 
   getSingleBulkSearchList(name: string) {
     // Get the keys and other fields of a list
-    const url = this.apiBaseUrl + `substances/@bulkQueryResultLists/${name}`;
+    const url = this.apiBaseUrl + `substances/@userList/${name}`;
     return this.http.get<any>(url);
   }
 
   editKeysBulkSearchLists(name: string, list: string, operation: string) {
     // Add or remove keys from a list
-    const url = this.apiBaseUrl + `substances/@bulkQueryResultList?listName=${name}&operation=${operation}/`;
+    const url = this.apiBaseUrl + `substances/@userList?listName=${name}&operation=${operation}/`;
     return this.http.put<any>(url, list);
   }
 
   deleteBulkSearchList(name: string) {
     // Delete a list from current user
-    const url = this.apiBaseUrl + `substances/@bulkQueryResultList/currentUser?listName=${name}`;
+    const url = this.apiBaseUrl + `substances/@userList/currentUser/keys?listName=${name}`;
     return this.http.delete<any>(url);
   }
 
   deleteUserBulkSearchList(listName: string, userName: string) {
     // Delete a list from any user
-    const url = this.apiBaseUrl + `substances/@bulkQueryResultList/otherUser?listName=${listName}&userName=${userName}`;
+    const url = this.apiBaseUrl + `substances/@userList/otherUser/keys?listName=${listName}&userName=${userName}`;
     return this.http.delete<any>(url);
   }
 
