@@ -10,7 +10,7 @@ git status
 git fetch
 git branch -a
 git status
-git checkout bulkQuery_frontend
+git checkout -B bulkQuery_frontend
   git pull
   git merge origin/fda
   cd gsrs-ci
