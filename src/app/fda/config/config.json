@@ -98,6 +98,10 @@
       "title": "Overview"
     },
     {
+      "card": "substance-display-image",
+      "title": "Substance Display Image"
+    },
+    {
       "card": "fda-substance-product",
       "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
       "filters": [
