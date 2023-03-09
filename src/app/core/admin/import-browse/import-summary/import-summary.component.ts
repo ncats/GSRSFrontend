@@ -80,7 +80,6 @@ export class ImportSummaryComponent implements OnInit {
     public authService: AuthService,
     private substanceService: SubstanceService,
     private structureService: StructureService,
-    private componentFactoryResolver: ComponentFactoryResolver,
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
@@ -161,7 +160,6 @@ export class ImportSummaryComponent implements OnInit {
         record._name = response._name;
       });
     });
-   // console.log(this.substance.matchedRecords);
     
   }
 
@@ -200,13 +198,10 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   getStructureID() {
-  //  console.log('getting ID');
     if(this.privateSubstance && this.privateSubstance.structure && this.privateSubstance.structure.molfile) {
         this.structureService.interpretStructure(this.privateSubstance.structure.molfile).subscribe(response => {
-        //  console.log(response);
           this.privateSubstance.structureID = response.structure.id;
           this.substance.structureID = response.structure.id;
-       //   console.log(this.privateSubstance.structureID);
         });
       }
   }
@@ -215,7 +210,6 @@ export class ImportSummaryComponent implements OnInit {
     
     if(this.privateSubstance._metadata && this.privateSubstance._metadata.validations){
       this.privateSubstance._metadata.validations.forEach (entry => {
-     //   console.log(entry);
         if(entry.validationType === 'error') {
           validation.errors++;
         } else if (entry.validationType === 'warning') {
@@ -223,7 +217,6 @@ export class ImportSummaryComponent implements OnInit {
         }
         validation.validations.push(entry);
       });
-    //  console.log(validation);
       
     }
     this.privateSubstance.validations = validation;
@@ -262,16 +255,12 @@ export class ImportSummaryComponent implements OnInit {
         {data: {'message': 'Error: failed to', 'action': action},
       width: '600px'});
        const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
-      //  this.router.navigate(['/staging-area/'], {queryParamsHandling: "preserve"});
 
        });
-    //  console.log(error);
     });
   }
 
   setCodeSystems() {
-  //  console.log('setting');
-  //  console.log(this.codes);
     if (this.codes && this.codes.length > 0) {
       const substanceId = this.substance.uuid;
       
@@ -299,7 +288,6 @@ export class ImportSummaryComponent implements OnInit {
       });
   
     }
-    //console.log(this.codeSystemNames);
   }
 
   sortCodeSystems(codes: Array<string>): Array<string> {
