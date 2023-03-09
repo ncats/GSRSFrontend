@@ -23,6 +23,10 @@ export class AppComponent {
       'chevron_right',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_right-24px.svg'));
 
+      iconRegistry.addSvgIcon(
+        'chevron_left',
+        sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_left-24px.svg'));
+
     iconRegistry.addSvgIcon(
       'search',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-search-24px.svg'));
@@ -181,6 +185,22 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'alarm-on',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-alarm_on-24px.svg'));
+    // precisionFDA Icons
+    iconRegistry.addSvgIcon(
+      'pfda_home',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/pfda/home.svg'));
+    iconRegistry.addSvgIcon(
+      'pfda_gsrs',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/pfda/gsrs-logo-round-bw.svg'));
+    iconRegistry.addSvgIcon(
+      'pfda_support',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/pfda/support.svg'));
+    iconRegistry.addSvgIcon(
+      'pfda_questionmark',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/pfda/questionmark.svg'));
+    iconRegistry.addSvgIcon(
+      'pfda_profile',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/pfda/profile.svg'));
     iconRegistry.addSvgIcon(
       'view-list',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_list-24px.svg'));

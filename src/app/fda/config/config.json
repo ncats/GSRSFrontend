@@ -607,6 +607,20 @@
   ],
   "facets": {
     "substances": {
+      "staging": [
+        "root_importmetadata_status",
+        "root_importmetadata_source",
+        "root_importmetadata_matchcount",
+        "root_importmetadata_matchkey",
+        "root_importmetadata_validationtype",
+        "root_importmetadata_validationmessage",
+        "Import Status",
+        "Source",
+        "Match Count",
+        "Match Key",
+        "Validation Type",
+        "Validation Message"
+        ],
       "default": [
         "Deprecated",
         "Record Status",
@@ -937,6 +951,7 @@
       ]
     },
     "applications": {
+      
       "default": [
         "Application Type",
         "Center",
