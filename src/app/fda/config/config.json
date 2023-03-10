@@ -98,6 +98,22 @@
       "title": "Overview"
     },
     {
+      "card": "substance-dependencies-image",
+      "title": "Substance Dependencies",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "references"
+        },
+        {
+          "filterName": "equals_in_array",
+          "propertyToCheck": "references",
+          "value": "SUBSTANCE IMAGE",
+          "propertyInArray": "tags"
+        }
+      ]
+    },
+    {
       "card": "fda-substance-product",
       "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
       "filters": [

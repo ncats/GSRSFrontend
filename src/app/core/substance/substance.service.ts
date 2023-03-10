@@ -23,6 +23,8 @@ import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
+
 import { stringify } from 'querystring';
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
@@ -435,9 +437,9 @@ export class SubstanceService extends BaseHttpService {
       } else {
         params = params.append('bulkQID', bulkQID.toString());
         let v  = "false";
-        if(searchOnIdentifiers===true) { v= "true"; }   
-        params = params.append('searchOnIdentifiers', v);    
-        params = params.append('searchEntity', searchEntity);    
+        if(searchOnIdentifiers===true) { v= "true"; }
+        params = params.append('searchOnIdentifiers', v);
+        params = params.append('searchEntity', searchEntity);
         url += `substances/bulkSearch`;
       }
 
@@ -503,8 +505,8 @@ export class SubstanceService extends BaseHttpService {
         response.statusKey=searchKey;
         observer.next(response);
         if (!asyncCallResponse.finished) {
-          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {     
-       
+          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+
             setTimeout(() => {
 
               this.processAsyncSearchResults(
@@ -534,7 +536,7 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
- 
+
 
   private getAsyncSearchResults(
     querySearchTerm: string,
@@ -723,6 +725,11 @@ export class SubstanceService extends BaseHttpService {
 
   getHierarchy(id: string): Observable<Array<HierarchyNode>> {
     const url = `${this.apiBaseUrl}substances(${id})/@hierarchy`;
+    return this.http.get<any>(url);
+  }
+
+  getDependencies(id: string): Observable<Array<SubstanceDependenciesImageNode>> {
+    const url = `${this.apiBaseUrl}substances(${id})/@dependencies`;
     return this.http.get<any>(url);
   }
 

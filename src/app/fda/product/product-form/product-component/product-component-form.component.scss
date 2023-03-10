@@ -15,6 +15,12 @@
   margin-bottom: 20px;
 }
 
+.divflexend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
 .form-row {
   display: flex;
   width: 100%;
@@ -90,6 +96,10 @@
   margin-top: 30px;
 }
 
+.maringright10px {
+  margin-right: 10px;
+}
+
 .pad10px {
   padding: 10px;
 }
@@ -137,11 +147,11 @@
 }
 
 .margintopminus25 {
-  margin-top: -5px;
+  margin-top: -25px;
 }
 
-.marginbottomminus17px {
-  margin-bottom: -17px;
+.marginbottomminus12px {
+  margin-bottom: -12px;
 }
 
 .padleft250px {
@@ -164,6 +174,7 @@ hr {
 fieldset.border {
   border: solid 1px var(--regular-green-color) !important;
   padding: 0 10px 10px 10px;
+  margin-bottom: 10px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */

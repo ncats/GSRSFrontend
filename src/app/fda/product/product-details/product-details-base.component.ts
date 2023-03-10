@@ -66,7 +66,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         if (Object.keys(this.product).length > 0) {
 
           // Add title on the browser. Concatenate multiple Product Code
-          let prodCode = '';
+          /*let prodCode = '';
           this.product.productCodeList.forEach((elementProdCode, indexProdCode) => {
             if (elementProdCode != null) {
               if (elementProdCode.productCode) {
@@ -76,8 +76,8 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                 prodCode = prodCode.concat(elementProdCode.productCode);
               }
             }
-          });
-          this.titleService.setTitle(`Product ` + prodCode);
+          });*/
+          this.titleService.setTitle(`View Product ` + this.product.id);
 
           this.getSubstanceBySubstanceKey();
         }
