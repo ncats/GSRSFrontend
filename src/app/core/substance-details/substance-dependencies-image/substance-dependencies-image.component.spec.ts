@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubstanceDisplayImageComponent } from './substance-display-image.component';
+import { SubstanceDependenciesImageComponent } from './substance-dependencies-image.component';
 
 describe('SubstanceDisplayImageComponent', () => {
-  let component: SubstanceDisplayImageComponent;
-  let fixture: ComponentFixture<SubstanceDisplayImageComponent>;
+  let component: SubstanceDependenciesImageComponent;
+  let fixture: ComponentFixture<SubstanceDependenciesImageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubstanceDisplayImageComponent ]
+      declarations: [ SubstanceDependenciesImageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubstanceDisplayImageComponent);
+    fixture = TestBed.createComponent(SubstanceDependenciesImageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

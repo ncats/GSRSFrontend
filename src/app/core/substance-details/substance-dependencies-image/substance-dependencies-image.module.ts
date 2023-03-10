@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubstanceDisplayImageComponent } from './substance-display-image.component';
+import { SubstanceDependenciesImageComponent } from './substance-dependencies-image.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -16,11 +16,12 @@ import {MatSortModule} from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceDisplayImageComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceDependenciesImageComponent),
     MatTableModule,
     CdkTableModule,
     MatPaginatorModule,
@@ -35,10 +36,11 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
     ReferencesManagerModule,
     MatDialogModule,
     MatSortModule,
-    CodeDisplayModule
+    CodeDisplayModule,
+    SubstanceImageModule
   ],
   declarations: [
-    SubstanceDisplayImageComponent
+    SubstanceDependenciesImageComponent
   ]
 })
-export class SubstanceDisplayImageModule { }
+export class SubstanceDependenciesImageModule { }

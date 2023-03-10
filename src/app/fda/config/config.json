@@ -98,8 +98,20 @@
       "title": "Overview"
     },
     {
-      "card": "substance-display-image",
-      "title": "Substance Display Image"
+      "card": "substance-dependencies-image",
+      "title": "Substance Dependencies",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "references"
+        },
+        {
+          "filterName": "equals_in_array",
+          "propertyToCheck": "references",
+          "value": "SUBSTANCE IMAGE",
+          "propertyInArray": "tags"
+        }
+      ]
     },
     {
       "card": "fda-substance-product",

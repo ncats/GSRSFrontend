@@ -214,10 +214,10 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceSsgDefinitionModule),
   },
   {
-    componentId: 'substance-display-image',
-    path: 'substance-display-image',
-    loadChildren: () => import('./substance-details/substance-display-image/substance-display-image.module')
-      .then(m => m.SubstanceDisplayImageModule),
+    componentId: 'substance-dependencies-image',
+    path: 'substance-dependencies-image',
+    loadChildren: () => import('./substance-details/substance-dependencies-image/substance-dependencies-image.module')
+      .then(m => m.SubstanceDependenciesImageModule),
   },
   {
     componentId: 'substance-form-definition',
