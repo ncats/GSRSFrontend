@@ -834,7 +834,7 @@ getDrafts() {
     this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
-        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING'|| message.messageType.toUpperCase() === 'NOTICE');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);

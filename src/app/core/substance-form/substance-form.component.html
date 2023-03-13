@@ -131,7 +131,7 @@
         </div>
         <div class="validation-message" *ngFor="let message of validationMessages; index as i" >
           <span class = "validation-body" >
-          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+          <div class="message-type" [ngClass]="{'error-message': message.messageType == 'ERROR', 'warning-message': message.messageType == 'WARNING', 'notice-message': message.messageType == 'NOTICE'}">
             {{message.messageType}}</div>
           <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br />
               <a [href]="fixLink(link.href)" class="internal-link"
