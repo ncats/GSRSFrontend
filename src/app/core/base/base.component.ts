@@ -477,10 +477,16 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   }
 
-  viewLists(): void {
+  viewLists(list?: string): void {
+    let data = {view: 'all'};
+    if (list) {
+      data.view = 'single';
+      data['activeName'] = list.split(':')[1];
+    }
     const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
       width: '800px',
-      autoFocus: false
+      autoFocus: false,
+      data: data
 
     });
     this.overlayContainer.style.zIndex = '1002';

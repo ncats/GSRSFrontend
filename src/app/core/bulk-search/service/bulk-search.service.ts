@@ -122,7 +122,7 @@ export class BulkSearchService extends BaseHttpService {
 
 
   saveBulkSearch(list: string, name: string, etag?: string) {
-    const url = this.apiBaseUrl + `substances/@userList/etag/${etag}?listName=${name}`;
+    const url = this.apiBaseUrl + `substances/@userList/keys?listName=${name}`;
    
     return this.http.post<any>(url, list);
   }
