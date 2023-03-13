@@ -128,13 +128,13 @@ export class BulkSearchService extends BaseHttpService {
   }
 
   getBulkSearchLists() {
-    const url = this.apiBaseUrl + `substances/@userList/currentUser`;
+    const url = this.apiBaseUrl + `substances/@userLists/currentUser`;
     return this.http.get<any>(url);
   }
 
   getUserBulkSearchLists(name: string) {
     // Get any users all saved lists.
-    const url = this.apiBaseUrl + `substances/@userList/otherUser?name=${name}`;
+    const url = this.apiBaseUrl + `substances/@userLists/otherUser?name=${name}`;
     return this.http.get<any>(url);
   }
 
