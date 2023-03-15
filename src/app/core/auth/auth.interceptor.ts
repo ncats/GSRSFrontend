@@ -15,7 +15,6 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        console.log('calling intercept');
         if (isPlatformBrowser(this.platformId)) {
 
             try {
@@ -48,12 +47,11 @@ export class AuthInterceptor implements HttpInterceptor {
                 } // configData end
 
                 const authToken = sessionStorage.getItem('authToken');
+                if (authToken) {
                     req = req.clone({
-                        headers: req.headers.set('auth-username', 'admin')
+                        headers: req.headers.set('auth-token', authToken)
                     });
-                    req = req.clone({
-                        headers: req.headers.set('auth-password', 'admin')
-                    });
+                }
                 
 
             } catch (e) {
