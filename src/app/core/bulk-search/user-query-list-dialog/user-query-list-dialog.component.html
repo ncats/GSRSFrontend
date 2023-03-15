@@ -13,6 +13,10 @@
 </div>
 <div  mat-dialog-content>
 <div *ngIf = "view == 'all'">
+    <div *ngIf = "lists.length == 0">
+        <button (click) = "demo()">click</button>
+       <i>No lists were found</i>
+    </div>
         <table mat-table matSort [dataSource]="lists" *ngIf = "lists.length > 0">
                 <ng-container matColumnDef="delete">
                         <th mat-header-cell *matHeaderCellDef> Delete </th>

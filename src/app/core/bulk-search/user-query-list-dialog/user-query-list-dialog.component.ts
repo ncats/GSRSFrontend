@@ -27,6 +27,11 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
+    this.getUserLists();
+  }
+  
+  getUserLists(): void {
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {
       this.lists = result.lists;
     }, error => {
@@ -42,12 +47,11 @@ export class UserQueryListDialogComponent implements OnInit {
     };
     this.lists = demo.lists;
     });
-
   }
-
   deleteList(list: string) {
     this.message = '';
     this.bulkSearchService.deleteBulkSearchList(list).subscribe(result => {
+      this.getUserLists();
     }, error => {
       this.message = "Error: Delete list failed. See console";
       console.log(error);
@@ -73,12 +77,18 @@ export class UserQueryListDialogComponent implements OnInit {
     }
     console.log(send);
     console.log(copy);
-    
+    this.message = "";
     this.bulkSearchService.editKeysBulkSearchLists(this.activeName, send, 'remove').subscribe(response => {
       this.active = copy;
     }, error => {
       this.message = "Error: Failed to delete. See error in console";
       console.log(error);
+    });
+  }
+
+  demo() {
+    this.bulkSearchService.saveBulkSearchEtag('90e9191d-1a81-4a53-b7ee-560bf9e68109', 'testList', 'f6fe09ff7ae9fab1').subscribe(response => {
+      console.log(response);
     });
   }
 

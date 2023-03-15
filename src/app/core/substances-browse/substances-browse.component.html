@@ -83,6 +83,12 @@
             </button>
           </div>
         </div>
+        <span class = "middle-fill"></span>
+        <div class="mat-elevation-z2" *ngIf = "isLoggedIn">
+            <button mat-flat-button color="primary" (click)="createList()">
+                <span>Add to List</span>
+              </button>
+        </div>
       </div>
     </div>
     
@@ -355,7 +361,8 @@
               (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
               [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
               [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
-              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy">
+              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy"
+              [userLists] = "userLists">
             </app-substance-summary-card>
           </div>
         </div>

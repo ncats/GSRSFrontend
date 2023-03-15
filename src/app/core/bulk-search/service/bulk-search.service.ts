@@ -120,9 +120,15 @@ export class BulkSearchService extends BaseHttpService {
     return this.http.get<any>(url, options);
   }
 
-
+  
   saveBulkSearch(list: string, name: string, etag?: string) {
     const url = this.apiBaseUrl + `substances/@userList/keys?listName=${name}`;
+   
+    return this.http.post<any>(url, list);
+  }
+
+  saveBulkSearchEtag(list: string, name: string, etag: string) {
+    const url = this.apiBaseUrl + `substances/@userList/etag/${etag}?listName=${name}`;
    
     return this.http.post<any>(url, list);
   }
@@ -140,25 +146,25 @@ export class BulkSearchService extends BaseHttpService {
 
   getSingleBulkSearchList(name: string) {
     // Get the keys and other fields of a list
-    const url = this.apiBaseUrl + `substances/@userList/${name}`;
+    const url = this.apiBaseUrl + `substances/@userLists/${name}`;
     return this.http.get<any>(url);
   }
 
   editKeysBulkSearchLists(name: string, list: string, operation: string) {
     // Add or remove keys from a list
-    const url = this.apiBaseUrl + `substances/@userList?listName=${name}&operation=${operation}/`;
+    const url = this.apiBaseUrl + `substances/@userList?listName=${name}&operation=${operation}`;
     return this.http.put<any>(url, list);
   }
 
   deleteBulkSearchList(name: string) {
     // Delete a list from current user
-    const url = this.apiBaseUrl + `substances/@userList/currentUser/keys?listName=${name}`;
+    const url = this.apiBaseUrl + `substances/@userList/currentUser?listName=${name}`;
     return this.http.delete<any>(url);
   }
 
   deleteUserBulkSearchList(listName: string, userName: string) {
     // Delete a list from any user
-    const url = this.apiBaseUrl + `substances/@userList/otherUser/keys?listName=${listName}&userName=${userName}`;
+    const url = this.apiBaseUrl + `substances/@userList/otherUser?listName=${listName}&userName=${userName}`;
     return this.http.delete<any>(url);
   }
 

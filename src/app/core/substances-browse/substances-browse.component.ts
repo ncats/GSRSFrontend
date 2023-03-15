@@ -117,6 +117,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   sequenceID?: string;
   searchHashFromAdvanced: string;
   bulkSearchFacet: Facet;
+  userLists: Array<string>;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -186,10 +187,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
   }
 
-  testing() {
-    this.bulkSearchService.saveBulkSearch('test','admin').subscribe(response=>{
+  createList() {
+    this.bulkSearchService.saveBulkSearchEtag('test','admin', this.etag).subscribe(response=>{
       console.log(response)},error => {console.log(error);});
   }
+
+
 
   fetchBulkLists() {
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {
@@ -246,6 +249,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
+    this.bulkSearchService.getBulkSearchLists().subscribe( result => {
+      console.log(result);
+      this.userLists = result.lists;
+
+        })
       } else {
         this.showDeprecated = false;
       }
@@ -532,6 +540,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
+          this.etag = pagingResponse.etag;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
               
