@@ -115,6 +115,7 @@ import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 
 @NgModule({
   declarations: [
@@ -151,7 +152,8 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
     CustomTextareaWidgetComponent,
     RegisterComponent,
     PwdRecoveryComponent,
-    UserQueryListDialogComponent
+    UserQueryListDialogComponent,
+    ListCreateDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -253,7 +255,8 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
     CustomRadioWidgetComponent,
     CustomMultiCheckboxWidgetComponent,
     CustomTextareaWidgetComponent,
-    UserQueryListDialogComponent
+    UserQueryListDialogComponent,
+    ListCreateDialogComponent
   ],
   exports: [
     StructureEditorModule,

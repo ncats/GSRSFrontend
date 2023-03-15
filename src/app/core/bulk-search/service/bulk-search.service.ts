@@ -130,7 +130,7 @@ export class BulkSearchService extends BaseHttpService {
   saveBulkSearchEtag(list: string, name: string, etag: string) {
     const url = this.apiBaseUrl + `substances/@userList/etag/${etag}?listName=${name}`;
    
-    return this.http.post<any>(url, list);
+    return this.http.post<any>(url, null);
   }
 
   getBulkSearchLists() {
@@ -152,7 +152,7 @@ export class BulkSearchService extends BaseHttpService {
 
   editKeysBulkSearchLists(name: string, list: string, operation: string) {
     // Add or remove keys from a list
-    const url = this.apiBaseUrl + `substances/@userList?listName=${name}&operation=${operation}`;
+    const url = this.apiBaseUrl + `substances/@userList/currentUser?keys=${list}&listName=${name}&operation=${operation}`;
     return this.http.put<any>(url, list);
   }
 

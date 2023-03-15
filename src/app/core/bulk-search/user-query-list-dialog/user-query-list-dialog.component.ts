@@ -15,6 +15,9 @@ export class UserQueryListDialogComponent implements OnInit {
   displayedColumns: string[] = ['delete', 'name', 'ID', 'view'];
   displayedColumns2: string[] = ['delete', 'key', 'name', 'code', 'codeSystem'];
   message = '';
+  etag?: string;
+  listName?: string;
+  showAddButtons = false;
 
 
   constructor(
@@ -24,11 +27,41 @@ export class UserQueryListDialogComponent implements OnInit {
   ) {
     this.view = data.view || 'all';
     this.activeName = data.activeName || null;
+    this.etag = data.etag || null;
+
   }
 
   ngOnInit(): void {
     
     this.getUserLists();
+    console.log(this.view);
+  }
+
+  viewLists(): void {
+    this.getUserLists();
+    this.showAddButtons = false;
+    this.view = "all";
+  }
+
+  addList(): void {
+    let found = false;
+    console.log(this.listName);
+    this.lists.forEach(item => {
+      if (item === this.listName) {
+        found = true;
+      }
+    });
+    if (!found) {
+      this.bulkSearchService.saveBulkSearchEtag(null, this.listName, this.etag).subscribe( response => {
+        this.message = "List Successfully Added";
+        this.showAddButtons = true;
+      }, error => {
+        console.log(error);
+        this.message = "Error: There was a problem adding a new list";
+      })
+    } else {
+      this.message = "Cannot add: This list name is already used";
+    }
   }
   
   getUserLists(): void {

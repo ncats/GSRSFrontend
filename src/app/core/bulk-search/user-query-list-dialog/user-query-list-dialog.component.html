@@ -2,6 +2,9 @@
     <div *ngIf = "view == 'all'" >
         <H3>Saved Lists</H3>
     </div>
+    <div *ngIf = "view == 'add'" >
+            <H3>Add List</H3>
+        </div>
     <div *ngIf = "view == 'single'" >
             <H3>Saved Lists: <span style = "font-weight:700;margin-left:10px;font-size:22px">{{activeName}}</span> 
                 
@@ -12,6 +15,16 @@
         </div>
 </div>
 <div  mat-dialog-content>
+
+        <div *ngIf = "view === 'add'">
+                <br/>
+           <div *ngIf = "!showAddButtons">
+              <b style = "font-weight:500">Enter a list name to save browse results to</b>  <br/><br/>
+            <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /> &nbsp; &nbsp;
+            <button mat-flat-button color = "primary" (click) = "addList()">Add List</button>
+        </div> 
+          
+        </div>
 <div *ngIf = "view == 'all'">
     <div *ngIf = "lists.length == 0">
         <button (click) = "demo()">click</button>
@@ -72,4 +85,9 @@
     <br/>
     {{message}}
 </div>
+<div class = "form-row">
+       <span class = "middle-fill"></span> <button *ngIf = "showAddButtons" (click) = "viewLists()">View Lists</button>
+    </div>
+
+
 </div>

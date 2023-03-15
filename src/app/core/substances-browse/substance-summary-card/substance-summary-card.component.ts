@@ -26,6 +26,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
 import * as lodash from 'lodash';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -134,7 +135,18 @@ export class SubstanceSummaryCardComponent implements OnInit {
   }
 
   
+openMessageDialog(message: string) {
+  const dialogRef = this.dialog.open(ListCreateDialogComponent, {
+    minWidth: '25%',
+    maxWidth: '50%',
+    data: {"message": message}
+  });
+  this.overlayContainer.style.zIndex = '1002';
 
+  dialogRef.afterClosed().subscribe(result => {
+    this.overlayContainer.style.zIndex = null;
+  });
+}
 
   getApprovalID() {
     if (!this.substance.approvalID) {
@@ -293,9 +305,9 @@ export class SubstanceSummaryCardComponent implements OnInit {
       record.lists.forEach(entry =>{
         if (entry.key === this.privateSubstance.uuid) {
           exists = true;
-          alert('found in list'); 
+          this.openMessageDialog('Cannot add: Already in list'); 
         } else {
-          toPut += entry.key + ", ";
+        //  toPut += entry.key + ", ";
         }
       });
       if (!exists) {
@@ -310,6 +322,11 @@ export class SubstanceSummaryCardComponent implements OnInit {
     console.log(list);
     this.bulkSearchService.editKeysBulkSearchLists(this.selectedList, list, 'add').subscribe(response => {
       console.log(response);
+      this.openMessageDialog('Record successfully added');
+    }, error => {
+      console.log(error);
+      this.openMessageDialog('Failed to Add to List: error in console');
+
     })
   }
 
