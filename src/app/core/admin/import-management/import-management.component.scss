@@ -94,7 +94,7 @@ align-items: center;
 margin-right: 5px;
 padding-top: 4px;
 padding-bottom: 4px;
-width: 180px;
+width: 200px;
 
 }
 }
@@ -111,6 +111,19 @@ width: 180px;
     .bar-label {
         font-size: 14px;
         padding-bottom: 3px;
+    }
+}
+
+.spinner {
+    width: 100px !important;
+    height: 100px !important;
+    margin: auto;
+    margin-top: 75px !important;
+    margin-left: 150px !important;
+    mat-progress-spinner {
+        margin: auto;
+        width: 100px !important;
+        height: 100px !important;
     }
 }
 

@@ -8,6 +8,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
+import { isString } from 'util';
 
 
 @Component({
@@ -36,6 +37,7 @@ fileID: string;
 previewDemo: any;
 previewIndex = 0;
 previewTotal = 0;
+previewLoading = false;
 toIgnore = [];
 fieldList: Array<any>;
 extension: string;
@@ -65,15 +67,30 @@ setAdapter(event?: any) {
 
 }
 
-createFieldList(values: Array<string>): void {
+createFieldList(values: Array<any>): void {
 this.fieldList = [];
+console.log(values)
   values.forEach(item => {
-    item = item.replace(/\(/g,"{").replace(/\)/g,"}");
-    let temp = {value: null, display: null};
-    temp.value = '{{'+item+'}}';
-    temp.display = item;
+    console.log(item);
+    let field = "";
+    if (item.fieldName) {
+      field = item.fieldName;
+      console.log(field);
+    } else if(isString(item)) {
+      field = item;
+      console.log(field);
+
+    }
+   // field = field.replace(/\(/g,"{").replace(/\)/g,"}");
+    console.log(field);
+    let temp = {"value":'{{'+field+'}}', "display": field};
+   // temp.value = '{{'+field+'}}';
+    //temp.display = field;
     this.fieldList.push(temp);
+    console.log(temp);
   });
+  console.log(this.fieldList);
+
 }
 
 openAction(templateRef:any, index: number): void  {
@@ -213,7 +230,8 @@ ngOnInit() {
 
   putTest(): void {
     this.loadingService.setLoading(true);
-    this.step = 4;
+   
+    
     let tosend = JSON.parse(JSON.stringify(this.postResp));
     this.adminService.executeAdapter(this.fileID, tosend, this.adapterKey ).subscribe(response => {
       this.loadingService.setLoading(false);
@@ -241,8 +259,11 @@ openInput(): void {
 
 stagingArea(sendFile?: boolean): void {
   let navigationExtras: NavigationExtras = {queryParams: {}};
+  let pos = this.postResp.filename.lastIndexOf(".");
+    const newtest = this.postResp.filename.slice(0, pos) + "!" + this.postResp.filename.slice(pos);
+    console.log(newtest);
   if(sendFile) {
-    navigationExtras.queryParams = {'facets': 'Source*' + this.postResp.filename.replace(/^.*[\\\/]/, '') + '.true'};
+    navigationExtras.queryParams = {'facets': 'Source*' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
 
   }
   this.router.navigate(['/staging-area'], navigationExtras);
@@ -258,7 +279,8 @@ ImportReload(): void {
 callPreview(): void {
 
   const formData = new FormData();
-    this.loadingService.setLoading(true);
+   // this.loadingService.setLoading(true);
+   this.previewLoading = true;
     this.previewIndex = 0;
   
     formData.append('file', this.uploadForm.get('file').value);
@@ -268,6 +290,7 @@ callPreview(): void {
 
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey ).pipe(take(1)).subscribe(response => {
       this.preview = [];
+      this.previewLoading = false;
       response.dataPreview.forEach(entry => {
        
       if (entry.data) {
@@ -281,27 +304,15 @@ callPreview(): void {
         this.preview[0].data.structureID = response.structure.id;
       });
     }
-      this.loadingService.setLoading(false);
+      this.previewLoading = false;
+
 
     }, error => {
       console.log(error);
     
       this.preview = [];
-      this.previewDemo.dataPreview.forEach(entry => {
-        if (entry.data) {
-          this.preview.push(entry);
-          this.previewTotal = this.preview.length;
-        }
-          
-      });
-      if (this.preview[0].data.structure) {
-        this.structureService.interpretStructure(this.preview[0].data.structure.molfile).subscribe(response => {
-          this.preview[0].data.structureID = response.structure.id;
-        });
-      }
-       
-      this.previewTotal = this.preview.length;
-     this.loadingService.setLoading(false);
+    
+      this.previewLoading = false;
 
     });
 }

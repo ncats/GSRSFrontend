@@ -186,7 +186,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   wildCardSearch() {
     this.wildCardService.getWildCardText(this.wildCardText);
     this.setUpPrivateSearchTerm();
-   // this.searchSubstances();
+    this.searchSubstances();
   }
 
   ngOnInit() {
@@ -539,7 +539,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   searchSubstances() {
       // There should be a better way to do this.
-
+console.log('calling search');
+console.log(this.privateSearchTerm);
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
@@ -557,10 +558,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     );
    // if (this.argsHash == null || this.argsHash !== newArgsHash) {
       this.isLoading = true;
-     // this.loadingService.setLoading(true);
+      this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams)
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm)
         .subscribe(pagingResponse => {
           this.substances = [];
           this.records = [];
@@ -591,6 +592,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
           this.narrowSearchSuggestionsCount = 0;
+          this.loadingService.setLoading(false);
          
         //  this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
@@ -602,7 +604,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           };
           this.isError = true;
           this.isLoading = false;
-          this.loadingService.setLoading(this.isLoading);
+          this.loadingService.setLoading(false);
       /*  const pagingResponse = this.setDemo2();
 
         this.totalSubstances = pagingResponse.total;

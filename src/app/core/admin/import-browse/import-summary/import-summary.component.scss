@@ -26,12 +26,11 @@ min-width: 100px;
 }
 
 .spinner {
-    height: 24px;
-    width: 24px;
-    margin-left: 10px;
-  margin-right: 10px;
-    margin-top: -5px;
-margin-bottom: 5px;
+    width: 100px !important;
+height: 100px !important;
+margin: auto;
+margin-top: 75px !important;
+margin-left: 150px !important;
 }
 
 .action-button {

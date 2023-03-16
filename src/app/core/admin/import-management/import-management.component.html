@@ -107,7 +107,15 @@
                                     </div>
         </div>
         <div class = "preview-window">
-                <div *ngIf = "previewTotal > 0" style = "margin-left: 50px;">
+                        <div *ngIf = "previewLoading" style = "margin-left: 50px;">
+                                        <div style = "width:100%"><mat-progress-spinner
+                                                class="spinner"
+                                                [color]="primary"
+                                                [diameter]="100"
+                                                mode = "indeterminate">
+                                            </mat-progress-spinner></div>
+                </div>
+                <div *ngIf = "previewTotal > 0 && !previewLoading" style = "margin-left: 50px;">
                         <div style = "width:100%;margin-left: 100px;">
                                 <button [disabled] = "previewIndex === 0" mat-button (click)="changePreview('back')">
                                          <mat-icon svgIcon="chevron_left"></mat-icon>

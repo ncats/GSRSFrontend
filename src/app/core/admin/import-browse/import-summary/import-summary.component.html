@@ -406,14 +406,14 @@
             <div class = "">
                 <span class = "action-label">Actions:        
                 </span>
-                <span ><button class ="action-button" color = "primary" [disabled] = "substance._metadata.importStatus === 'merged'" mat-button mat-flat-button mat-primary-button 
+                <span ><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button 
                   (click) = "doAction('create')">Create</button></span>
-                  <span><a class ="action-button" color = "primary" [disabled] = "substance._metadata.importStatus === 'merged'"  mat-button mat-flat-button mat-primary-button 
+                  <span><a class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
                     [routerLink]="['/substances/register']"
                   [queryParams]="{stagingID : substance._metadata.recordId}">Edit</a></span>
                 <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
                    (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
-                <span><button class ="action-button" color = "primary" [disabled] = "substance._metadata.importStatus === 'merged'"  mat-button mat-flat-button mat-primary-button 
+                <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
                   (click) = "doAction('ignore')">Reject</button></span>
 
             </div>
@@ -465,7 +465,7 @@
                   
                       <ng-container matColumnDef="type">
                         <th mat-header-cell *matHeaderCellDef> Type </th>
-                        <td mat-cell *matCellDef="let item" > <span [ngClass] = "{'warning-label':item.validationType === 'warning', 'error-label':item.validationType === 'error'}"> {{item.validationType}}</span> </td>
+                        <td mat-cell *matCellDef="let item" > <span [ngClass] = "{'warning-label':item.validationType === 'warning', 'error-label':item.validationType === 'error'}" style = "font-weight:500"> {{item.validationType | uppercase}}</span> </td>
                       </ng-container>
                   
                       <ng-container matColumnDef="message">
