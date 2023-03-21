@@ -18,16 +18,14 @@ export interface Product {
   countryCode?: string;
   language?: string;
   provenance?: string;
-  provenanceProductId?: string; //new 3.1
-  provenanceDocumentId?: string; //new 3.1
-  deaschedule?: string; //new 3.1
-  startMarketingDate?: string; //new 3.1
-  endMarketingDate?: string; //new 3.1
-  marketingCategoryCode?: string; //new 3.1
-  marketingCategoryName?: string; //new 3.1
-  productUrl?: string; //new 3.1
-  shelfLife ?: string; //new 3.1
-  storageConditions?: string;  //new 3.1
+  provenanceProductId?: string;
+  provenanceDocumentId?: string;
+  deaschedule?: string;
+  marketingCategoryCode?: string;
+  marketingCategoryName?: string;
+  productUrl?: string;
+  shelfLife ?: string;
+  storageConditions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -36,6 +34,7 @@ export interface Product {
   productNameList?: Array<ProductName>;
   productCodeList?: Array<ProductCode>;
   productCompanyList?: Array<ProductCompany>;
+  productIndications?: Array<ProductIndication>;
   productComponentList?: Array<ProductComponent>;
 }
 
@@ -64,7 +63,7 @@ export interface ProductCode {
   id?: number;
   productCode?: string;
   productCodeType?: string;
-  juridictions?: string;
+  jurisdictions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -82,8 +81,11 @@ export interface ProductCompany {
   companyRole?: string;
   companyCode?: string;
   companyCodeType?: string;
-  registrantName?: string; //new 3.1
-  registrantDUNS?: string; //new 3.1
+  startMarketingDate?: string;
+  endMarketingDate?: string;
+  companyProductId?: string;
+  companyDocumentId?: string;
+  provenanceDocumentId?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -101,6 +103,19 @@ export interface ProductCompanyCode {
   modifyDate?: number;
 }
 
+export interface ProductIndication {
+  id?: number;
+  Indication?: string;
+  indicationText?: string;
+  indicationCode?: string;
+  indicationCodeType?: string;
+  indicationGroup?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+}
+
 export interface ProductComponent {
   id?: number;
   charSize?: string;
@@ -109,21 +124,31 @@ export interface ProductComponent {
   charFlavor?: string;
   charShape?: string;
   charNumFragments?: string;
+  dosageForm?: string;
   dosageFormCode?: string;
   dosageFormCodeType?: string;
-  dosageForm?: string;
   amount?: string;
   unit?: string;
-  manufactureCode?: string;
-  manufactureCodeType?: string;
-  manufactureItemCode?: string;
-  manufactureItemCodeType?: string;
-
+  provenanceManufactureItemId?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  productManufacturers?: Array<ProductManufacturer>;
   productLotList?: Array<ProductLot>;
+}
+
+export interface ProductManufacturer {
+  id?: number;
+  manufacturerName?: string;
+  manufacturerRole?: string;
+  manufacturerCodeType?: string;
+  manufacturedItemCode?: string;
+  manufacturedItemCodeType?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
 }
 
 export interface ProductLot {

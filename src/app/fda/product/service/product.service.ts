@@ -9,7 +9,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
-import { ProductCompany, ProductCompanyCode, ProductComponent, ProductLot, ProductIngredient } from '../model/product.model';
+import { ProductCompany, ProductCompanyCode, ProductIndication, ProductComponent, ProductManufacturer, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
@@ -171,6 +171,7 @@ export class ProductService extends BaseHttpService {
         productNameList: [],
         productCodeList: [],
         productCompanyList: [],
+        productIndications: [],
         productComponentList: []
       };
     }
@@ -251,7 +252,7 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductCompany(): void {
-    const newProductCompany: ProductCompany = { productCompanyCodeList: [{}] };
+    const newProductCompany: ProductCompany = { productCompanyCodeList: [] };
     this.product.productCompanyList.unshift(newProductCompany);
   }
 
@@ -268,8 +269,18 @@ export class ProductService extends BaseHttpService {
     this.product.productCompanyList[prodCompanyIndex].productCompanyCodeList.splice(prodCompanyCodeIndex, 1);
   }
 
+  addNewProductIndication(): void {
+    const newProductIndication: ProductIndication = {};
+    this.product.productIndications.unshift(newProductIndication);
+  }
+
+  deleteProductIndication(prodIndicationIndex: number): void {
+    this.product.productIndications.splice(prodIndicationIndex, 1);
+  }
+
   addNewProductComponent(): void {
     const newProductComponent: ProductComponent = {
+      productManufacturers: [],
       productLotList: [{
         productIngredientList: [{}]
       }]
@@ -279,6 +290,15 @@ export class ProductService extends BaseHttpService {
 
   deleteProductComponent(prodComponentIndex: number): void {
     this.product.productComponentList.splice(prodComponentIndex, 1);
+  }
+
+  addNewProductManufacturer(prodComponentIndex: number): void {
+    const newProductManu: ProductManufacturer = {};
+    this.product.productComponentList[prodComponentIndex].productManufacturers.unshift(newProductManu);
+  }
+
+  deleteProductManufacturer(prodComponentIndex: number, prodManuIndex: number): void {
+    this.product.productComponentList[prodComponentIndex].productManufacturers.splice(prodManuIndex, 1);
   }
 
   addNewProductLot(prodComponentIndex: number): void {

@@ -87,6 +87,26 @@ export class ProductComponentFormComponent implements OnInit {
     this.productService.addNewProductLot(prodComponentIndex);
   }
 
+  addNewProductManufacturer(prodComponentIndex: number) {
+    this.productService.addNewProductManufacturer(prodComponentIndex);
+  }
+
+  confirmDeleteProductManufacturer(prodComponentIndex: number, productManuIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {message: 'Are you sure you want to delete Manufacture Item Code ' + (productManuIndex + 1) + ' data?'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductManufacturer(prodComponentIndex, productManuIndex);
+      }
+    });
+  }
+
+  deleteProductManufacturer(prodComponentIndex: number, productManuIndex: number) {
+    this.productService.deleteProductManufacturer(prodComponentIndex, productManuIndex);
+  }
+
   copyProductComponent() {
     this.productService.copyProductComponent(this.productComponent);
   }
