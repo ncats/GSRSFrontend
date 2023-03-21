@@ -128,9 +128,16 @@ export class BulkSearchService extends BaseHttpService {
   }
 
   saveBulkSearchEtag(list: string, name: string, etag: string) {
+    // save search results as a list by etag
     const url = this.apiBaseUrl + `substances/@userList/etag/${etag}?listName=${name}`;
    
     return this.http.post<any>(url, null);
+  }
+
+  getSaveBulkListStatus(id: string) {
+    // get the status of a call to add a new list.
+    const url = this.apiBaseUrl + `substances/@userList/status/${id}`;
+    return this.http.get<any>(url);
   }
 
   getBulkSearchLists() {
@@ -146,7 +153,7 @@ export class BulkSearchService extends BaseHttpService {
 
   getSingleBulkSearchList(name: string) {
     // Get the keys and other fields of a list
-    const url = this.apiBaseUrl + `substances/@userLists/${name}`;
+    const url = this.apiBaseUrl + `substances/@userList/${name}`;
     return this.http.get<any>(url);
   }
 
@@ -167,5 +174,7 @@ export class BulkSearchService extends BaseHttpService {
     const url = this.apiBaseUrl + `substances/@userList/otherUser?listName=${listName}&userName=${userName}`;
     return this.http.delete<any>(url);
   }
+
+  
 
 }

@@ -3,3 +3,66 @@
   
   font-size: 18px;
 }
+
+.loading-spinner {
+  width: 70px;
+  mat-progress-spinner {
+      margin: auto;
+  }
+}
+
+.form-row {
+  display: flex;
+  width: 100%;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: row;
+
+  .spinner-labels {
+      
+  }
+
+  .spinner-row {
+      width: 33%;
+      flex-direction: column;
+
+      .spinner-labels {
+      display: flex;
+      flex-direction: row;
+
+
+      .spinner {
+          width: 50px;
+      }
+      }
+  }
+}
+
+.mat-mini-fab {
+  position: absolute;
+  right: 17px;
+  top: 8px;
+  background-color: var(--mat-icon-button-bg-color);
+  color: var(--label-color);
+  width: 35px;
+  height: 35px;
+
+  &:not(:first-child) {
+      margin-top: 3px;
+  }
+
+  ::ng-deep .mat-button-wrapper {
+      padding: 0;
+  }
+}
+
+::ng-deep {
+
+    .mat-dialog-container {
+     // padding: 5px;
+      position: relative;
+    //  overflow: hidden;
+    }
+  }
