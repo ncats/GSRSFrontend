@@ -52,7 +52,7 @@ export class AuthInterceptor implements HttpInterceptor {
                         headers: req.headers.set('auth-token', authToken)
                     });
                 }
-                
+
             } catch (e) {
                 console.log('ERROR in intercept function: ' + e);
             }

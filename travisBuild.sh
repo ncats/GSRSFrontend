@@ -9,7 +9,7 @@ git status
 git fetch
 git branch -a
 git status
-git checkout -b fda_staged_sync
+git checkout fda_staged_sync
   git pull
   git merge origin/fda
   cd gsrs-ci
