@@ -1,0 +1,102 @@
+<div mat-header>
+        <button mat-mini-fab mat-dialog-close>
+                <mat-icon svgIcon="close"></mat-icon>
+              </button>
+    <div *ngIf = "view == 'all'" >
+        <H3>Saved Lists</H3>
+    </div>
+    <div *ngIf = "view == 'add'" >
+            <H3>Add List</H3>
+        </div>
+    <div *ngIf = "view == 'single'" >
+            <H3>Saved Lists: <span style = "font-weight:700;margin-left:10px;font-size:22px">{{activeName}}</span> 
+                
+            </H3>
+            <div>
+                    <a class = "link" (click) = "view = 'all'">Return to lists view</a>
+            </div>
+        </div>
+</div>
+<div  mat-dialog-content>
+
+        <div *ngIf = "view === 'add'">
+                <br/>
+           <div *ngIf = "!showAddButtons">
+              <b style = "font-weight:500">Enter a list name to save browse results to</b>  <br/><br/>
+            <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /> &nbsp; &nbsp;
+            <button mat-flat-button color = "primary" (click) = "addList()">Add List</button>
+        </div>
+        <div *ngIf = "showAddButtons && loading"> 
+                <div class = "loading-spinner" style="margin: auto;">
+                        <mat-progress-spinner  [color]="accent" mode="indeterminate" diameter = "50" >
+                        </mat-progress-spinner>
+                  </div>
+            </div>
+          
+        </div>
+<div *ngIf = "view == 'all'">
+    <div *ngIf = "lists.length == 0">
+        <button (click) = "demo()">click</button>
+       <i>No lists were found</i>
+    </div>
+        <table mat-table matSort [dataSource]="lists" *ngIf = "lists.length > 0">
+                <ng-container matColumnDef="delete">
+                        <th mat-header-cell *matHeaderCellDef> Delete </th>
+                        <td mat-cell *matCellDef="let list; index as i"> <button mat-icon-button matTooltip="Delete draft" (click) = "deleteList(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let list"> {{list}} </td>
+                            </ng-container>
+                          <!--  <ng-container matColumnDef="ID">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> ID </th>
+                                <td mat-cell *matCellDef="let list">  {{list.ID? list.ID : 'N/A'}} </td>
+                            </ng-container>-->
+                            <ng-container matColumnDef="view">
+                                <th mat-header-cell *matHeaderCellDef> View </th>
+                                <td mat-cell *matCellDef="let list"> <button mat-button (click) = "useDraft(list)">View List</button> </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                
+            </table>
+</div>
+
+<div *ngIf = "view == 'single'" >
+        <table mat-table matSort [dataSource]="active.lists" *ngIf = "active.lists.length > 0">
+                <ng-container matColumnDef="delete">
+                        <th mat-header-cell *matHeaderCellDef> Delete </th>
+                        <td mat-cell *matCellDef="let list"> <button mat-icon-button matTooltip="Delete draft" (click) = "deleteListEntry(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="key">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> UUID </th>
+                                <td mat-cell *matCellDef="let list"> <a [routerLink]="['/substances', list.key]"> {{list.key}} </a></td>
+                            </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let list">  {{list.displayName? list.displayName : 'N/A'}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="code">
+                                    <th mat-header-cell mat-sort-header *matHeaderCellDef> Code </th>
+                                    <td mat-cell *matCellDef="let list">  {{list.displayCode? list.displayCode : 'N/A'}} </td>
+                                </ng-container>
+                            <ng-container matColumnDef="codeSystem">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> Code System </th>
+                                    <td mat-cell *matCellDef="let list">  {{list.codeSystem? list.codeSystem : 'N/A'}} </td>
+                                 </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                
+            </table>
+</div>
+
+<div class = "form-row">
+    <br/>
+    {{message}}
+</div>
+<div class = "form-row">
+    <div></div>   <span class = "middle-fill"></span> <button color = "primary" mat-flat-button *ngIf = "showAddButtons && !loading" (click) = "viewLists()">View Lists</button>
+    </div>
+
+
+</div>

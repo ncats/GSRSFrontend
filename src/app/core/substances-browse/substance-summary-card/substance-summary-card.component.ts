@@ -25,6 +25,8 @@ import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substan
 import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
 import * as lodash from 'lodash';
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 
 @Component({
   selector: 'app-substance-summary-card',
@@ -42,6 +44,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   @Input() codeSystemNames?: Array<string>;
   @Input() codeSystemVocab?: Vocabulary;
   @Input() searchStrategy?: string = '';
+  @Input() userLists?: Array<string>;
   
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
@@ -57,6 +60,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
   showLessCodes = true;
   privateNames?: Array<SubstanceName>;
   nameLoading = true;
+  selectedList: string;
   _ = lodash;
 
   constructor(
@@ -70,11 +74,13 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
     private configService: ConfigService,
+    private bulkSearchService: BulkSearchService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    console.log(this.userLists);
 
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
       if (response) {
@@ -128,6 +134,19 @@ export class SubstanceSummaryCardComponent implements OnInit {
     return this.privateNames;
   }
 
+  
+openMessageDialog(message: string) {
+  const dialogRef = this.dialog.open(ListCreateDialogComponent, {
+    minWidth: '25%',
+    maxWidth: '50%',
+    data: {"message": message}
+  });
+  this.overlayContainer.style.zIndex = '1002';
+
+  dialogRef.afterClosed().subscribe(result => {
+    this.overlayContainer.style.zIndex = null;
+  });
+}
 
   getApprovalID() {
     if (!this.substance.approvalID) {
@@ -276,6 +295,39 @@ export class SubstanceSummaryCardComponent implements OnInit {
 
   showMoreLessCodes() {
     this.showLessCodes = !this.showLessCodes;
+  }
+
+  addToList() {
+    let exists = false;
+    let toPut = "";
+    this.bulkSearchService.getSingleBulkSearchList(this.selectedList).subscribe(record => {
+      console.log(record);
+      record.lists.forEach(entry =>{
+        if (entry.key === this.privateSubstance.uuid) {
+          exists = true;
+          this.openMessageDialog('Cannot add: Already in list'); 
+        } else {
+        //  toPut += entry.key + ", ";
+        }
+      });
+      if (!exists) {
+        toPut += this.privateSubstance.uuid;
+        this.addCall(toPut);
+      }
+    })
+   
+  }
+
+  addCall(list: string) {
+    console.log(list);
+    this.bulkSearchService.editKeysBulkSearchLists(this.selectedList, list, 'add').subscribe(response => {
+      console.log(response);
+      this.openMessageDialog('Record successfully added');
+    }, error => {
+      console.log(error);
+      this.openMessageDialog('Failed to Add to List: error in console');
+
+    })
   }
 
 

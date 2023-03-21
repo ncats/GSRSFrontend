@@ -6,6 +6,20 @@
     <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
     </mat-icon>
     <span class="middle-fill"></span>
+    <div style = "font-size:16px">
+    <mat-form-field *ngIf = 'userLists && userLists.length > 0' class = "select-list">
+      <mat-label>Add to List</mat-label>
+      <mat-select [(ngModel)]="selectedList" name="Add to List" (selectionChange)="console.log('changed')" >
+        <mat-option *ngFor="let list of userLists" [value]="list">
+          {{list}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <span style = "margin-right:50px;">
+      <button class = "mat-button" *ngIf = "selectedList" (click) = "addToList()" color = "primary">Add</button>
+
+    </span>
+  </div>
     <div class="approval">
       {{substance.approvalID}}
     </div>

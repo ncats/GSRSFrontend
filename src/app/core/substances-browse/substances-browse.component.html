@@ -83,7 +83,16 @@
             </button>
           </div>
         </div>
+        
       </div>
+      <span class = "middle-fill"></span>
+
+      <div class="mat-elevation-z2" >
+        <button mat-flat-button color="primary" (click)="createList()">
+            <span>Add to List</span>
+          </button>
+    </div>
+     
     </div>
     
     <div *ngIf="bulkSearchQueryId">
@@ -257,11 +266,18 @@
               </button>
             </div>
           </div>
+          <span class = "middle-fill"></span>
+
+          <button mat-raised-button style = "margin-right:50px;" color="primary" class="reset-facets-button" (click)="addToList()">
+            <span>Add to List</span>
+          </button>
         </div>
+
+        
       </ng-template>
       
       <div *ngIf="(substances && substances.length)">
-      
+        
       <div>
         <div class="sub-search-div">
           <p class="sub-search-text red-text">Results below are an incomplete preview</p>
@@ -355,7 +371,8 @@
               (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
               [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
               [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
-              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy">
+              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy"
+              [userLists] = "userLists">
             </app-substance-summary-card>
           </div>
         </div>
