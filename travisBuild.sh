@@ -9,7 +9,7 @@ git status
 git fetch
 git branch -a
 git status
-git checkout -b bulkQuery_frontend
+git checkout -b fda_staged_sync
   git pull
   git merge origin/fda
   cd gsrs-ci
@@ -25,7 +25,7 @@ git add -u
 git commit -m "pushing new frontend build"
 git status
 ls
-git push -u origin bulkQuery_frontend
+git push -u origin fda_staged_sync
 
 
  cd ../
