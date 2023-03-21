@@ -8,7 +8,6 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Product, ValidationMessage } from '../model/product.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -145,7 +144,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.productService.loadProduct(response);
           this.product = this.productService.product;
-          // Check if there is not Product Code Object, create one
+          /*
+          Check if there is not Product Code Object, create one
           if (this.product.productCodeList.length == 0) {
             this.product.productCodeList = [{}];
           }
@@ -160,6 +160,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             }
           }
+          */
         } else {
           this.message = 'No Product Record found for Id ' + this.id;
         }
@@ -615,6 +616,26 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
     this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
+  }
+
+  addNewProductIndication() {
+    this.productService.addNewProductIndication();
+  }
+
+  confirmDeleteProductIndication(prodIndicationIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductIndication(prodIndicationIndex);
+      }
+    });
+  }
+
+  deleteProductIndication(prodIndicationIndex: number) {
+    this.productService.deleteProductIndication(prodIndicationIndex);
   }
 
   addNewProductComponent() {

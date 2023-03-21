@@ -11,7 +11,9 @@
 
     <!-- Do not show 'Import JSON' button when in Update Impurities page -->
     <span *ngIf="product && !product.id">
-      <button mat-flat-button color="primary" (click)="importJSON()"><mat-icon> publish</mat-icon>Import JSON</button>
+      <button mat-flat-button color="primary" (click)="importJSON()">
+        <mat-icon> publish</mat-icon>Import JSON
+      </button>
     </span>
 
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
@@ -35,8 +37,8 @@
 
         <a mat-flat-button color="primary" routerLink="/product/{{product.id}}" target="_blank"
           matTooltip='Opens in a new window'>
-          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
           View Product
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
         </a>&nbsp;&nbsp;&nbsp;
 
         <span *ngIf="isAdmin">
@@ -92,6 +94,7 @@
   </div> <!-- Submission Message -->
 </div> <!-- top-fixed -->
 
+
 <!-- Display Form Fields -->
 <div class="form-content-container mat-form-field-style">
   <div class="scrollable-container">
@@ -102,11 +105,11 @@
     </div>
 
     <div class="cards-container">
-      <div class="" *ngIf="product">
+      <div class="margintop10px" *ngIf="product">
         <div class="title_box">
-          <div class="width260px">
+          <div class="width280px">
             <span class="title">
-              {{title}}
+              <b>{{title}}</b>
             </span>
           </div>
 
@@ -126,7 +129,6 @@
                 Provenance: {{product.provenance}}
               </span>
             </div>
-            <br>
             <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Create Date:</span> {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss
             a'}}&nbsp;&nbsp;&nbsp;
@@ -136,9 +138,9 @@
         </div>
 
         <!-- Product FORM  -->
+        <br>
         <mat-card class="" *ngIf="product">
           <mat-card-content>
-
             <mat-accordion multi="true">
 
               <!-- PRODUCT NAME LIST -->
@@ -154,25 +156,9 @@
                       (click)="addNewProductName(); $event.stopPropagation()" matTooltip="Add New Product Name">
                       <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
                     </button>
-                    <!--
-                    <div class="paneltitledivflex">
-                      <div class="">
-                        <span class="font17px"><b>Product Name</b></span>
-                      </div>
-                      <div>
-                        <button mat-icon-button class="marginright60px" color="primary" (click)="addNewProductName()"
-                          matTooltip="Add New Product Name">
-                          <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
-                        </button>
-                      </div>
-                    </div>
-                    -->
                   </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <!--
-                <div class="marginleftneg10px marginrightneg10px padleft10px padright10px bordergray">
-                -->
                 <div class="marginbottom10px"
                   *ngFor="let prodName of product.productNameList; let prodNameIndex = index">
 
@@ -190,15 +176,6 @@
                         (valueChange)="prodName.productNameType = $event">
                       </app-cv-input>
 
-                      <!-- Add and Delete Buttons -->
-                      <!--
-                      <span class="displayinlineblock marginleftneg5px">
-                      <button mat-icon-button color="primary" *ngIf="prodNameIndex == 0" (click)="addNewProductName()"
-                        matTooltip="Add New Product Name">
-                        <mat-icon>add_circle_outline</mat-icon>
-                      </button>
-                      </span>
-                      -->
                       <!-- [disabled]="product.productNameList.length == 1"
                        [class.disabled]="product.productNameList.length == 1" -->
                       <button mat-icon-button color="primary" (click)="confirmDeleteProductName(prodNameIndex)"
@@ -241,6 +218,7 @@
                 <!--
                 </div> -->
               </mat-expansion-panel>
+              <!-- Product Name List-->
 
 
               <!-- EXPANSION: PRODUCT OVERVIEW -->
@@ -308,13 +286,13 @@
                 </div>
 
                 <div class="form-row">
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Application Number" [(ngModel)]="product.appNumber" name="source" />
-                  </mat-form-field>
-
                   <app-cv-input class="col-1" domain="APPLICATION_TYPE" title="Application Type" name="appType"
                     [model]="product.appType" (valueChange)="product.appType = $event">
                   </app-cv-input>
+
+                  <mat-form-field class="col-1">
+                    <input matInput placeholder="Application Number" [(ngModel)]="product.appNumber" name="source" />
+                  </mat-form-field>
 
                   <mat-form-field class="col-1">
                     <input matInput placeholder="Source" [(ngModel)]="product.source" name="source" />
@@ -330,30 +308,16 @@
                     [model]="product.productType" (valueChange)="product.productType = $event">
                   </app-cv-input>
 
-                  <app-cv-input class="col-1" domain="PROD_COUNTRY_CODE" title="Country Code" name="countryCode"
-                    [model]="product.countryCode" (valueChange)="product.countryCode = $event">
-                  </app-cv-input>
-
                   <app-cv-input class="col-1" domain="LANGUAGE" title="Language" name="language"
                     [model]="product.language" (valueChange)="product.language = $event">
                   </app-cv-input>
 
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Deaschedule" [(ngModel)]="product.deaschedule" name="deaschedule" />
-                  </mat-form-field>
+                  <app-cv-input class="col-2" domain="PROD_COUNTRY_CODE" title="Country Code" name="countryCode"
+                    [model]="product.countryCode" (valueChange)="product.countryCode = $event">
+                  </app-cv-input>
                 </div>
 
                 <div class="form-row">
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Start Marketing Date" [(ngModel)]="product.startMarketingDate"
-                      name="startMarketingDate" />
-                  </mat-form-field>
-
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="End Marketing Date" [(ngModel)]="product.endMarketingDate"
-                      name="endMarketingDate" />
-                  </mat-form-field>
-
                   <mat-form-field class="col-1">
                     <input matInput placeholder="Marketing Category Code" [(ngModel)]="product.marketingCategoryCode"
                       name="marketingCategoryCode" />
@@ -363,12 +327,6 @@
                     <input matInput placeholder="Marketing Category Name" [(ngModel)]="product.marketingCategoryName"
                       name="marketingCategoryName" />
                   </mat-form-field>
-                </div>
-
-                <div class="form-row">
-                  <app-cv-input class="col-1" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
-                    [model]="product.provenance" (valueChange)="product.provenance = $event">
-                  </app-cv-input>
 
                   <mat-form-field class="col-1">
                     <input matInput placeholder="Shelf Life" [(ngModel)]="product.shelfLife" name="shelfLife" />
@@ -378,9 +336,19 @@
                     <input matInput placeholder="Storage Conditions" [(ngModel)]="product.storageConditions"
                       name="storageConditions" />
                   </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <app-cv-input class="col-1" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
+                    [model]="product.provenance" (valueChange)="product.provenance = $event">
+                  </app-cv-input>
 
                   <mat-form-field class="col-1">
-                    <input matInput placeholder="Product Url" [(ngModel)]="product.productUrl" name="productUrl" />
+                    <input matInput placeholder="Deaschedule" [(ngModel)]="product.deaschedule" name="deaschedule" />
+                  </mat-form-field>
+
+                  <mat-form-field class="col-2">
+                    <input matInput placeholder="Product URL" [(ngModel)]="product.productUrl" name="productUrl" />
                   </mat-form-field>
                 </div>
 
@@ -395,156 +363,9 @@
                       name="provenanceDocumentId" />
                   </mat-form-field>
                 </div>
-
               </mat-expansion-panel>
+              <!-- Product Overivew -->
 
-
-              <!-- ORIGINAL: Product Details/Overview: WITHOUT EXPANDION
-              <div class="row">
-                <mat-form-field class="col-2">
-                  <input matInput placeholder="Non Proprietary Name/INN/USAN Name/Generic Name"
-                    [(ngModel)]="product.nonProprietaryName" name="nonProprietaryName" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Proprietary Name/Invented Name" [(ngModel)]="product.proprietaryName"
-                    name="proprietaryName" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Compose Product Name" [(ngModel)]="product.composeProductName"
-                    name="composeProductName" />
-                </mat-form-field>
-              </div>
-
-              <div class="form-row">
-                <app-cv-input class="col-2" domain="PROD_PHARMACEDICAL_DOSAGE_FORM"
-                  title="Dosage Form/Pharmacedical Dosage Form" name="pharmacedicalDosageForm"
-                  [model]="product.pharmacedicalDosageForm" (valueChange)="product.pharmacedicalDosageForm = $event">
-                </app-cv-input>
-
-                <app-cv-input class="col-1" domain="PROD_RELEASE_CHARACTERISTIC" title="Release Characteristic"
-                  name="releaseCharacteristic" [model]="product.releaseCharacteristic"
-                  (valueChange)="product.releaseCharacteristic = $event">
-                </app-cv-input>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Strength Characteristic" [(ngModel)]="product.strengthCharacteristic"
-                    name="strengthCharacteristic" />
-                </mat-form-field>
-              </div>
-
-              <div class="form-row">
-                <app-cv-input class="col-1" domain="PROD_STATUS" title="Status" name="status" [model]="product.status"
-                  (valueChange)="product.status = $event">
-                </app-cv-input>
-
-                <app-cv-input class="col-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
-                  name="routeAdmin" [model]="product.routeAdmin" (valueChange)="product.routeAdmin = $event">
-                </app-cv-input>
-
-                <app-cv-input class="col-1" domain="PROD_UNIT_PRESENTATION" title="Unit of Presentation"
-                  name="unitPresentation" [model]="product.unitPresentation"
-                  (valueChange)="product.unitPresentation = $event">
-                </app-cv-input>
-
-                <app-cv-input class="col-1" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
-                  [model]="product.publicDomain" (valueChange)="product.publicDomain = $event">
-                </app-cv-input>
-              </div>
-
-              <div class="form-row">
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Application Number" [(ngModel)]="product.appNumber" name="source" />
-                </mat-form-field>
-
-                <app-cv-input class="col-1" domain="APPLICATION_TYPE" title="Application Type" name="appType"
-                  [model]="product.appType" (valueChange)="product.appType = $event">
-                </app-cv-input>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Source" [(ngModel)]="product.source" name="source" />
-                </mat-form-field>
-
-                <app-cv-input class="col-1" domain="PROD_SOURCE_TYPE" title="Source Type" name="sourceType"
-                  [model]="product.sourceType" (valueChange)="product.sourceType = $event">
-                </app-cv-input>
-              </div>
-
-              <div class="form-row">
-                <app-cv-input class="col-1" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
-                  [model]="product.productType" (valueChange)="product.productType = $event">
-                </app-cv-input>
-
-                <app-cv-input class="col-1" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
-                  [model]="product.provenance" (valueChange)="product.provenance = $event">
-                </app-cv-input>
-
-                <app-cv-input class="col-1" domain="PROD_COUNTRY_CODE" title="Country Code" name="countryCode"
-                  [model]="product.countryCode" (valueChange)="product.countryCode = $event">
-                </app-cv-input>
-
-                <app-cv-input class="col-1" domain="LANGUAGE" title="Language" name="language"
-                  [model]="product.language" (valueChange)="product.language = $event">
-                </app-cv-input>
-              </div>
-
-              <div class="form-row">
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Start Marketing Date" [(ngModel)]="product.startMarketingDate"
-                    name="startMarketingDate" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="End Marketing Date" [(ngModel)]="product.endMarketingDate"
-                    name="endMarketingDate" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Marketing Category Code" [(ngModel)]="product.marketingCategoryCode"
-                    name="marketingCategoryCode" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Marketing Category Name" [(ngModel)]="product.marketingCategoryName"
-                    name="marketingCategoryName" />
-                </mat-form-field>
-              </div>
-
-
-              <div class="form-row">
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Deaschedule" [(ngModel)]="product.deaschedule" name="deaschedule" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Provenance Product ID" [(ngModel)]="product.provenanceProductId"
-                    name="provenanceProductId" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Provenance Document ID" [(ngModel)]="product.provenanceDocumentId"
-                    name="provenanceDocumentId" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Product Code Url" [(ngModel)]="product.productCodeUrl"
-                    name="productCodeUrl" />
-                </mat-form-field>
-              </div>
-
-
-              <div class="form-row">
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Shelf Life" [(ngModel)]="product.shelfLife" name="shelfLife" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Storage Conditions" [(ngModel)]="product.storageConditions"
-                    name="storageConditions" />
-                </mat-form-field>
-              </div>
-                -->
 
               <!-- EXPANSION: PRODUCT CODE LIST -->
               <mat-expansion-panel [expanded]="true">
@@ -576,8 +397,8 @@
                         (valueChange)="prodCode.productCodeType = $event">
                       </app-cv-input>
 
-                      <app-cv-input class="col-3" domain="PROD_COUNTRY_CODE" title="Juridictions" name="juridiction"
-                        [model]="prodCode.juridictions" (valueChange)="prodCode.juridictions = $event">
+                      <app-cv-input class="col-3" domain="PROD_COUNTRY_CODE" title="Jurisdictions" name="jurisdiction"
+                        [model]="prodCode.jurisdictions" (valueChange)="prodCode.jurisdictions = $event">
                       </app-cv-input>
                     </div>
 
@@ -589,74 +410,7 @@
                   </div>
                 </div>
               </mat-expansion-panel>
-
-
-              <!-- ORIGINAL: PRODUCT CODE: WITHOUT EXPANSION -->
-              <!--
-              <br>
-              <fieldset class="border marginleftneg5px marginrightneg5px">
-                <legend class="border"><span class="font17px"><b>Product Code</b></span>&nbsp;&nbsp;
-
-                  <button mat-icon-button color="primary" (click)="addNewProductCode()"
-                    matTooltip="Add New Product Code">
-                    <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
-                  </button>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </legend>
-
-                <div class="marginbottom15px"
-                  *ngFor="let prodCode of product.productCodeList; let prodCodeIndex = index">
-                  <div class="divflexrow">
-                    <div class="form-row">
-                      <mat-form-field class="col-3">
-                        <input matInput placeholder="Product Code" [(ngModel)]="prodCode.productCode"
-                          name="productCode" />
-                      </mat-form-field>
-
-                      <app-cv-input class="col-3" domain="PROD_PRODUCT_CODE_TYPE" title="Product Code Type"
-                        name="productCodeType" [model]="prodCode.productCodeType"
-                        (valueChange)="prodCode.productCodeType = $event">
-                      </app-cv-input>
-
-                      <app-cv-input class="col-3" domain="PROD_COUNTRY_CODE" title="Juridictions" name="juridiction"
-                        [model]="prodCode.juridictions" (valueChange)="prodCode.juridictions = $event">
-                      </app-cv-input>
-                    </div>
-
-                    <button mat-icon-button color="primary" [disabled]="product.productCodeList.length == 1"
-                      (click)="confirmDeleteProductCode(prodCodeIndex)"
-                      [matTooltipDisabled]="product.productCodeList.length == 1" matTooltip="Delete Product Code">
-                      <mat-icon [class.disabled]="product.productCodeList.length == 1">delete_forever</mat-icon>
-                    </button>
-                    <br>
-                  </div>
-                </div>
-              </fieldset>
-               -->
-              <!-- ngFor product Code List END -->
-
-
-
-              <!-- PRODUCT COMPANY LIST -->
-              <!-- Orignal: Product Company: WITHOUT EXPANSION -->
-              <!--
-              <fieldset class="border margintop10px marginleftneg5px marginrightneg5px padleft10px padright10px">
-                <legend class="border">
-                  <span matBadge="{{product.productCompanyList.length}}" matBadgeOverlap="false">
-                    Product Company<b>&nbsp;<span class="font17px"></span></b>
-                  </span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  <span>
-                    <button mat-icon-button color="primary" (click)="addNewProductCompany()"
-                      matTooltip="Add New Company">
-                      <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
-                    </button>
-                  </span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </legend>
-
-                <div class="" *ngFor="let prodCompany of produ
-
+              <!-- Product Code -->
 
               <!-- EXPANSION: PRODUCT COMPANY LIST -->
               <mat-expansion-panel [expanded]="true">
@@ -709,20 +463,49 @@
                           name="companyCity" />
                       </mat-form-field>
 
-                      <mat-form-field class="col-half-3">
+                      <mat-form-field class="col-3">
                         <input matInput placeholder="Company State" [(ngModel)]="prodCompany.companyState"
                           name="companyState" />
                       </mat-form-field>
 
-                      <mat-form-field class="col-half-3">
+                      <mat-form-field class="col-3">
                         <input matInput placeholder="Company Zip" [(ngModel)]="prodCompany.companyZip"
                           name="companyZip" />
                       </mat-form-field>
+                    </div>
 
+                    <div class="form-row">
                       <app-cv-input class="col-3" domain="PROD_COUNTRY_CODE" title="Company Country"
                         name="companyCountry" [model]="prodCompany.companyCountry"
                         (valueChange)="prodCompany.companyCountry = $event">
                       </app-cv-input>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Start Marketing Date" [(ngModel)]="prodCompany.startMarketingDate"
+                          name="startMarketingDate" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="End Marketing Date" [(ngModel)]="prodCompany.endMarketingDate"
+                          name="endMarketingDate" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company Product ID" [(ngModel)]="prodCompany.companyProductId"
+                          name="companyProductId" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company Document ID" [(ngModel)]="prodCompany.companyDocumentId"
+                          name="companyDocumentId" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Provenance Document ID"
+                          [(ngModel)]="prodCompany.provenanceDocumentId" name="provenanceDocumentId" />
+                      </mat-form-field>
                     </div>
 
                     <br>
@@ -761,8 +544,72 @@
                     </div>
                   </fieldset>
                 </div> <!-- loop -->
-
               </mat-expansion-panel>
+              <!-- Company List -->
+
+
+              <!-- EXPANSION: INDICATION LIST -->
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <span class="font17px"><b>Product Indication</b></span>
+                    <span class="badge">
+                      {{(product.productIndications.length)}}
+                    </span>
+                    <div class="middle-fill"></div>
+                    <button mat-button class="marginright30px bordergreen" color="primary"
+                      (click)="addNewProductIndication(); $event.stopPropagation()"
+                      matTooltip="Add New Product Indication">
+                      <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
+                    </button>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="marginbottom15px"
+                  *ngFor="let prodInd of product.productIndications; let prodIndIndex = index">
+                  <div class="divflexend margintopneg10px">
+                    <div class="middle-fill"></div>
+                    <button class="padtop9px marginright10px" mat-icon-button color="primary"
+                      (click)="confirmDeleteProductIndication(prodIndIndex)" matTooltip="Delete Product Indication">
+                      <mat-icon>delete_forever</mat-icon>
+                    </button>
+                  </div>
+                  <fieldset class="border">
+                    <legend class="border">Product Indication&nbsp;<b>{{(prodIndIndex+1)}}</b>&nbsp;&nbsp;
+                    </legend>
+                    <div class="form-row">
+                      <mat-form-field class="col-1-1">
+                        <input matInput placeholder="Indication" [(ngModel)]="prodInd.indication" name="indication" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                      <mat-form-field class="col-1-1">
+                        <textarea matInput placeholder="Indication Text" [(ngModel)]="prodInd.indicationText"
+                          name="indicationText" rows="1"></textarea>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Indication Code" [(ngModel)]="prodInd.indicationCode"
+                          name="indicationCode" />
+                      </mat-form-field>
+
+                      <app-cv-input class="col-3" domain="PROD_INDICATION_CODE_TYPE"
+                        title="Product Indication Code Type" name="indicationCodeType"
+                        [model]="prodInd.indicationCodeType" (valueChange)="prodInd.indicationCodeType = $event">
+                      </app-cv-input>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Indication Group" [(ngModel)]="prodInd.indicationGroup"
+                          name="indicationGroup" />
+                      </mat-form-field>
+                    </div>
+                  </fieldset>
+                </div>
+              </mat-expansion-panel>
+              <!-- Indication List -->
 
 
               <!-- Manufacture Item -->
@@ -786,27 +633,6 @@
                   </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <!-- ORIGNAL
-                          <br>
-                          <br>
-                          <hr *ngIf="product.productComponentList.length > 0">
-                          <br>
-                          <span matBadge="{{product.productComponentList.length}}" matBadgeOverlap="false">
-                            <span class="titlegreen">MANUFACTURE ITEM </span>
-                          </span>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <button mat-raised-button color="primary" (click)="addNewProductComponent()"
-                            matTooltip="Add New Manufacture">
-                            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Manufacture Item
-                          </button>
-                          <br><br>
-                          -->
-
-                <!--
-                <span matBadge="{{product.productComponentList.length}}" matBadgeOverlap="false">
-                  <span class="titlegreen">MANUFACTURE ITEM </span>
-                </span>
-                 -->
                 <div *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
                   <app-product-component-form [productComponent]="productComponent"
                     [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
@@ -815,102 +641,7 @@
                   </app-product-component-form>
                 </div>
               </mat-expansion-panel>
-
-
-              <!--
-                   ct.productCompanyList; let prodCompanyIndex = index">
-
-              <div class="divflex divstylecompany bordergray">
-                <div>
-                  <b>Company {{(prodCompanyIndex+1)}}</b>
-                </div>
-
-                <button class="padtop9px" mat-icon-button color="primary"
-                  [disabled]="product.productCompanyList.length == 1"
-                  (click)="confirmDeleteProductCompany(prodCompanyIndex)" matTooltip="Delete Product Company">
-                  <mat-icon [class.disabled]="product.productCompanyList.length == 1">delete_forever</mat-icon>
-                </button>
-              </div>
-
-              <div class="form-row">
-                <app-cv-input class="col-3" domain="PROD_COMPANY_ROLE" title="Company Role" name="companyRole"
-                  [model]="prodCompany.companyRole" (valueChange)="prodCompany.companyRole = $event">
-                </app-cv-input>
-
-                <mat-form-field class="col-3">
-                  <input matInput placeholder="Company Name" [(ngModel)]="prodCompany.companyName" name="companyName" />
-                </mat-form-field>
-
-                <mat-form-field class="col-3">
-                  <input matInput placeholder="Company Address" [(ngModel)]="prodCompany.companyAddress"
-                    name="companyAddress" />
-                </mat-form-field>
-              </div>
-
-              <div class="form-row">
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Company City" [(ngModel)]="prodCompany.companyCity" name="companyCity" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Company State" [(ngModel)]="prodCompany.companyState"
-                    name="companyState" />
-                </mat-form-field>
-
-                <mat-form-field class="col-1">
-                  <input matInput placeholder="Company Zip" [(ngModel)]="prodCompany.companyZip" name="companyZip" />
-                </mat-form-field>
-
-                <app-cv-input class="col-1" domain="PROD_COUNTRY_CODE" title="Company Country" name="companyCountry"
-                  [model]="prodCompany.companyCountry" (valueChange)="prodCompany.companyCountry = $event">
-                </app-cv-input>
-              </div>
-
-
-              <br>
-              <span matBadge="{{prodCompany.productCompanyCodeList.length}}" matBadgeOverlap="false">
-                <span class="titlecomp">Company Codes </span>
-              </span>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <button mat-icon-button color="primary" (click)="addNewProductCompanyCode(prodCompanyIndex)"
-                matTooltip="Add New Company Code">
-                <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
-              </button>
-
-              <div class="marginbottom15px"
-                *ngFor="let prodCompanyCd of prodCompany.productCompanyCodeList; let prodCompanyCodeIndex = index">
-
-                <div class="form-row margintop10px">
-                  <mat-form-field class="col-2">
-                    <input matInput placeholder="Company Code" [(ngModel)]="prodCompanyCd.companyCode"
-                      name="companyCode" />
-                  </mat-form-field>
-
-                  <app-cv-input class="col-2" domain="PROD_COMPANY_CODE_TYPE" title="Company Code Type"
-                    name="companyCodeType" [model]="prodCompanyCd.companyCodeType"
-                    (valueChange)="prodCompanyCd.companyCodeType = $event">
-                  </app-cv-input>
-
-                  <span class="displayinlineblock">
-                    <button mat-icon-button color="primary"
-                      (click)="confirmDeleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex)"
-                      matTooltip="Delete Product Company">
-                      <mat-icon>delete_forever</mat-icon>
-                    </button>
-                  </span>
-                </div>
-              </div>
-              <br>
-      </div>
-      </fieldset>
-      -->
-              <!-- ngFor product Company List END -->
-
-
-              <!-- PRODUCT COMPONENT/MANUFACTURE LIST BEGIN -->
-
-
-              <!-- PRODUCT COMPONENT/MANUFACTURE LIST END -->
+              <!-- Manufacture Item List-->
 
             </mat-accordion>
           </mat-card-content>
