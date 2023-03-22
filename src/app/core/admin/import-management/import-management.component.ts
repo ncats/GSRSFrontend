@@ -69,27 +69,20 @@ setAdapter(event?: any) {
 
 createFieldList(values: Array<any>): void {
 this.fieldList = [];
-console.log(values)
   values.forEach(item => {
-    console.log(item);
     let field = "";
     if (item.fieldName) {
       field = item.fieldName;
-      console.log(field);
     } else if(isString(item)) {
       field = item;
-      console.log(field);
 
     }
    // field = field.replace(/\(/g,"{").replace(/\)/g,"}");
-    console.log(field);
     let temp = {"value":'{{'+field+'}}', "display": field};
    // temp.value = '{{'+field+'}}';
     //temp.display = field;
     this.fieldList.push(temp);
-    console.log(temp);
   });
-  console.log(this.fieldList);
 
 }
 
