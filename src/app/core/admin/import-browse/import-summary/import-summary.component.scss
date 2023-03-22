@@ -94,14 +94,16 @@ font-size: 18px;
 
 .warning-label {
     color: var(--warning-dialog-color);
-  //  background-color: var(--warning-dialog-bg-color);
+    font-weight: 500;
+    background-color: var(--warning-dialog-bg-color);
 
   }
 
 
   .error-label {
     color: var(--error-dialog-color);
-   // background-color: var(--error-dialog-bg-color);
+    font-weight: 500;
+    background-color: var(--error-dialog-bg-color);
   }
 
 .tab-container {

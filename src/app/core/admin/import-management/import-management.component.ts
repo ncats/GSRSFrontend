@@ -6,7 +6,7 @@ import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { StructureService } from '@gsrs-core/structure';
+import { StructureService, StructureImageModalComponent } from '@gsrs-core/structure';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 import { isString } from 'util';
 
@@ -259,10 +259,10 @@ openInput(): void {
 
 stagingArea(sendFile?: boolean): void {
   let navigationExtras: NavigationExtras = {queryParams: {}};
-  let pos = this.postResp.filename.lastIndexOf(".");
-    const newtest = this.postResp.filename.slice(0, pos) + "!" + this.postResp.filename.slice(pos);
-    console.log(newtest);
+ 
   if(sendFile) {
+    let pos = this.postResp.filename.lastIndexOf(".");
+    const newtest = this.postResp.filename.slice(0, pos) + "!" + this.postResp.filename.slice(pos);
     navigationExtras.queryParams = {'facets': 'Source*' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
 
   }
@@ -321,4 +321,41 @@ callPreview(): void {
 replaceAction(s: string) {
   return s && s.replace(' Action','');
 }
+
+openImageModal(preview: any): void {
+
+  let data: any;
+
+  if (preview.substanceClass === 'chemical') {
+    data = {
+      structure: preview.structureID,
+      uuid: preview.uuid,
+      names: preview.names
+    };
+  } else {
+    data = {
+      structure: preview.structureID,
+      names: preview.names
+    };
+  }
+
+  const dialogRef = this.dialog.open(StructureImageModalComponent, {
+    width: '670px',
+    height: '670px',
+    panelClass: 'structure-image-panel',
+    data: data
+  });
+
+  this.overlayContainer.style.zIndex = '1002';
+
+  const subscription = dialogRef.afterClosed().subscribe(() => {
+    this.overlayContainer.style.zIndex = null;
+    subscription.unsubscribe();
+  }, () => {
+    this.overlayContainer.style.zIndex = null;
+    subscription.unsubscribe();
+  });
+}
+
+
 }

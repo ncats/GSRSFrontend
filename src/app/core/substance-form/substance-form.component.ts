@@ -322,7 +322,33 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.getDetailsFromImport(record.record);
             this.gaService.sendPageView(`Substance Register`);
 
-          } else {
+          }  else if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+            this.substanceService.GetStagedRecord(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
+              response.uuid = null;
+
+
+                if (response._name){
+                  let name = response._name;
+                  response.names.forEach(current => {
+                    if (current.displayName && current.stdName) {
+                      name = current.stdName;
+                    }
+                  });
+                  name = name.replace(/<[^>]*>?/gm, '');
+                  this.titleService.setTitle('Edit - ' + name);
+                }
+                if (response) {
+                  this.definitionType = response.definitionType;
+                  this.substanceClass = response.substanceClass;
+                  this.status = response.status;
+                  this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+                    this.setFormSections(formSections[response.substanceClass]);
+                  });
+                
+              }
+            }, error => {
+              });  
+       }  else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
           if (this.copy) {
             const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
