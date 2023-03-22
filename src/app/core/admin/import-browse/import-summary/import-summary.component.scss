@@ -26,12 +26,11 @@ min-width: 100px;
 }
 
 .spinner {
-    height: 24px;
-    width: 24px;
-    margin-left: 10px;
-  margin-right: 10px;
-    margin-top: -5px;
-margin-bottom: 5px;
+    width: 100px !important;
+height: 100px !important;
+margin: auto;
+margin-top: 75px !important;
+margin-left: 150px !important;
 }
 
 .action-button {
@@ -95,14 +94,16 @@ font-size: 18px;
 
 .warning-label {
     color: var(--warning-dialog-color);
-  //  background-color: var(--warning-dialog-bg-color);
+    font-weight: 500;
+    background-color: var(--warning-dialog-bg-color);
 
   }
 
 
   .error-label {
     color: var(--error-dialog-color);
-   // background-color: var(--error-dialog-bg-color);
+    font-weight: 500;
+    background-color: var(--error-dialog-bg-color);
   }
 
 .tab-container {

@@ -6,8 +6,9 @@ import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { StructureService } from '@gsrs-core/structure';
+import { StructureService, StructureImageModalComponent } from '@gsrs-core/structure';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
+import { isString } from 'util';
 
 
 @Component({
@@ -36,6 +37,7 @@ fileID: string;
 previewDemo: any;
 previewIndex = 0;
 previewTotal = 0;
+previewLoading = false;
 toIgnore = [];
 fieldList: Array<any>;
 extension: string;
@@ -65,15 +67,23 @@ setAdapter(event?: any) {
 
 }
 
-createFieldList(values: Array<string>): void {
+createFieldList(values: Array<any>): void {
 this.fieldList = [];
   values.forEach(item => {
-    item = item.replace(/\(/g,"{").replace(/\)/g,"}");
-    let temp = {value: null, display: null};
-    temp.value = '{{'+item+'}}';
-    temp.display = item;
+    let field = "";
+    if (item.fieldName) {
+      field = item.fieldName;
+    } else if(isString(item)) {
+      field = item;
+
+    }
+   // field = field.replace(/\(/g,"{").replace(/\)/g,"}");
+    let temp = {"value":'{{'+field+'}}', "display": field};
+   // temp.value = '{{'+field+'}}';
+    //temp.display = field;
     this.fieldList.push(temp);
   });
+
 }
 
 openAction(templateRef:any, index: number): void  {
@@ -213,7 +223,8 @@ ngOnInit() {
 
   putTest(): void {
     this.loadingService.setLoading(true);
-    this.step = 4;
+   
+    
     let tosend = JSON.parse(JSON.stringify(this.postResp));
     this.adminService.executeAdapter(this.fileID, tosend, this.adapterKey ).subscribe(response => {
       this.loadingService.setLoading(false);
@@ -241,8 +252,11 @@ openInput(): void {
 
 stagingArea(sendFile?: boolean): void {
   let navigationExtras: NavigationExtras = {queryParams: {}};
+ 
   if(sendFile) {
-    navigationExtras.queryParams = {'facets': 'Source*' + this.postResp.filename.replace(/^.*[\\\/]/, '') + '.true'};
+    let pos = this.postResp.filename.lastIndexOf(".");
+    const newtest = this.postResp.filename.slice(0, pos) + "!" + this.postResp.filename.slice(pos);
+    navigationExtras.queryParams = {'facets': 'Source*' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
 
   }
   this.router.navigate(['/staging-area'], navigationExtras);
@@ -258,7 +272,8 @@ ImportReload(): void {
 callPreview(): void {
 
   const formData = new FormData();
-    this.loadingService.setLoading(true);
+   // this.loadingService.setLoading(true);
+   this.previewLoading = true;
     this.previewIndex = 0;
   
     formData.append('file', this.uploadForm.get('file').value);
@@ -268,6 +283,7 @@ callPreview(): void {
 
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey ).pipe(take(1)).subscribe(response => {
       this.preview = [];
+      this.previewLoading = false;
       response.dataPreview.forEach(entry => {
        
       if (entry.data) {
@@ -281,27 +297,15 @@ callPreview(): void {
         this.preview[0].data.structureID = response.structure.id;
       });
     }
-      this.loadingService.setLoading(false);
+      this.previewLoading = false;
+
 
     }, error => {
       console.log(error);
     
       this.preview = [];
-      this.previewDemo.dataPreview.forEach(entry => {
-        if (entry.data) {
-          this.preview.push(entry);
-          this.previewTotal = this.preview.length;
-        }
-          
-      });
-      if (this.preview[0].data.structure) {
-        this.structureService.interpretStructure(this.preview[0].data.structure.molfile).subscribe(response => {
-          this.preview[0].data.structureID = response.structure.id;
-        });
-      }
-       
-      this.previewTotal = this.preview.length;
-     this.loadingService.setLoading(false);
+    
+      this.previewLoading = false;
 
     });
 }
@@ -310,4 +314,41 @@ callPreview(): void {
 replaceAction(s: string) {
   return s && s.replace(' Action','');
 }
+
+openImageModal(preview: any): void {
+
+  let data: any;
+
+  if (preview.substanceClass === 'chemical') {
+    data = {
+      structure: preview.structureID,
+      uuid: preview.uuid,
+      names: preview.names
+    };
+  } else {
+    data = {
+      structure: preview.structureID,
+      names: preview.names
+    };
+  }
+
+  const dialogRef = this.dialog.open(StructureImageModalComponent, {
+    width: '670px',
+    height: '670px',
+    panelClass: 'structure-image-panel',
+    data: data
+  });
+
+  this.overlayContainer.style.zIndex = '1002';
+
+  const subscription = dialogRef.afterClosed().subscribe(() => {
+    this.overlayContainer.style.zIndex = null;
+    subscription.unsubscribe();
+  }, () => {
+    this.overlayContainer.style.zIndex = null;
+    subscription.unsubscribe();
+  });
+}
+
+
 }

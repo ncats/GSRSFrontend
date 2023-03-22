@@ -49,7 +49,7 @@
                                </div>
                     </div>
                     <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">name Type</div>
+                            <div class = "label">Name Type</div>
                             <div class = "value-container"  class = "set-width">
                                         <app-cv-import domain = "NAME_TYPE"  title = "Name Type" [model] = "settingsActive.actionParameters.nameType" 
                                         (valueChange)="updateType($event, 'nameType')" ></app-cv-import> 
@@ -61,7 +61,6 @@
                                         <app-cv-import domain = "LANGUAGE"  title = "Language" [model] = "settingsActive.actionParameters.lang" 
                                         (valueChange)="updateType($event, 'lang')" ></app-cv-import> 
                                 </div> 
-                            <div class = "value-container"><input mat-input class = "set-width label-padding" [(ngModel)] = "settingsActive.actionParameters.lang" /></div>
                     </div>
                    <!--   <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Language</div>

@@ -182,8 +182,11 @@ export class ImportSummaryComponent implements OnInit {
      // console.log(substance);
       this.codes = substance.codes;
     //  this.getStructureID();
-    if (substance._metadata.importStatus === 'merged') {
+    if (substance._metadata.importStatus.toUpperCase() === 'MERGED' || substance._metadata.importStatus.toUpperCase() === 'IMPORTED') {
       this.disabled = true;
+      console.log('disabling');
+    } else {
+      console.log(substance._metadata.importStatus);
     }
 
       this.setCodeSystems();

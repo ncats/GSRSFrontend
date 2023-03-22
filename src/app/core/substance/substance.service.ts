@@ -921,6 +921,13 @@ export class SubstanceService extends BaseHttpService {
     return this.http.put< any>(url, config);
   }
 
+  public GetStagedRecord(id:string) {
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/importdata/${id}`;
+    
+    return this.http.get< any >(`${url}`);
+
+  }
+
 }
 
 
