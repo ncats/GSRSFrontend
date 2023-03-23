@@ -85,9 +85,8 @@
                
                 
                 <div class = "label inline-vertical preview-container ">
-                                <b>Preview</b>   <span style = "width:25px;"> </span>                     
-                                 <button style = "margin:auto" mat-button mat-primary-button (click) = "callPreview()">{{previewTotal > 0? 'Reload Preview':'Load Preview'}}</button>
-
+                                <b>Preview</b>  <!-- <span style = "width:25px;"> </span>  -->                   
+                               
                             </div>
                 
         </div>
@@ -107,6 +106,19 @@
                                     </div>
         </div>
         <div class = "preview-window">
+                <div style = "width:100%; display:flex;">
+                       <span class ="middle-fill"></span>
+                       
+                       <div style = "width: 200px;margin: auto;">Show &nbsp; &nbsp; <mat-select [(ngModel)]="previewLimit" name="previewLimit" class = "preview-limit" >
+                                                <mat-option *ngFor="let term of previewLimitList" [value]="term">
+                                                  {{term}}
+                                                </mat-option>
+                                                </mat-select> &nbsp; records
+                                        </div>              
+                                      
+                                          <button  mat-button mat-flat-button (click) = "callPreview()">{{previewTotal > 0? 'Reload Preview':'Load Preview'}}</button>
+          
+                </div><br/>
                         <div *ngIf = "previewLoading" style = "margin-left: 50px;">
                                         <div style = "width:100%"><mat-progress-spinner
                                                 class="spinner"
@@ -163,7 +175,7 @@
 
 
         <div class = "full-row">
-            <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putTest()">Use Settings and Continue</button>
+            <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putSettings()">Use Settings and Continue</button>
         </div>
     </div>
     </div>
