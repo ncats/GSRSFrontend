@@ -538,9 +538,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   searchSubstances() {
-      // There should be a better way to do this.
-console.log('calling search');
-console.log(this.privateSearchTerm);
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,

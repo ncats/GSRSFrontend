@@ -18,7 +18,7 @@
       <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
         <mat-icon svgIcon="chevron_right"></mat-icon>
       </button>
-      <div class="no-results" *ngIf="!isLoading && !isError && (!substances || substances.length === 0)">
+      <div class="no-results" *ngIf="!isLoading && !isError && (!substances || totalSubstances === 0)">
           <div *ngIf="!matchTypes || matchTypes.length === 0">
             Your search did not return any results. Please try modifying it or
             <a class="link" (click)="clearFilters()">click here</a> to clear all your search criteria.

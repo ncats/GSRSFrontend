@@ -129,7 +129,7 @@
 
             <div *ngIf = "settingsActive.actionName == 'structure_and_moieties'">
                     <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">molfile</div>
+                            <div class = "label">Molfile</div>
                             <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.molfile" /></div>
                     </div>
                     <!-- <div class = "label-value"  style = "margin-bottom: 10px;">
@@ -143,6 +143,23 @@
                     </div>
                 </div>-->
             </div>
+
+            <div *ngIf = "settingsActive.actionName == 'note_import'">
+                        <div class = "label-value"  style = "margin-bottom: 10px;">
+                                <div class = "label">Note</div>
+                                <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.note" /></div>
+                        </div>
+                        <!-- <div class = "label-value"  style = "margin-bottom: 10px;">
+                                <div class = "label">Citation</div>
+                               <div class = "value-container">
+                                        <div *ngFor = "let reference of settingsActive.actionParameters.referenceUUIDs, index as index2">
+                                                <input mat-input [(ngModel)] = "reference of settingsActive.actionParameters.referenceUUIDs[index2]" /> <br/>
+                                        </div>  
+                                </div>
+    
+                        </div>
+                    </div>-->
+                </div>
 
         <!--<div class = "label-value" *ngFor = "let current of settingsActive.fields" style = "margin-bottom: 10px;">
             <div class = "label">{{current.fieldLabel}}</div>

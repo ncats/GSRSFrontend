@@ -148,9 +148,12 @@ export class AdminService extends BaseHttpService {
           return this.http.put< any >(`${url}`, file);
         }*/
 
-        public previewAdapter(id: string, file: any, adapter?: any): Observable< any > {
+        public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
           console.log(file);
-          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview?adapter=${adapter}&limit=3`;
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview?adapter=${adapter}`;
+          if (limit && limit !== 'all') {
+            url += "&limit=" + limit;
+          }
           return this.http.put< any >(`${url}`, file);
         }
 
@@ -188,7 +191,7 @@ export class AdminService extends BaseHttpService {
 
         }
         public GetStagedRecord(id:string) {
-          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/importdata/${id}`;
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}`;
           
           return this.http.get< any >(`${url}`);
 
@@ -207,7 +210,7 @@ export class AdminService extends BaseHttpService {
           const options = {
             params: params
           };
-          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/importdata/search?skip=${skip}`;
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/search?skip=${skip}`;
           
           return this.http.get< any >(url, options);
 

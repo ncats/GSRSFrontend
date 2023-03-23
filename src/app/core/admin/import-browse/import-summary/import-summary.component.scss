@@ -96,6 +96,17 @@ font-size: 18px;
     color: var(--warning-dialog-color);
     font-weight: 500;
     background-color: var(--warning-dialog-bg-color);
+    padding: 10px;
+    border-radius: 5px;
+
+  }
+
+  .info-label {
+    color: black;
+    font-weight: 500;
+    background-color: lightgray;
+    padding: 10px;
+    border-radius: 5px;
 
   }
 
@@ -104,6 +115,8 @@ font-size: 18px;
     color: var(--error-dialog-color);
     font-weight: 500;
     background-color: var(--error-dialog-bg-color);
+    padding: 10px;
+    border-radius: 5px;
   }
 
 .tab-container {

@@ -38,6 +38,8 @@ previewDemo: any;
 previewIndex = 0;
 previewTotal = 0;
 previewLoading = false;
+previewLimit = 10;
+previewLimitList = [1, 10, 100, 'all'];
 toIgnore = [];
 fieldList: Array<any>;
 extension: string;
@@ -221,16 +223,16 @@ ngOnInit() {
    });
   }
 
-  putTest(): void {
+  putSettings(): void {
     this.loadingService.setLoading(true);
-   
-    
+    this.step = 4;
     let tosend = JSON.parse(JSON.stringify(this.postResp));
     this.adminService.executeAdapter(this.fileID, tosend, this.adapterKey ).subscribe(response => {
       this.loadingService.setLoading(false);
-
     }, error => {
       this.loadingService.setLoading(false);
+      console.log(error);
+      alert('Error: see console log for server error');
 
     });
 
@@ -281,7 +283,7 @@ callPreview(): void {
      this.preview = [];
      let tosend = JSON.parse(JSON.stringify(this.postResp));
 
-    this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey ).pipe(take(1)).subscribe(response => {
+    this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey, this.previewLimit ).pipe(take(1)).subscribe(response => {
       this.preview = [];
       this.previewLoading = false;
       response.dataPreview.forEach(entry => {
