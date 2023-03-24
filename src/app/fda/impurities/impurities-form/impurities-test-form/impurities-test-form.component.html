@@ -16,15 +16,15 @@
 
     <!-- //new 3.1 start -->
     <div class="form-row">
-      <app-cv-input class="col-3-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
+      <app-cv-input class="col-4-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
         [model]="impuritiesTest.sourceType" (valueChange)="impuritiesTest.sourceType = $event">
       </app-cv-input>
 
-      <app-cv-input class="col-3-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
+      <app-cv-input class="col-4-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
         [model]="impuritiesTest.source" (valueChange)="impuritiesTest.source = $event">
       </app-cv-input>
 
-      <mat-form-field class="col-3-1">
+      <mat-form-field class="col-2-1">
         <input matInput placeholder="Source ID" [(ngModel)]="impuritiesTest.sourceId" name="sourceId" />
       </mat-form-field>
     </div>
@@ -35,12 +35,36 @@
         <input matInput placeholder="Test" [(ngModel)]="impuritiesTest.test" name="test" />
       </mat-form-field>
 
-      <app-cv-input class="col-2-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
+      <app-cv-input class="col-4-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
         [model]="impuritiesTest.testType" (valueChange)="impuritiesTest.testType = $event">
       </app-cv-input>
+
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Flow Rate" [(ngModel)]="impuritiesTest.flowRate" name="flowRate" />
+      </mat-form-field>
     </div>
 
-    <!-- //new 3.1 start -->
+    <div class="form-row">
+      <app-cv-input class="col-4-1" domain="IMPURITIES_COLUMN_PACKING_TYPE" title="Column Packing Type"
+        name="columnPackingType" [model]="impuritiesTest.columnPackingType"
+        (valueChange)="impuritiesTest.columnPackingType = $event">
+      </app-cv-input>
+
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Column Packing Size" [(ngModel)]="impuritiesTest.columnPackingSize"
+          name="columnPackingSize" />
+      </mat-form-field>
+
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Column Size" [(ngModel)]="impuritiesTest.columnSize" name="columnSize" />
+      </mat-form-field>
+
+      <mat-form-field class="col-4-1">
+        <input matInput placeholder="Column Temperature" [(ngModel)]="impuritiesTest.columnTemperature"
+          name="columnTemperature" />
+      </mat-form-field>
+    </div>
+
     <div class="form-row">
       <app-cv-input class="col-4-1" domain="IMPURITIES_SYSTEM" title="System" name="system"
         [model]="impuritiesTest.system" (valueChange)="impuritiesTest.system = $event">
@@ -61,32 +85,16 @@
     </div>
 
     <div class="form-row">
-      <app-cv-input class="col-3-1" domain="IMPURITIES_COLUMN_PACKING_TYPE" title="Column Packing Type"
-        name="columnPackingType" [model]="impuritiesTest.columnPackingType"
-        (valueChange)="impuritiesTest.columnPackingType = $event">
-      </app-cv-input>
-
-      <mat-form-field class="col-3-1">
-        <input matInput placeholder="Column Packing Size" [(ngModel)]="impuritiesTest.columnPackingSize"
-          name="columnPackingSize" />
-      </mat-form-field>
-
-      <mat-form-field class="col-3-1">
-        <input matInput placeholder="Column Size" [(ngModel)]="impuritiesTest.columnSize" name="columnSize" />
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field class="col-3-1">
+      <mat-form-field class="col-4-1">
         <input matInput placeholder="Injection Volume Amount" [(ngModel)]="impuritiesTest.injectionVolumeAmount"
           name="injectionVolumeAmount" />
       </mat-form-field>
 
-      <mat-form-field class="col-3-1">
+      <mat-form-field class="col-4-1">
         <input matInput placeholder="Diluent" [(ngModel)]="impuritiesTest.diluent" name="diluent" />
       </mat-form-field>
 
-      <mat-form-field class="col-3-1">
+      <mat-form-field class="col-2-1">
         <input matInput placeholder="Standard Solution" [(ngModel)]="impuritiesTest.standardSolution"
           name="standardSolution" />
       </mat-form-field>

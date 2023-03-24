@@ -45,26 +45,28 @@ export interface ImpuritiesSubstance {
 
 export interface ImpuritiesTesting {
   id?: number;
-  sourceType?: string;    //new 3.1
-  source?: string;        //new 3.1
-  sourceId?: string;      //new 3.1
-  system?: string;        //new 3.1
-  mode?: string;          //new 3.1
-  detectionType?: string;  //new 3.1
-  detectionDetails?: string; //new 3.1
-  columnPackingType?: string; //new 3.1
-  columnPackingSize?: string;  //new 3.1
-  columnSize?: string;  //new 3.1
-  injectionVolumeAmount?: string;  //new 3.1
-  diluent?: string;  //new 3.1
-  standardSolution?: string;  //new 3.1
-  sampleSolution?: string;   //new 3.1
-  systemSuitabilitySolution?: string; //new 3.1
-  suitabilityReqResolution?: string;  //new 3.1
-  suitabilityReqRelStandardDeviation?: string;  //new 3.1
-  elutionType?: string;   //new 3.1
-  elutionSolvent?: string;   //new 3.1
-  elutionSolventId?: string;   //new 3.1
+  sourceType?: string;
+  source?: string;
+  sourceId?: string;
+  system?: string;
+  mode?: string;
+  detectionType?: string;
+  detectionDetails?: string;
+  columnPackingType?: string;
+  columnPackingSize?: string;
+  columnSize?: string;
+  columnTemperature?: string;
+  flowRate?: string;
+  injectionVolumeAmount?: string;
+  diluent?: string;
+  standardSolution?: string;
+  sampleSolution?: string;
+  systemSuitabilitySolution?: string;
+  suitabilityReqResolution?: string;
+  suitabilityReqRelStandardDeviation?: string;
+  elutionType?: string;
+  elutionSolvent?: string;
+  elutionSolventId?: string;
   test?: string;
   testType?: string;
   testDescription?: number;
