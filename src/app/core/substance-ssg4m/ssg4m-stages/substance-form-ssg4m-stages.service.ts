@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../../substance-form/base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SpecifiedSubstanceG4mCriticalParameter, SpecifiedSubstanceG4mStage, SpecifiedSubstanceG4mStartingMaterial } from '@gsrs-core/substance/substance.model';
-import { SpecifiedSubstanceG4mProcessingMaterial, SpecifiedSubstanceG4mResultingMaterial, SpecifiedSubstanceG4mManufactureDetails } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mProcessingMaterial, SpecifiedSubstanceG4mResultingMaterial, SpecifiedSubstanceG4mManufacturerDetails } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mResultingMaterialsModule } from '../ssg4m-resulting-materials/substance-form-ssg4m-resulting-materials.module';
 
 @Injectable({
@@ -51,34 +51,37 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
   }
 
   addStartingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newStartMat: SpecifiedSubstanceG4mStartingMaterial = { substanceRole: 'Starting Material', manufactureDetails:[], references: [] };
+    const newStartMat: SpecifiedSubstanceG4mStartingMaterial = { substanceRole: 'Starting Material'};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials.push(newStartMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials);
   }
 
   addProcessingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = { substanceRole: 'Solvent', manufactureDetails:[], references: []};
+    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = { substanceRole: 'Solvent', references: [] };
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials.push(newProcessMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials);
   }
 
   addResultingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newResultingMat: SpecifiedSubstanceG4mResultingMaterial = { substanceRole: 'Intermediate', manufactureDetails:[], references: [] };
+    const newResultingMat: SpecifiedSubstanceG4mResultingMaterial = { substanceRole: 'Intermediate', references: [] };
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials.push(newResultingMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials);
   }
 
-  addStartingManufactureDetails(processIndex: number, siteIndex: number, stageIndex: number, startingMaterialIndex: number): void {
-    const newStartingManuDetail: SpecifiedSubstanceG4mManufactureDetails = {};
+  addStartingManufacturerDetails(processIndex: number, siteIndex: number, stageIndex: number, startingMaterialIndex: number): void {
+    const newStartingManuDetail: SpecifiedSubstanceG4mManufacturerDetails = {};
 
-   // alert(JSON.stringify(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex]));
-    const newStartObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex];
-    newStartObj.manufactureDetails = [];
-    newStartObj.manufactureDetails.push(newStartingManuDetail);
+    if (this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufacturerDetails == null) {
+     // this.substance.specifiedSubstanceG4m.process = [{ sites: [] }];
 
-   // this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufactureDetails.push(newStartingManuDetail);
+      // alert(JSON.stringify(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex]));
+      this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufacturerDetails = [];
+    }
+    // newStartObj.manufactureDetails = [];
+    // newStartObj.manufactureDetails.push(newStartingManuDetail);
 
-    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufactureDetails);
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufacturerDetails.push(newStartingManuDetail);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufacturerDetails);
   }
 
   addStage(processIndex: number, siteIndex: number): void {
@@ -161,7 +164,7 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
 
     // If Substance Name exists in Resulting Materials in Current/Source Stage, then copy to Starting Material in next/new Stage
     // If new Stage is first one in the list, do not copy Resulting Material
- //   if ((this.sourceResultingMatObj && this.sourceResultingMatRefUuid && newStageIndex > 0) && (insertDirection && insertDirection === 'after')) {
+    //   if ((this.sourceResultingMatObj && this.sourceResultingMatRefUuid && newStageIndex > 0) && (insertDirection && insertDirection === 'after')) {
     if ((this.sourceResultingMatList.length > 0 && newStageIndex > 0) && (insertDirection && insertDirection === 'after')) {
       this.copyResultingToStarting(processIndex, siteIndex, newStageIndex);
 
@@ -446,39 +449,39 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
         }
       }
     });
-}
+  }
 
-copyToStartingFields(processIndex: number, siteIndex: number, stageIndex: number, sourceResultingMatObj: SpecifiedSubstanceG4mResultingMaterial) {
-  // Get New Stage
-  const newStageObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex];
-
-  // copy to the Starting Material in the new Stage
-  const newStartIndex = newStageObj.startingMaterials.length - 1;
-  const newStartMat = newStageObj.startingMaterials[newStartIndex];
-
-  // Copy to new Starting Material
-  newStartMat.substanceName = sourceResultingMatObj.substanceName;
-  newStartMat.verbatimName = sourceResultingMatObj.verbatimName;
-  newStartMat.substanceRole = 'Intermediate';
-  newStartMat.comments = sourceResultingMatObj.comments;
-}
-
-copyToResultingFields(processIndex: number, siteIndex: number, stageIndex: number) {
-  if (this.sourceStartingMatObj) {
-    this.addResultingMaterials(processIndex, siteIndex, stageIndex);
-    // New Stage and New Resulting Material
+  copyToStartingFields(processIndex: number, siteIndex: number, stageIndex: number, sourceResultingMatObj: SpecifiedSubstanceG4mResultingMaterial) {
     // Get New Stage
     const newStageObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex];
 
-    // Copy to the Resulting Material in the new Stage
-    const newResultIndex = newStageObj.resultingMaterials.length - 1;
-    const newResulttMat = newStageObj.resultingMaterials[newResultIndex];
-    newResulttMat.substanceName = this.sourceStartingMatObj.substanceName;
-    newResulttMat.verbatimName = this.sourceStartingMatObj.verbatimName;
-    newResulttMat.substanceRole = 'Intermediate';
-    newResulttMat.comments = this.sourceStartingMatObj.comments;
+    // copy to the Starting Material in the new Stage
+    const newStartIndex = newStageObj.startingMaterials.length - 1;
+    const newStartMat = newStageObj.startingMaterials[newStartIndex];
+
+    // Copy to new Starting Material
+    newStartMat.substanceName = sourceResultingMatObj.substanceName;
+    newStartMat.verbatimName = sourceResultingMatObj.verbatimName;
+    newStartMat.substanceRole = 'Intermediate';
+    newStartMat.comments = sourceResultingMatObj.comments;
   }
-}
+
+  copyToResultingFields(processIndex: number, siteIndex: number, stageIndex: number) {
+    if (this.sourceStartingMatObj) {
+      this.addResultingMaterials(processIndex, siteIndex, stageIndex);
+      // New Stage and New Resulting Material
+      // Get New Stage
+      const newStageObj = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex];
+
+      // Copy to the Resulting Material in the new Stage
+      const newResultIndex = newStageObj.resultingMaterials.length - 1;
+      const newResulttMat = newStageObj.resultingMaterials[newResultIndex];
+      newResulttMat.substanceName = this.sourceStartingMatObj.substanceName;
+      newResulttMat.verbatimName = this.sourceStartingMatObj.verbatimName;
+      newResulttMat.substanceRole = 'Intermediate';
+      newResulttMat.comments = this.sourceStartingMatObj.comments;
+    }
+  }
 
   /*
   copyToStartingFields(processIndex: number, siteIndex: number, stageIndex: number, resultingMaterialIndex: number) {

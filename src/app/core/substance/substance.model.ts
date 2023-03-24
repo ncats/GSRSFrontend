@@ -586,11 +586,8 @@ export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
   specificationReference?: string;
   amount?: SubstanceAmount;
   references?: Array<string>;
-  manufactureName?: string;
-  manufactureId?: string;
-  manufactureIdType?: string;
   comments?: string;
-  manufactureDetails?: Array<SpecifiedSubstanceG4mManufactureDetails>;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
 }
 
 export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
@@ -605,11 +602,11 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   specificationReference?: string;
   amount?: SubstanceAmount;
   references?: Array<string>;
-  manufactureName?: string;
-  manufactureId?: string;
-  manufactureIdType?: string;
+  manufacturerName?: string;
+  manufacturerId?: string;
+  manufacturerIdType?: string;
   comments?: string;
-  manufactureDetails?: Array<SpecifiedSubstanceG4mManufactureDetails>;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
 }
 
 export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
@@ -625,13 +622,13 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
   amount?: SubstanceAmount;
   references?: Array<string>;
   comments?: string;
-  manufactureDetails?: Array<SpecifiedSubstanceG4mManufactureDetails>;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
 }
 
-export interface SpecifiedSubstanceG4mManufactureDetails extends SubstanceBase {
-  manufactureName?: String;
-  manufactureId?: string;
-  manufactureIdType?: string;
+export interface SpecifiedSubstanceG4mManufacturerDetails extends SubstanceBase {
+  manufacturerName?: String;
+  manufacturerId?: string;
+  manufacturerIdType?: string;
 }
 
 export interface TableFilterDDModel {

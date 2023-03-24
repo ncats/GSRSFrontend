@@ -2,20 +2,20 @@
   <hr>
 </div>
 <div class="form-container">
+  <!--
   <div *ngIf="startingMaterial.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
     <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
+  -->
 
-  <div class="">
-    <div class="button-delete">
-      <button mat-icon-button matTooltip="Delete Starting Material {{(startingMaterialIndex+1)}}"
-        (click)="confirmDeleteStartingMaterial()">
-        <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
-      </button>
-    </div>
+  <div class="button-delete">
+    <button mat-icon-button matTooltip="Delete Starting Material {{(startingMaterialIndex+1)}}"
+      (click)="confirmDeleteStartingMaterial()">
+      <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+    </button>
   </div>
 
   <div class="form-row">
@@ -63,44 +63,59 @@
 
     <app-cv-input class="col"
       *ngIf="configSettingsDisplay['substanceGrade'] || (configSettingsDisplay['substanceGrade'] === undefined && true)"
-      domain="SSG_SUBSTANCE_GRADE" required='true' title="Substance Grade" [model]="startingMaterial.substanceGrade"
+      domain="SSG_SUBSTANCE_GRADE" title="Substance Grade" [model]="startingMaterial.substanceGrade"
       (valueChange)="updateSubstanceGrade($event)">
     </app-cv-input>
   </div>
 
-  <b>Manufacturer Details: </b> <!--{{startingMaterial.manufactureDetails.length}} -->
-  <button mat-stroked-button color="primary" class="button-insert-before" matTooltip="Add Manufacture"
-    (click)="addManufacture(processIndex, siteIndex, stageIndex)">
+  <!-- Manufacturer Detail Add button -->
+  <b>Manufacturer Details: </b>
+  <!--{{startingMaterial.manufactureDetails.length}} -->
+  <button mat-raised-button color="primary" class="" matTooltip="Add Manufacturer"
+    (click)="addManufacturer(processIndex, siteIndex, stageIndex)">
     <mat-icon>add_circle_outline</mat-icon>Add Manufacturer
   </button>
 
-  <div class="marginbottom10px"
-    *ngFor="let manufactureDetails of startingMaterial.manufactureDetails; let manufactureIndex = index">
+  <!-- Manufacturer Detail Loop -->
+  <div *ngIf="startingMaterial.manufacturerDetails != null">
+    <div class="marginbottom10px"
+      *ngFor="let manufacturerDetails of startingMaterial.manufacturerDetails; let manufacturerIndex = index">
 
-    <div class="form-row">
-      <mat-form-field class="col"
-        *ngIf="configSettingsDisplay['manufactureName'] || (configSettingsDisplay['manufactureName'] === undefined && true)">
-        <input matInput placeholder="Manufacturer Name" [(ngModel)]="manufactureDetails.manufactureName"
-          name="manufactureDetails.manufactureName" />
-      </mat-form-field>
+      <div class="form-row">
+        <mat-form-field class="col"
+          *ngIf="configSettingsDisplay['manufacturerName'] || (configSettingsDisplay['manufacturerName'] === undefined && true)">
+          <input matInput placeholder="Manufacturer Name" [(ngModel)]="manufacturerDetails.manufacturerName"
+            name="manufacturerDetails.manufacturerName" />
+        </mat-form-field>
 
-      <app-cv-input class="col"
-        *ngIf="configSettingsDisplay['manufactureIdType'] || (configSettingsDisplay['manufactureIdType'] === undefined && true)"
-        domain="SSG_MANUFACTURE_ID_TYPE" required='true' title="Manufacturer ID Type"
-        [model]="manufactureDetails.manufactureIdType" (valueChange)="updateManufactureIdType($event)">
-      </app-cv-input>
+        <app-cv-input class="col"
+          *ngIf="configSettingsDisplay['manufacturerIdType'] || (configSettingsDisplay['manufacturerIdType'] === undefined && true)"
+          domain="SSG_MANUFACTURE_ID_TYPE" title="Manufacturer ID Type" [model]="manufacturerDetails.manufacturerIdType"
+          (valueChange)="updateManufacturerIdType(manufacturerIndex, $event)">
+        </app-cv-input>
 
-      <mat-form-field class="col"
-        *ngIf="configSettingsDisplay['manufactureId'] || (configSettingsDisplay['manufactureId'] === undefined && true)">
-        <input matInput placeholder="Manufacturer ID" [(ngModel)]="manufactureDetails.manufactureId"
-          name="manufactureDetails.manufactureId" />
-      </mat-form-field>
-    </div>
-  </div> <!-- loop Manufacture Details -->
+        <mat-form-field class="col"
+          *ngIf="configSettingsDisplay['manufacturerId'] || (configSettingsDisplay['manufacturerId'] === undefined && true)">
+          <input matInput placeholder="Manufacturer ID" [(ngModel)]="manufacturerDetails.manufacturerId"
+            name="manufactureDetails.manufacturerId" />
+        </mat-form-field>
+
+        <div class="button-delete">
+          <button mat-icon-button matTooltip="Delete Manufacturer Details{{(manufacturerIndex+1)}}"
+            (click)="confirmDeleteManufacturer(manufacturerIndex)">
+            <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
+
+      </div>
+    </div> <!-- loop Manufacture Details -->
+  </div>
 
 
   <div class="form-row">
-    <div class='col'>
+
+    <div class='col'
+      *ngIf="configSettingsDisplay['amount'] || (configSettingsDisplay['amount'] === undefined && showAdvancedSettings)">
       <div class="label amt-label">
         Amount
         <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
@@ -115,40 +130,44 @@
     </div>
 
     <!-- Specification Type -->
-    <div class="col" *ngIf="!startingMaterial.specificationReference">
-      <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
-        <span>Certification Of Analysis</span>&nbsp;
-        <mat-icon svgIcon="cloud_upload"></mat-icon>
-      </button>
-    </div>
-    <div *ngIf="startingMaterial.specificationReference">
-      <button mat-button [matMenuTriggerFor]="documentMenu">
-        Certification Of Analysis: &nbsp;&nbsp;See Attachment
-        <mat-icon svgIcon="attachment"></mat-icon>
-      </button>
-      <mat-menu #documentMenu="matMenu">
-        <a mat-menu-item (click)="downloadDocument(startingMaterial.specificationReference)">Download</a>
-        <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
-        <button mat-menu-item (click)="startingMaterial.specificationReference = null">Delete</button>
-      </mat-menu>
-    </div>
-    <div class="loading-container" *ngIf="loading === true">
-      <div class="spinner-container">
-        <mat-progress-spinner class="progress-spinner spinner" [color]="primary" mode="indeterminate">
-        </mat-progress-spinner>
+    <div *ngIf="configSettingsDisplay['specificationReference'] || (configSettingsDisplay['specificationReference'] === undefined && showAdvancedSettings)">
+      <div class="col" *ngIf="!startingMaterial.specificationReference">
+        <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
+          <span>Certification Of Analysis</span>&nbsp;
+          <mat-icon svgIcon="cloud_upload"></mat-icon>
+        </button>
       </div>
+      <div *ngIf="startingMaterial.specificationReference">
+        <button mat-button [matMenuTriggerFor]="documentMenu">
+          Certification Of Analysis: &nbsp;&nbsp;See Attachment
+          <mat-icon svgIcon="attachment"></mat-icon>
+        </button>
+        <mat-menu #documentMenu="matMenu">
+          <a mat-menu-item (click)="downloadDocument(startingMaterial.specificationReference)">Download</a>
+          <button mat-menu-item ncatsFileSelect (selectedFile)="fileSelected($event)">Replace</button>
+          <button mat-menu-item (click)="startingMaterial.specificationReference = null">Delete</button>
+        </mat-menu>
+      </div>
+      <div class="loading-container" *ngIf="loading === true">
+        <div class="spinner-container">
+          <mat-progress-spinner class="progress-spinner spinner" [color]="primary" mode="indeterminate">
+          </mat-progress-spinner>
+        </div>
 
-      <span>Uploading</span>
-    </div>
-    <div class="loading-container" *ngIf="loading === false && error === true">
-      Error: There was a problem uploading this document
+        <span>Uploading</span>
+      </div>
+      <div class="loading-container" *ngIf="loading === false && error === true">
+        Error: There was a problem uploading this document
+      </div>
     </div>
 
     <div class="middle-fill"></div>
 
   </div> <!-- form-row-->
 
-  <div class="form-row">
+  <!-- References -->
+  <div class="form-row"
+    *ngIf="configSettingsDisplay['references'] || (configSettingsDisplay['references'] === undefined && showAdvancedSettings)">
     <div class="references-container">
       <app-domain-references [referencesUuids]="startingMaterial.references" #references></app-domain-references>
     </div>

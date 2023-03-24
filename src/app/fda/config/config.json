@@ -98,6 +98,22 @@
       "title": "Overview"
     },
     {
+      "card": "substance-dependencies-image",
+      "title": "Substance Dependencies",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "references"
+        },
+        {
+          "filterName": "equals_in_array",
+          "propertyToCheck": "references",
+          "value": "SUBSTANCE IMAGE",
+          "propertyInArray": "tags"
+        }
+      ]
+    },
+    {
       "card": "fda-substance-product",
       "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
       "filters": [
@@ -1429,11 +1445,12 @@
   "ssg4Form": {
     "showRegisterEditTitle": "true",
     "titles": {
-      "parentSubstance": "Search for Manufactured Substance",
+      "parentSubstance": "Search or Register a New Substance",
       "stage": "Step",
       "processingMaterials": "Solvents and Catalysts"
     },
     "settingsDisplay": {
+      "references": "simple",
       "process": {
         "processName": "simple",
         "processRole": "advanced",
@@ -1448,6 +1465,9 @@
         "siteAddress": "advanced",
         "gpsSiteLocation": "advanced",
         "siteClearance": "advanced",
+        "companyName": "advanced",
+        "companyId": "advanced",
+        "companyIdType": "advanced",
         "siteComments": "advanced"
       },
       "stage": {
@@ -1476,36 +1496,22 @@
         "verbatimName": "simple",
         "substanceRole": "simple",
         "comments": "advanced",
-        "substanceGrade": "simple",
-        "acceptanceCriteria": "simple",
-        "specificationType": "simple",
-        "specificationReference": "simple",
-        "amount": "simple",
-        "references": "simple"
+        "substanceGrade": "advanced",
+        "amount": "advanced",
+        "specificationReference": "advanced",
+        "references": "advanced"
       },
       "processingMaterial": {
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced",
-        "substanceGrade": "simple",
-        "acceptanceCriteria": "simple",
-        "specificationType": "simple",
-        "specificationReference": "simple",
-        "amount": "simple",
-        "references": "simple"
+        "comments": "advanced"
       },
       "resultingMaterial": {
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced",
-        "substanceGrade": "simple",
-        "acceptanceCriteria": "simple",
-        "specificationType": "simple",
-        "specificationReference": "simple",
-        "amount": "simple",
-        "references": "simple"
+        "comments": "advanced"
       }
     }
   }

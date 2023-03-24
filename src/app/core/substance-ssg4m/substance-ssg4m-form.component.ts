@@ -105,6 +105,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   saveDelayedMessage = '';
   isCancelBtnClicked = false;
   isSavedSuccessful = false;
+  public configSettingsDisplay = {};
+  configSsg4Form: any;
+  configSettingReferences = false;
   private submitSubscription: any = null;
 
   private jsLibScriptUrls = [
@@ -141,10 +144,12 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
 
-    let configSsg4Form: any;
-    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
-    // Get 'showRegisterEditTitle' value from config
-    this.showRegisterEditTitle = configSsg4Form.showRegisterEditTitle;
+    this.getConfigSettings();
+    if (this.configSsg4Form) {
+      // Get 'showRegisterEditTitle' value from config
+      this.showRegisterEditTitle = this.configSsg4Form.showRegisterEditTitle;
+    }
+
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -182,6 +187,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             this.substanceClass = this.subClass;
             this.titleService.setTitle('Register - Specified Substance Group 4 Manufacturing');
             this.substanceFormService.loadSubstance(this.substanceClass).pipe(take(1)).subscribe(() => {
+              alert("GGGGGGGGGG:" + JSON.stringify(formSections[this.substanceClass]));
               this.setFormSections(formSections[this.substanceClass]);
               this.loadingService.setLoading(false);
               this.isLoading = false;
@@ -287,6 +293,38 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         }
         subscription.unsubscribe();
       });
+  }
+
+  private setFormSections(sectionNames: Array<string> = []): void {
+    this.formSections = [];
+    sectionNames.forEach(sectionName => {
+      let canAdd = true;
+      if (this.configSettingReferences === false) {
+        if (sectionName === 'substance-form-references') {
+          canAdd = false;
+        }
+      }
+      if (canAdd === true) {
+        const formSection = new SubstanceFormSection(sectionName);
+        this.formSections.push(formSection);
+      }
+    });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    // let configSsg4Form: any;
+    this.configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'startingMaterial' json values from config
+    let configReferences = this.configSsg4Form.settingsDisplay.references;
+    this.configSettingReferences = false;
+    if (configReferences === 'simple') {
+      this.configSettingReferences = true;
+    } else if (configReferences === 'advanced') {
+      this.configSettingReferences = false;
+    } else if (configReferences === 'removed') {
+      this.configSettingReferences = false;
+    }
   }
 
   openedChange(event: any) {
@@ -705,18 +743,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
   }
 
-  private setFormSections(sectionNames: Array<string> = []): void {
-    this.formSections = [];
-    sectionNames.forEach(sectionName => {
-      const formSection = new SubstanceFormSection(sectionName);
-      /* if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
-         (formSection.dynamicComponentName === 'substance-form-names'
-           || formSection.dynamicComponentName === 'substance-form-codes-card'))) {
-       } */
-      this.formSections.push(formSection);
-    });
-  }
-
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {
       message: 'The substance you\'re trying to edit doesn\'t exist.',
@@ -1048,7 +1074,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       message: 'Unknown Server Error'
     };
     if (error && error.error && error.error.message) {
-      alert("HERER HERE");
       message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error && error.error && (typeof error.error) === 'string') {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;

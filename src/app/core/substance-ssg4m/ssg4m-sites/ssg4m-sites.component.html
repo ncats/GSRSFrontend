@@ -70,15 +70,15 @@
     </mat-form-field>
 
     <mat-form-field class="col-3-1"
-      *ngIf="configSettingsDisplay['CompanyId'] || (configSettingsDisplay['CompanyId'] === undefined && true)">
-      <input matInput placeholder="Company ID" [(ngModel)]="site.CompanyId"
-        name="site.CompanyId" />
+      *ngIf="configSettingsDisplay['companyId'] || (configSettingsDisplay['companyId'] === undefined && true)">
+      <input matInput placeholder="Company ID" [(ngModel)]="site.companyId"
+        name="site.companyId" />
     </mat-form-field>
 
     <app-cv-input class="col-3-1"
-      *ngIf="configSettingsDisplay['CompanyIdType'] || (configSettingsDisplay['CompanyIdType'] === undefined && true)"
+      *ngIf="configSettingsDisplay['companyIdType'] || (configSettingsDisplay['companyIdType'] === undefined && true)"
       domain="SSG_COMPANY_ID_TYPE" required='true' title="Company ID Type"
-      [model]="site.CompanyIdType" (valueChange)="updateManufactureIdType($event)">
+      [model]="site.companyIdType" (valueChange)="updateCompanyIdType($event)">
     </app-cv-input>
   </div>
 

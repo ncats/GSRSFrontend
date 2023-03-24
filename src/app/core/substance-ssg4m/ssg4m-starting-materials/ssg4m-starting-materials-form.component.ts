@@ -8,7 +8,7 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
 import { SpecifiedSubstanceG4mStartingMaterial, SubstanceAmount } from '@gsrs-core/substance/substance.model';
-import { AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
+import { AmountFormDialogComponent } from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
 
@@ -101,6 +101,12 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
       let substanceRelated = this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials[this.startingMaterialIndex].substanceName;
       this.relatedSubstanceUuid = substanceRelated.refuuid;
     }
+
+    if (this.configSettingsDisplay["references"] === true) {
+      if (this.privateStartingMaterial.references == null) {
+        this.privateStartingMaterial.references = [];
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -145,16 +151,16 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.privateStartingMaterial.specificationType = specificationType;
   }
 
-  updateManufactureIdType(manufactureIdType: string): void {
-    this.privateStartingMaterial.manufactureIdType = manufactureIdType;
+  updateManufacturerIdType(manufacturerIndex: number, manufacturerIdType: string): void {
+    this.privateStartingMaterial.manufacturerDetails[manufacturerIndex].manufacturerIdType = manufacturerIdType;
   }
 
   updateAcceptanceCriteriaType(acceptanceCriteriaType: string): void {
     this.privateStartingMaterial.acceptanceCriteriaType = acceptanceCriteriaType;
   }
 
-  addManufacture(processIndex: number, siteIndex: number, stageIndex: number) {
-    this.substanceFormSsg4mStagesService.addStartingManufactureDetails(processIndex, siteIndex, stageIndex, this.startingMaterialIndex);
+  addManufacturer(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addStartingManufacturerDetails(processIndex, siteIndex, stageIndex, this.startingMaterialIndex);
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
@@ -188,12 +194,28 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials.splice(this.startingMaterialIndex, 1);
   }
 
+  confirmDeleteManufacturer(manufacturerIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Manufacturer ' + (manufacturerIndex + 1) + ' for Starting Material ' + (this.startingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteManufacturer(manufacturerIndex);
+      }
+    });
+  }
+
+  deleteManufacturer(manufacturerIndex: number): void {
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials[this.startingMaterialIndex].manufacturerDetails.splice(manufacturerIndex, 1);
+  }
+
   openAmountDialog(): void {
     if (!this.privateStartingMaterial.amount) {
       this.privateStartingMaterial.amount = {};
     }
     const dialogRef = this.dialog.open(AmountFormDialogComponent, {
-      data: {'subsAmount': this.privateStartingMaterial.amount},
+      data: { 'subsAmount': this.privateStartingMaterial.amount },
       width: '990px'
     });
     this.overlayContainer.style.zIndex = '1002';
