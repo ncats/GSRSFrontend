@@ -685,6 +685,7 @@
         {
           "category": "Default",
           "facets": [
+            "User List",
             "Deprecated",
             "Record Status",
             "Substance Class",
