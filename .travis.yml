@@ -2,7 +2,7 @@ dist: trusty
 
 language: node_js
 node_js:
-  - 12.20.0
+  - 14.17.0
 
 
 install:
@@ -26,4 +26,3 @@ script:
 after_success:
   - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
 
-  
