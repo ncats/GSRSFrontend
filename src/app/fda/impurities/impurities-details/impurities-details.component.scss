@@ -150,7 +150,8 @@
 
 .headerstyle {
   border: 1px solid var(--regular-grey-color);
-  height: 30px;
+  border-bottom: none;
+  height: 35px;
   background-color: var(--light-yellow-color);
 }
 
@@ -248,6 +249,10 @@
 
 .colorgreen {
   color: var(--regular-green-color);
+}
+
+.colorblack {
+  color: var(--regular-black-color);
 }
 
 .bordergray {
