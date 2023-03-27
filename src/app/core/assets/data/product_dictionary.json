@@ -168,7 +168,7 @@
         "suggest":null
     },
     "Product Code":{
-        "lucenePath":"root_productCodeList_productCode",
+        "lucenePath":"root_productCodes_productCode",
         "description":"Product Term",
         "type":"string",
         "cvDomain":null,
@@ -200,7 +200,7 @@
         "suggest":null
     },
     "Product Code Country Code":{
-        "lucenePath":"root_productCodeList_countryCode",
+        "lucenePath":"root_productCodes_countryCode",
         "description":"Product Code Country Code",
         "type":"string",
         "cvDomain":null,
@@ -208,7 +208,7 @@
         "suggest":null
     },
     "Product Code Type":{
-        "lucenePath":"root_productCodeList_productCodeType",
+        "lucenePath":"root_productCodes_productCodeType",
         "description":"Product Code Type",
         "type":"string",
         "cvDomain":null,
@@ -392,7 +392,7 @@
         "suggest":null
     },
     "Product Name":{
-        "lucenePath":"root_productNameList_productName",
+        "lucenePath":"root_productNames_productName",
         "description":"Product Name",
         "type":"string",
         "cvDomain":null,
@@ -400,7 +400,7 @@
         "suggest":null
     },
     "Product Name Type":{
-        "lucenePath":"root_productNameList_productNameType",
+        "lucenePath":"root_productNames_productNameType",
         "description":"Product Name Type",
         "type":"string",
         "cvDomain":"PROD_PRODUCT_NAME_TYPE",
@@ -488,7 +488,7 @@
         "suggest":null
     },
     "Product Term":{
-        "lucenePath":"root_productNameList_productTermAndTermPartList_productTerm",
+        "lucenePath":"root_productNames_productTermAndTermPartList_productTerm",
         "description":"Product Term",
         "type":"string",
         "cvDomain":null,
@@ -496,7 +496,7 @@
         "suggest":null
     },
     "Product Term Part":{
-        "lucenePath":"root_productNameList_productTermAndTermPartList_productTermPart",
+        "lucenePath":"root_productNames_productTermAndTermPartList_productTermPart",
         "description":"Product Term Part",
         "type":"string",
         "cvDomain":"PROD_TERM_PART",
