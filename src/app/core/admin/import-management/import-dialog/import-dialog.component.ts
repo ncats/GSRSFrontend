@@ -30,7 +30,7 @@ export class ImportDialogComponent implements OnInit {
         "lang": "",
         "referenceUUIDs": []
     }; 
-    settingTypes = ["Create Name Action", "Create Code Action", "Create Property Action"];
+    settingTypes = ["Create Name Action", "Create Code Action", "Create Property Action", "Create Note Action"];
   constructor(
     public cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
