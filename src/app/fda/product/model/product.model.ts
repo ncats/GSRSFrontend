@@ -31,8 +31,8 @@ export interface Product {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
-  productNameList?: Array<ProductName>;
-  productCodeList?: Array<ProductCode>;
+  productNames?: Array<ProductName>;
+  productCodes?: Array<ProductCode>;
   productCompanyList?: Array<ProductCompany>;
   productIndications?: Array<ProductIndication>;
   productComponentList?: Array<ProductComponent>;
@@ -127,6 +127,8 @@ export interface ProductComponent {
   dosageForm?: string;
   dosageFormCode?: string;
   dosageFormCodeType?: string;
+  dosageFormNote?: string;
+  compositionNote?: string;
   amount?: string;
   unit?: string;
   provenanceManufactureItemId?: string;

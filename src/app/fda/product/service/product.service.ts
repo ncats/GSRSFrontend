@@ -168,8 +168,8 @@ export class ProductService extends BaseHttpService {
       this.product = product;
     } else { // new Product
       this.product = {
-        productNameList: [],
-        productCodeList: [],
+        productNames: [],
+        productCodes: [],
         productCompanyList: [],
         productIndications: [],
         productComponentList: []
@@ -223,32 +223,32 @@ export class ProductService extends BaseHttpService {
 
   addNewProductName(): void {
     const newProductName: ProductName = { productTermAndTermPartList: [] };
-    this.product.productNameList.unshift(newProductName);
+    this.product.productNames.unshift(newProductName);
   }
 
   deleteProductName(prodNameIndex: number): void {
-    this.product.productNameList.splice(prodNameIndex, 1);
+    this.product.productNames.splice(prodNameIndex, 1);
   }
 
   addNewTermAndTermPart(prodNameIndex: number): void {
-    if (this.product.productNameList[prodNameIndex].productTermAndTermPartList == null) {
-      this.product.productNameList[prodNameIndex].productTermAndTermPartList = [];
+    if (this.product.productNames[prodNameIndex].productTermAndTermPartList == null) {
+      this.product.productNames[prodNameIndex].productTermAndTermPartList = [];
     }
     const newProductPartTerm: ProductTermAndPart = {};
-    this.product.productNameList[prodNameIndex].productTermAndTermPartList.unshift(newProductPartTerm);
+    this.product.productNames[prodNameIndex].productTermAndTermPartList.unshift(newProductPartTerm);
   }
 
   deleteTermAndTermPart(prodNameIndex: number, prodNameTermIndex: number): void {
-    this.product.productNameList[prodNameIndex].productTermAndTermPartList.splice(prodNameTermIndex, 1);
+    this.product.productNames[prodNameIndex].productTermAndTermPartList.splice(prodNameTermIndex, 1);
   }
 
   addNewProductCode(): void {
     const newProductCode: ProductCode = {};
-    this.product.productCodeList.unshift(newProductCode);
+    this.product.productCodes.unshift(newProductCode);
   }
 
   deleteProductCode(prodCodeIndex: number): void {
-    this.product.productCodeList.splice(prodCodeIndex, 1);
+    this.product.productCodes.splice(prodCodeIndex, 1);
   }
 
   addNewProductCompany(): void {

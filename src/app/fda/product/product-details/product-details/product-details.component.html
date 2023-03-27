@@ -48,9 +48,9 @@
   <div class="details-container margintop20px">
     <mat-card class="bordergray">
       <mat-card-title class="title2">
-        PRODUCT NAME ({{product.productNameList.length}})
+        PRODUCT NAME ({{product.productNames.length}})
       </mat-card-title>
-      <div *ngIf="product.productNameList.length > 0">
+      <div *ngIf="product.productNames.length > 0">
         <mat-card-content>
           <table class="blueTable">
             <thead>
@@ -61,7 +61,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let prodName of product.productNameList; let indexName = index">
+              <tr *ngFor="let prodName of product.productNames; let indexName = index">
                 <td>
                   <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
                 </td>
@@ -74,7 +74,7 @@
                 </td>
               </tr>
 
-              <tr *ngIf="product.productNameList.length < 1">
+              <tr *ngIf="product.productNames.length < 1">
                 <td colspan="3">
                   No Product Name Available
                 </td>
@@ -361,9 +361,9 @@
   <div class="details-container margintop30px">
     <mat-card class="bordergray">
       <mat-card-title class="title2">
-        PRODUCT CODE ({{product.productCodeList.length}})
+        PRODUCT CODE ({{product.productCodes.length}})
       </mat-card-title>
-      <div *ngIf="product.productCodeList.length > 0">
+      <div *ngIf="product.productCodes.length > 0">
         <mat-card-content>
           <table class="blueTable">
             <thead>
@@ -375,7 +375,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let x of product.productCodeList; let i = index">
+              <tr *ngFor="let x of product.productCodes; let i = index">
                 <td>{{i + 1}}</td>
                 <td>{{ x.productCode }}</td>
                 <td>{{ x.productCodeType }}</td>
@@ -712,6 +712,25 @@
                       </div>
                       <div class="row-property-value">
                         {{prodComp.provenanceManufactureItemId}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Dosage Form Note:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.dosageFormNote}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Composition Note:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.compositionNote}}
                       </div>
                     </div>
                   </div>

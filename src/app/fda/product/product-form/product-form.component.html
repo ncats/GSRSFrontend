@@ -149,7 +149,7 @@
                   <mat-panel-title>
                     <span class="font17px"><b>Product Name</b></span>
                     <span class="badge">
-                      {{(product.productNameList.length)}}
+                      {{(product.productNames.length)}}
                     </span>
                     <div class="middle-fill"></div>
                     <button mat-button class="marginright30px bordergreen" color="primary"
@@ -160,7 +160,7 @@
                 </mat-expansion-panel-header>
 
                 <div class="marginbottom10px"
-                  *ngFor="let prodName of product.productNameList; let prodNameIndex = index">
+                  *ngFor="let prodName of product.productNames; let prodNameIndex = index">
 
                   <hr *ngIf="prodNameIndex > 0">
 
@@ -176,8 +176,6 @@
                         (valueChange)="prodName.productNameType = $event">
                       </app-cv-input>
 
-                      <!-- [disabled]="product.productNameList.length == 1"
-                       [class.disabled]="product.productNameList.length == 1" -->
                       <button mat-icon-button color="primary" (click)="confirmDeleteProductName(prodNameIndex)"
                         matTooltip="Delete Product Name">
                         <mat-icon>delete_forever</mat-icon>
@@ -373,7 +371,7 @@
                   <mat-panel-title>
                     <span class="font17px"><b>Product Code</b></span>
                     <span class="badge">
-                      {{(product.productCodeList.length)}}
+                      {{(product.productCodes.length)}}
                     </span>
                     <div class="middle-fill"></div>
                     <button mat-button class="marginright30px bordergreen" color="primary"
@@ -384,7 +382,7 @@
                 </mat-expansion-panel-header>
 
                 <div class="marginbottom15px"
-                  *ngFor="let prodCode of product.productCodeList; let prodCodeIndex = index">
+                  *ngFor="let prodCode of product.productCodes; let prodCodeIndex = index">
                   <div class="divflexrow">
                     <div class="form-row">
                       <mat-form-field class="col-3">
@@ -403,7 +401,7 @@
                     </div>
 
                     <button mat-icon-button color="primary" (click)="confirmDeleteProductCode(prodCodeIndex)"
-                      [matTooltipDisabled]="product.productCodeList.length == 1" matTooltip="Delete Product Code">
+                      [matTooltipDisabled]="product.productCodes.length == 1" matTooltip="Delete Product Code">
                       <mat-icon>delete_forever</mat-icon>
                     </button>
                     <br>
