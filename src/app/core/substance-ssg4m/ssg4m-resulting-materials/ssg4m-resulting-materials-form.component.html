@@ -84,7 +84,7 @@
 
     <app-cv-input class="col"
       *ngIf="configSettingsDisplay['acceptanceCriteriaType'] || (configSettingsDisplay['acceptanceCriteriaType'] === undefined && true)"
-      domain="SSG_ACCEPTANCE_CRITERIA_TYPE" required='true' title="Acceptance Criteria Type"
+      domain="SSG_ACCEPTANCE_CRITERIA_TYPE" title="Acceptance Criteria Type"
       [model]="resultingMaterial.acceptanceCriteriaType" (valueChange)="updateAcceptanceCriteriaType($event)">
     </app-cv-input>
 
@@ -98,7 +98,7 @@
 
     <app-cv-input class="col"
       *ngIf="configSettingsDisplay['substanceGrade'] || (configSettingsDisplay['substanceGrade'] === undefined && true)"
-      domain="SSG_SUBSTANCE_GRADE" required='true' title="Substance Grade" [model]="resultingMaterial.substanceGrade"
+      domain="SSG_SUBSTANCE_GRADE" title="Substance Grade" [model]="resultingMaterial.substanceGrade"
       (valueChange)="updateSubstanceGrade($event)">
     </app-cv-input>
   </div>

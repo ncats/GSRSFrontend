@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { SubstanceFormServiceBase } from '../../substance-form/base-classes/substance-form-service-base';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SpecifiedSubstanceG4mCriticalParameter, SpecifiedSubstanceG4mStage, SpecifiedSubstanceG4mStartingMaterial } from '@gsrs-core/substance/substance.model';
-import { SpecifiedSubstanceG4mProcessingMaterial, SpecifiedSubstanceG4mResultingMaterial, SpecifiedSubstanceG4mManufacturerDetails } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mProcessingMaterial, SpecifiedSubstanceG4mResultingMaterial, SpecifiedSubstanceG4mManufacturerDetails, SpecifiedSubstanceG4mAcceptanceCriteria } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormSsg4mResultingMaterialsModule } from '../ssg4m-resulting-materials/substance-form-ssg4m-resulting-materials.module';
 
 @Injectable({
@@ -57,7 +57,7 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
   }
 
   addProcessingMaterials(processIndex: number, siteIndex: number, stageIndex: number): void {
-    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = { substanceRole: 'Solvent', references: [] };
+    const newProcessMat: SpecifiedSubstanceG4mProcessingMaterial = { substanceRole: 'Solvent'};
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials.push(newProcessMat);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials);
   }
@@ -82,6 +82,39 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
 
     this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufacturerDetails.push(newStartingManuDetail);
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].manufacturerDetails);
+  }
+
+  addResultingManufacturerDetails(processIndex: number, siteIndex: number, stageIndex: number, processingMaterialIndex: number): void {
+    const newProcessingManuDetail: SpecifiedSubstanceG4mManufacturerDetails = {};
+
+    if (this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].manufacturerDetails == null) {
+      this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].manufacturerDetails = [];
+    }
+
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].manufacturerDetails.push(newProcessingManuDetail);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].manufacturerDetails);
+  }
+
+  addStartingAcceptanceCriteria(processIndex: number, siteIndex: number, stageIndex: number, startingMaterialIndex: number): void {
+    const newAcceptanceCriteria: SpecifiedSubstanceG4mAcceptanceCriteria = {};
+
+    if (this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].acceptanceCriterias == null) {
+      this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].acceptanceCriterias = [];
+    }
+
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].acceptanceCriterias.push(newAcceptanceCriteria);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].startingMaterials[startingMaterialIndex].acceptanceCriterias);
+  }
+
+  addProcessingAcceptanceCriteria(processIndex: number, siteIndex: number, stageIndex: number, processingMaterialIndex: number): void {
+    const newAcceptanceCriteria: SpecifiedSubstanceG4mAcceptanceCriteria = {};
+
+    if (this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].acceptanceCriterias == null) {
+      this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].acceptanceCriterias = [];
+    }
+
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].acceptanceCriterias.push(newAcceptanceCriteria);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].acceptanceCriterias);
   }
 
   addStage(processIndex: number, siteIndex: number): void {

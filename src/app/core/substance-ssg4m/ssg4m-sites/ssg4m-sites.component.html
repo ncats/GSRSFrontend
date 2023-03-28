@@ -77,7 +77,7 @@
 
     <app-cv-input class="col-3-1"
       *ngIf="configSettingsDisplay['companyIdType'] || (configSettingsDisplay['companyIdType'] === undefined && true)"
-      domain="SSG_COMPANY_ID_TYPE" required='true' title="Company ID Type"
+      domain="SSG_COMPANY_ID_TYPE" title="Company ID Type"
       [model]="site.companyIdType" (valueChange)="updateCompanyIdType($event)">
     </app-cv-input>
   </div>

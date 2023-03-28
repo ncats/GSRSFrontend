@@ -580,14 +580,13 @@ export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
   verbatimName?: string;
   substanceRole?: string;
   substanceGrade?: string;
-  acceptanceCriteria?: string;
-  acceptanceCriteriaType?: string;
   specificationType?: string;
   specificationReference?: string;
   amount?: SubstanceAmount;
   references?: Array<string>;
   comments?: string;
   manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
 }
 
 export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
@@ -596,8 +595,6 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   verbatimName?: string;
   substanceRole?: string;
   substanceGrade?: string;
-  acceptanceCriteria?: string;
-  acceptanceCriteriaType?: string;
   specificationType?: string;
   specificationReference?: string;
   amount?: SubstanceAmount;
@@ -607,6 +604,7 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   manufacturerIdType?: string;
   comments?: string;
   manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
 }
 
 export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
@@ -615,20 +613,24 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
   verbatimName?: string;
   substanceRole?: string;
   substanceGrade?: string;
-  acceptanceCriteria?: string;
-  acceptanceCriteriaType?: string;
   specificationType?: string;
   specificationReference?: string;
   amount?: SubstanceAmount;
   references?: Array<string>;
   comments?: string;
   manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
 }
 
 export interface SpecifiedSubstanceG4mManufacturerDetails extends SubstanceBase {
   manufacturerName?: String;
   manufacturerId?: string;
   manufacturerIdType?: string;
+}
+
+export interface SpecifiedSubstanceG4mAcceptanceCriteria extends SubstanceBase {
+  acceptanceCriteria?: string;
+  acceptanceCriteriaType?: string;
 }
 
 export interface TableFilterDDModel {

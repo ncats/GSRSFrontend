@@ -1497,6 +1497,8 @@
         "substanceRole": "simple",
         "comments": "advanced",
         "substanceGrade": "advanced",
+        "manufacturer": "advanced",
+        "acceptanceCriteria": "advanced",
         "amount": "advanced",
         "specificationReference": "advanced",
         "references": "advanced"
@@ -1505,7 +1507,13 @@
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "advanced",
+        "manufacturer": "advanced",
+        "acceptanceCriteria": "advanced",
+        "amount": "advanced",
+        "specificationReference": "advanced",
+        "references": "advanced"
       },
       "resultingMaterial": {
         "substanceName": "simple",

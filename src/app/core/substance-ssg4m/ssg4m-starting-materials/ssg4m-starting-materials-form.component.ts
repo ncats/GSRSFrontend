@@ -155,12 +155,16 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
     this.privateStartingMaterial.manufacturerDetails[manufacturerIndex].manufacturerIdType = manufacturerIdType;
   }
 
-  updateAcceptanceCriteriaType(acceptanceCriteriaType: string): void {
-    this.privateStartingMaterial.acceptanceCriteriaType = acceptanceCriteriaType;
+  updateAcceptanceCriteriaType(acceptanceCriteriaType: string, acceptanceIndex: string): void {
+    this.privateStartingMaterial.acceptanceCriterias[acceptanceIndex].acceptanceCriteriaType = acceptanceCriteriaType;
   }
 
   addManufacturer(processIndex: number, siteIndex: number, stageIndex: number) {
     this.substanceFormSsg4mStagesService.addStartingManufacturerDetails(processIndex, siteIndex, stageIndex, this.startingMaterialIndex);
+  }
+
+  addAcceptanceCriteria(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addStartingAcceptanceCriteria(processIndex, siteIndex, stageIndex, this.startingMaterialIndex);
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
@@ -208,6 +212,22 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
 
   deleteManufacturer(manufacturerIndex: number): void {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials[this.startingMaterialIndex].manufacturerDetails.splice(manufacturerIndex, 1);
+  }
+
+  confirmDeleteAcceptanceCriteria(acceptanceIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Acceptance Criteria ' + (acceptanceIndex + 1) + ' for Starting Material ' + (this.startingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteAcceptanceCriteria(acceptanceIndex);
+      }
+    });
+  }
+
+  deleteAcceptanceCriteria(acceptanceIndex: number): void {
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].startingMaterials[this.startingMaterialIndex].acceptanceCriterias.splice(acceptanceIndex, 1);
   }
 
   openAmountDialog(): void {

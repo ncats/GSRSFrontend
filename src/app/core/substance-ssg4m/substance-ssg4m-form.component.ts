@@ -187,7 +187,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             this.substanceClass = this.subClass;
             this.titleService.setTitle('Register - Specified Substance Group 4 Manufacturing');
             this.substanceFormService.loadSubstance(this.substanceClass).pipe(take(1)).subscribe(() => {
-              alert("GGGGGGGGGG:" + JSON.stringify(formSections[this.substanceClass]));
               this.setFormSections(formSections[this.substanceClass]);
               this.loadingService.setLoading(false);
               this.isLoading = false;

@@ -144,8 +144,8 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
     this.privateResultingMaterial.specificationType = specificationType;
   }
 
-  updateAcceptanceCriteriaType(acceptanceCriteriaType: string): void {
-    this.privateResultingMaterial.acceptanceCriteriaType = acceptanceCriteriaType;
+  updateAcceptanceCriteriaType(acceptanceCriteriaType: string, acceptanceIndex: number): void {
+    this.privateResultingMaterial.acceptanceCriterias[acceptanceIndex].acceptanceCriteriaType = acceptanceCriteriaType;
   }
 
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
