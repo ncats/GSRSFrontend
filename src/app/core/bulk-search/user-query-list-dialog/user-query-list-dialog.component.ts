@@ -38,6 +38,9 @@ export class UserQueryListDialogComponent implements OnInit {
   ngOnInit(): void {
     
     this.getUserLists();
+    if (this.view === 'single') {
+      this.useDraft(this.activeName);
+    }
   }
 
   viewLists(): void {
@@ -151,6 +154,7 @@ export class UserQueryListDialogComponent implements OnInit {
     this.activeName = draft;
     this.bulkSearchService.getSingleBulkSearchList(draft).subscribe(result => {
       this.active = result;
+      console.log(this.active);
       this.view = 'single';
     }, error => {
       this.message = "Error: Fetching list failed. See error in console";
