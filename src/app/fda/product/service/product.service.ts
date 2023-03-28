@@ -170,7 +170,7 @@ export class ProductService extends BaseHttpService {
       this.product = {
         productNames: [],
         productCodes: [],
-        productCompanyList: [],
+        productCompanies: [],
         productIndications: [],
         productComponentList: []
       };
@@ -252,21 +252,21 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductCompany(): void {
-    const newProductCompany: ProductCompany = { productCompanyCodeList: [] };
-    this.product.productCompanyList.unshift(newProductCompany);
+    const newProductCompany: ProductCompany = { productCompanyCodes: [] };
+    this.product.productCompanies.unshift(newProductCompany);
   }
 
   deleteProductCompany(prodCompanyIndex: number): void {
-    this.product.productCompanyList.splice(prodCompanyIndex, 1);
+    this.product.productCompanies.splice(prodCompanyIndex, 1);
   }
 
   addNewProductCompanyCode(productCompanyIndex: number): void {
     const newProductCompanyCode: ProductCompanyCode = {};
-    this.product.productCompanyList[productCompanyIndex].productCompanyCodeList.push(newProductCompanyCode);
+    this.product.productCompanies[productCompanyIndex].productCompanyCodes.push(newProductCompanyCode);
   }
 
   deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number): void {
-    this.product.productCompanyList[prodCompanyIndex].productCompanyCodeList.splice(prodCompanyCodeIndex, 1);
+    this.product.productCompanies[prodCompanyIndex].productCompanyCodes.splice(prodCompanyCodeIndex, 1);
   }
 
   addNewProductIndication(): void {

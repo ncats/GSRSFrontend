@@ -33,7 +33,7 @@ export interface Product {
   internalVersion?: number;
   productNames?: Array<ProductName>;
   productCodes?: Array<ProductCode>;
-  productCompanyList?: Array<ProductCompany>;
+  productCompanies?: Array<ProductCompany>;
   productIndications?: Array<ProductIndication>;
   productComponentList?: Array<ProductComponent>;
 }
@@ -90,7 +90,7 @@ export interface ProductCompany {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  productCompanyCodeList?: Array<ProductCompanyCode>;
+  productCompanyCodes?: Array<ProductCompanyCode>;
 }
 
 export interface ProductCompanyCode {
