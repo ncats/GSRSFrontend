@@ -170,7 +170,7 @@ export class ProductService extends BaseHttpService {
       this.product = {
         productNames: [],
         productCodes: [],
-        productCompanyList: [],
+        productCompanies: [],
         productIndications: [],
         productComponentList: []
       };
@@ -222,7 +222,7 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductName(): void {
-    const newProductName: ProductName = { productTermAndTermPartList: [] };
+    const newProductName: ProductName = { productTermAndParts: [] };
     this.product.productNames.unshift(newProductName);
   }
 
@@ -231,15 +231,15 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewTermAndTermPart(prodNameIndex: number): void {
-    if (this.product.productNames[prodNameIndex].productTermAndTermPartList == null) {
-      this.product.productNames[prodNameIndex].productTermAndTermPartList = [];
+    if (this.product.productNames[prodNameIndex].productTermAndParts == null) {
+      this.product.productNames[prodNameIndex].productTermAndParts = [];
     }
     const newProductPartTerm: ProductTermAndPart = {};
-    this.product.productNames[prodNameIndex].productTermAndTermPartList.unshift(newProductPartTerm);
+    this.product.productNames[prodNameIndex].productTermAndParts.unshift(newProductPartTerm);
   }
 
   deleteTermAndTermPart(prodNameIndex: number, prodNameTermIndex: number): void {
-    this.product.productNames[prodNameIndex].productTermAndTermPartList.splice(prodNameTermIndex, 1);
+    this.product.productNames[prodNameIndex].productTermAndParts.splice(prodNameTermIndex, 1);
   }
 
   addNewProductCode(): void {
@@ -252,21 +252,21 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductCompany(): void {
-    const newProductCompany: ProductCompany = { productCompanyCodeList: [] };
-    this.product.productCompanyList.unshift(newProductCompany);
+    const newProductCompany: ProductCompany = { productCompanyCodes: [] };
+    this.product.productCompanies.unshift(newProductCompany);
   }
 
   deleteProductCompany(prodCompanyIndex: number): void {
-    this.product.productCompanyList.splice(prodCompanyIndex, 1);
+    this.product.productCompanies.splice(prodCompanyIndex, 1);
   }
 
   addNewProductCompanyCode(productCompanyIndex: number): void {
     const newProductCompanyCode: ProductCompanyCode = {};
-    this.product.productCompanyList[productCompanyIndex].productCompanyCodeList.push(newProductCompanyCode);
+    this.product.productCompanies[productCompanyIndex].productCompanyCodes.push(newProductCompanyCode);
   }
 
   deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number): void {
-    this.product.productCompanyList[prodCompanyIndex].productCompanyCodeList.splice(prodCompanyCodeIndex, 1);
+    this.product.productCompanies[prodCompanyIndex].productCompanyCodes.splice(prodCompanyCodeIndex, 1);
   }
 
   addNewProductIndication(): void {

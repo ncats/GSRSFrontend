@@ -67,7 +67,7 @@
                 </td>
                 <td>{{ prodName.productNameType }}</td>
                 <td>
-                  <div *ngFor="let prodPart of prodName.productTermAndTermPartList; let indexPart = index">
+                  <div *ngFor="let prodPart of prodName.productTermAndParts; let indexPart = index">
                     <b>Term:</b>&nbsp;{{prodPart.productTerm}}
                     <b>Term Part:</b>&nbsp;&nbsp;{{prodPart.productTermPart}}<br><br>
                   </div>
@@ -394,11 +394,11 @@
   <div class="details-container margintop30px">
     <mat-card class="bordergray">
       <mat-card-title class="title2">
-        PRODUCT COMPANY ({{product.productCompanyList.length}})
+        PRODUCT COMPANY ({{product.productCompanies.length}})
       </mat-card-title>
-      <div *ngIf="product.productCompanyList.length > 0">
+      <div *ngIf="product.productCompanies.length > 0">
         <mat-card-content>
-          <div class="marginbottom60px" *ngFor="let x of product.productCompanyList; let i = index">
+          <div class="marginbottom60px" *ngFor="let x of product.productCompanies; let i = index">
 
             <div class="row">
               <div class="row-property">
@@ -518,9 +518,9 @@
             <div class="details-container margintop30px">
               <mat-card class="bordergray">
                 <mat-card-title class="title2 font14px colorblack">
-                  Company Code ({{x.productCompanyCodeList.length}})
+                  Company Code ({{x.productCompanyCodes.length}})
                 </mat-card-title>
-                <div *ngIf="x.productCompanyCodeList.length">
+                <div *ngIf="x.productCompanyCodes.length">
                   <mat-card-content>
                     <table class="blueTable">
                       <thead>
@@ -531,7 +531,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let compCode of x.productCompanyCodeList; let compCodeIndex = index">
+                        <tr *ngFor="let compCode of x.productCompanyCodes; let compCodeIndex = index">
                           <td>{{ compCodeIndex + 1}}</td>
                           <td>{{ compCode.companyCode }}</td>
                           <td>{{ compCode.companyCodeType }}</td>

@@ -192,7 +192,7 @@
 
                   <!-- Name PART and TERM PART List -->
                   <div class="bkcolorlightblue"
-                    *ngFor="let prodNameTerm of prodName.productTermAndTermPartList; let prodNameTermIndex = index">
+                    *ngFor="let prodNameTerm of prodName.productTermAndParts; let prodNameTermIndex = index">
                     <div class="form-row">
                       <mat-form-field class="col-2">
                         <input matInput placeholder="Term" [(ngModel)]="prodNameTerm.productTerm" name="productTerm" />
@@ -416,7 +416,7 @@
                   <mat-panel-title>
                     <span class="font17px"><b>Product Company</b></span>
                     <span class="badge">
-                      {{(product.productCompanyList.length)}}
+                      {{(product.productCompanies.length)}}
                     </span>
                     <div class="middle-fill"></div>
                     <div class="bordegray">
@@ -428,7 +428,7 @@
                   </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div class="" *ngFor="let prodCompany of product.productCompanyList; let prodCompanyIndex = index">
+                <div class="" *ngFor="let prodCompany of product.productCompanies; let prodCompanyIndex = index">
                   <div class="divflexend margintopneg10px">
                     <div class="middle-fill"></div>
                     <button class="padtop9px marginright10px" mat-icon-button color="primary"
@@ -507,7 +507,7 @@
                     </div>
 
                     <br>
-                    <span matBadge="{{prodCompany.productCompanyCodeList.length}}" matBadgeOverlap="false">
+                    <span matBadge="{{prodCompany.productCompanyCodes.length}}" matBadgeOverlap="false">
                       <span class="titlecomp">Company Code</span>
                     </span>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -518,7 +518,7 @@
                     </button>
 
                     <div class="marginbottom15px"
-                      *ngFor="let prodCompanyCd of prodCompany.productCompanyCodeList; let prodCompanyCodeIndex = index">
+                      *ngFor="let prodCompanyCd of prodCompany.productCompanyCodes; let prodCompanyCodeIndex = index">
 
                       <div class="form-row margintop10px">
                         <mat-form-field class="col-2">

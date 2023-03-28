@@ -176,7 +176,7 @@
         "suggest":null
     },
     "Product Code Adress":{
-        "lucenePath":"root_productCompanyList_companyAddress",
+        "lucenePath":"root_productCompanies_companyAddress",
         "description":"Product Code Adress",
         "type":"string",
         "cvDomain":null,
@@ -184,7 +184,7 @@
         "suggest":null
     },
     "Product Code City":{
-        "lucenePath":"root_productCompanyList_companyCity",
+        "lucenePath":"root_productCompanies_companyCity",
         "description":"Product Code City",
         "type":"string",
         "cvDomain":null,
@@ -192,7 +192,7 @@
         "suggest":null
     },
     "Product Code Code":{
-        "lucenePath":"root_productCompanyList_companyCode",
+        "lucenePath":"root_productCompanies_companyCode",
         "description":"Product Company Code",
         "type":"string",
         "cvDomain":null,
@@ -216,7 +216,7 @@
         "suggest":null
     },
     "Product Code Zipcode":{
-        "lucenePath":"root_productCompanyList_companyZip",
+        "lucenePath":"root_productCompanies_companyZip",
         "description":"Product Code zipcode",
         "type":"string",
         "cvDomain":null,
@@ -232,7 +232,7 @@
         "suggest":null
     },
     "Product Company Code Type":{
-        "lucenePath":"root_productCompanyList_companyCodeType",
+        "lucenePath":"root_productCompanies_companyCodeType",
         "description":"Product Company Code Type",
         "type":"string",
         "cvDomain":null,
@@ -240,7 +240,7 @@
         "suggest":null
     },
     "Product Company Country":{
-        "lucenePath":"root_productCompanyList_companyCountry",
+        "lucenePath":"root_productCompanies_companyCountry",
         "description":"Product Company Country",
         "type":"string",
         "cvDomain":null,
@@ -248,7 +248,7 @@
         "suggest":null
     },
     "Product Company Name":{
-        "lucenePath":"root_productCompanyList_companyName",
+        "lucenePath":"root_productCompanies_companyName",
         "description":"Product Company Name",
         "type":"string",
         "cvDomain":null,
@@ -256,7 +256,7 @@
         "suggest":null
     },
     "Product Company Role":{
-        "lucenePath":"root_productCompanyList_companyRole",
+        "lucenePath":"root_productCompanies_companyRole",
         "description":"Product Company Role",
         "type":"string",
         "cvDomain":null,
@@ -264,7 +264,7 @@
         "suggest":null
     },
     "Product Company State":{
-        "lucenePath":"root_productCompanyList_companyState",
+        "lucenePath":"root_productCompanies_companyState",
         "description":"Product Company State",
         "type":"string",
         "cvDomain":null,
@@ -488,7 +488,7 @@
         "suggest":null
     },
     "Product Term":{
-        "lucenePath":"root_productNames_productTermAndTermPartList_productTerm",
+        "lucenePath":"root_productNames_productTermAndParts_productTerm",
         "description":"Product Term",
         "type":"string",
         "cvDomain":null,
@@ -496,7 +496,7 @@
         "suggest":null
     },
     "Product Term Part":{
-        "lucenePath":"root_productNames_productTermAndTermPartList_productTermPart",
+        "lucenePath":"root_productNames_productTermAndParts_productTermPart",
         "description":"Product Term Part",
         "type":"string",
         "cvDomain":"PROD_TERM_PART",
