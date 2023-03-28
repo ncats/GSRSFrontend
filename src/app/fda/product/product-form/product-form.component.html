@@ -192,7 +192,7 @@
 
                   <!-- Name PART and TERM PART List -->
                   <div class="bkcolorlightblue"
-                    *ngFor="let prodNameTerm of prodName.productTermAndTermPartList; let prodNameTermIndex = index">
+                    *ngFor="let prodNameTerm of prodName.productTermAndParts; let prodNameTermIndex = index">
                     <div class="form-row">
                       <mat-form-field class="col-2">
                         <input matInput placeholder="Term" [(ngModel)]="prodNameTerm.productTerm" name="productTerm" />

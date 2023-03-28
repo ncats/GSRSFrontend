@@ -67,7 +67,7 @@
                 </td>
                 <td>{{ prodName.productNameType }}</td>
                 <td>
-                  <div *ngFor="let prodPart of prodName.productTermAndTermPartList; let indexPart = index">
+                  <div *ngFor="let prodPart of prodName.productTermAndParts; let indexPart = index">
                     <b>Term:</b>&nbsp;{{prodPart.productTerm}}
                     <b>Term Part:</b>&nbsp;&nbsp;{{prodPart.productTermPart}}<br><br>
                   </div>

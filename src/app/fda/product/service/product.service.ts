@@ -222,7 +222,7 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewProductName(): void {
-    const newProductName: ProductName = { productTermAndTermPartList: [] };
+    const newProductName: ProductName = { productTermAndParts: [] };
     this.product.productNames.unshift(newProductName);
   }
 
@@ -231,15 +231,15 @@ export class ProductService extends BaseHttpService {
   }
 
   addNewTermAndTermPart(prodNameIndex: number): void {
-    if (this.product.productNames[prodNameIndex].productTermAndTermPartList == null) {
-      this.product.productNames[prodNameIndex].productTermAndTermPartList = [];
+    if (this.product.productNames[prodNameIndex].productTermAndParts == null) {
+      this.product.productNames[prodNameIndex].productTermAndParts = [];
     }
     const newProductPartTerm: ProductTermAndPart = {};
-    this.product.productNames[prodNameIndex].productTermAndTermPartList.unshift(newProductPartTerm);
+    this.product.productNames[prodNameIndex].productTermAndParts.unshift(newProductPartTerm);
   }
 
   deleteTermAndTermPart(prodNameIndex: number, prodNameTermIndex: number): void {
-    this.product.productNames[prodNameIndex].productTermAndTermPartList.splice(prodNameTermIndex, 1);
+    this.product.productNames[prodNameIndex].productTermAndParts.splice(prodNameTermIndex, 1);
   }
 
   addNewProductCode(): void {

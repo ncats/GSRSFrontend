@@ -46,7 +46,7 @@ export interface ProductName {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  productTermAndTermPartList?: Array<ProductTermAndPart>;
+  productTermAndParts?: Array<ProductTermAndPart>;
 }
 
 export interface ProductTermAndPart {
