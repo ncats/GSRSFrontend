@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import * as moment from 'moment';
 import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { LoadingService } from '@gsrs-core/loading';
@@ -24,6 +25,8 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   iconSrcPath: string;
   message = '';
   isAdmin = false;
+  downloadJsonHref: any;
+  jsonFileName: string;
   subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -35,8 +38,8 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
-    public titleService: Title
-  ) { }
+    public titleService: Title,
+    public sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
@@ -66,7 +69,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         if (Object.keys(this.product).length > 0) {
 
           // Add title on the browser. Concatenate multiple Product Code
-          let prodCode = '';
+          /*let prodCode = '';
           this.product.productCodeList.forEach((elementProdCode, indexProdCode) => {
             if (elementProdCode != null) {
               if (elementProdCode.productCode) {
@@ -76,8 +79,8 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                 prodCode = prodCode.concat(elementProdCode.productCode);
               }
             }
-          });
-          this.titleService.setTitle(`Product ` + prodCode);
+          });*/
+          this.titleService.setTitle(`View Product ` + this.product.id);
 
           this.getSubstanceBySubstanceKey();
         }
@@ -91,11 +94,11 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
   getSubstanceBySubstanceKey() {
     if (this.product != null) {
-      this.product.productComponentList.forEach(elementComp => {
+      this.product.productManufactureItems.forEach(elementComp => {
         if (elementComp != null) {
-          elementComp.productLotList.forEach(elementLot => {
+          elementComp.productLots.forEach(elementLot => {
             if (elementLot != null) {
-              elementLot.productIngredientList.forEach(elementIngred => {
+              elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
                   // Get Substance Details, uuid, approval_id, substance name
                   if (elementIngred.substanceKey) {
@@ -128,47 +131,14 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-  /*
-  getSubstanceDetails() {
-    if (this.product != null) {
-      this.product.productComponentList.forEach(elementComp => {
-        if (elementComp != null) {
-          elementComp.productLotList.forEach(elementLot => {
-            if (elementLot != null) {
-              elementLot.productIngredientList.forEach(elementIngred => {
-                if (elementIngred != null) {
-                  // Get Ingredient Name
-                  if (elementIngred.bdnum) {
-                    this.productService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
-                      if (response) {
-                        if (response.substanceId) {
-                          elementIngred.substanceId = response.substanceId;
-                          elementIngred.ingredientName = response.name;
-                        }
-                      }
-                    });
-                  }
+  saveJSON(): void {
+    let json = this.product;
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
 
-                  // Get Basis of Strength
-                  if (elementIngred.basisOfStrengthBdnum) {
-                    this.productService.getSubstanceDetailsByBdnum(elementIngred.basisOfStrengthBdnum).subscribe(response => {
-                      if (response) {
-                        if (response.substanceId) {
-                          elementIngred.basisOfStrengthSubstanceId = response.substanceId;
-                          elementIngred.basisOfStrengthIngredientName = response.name;
-                        }
-                      }
-                    });
-                  }
-                }
-              });
-            }
-          });
-        }
-      });
-    }
+    const date = new Date();
+    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
-  */
 
   private handleSubstanceRetrivalError() {
     this.loadingService.setLoading(false);
@@ -186,6 +156,5 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
   }
-
 
 }

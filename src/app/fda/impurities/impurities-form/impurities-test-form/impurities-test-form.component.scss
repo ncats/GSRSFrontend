@@ -79,7 +79,7 @@
 
 .col-6-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-2-1 {
   width: calc((100% - 20px * 1) / 2);
@@ -88,16 +88,25 @@
 
 .col-2-1:last-child {
   margin-right: 0px;
-}  
+}
+
+.col-3-1 {
+  width: calc((100% - 25px * 2) / 3);
+  margin-right: 25px;
+}
+
+.col-3-1:last-child {
+  margin-right: 0px;
+}
 
 .col-5-1 {
-  width: calc((100% - 30px * 4) / 5); 
+  width: calc((100% - 30px * 4) / 5);
   margin-right: 30px;
 }
 
 .col-5-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-4-1 {
   width: calc((100% - 30px * 3) / 4);
@@ -106,7 +115,7 @@
 
 .col-4-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-4 {
   width: calc((100% - 20px) / (6/4));
@@ -115,7 +124,7 @@
 
 .col-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-5 {
   width: calc((100% - 10px) / (6/5));
@@ -124,7 +133,7 @@
 
 .col-5:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-5-more {
   width: calc((100% + 100px) / (6/5));
@@ -354,6 +363,10 @@ marginleftneg7px {
   width: 25%;
 }
 
+.width55percent {
+  width: 55%;
+}
+
 .width75percent {
   width: 75%;
 }
@@ -390,14 +403,14 @@ marginleftneg7px {
   float: left;
 }
 
-.disabled { 
-  cursor: not-allowed; 
-} 
-
-.disabledfield { 
+.disabled {
   cursor: not-allowed;
-  color: var(--regular-red-color); 
-} 
+}
+
+.disabledfield {
+  cursor: not-allowed;
+  color: var(--regular-red-color);
+}
 
 /* CV INPUT OVERWRITE WIDTH */
 .cvwidth {
@@ -419,7 +432,7 @@ marginleftneg7px {
 
   .mat-select-value {
     color: var(--regular-blue-color);
-  }  
+  }
 
   .mat-form-field-label {
     color: var(--mat-form-field-label-color) !important;
@@ -427,7 +440,7 @@ marginleftneg7px {
 
   .mat-form-field-underline {
     background-color: var(--mat-form-field-underline-bg-color) !important;
-  } 
+  }
 
   /*Focused: change color of label*/
   .mat-focused .mat-form-field-label {
@@ -437,15 +450,15 @@ marginleftneg7px {
   /*Focused: change color of underline*/
   .mat-form-field-ripple {
     background-color: var(--mat-form-field-focused-color) !important;;
-  } 
+  }
 
-  .mat-form-field-disabled .mat-form-field-underline 
-  { 
-    background-image: linear-gradient( to right, var(--img-linear-gradient-start-color) 0, var(--textarea-dark-border-color) 10%, var(--img-linear-gradient-color) 0 ) !important; 
+  .mat-form-field-disabled .mat-form-field-underline
+  {
+    background-image: linear-gradient( to right, var(--img-linear-gradient-start-color) 0, var(--textarea-dark-border-color) 10%, var(--img-linear-gradient-color) 0 ) !important;
     background-size: 1px 100% !important;
-    background-repeat: repeat-x !important; 
+    background-repeat: repeat-x !important;
     cursor: not-allowed;
-  } 
+  }
 
   .mat-form-field-disabled:hover {
     cursor: not-allowed;
@@ -454,7 +467,7 @@ marginleftneg7px {
   mat-hint {
     color: var(--regular-red-color) !important;
   }
-  
+
 }
 
 .errortext {
@@ -492,4 +505,17 @@ marginleftneg7px {
   padding-left: 30px;
   padding-top: 5px;
   padding-right: 5px;
+}
+
+.top-search {
+  border: 1px solid red;
+  width: 50px;
+  max-width: 50px;
+
+  ::ng-deep .mat-form-field {
+
+    .mat-form-field-label {
+      font-size: 16px;
+    }
+  }
 }

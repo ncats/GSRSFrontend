@@ -98,6 +98,22 @@
       "title": "Overview"
     },
     {
+      "card": "substance-dependencies-image",
+      "title": "Substance Dependencies",
+      "filters": [
+        {
+          "filterName": "exists",
+          "propertyToCheck": "references"
+        },
+        {
+          "filterName": "equals_in_array",
+          "propertyToCheck": "references",
+          "value": "SUBSTANCE IMAGE",
+          "propertyInArray": "tags"
+        }
+      ]
+    },
+    {
       "card": "fda-substance-product",
       "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
       "filters": [
@@ -607,6 +623,20 @@
   ],
   "facets": {
     "substances": {
+      "staging": [
+        "root_importmetadata_status",
+        "root_importmetadata_source",
+        "root_importmetadata_matchcount",
+        "root_importmetadata_matchkey",
+        "root_importmetadata_validationtype",
+        "root_importmetadata_validationmessage",
+        "Import Status",
+        "Source",
+        "Match Count",
+        "Match Key",
+        "Validation Type",
+        "Validation Message"
+        ],
       "default": [
         "Deprecated",
         "Record Status",
@@ -655,6 +685,7 @@
         {
           "category": "Default",
           "facets": [
+            "User List",
             "Deprecated",
             "Record Status",
             "Substance Class",
@@ -937,6 +968,7 @@
       ]
     },
     "applications": {
+      
       "default": [
         "Application Type",
         "Center",

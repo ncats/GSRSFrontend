@@ -48,7 +48,7 @@ export class ImpuritiesDetailsFormComponent implements OnInit {
 
   addNewIdentityCriteria() {
     const identityCriteria: IdentityCriteria = {};
-    this.impuritiesDetails.identityCriteriaList.unshift(identityCriteria);
+    this.impuritiesDetails.identityCriteriaList.push(identityCriteria);
   }
 
   confirmDeleteImpuritiesDetails() {

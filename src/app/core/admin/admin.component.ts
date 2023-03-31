@@ -29,6 +29,8 @@ export class AdminComponent implements OnInit {
         case 'cv': this.activeTab = 3; break;
         case 'jobs': this.activeTab = 4; break;
         case 'files': this.activeTab = 5; break;
+        case 'import': this.activeTab = 6; break;
+
         default: this.activeTab = 0; break;
     }
     });
@@ -59,6 +61,9 @@ export class AdminComponent implements OnInit {
       break;
       case 5:
         route = 'files';
+      break;
+      case 6:
+        route = 'import';
       break;
     }
     if (this.current !== 'jobs') {

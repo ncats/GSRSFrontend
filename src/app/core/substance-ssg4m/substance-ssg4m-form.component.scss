@@ -1,19 +1,23 @@
 .top-fixed {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    /*top: 64px; */
-    width: 100%;
-    background-color: var(--regular-white-color);
-    align-items: center;
-    /*justify-content: center;*/
-    box-shadow:     0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
-    z-index: 1001;
-    justify-content: flex-end;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  /*top: 64px; */
+  width: 100%;
+  background-color: var(--regular-white-color);
+  align-items: center;
+  /*justify-content: center;*/
+  box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
+  z-index: 1001;
+  justify-content: flex-end;
 }
 
 .top-fixed-top {
   top: 64px;
+}
+
+.zindex2000 {
+  z-index: 2000;
 }
 
 .actions-container {
@@ -42,7 +46,7 @@
 
 .form-header {
   // padding-bottom:20px;
-  font-weight:500;
+  font-weight: 500;
   font-size: 28px;
 }
 
@@ -69,11 +73,12 @@
   z-index: 1005;
 }
 
-mat-select-panel{
+mat-select-panel {
   z-index: 1005;
 }
 
-.admin-functions, .changeClass {
+.admin-functions,
+.changeClass {
   margin-bottom: -15px;
   margin-left: 30px;
   margin-right: 5px;
@@ -93,10 +98,11 @@ mat-select-panel{
 .advanced-features {
   z-index: 2000 !important;
 
-  display:flex;
+  display: flex;
   flex-direction: row;
   padding-left: 10px;
 }
+
 ::ng-deep .cdk-overlay-pane {
   margin-top: 20px !important;
 }
@@ -146,8 +152,8 @@ mat-select-panel{
       text-transform: uppercase;
       font-weight: 500;
       margin-right: 20px;
-      padding:10px;
-      border-radius:3px;
+      padding: 10px;
+      border-radius: 3px;
     }
   }
 
@@ -168,8 +174,8 @@ mat-select-panel{
 
 }
 
-.validate-button{
-  margin-left:15px;
+.validate-button {
+  margin-left: 15px;
 }
 
 .mat-expansion-panel-header-title {
@@ -196,7 +202,11 @@ mat-select-panel{
 
 .sub-header {
   font-weight: 400;
-  padding-right:5px;
+  padding-right: 5px;
+}
+
+.divflex {
+  display: flex;
 }
 
 .fontsize16px {
@@ -207,8 +217,12 @@ mat-select-panel{
   font-size: 20px;
 }
 
-.padall25px {
-  padding: 25px;
+.padall15px {
+  padding: 15px;
+}
+
+.padtop25px {
+  padding-top: 25px;
 }
 
 .padtop70px {
@@ -221,6 +235,10 @@ mat-select-panel{
 
 .margintop10px {
   margin-top: 10px;
+}
+
+.marginright75px {
+  margin-right: 75px;
 }
 
 .bordergray {
@@ -248,7 +266,7 @@ mat-select-panel{
   background-color: rgb(247, 247, 216);
 }
 
-::ng-deep .custom-menu{
+::ng-deep .custom-menu {
   margin-top: -12px;
   /*z-index: 4000;*/
 }
@@ -270,5 +288,14 @@ button.mat-menu-item:hover {
 
 /* tyler added as quick fix */
 app-substance-form-ssg4m-process-card button[color=primary] {
-    float: right;
+  float: right;
+}
+
+.ontopmessage {
+  position: relative;
+  z-index: 2000;
+}
+
+.main-container {
+  position: relative;
 }

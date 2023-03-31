@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpParameterCodec } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
 import { Observable, Subject, forkJoin, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
@@ -9,7 +9,23 @@ import { FacetHttpParams } from '@gsrs-core/facets-manager';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { Auth } from '@gsrs-core/auth';
 import { UserEditObject, UploadObject, DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
+class CustomEncoder implements HttpParameterCodec {
+  encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
 
+  encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
+}
 
  @Injectable({
   providedIn: 'root'
@@ -22,6 +38,8 @@ export class AdminService extends BaseHttpService {
   ) {
     super(configService);
   }
+
+  
 
   public fetchJobs(): Observable< any > {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
@@ -96,6 +114,7 @@ export class AdminService extends BaseHttpService {
         }
 
         public loadData(form: any) {
+          console.log(form);
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/load`;
           return this.http.post< any >(url, form);
         }
@@ -117,5 +136,124 @@ export class AdminService extends BaseHttpService {
 
         public getDownloadLink(name: string): string {
             return `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/files/${name}`;
+        }
+
+        public getAdapters(): Observable< UploadObject > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/adapters`;
+          return this.http.get< any >(`${url}`);
+        }
+
+       /* public putAdapter(file: any): Observable< Auth > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import`;
+          return this.http.put< any >(`${url}`, file);
+        }*/
+
+        public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
+          console.log(file);
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview?adapter=${adapter}`;
+          if (limit && limit !== 'all') {
+            url += "&limit=" + limit;
+          }
+          return this.http.put< any >(`${url}`, file);
+        }
+
+        public executeAdapter(id: string, file: any, adapter?: any): Observable< Auth > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@execute?adapter=${adapter}`;
+          return this.http.post< any >(`${url}`, file);
+        }
+
+        //http://localhost:8080/api/v1/substances/import(a446cea4-07ad-4a25-b117-c2e25fee9c9a)/@execute?adapter=SDF
+
+        public postAdapterFile(file: any, adapter?: string, entityType?: string): Observable< UploadObject > {
+          if (!entityType) {
+            entityType = 'ix.ginas.models.v1.Substance';
+          }
+          if (!adapter) {
+            adapter = 'SDF';
+          }
+          adapter = encodeURI(adapter);
+
+          console.log(adapter);
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import?adapter=${adapter}&entityType=${entityType}`;
+          console.log('posting to ' + url);
+
+          return this.http.post< any >(url, file);
+        }
+
+
+        public GetStagedData(index?: any) {
+          console.log(index);
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/data`;
+          if(index) {
+            url += `?skip=${index}`;
+          }
+          return this.http.get< any >(`${url}`);
+
+        }
+        public GetStagedRecord(id:string) {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}`;
+          
+          return this.http.get< any >(`${url}`);
+
+        }
+
+        public SearchStagedData(skip: any, facets?: any, term?: any) {
+          let params = new FacetHttpParams({encoder: new CustomEncoder()});
+          if (facets){
+            params = params.appendFacetParams(facets, true);
+
+          }
+          if (term) {
+            params = params.append('q',(term));
+          }
+
+          const options = {
+            params: params
+          };
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/search?skip=${skip}`;
+          
+          return this.http.get< any >(url, options);
+
+        }
+
+        public GetSingleUUID() {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/search?top=1`;
+          return this.http.get< any >(url);
+        }
+
+        public stagedRecordAction(id:string, record: string, action: string) {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/0/@act?matchedEntityId=${record}&view=internal&persistChangedObject=true`;
+          let toput = {};
+          if (action === 'create') {
+            toput = {
+              "processingActions": [
+                {
+                  "processingActionClass": "gsrs.dataexchange.processing_actions.CreateProcessingAction"
+                }
+              ]
+            };
+          } else if (action === 'merge') {
+            toput = {
+              "processingActions": [
+                {
+                        "parameters": {
+                  "MergeNames": true,
+                            "MergeCodes": true
+                  },
+                  "processingActionClass": "gsrs.dataexchange.processing_actions.MergeProcessingAction"
+                }
+              ]
+            }
+          } else if (action === 'ignore') {
+            toput = {
+              "processingActions": [
+                {
+                  "processingActionClass": "gsrs.dataexchange.processing_actions.RejectProcessingAction"
+                }
+              ]
+            }
+          }
+          return this.http.put< any >(url, toput);
+
         }
 }

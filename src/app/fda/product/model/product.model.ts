@@ -17,15 +17,25 @@ export interface Product {
   strengthCharacteristic?: string;
   countryCode?: string;
   language?: string;
+  provenance?: string;
+  provenanceProductId?: string;
+  provenanceDocumentId?: string;
+  deaschedule?: string;
+  marketingCategoryCode?: string;
+  marketingCategoryName?: string;
+  productUrl?: string;
+  shelfLife ?: string;
+  storageConditions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
-  productNameList?: Array<ProductName>;
-  productCodeList?: Array<ProductCode>;
-  productCompanyList?: Array<ProductCompany>;
-  productComponentList?: Array<ProductComponent>;
+  productNames?: Array<ProductName>;
+  productCodes?: Array<ProductCode>;
+  productCompanies?: Array<ProductCompany>;
+  productIndications?: Array<ProductIndication>;
+  productManufactureItems?: Array<ProductComponent>;
 }
 
 export interface ProductName {
@@ -36,7 +46,7 @@ export interface ProductName {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  productTermAndTermPartList?: Array<ProductTermAndPart>;
+  productTermAndParts?: Array<ProductTermAndPart>;
 }
 
 export interface ProductTermAndPart {
@@ -53,7 +63,7 @@ export interface ProductCode {
   id?: number;
   productCode?: string;
   productCodeType?: string;
-  countryCode?: string;
+  jurisdictions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -68,9 +78,41 @@ export interface ProductCompany {
   companyState?: string;
   companyZip?: string;
   companyCountry?: string;
+  companyGpsLatitude?: string;
+  companyGpsLongitude?: string;
+  companyGpsElevation?: string;
   companyRole?: string;
   companyCode?: string;
   companyCodeType?: string;
+  startMarketingDate?: string;
+  endMarketingDate?: string;
+  companyProductId?: string;
+  companyDocumentId?: string;
+  provenanceDocumentId?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  productCompanyCodes?: Array<ProductCompanyCode>;
+}
+
+export interface ProductCompanyCode {
+  id?: number;
+  companyCode?: string;
+  companyCodeType?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+}
+
+export interface ProductIndication {
+  id?: number;
+  Indication?: string;
+  indicationText?: string;
+  indicationCode?: string;
+  indicationCodeType?: string;
+  indicationGroup?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -86,28 +128,47 @@ export interface ProductComponent {
   charShape?: string;
   charNumFragments?: string;
   dosageForm?: string;
+  dosageFormCode?: string;
+  dosageFormCodeType?: string;
+  dosageFormNote?: string;
+  compositionNote?: string;
+  routeOfAdministration?: string;
   amount?: string;
   unit?: string;
-  manufactureCode?: string;
-  manufactureCodeType?: string;
+  provenanceManufactureItemId?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  productLotList?: Array<ProductLot>;
+  productManufacturers?: Array<ProductManufacturer>;
+  productLots?: Array<ProductLot>;
+}
+
+export interface ProductManufacturer {
+  id?: number;
+  manufacturerName?: string;
+  manufacturerRole?: string;
+  manufacturerCodeType?: string;
+  manufacturedItemCode?: string;
+  manufacturedItemCodeType?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
 }
 
 export interface ProductLot {
   id?: number;
   lotNo?: string;
   lotSize?: string;
+  lotType?: string;
   expiryDate?: Date;
   manufactureDate?: Date;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  productIngredientList?: Array<ProductIngredient>;
+  productIngredients?: Array<ProductIngredient>;
 }
 
 export interface ProductIngredient {
@@ -131,6 +192,11 @@ export interface ProductIngredient {
   releaseCharacteristic?: string;
   notes?: string;
   ingredientLocation?: string;
+  confidentialityCode?: string;
+  originalNumeratorNumber?: string;
+  originalNumeratorUnit?: string;
+  originalDenominatorNumber?: string;
+  originalDenominatorUnit?: string;
   reviewedBy?: string;
   reviewDate?: number;
   internalVersion?: number;
@@ -171,7 +237,7 @@ export interface ProductAll {
   productNameList?: Array<ProductName>;
   productCodeList?: Array<ProductCode>;
   productCompanyList?: Array<ProductCompany>;
-  productComponentList?: Array<ProductComponent>;
+  productManufactureItems?: Array<ProductComponent>;
   */
 }
 
