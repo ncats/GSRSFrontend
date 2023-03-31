@@ -203,6 +203,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
 
+      this.bulkSearchService.listEmitter.subscribe(result => {
+        this.userLists = result;
+      });
+
     });
     
     this.title.setTitle('Browse Substances');
@@ -409,7 +413,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
-    console.log('facet param update');
     this.pageIndex = 0;
     if (facetsUpdateEvent.deprecated && facetsUpdateEvent.deprecated === true) {
       this.showDeprecated = true;
@@ -458,8 +461,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   // for facets
   facetsLoaded(numFacetsLoaded: number) {
-    console.log('facetsLoaded');
-    console.log(this.rawFacets);
     if (numFacetsLoaded > 0) {
       this.processResponsiveness();
     } else {
@@ -540,12 +541,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.etag = pagingResponse.etag;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
-              
-           
-            let test: Facet =   {"$fetched": null, "name":"User List","values":[{"label":"ADMIN:testList1","count":3},{"label":"ADMIN:testList2","count":3}],"enhanced":true,"prefix":"","_self":"http://localhost:7081/api/v1/substances/search/@facets?defaultField=identifiers&wait=false&kind=ix.ginas.models.v1.Substance&skip=0&promoteSpecialMatches=true&fdim=10&includeFacets=true&qSkip=0&simpleSearchOnly=false&qTop=10&sideway=true&field=User+List&top=10&fskip=0&fetch=100&includeBreakdown=true&facet=Deprecated%2FNot+Deprecated&order=%24root_lastEdited"};
-          //  this.rawFacets.push(test);
-            console.log(this.rawFacets);
-
+            
           }
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
@@ -1201,21 +1197,20 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   addToList(): void {
-      let data = {view: 'add', etag: this.etag};
+      let data = {view: 'add', etag: this.etag, lists: this.userLists};
 
       
-      console.log(data);
       const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
-        width: '700px',
+        width: '800px',
         autoFocus: false,
               data: data
   
       });
-     // this.overlayContainer.style.zIndex = '1002';
+      this.overlayContainer.style.zIndex = '1002';
   
       const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
         if (response) {
-         // this.overlayContainer.style.zIndex = null;
+          this.overlayContainer.style.zIndex = null;
         }
       });
     }

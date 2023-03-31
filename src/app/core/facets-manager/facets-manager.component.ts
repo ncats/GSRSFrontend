@@ -326,6 +326,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               }
             });
           } else if (this._facetDisplayType === 'facetView' && this._facetViewCategorySelected !== 'All') {
+            console.log('type is facetview');
             if (this._configName && this._configName === 'substances') {
               this.facetsConfig['facetView'].forEach(categoryRow => {
                 const category = categoryRow['category'];
@@ -388,6 +389,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             newFacets.unshift(newFacets.splice(position, 1)[0]);
           }
         });
+        console.log(newFacets);
         this.facets = newFacets;
         this.setShowAdvancedFacetStates();
         this.facetsLoaded.emit(this.facets.length);
@@ -736,7 +738,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     console.log(data);
     const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
-      width: '800px',
+      width: '850px',
       autoFocus: false,
             data: data
 

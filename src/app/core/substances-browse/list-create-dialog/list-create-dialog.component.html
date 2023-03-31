@@ -1,4 +1,12 @@
+<div *ngIf = "newList" mat-dialog-header>
+    <h3>Create List from {{record._name}}</h3>
+</div>
+
 <div mat-dialog-content style = "margin: auto;margin-top: 39px;">
+    <div *ngIf = "newList">
+            <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /> &nbsp; &nbsp;
+            <button mat-flat-button color = "primary" (click) = "addList()">Add List</button>
+    </div>
 {{message}}
 </div>
 <div mat-dialog-actions>

@@ -484,7 +484,7 @@ export class BaseComponent implements OnInit, OnDestroy {
       data['activeName'] = list.split(':')[1];
     }
     const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
-      width: '800px',
+      width: '850px',
       autoFocus: false,
       data: data
 

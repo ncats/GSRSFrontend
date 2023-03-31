@@ -85,13 +85,7 @@
         </div>
         
       </div>
-      <span class = "middle-fill"></span>
-
-      <div class="mat-elevation-z2" >
-        <button mat-flat-button color="primary" (click)="createList()">
-            <span>Add to List</span>
-          </button>
-    </div>
+      
      
     </div>
     
@@ -268,9 +262,7 @@
           </div>
           <span class = "middle-fill"></span>
 
-          <button mat-raised-button style = "margin-right:50px;" color="primary" class="reset-facets-button" (click)="addToList()">
-            <span>Add to List</span>
-          </button>
+          
         </div>
 
         
@@ -326,10 +318,14 @@
         </mat-menu>
 
         <div class="export ">
+
           <button *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
             mat-button class="mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
+          <button *ngIf = "isLoggedIn" mat-raised-button style = "margin-left:30px;" color="primary" class="reset-facets-button" (click)="addToList()">
+              <span>Add to List</span>
+            </button>
         </div>
 
         <div class="break"></div>

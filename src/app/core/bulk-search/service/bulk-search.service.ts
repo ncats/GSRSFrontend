@@ -5,6 +5,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { BulkQuery } from '../bulk-query.model';
 import { BulkSearch } from '../bulk-search.model';
+import { Subject } from 'rxjs';
 
 @Injectable(
   { providedIn: 'root' }
@@ -14,6 +15,8 @@ export class BulkSearchService extends BaseHttpService {
 
   totalRecords: 0;
   baseHref: '';
+  public listEmitter = new Subject<any>();
+
 
   constructor(
     public http: HttpClient,
@@ -161,6 +164,12 @@ export class BulkSearchService extends BaseHttpService {
     // Add or remove keys from a list
     const url = this.apiBaseUrl + `substances/@userList/currentUser?keys=${list}&listName=${name}&operation=${operation}`;
     return this.http.put<any>(url, list);
+  }
+
+  editEtagBulkSearchLists(name: string, etag: string, operation: string) {
+    // Add or remove keys from a list
+    const url = this.apiBaseUrl + `substances/@userList/currentUser/etag/${etag}?listName=${name}&operation=${operation}`;
+    return this.http.put<any>(url, null);
   }
 
   deleteBulkSearchList(name: string) {
