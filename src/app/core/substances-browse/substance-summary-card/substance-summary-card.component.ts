@@ -297,6 +297,24 @@ openMessageDialog(message: string) {
     this.showLessCodes = !this.showLessCodes;
   }
 
+  createList() {
+    let send = {
+      'record': this.privateSubstance,
+      'newList': true
+    }
+
+    const dialogRef = this.dialog.open(ListCreateDialogComponent, {
+      minWidth: '25%',
+      maxWidth: '50%',
+      data: send
+    });
+    this.overlayContainer.style.zIndex = '1002';
+  
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
   addToList() {
     let exists = false;
     let toPut = "";
@@ -319,10 +337,9 @@ openMessageDialog(message: string) {
   }
 
   addCall(list: string) {
-    console.log(list);
     this.bulkSearchService.editKeysBulkSearchLists(this.selectedList, list, 'add').subscribe(response => {
-      console.log(response);
       this.openMessageDialog('Record successfully added');
+      
     }, error => {
       console.log(error);
       this.openMessageDialog('Failed to Add to List: error in console');

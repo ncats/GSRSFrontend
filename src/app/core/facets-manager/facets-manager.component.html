@@ -117,7 +117,7 @@
         </a>
         <span class = "middle-fill" *ngIf="facet.name === 'User List'"></span>
         <span *ngIf="facet.name === 'User List'">
-          <button mat-button mat-primary mat-flat-button color = "primary" class = "user-list-button" (click) = "editList()">View / Edit Lists</button>
+          <button mat-button mat-flat-button  class = "user-list-button" (click) = "editList()">View / Edit Lists</button>
         </span>
       </div>
       <div class="facet-actions" *ngIf="facetParams[facet.name] !== null">

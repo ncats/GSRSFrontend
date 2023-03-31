@@ -3,17 +3,25 @@
                 <mat-icon svgIcon="close"></mat-icon>
               </button>
     <div *ngIf = "view == 'all'" >
-        <H3>Saved Lists</H3>
+        <H3>Saved Lists {{setUser ? ' - ' + setUser : ''}}</H3>
+        <div>
+            <a *ngIf = "isAdmin" class = "link" (click) = "getUsers()">Other User's Lists</a>
+    </div>
     </div>
     <div *ngIf = "view == 'add'" >
             <H3>Add List</H3>
         </div>
-    <div *ngIf = "view == 'single'" >
+
+        <div *ngIf = "view == 'users'" >
+            <H3>Users</H3>
+        </div>
+    <div *ngIf = "view == 'single'" class = "single-header">
             <H3>Saved Lists: <span style = "font-weight:700;margin-left:10px;font-size:22px">{{activeName}}</span> 
                 
             </H3>
-            <div>
-                    <a class = "link" (click) = "view = 'all'">Return to lists view</a>
+            <div style = "width: 100%;display:flex;">
+                    <a class = "link" (click) = "view = 'all'">Return to lists view</a> <span class = "middle-fill"></span>
+                    <a class = "link" (click) = "browseView()">View list in browse page</a>
             </div>
         </div>
 </div>
@@ -24,8 +32,22 @@
            <div *ngIf = "!showAddButtons">
               <b style = "font-weight:500">Enter a list name to save browse results to</b>  <br/><br/>
             <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /> &nbsp; &nbsp;
-            <button mat-flat-button color = "primary" (click) = "addList()">Add List</button>
+            <button mat-flat-button color = "primary" (click) = "addList()">Add New List</button>
         </div>
+        <br/><br/>
+        <div *ngIf = "!showAddButtons">
+                <b style = "font-weight:500">Or select an existing list to append to</b>  <br/>
+                <mat-form-field *ngIf = 'userLists' class = "select-list">
+                        <mat-label>Select a List</mat-label>
+                        <mat-select [(ngModel)]="listName2" name="Add to List">
+                          <mat-option *ngFor="let list of userLists" [value]="list">
+                            {{list}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      &nbsp; &nbsp;
+            <button mat-flat-button color = "primary" (click) = "appendList()">Append to List</button>
+          </div>
         <div *ngIf = "showAddButtons && loading"> 
                 <div class = "loading-spinner" style="margin: auto;">
                         <mat-progress-spinner  [color]="accent" mode="indeterminate" diameter = "50" >
@@ -34,9 +56,28 @@
             </div>
           
         </div>
+        <div *ngIf = "view === 'users'">
+            <table mat-table matSort [dataSource]="users" *ngIf = "users.length > 0">
+                    <ng-container matColumnDef="identifier">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let list"> {{list.identifier}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="roles">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> ID </th>
+                                <td mat-cell *matCellDef="let list">  <span *ngFor = "let role of list.roles">{{role}} &nbsp; </span></td>
+                            </ng-container>
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef> View </th>
+                                <td mat-cell *matCellDef="let list"> <button mat-button (click) = "useUser(list.identifier)">View User Lists</button> </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+                
+            </table>
+      
+    </div>
 <div *ngIf = "view == 'all'">
     <div *ngIf = "lists.length == 0">
-        <button (click) = "demo()">click</button>
        <i>No lists were found</i>
     </div>
         <table mat-table matSort [dataSource]="lists" *ngIf = "lists.length > 0">
@@ -63,7 +104,7 @@
 </div>
 
 <div *ngIf = "view == 'single'" >
-        <table mat-table matSort [dataSource]="active.lists" *ngIf = "active.lists.length > 0">
+        <table mat-table matSort [dataSource]="filtered" *ngIf = "filtered.length > 0">
                 <ng-container matColumnDef="delete">
                         <th mat-header-cell *matHeaderCellDef> Delete </th>
                         <td mat-cell *matCellDef="let list"> <button mat-icon-button matTooltip="Delete draft" (click) = "deleteListEntry(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
@@ -88,6 +129,9 @@
                             <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
                 
             </table>
+            <mat-paginator [length]="active.lists && active.lists.length || 0" [pageSize]="pagesize" showFirstLastButtons="true" (page)="pageChange($event)"
+               [pageSizeOptions]="[5, 10, 25, 100, 250, 1000]">
+</mat-paginator>
 </div>
 
 <div class = "form-row">
