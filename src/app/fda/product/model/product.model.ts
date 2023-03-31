@@ -35,7 +35,7 @@ export interface Product {
   productCodes?: Array<ProductCode>;
   productCompanies?: Array<ProductCompany>;
   productIndications?: Array<ProductIndication>;
-  productComponentList?: Array<ProductComponent>;
+  productManufactureItems?: Array<ProductComponent>;
 }
 
 export interface ProductName {
@@ -137,7 +137,7 @@ export interface ProductComponent {
   modifiedBy?: string;
   modifyDate?: number;
   productManufacturers?: Array<ProductManufacturer>;
-  productLotList?: Array<ProductLot>;
+  productLots?: Array<ProductLot>;
 }
 
 export interface ProductManufacturer {
@@ -164,7 +164,7 @@ export interface ProductLot {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  productIngredientList?: Array<ProductIngredient>;
+  productIngredients?: Array<ProductIngredient>;
 }
 
 export interface ProductIngredient {
@@ -233,7 +233,7 @@ export interface ProductAll {
   productNameList?: Array<ProductName>;
   productCodeList?: Array<ProductCode>;
   productCompanyList?: Array<ProductCompany>;
-  productComponentList?: Array<ProductComponent>;
+  productManufactureItems?: Array<ProductComponent>;
   */
 }
 

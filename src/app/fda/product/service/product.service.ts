@@ -100,6 +100,11 @@ export class ProductService extends BaseHttpService {
     }
   }
 
+  getExportOptions(etag: string): Observable<any> {
+    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}`;
+    return this.http.get< any>(url);
+  }
+
   getApiExportUrl(etag: string, extension: string): string {
     // const url = `${this.configService.configData.apiBaseUrl}api/v1/productmainall/export/${etag}/${extension}`;
     const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}/${extension}`;
@@ -172,7 +177,7 @@ export class ProductService extends BaseHttpService {
         productCodes: [],
         productCompanies: [],
         productIndications: [],
-        productComponentList: []
+        productManufactureItems: []
       };
     }
   }
@@ -281,42 +286,42 @@ export class ProductService extends BaseHttpService {
   addNewProductComponent(): void {
     const newProductComponent: ProductComponent = {
       productManufacturers: [],
-      productLotList: [{
-        productIngredientList: [{}]
+      productLots: [{
+        productIngredients: [{}]
       }]
     };
-    this.product.productComponentList.unshift(newProductComponent);
+    this.product.productManufactureItems.unshift(newProductComponent);
   }
 
   deleteProductComponent(prodComponentIndex: number): void {
-    this.product.productComponentList.splice(prodComponentIndex, 1);
+    this.product.productManufactureItems.splice(prodComponentIndex, 1);
   }
 
   addNewProductManufacturer(prodComponentIndex: number): void {
     const newProductManu: ProductManufacturer = {};
-    this.product.productComponentList[prodComponentIndex].productManufacturers.unshift(newProductManu);
+    this.product.productManufactureItems[prodComponentIndex].productManufacturers.unshift(newProductManu);
   }
 
   deleteProductManufacturer(prodComponentIndex: number, prodManuIndex: number): void {
-    this.product.productComponentList[prodComponentIndex].productManufacturers.splice(prodManuIndex, 1);
+    this.product.productManufactureItems[prodComponentIndex].productManufacturers.splice(prodManuIndex, 1);
   }
 
   addNewProductLot(prodComponentIndex: number): void {
-    const newProductLot: ProductLot = { productIngredientList: [{}] };
-    this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProductLot);
+    const newProductLot: ProductLot = { productIngredients: [{}] };
+    this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProductLot);
   }
 
   deleteProductLot(prodComponentIndex: number, prodLotIndex: number): void {
-    this.product.productComponentList[prodComponentIndex].productLotList.splice(prodLotIndex, 1);
+    this.product.productManufactureItems[prodComponentIndex].productLots.splice(prodLotIndex, 1);
   }
 
   addNewProductIngredient(prodComponentIndex: number, prodLotIndex: number): void {
     const newProductIngredient: ProductIngredient = {};
-    this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProductIngredient);
+    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProductIngredient);
   }
 
   deleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number): void {
-    this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.splice(prodIngredientIndex, 1);
+    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.splice(prodIngredientIndex, 1);
   }
 
   copyProductComponent(productComp: any): void {
@@ -330,7 +335,7 @@ export class ProductService extends BaseHttpService {
     newProduct.createdBy = null;
     newProduct.lastModifiedDate = null;
 
-    newProduct.productLotList.forEach(elementLot => {
+    newProduct.productLots.forEach(elementLot => {
       if (elementLot != null) {
         elementLot.id = null;
         elementLot.internalVersion = null;
@@ -339,7 +344,7 @@ export class ProductService extends BaseHttpService {
         elementLot.modifiedBy = null;
         elementLot.lastModifiedDate = null;
 
-        elementLot.productIngredientList.forEach(elementIngred => {
+        elementLot.productIngredients.forEach(elementIngred => {
           if (elementIngred != null) {
             elementIngred.id = null;
             elementIngred.internalVersion = null;
@@ -352,7 +357,7 @@ export class ProductService extends BaseHttpService {
       }
     });
 
-    this.product.productComponentList.unshift(newProduct);
+    this.product.productManufactureItems.unshift(newProduct);
   }
 
 copyProductLot(productLot: any, prodComponentIndex: number): void {
@@ -364,7 +369,7 @@ copyProductLot(productLot: any, prodComponentIndex: number): void {
   newProduct.modifiedBy = null;
   newProduct.lastModifiedDate = null;
 
-  newProduct.productIngredientList.forEach(elementIngred => {
+  newProduct.productIngredients.forEach(elementIngred => {
     if (elementIngred != null) {
       elementIngred.id = null;
       elementIngred.createdBy = null;
@@ -374,7 +379,7 @@ copyProductLot(productLot: any, prodComponentIndex: number): void {
     }
   });
 
-  this.product.productComponentList[prodComponentIndex].productLotList.unshift(newProduct);
+  this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProduct);
 }
 
 copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
@@ -386,7 +391,7 @@ copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLo
   newProduct.modifiedBy = null;
   newProduct.lastModifiedDate = null;
 
-  this.product.productComponentList[prodComponentIndex].productLotList[prodLotIndex].productIngredientList.unshift(newProduct);
+  this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProduct);
 }
 
   /*

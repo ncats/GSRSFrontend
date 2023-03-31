@@ -64,7 +64,7 @@
     <br>
     <hr>
     <br>
-    <span matBadge="{{productLot.productIngredientList.length}}" matBadgeOverlap="false">
+    <span matBadge="{{productLot.productIngredients.length}}" matBadgeOverlap="false">
       <span class="titleorange">INGREDIENT </span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -75,9 +75,9 @@
     <br><br>
 
     <div class="marginbottom10px"
-      *ngFor="let productIngredient of productLot.productIngredientList; let prodIngredientIndex = index">
+      *ngFor="let productIngredient of productLot.productIngredients; let prodIngredientIndex = index">
       <app-product-ingredient-form [ingredient]="productIngredient"
-        [totalIngredient]="productLot.productIngredientList.length" [prodIngredientIndex]="prodIngredientIndex"
+        [totalIngredient]="productLot.productIngredients.length" [prodIngredientIndex]="prodIngredientIndex"
         [prodLotIndex]="prodLotIndex" [prodComponentIndex]="prodComponentIndex">
       </app-product-ingredient-form>
     </div>

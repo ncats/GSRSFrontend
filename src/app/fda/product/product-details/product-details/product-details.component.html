@@ -7,14 +7,31 @@
   <div class="details-container details-box margintop80px">
     <div class="divflexrow margintop20px">
       <div class="divflex">
+
         <div class="title">
-          Product Details &nbsp;&nbsp;&nbsp;&nbsp;
-          <!-- Edit GSRS record button -->
-          <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
-            matTooltip='Edit GSRS Product Record'>
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>
+          <div class="divflex">
+            <div>
+              Product Details &nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="margintopneg10px">
+              <!-- Download Json -->
+              <span *ngIf="product && product.id">
+                <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
+                  download="{{jsonFileName}}.json" matTooltip='Download JSON'>
+                  <mat-icon svgIcon="get_app"></mat-icon>
+                </a>&nbsp;
+              </span>
+            </div>
+            <div>
+              <!-- Edit GSRS record button -->
+              <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                matTooltip='Edit GSRS Product Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+            </div>
+          </div> <!-- flex -->
         </div>
+
         <div class="margintopneg10px">
           <!-- Copy Product to New Register -->
           <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
@@ -29,7 +46,7 @@
           </span>
         </div>
       </div>
-      <div class="width65percent textalignright font11px" *ngIf="product.id">
+      <div class="width60percent textalignright font11px" *ngIf="product.id">
         <span *ngIf="product.provenance" class="font12px colorred">
           Provenance: {{product.provenance}}
         </span>
@@ -590,13 +607,13 @@
   <div class="details-container margintop30px">
     <mat-card class="bordergray">
       <mat-card-title class="title2">
-        MANUFACTURE ITEM ({{product.productComponentList.length}})
+        MANUFACTURE ITEM ({{product.productManufactureItems.length}})
       </mat-card-title>
-      <div *ngIf="product.productComponentList.length > 0">
+      <div *ngIf="product.productManufactureItems.length > 0">
         <mat-card-content class="bordergray">
           <mat-tab-group>
             <mat-tab label="Manufacture item {{index + 1}}"
-              *ngFor="let prodComp of product.productComponentList; let index = index">
+              *ngFor="let prodComp of product.productManufactureItems; let index = index">
 
               <!-- Component/Manufacturing Begin -->
               <mat-card>
@@ -813,7 +830,7 @@
                   <br><br>
                   <mat-card class="bordergray">
                     <mat-card-content>
-                      <div *ngFor="let lot of prodComp.productLotList; let indexLot = index">
+                      <div *ngFor="let lot of prodComp.productLots; let indexLot = index">
                         <div class="title2">
                           <span class="colorgreen">LOT {{indexLot + 1}}</span>
                         </div>
@@ -874,11 +891,11 @@
                           <mat-card-title class="title2">
                             <span class="title3 colororange">
                               ACTIVE INGREDIENTS
-                              ({{lot.productIngredientList.length}})
+                              ({{lot.productIngredients.length}})
                             </span>
                           </mat-card-title>
                           <mat-card-content>
-                            <div *ngFor="let ingred of lot.productIngredientList; let indexIng = index">
+                            <div *ngFor="let ingred of lot.productIngredients; let indexIng = index">
                               <hr *ngIf="indexIng > 0">
                               <div class="row">
                                 <div class="row-property">

@@ -107,7 +107,7 @@
     <div class="cards-container">
       <div class="margintop10px" *ngIf="product">
         <div class="title_box">
-          <div class="width280px">
+          <div class="width290px">
             <span class="title">
               <b>{{title}}</b>
             </span>
@@ -616,7 +616,7 @@
                   <mat-panel-title>
                     <span class="font17px"><b>Manufacture Item
                         <span class="badge">
-                          {{(product.productComponentList.length)}}
+                          {{(product.productManufactureItems.length)}}
                         </span>
                         <mat-icon>arrow_right_alt</mat-icon> Lot
                         <mat-icon>arrow_right_alt</mat-icon> Ingredient
@@ -631,9 +631,9 @@
                   </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
+                <div *ngFor="let productComponent of product.productManufactureItems; let prodComponentIndex = index">
                   <app-product-component-form [productComponent]="productComponent"
-                    [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
+                    [totalComponent]="product.productManufactureItems.length" [prodComponentIndex]="prodComponentIndex"
                     (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
                     (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)">
                   </app-product-component-form>

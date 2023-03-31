@@ -84,7 +84,7 @@
     <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit" [model]="productComponent.unit"
       (valueChange)="productComponent.unit = $event">
     </app-cv-input>
-    
+
     <mat-form-field class="col-2-4">
       <input matInput placeholder="Provenance Manufacture Item ID"
         [(ngModel)]="productComponent.provenanceManufactureItemId" name="provenanceManufactureItemId" />
@@ -96,12 +96,12 @@
   <div class="">
     <br>
     <span matBadge="{{productComponent.productManufacturers.length}}" matBadgeOverlap="false">
-      <span class="titlebrown">Manufacture Item Code </span>
+      <span class="titlebrown">Manufacturer Item Code </span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-raised-button color="primary" (click)="addNewProductManufacturer(prodComponentIndex)"
       matTooltip="Add New Manufacturer">
-      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Manufacture Item Code
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Manufacturer Item Code
     </button>
     <br>
     <div class="marginbottom10px"
@@ -117,7 +117,7 @@
         </div>
       </div>
       <fieldset class="border">
-        <legend class="border">Manufacture Item Code&nbsp;<b>{{(prodManuIndex+1)}}</b>&nbsp;&nbsp;
+        <legend class="border">Manufacturer Item Code&nbsp;<b>{{(prodManuIndex+1)}}</b>&nbsp;&nbsp;
         </legend>
         <div class="form-row">
           <app-cv-input class="col-1-4" domain="PROD_COMPANY_ROLE" title="Manufacturer Role" name="manufacturerRole"
@@ -163,7 +163,7 @@
     <br>
     <hr>
     <br>
-    <span matBadge="{{productComponent.productLotList.length}}" matBadgeOverlap="false">
+    <span matBadge="{{productComponent.productLots.length}}" matBadgeOverlap="false">
       <span class="titlebrown">LOT </span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -171,10 +171,10 @@
       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Lot
     </button>
     <br>
-    <div *ngIf="productComponent.productLotList.length > 0">
+    <div *ngIf="productComponent.productLots.length > 0">
       <div class="marginbottom10px"
-        *ngFor="let productLot of productComponent.productLotList; let prodLotIndex = index">
-        <app-product-lot-form [productLot]="productLot" [totalLot]="productComponent.productLotList.length"
+        *ngFor="let productLot of productComponent.productLots; let prodLotIndex = index">
+        <app-product-lot-form [productLot]="productLot" [totalLot]="productComponent.productLots.length"
           [prodLotIndex]="prodLotIndex" [prodComponentIndex]="prodComponentIndex"
           (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
           (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)">

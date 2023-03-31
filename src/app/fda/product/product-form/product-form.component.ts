@@ -88,12 +88,15 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.id) {  //copy from existing Product
             this.gaService.sendPageView(`Register Product from Copy`);
             this.titleService.setTitle(`Register Product from Copy ` + this.id);
+            this.title = 'Register New Product from Copy Product ID ' + this.id;
             this.getProductDetails('copy');
           }
         } else if (this.activatedRoute.snapshot.queryParams['action']) {
           let actionParam = this.activatedRoute.snapshot.queryParams['action'];
           if (actionParam && actionParam === 'import' && window.history.state) {
             this.gaService.sendPageView(`Import Product`);
+            this.titleService.setTitle(`Register New Product from Import`);
+            this.title = 'Register New Product from Import';
             const record = window.history.state.record;
             const response = JSON.parse(record);
             if (response) {
@@ -230,13 +233,13 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Validate Ingredient Average, which should be integer/number
     if (this.product != null) {
-      this.product.productComponentList.forEach(elementComp => {
+      this.product.productManufactureItems.forEach(elementComp => {
         if (elementComp != null) {
-          elementComp.productLotList.forEach(elementLot => {
+          elementComp.productLots.forEach(elementLot => {
             if (elementLot != null) {
 
               // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
-              elementLot.productIngredientList.forEach(elementIngred => {
+              elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
                   if (elementIngred.average) {
                     if (this.isNumber(elementIngred.average) === false) {
@@ -379,11 +382,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   cleanProduct(): Product {
     let productStr = JSON.stringify(this.product);
     let productCopy: Product = JSON.parse(productStr);
-    productCopy.productComponentList.forEach(elementComp => {
+    productCopy.productManufactureItems.forEach(elementComp => {
       if (elementComp != null) {
-        elementComp.productLotList.forEach(elementLot => {
+        elementComp.productLots.forEach(elementLot => {
           if (elementLot != null) {
-            elementLot.productIngredientList.forEach(elementIngred => {
+            elementLot.productIngredients.forEach(elementIngred => {
               if (elementIngred != null) {
                 // remove property for Ingredient Name Validation. Do not need in the form JSON
                 if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {

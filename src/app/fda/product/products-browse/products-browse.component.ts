@@ -89,6 +89,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
   private isFacetsParamsInit = false;
+  exportOptions: Array<any>;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
 
@@ -234,9 +235,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.matchTypes.sort();
         // Narrow Suggest Search End
 
+        // Get list of Export extension options such as .xlsx, .txt
+        this.productService.getExportOptions(this.etag).subscribe(response => {
+          this.exportOptions = response;
+        });
+
         // Separate Application Type and Application Number in Product Result.
         this.separateAppTypeNumber();
-
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -421,13 +426,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
-  export() {
+  export(extension: string) {
     if (this.etag) {
-      const extension = 'xlsx';
-      const url = this.getApiExportUrl(this.etag, extension);
+      // const extension = 'xlsx';
+      const url1 = this.getApiExportUrl(this.etag, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-         // height: '215x',
+          // height: '215x',
           width: '700px',
           data: { 'extension': extension, 'type': 'BrowseProducts', 'entity': 'products', 'hideOptionButtons': true }
         });
@@ -439,8 +444,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-            // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.authService.startUserDownload(url1, this.privateExport, fullname, id).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
