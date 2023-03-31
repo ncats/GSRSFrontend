@@ -107,7 +107,7 @@
     <div class="cards-container">
       <div class="margintop10px" *ngIf="product">
         <div class="title_box">
-          <div class="width280px">
+          <div class="width290px">
             <span class="title">
               <b>{{title}}</b>
             </span>
@@ -473,6 +473,23 @@
                     </div>
 
                     <div class="form-row">
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company GPS Latitude" [(ngModel)]="prodCompany.companyGpsLatitude"
+                          name="companyGpsLatitude" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company GPS Longitude" [(ngModel)]="prodCompany.companyGpsLongitude"
+                          name="companyGpsLongitude" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company GPS Elevation" [(ngModel)]="prodCompany.companyGpsElevation"
+                          name="companyGpsElevation" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
                       <app-cv-input class="col-3" domain="PROD_COUNTRY_CODE" title="Company Country"
                         name="companyCountry" [model]="prodCompany.companyCountry"
                         (valueChange)="prodCompany.companyCountry = $event">
@@ -616,7 +633,7 @@
                   <mat-panel-title>
                     <span class="font17px"><b>Manufacture Item
                         <span class="badge">
-                          {{(product.productComponentList.length)}}
+                          {{(product.productManufactureItems.length)}}
                         </span>
                         <mat-icon>arrow_right_alt</mat-icon> Lot
                         <mat-icon>arrow_right_alt</mat-icon> Ingredient
@@ -631,9 +648,9 @@
                   </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div *ngFor="let productComponent of product.productComponentList; let prodComponentIndex = index">
+                <div *ngFor="let productComponent of product.productManufactureItems; let prodComponentIndex = index">
                   <app-product-component-form [productComponent]="productComponent"
-                    [totalComponent]="product.productComponentList.length" [prodComponentIndex]="prodComponentIndex"
+                    [totalComponent]="product.productManufactureItems.length" [prodComponentIndex]="prodComponentIndex"
                     (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
                     (manufactureDateMessageOut)="manufactureDateMessageOutChange($event)">
                   </app-product-component-form>

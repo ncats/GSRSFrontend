@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { LoadingService } from '@gsrs-core/loading';
 import { Title } from '@angular/platform-browser';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -28,10 +29,11 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public authService: AuthService,
-    titleService: Title
+    titleService: Title,
+    public sanitizer: DomSanitizer
   ) {
     super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, titleService);
+      router, gaService, utilsService, titleService, sanitizer);
   }
 
   ngOnInit() {

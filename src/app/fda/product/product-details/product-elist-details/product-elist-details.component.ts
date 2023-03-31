@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingService } from '@gsrs-core/loading';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Title } from '@angular/platform-browser';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
@@ -35,10 +36,11 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
     public configService: ConfigService,
-    titleService: Title
+    titleService: Title,
+    public sanitizer: DomSanitizer
   ) {
     super(producService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, titleService);
+      router, gaService, utilsService, titleService, sanitizer);
   }
 
   ngOnInit() {

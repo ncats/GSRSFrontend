@@ -130,11 +130,29 @@
         </mat-form-field>
 
         <!-- Export Product Button -->
+        <!---
         <div class="export" *ngIf="isAdmin">
           <button matTooltip="Export Search Results" mat-button (click)="export()"
             class="mat-button export-button mat-raised-button">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
+        </div>
+        -->
+
+        <div class="export" *ngIf="isAdmin">
+          <mat-menu #exportMenu="matMenu">
+            <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.extension)">
+              {{option.displayname}}
+            </a>
+          </mat-menu>
+
+          <div class="export ">
+            <button *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
+              mat-button class="mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
+              <mat-icon svgIcon="get_app"></mat-icon> Export
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+          </div>
         </div>
 
         <div class="break"></div>
