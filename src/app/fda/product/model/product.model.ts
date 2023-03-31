@@ -78,6 +78,9 @@ export interface ProductCompany {
   companyState?: string;
   companyZip?: string;
   companyCountry?: string;
+  companyGpsLatitude?: string;
+  companyGpsLongitude?: string;
+  companyGpsElevation?: string;
   companyRole?: string;
   companyCode?: string;
   companyCodeType?: string;
@@ -129,6 +132,7 @@ export interface ProductComponent {
   dosageFormCodeType?: string;
   dosageFormNote?: string;
   compositionNote?: string;
+  routeOfAdministration?: string;
   amount?: string;
   unit?: string;
   provenanceManufactureItemId?: string;

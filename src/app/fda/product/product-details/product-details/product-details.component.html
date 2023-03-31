@@ -477,12 +477,42 @@
             <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
+                  Company GPS Latitude:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyGpsLatitude }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company GPS Longitude:
+                </div>
+                <div class="row-property-value">
+                  {{x.companyGpsLongitude}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company GPS Elevation:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyGpsElevation }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
                   Company Country:
                 </div>
                 <div class="row-property-value">
                   {{ x.companyCountry }}
                 </div>
               </div>
+            </div>
+
+            <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
                   Start Marketing Date:
@@ -491,9 +521,6 @@
                   {{x.startMarketingDate}}
                 </div>
               </div>
-            </div>
-
-            <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
                   Company Product ID:
@@ -502,6 +529,9 @@
                   {{x.companyProductId}}
                 </div>
               </div>
+            </div>
+
+            <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
                   End Marketing Date:
@@ -723,6 +753,17 @@
                         {{prodComp.charShape}}
                       </div>
                     </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Route of Administration:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.routeOfAdministration}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
                     <div class="row-property">
                       <div class="row-property-key">
                         Provenance Manufacture Item ID:

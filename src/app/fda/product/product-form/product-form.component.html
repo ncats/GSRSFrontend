@@ -473,6 +473,23 @@
                     </div>
 
                     <div class="form-row">
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company GPS Latitude" [(ngModel)]="prodCompany.companyGpsLatitude"
+                          name="companyGpsLatitude" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company GPS Longitude" [(ngModel)]="prodCompany.companyGpsLongitude"
+                          name="companyGpsLongitude" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Company GPS Elevation" [(ngModel)]="prodCompany.companyGpsElevation"
+                          name="companyGpsElevation" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
                       <app-cv-input class="col-3" domain="PROD_COUNTRY_CODE" title="Company Country"
                         name="companyCountry" [model]="prodCompany.companyCountry"
                         (valueChange)="prodCompany.companyCountry = $event">

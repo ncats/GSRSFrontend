@@ -85,7 +85,11 @@
       (valueChange)="productComponent.unit = $event">
     </app-cv-input>
 
-    <mat-form-field class="col-2-4">
+    <app-cv-input class="col-1-4" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration" name="routeOfAdministration"
+      [model]="productComponent.routeOfAdministration" (valueChange)="productComponent.routeOfAdministration = $event">
+    </app-cv-input>
+
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Provenance Manufacture Item ID"
         [(ngModel)]="productComponent.provenanceManufactureItemId" name="provenanceManufactureItemId" />
     </mat-form-field>
@@ -172,8 +176,7 @@
     </button>
     <br>
     <div *ngIf="productComponent.productLots.length > 0">
-      <div class="marginbottom10px"
-        *ngFor="let productLot of productComponent.productLots; let prodLotIndex = index">
+      <div class="marginbottom10px" *ngFor="let productLot of productComponent.productLots; let prodLotIndex = index">
         <app-product-lot-form [productLot]="productLot" [totalLot]="productComponent.productLots.length"
           [prodLotIndex]="prodLotIndex" [prodComponentIndex]="prodComponentIndex"
           (expiryDateMessageOut)="expiryDateMessageOutChange($event)"
