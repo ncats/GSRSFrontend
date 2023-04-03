@@ -1450,7 +1450,7 @@
       "processingMaterials": "Solvents and Catalysts"
     },
     "settingsDisplay": {
-      "references": "simple",
+      "references": "advanced",
       "process": {
         "processName": "simple",
         "processRole": "advanced",
@@ -1519,7 +1519,10 @@
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "advanced",
+        "acceptanceCriteria": "advanced",
+        "amount": "advanced"
       }
     }
   }

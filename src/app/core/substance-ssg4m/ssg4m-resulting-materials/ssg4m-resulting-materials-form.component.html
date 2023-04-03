@@ -76,26 +76,6 @@
 
 
   <div class="form-row">
-    <mat-form-field class="col"
-      *ngIf="configSettingsDisplay['acceptanceCriteria'] || (configSettingsDisplay['acceptanceCriteria'] === undefined && true)">
-      <input matInput placeholder="Acceptance Criteria" [(ngModel)]="resultingMaterial.acceptanceCriteria"
-        name="resultingMaterial.acceptanceCriteria" />
-    </mat-form-field>
-
-    <app-cv-input class="col"
-      *ngIf="configSettingsDisplay['acceptanceCriteriaType'] || (configSettingsDisplay['acceptanceCriteriaType'] === undefined && true)"
-      domain="SSG_ACCEPTANCE_CRITERIA_TYPE" title="Acceptance Criteria Type"
-      [model]="resultingMaterial.acceptanceCriteriaType" (valueChange)="updateAcceptanceCriteriaType($event)">
-    </app-cv-input>
-
-    <!--
-    <app-cv-input class="col"
-      *ngIf="configSettingsDisplay['specificationType'] || (configSettingsDisplay['specificationType'] === undefined && true)"
-      domain="SSG_SPECIFICATION_TYPE" required='true' title="Specification Type"
-      [model]="resultingMaterial.specificationType" (valueChange)="updateSpecificationType($event)">
-    </app-cv-input>
-    -->
-
     <app-cv-input class="col"
       *ngIf="configSettingsDisplay['substanceGrade'] || (configSettingsDisplay['substanceGrade'] === undefined && true)"
       domain="SSG_SUBSTANCE_GRADE" title="Substance Grade" [model]="resultingMaterial.substanceGrade"
@@ -103,8 +83,46 @@
     </app-cv-input>
   </div>
 
+
+  <!-- Acceptance Criteria Add button -->
+  <div
+    *ngIf="configSettingsDisplay['acceptanceCriteria'] || (configSettingsDisplay['acceptanceCriteria'] === undefined && true)">
+    <br>
+    <b>Acceptance Criterias: </b>
+    <button mat-raised-button color="primary" class="" matTooltip="Add Acceptance Criteria"
+      (click)="addAcceptanceCriteria(processIndex, siteIndex, stageIndex)">
+      <mat-icon>add_circle_outline</mat-icon>Add Acceptance Criteria
+    </button>
+
+    <!-- Acceptance Criteria Loop -->
+    <div *ngIf="resultingMaterial.acceptanceCriterias != null">
+      <div class="marginbottom10px"
+        *ngFor="let acceptanceCriteria of resultingMaterial.acceptanceCriterias; let acceptanceIndex = index">
+        <div class="form-row">
+          <mat-form-field class="col">
+            <input matInput placeholder="Acceptance Criteria" [(ngModel)]="acceptanceCriteria.acceptanceCriteria"
+              name="resultingMaterial.acceptanceCriteria" />
+          </mat-form-field>
+
+          <app-cv-input class="col" domain="SSG_ACCEPTANCE_CRITERIA_TYPE" title="Acceptance Criteria Type"
+            [model]="acceptanceCriteria.acceptanceCriteriaType"
+            (valueChange)="updateAcceptanceCriteriaType($event, acceptanceIndex)">
+          </app-cv-input>
+
+          <div class="button-delete">
+            <button mat-icon-button matTooltip="Delete Manufacturer Details{{(acceptanceIndex+1)}}"
+              (click)="confirmDeleteAcceptanceCriteria(acceptanceIndex)">
+              <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+            </button>
+          </div>
+        </div>
+      </div> <!-- loop Acceptance Criteria -->
+    </div>
+  </div> <!-- Config -->
+
+
   <div class="form-row">
-    <div class='col'>
+    <div class='col' *ngIf="configSettingsDisplay['amount'] || (configSettingsDisplay['amount'] === undefined && showAdvancedSettings)">
       <div class="label amt-label">
         Amount
         <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
@@ -117,6 +135,7 @@
         </div>
       </div>
     </div>
+
 
     <!-- Specification Type -->
     <!--

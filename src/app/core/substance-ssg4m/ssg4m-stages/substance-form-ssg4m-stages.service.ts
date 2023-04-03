@@ -117,6 +117,17 @@ export class SubstanceFormSsg4mStagesService extends SubstanceFormServiceBase<Ar
     this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].processingMaterials[processingMaterialIndex].acceptanceCriterias);
   }
 
+  addResultingAcceptanceCriteria(processIndex: number, siteIndex: number, stageIndex: number, resultingMaterialIndex: number): void {
+    const newAcceptanceCriteria: SpecifiedSubstanceG4mAcceptanceCriteria = {};
+
+    if (this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials[resultingMaterialIndex].acceptanceCriterias == null) {
+      this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials[resultingMaterialIndex].acceptanceCriterias = [];
+    }
+
+    this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials[resultingMaterialIndex].acceptanceCriterias.push(newAcceptanceCriteria);
+    this.propertyEmitter.next(this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages[stageIndex].resultingMaterials[resultingMaterialIndex].acceptanceCriterias);
+  }
+
   addStage(processIndex: number, siteIndex: number): void {
     const stageIndex = this.substance.specifiedSubstanceG4m.process[processIndex].sites[siteIndex].stages.length - 1;
     const newStageIndex = (stageIndex + 2).toString();

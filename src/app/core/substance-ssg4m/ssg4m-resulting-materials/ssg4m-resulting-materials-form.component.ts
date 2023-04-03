@@ -164,6 +164,10 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  addAcceptanceCriteria(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addResultingAcceptanceCriteria(processIndex, siteIndex, stageIndex, this.resultingMaterialIndex);
+  }
+
   confirmDeleteResultingMaterial() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delele Resulting Material ' + (this.resultingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
