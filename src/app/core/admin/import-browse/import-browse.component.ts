@@ -577,7 +577,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
           
           pagingResponse.content.forEach(entry => {
-            this.getRecord(entry.recordId).subscribe(response => {
+            this.getRecord(entry._metadata.recordId).subscribe(response => {
               this.substances.push(response);
               this.records.push(response);
             });

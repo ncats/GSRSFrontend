@@ -150,16 +150,27 @@ export class AdminService extends BaseHttpService {
 
         public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
           console.log(file);
-          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview?adapter=${adapter}`;
-          if (limit && limit !== 'all') {
-            url += "&limit=" + limit;
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview`;
+         if (limit && limit !== 'all') {
+            url += "?limit=" + limit;
           }
           return this.http.put< any >(`${url}`, file);
         }
 
-        public executeAdapter(id: string, file: any, adapter?: any): Observable< Auth > {
+        public executeAdapter(id: string, file: any, adapter?: any): Observable< any > {
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@execute?adapter=${adapter}`;
           return this.http.post< any >(`${url}`, file);
+        }
+
+        public executeAdapterAsync(id: string, file: any, adapter?: any): Observable< any > {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@executeasync?skipIndexing=true&adapter=${adapter}`;
+          return this.http.post< any >(`${url}`, file);
+        }
+
+        public processingstatus(id: any) {
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/processingstatus(${id})`;
+          return this.http.get< any >(`${url}`);
+
         }
 
         //http://localhost:8080/api/v1/substances/import(a446cea4-07ad-4a25-b117-c2e25fee9c9a)/@execute?adapter=SDF
@@ -173,16 +184,13 @@ export class AdminService extends BaseHttpService {
           }
           adapter = encodeURI(adapter);
 
-          console.log(adapter);
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import?adapter=${adapter}&entityType=${entityType}`;
-          console.log('posting to ' + url);
 
           return this.http.post< any >(url, file);
         }
 
 
         public GetStagedData(index?: any) {
-          console.log(index);
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/data`;
           if(index) {
             url += `?skip=${index}`;
@@ -254,6 +262,32 @@ export class AdminService extends BaseHttpService {
             }
           }
           return this.http.put< any >(url, toput);
+
+        }
+
+        public stagedRecordMultiAction(id:string, record: string, action: string) {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
+          let toput = {
+            stagingAreaRecords: [
+              {'id': record}
+            ],
+              "processingActions": [
+                {
+                  "parameters": {
+
+                  }, "processingActionName": action
+                }
+              ]
+            }
+         
+          return this.http.put< any >(url, toput);
+
+        }
+
+        public updateStagingArea(id: string, substance: any) {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}/@update`;
+
+          return this.http.put< any >(url, substance);
 
         }
 }
