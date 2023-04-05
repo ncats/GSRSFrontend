@@ -30,6 +30,9 @@ export class ImportDialogComponent implements OnInit {
         "lang": "",
         "referenceUUIDs": []
     }; 
+    noteActions: any = {
+      "note":""
+    }; 
     settingTypes = ["Create Name Action", "Create Code Action", "Create Property Action", "Create Note Action"];
   constructor(
     public cvService: ControlledVocabularyService,
@@ -60,6 +63,9 @@ export class ImportDialogComponent implements OnInit {
       } else if (action.value == "Create Property Action") {
         this.settingsActive.actionParameters = this.propertyActions;
         this.settingsActive.actionName = 'property_import';
+      }else if (action.value == "Create Note Action") {
+        this.settingsActive.actionParameters = this.noteActions;
+        this.settingsActive.actionName = 'note_import';
       }
       this.settingsActive.label = action.value;
   //  }

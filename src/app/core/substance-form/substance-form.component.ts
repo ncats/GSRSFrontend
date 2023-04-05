@@ -39,6 +39,7 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
 import { UtilsService } from '@gsrs-core/utils';
 import { ungzip, deflate, inflate } from 'pako';
 import { Buffer } from 'buffer';
+import { AdminService } from '@gsrs-core/admin/admin.service';
 
 
 @Component({
@@ -904,10 +905,27 @@ getDrafts() {
     );
   }
 
+  submitStaging() {
+    this.substanceFormService.submitStaging(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.validationMessages = null;
+      this.showSubmissionMessages = false;
+      this.submissionMessage = '';
+      if (!this.id) {
+        this.id = response.uuid;
+      }
+      this.openSuccessDialog('staging');
+    })
+  }
+
   submit(): void {
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
+    if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+      this.submitStaging();
+    } else {
     this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -937,6 +955,8 @@ getDrafts() {
         }, 8000);
       }
     });
+         
+  }
   }
 
   dismissValidationMessage(index: number) {
@@ -1122,16 +1142,18 @@ getDrafts() {
   }
 
   openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {});
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {data: {'type':type}});
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view' | 'staging') => {
 
       this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
       } else if (response === 'browse') {
         this.router.navigate(['/browse-substance']);
+      } else if (response === 'staging') {
+        this.router.navigate(['/staging-area']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
       } else {
@@ -1141,11 +1163,15 @@ getDrafts() {
         }
         this.showSubmissionMessages = true;
         this.validationResult = false;
-        setTimeout(() => {
-          this.showSubmissionMessages = false;
-          this.submissionMessage = '';
-          this.router.navigate(['/substances', this.id, 'edit']);
-        }, 3000);
+        if (type && type === 'staging') {
+          this.submissionMessage = 'Edits to staged substance were saved successfully';
+        } else {
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = '';
+            this.router.navigate(['/substances', this.id, 'edit']);
+          }, 3000);
+        }
       }
     });
     this.subscriptions.push(dialogSubscription);

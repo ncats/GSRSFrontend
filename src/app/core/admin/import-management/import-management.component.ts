@@ -43,6 +43,10 @@ previewLimitList = [1, 10, 100, 'all'];
 toIgnore = [];
 fieldList: Array<any>;
 extension: string;
+executeStatus: string;
+executeID:string;
+completedRecords: any;
+executeLoading = false;
 constructor(
   public formBuilder: FormBuilder,
   public adminService: AdminService,
@@ -227,8 +231,12 @@ ngOnInit() {
     this.loadingService.setLoading(true);
     this.step = 4;
     let tosend = JSON.parse(JSON.stringify(this.postResp));
-    this.adminService.executeAdapter(this.fileID, tosend, this.adapterKey ).subscribe(response => {
+    this.adminService.executeAdapterAsync(this.fileID, tosend, this.adapterKey ).subscribe(response => {
+      this.executeStatus = response.jobStatus;
       this.loadingService.setLoading(false);
+      this.executeLoading = true;
+
+      this.processingstatus(response.id);
     }, error => {
       this.loadingService.setLoading(false);
       console.log(error);
@@ -237,6 +245,24 @@ ngOnInit() {
     });
 
   }
+
+  processingstatus(id: string): void {
+    this.adminService.processingstatus(id).subscribe(response => {
+      this.executeStatus = response.statusMessage;
+      this.completedRecords = response.completedRecordCount;
+      if (response.jobStatus === 'completed') {
+        this.executeLoading = false;
+      } else {
+        setTimeout(() => {
+          this.processingstatus(id);
+        }, 200);
+      }
+     
+
+    });
+  }
+
+
 
 
 onFileSelect(event): void {
