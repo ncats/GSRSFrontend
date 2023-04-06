@@ -138,7 +138,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   idMapping: Array< any > = [];
   demoResp: any;
   matches: Array<any>;
-  dummyUUID: string;
 
 
 
@@ -192,9 +191,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.substances = [];
     this.records = [];
-    this.adminService.GetSingleUUID().subscribe(response => {
-      this.dummyUUID =response.content[0].uuid;
-    });
      
     this.gaService.sendPageView('Staging Area');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {

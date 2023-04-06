@@ -265,11 +265,11 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public stagedRecordMultiAction(id:string, record: string, action: string) {
+        public stagedRecordMultiAction(id:string, action: string) {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
           let toput = {
             stagingAreaRecords: [
-              {'id': record}
+              {'id': id}
             ],
               "processingActions": [
                 {

@@ -89,14 +89,6 @@ export class ImportSummaryComponent implements OnInit {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
-  @Input()
-  set dummyID(dummyID: any) {
-    this.privateDummyID = dummyID;
-  }
-
-  get dummyID(): any {
-    return this.privateDummyID;
-  }
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -230,9 +222,7 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   doAction(action: string, mergeID?: string) {
-    if (!mergeID) {
-      mergeID = this.privateDummyID;
-    }
+ 
     this.displayAction = action;
     this.loadingService.setLoading(true);
     this.adminService.stagedRecordMultiAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
