@@ -163,7 +163,7 @@ export class AdminService extends BaseHttpService {
         }
 
         public executeAdapterAsync(id: string, file: any, adapter?: any): Observable< any > {
-          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@executeasync?skipIndexing=true&adapter=${adapter}`;
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@executeasync?adapter=${adapter}`;
           return this.http.post< any >(`${url}`, file);
         }
 
@@ -265,11 +265,11 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public stagedRecordMultiAction(id:string, record: string, action: string) {
+        public stagedRecordMultiAction(id:string, action: string) {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
           let toput = {
             stagingAreaRecords: [
-              {'id': record}
+              {'id': id}
             ],
               "processingActions": [
                 {
