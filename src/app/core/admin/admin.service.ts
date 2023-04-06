@@ -163,7 +163,7 @@ export class AdminService extends BaseHttpService {
         }
 
         public executeAdapterAsync(id: string, file: any, adapter?: any): Observable< any > {
-          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@executeasync?skipIndexing=true&adapter=${adapter}`;
+          const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@executeasync?adapter=${adapter}`;
           return this.http.post< any >(`${url}`, file);
         }
 

@@ -235,7 +235,7 @@ export class ImportSummaryComponent implements OnInit {
     }
     this.displayAction = action;
     this.loadingService.setLoading(true);
-    this.adminService.stagedRecordMultiAction(this.privateSubstance._metadata.recordId, mergeID, action).subscribe(result => {
+    this.adminService.stagedRecordMultiAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
       this.doneAction.emit(this.privateSubstance.uuid);
       this.loadingService.setLoading(false);
       this.message = "Record " + action + "  successful";
