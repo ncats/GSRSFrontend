@@ -48,6 +48,15 @@
     </app-cv-input>
   </div>
 
+  <div class="form-row"
+    *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
+    <div class="">&nbsp;</div>
+    <mat-form-field class="col-1-1">
+      <textarea matInput placeholder="Comments" [(ngModel)]="startingMaterial.comments" name="startingMaterial.comments"
+        rows="1"></textarea>
+    </mat-form-field>
+  </div> <!-- form-row-->
+
 
   <!-- Acceptance Criteria Add button -->
   <div
@@ -138,7 +147,7 @@
 
 
   <div class="form-row">
-    <div class='col'
+    <div class='col margintop10px'
       *ngIf="configSettingsDisplay['amount'] || (configSettingsDisplay['amount'] === undefined && showAdvancedSettings)">
       <div class="label amt-label">
         Amount
@@ -154,7 +163,7 @@
     </div>
 
     <!-- Specification Type -->
-    <div
+    <div class="margintop10px"
       *ngIf="configSettingsDisplay['specificationReference'] || (configSettingsDisplay['specificationReference'] === undefined && showAdvancedSettings)">
       <div class="col" *ngIf="!startingMaterial.specificationReference">
         <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
@@ -197,14 +206,5 @@
       <app-domain-references [referencesUuids]="startingMaterial.references" #references></app-domain-references>
     </div>
   </div>
-
-  <div class="form-row"
-    *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
-    <div class="">&nbsp;</div>
-    <mat-form-field class="col-1-1">
-      <textarea matInput placeholder="Comments" [(ngModel)]="startingMaterial.comments" name="startingMaterial.comments"
-        rows="1"></textarea>
-    </mat-form-field>
-  </div> <!-- form-row-->
 
 </div>

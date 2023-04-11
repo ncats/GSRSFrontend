@@ -24,6 +24,7 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
   relatedSubstanceUuid: string;
   configSsg4Form: any;
   public configSettingsDisplay = {};
+  public parentSubstanceHeader = 'Parent Substance';
   private subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -41,7 +42,12 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
     this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
     let configTitle = 'Search or Register a New Substance';
     if (this.configSsg4Form) {
-      configTitle = this.configSsg4Form.titles.parentSubstance || null;
+      if (this.configSsg4Form.titles.parentSubstance) {
+        configTitle = this.configSsg4Form.titles.parentSubstance;
+      }
+      if (this.configSsg4Form.parentSubstanceHeader) {
+        this.parentSubstanceHeader = this.configSsg4Form.parentSubstanceHeader;
+      }
     }
 
     this.menuLabelUpdate.emit(configTitle);

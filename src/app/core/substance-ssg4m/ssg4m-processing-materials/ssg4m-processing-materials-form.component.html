@@ -65,9 +65,18 @@
     </app-cv-input>
   </div>
 
+  <div class="form-row margintop10px"
+    *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
+    <div class="">&nbsp;</div>
+    <mat-form-field class="col-1-1">
+      <textarea matInput placeholder="Comments" [(ngModel)]="processingMaterial.comments"
+        name="processingMaterial.comments" rows="1"></textarea>
+    </mat-form-field>
+  </div> <!-- form-row-->
 
-    <!-- Acceptance Criteria Add button -->
-    <div
+
+  <!-- Acceptance Criteria Add button -->
+  <div
     *ngIf="configSettingsDisplay['acceptanceCriteria'] || (configSettingsDisplay['acceptanceCriteria'] === undefined && true)">
     <br>
     <b>Acceptance Criterias: </b>
@@ -83,14 +92,13 @@
         <div class="form-row">
 
           <mat-form-field class="col">
-          <input matInput placeholder="Acceptance Criteria" [(ngModel)]="processingMaterial.acceptanceCriteria"
-            name="processingMaterial.acceptanceCriteria" />
-        </mat-form-field>
+            <input matInput placeholder="Acceptance Criteria" [(ngModel)]="processingMaterial.acceptanceCriteria"
+              name="processingMaterial.acceptanceCriteria" />
+          </mat-form-field>
 
-        <app-cv-input class="col"
-          domain="SSG_ACCEPTANCE_CRITERIA_TYPE" title="Acceptance Criteria Type"
-          [model]="processingMaterial.acceptanceCriteriaType" (valueChange)="updateAcceptanceCriteriaType($event)">
-        </app-cv-input>
+          <app-cv-input class="col" domain="SSG_ACCEPTANCE_CRITERIA_TYPE" title="Acceptance Criteria Type"
+            [model]="processingMaterial.acceptanceCriteriaType" (valueChange)="updateAcceptanceCriteriaType($event)">
+          </app-cv-input>
 
           <div class="button-delete">
             <button mat-icon-button matTooltip="Delete Manufacturer Details{{(acceptanceIndex+1)}}"
@@ -149,7 +157,7 @@
   </div> <!-- config -->
 
   <div class="form-row">
-    <div class='col'
+    <div class='col margintop10px'
       *ngIf="configSettingsDisplay['amount'] || (configSettingsDisplay['amount'] === undefined && showAdvancedSettings)">
       <div class="label amt-label">
         Amount
@@ -165,7 +173,7 @@
     </div>
 
     <!-- Specification Type -->
-    <div
+    <div class="margintop10px"
       *ngIf="configSettingsDisplay['specificationReference'] || (configSettingsDisplay['specificationReference'] === undefined && showAdvancedSettings)">
       <div class="col" *ngIf="!processingMaterial.specificationReference">
         <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
@@ -207,14 +215,5 @@
       <app-domain-references [referencesUuids]="processingMaterial.references" #references></app-domain-references>
     </div>
   </div>
-
-  <div class="form-row margintop10px"
-    *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
-    <div class="">&nbsp;</div>
-    <mat-form-field class="col-1-1">
-      <textarea matInput placeholder="Comments" [(ngModel)]="processingMaterial.comments"
-        name="processingMaterial.comments" rows="1"></textarea>
-    </mat-form-field>
-  </div> <!-- form-row-->
 
 </div>

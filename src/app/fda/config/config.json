@@ -623,6 +623,20 @@
   ],
   "facets": {
     "substances": {
+      "staging": [
+        "root_importmetadata_status",
+        "root_importmetadata_source",
+        "root_importmetadata_matchcount",
+        "root_importmetadata_matchkey",
+        "root_importmetadata_validationtype",
+        "root_importmetadata_validationmessage",
+        "Import Status",
+        "Source",
+        "Match Count",
+        "Match Key",
+        "Validation Type",
+        "Validation Message"
+        ],
       "default": [
         "Deprecated",
         "Record Status",
@@ -671,6 +685,7 @@
         {
           "category": "Default",
           "facets": [
+            "User List",
             "Deprecated",
             "Record Status",
             "Substance Class",
@@ -953,6 +968,7 @@
       ]
     },
     "applications": {
+
       "default": [
         "Application Type",
         "Center",
@@ -1444,13 +1460,14 @@
   },
   "ssg4Form": {
     "showRegisterEditTitle": "true",
+    "parentSubstanceHeader": "Manufactured Substance",
     "titles": {
       "parentSubstance": "Search or Register a New Substance",
       "stage": "Step",
       "processingMaterials": "Solvents and Catalysts"
     },
     "settingsDisplay": {
-      "references": "advanced",
+      "references": "simple",
       "process": {
         "processName": "simple",
         "processRole": "advanced",

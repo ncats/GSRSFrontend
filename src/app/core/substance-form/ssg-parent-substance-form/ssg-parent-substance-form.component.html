@@ -3,7 +3,7 @@
     <div class="related-substance">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
         eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
-        header="Parent Substance" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+        [header]="parentSubstanceHeader" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
     </div>
 

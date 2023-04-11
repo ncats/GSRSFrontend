@@ -184,6 +184,22 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].resultingMaterials.splice(this.resultingMaterialIndex, 1);
   }
 
+  confirmDeleteAcceptanceCriteria(acceptanceIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Acceptance Criteria ' + (acceptanceIndex + 1) + ' for Processing Material ' + (this.resultingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteAcceptanceCriteria(acceptanceIndex);
+      }
+    });
+  }
+
+  deleteAcceptanceCriteria(acceptanceIndex: number): void {
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].resultingMaterials[this.resultingMaterialIndex].acceptanceCriterias.splice(acceptanceIndex, 1);
+  }
+
   copyResultingToStarting() {
     this.substanceFormSsg4mStagesService.setSourceStageToCopy(this.processIndex, this.siteIndex, this.stageIndex);
     this.substanceFormSsg4mStagesService.setSourceResultingToCopy(this.resultingMaterialIndex);
