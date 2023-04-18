@@ -350,6 +350,11 @@
             <span class="page-label"> of {{lastPage}}</span>
           </div>
         </div>
+        <div class="break"></div>
+        <div style = "width:100%;display:flex">
+          <span class = "middle-fill"></span>
+          <button class = "bulk-action-button" color = "primary" mat-button mat-primary-button mat-flat-button (click) = "bulkActionDialog()">Bulk Actions</button>
+        </div>
         <ng-template appBrowseHeaderDynamicSection></ng-template>
        
         <div class="dynamic container">
@@ -357,7 +362,8 @@
         <div [ngClass]="view">
           <div class="substance-cards">
             <div *ngFor="let substance of records">
-              <app-import-summary  [substance]="substance" [recordID] = "idMapping[substance.uuid]"
+              <app-import-summary  [bulkAction] = "bulkList && bulkList[substance._metadata.recordId] ? bulkList[substance._metadata.recordId].checked : false"
+               [recordID] = "idMapping[substance.uuid]" (bulkSelect) = "updateBulkList($event)" [substance]="substance"
                 (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="substance.names" [codes] = "substance.codes"
                [dummyID] = "dummyUUID"
                 [codeSystemVocab]="codeSystem" [searchStrategy]="null">

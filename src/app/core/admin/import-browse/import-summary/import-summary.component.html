@@ -7,6 +7,7 @@
          <!-- <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
           </mat-icon>-->
           <span class="middle-fill"></span>
+          
           <div class="">
             <span class = "status-label">Status: </span>
             <span class = "status">{{substance._metadata.importStatus | uppercase}}</span>
@@ -316,12 +317,11 @@
             </div>
       
             <div class="right-aligned">
-              <div *ngIf="inxightLink" class="inxight-container">
-                <a class="ext-link" [href]="inxightUrl" target="_blank"
-                attr.aria-label="open {{inxightUrl}} in new tab">
-                  Inxight Drugs <mat-icon class="icon small-icon" svgIcon="open_in_new"></mat-icon>
-                </a>
-              </div>
+                <span class = "middle-fill"></span><div style = "vertical-align: middle;margin:auto;display: flex;margin-top:10px;">
+                  <span style = "font-size: 18px; margin-right:15px;">Bulk Action Select</span>  <mat-checkbox [checked] = "bulkChecked"
+                       (change) = "addtoBulkList() " style = "height: 20px; width: 20px;">
+                      </mat-checkbox>
+                  </div>
               <div *ngIf="showAudit">
                 <div class="substance-data">
                   <div class="label">Created: </div>

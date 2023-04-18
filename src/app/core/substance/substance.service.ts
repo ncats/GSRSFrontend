@@ -915,7 +915,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
   public GetStagedRecord(id:string) {
-    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/importdata/${id}`;
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}`;
     
     return this.http.get< any >(`${url}`);
 
