@@ -47,6 +47,7 @@ import { environment } from '@environment/environment.cbg.prod';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
+import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
 
 @Component({
   selector: 'app-import-browse',
@@ -138,6 +139,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   idMapping: Array< any > = [];
   demoResp: any;
   matches: Array<any>;
+  bulkList: any = {};
 
 
 
@@ -188,9 +190,47 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.searchSubstances();
   }
 
+  updateBulkList(event: any) {
+    console.log(event);
+    let checked = event.checked;
+    let recordId = event.substance._metadata.recordId;
+    if (this.bulkList[recordId]) {
+      this.bulkList[recordId].checked = checked;
+    } else {
+      this.bulkList[recordId] = {"checked": checked, "substance": event.substance};
+    }
+    Object.keys(this.bulkList).forEach(item => {
+      
+    });
+    console.log(this.bulkList);
+  }
+
+  bulkActionDialog() {
+    console.log(this.bulkList);
+      const dialogReference = this.dialog.open(BulkActionDialogComponent, {
+        maxHeight: '85%',
+
+        width: '60%',
+        data: { 'records': this.bulkList }
+      });
+
+      this.overlayContainer.style.zIndex = '1002';
+
+      const exportSub = dialogReference.afterClosed().subscribe(response => {
+        console.log(response);
+        if(response) {
+          this.bulkList = response;
+        }
+        this.overlayContainer.style.zIndex = null;
+       
+      });
+  }
+
   ngOnInit() {
     this.substances = [];
     this.records = [];
+
+    
      
     this.gaService.sendPageView('Staging Area');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {

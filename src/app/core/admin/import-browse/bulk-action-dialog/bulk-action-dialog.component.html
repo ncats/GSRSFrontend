@@ -1,0 +1,46 @@
+<div mat-dialog-header>
+<h3>Bulk Staging Actions</h3>
+</div>
+<div mat-dialog-content *ngIf = "!loading">
+   
+    <div *ngIf = "filtered.length == 0" >No Records Selected for bulk action. Click the checkbox next to a record in the results to select</div>
+    <div class = "form-row" *ngIf = "!successful"><span class = "total">{{total}} Records </span><span class ="middle-fill"></span>
+        <span ><button class ="action-button" color = "primary"  mat-button mat-flat-button mat-primary-button 
+            (click) = "doAction('create')" [disabled] = "total && total == 0">Create</button></span>
+            
+          <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
+             (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
+          <span><button class ="action-button" color = "primary"  mat-button mat-flat-button mat-primary-button 
+            (click) = "doAction('reject')" [disabled] = "total && total == 0">Reject</button></span>
+    </div>
+    <table mat-table matSort [dataSource]="filtered" *ngIf = "filtered.length > 0 && !successful">
+        <ng-container matColumnDef="ID">
+                <th mat-header-cell  *matHeaderCellDef> Selected </th>
+                <td mat-cell *matCellDef="let list">          <mat-checkbox [checked] = "list.checked"
+                    (change) = "checked($event, list)"></mat-checkbox>
+         </td>
+            </ng-container>
+    <ng-container matColumnDef="name">
+                <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let list"> {{list.record._name}} </td>
+            </ng-container>
+            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+</div>
+ <div mat-dialog-content class = "loading-container" *ngIf = "loading">
+        <mat-progress-spinner style = "margin: auto"
+          class="spinner"
+          [color]="primary"
+          mode = "indeterminate">
+      </mat-progress-spinner>
+      </div>
+      <div mat-dialog-content *ngIf = "successful">
+            <span> Import Action Successful</span>
+          </div>
+
+<div mat-dialog-actions>
+   <span class = "middle-fill"></span> <button *ngIf = "!successful" mat-button (click) = "close('save')">Save Selections and Close</button> <button mat-button (click) = "close()">Close</button>
+</div>

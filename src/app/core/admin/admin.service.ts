@@ -265,7 +265,28 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public stagedRecordMultiAction(id:string, action: string) {
+        public stagedRecordMultiAction(records:any, action: string) {
+          console.log(records);
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
+          let toput = {
+            stagingAreaRecords: 
+              records
+            ,
+              "processingActions": [
+                {
+                  "parameters": {
+
+                  }, "processingActionName": action
+                }
+              ]
+            }
+            console.log(toput);
+         
+          return this.http.put< any >(url, toput);
+
+        }
+
+        public stagedRecordSingleAction(id:string, action: string) {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
           let toput = {
             stagingAreaRecords: [
