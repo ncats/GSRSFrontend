@@ -601,6 +601,12 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
+  getAllByEtag(etag: string) {
+    let url = this.apiBaseUrl + 'substances/search?top=1000000&etag=' + etag;
+    return this.http.get<any>(url);
+
+  }
+
   searchSingleFacet(name: string, value: string) {
     const url = this.apiBaseUrl + 'substances/search?facet=' + name + '/' + value;
     return this.http.get<any>(url);

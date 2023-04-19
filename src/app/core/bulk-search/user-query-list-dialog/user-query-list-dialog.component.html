@@ -39,14 +39,14 @@
                 <b style = "font-weight:500">Or select an existing list to append to</b>  <br/>
                 <mat-form-field *ngIf = 'userLists' class = "select-list">
                         <mat-label>Select a List</mat-label>
-                        <mat-select [(ngModel)]="listName2" name="Add to List">
+                        <mat-select [(ngModel)]="listName2" name="Add to List" (selectionChange) = "checkList()">
                           <mat-option *ngFor="let list of userLists" [value]="list">
                             {{list}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
                       &nbsp; &nbsp;
-            <button mat-flat-button color = "primary" (click) = "appendList()">Append to List</button>
+            <button mat-flat-button color = "primary" (click) = "appendList()" [disabled] ="disabled">Append to List</button>
           </div>
         <div *ngIf = "showAddButtons && loading"> 
                 <div class = "loading-spinner" style="margin: auto;">
@@ -83,7 +83,7 @@
         <table mat-table matSort [dataSource]="lists" *ngIf = "lists.length > 0">
                 <ng-container matColumnDef="delete">
                         <th mat-header-cell *matHeaderCellDef> Delete </th>
-                        <td mat-cell *matCellDef="let list; index as i"> <button mat-icon-button matTooltip="Delete draft" (click) = "deleteList(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
+                        <td mat-cell *matCellDef="let list; index as i"> <button mat-icon-button matTooltip="Delete entry" (click) = "deleteList(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
