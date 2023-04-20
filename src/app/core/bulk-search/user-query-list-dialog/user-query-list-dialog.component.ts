@@ -7,6 +7,7 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { AuthService } from '@gsrs-core/auth';
 import { PageEvent } from '@angular/material/paginator';
+import { SubstanceService } from '@gsrs-core/substance';
 @Component({
   selector: 'app-user-query-list-dialog',
   templateUrl: './user-query-list-dialog.component.html',
@@ -37,12 +38,16 @@ export class UserQueryListDialogComponent implements OnInit {
   setUser: string;
   identifier: string;
   isAdmin = false;
+  etagIDs = [];
+  uniqueRecords = [];
+  disabled = false;
 
 
   constructor(
     private bulkSearchService: BulkSearchService,
     public dialogRef: MatDialogRef<UserQueryListDialogComponent>,
     private adminService: AdminService,
+    private substanceService: SubstanceService,
     private router: Router,
     private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -55,6 +60,14 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.substanceService.getAllByEtag(this.etag).subscribe(result => {
+      if(result.content) {
+        result.content.forEach(record => {
+          this.etagIDs.push(record.uuid);
+        })
+      }
+
+    });
     this.authService.checkAuth().subscribe(response => {
       this.identifier = response.identifier;
       response.roles.forEach(role => {
@@ -88,7 +101,7 @@ export class UserQueryListDialogComponent implements OnInit {
       this.bulkSearchService.saveBulkSearchEtag(null, this.listName, this.etag).subscribe( response => {
         this.loadID = response.id;
         setTimeout(() => {
-          this.refresh();
+          this.refresh('add');
           }, 100);
         this.message = "Status: sending request";
         this.showAddButtons = true;
@@ -97,6 +110,33 @@ export class UserQueryListDialogComponent implements OnInit {
       })
     } else {
       this.message = "Cannot add: This list name is already used";
+    }
+  }
+
+  checkList(): void {
+    this.bulkSearchService.getSingleBulkSearchList(this.listName2).subscribe(result => {
+      let tosend = [];
+      result.lists.forEach(list => {
+        tosend.push(list.key);
+      })
+      if (this.etagIDs.length > 0) {
+        this.compareLists(tosend);
+      }
+      
+    });
+  }
+
+  compareLists(list: any) {
+    this.uniqueRecords = this.etagIDs.filter(obj => { return list.indexOf(obj) == -1; });
+    if (this.uniqueRecords.length == 0) {
+      this.message = "NOTICE: All records already exist in selected list";
+      this.disabled = true;
+    } else {
+      this.disabled = false;
+      this.message = "Add " + this.uniqueRecords.length + " records to list.";
+      if (this.uniqueRecords.length < this.etagIDs.length) {
+        this.message += " Ignore " + (this.etagIDs.length - this.uniqueRecords.length) + " duplicates";
+      }
     }
   }
 
@@ -109,19 +149,21 @@ export class UserQueryListDialogComponent implements OnInit {
     });
     if (!found) {
       this.loading = true;
+      
       this.bulkSearchService.editEtagBulkSearchLists(this.listName2, this.etag, 'add').subscribe( response => {
         this.loadID = response.id;
         setTimeout(() => {
-          this.refresh();
+          this.refresh('append');
           }, 100);
         this.message = "Status: sending request";
         this.showAddButtons = true;
       }, error => {
         this.message = "Error: There was a problem adding a new list";
-      })
+      });
     } else {
       this.message = "Cannot add: This list name is already used";
     }
+  
   }
 
   useUser(name: string) {
@@ -171,22 +213,21 @@ export class UserQueryListDialogComponent implements OnInit {
     this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
-  refresh() {
+  refresh(type: string) {
     this.bulkSearchService.getSaveBulkListStatus(this.loadID).pipe(take(1)).subscribe(response => {
 
-    
     this.status = response.status;
         this.message = "Status: " + this.status;
         if (this.status === 'Completed.') {
           this.loading = false;
         } else {
           setTimeout(() => {
-          this.refresh();
+          this.refresh(type);
           }, 100);
         }
     }, error => {
         setTimeout(() => {
-          this.refresh();
+          this.refresh(type);
           }, 1000);
     })
   }
@@ -196,8 +237,9 @@ export class UserQueryListDialogComponent implements OnInit {
       this.bulkSearchService.listEmitter.next(result.lists);
       this.lists = result.lists;
     }, error => {
-      this.message = "Error: Fetching lists failed, see error in console";
       console.log(error);
+
+      this.message = "Error: Fetching lists failed, see error in console";
       
     });
   }
@@ -207,8 +249,9 @@ export class UserQueryListDialogComponent implements OnInit {
       this.bulkSearchService.deleteBulkSearchList(list).subscribe(result => {
         this.getUserLists();
       }, error => {
-        this.message = "Error: Delete list failed. See browser console";
         console.log(error);
+        this.message = "Error: Delete list failed. See browser console";
+        
       });
     }
   }
@@ -227,14 +270,14 @@ export class UserQueryListDialogComponent implements OnInit {
       }
     }
     this.message = "";
-    this.bulkSearchService.editKeysBulkSearchLists(this.activeName, send, 'remove').subscribe(response => {
+    this.bulkSearchService.editKeysBulkSearchLists(this.activeName, entry.key, 'remove').subscribe(response => {
       this.active = copy;
       this.filtered = JSON.parse(JSON.stringify(copy.lists)).slice(0, 10);
       this.pagesize = 10;
       this.page = 0;
     }, error => {
-      this.message = "Error: Failed to delete. See error in console";
       console.log(error);
+      this.message = "Error: Failed to delete. See error in console";
     });
   }
 
