@@ -638,6 +638,7 @@
         "Validation Message"
         ],
       "default": [
+        "User List",
         "Deprecated",
         "Record Status",
         "Substance Class",
