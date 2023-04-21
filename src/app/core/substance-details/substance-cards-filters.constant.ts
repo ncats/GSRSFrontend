@@ -78,7 +78,7 @@ export function equalsInArrayFilter(
         let isApproved = false;
         if (filter.value != null && filter.propertyToCheck != null && filter.propertyInArray != null) {
             for (let i = 0; i < substance[filter.propertyToCheck].length; i++) {
-                if ((substance[filter.propertyToCheck][i][filter.propertyInArray]) === filter.value) {
+                if ((substance[filter.propertyToCheck][i][filter.propertyInArray]) == filter.value) {
                     isApproved = true;
                     break;
                 }

@@ -8,14 +8,16 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Product, ValidationMessage } from '../model/product.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import * as moment from 'moment';
 import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
@@ -61,7 +63,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private titleService: Title) { }
+    private titleService: Title,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
@@ -76,27 +79,45 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.title = 'Update Product';
           if (id !== this.id) {
             this.id = id;
-            this.gaService.sendPageView(`Product Edit`);
+            this.gaService.sendPageView(`Edit Product`);
+            this.titleService.setTitle(`Edit Product ` + this.id);
             this.getProductDetails();
           }
-        } else { //Copy Product to register form
-          this.title = 'Register New Product';
-          this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
-          if (this.id) {
+        } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
+          this.id = this.activatedRoute.snapshot.queryParams['copyId'];
+          if (this.id) {  //copy from existing Product
+            this.gaService.sendPageView(`Register Product from Copy`);
+            this.titleService.setTitle(`Register Product from Copy ` + this.id);
+            this.title = 'Register New Product from Copy Product ID ' + this.id;
             this.getProductDetails('copy');
-            this.gaService.sendPageView(`Product Register`);
-          } else { // Register New Product
-            this.title = 'Register New Product';
-            setTimeout(() => {
-              this.gaService.sendPageView(`Product Register`);
-              this.titleService.setTitle(`Register Product`);
-              this.productService.loadProduct();
+          }
+        } else if (this.activatedRoute.snapshot.queryParams['action']) {
+          let actionParam = this.activatedRoute.snapshot.queryParams['action'];
+          if (actionParam && actionParam === 'import' && window.history.state) {
+            this.gaService.sendPageView(`Import Product`);
+            this.titleService.setTitle(`Register New Product from Import`);
+            this.title = 'Register New Product from Import';
+            const record = window.history.state.record;
+            const response = JSON.parse(record);
+            if (response) {
+              this.scrub(response);
+              this.productService.loadProduct(response);
               this.product = this.productService.product;
               this.loadingService.setLoading(false);
               this.isLoading = false;
-            });
-          } // else
-        } // else
+            }
+          }
+        } else { // Register New Product
+          this.title = 'Register New Product';
+          setTimeout(() => {
+            this.gaService.sendPageView(`Register Product`);
+            this.titleService.setTitle(`Register Product`);
+            this.productService.loadProduct();
+            this.product = this.productService.product;
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+          });
+        } // else Register
       });
     this.subscriptions.push(routeSubscription);
   }
@@ -110,19 +131,24 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  togglePanel(expanded) {
+    expanded = !expanded;
+  }
+
   getProductDetails(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
       this.productService.getProduct(id).subscribe(response => {
         if (response) {
 
-          // before copying existing product, delete the id
+          // before copy the existing product, delete the ids
           if (newType && newType === 'copy') {
             this.scrub(response);
           }
           this.productService.loadProduct(response);
           this.product = this.productService.product;
-          // Check if there is not Product Code Object, create one
+          /*
+          Check if there is not Product Code Object, create one
           if (this.product.productCodeList.length == 0) {
             this.product.productCodeList = [{}];
           }
@@ -137,9 +163,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             }
           }
-          this.titleService.setTitle(`Edit Product ` + prodCode);
+          */
         } else {
-          this.handleProductRetrivalError();
+          this.message = 'No Product Record found for Id ' + this.id;
         }
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -148,7 +174,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.gaService.sendException('getProductDetails: error from API call');
         this.loadingService.setLoading(false);
         this.isLoading = false;
-        this.handleProductRetrivalError();
+       // this.handleProductRetrivalError();
       });
     }
   }
@@ -207,13 +233,13 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Validate Ingredient Average, which should be integer/number
     if (this.product != null) {
-      this.product.productComponentList.forEach(elementComp => {
+      this.product.productManufactureItems.forEach(elementComp => {
         if (elementComp != null) {
-          elementComp.productLotList.forEach(elementLot => {
+          elementComp.productLots.forEach(elementLot => {
             if (elementLot != null) {
 
               // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
-              elementLot.productIngredientList.forEach(elementIngred => {
+              elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
                   if (elementIngred.average) {
                     if (this.isNumber(elementIngred.average) === false) {
@@ -287,6 +313,17 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadingService.setLoading(true);
     // remove non-field form property/field/key from Product object
     this.product = this.cleanProduct();
+    if (this.product) {
+      if (this.product.id) {
+      } else {
+        if (this.product.provenance === null || this.product.provenance === undefined) {
+          // Set Provenance to GSRS
+          this.product.provenance = 'GSRS';
+        }
+      }
+      // Set service application
+      this.productService.product = this.product;
+    }
     this.productService.saveProduct().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -345,11 +382,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   cleanProduct(): Product {
     let productStr = JSON.stringify(this.product);
     let productCopy: Product = JSON.parse(productStr);
-    productCopy.productComponentList.forEach(elementComp => {
+    productCopy.productManufactureItems.forEach(elementComp => {
       if (elementComp != null) {
-        elementComp.productLotList.forEach(elementLot => {
+        elementComp.productLots.forEach(elementLot => {
           if (elementLot != null) {
-            elementLot.productIngredientList.forEach(elementIngred => {
+            elementLot.productIngredients.forEach(elementIngred => {
               if (elementIngred != null) {
                 // remove property for Ingredient Name Validation. Do not need in the form JSON
                 if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {
@@ -370,6 +407,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showJSON(): void {
+    this.product = this.cleanProduct();
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
@@ -383,12 +421,69 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  saveJson(): void {
+  saveJSON(): void {
+    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
+    this.cleanProduct();
+    let json = this.product;
+    // this.json = this.cleanObject(substanceCopy);
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
 
+    const date = new Date();
+    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
-  saveJSON(): void {
+  importJSON(): void {
+    let data: any;
+    data = {
+      title: 'Product Record Import',
+      entity: 'product',
+    };
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false,
+      data: data
+    });
+    this.overlayContainer.style.zIndex = '1002';
 
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.loadingService.setLoading(true);
+        this.overlayContainer.style.zIndex = null;
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+        /* const read = JSON.parse(response);
+         if (this.id && read.uuid && this.id === read.uuid) {
+           this.substanceFormService.importSubstance(read, 'update');
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {
+         if ( read.substanceClass === this.substanceClass) {
+           this.imported = true;
+           this.substanceFormService.importSubstance(read);
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {*/
+        setTimeout(() => {
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          if (!this.id) {
+            // new record
+            this.router.navigateByUrl('/product/register?action=import', { state: { record: response } });
+          }
+        }, 1000);
+      }
+      // }
+      // }
+    });
   }
 
   confirmDeleteProduct(productId: number) {
@@ -524,6 +619,26 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
     this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
+  }
+
+  addNewProductIndication() {
+    this.productService.addNewProductIndication();
+  }
+
+  confirmDeleteProductIndication(prodIndicationIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductIndication(prodIndicationIndex);
+      }
+    });
+  }
+
+  deleteProductIndication(prodIndicationIndex: number) {
+    this.productService.deleteProductIndication(prodIndicationIndex);
   }
 
   addNewProductComponent() {

@@ -83,7 +83,10 @@
             </button>
           </div>
         </div>
+        
       </div>
+      
+     
     </div>
     
     <div *ngIf="bulkSearchQueryId">
@@ -257,11 +260,16 @@
               </button>
             </div>
           </div>
+          <span class = "middle-fill"></span>
+
+          
         </div>
+
+        
       </ng-template>
       
       <div *ngIf="(substances && substances.length)">
-      
+        
       <div>
         <div class="sub-search-div">
           <p class="sub-search-text red-text">Results below are an incomplete preview</p>
@@ -310,10 +318,14 @@
         </mat-menu>
 
         <div class="export ">
+
           <button *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
             mat-button class="mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
+          <button *ngIf = "isLoggedIn" mat-raised-button style = "margin-left:30px;" color="primary" class="reset-facets-button" (click)="addToList()">
+              <span>Add to List</span>
+            </button>
         </div>
 
         <div class="break"></div>
@@ -355,7 +367,8 @@
               (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"
               [codeSystemNames]="codes[substance.uuid] && codes[substance.uuid].codeSystemNames"
               [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
-              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy">
+              [codeSystemVocab]="codeSystem" [searchStrategy]="searchStrategy"
+              [userLists] = "userLists">
             </app-substance-summary-card>
           </div>
         </div>

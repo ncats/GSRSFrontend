@@ -13,6 +13,8 @@ import { Environment } from 'src/environments/environment.model';
 import { Location } from '@angular/common';
 import { DisplayFacet } from './display-facet';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-facets-manager',
@@ -60,7 +62,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     private gaService: GoogleAnalyticsService,
     private router: Router,
     private location: Location,
-    private facetManagerService: FacetsManagerService
+    private facetManagerService: FacetsManagerService,
+    private dialog: MatDialog
   ) {
     this.privateFacetParams = {};
     this.facetBuilder = {};
@@ -323,6 +326,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               }
             });
           } else if (this._facetDisplayType === 'facetView' && this._facetViewCategorySelected !== 'All') {
+            console.log('type is facetview');
             if (this._configName && this._configName === 'substances') {
               this.facetsConfig['facetView'].forEach(categoryRow => {
                 const category = categoryRow['category'];
@@ -385,6 +389,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             newFacets.unshift(newFacets.splice(position, 1)[0]);
           }
         });
+        console.log(newFacets);
         this.facets = newFacets;
         this.setShowAdvancedFacetStates();
         this.facetsLoaded.emit(this.facets.length);
@@ -725,4 +730,25 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     return this.privateFacetParams;
   }
 
+  editList(list?: string): void {
+    let data = {view: 'all'};
+    if (list) {
+      data.view = 'single';
+      data['activeName'] = list.split(':')[1];
+    }
+    console.log(data);
+    const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+      width: '850px',
+      autoFocus: false,
+            data: data
+
+    });
+   // this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+       // this.overlayContainer.style.zIndex = null;
+      }
+    });
+  }
 }

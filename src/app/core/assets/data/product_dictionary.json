@@ -16,7 +16,7 @@
         "suggest":null
     },
     "Ingredient Average":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_average",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_average",
         "description":"Ingredient Average",
         "type":"number",
         "cvDomain":null,
@@ -24,7 +24,7 @@
         "suggest":null
     },
     "Ingredient Basis of Strength Substance Key":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_basisOfStrengthSubstanceKey",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_basisOfStrengthSubstanceKey",
         "description":"Ingredient Basis of Strength Substance Key",
         "type":"string",
         "cvDomain":null,
@@ -32,7 +32,7 @@
         "suggest":null
     },
     "Ingredient Basis of Strength Substance Key Type":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_basisOfStrengthSubstanceKeyType",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_basisOfStrengthSubstanceKeyType",
         "description":"Ingredient Basis of Strength Substance Key Type",
         "type":"string",
         "cvDomain":null,
@@ -40,7 +40,7 @@
         "suggest":null
     },
     "Ingredient Grade":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_grade",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_grade",
         "description":"Ingredient Grade",
         "type":"string",
         "cvDomain":"PROD_GRADE",
@@ -48,7 +48,7 @@
         "suggest":null
     },
     "Ingredient High":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_high",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_high",
         "description":"Ingredient High",
         "type":"number",
         "cvDomain":null,
@@ -56,7 +56,7 @@
         "suggest":null
     },
     "Ingredient Ingredient Type":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_ingredientType",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_ingredientType",
         "description":"Ingredient Ingredient Type",
         "type":"string",
         "cvDomain":"INGREDIENT_TYPE",
@@ -64,7 +64,7 @@
         "suggest":null
     },
     "Ingredient Location":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_ingredientLocation",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_ingredientLocation",
         "description":"Ingredient Location",
         "type":"string",
         "cvDomain":null,
@@ -72,7 +72,7 @@
         "suggest":null
     },
     "Ingredient Lot No":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_ingredLotNo",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_ingredLotNo",
         "description":"Ingredient Lot No",
         "type":"string",
         "cvDomain":null,
@@ -80,7 +80,7 @@
         "suggest":null
     },
     "Ingredient Low":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_low",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_low",
         "description":"Ingredient Low",
         "type":"number",
         "cvDomain":null,
@@ -88,7 +88,7 @@
         "suggest":null
     },
     "Ingredient Manufacturer":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_manufacturer",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_manufacturer",
         "description":"Ingredient Manufacturer",
         "type":"string",
         "cvDomain":null,
@@ -96,7 +96,7 @@
         "suggest":null
     },
     "Ingredient Notes":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_notes",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_notes",
         "description":"Ingredient Notes",
         "type":"string",
         "cvDomain":null,
@@ -104,7 +104,7 @@
         "suggest":null
     },
     "Ingredient Release Characteristic":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_releaseCharacteristic",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_releaseCharacteristic",
         "description":"Ingredient Release Characteristic",
         "type":"string",
         "cvDomain":null,
@@ -112,7 +112,7 @@
         "suggest":null
     },
     "Ingredient Substance Key":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_substanceKey",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_substanceKey",
         "description":"Ingredient Substance Key",
         "type":"string",
         "cvDomain":null,
@@ -120,7 +120,7 @@
         "suggest":null
     },
     "Ingredient Substance Key Type":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_substanceKeyType",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_substanceKeyType",
         "description":"Ingredient Substance Key Type",
         "type":"string",
         "cvDomain":null,
@@ -128,7 +128,7 @@
         "suggest":null
     },
     "Ingredient Unit":{
-        "lucenePath":"root_productComponentList_productLotList_productIngredientList_unit",
+        "lucenePath":"root_productManufactureItems_productLots_productIngredients_unit",
         "description":"Ingredient Unit",
         "type":"string",
         "cvDomain":null,
@@ -152,7 +152,7 @@
         "suggest":null
     },
     "Product Amount":{
-        "lucenePath":"root_productComponentList_amount",
+        "lucenePath":"root_productManufactureItems_amount",
         "description":"Product Amount",
         "type":"number",
         "cvDomain":null,
@@ -168,7 +168,7 @@
         "suggest":null
     },
     "Product Code":{
-        "lucenePath":"root_productCodeList_productCode",
+        "lucenePath":"root_productCodes_productCode",
         "description":"Product Term",
         "type":"string",
         "cvDomain":null,
@@ -176,7 +176,7 @@
         "suggest":null
     },
     "Product Code Adress":{
-        "lucenePath":"root_productCompanyList_companyAddress",
+        "lucenePath":"root_productCompanies_companyAddress",
         "description":"Product Code Adress",
         "type":"string",
         "cvDomain":null,
@@ -184,7 +184,7 @@
         "suggest":null
     },
     "Product Code City":{
-        "lucenePath":"root_productCompanyList_companyCity",
+        "lucenePath":"root_productCompanies_companyCity",
         "description":"Product Code City",
         "type":"string",
         "cvDomain":null,
@@ -192,7 +192,7 @@
         "suggest":null
     },
     "Product Code Code":{
-        "lucenePath":"root_productCompanyList_companyCode",
+        "lucenePath":"root_productCompanies_companyCode",
         "description":"Product Company Code",
         "type":"string",
         "cvDomain":null,
@@ -200,7 +200,7 @@
         "suggest":null
     },
     "Product Code Country Code":{
-        "lucenePath":"root_productCodeList_countryCode",
+        "lucenePath":"root_productCodes_countryCode",
         "description":"Product Code Country Code",
         "type":"string",
         "cvDomain":null,
@@ -208,7 +208,7 @@
         "suggest":null
     },
     "Product Code Type":{
-        "lucenePath":"root_productCodeList_productCodeType",
+        "lucenePath":"root_productCodes_productCodeType",
         "description":"Product Code Type",
         "type":"string",
         "cvDomain":null,
@@ -216,7 +216,7 @@
         "suggest":null
     },
     "Product Code Zipcode":{
-        "lucenePath":"root_productCompanyList_companyZip",
+        "lucenePath":"root_productCompanies_companyZip",
         "description":"Product Code zipcode",
         "type":"string",
         "cvDomain":null,
@@ -224,7 +224,7 @@
         "suggest":null
     },
     "Product Color Name":{
-        "lucenePath":"root_productComponentList_charColor",
+        "lucenePath":"root_productManufactureItems_charColor",
         "description":"Product Color Name",
         "type":"string",
         "cvDomain":"PROD_CHARACTER_COLOR",
@@ -232,7 +232,7 @@
         "suggest":null
     },
     "Product Company Code Type":{
-        "lucenePath":"root_productCompanyList_companyCodeType",
+        "lucenePath":"root_productCompanies_companyCodeType",
         "description":"Product Company Code Type",
         "type":"string",
         "cvDomain":null,
@@ -240,7 +240,7 @@
         "suggest":null
     },
     "Product Company Country":{
-        "lucenePath":"root_productCompanyList_companyCountry",
+        "lucenePath":"root_productCompanies_companyCountry",
         "description":"Product Company Country",
         "type":"string",
         "cvDomain":null,
@@ -248,7 +248,7 @@
         "suggest":null
     },
     "Product Company Name":{
-        "lucenePath":"root_productCompanyList_companyName",
+        "lucenePath":"root_productCompanies_companyName",
         "description":"Product Company Name",
         "type":"string",
         "cvDomain":null,
@@ -256,7 +256,7 @@
         "suggest":null
     },
     "Product Company Role":{
-        "lucenePath":"root_productCompanyList_companyRole",
+        "lucenePath":"root_productCompanies_companyRole",
         "description":"Product Company Role",
         "type":"string",
         "cvDomain":null,
@@ -264,7 +264,7 @@
         "suggest":null
     },
     "Product Company State":{
-        "lucenePath":"root_productCompanyList_companyState",
+        "lucenePath":"root_productCompanies_companyState",
         "description":"Product Company State",
         "type":"string",
         "cvDomain":null,
@@ -296,7 +296,7 @@
         "suggest":null
     },
     "Product Dosage Form":{
-        "lucenePath":"root_productComponentList_dosageForm",
+        "lucenePath":"root_productManufactureItems_dosageForm",
         "description":"Product Dosage Form",
         "type":"string",
         "cvDomain":"DOSAGE_FORM",
@@ -304,7 +304,7 @@
         "suggest":null
     },
     "Product Flavor Name":{
-        "lucenePath":"root_productComponentList_charFlavor",
+        "lucenePath":"root_productManufactureItems_charFlavor",
         "description":"Product Flavor Name",
         "type":"string",
         "cvDomain":"PROD_CHARACTER_FLAVOR",
@@ -312,7 +312,7 @@
         "suggest":null
     },
     "Product Imprint Text":{
-        "lucenePath":"root_productComponentList_charImprintText",
+        "lucenePath":"root_productManufactureItems_charImprintText",
         "description":"Product Imprint Text",
         "type":"string",
         "cvDomain":null,
@@ -328,7 +328,7 @@
         "suggest":null
     },
     "Product Lot Expiry Date":{
-        "lucenePath":"root_productComponentList_productLotList_expiryDate",
+        "lucenePath":"root_productManufactureItems_productLots_expiryDate",
         "description":"Product Lot Expiry Date",
         "type":"Date",
         "cvDomain":null,
@@ -336,7 +336,7 @@
         "suggest":null
     },
     "Product Lot Manufacture Date":{
-        "lucenePath":"root_productComponentList_productLotList_manufactureDate",
+        "lucenePath":"root_productManufactureItems_productLots_manufactureDate",
         "description":"Product Lot Manufacture Date",
         "type":"Date",
         "cvDomain":null,
@@ -344,7 +344,7 @@
         "suggest":null
     },
     "Product Lot No":{
-        "lucenePath":"root_productComponentList_productLotList_lotNo",
+        "lucenePath":"root_productManufactureItems_productLots_lotNo",
         "description":"Product Lot No",
         "type":"string",
         "cvDomain":null,
@@ -352,7 +352,7 @@
         "suggest":null
     },
     "Product Lot Size":{
-        "lucenePath":"root_productComponentList_productLotList_lotSize",
+        "lucenePath":"root_productManufactureItems_productLots_lotSize",
         "description":"Product Lot Size",
         "type":"string",
         "cvDomain":null,
@@ -360,7 +360,7 @@
         "suggest":null
     },
     "Product Manufacture Code":{
-        "lucenePath":"root_productComponentList_manufactureCode",
+        "lucenePath":"root_productManufactureItems_manufactureCode",
         "description":"Product Manufacture Code",
         "type":"string",
         "cvDomain":null,
@@ -368,7 +368,7 @@
         "suggest":null
     },
     "Product Manufacture Code Type":{
-        "lucenePath":"root_productComponentList_manufactureCodeType",
+        "lucenePath":"root_productManufactureItems_manufactureCodeType",
         "description":"Product Manufacture Code Type",
         "type":"string",
         "cvDomain":"PROD_MANUFACTURE_CODE_TYPE",
@@ -392,7 +392,7 @@
         "suggest":null
     },
     "Product Name":{
-        "lucenePath":"root_productNameList_productName",
+        "lucenePath":"root_productNames_productName",
         "description":"Product Name",
         "type":"string",
         "cvDomain":null,
@@ -400,7 +400,7 @@
         "suggest":null
     },
     "Product Name Type":{
-        "lucenePath":"root_productNameList_productNameType",
+        "lucenePath":"root_productNames_productNameType",
         "description":"Product Name Type",
         "type":"string",
         "cvDomain":"PROD_PRODUCT_NAME_TYPE",
@@ -440,7 +440,7 @@
         "suggest":null
     },
     "Product Scoring":{
-        "lucenePath":"root_productComponentList_charNumFragments",
+        "lucenePath":"root_productManufactureItems_charNumFragments",
         "description":"Product Scoring",
         "type":"string",
         "cvDomain":"PROD_CHARACTER_FRAGMENTS",
@@ -448,7 +448,7 @@
         "suggest":null
     },
     "Product Shape Name":{
-        "lucenePath":"root_productComponentList_charShape",
+        "lucenePath":"root_productManufactureItems_charShape",
         "description":"Product Shape Name",
         "type":"string",
         "cvDomain":"PROD_CHARACTER_SHAPE",
@@ -456,7 +456,7 @@
         "suggest":null
     },
     "Product Size":{
-        "lucenePath":"root_productComponentList_charSize",
+        "lucenePath":"root_productManufactureItems_charSize",
         "description":"Product Size",
         "type":"string",
         "cvDomain":null,
@@ -488,7 +488,7 @@
         "suggest":null
     },
     "Product Term":{
-        "lucenePath":"root_productNameList_productTermAndTermPartList_productTerm",
+        "lucenePath":"root_productNames_productTermAndParts_productTerm",
         "description":"Product Term",
         "type":"string",
         "cvDomain":null,
@@ -496,7 +496,7 @@
         "suggest":null
     },
     "Product Term Part":{
-        "lucenePath":"root_productNameList_productTermAndTermPartList_productTermPart",
+        "lucenePath":"root_productNames_productTermAndParts_productTermPart",
         "description":"Product Term Part",
         "type":"string",
         "cvDomain":"PROD_TERM_PART",
@@ -512,7 +512,7 @@
         "suggest":null
     },
     "Product Unit":{
-        "lucenePath":"root_productComponentList_unit",
+        "lucenePath":"root_productManufactureItems_unit",
         "description":"Product Unit",
         "type":"string",
         "cvDomain":"PROD_UNIT",

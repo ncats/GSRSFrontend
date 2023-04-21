@@ -115,6 +115,8 @@ import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
 import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 
 @NgModule({
   declarations: [
@@ -151,7 +153,10 @@ import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge
     CustomTextareaWidgetComponent,
     RegisterComponent,
     PwdRecoveryComponent,
-    MergeActionDialogComponent
+    MergeActionDialogComponent,
+    UserQueryListDialogComponent,
+    ListCreateDialogComponent
+
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -253,7 +258,9 @@ import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge
     CustomRadioWidgetComponent,
     CustomMultiCheckboxWidgetComponent,
     CustomTextareaWidgetComponent,
-    MergeActionDialogComponent
+    MergeActionDialogComponent,
+    UserQueryListDialogComponent,
+    ListCreateDialogComponent
   ],
   exports: [
     StructureEditorModule,

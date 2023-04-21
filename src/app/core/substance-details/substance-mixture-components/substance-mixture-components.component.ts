@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {SubstanceCardBase} from '../substance-card-base';
 import {MixtureComponents, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
+import { StructureImageModalComponent } from '@gsrs-core/structure';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-substance-mixture-components',
@@ -14,8 +16,11 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
   presentInAny: Array<MixtureComponents>;
   presentInOne: Array<MixtureComponents>;
   substanceUpdated = new Subject<SubstanceDetail>();
+  active: string;
 
-  constructor() {
+  constructor(
+   private dialog: MatDialog
+  ) {
     super();
   }
 
@@ -34,5 +39,16 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
       }
     });
   }
+
+  openImageModal(templateRef, related: any) {
+    let data = {uuid: related.substance.refuuid};
+    this.active = related.substance.refuuid;
+ 
+  const dialogRef = this.dialog.open(templateRef, {
+    width: '750px',
+    height: '700px',
+    panelClass: 'structure-image-panel'
+    });
+}
 
 }

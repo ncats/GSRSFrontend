@@ -11,6 +11,7 @@
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 20px;
+  margin: 0 auto;
 }
 
 .divflex {
@@ -72,16 +73,16 @@
 .row-property-key {
   min-width: 40%;
   max-width: 40%;
-  padding: 7px;
-  font-size: 12px;
+  padding: 9px;
+  font-size: 13px;
   font-weight: 600;
 }
 
 .row-property-value {
   min-width: 60%;
   max-width: 60%;
-  padding: 7px;
-  font-size: 12px;
+  padding: 9px;
+  font-size: 13px;
 }
 
 .row-property-2 {
@@ -90,18 +91,18 @@
 }
 
 .row-property-key-2 {
-  min-width: 20%;
-  max-width: 20%;
-  padding: 6px;
-  font-size: 12px;
+  min-width: 47%;
+  max-width: 47%;
+  padding: 9px;
+  font-size: 13px;
   font-weight: 600;
 }
 
 .row-property-value-2 {
-  min-width: 80%;
-  max-width: 80%;
-  padding: 6px;
-  font-size: 12px;
+  min-width: 53%;
+  max-width: 53%;
+  padding: 9px;
+  font-size: 13px;
 }
 
 .row-property-4 {
@@ -125,10 +126,10 @@
 }
 
 .title {
-  font-size: 15px;
+  font-size: 27px;
   font-weight: bold;
-  font-family: Verdana;
-  color: var(--primary-title-color);
+  font-family: Arial, Helvetica, sans-serif;
+  /*color: var(--primary-title-color);*/
   padding-right: 5px;
   text-align: top;
   margin-bottom: 9px;
@@ -138,27 +139,35 @@
   display: flex;
   box-sizing: border-box;
   width: 100%;
+  margin-bottom: 20px;
   flex-direction: row;
   align-items: center;
   white-space: nowrap;
   white-space: normal;
-  font-size:18px;
+  font-size: 17px;
+  font-weight: bold;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  color: var(--primary-title-color);
 }
 
 .margintopneg10px {
   margin-top: -10px;
 }
 
+.margintop20px {
+  margin-top: 20px;
+}
+
 .margintop30px {
   margin-top: 30px;
 }
 
-.margintop90px {
-  margin-top: 90px;
+.margintop80px {
+  margin-top: 80px;
 }
 
-.marginbottom80px {
-  margin-bottom: 80px;
+.marginbottom60px {
+  margin-bottom: 60px;
 }
 
 .padtop17px {
@@ -213,6 +222,14 @@
   font-weight: 500;
 }
 
+.colorblack {
+  color: var(--regular-black-color);
+}
+
+.colorred {
+  color: var(--regular-red-color);
+}
+
 .colorgray {
   color: var(--regular-grey-color);
 }
@@ -263,6 +280,16 @@
   background-color: var(--regular-blue-color);
 }
 
+hr {
+  border: none;
+  border-top: 3px dotted var(--regular-green-color);
+  color: var(--hr-color);
+  overflow: visible;
+  text-align: center;
+  height: 5px;
+  margin-top: -3px;
+}
+
 table.blueTable {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   /*font-family: Verdana, Geneva, sans-serif;*/
@@ -281,7 +308,7 @@ table.blueTable td, table.blueTable th {
 table.blueTable tbody td {
   font-size: 12px;
   vertical-align: top;
-  padding: 10px 10px;
+  padding: 12px 10px;
 }
 
 table.blueTable tr:nth-child(even) {
@@ -298,6 +325,7 @@ table.blueTable thead th {
   font-weight: 700;
   color: var(--table-th-color);
   border-left: 1px solid var(--table-th-border-color-2);
+  /*border: 1px solid rgb(249, 249, 247);*/
   padding: 10px 10px;
 }
 

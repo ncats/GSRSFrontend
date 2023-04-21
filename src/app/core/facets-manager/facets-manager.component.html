@@ -58,8 +58,12 @@
           </div>
           <div class="facet-value-label" [ngClass] = "facetParams[facet.name] && facetParams[facet.name].params[value.label] === false ? 'strikethrough':''">
             <span
-              *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status' && facet.name !== 'Code System' && facet.name !== 'Relationships'">
+              *ngIf="facet.name !== 'Substance Class' && facet.name !== 'Record Status' 
+              && facet.name !== 'Code System' && facet.name !== 'Relationships' && facet.name !== 'User List'">
               {{value.label}}
+            </span>
+            <span *ngIf="facet.name === 'User List'">
+              {{value.label | facetDisplay: 'userList'}}
             </span>
             <span *ngIf="facet.name === 'Substance Class'">
               {{value.label | facetDisplay: 'types'}}
@@ -75,10 +79,21 @@
             </span>
           </div>
           <div class="middle-fill"></div>
-          <div class="facet-value-count">
+          <div class="facet-value-count" *ngIf="facet.name !== 'User List'" >
             {{value.count}}
           </div>
+          <div class="facet-value-count count-fix" *ngIf="facet.name === 'User List'" >
+           <span><a class = "mat-button button-fix" matTooltip = "select to edit" (click) = "editList(value.label)">
+              <mat-icon svgIcon="edit" class = "small-icon clear-button" style = "height:20px;width:20px;"></mat-icon>
+          </a></span>   <span class = "number-fix"> {{value.count}}</span>
+          </div>
         </div>
+
+
+        
+
+
+
       </ng-container>
       <div>
         <!--- <a class="show-more" (click)="toggle[topIndex] = !toggle[topIndex]" *ngIf = "facet.values.length > 10">
@@ -100,6 +115,10 @@
         <a (click)="facet.$showAdvanced = !facet.$showAdvanced">
           <span *ngIf="facet.$showAdvanced">hide </span>advanced options
         </a>
+        <span class = "middle-fill" *ngIf="facet.name === 'User List'"></span>
+        <span *ngIf="facet.name === 'User List'">
+          <button mat-button mat-flat-button  class = "user-list-button" (click) = "editList()">View / Edit Lists</button>
+        </span>
       </div>
       <div class="facet-actions" *ngIf="facetParams[facet.name] !== null">
         <mat-checkbox *ngIf="facetParams[facet.name] && facetParams[facet.name].showAllMatchOption"
