@@ -199,9 +199,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.bulkList[recordId] = {"checked": checked, "substance": event.substance};
     }
-    Object.keys(this.bulkList).forEach(item => {
-      
-    });
+    
     console.log(this.bulkList);
   }
 
@@ -224,6 +222,23 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.overlayContainer.style.zIndex = null;
        
       });
+  }
+
+  selectBulk() {
+    this.substances.forEach(record => {
+      if (this.bulkList[record._metadata.recordId]) {
+        this.bulkList[record._metadata.recordId].checked = true;
+      } else {
+        this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+      }
+    });
+    
+  }
+
+  deselectAll() {
+    Object.keys(this.bulkList).forEach(item => {
+      this.bulkList[item].checked = false;
+    });
   }
 
   ngOnInit() {

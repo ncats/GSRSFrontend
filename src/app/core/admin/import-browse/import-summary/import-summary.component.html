@@ -9,7 +9,7 @@
           <span class="middle-fill"></span>
           
           <div class="">
-            <span class = "status-label">Status: </span>
+            <span class = "status-label">Import Status: </span>
             <span class = "status">{{substance._metadata.importStatus | uppercase}}</span>
           </div>
         </mat-card-title>
@@ -411,8 +411,8 @@
                   <span><a class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
                     [routerLink]="['/substances/register']"
                   [queryParams]="{stagingID : substance._metadata.recordId}">Edit</a></span>
-                <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
-                   (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
+                <span><button  class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button
+                   (click) = "openMergeModal()">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
                 <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
                   (click) = "doAction('reject')">Reject</button></span>
 
@@ -444,7 +444,7 @@
                         </ng-container>-->
                         <ng-container matColumnDef="merge">
                           <th mat-header-cell *matHeaderCellDef>  </th>
-                          <td mat-cell *matCellDef="let record"> <span ><button color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button >Merge</button></span></td>
+                          <td mat-cell *matCellDef="let record"> <span ><button color = "primary" [disabled] = "disabled" (click) = "openMergeModal(record)" mat-button mat-flat-button mat-primary-button >Merge</button></span></td>
                         </ng-container>
                     
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

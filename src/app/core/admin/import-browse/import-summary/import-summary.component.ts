@@ -25,6 +25,7 @@ import * as lodash from 'lodash';
 import { CardDynamicSectionDirective } from '@gsrs-core/substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
+import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
 @Component({
   selector: 'app-import-summary',
   templateUrl: './import-summary.component.html',
@@ -403,19 +404,24 @@ export class ImportSummaryComponent implements OnInit {
     }
   }
 
-  openMolModal() {
+  openMergeModal(selected?: any) {
+    console.log(this.substance._metadata);
 
-  /*  const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
+    let temp = {uuid: this.substance.uuid, recordId: this.substance._metadata.recordId, matches: this.substance.matchedRecords}
+    if (selected) {
+      temp['mergeRecord'] = selected;
+    }
+    const dialogRef = this.dialog.open(MergeActionDialogComponent, {
       minWidth: '40%',
       maxWidth: '90%',
-      height: '90%',
-      data: {uuid: this.substance.uuid, approval: this.substance.approvalID}
+      height: '70%',
+      data: temp
     });
     this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
-    });*/
+    });
   }
 
   moreThanNumberCount(names, number) {

@@ -263,6 +263,22 @@ ngOnInit() {
   }
 
 
+  addRef() {
+    let temp = {
+      "actionName": "public_reference",
+      "actionParameters": {
+          "docType": "",
+          "citation": "",
+          "referenceID": "",
+          "uuid": "[[UUID_2]]",
+          "publicDomain": false,
+          "tags":[]
+      },
+      "label": "Create Reference"
+  }
+  this.postResp.adapterSettings.actions.push(temp);
+  }
+
 
 
 onFileSelect(event): void {

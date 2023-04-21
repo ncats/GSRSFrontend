@@ -105,10 +105,14 @@
                 </div>
 
             <div *ngIf = "settingsActive.actionName == 'public_reference'">
-                    <div class = "label-value"  style = "margin-bottom: 10px;">
-                            <div class = "label">Document Type</div>
-                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.docType" /></div>
-                    </div>
+                        <div class = "label-value"  style = "margin-bottom: 10px;">
+                                        <div class = "label">Document Type</div>
+                                        <div class = "value-container"  class = "set-width">
+                                                    <app-cv-import domain = "DOCUMENT_TYPE" title = "Document Type" [model] = "settingsActive.actionParameters.docType" 
+                                                    (valueChange)="updateType($event, 'docType')" ></app-cv-import> 
+                                            </div> 
+            
+                                </div>
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Citation</div>
                             <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.citation" /></div>

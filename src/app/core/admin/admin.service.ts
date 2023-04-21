@@ -286,22 +286,34 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public stagedRecordSingleAction(id:string, action: string) {
+        public stagedRecordSingleAction(id:string, action: string, params?: any, matching?: string) {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
+          let putParam = { "parameters": {}, "processingActionName": action};
+          let putRecords = {}
+          if (action === 'merge') {
+            putParam.parameters['mergeSettings'] = params;
+            putRecords = {'id': id, 'matchingID': matching }
+          } else {
+            putRecords = {'id': id}
+          }
           let toput = {
             stagingAreaRecords: [
-              {'id': id}
+              putRecords
             ],
               "processingActions": [
-                {
-                  "parameters": {
-
-                  }, "processingActionName": action
-                }
+                putParam
               ]
             }
+            console.log
          
           return this.http.put< any >(url, toput);
+
+        }
+
+        getMergeActionSchema() {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/action(merge)/@schema`;
+
+          return this.http.get< any >(url);
 
         }
 

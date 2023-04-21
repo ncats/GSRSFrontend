@@ -104,6 +104,10 @@
                                                   (change) = "action.actionName && action.actionName == 'no-op'? action.actionName = null: action.actionName = 'no-op' "></mat-checkbox>
                                         </div>
                                     </div>
+
+                                    <button mat-button (click) = "addRef()">
+                                                Add Reference<mat-icon svgIcon="add_circle_outline"></mat-icon>
+                                              </button>
         </div>
         <div class = "preview-window">
                 <div style = "width:100%; display:flex;">
