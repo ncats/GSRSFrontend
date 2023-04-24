@@ -1119,7 +1119,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     }
   }
 
-  openImageModal(substance: SubstanceDetail): void {
+  openImageModal(substance: any): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
         this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
@@ -1127,14 +1127,14 @@ searchTermOkforBeginsWithSearch(): boolean {
 
     if (substance.substanceClass === 'chemical') {
       data = {
-        structure: substance.uuid,
+        structure: substance._metadata.recordId,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
         names: this.names[substance.uuid]
       };
     } else {
       data = {
-        structure: substance.uuid,
+        structure: substance._metadata.recordId,
         names: this.names[substance.uuid]
       };
     }

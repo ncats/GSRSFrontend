@@ -277,6 +277,7 @@ ngOnInit() {
       "label": "Create Reference"
   }
   this.postResp.adapterSettings.actions.push(temp);
+  this.openAction(null, this.postResp.adapterSettings.actions.length-1);
   }
 
 
