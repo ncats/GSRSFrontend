@@ -126,7 +126,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    alert("AFTER VIEW");
   }
 
   ngOnDestroy(): void {
@@ -412,7 +411,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       } // if comp is not null
     }); // comp loop
 
-    alert("JSON " + JSON.stringify(productCopy));
     return productCopy;
   }
 
@@ -426,9 +424,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
-     // alert("AAAAAAAAAA");
-     //   alert("INSIDE");
-       //  this.overlayContainer.style.zIndex = null;
     });
     this.subscriptions.push(dialogSubscription);
   }
@@ -534,7 +529,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addNewProductProvenance() {
-    alert("NEW");
     this.productService.addNewProductProvenance();
   }
 

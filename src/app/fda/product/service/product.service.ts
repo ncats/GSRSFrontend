@@ -229,7 +229,6 @@ export class ProductService extends BaseHttpService {
 
   addNewProductProvenance(): void {
     const newProductProvenance: ProductProvenance = {productNames: [], productCodes: [], productDocumentations: []};
-    alert("length " + this.product.productProvenances.length);
 
     this.product.productProvenances.push(newProductProvenance);
   }
