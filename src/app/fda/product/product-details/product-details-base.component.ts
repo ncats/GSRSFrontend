@@ -68,6 +68,11 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         this.product = response;
         if (Object.keys(this.product).length > 0) {
 
+          // This is a temporary solution to load the current records.
+          if (this.product.productNames == null) {
+            
+          }
+
           // Add title on the browser. Concatenate multiple Product Code
           /*let prodCode = '';
           this.product.productCodeList.forEach((elementProdCode, indexProdCode) => {

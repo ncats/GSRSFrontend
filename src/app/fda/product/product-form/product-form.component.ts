@@ -103,6 +103,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
               this.scrub(response);
               this.productService.loadProduct(response);
               this.product = this.productService.product;
+              if (this.product.productProvenances == null) {
+                this.product.productProvenances = [];
+              }
               this.loadingService.setLoading(false);
               this.isLoading = false;
             }
@@ -123,6 +126,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    alert("AFTER VIEW");
   }
 
   ngOnDestroy(): void {
@@ -147,6 +151,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.productService.loadProduct(response);
           this.product = this.productService.product;
+
+          if (this.product.productProvenances == null) {
+            this.product.productProvenances = [{productNames: [], productCodes: [], productDocumentations: []}];
+          }
+
           /*
           Check if there is not Product Code Object, create one
           if (this.product.productCodeList.length == 0) {
@@ -403,22 +412,25 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       } // if comp is not null
     }); // comp loop
 
+    alert("JSON " + JSON.stringify(productCopy));
     return productCopy;
   }
 
   showJSON(): void {
-    this.product = this.cleanProduct();
+    let cleanProduct = this.cleanProduct();
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.product
+      data: cleanProduct
     });
 
     // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+     // alert("AAAAAAAAAA");
+     //   alert("INSIDE");
+       //  this.overlayContainer.style.zIndex = null;
     });
     this.subscriptions.push(dialogSubscription);
-
   }
 
   saveJSON(): void {
@@ -519,6 +531,27 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate(['/home']);
     });
+  }
+
+  addNewProductProvenance() {
+    alert("NEW");
+    this.productService.addNewProductProvenance();
+  }
+
+  addNewProductNameInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductNameInProv(prodProvenanceIndex);
+  }
+
+  addNewTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.productService.addNewTermAndTermPartInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  addNewProductProvCode(prodProvenanceIndex: number) {
+    this.productService.addNewProductProvCode(prodProvenanceIndex);
+  }
+
+  addNewProductDocumenation(prodProvenanceIndex: number) {
+    this.productService.addNewProductDocumentation(prodProvenanceIndex);
   }
 
   addNewProductName() {

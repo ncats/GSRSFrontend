@@ -26,6 +26,9 @@ export interface Product {
   productUrl?: string;
   shelfLife ?: string;
   storageConditions?: string;
+  effectiveTime?: string;
+  numberOfManufactureItem?: string;
+  manufacturerName?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -36,6 +39,7 @@ export interface Product {
   productCompanies?: Array<ProductCompany>;
   productIndications?: Array<ProductIndication>;
   productManufactureItems?: Array<ProductComponent>;
+  productProvenances?: Array<ProductProvenance>;  //new
 }
 
 export interface ProductName {
@@ -206,6 +210,41 @@ export interface ProductIngredient {
   modifyDate?: number;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
+}
+
+// New
+export interface ProductProvenance {
+  id?: number;
+  productType?: string;
+  productStatus?: string;
+  applicationType?: string;
+  applicationNumber?: string;
+  productUrl?: Date;
+  publicDomain?: Date;
+  productProvenanceId?: string;
+  provenanceDocumentId?: string;
+  internalVersion?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  productNames?: Array<ProductName>;
+  productCodes?: Array<ProductCode>;
+  productDocumentations?: Array<ProductDocumentation>;
+}
+
+// New
+export interface ProductDocumentation {
+  id?: number;
+  documentId?: string;
+  documentType?: string;
+  setIdVersion?: string;
+  jurisdictions?: string;
+  internalVersion?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
 }
 
 export interface ProductAll {

@@ -8,7 +8,7 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
-import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
+import { Product, ProductProvenance, ProductName, ProductTermAndPart, ProductCode, ProductAll, ProductDocumentation } from '../model/product.model';
 import { ProductCompany, ProductCompanyCode, ProductIndication, ProductComponent, ProductManufacturer, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
@@ -102,7 +102,7 @@ export class ProductService extends BaseHttpService {
 
   getExportOptions(etag: string): Observable<any> {
     const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}`;
-    return this.http.get< any>(url);
+    return this.http.get<any>(url);
   }
 
   getApiExportUrl(etag: string, extension: string): string {
@@ -173,8 +173,9 @@ export class ProductService extends BaseHttpService {
       this.product = product;
     } else { // new Product
       this.product = {
-        productNames: [],
-        productCodes: [],
+        productProvenances: [],
+     //   productNames: [],
+     //   productCodes: [],
         productCompanies: [],
         productIndications: [],
         productManufactureItems: []
@@ -226,6 +227,37 @@ export class ProductService extends BaseHttpService {
     return x;
   }
 
+  addNewProductProvenance(): void {
+    const newProductProvenance: ProductProvenance = {productNames: [], productCodes: [], productDocumentations: []};
+    alert("length " + this.product.productProvenances.length);
+
+    this.product.productProvenances.push(newProductProvenance);
+  }
+
+  addNewProductNameInProv(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productNames == null) {
+      this.product.productProvenances[prodProvenanceIndex].productNames = [];
+    }
+    const newProductName: ProductName = {};
+    this.product.productProvenances[prodProvenanceIndex].productNames.unshift(newProductName);
+  }
+
+  addNewProductProvCode(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productCodes == null) {
+      this.product.productProvenances[prodProvenanceIndex].productCodes = [];
+    }
+    const newProductCode: ProductCode = {};
+    this.product.productProvenances[prodProvenanceIndex].productCodes.unshift(newProductCode);
+  }
+
+  addNewProductDocumentation(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productDocumentations == null) {
+      this.product.productProvenances[prodProvenanceIndex].productDocumentations = [];
+    }
+    const newProductDocumentation: ProductDocumentation = {};
+    this.product.productProvenances[prodProvenanceIndex].productDocumentations.unshift(newProductDocumentation);
+  }
+
   addNewProductName(): void {
     const newProductName: ProductName = { productTermAndParts: [] };
     this.product.productNames.unshift(newProductName);
@@ -233,6 +265,14 @@ export class ProductService extends BaseHttpService {
 
   deleteProductName(prodNameIndex: number): void {
     this.product.productNames.splice(prodNameIndex, 1);
+  }
+
+  addNewTermAndTermPartInProv(productProvenanceIndex: number, prodNameIndex: number) {
+    if (this.product.productProvenances[productProvenanceIndex].productNames[prodNameIndex].productTermAndParts == null) {
+      this.product.productProvenances[productProvenanceIndex].productNames[prodNameIndex].productTermAndParts = [];
+    }
+    const newProductPartTerm: ProductTermAndPart = {};
+    this.product.productProvenances[productProvenanceIndex].productNames[prodNameIndex].productTermAndParts.unshift(newProductPartTerm);
   }
 
   addNewTermAndTermPart(prodNameIndex: number): void {
@@ -360,39 +400,39 @@ export class ProductService extends BaseHttpService {
     this.product.productManufactureItems.unshift(newProduct);
   }
 
-copyProductLot(productLot: any, prodComponentIndex: number): void {
-  const newProduct = JSON.parse(JSON.stringify(productLot));
+  copyProductLot(productLot: any, prodComponentIndex: number): void {
+    const newProduct = JSON.parse(JSON.stringify(productLot));
 
-  newProduct.id = null;
-  newProduct.createdBy = null;
-  newProduct.creationDate = null;
-  newProduct.modifiedBy = null;
-  newProduct.lastModifiedDate = null;
+    newProduct.id = null;
+    newProduct.createdBy = null;
+    newProduct.creationDate = null;
+    newProduct.modifiedBy = null;
+    newProduct.lastModifiedDate = null;
 
-  newProduct.productIngredients.forEach(elementIngred => {
-    if (elementIngred != null) {
-      elementIngred.id = null;
-      elementIngred.createdBy = null;
-      elementIngred.creationDate = null;
-      elementIngred.modifiedBy = null;
-      elementIngred.lastModifiedDate = null;
-    }
-  });
+    newProduct.productIngredients.forEach(elementIngred => {
+      if (elementIngred != null) {
+        elementIngred.id = null;
+        elementIngred.createdBy = null;
+        elementIngred.creationDate = null;
+        elementIngred.modifiedBy = null;
+        elementIngred.lastModifiedDate = null;
+      }
+    });
 
-  this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProduct);
-}
+    this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProduct);
+  }
 
-copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
-  const newProduct = JSON.parse(JSON.stringify(productIngredient));
+  copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
+    const newProduct = JSON.parse(JSON.stringify(productIngredient));
 
-  newProduct.id = null;
-  newProduct.createdBy = null;
-  newProduct.creationDate = null;
-  newProduct.modifiedBy = null;
-  newProduct.lastModifiedDate = null;
+    newProduct.id = null;
+    newProduct.createdBy = null;
+    newProduct.creationDate = null;
+    newProduct.modifiedBy = null;
+    newProduct.lastModifiedDate = null;
 
-  this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProduct);
-}
+    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProduct);
+  }
 
   /*
   reviewProduct(prodIndex: number): void {

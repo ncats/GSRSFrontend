@@ -1,5 +1,8 @@
 {
   "version": "3.0.3",
+  "apiBaseUrl": "http://localhost:8081/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/beta/",
+  "apiSSG4mBaseUrl": "http://localhost:8081/",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -968,7 +971,7 @@
       ]
     },
     "applications": {
-      
+
       "default": [
         "Application Type",
         "Center",
