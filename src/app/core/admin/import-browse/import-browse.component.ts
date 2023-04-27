@@ -224,14 +224,34 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  selectBulk() {
-    this.substances.forEach(record => {
-      if (this.bulkList[record._metadata.recordId]) {
-        this.bulkList[record._metadata.recordId].checked = true;
-      } else {
-        this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
-      }
-    });
+  selectBulk(type?: string) {
+    if(type && type === 'all') {
+      this.isLoading = true;
+      this.loadingService.setLoading(true);
+      const skip = this.pageIndex * this.pageSize;
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
+        .subscribe(pagingResponse => { console.log(pagingResponse); 
+          
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      pagingResponse.content.forEach(record => {
+        if (this.bulkList[record._metadata.recordId]) {
+          this.bulkList[record._metadata.recordId].checked = true;
+        } else {
+          this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+        }
+      });
+        });
+    } else {
+      this.substances.forEach(record => {
+        if (this.bulkList[record._metadata.recordId]) {
+          this.bulkList[record._metadata.recordId].checked = true;
+        } else {
+          this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+        }
+      });
+    }
+    
     
   }
 
@@ -588,6 +608,15 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  searchforIDs() {
+     // if (this.argsHash == null || this.argsHash !== newArgsHash) {
+        this.isLoading = true;
+        this.loadingService.setLoading(true);
+        const skip = this.pageIndex * this.pageSize;
+        const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
+          .subscribe(pagingResponse => { console.log(pagingResponse)});
+  }
+
   searchSubstances() {
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
@@ -609,7 +638,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm)
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.pageSize)
         .subscribe(pagingResponse => {
           this.substances = [];
           this.records = [];
@@ -619,7 +648,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
-          this.pageSize = 10;
+       //   this.pageSize = 10;
           if (this.totalSubstances % this.pageSize === 0) {
             this.lastPage = (this.totalSubstances / this.pageSize);
           } else {
