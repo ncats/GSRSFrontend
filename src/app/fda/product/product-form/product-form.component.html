@@ -241,6 +241,7 @@
                   </mat-panel-description>
                 </mat-expansion-panel-header>
 
+                <!--
                 <div class="width100percent">
                   <mat-form-field class="col-2">
                     <input matInput placeholder="Non Proprietary Name/INN/USAN Name/Generic Name"
@@ -257,6 +258,7 @@
                       name="composeProductName" />
                   </mat-form-field>
                 </div>
+                -->
 
                 <div class="form-row">
                   <app-cv-input class="col-2" domain="DOSAGE_FORM" title="Administravail Pharmacedical Dosage Form"
@@ -304,7 +306,7 @@
                   <mat-form-field class="col-1">
                     <input matInput placeholder="Application Number" [(ngModel)]="product.appNumber" name="appNumber" />
                   </mat-form-field>
-                  -->
+
                   <mat-form-field class="col-1">
                     <input matInput placeholder="Source" [(ngModel)]="product.source" name="source" />
                   </mat-form-field>
@@ -312,34 +314,15 @@
                   <app-cv-input class="col-1" domain="PROD_SOURCE_TYPE" title="Source Type" name="sourceType"
                     [model]="product.sourceType" (valueChange)="product.sourceType = $event">
                   </app-cv-input>
-
-                  <app-cv-input class="col-1" domain="LANGUAGE" title="Language" name="language"
-                    [model]="product.language" (valueChange)="product.language = $event">
-                  </app-cv-input>
+                  -->
 
                   <app-cv-input class="col-1" domain="PROD_COUNTRY_CODE" title="Country Code" name="countryCode"
                     [model]="product.countryCode" (valueChange)="product.countryCode = $event">
                   </app-cv-input>
-                </div>
 
-                <div class="form-row">
-                  <!--
-                  <app-cv-input class="col-1" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
-                    [model]="product.productType" (valueChange)="product.productType = $event">
+                  <app-cv-input class="col-1" domain="LANGUAGE" title="Language" name="language"
+                    [model]="product.language" (valueChange)="product.language = $event">
                   </app-cv-input>
-                  -->
-                </div>
-
-                <div class="form-row">
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Marketing Category Code" [(ngModel)]="product.marketingCategoryCode"
-                      name="marketingCategoryCode" />
-                  </mat-form-field>
-
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Marketing Category Name" [(ngModel)]="product.marketingCategoryName"
-                      name="marketingCategoryName" />
-                  </mat-form-field>
 
                   <mat-form-field class="col-1">
                     <input matInput placeholder="Shelf Life" [(ngModel)]="product.shelfLife" name="shelfLife" />
@@ -353,40 +336,57 @@
 
                 <div class="form-row">
                   <!--
+                  <app-cv-input class="col-1" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
+                    [model]="product.productType" (valueChange)="product.productType = $event">
+                  </app-cv-input>
+                  -->
+                </div>
+
+                <div class="form-row">
+
+
+
+                  <!--
+                  <mat-form-field class="col-1">
+                    <input matInput placeholder="Strength Characteristic" [(ngModel)]="product.strengthCharacteristic"
+                      name="strengthCharacteristic" />
+                  </mat-form-field>
+                  -->
+                </div>
+
+                <div class="form-row">
+                  <!--
                   <app-cv-input class="col-1" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
                     [model]="product.provenance" (valueChange)="product.provenance = $event">
                   </app-cv-input>
                   -->
 
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Deaschedule" [(ngModel)]="product.deaschedule" name="deaschedule" />
-                  </mat-form-field>
 
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Effective Time" [(ngModel)]="product.effectiveTime"
-                      name="effectiveTime" />
-                  </mat-form-field>
-
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Strength Characteristic" [(ngModel)]="product.strengthCharacteristic"
-                      name="strengthCharacteristic" />
-                  </mat-form-field>
                 </div>
 
                 <div class="form-row">
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Number of Manufacture Item"
-                      [(ngModel)]="product.numberOfManufactureItem" name="numberOfManufactureItem" />
-                  </mat-form-field>
+                  <app-cv-input class="col-1" domain="PROD_NUMBER_OF_MANUFACTURE_ITEM"
+                    title="Number of Manufacture Item" name="numberOfManufactureItem"
+                    [model]="product.numberOfManufactureItem" (valueChange)="product.numberOfManufactureItem = $event">
+                  </app-cv-input>
 
                   <mat-form-field class="col-1">
                     <input matInput placeholder="Manufacturer Name" [(ngModel)]="product.manufacturerName"
                       name="manufacturerName" />
                   </mat-form-field>
-                </div>
 
-                <!---
-                <div class="form-row">
+                  <mat-form-field class="col-1">
+                    <input matInput placeholder="Manufacturer Code" [(ngModel)]="product.manufacturerCode"
+                      name="manufacturerCode" />
+                  </mat-form-field>
+
+                  <app-cv-input class="col-1" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacturer Code Type"
+                    name="manufacturerCodeType" [model]="product.manufacturerCodeType"
+                    (valueChange)="product.manufacturerCodeType = $event">
+                  </app-cv-input>
+
+                  <!---
+                  <div class="form-row">
                   <mat-form-field class="col-2">
                     <input matInput placeholder="Provenance Product ID" [(ngModel)]="product.provenanceProductId"
                       name="provenanceProductId" />
@@ -398,6 +398,8 @@
                   </mat-form-field>
                 </div>
                 -->
+
+                </div>
 
               </mat-expansion-panel>
               <!-- Product Overivew -->
@@ -432,32 +434,63 @@
                 <div class="marginbottom15px"
                   *ngFor="let prodProv of product.productProvenances; let prodProvIndex = index">
                   <div class="form-row">
-                    <app-cv-input class="col-2" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
+                    <app-cv-input class="col-1" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
                       [model]="prodProv.provenance" (valueChange)="prodProv.provenance = $event">
                     </app-cv-input>
 
-                    <app-cv-input class="col-2" domain="PROD_STATUS" title="Status" name="status"
+                    <app-cv-input class="col-1" domain="PROD_STATUS" title="Status" name="status"
                       [model]="prodProv.productStatus" (valueChange)="prodProv.productStatus = $event">
                     </app-cv-input>
 
-                    <app-cv-input class="col-2" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
+                    <app-cv-input class="col-1" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
+                      [model]="prodProv.productType" (valueChange)="prodProv.productType = $event">
+                    </app-cv-input>
+
+                    <app-cv-input class="col-1" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
                       [model]="prodProv.publicDomain" (valueChange)="prodProv.publicDomain = $event">
                     </app-cv-input>
                   </div>
 
                   <div class="form-row">
-                    <app-cv-input class="col-2" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
-                      [model]="prodProv.productType" (valueChange)="prodProv.productType = $event">
-                    </app-cv-input>
-
-                    <app-cv-input class="col-2" domain="APPLICATION_TYPE" title="Application Type"
+                    <app-cv-input class="col-1" domain="APPLICATION_TYPE" title="Application Type"
                       name="applicationType" [model]="prodProv.applicationType"
                       (valueChange)="prodProv.applicationType = $event">
                     </app-cv-input>
 
-                    <mat-form-field class="col-2">
+                    <mat-form-field class="col-1">
                       <input matInput placeholder="Application Number" [(ngModel)]="prodProv.applicationNumber"
                         name="applicationNumber" />
+                    </mat-form-field>
+
+                    <mat-form-field class="col-1">
+                      <input matInput placeholder="Marketing Category Code" [(ngModel)]="prodProv.marketingCategoryCode"
+                        name="marketingCategoryCode" />
+                    </mat-form-field>
+
+                    <mat-form-field class="col-1">
+                      <input matInput placeholder="Marketing Category Name" [(ngModel)]="prodProv.marketingCategoryName"
+                        name="marketingCategoryName" />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-row">
+                    <mat-form-field class="col-1">
+                      <input matInput placeholder="Control Substance Code" [(ngModel)]="prodProv.controlSubstanceCode"
+                        name="controlSubstanceCode" />
+                    </mat-form-field>
+
+                    <app-cv-input class="col-1" domain="PROD_CONTROL_SUBSTANCE_CLASS" title="Control Substance Class"
+                      name="controlSubstanceClass" [model]="prodProv.controlSubstanceClass"
+                      (valueChange)="prodProv.controlSubstanceClass = $event">
+                    </app-cv-input>
+
+                    <app-cv-input class="col-1" domain="PROD_CONTROL_SUBSTANCE_SOURCE" title="Control Substance Source"
+                      name="controlSubstanceSource" [model]="prodProv.controlSubstanceSource"
+                      (valueChange)="prodProv.controlSubstanceSource = $event">
+                    </app-cv-input>
+
+                    <mat-form-field class="col-1">
+                      <input matInput placeholder="Product URL" [(ngModel)]="prodProv.productUrl" name="productUrl" />
                     </mat-form-field>
                   </div>
 
@@ -471,10 +504,9 @@
                       <input matInput placeholder="Provenance Document ID" [(ngModel)]="prodProv.provenanceDocumentId"
                         name="provenanceDocumentId" />
                     </mat-form-field>
+                  </div>
 
-                    <mat-form-field class="col-2">
-                      <input matInput placeholder="Product URL" [(ngModel)]="prodProv.productUrl" name="productUrl" />
-                    </mat-form-field>
+                  <div class="form-row">
                   </div>
                   <!-- Provenance-->
 
@@ -541,6 +573,13 @@
                                 (valueChange)="prodName.productNameType = $event">
                               </app-cv-input>
                             </div>
+
+                            <div class="width290px">
+                              &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                              <mat-checkbox [(ngModel)]="prodName.displayName">
+                                Display Name
+                              </mat-checkbox>
+                            </div>
                           </div>
 
                           <div class="divflex">
@@ -606,7 +645,7 @@
                         </span>
                         <div class="middle-fill"></div>
                         <button mat-button class="marginright30px bordergreen" color="primary"
-                          (click)="addNewProductProvCodeInProv(prodProvIndex); $event.stopPropagation()"
+                          (click)="addNewProductCodeInProv(prodProvIndex); $event.stopPropagation()"
                           matTooltip="Add New Product Code">
                           <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
                         </button>
@@ -709,6 +748,11 @@
                         <mat-form-field class="col-2">
                           <input matInput placeholder="Set Id Version" [(ngModel)]="prodDoc.setIdVersion"
                             name="setIdVersion" />
+                        </mat-form-field>
+
+                        <mat-form-field class="col-1">
+                          <input matInput placeholder="Effective Time" [(ngModel)]="prodDoc.effectiveTime"
+                            name="effectiveTime" />
                         </mat-form-field>
 
                         <app-cv-input class="col-2" domain="PROD_COUNTRY_CODE" title="Jurisdictions"
@@ -991,6 +1035,23 @@
                       <mat-form-field class="col-3">
                         <input matInput placeholder="Indication Group" [(ngModel)]="prodInd.indicationGroup"
                           name="indicationGroup" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Indication Source" [(ngModel)]="prodInd.indicationSource"
+                          name="indicationSource" />
+                      </mat-form-field>
+
+                      <app-cv-input class="col-3" domain="PROD_INDICATION_SOURCE_TYPE" title="Indication Source Type"
+                        name="indicationSourceType" [model]="prodInd.indicationSourceType"
+                        (valueChange)="prodInd.indicationSourceType = $event">
+                      </app-cv-input>
+
+                      <mat-form-field class="col-3">
+                        <input matInput placeholder="Indication Source URL" [(ngModel)]="prodInd.indicationSourceUrl"
+                          name="indicationSourceUrl" />
                       </mat-form-field>
                     </div>
                   </fieldset>

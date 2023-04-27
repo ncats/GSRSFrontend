@@ -185,20 +185,18 @@
         name="originalNumeratorNumber" />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Original Numerator Unit" [(ngModel)]="ingredient.originalNumeratorUnit"
-        name="originalNumeratorUnit" />
-    </mat-form-field>
+    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Original Numerator Unit" name="originalNumeratorUnit"
+      [model]="ingredient.originalNumeratorUnit" (valueChange)="ingredient.originalNumeratorUnit = $event">
+    </app-cv-input>
 
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Original Denominator Number" [(ngModel)]="ingredient.originalDenominatorNumber"
         name="originalDenominatorNumber" />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Original Denominator Unit" [(ngModel)]="ingredient.originalDenominatorUnit"
-        name="originalDenominatorUnit" />
-    </mat-form-field>
+    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Original Denominator Unit" name="originalDenominatorUnit"
+      [model]="ingredient.originalDenominatorUnit" (valueChange)="ingredient.originalDenominatorUnit = $event">
+    </app-cv-input>
   </div>
 
   <div class="form-row">

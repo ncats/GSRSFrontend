@@ -241,7 +241,7 @@ export class ProductService extends BaseHttpService {
     this.product.productProvenances[prodProvenanceIndex].productNames.unshift(newProductName);
   }
 
-  addNewProductProvCode(prodProvenanceIndex: number): void {
+  addNewProductCodeInProv(prodProvenanceIndex: number): void {
     if (this.product.productProvenances[prodProvenanceIndex].productCodes == null) {
       this.product.productProvenances[prodProvenanceIndex].productCodes = [];
     }

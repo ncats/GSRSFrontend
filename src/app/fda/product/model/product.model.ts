@@ -18,17 +18,15 @@ export interface Product {
   countryCode?: string;
   language?: string;
   provenance?: string;
-  provenanceProductId?: string;
-  provenanceDocumentId?: string;
-  deaschedule?: string;
-  marketingCategoryCode?: string;
-  marketingCategoryName?: string;
+  /*provenanceProductId?: string;*/
+  /*provenanceDocumentId?: string;*/
   productUrl?: string;
   shelfLife ?: string;
   storageConditions?: string;
-  effectiveTime?: string;
   numberOfManufactureItem?: string;
   manufacturerName?: string;
+  manufacturerCode?: string;
+  manufacturerCodeType?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -46,6 +44,9 @@ export interface ProductName {
   id?: number;
   productName?: string;
   productNameType?: string;
+  displayName?: string;
+  language?: string;
+  jurisdictions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -117,6 +118,9 @@ export interface ProductIndication {
   indicationCode?: string;
   indicationCodeType?: string;
   indicationGroup?: string;
+  indicationSource?: string;
+  indicationSourceType?: string;
+  indicationSourceUrl?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -215,14 +219,20 @@ export interface ProductIngredient {
 // New
 export interface ProductProvenance {
   id?: number;
-  productType?: string;
+  provenance?: string;
   productStatus?: string;
+  productType?: string;
   applicationType?: string;
   applicationNumber?: string;
-  productUrl?: Date;
   publicDomain?: Date;
-  productProvenanceId?: string;
+  marketingCategoryCode?: string;
+  marketingCategoryName?: string;
+  controlSubstanceCode?: string;
+  controlSubstanceClass?: string;
+  controlSubstanceSource?: string;
+  provenanceProductId?: string;
   provenanceDocumentId?: string;
+  productUrl?: Date;
   internalVersion?: number;
   createdBy?: string;
   createDate?: number;
@@ -239,6 +249,7 @@ export interface ProductDocumentation {
   documentId?: string;
   documentType?: string;
   setIdVersion?: string;
+  effectiveTime?: string;
   jurisdictions?: string;
   internalVersion?: number;
   createdBy?: string;

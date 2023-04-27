@@ -540,8 +540,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.addNewTermAndTermPartInProv(prodProvenanceIndex, prodNameIndex);
   }
 
-  addNewProductProvCode(prodProvenanceIndex: number) {
-    this.productService.addNewProductProvCode(prodProvenanceIndex);
+  addNewProductCodeInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductCodeInProv(prodProvenanceIndex);
   }
 
   addNewProductDocumenation(prodProvenanceIndex: number) {

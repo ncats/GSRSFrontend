@@ -114,6 +114,8 @@
         PRODUCT OVERVIEW
       </mat-card-title>
       <mat-card-content>
+
+        <!--
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
@@ -132,6 +134,7 @@
             </div>
           </div>
         </div>
+        -->
 
         <div class="row">
           <div class="row-property">
@@ -142,6 +145,17 @@
               {{product.pharmacedicalDosageForm}}
             </div>
           </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Route of Administration:
+            </div>
+            <div class="row-property-value">
+              {{product.routeAdmin}}
+            </div>
+          </div>
+
+          <!--
           <div class="row-property">
             <div class="row-property-key">
               Compose Product Name:
@@ -150,9 +164,18 @@
               {{product.composeProductName}}
             </div>
           </div>
+          -->
         </div>
 
         <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Unit of Presentation:
+            </div>
+            <div class="row-property-value">
+              {{product.unitPresentation}}
+            </div>
+          </div>
           <div class="row-property">
             <div class="row-property-key">
               Country Code:
@@ -161,6 +184,18 @@
               {{product.countryCode}}
             </div>
           </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Shelf Life:
+            </div>
+            <div class="row-property-value">
+              {{product.shelfLife}}
+            </div>
+          </div>
+
           <div class="row-property">
             <div class="row-property-key">
               Language:
@@ -192,6 +227,7 @@
         </div>
         -->
 
+        <!--
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
@@ -210,25 +246,9 @@
             </div>
           </div>
         </div>
+        -->
 
-        <div class="row">
-          <div class="row-property">
-            <div class="row-property-key">
-              Unit of Presentation:
-            </div>
-            <div class="row-property-value">
-              {{product.unitPresentation}}
-            </div>
-          </div>
-          <div class="row-property">
-            <div class="row-property-key">
-              Route of Administration:
-            </div>
-            <div class="row-property-value">
-              {{product.routeAdmin}}
-            </div>
-          </div>
-        </div>
+
 
         <!--
         <div class="row">
@@ -252,6 +272,7 @@
         </div>
         -->
 
+        <!--
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
@@ -271,27 +292,9 @@
             </div>
           </div>
         </div>
+        -->
 
-        <div class="row">
-          <div class="row-property">
-            <div class="row-property-key">
-              Deaschedule:
-            </div>
-            <div class="row-property-value">
-              {{product.deaschedule}}
-            </div>
-          </div>
-
-          <div class="row-property">
-            <div class="row-property-key">
-              Effective Time:
-            </div>
-            <div class="row-property-value">
-              {{product.effectiveTime}}
-            </div>
-          </div>
-
-          <!--
+        <!--
           <div class="row-property">
             <div class="row-property-key">
               Provenance Product ID:
@@ -300,10 +303,8 @@
               {{product.provenanceProductId}}
             </div>
           </div>
-          -->
         </div>
 
-        <!--
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
@@ -328,19 +329,18 @@
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
-              Shelf Life:
-            </div>
-            <div class="row-property-value">
-              {{product.shelfLife}}
-            </div>
-          </div>
-
-          <div class="row-property">
-            <div class="row-property-key">
               Storage Conditions:
             </div>
             <div class="row-property-value">
               {{product.storageConditions}}
+            </div>
+          </div>
+          <div class="row-property">
+            <div class="row-property-key">
+              Manufacturer Code:
+            </div>
+            <div class="row-property-value">
+              {{product.manufacturerCode}}
             </div>
           </div>
         </div>
@@ -356,25 +356,26 @@
           </div>
           <div class="row-property">
             <div class="row-property-key">
+              Manufacturer Code Type:
+            </div>
+            <div class="row-property-value">
+              {{product.manufacturerCodeType}}
+            </div>
+          </div>
+        </div>
+        <!--
+          <div class="row-property">
+            <div class="row-property-key">
               Strength Characteristic:
             </div>
             <div class="row-property-value">
               {{product.strengthCharacteristic}}
             </div>
           </div>
-        </div>
+          -->
+
 
         <div class="row">
-          <!--
-          <div class="row-property">
-            <div class="row-property-key">
-              Release Characteristic:
-            </div>
-            <div class="row-property-value">
-              {{product.releaseCharacteristic}}
-            </div>
-          </div>
-          -->
           <div class="row-property">
             <div class="row-property-key">
               Manufacturer Name(s):
@@ -384,6 +385,17 @@
             </div>
           </div>
         </div>
+        <!--
+          <div class="row-property">
+            <div class="row-property-key">
+              Release Characteristic:
+            </div>
+            <div class="row-property-value">
+              {{product.releaseCharacteristic}}
+            </div>
+          </div>
+          -->
+
 
         <!--
         <div class="row">
@@ -489,6 +501,66 @@
             <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
+                  Marketing Category Code:
+                </div>
+                <div class="row-property-value">
+                  {{x.marketingCategoryCode}}
+                </div>
+              </div>
+
+              <div class="row-property">
+                <div class="row-property-key">
+                  Marketing Category Name:
+                </div>
+                <div class="row-property-value">
+                  {{x.marketingCategoryName}}
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Control Substance Code:
+                </div>
+                <div class="row-property-value">
+                  {{x.controlSubstanceCode}}
+                </div>
+              </div>
+
+              <div class="row-property">
+                <div class="row-property-key">
+                  Control Substance Class:
+                </div>
+                <div class="row-property-value">
+                  {{x.controlSubstanceClass}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Control Substance Source:
+                </div>
+                <div class="row-property-value">
+                  {{x.controlSubstanceSource}}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Product URL:
+                </div>
+                <div class="row-property-value">
+                  {{ x.productUrl }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
                   Provenance Product ID:
                 </div>
                 <div class="row-property-value">
@@ -505,18 +577,6 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="row-property">
-                <div class="row-property-key">
-                  Product URL:
-                </div>
-                <div class="row-property-value">
-                  {{ x.productUrl }}
-                </div>
-              </div>
-            </div>
-
-
             <!-- Product Name in Provenance Begin -->
             <br>
             <mat-card class="bordergray">
@@ -530,6 +590,8 @@
                       <tr height="25px">
                         <th>Full Product Name</th>
                         <th>Product Type</th>
+                        <th>Language</th>
+                        <th>Jurisdictions</th>
                         <th>Term and Term Part</th>
                       </tr>
                     </thead>
@@ -539,6 +601,8 @@
                           <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
                         </td>
                         <td>{{ prodName.productNameType }}</td>
+                        <td>{{ prodName.language }}</td>
+                        <td>{{ prodName.jurisdictions }}</td>
                         <td>
                           <div *ngFor="let prodPart of prodName.productTermAndParts; let indexPart = index">
                             <b>Term:</b>&nbsp;{{prodPart.productTerm}}
@@ -575,7 +639,7 @@
                           <th>#</th>
                           <th>Product Code</th>
                           <th>Product Code Type</th>
-                          <th>Juridictions</th>
+                          <th>Jurisdictions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -609,7 +673,8 @@
                           <th>Document ID</th>
                           <th>Product Document Type</th>
                           <th>Set Id Version</th>
-                          <th>Juridictions</th>
+                          <th>Effective Time</th>
+                          <th>Jurisdictions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -618,6 +683,7 @@
                           <td>{{ prodDoc.documentId }}</td>
                           <td>{{ prodDoc.documentType }}</td>
                           <td>{{ prodDoc.setIdVersion }}</td>
+                          <td>{{ prodDoc.effectiveTime }}</td>
                           <td>{{ prodDoc.jurisdictions }}</td>
                         </tr>
                       </tbody>
