@@ -230,7 +230,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingService.setLoading(true);
       const skip = this.pageIndex * this.pageSize;
       const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
-        .subscribe(pagingResponse => { console.log(pagingResponse); 
+        .subscribe(pagingResponse => {
           
       this.isLoading = false;
       this.loadingService.setLoading(false);
@@ -241,6 +241,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
         }
       });
+        }, error => {
+          console.log(error);
+          this.isLoading = false;
+          this.loadingService.setLoading(false);
         });
     } else {
       this.substances.forEach(record => {
