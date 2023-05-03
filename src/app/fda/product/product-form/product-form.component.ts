@@ -383,14 +383,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  saveJson(): void {
-
-  }
-
-  saveJSON(): void {
-
-  }
-
   confirmDeleteProduct(productId: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete this Product?' }

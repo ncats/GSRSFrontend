@@ -61,6 +61,7 @@ export interface LoadedComponents {
     clinicaltrials?: boolean;
     adverseevents?: boolean;
     impurities?: boolean;
+    ssg4m?: boolean;
     userRegistration?: boolean;
 }
 

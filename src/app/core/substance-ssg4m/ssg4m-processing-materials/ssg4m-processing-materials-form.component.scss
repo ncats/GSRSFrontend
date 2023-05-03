@@ -45,9 +45,16 @@
 }
 
 .related-substance {
-  width: 300px;
-  max-width: 300px;
+  min-width: 310px;
+  max-width: 310px;
 }
+
+/*
+.related-substance {
+  min-width: 387px;
+  max-width: 387px;
+}
+*/
 
 ::ng-deep .selected-substance {
   display: flex;
@@ -70,8 +77,20 @@
   border: 1px solid var(--regular-grey-color);
 }
 
+.margintopneg30px {
+  margin-top: -30px;
+}
+
 .margintop10px {
   margin-top: 10px;
+}
+
+.margintop20px {
+  margin-top: 20px;
+}
+
+.marginleftneg15px {
+  margin-left: -15px;
 }
 
 .marginleft50px {
@@ -102,6 +121,10 @@
   font-size: 11px;
 }
 
+.width80percent {
+  width: 80%;
+}
+
 .button-delete {
   display: flex;
   justify-content: flex-end;
@@ -112,16 +135,15 @@
   color: red;
 }
 
-hr {
-  border: none;
-  border-top: 1px solid rgba(75, 80, 75, 0.781);
-  color: #333;
-  overflow: visible;
-  text-align: center;
-  height: 5px;
+hr.style {
+  border: 1px solid rgb(111, 111, 111);
 }
 
-.related-substance {
-  min-width: 387px;
-  max-width: 387px;
+.amount {
+  width: 100%;
+  display: flex;
+}
+
+.amount-display {
+  padding-top:11px;
 }

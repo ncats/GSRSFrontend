@@ -268,5 +268,11 @@
       </app-substance-impurities>
     </mat-tab>
 
+    <mat-tab label="SSG4 Manufacturing ({{ssg4mCount}})" *ngIf="loadedComponents && loadedComponents.ssg4m">
+      <app-substance-ssg4m [substanceUuid]="substance.uuid" (countSsg4mOut)="getSsg4mCount($event)"
+        [substanceName]="substanceName">
+      </app-substance-ssg4m>
+    </mat-tab>
+
   </mat-tab-group>
 </div>

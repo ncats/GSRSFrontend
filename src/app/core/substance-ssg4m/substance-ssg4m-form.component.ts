@@ -150,6 +150,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.showRegisterEditTitle = this.configSsg4Form.showRegisterEditTitle;
     }
 
+    this.substanceClass = 'specifiedSubstanceG4m';
+
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -159,28 +161,73 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             this.id = id;
             this.gaService.sendPageView(`Substance Edit`);
             this.titleService.setTitle('Edit - Specified Substance Group 4 Manufacturing');
-            this.substanceClass = 'specifiedSubstanceG4m';
             const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
             if (newType) {
               this.getSsg4mDetails(newType);
             } else {
               this.getSsg4mDetails();
             }
+          } // if Id
+        } else if (this.activatedRoute.snapshot.queryParams['action']) {  // import in new register form
+          const actionParam = this.activatedRoute.snapshot.queryParams['action'] || null;
+          if (actionParam && actionParam === 'import' && window.history.state) {
+            const record = window.history.state.record;
+            if ((record) && this.jsonValid(record)) {
+              const responseImport = JSON.parse(record);
+              if (responseImport) {
+                this.substanceFormService.loadSubstance(this.substanceClass, responseImport).pipe(take(1)).subscribe(() => {
+                  this.setFormSections(formSections[this.substanceClass]);
+
+                  setTimeout(() => {
+                    this.forceChange = true;
+                    this.dynamicComponents.forEach((cRef, index) => {
+                      this.dynamicComponentLoader
+                        .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
+                        .subscribe(componentFactory => {
+                          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                          this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+                          this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+                            this.formSections[index].menuLabel = label;
+                          });
+                          const hiddenStateSubscription =
+                            this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                              this.formSections[index].isHidden = isHidden;
+                            });
+                          this.subscriptions.push(hiddenStateSubscription);
+                          this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+                            this.formSections[index].canAddItem = isList;
+                            if (isList) {
+                              const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                                this.formSections[index].matExpansionPanel.open();
+                                this.formSections[index].dynamicComponentRef.instance.addItem();
+                              });
+                              this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                                aieSubscription.unsubscribe();
+                              });
+                            }
+                          });
+                          this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+                        });
+                    });
+                  });
+                });  // load Substance in Import on new Register page
+              }
+            }
           }
-        } /*else { // Import JSON
-          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-          if (action && action === 'import' && window.history.state) {
-            const record = window.history.state;
-            this.imported = true;
-            this.getDetailsFromImport(record.record);
-            this.gaService.sendPageView(`Substance Import`);
-          } else {
-            this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
-            if (this.copy) {
-              const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
-              this.getPartialSubstanceDetails(this.copy, copyType);
-              this.gaService.sendPageView(`Substance Register`);
-            } */ else {  // new record
+
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+
+          // this.imported = true;
+          // this.getDetailsFromImport(record.record);
+          /* }  else {
+              this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
+              if (this.copy) {
+                const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
+                this.getPartialSubstanceDetails(this.copy, copyType);
+                this.gaService.sendPageView(`Substance Register`);
+              } */
+        } else {  // new record
           setTimeout(() => {
             this.gaService.sendPageView(`Substance Register`);
             this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
@@ -192,9 +239,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
               this.isLoading = false;
             });
           });
-        }
-        //  }
-        // }
+        } //else
       });
     this.subscriptions.push(routeSubscription);
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
@@ -608,7 +653,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.ssg4mSyntheticPathway = response;
 
         if (action && action === 'import' && window.history.state) {
-          this.gaService.sendPageView(`Substance Import`);
+          // this.gaService.sendPageView(`Substance Import`);
           const record = window.history.state.record;
           // this.imported = true;
           // this.getDetailsFromImport(record.record);
@@ -954,6 +999,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // if New Record, initialize object
       if (this.ssg4mSyntheticPathway == null) {
         this.ssg4mSyntheticPathway = {};
+
+        // Generate GUID SynthPathwayId
+        // this.ssg4mSyntheticPathway.synthPathwayId = '2ead5343-6471-88ae-b0b0-88370d44786e';
         // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
       }
       // Existing Record
@@ -981,7 +1029,12 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.showSubmissionMessages = false;
         this.validationResult = false;
 
+        // if Saved Successfully
         if (response && response.synthPathwaySkey) {
+          if (response.synthPathwaySkey) {
+            this.id = response.synthPathwaySkey.toString();
+          }
+
           // if the API communication does resolve, AND the initial save went through, it will replace
           // the warning message. Only show this message when user clicked on the 'Cancel' button.
           // After user clicks 'Refresh' button, refresh the page manually.
@@ -1239,6 +1292,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       this.substanceSsg4mService.bypassUpdateCheck();
       if (response === 'continue') {
+
         // Refresh the current page, this will not cause record locking issue
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
@@ -1248,6 +1302,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         } else {
           this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         }
+
         // } else if (response === 'browse') {
         //  this.router.navigate(['/browse-substance']);
         //  } else if (response === 'home') {

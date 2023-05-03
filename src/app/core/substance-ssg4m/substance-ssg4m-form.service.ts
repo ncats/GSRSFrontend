@@ -3,7 +3,7 @@ import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } fro
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config/config.service';
-import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
+import { Ssg4mSyntheticPathway, Ssg4mSyntheticPathwayDetail } from './model/substance-ssg4m.model';
 import { SubstanceDetail } from '../substance/substance.model';
 import { SubstanceName } from '../substance/substance.model';
 import { SubstanceFormDefinition, SubunitSequence, ValidationResults, ValidationMessage } from '../substance-form/substance-form.model';
@@ -446,6 +446,13 @@ export class SubstanceSsg4mService implements OnDestroy {
         isDeleted: false
       };
     }
+  }
+
+  getSyntheticPathwayIndexBySubUuid(subUuid: string) {
+    // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m/${id}`;
+    const url = this.apiBaseUrlSsg4mEntityUrl + '/indexbysubuuid/' + subUuid;
+
+    return this.http.get<Ssg4mSyntheticPathwayDetail>(url);
   }
 
 }
