@@ -227,7 +227,8 @@ import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/impo
     Ssg2ManufacturingModule,
     SchemaFormModule.forRoot(),   
     BulkSearchModule,
-    ElementLabelDisplayModule
+    ElementLabelDisplayModule,
+    PrivacyStatementModule
   ],
   providers: [
     {
