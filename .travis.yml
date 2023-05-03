@@ -25,4 +25,3 @@ script:
   - npm run build:fda:prod
 after_success:
   - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
-
