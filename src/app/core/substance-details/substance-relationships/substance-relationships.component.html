@@ -32,8 +32,13 @@
     <ng-container matColumnDef="details">
       <th mat-header-cell *matHeaderCellDef > Details </th>
       <td mat-cell *matCellDef="let relationship">
-        <button class = "mat-raised-button mat-primary" (click)="openModal(detailTemplate)" [disabled]="!hasDetails(relationship)" > View</button>
-        <ng-template #detailTemplate>
+          <button class = "mat-raised-button mat-primary" (click)="openModal(detailTemplate)" [disabled]="
+          !(relationship.mediatorSubstance && relationship.mediatorSubstance.name)
+        && !(relationship.amount)
+        && !(relationship.qualification)
+        && !(relationship.interactionType)
+        && !(relationship.comments)" > View</button>
+          <ng-template #detailTemplate>
           <h2 mat-dialog-title>Details</h2>
           <div mat-dialog-content>
             <table class = "details-table mat-table">

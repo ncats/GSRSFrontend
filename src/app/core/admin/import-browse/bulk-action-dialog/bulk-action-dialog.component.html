@@ -8,11 +8,14 @@
         <span ><button class ="action-button" color = "primary"  mat-button mat-flat-button mat-primary-button 
             (click) = "doAction('create')" [disabled] = "total && total == 0">Create</button></span>
             
-          <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
-             (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
+         <!-- <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
+             (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>-->
           <span><button class ="action-button" color = "primary"  mat-button mat-flat-button mat-primary-button 
             (click) = "doAction('reject')" [disabled] = "total && total == 0">Reject</button></span>
     </div>
+    <div *ngIf = "filtered.length > 0 && !successful" class = "scrubber-row">
+            <mat-checkbox [(ngModel)] = "useScrubber"></mat-checkbox> Use Cleaning Options
+        </div>
     <table mat-table matSort [dataSource]="filtered" *ngIf = "filtered.length > 0 && !successful">
         <ng-container matColumnDef="ID">
                 <th mat-header-cell  *matHeaderCellDef> Selected </th>
@@ -29,6 +32,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 </table>
+
 </div>
  <div mat-dialog-content class = "loading-container" *ngIf = "loading">
         <mat-progress-spinner style = "margin: auto"

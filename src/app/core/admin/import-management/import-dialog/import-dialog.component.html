@@ -96,7 +96,7 @@
                             <div class = "label">Value Units</div>
 
                             <div class = "value-container"  class = "set-width">
-                                        <app-cv-import [vocabulary] = "fieldList"  title = "Value Units" [model] = "settingsActive.actionParameters.valueUnits" 
+                                        <app-cv-import domain =  "AMOUNT_UNIT"  title = "Value Units" [model] = "settingsActive.actionParameters.valueUnits" 
                                         (valueChange)="updateType($event, 'valueUnits')" ></app-cv-import>
                                 </div>
                             
@@ -129,12 +129,19 @@
 
                     </div>
                 </div>
+
+                <div class = "field-note">
+                                A standard reference will be added to the substance and assigned to the definition and to any names created.
+                     </div>
             </div>
 
             <div *ngIf = "settingsActive.actionName == 'structure_and_moieties'">
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Molfile</div>
                             <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.molfile" /></div>
+                    </div>
+                    <div class = "field-note">
+                               This value will be pulled from molefile field of your file. Please do not change without a specific reason.
                     </div>
                     <!-- <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Citation</div>
@@ -149,8 +156,13 @@
             </div>
             <div *ngIf = "settingsActive.actionName == 'note_import'">
                         <div class = "label-value"  style = "margin-bottom: 10px;">
-                                <div class = "label">Note</div>
-                                <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.note" /></div>
+                        <div class = "label">Note</div>
+                        <div class = "value-container" class = "set-width">
+                                        <app-cv-import [vocabulary] = "fieldList"  title = "Note" [model] = "settingsActive.actionParameters.note" 
+                                        (valueChange)="updateType($event, 'note')" ></app-cv-import>
+                                        </div>     
+                                        
+                                        
                         </div>
                         <!-- <div class = "label-value"  style = "margin-bottom: 10px;">
                                 <div class = "label">Citation</div>

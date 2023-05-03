@@ -64,6 +64,16 @@
     font-size: 16px;
 }
 
+.top-button {
+    font-size: 20px;
+    margin-left: 150px;
+padding-top: 4px;
+padding-bottom: 4px;
+width: 200px;
+background-color:  var(--primary-color);
+color: white;
+}
+
 .search-parameters {
     display: flex;
     width: 100%;

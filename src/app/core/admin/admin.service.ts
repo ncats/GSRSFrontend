@@ -151,7 +151,10 @@ export class AdminService extends BaseHttpService {
         public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
           console.log(file);
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview`;
-         if (limit && limit !== 'all') {
+         if (limit) {
+           if(limit === 'all') {
+             limit = 500000
+           }
             url += "?limit=" + limit;
           }
           return this.http.put< any >(`${url}`, file);
@@ -270,11 +273,12 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public stagedRecordMultiAction(records:any, action: string) {
+        public stagedRecordMultiAction(records:any, action: string, scrubber?: any) {
           console.log(records);
+          console.log(scrubber);
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
           let toput = {
-            stagingAreaRecords: 
+            "stagingAreaRecords":
               records
             ,
               "processingActions": [
@@ -284,6 +288,9 @@ export class AdminService extends BaseHttpService {
                   }, "processingActionName": action
                 }
               ]
+            }
+            if (scrubber) {
+              toput.processingActions[0].parameters['scrubberSettings'] = scrubber;
             }
             console.log(toput);
          
@@ -326,6 +333,13 @@ export class AdminService extends BaseHttpService {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}/@update`;
 
           return this.http.put< any >(url, substance);
+
+        }
+
+        public getImportScrubberSchema() {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/action(Scrub)/@schema`;
+
+          return this.http.get< any >(url);
 
         }
 }

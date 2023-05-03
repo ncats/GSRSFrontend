@@ -1,6 +1,6 @@
 <h3>Record Import </h3>
 <div class = "top-button-row">
-                <button  class = "top-button" mat-flat-button mat-button color = "primary" (click) = "ImportReload()" [disabled] = "step === 1">New Data Import</button>
+                <button  class = "top-button" mat-flat-button mat-button color = "primary" (click) = "ImportReload()">New Data Import</button>
                 <button class = "top-button" mat-flat-button mat-button color = "primary" (click) = "stagingArea()">Staging Area</button>
         </div>
 <div *ngIf = "!step || step === 1">
@@ -26,7 +26,8 @@
             <div class = "half-row importer-radio">
              <mat-radio-group placeholder="Adapter" name = "adapter"  (change) = "setAdapter($event)">
                     <div style = "height:32px; margin-right:15px;" *ngFor = "let adapter of demo" >
-                            <mat-radio-button style = "width: 100%" value = '{{adapter.adapterKey}}'>{{adapter.adapterName}}</mat-radio-button>
+                            <mat-radio-button style = "width: 100%" value = '{{adapter.adapterKey}}' [checked] = "adapter.adapterKey == adapterKey">
+                                    {{adapter.adapterName}}</mat-radio-button>
                          </div>
                 </mat-radio-group>
             
@@ -85,7 +86,7 @@
                
                 
                 <div class = "label inline-vertical preview-container ">
-                                <b>Preview</b>  <!-- <span style = "width:25px;"> </span>  -->                   
+                                <b>Preview</b>               
                                
                             </div>
                 
@@ -108,12 +109,13 @@
                                     <button mat-button (click) = "addRef()">
                                                 Add Reference<mat-icon svgIcon="add_circle_outline"></mat-icon>
                                               </button>
+
         </div>
         <div class = "preview-window">
                 <div style = "width:100%; display:flex;">
                        <span class ="middle-fill"></span>
                        
-                       <div style = "width: 235px;margin: auto;">Show &nbsp; &nbsp; <mat-select [(ngModel)]="previewLimit" name="previewLimit" class = "preview-limit" >
+                       <div style = "width: 235px;margin: auto;">Show &nbsp; &nbsp; <mat-select (selectionChange) = "this.callPreview()" [(ngModel)]="previewLimit" name="previewLimit" class = "preview-limit" >
                                                 <mat-option *ngFor="let term of previewLimitList" [value]="term">
                                                   {{term}}
                                                 </mat-option>

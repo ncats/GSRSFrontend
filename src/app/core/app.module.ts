@@ -117,6 +117,7 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
 import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
+import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 
 @NgModule({
   declarations: [
@@ -155,7 +156,8 @@ import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-cre
     PwdRecoveryComponent,
     MergeActionDialogComponent,
     UserQueryListDialogComponent,
-    ListCreateDialogComponent
+    ListCreateDialogComponent,
+    ImportScrubberComponent
 
   ],
   imports: [
@@ -260,7 +262,8 @@ import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-cre
     CustomTextareaWidgetComponent,
     MergeActionDialogComponent,
     UserQueryListDialogComponent,
-    ListCreateDialogComponent
+    ListCreateDialogComponent,
+    ImportScrubberComponent
   ],
   exports: [
     StructureEditorModule,

@@ -48,6 +48,7 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
+import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 
 @Component({
   selector: 'app-import-browse',
@@ -141,6 +142,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   matches: Array<any>;
   bulkList: any = {};
 
+  scrubberSchema: any;
+  scrubberModel: any;
 
 
   constructor(
@@ -209,7 +212,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         maxHeight: '85%',
 
         width: '60%',
-        data: { 'records': this.bulkList }
+        data: { 'records': this.bulkList, 'scrubberModel': this.scrubberModel }
       });
 
       this.overlayContainer.style.zIndex = '1002';
@@ -235,10 +238,12 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isLoading = false;
       this.loadingService.setLoading(false);
       pagingResponse.content.forEach(record => {
-        if (this.bulkList[record._metadata.recordId]) {
-          this.bulkList[record._metadata.recordId].checked = true;
-        } else {
-          this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+        if ( !record._metadata.importStatus || record._metadata.importStatus !== 'imported') {
+          if (this.bulkList[record._metadata.recordId]) {
+            this.bulkList[record._metadata.recordId].checked = true;
+          } else {
+            this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+          }
         }
       });
         }, error => {
@@ -265,11 +270,35 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  openScrubber(templateRef:any, index: number): void  {
+      const dialogref = this.dialog.open(ImportScrubberComponent, {
+        minHeight: '500px',
+        width: '800px',
+        data: {
+          scrubberSchema: this.scrubberSchema,
+          scrubberModel: this.scrubberModel
+        }
+      });
+      this.overlayContainer.style.zIndex = '1002';
+  
+      dialogref.afterClosed().subscribe(result => {
+        this.overlayContainer.style.zIndex = null;
+  
+        if(result) {
+          this.scrubberModel = result;
+        }
+        
+      });
+  }
+
   ngOnInit() {
     this.substances = [];
     this.records = [];
 
-    
+    this.adminService.getImportScrubberSchema().subscribe(response => {
+      console.log(response);
+      this.scrubberSchema = response;
+    });
      
     this.gaService.sendPageView('Staging Area');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
@@ -835,46 +864,13 @@ searchTermOkforBeginsWithSearch(): boolean {
 
 
   populateUrlQueryParameters(): void {
-    /*
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-
-    navigationExtras.queryParams['search'] = this.privateSearchTerm;
-    navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
-    navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
-    navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
-    navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
-    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
-    navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
-    navigationExtras.queryParams['type'] = this.privateSearchType;
-    navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
-    navigationExtras.queryParams['smiles'] = this.smiles;
-    navigationExtras.queryParams['order'] = this.order;
-    navigationExtras.queryParams['pageSize'] = this.pageSize;
-    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
-    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
-    navigationExtras.queryParams['view'] = this.view;
-    // navigationExtras.queryParams['g-search-hash'] = this.searchTermHash;
-    this.previousState.push(this.router.url);
-    const urlTree = this.router.createUrlTree([], {
-      queryParams: navigationExtras.queryParams,
-      queryParamsHandling: 'merge',
-      preserveFragment: true
-    });
-    this.location.go(urlTree.toString());
-    */
+    
   }
 
   editAdvancedSearch(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'advanced search term' :
       `${this.privateSearchTerm}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
-    // Structure Search
-   // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
-   // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
-   // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
-
     // ** BEGIN: Store in Local Storage for Advanced Search
     // storage searchterm in local storage when going from Browse Substance to Advanced Search (NOT COMING FROM ADVANCED SEARCH)
     if (!this.searchHashFromAdvanced) {
