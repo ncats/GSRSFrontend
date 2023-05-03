@@ -118,7 +118,7 @@ import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
-
+import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 @NgModule({
   declarations: [
     AppComponent,
