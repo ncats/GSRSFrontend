@@ -42,6 +42,11 @@
   </legend>
 
   <div class="divflexrow">
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
+        name="applicantIngredName" />
+    </mat-form-field>
+
     <!-- Ingredient Name -->
     <div class="col-1-4 flex-column related-substance">
       <div class="related-substance-border">
@@ -124,9 +129,6 @@
       </mat-select>
     </mat-form-field>
     -->
-    <app-cv-input class="col-1-4" domain="PROD_GRADE" title="Grade" name="grade" [model]="ingredient.grade"
-      (valueChange)="ingredient.grade = $event">
-    </app-cv-input>
 
     <div>
       <label>Ingredient Location</label><br>
@@ -200,6 +202,10 @@
   </div>
 
   <div class="form-row">
+    <app-cv-input class="col-1-4" domain="PROD_GRADE" title="Grade" name="grade" [model]="ingredient.grade"
+      (valueChange)="ingredient.grade = $event">
+    </app-cv-input>
+
     <app-cv-input class="col-1-4" domain="PROD_RELEASE_CHARACTERISTIC" title="Release Characteristics"
       name="releaseCharacteristic" [model]="ingredient.releaseCharacteristic"
       (valueChange)="ingredient.releaseCharacteristic = $event">
@@ -217,14 +223,6 @@
     -->
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />
-    </mat-form-field>
-
-    <mat-form-field class="col-half-4">
-      <input matInput placeholder="Lot No" [(ngModel)]="ingredient.ingredLotNo" name="ingredLotNo" />
-    </mat-form-field>
-
-    <mat-form-field class="col-half-4">
       <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode"
         name="confidentialityCode" />
     </mat-form-field>
@@ -233,6 +231,22 @@
       <input matInput placeholder="Notes" [(ngModel)]="ingredient.notes" name="notes " />
     </mat-form-field>
   </div> <!-- row-->
+
+
+  <div class="form-row">
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Lot No" [(ngModel)]="ingredient.ingredLotNo" name="ingredLotNo" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Manufacture Ingredient Catalog ID"
+        [(ngModel)]="ingredient.manufactureIngredCatalogId" name="manufactureIngredCatalogId " />
+    </mat-form-field>
+  </div>
 
 </fieldset>
 <br>

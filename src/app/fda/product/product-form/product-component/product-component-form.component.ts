@@ -87,6 +87,7 @@ export class ProductComponentFormComponent implements OnInit {
     this.productService.addNewProductLot(prodComponentIndex);
   }
 
+  /*
   addNewProductManufacturer(prodComponentIndex: number) {
     this.productService.addNewProductManufacturer(prodComponentIndex);
   }
@@ -106,7 +107,8 @@ export class ProductComponentFormComponent implements OnInit {
   deleteProductManufacturer(prodComponentIndex: number, productManuIndex: number) {
     this.productService.deleteProductManufacturer(prodComponentIndex, productManuIndex);
   }
-
+  */
+ 
   copyProductComponent() {
     this.productService.copyProductComponent(this.productComponent);
   }

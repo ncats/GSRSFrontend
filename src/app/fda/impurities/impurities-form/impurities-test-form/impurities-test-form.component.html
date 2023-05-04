@@ -14,7 +14,6 @@
 <mat-card class="borderblue">
   <mat-card-content>
 
-    <!-- //new 3.1 start -->
     <div class="form-row">
       <app-cv-input class="col-4-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
         [model]="impuritiesTest.sourceType" (valueChange)="impuritiesTest.sourceType = $event">
@@ -28,7 +27,6 @@
         <input matInput placeholder="Source ID" [(ngModel)]="impuritiesTest.sourceId" name="sourceId" />
       </mat-form-field>
     </div>
-    <!-- //new 3.1 end -->
 
     <div class="form-row">
       <mat-form-field class="col-2-1">
@@ -66,6 +64,17 @@
     </div>
 
     <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <input matInput placeholder="Injection Volume Amount" [(ngModel)]="impuritiesTest.injectionVolumeAmount"
+          name="injectionVolumeAmount" />
+      </mat-form-field>
+
+      <mat-form-field class="col-2-1">
+        <input matInput placeholder="Diluent" [(ngModel)]="impuritiesTest.diluent" name="diluent" />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
       <app-cv-input class="col-4-1" domain="IMPURITIES_SYSTEM" title="System" name="system"
         [model]="impuritiesTest.system" (valueChange)="impuritiesTest.system = $event">
       </app-cv-input>
@@ -74,41 +83,33 @@
         (valueChange)="impuritiesTest.mode = $event">
       </app-cv-input>
 
-      <app-cv-input class="col-4-1" domain="IMPURITIES_DETECTION_TYPE" title="Detection Type" name="detectionType"
+      <app-cv-input class="col-2-1" domain="IMPURITIES_DETECTION_TYPE" title="Detection Type" name="detectionType"
         [model]="impuritiesTest.detectionType" (valueChange)="impuritiesTest.detectionType = $event">
       </app-cv-input>
 
-      <mat-form-field class="col-4-1">
-        <input matInput placeholder="Detection Details" [(ngModel)]="impuritiesTest.detectionDetails"
-          name="detectionDetails" />
-      </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field class="col-4-1">
-        <input matInput placeholder="Injection Volume Amount" [(ngModel)]="impuritiesTest.injectionVolumeAmount"
-          name="injectionVolumeAmount" />
-      </mat-form-field>
-
-      <mat-form-field class="col-4-1">
-        <input matInput placeholder="Diluent" [(ngModel)]="impuritiesTest.diluent" name="diluent" />
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Standard Solution" [(ngModel)]="impuritiesTest.standardSolution"
+          name="standardSolution"></textarea>
       </mat-form-field>
 
       <mat-form-field class="col-2-1">
-        <input matInput placeholder="Standard Solution" [(ngModel)]="impuritiesTest.standardSolution"
-          name="standardSolution" />
+        <textarea matInput placeholder="Detection Details" [(ngModel)]="impuritiesTest.detectionDetails"
+          name="detectionDetails"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field class="col-2-1">
-        <input matInput placeholder="Sample Solution" [(ngModel)]="impuritiesTest.sampleSolution"
-          name="sampleSolution" />
+        <textarea matInput placeholder="Sample Solution" [(ngModel)]="impuritiesTest.sampleSolution"
+          name="sampleSolution"></textarea>
       </mat-form-field>
 
       <mat-form-field class="col-2-1">
-        <input matInput placeholder="System Suitability Solution" [(ngModel)]="impuritiesTest.systemSuitabilitySolution"
-          name="systemSuitabilitySolution" />
+        <textarea matInput placeholder="System Suitability Solution" [(ngModel)]="impuritiesTest.systemSuitabilitySolution"
+          name="systemSuitabilitySolution"></textarea>
       </mat-form-field>
     </div>
 
@@ -145,8 +146,10 @@
           *ngFor="let impuritiesElution of impuritiesTest.impuritiesElutionSolventList; let impuritiesElutionIndex = index">
           <div class="form-row">
 
-            <app-substance-text-search class="col-2-1" [searchValue]="impuritiesElution.elutionSolvent" placeholder="Search Substances"
-              (searchPerformed)="nameSearch($event, impuritiesTestIndex, impuritiesElutionIndex)" eventCategory="selectorSearch">
+            <app-substance-text-search class="col-2-1" [searchValue]="impuritiesElution.elutionSolvent"
+              placeholder="Search Substances"
+              (searchPerformed)="nameSearch($event, impuritiesTestIndex, impuritiesElutionIndex)"
+              eventCategory="selectorSearch">
             </app-substance-text-search>
 
             <!--

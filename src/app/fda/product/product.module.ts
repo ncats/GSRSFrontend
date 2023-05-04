@@ -57,8 +57,8 @@ const productRoutes: Routes = [
   {
     path: 'product/register',
     component: ProductFormComponent,
-  //  canActivate: [ActivateProductsComponent, CanActivateRegisterProductFormComponent],
-  //  canDeactivate: [CanDeactivateProductFormComponent]
+    canActivate: [ActivateProductsComponent, CanActivateRegisterProductFormComponent],
+    canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id/edit',

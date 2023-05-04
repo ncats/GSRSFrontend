@@ -148,7 +148,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
         this.ingredientNameMessage = 'Click Validate and Submit button to delete ' + this.ingredientName;
       }
     }
-    this.ingredientNameSubstanceUuid = null;
+    // this.ingredientNameSubstanceUuid = null;
+    this.substanceUuid = null;
     this.ingredientName = null;
     this.ingredient.substanceKey = null;
     this.ingredient.substanceKeyType = null;
