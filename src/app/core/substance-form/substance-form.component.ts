@@ -382,15 +382,14 @@ isBase64(str) {
 
 setStructureFromUrl(structure: string, type: string):void {
   // check if structureUR is encoded molfile or raw smiles string, then import into form
-  if (this.isBase64(structure)) {
-    structure = this.gunzip(structure);
+  /*structure = this.gunzip(structure);
     structure = decodeURIComponent(structure);
-    this.substanceFormService.importStructure(structure, 'molfile');
-  } else {
+    this.substanceFormService.importStructure(structure, 'molfile');*/
     this.substanceFormService.importStructure(structure, 'smiles');
-  }
 
 }
+
+
 
 gunzip(t): string{
   
@@ -429,6 +428,7 @@ getDrafts() {
     const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
     if (structure) {
      let decode = decodeURIComponent(structure);
+     console.log(decode);
       setTimeout(() => {
         this.setStructureFromUrl(decode, 'molfile');
       });
