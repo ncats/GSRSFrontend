@@ -7,8 +7,9 @@
 <div class="flex-row" mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="dismissDialog('continue')">Continue Editing</button>
     <!-- Do not show the following buttons, if the Dialog is launching from SSG4 page -->
-    <button *ngIf="isCoreSubstance === 'true'" mat-flat-button color="primary" (click)="dismissDialog('browse')">Go to
+    <button *ngIf="isCoreSubstance === 'true' && !staging" mat-flat-button color="primary" (click)="dismissDialog('browse')">Go to
         Browse</button>
-    <button *ngIf="isCoreSubstance === 'true'" mat-flat-button color="primary" (click)="dismissDialog('view')">View
+    <button *ngIf="isCoreSubstance === 'true' && !staging" mat-flat-button color="primary" (click)="dismissDialog('view')">View
         Substance</button>
+        <button *ngIf="staging" mat-flat-button color="primary" (click)="dismissDialog('staging')">Return to Staging Area</button>
 </div>

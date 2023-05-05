@@ -316,9 +316,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     if (this.application) {
       if (this.application.id) {
       } else {
-        alert('PROV: ' + this.application.provenance);
         if (this.application.provenance === null || this.application.provenance === undefined) {
-          alert("INSIDE PROVENANCE");
           // Set Provenance to GSRS
           this.application.provenance = 'GSRS';
         }
@@ -371,7 +369,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       }*/
 
     );
-    
+
   }
 
   private handleApplicationRetrivalError() {

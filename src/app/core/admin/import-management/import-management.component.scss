@@ -1,0 +1,412 @@
+.italics {
+    font-style: italic;
+    color: var(--text-color);
+}
+
+.inline-vertical {
+  //  display: inline;
+ //   vertical-align: middle;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.file-name {
+    display: flex;
+    text-align: center;
+    margin-left: 15px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.full-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap:wrap;
+    padding: 10px;
+
+    .action-list {
+        max-width:70%;
+        width: 900px;
+    }
+    
+    .preview-window {
+        max-width: 28%;
+        margin-right:25px;
+        width: 500px;
+    }
+}
+
+.spinner {
+   
+}
+.action-list {
+    width: 70%;
+   
+}
+
+.importer-radio {
+    display: flex; flex-direction: column;
+}
+
+.half-column {
+    width: 50%;
+}
+
+.label-value {
+    width: 100%;
+    .label {
+        width:30%;
+    }
+    .value-container {
+        width: 66%;
+        display:flex;
+        flex-wrap: wrap;
+
+        .value {
+            width: 100%;
+        }
+    }
+
+    .ignore-container {
+        width: 15%
+    }
+}
+
+.preview-container {
+    margin-left: auto;
+margin-right: auto;
+padding-left: 7%;
+}
+
+.top-button-row {
+    width: 100%;
+    margin-top: -130px;
+    margin-bottom: 100px;
+display: flex;
+flex-direction: row;
+align-items: center;
+  justify-content: center;
+
+.top-button {
+    font-size: 20px;
+margin-right: 5px;
+padding-top: 4px;
+padding-bottom: 4px;
+width: 200px;
+
+}
+}
+.progress-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+
+    .load-progress {
+        width: 100%;
+    }
+
+    .bar-label {
+        font-size: 14px;
+        padding-bottom: 3px;
+    }
+}
+
+.spinner {
+    width: 100px !important;
+    height: 100px !important;
+    margin: auto;
+    margin-top: 75px !important;
+    margin-left: 150px !important;
+    mat-progress-spinner {
+        margin: auto;
+        width: 100px !important;
+        height: 100px !important;
+    }
+}
+
+.set-width-label {
+    min-width: 430px;
+}
+
+.load-progress {
+    height: 17px;
+    margin-bottom: 5px;
+    font-size:12px;
+    color: var(--regular-black-color);
+  -webkit-text-fill-color: var(--regular-white-color); /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--regular-black-color);
+}
+
+.load-fail {
+    // transform: rotate(180deg);
+    margin-top: -22px;
+    ::ng-deep .mat-progress-bar-fill {
+        background-color: var(--error);
+        z-index: 1;
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        background-color: var(--error);
+     //    z-index: 1;
+
+    }
+
+
+      
+    
+    ::ng-deep .mat-progress-bar-buffer {
+        background: var(--progress-bar-buffer-bg-color);
+    }
+}
+
+.loading-spinner {
+    width: 70px;
+    mat-progress-spinner {
+        margin: auto;
+    }
+}
+.load-fail-old {
+     transform: rotate(180deg);
+    margin-top: -22px;
+    ::ng-deep .mat-progress-bar-fill {
+        background-color: var(--error);
+        z-index: 2;
+
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        background-color: var(--error);
+        z-index: 2;
+
+
+    }
+
+
+      
+    
+    ::ng-deep .mat-progress-bar-buffer {
+        background: var(--progress-bar-buffer-bg-color);
+    }
+}
+
+.load-success {
+    ::ng-deep .mat-progress-bar-fill {
+        // background-color: var(--error);
+         z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        // background-color: var(--error);
+       //  z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-buffer {
+        background: var(--progress-bar-buffer-bg-color);
+    }
+}
+
+
+.load-success-old {
+    ::ng-deep .mat-progress-bar-fill {
+        // background-color: var(--error);
+        z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-fill::after {
+        // background-color: var(--error);
+         z-index: 2;
+
+    }
+    ::ng-deep .mat-progress-bar-buffer {
+        background: var(--progress-bar-buffer-bg-color);
+    }
+}
+
+.progress-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .load-progress {
+        width: 100%;
+    }
+
+    .bar-label {
+        font-size: 14px;
+    }
+}
+
+
+
+.spinner-container {
+    display: flex;
+    flex-direction: row;
+
+    .spinner-labels {
+        
+    }
+
+    .spinner-row {
+        width: 33%;
+        flex-direction: column;
+
+        .spinner-labels {
+        display: flex;
+        flex-direction: row;
+
+
+        .spinner {
+            width: 50px;
+        }
+        }
+    }
+}
+
+.count-label {
+margin-top: auto;
+margin-bottom: auto;
+}
+
+.loader-container {
+    width: 70%;
+    margin: 10px;
+}
+
+.lower-body {
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+}
+
+.stat-container {
+    width: 30%;
+    margin:10px;
+    min-width: 250px;
+}
+
+.label-value{
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+    padding-bottom: 10px;
+
+    .label { 
+        width: 25%;
+        min-width: 125px;
+        font-weight: 500;
+    }
+
+    .value {
+        width: 69%;
+    }
+}
+
+.example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+
+.preview-limit {
+    width: 60px;
+    font-weight: 500;
+}
+  .mirror {
+    margin-top: -105px;
+    transform: scale(-1, 1);
+
+    ::ng-deep circle {
+        stroke: var(--error);
+    }
+      
+ 
+    
+    ::ng-deep .mat-progress-spinner-buffer {
+        background: var(--progress-spinner-buffer-bg-color);
+    }
+  }
+
+  .mirror-test {
+    margin-left: -125px;
+    transform: scale(-1, 1);
+
+    ::ng-deep circle {
+        stroke: var(--error);
+    }
+
+    ::ng-deep .mat-progress-spinner-buffer {
+        background: var(--progress-spinner-buffer-bg-color);
+    }
+}
+
+
+  .overlap {
+    ::ng-deep .mat-progress-bar-fill::after {
+        z-index: 2;
+    }
+  }
+
+  .deleted {
+      margin: auto;
+      padding: 10px;
+      color: var(--regular-grey-color);
+      font-style: italics;
+      font-size: 18px;
+  }
+
+
+  .label-row {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+
+      .count-row-label {
+          margin-left: auto;
+          margin-right: auto;
+      }
+  }
+
+  .count-cont {
+      text-align: center;
+      color: var(--regular-white-color);
+      margin-top: -22px;
+      font-weight: bold;
+      z-index: 5;
+      font-size: 15px;
+  }
+
+  .file-row {
+      width: 75%;
+      height: 40px;
+        display: flex;
+        flex-direction: row;
+  }
+
+  .options-row {
+      width: 25%;
+      display: flex;
+      flex-direction: column;
+  }
+
+  .bottom {
+      padding-top: 50px;
+  }
+
+
+  .substance-data {
+    flex-direction: column;
+
+    .label {
+        margin-bottom: 10px;
+    }
+
+    .value, .code-system {
+        padding-left: 20px;
+    }
+}

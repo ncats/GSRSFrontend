@@ -114,6 +114,9 @@ import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
+import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 
 @NgModule({
   declarations: [
@@ -149,7 +152,9 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     CustomMultiCheckboxWidgetComponent,
     CustomTextareaWidgetComponent,
     RegisterComponent,
-    PwdRecoveryComponent
+    PwdRecoveryComponent,
+    UserQueryListDialogComponent,
+    ListCreateDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -218,7 +223,8 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     Ssg2ManufacturingModule,
     SchemaFormModule.forRoot(),   
     BulkSearchModule,
-    ElementLabelDisplayModule
+    ElementLabelDisplayModule,
+    PrivacyStatementModule
   ],
   providers: [
     {
@@ -250,7 +256,9 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     CustomSelectWidgetComponent,
     CustomRadioWidgetComponent,
     CustomMultiCheckboxWidgetComponent,
-    CustomTextareaWidgetComponent
+    CustomTextareaWidgetComponent,
+    UserQueryListDialogComponent,
+    ListCreateDialogComponent
   ],
   exports: [
     StructureEditorModule,

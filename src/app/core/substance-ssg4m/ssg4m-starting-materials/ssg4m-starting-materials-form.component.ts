@@ -277,4 +277,13 @@ export class Ssg4mStartingMaterialsFormComponent implements OnInit, OnDestroy {
 
   }
 
+  /*
+  deleteProductLot(prodComponentIndex: number, prodLotIndex: number) {
+    this.productService.deleteProductLot(prodComponentIndex, prodLotIndex);
+  }
+
+  deleteProductLot(prodComponentIndex: number, prodLotIndex: number): void {
+    this.product.productComponentList[prodComponentIndex].productLotList.splice(prodLotIndex, 1);
+  }
+  */
 }

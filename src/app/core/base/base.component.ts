@@ -20,6 +20,8 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import {sprintf} from "sprintf-js";
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
   selector: 'app-base',
@@ -475,6 +477,27 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  viewLists(list?: string): void {
+    let data = {view: 'all'};
+    if (list) {
+      data.view = 'single';
+      data['activeName'] = list.split(':')[1];
+    }
+    const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+      width: '850px',
+      autoFocus: false,
+      data: data
+
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
+      }
+    });
   }
 
   logout() {

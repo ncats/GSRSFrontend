@@ -2,79 +2,115 @@
   <br><br><br><br>
   {{message}}
 </div>
+
 <div *ngIf="product && product.id">
-  <div class="details-container margintop90px">
-    <mat-card class="bordergray">
-      <mat-card-title>
-        <div class="divflexrow">
+  <div class="details-container details-box margintop80px">
+    <div class="divflexrow margintop20px">
+      <div class="divflex">
+
+        <div class="title">
           <div class="divflex">
             <div>
               Product Details &nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="margintopneg10px">
+              <!-- Download Json -->
+              <span *ngIf="product && product.id">
+                <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
+                  download="{{jsonFileName}}.json" matTooltip='Download JSON'>
+                  <mat-icon svgIcon="get_app"></mat-icon>
+                </a>&nbsp;
+              </span>
+            </div>
+            <div>
               <!-- Edit GSRS record button -->
               <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
                 matTooltip='Edit GSRS Product Record'>
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
             </div>
-            <div class="margintopneg10px">
-              <!-- Copy Product to New Register -->
-              <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copy:product.id}"
-                matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
-                <mat-icon svgIcon="file_copy"></mat-icon>
-              </a>
-            </div>
-            <div>
-              <span>
-                <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
-                </mat-icon>
-              </span>
-            </div>
-          </div>
-          <div class="width60percent textalignright font11px" *ngIf="product.id">
-            <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Create Date:</span>
-            {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-          </div>
-        </div> <!-- class=divflexrow -->
-      </mat-card-title>
+          </div> <!-- flex -->
+        </div>
 
-      <mat-card-content>
-
-        <table class="blueTable">
-          <thead>
-            <tr height="30px">
-              <th>Full Product Name</th>
-              <th>Product Type</th>
-              <th>Term and Term Part</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let prodName of product.productNameList; let indexName = index">
-              <td>
-                <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
-              </td>
-              <td>{{ prodName.productNameType }}</td>
-              <td>
-                <div *ngFor="let prodPart of prodName.productTermAndTermPartList; let indexPart = index">
-                  <b>Term:</b>&nbsp;{{prodPart.productTerm}}
-                  <b>Term Part:</b>&nbsp;&nbsp;{{prodPart.productTermPart}}<br><br>
-                </div>
-              </td>
-            </tr>
-
-            <tr *ngIf="product.productNameList.length < 1">
-              <td colspan="3">
-                No Product Name Available
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <!-- Product Details -->
+        <div class="margintopneg10px">
+          <!-- Copy Product to New Register -->
+          <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
+            matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
+            <mat-icon svgIcon="file_copy"></mat-icon>
+          </a>
+        </div>
+        <div>
+          <span>
+            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+            </mat-icon>
+          </span>
+        </div>
+      </div>
+      <div class="width60percent textalignright font11px" *ngIf="product.id">
+        <span *ngIf="product.provenance" class="font12px colorred">
+          Provenance: {{product.provenance}}
+        </span>
         <br>
+        <span class="colorgray">Created By:</span> {{product.createdBy}}&nbsp;&nbsp;&nbsp;
+        <span class="colorgray">Create Date:</span>
+        {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+        <span class="colorgray">Modified By:</span> {{product.modifiedBy}}&nbsp;&nbsp;&nbsp;
+        <span class="colorgray">Modify Date:</span> {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+      </div>
+    </div> <!-- class=divflexrow -->
+  </div>
+
+
+  <!-- Product Name -->
+  <div class="details-container margintop20px">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        PRODUCT NAME ({{product.productNames.length}})
+      </mat-card-title>
+      <div *ngIf="product.productNames.length > 0">
+        <mat-card-content>
+          <table class="blueTable">
+            <thead>
+              <tr height="25px">
+                <th>Full Product Name</th>
+                <th>Product Type</th>
+                <th>Term and Term Part</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let prodName of product.productNames; let indexName = index">
+                <td>
+                  <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
+                </td>
+                <td>{{ prodName.productNameType }}</td>
+                <td>
+                  <div *ngFor="let prodPart of prodName.productTermAndParts; let indexPart = index">
+                    <b>Term:</b>&nbsp;{{prodPart.productTerm}}
+                    <b>Term Part:</b>&nbsp;&nbsp;{{prodPart.productTermPart}}<br><br>
+                  </div>
+                </td>
+              </tr>
+
+              <tr *ngIf="product.productNames.length < 1">
+                <td colspan="3">
+                  No Product Name Available
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Product OVERVIEW -->
+  <div class="details-container margintop30px">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        PRODUCT OVERVIEW
+      </mat-card-title>
+      <mat-card-content>
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
@@ -181,7 +217,7 @@
           </div>
           <div class="row-property">
             <div class="row-property-key">
-              Source
+              Source:
             </div>
             <div class="row-property-value">
               {{product.source}}
@@ -231,16 +267,100 @@
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
+              Marketing Category Code:
+            </div>
+            <div class="row-property-value">
+              {{product.marketingCategoryCode}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Marketing Category Name:
+            </div>
+            <div class="row-property-value">
+              {{product.marketingCategoryName}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Deaschedule:
+            </div>
+            <div class="row-property-value">
+              {{product.deaschedule}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Provenance Product ID:
+            </div>
+            <div class="row-property-value">
+              {{product.provenanceProductId}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Provenance Document ID:
+            </div>
+            <div class="row-property-value">
+              {{product.provenanceDocumentId}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Product Url:
+            </div>
+            <div class="row-property-value">
+              {{product.productUrl}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="row-property">
+            <div class="row-property-key">
+              Shelf Life:
+            </div>
+            <div class="row-property-value">
+              {{product.shelfLife}}
+            </div>
+          </div>
+
+          <div class="row-property">
+            <div class="row-property-key">
+              Storage Conditions:
+            </div>
+            <div class="row-property-value">
+              {{product.storageConditions}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <!--
+          <div class="row-property">
+            <div class="row-property-key">
               Product ID/Code:<br>
-              Product Type:
+              Product Type:<br>
+              Juridictions:
             </div>
             <div class="row-property-value">
               <div *ngFor="let prodCode of product.productCodeList; let indexCode = index">
                 <span class="font14px"><b>{{prodCode.productCode}}</b></span><br>
                 {{prodCode.productCodeType}}<br>
+                {{prodCode.juridictions}}<br>
               </div>
             </div>
           </div>
+          -->
           <div class="row-property">
             <div class="row-property-key">
               Provenance:
@@ -250,299 +370,834 @@
             </div>
           </div>
         </div>
-
       </mat-card-content>
     </mat-card>
   </div>
 
+  <!-- Product Code -->
   <div class="details-container margintop30px">
     <mat-card class="bordergray">
       <mat-card-title class="title2">
-        Company ({{product.productCompanyList.length}})
+        PRODUCT CODE ({{product.productCodes.length}})
       </mat-card-title>
-      <mat-card-content>
-        <table class="blueTable">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Company Name</th>
-              <th>Company Address</th>
-              <th>City</th>
-              <th>State</th>
-              <th>Zip</th>
-              <th>Company Country</th>
-              <th>Company Code</th>
-              <th>Company Code Type</th>
-              <th>Company Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let x of product.productCompanyList; let i = index">
-              <td>{{i + 1}}</td>
-              <td>{{ x.companyName }}</td>
-              <td>{{ x.companyAddress }}</td>
-              <td>{{ x.companyCity }}</td>
-              <td>{{ x.companyState }}</td>
-              <td>{{ x.companyZip }}</td>
-              <td>{{ x.companyCountry }} </td>
-              <td>{{ x.companyCode }}</td>
-              <td>{{ x.companyCodeType }}</td>
-              <td>{{ x.companyRole }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </mat-card-content>
+      <div *ngIf="product.productCodes.length > 0">
+        <mat-card-content>
+          <table class="blueTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product Code</th>
+                <th>Product Code Type</th>
+                <th>Juridictions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of product.productCodes; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{ x.productCode }}</td>
+                <td>{{ x.productCodeType }}</td>
+                <td>{{ x.jurisdictions }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </div>
+  <!-- Company Code -->
+
+
+  <!-- Product Company -->
+  <div class="details-container margintop30px">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        PRODUCT COMPANY ({{product.productCompanies.length}})
+      </mat-card-title>
+      <div *ngIf="product.productCompanies.length > 0">
+        <mat-card-content>
+          <div class="marginbottom60px" *ngFor="let x of product.productCompanies; let i = index">
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company Role:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyRole }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company Name:
+                </div>
+                <div class="row-property-value">
+                  {{x.companyName}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company Address:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyAddress }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  City:
+                </div>
+                <div class="row-property-value">
+                  {{x.companyCity}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  State:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyState }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Zip:
+                </div>
+                <div class="row-property-value">
+                  {{x.companyZip}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company GPS Latitude:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyGpsLatitude }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company GPS Longitude:
+                </div>
+                <div class="row-property-value">
+                  {{x.companyGpsLongitude}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company GPS Elevation:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyGpsElevation }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company Country:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyCountry }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Start Marketing Date:
+                </div>
+                <div class="row-property-value">
+                  {{x.startMarketingDate}}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company Product ID:
+                </div>
+                <div class="row-property-value">
+                  {{x.companyProductId}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  End Marketing Date:
+                </div>
+                <div class="row-property-value">
+                  {{ x.endMarketingDate }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="row-property">
+                <div class="row-property-key">
+                  Company Document ID:
+                </div>
+                <div class="row-property-value">
+                  {{ x.companyDocumentId }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
+                  Provenance Document ID:
+                </div>
+                <div class="row-property-value">
+                  {{x.provenanceDocumentId}}
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Company Code Begin -->
+            <div class="details-container margintop30px">
+              <mat-card class="bordergray">
+                <mat-card-title class="title2 font14px colorblack">
+                  Company Code ({{x.productCompanyCodes.length}})
+                </mat-card-title>
+                <div *ngIf="x.productCompanyCodes.length">
+                  <mat-card-content>
+                    <table class="blueTable">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Company Code</th>
+                          <th>Company Code Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let compCode of x.productCompanyCodes; let compCodeIndex = index">
+                          <td>{{ compCodeIndex + 1}}</td>
+                          <td>{{ compCode.companyCode }}</td>
+                          <td>{{ compCode.companyCodeType }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card-content>
+                </div>
+              </mat-card>
+            </div>
+            <!-- Product Company Code End -->
+          </div> <!-- Company loop-->
+        </mat-card-content>
+      </div>
     </mat-card>
   </div>
 
-  <br><br>
-  <!-- TAB BEGINS HERE -->
-  <mat-card class="bordergray">
-    <mat-card-content class="bordergray">
-      <mat-tab-group>
-        <mat-tab label="Manufacture item {{index + 1}}"
-          *ngFor="let prodComp of product.productComponentList; let index = index">
 
-          <!-- Component/Manufacturing Begin -->
-          <mat-card>
-            <mat-card-content>
-              <div class="title2 colorblue">
-                Manufacture Item {{index + 1}}
-              </div>
+  <!-- Product Indication -->
+  <div class="details-container margintop30px">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        PRODUCT INDICATION ({{product.productIndications.length}})
+      </mat-card-title>
+      <div *ngIf="product.productIndications.length > 0">
+        <mat-card-content>
+          <table class="blueTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th width="25%">Indication</th>
+                <th width="30%">Indication Text</th>
+                <th width="15%">Indication Code</th>
+                <th width="15%">Indication Code Type</th>
+                <th width="15%">Indication Group</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of product.productIndications; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{ x.indication }}</td>
+                <td>{{ x.indicationText }}</td>
+                <td>{{ x.indicationCode }}</td>
+                <td>{{ x.indicationCodeType }}</td>
+                <td>{{ x.indicationGroup }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </div>
+  <!-- Product Indication -->
 
-              <br>
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key-2">
-                    Dosage Form:
-                  </div>
-                  <div class="row-property-value-2">
-                    {{ prodComp.dosageForm }}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Amount:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.amount}}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Unit:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.unit}}
-                  </div>
-                </div>
-              </div>
+  <!-- TAB BEGINS HERE for Manufacture Item -->
+  <div class="details-container margintop30px">
+    <mat-card class="bordergray">
+      <mat-card-title class="title2">
+        MANUFACTURE ITEM ({{product.productManufactureItems.length}})
+      </mat-card-title>
+      <div *ngIf="product.productManufactureItems.length > 0">
+        <mat-card-content class="bordergray">
+          <mat-tab-group>
+            <mat-tab label="Manufacture item {{index + 1}}"
+              *ngFor="let prodComp of product.productManufactureItems; let index = index">
 
-              <div class="row">
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Code:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.manufactureCode}}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Code Type:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.manufactureCodeType}}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Size:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.charSize}}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Imprint Text:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.charImprintText}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Color Name:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.charColor}}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Flavor Name:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.charFlavor}}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Shape Name:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.charShape}}
-                  </div>
-                </div>
-                <div class="row-property-4">
-                  <div class="row-property-key-4">
-                    Number of Fragments:
-                  </div>
-                  <div class="row-property-value-4">
-                    {{prodComp.charNumFragments}}
-                  </div>
-                </div>
-              </div>
-
-
-              <!-- Product Details End -->
-
-              <!-- Lot -->
-              <mat-card class="bordergray">
+              <!-- Component/Manufacturing Begin -->
+              <mat-card>
                 <mat-card-content>
-                  <div *ngFor="let lot of prodComp.productLotList; let indexLot = index">
-                    <div class="title2">
-                      <span class="colorgreen">Lot {{indexLot + 1}}</span>
-                    </div>
-
-                    <div class="row">
-                      <div class="row-property">
-                        <div class="row-property-key">
-                          Lot Number:
-                        </div>
-                        <div class="row-property-value">
-                          {{ lot.lotNo }}
-                        </div>
+                  <br>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Dosage Form:
                       </div>
-                      <div class="row-property">
-                        <div class="row-property-key">
-                          Lot Size:
-                        </div>
-                        <div class="row-property-value">
-                          {{ lot.lotSize }}
-                        </div>
-                      </div>
-                      <div class="row-property">
-                        <div class="row-property-key">
-                          Expiry Date:
-                        </div>
-                        <div class="row-property-value">
-                          {{ lot.expiryDate }}
-                        </div>
-                      </div>
-                      <div class="row-property">
-                        <div class="row-property-key">
-                          Manufacture Date:
-                        </div>
-                        <div class="row-property-value">
-                          {{ lot.manufactureDate }}
-                        </div>
+                      <div class="row-property-value">
+                        {{ prodComp.dosageForm }}
                       </div>
                     </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Amount:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.amount}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Dosage Form Code:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.dosageFormCode}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Unit:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.unit}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Dosage Form Code Type:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.dosageFormCodeType}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Number of Fragments:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.charNumFragments}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Flavor Name:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.charFlavor}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Size:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.charSize}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Color Name:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.charColor}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Imprint Text:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.charImprintText}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Shape Name:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.charShape}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Route of Administration:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.routeOfAdministration}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Provenance Manufacture Item ID:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.provenanceManufactureItemId}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Dosage Form Note:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.dosageFormNote}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Composition Note:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.compositionNote}}
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Manufacuture Item/Component -->
 
 
-                    <!-- Display Ingredient -->
-
-                    <mat-card class="bordergray">
-                      <mat-card-title class="title2">
-                        <span class="title3 colororange">
-                          Core/Internal Active Ingredients
-                          ({{lot.productIngredientList.length}})
-                        </span>
-                      </mat-card-title>
+                  <!-- Manufacturer -->
+                  <mat-card class="bordergray">
+                    <mat-card-title class="title2 font14px colorblue">
+                      <span>Manufacture Item Code ({{prodComp.productManufacturers.length}})</span>
+                    </mat-card-title>
+                    <div *ngIf="prodComp.productManufacturers.length > 0">
                       <mat-card-content>
-                        <div class="div-scroll">
-                          <table class="blueTable">
-                            <thead>
-                              <tr height="30px">
-                                <th>Ingredient Name</th>
-                                <th>Basis Of Strength</th>
-                                <th>Ingredient Type</th>
-                                <th>Ingredient Location</th>
-                                <th>Average</th>
-                                <th>Low</th>
-                                <th>High</th>
-                                <th>Unit</th>
-                                <th>Manufacture</th>
-                                <th>Lot No</th>
-                                <th>Grade</th>
-                                <th>Release Characteristics</th>
-                                <th>Notes</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr *ngFor="let ingred of lot.productIngredientList; let indexIng = index">
-                                <td>
-                                  <div *ngIf="ingred._substanceUuid">
-                                    <a [routerLink]="['/substances', ingred._substanceUuid]"
-                                      target="_blank">{{ingred._ingredientName}}</a>
-                                  </div>
-                                  <!--
-                                  <br>
-                                  <span *ngIf="ingred.substanceKey">
-                                    ({{ingred.substanceKey}})
-                                  </span>
-                                  -->
-                                </td>
+                        <div *ngFor="let prodManu of prodComp.productManufacturers; let indexManu = index">
+                          <hr *ngIf="indexManu > 0">
+                          <div class="row">
+                            <div class="row-property">
+                              <div class="row-property-key">
+                                Manufacturer Name:
+                              </div>
+                              <div class="row-property-value">
+                                {{ prodManu.manufacturerName }}
+                              </div>
+                            </div>
+                            <div class="row-property">
+                              <div class="row-property-key">
+                                Manufacturer Role:
+                              </div>
+                              <div class="row-property-value">
+                                {{ prodManu.manufacturerRole }}
+                              </div>
+                            </div>
+                          </div>
 
-                                <td>
-                                  <div *ngIf="ingred._basisOfStrengthSubstanceUuid">
-                                    <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
-                                      target="_blank">{{ingred._basisOfStrengthIngredientName}}</a>
-                                  </div>
-                                  <!--
-                                  <br>
-                                  <span *ngIf="ingred.basisOfStrengthSubstanceKey">
-                                    ({{ingred.basisOfStrengthSubstanceKey}})
-                                  </span>
-                                  -->
-                                </td>
-                                <td>{{ ingred.ingredientType }}</td>
-                                <td>{{ ingred.ingredientLocation }}</td>
-                                <td>{{ ingred.average }}</td>
-                                <td>{{ ingred.low }}</td>
-                                <td>{{ ingred.high }}</td>
-                                <td>{{ ingred.unit }}</td>
-                                <td>{{ ingred.manufacturer }}</td>
-                                <td>{{ ingred.ingredLotNo }}</td>
-                                <td>{{ ingred.grade }}</td>
-                                <td>{{ ingred.releaseCharacteristic }}</td>
-                                <td>{{ ingred.notes }}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                          <div class="row">
+                            <div class="row-property">
+                              <div class="row-property-key">
+                                Manufacturer Code:
+                              </div>
+                              <div class="row-property-value">
+                                {{ prodManu.manufacturerCode }}
+                              </div>
+                            </div>
+                            <div class="row-property">
+                              <div class="row-property-key">
+                                Manufacturer Code Type:
+                              </div>
+                              <div class="row-property-value">
+                                {{ prodManu.manufacturerCodeType }}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="row-property">
+                              <div class="row-property-key">
+                                Manufactured Item Code:
+                              </div>
+                              <div class="row-property-value">
+                                {{ prodManu.manufacturedItemCode }}
+                              </div>
+                            </div>
+                            <div class="row-property">
+                              <div class="row-property-key">
+                                Manufactured Item Code Type
+                              </div>
+                              <div class="row-property-value">
+                                {{ prodManu.manufacturedItemCodeType }}
+                              </div>
+                            </div>
+                          </div> <!-- row -->
+                        </div> <!-- loop -->
                       </mat-card-content>
-                    </mat-card>
-                    <br>
+                    </div>
+                  </mat-card>
+                  <!-- Manufacturer -->
 
-                  </div> <!-- lot loop -->
+
+                  <!-- Lot -->
+                  <br><br>
+                  <mat-card class="bordergray">
+                    <mat-card-content>
+                      <div *ngFor="let lot of prodComp.productLots; let indexLot = index">
+                        <div class="title2">
+                          <span class="colorgreen">LOT {{indexLot + 1}}</span>
+                        </div>
+                        <div class="row">
+                          <div class="row-property">
+                            <div class="row-property-key">
+                              Lot Type:
+                            </div>
+                            <div class="row-property-value">
+                              {{ lot.lotType }}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="row-property">
+                            <div class="row-property-key">
+                              Lot Number:
+                            </div>
+                            <div class="row-property-value">
+                              {{ lot.lotNo }}
+                            </div>
+                          </div>
+                          <div class="row-property">
+                            <div class="row-property-key">
+                              Lot Size:
+                            </div>
+                            <div class="row-property-value">
+                              {{ lot.lotSize }}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="row-property">
+                            <div class="row-property-key">
+                              Expiry Date:
+                            </div>
+                            <div class="row-property-value">
+                              {{ lot.expiryDate }}
+                            </div>
+                          </div>
+                          <div class="row-property">
+                            <div class="row-property-key">
+                              Manufacture Date:
+                            </div>
+                            <div class="row-property-value">
+                              {{ lot.manufactureDate }}
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Lot -->
+
+
+                        <!-- Display Ingredient BEGIN -->
+                        <br>
+                        <mat-card class="bordergray">
+                          <mat-card-title class="title2">
+                            <span class="title3 colororange">
+                              ACTIVE INGREDIENTS
+                              ({{lot.productIngredients.length}})
+                            </span>
+                          </mat-card-title>
+                          <mat-card-content>
+                            <div *ngFor="let ingred of lot.productIngredients; let indexIng = index">
+                              <hr *ngIf="indexIng > 0">
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Ingredient Name:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    <div *ngIf="ingred._substanceUuid">
+                                      <a [routerLink]="['/substances', ingred._substanceUuid]"
+                                        target="_blank">{{ingred._ingredientName}}</a>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Basis Of Strength:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    <div *ngIf="ingred._basisOfStrengthSubstanceUuid">
+                                      <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
+                                        target="_blank">{{ingred._basisOfStrengthIngredientName}}</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Ingredient Type:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    <span class="colorgreen">{{ ingred.ingredientType }}</span>
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Ingredient Location:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.ingredientLocation }}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Average:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.average }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Low:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.low }}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    High:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.high }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Unit:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.unit }}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Original Numerator Number:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.originalNumeratorNumber }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Original Denominator Number:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.originalDenominatorNumber }}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Original Numerator Unit:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.originalNumeratorUnit }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Original Denominator Unit:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.originalDenominatorUnit }}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Manufacturer:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.manufacturer }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Lot No:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.ingredLotNo }}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Grade:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.grade }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Release Characteristics:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.releaseCharacteristic }}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Confidentiality Code:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.confidentialityCode }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    Notes:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.notes }}
+                                  </div>
+                                </div>
+                              </div>
+                              <br>
+                            </div> <!-- Ingredient LOOP -->
+                            <!-- Ingredient END -->
+
+                            <!--
+                            <div class="div-scroll">
+                              <table class="blueTable">
+                                <thead>
+                                  <tr height="30px">
+                                    <th>Ingredient Name</th>
+                                    <th>Basis Of Strength</th>
+                                    <th>Ingredient Type</th>
+                                    <th>Ingredient Location</th>
+                                    <th>Average</th>
+                                    <th>Low</th>
+                                    <th>High</th>
+                                    <th>Unit</th>
+                                    <th>Confidentiality Code</th>
+                                    <th>Original Numerator Number</th>
+                                    <th>Original Numerator Unit</th>
+                                    <th>Original Denominator Number</th>
+                                    <th>Original Denominator Unit</th>
+                                    <th>Manufacture</th>
+                                    <th>Lot No</th>
+                                    <th>Grade</th>
+                                    <th>Release Characteristics</th>
+                                    <th>Notes</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr >
+                                    <td>
+                                      <div *ngIf="ingred._substanceUuid">
+                                        <a [routerLink]="['/substances', ingred._substanceUuid]"
+                                          target="_blank">{{ingred._ingredientName}}</a>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <div *ngIf="ingred._basisOfStrengthSubstanceUuid">
+                                        <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
+                                          target="_blank">{{ingred._basisOfStrengthIngredientName}}</a>
+                                      </div>
+                                    </td>
+                                    <td>{{ ingred.ingredientType }}</td>
+                                    <td>{{ ingred.ingredientLocation }}</td>
+                                    <td>{{ ingred.average }}</td>
+                                    <td>{{ ingred.low }}</td>
+                                    <td>{{ ingred.high }}</td>
+                                    <td>{{ ingred.unit }}</td>
+                                    <td>{{ ingred.confidentialityCode }}</td>
+                                    <td>{{ ingred.originalNumeratorNumber }}</td>
+                                    <td>{{ ingred.originalNumeratorUnit }} </td>
+                                    <td>{{ ingred.originalDenominatorNumber }} </td>
+                                    <td>{{ ingred.originalDenominatorUnit }} </td>
+                                    <td>{{ ingred.manufacturer }}</td>
+                                    <td>{{ ingred.ingredLotNo }}</td>
+                                    <td>{{ ingred.grade }}</td>
+                                    <td>{{ ingred.releaseCharacteristic }}</td>
+                                    <td>{{ ingred.notes }}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div> -->
+
+
+
+                          </mat-card-content>
+                        </mat-card>
+                        <br>
+
+                      </div> <!-- lot loop -->
+                    </mat-card-content>
+                  </mat-card>
+
                 </mat-card-content>
               </mat-card>
+              <!-- Component/Manufacturing End -->
 
-            </mat-card-content>
-          </mat-card>
-          <!-- Component/Manufacturing End -->
-
-        </mat-tab>
-      </mat-tab-group>
-
-    </mat-card-content>
-  </mat-card>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </div>
 </div>
 <!--
 <ng-template #noRecordProd>

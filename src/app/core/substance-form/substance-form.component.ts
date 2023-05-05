@@ -37,6 +37,10 @@ import { ConfigService } from '@gsrs-core/config';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { UtilsService } from '@gsrs-core/utils';
+import { ungzip, deflate, inflate } from 'pako';
+import { Buffer } from 'buffer';
+import { AdminService } from '@gsrs-core/admin/admin.service';
+
 
 @Component({
   selector: 'app-substance-form',
@@ -272,6 +276,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.router.navigate([this.router.url]);
   }
 
+
+
   ngOnInit() {
     this.loadingService.setLoading(true);
     if (this.configService.configData && this.configService.configData.approvalType) {
@@ -317,7 +323,33 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.getDetailsFromImport(record.record);
             this.gaService.sendPageView(`Substance Register`);
 
-          } else {
+          }  else if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+            this.substanceService.GetStagedRecord(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
+              response.uuid = null;
+
+
+                if (response._name){
+                  let name = response._name;
+                  response.names.forEach(current => {
+                    if (current.displayName && current.stdName) {
+                      name = current.stdName;
+                    }
+                  });
+                  name = name.replace(/<[^>]*>?/gm, '');
+                  this.titleService.setTitle('Edit - ' + name);
+                }
+                if (response) {
+                  this.definitionType = response.definitionType;
+                  this.substanceClass = response.substanceClass;
+                  this.status = response.status;
+                  this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+                    this.setFormSections(formSections[response.substanceClass]);
+                  });
+                
+              }
+            }, error => {
+              });  
+       }  else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
           if (this.copy) {
             const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
@@ -365,7 +397,35 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     });
 
+    
+
+}
+
+isBase64(str) {
+  let base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+  let result = decodeURIComponent(str);
+  return base64regex.test(str);
+}
+
+setStructureFromUrl(structure: string, type: string):void {
+  // check if structureUR is encoded molfile or raw smiles string, then import into form
+  if (this.isBase64(structure)) {
+    structure = this.gunzip(structure);
+    structure = decodeURIComponent(structure);
+    this.substanceFormService.importStructure(structure, 'molfile');
+  } else {
+    this.substanceFormService.importStructure(structure, 'smiles');
   }
+
+}
+
+gunzip(t): string{
+  
+   const gezipedData = Buffer.from(t, 'base64')
+const gzipedDataArray = Uint8Array.from(gezipedData);
+const ungzipedData = ungzip(gzipedDataArray);
+return new TextDecoder().decode(ungzipedData);
+}
 
 getDrafts() {
   let keys = Object.keys(localStorage);
@@ -392,6 +452,21 @@ getDrafts() {
 
   ngAfterViewInit(): void {
     this.getDrafts();
+    // set structure based on smiles or molfile
+    const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
+    if (structure) {
+     let decode = decodeURIComponent(structure);
+      setTimeout(() => {
+        this.setStructureFromUrl(decode, 'molfile');
+      });
+    }
+    const json = this.activatedRoute.snapshot.queryParams['jsonStructure'] || null;
+    // TODO add json support
+ //   this.setStructureFromUrl(structure, 'json');
+    if (json) {
+     let decode = decodeURI(json);
+    }
+    
     
 
     const subscription = this.dynamicComponents.changes
@@ -786,7 +861,7 @@ getDrafts() {
     this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
-        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING'|| message.messageType.toUpperCase() === 'NOTICE');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -830,10 +905,27 @@ getDrafts() {
     );
   }
 
+  submitStaging() {
+    this.substanceFormService.submitStaging(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.validationMessages = null;
+      this.showSubmissionMessages = false;
+      this.submissionMessage = '';
+      if (!this.id) {
+        this.id = response.uuid;
+      }
+      this.openSuccessDialog('staging');
+    })
+  }
+
   submit(): void {
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
+    if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+      this.submitStaging();
+    } else {
     this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -863,6 +955,8 @@ getDrafts() {
         }, 8000);
       }
     });
+         
+  }
   }
 
   dismissValidationMessage(index: number) {
@@ -1048,16 +1142,18 @@ getDrafts() {
   }
 
   openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {});
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {data: {'type':type}});
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view' | 'staging') => {
 
       this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
       } else if (response === 'browse') {
         this.router.navigate(['/browse-substance']);
+      } else if (response === 'staging') {
+        this.router.navigate(['/staging-area']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
       } else {
@@ -1067,11 +1163,15 @@ getDrafts() {
         }
         this.showSubmissionMessages = true;
         this.validationResult = false;
-        setTimeout(() => {
-          this.showSubmissionMessages = false;
-          this.submissionMessage = '';
-          this.router.navigate(['/substances', this.id, 'edit']);
-        }, 3000);
+        if (type && type === 'staging') {
+          this.submissionMessage = 'Edits to staged substance were saved successfully';
+        } else {
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = '';
+            this.router.navigate(['/substances', this.id, 'edit']);
+          }, 3000);
+        }
       }
     });
     this.subscriptions.push(dialogSubscription);

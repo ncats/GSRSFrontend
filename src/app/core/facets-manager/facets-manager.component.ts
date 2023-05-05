@@ -13,6 +13,8 @@ import { Environment } from 'src/environments/environment.model';
 import { Location } from '@angular/common';
 import { DisplayFacet } from './display-facet';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-facets-manager',
@@ -60,7 +62,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     private gaService: GoogleAnalyticsService,
     private router: Router,
     private location: Location,
-    private facetManagerService: FacetsManagerService
+    private facetManagerService: FacetsManagerService,
+    private dialog: MatDialog
   ) {
     this.privateFacetParams = {};
     this.facetBuilder = {};
@@ -105,10 +108,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
     this._configName = configName;
     if (configName === 'applications' || configName === 'clinicaltrialsus' || configName === 'products'
-    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm') {
+    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm' || configName === 'staging') {
       this.hideDeprecatedCheckbox = true;
     } else {
       this.hideDeprecatedCheckbox = false;
+    }
+    if(this.calledFrom === 'staging') {
+      this.hideDeprecatedCheckbox = true;
     }
     this.populateFacets();
   }
@@ -260,6 +266,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private populateFacets(): void {
+    console.log(this.privateRawFacets);
     if (this.privateRawFacets && this.facetsConfig) {
       if (this.facetsAuthSubscription != null) {
         this.facetsAuthSubscription.unsubscribe();
@@ -269,13 +276,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const facetsCopy = this.privateRawFacets.slice();
         const newFacets = [];
         this.showAudit = this.authService.hasRoles('admin');
-        const facetKeys = Object.keys(this.facetsConfig) || [];
+        let facetKeys = Object.keys(this.facetsConfig) || [];
 
         if (this._facetDisplayType) {
-          if (this._facetDisplayType === 'default') {
+          if (this._facetDisplayType === 'default' || 'staging') {
             facetKeys.forEach(facetKey => {
               if (this.facetsConfig[facetKey].length
-                && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
+                && (facetKey === 'default' || this.authService.hasRoles(facetKey) || (facetKey === 'staging' && this.calledFrom === 'staging'))) {
                 this.facetsConfig[facetKey].forEach(facet => {
                   for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                     this.toggle[facetIndex] = true;
@@ -319,6 +326,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               }
             });
           } else if (this._facetDisplayType === 'facetView' && this._facetViewCategorySelected !== 'All') {
+            console.log('type is facetview');
             if (this._configName && this._configName === 'substances') {
               this.facetsConfig['facetView'].forEach(categoryRow => {
                 const category = categoryRow['category'];
@@ -381,6 +389,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             newFacets.unshift(newFacets.splice(position, 1)[0]);
           }
         });
+        console.log(newFacets);
         this.facets = newFacets;
         this.setShowAdvancedFacetStates();
         this.facetsLoaded.emit(this.facets.length);
@@ -721,4 +730,25 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     return this.privateFacetParams;
   }
 
+  editList(list?: string): void {
+    let data = {view: 'all'};
+    if (list) {
+      data.view = 'single';
+      data['activeName'] = list.split(':')[1];
+    }
+    console.log(data);
+    const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+      width: '850px',
+      autoFocus: false,
+            data: data
+
+    });
+   // this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+       // this.overlayContainer.style.zIndex = null;
+      }
+    });
+  }
 }
