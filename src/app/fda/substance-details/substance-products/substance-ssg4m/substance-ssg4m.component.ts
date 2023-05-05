@@ -13,7 +13,6 @@ import { ImpuritiesService } from '../../../impurities/service/impurities.servic
 import { GeneralService } from '../../../service/general.service';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { SubstanceDetailsBaseTableDisplay } from '../substance-details-base-table-display';
-import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../../impurities/model/impurities.model';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { SubstanceSsg4mService } from '@gsrs-core/substance-ssg4m/substance-ssg4m-form.service';
@@ -29,13 +28,8 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
   @Input() substanceName: string;
   @Output() countSsg4mOut: EventEmitter<number> = new EventEmitter<number>();
   private subscriptions: Array<Subscription> = [];
-  parentSubstance: string;
-  parentSubstanceUuid: string;
+  ssg4mTotalRecords = 0;
   showSpinner = false;
-  impurities: Array<Impurities>;
-  totalImpurities = 0;
-  impuritiesCount = 0;
-  impuritiesTestTotal = 0;
   pageIndex = 0;
   pageSize = 5;
   public privateSearchTerm?: string;
@@ -43,11 +37,10 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
   privateExport = false;
   disableExport = false;
   etag = '';
-  order = '$root_productSubstanceName';
   ascDescDir = 'desc';
   displayedColumns: string[] = [
-    'substanceName',
-    'substanceRole'
+    'view',
+    'substanceReaction'
   ];
 
   constructor(
@@ -87,12 +80,36 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
     this.setPageEvent(pageEvent);
     const skip = this.page * this.pageSize;
 
-    this.ssg4mService.getSyntheticPathwayIndexBySubUuid(this.substanceUuid).subscribe(results => {
-        this.totalRecords = results.;
-        this.setResultData(pagingResponse.content);
-        this.productCount = pagingResponse.total;
-        this.etag = pagingResponse.etag;
+    const subscription = this.ssg4mService.getSyntheticPathwayIndexBySubUuid(this.substanceUuid).subscribe(results => {
+      let synthResultsOrganized: Array<any> = [];
+
+      if (results.length > 0) {
+        // Loop through the results and organize the data to display in the table.
+        results.forEach(rec => {
+          if (rec.synthPathwaySkey) {
+            let found = false;
+            synthResultsOrganized.forEach(synthOrg => {
+              // If found the key, append Reaction in the same record, or else create a new record
+              if (synthOrg['synthPathwaySkey'] === rec.synthPathwaySkey) {
+                synthOrg.synthDetails.push({'sbstncReactnSectNm': rec.sbstncReactnSectNm, 'sbstncRoleNm': rec.sbstncRoleNm});
+               // alert("FOUND: " + synthOrg['synthPathwaySkey']  + '    ' + rec.synthPathwaySkey);
+                found = true;
+              }
+            });
+
+            //  else { // a new record
+            if (found === false) {
+                const newSynth: any = {synthDetails: []};
+                newSynth.synthPathwaySkey = rec.synthPathwaySkey;
+                newSynth.synthDetails.push({'sbstncReactnSectNm': rec.sbstncReactnSectNm, 'sbstncRoleNm': rec.sbstncRoleNm});
+                synthResultsOrganized.push(newSynth);
+            }
+          }
+        });
       }
+      this.ssg4mTotalRecords = synthResultsOrganized.length;
+      this.paged = synthResultsOrganized;
+      this.countSsg4mOut.emit(synthResultsOrganized.length);
     }, error => {
       this.showSpinner = false;  // Stop progress spinner
       console.log('error');
@@ -100,36 +117,7 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
       this.showSpinner = false;  // Stop progress spinner
       subscription.unsubscribe();
     });
-    this.loadingStatus = '';
+    // this.loadingStatus = '';
     // this.showSpinner = false;  // Stop progress spinner
   }
-
-
-
-    });
-    /*
-    // , this.page, this.pageSize
-    this.impuritiesService.getImpuritiesBySubstanceUuid(
-      this.order,
-      skip,
-      this.pageSize,
-      this.substanceUuid,
-      this.privateFacetParams).subscribe(results => {
-        this.impuritiesService.totalRecords = results.total;
-        this.impurities = results.content;
-
-        // Load Impurities Test Details by Substance Uuid
-       // this.loadImpuritiesTestDetails();
-
-        this.setResultData(this.impurities);
-
-        this.totalImpurities = results.total;
-
-        this.etag = results.etag;
-        this.countImpuritiesOut.emit(this.totalImpurities);
-      });
-    */
-    this.showSpinner = false;  // Stop progress spinner
-  }
-
 }

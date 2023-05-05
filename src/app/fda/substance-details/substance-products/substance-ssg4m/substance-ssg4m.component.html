@@ -20,101 +20,55 @@
   </div>
 
   <table mat-table [dataSource]="paged">
+    <ng-container matColumnDef="view">
+      <th mat-header-cell *matHeaderCellDef class="width100px">View/Edit </th>
+      <td mat-cell *matCellDef="let ssg4">
+        <div *ngIf="ssg4.synthPathwaySkey">
+          <div *ngIf="isAdmin; else noLogin">
+            <a [routerLink]="['/substances-ssg4m', ssg4.synthPathwaySkey, 'edit']" target="_blank"
+              matTooltip='View/Edit Specified Substance Group 4 Manufacturing Record'>
+              View/Edit
+            </a>
+          </div>
+          <ng-template #noLogin>
+            Please Login to View/Edit
+          </ng-template>
+        </div>
+      </td>
+    </ng-container>
 
     <!--
-        <ng-container matColumnDef="productSubstanceName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width100px">Product/Substance Name</th>
-            <td mat-cell *matCellDef="let impurities">
-                <div *ngIf="impurities.id">
-                    <a [routerLink]="['/impurities', impurities.id]" target="_blank">
-                        <div *ngIf="impurities.productSubstanceName; else noProdName">
-                            {{impurities.productSubstanceName}}</div>
-                        <ng-template #noProdName>
-                            View
-                        </ng-template>
-                    </a>
-                    &nbsp;&nbsp;
-                    <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                        matTooltip='Edit Impurities Record'>
-                        <mat-icon svgIcon="edit"></mat-icon>
-                    </a>
-                </div>
-            </td>
-        </ng-container>
-        -->
-
     <ng-container matColumnDef="substanceName">
       <th mat-header-cell *matHeaderCellDef class="width100px"> Substance Name</th>
-      <td mat-cell *matCellDef="let ssg4"> {{ssg4.appType}} </td>
+      <td mat-cell *matCellDef="let ssg4"> {{ssg4.sbstncPfrdNm}} </td>
+    </ng-container>
+    -->
+
+    <ng-container matColumnDef="substanceReaction">
+      <th mat-header-cell *matHeaderCellDef class="width100px"> Substance Reaction/Role</th>
+      <td mat-cell *matCellDef="let ssg4">
+        <div *ngFor="let ssg4Detail of ssg4.synthDetails; let detIndex = index">
+          <span class="colorgreen">
+            {{ssg4Detail.sbstncReactnSectNm}}
+          </span>
+          <br>
+          {{ssg4Detail.sbstncRoleNm}}
+        </div>
+      </td>
     </ng-container>
 
+    <!--
     <ng-container matColumnDef="substanceRole">
       <th mat-header-cell *matHeaderCellDef class="width100px"> Substance Role</th>
-      <td mat-cell *matCellDef="let ssg4"> {{ssg4.appType}} </td>
+      <td mat-cell *matCellDef="let ssg4"> {{ssg4.sbstncRoleNm}} </td>
     </ng-container>
+    -->
 
-    <!--
-        <ng-container matColumnDef="source">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width100px"> Source </th>
-            <td mat-cell *matCellDef="let impurities"> {{impurities.source}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="sourceId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width100px"> Source ID</th>
-            <td mat-cell *matCellDef="let impurities"> {{impurities.sourceId}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width100px"> Type </th>
-            <td mat-cell *matCellDef="let impurities"> {{impurities.type}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="specType">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="width100px"> Spec Type </th>
-            <td mat-cell *matCellDef="let impurities"> {{impurities.specType}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="parentSubstance">
-            <th mat-header-cell *matHeaderCellDef class="width100px"> Parent Substance </th>
-            <td mat-cell *matCellDef="let impurities">
-                <div *ngFor="let impSub of impurities.impuritiesSubstanceList; let subIndex = index">
-                    <a [routerLink]="['/substances', impSub._parentSubstanceUuid]" target="_blank">
-                        <span class="colorblue">{{impSub._parentSubstanceName}}</span>
-                    </a>
-                </div>
-            </td>
-        </ng-container>
-        -->
-    <!--
-        <ng-container matColumnDef="relatedSubstance">
-            <th mat-header-cell *matHeaderCellDef class="width100px"> Impurities Related Substance</th>
-            <td mat-cell *matCellDef="let impurities">
-                <div *ngFor="let impSub of impurities.impuritiesSubstanceList; let subIndex = index">
-                    <!- - Impurities Substance Name is same as current display Substance Name - ->
-                    <div *ngFor="let impTest of impSub.impuritiesTestList; let testIndex = index">
-                        <div *ngFor="let impDetail of impTest.impuritiesDetailsList; let detIndex = index"
-                            class="font12px">
-                            <div *ngIf="impDetail.relatedSubstanceUuid === substanceUuid">
-                                <span class="colorgreen">
-                                    <span
-                                        *ngIf="impDetail.limitType">&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.limitType}}&nbsp;</span>
-                                    {{impDetail.limitValue}}&nbsp;{{impDetail.unit}}
-                                </span>
-                                <span *ngIf="impDetail.impurityType"
-                                    class="colorpurple"><br>&nbsp;&nbsp;&nbsp;&nbsp;{{impDetail.impurityType}}
-                                </span>
-                            </div>
-                        </div> <!- - ngFor impDetail - ->
-                    </div> <!- - ngFor impTest - ->
-                </div>
-            </td>
-        </ng-container>
-        -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
 
-<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
+<mat-paginator [length]="ssg4mTotalRecords" [pageSize]="5" showFirstLastButtons="true"
   (page)="getSsg4mBySubstanceUuid($event)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
