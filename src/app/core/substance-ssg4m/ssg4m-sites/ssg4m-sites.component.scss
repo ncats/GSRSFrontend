@@ -28,13 +28,8 @@
     padding: 0 10px 8px 0;
   }
 
-  .col-4-1 {
-    width: calc((100% - 20px * 3) / 4); // 4 column
-    margin-right: 20px;
-  }
-
-  .col-3-1 {
-    width: calc((100% - 20px * 2) / 3); // 3 column
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); // 1 column
     margin-right: 20px;
   }
 
@@ -43,8 +38,13 @@
     margin-right: 20px;
   }
 
-  .col-1-1 {
-    width: calc((100% - 20px * 1)); // 1 column
+  .col-3-1 {
+    width: calc((100% - 20px * 2) / 3); // 3 column
+    margin-right: 20px;
+  }
+
+  .col-4-1 {
+    width: calc((100% - 20px * 3) / 4); // 4 column
     margin-right: 20px;
   }
 }

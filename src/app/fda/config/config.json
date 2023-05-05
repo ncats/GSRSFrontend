@@ -623,20 +623,6 @@
   ],
   "facets": {
     "substances": {
-      "staging": [
-        "root_importmetadata_status",
-        "root_importmetadata_source",
-        "root_importmetadata_matchcount",
-        "root_importmetadata_matchkey",
-        "root_importmetadata_validationtype",
-        "root_importmetadata_validationmessage",
-        "Import Status",
-        "Source",
-        "Match Count",
-        "Match Key",
-        "Validation Type",
-        "Validation Message"
-        ],
       "default": [
         "User List",
         "Deprecated",
@@ -686,7 +672,6 @@
         {
           "category": "Default",
           "facets": [
-            "User List",
             "Deprecated",
             "Record Status",
             "Substance Class",
@@ -969,7 +954,6 @@
       ]
     },
     "applications": {
-      
       "default": [
         "Application Type",
         "Center",
@@ -1461,12 +1445,14 @@
   },
   "ssg4Form": {
     "showRegisterEditTitle": "true",
+    "parentSubstanceHeader": "Manufactured Substance",
     "titles": {
       "parentSubstance": "Search or Register a New Substance",
       "stage": "Step",
       "processingMaterials": "Solvents and Catalysts"
     },
     "settingsDisplay": {
+      "references": "simple",
       "process": {
         "processName": "simple",
         "processRole": "advanced",
@@ -1479,8 +1465,13 @@
         "siteIdType": "advanced",
         "siteId": "advanced",
         "siteAddress": "advanced",
-        "gpsSiteLocation": "advanced",
+        "siteGPSLatitude": "advanced",
+        "siteGPSLongitude": "advanced",
+        "siteGPSElevation": "advanced",
         "siteClearance": "advanced",
+        "companyName": "advanced",
+        "companyId": "advanced",
+        "companyIdType": "advanced",
         "siteComments": "advanced"
       },
       "stage": {
@@ -1508,19 +1499,34 @@
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "advanced",
+        "manufacturer": "advanced",
+        "acceptanceCriteria": "advanced",
+        "amount": "advanced",
+        "specificationReference": "advanced",
+        "references": "advanced"
       },
       "processingMaterial": {
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "advanced",
+        "manufacturer": "advanced",
+        "acceptanceCriteria": "advanced",
+        "amount": "advanced",
+        "specificationReference": "advanced",
+        "references": "advanced"
       },
       "resultingMaterial": {
         "substanceName": "simple",
         "verbatimName": "simple",
         "substanceRole": "simple",
-        "comments": "advanced"
+        "comments": "advanced",
+        "substanceGrade": "advanced",
+        "acceptanceCriteria": "advanced",
+        "amount": "advanced"
       }
     }
   }

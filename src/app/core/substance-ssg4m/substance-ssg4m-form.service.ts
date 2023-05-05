@@ -3,29 +3,10 @@ import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } fro
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config/config.service';
-import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
-import {
-  SubstanceDetail
-} from '../substance/substance.model';
-import {
-  SubstanceName, SubstanceNameOrg, SubstanceStructure,
-  SubstanceMoiety,
-  Subunit,
-  Link,
-  DisulfideLink,
-  Glycosylation,
-  Site,
-  StructuralModification,
-  Sugar,
-  Linkage,
-  NucleicAcid,
-  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification
-} from '../substance/substance.model';
-import {
-  SequenceUnit,
-  SubstanceFormDefinition,
-  SubstanceFormResults, SubunitSequence, ValidationResults, ValidationMessage
-} from '../substance-form/substance-form.model';
+import { Ssg4mSyntheticPathway, Ssg4mSyntheticPathwayDetail } from './model/substance-ssg4m.model';
+import { SubstanceDetail } from '../substance/substance.model';
+import { SubstanceName } from '../substance/substance.model';
+import { SubstanceFormDefinition, SubunitSequence, ValidationResults, ValidationMessage } from '../substance-form/substance-form.model';
 import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
@@ -40,6 +21,7 @@ export class SubstanceSsg4mService implements OnDestroy {
   private privateSubstance: SubstanceDetail;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;
+  /*
   private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
   private substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
   private substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
@@ -47,15 +29,19 @@ export class SubstanceSsg4mService implements OnDestroy {
   private substanceOtherLinksEmitter = new ReplaySubject<Array<Link>>();
   private substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
   private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
+  */
   private substanceFormActionEmitter = new ReplaySubject<'load' | 'unload'>();
 
-  private definitionEmitter = new Subject<SubstanceFormDefinition>();
+  /* private definitionEmitter = new Subject<SubstanceFormDefinition>(); */
   private subClass: string;
+  /*
   private substanceSubunitsEmitter = new Subject<Array<Subunit>>();
   private substanceSugarsEmitter = new Subject<Array<Sugar>>();
   private substanceNucleicAcidEmitter = new Subject<NucleicAcid>();
   private displaySequences: Array<SubunitSequence>;
   private displaySequencesEmitter = new Subject<Array<SubunitSequence>>();
+  */
+
   private substanceChangeReasonEmitter = new Subject<string>();
   private nameResolver = new Subject<string>();
   resolvedMol = this.nameResolver.asObservable();
@@ -258,6 +244,7 @@ export class SubstanceSsg4mService implements OnDestroy {
 
   unloadSubstance(): void {
     // this.privateSubstance = null;
+    /*
     this.displaySequences = null;
     this.substanceEmitter.complete();
     this.substanceDisulfideLinksEmitter.complete();
@@ -267,7 +254,9 @@ export class SubstanceSsg4mService implements OnDestroy {
     this.substanceOtherLinksEmitter.complete();
     this.substanceStructuralModificationsEmitter.complete();
     this.substanceCysteineEmitter.complete();
+    */
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
+    /*
     this.substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
     this.substanceGlycosylationEmitter = new ReplaySubject<Glycosylation>();
     this.substanceLinksEmitter = new ReplaySubject<Array<Linkage>>();
@@ -275,6 +264,7 @@ export class SubstanceSsg4mService implements OnDestroy {
     this.substanceOtherLinksEmitter = new ReplaySubject<Array<Link>>();
     this.substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
     this.substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
+    */
     this.substanceFormActionEmitter.next('unload');
   }
 
@@ -456,6 +446,14 @@ export class SubstanceSsg4mService implements OnDestroy {
         isDeleted: false
       };
     }
+  }
+
+  getSyntheticPathwayIndexBySubUuid(subUuid: string) {
+    // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m/${id}`;
+    const url = this.apiBaseUrlSsg4mEntityUrl + '/indexbysubuuid/' + subUuid;
+
+    return this.http.get<any>(url);
+   // return this.http.get<Ssg4mSyntheticPathway>(url);
   }
 
 }

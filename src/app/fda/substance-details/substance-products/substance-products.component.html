@@ -38,13 +38,6 @@
               </button>
             </span>
 
-            <!-- *** Search Any Text (TYPE AHEAD) *** -->
-            <!--
-            <span class="middle-fill"></span>
-            <mat-form-field [floatLabel]="'never'" class="search" size="100">
-              <input matInput placeholder="Search" [formControl]="searchControl">
-            </mat-form-field>
-            -->
           </div>
 
           <div class="responsive mat-table-style">
@@ -154,76 +147,7 @@
 
       </mat-tab-group>
 
-      <!--
-      </div>
-      <ng-template #noprovence>
-        <br>
-        <div class="padleft25px colorblue"><b>No Product Found</b></div>
-        <br>
-      </ng-template>
-    -->
     </mat-tab>
-
-    <!--  PREVIOUS CODE
-      <div class="responsive mat-table-style">
-        <table mat-table [dataSource]="paged">
-
-          <ng-container matColumnDef="productNDC">
-            <th mat-header-cell *matHeaderCellDef> Product NDC </th>
-            <td mat-cell *matCellDef="let product">
-              <div *ngIf="product.fromTable === 'SRS'">
-                <a [routerLink]="['/productDetails', product.id, 'srs']" target="_blank">{{product.productNDC}}</a>
-              </div>
-              <div *ngIf="product.fromTable != 'SRS'">
-                <a [routerLink]="['/productElistDetails', product.id, 'elist']"
-                  target="_blank">{{product.productNDC}}</a>
-                <br><span class="font10px colorgray">(Elist)</span>
-              </div>
-
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Product Name </th>
-            <td mat-cell *matCellDef="let product"> {{product.productName}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="nonProprietaryName">
-            <th mat-header-cell *matHeaderCellDef> Non Proprietary Name </th>
-            <td mat-cell *matCellDef="let product"> {{product.nonProprietaryName}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="labelerName">
-            <th mat-header-cell *matHeaderCellDef> Labeler Name </th>
-            <td mat-cell *matCellDef="let product"> {{product.labelerName}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="applicationNumber">
-            <th mat-header-cell *matHeaderCellDef> Application Number </th>
-            <td mat-cell *matCellDef="let product"> {{product.applicationNumber}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="productNameType">
-            <th mat-header-cell *matHeaderCellDef> Product Name Type </th>
-            <td mat-cell *matCellDef="let product"> {{product.productTypeName}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="ingredientType">
-            <th mat-header-cell *matHeaderCellDef> Ingredient Type </th>
-            <td mat-cell *matCellDef="let product"> {{product.ingredientType}} </td>
-          </ng-container>
-
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </div>
-
-      <mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
-        (page)="getSubstanceProducts($event)" [pageSizeOptions]="[5, 10, 25, 100]">
-      </mat-paginator>
-    -->
-
 
     <mat-tab label="Application ({{applicationCount}})" *ngIf="loadedComponents && loadedComponents.applications">
       <app-substance-application [bdnum]="bdnum" (countApplicationOut)="getApplicationCount($event)">
@@ -266,6 +190,12 @@
       <app-substance-impurities [substanceUuid]="substance.uuid" (countImpuritiesOut)="getImpuritiesCount($event)"
         [substanceName]="substanceName">
       </app-substance-impurities>
+    </mat-tab>
+
+    <mat-tab label="SSG4 Manufacturing ({{ssg4mCount}})" *ngIf="loadedComponents && loadedComponents.ssg4m">
+      <app-substance-ssg4m [substanceUuid]="substance.uuid" (countSsg4mOut)="getSsg4mCount($event)"
+        [substanceName]="substanceName">
+      </app-substance-ssg4m>
     </mat-tab>
 
   </mat-tab-group>

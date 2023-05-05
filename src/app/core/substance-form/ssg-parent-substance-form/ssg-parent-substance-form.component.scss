@@ -6,6 +6,26 @@
   align-items: flex-end;
 }
 
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+      padding: 0 10px 8px 0;
+  }
+
+  .col {
+      flex-grow: 1;
+      padding-right: 15px;
+  }
+
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); //one column
+    margin-right: 20px;
+  }
+}
+
 .related-substance {
   width: 350px;
   max-width: 350px;
