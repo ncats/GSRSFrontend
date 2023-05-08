@@ -351,7 +351,7 @@ stagingArea(sendFile?: boolean): void {
     navigationExtras.queryParams = {'facets': 'Source*' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
 
   }
-  this.router.navigate(['staging-area'], navigationExtras);
+  this.router.navigate(['admin/staging-area'], navigationExtras);
 
 }
 

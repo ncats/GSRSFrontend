@@ -26,6 +26,7 @@ import { CardDynamicSectionDirective } from '@gsrs-core/substances-browse/card-d
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
+import { PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-import-summary',
   templateUrl: './import-summary.component.html',
@@ -50,6 +51,8 @@ export class ImportSummaryComponent implements OnInit {
   bulkChecked = false;
   displayAction: string;
   privateBulkAction: any;
+  pageSize = 5;
+  pageIndex = 0;
 
   
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
@@ -68,9 +71,10 @@ export class ImportSummaryComponent implements OnInit {
   nameLoading = true;
   _ = lodash;
   codeSystems = [];
-  displayedColumns = ['name', 'keys', 'merge'];
+  displayedColumns = ['name', 'source', 'keys', 'merge'];
   displayedColumns2 = ['type', 'message'];
   message = "";
+  private privateMatches: any;
 
   disabled = false;
   performedAction: string;
@@ -133,7 +137,9 @@ export class ImportSummaryComponent implements OnInit {
     if (this.configService.configData && this.configService.configData.molWeightRounding) {
       this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
     }
+    this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
   }
+
 
   @Input()
 
@@ -154,7 +160,6 @@ export class ImportSummaryComponent implements OnInit {
   set bulkAction(action: boolean){
     this.privateBulkAction = action;
     this.bulkChecked = action;
-    console.log('setting action' + action);
   }
 
   get bulkAction() {
@@ -162,11 +167,23 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   getMatchSummary() {
+
     this.substance.matchedRecords.forEach(record => {
-      this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
-        record.uuid = response.uuid;
-        record._name = response._name;
-      });
+      if (record.source && record.source === 'Staging Area'){
+        this.adminService.GetStagedRecord(record.ID).subscribe(response => {
+          record._name = response._name;
+          
+        }, error => {
+          console.log(error);
+        })
+      } else {
+        this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
+        
+          record.uuid = response.uuid;
+          record._name = response._name;
+        });
+      }
+      
     });
     
   }
@@ -260,7 +277,7 @@ export class ImportSummaryComponent implements OnInit {
         {data: {'message': 'Record successfuly Created', 'action': action},
       width: '600px'});
        const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
-        this.router.navigate(['/staging-area/'], {queryParamsHandling: "preserve"});
+        this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
        });
     }, error => {
       this.message = "Error: failed to " + action + " record";
@@ -438,6 +455,14 @@ export class ImportSummaryComponent implements OnInit {
 
   showMoreLessCodes() {
     this.showLessCodes = !this.showLessCodes;
+  }
+
+  changePage(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    const skip = event.pageSize * event.pageIndex;
+      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(skip, (this.pageSize + skip));
+     
   }
 
 

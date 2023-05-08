@@ -1,10 +1,10 @@
-<h3>Record Import </h3>
+<!--<h3>Record Import </h3>-->
 <div class = "top-button-row">
                 <button  class = "top-button" mat-flat-button mat-button color = "primary" (click) = "ImportReload()">New Data Import</button>
                 <button class = "top-button" mat-flat-button mat-button color = "primary" (click) = "stagingArea()">Staging Area</button>
         </div>
 <div *ngIf = "!step || step === 1">
-
+                <div><h3>Step 1: Record File Import</h3></div>
 <div class = "file-select-container">
     <form [formGroup] = "uploadForm">      
             <div class = "full-row">
@@ -69,49 +69,77 @@
 
 
 
+
     <div *ngIf = "step && step === 3">
         <div><h3>Step 2: Configure Importer Actions</h3></div>
-        <div class = "label-value"  style = "width:100%">
-                <div class = "action-list" style = "display:flex">
-                <div class = "label inline-vertical" style = "padding-left:25px;">
+        <br/><br/>
+        <div class = "label-value step2-header"  >
+        <div class = "action-list step2-actions-container" style = "display: flex;flex-direction:row;">
+                
+
+                <div class = "label-col label inline-vertical" style = "">
                     <b>Import Action</b>
                 </div>
-                <div class = "value-container inline-vertical" style = "padding-left: 125px; width: 50%;">
+
+                <div class = "details-col inline-vertical" style = "">
                         <b>Action Details</b>
                 </div>
-                <div class = "ignore-container inline-vertical" style = "">
+                <span class = "middle-fill"></span>
+
+                <div class = "inline-vertical" style = "min-width: 150px; margin-right: -5px;">
                         <b>Ignore Field</b>
                 </div>
+        
         </div>
-               
+        <div class = " step2-preview-container" style ="display:flex; justify-content:center">
+                        <b style = "margin-left: auto; margin-right:auto;">Preview</b>               
+                       
+                    </div>      
                 
-                <div class = "label inline-vertical preview-container ">
-                                <b>Preview</b>               
-                               
-                            </div>
+                
                 
         </div>
         <div class = "full-row">
-                <div class = "action-list" style = " border-right: 1px solid lightgray;">
-                        <div class = "label-value  inline-vertical" *ngFor = "let action of postResp.adapterSettings.actions, index as $index">
-                                        <div class = "label inline-vertical ">
-                                            {{action.label? replaceAction(action.label) : "no label"}} 
+                <div class = "step2-actions-container" style = " border-right: 1px solid lightgray;">
+                        <div class = "action-row" style = "width:100%; display:flex" *ngFor = "let action of postResp.adapterSettings.actions, index as $index">
+                                
+                                
+
+                                <div class = "label-col inline-vertical " style = "font-weight: 500;">
+                                        {{action.label? replaceAction(action.label) : "no label"}} 
+                                </div>
+
+
+                                <div class = "detail-button-div" style = "min-width: 100px; max-width: 150px; margin: auto;">
+                                                <button mat-button mat-flat-button class = "mat-button mat-flat-button step2-button" (click) = "openAction( settingTemplate, $index)">Settings </button>
+                                         </div>
+                                <div class = "details-col inline-vertical">
+                                        
+                                               <i class = "inline-vertical  set-width-label">{{action.fileField ? action.fileField + ' field from file' : ''}}</i>
+                                       
+                                </div>
+                                <span class = "middle-fill"></span>
+
+                                <div class = "inline-vertical ignore-col">
+                                                <div style = "margin: auto;">
+                                                        <mat-checkbox style = "margin: auto;" [checked] = "action.actionName == 'no-op'"
+                                                                (change) = "action.actionName && action.actionName == 'no-op'? action.actionName = null: action.actionName = 'no-op' "></mat-checkbox>
+                                                </div>
                                         </div>
-                                        <div class = "value-container inline-vertical">
-                                               <i class = "inline-vertical  set-width-label">{{action.fileField ? action.fileField + ' field from file' : ''}}</i> <button class = "mat-button mat-primary mat-flat-button" style = "margin-left: 15px;" (click) = "openAction( settingTemplate, $index)">Settings...</button>
-                                        </div>
-                                        <div style = "margin: auto;margin-left:0px;margin-right: 50px;">
-                                                 <mat-checkbox [checked] = "action.actionName == 'no-op'"
-                                                  (change) = "action.actionName && action.actionName == 'no-op'? action.actionName = null: action.actionName = 'no-op' "></mat-checkbox>
-                                        </div>
-                                    </div>
+                        
+                                
+                        </div>
+                                
+                                       
+                                 
+                       
 
                                     <button mat-button (click) = "addRef()">
                                                 Add Reference<mat-icon svgIcon="add_circle_outline"></mat-icon>
                                               </button>
 
         </div>
-        <div class = "preview-window">
+        <div class = "step2-preview-container">
                 <div style = "width:100%; display:flex;">
                        <span class ="middle-fill"></span>
                        
@@ -133,7 +161,7 @@
                                                 mode = "indeterminate">
                                             </mat-progress-spinner></div>
                 </div>
-                <div *ngIf = "previewTotal > 0 && !previewLoading" style = "margin-left: 50px;">
+                <div *ngIf = "previewTotal > 0 && !previewLoading" >
                         <div style = "width:100%;margin-left: 100px;">
                                 <button [disabled] = "previewIndex === 0" mat-button (click)="changePreview('back')">
                                          <mat-icon svgIcon="chevron_left"></mat-icon>
@@ -148,6 +176,7 @@
                                       <a style ="cursor: zoom-in;" (click) = "openImageModal(preview[previewIndex].data)"><img appSubstanceImage [entityId]="preview[previewIndex].data.structureID"
                                         style = "margin-left: 150px;" ></a>
                                 </span>
+                                <div style = "margin-left: 50px;">
                                         <div class = "substance-data">
                                                 <div class="label">Names:</div>
                                                 <div class="value space-bottom" *ngFor="let nameObject of preview[previewIndex].data.names">
@@ -164,6 +193,7 @@
                                                 <span style = "font-weight:550">{{code.codeSystem}}</span>: {{code.code}}
                                                 </div>
                                         </div>
+                                        <br/>
                                         <div class = "substance-data">
                                                 <div *ngIf = "preview[previewIndex].data.structure && preview[previewIndex].data.structure.formula">
                                                                 <b>Formula</b>: {{preview[previewIndex].data.structure.formula}}   
@@ -171,6 +201,7 @@
                                                 <div *ngIf = "preview[previewIndex].data.structure && preview[previewIndex].data.structure.mwt">
                                                                 <b>Mol Weight</b>: {{preview[previewIndex].data.structure.mwt}}   
                                                 </div>
+                                        </div>
                                 </div>
                 </div>
         
@@ -181,13 +212,14 @@
 
 
         <div class = "full-row">
+                <br/> <br/>
             <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putSettings()">Use Settings and Continue</button>
         </div>
     </div>
     </div>
-    <br/>
     <div *ngIf = "step && step === 4">
                 <div><h3>Step 3: Record Staging</h3>
+                        <br/>
                 <h4 style = "margin-left:25px">Importing {{filename}}</h4></div>
 
 

@@ -268,7 +268,9 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
   ],
   exports: [
     StructureEditorModule,
-    NameResolverModule
+    NameResolverModule,
+    NamesDisplayPipe,
+    SubstanceStatusPipe
   ]
 })
 export class AppModule {}

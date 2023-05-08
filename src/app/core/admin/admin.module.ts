@@ -47,6 +47,9 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
 import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-import.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
+import { NamesDisplayStagingPipe } from '@gsrs-core/admin/import-browse/name-display.pipe';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
+import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe';
 
 
 
@@ -82,7 +85,8 @@ import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-a
     MatChipsModule,
   StructureEditorModule,
   FacetsManagerModule,
-  SubstanceImageModule
+  SubstanceImageModule,
+  ElementLabelDisplayModule,
 ],
   declarations: [
     CvManagementComponent,
@@ -102,7 +106,9 @@ import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-a
     ImportSummaryComponent,
     ImportDialogComponent,
     CvImportComponent,
-    BulkActionDialogComponent
+    BulkActionDialogComponent,
+    NamesDisplayStagingPipe,
+    TakeImportPipe
   ],
   exports: [
     CvManagementComponent,
@@ -130,7 +136,10 @@ import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-a
     UserEditDialogComponent,
     ImportDialogComponent,
     CvImportComponent,
-    BulkActionDialogComponent
+    BulkActionDialogComponent,
+    NamesDisplayStagingPipe,
+    TakeImportPipe
+
 
   ],
   providers: [

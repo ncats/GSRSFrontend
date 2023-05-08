@@ -90,11 +90,22 @@ const childRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [CanActivateAdmin],
+
+  },
+  
+  {
+    path: 'admin/staging-area',
+    component: ImportBrowseComponent,
+    canActivate: [CanActivateAdmin],
+    pathMatch: 'full'
 
   },
   {
     path: 'admin/:function',
     component: AdminComponent,
+    canActivate: [CanActivateAdmin],
+
 
   },
   {
@@ -113,12 +124,6 @@ const childRoutes: Routes = [
   {
     path: 'user-downloads/:id',
     component: UserDownloadsComponent
-  },
-  {
-    path: 'staging-area',
-    component: ImportBrowseComponent,
-    canActivate: [CanActivateAdmin]
-
   }
 ];
 

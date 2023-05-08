@@ -574,15 +574,20 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   getRecord(id: string): Observable<any> { 
     let subject = new Subject<string>();
     let ids = [];
+    let sources = [];
     this.adminService.GetStagedRecord(id).subscribe(response => {
       this.idMapping[response.uuid] = id;
       response._matches.matches.forEach(match => {
+        console.log(match);
         match.matchingRecords.forEach(matchRec => {
-          if (matchRec.sourceName == 'GSRS') {
+          if (matchRec.sourceName == 'GSRS' || matchRec.sourceName == 'Staging Area') {
             if (!ids[matchRec.recordId.idString]) {
               ids[matchRec.recordId.idString] = [matchRec.matchedKey];
+              sources[matchRec.recordId.idString] = matchRec.sourceName;
             } else {
               ids[matchRec.recordId.idString].push(matchRec.matchedKey);
+              sources[matchRec.recordId.idString] = matchRec.sourceName;
+
             }
           }
           
@@ -591,7 +596,9 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       let items = [];
       Object.keys(ids).forEach(key => {
         let temp = {'ID':key,
-                    'records':ids[key]};
+                    'records':ids[key],
+                     'source':sources[key]
+                  };
                     items.push(temp);
       });
       response.matchedRecords = items;

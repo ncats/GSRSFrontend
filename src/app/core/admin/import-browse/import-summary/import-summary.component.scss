@@ -4,7 +4,6 @@
 }
 
 .name-header {
-    cursor: auto;
 }
 
 .mat-card, .controls-container {
@@ -271,4 +270,8 @@ font-size: 18px;
     color: var(--regular-green-color);
     margin-top: 8px;
     margin-bottom: 8px;
+}
+
+.space-bottom {
+    margin-bottom: 5px;
 }
