@@ -62,7 +62,6 @@ export interface ProductProvenance {
   productNames?: Array<ProductName>;
   productCodes?: Array<ProductCode>;
   productCompanies?: Array<ProductCompany>;
-  productManufacturers?: Array<ProductManufacturer>;
   productDocumentations?: Array<ProductDocumentation>;
   productIndications?: Array<ProductIndication>;
 }
@@ -203,6 +202,7 @@ export interface ProductComponent {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  productManufacturers?: Array<ProductManufacturer>;
   productLots?: Array<ProductLot>;
 }
 
@@ -247,6 +247,7 @@ export interface ProductIngredient {
   originalDenominatorNumber?: string;
   originalDenominatorUnit?: string;
   manufactureIngredCatalogId?: string;
+  manufactureIngredientUrl?: string;
   reviewedBy?: string;
   reviewDate?: number;
   internalVersion?: number;

@@ -614,6 +614,29 @@ legend.border {
   margin-bottom: 10px;
 }
 
+fieldset.border-second {
+  border: solid 2px var(--regular-green-color) !important;
+  padding: 0 10px 10px 10px;
+  border-bottom: none;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  min-width: 0;
+}
+
+legend.border-second {
+  width: auto !important;
+  background: var(--legend-bg-green-color);
+  border: solid 1px var(--regular-green-color) !important;
+  border-bottom: none;
+  border-radius: 5px;
+  font-size: 13px;
+  color: var(--legend-blue-border-color);
+  font-family: Verdana;
+  font-weight: bold;
+  padding: 7px 10px;
+  margin-bottom: 10px;
+}
+
 .paneltitledivflex {
   display: flex;
   width: 100%;
@@ -621,24 +644,32 @@ legend.border {
   align-items: flex-end;
 }
 
-.badge {
+.badge-one {
   background-color: green;
   color: white;
-  padding: 4px 6px;
+  padding: 10px 6px;
   text-align: center;
   border-radius: 5px;
   margin-left: 7px;
-  margin-top: -10px;
+  margin-top: -15px;
+  min-width: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1px;
 }
 
-.badge2 {
-  background-color: green;
+.badge-two {
+  background-color: rgb(113, 94, 2);
   color: white;
-  padding: 4px 6px;
+  padding: 10px 6px;
   text-align: center;
-  border-radius: 5px;
+  border-radius: 10px;
   margin-left: 7px;
-  margin-top: -10px;
+  margin-top: -15px;
+  min-width: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1px;
 }
 
 .middle-fill {

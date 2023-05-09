@@ -51,25 +51,19 @@ export class ProductComponentFormComponent implements OnInit {
 
   ngOnInit() {
     this.username = this.authService.getUser();
- //   this.getVocabularies();
   }
 
-  /*
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOSAGE_FORM', 'PROD_CHARACTER_COLOR', 'PROD_CHARACTER_FLAVOR',
-      'PROD_CHARACTER_SHAPE', 'PROD_CHARACTER_FRAGMENTS').subscribe(response => {
-        this.dosageFormList = response['DOSAGE_FORM'].list;
-        this.colorList = response['PROD_CHARACTER_COLOR'].list;
-        this.flavorList = response['PROD_CHARACTER_FLAVOR'].list;
-        this.shapeList = response['PROD_CHARACTER_SHAPE'].list;
-        this.scoringList = response['PROD_CHARACTER_FRAGMENTS'].list;
-      });
+  addNewProductManufacturer(prodComponentIndex: number) {
+    this.productService.addNewProductManufacturer(prodComponentIndex);
   }
-*/
+
+  addNewProductLot(prodComponentIndex: number) {
+    this.productService.addNewProductLot(prodComponentIndex);
+  }
 
   confirmDeleteComponent(prodComponentIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Manufacture Item Details ' + (prodComponentIndex + 1) + ' data?'}
+      data: { message: 'Are you sure you want to delete Manufacture Item Details ' + (prodComponentIndex + 1) + ' data?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -81,15 +75,6 @@ export class ProductComponentFormComponent implements OnInit {
 
   deleteProductComponent(prodComponentIndex: number) {
     this.productService.deleteProductComponent(prodComponentIndex);
-  }
-
-  addNewProductLot(prodComponentIndex: number) {
-    this.productService.addNewProductLot(prodComponentIndex);
-  }
-
-  /*
-  addNewProductManufacturer(prodComponentIndex: number) {
-    this.productService.addNewProductManufacturer(prodComponentIndex);
   }
 
   confirmDeleteProductManufacturer(prodComponentIndex: number, productManuIndex: number) {
@@ -107,8 +92,7 @@ export class ProductComponentFormComponent implements OnInit {
   deleteProductManufacturer(prodComponentIndex: number, productManuIndex: number) {
     this.productService.deleteProductManufacturer(prodComponentIndex, productManuIndex);
   }
-  */
- 
+
   copyProductComponent() {
     this.productService.copyProductComponent(this.productComponent);
   }
@@ -181,14 +165,14 @@ export class ProductComponentFormComponent implements OnInit {
   }
 */
 
-expiryDateMessageOutChange($event) {
-  this.expiryDateMessage = $event;
-  this.expiryDateMessageOut.emit(this.expiryDateMessage);
-}
+  expiryDateMessageOutChange($event) {
+    this.expiryDateMessage = $event;
+    this.expiryDateMessageOut.emit(this.expiryDateMessage);
+  }
 
-manufactureDateMessageOutChange($event) {
-  this.manufactureDateMessage = $event;
-  this.manufactureDateMessageOut.emit(this.manufactureDateMessage);
-}
+  manufactureDateMessageOutChange($event) {
+    this.manufactureDateMessage = $event;
+    this.manufactureDateMessageOut.emit(this.manufactureDateMessage);
+  }
 
 }

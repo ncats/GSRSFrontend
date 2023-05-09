@@ -517,10 +517,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.addNewProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex);
   }
 
-  addNewProductManufacturerInProv(prodProvenanceIndex: number) {
-    this.productService.addNewProductManufacturerInProv(prodProvenanceIndex);
-  }
-
   addNewProductDocumenation(prodProvenanceIndex: number) {
     this.productService.addNewProductDocumentation(prodProvenanceIndex);
   }
@@ -569,6 +565,22 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  confirmDeleteProductProvenance(prodProvenanceIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Provenance ' + (prodProvenanceIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductProvenance(prodProvenanceIndex);
+      }
+    });
+  }
+
+  deleteProductProvenance(prodProvenanceIndex: number) {
+    this.productService.deleteProductProvenance(prodProvenanceIndex);
+  }
+
   confirmDeleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?' }
@@ -583,6 +595,22 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
     this.productService.deleteProductNameInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  confirmDeleteTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Term and Term Part ' + (prodNameTermIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
+      }
+    });
+  }
+
+  deleteProductTermAndTermPart(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    this.productService.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
   }
 
   confirmDeleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
@@ -633,23 +661,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.deleteProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex, prodCompanyCodeIndex);
   }
 
-  confirmDeleteProductManufacturerInProv(prodProvenanceIndex: number, productManuIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Manufacturer Item Code ' + (productManuIndex + 1) + ' data?'}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteProductManufacturerInProv(prodProvenanceIndex, productManuIndex);
-      }
-    });
-  }
-
-  deleteProductManufacturerInProv(prodProvenanceIndex: number, productManuIndex: number) {
-    this.productService.deleteProductManufacturerInProv(prodProvenanceIndex, productManuIndex);
-  }
-
-
   confirmDeleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {message: 'Are you sure you want to delete Documentation IDs ' + (productDocIndex + 1) + ' data?'}
@@ -666,22 +677,25 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.deleteProductDocumentationInProv(prodProvenanceIndex, productDocIndex);
   }
 
-  confirmDeleteProductIndication(prodProvIndex: number, prodIndicationIndex: number) {
+  confirmDeleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteProductIndication(prodProvIndex, prodIndicationIndex);
+        this.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
       }
     });
   }
 
-  deleteProductIndication(prodProvIndex: number, prodIndicationIndex: number) {
-    this.productService.deleteProductIndication(prodProvIndex, prodIndicationIndex);
+  deleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
+    this.productService.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
   }
 
+  copyProvenance(productProvenanceIndex: number) {
+    this.productService.copyProductProvenance(this.product.productProvenances[productProvenanceIndex]);
+  }
 
   /*
   addNewProductName() {
