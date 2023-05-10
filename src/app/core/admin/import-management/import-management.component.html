@@ -109,7 +109,7 @@
                 <div style = "width:100%; display:flex;">
                        <span class ="middle-fill"></span>
                        
-                       <div style = "width: 200px;margin: auto;">Show &nbsp; &nbsp; <mat-select [(ngModel)]="previewLimit" name="previewLimit" class = "preview-limit" >
+                       <div style = "width: 235px;margin: auto;">Show &nbsp; &nbsp; <mat-select [(ngModel)]="previewLimit" name="previewLimit" class = "preview-limit" >
                                                 <mat-option *ngFor="let term of previewLimitList" [value]="term">
                                                   {{term}}
                                                 </mat-option>
@@ -179,8 +179,10 @@
         </div>
     </div>
     </div>
+    <br/>
     <div *ngIf = "step && step === 4">
-                <div><h3>Step 3: Import</h3></div>
+                <div><h3>Step 3: Record Staging</h3>
+                <h4 style = "margin-left:25px">Importing {{filename}}</h4></div>
 
 
                 
@@ -189,7 +191,7 @@
                         <div class = "loader-container">
 
                                         <div class = "progress-container">
-                                          <div class = "bar-label">Progress</div>
+                                        <!--  <div class = "bar-label">Progress</div>
                                               <div>  
                                           <mat-progress-bar class = "load-progress" color="accent" mode="determinate" [value] = "loading? 0: 100" >
                                           </mat-progress-bar>
@@ -198,12 +200,27 @@
                                                       <span class = "count-row-label">{{loading? '0': previewTotal}} / {{previewTotal}}</span>
                                               </div>
                                               </div>
-                                      </div>
+                                      </div>-->
                                                  
                                       </div>
+
+                                      <div style = "margin-left: 50px;width:100%">
+                                        <div  *ngIf = "executeLoading"  style = "width:100%"><mat-progress-spinner
+                                                style = "margin:auto"
+                                                [color]="primary"
+                                                [diameter]="100"
+                                                mode = "indeterminate">
+                                            </mat-progress-spinner></div>
+                                            <br/><br/>
+                                            <div>
+                                                   <b>Status:</b> {{executeStatus}}<br/><br/>
+                                                   <b> Records Processed:</b> {{completedRecords}}
+                                            </div>
+                                            <br/><br/>
+                </div>
          </div>  
          
-                <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "stagingArea(true)">View Records in Staging Area</button>
+                <button mat-button [disabled] = "executeLoading" class = "mat-button mat-primary mat-flat-button" (click) = "stagingArea(true)">View Records in Staging Area</button>
 
             </div>
 

@@ -46,6 +46,7 @@ import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-import.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
 
 
 
@@ -100,7 +101,8 @@ import { MatChipsModule } from '@angular/material/chips';
     ImportBrowseComponent,
     ImportSummaryComponent,
     ImportDialogComponent,
-    CvImportComponent
+    CvImportComponent,
+    BulkActionDialogComponent
   ],
   exports: [
     CvManagementComponent,
@@ -119,14 +121,16 @@ import { MatChipsModule } from '@angular/material/chips';
     ImportBrowseComponent,
     ImportSummaryComponent,
     ImportDialogComponent,
-    CvImportComponent
+    CvImportComponent,
+    BulkActionDialogComponent
 
   ],
   entryComponents: [
     CvTermDialogComponent,
     UserEditDialogComponent,
     ImportDialogComponent,
-    CvImportComponent
+    CvImportComponent,
+    BulkActionDialogComponent
 
   ],
   providers: [

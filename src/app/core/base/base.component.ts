@@ -158,6 +158,8 @@ export class BaseComponent implements OnInit, OnDestroy {
         notempty = true;
       } else if (this.loadedComponents.products) {
         notempty = true;
+      } else if (this.loadedComponents.ssg4m) {
+        notempty = true;
       }
 
       if (!notempty) {
@@ -362,14 +364,14 @@ export class BaseComponent implements OnInit, OnDestroy {
     if(item?.kind && item?.mailToPath) {
       let subject ='';
       let email ='';
-      if(item.kind==='contact-us') { 
+      if(item.kind==='contact-us') {
         email = this.contactEmail;
       }
       if(item?.queryParams) {
         if(item?.queryParams?.subject) {
-          subject = item.queryParams.subject;   
+          subject = item.queryParams.subject;
         }
-      } 
+      }
       const part1 = sprintf(item.mailToPath, email);
       let part2 ='';
       if(subject) {
@@ -377,7 +379,7 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
       return part1+'?'+part2;
     }
-    return '';          
+    return '';
   }
 
   setClassicLinkPath(path: string): void {
@@ -512,17 +514,17 @@ export class BaseComponent implements OnInit, OnDestroy {
       data: {view: 'user'}
     });
     this.overlayContainer.style.zIndex = '1002';
-  
+
    dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
-  
-  
+
+
       if (response) {
            this.loadingService.setLoading(true);
          //  console.log(response.json);
-  
+
           const read = response.substance;
-          
+
           if (response.uuid && response.uuid != 'register'){
            const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
           this.router.navigateByUrl(url, { state: { record: response.substance } });
@@ -532,12 +534,12 @@ export class BaseComponent implements OnInit, OnDestroy {
              this.router.onSameUrlNavigation = 'reload';
              let url = '/substances/register/' + response.substance.substanceClass + '?action=import'
             this.router.navigateByUrl(url, { state: { record: response.substance } });
- 
+
            }, 500);
          }
           }
-  
-         
+
+
     });
   }
 

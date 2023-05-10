@@ -34,6 +34,7 @@ export class ImportSummaryComponent implements OnInit {
   private privateSubstance: any;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Output() doneAction = new EventEmitter< any >();
+  @Output() bulkSelect = new EventEmitter < any > ();
   privateDummyID: string;
   showAudit = false;
   isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
@@ -45,7 +46,9 @@ export class ImportSummaryComponent implements OnInit {
   @Input() searchStrategy?: string = '';
   @Input() recordID: string = null;
   private codes: Array <any >;
+  bulkChecked = false;
   displayAction: string;
+  privateBulkAction: any;
 
   
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
@@ -89,14 +92,6 @@ export class ImportSummaryComponent implements OnInit {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
-  @Input()
-  set dummyID(dummyID: any) {
-    this.privateDummyID = dummyID;
-  }
-
-  get dummyID(): any {
-    return this.privateDummyID;
-  }
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -153,6 +148,18 @@ export class ImportSummaryComponent implements OnInit {
     return this.privateNames;
   }
 
+  @Input()
+
+  set bulkAction(action: boolean){
+    this.privateBulkAction = action;
+    this.bulkChecked = action;
+    console.log('setting action' + action);
+  }
+
+  get bulkAction() {
+    return this.privateBulkAction;
+  }
+
   getMatchSummary() {
     this.substance.matchedRecords.forEach(record => {
       this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
@@ -161,6 +168,13 @@ export class ImportSummaryComponent implements OnInit {
       });
     });
     
+  }
+
+  addtoBulkList() {
+    this.bulkChecked = !this.bulkChecked;
+    const toEmit = {"checked": this.bulkChecked,
+                    "substance": this.privateSubstance};
+    this.bulkSelect.emit(toEmit);
   }
 
 
@@ -184,9 +198,7 @@ export class ImportSummaryComponent implements OnInit {
     //  this.getStructureID();
     if (substance._metadata.importStatus.toUpperCase() === 'MERGED' || substance._metadata.importStatus.toUpperCase() === 'IMPORTED') {
       this.disabled = true;
-      console.log('disabling');
     } else {
-      console.log(substance._metadata.importStatus);
     }
 
       this.setCodeSystems();
@@ -230,15 +242,13 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   doAction(action: string, mergeID?: string) {
-    if (!mergeID) {
-      mergeID = this.privateDummyID;
-    }
+ 
     this.displayAction = action;
     this.loadingService.setLoading(true);
-    this.adminService.stagedRecordAction(this.privateSubstance._metadata.recordId, mergeID, action).subscribe(result => {
+    this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
       this.doneAction.emit(this.privateSubstance.uuid);
       this.loadingService.setLoading(false);
-      this.message = "Record successfully " + action + "d";
+      this.message = "Record " + action + "  successful";
       if (result) {
         this.disabled = true;
         this.performedAction = action;

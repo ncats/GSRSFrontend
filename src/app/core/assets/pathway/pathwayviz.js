@@ -642,14 +642,21 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
 
 
 
-    d3cola
-      .nodes(graph.nodes)
-      .links(graph.links)
-      .constraints(graph.constraints)
-      .flowLayout(layoutVar, schemeUtil.nodeSpacing)
-      .avoidOverlaps(false)
-      .symmetricDiffLinkLengths(6)
-      .start(10, 20, 20);
+    try{
+      d3cola
+        .nodes(graph.nodes)
+        .links(graph.links)
+        .constraints(graph.constraints)
+        .flowLayout(layoutVar, schemeUtil.nodeSpacing)
+        .avoidOverlaps(false)
+        .symmetricDiffLinkLengths(6)
+        .start(10, 20, 20);
+    }catch(e){
+      //the rendering failed for some reason, trigger the ending event
+      //and return
+      schemeUtil.onFinishedLayout(null);
+      return;
+    }
     var path = svg
       .selectAll(".link")
       .data(graph.links)

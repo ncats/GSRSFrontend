@@ -2,6 +2,7 @@
     color: var(--primary-color);
   
   font-size: 18px;
+  text-decoration: none;
 }
 
 .loading-spinner {
@@ -9,6 +10,39 @@
   mat-progress-spinner {
       margin: auto;
   }
+}
+
+
+.file-import {
+  width: 100%;
+}
+
+.file-row {
+  width: 100%;
+}
+
+.full-row-start {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 15px;
+}
+
+
+.italics {
+  font-style: italic;
+  color: var(--text-color);
+}
+
+.file-name {
+  display: flex;
+  text-align: center;
+  margin-left: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 15px;
+  color: var(--deprecated-color);
 }
 
 .single-header {
