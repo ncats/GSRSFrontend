@@ -135,14 +135,8 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     'substance-form-references'
   ],
   specifiedSubstanceG4m: [
- //   'substance-form-definition',
- //   'substance-form-names',
+    'substance-form-references',
     'substance-form-ssg-parent-substance',
     'substance-form-ssg4m-process',
- //   'substance-form-ssg-definition',
- //   'substance-form-ssg-grade',
-  //  'substance-form-codes-card',
-  //  'substance-form-notes',
-  //  'substance-form-references'
   ]
 };

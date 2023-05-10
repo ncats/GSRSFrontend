@@ -103,6 +103,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
               this.scrub(response);
               this.productService.loadProduct(response);
               this.product = this.productService.product;
+              if (this.product.productProvenances == null) {
+                this.product.productProvenances = [];
+              }
               this.loadingService.setLoading(false);
               this.isLoading = false;
             }
@@ -147,6 +150,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.productService.loadProduct(response);
           this.product = this.productService.product;
+
+          if (this.product.productProvenances == null) {
+            this.product.productProvenances = [{productNames: [], productCodes: [], productDocumentations: []}];
+          }
+
           /*
           Check if there is not Product Code Object, create one
           if (this.product.productCodeList.length == 0) {
@@ -407,18 +415,17 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showJSON(): void {
-    this.product = this.cleanProduct();
+    let cleanProduct = this.cleanProduct();
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.product
+      data: cleanProduct
     });
 
     // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
-
   }
 
   saveJSON(): void {
@@ -486,6 +493,43 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  addNewProductProvenance() {
+    this.productService.addNewProductProvenance();
+  }
+
+  addNewProductNameInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductNameInProv(prodProvenanceIndex);
+  }
+
+  addNewTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.productService.addNewTermAndTermPartInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  addNewProductCodeInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductCodeInProv(prodProvenanceIndex);
+  }
+
+  addNewProductCompanyInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductCompanyInProv(prodProvenanceIndex);
+  }
+
+  addNewProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    this.productService.addNewProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex);
+  }
+
+  addNewProductDocumenation(prodProvenanceIndex: number) {
+    this.productService.addNewProductDocumentation(prodProvenanceIndex);
+  }
+
+  addNewProductIndication(prodProvIndex: number) {
+    this.productService.addNewProductIndication(prodProvIndex);
+  }
+
+  addNewProductComponent() {
+    this.productService.addNewProductComponent();
+  }
+
+
   confirmDeleteProduct(productId: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete this Product?' }
@@ -521,6 +565,139 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  confirmDeleteProductProvenance(prodProvenanceIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Provenance ' + (prodProvenanceIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductProvenance(prodProvenanceIndex);
+      }
+    });
+  }
+
+  deleteProductProvenance(prodProvenanceIndex: number) {
+    this.productService.deleteProductProvenance(prodProvenanceIndex);
+  }
+
+  confirmDeleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductNameInProv(prodProvenanceIndex, prodNameIndex);
+      }
+    });
+  }
+
+  deleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.productService.deleteProductNameInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  confirmDeleteTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Term and Term Part ' + (prodNameTermIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
+      }
+    });
+  }
+
+  deleteProductTermAndTermPart(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    this.productService.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
+  }
+
+  confirmDeleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Code ' + (prodCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCodeInProv(prodProvenanceIndex, prodCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
+    this.productService.deleteProductCodeInProv(prodProvenanceIndex, prodCodeIndex);
+  }
+
+  confirmDeleteProductCompanyInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company ' + (prodCompanyIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyInProv(prodProvenanceIndex, prodCompanyIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    this.productService.deleteProductCompanyInProv(prodProvenanceIndex, prodCompanyIndex);
+  }
+
+  confirmDeleteProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company Code ' + (prodCompanyCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex, prodCompanyCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    this.productService.deleteProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex, prodCompanyCodeIndex);
+  }
+
+  confirmDeleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {message: 'Are you sure you want to delete Documentation IDs ' + (productDocIndex + 1) + ' data?'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductDocumentationInProv(prodProvenanceIndex, productDocIndex);
+      }
+    });
+  }
+
+  deleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
+    this.productService.deleteProductDocumentationInProv(prodProvenanceIndex, productDocIndex);
+  }
+
+  confirmDeleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
+      }
+    });
+  }
+
+  deleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
+    this.productService.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
+  }
+
+  copyProvenance(productProvenanceIndex: number) {
+    this.productService.copyProductProvenance(this.product.productProvenances[productProvenanceIndex]);
+  }
+
+  /*
   addNewProductName() {
     this.productService.addNewProductName();
   }
@@ -580,7 +757,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteProductCode(prodCodeIndex: number) {
     this.productService.deleteProductCode(prodCodeIndex);
   }
+  */
 
+  /*
   addNewProductCompany() {
     this.productService.addNewProductCompany();
   }
@@ -620,30 +799,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
     this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
   }
-
-  addNewProductIndication() {
-    this.productService.addNewProductIndication();
-  }
-
-  confirmDeleteProductIndication(prodIndicationIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteProductIndication(prodIndicationIndex);
-      }
-    });
-  }
-
-  deleteProductIndication(prodIndicationIndex: number) {
-    this.productService.deleteProductIndication(prodIndicationIndex);
-  }
-
-  addNewProductComponent() {
-    this.productService.addNewProductComponent();
-  }
+  */
 
   expiryDateMessageOutChange($event) {
     this.expiryDateMessage = $event;

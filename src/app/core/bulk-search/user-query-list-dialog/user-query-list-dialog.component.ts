@@ -8,6 +8,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { AuthService } from '@gsrs-core/auth';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceService } from '@gsrs-core/substance';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-user-query-list-dialog',
   templateUrl: './user-query-list-dialog.component.html',
@@ -41,7 +42,12 @@ export class UserQueryListDialogComponent implements OnInit {
   etagIDs = [];
   uniqueRecords = [];
   disabled = false;
-
+  loaded = false;
+  filename: string;
+  importedList: any;
+  pastedJson: any;
+  viewCreated = false;
+  downloadJsonHref: SafeUrl;
 
   constructor(
     private bulkSearchService: BulkSearchService,
@@ -50,6 +56,8 @@ export class UserQueryListDialogComponent implements OnInit {
     private substanceService: SubstanceService,
     private router: Router,
     private authService: AuthService,
+    private sanitizer: DomSanitizer,
+
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.view = data.view || 'all';
@@ -79,6 +87,7 @@ export class UserQueryListDialogComponent implements OnInit {
     this.getUserLists();
     if (this.view === 'single') {
       this.useDraft(this.activeName);
+      
     }
   }
 
@@ -167,6 +176,8 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   useUser(name: string) {
+    this.viewCreated = false;
+    this.loaded = false;
     this.bulkSearchService.getUserBulkSearchLists(name).subscribe(response => {
       this.view = "all";
       this.lists = response.lists;
@@ -287,6 +298,8 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   getUsers() {
+    this.viewCreated = false;
+    this.loaded = false;
     this.view = 'users';
     this.adminService.getAllUsers().subscribe(response => {
       this.users = response;
@@ -294,6 +307,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   useDraft(draft: any) {
+    this.viewCreated = false;
     this.message = '';
     this.activeName = draft;
     this.bulkSearchService.getSingleBulkSearchList(draft).subscribe(result => {
@@ -301,6 +315,8 @@ export class UserQueryListDialogComponent implements OnInit {
       this.filtered = JSON.parse(JSON.stringify(result.lists)).slice(0, 10);
       this.pagesize = 10;
       this.page = 0;
+      const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(result.lists)));
+      this.downloadJsonHref = uri;
 
       this.view = 'single';
     }, error => {
@@ -315,5 +331,96 @@ export class UserQueryListDialogComponent implements OnInit {
     }
     });
   }
+
+  uploadFile(event) {
+    this.viewCreated = false;
+    if (event.target.files.length !== 1) {
+      this.message = 'No file selected';
+          this.loaded = false;
+    } else {
+      const file = event.target.files[0];
+      this.filename = file.name;
+      const reader = new FileReader();
+      reader.onloadend = (e) => {
+        const response = reader.result.toString().replace('\t','');
+        if (this.jsonValid(response)) {
+          const read = JSON.parse(response);
+            this.pastedJson = response;
+            this.loaded = true;
+            this.importedList = response;
+            this.message = '';
+    
+        } else {
+          this.message = 'Error: Invalid file format';
+          this.loaded = false;
+        }
+      };
+      reader.readAsText(event.target.files[0]);
+
+     // this.uploaded = true;
+    }
+  }
+
+  useFile() {
+    this.loading =true;
+    this.viewCreated = false;
+    if (this.loaded && this.pastedJson) {
+        const read = JSON.parse(this.pastedJson);
+        if (!read[0]['key']) {
+          this.message = 'Error: Invalid JSON format';
+          this.loaded = false;
+          this.loading =true;
+        } else {
+          this.loaded = true;
+          this.importedList = read;
+          const mapped = read.map(x=> x.key).join(',');
+          this.bulkSearchService.saveBulkSearch( mapped, this.listName, 'add').subscribe(response => {
+            this.getUserLists();
+            this.loading = false;
+            this.message = "List Successfully Created";
+            this.viewCreated = true;
+          }, error => {
+            this.loading = false;
+          })
+         // this.pastedJson.forEach()
+          this.message = '';
+        }
+    }
+  }
+
+  useCreated() {
+    this.view = "single";
+    this.viewCreated = false;
+    this.loaded = false;
+    this.useDraft(this.listName);
+  }
+
+
+  checkLoaded() {
+    this.loaded = true;
+    try {
+      JSON.parse(this.pastedJson);
+      this.message = '';
+  } catch (e) {
+    this.message = 'Error: Invalid JSON format in pasted string';
+    this.loaded = false;
+  }
+}
+
+
+  openInput(): void {
+    document.getElementById('fileInput').click();
+  }
+
+  jsonValid(file: any): boolean {
+    try {
+      JSON.parse(file);
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+    return true;
+  }
+
 
 }

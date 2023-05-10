@@ -8,6 +8,8 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ProductService } from '../service/product.service';
 import { GeneralService } from '../../service/general.service';
@@ -28,6 +30,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   downloadJsonHref: any;
   jsonFileName: string;
   subscriptions: Array<Subscription> = [];
+  languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
 
   constructor(
     public productService: ProductService,
@@ -38,6 +41,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    public cvService: ControlledVocabularyService,
     public titleService: Title,
     public sanitizer: DomSanitizer) { }
 
@@ -62,26 +66,49 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
   ngAfterViewInit() { }
 
+  getVocabularies(): void {
+    this.cvService.getDomainVocabulary('LANGUAGE').subscribe(response => {
+      this.languageVocabulary = response['LANGUAGE'] && response['LANGUAGE'].dictionary;
+
+      // Display Language by full description. Example: display 'en' to 'English'.
+      if (this.product.language && this.product.language.length > 0) {
+        if (this.languageVocabulary[this.product.language]) {
+          if (this.languageVocabulary[this.product.language].display) {
+            this.product.language = this.languageVocabulary[this.product.language].display;
+          }
+        }
+      }
+
+      // Display Language by full description in Product Name section
+      this.product.productProvenances.forEach(elementProv => {
+        if (elementProv != null) {
+          elementProv.productNames.forEach(elementName => {
+            if (elementName != null) {
+              if (elementName.language && elementName.language.length > 0) {
+                if (this.languageVocabulary[elementName.language]) {
+                  if (this.languageVocabulary[elementName.language].display) {
+                    elementName.language = this.languageVocabulary[elementName.language].display;
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+    });  // getDomainVocabulary
+  }
+
   getProduct(): void {
     const prodSubscription = this.productService.getProduct(this.productId).subscribe(response => {
       if (response) {
         this.product = response;
         if (Object.keys(this.product).length > 0) {
-
-          // Add title on the browser. Concatenate multiple Product Code
-          /*let prodCode = '';
-          this.product.productCodeList.forEach((elementProdCode, indexProdCode) => {
-            if (elementProdCode != null) {
-              if (elementProdCode.productCode) {
-                if (indexProdCode > 0) {
-                  prodCode = prodCode.concat('|');
-                }
-                prodCode = prodCode.concat(elementProdCode.productCode);
-              }
-            }
-          });*/
           this.titleService.setTitle(`View Product ` + this.product.id);
 
+          // Get Language vocabularies
+          this.getVocabularies();
+
+          // Get Ingredient Name for the Substance Key
           this.getSubstanceBySubstanceKey();
         }
       }
