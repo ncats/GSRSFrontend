@@ -8,7 +8,7 @@
   </div>
   <div class="maringright10px">
     <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="confirmDeleteComponent(prodComponentIndex)"
-      matTooltip="Delete Manufacture Item {{prodComponentIndex + 1}}">
+      matTooltip="Delete Manufacture Item Details {{prodComponentIndex + 1}}">
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
@@ -97,7 +97,7 @@
   </div>
 
 
-  <!-- Product MANUFACTURER BEGIN -->
+  <!-- Product MANUFACTURER Begin -->
   <br>
   <span matBadge="{{productComponent.productManufacturers.length}}" matBadgeOverlap="false">
     <span class="titlebrown">Manufacturer Item Code</span>
@@ -126,40 +126,40 @@
       </legend>
 
       <div class="form-row">
-        <app-cv-input class="col-4-1" domain="PROD_COMPANY_ROLE" title="Manufacturer Role" name="manufacturerRole"
+        <app-cv-input class="col-3-1" domain="PROD_COMPANY_ROLE" title="Manufacturer Role" name="manufacturerRole"
           [model]="productManufacturer.manufacturerRole" (valueChange)="productManufacturer.manufacturerRole = $event">
         </app-cv-input>
 
-        <mat-form-field class="col-4-3">
+        <mat-form-field class="col-3-1">
           <input matInput placeholder="Manufacturer Name" [(ngModel)]="productManufacturer.manufacturerName"
             name="manufacturerName" />
         </mat-form-field>
+
+        <app-cv-input class="col-3-1" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacturer Code Type"
+          name="manufacturerCodeType" [model]="productManufacturer.manufacturerCodeType"
+          (valueChange)="productManufacturer.manufacturerCodeType = $event">
+        </app-cv-input>
       </div>
 
       <div class="form-row margintop10px">
-        <mat-form-field class="col-1">
+        <mat-form-field class="col-3-1">
           <input matInput placeholder="Manufacturer Code" [(ngModel)]="productManufacturer.manufacturerCode"
             name="manufacturerCode" />
         </mat-form-field>
 
-        <app-cv-input class="col-1" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacturer Code Type"
-          name="manufacturerCodeType" [model]="productManufacturer.manufacturerCodeType"
-          (valueChange)="productManufacturer.manufacturerCodeType = $event">
-        </app-cv-input>
-
-        <mat-form-field class="col-1">
+        <mat-form-field class="col-3-1">
           <input matInput placeholder="Manufactured Item Code" [(ngModel)]="productManufacturer.manufacturedItemCode"
             name="manufacturedItemCode" />
         </mat-form-field>
 
-        <app-cv-input class="col-1" domain="MANUFACTURED_ITEM_CODE_TYPE" title="Manufactured Item Code Type"
+        <app-cv-input class="col-3-1" domain="MANUFACTURED_ITEM_CODE_TYPE" title="Manufactured Item Code Type"
           name="manufacturedItemCodeType" [model]="productManufacturer.manufacturedItemCodeType"
           (valueChange)="productManufacturer.manufacturedItemCodeType = $event">
         </app-cv-input>
       </div>
     </fieldset>
   </div> <!-- loop -->
-  <!-- Product MANUFACTURER END -->
+  <!-- Product MANUFACTURER End -->
 
 
   <!-- PRODUCT LOT LIST BEGIN -->

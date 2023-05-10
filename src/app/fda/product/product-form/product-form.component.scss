@@ -67,24 +67,24 @@
 }
 
 .col-1-1 {
-  width: 100%;  /*1 column*/
+  width: 100%;  /*1 column only on the row*/
 }
 
-.col-1 {
-  width: calc((100% - 25px * 3) / 4);  /*calculation for 4 columns*/
+.col-4-1 {
+  width: calc((100% - 25px * 3) / 4); // out of total 4 columns in a row, use 1 column
   margin-right: 25px;
 }
 
-.col-1:last-child {
+.col-4-1:last-child {
   margin-right: 0px;
 }
 
-.col-2 {
-  width: calc((100% - 25px * 1) / 2);  /*calculation for 2 columns*/
+.col-2-1 {
+  width: calc((100% - 25px * 1) / 2);  // out of total 2 columns in a row, use 1 column
   margin-right: 25px;
 }
 
-.col-2:last-child {
+.col-2-1:last-child {
   margin-right: 0px;
 }
 
@@ -97,12 +97,21 @@
   margin-right: 0px;
 }
 
-.col-3 {
-  width: calc((100% - 25px * 2) / 3);  /*calculation for 3 columns*/
+.col-3-1 {
+  width: calc((100% - 25px * 2) / 3);  // out of total 3 columns in a row, use 1 column
   margin-right: 25px;
 }
 
-.col-3:last-child {
+.col-3-1:last-child {
+  margin-right: 0px;
+}
+
+.col-3-2 {
+  width: calc((100%) * (2/3));  // out of total 3 columns in a row, use 2 columns
+  margin-right: 25px;
+}
+
+.col-3-2:last-child {
   margin-right: 0px;
 }
 
@@ -157,15 +166,6 @@
 }
 
 .col-4-3:last-child {
-  margin-right: 0px;
-}
-
-.col-4-1 {
-  width: calc((100% - 25px * 3) / 4); // out of total 4 columns, use 1 column
-  margin-right: 25px;
-}
-
-.col-4-1:last-child {
   margin-right: 0px;
 }
 
@@ -614,16 +614,16 @@ legend.border {
   margin-bottom: 10px;
 }
 
-fieldset.border-second {
+fieldset.border-two {
   border: solid 2px var(--regular-green-color) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   min-width: 0;
 }
 
-legend.border-second {
+legend.border-two {
   width: auto !important;
   background: var(--legend-bg-green-color);
   border: solid 1px var(--regular-green-color) !important;

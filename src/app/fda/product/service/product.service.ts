@@ -229,7 +229,7 @@ export class ProductService extends BaseHttpService {
   addNewProductProvenance(): void {
     const newProductProvenance: ProductProvenance =
     {productNames: [], productCodes: [], productCompanies: [], productDocumentations: [], productIndications: []};
-    this.product.productProvenances.push(newProductProvenance);
+    this.product.productProvenances.unshift(newProductProvenance);
   }
 
   addNewProductNameInProv(prodProvenanceIndex: number): void {

@@ -166,7 +166,7 @@
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
-              Manufacturer Name(s):
+              Manufacturer:
             </div>
             <div class="row-property-value">
               {{product.manufacturerName}}
@@ -177,10 +177,10 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <!-- Product OVERVIEW END -->
+  <!-- Product OVERVIEW End -->
 
 
-  <!-- Product PROVENANCE BEGIN -->
+  <!-- Product PROVENANCE Begin -->
   <div class="details-container margintop30px">
     <mat-card class="bordergray">
       <mat-card-title class="title2">
@@ -239,10 +239,10 @@
               </div>
               <div class="row-property">
                 <div class="row-property-key">
-                  Application Number:
+                  Is Listed:
                 </div>
                 <div class="row-property-value">
-                  {{x.applicationNumber}}
+                  {{x.isListed}}
                 </div>
               </div>
             </div>
@@ -250,13 +250,12 @@
             <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
-                  Marketing Category Code:
+                  Application Number:
                 </div>
                 <div class="row-property-value">
-                  {{x.marketingCategoryCode}}
+                  {{x.applicationNumber}}
                 </div>
               </div>
-
               <div class="row-property">
                 <div class="row-property-key">
                   Marketing Category Name:
@@ -276,13 +275,12 @@
                   {{x.controlSubstanceCode}}
                 </div>
               </div>
-
               <div class="row-property">
                 <div class="row-property-key">
-                  Control Substance Class:
+                  Marketing Category Code:
                 </div>
                 <div class="row-property-value">
-                  {{x.controlSubstanceClass}}
+                  {{x.marketingCategoryCode}}
                 </div>
               </div>
             </div>
@@ -298,10 +296,10 @@
               </div>
               <div class="row-property">
                 <div class="row-property-key">
-                  Product URL:
+                  Control Substance Class:
                 </div>
                 <div class="row-property-value">
-                  {{ x.productUrl }}
+                  {{x.controlSubstanceClass}}
                 </div>
               </div>
             </div>
@@ -309,25 +307,18 @@
             <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
-                  Provenance Product ID:
+                  Product URL:
                 </div>
                 <div class="row-property-value">
-                  {{ x.provenanceProductId }}
-                </div>
-              </div>
-              <div class="row-property">
-                <div class="row-property-key">
-                  Provenance Document ID:
-                </div>
-                <div class="row-property-value">
-                  {{x.provenanceDocumentId}}
+                  {{ x.productUrl }}
                 </div>
               </div>
             </div>
+            <!-- Product PROVENANCE Fields End -->
 
 
-            <!-- Product NAME BEGIN -->
-            <br>
+            <!-- Product NAME Begin -->
+            <br><br>
             <mat-card class="bordergray">
               <mat-card-title class="title2 font14px colorblack">
                 PRODUCT NAME ({{x.productNames.length}})
@@ -337,7 +328,8 @@
                   <table class="blueTable">
                     <thead>
                       <tr height="25px">
-                        <th>Full Product Name</th>
+                        <th>#</th>
+                        <th class="width300px">Product Name</th>
                         <th>Product Type</th>
                         <th>Language</th>
                         <th>Jurisdictions</th>
@@ -346,6 +338,7 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let prodName of x.productNames; let indexName = index">
+                        <td>{{indexName + 1}}</td>
                         <td>
                           <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
                         </td>
@@ -485,10 +478,10 @@
                         </div>
                         <div class="row-property">
                           <div class="row-property-key">
-                            Company GPS Longitude:
+                            Company Country:
                           </div>
                           <div class="row-property-value">
-                            {{ prodComp.companyGpsLongitude }}
+                            {{ prodComp.companyCountry }}
                           </div>
                         </div>
                       </div>
@@ -496,18 +489,18 @@
                       <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
-                            Company GPS Elevation:
+                            Company GPS Longitude:
                           </div>
                           <div class="row-property-value">
-                            {{ prodComp.companyGpsElevation }}
+                            {{ prodComp.companyGpsLongitude }}
                           </div>
                         </div>
                         <div class="row-property">
                           <div class="row-property-key">
-                            Company Country:
+                            Company GPS Elevation:
                           </div>
                           <div class="row-property-value">
-                            {{ prodComp.companyCountry }}
+                            {{ prodComp.companyGpsElevation }}
                           </div>
                         </div>
                       </div>
@@ -523,10 +516,10 @@
                         </div>
                         <div class="row-property">
                           <div class="row-property-key">
-                            Company Product ID:
+                            Company Public Domain:
                           </div>
                           <div class="row-property-value">
-                            {{ prodComp.companyProductId }}
+                            {{ prodComp.companyPublicDomain }}
                           </div>
                         </div>
                       </div>
@@ -538,6 +531,14 @@
                           </div>
                           <div class="row-property-value">
                             {{ prodComp.endMarketingDate }}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Company Product ID:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodComp.companyProductId }}
                           </div>
                         </div>
                       </div>
@@ -578,7 +579,7 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr *ngFor="let compCode of x.productCompanyCodes; let compCodeIndex = index">
+                                  <tr *ngFor="let compCode of prodComp.productCompanyCodes; let compCodeIndex = index">
                                     <td>{{ compCodeIndex + 1}}</td>
                                     <td>{{ compCode.companyCode }}</td>
                                     <td>{{ compCode.companyCodeType }}</td>
@@ -680,7 +681,7 @@
   </div>
   <!-- Product Provenance -->
 
-  
+
   <!-- TAB BEGINS HERE for Manufacture Item -->
   <div class="details-container margintop30px">
     <mat-card class="bordergray">

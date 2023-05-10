@@ -108,8 +108,8 @@
         {
           "filterName": "equals_in_array",
           "propertyToCheck": "references",
-          "value": "SUBSTANCE IMAGE",
-          "propertyInArray": "tags"
+          "value": "IMAGE REFERENCE",
+          "propertyInArray": "docType"
         }
       ]
     },

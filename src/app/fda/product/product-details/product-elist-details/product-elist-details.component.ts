@@ -9,6 +9,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
 import { ProductDetailsBaseComponent } from '../product-details-base.component';
 import { ConfigService } from '@gsrs-core/config';
 import { GeneralService } from '../../../service/general.service';
@@ -35,12 +36,13 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    public cvService: ControlledVocabularyService,
     public configService: ConfigService,
     titleService: Title,
     public sanitizer: DomSanitizer
   ) {
     super(producService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, titleService, sanitizer);
+      router, gaService, utilsService, cvService, titleService, sanitizer);
   }
 
   ngOnInit() {

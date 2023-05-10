@@ -70,7 +70,7 @@ export interface ProductName {
   id?: number;
   productName?: string;
   productNameType?: string;
-  displayName?: string;
+  displayName?: boolean;
   language?: string;
   jurisdictions?: string;
   createdBy?: string;
@@ -246,7 +246,7 @@ export interface ProductIngredient {
   originalNumeratorUnit?: string;
   originalDenominatorNumber?: string;
   originalDenominatorUnit?: string;
-  manufactureIngredCatalogId?: string;
+  manufactureIngredientCatalogId?: string;
   manufactureIngredientUrl?: string;
   reviewedBy?: string;
   reviewDate?: number;
