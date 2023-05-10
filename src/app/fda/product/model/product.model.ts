@@ -18,30 +18,61 @@ export interface Product {
   countryCode?: string;
   language?: string;
   provenance?: string;
-  provenanceProductId?: string;
-  provenanceDocumentId?: string;
-  deaschedule?: string;
-  marketingCategoryCode?: string;
-  marketingCategoryName?: string;
+  /*provenanceProductId?: string;*/
+  /*provenanceDocumentId?: string;*/
   productUrl?: string;
   shelfLife ?: string;
   storageConditions?: string;
+  numberOfManufactureItem?: string;
+  manufacturerName?: string;
+  manufacturerCode?: string;
+  manufacturerCodeType?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  // productNames?: Array<ProductName>;
+  // productCodes?: Array<ProductCode>;
+  // productCompanies?: Array<ProductCompany>;
+  productManufactureItems?: Array<ProductComponent>;
+  productProvenances?: Array<ProductProvenance>;  //new
+}
+
+export interface ProductProvenance {
+  id?: number;
+  provenance?: string;
+  productStatus?: string;
+  productType?: string;
+  applicationType?: string;
+  applicationNumber?: string;
+  publicDomain?: Date;
+  marketingCategoryCode?: string;
+  marketingCategoryName?: string;
+  controlSubstanceCode?: string;
+  controlSubstanceClass?: string;
+  controlSubstanceSource?: string;
+  productUrl?: Date;
+  isListed?: string;
+  internalVersion?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
   productNames?: Array<ProductName>;
   productCodes?: Array<ProductCode>;
   productCompanies?: Array<ProductCompany>;
+  productDocumentations?: Array<ProductDocumentation>;
   productIndications?: Array<ProductIndication>;
-  productManufactureItems?: Array<ProductComponent>;
 }
 
 export interface ProductName {
   id?: number;
   productName?: string;
   productNameType?: string;
+  displayName?: boolean;
+  language?: string;
+  jurisdictions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -89,6 +120,7 @@ export interface ProductCompany {
   companyProductId?: string;
   companyDocumentId?: string;
   provenanceDocumentId?: string;
+  companyPublicDomain?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -106,6 +138,33 @@ export interface ProductCompanyCode {
   modifyDate?: number;
 }
 
+export interface ProductManufacturer {
+  id?: number;
+  manufacturerName?: string;
+  manufacturerRole?: string;
+  manufacturerCodeType?: string;
+  manufacturedItemCode?: string;
+  manufacturedItemCodeType?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+}
+
+export interface ProductDocumentation {
+  id?: number;
+  documentId?: string;
+  documentType?: string;
+  setIdVersion?: string;
+  effectiveTime?: string;
+  jurisdictions?: string;
+  internalVersion?: number;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+}
+
 export interface ProductIndication {
   id?: number;
   Indication?: string;
@@ -113,6 +172,9 @@ export interface ProductIndication {
   indicationCode?: string;
   indicationCodeType?: string;
   indicationGroup?: string;
+  indicationSource?: string;
+  indicationSourceType?: string;
+  indicationSourceUrl?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -142,19 +204,6 @@ export interface ProductComponent {
   modifyDate?: number;
   productManufacturers?: Array<ProductManufacturer>;
   productLots?: Array<ProductLot>;
-}
-
-export interface ProductManufacturer {
-  id?: number;
-  manufacturerName?: string;
-  manufacturerRole?: string;
-  manufacturerCodeType?: string;
-  manufacturedItemCode?: string;
-  manufacturedItemCodeType?: string;
-  createdBy?: string;
-  createDate?: number;
-  modifiedBy?: string;
-  modifyDate?: number;
 }
 
 export interface ProductLot {
@@ -197,6 +246,8 @@ export interface ProductIngredient {
   originalNumeratorUnit?: string;
   originalDenominatorNumber?: string;
   originalDenominatorUnit?: string;
+  manufactureIngredientCatalogId?: string;
+  manufactureIngredientUrl?: string;
   reviewedBy?: string;
   reviewDate?: number;
   internalVersion?: number;

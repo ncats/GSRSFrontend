@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, OnDestroy, EventEmitter, ViewChild } 
 import { Subscription } from 'rxjs';
 import { ApplicationIngredient } from '../../model/application.model';
 import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '../../../../core/controlled-vocabulary/vocabulary.model';
 import { ApplicationService } from '../../service/application.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
@@ -148,7 +147,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
         this.ingredientNameMessage = 'Click Validate and Submit button to delete ' + this.ingredientName;
       }
     }
-    this.ingredientNameSubstanceUuid = null;
+    // this.ingredientNameSubstanceUuid = null;
+    this.substanceUuid = null;
     this.ingredientName = null;
     this.ingredient.substanceKey = null;
     this.ingredient.substanceKeyType = null;

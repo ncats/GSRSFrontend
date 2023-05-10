@@ -71,16 +71,16 @@
 }
 
 .row-property-key {
-  min-width: 40%;
-  max-width: 40%;
+  min-width: 45%;
+  max-width: 45%;
   padding: 9px;
   font-size: 13px;
   font-weight: 600;
 }
 
 .row-property-value {
-  min-width: 60%;
-  max-width: 60%;
+  min-width: 55%;
+  max-width: 55%;
   padding: 9px;
   font-size: 13px;
 }
@@ -254,6 +254,15 @@
   color: var(--orange-color);
 }
 
+.width300px {
+  width: 300px;
+}
+
+.width650px {
+  width: 650px;
+  max-width: 650px;
+}
+
 .width45percent {
   width: 45%;
 }
@@ -261,11 +270,6 @@
 .width60percent {
   width: 60%;
   max-width: 60%;
-}
-
-.width650px {
-  width: 650px;
-  max-width: 650px;
 }
 
 .textaligncenter {
