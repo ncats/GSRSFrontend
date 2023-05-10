@@ -29,6 +29,9 @@ export class BulkActionDialogComponent implements OnInit {
   ) {
     this.records = data.records;
     this.scrubberModel = data.scrubberModel;
+    if(this.scrubberModel) {
+      this.useScrubber = true;
+    }
     if (this.records) {
     Object.keys(this.records).forEach(record => {
       if(this.records[record].checked) {
@@ -68,8 +71,15 @@ export class BulkActionDialogComponent implements OnInit {
  
     this.loading = true;
     this.adminService.stagedRecordMultiAction(toSend, action, scrubber).subscribe(result => {
-      this.successful = true;
+      if (result.jobStatus === 'completed') {
+        this.successful = true;
       this.loading = false;
+      } else {
+        setTimeout(() => {
+          this.processingstatus(result.id);
+        }, 200);
+      }
+      
 
     }, error => {
       alert("Error - see console for details");
@@ -96,6 +106,21 @@ export class BulkActionDialogComponent implements OnInit {
       this.dialogRef.close();
 
     }
+  }
+
+  processingstatus(id: string): void {
+    this.adminService.processingstatus(id).subscribe(response => {
+      if (response.jobStatus === 'completed') {
+        this.successful = true;
+        this.loading = false;
+      } else {
+        setTimeout(() => {
+          this.processingstatus(id);
+        }, 200);
+      }
+     
+
+    });
   }
 
 }

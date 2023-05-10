@@ -194,7 +194,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateBulkList(event: any) {
-    console.log(event);
     let checked = event.checked;
     let recordId = event.substance._metadata.recordId;
     if (this.bulkList[recordId]) {
@@ -203,11 +202,9 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.bulkList[recordId] = {"checked": checked, "substance": event.substance};
     }
     
-    console.log(this.bulkList);
   }
 
   bulkActionDialog() {
-    console.log(this.bulkList);
       const dialogReference = this.dialog.open(BulkActionDialogComponent, {
         maxHeight: '85%',
 
@@ -218,7 +215,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.overlayContainer.style.zIndex = '1002';
 
       const exportSub = dialogReference.afterClosed().subscribe(response => {
-        console.log(response);
         if(response) {
           this.bulkList = response;
         }
@@ -296,7 +292,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.records = [];
 
     this.adminService.getImportScrubberSchema().subscribe(response => {
-      console.log(response);
       this.scrubberSchema = response;
     });
      
@@ -578,7 +573,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.adminService.GetStagedRecord(id).subscribe(response => {
       this.idMapping[response.uuid] = id;
       response._matches.matches.forEach(match => {
-        console.log(match);
         match.matchingRecords.forEach(matchRec => {
           if (matchRec.sourceName == 'GSRS' || matchRec.sourceName == 'Staging Area') {
             if (!ids[matchRec.recordId.idString]) {

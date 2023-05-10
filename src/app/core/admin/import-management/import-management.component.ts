@@ -158,7 +158,6 @@ changePreview(direction: string) {
       this.preview[this.previewIndex].data.structureID = response.structure.id;
     });
   } else {
-    console.log('false');
   }
   
 }
@@ -314,12 +313,8 @@ onFileSelect(event): void {
   if (event.target.files.length > 0) {
     const file = event.target.files[0];
     this.filename = file.name;
-    console.log(file.name);
-    console.log(file.type);
-    console.log(file);
     let extension = file.name.split('.');
     extension = extension[extension.length - 1];
-    console.log(extension);
 
     if(this.demo) {
       this.demo.forEach(val => {
@@ -377,7 +372,6 @@ callPreview(): void {
       this.preview = [];
       this.previewLoading = false;
       response.dataPreview.forEach(entry => {
-       console.log(entry);
       if (entry.data) {
         this.preview.push(entry);
         this.previewTotal = this.preview.length;

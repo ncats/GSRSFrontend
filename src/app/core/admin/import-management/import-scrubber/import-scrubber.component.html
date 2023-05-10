@@ -1,9 +1,7 @@
-<h3 mat-dialog-header>Staging Record Merge</h3>
-<div mat-dialog-content style = "min-height:525px" >
-    <div>
-<sf-form  [schema]="scrubberSchema"  [model]="scrubberModel" (onChange)="checkValue($event.value)" class = "top-margin"></sf-form>
-    </div>
-
+<h3 mat-dialog-header>Data Cleaning / Scrubbing</h3>
+<div mat-dialog-content style = "min-height:500px">
+<sf-form style = "min-height:525px"  [schema]="scrubberSchema"  [model]="scrubberModel" (onChange)="checkValue($event.value)" class = "top-margin"></sf-form>
+</div>
 <div mat-dialog-actions style = "height: 50px;">
      <span class = "middle-fill"></span> 
        <button  mat-button mat-flat-button color = "primary" (click) = "submit()">Save</button> &nbsp; 
