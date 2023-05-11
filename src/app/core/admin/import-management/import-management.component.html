@@ -123,7 +123,7 @@
                                 <div class = "inline-vertical ignore-col">
                                                 <div style = "margin: auto;">
                                                         <mat-checkbox style = "margin: auto;" [checked] = "action.actionName == 'no-op'"
-                                                                (change) = "action.actionName && action.actionName == 'no-op'? action.actionName = null: action.actionName = 'no-op' "></mat-checkbox>
+                                                                (change) = "toggleIgnore(action, $index);"></mat-checkbox>
                                                 </div>
                                         </div>
                         

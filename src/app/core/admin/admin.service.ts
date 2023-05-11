@@ -138,7 +138,7 @@ export class AdminService extends BaseHttpService {
             return `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/files/${name}`;
         }
 
-        public getAdapters(): Observable< UploadObject > {
+        public getAdapters(): Observable< any > {
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/adapters`;
           return this.http.get< any >(`${url}`);
         }
