@@ -218,6 +218,13 @@ ngOnInit() {
      }
   }
 
+  toggleIgnore(action: any, index: any) {
+    if (action.actionName && action.actionName == 'no-op') {
+      action.actionName = this.toIgnore[index].actionName;
+    } else {
+      action.actionName = 'no-op';
+    }
+  }
 
   onSubmit() {
     const formData = new FormData();
@@ -226,13 +233,13 @@ ngOnInit() {
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
     this.adminService.postAdapterFile(formData, this.adapterKey).pipe(take(1)).subscribe(response => {
+      console.log(response);
       this.loadingService.setLoading(false);
      this.step = 3;
       this.postResp = response;
       this.fileID = response.id;
-      this.postResp.adapterSettings.actions.forEach(action => {
-        this.toIgnore[action.fileField] = false;
-      });
+      this.toIgnore = JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions));
+       
       if (this.postResp.adapterSchema.fields) {
         this.createFieldList(this.postResp.adapterSchema.fields);
       } else if (this.postResp.adapterSchema['SDF Fields']) {
@@ -258,7 +265,8 @@ ngOnInit() {
     this.loadingService.setLoading(true);
     this.step = 4;
     let tosend = JSON.parse(JSON.stringify(this.postResp));
-    this.adminService.executeAdapterAsync(this.fileID, tosend, this.adapterKey ).subscribe(response => {
+    console.log(tosend);
+    this.adminService.executeAdapterAsync(this.fileID, tosend).subscribe(response => {
       this.executeStatus = response.jobStatus;
       this.loadingService.setLoading(false);
       this.executeLoading = true;
@@ -367,8 +375,9 @@ callPreview(): void {
      formData.append('file-type', this.fileType);
      this.preview = [];
      let tosend = JSON.parse(JSON.stringify(this.postResp));
-
+  console.log(tosend);
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey, this.previewLimit ).pipe(take(1)).subscribe(response => {
+      console.log(response);
       this.preview = [];
       this.previewLoading = false;
       response.dataPreview.forEach(entry => {
