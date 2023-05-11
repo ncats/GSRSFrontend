@@ -50,7 +50,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   message = '';
   downloadJsonHref: any;
   jsonFileName: string;
-
+ 
   constructor(
     private productService: ProductService,
     private authService: AuthService,
@@ -152,7 +152,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.product = this.productService.product;
 
           if (this.product.productProvenances == null) {
-            this.product.productProvenances = [{productNames: [], productCodes: [], productDocumentations: []}];
+            this.product.productProvenances = [{ productNames: [], productCodes: [], productDocumentations: [] }];
           }
 
           /*
@@ -182,7 +182,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.gaService.sendException('getProductDetails: error from API call');
         this.loadingService.setLoading(false);
         this.isLoading = false;
-       // this.handleProductRetrivalError();
+        // this.handleProductRetrivalError();
       });
     }
   }
@@ -663,7 +663,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   confirmDeleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Documentation IDs ' + (productDocIndex + 1) + ' data?'}
+      data: { message: 'Are you sure you want to delete Documentation IDs ' + (productDocIndex + 1) + ' data?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -800,6 +800,24 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
   }
   */
+
+  changeSelectionDisplayName($event, prodNameIndex: number) {
+    // Only allow to select ONE Display Name check box
+    this.product.productProvenances.forEach(elementProv => {
+      if (elementProv != null) {
+        elementProv.productNames.forEach((elementName, index) => {
+          if (elementName != null) {
+            if (prodNameIndex == index) {
+              elementName.displayName = $event.checked;
+            }
+            else {
+              elementName.displayName = false;
+            }
+          }
+        });
+      }
+    });
+  }
 
   expiryDateMessageOutChange($event) {
     this.expiryDateMessage = $event;
