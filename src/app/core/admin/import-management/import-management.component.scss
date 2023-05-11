@@ -82,8 +82,7 @@ padding-left: 7%;
 
 .top-button-row {
     width: 100%;
-    margin-top: -130px;
-    margin-bottom: 100px;
+   
 display: flex;
 flex-direction: row;
 align-items: center;
@@ -95,7 +94,6 @@ margin-right: 5px;
 padding-top: 4px;
 padding-bottom: 4px;
 width: 200px;
-
 }
 }
 .progress-container {
@@ -272,7 +270,7 @@ margin-bottom: auto;
 }
 
 .loader-container {
-    width: 70%;
+    width: 100%;
     margin: 10px;
 }
 
@@ -409,4 +407,49 @@ margin-bottom: auto;
     .value, .code-system {
         padding-left: 20px;
     }
+}
+
+.step2-header {
+    width: 100%;
+    display:flex;
+    font-size: 18px;
+}
+
+.step2-actions-container {
+    width: 70%;
+    justify-content: space-between;
+}
+
+.step2-preview-container {
+    width: 30%;
+}
+
+.actions-container {
+
+}
+
+.step2-button {
+    font-weight: 500;
+    font-size: 16px;
+    margin-right: 20px;
+}
+
+.ignore-col {
+    width: 125px;
+padding-left: 40px;
+}
+
+
+.details-col {
+    min-width: 100px;
+}
+
+.label-col {
+    min-width: 200px;
+    padding-left: 25px;
+}
+
+.action-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }

@@ -9,6 +9,7 @@ import { MatDialog, MatDialogRef, MatDialogModule, MAT_DIALOG_DATA } from '@angu
 import { StructureService, StructureImageModalComponent } from '@gsrs-core/structure';
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 import { isString } from 'util';
+import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 
 
 @Component({
@@ -47,6 +48,8 @@ executeStatus: string;
 executeID:string;
 completedRecords: any;
 executeLoading = false;
+scrubberSchema: any;
+scrubberModel: any;
 constructor(
   public formBuilder: FormBuilder,
   public adminService: AdminService,
@@ -92,6 +95,32 @@ this.fieldList = [];
 
 }
 
+openScrubber(templateRef:any, index: number): void  {
+  this.save = false;
+    this.settingsActive = this.postResp.adapterSettings.actions[index];
+
+
+
+    const dialogref = this.dialog.open(ImportScrubberComponent, {
+      minHeight: '500px',
+      width: '800px',
+      data: {
+        scrubberSchema: this.scrubberSchema,
+        scrubberModel: this.scrubberModel
+      }
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogref.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+
+      if(result) {
+        this.scrubberModel = result;
+      }
+      
+    });
+}
+
 openAction(templateRef:any, index: number): void  {
   this.save = false;
     this.settingsActive = this.postResp.adapterSettings.actions[index];
@@ -129,7 +158,6 @@ changePreview(direction: string) {
       this.preview[this.previewIndex].data.structureID = response.structure.id;
     });
   } else {
-    console.log('false');
   }
   
 }
@@ -158,7 +186,6 @@ ngOnInit() {
 
 
   });
-  
 
 
 }
@@ -212,7 +239,7 @@ ngOnInit() {
         this.createFieldList(this.postResp.adapterSchema['SDF Fields']);
       }
     
-     // this.adapterSettings = response.adapterSettings;
+     this.callPreview();
    }, error => {
     this.message = 'File could not be uploaded';
     alert('error in upload call, continuing with non-api demo. Error in console');
@@ -263,12 +290,44 @@ ngOnInit() {
   }
 
 
+  addRef() {
+    let temp = {
+      "actionName": "public_reference",
+      "actionParameters": {
+          "docType": "",
+          "citation": "",
+          "referenceID": "",
+          "uuid": "[[UUID_2]]",
+          "publicDomain": false,
+          "tags":[]
+      },
+      "label": "Create Reference"
+  }
+  this.postResp.adapterSettings.actions.push(temp);
+  this.openAction(null, this.postResp.adapterSettings.actions.length-1);
+  }
+
 
 
 onFileSelect(event): void {
   if (event.target.files.length > 0) {
     const file = event.target.files[0];
     this.filename = file.name;
+    let extension = file.name.split('.');
+    extension = extension[extension.length - 1];
+
+    if(this.demo) {
+      this.demo.forEach(val => {
+        val.fileExtensions.forEach(ext => {
+          if (ext.toUpperCase() == extension.toUpperCase()) {
+            this.adapterSettings = val.parameters;
+            this.adapterKey = val.adapterKey;
+        }
+        });
+        
+    });
+    }
+    
     this.uploadForm.get('file').setValue(file);
 
   }
@@ -287,7 +346,7 @@ stagingArea(sendFile?: boolean): void {
     navigationExtras.queryParams = {'facets': 'Source*' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
 
   }
-  this.router.navigate(['/staging-area'], navigationExtras);
+  this.router.navigate(['admin/staging-area'], navigationExtras);
 
 }
 
@@ -313,7 +372,6 @@ callPreview(): void {
       this.preview = [];
       this.previewLoading = false;
       response.dataPreview.forEach(entry => {
-       
       if (entry.data) {
         this.preview.push(entry);
         this.previewTotal = this.preview.length;
@@ -337,6 +395,7 @@ callPreview(): void {
 
     });
 }
+
 
 
 replaceAction(s: string) {

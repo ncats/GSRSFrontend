@@ -1153,7 +1153,7 @@ getDrafts() {
       } else if (response === 'browse') {
         this.router.navigate(['/browse-substance']);
       } else if (response === 'staging') {
-        this.router.navigate(['/staging-area']);
+        this.router.navigate(['/admin/staging-area']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
       } else {

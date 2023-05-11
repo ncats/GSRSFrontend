@@ -25,6 +25,8 @@ import * as lodash from 'lodash';
 import { CardDynamicSectionDirective } from '@gsrs-core/substances-browse/card-dynamic-section/card-dynamic-section.directive';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { LoadingService } from '@gsrs-core/loading';
+import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
+import { PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-import-summary',
   templateUrl: './import-summary.component.html',
@@ -49,6 +51,8 @@ export class ImportSummaryComponent implements OnInit {
   bulkChecked = false;
   displayAction: string;
   privateBulkAction: any;
+  pageSize = 5;
+  pageIndex = 0;
 
   
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
@@ -67,9 +71,10 @@ export class ImportSummaryComponent implements OnInit {
   nameLoading = true;
   _ = lodash;
   codeSystems = [];
-  displayedColumns = ['name', 'keys', 'merge'];
+  displayedColumns = ['name', 'source', 'keys', 'merge'];
   displayedColumns2 = ['type', 'message'];
   message = "";
+  private privateMatches: any;
 
   disabled = false;
   performedAction: string;
@@ -94,6 +99,8 @@ export class ImportSummaryComponent implements OnInit {
 
 
   ngOnInit() {
+    this.getMatchSummary();
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
@@ -118,21 +125,36 @@ export class ImportSummaryComponent implements OnInit {
     if (this.substance.structure && this.substance.structure.formula) {
       this.substance.structure.formula = this.structureService.formatFormula(this.substance.structure);
     }
-    if (this.substance.approvalID) {
-      this.substanceService.hasInxightLink(this.substance.approvalID).subscribe(response => {
-        if (response.total && response.total > 0) {
-          this.inxightLink = true;
-          this.inxightUrl = 'https://drugs.ncats.io/drug/' + this.substance.approvalID;
-        }
-      }, error => {});
-    } else {
-      this.getApprovalID();
-    }
 
+    this.matchFieldsToCount(this.substance.matchedRecords);
     if (this.configService.configData && this.configService.configData.molWeightRounding) {
       this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
     }
+  //  this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
   }
+
+
+  matchFieldsToCount(matches: any) {
+    matches.forEach(match => {
+      let newArr: Array<any> = [];
+      match.records.forEach(record => {
+        let found = false;
+        newArr.forEach(val => {
+          if (val.field && val.field === record) {
+            val.count++;
+            found = true;
+          }
+        });
+        if (!found) {
+          let temp = {'field': record, 'count': 1};
+          newArr.push(temp);
+        }
+      });
+      match.recordArr = newArr;
+      console.log(match);
+    });
+  }
+
 
   @Input()
 
@@ -153,7 +175,6 @@ export class ImportSummaryComponent implements OnInit {
   set bulkAction(action: boolean){
     this.privateBulkAction = action;
     this.bulkChecked = action;
-    console.log('setting action' + action);
   }
 
   get bulkAction() {
@@ -162,10 +183,23 @@ export class ImportSummaryComponent implements OnInit {
 
   getMatchSummary() {
     this.substance.matchedRecords.forEach(record => {
-      this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
-        record.uuid = response.uuid;
-        record._name = response._name;
-      });
+      if (record.source && record.source === 'Staging Area'){
+        this.adminService.GetStagedRecord(record.ID).subscribe(response => {
+          record._name = response._name;
+          this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
+        }, error => {
+          console.log(error);
+        })
+      } else {
+        this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
+          record.uuid = response.uuid;
+          record._name = response._name;
+          this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
+        }, error => {
+          console.log(error);
+        });
+      }
+      
     });
     
   }
@@ -203,8 +237,6 @@ export class ImportSummaryComponent implements OnInit {
 
       this.setCodeSystems();
       this.processValidation();
-      this.getMatchSummary();
-      this.loadDynamicContent();
     }
   }
 
@@ -259,7 +291,7 @@ export class ImportSummaryComponent implements OnInit {
         {data: {'message': 'Record successfuly Created', 'action': action},
       width: '600px'});
        const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
-        this.router.navigate(['/staging-area/'], {queryParamsHandling: "preserve"});
+        this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
        });
     }, error => {
       this.message = "Error: failed to " + action + " record";
@@ -368,20 +400,6 @@ export class ImportSummaryComponent implements OnInit {
     downloadLink.click();
   }
 
-  loadDynamicContent(): void {/*
-    const viewContainerRef = this.dynamicContentContainer.viewContainerRef;
-    viewContainerRef.clear();
-    if (this.configService.configData && this.configService.configData.loadedComponents){
-      const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
-      .filter(item => item.componentType === 'summary');
-      dynamicContentItemsFlat.forEach(dynamicContentItem => {
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
-        const componentRef = viewContainerRef.createComponent(componentFactory);
-        (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
-      });
-  }*/
-  }
-
   downloadJson() {
     this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1)).subscribe(response => {
         this.downloadFile(JSON.stringify(response), this.substance.uuid + '.json');
@@ -403,19 +421,23 @@ export class ImportSummaryComponent implements OnInit {
     }
   }
 
-  openMolModal() {
+  openMergeModal(selected?: any) {
 
-  /*  const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
+    let temp = {uuid: this.substance.uuid, recordId: this.substance._metadata.recordId, matches: this.substance.matchedRecords}
+    if (selected) {
+      temp['mergeRecord'] = selected;
+    }
+    const dialogRef = this.dialog.open(MergeActionDialogComponent, {
       minWidth: '40%',
       maxWidth: '90%',
-      height: '90%',
-      data: {uuid: this.substance.uuid, approval: this.substance.approvalID}
+      height: '70%',
+      data: temp
     });
     this.overlayContainer.style.zIndex = '1002';
 
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
-    });*/
+    });
   }
 
   moreThanNumberCount(names, number) {
@@ -432,6 +454,14 @@ export class ImportSummaryComponent implements OnInit {
 
   showMoreLessCodes() {
     this.showLessCodes = !this.showLessCodes;
+  }
+
+  changePage(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    const skip = event.pageSize * event.pageIndex;
+      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(skip, (this.pageSize + skip));
+     
   }
 
 

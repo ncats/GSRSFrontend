@@ -48,6 +48,7 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
+import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 
 @Component({
   selector: 'app-import-browse',
@@ -141,6 +142,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   matches: Array<any>;
   bulkList: any = {};
 
+  scrubberSchema: any;
+  scrubberModel: any;
 
 
   constructor(
@@ -191,7 +194,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateBulkList(event: any) {
-    console.log(event);
     let checked = event.checked;
     let recordId = event.substance._metadata.recordId;
     if (this.bulkList[recordId]) {
@@ -199,25 +201,20 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.bulkList[recordId] = {"checked": checked, "substance": event.substance};
     }
-    Object.keys(this.bulkList).forEach(item => {
-      
-    });
-    console.log(this.bulkList);
+    
   }
 
   bulkActionDialog() {
-    console.log(this.bulkList);
       const dialogReference = this.dialog.open(BulkActionDialogComponent, {
         maxHeight: '85%',
 
         width: '60%',
-        data: { 'records': this.bulkList }
+        data: { 'records': this.bulkList, 'scrubberModel': this.scrubberModel }
       });
 
       this.overlayContainer.style.zIndex = '1002';
 
       const exportSub = dialogReference.afterClosed().subscribe(response => {
-        console.log(response);
         if(response) {
           this.bulkList = response;
         }
@@ -226,11 +223,77 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  selectBulk(type?: string) {
+    if(type && type === 'all') {
+      this.isLoading = true;
+      this.loadingService.setLoading(true);
+      const skip = this.pageIndex * this.pageSize;
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
+        .subscribe(pagingResponse => {
+          
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      pagingResponse.content.forEach(record => {
+        if ( !record._metadata.importStatus || record._metadata.importStatus !== 'imported') {
+          if (this.bulkList[record._metadata.recordId]) {
+            this.bulkList[record._metadata.recordId].checked = true;
+          } else {
+            this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+          }
+        }
+      });
+        }, error => {
+          console.log(error);
+          this.isLoading = false;
+          this.loadingService.setLoading(false);
+        });
+    } else {
+      this.substances.forEach(record => {
+        if (this.bulkList[record._metadata.recordId]) {
+          this.bulkList[record._metadata.recordId].checked = true;
+        } else {
+          this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+        }
+      });
+    }
+    
+    
+  }
+
+  deselectAll() {
+    Object.keys(this.bulkList).forEach(item => {
+      this.bulkList[item].checked = false;
+    });
+  }
+
+  openScrubber(templateRef:any, index: number): void  {
+      const dialogref = this.dialog.open(ImportScrubberComponent, {
+        minHeight: '500px',
+        width: '800px',
+        data: {
+          scrubberSchema: this.scrubberSchema,
+          scrubberModel: this.scrubberModel
+        }
+      });
+      this.overlayContainer.style.zIndex = '1002';
+  
+      dialogref.afterClosed().subscribe(result => {
+        this.overlayContainer.style.zIndex = null;
+  
+        if(result) {
+          this.scrubberModel = result;
+        }
+        
+      });
+  }
+
   ngOnInit() {
     this.substances = [];
     this.records = [];
 
-    
+    this.adminService.getImportScrubberSchema().subscribe(response => {
+      this.scrubberSchema = response;
+    });
      
     this.gaService.sendPageView('Staging Area');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
@@ -506,15 +569,19 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   getRecord(id: string): Observable<any> { 
     let subject = new Subject<string>();
     let ids = [];
+    let sources = [];
     this.adminService.GetStagedRecord(id).subscribe(response => {
       this.idMapping[response.uuid] = id;
       response._matches.matches.forEach(match => {
         match.matchingRecords.forEach(matchRec => {
-          if (matchRec.sourceName == 'GSRS') {
+          if (matchRec.sourceName == 'GSRS' || matchRec.sourceName == 'Staging Area') {
             if (!ids[matchRec.recordId.idString]) {
               ids[matchRec.recordId.idString] = [matchRec.matchedKey];
+              sources[matchRec.recordId.idString] = matchRec.sourceName;
             } else {
               ids[matchRec.recordId.idString].push(matchRec.matchedKey);
+              sources[matchRec.recordId.idString] = matchRec.sourceName;
+
             }
           }
           
@@ -523,7 +590,9 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       let items = [];
       Object.keys(ids).forEach(key => {
         let temp = {'ID':key,
-                    'records':ids[key]};
+                    'records':ids[key],
+                     'source':sources[key]
+                  };
                     items.push(temp);
       });
       response.matchedRecords = items;
@@ -573,6 +642,15 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  searchforIDs() {
+     // if (this.argsHash == null || this.argsHash !== newArgsHash) {
+        this.isLoading = true;
+        this.loadingService.setLoading(true);
+        const skip = this.pageIndex * this.pageSize;
+        const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
+          .subscribe(pagingResponse => { console.log(pagingResponse)});
+  }
+
   searchSubstances() {
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
@@ -594,7 +672,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingService.setLoading(true);
       this.argsHash = newArgsHash;
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm)
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.pageSize)
         .subscribe(pagingResponse => {
           this.substances = [];
           this.records = [];
@@ -604,7 +682,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
-          this.pageSize = 10;
+       //   this.pageSize = 10;
           if (this.totalSubstances % this.pageSize === 0) {
             this.lastPage = (this.totalSubstances / this.pageSize);
           } else {
@@ -787,46 +865,13 @@ searchTermOkforBeginsWithSearch(): boolean {
 
 
   populateUrlQueryParameters(): void {
-    /*
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-
-    navigationExtras.queryParams['search'] = this.privateSearchTerm;
-    navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm;
-    navigationExtras.queryParams['sequence_search'] = this.privateSequenceSearchTerm;
-    navigationExtras.queryParams['searchOnIdentifiers'] = this.searchOnIdentifiers;
-    navigationExtras.queryParams['bulkQID'] = this.privateBulkSearchQueryId;
-    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
-    navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff;
-    navigationExtras.queryParams['type'] = this.privateSearchType;
-    navigationExtras.queryParams['seq_type'] = this.privateSearchSeqType;
-    navigationExtras.queryParams['smiles'] = this.smiles;
-    navigationExtras.queryParams['order'] = this.order;
-    navigationExtras.queryParams['pageSize'] = this.pageSize;
-    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
-    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
-    navigationExtras.queryParams['view'] = this.view;
-    // navigationExtras.queryParams['g-search-hash'] = this.searchTermHash;
-    this.previousState.push(this.router.url);
-    const urlTree = this.router.createUrlTree([], {
-      queryParams: navigationExtras.queryParams,
-      queryParamsHandling: 'merge',
-      preserveFragment: true
-    });
-    this.location.go(urlTree.toString());
-    */
+    
   }
 
   editAdvancedSearch(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'advanced search term' :
       `${this.privateSearchTerm}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
-    // Structure Search
-   // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
-   // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
-   // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
-
     // ** BEGIN: Store in Local Storage for Advanced Search
     // storage searchterm in local storage when going from Browse Substance to Advanced Search (NOT COMING FROM ADVANCED SEARCH)
     if (!this.searchHashFromAdvanced) {
@@ -1104,7 +1149,7 @@ searchTermOkforBeginsWithSearch(): boolean {
     }
   }
 
-  openImageModal(substance: SubstanceDetail): void {
+  openImageModal(substance: any): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
         this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
@@ -1112,14 +1157,14 @@ searchTermOkforBeginsWithSearch(): boolean {
 
     if (substance.substanceClass === 'chemical') {
       data = {
-        structure: substance.uuid,
+        structure: substance._metadata.recordId,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
         names: this.names[substance.uuid]
       };
     } else {
       data = {
-        structure: substance.uuid,
+        structure: substance._metadata.recordId,
         names: this.names[substance.uuid]
       };
     }
