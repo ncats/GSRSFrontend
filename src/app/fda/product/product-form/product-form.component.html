@@ -545,7 +545,7 @@
 
                               <div class="width290px padtop10px">
                                 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                                <mat-checkbox [(ngModel)]="prodName.displayName">
+                                <mat-checkbox [(ngModel)]="prodName.displayName" (change)="changeSelectionDisplayName($event, prodNameIndex)">
                                   Display Name
                                 </mat-checkbox>
                               </div>

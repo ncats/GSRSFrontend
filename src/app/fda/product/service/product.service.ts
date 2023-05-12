@@ -174,9 +174,9 @@ export class ProductService extends BaseHttpService {
     } else { // new Product
       this.product = {
         productProvenances: [],
-     //   productNames: [],
-     //   productCodes: [],
-     //   productCompanies: [],
+        //   productNames: [],
+        //   productCodes: [],
+        //   productCompanies: [],
         productManufactureItems: []
       };
     }
@@ -228,7 +228,7 @@ export class ProductService extends BaseHttpService {
 
   addNewProductProvenance(): void {
     const newProductProvenance: ProductProvenance =
-    {productNames: [], productCodes: [], productCompanies: [], productDocumentations: [], productIndications: []};
+      { productNames: [], productCodes: [], productCompanies: [], productDocumentations: [], productIndications: [] };
     this.product.productProvenances.unshift(newProductProvenance);
   }
 
@@ -264,7 +264,7 @@ export class ProductService extends BaseHttpService {
       this.product.productProvenances[prodProvenanceIndex].productCompanies = [];
     }
 
-    const newProductCompany: ProductCompany = {productCompanyCodes: []};
+    const newProductCompany: ProductCompany = { productCompanyCodes: [] };
     this.product.productProvenances[prodProvenanceIndex].productCompanies.push(newProductCompany);
   }
 
@@ -453,6 +453,7 @@ export class ProductService extends BaseHttpService {
     newProductProv.createdBy = null;
     newProductProv.lastModifiedDate = null;
 
+    // Product Names
     newProductProv.productNames.forEach(elementName => {
       if (elementName != null) {
         elementName.id = null;
@@ -462,18 +463,75 @@ export class ProductService extends BaseHttpService {
         elementName.modifiedBy = null;
         elementName.lastModifiedDate = null;
 
-        /*
-        elementName.productIngredients.forEach(elementIngred => {
-          if (elementIngred != null) {
-            elementIngred.id = null;
-            elementIngred.internalVersion = null;
-            elementIngred.createdBy = null;
-            elementIngred.creationDate = null;
-            elementIngred.modifiedBy = null;
-            elementIngred.lastModifiedDate = null;
+        elementName.productTermAndParts.forEach(elementPart => {
+          if (elementPart != null) {
+            elementPart.id = null;
+            elementPart.internalVersion = null;
+            elementPart.createdBy = null;
+            elementPart.creationDate = null;
+            elementPart.modifiedBy = null;
+            elementPart.lastModifiedDate = null;
           }
         });
-        */
+      }
+    });
+
+    // Product Codes
+    newProductProv.productCodes.forEach(elementCode => {
+      if (elementCode != null) {
+        elementCode.id = null;
+        elementCode.internalVersion = null;
+        elementCode.createdBy = null;
+        elementCode.creationDate = null;
+        elementCode.modifiedBy = null;
+        elementCode.lastModifiedDate = null;
+      }
+    });
+
+    // Product Companies
+    newProductProv.productCompanies.forEach(elementComp => {
+      if (elementComp != null) {
+        elementComp.id = null;
+        elementComp.internalVersion = null;
+        elementComp.createdBy = null;
+        elementComp.creationDate = null;
+        elementComp.modifiedBy = null;
+        elementComp.lastModifiedDate = null;
+
+        elementComp.productCompanyCodes.forEach(elementCompCode => {
+          if (elementCompCode != null) {
+            elementCompCode.id = null;
+            elementCompCode.internalVersion = null;
+            elementCompCode.createdBy = null;
+            elementCompCode.creationDate = null;
+            elementCompCode.modifiedBy = null;
+            elementCompCode.lastModifiedDate = null;
+          }
+        });
+      }
+    });
+
+    // Product Documentation IDs
+    newProductProv.productDocumentations.forEach(elementDoc => {
+      if (elementDoc != null) {
+        elementDoc.id = null;
+        elementDoc.internalVersion = null;
+        elementDoc.createdBy = null;
+        elementDoc.creationDate = null;
+        elementDoc.modifiedBy = null;
+        elementDoc.lastModifiedDate = null;
+      }
+    });
+
+    // Product Indications
+    newProductProv.productIndications.forEach(elementInd => {
+      if (elementInd != null) {
+        elementInd.id = null;
+        elementInd.internalVersion = null;
+        elementInd.createdBy = null;
+        elementInd.creationDate = null;
+        elementInd.modifiedBy = null;
+        elementInd.lastModifiedDate = null;
       }
     });
 

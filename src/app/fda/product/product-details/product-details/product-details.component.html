@@ -190,13 +190,19 @@
         <mat-card-content>
           <div class="marginbottom60px" *ngFor="let x of product.productProvenances; let i = index">
 
+            <hr *ngIf="i > 0">
+            <div class="colorgreen">
+              <b>Provenance {{(i+1)}} of {{product.productProvenances.length}}</b>
+            </div>
+            <br><br>
+
             <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
                   Provenance:
                 </div>
                 <div class="row-property-value">
-                  {{ x.provenance }}
+                  <span class="font16px colorred"><b>{{ x.provenance }}</b></span>
                 </div>
               </div>
               <div class="row-property">
@@ -340,7 +346,17 @@
                       <tr *ngFor="let prodName of x.productNames; let indexName = index">
                         <td>{{indexName + 1}}</td>
                         <td>
-                          <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
+                          <div class="divflex">
+                            <div>
+                              <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
+                            </div>
+
+                            <div class="margintopneg5px"
+                              *ngIf="prodName.displayName && prodName.displayName == true">
+                              &nbsp;
+                              <mat-icon>check</mat-icon>
+                            </div>
+                          </div>
                         </td>
                         <td>{{ prodName.productNameType }}</td>
                         <td>{{ prodName.language }}</td>
@@ -408,23 +424,27 @@
                 </mat-card-title>
                 <div *ngIf="x.productCompanies.length > 0">
                   <mat-card-content>
-                    <div class="marginbottom60px" *ngFor="let prodComp of x.productCompanies; let i = index">
+                    <div class="marginbottom20px" *ngFor="let prodComp of x.productCompanies; let i = index">
 
+                      <div class="colorgreen">
+                        <b>Company {{(i+1)}} of {{x.productCompanies.length}}</b>
+                      </div>
+                      <br><br>
                       <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Company Role:
-                          </div>
-                          <div class="row-property-value">
-                            {{ prodComp.companyRole }}
-                          </div>
-                        </div>
                         <div class="row-property">
                           <div class="row-property-key">
                             Company Name:
                           </div>
                           <div class="row-property-value">
                             {{prodComp.companyName}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Company Role:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodComp.companyRole }}
                           </div>
                         </div>
                       </div>
@@ -591,7 +611,8 @@
                         </mat-card>
                       </div>
                       <!-- Product Company Code End -->
-                      <hr>
+                      <br><br>
+                      <hr *ngIf="(i+1) < x.productCompanies.length">
                     </div> <!-- Company loop-->
                   </mat-card-content>
                 </div>
@@ -684,18 +705,19 @@
 
   <!-- TAB BEGINS HERE for Manufacture Item -->
   <div class="details-container margintop30px">
-    <mat-card class="bordergray">
+    <mat-card>
       <mat-card-title class="title2">
         MANUFACTURE ITEM ({{product.productManufactureItems.length}})
       </mat-card-title>
       <div *ngIf="product.productManufactureItems.length > 0">
-        <mat-card-content class="bordergray">
+        <mat-card-content>
+          <br>
           <mat-tab-group>
             <mat-tab label="Manufacture item {{index + 1}}"
               *ngFor="let prodComp of product.productManufactureItems; let index = index">
 
               <!-- Component/Manufacturing Begin -->
-              <mat-card>
+              <mat-card class="bordergray">
                 <mat-card-content>
                   <br>
                   <div class="row">
@@ -815,17 +837,6 @@
                   <div class="row">
                     <div class="row-property">
                       <div class="row-property-key">
-                        Provenance Manufacture Item ID:
-                      </div>
-                      <div class="row-property-value">
-                        {{prodComp.provenanceManufactureItemId}}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="row-property">
-                      <div class="row-property-key">
                         Dosage Form Note:
                       </div>
                       <div class="row-property-value">
@@ -841,14 +852,24 @@
                       </div>
                     </div>
                   </div>
-                  <!-- Manufacuture Item/Component -->
 
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Provenance Manufacture Item ID:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodComp.provenanceManufactureItemId}}
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Manufacuture Item/Component -->
 
 
                   <!-- Product MANUFACTURER BEGIN -->
                   <mat-card class="bordergray margintop30px">
                     <mat-card-title class="title2 font14px colorblack">
-                      <span>MANUFACTURE ITEM CODE ({{prodComp.productManufacturers.length}})</span>
+                      <span>MANUFACTURER ITEM CODE ({{prodComp.productManufacturers.length}})</span>
                     </mat-card-title>
                     <div *ngIf="prodComp.productManufacturers.length > 0">
                       <mat-card-content>
@@ -910,6 +931,7 @@
                               </div>
                             </div>
                           </div> <!-- row -->
+                          <br>
                         </div> <!-- loop -->
                       </mat-card-content>
                     </div>
@@ -922,6 +944,9 @@
                   <mat-card class="bordergray">
                     <mat-card-content>
                       <div *ngFor="let lot of prodComp.productLots; let indexLot = index">
+                        <br>
+                        <hr *ngIf="indexLot > 0">
+
                         <div class="title2">
                           <span class="colorgreen">LOT {{indexLot + 1}}</span>
                         </div>
@@ -989,16 +1014,18 @@
                             <div *ngFor="let ingred of lot.productIngredients; let indexIng = index">
                               <hr *ngIf="indexIng > 0">
 
+                              <div class="colorgreen">
+                                <b>Ingredient {{(indexIng+1)}} of {{lot.productIngredients.length}}</b>
+                              </div>
+                              <br><br>
+
                               <div class="row">
                                 <div class="row-property">
                                   <div class="row-property-key-2">
                                     Applicant Ingredient Name:
                                   </div>
                                   <div class="row-property-value-2">
-                                    <div *ngIf="ingred._substanceUuid">
-                                      <a [routerLink]="['/substances', ingred._substanceUuid]"
-                                        target="_blank">{{ingred.applicantIngredName}}</a>
-                                    </div>
+                                    {{ingred.applicantIngredName}}
                                   </div>
                                 </div>
                               </div>
@@ -1182,68 +1209,6 @@
                               <br>
                             </div> <!-- Ingredient LOOP -->
                             <!-- Ingredient END -->
-
-                            <!--
-                            <div class="div-scroll">
-                              <table class="blueTable">
-                                <thead>
-                                  <tr height="30px">
-                                    <th>Ingredient Name</th>
-                                    <th>Basis Of Strength</th>
-                                    <th>Ingredient Type</th>
-                                    <th>Ingredient Location</th>
-                                    <th>Average</th>
-                                    <th>Low</th>
-                                    <th>High</th>
-                                    <th>Unit</th>
-                                    <th>Confidentiality Code</th>
-                                    <th>Original Numerator Number</th>
-                                    <th>Original Numerator Unit</th>
-                                    <th>Original Denominator Number</th>
-                                    <th>Original Denominator Unit</th>
-                                    <th>Manufacture</th>
-                                    <th>Lot No</th>
-                                    <th>Grade</th>
-                                    <th>Release Characteristics</th>
-                                    <th>Notes</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr >
-                                    <td>
-                                      <div *ngIf="ingred._substanceUuid">
-                                        <a [routerLink]="['/substances', ingred._substanceUuid]"
-                                          target="_blank">{{ingred._ingredientName}}</a>
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <div *ngIf="ingred._basisOfStrengthSubstanceUuid">
-                                        <a [routerLink]="['/substances', ingred._basisOfStrengthSubstanceUuid]"
-                                          target="_blank">{{ingred._basisOfStrengthIngredientName}}</a>
-                                      </div>
-                                    </td>
-                                    <td>{{ ingred.ingredientType }}</td>
-                                    <td>{{ ingred.ingredientLocation }}</td>
-                                    <td>{{ ingred.average }}</td>
-                                    <td>{{ ingred.low }}</td>
-                                    <td>{{ ingred.high }}</td>
-                                    <td>{{ ingred.unit }}</td>
-                                    <td>{{ ingred.confidentialityCode }}</td>
-                                    <td>{{ ingred.originalNumeratorNumber }}</td>
-                                    <td>{{ ingred.originalNumeratorUnit }} </td>
-                                    <td>{{ ingred.originalDenominatorNumber }} </td>
-                                    <td>{{ ingred.originalDenominatorUnit }} </td>
-                                    <td>{{ ingred.manufacturer }}</td>
-                                    <td>{{ ingred.ingredLotNo }}</td>
-                                    <td>{{ ingred.grade }}</td>
-                                    <td>{{ ingred.releaseCharacteristic }}</td>
-                                    <td>{{ ingred.notes }}</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div> -->
-
-
 
                           </mat-card-content>
                         </mat-card>

@@ -150,8 +150,16 @@
   color: var(--primary-title-color);
 }
 
+.margintopneg5px {
+  margin-top: -5px;
+}
+
 .margintopneg10px {
   margin-top: -10px;
+}
+
+.margintop10px {
+  margin-top: 10px;
 }
 
 .margintop20px {
@@ -164,6 +172,10 @@
 
 .margintop80px {
   margin-top: 80px;
+}
+
+.marginbottom20px {
+  margin-bottom: 20px;
 }
 
 .marginbottom60px {
@@ -291,7 +303,6 @@ hr {
   overflow: visible;
   text-align: center;
   height: 5px;
-  margin-top: -3px;
 }
 
 table.blueTable {
@@ -365,6 +376,27 @@ table.blueTable tfoot .links a{
   width: 15px;
   height: 15px;
   padding-left: 5px;
+}
+
+/* label style */
+.mat-tab-label{
+  background: var(--pale-border-color-rgb-3);
+  color:  var(--red-label-color);
+  min-width: 60px!important;
+
+}
+
+:host ::ng-deep .mat-tab-label-active {
+  color: var(--regular-white-color);
+  font-weight: bold;
+  /*background-color: var(--pale-border-color-rgb-3);*/
+  background-color: var(--orange-color-rgb);
+  border-radius: 5px;
+}
+
+:host ::ng-deep .mat-ink-bar {
+  background-color: var(--primary-color, --orange-color-rgb) !important;
+  height: 2px;
 }
 
 @media(max-width: 700px) {

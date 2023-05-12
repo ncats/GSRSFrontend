@@ -48,6 +48,9 @@
       <th mat-header-cell *matHeaderCellDef class="width100px"> Substance Reaction/Role</th>
       <td mat-cell *matCellDef="let ssg4">
         <div *ngFor="let ssg4Detail of ssg4.synthDetails; let detIndex = index">
+          <span *ngIf="detIndex > 0">
+           <br>
+          </span>
           <span class="colorgreen">
             {{ssg4Detail.sbstncReactnSectNm}}
           </span>
