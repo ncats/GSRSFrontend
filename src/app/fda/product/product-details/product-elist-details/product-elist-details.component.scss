@@ -205,7 +205,7 @@ table.blueTable {
 }
 
 table.blueTable thead {
-  background:  var(--table-thead-bg-color-2);
+  background:  var(--table-thead-bg-color);
   border-bottom: 1px solid var(--table-thead-border-color);
 }
 
@@ -271,7 +271,7 @@ table.tableStyle2 {
 }
 
 table.tableStyle2 thead {
-  background:  var(--table-thead-bg-color-3);
+  background:  var(--table-thead-bg-color);
   border-bottom: 1px solid var(--table-thead-border-color);
 }
 
