@@ -179,8 +179,8 @@
 }
 
 .actions-container {
-  max-width: 1200px;
-  min-width: 1200px;
+  max-width: 1300px;
+  min-width: 1300px;
   background-color: var(--regular-white-color);
   padding: 10px;
   display: flex;
@@ -301,6 +301,10 @@
 
 .margintopneg10px {
   margin-top: -10px;
+}
+
+.margintopneg40px {
+  margin-top: -40px;
 }
 
 .margintop10px {
@@ -674,4 +678,8 @@ legend.border-two {
 
 .middle-fill {
   flex: 1 1 auto;
+}
+
+mat-hint {
+  color: var(--regular-red-color) !important;
 }
