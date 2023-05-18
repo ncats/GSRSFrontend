@@ -241,25 +241,6 @@
                   </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <!--
-                <div class="width100percent">
-                  <mat-form-field class="col-2">
-                    <input matInput placeholder="Non Proprietary Name/INN/USAN Name/Generic Name"
-                      [(ngModel)]="product.nonProprietaryName" name="nonProprietaryName" />
-                  </mat-form-field>
-
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Proprietary Name/Invented Name" [(ngModel)]="product.proprietaryName"
-                      name="proprietaryName" />
-                  </mat-form-field>
-
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Compose Product Name" [(ngModel)]="product.composeProductName"
-                      name="composeProductName" />
-                  </mat-form-field>
-                </div>
-                -->
-
                 <div class="form-row">
                   <app-cv-input class="col-2-1" domain="DOSAGE_FORM" title="Administravail Pharmacedical Dosage Form"
                     name="pharmacedicalDosageForm" [model]="product.pharmacedicalDosageForm"
@@ -275,47 +256,9 @@
                     (valueChange)="product.unitPresentation = $event">
                   </app-cv-input>
 
-                  <!-- REMOVE -->
-                  <!--
-                  <app-cv-input class="col-1" domain="PROD_RELEASE_CHARACTERISTIC" title="Release Characteristic"
-                    name="releaseCharacteristic" [model]="product.releaseCharacteristic"
-                    (valueChange)="product.releaseCharacteristic = $event">
-                  </app-cv-input>
-                  -->
-
                 </div>
 
-                <!--
                 <div class="form-row">
-                  <app-cv-input class="col-1" domain="PROD_STATUS" title="Status" name="status" [model]="product.status"
-                    (valueChange)="product.status = $event">
-                  </app-cv-input>
-
-                  <app-cv-input class="col-1" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
-                    [model]="product.publicDomain" (valueChange)="product.publicDomain = $event">
-                  </app-cv-input>
-                </div>
-                -->
-
-                <div class="form-row">
-                  <!--
-                  <app-cv-input class="col-1" domain="APPLICATION_TYPE" title="Application Type" name="appType"
-                    [model]="product.appType" (valueChange)="product.appType = $event">
-                  </app-cv-input>
-
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Application Number" [(ngModel)]="product.appNumber" name="appNumber" />
-                  </mat-form-field>
-
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Source" [(ngModel)]="product.source" name="source" />
-                  </mat-form-field>
-
-                  <app-cv-input class="col-1" domain="PROD_SOURCE_TYPE" title="Source Type" name="sourceType"
-                    [model]="product.sourceType" (valueChange)="product.sourceType = $event">
-                  </app-cv-input>
-                  -->
-
                   <app-cv-input class="col-4-1" domain="PROD_COUNTRY_CODE" title="Country Code" name="countryCode"
                     [model]="product.countryCode" (valueChange)="product.countryCode = $event">
                   </app-cv-input>
@@ -332,23 +275,6 @@
                     <input matInput placeholder="Storage Conditions" [(ngModel)]="product.storageConditions"
                       name="storageConditions" />
                   </mat-form-field>
-                </div>
-
-                <div class="form-row">
-                  <!--
-                  <app-cv-input class="col-1" domain="PROD_PRODUCT_TYPE" title="Product Type" name="productType"
-                    [model]="product.productType" (valueChange)="product.productType = $event">
-                  </app-cv-input>
-                  -->
-                </div>
-
-                <div class="form-row">
-                  <!--
-                  <mat-form-field class="col-1">
-                    <input matInput placeholder="Strength Characteristic" [(ngModel)]="product.strengthCharacteristic"
-                      name="strengthCharacteristic" />
-                  </mat-form-field>
-                  -->
                 </div>
 
                 <div class="form-row">
@@ -421,9 +347,16 @@
                     </legend>
 
                     <div class="form-row">
-                      <app-cv-input class="col-4-1" domain="PROD_PROVENANCE" title="Provenance" name="provenance"
-                        [model]="prodProv.provenance" (valueChange)="prodProv.provenance = $event">
-                      </app-cv-input>
+                      <div class="col-4-1">
+                        <app-cv-input class="col-4-1" required="true" domain="PROD_PROVENANCE" title="Provenance"
+                          name="provenance" [model]="prodProv.provenance" (valueChange)="updateProvenanceField(prodProvIndex, $event)">
+                        </app-cv-input>
+                        <mat-hint *ngIf="provenanceFieldMessage.length > 0 && provenanceFieldMessage[prodProvIndex]">
+                          <div class="margintopneg40px font11px">
+                            {{provenanceFieldMessage[prodProvIndex]}}
+                          </div>
+                        </mat-hint>
+                      </div>
 
                       <app-cv-input class="col-4-1" domain="PROD_STATUS" title="Status" name="status"
                         [model]="prodProv.productStatus" (valueChange)="prodProv.productStatus = $event">
@@ -545,7 +478,8 @@
 
                               <div class="width290px padtop10px">
                                 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                                <mat-checkbox [(ngModel)]="prodName.displayName" (change)="changeSelectionDisplayName($event, prodNameIndex)">
+                                <mat-checkbox [(ngModel)]="prodName.displayName"
+                                  (change)="changeSelectionDisplayName($event, prodNameIndex)">
                                   Display Name
                                 </mat-checkbox>
                               </div>
@@ -888,9 +822,12 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-3-1">
-                              <input matInput placeholder="Effective Time" [(ngModel)]="prodDoc.effectiveTime"
-                                name="effectiveTime" />
-                            </mat-form-field>
+                              <input matInput placeholder="Effective Time (mm/dd/yyyy)" [(ngModel)]="prodDoc.effectiveTime"
+                                name="effectiveTime" (change)="validateEffectiveTime()"/>
+                                <mat-hint *ngIf="effectiveTimeMessage.length > 0 && this.effectiveTimeMessage[prodProvIndex][prodDocIndex]">
+                                  {{this.effectiveTimeMessage[prodProvIndex][prodDocIndex]}}
+                                </mat-hint>
+                              </mat-form-field>
 
                             <app-cv-input class="col-3-2" domain="PROD_COUNTRY_CODE" title="Jurisdictions"
                               name="jurisdictions" [model]="prodDoc.jurisdictions"
