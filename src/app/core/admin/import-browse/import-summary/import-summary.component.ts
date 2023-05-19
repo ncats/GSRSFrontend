@@ -18,7 +18,6 @@ import {Alignment, UtilsService} from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
 import { ConfigService } from '@gsrs-core/config';
 import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
 import * as lodash from 'lodash';
@@ -53,6 +52,7 @@ export class ImportSummaryComponent implements OnInit {
   privateBulkAction: any;
   pageSize = 5;
   pageIndex = 0;
+  deleted = false;
 
   
 //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
@@ -273,6 +273,16 @@ export class ImportSummaryComponent implements OnInit {
 
   }
 
+  deleteRecord() {
+    this.adminService.deleteStagedRecord([this.privateSubstance._metadata.recordId]).subscribe(response => {
+      this.message = "Successfully deleted staging area record data";
+      this.deleted = true;
+    }, error => {
+      this.message = "There was a problem deleting staging area record data";
+
+    })
+  }
+
   doAction(action: string, mergeID?: string) {
  
     this.displayAction = action;
@@ -286,7 +296,7 @@ export class ImportSummaryComponent implements OnInit {
         this.performedAction = action;
       }
 
-
+      this.deleted = false;
       this.dialogRef =  this.dialog.open(this.infoDialog,
         {data: {'message': 'Record successfuly Created', 'action': action},
       width: '600px'});

@@ -1,128 +1,31 @@
 <div mat-header>
-        <button mat-mini-fab mat-dialog-close>
-                <mat-icon svgIcon="close"></mat-icon>
-              </button>
     <div *ngIf = "view == 'all'" >
-        <H3>Saved Lists {{setUser ? ' - ' + setUser : ''}}</H3>
-        <div class ="form-row">
-            <a *ngIf = "isAdmin" class = "link" (click) = "getUsers()">Other User's Lists</a>
-
-            <span class ="middle-fill"></span>
-            <a *ngIf = "isAdmin" class = "link" (click) = "view = 'import'">List Import</a>
+        <H3>Saved Lists</H3>
     </div>
-    </div>
-    <div *ngIf = "view == 'add'" >
-            <H3>Add List</H3>
-        </div>
-        <div *ngIf = "view == 'import'" >
-                <H3>Import List</H3>
-                <a class = "link" (click) = "view = 'all'">Return to lists view</a> <span class = "middle-fill"></span>
-            </div>
-
-        <div *ngIf = "view == 'users'" >
-            <H3>Users</H3>
-        </div>
-    <div *ngIf = "view == 'single'" class = "single-header">
+    <div *ngIf = "view == 'single'" >
             <H3>Saved Lists: <span style = "font-weight:700;margin-left:10px;font-size:22px">{{activeName}}</span> 
                 
             </H3>
-            <div class ="form-row" style = "justify-content:space-evenly">
-                    <a class = "link" (click) = "view = 'all'">Return to lists view</a> 
-                    <a class = "link" [href]="downloadJsonHref" download="{{(setUser ? setUser + '-' : '') + activeName}}.json">Export List</a> 
-                    <a class = "link" (click) = "browseView()">View list in browse page</a>
+            <div>
+                    <a class = "link" (click) = "view = 'all'">Return to lists view</a>
             </div>
         </div>
 </div>
 <div  mat-dialog-content>
-
-        <div *ngIf = "view === 'add'">
-                <br/>
-           <div *ngIf = "!showAddButtons">
-              <b style = "font-weight:500">Enter a list name to save browse results to</b>  <br/><br/>
-            <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /> &nbsp; &nbsp;
-            <button mat-flat-button color = "primary" (click) = "addList()">Add New List</button>
-        </div>
-        <br/><br/>
-        <div *ngIf = "!showAddButtons">
-                <b style = "font-weight:500">Or select an existing list to append to</b>  <br/>
-                <mat-form-field *ngIf = 'userLists' class = "select-list">
-                        <mat-label>Select a List</mat-label>
-                        <mat-select [(ngModel)]="listName2" name="Add to List" (selectionChange) = "checkList()">
-                          <mat-option *ngFor="let list of userLists" [value]="list">
-                            {{list}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      &nbsp; &nbsp;
-            <button mat-flat-button color = "primary" (click) = "appendList()" [disabled] ="disabled">Append to List</button>
-          </div>
-        <div *ngIf = "showAddButtons && loading"> 
-                <div class = "loading-spinner" style="margin: auto;">
-                        <mat-progress-spinner  [color]="accent" mode="indeterminate" diameter = "50" >
-                        </mat-progress-spinner>
-                  </div>
-            </div>
-          
-        </div>
-        <div *ngIf = "view === 'users'">
-            <table mat-table matSort [dataSource]="users" *ngIf = "users.length > 0">
-                    <ng-container matColumnDef="identifier">
-                                <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
-                                <td mat-cell *matCellDef="let list"> {{list.identifier}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="roles">
-                                <th mat-header-cell mat-sort-header *matHeaderCellDef> ID </th>
-                                <td mat-cell *matCellDef="let list">  <span *ngFor = "let role of list.roles">{{role}} &nbsp; </span></td>
-                            </ng-container>
-                            <ng-container matColumnDef="action">
-                                <th mat-header-cell *matHeaderCellDef> View </th>
-                                <td mat-cell *matCellDef="let list"> <button mat-button (click) = "useUser(list.identifier)">View User Lists</button> </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
-                
-            </table>
-      
-    </div>
-
-
-    <div *ngIf = "view === 'import'">
-            <br/><br/><br/>
-        <div class = "info">
-            Select a .json list file to import into a new edit form.
-        </div>
-        <br/><br/>
-        <div class = "full-row"> <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /></div>
-        <br/>
-        <div class = "full-row-start">
-                <div><button mat-stroked-button class="button-select-file" (click)="openInput()">Select File to Import</button></div>
-                <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
-                <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
-               
-        </div>
-        <br/><br/>
-        <button mat-flat-button color = "primary" class="button-import2" [disabled]= "!loaded || (!listName || listName === '')" (click) ="useFile()">Import</button>
-        <br/><br/>
-    </div>
-
-
 <div *ngIf = "view == 'all'">
-    <div *ngIf = "lists.length == 0">
-       <i>No lists were found</i>
-    </div>
         <table mat-table matSort [dataSource]="lists" *ngIf = "lists.length > 0">
                 <ng-container matColumnDef="delete">
                         <th mat-header-cell *matHeaderCellDef> Delete </th>
-                        <td mat-cell *matCellDef="let list; index as i"> <button mat-icon-button matTooltip="Delete entry" (click) = "deleteList(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
+                        <td mat-cell *matCellDef="let list; index as i"> <button mat-icon-button matTooltip="Delete draft" (click) = "deleteList(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
                                 <td mat-cell *matCellDef="let list"> {{list}} </td>
                             </ng-container>
-                          <!--  <ng-container matColumnDef="ID">
+                            <ng-container matColumnDef="ID">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef> ID </th>
                                 <td mat-cell *matCellDef="let list">  {{list.ID? list.ID : 'N/A'}} </td>
-                            </ng-container>-->
+                            </ng-container>
                             <ng-container matColumnDef="view">
                                 <th mat-header-cell *matHeaderCellDef> View </th>
                                 <td mat-cell *matCellDef="let list"> <button mat-button (click) = "useDraft(list)">View List</button> </td>
@@ -134,14 +37,14 @@
 </div>
 
 <div *ngIf = "view == 'single'" >
-        <table mat-table matSort [dataSource]="filtered" *ngIf = "filtered.length > 0">
+        <table mat-table matSort [dataSource]="active.lists" *ngIf = "active.lists.length > 0">
                 <ng-container matColumnDef="delete">
                         <th mat-header-cell *matHeaderCellDef> Delete </th>
                         <td mat-cell *matCellDef="let list"> <button mat-icon-button matTooltip="Delete draft" (click) = "deleteListEntry(list)"> <mat-icon svgIcon="delete_forever"></mat-icon></button> </td>
                     </ng-container>
                     <ng-container matColumnDef="key">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef> UUID </th>
-                                <td mat-cell *matCellDef="let list"> <a class = "primary-color" [routerLink]="['/substances', list.key]"> {{list.key}} </a></td>
+                                <td mat-cell *matCellDef="let list"> <a [routerLink]="['/substances', list.key]"> {{list.key}} </a></td>
                             </ng-container>
                             <ng-container matColumnDef="name">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
@@ -153,28 +56,19 @@
                                 </ng-container>
                             <ng-container matColumnDef="codeSystem">
                                 <th mat-header-cell mat-sort-header *matHeaderCellDef> Code System </th>
-                                    <td mat-cell *matCellDef="let list">  {{list.displayCodeSystem? list.displayCodeSystem : 'N/A'}} </td>
+                                    <td mat-cell *matCellDef="let list">  {{list.codeSystem? list.codeSystem : 'N/A'}} </td>
                                  </ng-container>
                             <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
                 
             </table>
-            <mat-paginator [length]="active.lists && active.lists.length || 0" [pageSize]="pagesize" showFirstLastButtons="true" (page)="pageChange($event)"
-               [pageSizeOptions]="[5, 10, 25, 100, 250, 1000]">
-</mat-paginator>
 </div>
 
 <div class = "form-row">
     <br/>
     {{message}}
-    <br/>
-    <span *ngIf = "view === 'import' && viewCreated">
-        &nbsp; &nbsp; &nbsp; <a class = "link" (click) = "useCreated()">View new list</a>
-    </span>
 </div>
-<div class = "form-row">
-    <div></div>   <span class = "middle-fill"></span> <button color = "primary" mat-flat-button *ngIf = "showAddButtons && !loading" (click) = "viewLists()">View Lists</button>
-    </div>
-
-
+</div>
+<div  mat-dialog-actions>
+<span class = "middle-fill"></span> <button color = "primary" mat-button mat-primary-button >Close</button>
 </div>
