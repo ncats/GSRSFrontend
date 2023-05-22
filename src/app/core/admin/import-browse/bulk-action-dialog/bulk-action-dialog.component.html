@@ -16,6 +16,9 @@
     <div *ngIf = "filtered.length > 0 && !successful" class = "scrubber-row">
             <mat-checkbox [(ngModel)] = "useScrubber"></mat-checkbox> Use Cleaning Options
         </div>
+        <div *ngIf = "filtered.length > 0 && !successful" class = "scrubber-row">
+            <mat-checkbox [(ngModel)] = "deleteStaged"></mat-checkbox> Delete from staging area after Action
+        </div>
     <table mat-table matSort [dataSource]="filtered" *ngIf = "filtered.length > 0 && !successful">
         <ng-container matColumnDef="ID">
                 <th mat-header-cell  *matHeaderCellDef> Selected </th>

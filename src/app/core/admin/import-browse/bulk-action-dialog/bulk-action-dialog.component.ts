@@ -18,6 +18,7 @@ export class BulkActionDialogComponent implements OnInit {
   loading = false;
   useScrubber = false;
   scrubberModel: any;
+  deleteStaged = true;
   constructor(
    
     public dialogRef: MatDialogRef<ImportDialogComponent>,
@@ -46,6 +47,24 @@ export class BulkActionDialogComponent implements OnInit {
   
 
   ngOnInit(): void {
+  }
+
+  deleteStagedRecords(): void {
+    let toSend = [];
+    this.filtered.forEach(item => {
+      if (item.checked) {
+        toSend.push(item.ID);
+      }
+    });
+    this.adminService.deleteStagedRecord(toSend).subscribe(response => {
+      this.successful = true;
+        this.loading = false;
+      console.log(response);
+    }, error => {
+      console.log(error);
+      this.successful = true;
+        this.loading = false;
+    })
   }
 
   checked(event: any, list: any) {
@@ -111,8 +130,13 @@ export class BulkActionDialogComponent implements OnInit {
   processingstatus(id: string): void {
     this.adminService.processingstatus(id).subscribe(response => {
       if (response.jobStatus === 'completed') {
-        this.successful = true;
-        this.loading = false;
+        if(this.deleteStaged) {
+          this.deleteStagedRecords();
+        } else {
+          this.successful = true;
+          this.loading = false;
+        }
+        
       } else {
         setTimeout(() => {
           this.processingstatus(id);

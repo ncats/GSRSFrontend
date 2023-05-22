@@ -51,54 +51,7 @@
           <div class='definition' *ngIf="substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
             {{substance.definitionLevel }} DEFINITION
           </div>
-         <!-- <div class="button-wrapper">
-            <button aria-label="Download" class="summary-button" mat-icon-button [matMenuTriggerFor]="downloadMenu">
-              <mat-icon svgIcon="get_app"></mat-icon>
-            </button>
-  
-            <button class="summary-button" aria-label="Search" *ngIf="substance.structure || substance.polymer"
-              mat-icon-button [matMenuTriggerFor]="searchMenu">
-              <mat-icon svgIcon="search"></mat-icon>
-            </button>
-  
-            
-            <button class="summary-button" aria-label="Advanced Search" mat-icon-button [matMenuTriggerFor]="advancedSearchMenu">
-              <mat-icon svgIcon="youtube"></mat-icon>
-            </button>
-            
-  
-            <a class = "mat-icon-button" aria-label = "Advanced Search" *ngIf="substance.structure"
-              class = "summary-button" mat-icon-button
-              [routerLink]="['/advanced-search']" [queryParams]="{structure : substance.structure.id}" matTooltip='Transfer Structure to Advanced Search'>
-              <mat-icon svgIcon="youtube"></mat-icon>
-            </a>
-  
-            
-            <a class="mat-icon-button" matTooltip="edit substance" class="summary-button" aria-label="edit substance"
-            </a>
-            
-            <a class="mat-icon-button" matTooltip="edit substance" aria-label="edit substance" class="summary-button"
-              *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </a>
-  
-           Reverting back from button to link to allow right click -> new tab opening 
-           
-            <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
-              [routerLink]="['/substances', substance.uuid, 'edit']">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-  
-            <button aria-label="Copy file" class="summary-button" *ngIf="canCreate" mat-icon-button
-              [matMenuTriggerFor]="editMenu">
-              <mat-icon svgIcon="file_copy"></mat-icon>
-            </button>
-  
-            <button aria-label="Sequence Search" class="summary-button" *ngIf="subunits" mat-icon-button
-              [matMenuTriggerFor]="sequenceMenu" matTooltip="sequence search">
-              <mat-icon svgIcon="search"></mat-icon>
-            </button>
-          </div>-->
+         
   
           <mat-menu #sequenceMenu="matMenu">
             <a mat-menu-item *ngFor="let unit of subunits; index as index" [routerLink]="['/sequence-search']"
@@ -131,11 +84,11 @@
   
           <mat-menu #searchMenu="matMenu">
             <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/structure-search']"
-              [queryParams]="{structure : substance.structure.id}">
+              [queryParams]="{structure : substance._metadata.recordId}">
               <span>Search Structure</span>
             </a>
             <a mat-menu-item *ngIf="substance.polymer" [routerLink]="['/structure-search']"
-              [queryParams]="{structure : substance.polymer.displayStructure.id}">
+              [queryParams]="{structure : substance._metadata.recordId}">
               <span>Search Structure</span>
             </a>
           </mat-menu>
@@ -517,6 +470,7 @@
       <br/><br/>
 
       <div style = "width:100%; display:flex; flex-direction:row;">
+          <button mat-button mat-flat-button mat-primary-button color = "primary" (click) = "deleteRecord()" [disabled] = "deleted">Delete Staging Area Data</button>
         <span class = "middle-fill"></span>
         <button mat-button mat-flat-button mat-primary-button mat-dialog-close (click) = "dialogRef.close()">Close</button>
         </div>

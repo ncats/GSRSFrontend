@@ -329,6 +329,20 @@ export class AdminService extends BaseHttpService {
 
         }
 
+        deleteStagedRecord(records: Array<string>) {
+          let tosend = "";
+          for(let i = 0; i< records.length; i++) {
+            tosend += records[i];
+            if(i !== (records.length - 1)) {
+              tosend += '\\n';
+            }
+          }
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@deletebulk`;
+
+          return this.http.delete< any >(url, { body: tosend });
+
+        }
+
         public updateStagingArea(id: string, substance: any) {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}/@update`;
 
