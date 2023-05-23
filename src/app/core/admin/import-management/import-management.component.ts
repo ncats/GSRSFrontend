@@ -238,7 +238,7 @@ ngOnInit() {
      this.step = 3;
       this.postResp = response;
       this.fileID = response.id;
-      this.toIgnore = JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions));
+      this.toIgnore = this.postResp.adapterSettings && this.postResp.adapterSettings.actions? JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions)) : null;
        
       if (this.postResp.adapterSchema.fields) {
         this.createFieldList(this.postResp.adapterSchema.fields);

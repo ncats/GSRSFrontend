@@ -10,6 +10,19 @@
   color: var(--link-color);
 }
 
+.disabled-btn {
+  color: var(--box-shadow-color-5);
+  background-color: var(--box-shadow-color-3);
+  cursor: pointer;
+  &:hover {
+    cursor: pointer !important;
+  }
+}
+
+.disabled-btn:hover {
+  cursor: pointer !important;
+
+}
 
 .form-row {
   width:100%;
