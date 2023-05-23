@@ -134,7 +134,7 @@
                                  
                        
 
-                                    <button mat-button (click) = "addRef()">
+                                    <button mat-button *ngIf = "postResp.adapter === 'SDF'" (click) = "addRef()">
                                                 Add Reference<mat-icon svgIcon="add_circle_outline"></mat-icon>
                                               </button>
 
