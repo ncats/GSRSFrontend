@@ -497,14 +497,16 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   logout() {
     this.authService.logout();
     setTimeout(() => {
-      this.router.navigate(['/home']);
+      if (this.configService.configData && this.configService.configData.logoutRedirectUrl){
+        window.location.href = this.configService.configData.logoutRedirectUrl;
+      } else {
+        this.router.navigate(['/home']);
+      }
     }, 1200);
   }
-
   viewDrafts(): void {
     const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
       maxHeight: '85%',
