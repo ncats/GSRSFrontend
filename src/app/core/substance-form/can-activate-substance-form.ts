@@ -18,7 +18,7 @@ export class CanActivateSubstanceForm implements CanActivate {
         return new Observable(observer => {
             this.authService.getAuth().subscribe(auth => {
                 if (auth) {
-                    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
+                    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').subscribe(response => {
                         if (response) {
                             observer.next(true);
                             observer.complete();

@@ -497,7 +497,6 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   logout() {
     this.authService.logout();
     setTimeout(() => {
@@ -508,7 +507,6 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     }, 1200);
   }
-
   viewDrafts(): void {
     const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
       maxHeight: '85%',
