@@ -4,6 +4,7 @@ export interface Config {
     apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;
     logoutRedirectUrl?: string;
+    sessionChecker?: any;
     googleAnalyticsId?: string;
     version?: string;
     buildDateTime?: string;
@@ -55,7 +56,16 @@ export interface Config {
     bulkSearch?: any
     useDataUrl?: any;
 }
+export interface SessionChecker { 
+        check?: boolean;
+        redirectUrl?: string;
+        redirectToLogin?: boolean;
+        alertMessage?: string; 
+        interval?: number;
 
+        
+
+}
 export interface LoadedComponents {
     applications?: boolean;
     products?: boolean;

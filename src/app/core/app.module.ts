@@ -117,6 +117,8 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
+import { SessionCheckerComponent } from './auth/session-checker.component';
+import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -154,7 +156,8 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
     RegisterComponent,
     PwdRecoveryComponent,
     UserQueryListDialogComponent,
-    ListCreateDialogComponent
+    ListCreateDialogComponent,
+    SessionCheckerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -226,6 +229,9 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
     ElementLabelDisplayModule,
     PrivacyStatementModule
   ],
+
+
+
   providers: [
     {
       provide: ErrorHandler,
@@ -243,7 +249,7 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {provide: WidgetRegistry, useClass: MyWidgetRegistry}
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent, Location],
   entryComponents: [
     HighlightedSearchActionComponent,
     ExportDialogComponent,
