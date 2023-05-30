@@ -334,7 +334,7 @@ export class AdminService extends BaseHttpService {
           for(let i = 0; i< records.length; i++) {
             tosend += records[i];
             if(i !== (records.length - 1)) {
-              tosend += '\\n';
+              tosend += ',';
             }
           }
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@deletebulk`;
