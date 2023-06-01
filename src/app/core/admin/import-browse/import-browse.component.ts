@@ -345,7 +345,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showAudit = this.authService.hasRoles('admin');
 
     });
-    this.facetManagerService.registerGetFacetsHandler(this.substanceService.getSubstanceFacets );
+    this.facetManagerService.registerGetFacetsHandler(this.substanceService.getStagingFacets );
 
     this.subscriptions.push(authSubscription);
     this.isComponentInit = true;
