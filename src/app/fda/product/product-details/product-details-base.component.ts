@@ -125,6 +125,12 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         if (elementComp != null) {
           elementComp.productLots.forEach(elementLot => {
             if (elementLot != null) {
+
+              // Sort Ingredient Name by Inredient Type ('Active Ingredient', 'Inactive Ingredient', etc)
+              if (elementLot.productIngredients.length > 0) {
+                elementLot.productIngredients.sort((a, b) => (a.ingredientType < b.ingredientType ? -1 : 1));
+              }
+
               elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
                   // Get Substance Details, uuid, approval_id, substance name

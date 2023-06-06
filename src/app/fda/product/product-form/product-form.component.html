@@ -349,7 +349,8 @@
                     <div class="form-row">
                       <div class="col-4-1">
                         <app-cv-input class="col-4-1" required="true" domain="PROD_PROVENANCE" title="Provenance"
-                          name="provenance" [model]="prodProv.provenance" (valueChange)="updateProvenanceField(prodProvIndex, $event)">
+                          name="provenance" [model]="prodProv.provenance"
+                          (valueChange)="updateProvenanceField(prodProvIndex, $event)">
                         </app-cv-input>
                         <mat-hint *ngIf="provenanceFieldMessage.length > 0 && provenanceFieldMessage[prodProvIndex]">
                           <div class="margintopneg40px font11px">
@@ -390,7 +391,7 @@
                     </div>
 
                     <div class="form-row">
-                      <app-cv-input class="col-2-1" domain="PROD_CONTROL_SUBSTANCE_SOURCE"
+                      <app-cv-input class="col-4-1" domain="PROD_CONTROL_SUBSTANCE_SOURCE"
                         title="Control Substance Source" name="controlSubstanceSource"
                         [model]="prodProv.controlSubstanceSource"
                         (valueChange)="prodProv.controlSubstanceSource = $event">
@@ -405,6 +406,10 @@
                         title="Control Substance Class" name="controlSubstanceClass"
                         [model]="prodProv.controlSubstanceClass"
                         (valueChange)="prodProv.controlSubstanceClass = $event">
+                      </app-cv-input>
+
+                      <app-cv-input class="col-4-1" domain="PROD_COUNTRY_CODE" title="Jurisdictions" name="jurisdiction"
+                        [model]="prodProv.jurisdictions" (valueChange)="prodProv.jurisdictions = $event">
                       </app-cv-input>
                     </div>
 
@@ -465,15 +470,10 @@
                             </legend>
                             <div class="divflex">
                               <div class="form-row">
-                                <mat-form-field class="col-2-1">
+                                <mat-form-field class="col-1-1">
                                   <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName"
                                     name="productName" />
                                 </mat-form-field>
-
-                                <app-cv-input class="col-2-1" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type"
-                                  name="productNameType" [model]="prodName.productNameType"
-                                  (valueChange)="prodName.productNameType = $event">
-                                </app-cv-input>
                               </div>
 
                               <div class="width290px padtop10px">
@@ -487,9 +487,9 @@
 
                             <div class="divflex">
                               <div class="form-row">
-                                <app-cv-input class="col-2-1" domain="PROD_COUNTRY_CODE" title="Jurisdictions"
-                                  name="jurisdiction" [model]="prodName.jurisdictions"
-                                  (valueChange)="prodName.jurisdictions = $event">
+                                <app-cv-input class="col-2-1" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type"
+                                  name="productNameType" [model]="prodName.productNameType"
+                                  (valueChange)="prodName.productNameType = $event">
                                 </app-cv-input>
 
                                 <app-cv-input class="col-2-1" domain="LANGUAGE" title="Language" name="language"
@@ -565,19 +565,14 @@
                           *ngFor="let prodCode of prodProv.productCodes; let prodCodeIndex = index">
                           <div class="divflexrow">
                             <div class="form-row">
-                              <mat-form-field class="col-3-1">
+                              <mat-form-field class="col-2-1">
                                 <input matInput placeholder="Product Code" [(ngModel)]="prodCode.productCode"
                                   name="productCode" />
                               </mat-form-field>
 
-                              <app-cv-input class="col-3-1" domain="PROD_PRODUCT_CODE_TYPE" title="Product Code Type"
+                              <app-cv-input class="col-2-1" domain="PROD_PRODUCT_CODE_TYPE" title="Product Code Type"
                                 name="productCodeType" [model]="prodCode.productCodeType"
                                 (valueChange)="prodCode.productCodeType = $event">
-                              </app-cv-input>
-
-                              <app-cv-input class="col-3-1" domain="PROD_COUNTRY_CODE" title="Jurisdictions"
-                                name="jurisdiction" [model]="prodCode.jurisdictions"
-                                (valueChange)="prodCode.jurisdictions = $event">
                               </app-cv-input>
                             </div>
 
@@ -822,12 +817,14 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-3-1">
-                              <input matInput placeholder="Effective Time (mm/dd/yyyy)" [(ngModel)]="prodDoc.effectiveTime"
-                                name="effectiveTime" (change)="validateEffectiveTime()"/>
-                                <mat-hint *ngIf="effectiveTimeMessage.length > 0 && this.effectiveTimeMessage[prodProvIndex][prodDocIndex]">
-                                  {{this.effectiveTimeMessage[prodProvIndex][prodDocIndex]}}
-                                </mat-hint>
-                              </mat-form-field>
+                              <input matInput placeholder="Effective Time (mm/dd/yyyy)"
+                                [(ngModel)]="prodDoc.effectiveTime" name="effectiveTime"
+                                (change)="validateEffectiveTime()" />
+                              <mat-hint
+                                *ngIf="effectiveTimeMessage.length > 0 && this.effectiveTimeMessage[prodProvIndex][prodDocIndex]">
+                                {{this.effectiveTimeMessage[prodProvIndex][prodDocIndex]}}
+                              </mat-hint>
+                            </mat-form-field>
 
                             <app-cv-input class="col-3-2" domain="PROD_COUNTRY_CODE" title="Jurisdictions"
                               name="jurisdictions" [model]="prodDoc.jurisdictions"
@@ -899,10 +896,10 @@
                               [model]="prodInd.indicationCodeType" (valueChange)="prodInd.indicationCodeType = $event">
                             </app-cv-input>
 
-                            <mat-form-field class="col-3-1">
-                              <input matInput placeholder="Indication Group" [(ngModel)]="prodInd.indicationGroup"
-                                name="indicationGroup" />
-                            </mat-form-field>
+                            <app-cv-input class="col-3-1" domain="PROD_INDICATION_GROUP" title="Indication Group"
+                              name="indicationGroup" [model]="prodInd.indicationGroup"
+                              (valueChange)="prodInd.indicationGroup = $event">
+                            </app-cv-input>
                           </div>
 
                           <div class="form-row">

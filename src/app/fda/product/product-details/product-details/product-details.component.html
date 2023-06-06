@@ -313,6 +313,14 @@
             <div class="row">
               <div class="row-property">
                 <div class="row-property-key">
+                  Jurisdictions:
+                </div>
+                <div class="row-property-value">
+                  {{ x.jurisdictions }}
+                </div>
+              </div>
+              <div class="row-property">
+                <div class="row-property-key">
                   Product URL:
                 </div>
                 <div class="row-property-value">
@@ -338,7 +346,6 @@
                         <th class="width300px">Product Name</th>
                         <th>Product Type</th>
                         <th>Language</th>
-                        <th>Jurisdictions</th>
                         <th>Term and Term Part</th>
                       </tr>
                     </thead>
@@ -351,16 +358,14 @@
                               <span class="colororange font16px fontbold">{{ prodName.productName }}</span>
                             </div>
 
-                            <div class="margintopneg5px"
-                              *ngIf="prodName.displayName && prodName.displayName == true">
+                            <div class="margintopneg5px" *ngIf="prodName.displayName && prodName.displayName == true">
                               &nbsp;
-                              <mat-icon>check</mat-icon>
+                              <mat-icon matTooltip="Display Name">check</mat-icon>
                             </div>
                           </div>
                         </td>
                         <td>{{ prodName.productNameType }}</td>
                         <td>{{ prodName.language }}</td>
-                        <td>{{ prodName.jurisdictions }}</td>
                         <td>
                           <div *ngFor="let prodPart of prodName.productTermAndParts; let indexPart = index">
                             <b>Term:</b>&nbsp;{{prodPart.productTerm}}
@@ -397,7 +402,6 @@
                           <th>#</th>
                           <th>Product Code</th>
                           <th>Product Code Type</th>
-                          <th>Jurisdictions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -405,7 +409,6 @@
                           <td>{{i + 1}}</td>
                           <td>{{ prodCode.productCode }}</td>
                           <td>{{ prodCode.productCodeType }}</td>
-                          <td>{{ prodCode.jurisdictions }}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -666,28 +669,89 @@
                 </mat-card-title>
                 <div *ngIf="x.productIndications.length > 0">
                   <mat-card-content>
-                    <table class="blueTable">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th width="25%">Indication</th>
-                          <th width="30%">Indication Text</th>
-                          <th width="15%">Indication Code</th>
-                          <th width="15%">Indication Code Type</th>
-                          <th width="15%">Indication Group</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let prodInd of x.productIndications; let i = index">
-                          <td>{{i + 1}}</td>
-                          <td>{{ prodInd.indication }}</td>
-                          <td>{{ prodInd.indicationText }}</td>
-                          <td>{{ prodInd.indicationCode }}</td>
-                          <td>{{ prodInd.indicationCodeType }}</td>
-                          <td>{{ prodInd.indicationGroup }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="marginbottom20px" *ngFor="let prodInd of x.productIndications; let i = index">
+
+                      <div class="colorgreen">
+                        <b>Indication {{(i+1)}} of {{x.productIndications.length}}</b>
+                      </div>
+                      <br><br>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indication }}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication Text:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indicationText }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication Code:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indicationCode }}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication Code Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indicationCodeType }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication Group:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indicationGroup }}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication Source:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indicationSource }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication Source Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indicationSourceType }}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Indication Source URL:
+                          </div>
+                          <div class="row-property-value">
+                            {{ prodInd.indicationSourceUrl }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </mat-card-content>
                 </div>
               </mat-card>
@@ -1061,7 +1125,7 @@
                                     Ingredient Type:
                                   </div>
                                   <div class="row-property-value-2">
-                                    <span class="colorgreen">{{ ingred.ingredientType }}</span>
+                                    <span class="colorgreen"><b>{{ ingred.ingredientType }}</b></span>
                                   </div>
                                 </div>
                                 <div class="row-property">
