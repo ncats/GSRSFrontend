@@ -1,501 +1,477 @@
 <mat-card>
-        <mat-card-title>
-          <a class="substance-name name-header">
-            <span [innerHTML] = "substance._name"></span>
+    <mat-card-title>
+      <a class="substance-name name-header" [routerLink]="['/substances', substance._metadata.recordId]" [queryParams]="{source : 'staging'}">
+        <span [innerHTML] = "substance._name" ></span>
+  
+      </a>
+     <!-- <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
+      </mat-icon>-->
+      <span class="middle-fill"></span>
       
-          </a>
-         <!-- <mat-icon svgIcon="lock" class="lock-icon" *ngIf="substance.access && substance.access.length > 0">
-          </mat-icon>-->
-          <span class="middle-fill"></span>
-          
-          <div class="">
-            <span class = "status-label">Status: </span>
-            <span class = "status">{{substance._metadata.importStatus | uppercase}}</span>
-          </div>
-        </mat-card-title>
-      
-        <mat-card-content>
-          <div class="substance-content">
-            <div class="structure-container">
-              <div *ngIf="substance.structure">
-                <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
-                  <mat-chip-list selectable="false" multiple="false">
-                    <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
-                  </mat-chip-list>
-                </div>
-              </div>
-              <div *ngIf="!substance.structure">
-                <div class="mat-chip-list-container">
-                  <mat-chip-list selectable="false" multiple="false">
-                    <mat-chip color="primary" selected>{{substance.substanceClass}}
-                    </mat-chip>
-                  </mat-chip-list>
-                </div>
-              </div>
-              <div class="image-thumbnail">
-                <div *ngIf="substance.structure || substance.polymer">
-                  <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(substance)">
-                    <img appSubstanceImage [entityId]="substance._metadata.recordId"
-                      [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
-                  </a>
-                </div>
-                <div *ngIf="!substance.structure && !substance.polymer">
-                  <img appSubstanceImage [entityId]="substance._metadata.recordId"
-                    [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
-                </div>
-              </div>
-              <div *ngIf="substance._matchContext && substance._matchContext.similarity">
-                <span class="simlarity-label">similarity:</span> <span
-                  class="similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
-              </div>
-              <div class='definition' *ngIf="substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
-                {{substance.definitionLevel }} DEFINITION
-              </div>
-             <!-- <div class="button-wrapper">
-                <button aria-label="Download" class="summary-button" mat-icon-button [matMenuTriggerFor]="downloadMenu">
-                  <mat-icon svgIcon="get_app"></mat-icon>
-                </button>
-      
-                <button class="summary-button" aria-label="Search" *ngIf="substance.structure || substance.polymer"
-                  mat-icon-button [matMenuTriggerFor]="searchMenu">
-                  <mat-icon svgIcon="search"></mat-icon>
-                </button>
-      
-                
-                <button class="summary-button" aria-label="Advanced Search" mat-icon-button [matMenuTriggerFor]="advancedSearchMenu">
-                  <mat-icon svgIcon="youtube"></mat-icon>
-                </button>
-                
-      
-                <a class = "mat-icon-button" aria-label = "Advanced Search" *ngIf="substance.structure"
-                  class = "summary-button" mat-icon-button
-                  [routerLink]="['/advanced-search']" [queryParams]="{structure : substance.structure.id}" matTooltip='Transfer Structure to Advanced Search'>
-                  <mat-icon svgIcon="youtube"></mat-icon>
-                </a>
-      
-                
-                <a class="mat-icon-button" matTooltip="edit substance" class="summary-button" aria-label="edit substance"
-                </a>
-                
-                <a class="mat-icon-button" matTooltip="edit substance" aria-label="edit substance" class="summary-button"
-                  *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
-                  <mat-icon svgIcon="edit"></mat-icon>
-                </a>
-      
-               Reverting back from button to link to allow right click -> new tab opening 
-               
-                <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
-                  [routerLink]="['/substances', substance.uuid, 'edit']">
-                  <mat-icon svgIcon="edit"></mat-icon>
-                </button>
-      
-                <button aria-label="Copy file" class="summary-button" *ngIf="canCreate" mat-icon-button
-                  [matMenuTriggerFor]="editMenu">
-                  <mat-icon svgIcon="file_copy"></mat-icon>
-                </button>
-      
-                <button aria-label="Sequence Search" class="summary-button" *ngIf="subunits" mat-icon-button
-                  [matMenuTriggerFor]="sequenceMenu" matTooltip="sequence search">
-                  <mat-icon svgIcon="search"></mat-icon>
-                </button>
-              </div>-->
-      
-              <mat-menu #sequenceMenu="matMenu">
-                <a mat-menu-item *ngFor="let unit of subunits; index as index" [routerLink]="['/sequence-search']"
-                  [queryParams]="{substance : substance.uuid, subunit : unit.uuid, seq_type : substance.substanceClass}">
-                  subunit {{unit.subunitIndex}} ({{unit.sequence && unit.sequence.length || 0}}) similarity search
-                </a>
-              </mat-menu>
-      
-              <mat-menu #downloadMenu="matMenu">
-      
-                <a mat-menu-item (click)="downloadJson()">
-                  <span>Download JSON</span>
-                </a>
-                <a mat-menu-item (click)="openMolModal()" *ngIf="substance.structure || substance.polymer">
-                  <span>Show Molfile</span>
-                </a>
-                <a mat-menu-item *ngIf="substance.structure"
-                  (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
-                  <span>Download Molfile</span>
-                </a>
-                <a mat-menu-item *ngIf="substance.polymer"
-                  (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
-                  <span>Download Molfile</span>
-                </a>
-                <a mat-menu-item *ngIf="(substance.protein || substance.nucleicAcid)"
-                  (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')">
-                  <span>Download Fasta</span>
-                </a>
-              </mat-menu>
-      
-              <mat-menu #searchMenu="matMenu">
-                <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/structure-search']"
-                  [queryParams]="{structure : substance.structure.id}">
-                  <span>Search Structure</span>
-                </a>
-                <a mat-menu-item *ngIf="substance.polymer" [routerLink]="['/structure-search']"
-                  [queryParams]="{structure : substance.polymer.displayStructure.id}">
-                  <span>Search Structure</span>
-                </a>
-              </mat-menu>
-      
-              <mat-menu #advancedSearchMenu="matMenu">
-                <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/advanced-search']"
-                  [queryParams]="{structure : substance.structure.id}">
-                  <span>Advanced Structure</span>
-                </a>
-              </mat-menu>
-      
-              <mat-menu #editMenu="matMenu">
-                <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                  [queryParams]="{copy:substance.uuid}" matTooltip='copy substance to new registration form'>
-                  <span>Copy Substance to New Form</span>
-                </a>
-                <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                  [queryParams]="{copy:substance.uuid,copyType:'definition'}"
-                  matTooltip='copy definition to new registration form'>
-                  <span>Copy Definition to New Form</span>
-                </a>
-              </mat-menu>
-      
+      <div class="">
+        <span class = "status-label">Import Status: </span>
+        <span class = "status">{{substance._metadata.importStatus | uppercase}}</span>
+      </div>
+    </mat-card-title>
+  
+    <mat-card-content>
+      <div class="substance-content">
+        <div class="structure-container">
+          <div *ngIf="substance.structure">
+            <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
+              <mat-chip-list selectable="false" multiple="false">
+                <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
+              </mat-chip-list>
             </div>
-            <div>
-            <div *ngIf = "nameLoading" class = "name-loading">
-                <div class="label loading-label">Names: </div>
-                <div><mat-progress-spinner
-                  class="spinner"
-                  [color]="primary"
-                  [diameter]="24"
-                  mode = "indeterminate">
-              </mat-progress-spinner></div><div> <i>Loading</i></div>
-                </div>
-              <div class="substance-data substance-names" *ngIf="privateNames && privateNames.length && !nameLoading">
-                <div class="label">Names:</div>
-                <div [hidden]="!showLessNames">
-                  <div class="value space-bottom" *ngFor="let nameObject of privateNames">
-                    <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
-                    <span *ngIf="nameObject.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
-                      <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
-                    </span>
-                  </div>
-                  <div [hidden]="!moreThanNumberCount(privateNames, 5)" (click)="showMoreLessNames()" class="show-more">See {{names.length - 4}} More</div>
-                </div>
-                <div [hidden]="showLessNames">
-                  <div class="value space-bottom" *ngFor="let nameObject of privateNames">
-                    <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
-                      <span *ngIf="nameObject.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
-                      <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
-                    </span>
-                    <span *ngIf="nameObject.preferred == true" matTooltip="{{ 'preferredTitle' | elementLabel : 'substance_names_name' }}">
-                      <mat-icon class="icon-align grey-font" svgIcon="done"></mat-icon>
-                    </span>
-                  </div>
-                  <div (click)="showMoreLessNames()" class="show-more">Less</div>
-                </div>
+          </div>
+          <div *ngIf="!substance.structure">
+            <div class="mat-chip-list-container">
+              <mat-chip-list selectable="false" multiple="false">
+                <mat-chip color="primary" selected>{{substance.substanceClass}}
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+          <div class="image-thumbnail">
+            <div *ngIf="substance.structure || substance.polymer">
+              <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(substance)">
+                <img appSubstanceImage [entityId]="substance._metadata.recordId"
+                  [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+              </a>
+            </div>
+            <div *ngIf="!substance.structure && !substance.polymer">
+              <img appSubstanceImage [entityId]="substance._metadata.recordId"
+                [atomMaps]="substance._matchContext && substance._matchContext.atomMaps || null">
+            </div>
+          </div>
+          <div *ngIf="substance._matchContext && substance._matchContext.similarity">
+            <span class="simlarity-label">similarity:</span> <span
+              class="similarity">{{substance._matchContext.similarity.toFixed(3)}}</span>
+          </div>
+          <div class='definition' *ngIf="substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
+            {{substance.definitionLevel }} DEFINITION
+          </div>
+         
+  
+          <mat-menu #sequenceMenu="matMenu">
+            <a mat-menu-item *ngFor="let unit of subunits; index as index" [routerLink]="['/sequence-search']"
+              [queryParams]="{substance : substance.uuid, subunit : unit.uuid, seq_type : substance.substanceClass}">
+              subunit {{unit.subunitIndex}} ({{unit.sequence && unit.sequence.length || 0}}) similarity search
+            </a>
+          </mat-menu>
+  
+          <mat-menu #downloadMenu="matMenu">
+  
+            <a mat-menu-item (click)="downloadJson()">
+              <span>Download JSON</span>
+            </a>
+            <a mat-menu-item (click)="openMolModal()" *ngIf="substance.structure || substance.polymer">
+              <span>Show Molfile</span>
+            </a>
+            <a mat-menu-item *ngIf="substance.structure"
+              (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+              <span>Download Molfile</span>
+            </a>
+            <a mat-menu-item *ngIf="substance.polymer"
+              (click)="getMol(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.mol')">
+              <span>Download Molfile</span>
+            </a>
+            <a mat-menu-item *ngIf="(substance.protein || substance.nucleicAcid)"
+              (click)="getFasta(substance.uuid, (substance.approvalID? substance.approvalID.toString() : substance.uuid.toString())+'.fas')">
+              <span>Download Fasta</span>
+            </a>
+          </mat-menu>
+  
+          <mat-menu #searchMenu="matMenu">
+            <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/structure-search']"
+              [queryParams]="{structure : substance._metadata.recordId}">
+              <span>Search Structure</span>
+            </a>
+            <a mat-menu-item *ngIf="substance.polymer" [routerLink]="['/structure-search']"
+              [queryParams]="{structure : substance._metadata.recordId}">
+              <span>Search Structure</span>
+            </a>
+          </mat-menu>
+  
+          <mat-menu #advancedSearchMenu="matMenu">
+            <a mat-menu-item *ngIf="substance.structure" [routerLink]="['/advanced-search']"
+              [queryParams]="{structure : substance.structure.id}">
+              <span>Advanced Structure</span>
+            </a>
+          </mat-menu>
+  
+          <mat-menu #editMenu="matMenu">
+            <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
+              [queryParams]="{copy:substance.uuid}" matTooltip='copy substance to new registration form'>
+              <span>Copy Substance to New Form</span>
+            </a>
+            <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
+              [queryParams]="{copy:substance.uuid,copyType:'definition'}"
+              matTooltip='copy definition to new registration form'>
+              <span>Copy Definition to New Form</span>
+            </a>
+          </mat-menu>
+  
+        </div>
+        <div>
+        <div *ngIf = "nameLoading" class = "name-loading">
+            <div class="label loading-label">Names: </div>
+            <div><mat-progress-spinner
+              class="spinner"
+              [color]="primary"
+              [diameter]="24"
+              mode = "indeterminate">
+          </mat-progress-spinner></div><div> <i>Loading</i></div>
+            </div>
+          <div class="substance-data substance-names" *ngIf="privateNames && privateNames.length && !nameLoading">
+            <div class="label">Names:</div>
+            <div [hidden]="!showLessNames">
+              <div class="value space-bottom" *ngFor="let nameObject of privateNames | namesDisplay">
+                <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
+                <span *ngIf="nameObject.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
+                  <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
+                </span>
               </div>
-              <div class="substance-data substance-code-systems" *ngIf="codeSystems">
-                <div class="label">Codes:</div>
-                <div [hidden]="!showLessCodes">
-                  <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames; index as codeindex">
-                    <div class="code-system">
-                      <span class="label">{{(codeSystemVocab && codeSystemVocab[codeSystemName]) ? codeSystemVocab[codeSystemName].display : codeSystemName}}
-      
-                      </span>:&nbsp;
-                      <span class="value"
-                        *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast; index as index">
-                        <span *ngIf="index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
-                          <span *ngIf="codeObject.url">
-                            <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
-                              evCategory="substancesContent" evAction="link:code" aria-label="view site for {{codeObject.code.trim()}} in new tab">
-                              <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
-                              <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
-                              <span *ngIf="codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style="font-size: 90%;
-                                font-weight: 400;">[{{codeObject.type}}]</span>
-      
-                            </a>
-                          </span>
-                          <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}
-                            <span *ngIf="codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style="font-size: 90%;
-                                font-weight: 400;">[{{codeObject.type}}]</span>
-                          </span>
-      
-                          <span *ngIf="!isLast">, </span>
-                        </span>
+              <div [hidden]="!moreThanNumberCount(privateNames, 5)" (click)="showMoreLessNames()" class="show-more">See {{names.length - 4}} More</div>
+            </div>
+            <div [hidden]="showLessNames">
+              <div class="value space-bottom" *ngFor="let nameObject of privateNames">
+                <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
+                  <span *ngIf="nameObject.displayName == true" matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
+                  <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
+                </span>
+                <span *ngIf="nameObject.preferred == true" matTooltip="{{ 'preferredTitle' | elementLabel : 'substance_names_name' }}">
+                  <mat-icon class="icon-align grey-font" svgIcon="done"></mat-icon>
+                </span>
+              </div>
+              <div (click)="showMoreLessNames()" class="show-more">Less</div>
+            </div>
+          </div>
+          <div class="substance-data substance-code-systems" *ngIf="codeSystems">
+            <div class="label">Codes:</div>
+            <div [hidden]="!showLessCodes">
+              <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5; index as codeindex">
+                <div class="code-system">
+                  <span class="label">{{(codeSystemVocab && codeSystemVocab[codeSystemName]) ? codeSystemVocab[codeSystemName].display : codeSystemName}}
+  
+                  </span>:&nbsp;
+                  <span class="value"
+                    *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast; index as index">
+                    <span *ngIf="index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
+                      <span *ngIf="codeObject.url">
+                        <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
+                          evCategory="substancesContent" evAction="link:code" aria-label="view site for {{codeObject.code.trim()}} in new tab">
+                          <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
+                          <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
+                          <span *ngIf="codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style="font-size: 90%;
+                            font-weight: 400;">[{{codeObject.type}}]</span>
+  
+                        </a>
                       </span>
-                      <span *ngIf="codeSystems[codeSystemName].length > 4">
-                        <a class="moreLink"
-                          (click)="!showAll[codeSystemName]? showAll[codeSystemName] = true: (showAll[codeSystemName] === true ? showAll[codeSystemName] = false : showAll[codeSystemName] = true)">{{showAll[codeSystemName] ? 'Show Less': 'Show More'}}</a>
+                      <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}
+                        <span *ngIf="codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style="font-size: 90%;
+                            font-weight: 400;">[{{codeObject.type}}]</span>
                       </span>
-                    </div>
-                  </div>
-                  <div [hidden]="!moreThanNumberCount(codeSystemNames, 6)" (click)="showMoreLessCodes()" class="show-more">See {{codeSystemNames.length - 5}} More</div>
-                </div>
-                <div [hidden]="showLessCodes">
-                  <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames; index as codeindex">
-                    <div class="code-system">
-                      <span class="label">{{codeSystemName}}
-      
-                        </span>:&nbsp;
-                      <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast; index as index">
-                        <span *ngIf = "index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
-                        <span *ngIf="codeObject.url">
-                          <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
-                            evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
-                            <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
-                            <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
-                            <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
-                                font-weight: 400;">[{{codeObject.type}}]</span>
-      
-                          </a>
-                        </span>
-                        <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}
-                            <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
-                                font-weight: 400;">[{{codeObject.type}}]</span>
-                        </span>
-      
-                        <span *ngIf="!isLast">, </span>
-                        </span>
-                      </span>
-                      <span *ngIf = "codeSystems[codeSystemName].length > 4">
-                        <a class = "moreLink" (click) = "!showAll[codeSystemName]? showAll[codeSystemName] = true: (showAll[codeSystemName] === true ? showAll[codeSystemName] = false : showAll[codeSystemName] = true)">{{showAll[codeSystemName] ? 'Show Less': 'Show More'}}</a>
-                      </span>
-                    </div>
-                  </div>
-                  <div (click)="showMoreLessCodes()" class="show-more">Less</div>
-                </div>
-              </div>
-              <div class="substance-data substance-relationships"
-                *ngIf="substance._relationships && substance._relationships.count != null">
-                <div class="label">Relationships:</div>
-                <div class="value">
-                  {{substance._relationships.count}}
-                </div>
-              </div>
-              <div class="substance-data"
-                *ngIf="substance.mixture && substance.mixture.components && substance.mixture.components.length">
-                <div class="label">Components:</div>
-                <div>
-                  <span class="value">{{substance.mixture.components.length}}</span>
-                </div>
-              </div>
-              <div class="substance-data" *ngIf="substance.specifiedSubstance && substance.specifiedSubstance.constituents">
-                <div class="label">Constituents:</div>
-                <div>
-                  <span class="value">{{substance.specifiedSubstance.constituents.length}}</span>
-                </div>
-              </div>
-              <div class="substance-data" *ngIf="substance.nucleicAcid && substance.nucleicAcid.subunits">
-                <div class="label">Subunits:</div>
-                <div>
-                  <span class="value">{{substance.nucleicAcid.subunits.length}}</span>
-                </div>
-              </div>
-              <div class="substance-data" *ngIf="substance.structure?.mwt">
-                <div class="label">Mol. Weight:</div>
-                <div>
-                  <span class="value">{{substance.structure.mwt  | number: rounding}}</span>
-                </div>
-              </div>
-              <div class="substance-data" *ngIf="substance.structure?.formula">
-                <div class="label">Formula:</div>
-                <div>
-                  <span class="value" [innerHTML]="substance.structure.formula"></span>
-                </div>
-              </div>
-              <div class="substance-data" *ngIf="substance.structurallyDiverse?.part">
-                <div class="label">Part:</div>
-                <div>
-                  <span class="blue-pill">
-                    <span *ngFor="let part of substance.structurallyDiverse.part; last as isLast">
-                      {{part}}
+  
                       <span *ngIf="!isLast">, </span>
                     </span>
                   </span>
+                  <span *ngIf="codeSystems[codeSystemName].length > 4">
+                    <a class="moreLink"
+                      (click)="!showAll[codeSystemName]? showAll[codeSystemName] = true: (showAll[codeSystemName] === true ? showAll[codeSystemName] = false : showAll[codeSystemName] = true)">{{showAll[codeSystemName] ? 'Show Less': 'Show More'}}</a>
+                  </span>
                 </div>
               </div>
+              <div [hidden]="!moreThanNumberCount(codeSystemNames, 6)" (click)="showMoreLessCodes()" class="show-more">See {{codeSystemNames.length - 5}} More</div>
             </div>
-      
-            <div class="right-aligned">
-                <span class = "middle-fill"></span><div style = "vertical-align: middle;margin:auto;display: flex;margin-top:10px;">
-                  <span style = "font-size: 18px; margin-right:15px;">Bulk Action Select</span>  <mat-checkbox [checked] = "bulkChecked"
-                       (change) = "addtoBulkList() " style = "height: 20px; width: 20px;">
-                      </mat-checkbox>
-                  </div>
-              <div *ngIf="showAudit">
-                <div class="substance-data">
-                  <div class="label">Created: </div>
-                  <div>
-                    <span class="value">
-                      {{substance.created | date : 'shortDate'}}
+            <div [hidden]="showLessCodes">
+              <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames; index as codeindex">
+                <div class="code-system">
+                  <span class="label">{{codeSystemName}}
+  
+                    </span>:&nbsp;
+                  <span class="value" *ngFor="let codeObject of codeSystems[codeSystemName]; last as isLast; index as index">
+                    <span *ngIf = "index < 5  || (showAll[codeSystemName] && showAll[codeSystemName] === true)">
+                    <span *ngIf="codeObject.url">
+                      <a class="ext-link" target="_blank" [href]="codeObject.url" appTrackLinkEvent
+                        evCategory="substancesContent" evAction="link:code" aria-label ="view site in new tab">
+                        <span hidden>view site in new tab</span>{{codeObject.code.trim()}}
+                        <!-- <mat-icon class="icon-align" svgIcon="link"></mat-icon>-->
+                        <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
+                            font-weight: 400;">[{{codeObject.type}}]</span>
+  
+                      </a>
                     </span>
-                  </div>
-                </div>
-                <div class="substance-data">
-                  <div class="label">Created By: </div>
-                  <div>
-                    <span class="value">
-                      {{substance.createdBy }}
+                    <span *ngIf="!codeObject.url">{{codeObject.code.trim()}}
+                        <span *ngIf = "codeSystems[codeSystemName].length > 1 && codeObject.type !== 'PRIMARY'" style = "font-size: 90%;
+                            font-weight: 400;">[{{codeObject.type}}]</span>
                     </span>
-                  </div>
-                </div>
-                <div class="substance-data">
-                  <div class="label">Import Status: </div>
-                  <div>
-                    <span class="value">
+  
+                    <span *ngIf="!isLast">, </span>
                     </span>
-                  </div>
-                </div>
-                <div class="substance-data" *ngIf="substance.status === 'approved'">
-                  <div class="label">Validated By: </div>
-                  <div>
-                    <span class="value">
-                      {{substance.approvedBy }}
-                    </span>
-                  </div>
-                </div>
-                <div class="substance-data" *ngIf="substance.approved">
-                  <div class="label">Validated Date: </div>
-                  <div>
-                    <span class="value">
-                      {{substance.approved| date : 'short'}}
-                    </span>
-                  </div>
-                </div>
-                <div class="substance-data">
-                  <div class="label">Last Modified: </div>
-                  <div>
-                    <span class="value">
-                      {{substance.lastEdited | date : 'shortDate'}}
-                    </span>
-                  </div>
-                </div>
-                <div class="substance-data">
-                  <div class="label">Last Modified By: </div>
-                  <div>
-                    <span class="value">
-                      {{substance.lastEditedBy }}
-                    </span>
-                  </div>
-                </div>
-                <div class="substance-data">
-                  <div class="label">Version: </div>
-                  <div>
-                    <span class="value">
-                      {{substance.version}}
-                    </span>
-                  </div>
+                  </span>
+                  <span *ngIf = "codeSystems[codeSystemName].length > 4">
+                    <a class = "moreLink" (click) = "!showAll[codeSystemName]? showAll[codeSystemName] = true: (showAll[codeSystemName] === true ? showAll[codeSystemName] = false : showAll[codeSystemName] = true)">{{showAll[codeSystemName] ? 'Show Less': 'Show More'}}</a>
+                  </span>
                 </div>
               </div>
+              <div (click)="showMoreLessCodes()" class="show-more">Less</div>
             </div>
           </div>
-          <div *ngIf="alignments">
-            <app-sequence-alignment *ngFor="let alignment of alignments" [alignmentArray]="alignment">
-            </app-sequence-alignment>
+          <div class="substance-data substance-relationships"
+            *ngIf="substance._relationships && substance._relationships.count != null">
+            <div class="label">Relationships:</div>
+            <div class="value">
+              {{substance._relationships.count}}
+            </div>
           </div>
-          <div *ngIf="searchStrategy && searchStrategy==='bulk'">
-            <span class="match-context" *ngIf="substance._matchContext?.queries && substance._matchContext.queries.length>0">
-              (matched queries: {{_.join(substance._matchContext.queries, ", ")}})
-            </span>
+          <div class="substance-data"
+            *ngIf="substance.mixture && substance.mixture.components && substance.mixture.components.length">
+            <div class="label">Components:</div>
+            <div>
+              <span class="value">{{substance.mixture.components.length}}</span>
+            </div>
           </div>
-         <!-- <div>
-            <app-substance-hierarchy [uuid]="this.substance.uuid" [name]="this.substance._name"
-              [approvalID]="this.substance.approvalID"></app-substance-hierarchy>
-          </div>-->
-          <div>
-            <div class = "">
-                <span class = "action-label">Actions:        
+          <div class="substance-data" *ngIf="substance.specifiedSubstance && substance.specifiedSubstance.constituents">
+            <div class="label">Constituents:</div>
+            <div>
+              <span class="value">{{substance.specifiedSubstance.constituents.length}}</span>
+            </div>
+          </div>
+          <div class="substance-data" *ngIf="substance.nucleicAcid && substance.nucleicAcid.subunits">
+            <div class="label">Subunits:</div>
+            <div>
+              <span class="value">{{substance.nucleicAcid.subunits.length}}</span>
+            </div>
+          </div>
+          <div class="substance-data" *ngIf="substance.structure?.mwt">
+            <div class="label">Mol. Weight:</div>
+            <div>
+              <span class="value">{{substance.structure.mwt  | number: rounding}}</span>
+            </div>
+          </div>
+          <div class="substance-data" *ngIf="substance.structure?.formula">
+            <div class="label">Formula:</div>
+            <div>
+              <span class="value" [innerHTML]="substance.structure.formula"></span>
+            </div>
+          </div>
+          <div class="substance-data" *ngIf="substance.structurallyDiverse?.part">
+            <div class="label">Part:</div>
+            <div>
+              <span class="blue-pill">
+                <span *ngFor="let part of substance.structurallyDiverse.part; last as isLast">
+                  {{part}}
+                  <span *ngIf="!isLast">, </span>
                 </span>
-                <span ><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button 
-                  (click) = "doAction('create')">Create</button></span>
-                  <span><a class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
-                    [routerLink]="['/substances/register']"
-                  [queryParams]="{stagingID : substance._metadata.recordId}">Edit</a></span>
-                <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button
-                   (click) = "doAction('merge')">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
-                <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
-                  (click) = "doAction('reject')">Reject</button></span>
-
+              </span>
             </div>
-            <mat-card class = "tab-container">
-                <mat-tab-group animationDuration="0ms" class = "tab-group">
-                    <mat-tab label="Matches"  labelClass = "summary-tab-label">
-                    <div *ngIf = "substance.matchedRecords ">
-                    <table mat-table [dataSource]="substance.matchedRecords">
-
-                    
-                        <ng-container matColumnDef="name">
-                          <th mat-header-cell *matHeaderCellDef> Name </th>
-                          <td mat-cell *matCellDef="let record">
-                            
-                              <span *ngIf = "record._name"> <a [innerHTML] = "record._name" class = "match-link" [routerLink] = "['/substances', record.uuid]"></a></span>
-                              <span *ngIf = "!record._name"> {{record.ID}} </span>
-                          
-                          </td>
-                        </ng-container>
-                    
-                        <ng-container matColumnDef="keys">
-                          <th mat-header-cell *matHeaderCellDef> Match Keys </th>
-                          <td mat-cell *matCellDef="let record"> <span *ngFor = "let item of record.records; last as last">{{item}} {{last?'':','}} &nbsp;</span> </td>
-                        </ng-container>
-                     <!--   <ng-container matColumnDef="confidence">
-                          <th mat-header-cell *matHeaderCellDef> Match Confidence </th>
-                          <td mat-cell *matCellDef="let record"> <span ></span></td>
-                        </ng-container>-->
-                        <ng-container matColumnDef="merge">
-                          <th mat-header-cell *matHeaderCellDef>  </th>
-                          <td mat-cell *matCellDef="let record"> <span ><button color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button >Merge</button></span></td>
-                        </ng-container>
-                    
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                      </table>
-                  </div>
-                </mat-tab>
-                
-                <mat-tab class = "summary-tab-label" style = "font-size: 17px">
-                    <ng-template mat-tab-label style = "font-size: 17px">
-                        Validation ({{substance.validations.warnings}}&nbsp;<span class = "warning-label">warnings</span>, &nbsp;
-                        {{substance.validations.errors}}&nbsp;<span class = "error-label">errors</span> )
-                    </ng-template>
-              <div class = "validation-container" *ngIf = "substance.validations">
-                <div *ngIf = "substance.validations ">
-                  <table mat-table [dataSource]="substance.validations.validations">
-
-                  
-                      <ng-container matColumnDef="type">
-                        <th mat-header-cell *matHeaderCellDef> Type </th>
-                        <td mat-cell *matCellDef="let item" > <span [ngClass] = "{'warning-label':item.validationType === 'warning', 'error-label':item.validationType === 'error', 'info-label':item.validationType === 'info'}" style = "font-weight:500"> {{item.validationType | uppercase}}</span> </td>
-                      </ng-container>
-                  
-                      <ng-container matColumnDef="message">
-                        <th mat-header-cell *matHeaderCellDef> Message </th>
-                        <td mat-cell *matCellDef="let item"> {{item.validationMessage}} </td>
-                      </ng-container>
-                  
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-                    </table>
-                </div>
-            </div>
-            </mat-tab>
-            </mat-tab-group>
-          </mat-card>
-
           </div>
-        </mat-card-content>
-      </mat-card>
-      
-
-      <ng-template #infoDialog>
-        <h3>Record Action: {{displayAction}}</h3>
-        <br/><br/>
-         &nbsp; &nbsp; {{message}}
-          
-          <br/><br/>
-
-          <div style = "width:100%; display:flex; flex-direction:row;">
-            <span class = "middle-fill"></span>
-            <button mat-button mat-flat-button mat-primary-button mat-dialog-close (click) = "dialogRef.close()">Close</button>
+        </div>
+  
+        <div class="right-aligned">
+            <span class = "middle-fill"></span><div style = "vertical-align: middle;margin:auto;display: flex;margin-top:10px;">
+              <span style = "font-size: 18px; margin-right:15px;" [ngClass] = "{'darkgray': substance._metadata.importStatus === 'imported'}"> Bulk Action Select</span>  <mat-checkbox [checked] = "bulkChecked"
+                   (change) = "addtoBulkList() "
+                   [disabled] = "substance._metadata.importStatus === 'imported'"
+                   style = "height: 20px; width: 20px;">
+                  </mat-checkbox>
+              </div>
+          <div *ngIf="showAudit">
+            <div class="substance-data">
+              <div class="label">Created: </div>
+              <div>
+                <span class="value">
+                  {{substance.created | date : 'shortDate'}}
+                </span>
+              </div>
             </div>
-        </ng-template>
+            <div class="substance-data">
+              <div class="label">Created By: </div>
+              <div>
+                <span class="value">
+                  {{substance.createdBy }}
+                </span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Import Status: </div>
+              <div>
+                <span class="value">
+                </span>
+              </div>
+            </div>
+            <div class="substance-data" *ngIf="substance.status === 'approved'">
+              <div class="label">Validated By: </div>
+              <div>
+                <span class="value">
+                  {{substance.approvedBy }}
+                </span>
+              </div>
+            </div>
+            <div class="substance-data" *ngIf="substance.approved">
+              <div class="label">Validated Date: </div>
+              <div>
+                <span class="value">
+                  {{substance.approved| date : 'short'}}
+                </span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Last Modified: </div>
+              <div>
+                <span class="value">
+                  {{substance.lastEdited | date : 'shortDate'}}
+                </span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Last Modified By: </div>
+              <div>
+                <span class="value">
+                  {{substance.lastEditedBy }}
+                </span>
+              </div>
+            </div>
+            <div class="substance-data">
+              <div class="label">Version: </div>
+              <div>
+                <span class="value">
+                  {{substance.version}}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="alignments">
+        <app-sequence-alignment *ngFor="let alignment of alignments" [alignmentArray]="alignment">
+        </app-sequence-alignment>
+      </div>
+      <div *ngIf="searchStrategy && searchStrategy==='bulk'">
+        <span class="match-context" *ngIf="substance._matchContext?.queries && substance._matchContext.queries.length>0">
+          (matched queries: {{_.join(substance._matchContext.queries, ", ")}})
+        </span>
+      </div>
+     <!-- <div>
+        <app-substance-hierarchy [uuid]="this.substance.uuid" [name]="this.substance._name"
+          [approvalID]="this.substance.approvalID"></app-substance-hierarchy>
+      </div>-->
+      <div>
+        <div class = "">
+          <br/><br/>
+            <span class = "action-label">Actions:        
+            </span>
+            <span ><button class ="action-button" color = "primary" [disabled] = "disabled" mat-button mat-flat-button mat-primary-button 
+              (click) = "doAction('create')">Create</button></span>
+              <span><a class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
+                [routerLink]="['/substances/register']"
+              [queryParams]="{stagingID : substance._metadata.recordId}">Edit</a></span>
+            <span><button  class ="action-button" color = "primary" disabled mat-button mat-flat-button mat-primary-button matTooltip="Merge actions are not supported in this release"
+               (click) = "openMergeModal()">Merge <mat-icon svgIcon = "drop_down"></mat-icon></button></span>
+            <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
+              (click) = "doAction('reject')">Reject</button></span>
+
+        </div>
+        <mat-card class = "tab-container">
+            <mat-tab-group animationDuration="0ms" class = "tab-group">
+                <mat-tab label="Matched Records"  labelClass = "summary-tab-label">
+                <div *ngIf = "substance.matchedRecords && substance.matchedRecords.length > 0 ">
+                <table mat-table [dataSource]="privateMatches">
+
+                
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                      <td mat-cell *matCellDef="let record">
+                        
+                          <span *ngIf = "record._name && record.source != 'Staging Area'"> <a [innerHTML] = "record._name" class = "match-link" [routerLink] = "['/substances', record.uuid]"></a></span>
+                          <span *ngIf = "record._name && record.source === 'Staging Area'"> <a [innerHTML] = "record._name" class = "match-link"  [routerLink] = "['/substances', record.ID]"  [queryParams]="{source:'staging'}" ></a></span>
+
+                          <span *ngIf = "!record._name"> {{record.ID}} </span>
+                      
+                      </td>
+                    </ng-container>
+                    <ng-container matColumnDef="source">
+                    <th mat-header-cell *matHeaderCellDef> Source </th>
+                      <td mat-cell *matCellDef="let record">
+                        
+                          <span > {{record.source}} </span>
+                      
+                      </td>
+                    </ng-container>
+                
+                    <ng-container matColumnDef="keys">
+                      <th mat-header-cell *matHeaderCellDef> Match Keys </th>
+                      <td mat-cell *matCellDef="let record"> 
+                        <span *ngFor = "let item of record.recordArr; last as last">{{item.field}}{{item.count > 1 ? " (" + item.count + " matches)" : ''}}{{last?'':', '}} &nbsp;</span> </td>
+                    </ng-container>
+                 <!--   <ng-container matColumnDef="confidence">
+                      <th mat-header-cell *matHeaderCellDef> Match Confidence </th>
+                      <td mat-cell *matCellDef="let record"> <span ></span></td>
+                    </ng-container>-->
+                    <ng-container matColumnDef="merge">
+                      <th mat-header-cell *matHeaderCellDef>  </th>
+                      <td mat-cell *matCellDef="let record"> <span ><button color = "primary" disabled  matTooltip="Merge actions are not supported in this release" (click) = "openMergeModal(record)" mat-button mat-flat-button mat-primary-button >Merge</button></span></td>
+                    </ng-container>
+                
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                <div *ngIf = "substance.matchedRecords.length > 5"> 
+                  <mat-paginator #paginator [length]="substance.matchedRecords.length" style ="justify-content: flex-start;" [pageIndex]="pageIndex" [pageSize]="pageSize"
+                  [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="false">
+                </mat-paginator>
+              </div>
+              </div>
+              <div *ngIf = "!substance.matchedRecords || substance.matchedRecords.length == 0">
+                <div class = "no-matches"><i>No matching fields or records found</i></div>
+                </div>
+            </mat-tab>
+            
+            <mat-tab class = "summary-tab-label" style = "font-size: 17px">
+                <ng-template mat-tab-label style = "font-size: 17px">
+                    Validation ({{substance.validations.warnings}}&nbsp;<span class = "warning-label">warnings</span>, &nbsp;
+                    {{substance.validations.errors}}&nbsp;<span class = "error-label">errors</span> )
+                </ng-template>
+          <div class = "validation-container" *ngIf = "substance.validations">
+            <div *ngIf = "substance.validations ">
+              <table mat-table [dataSource]="substance.validations.validations">
+
+              
+                  <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef> Type </th>
+                    <td mat-cell *matCellDef="let item" > <span [ngClass] = "{'warning-label':item.validationType === 'warning', 'error-label':item.validationType === 'error', 'info-label':item.validationType === 'info'}" style = "font-weight:500"> {{item.validationType | uppercase}}</span> </td>
+                  </ng-container>
+              
+                  <ng-container matColumnDef="message">
+                    <th mat-header-cell *matHeaderCellDef> Message </th>
+                    <td mat-cell *matCellDef="let item"> {{item.validationMessage}} </td>
+                  </ng-container>
+              
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                </table>
+            </div>
+        </div>
+        </mat-tab>
+        </mat-tab-group>
+      </mat-card>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+
+  <ng-template #infoDialog>
+    <h3>Record Action: {{displayAction}}</h3>
+    <br/><br/>
+     &nbsp; &nbsp; {{message}}
+      
+      <br/><br/>
+
+      <div style = "width:100%; display:flex; flex-direction:row;">
+          <button mat-button mat-flat-button mat-primary-button color = "primary" (click) = "deleteRecord()" [disabled] = "deleted">Delete Staging Area Data</button>
+        <span class = "middle-fill"></span>
+        <button mat-button mat-flat-button mat-primary-button mat-dialog-close (click) = "dialogRef.close()">Close</button>
+        </div>
+    </ng-template>

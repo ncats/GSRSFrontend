@@ -25,11 +25,11 @@ export class AdminComponent implements OnInit {
       switch (this.current) {
         case 'cache': this.activeTab = 0; break;
         case 'user': this.activeTab = 1; break;
-        case 'data': this.activeTab = 2; break;
+        case 'import': this.activeTab = 2; break;
         case 'cv': this.activeTab = 3; break;
         case 'jobs': this.activeTab = 4; break;
         case 'files': this.activeTab = 5; break;
-        case 'import': this.activeTab = 6; break;
+        case 'data': this.activeTab = 6; break;
 
         default: this.activeTab = 0; break;
     }
@@ -51,7 +51,7 @@ export class AdminComponent implements OnInit {
       route = 'user';
         break;
       case 2:
-        route = 'data';
+        route = 'import';
       break;
       case 3:
         route = 'cv';
@@ -63,7 +63,7 @@ export class AdminComponent implements OnInit {
         route = 'files';
       break;
       case 6:
-        route = 'import';
+        route = 'data';
       break;
     }
     if (this.current !== 'jobs') {

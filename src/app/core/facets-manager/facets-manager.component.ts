@@ -44,6 +44,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   _configName: string;
   _facetNameText: string;
   urlSearch: string;
+  stagingFacets: any;
   private privateFacetParams: FacetParam;
   private privateRawFacets: Array<Facet>;
   private facetSearchChanged = new Subject<{ index: number; query: any; facets?: any; }>();
@@ -115,6 +116,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     if(this.calledFrom === 'staging') {
       this.hideDeprecatedCheckbox = true;
+      this.stagingFacets = this.configService.configData.facets[configName];
     }
     this.populateFacets();
   }
@@ -176,6 +178,9 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         distinctUntilChanged(),
         switchMap(event => {
           const facet = this.facets[event.index];
+          if (!facet._self) {
+            facet._self = this.facetManagerService.generateSelfUrl('stagingArea', facet.name);
+          }
           return this.facetsService.getFacetsHandler(facet, event.query, null, this.privateFacetParams, this.urlSearch).pipe(take(1));
         })
       ).subscribe(response => {
@@ -686,8 +691,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   moreFacets(index: number, facet: Facet) {
     this.facets[index].$isLoading = true;
+    // This check for _self should be temporary while it's incorporation in the staging area is complete.
+    // If no meta fields exist, generate what they are expected to look like
     if (facet.$next == null) {
-      facet.$next = facet._self.replace('fskip=0', 'fskip=10');
+      if (!facet._self) {
+          facet._self = this.facetManagerService.generateSelfUrl('stagingArea', facet.name);
+      }
+        facet.$next = facet._self.replace('fskip=0', 'fskip=10');
     }
     this.facetManagerService.getFacetsHandler(this.facets[index], '', facet.$next, this.privateFacetParams, this.urlSearch).pipe(take(1)).subscribe(resp => {
       this.facets[index].$next = resp.nextPageUri;

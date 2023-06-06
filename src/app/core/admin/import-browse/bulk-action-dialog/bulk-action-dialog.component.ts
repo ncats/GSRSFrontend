@@ -16,6 +16,9 @@ export class BulkActionDialogComponent implements OnInit {
   successful = false;
   displayedColumns = ['ID', 'name'];
   loading = false;
+  useScrubber = false;
+  scrubberModel: any;
+  deleteStaged = true;
   constructor(
    
     public dialogRef: MatDialogRef<ImportDialogComponent>,
@@ -26,6 +29,10 @@ export class BulkActionDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.records = data.records;
+    this.scrubberModel = data.scrubberModel;
+    if(this.scrubberModel) {
+      this.useScrubber = true;
+    }
     if (this.records) {
     Object.keys(this.records).forEach(record => {
       if(this.records[record].checked) {
@@ -40,6 +47,24 @@ export class BulkActionDialogComponent implements OnInit {
   
 
   ngOnInit(): void {
+  }
+
+  deleteStagedRecords(): void {
+    let toSend = [];
+    this.filtered.forEach(item => {
+      if (item.checked) {
+        toSend.push(item.ID);
+      }
+    });
+    this.adminService.deleteStagedRecord(toSend).subscribe(response => {
+      this.successful = true;
+        this.loading = false;
+      console.log(response);
+    }, error => {
+      console.log(error);
+      this.successful = true;
+        this.loading = false;
+    })
   }
 
   checked(event: any, list: any) {
@@ -58,16 +83,24 @@ export class BulkActionDialogComponent implements OnInit {
       toSend.push({'id':item.ID});
     }
   });
-  console.log(toSend);
+  let scrubber = null;
+  if (this.useScrubber) {
+    scrubber = this.scrubberModel;
+  }
  
     this.loading = true;
-    this.adminService.stagedRecordMultiAction(toSend, action).subscribe(result => {
-      console.log(result);
-      this.successful = true;
+    this.adminService.stagedRecordMultiAction(toSend, action, scrubber).subscribe(result => {
+      if (result.jobStatus === 'completed') {
+        this.successful = true;
       this.loading = false;
+      } else {
+        setTimeout(() => {
+          this.processingstatus(result.id);
+        }, 200);
+      }
+      
 
     }, error => {
-      console.log(error);
       alert("Error - see console for details");
       this.loading = false;
       
@@ -75,10 +108,16 @@ export class BulkActionDialogComponent implements OnInit {
   }
 
   close(param?: string) {
+    
     this.filtered.forEach(record => {
       this.records[record.ID].checked = record.checked;
     })
-    console.log(this.records);
+    if (this.successful) {
+      window.location.reload();
+      setTimeout(() => {
+        this.dialogRef.close();
+      }, 100);
+    }
     if (param && param == 'save') {
       this.dialogRef.close(this.records);
 
@@ -86,6 +125,26 @@ export class BulkActionDialogComponent implements OnInit {
       this.dialogRef.close();
 
     }
+  }
+
+  processingstatus(id: string): void {
+    this.adminService.processingstatus(id).subscribe(response => {
+      if (response.jobStatus === 'completed') {
+        if(this.deleteStaged) {
+          this.deleteStagedRecords();
+        } else {
+          this.successful = true;
+          this.loading = false;
+        }
+        
+      } else {
+        setTimeout(() => {
+          this.processingstatus(id);
+        }, 200);
+      }
+     
+
+    });
   }
 
 }

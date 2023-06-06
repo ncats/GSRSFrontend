@@ -49,11 +49,29 @@
     border-color: var(--pale-border-color-rgb-3);
 }
 
+.background-button {
+    background-color: #ebf1f6;
+}
+
+.button-margin {
+    margin-right: 0px !important;
+}
+
 .bulk-action-button {
     margin-right: 140px;
     margin-bottom: 10px;
     margin-top: -10px;
     font-size: 16px;
+}
+
+.top-button {
+    font-size: 20px;
+    margin-left: 150px;
+padding-top: 4px;
+padding-bottom: 4px;
+width: 200px;
+background-color:  var(--primary-color);
+color: white;
 }
 
 .search-parameters {

@@ -1,13 +1,5 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" >
     <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
-      <mat-form-field style = "margin-left: 30px;" *ngIf="isAdmin" id = "facetView" class = "facetView">
-        <mat-label>Facet View:</mat-label>
-        <mat-select [formControl]="facetViewControl" (openedChange)="openedFacetViewChange($event)" (selectionChange)="facetViewChange($event)">
-          <mat-option *ngFor="let option of facetViewCategory" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
         [rawFacets]="rawFacets" calledFrom = "staging" 
         [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
@@ -281,7 +273,9 @@
         </div>
         <div class="controls-container">
             <div class = "title-container">
-                <span class = "main-title">Staged Substances</span>
+                <span class = "main-title">Staged Substances</span> &nbsp; &nbsp; &nbsp; 
+                <a  class = "top-button mat-flat-button mat-button"  color = "primary" [routerLink] = "['/admin/import']"> New Data Import</a>
+
             </div>
   
          <!-- <mat-button-toggle-group [value]="view" (change)="updateView($event)">
@@ -352,8 +346,15 @@
         </div>
         <div class="break"></div>
         <div style = "width:100%;display:flex">
+            <button class = "bulk-action-button button-margin" color = "primary" style ="margin-left: 140px;" mat-button mat-primary-button mat-flat-button (click) = "openScrubber()">Data Cleaning Options</button>
+
           <span class = "middle-fill"></span>
-          <button class = "bulk-action-button" color = "primary" mat-button mat-primary-button mat-flat-button (click) = "bulkActionDialog()">Bulk Actions</button>
+          <button class = "bulk-action-button button-margin" color = "primary" mat-button mat-primary-button mat-flat-button (click) = "bulkActionDialog()">Bulk Actions</button>
+          &nbsp; <button  class = "bulk-action-button button-margin background-button"  (click) = "selectBulk()" mat-button mat-primary-button mat-flat-button >Select All On Page</button> &nbsp;
+          &nbsp; <button  class = "bulk-action-button button-margin background-button"  (click) = "selectBulk('all')" mat-button mat-primary-button mat-flat-button >Select All Results</button> &nbsp;
+
+           <button  class = "bulk-action-button background-button"  (click) = "deselectAll()" mat-button mat-primary-button mat-flat-button >Clear Selections</button> 
+          
         </div>
         <ng-template appBrowseHeaderDynamicSection></ng-template>
        

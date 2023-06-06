@@ -89,9 +89,11 @@
     </ng-container>
 
     <ng-container matColumnDef="comments">
-      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Comments </th>
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Comments  </th>
       <td mat-cell *matCellDef="let code">
-          <button class = "mat-raised-button mat-primary" (click)="openModal(commentTemplate)" [disabled]="!code.comments && !code.codeText " >View</button>  
+          <button class = "mat-button mat-raised-button" color = "primary" (click)="openModal(commentTemplate)"
+            [ngClass] = "(!code.comments && !code.codeText) ? 'mat-button-disabled':''"
+          [disabled] = "!code.comments && !code.codeText" >{{!code.comments && !code.codeText ? 'None' : 'View'}}</button>  
           <ng-template #commentTemplate>
               <h2 mat-dialog-title>Code Comments</h2>
               <div mat-dialog-content>
@@ -118,7 +120,9 @@
     <ng-container matColumnDef="references">
       <th mat-header-cell *matHeaderCellDef> References </th>
       <td mat-cell *matCellDef="let code">
-        <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" [disabled]="code.references.length <= 0" >View</button>
+        <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" 
+        [ngClass] = "code.references.length <= 0 ? 'mat-button-disabled':''"
+        [disabled]="code.references.length <= 0" >{{code.references.length <= 0 ? 'None' : 'View'}}</button>
 
         <ng-template #refTemplate>
           <h2 mat-dialog-title>References</h2>
