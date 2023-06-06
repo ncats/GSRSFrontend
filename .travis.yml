@@ -29,8 +29,7 @@ before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
   - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
-  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d')}
-  - ls -R
+  - export TRAVIS_TAG=${$(date +'%Y%m%d')}
   - if [ $TRAVIS_BRANCH = 'travis_tagging' ]; then git tag $GIT_TAG -a -m "Generated testing tag from TravisCI on $TRAVIS_TAG"; fi
   - echo "$TRAVIS_TAG" "$TRAVIS_COMMIT"
 
