@@ -47,6 +47,7 @@ export interface ProductProvenance {
   applicationType?: string;
   applicationNumber?: string;
   publicDomain?: Date;
+  jurisdictions?: string;
   marketingCategoryCode?: string;
   marketingCategoryName?: string;
   controlSubstanceCode?: string;
@@ -72,7 +73,6 @@ export interface ProductName {
   productNameType?: string;
   displayName?: boolean;
   language?: string;
-  jurisdictions?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

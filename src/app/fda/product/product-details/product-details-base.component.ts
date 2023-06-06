@@ -125,6 +125,12 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         if (elementComp != null) {
           elementComp.productLots.forEach(elementLot => {
             if (elementLot != null) {
+
+              // Sort Ingredient Name by Inredient Type ('Active Ingredient', 'Inactive Ingredient', etc)
+              if (elementLot.productIngredients.length > 0) {
+                elementLot.productIngredients.sort((a, b) => (a.ingredientType < b.ingredientType ? -1 : 1));
+              }
+
               elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
                   // Get Substance Details, uuid, approval_id, substance name
@@ -157,6 +163,57 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
       }); // Component Loop
     }
   }
+
+  /*
+  sortSubstanceNameByIngredientType() {
+    // Sort Substance Name by Ingredient Type
+
+    if (this.product != null) {
+      this.product.productManufactureItems.forEach(elementComp => {
+        if (elementComp != null) {
+          elementComp.productLots.forEach(elementLot => {
+            if (elementLot != null) {
+              elementLot.productIngredients.forEach(elementIngred => {
+                if (elementIngred != null) {
+                  // Get Substance Details, uuid, approval_id, substance name
+                  if (elementIngred.ingredientType) {
+                    this.product.prodActiveElistList.sort((a, b) => (a.name < b.name ? -1 : 1));
+
+
+                    const subSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+                      if (response) {
+                        elementIngred._substanceUuid = response.uuid;
+                        elementIngred._ingredientName = response._name;
+                      }
+                    });
+                    this.subscriptions.push(subSubscription);
+                  }
+
+
+
+
+    if (this.product.prodActiveElistList.length > 0) {
+      this.product.prodActiveElistList.sort((a, b) => (a.name < b.name ? -1 : 1));
+
+      // Active Ingredient - get Substance Uuid for each Substance Name
+      this.product.prodActiveElistList.forEach(elementActive => {
+
+        if (elementActive != null) {
+          // Get Substance Details, uuid
+          if (elementActive.unii) {
+            const subActiveSubscription = this.generalService.getSubstanceByAnyId(elementActive.unii).subscribe(response => {
+              if (response) {
+                elementActive._substanceUuid = response.uuid;
+              }
+            });
+            this.subscriptions.push(subActiveSubscription);
+          }
+        }
+      });
+    }
+  }
+  */
+
 
   saveJSON(): void {
     let json = this.product;
