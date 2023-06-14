@@ -177,10 +177,12 @@ export class UserQueryListDialogComponent implements OnInit {
 
   useUser(name: string) {
     this.viewCreated = false;
+    this.setUser = null;
     this.loaded = false;
     this.bulkSearchService.getUserBulkSearchLists(name).subscribe(response => {
       this.view = "all";
       this.lists = response.lists;
+      this.setUser = name;
     });
   }
 
@@ -248,6 +250,7 @@ export class UserQueryListDialogComponent implements OnInit {
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {
       this.bulkSearchService.listEmitter.next(result.lists);
       this.lists = result.lists;
+      this.setUser = null;
     }, error => {
       console.log(error);
 
@@ -311,7 +314,7 @@ export class UserQueryListDialogComponent implements OnInit {
     this.viewCreated = false;
     this.message = '';
     this.activeName = draft;
-    this.bulkSearchService.getSingleBulkSearchList(draft).subscribe(result => {
+    this.bulkSearchService.getSingleBulkSearchList(draft, this.setUser).subscribe(result => {
       this.active = result;
       this.filtered = JSON.parse(JSON.stringify(result.lists)).slice(0, 10);
       this.pagesize = 10;
