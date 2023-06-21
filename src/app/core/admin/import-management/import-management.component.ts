@@ -50,6 +50,7 @@ completedRecords: any;
 executeLoading = false;
 scrubberSchema: any;
 scrubberModel: any;
+uuidInt = 1;
 constructor(
   public formBuilder: FormBuilder,
   public adminService: AdminService,
@@ -299,18 +300,20 @@ ngOnInit() {
 
 
   addRef() {
+
     let temp = {
       "actionName": "public_reference",
       "actionParameters": {
           "docType": "",
           "citation": "",
           "referenceID": "",
-          "uuid": "[[UUID_2]]",
+          "uuid": "[[UUID_"+this.uuidInt+"]]",
           "publicDomain": false,
           "tags":[]
       },
       "label": "Create Reference"
   }
+  this.uuidInt++;
   this.postResp.adapterSettings.actions.push(temp);
   this.openAction(null, this.postResp.adapterSettings.actions.length-1);
   }
