@@ -1212,6 +1212,12 @@
     },
     {
       "component": "",
+      "display": "Privacy Statement",
+      "path": "privacy-statement",
+      "order": 220
+    },
+    {
+      "component": "",
       "kind": "contact-us",
       "display": "Contact Us",
       "mailToPath": "mailto:%s",

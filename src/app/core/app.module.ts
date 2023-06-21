@@ -114,6 +114,7 @@ import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
+import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 
 @NgModule({
   declarations: [
@@ -218,7 +219,8 @@ import { ElementLabelDisplayModule } from './utils/element-label-display.module'
     Ssg2ManufacturingModule,
     SchemaFormModule.forRoot(),   
     BulkSearchModule,
-    ElementLabelDisplayModule
+    ElementLabelDisplayModule,
+    PrivacyStatementModule
   ],
   providers: [
     {
