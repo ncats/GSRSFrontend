@@ -1,5 +1,13 @@
 {
   "version": "3.0.3",
+  "logoutRedirectUrl": "",
+  "sessionChecker": { 
+    "check": false,
+    "redirectUrl": "",
+    "redirectToLogin": true,
+    "alertMessage": "There's not a valid session."
+  },
+  "apiBaseUrl": "http://localhost:8081/",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
