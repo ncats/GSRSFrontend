@@ -79,9 +79,9 @@
 
 
         <!-- Identity Criteria -->
-        <div class="flex-container margintop10px marginleftneg7px">
+        <div class="margintop10px marginleftneg7px">
 
-          <div class="width25percent width160px padbottom10px marginright10px">
+          <div class="padbottom10px marginright10px">
             <button mat-raised-button color="primary" (click)="addNewIdentityCriteria()"
               matTooltip="Add Identity Criteria">
               <!--
@@ -91,7 +91,7 @@
             </button>
           </div>
 
-          <div class="width75percent">
+          <div class="">
             <div class="marginbottom10px"
               *ngFor="let identityCriteria of impuritiesDetails.identityCriteriaList; let identityCriteriaIndex = index">
 
@@ -110,7 +110,7 @@
                   [model]="identityCriteria.unit" (valueChange)="identityCriteria.unit = $event">
                 </app-cv-input>
 
-                <div class="col-3-1 marginleftneg40px" style="margin-left: -40px;">
+                <div class="col-3-1" style="margin-left: -10px;">
                   <button mat-icon-button color="primary"
                     (click)="confirmDeleteIdentityCriteria(impuritiesDetailsIndex, identityCriteriaIndex)"
                     matTooltip="Delete Identity Criteria {{identityCriteriaIndex + 1}}">
