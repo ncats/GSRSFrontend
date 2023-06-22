@@ -3,8 +3,8 @@
     margin-bottom: 20px;
 }
 
-.name-header {
-    cursor: auto;
+.no-matches {
+    margin: 15px;
 }
 
 .mat-card, .controls-container {
@@ -23,6 +23,10 @@ min-width: 100px;
 
 .match-link {
     color: var(--link-primary-color);
+}
+
+.darkgray {
+    color: gray;
 }
 
 .spinner {
@@ -267,4 +271,8 @@ font-size: 18px;
     color: var(--regular-green-color);
     margin-top: 8px;
     margin-bottom: 8px;
+}
+
+.space-bottom {
+    margin-bottom: 5px;
 }

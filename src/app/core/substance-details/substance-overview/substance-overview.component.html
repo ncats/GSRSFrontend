@@ -4,18 +4,25 @@
         application in new tab</span>
       <mat-icon svgIcon="open_in_new"></mat-icon>
     </a>
-    <span *ngIf="canEdit">
+    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
         <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
         name="edit_record" aria-label="edit record">
         <mat-icon svgIcon="edit"></mat-icon>
       </a>
 </span>
-    <span *ngIf="canEdit">
+<span *ngIf="canEdit && (substance.$$source && substance.$$source == 'staging') ">
+    <a mat-icon-button [routerLink]="['/substances/register']"
+    [queryParams]="{stagingID : substance._metadata.recordId}"  matTooltip='edit record'
+    name="edit_record" aria-label="edit record">
+    <mat-icon svgIcon="edit"></mat-icon>
+  </a>
+</span>
+    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
       <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"
         *ngIf="isEditable; else editClassic" aria-label="copy file">
         <mat-icon svgIcon="file_copy"></mat-icon>
       </button>
-      <ng-template #editClassic *ngIf = "showlinks">
+      <ng-template #editClassic *ngIf = "showlinks && (!substance.$$source || substance.$$source !== 'staging') ">
         <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name="edit"
           target="_blank">
           <mat-icon svgIcon="edit"></mat-icon>
@@ -53,7 +60,7 @@
       <div class="name">Substance Class</div>
       <div class="value blue-font">{{substance.substanceClass | classDisplay}}</div>
     </div>
-    <div class="name-value">
+    <div class="name-value" *ngIf = "!substance.$$source">
       <div class="name">Record {{approvalCode? approvalCode : 'Approval ID'}}</div>
       <div class="value blue-font">{{substance._approvalIDDisplay}}</div>
     </div>
@@ -74,7 +81,7 @@
         </ng-template>
       </div>
     </div>
-    <div class="name-value">
+    <div class="name-value" *ngIf = "!substance.$$source">
       <div class="name">Record Status</div>
       <div class="value blue-font">{{substance.status === 'approved' ? primaryCode : substance.status}}
         <span class = "deprecated" *ngIf ="substance.deprecated">RECORD IS DEPRECATED</span>
@@ -213,11 +220,11 @@
         </div>
       </div>
     </div>
-    <div *ngIf="!isAdmin" class="name-value">
+    <div *ngIf="!isAdmin && !substance.$$source" class="name-value">
       <div class="name">Record Version</div>
       <div class="value blue-font">{{substance.version}}</div>
     </div>
-    <div *ngIf="isAdmin" class="name-value">
+    <div *ngIf="isAdmin && !substance.$$source" class="name-value">
       <div class="name">Record Version</div>
       <mat-form-field class="version-dropdown">
         <mat-select [formControl]="versionControl" class="version-select">
@@ -229,7 +236,7 @@
       <button *ngIf="substance.version != versionControl.value" mat-button
         class="mat-raised-button mat-primary view-version" (click)='changeVersion()'>View</button>
     </div>
-    <div *ngIf="substance.version != latestVersion" class="indent">
+    <div *ngIf="substance.version != latestVersion  && !substance.$$source" class="indent">
       This is an older version of this substance - Ver. {{this.substance.version}}
       <button *ngIf="isAdmin" mat-button
         class="mat-raised-button mat-primary view-version" (click)='restoreVersion()'>Restore this version</button>

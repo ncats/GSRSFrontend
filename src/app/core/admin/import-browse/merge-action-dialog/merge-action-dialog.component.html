@@ -1,0 +1,43 @@
+<h3 mat-dialog-header>Staging Record Merge</h3>
+<div mat-dialog-content style = "min-height:525px" >
+    <div *ngIf = "!loading && !completed">
+<sf-form  [schema]="mergeSchema"  [model]="mergeModel" (onChange)="checkValue($event.value)" class = "top-margin"></sf-form>
+<div style = "margin-top:25px;" *ngIf = "!data.mergeRecord"><b>Select a record to merge into</b>
+    <div class = "match-row"><span style = "width:15%;font-size:15px">Selected</span>
+        <span style ="width: 85%; font-size:15px">Record Name</span></div>
+    <div class = "match-row" *ngFor ="let match of matches" >
+            <span style = "width:15%"><mat-radio-button (change) = "select(match)"></mat-radio-button></span>
+            <span style ="width: 85%">{{match._name}}</span>
+    </div>
+    
+   
+</div>
+<div *ngIf = "data.mergeRecord" style = "margin-top:25px;">
+        Merging with: <b>{{data.mergeRecord._name}}</b>
+    </div>
+</div>
+<div style = " width:100%; display:flex" *ngIf = "loading && !completed">
+        <mat-progress-spinner style = "margin-top: 30%"
+        class="spinner"
+        [color]="primary"
+        [diameter]="100"
+        mode = "indeterminate">
+    </mat-progress-spinner></div>
+    
+    <div style = "width:100%; display:flex; margin: auto" *ngIf = "!loading && completed">
+        <div *ngIf = "!success" style = "margin-top:100px">
+            <b>Error: </b><br/><br/>
+            <div *ngFor = "let error of errors">
+                {{error}}<br/><br/>
+            </div>
+        </div>
+        <span *ngIf = "success" style = "margin-top:100px"><b>Fields merged successfully</b></span>
+    </div>
+</div>
+
+
+<div mat-dialog-actions style = "height: 50px;">
+     <span class = "middle-fill"></span> 
+       <button  mat-button mat-flat-button color = "primary" [disabled] = "!toMerge || completed" (click) = "submit()">Submit</button> &nbsp; 
+     <button mat-button mat-flat-button color = "primary" mat-dialog-close>Cancel</button>
+    </div>

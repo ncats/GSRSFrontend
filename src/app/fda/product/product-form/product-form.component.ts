@@ -50,6 +50,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   message = '';
   downloadJsonHref: any;
   jsonFileName: string;
+  provenanceFieldMessage: Array<String> = [];
+  effectiveTimeMessage: any[][] = [];
 
   constructor(
     private productService: ProductService,
@@ -103,6 +105,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
               this.scrub(response);
               this.productService.loadProduct(response);
               this.product = this.productService.product;
+              if (this.product.productProvenances == null) {
+                this.product.productProvenances = [];
+              }
               this.loadingService.setLoading(false);
               this.isLoading = false;
             }
@@ -147,6 +152,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           this.productService.loadProduct(response);
           this.product = this.productService.product;
+
+          if (this.product.productProvenances == null) {
+            this.product.productProvenances = [{ productNames: [], productCodes: [], productDocumentations: [] }];
+          }
+
           /*
           Check if there is not Product Code Object, create one
           if (this.product.productCodeList.length == 0) {
@@ -174,7 +184,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.gaService.sendException('getProductDetails: error from API call');
         this.loadingService.setLoading(false);
         this.isLoading = false;
-       // this.handleProductRetrivalError();
+        // this.handleProductRetrivalError();
       });
     }
   }
@@ -183,6 +193,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
+    this.provenanceFieldMessage = [];
 
     this.validateClient();
     // If there is no error on client side, check validation on server side
@@ -221,12 +232,18 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.validationMessages = [];
     this.validationResult = true;
 
-    // Validate Expiry Date in Lot
+    // Validate Provenance field in Provenance section
+    this.validateProvenanceField('main-validation');
+
+    // Validate Effective Time in Documentation IDs
+    this.validateEffectiveTime('main-validation');
+
+    // Validate Expiry Date in Lot section
     if ((this.expiryDateMessage !== null) && (this.expiryDateMessage.length > 0)) {
       this.setValidationMessage(this.expiryDateMessage);
     }
 
-    // Validate Manufacture Date in Lot
+    // Validate Manufacture Date in Lot section
     if ((this.manufactureDateMessage !== null) && (this.manufactureDateMessage.length > 0)) {
       this.setValidationMessage(this.manufactureDateMessage);
     }
@@ -284,6 +301,89 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showSubmissionMessages = !this.showSubmissionMessages;
   }
 
+  updateProvenanceField(prodProvIndex: number, $event) {
+    this.product.productProvenances[prodProvIndex].provenance = $event;
+
+    // Check the Provenance field validation
+    this.validateProvenanceField();
+  }
+
+  validateProvenanceField(type?: string) {
+    // Validate Provenance (required field) in Provenance section
+    if (this.product != null) {
+      this.provenanceFieldMessage = [];
+      this.product.productProvenances.forEach((elementProv, index) => {
+        if (elementProv != null) {
+          if (elementProv.provenance === null || elementProv.provenance === undefined) {
+            if (type && type === 'main-validation') {
+              this.setValidationMessage('Provenance is required in Product Provenance ' + (index + 1));
+            }
+            this.provenanceFieldMessage.push('Provenance is required');
+          } else {
+            this.provenanceFieldMessage.push('');
+          }
+        }
+      });
+    }
+  }
+
+  validateEffectiveTime(type?: string) {
+    // Validate Effective Time in Provenance Documentation IDs section
+    if (this.product != null) {
+      this.product.productProvenances.forEach((elementProv, indexProv) => {
+        if (elementProv != null) {
+          this.effectiveTimeMessage[indexProv] = [];
+          elementProv.productDocumentations.forEach((elementDoc, indexDoc) => {
+            if (elementDoc.effectiveTime) {
+              const isValid = this.validateDate(elementDoc.effectiveTime);
+
+              if (isValid === false) {
+                if (type && type === 'main-validation') {
+                  this.setValidationMessage('Effective Time is invalid in Product Provenance ' + (indexProv + 1) + ' in Product Documentation IDs ' + (indexDoc + 1));
+                }
+                this.effectiveTimeMessage[indexProv][indexDoc] = 'Effective Time is invalid';
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  validateDate(dateinput: any): boolean {
+    let isValid = true;
+    if ((dateinput !== null) && (dateinput.length > 0)) {
+      if ((dateinput.length < 8) || (dateinput.length > 10)) {
+        return false;
+      }
+      const split = dateinput.split('/');
+      if (split.length !== 3 || (split[0].length < 1 || split[0].length > 2) ||
+        (split[1].length < 1 || split[1].length > 2) || split[2].length !== 4) {
+        return false;
+      }
+      if (split.length === 3) {
+        const comstring = split[0] + split[1] + split[2];
+        for (let i = 0; i < split.length; i++) {
+          const valid = this.isNumber(split[i]);
+          if (valid === false) {
+            isValid = false;
+            break;
+          }
+        }
+      }
+    }
+    return isValid;
+  }
+
+  isNumber(str: string): boolean {
+    if ((str !== null) && (str !== '')) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
+
   addServerError(error: any): void {
     this.serverError = true;
     this.validationResult = false;
@@ -316,10 +416,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.product) {
       if (this.product.id) {
       } else {
+        /*
         if (this.product.provenance === null || this.product.provenance === undefined) {
           // Set Provenance to GSRS
           this.product.provenance = 'GSRS';
-        }
+        } */
       }
       // Set service application
       this.productService.product = this.product;
@@ -407,18 +508,17 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showJSON(): void {
-    this.product = this.cleanProduct();
+    let cleanProduct = this.cleanProduct();
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.product
+      data: cleanProduct
     });
 
     // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
-
   }
 
   saveJSON(): void {
@@ -486,6 +586,50 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  addNewProductProvenance() {
+    this.productService.addNewProductProvenance();
+
+    // Display Existing Provenance field Validation
+    this.validateProvenanceField();
+
+  }
+
+  addNewProductNameInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductNameInProv(prodProvenanceIndex);
+  }
+
+  addNewTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.productService.addNewTermAndTermPartInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  addNewProductCodeInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductCodeInProv(prodProvenanceIndex);
+  }
+
+  addNewProductCompanyInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductCompanyInProv(prodProvenanceIndex);
+  }
+
+  addNewProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    this.productService.addNewProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex);
+  }
+
+  addNewProductDocumenation(prodProvenanceIndex: number) {
+    // Display Existing Effective Time Validation
+    this.validateEffectiveTime();
+
+    this.productService.addNewProductDocumentation(prodProvenanceIndex);
+  }
+
+  addNewProductIndication(prodProvIndex: number) {
+    this.productService.addNewProductIndication(prodProvIndex);
+  }
+
+  addNewProductComponent() {
+    this.productService.addNewProductComponent();
+  }
+
+
   confirmDeleteProduct(productId: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delete this Product?' }
@@ -521,6 +665,145 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  confirmDeleteProductProvenance(prodProvenanceIndex: number) {
+    // Show existing validation for Provenance field
+    this.validateProvenanceField();
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Provenance ' + (prodProvenanceIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductProvenance(prodProvenanceIndex);
+      }
+    });
+  }
+
+  deleteProductProvenance(prodProvenanceIndex: number) {
+    this.productService.deleteProductProvenance(prodProvenanceIndex);
+  }
+
+  confirmDeleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductNameInProv(prodProvenanceIndex, prodNameIndex);
+      }
+    });
+  }
+
+  deleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.productService.deleteProductNameInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  confirmDeleteTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Term and Term Part ' + (prodNameTermIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
+      }
+    });
+  }
+
+  deleteProductTermAndTermPart(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    this.productService.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
+  }
+
+  confirmDeleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Code ' + (prodCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCodeInProv(prodProvenanceIndex, prodCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
+    this.productService.deleteProductCodeInProv(prodProvenanceIndex, prodCodeIndex);
+  }
+
+  confirmDeleteProductCompanyInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company ' + (prodCompanyIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyInProv(prodProvenanceIndex, prodCompanyIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    this.productService.deleteProductCompanyInProv(prodProvenanceIndex, prodCompanyIndex);
+  }
+
+  confirmDeleteProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company Code ' + (prodCompanyCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex, prodCompanyCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    this.productService.deleteProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex, prodCompanyCodeIndex);
+  }
+
+  confirmDeleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
+    // Display Existing Effective Time Validation
+    this.validateEffectiveTime();
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Documentation IDs ' + (productDocIndex + 1) + ' data?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductDocumentationInProv(prodProvenanceIndex, productDocIndex);
+      }
+    });
+  }
+
+  deleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
+    this.productService.deleteProductDocumentationInProv(prodProvenanceIndex, productDocIndex);
+  }
+
+  confirmDeleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
+      }
+    });
+  }
+
+  deleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
+    this.productService.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
+  }
+
+  copyProvenance(productProvenanceIndex: number) {
+    this.productService.copyProductProvenance(this.product.productProvenances[productProvenanceIndex]);
+  }
+
+  /*
   addNewProductName() {
     this.productService.addNewProductName();
   }
@@ -580,7 +863,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteProductCode(prodCodeIndex: number) {
     this.productService.deleteProductCode(prodCodeIndex);
   }
+  */
 
+  /*
   addNewProductCompany() {
     this.productService.addNewProductCompany();
   }
@@ -620,29 +905,24 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
     this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
   }
+  */
 
-  addNewProductIndication() {
-    this.productService.addNewProductIndication();
-  }
-
-  confirmDeleteProductIndication(prodIndicationIndex: number) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteProductIndication(prodIndicationIndex);
+  changeSelectionDisplayName($event, prodNameIndex: number) {
+    // Only allow to select ONE Display Name check box
+    this.product.productProvenances.forEach(elementProv => {
+      if (elementProv != null) {
+        elementProv.productNames.forEach((elementName, index) => {
+          if (elementName != null) {
+            if (prodNameIndex == index) {
+              elementName.displayName = $event.checked;
+            }
+            else {
+              elementName.displayName = false;
+            }
+          }
+        });
       }
     });
-  }
-
-  deleteProductIndication(prodIndicationIndex: number) {
-    this.productService.deleteProductIndication(prodIndicationIndex);
-  }
-
-  addNewProductComponent() {
-    this.productService.addNewProductComponent();
   }
 
   expiryDateMessageOutChange($event) {
@@ -651,15 +931,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   manufactureDateMessageOutChange($event) {
     this.manufactureDateMessage = $event;
-  }
-
-  isNumber(str: any): boolean {
-    if (str) {
-      const num = Number(str);
-      const nan = isNaN(num);
-      return !nan;
-    }
-    return false;
   }
 
   getViewProductUrl(): string {

@@ -376,5 +376,9 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     }
   }
 
+  close() {
+    this.dialog.closeAll();
+  }
+
 }
 

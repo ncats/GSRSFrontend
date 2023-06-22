@@ -138,7 +138,7 @@ export class AdminService extends BaseHttpService {
             return `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/files/${name}`;
         }
 
-        public getAdapters(): Observable< UploadObject > {
+        public getAdapters(): Observable< any > {
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/adapters`;
           return this.http.get< any >(`${url}`);
         }
@@ -151,7 +151,10 @@ export class AdminService extends BaseHttpService {
         public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
           console.log(file);
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview`;
-         if (limit && limit !== 'all') {
+         if (limit) {
+           if(limit === 'all') {
+             limit = 500000
+           }
             url += "?limit=" + limit;
           }
           return this.http.put< any >(`${url}`, file);
@@ -205,7 +208,7 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public SearchStagedData(skip: any, facets?: any, term?: any) {
+        public SearchStagedData(skip: any, facets?: any, term?: any, top?: any) {
           let params = new FacetHttpParams({encoder: new CustomEncoder()});
           if (facets){
             params = params.appendFacetParams(facets, true);
@@ -213,6 +216,11 @@ export class AdminService extends BaseHttpService {
           }
           if (term) {
             params = params.append('q',(term));
+          }
+
+          if (top) {
+            params = params.append('top',(top));
+
           }
 
           const options = {
@@ -265,11 +273,12 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public stagedRecordMultiAction(records:any, action: string) {
+        public stagedRecordMultiAction(records:any, action: string, scrubber?: any) {
           console.log(records);
+          console.log(scrubber);
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
           let toput = {
-            stagingAreaRecords: 
+            "stagingAreaRecords":
               records
             ,
               "processingActions": [
@@ -280,28 +289,57 @@ export class AdminService extends BaseHttpService {
                 }
               ]
             }
+            if (scrubber) {
+              toput.processingActions[0].parameters['scrubberSettings'] = scrubber;
+            }
             console.log(toput);
          
           return this.http.put< any >(url, toput);
 
         }
 
-        public stagedRecordSingleAction(id:string, action: string) {
+        public stagedRecordSingleAction(id:string, action: string, params?: any, matching?: string) {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
+          let putParam = { "parameters": {}, "processingActionName": action};
+          let putRecords = {}
+          if (action === 'merge') {
+            putParam.parameters['mergeSettings'] = params;
+            putRecords = {'id': id, 'matchingID': matching }
+          } else {
+            putRecords = {'id': id}
+          }
           let toput = {
             stagingAreaRecords: [
-              {'id': id}
+              putRecords
             ],
               "processingActions": [
-                {
-                  "parameters": {
-
-                  }, "processingActionName": action
-                }
+                putParam
               ]
             }
+            console.log
          
           return this.http.put< any >(url, toput);
+
+        }
+
+        getMergeActionSchema() {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/action(merge)/@schema`;
+
+          return this.http.get< any >(url);
+
+        }
+
+        deleteStagedRecord(records: Array<string>) {
+          let tosend = "";
+          for(let i = 0; i< records.length; i++) {
+            tosend += records[i];
+            if(i !== (records.length - 1)) {
+              tosend += ',';
+            }
+          }
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@deletebulk`;
+
+          return this.http.delete< any >(url, { body: tosend });
 
         }
 
@@ -309,6 +347,13 @@ export class AdminService extends BaseHttpService {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}/@update`;
 
           return this.http.put< any >(url, substance);
+
+        }
+
+        public getImportScrubberSchema() {
+          let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/action(Scrub)/@schema`;
+
+          return this.http.get< any >(url);
 
         }
 }

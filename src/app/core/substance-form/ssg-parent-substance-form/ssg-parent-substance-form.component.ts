@@ -18,9 +18,13 @@ import { SubstanceFormSsg4mStartingMaterialsModule } from '@gsrs-core/substance-
 export class SsgParentSubstanceFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   substance: any;
   substanceClass: string;
+  privateShowAdvancedSettings: boolean;
+  specifiedSubstanceG4m: SpecifiedSubstanceG4m;
   parentSubstance: SubstanceRelated;
   relatedSubstanceUuid: string;
   configSsg4Form: any;
+  public configSettingsDisplay = {};
+  public parentSubstanceHeader = 'Parent Substance';
   private subscriptions: Array<Subscription> = [];
 
   constructor(
@@ -38,7 +42,12 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
     this.configSsg4Form = (this.configService.configData && this.configService.configData.ssg4Form) || null;
     let configTitle = 'Search or Register a New Substance';
     if (this.configSsg4Form) {
-      configTitle = this.configSsg4Form.titles.parentSubstance || null;
+      if (this.configSsg4Form.titles.parentSubstance) {
+        configTitle = this.configSsg4Form.titles.parentSubstance;
+      }
+      if (this.configSsg4Form.parentSubstanceHeader) {
+        this.parentSubstanceHeader = this.configSsg4Form.parentSubstanceHeader;
+      }
     }
 
     this.menuLabelUpdate.emit(configTitle);
@@ -48,9 +57,13 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
 
       // SSG4m: Load/Set Substance Name with Structure
       if (this.substanceClass && this.substanceClass === 'specifiedSubstanceG4m') {
-        if (this.substance.specifiedSubstanceG4m.parentSubstance) {
-          if (this.substance.specifiedSubstanceG4m.parentSubstance.refuuid) {
-            this.relatedSubstanceUuid = this.substance.specifiedSubstanceG4m.parentSubstance.refuuid;
+        if (this.substance.specifiedSubstanceG4m) {
+          this.specifiedSubstanceG4m = this.substance.specifiedSubstanceG4m;
+
+          if (this.substance.specifiedSubstanceG4m.parentSubstance) {
+            if (this.substance.specifiedSubstanceG4m.parentSubstance.refuuid) {
+              this.relatedSubstanceUuid = this.substance.specifiedSubstanceG4m.parentSubstance.refuuid;
+            }
           }
         }
       }
@@ -91,6 +104,30 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
     });
   }
 
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'startingMaterial' json values from config
+    const confSettings = configSsg4Form.settingsDisplay.startingMaterial;
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        } else if (confSettings[key] === 'removed') {
+          this.configSettingsDisplay[key] = false;
+        }
+      }
+    });
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance !== null) {
       const relatedSubstance: SubstanceRelated = {
@@ -108,6 +145,10 @@ export class SsgParentSubstanceFormComponent extends SubstanceFormBase implement
         this.substance.specifiedSubstanceG4m.parentSubstance = {};
       }
     }
+  }
+
+  updateManufactureIdType(manufactureIdType: string): void {
+    this.specifiedSubstanceG4m.manufactureIdType = manufactureIdType;
   }
 
 }

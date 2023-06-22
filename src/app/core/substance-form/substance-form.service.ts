@@ -739,7 +739,7 @@ export class SubstanceFormService implements OnDestroy {
     if (this.privateSubstance.properties) {
       this.privateSubstance.properties.forEach(prop => {
         if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
-          const featArr = prop.value.nonNumericValue.split(';');
+          const featArr = prop.value.nonNumericValue ? prop.value.nonNumericValue.split(';') : [];
           featArr.forEach(f => {
             const sites = f.split('-');
             const subunitIndex = Number(sites[0].split('_')[0]);

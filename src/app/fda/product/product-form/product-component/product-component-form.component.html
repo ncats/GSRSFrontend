@@ -8,7 +8,7 @@
   </div>
   <div class="maringright10px">
     <button mat-icon-button [ngStyle]="{'color':'green'}" (click)="confirmDeleteComponent(prodComponentIndex)"
-      matTooltip="Delete Component Details {{prodComponentIndex + 1}}">
+      matTooltip="Delete Manufacture Item Details {{prodComponentIndex + 1}}">
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
@@ -52,7 +52,7 @@
       [model]="productComponent.charShape" (valueChange)="productComponent.charShape = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FRAGMENTS" title="Number of Fragments" name="charNumFragments"
+    <app-cv-input class="col-1-4" domain="PROD_CHARACTER_FRAGMENTS" title="Scoring" name="charNumFragments"
       [model]="productComponent.charNumFragments" (valueChange)="productComponent.charNumFragments = $event">
     </app-cv-input>
 
@@ -85,8 +85,9 @@
       (valueChange)="productComponent.unit = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-1-4" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration" name="routeOfAdministration"
-      [model]="productComponent.routeOfAdministration" (valueChange)="productComponent.routeOfAdministration = $event">
+    <app-cv-input class="col-1-4" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
+      name="routeOfAdministration" [model]="productComponent.routeOfAdministration"
+      (valueChange)="productComponent.routeOfAdministration = $event">
     </app-cv-input>
 
     <mat-form-field class="col-1-4">
@@ -96,70 +97,69 @@
   </div>
 
 
-  <!-- PRODUCT MANUFACTURER LIST BEGIN -->
-  <div class="">
-    <br>
-    <span matBadge="{{productComponent.productManufacturers.length}}" matBadgeOverlap="false">
-      <span class="titlebrown">Manufacturer Item Code </span>
-    </span>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button mat-raised-button color="primary" (click)="addNewProductManufacturer(prodComponentIndex)"
-      matTooltip="Add New Manufacturer">
-      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Manufacturer Item Code
-    </button>
-    <br>
-    <div class="marginbottom10px"
-      *ngFor="let productManufacturer of productComponent.productManufacturers; let prodManuIndex = index">
-      <!-- Delete buttons -->
-      <div class="divflexend marginbottomminus12px padleft235px">
-        <div class="">
-          <button mat-icon-button color="primary"
-            (click)="confirmDeleteProductManufacturer(prodComponentIndex, prodManuIndex)"
-            matTooltip="Delete Manufacturer Item Code {{prodManuIndex + 1}}">
-            <mat-icon>delete_forever</mat-icon>
-          </button>
-        </div>
+  <!-- Product MANUFACTURER Begin -->
+  <br>
+  <span matBadge="{{productComponent.productManufacturers.length}}" matBadgeOverlap="false">
+    <span class="titlebrown">Manufacturer Item Code</span>
+  </span>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button mat-raised-button color="primary" (click)="addNewProductManufacturer(prodComponentIndex)"
+    matTooltip="Add New Manufacturer Item Code">
+    <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Manufacturer Item Code
+  </button>
+  <br>
+
+  <div class="marginbottom10px"
+    *ngFor="let productManufacturer of productComponent.productManufacturers; let prodManuIndex = index">
+    <!-- Delete buttons -->
+    <div class="divflexend margintopneg10px">
+      <div class="middle-fill"></div>
+      <button class="padtop9px marginright10px" mat-icon-button color="primary"
+        (click)="confirmDeleteProductManufacturer(prodComponentIndex, prodManuIndex)"
+        matTooltip="Delete Manufacturer Item Code {{prodManuIndex + 1}}">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+    </div>
+
+    <fieldset class="border">
+      <legend class="border">Manufacturer Item Code&nbsp;<b>{{(prodManuIndex+1)}}</b>&nbsp;&nbsp;
+      </legend>
+
+      <div class="form-row">
+        <app-cv-input class="col-3-1" domain="PROD_COMPANY_ROLE" title="Manufacturer Role" name="manufacturerRole"
+          [model]="productManufacturer.manufacturerRole" (valueChange)="productManufacturer.manufacturerRole = $event">
+        </app-cv-input>
+
+        <mat-form-field class="col-3-1">
+          <input matInput placeholder="Manufacturer Name" [(ngModel)]="productManufacturer.manufacturerName"
+            name="manufacturerName" />
+        </mat-form-field>
+
+        <app-cv-input class="col-3-1" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacturer Code Type"
+          name="manufacturerCodeType" [model]="productManufacturer.manufacturerCodeType"
+          (valueChange)="productManufacturer.manufacturerCodeType = $event">
+        </app-cv-input>
       </div>
-      <fieldset class="border">
-        <legend class="border">Manufacturer Item Code&nbsp;<b>{{(prodManuIndex+1)}}</b>&nbsp;&nbsp;
-        </legend>
-        <div class="form-row">
-          <app-cv-input class="col-1-4" domain="PROD_COMPANY_ROLE" title="Manufacturer Role" name="manufacturerRole"
-            [model]="productManufacturer.manufacturerRole"
-            (valueChange)="productManufacturer.manufacturerRole = $event">
-          </app-cv-input>
 
-          <mat-form-field class="col-3-4">
-            <input matInput placeholder="Manufacturer Name" [(ngModel)]="productManufacturer.manufacturerName"
-              name="manufacturerName" />
-          </mat-form-field>
-        </div>
+      <div class="form-row margintop10px">
+        <mat-form-field class="col-3-1">
+          <input matInput placeholder="Manufacturer Code" [(ngModel)]="productManufacturer.manufacturerCode"
+            name="manufacturerCode" />
+        </mat-form-field>
 
-        <div class="form-row margintop10px">
-          <mat-form-field class="col-1-4">
-            <input matInput placeholder="Manufacturer Code" [(ngModel)]="productManufacturer.manufacturerCode"
-              name="manufacturerCode" />
-          </mat-form-field>
+        <mat-form-field class="col-3-1">
+          <input matInput placeholder="Manufactured Item Code" [(ngModel)]="productManufacturer.manufacturedItemCode"
+            name="manufacturedItemCode" />
+        </mat-form-field>
 
-          <app-cv-input class="col-1-4" domain="PROD_MANUFACTURE_CODE_TYPE" title="Manufacturer Code Type"
-            name="manufacturerCodeType" [model]="productManufacturer.manufacturerCodeType"
-            (valueChange)="productManufacturer.manufacturerCodeType = $event">
-          </app-cv-input>
-
-          <mat-form-field class="col-1-4">
-            <input matInput placeholder="Manufactured Item Code" [(ngModel)]="productManufacturer.manufacturedItemCode"
-              name="manufacturedItemCode" />
-          </mat-form-field>
-
-          <app-cv-input class="col-1-4" domain="MANUFACTURE_ITEM_CODE_TYPE" title="Manufactured Item Code Type"
-            name="manufacturedItemCodeType" [model]="productManufacturer.manufacturedItemCodeType"
-            (valueChange)="productManufacturer.manufacturedItemCodeType = $event">
-          </app-cv-input>
-        </div>
-      </fieldset>
-    </div> <!-- loop -->
-  </div>
-  <!-- PRODUCT MANUFACTURER LIST END -->
+        <app-cv-input class="col-3-1" domain="PROD_MANUFACTURED_ITEM_CODE_TYPE" title="Manufactured Item Code Type"
+          name="manufacturedItemCodeType" [model]="productManufacturer.manufacturedItemCodeType"
+          (valueChange)="productManufacturer.manufacturedItemCodeType = $event">
+        </app-cv-input>
+      </div>
+    </fieldset>
+  </div> <!-- loop -->
+  <!-- Product MANUFACTURER End -->
 
 
   <!-- PRODUCT LOT LIST BEGIN -->

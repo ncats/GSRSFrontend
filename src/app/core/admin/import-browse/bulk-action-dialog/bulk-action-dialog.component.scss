@@ -2,8 +2,6 @@
     width: 100px !important;
 height: 100px !important;
 margin: auto;
-margin-top: 75px !important;
-margin-left: 150px !important;
 }
 
 .action-button {
@@ -18,5 +16,9 @@ font-size: 18px;
 }
 
 .row {
+    margin: 15px;
+}
+
+.scrubber-row {
     margin: 15px;
 }

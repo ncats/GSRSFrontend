@@ -114,8 +114,10 @@ import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 import { RegisterComponent } from './register/register.component';
 import { PwdRecoveryComponent } from './pwd-recovery/pwd-recovery.component';
 import { ElementLabelDisplayModule } from './utils/element-label-display.module';
+import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
+import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 import { SessionCheckerComponent } from './auth/session-checker.component';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
@@ -155,7 +157,9 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
     CustomTextareaWidgetComponent,
     RegisterComponent,
     PwdRecoveryComponent,
+    MergeActionDialogComponent,
     UserQueryListDialogComponent,
+    ImportScrubberComponent,
     ListCreateDialogComponent,
     SessionCheckerComponent
   ],
@@ -229,9 +233,6 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
     ElementLabelDisplayModule,
     PrivacyStatementModule
   ],
-
-
-
   providers: [
     {
       provide: ErrorHandler,
@@ -264,12 +265,16 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
     CustomRadioWidgetComponent,
     CustomMultiCheckboxWidgetComponent,
     CustomTextareaWidgetComponent,
+    MergeActionDialogComponent,
     UserQueryListDialogComponent,
-    ListCreateDialogComponent
+    ListCreateDialogComponent,
+    ImportScrubberComponent
   ],
   exports: [
     StructureEditorModule,
-    NameResolverModule
+    NameResolverModule,
+    NamesDisplayPipe,
+    SubstanceStatusPipe
   ]
 })
 export class AppModule {}

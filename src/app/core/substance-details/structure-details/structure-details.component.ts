@@ -50,8 +50,12 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   ngOnInit() {
 
       if (this.substance != null) {
+
         this.getSysNames();
         this.structure = this.substance.structure;
+        if(this.substance.$$source && this.substance.$$source === 'staging') {
+          this.structure.id = this.substance.uuid;
+        }
         if (this.structure.smiles) {
           this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
             this.inchi = inchi.replace(/\"/g, '');

@@ -4,13 +4,20 @@
               </button>
     <div *ngIf = "view == 'all'" >
         <H3>Saved Lists {{setUser ? ' - ' + setUser : ''}}</H3>
-        <div>
+        <div class ="form-row">
             <a *ngIf = "isAdmin" class = "link" (click) = "getUsers()">Other User's Lists</a>
+
+            <span class ="middle-fill"></span>
+            <a *ngIf = "isAdmin" class = "link" (click) = "view = 'import'">Saved List Import</a>
     </div>
     </div>
     <div *ngIf = "view == 'add'" >
             <H3>Add List</H3>
         </div>
+        <div *ngIf = "view == 'import'" >
+                <H3>Import List</H3>
+                <a class = "link" (click) = "view = 'all'">Return to lists view</a> <span class = "middle-fill"></span>
+            </div>
 
         <div *ngIf = "view == 'users'" >
             <H3>Users</H3>
@@ -19,8 +26,9 @@
             <H3>Saved Lists: <span style = "font-weight:700;margin-left:10px;font-size:22px">{{activeName}}</span> 
                 
             </H3>
-            <div style = "width: 100%;display:flex;">
-                    <a class = "link" (click) = "view = 'all'">Return to lists view</a> <span class = "middle-fill"></span>
+            <div class ="form-row" style = "justify-content:space-evenly">
+                    <a class = "link" (click) = "view = 'all'">Return to lists view</a> 
+                    <a class = "link" [href]="downloadJsonHref" download="{{(setUser ? setUser + '-' : '') + activeName}}.json">Export List</a> 
                     <a class = "link" (click) = "browseView()">View list in browse page</a>
             </div>
         </div>
@@ -76,6 +84,28 @@
             </table>
       
     </div>
+
+
+    <div *ngIf = "view === 'import'">
+            <br/><br/><br/>
+        <div class = "info">
+            Select an exported .json saved list file to import into a new form.
+        </div>
+        <br/><br/>
+        <div class = "full-row"> <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /></div>
+        <br/>
+        <div class = "full-row-start">
+                <div><button mat-stroked-button class="button-select-file" (click)="openInput()">Select File to Import</button></div>
+                <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
+                <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
+               
+        </div>
+        <br/><br/>
+        <button mat-flat-button color = "primary" class="button-import2" [disabled]= "!loaded || (!listName || listName === '')" (click) ="useFile()">Import</button>
+        <br/><br/>
+    </div>
+
+
 <div *ngIf = "view == 'all'">
     <div *ngIf = "lists.length == 0">
        <i>No lists were found</i>
@@ -137,6 +167,10 @@
 <div class = "form-row">
     <br/>
     {{message}}
+    <br/>
+    <span *ngIf = "view === 'import' && viewCreated">
+        &nbsp; &nbsp; &nbsp; <a class = "link" (click) = "useCreated()">View new list</a>
+    </span>
 </div>
 <div class = "form-row">
     <div></div>   <span class = "middle-fill"></span> <button color = "primary" mat-flat-button *ngIf = "showAddButtons && !loading" (click) = "viewLists()">View Lists</button>

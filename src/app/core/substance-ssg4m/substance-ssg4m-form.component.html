@@ -131,15 +131,15 @@
                 <mat-panel-title>
                   <span class="fontsize20px colorbluefda fontbold">{{section.menuLabel}}</span>
                   <div class="middle-fill"></div>
-                  <!--
-              <div *ngIf="section.canAddItem">
-                <button mat-flat-button color="primary" id="Add new {{section.menuLabel}}"
-                  (click)="section.addItem(); $event.stopPropagation()" matTooltip="Add new {{section.menuLabel}}">
-                  Add {{section.menuLabel}}
-                  <mat-icon svgIcon="add_circle_outline"></mat-icon>
-                </button>
-              </div>
-              -->
+
+                  <div *ngIf="section.canAddItem && (section.menuLabel && section.menuLabel !== 'Processes')">
+                    <button mat-flat-button color="primary" id="Add new {{section.menuLabel}}"
+                      (click)="section.addItem(); $event.stopPropagation()" matTooltip="Add new {{section.menuLabel}}">
+                      Add {{section.menuLabel}}
+                      <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                    </button>
+                  </div>
+
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <div #dynamicComponent></div>

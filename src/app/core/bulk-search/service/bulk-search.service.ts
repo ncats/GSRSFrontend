@@ -154,9 +154,14 @@ export class BulkSearchService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
-  getSingleBulkSearchList(name: string) {
-    // Get the keys and other fields of a list
-    const url = this.apiBaseUrl + `substances/@userList/${name}`;
+  getSingleBulkSearchList(name: string, user?: string) {
+    // Get the keys and other fields of a list. default to active user if not specified
+    let url = this.apiBaseUrl + `substances/@userList/${name}`;
+
+    if(user && user !== null) {
+      url = this.apiBaseUrl + `substances/@userList/${user}/${name}`;
+
+    }
     return this.http.get<any>(url);
   }
 

@@ -37,6 +37,8 @@ export interface SubstanceBaseExtended {
   protein?: Protein;
   $$mixtureParents?: any;
   $$constituentParents?: any;
+  $$otherID?: string;
+  $$source?: string;
 }
 
 export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
@@ -524,6 +526,9 @@ export interface SpecifiedSubstanceG4m extends SubstanceBase {
   // references?: Array<string>;
   parentSubstance?: SpecifiedSubstanceParent;
   process?: Array<SpecifiedSubstanceG4mProcess>;
+  manufactureName?: string;
+  ManufactureId?: string;
+  manufactureIdType?: string;
   _svg?: string;
 }
 
@@ -544,6 +549,9 @@ export interface SpecifiedSubstanceG4mSite extends SubstanceBase {
   siteAddress?: string;
   gpsSiteLocation?: string;
   siteClearance?: string;
+  companyName?: string;
+  CompanyId?: string;
+  CompanyIdType?: string;
   siteComments?: string;
   stages?: Array<SpecifiedSubstanceG4mStage>;
 }
@@ -573,7 +581,14 @@ export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  substanceGrade?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
   comments?: string;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
 }
 
 export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
@@ -581,7 +596,17 @@ export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  substanceGrade?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
+  manufacturerName?: string;
+  manufacturerId?: string;
+  manufacturerIdType?: string;
   comments?: string;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
 }
 
 export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
@@ -589,7 +614,25 @@ export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
   substanceName?: SubstanceRelated;
   verbatimName?: string;
   substanceRole?: string;
+  substanceGrade?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
   comments?: string;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
+}
+
+export interface SpecifiedSubstanceG4mManufacturerDetails extends SubstanceBase {
+  manufacturerName?: String;
+  manufacturerId?: string;
+  manufacturerIdType?: string;
+}
+
+export interface SpecifiedSubstanceG4mAcceptanceCriteria extends SubstanceBase {
+  acceptanceCriteria?: string;
+  acceptanceCriteriaType?: string;
 }
 
 export interface TableFilterDDModel {

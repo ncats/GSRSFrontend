@@ -8,7 +8,7 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
-import { Product, ProductName, ProductTermAndPart, ProductCode, ProductAll } from '../model/product.model';
+import { Product, ProductProvenance, ProductName, ProductTermAndPart, ProductCode, ProductAll, ProductDocumentation } from '../model/product.model';
 import { ProductCompany, ProductCompanyCode, ProductIndication, ProductComponent, ProductManufacturer, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
@@ -102,7 +102,7 @@ export class ProductService extends BaseHttpService {
 
   getExportOptions(etag: string): Observable<any> {
     const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}`;
-    return this.http.get< any>(url);
+    return this.http.get<any>(url);
   }
 
   getApiExportUrl(etag: string, extension: string): string {
@@ -173,10 +173,10 @@ export class ProductService extends BaseHttpService {
       this.product = product;
     } else { // new Product
       this.product = {
-        productNames: [],
-        productCodes: [],
-        productCompanies: [],
-        productIndications: [],
+        productProvenances: [],
+        //   productNames: [],
+        //   productCodes: [],
+        //   productCompanies: [],
         productManufactureItems: []
       };
     }
@@ -226,6 +226,153 @@ export class ProductService extends BaseHttpService {
     return x;
   }
 
+  addNewProductProvenance(): void {
+    const newProductProvenance: ProductProvenance =
+      { productNames: [], productCodes: [], productCompanies: [], productDocumentations: [], productIndications: [] };
+    this.product.productProvenances.unshift(newProductProvenance);
+  }
+
+  addNewProductNameInProv(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productNames == null) {
+      this.product.productProvenances[prodProvenanceIndex].productNames = [];
+    }
+
+    const newProductName: ProductName = {};
+    this.product.productProvenances[prodProvenanceIndex].productNames.push(newProductName);
+  }
+
+  addNewTermAndTermPartInProv(productProvenanceIndex: number, prodNameIndex: number) {
+    if (this.product.productProvenances[productProvenanceIndex].productNames[prodNameIndex].productTermAndParts == null) {
+      this.product.productProvenances[productProvenanceIndex].productNames[prodNameIndex].productTermAndParts = [];
+    }
+
+    const newProductPartTerm: ProductTermAndPart = {};
+    this.product.productProvenances[productProvenanceIndex].productNames[prodNameIndex].productTermAndParts.push(newProductPartTerm);
+  }
+
+  addNewProductCodeInProv(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productCodes == null) {
+      this.product.productProvenances[prodProvenanceIndex].productCodes = [];
+    }
+
+    const newProductCode: ProductCode = {};
+    this.product.productProvenances[prodProvenanceIndex].productCodes.push(newProductCode);
+  }
+
+  addNewProductCompanyInProv(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productCompanies == null) {
+      this.product.productProvenances[prodProvenanceIndex].productCompanies = [];
+    }
+
+    const newProductCompany: ProductCompany = { productCompanyCodes: [] };
+    this.product.productProvenances[prodProvenanceIndex].productCompanies.push(newProductCompany);
+  }
+
+  addNewProductCompanyCodeInProv(prodProvenanceIndex: number, productCompanyIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productCompanies[productCompanyIndex].productCompanyCodes == null) {
+      this.product.productProvenances[prodProvenanceIndex].productCompanies[productCompanyIndex].productCompanyCodes = [];
+    }
+
+    const newProductCompanyCode: ProductCompanyCode = {};
+    this.product.productProvenances[prodProvenanceIndex].productCompanies[productCompanyIndex].productCompanyCodes.push(newProductCompanyCode);
+  }
+
+  addNewProductDocumentation(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productDocumentations == null) {
+      this.product.productProvenances[prodProvenanceIndex].productDocumentations = [];
+    }
+
+    const newProductDocumentation: ProductDocumentation = {};
+    this.product.productProvenances[prodProvenanceIndex].productDocumentations.push(newProductDocumentation);
+  }
+
+  addNewProductIndication(prodProvenanceIndex: number): void {
+    if (this.product.productProvenances[prodProvenanceIndex].productIndications == null) {
+      this.product.productProvenances[prodProvenanceIndex].productIndications = [];
+    }
+
+    const newProductIndication: ProductIndication = {};
+    this.product.productProvenances[prodProvenanceIndex].productIndications.push(newProductIndication);
+  }
+
+  addNewProductComponent(): void {
+    const newProductComponent: ProductComponent = {
+      productManufacturers: [],
+      productLots: [{
+        productIngredients: [{}]
+      }]
+    };
+    this.product.productManufactureItems.unshift(newProductComponent);
+  }
+
+  addNewProductManufacturer(prodComponentIndex: number): void {
+    if (this.product.productManufactureItems[prodComponentIndex].productManufacturers == null) {
+      this.product.productManufactureItems[prodComponentIndex].productManufacturers = [];
+    }
+
+    const newProductManu: ProductManufacturer = {};
+    this.product.productManufactureItems[prodComponentIndex].productManufacturers.unshift(newProductManu);
+  }
+
+  addNewProductLot(prodComponentIndex: number): void {
+    const newProductLot: ProductLot = { productIngredients: [{}] };
+    this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProductLot);
+  }
+
+  addNewProductIngredient(prodComponentIndex: number, prodLotIndex: number): void {
+    const newProductIngredient: ProductIngredient = {};
+    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProductIngredient);
+  }
+
+  deleteProductProvenance(prodProvenanceIndex: number) {
+    this.product.productProvenances.splice(prodProvenanceIndex, 1);
+  }
+
+  deleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.product.productProvenances[prodProvenanceIndex].productNames.splice(prodNameIndex, 1);
+  }
+
+  deleteProductTermAndTermPart(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    this.product.productProvenances[prodProvenanceIndex].productNames[prodNameIndex].productTermAndParts.splice(prodNameTermIndex, 1);
+  }
+
+  deleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
+    this.product.productProvenances[prodProvenanceIndex].productCodes.splice(prodCodeIndex, 1);
+  }
+
+  deleteProductCompanyInProv(prodProvenanceIndex: number, prodCompanyIndex: number): void {
+    this.product.productProvenances[prodProvenanceIndex].productCompanies.splice(prodCompanyIndex, 1);
+  }
+
+  deleteProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number, prodCompanyCodeIndex: number): void {
+    this.product.productProvenances[prodProvenanceIndex].productCompanies[prodCompanyIndex].productCompanyCodes.splice(prodCompanyCodeIndex, 1);
+  }
+
+  deleteProductDocumentationInProv(prodProvenanceIndex: number, prodDocIndex: number): void {
+    this.product.productProvenances[prodProvenanceIndex].productDocumentations.splice(prodDocIndex, 1);
+  }
+
+  deleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number): void {
+    this.product.productProvenances[prodProvenanceIndex].productIndications.splice(prodIndicationIndex, 1);
+  }
+
+  deleteProductComponent(prodComponentIndex: number): void {
+    this.product.productManufactureItems.splice(prodComponentIndex, 1);
+  }
+
+  deleteProductManufacturer(prodComponentIndex: number, prodManuIndex: number): void {
+    this.product.productManufactureItems[prodComponentIndex].productManufacturers.splice(prodManuIndex, 1);
+  }
+
+  deleteProductLot(prodComponentIndex: number, prodLotIndex: number): void {
+    this.product.productManufactureItems[prodComponentIndex].productLots.splice(prodLotIndex, 1);
+  }
+
+  deleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number): void {
+    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.splice(prodIngredientIndex, 1);
+  }
+
+  /*
   addNewProductName(): void {
     const newProductName: ProductName = { productTermAndParts: [] };
     this.product.productNames.unshift(newProductName);
@@ -234,7 +381,9 @@ export class ProductService extends BaseHttpService {
   deleteProductName(prodNameIndex: number): void {
     this.product.productNames.splice(prodNameIndex, 1);
   }
+  */
 
+  /*
   addNewTermAndTermPart(prodNameIndex: number): void {
     if (this.product.productNames[prodNameIndex].productTermAndParts == null) {
       this.product.productNames[prodNameIndex].productTermAndParts = [];
@@ -252,17 +401,20 @@ export class ProductService extends BaseHttpService {
     this.product.productCodes.unshift(newProductCode);
   }
 
+
   deleteProductCode(prodCodeIndex: number): void {
     this.product.productCodes.splice(prodCodeIndex, 1);
   }
 
+  deleteProductCode(prodCodeIndex: number): void {
+    this.product.productCodes.splice(prodCodeIndex, 1);
+  }
+  */
+
+  /*
   addNewProductCompany(): void {
     const newProductCompany: ProductCompany = { productCompanyCodes: [] };
     this.product.productCompanies.unshift(newProductCompany);
-  }
-
-  deleteProductCompany(prodCompanyIndex: number): void {
-    this.product.productCompanies.splice(prodCompanyIndex, 1);
   }
 
   addNewProductCompanyCode(productCompanyIndex: number): void {
@@ -270,33 +422,16 @@ export class ProductService extends BaseHttpService {
     this.product.productCompanies[productCompanyIndex].productCompanyCodes.push(newProductCompanyCode);
   }
 
+  deleteProductCompany(prodCompanyIndex: number): void {
+    this.product.productCompanies.splice(prodCompanyIndex, 1);
+  }
+
   deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number): void {
     this.product.productCompanies[prodCompanyIndex].productCompanyCodes.splice(prodCompanyCodeIndex, 1);
   }
+  */
 
-  addNewProductIndication(): void {
-    const newProductIndication: ProductIndication = {};
-    this.product.productIndications.unshift(newProductIndication);
-  }
-
-  deleteProductIndication(prodIndicationIndex: number): void {
-    this.product.productIndications.splice(prodIndicationIndex, 1);
-  }
-
-  addNewProductComponent(): void {
-    const newProductComponent: ProductComponent = {
-      productManufacturers: [],
-      productLots: [{
-        productIngredients: [{}]
-      }]
-    };
-    this.product.productManufactureItems.unshift(newProductComponent);
-  }
-
-  deleteProductComponent(prodComponentIndex: number): void {
-    this.product.productManufactureItems.splice(prodComponentIndex, 1);
-  }
-
+  /*
   addNewProductManufacturer(prodComponentIndex: number): void {
     const newProductManu: ProductManufacturer = {};
     this.product.productManufactureItems[prodComponentIndex].productManufacturers.unshift(newProductManu);
@@ -305,24 +440,104 @@ export class ProductService extends BaseHttpService {
   deleteProductManufacturer(prodComponentIndex: number, prodManuIndex: number): void {
     this.product.productManufactureItems[prodComponentIndex].productManufacturers.splice(prodManuIndex, 1);
   }
+  */
 
-  addNewProductLot(prodComponentIndex: number): void {
-    const newProductLot: ProductLot = { productIngredients: [{}] };
-    this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProductLot);
+  copyProductProvenance(productProvenance: any): void {
+    const newProductProv = JSON.parse(JSON.stringify(productProvenance));
+
+    newProductProv.id = null;
+    newProductProv.internalVersion = null;
+    newProductProv.createdBy = null;
+    newProductProv.creationDate = null;
+    newProductProv.modifiedBy = null;
+    newProductProv.createdBy = null;
+    newProductProv.lastModifiedDate = null;
+
+    // Product Names
+    newProductProv.productNames.forEach(elementName => {
+      if (elementName != null) {
+        elementName.id = null;
+        elementName.internalVersion = null;
+        elementName.createdBy = null;
+        elementName.creationDate = null;
+        elementName.modifiedBy = null;
+        elementName.lastModifiedDate = null;
+
+        elementName.productTermAndParts.forEach(elementPart => {
+          if (elementPart != null) {
+            elementPart.id = null;
+            elementPart.internalVersion = null;
+            elementPart.createdBy = null;
+            elementPart.creationDate = null;
+            elementPart.modifiedBy = null;
+            elementPart.lastModifiedDate = null;
+          }
+        });
+      }
+    });
+
+    // Product Codes
+    newProductProv.productCodes.forEach(elementCode => {
+      if (elementCode != null) {
+        elementCode.id = null;
+        elementCode.internalVersion = null;
+        elementCode.createdBy = null;
+        elementCode.creationDate = null;
+        elementCode.modifiedBy = null;
+        elementCode.lastModifiedDate = null;
+      }
+    });
+
+    // Product Companies
+    newProductProv.productCompanies.forEach(elementComp => {
+      if (elementComp != null) {
+        elementComp.id = null;
+        elementComp.internalVersion = null;
+        elementComp.createdBy = null;
+        elementComp.creationDate = null;
+        elementComp.modifiedBy = null;
+        elementComp.lastModifiedDate = null;
+
+        elementComp.productCompanyCodes.forEach(elementCompCode => {
+          if (elementCompCode != null) {
+            elementCompCode.id = null;
+            elementCompCode.internalVersion = null;
+            elementCompCode.createdBy = null;
+            elementCompCode.creationDate = null;
+            elementCompCode.modifiedBy = null;
+            elementCompCode.lastModifiedDate = null;
+          }
+        });
+      }
+    });
+
+    // Product Documentation IDs
+    newProductProv.productDocumentations.forEach(elementDoc => {
+      if (elementDoc != null) {
+        elementDoc.id = null;
+        elementDoc.internalVersion = null;
+        elementDoc.createdBy = null;
+        elementDoc.creationDate = null;
+        elementDoc.modifiedBy = null;
+        elementDoc.lastModifiedDate = null;
+      }
+    });
+
+    // Product Indications
+    newProductProv.productIndications.forEach(elementInd => {
+      if (elementInd != null) {
+        elementInd.id = null;
+        elementInd.internalVersion = null;
+        elementInd.createdBy = null;
+        elementInd.creationDate = null;
+        elementInd.modifiedBy = null;
+        elementInd.lastModifiedDate = null;
+      }
+    });
+
+    this.product.productProvenances.unshift(newProductProv);
   }
 
-  deleteProductLot(prodComponentIndex: number, prodLotIndex: number): void {
-    this.product.productManufactureItems[prodComponentIndex].productLots.splice(prodLotIndex, 1);
-  }
-
-  addNewProductIngredient(prodComponentIndex: number, prodLotIndex: number): void {
-    const newProductIngredient: ProductIngredient = {};
-    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProductIngredient);
-  }
-
-  deleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number): void {
-    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.splice(prodIngredientIndex, 1);
-  }
 
   copyProductComponent(productComp: any): void {
     const newProduct = JSON.parse(JSON.stringify(productComp));
@@ -360,39 +575,39 @@ export class ProductService extends BaseHttpService {
     this.product.productManufactureItems.unshift(newProduct);
   }
 
-copyProductLot(productLot: any, prodComponentIndex: number): void {
-  const newProduct = JSON.parse(JSON.stringify(productLot));
+  copyProductLot(productLot: any, prodComponentIndex: number): void {
+    const newProduct = JSON.parse(JSON.stringify(productLot));
 
-  newProduct.id = null;
-  newProduct.createdBy = null;
-  newProduct.creationDate = null;
-  newProduct.modifiedBy = null;
-  newProduct.lastModifiedDate = null;
+    newProduct.id = null;
+    newProduct.createdBy = null;
+    newProduct.creationDate = null;
+    newProduct.modifiedBy = null;
+    newProduct.lastModifiedDate = null;
 
-  newProduct.productIngredients.forEach(elementIngred => {
-    if (elementIngred != null) {
-      elementIngred.id = null;
-      elementIngred.createdBy = null;
-      elementIngred.creationDate = null;
-      elementIngred.modifiedBy = null;
-      elementIngred.lastModifiedDate = null;
-    }
-  });
+    newProduct.productIngredients.forEach(elementIngred => {
+      if (elementIngred != null) {
+        elementIngred.id = null;
+        elementIngred.createdBy = null;
+        elementIngred.creationDate = null;
+        elementIngred.modifiedBy = null;
+        elementIngred.lastModifiedDate = null;
+      }
+    });
 
-  this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProduct);
-}
+    this.product.productManufactureItems[prodComponentIndex].productLots.unshift(newProduct);
+  }
 
-copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
-  const newProduct = JSON.parse(JSON.stringify(productIngredient));
+  copyProductIngredient(productIngredient: any, prodComponentIndex: number, prodLotIndex: number): void {
+    const newProduct = JSON.parse(JSON.stringify(productIngredient));
 
-  newProduct.id = null;
-  newProduct.createdBy = null;
-  newProduct.creationDate = null;
-  newProduct.modifiedBy = null;
-  newProduct.lastModifiedDate = null;
+    newProduct.id = null;
+    newProduct.createdBy = null;
+    newProduct.creationDate = null;
+    newProduct.modifiedBy = null;
+    newProduct.lastModifiedDate = null;
 
-  this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProduct);
-}
+    this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProduct);
+  }
 
   /*
   reviewProduct(prodIndex: number): void {
