@@ -9,7 +9,7 @@
   },
   "sessionChecker": {
     "interval": "1",
-    "check": false,
+    "check": true,
     "redirectUrl": "https://google.com",
     "alertMessage": "There's not a valid session."
   },
