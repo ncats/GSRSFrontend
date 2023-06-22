@@ -4,6 +4,7 @@ export interface Config {
     apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;
     logoutRedirectUrl?: string;
+    unauthorized?: Unauthorized;
     sessionChecker?: any;
     googleAnalyticsId?: string;
     version?: string;
@@ -57,15 +58,22 @@ export interface Config {
     useDataUrl?: any;
 }
 export interface SessionChecker { 
-        check?: boolean;
-        redirectUrl?: string;
-        redirectToLogin?: boolean;
-        alertMessage?: string; 
-        interval?: number;
-
-        
-
+    check?: boolean;
+    redirectUrl?: string;
+    redirectToLogin?: boolean;
+    alertMessage?: string; 
+    interval?: number;
 }
+
+export interface Unauthorized { 
+    redirectUrl?: string;
+    link?: string;
+    redirectToHome?: boolean;
+    message?: string;
+    showContactEmail?: boolean;
+}
+
+
 export interface LoadedComponents {
     applications?: boolean;
     products?: boolean;

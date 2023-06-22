@@ -7,13 +7,30 @@ import { Router, ActivatedRoute, UrlSegment, NavigationEnd } from '@angular/rout
 import {Location} from '@angular/common';
 
 /*
-  Example configuration:
+
+  # A) To use this you will probably want these setting in the substances service application.conf or whatever service handles authentication
+
+  ix.authentication.trustheader=false
+  ix.authentication.allownonauthenticated=false
+
+  # B) You will probably want this item in config.json; See the logout method in the base.component.ts file. 
+
+  "logoutRedirectUrl": "https://external.link.com".   
+
+  # C) You should also configure "unauthorized" in the frontend.  See the unauthorized-component.ts file. 
+
+  # D) For this coponenent itself, consider this example frontend configuration in the config.json file.
+
   "sessionChecker": { 
     "check": false,            # does nothing if false
+    "interval": "30",          # in minutes; default is 30
     "redirectUrl": "",         # first priority handler action taken if not blank or undefined
     "redirectToLogin": false,  # 2nd priority handler, action take if true
     "alertMessage": ""         # 3rd priority handler, action taken if not blank or undefined
   },
+
+  redirectToLogin -- disabled for now.
+
 */
 
 @Component({
@@ -81,10 +98,12 @@ export class SessionCheckerComponent implements OnInit, OnDestroy {
     } 
     if (!actionTaken) { 
       // tried to make this more general but got infinite loops in some cases.
+      // disabling for now, to prevent loops.
       const redirectToLogin = this.configService.configData?.sessionChecker?.redirectToLogin||'';
       if (redirectToLogin) {
         actionTaken = true;
-        this.router.navigate(['/login']);
+        console.log("redirectToLogin effectively disabled in code for now."); 
+        // this.router.navigate(['/login']);
       }
     }  
 

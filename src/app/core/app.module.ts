@@ -239,6 +239,7 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
     },
     { provide: WidgetRegistry, useClass: DefaultWidgetRegistry },
     CanActivateAdminPage,
+    Location, {provide: LocationStrategy, useClass: PathLocationStrategy},
     ConfigService,
     {
         provide: APP_INITIALIZER,
@@ -249,7 +250,7 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {provide: WidgetRegistry, useClass: MyWidgetRegistry}
   ],
-  bootstrap: [AppComponent, Location],
+  bootstrap: [AppComponent],
   entryComponents: [
     HighlightedSearchActionComponent,
     ExportDialogComponent,

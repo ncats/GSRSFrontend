@@ -1,10 +1,20 @@
 <div class = "main-container">
     <mat-card>
-    <div class = "form-row">
+    <div *ngIf="!useConfiguredMessage" class = "form-row">
             You are not authorized to see this resource. Please contact an administrator 
             <span *ngIf = "email" style = "padding-right:5px">or send an email to <a href = "mailto:{{email}}">{{email}}</a> 
                 </span> 
                  to be granted access.
+            
+    </div>
+    <div *ngIf="useConfiguredMessage" class = "useConfiguredMessage">
+        
+        <div [innerHtml]="message"></div>
+
+        <div *ngIf = "link && link.length>0" style = "padding-right:5px">Link: <a [attr.href] = "link">{{link}}</a></div>
+        
+        <div *ngIf = "email" style = "padding-right:5px">Email: <a href = "mailto:{{email}}">{{email}}</a></div> 
+
     </div>
 </mat-card>
 </div>
