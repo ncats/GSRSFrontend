@@ -18,7 +18,7 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilteredList<SubstanceDependenciesImageNode> implements OnInit {
   references: Array<SubstanceReference> = [];
-  displayedColumns: string[] = ['Substance', 'Role'];
+  displayedColumns: string[] = ['relatedSubstance', 'structure', 'relationshipType', 'interactionType', 'mediatorSubtance', 'comments'];
   private overlayContainer: HTMLElement;
   displayImagetag: string;
   dependencies: Array<SubstanceDependenciesImageNode>;
@@ -37,6 +37,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
 
     this.uuid = this.substance.uuid;
 
+    /*
     this.substanceService.getDependencies(this.uuid).subscribe(response => {
       if (response) {
         this.dependencies = response;
@@ -44,14 +45,42 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
       }
     }, error => {
     });
+    */
+
+    this.getSubstanceRelationships();
   }
 
-  openImageModal() {
+  getSubstanceRelationships() {
+    let relationship = this.substance.relationships;
+
+    if (relationship.length > 0) {
+      this.dependencies = [];
+      relationship.forEach(element => {
+        if (element != null) {
+          if (element.type && element.qualification === 'DEPENDENCY') {
+            let data: any;
+            data = {
+              relatedSubstance: element.relatedSubstance,
+              relationshipType: element.type,
+              interactionType: element.interactionType,
+              role: 'Relationship',
+              mediatorSubstance: element.mediatorSubstance,
+              comments: element.comments
+            };
+            this.dependencies.push(data);
+          }
+        }
+      });
+    }
+    this.filtered = this.dependencies;
+  }
+
+  openImageModal(uuid: string) {
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '90%',
       width: '650px',
       panelClass: 'structure-image-panel',
-      data: {structure: this.substance.uuid}
+      data: { structure: uuid }
     });
 
     this.overlayContainer.style.zIndex = '1002';
