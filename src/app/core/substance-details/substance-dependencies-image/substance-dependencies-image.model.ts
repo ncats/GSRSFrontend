@@ -1,6 +1,10 @@
 import {SubstanceRelated} from '@gsrs-core/substance';
 
 export interface SubstanceDependenciesImageNode {
-  role?: string;
-  SubstanceRef?: SubstanceRelated;
+  relatedSubstance?: SubstanceRelated;
+  structure?: string;
+  relationshipType?: string;
+  interactionType?: string;
+  mediatorSubstance?: SubstanceRelated;
+  comments?: string;
 }
