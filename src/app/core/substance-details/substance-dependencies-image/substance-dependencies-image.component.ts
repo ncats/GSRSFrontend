@@ -57,7 +57,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
       this.dependencies = [];
       relationship.forEach(element => {
         if (element != null) {
-          if (element.type && element.qualification === 'DEPENDENCY') {
+          if (element.qualification && element.qualification === 'DEPENDENCY') {
             let data: any;
             data = {
               relatedSubstance: element.relatedSubstance,
