@@ -640,6 +640,10 @@ getDrafts() {
     if (action && action === 'import') {
       return false;
     }
+   const staging = this.activatedRoute.snapshot.queryParams['stagingID'] || null;
+    if (staging && staging.length > 0 ) {
+      return false
+    }
     // if config var set and set to 'createdBy then set approval button enabled if user is not creator
     if(this.approvalType === 'createdBy') {
         if (this.definition && this.definition.createdBy && this.user) {
