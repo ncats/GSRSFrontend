@@ -241,9 +241,9 @@ ngOnInit() {
       this.fileID = response.id;
       this.toIgnore = this.postResp.adapterSettings && this.postResp.adapterSettings.actions? JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions)) : null;
        
-      if (this.postResp.adapterSchema.fields) {
+      if (this.postResp.adapterSchema && this.postResp.adapterSchema.fields) {
         this.createFieldList(this.postResp.adapterSchema.fields);
-      } else if (this.postResp.adapterSchema['SDF Fields']) {
+      } else if (this.postResp.adapterSchema && this.postResp.adapterSchema['SDF Fields']) {
         this.createFieldList(this.postResp.adapterSchema['SDF Fields']);
       }
     
@@ -254,9 +254,9 @@ ngOnInit() {
     this.step = 3;
     this.fileID = this.postResp.id;
     this.loadingService.setLoading(false);
-    if (this.postResp.adapterSchema.fields) {
+    if (this.postResp.adapterSchema && this.postResp.adapterSchema.fields) {
       this.createFieldList(this.postResp.adapterSchema.fields);
-    } else if (this.postResp.adapterSchema['SDF Fields']) {
+    } else if (this.postResp.adapterSchema && this.postResp.adapterSchema['SDF Fields']) {
       this.createFieldList(this.postResp.adapterSchema['SDF Fields']);
     }
    });
@@ -266,7 +266,6 @@ ngOnInit() {
     this.loadingService.setLoading(true);
     this.step = 4;
     let tosend = JSON.parse(JSON.stringify(this.postResp));
-    console.log(tosend);
     this.adminService.executeAdapterAsync(this.fileID, tosend).subscribe(response => {
       this.executeStatus = response.jobStatus;
       this.loadingService.setLoading(false);
@@ -352,8 +351,8 @@ stagingArea(sendFile?: boolean): void {
   let navigationExtras: NavigationExtras = {queryParams: {}};
  
   if(sendFile) {
-    let pos = this.postResp.filename.lastIndexOf(".");
-    const newtest = this.postResp.filename.slice(0, pos) + "!" + this.postResp.filename.slice(pos);
+    const newtest = this.postResp.filename.replaceAll(".", "!.");
+
     navigationExtras.queryParams = {'facets': 'Source*' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
 
   }
@@ -378,9 +377,7 @@ callPreview(): void {
      formData.append('file-type', this.fileType);
      this.preview = [];
      let tosend = JSON.parse(JSON.stringify(this.postResp));
-  console.log(tosend);
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey, this.previewLimit ).pipe(take(1)).subscribe(response => {
-      console.log(response);
       this.preview = [];
       this.previewLoading = false;
       response.dataPreview.forEach(entry => {
