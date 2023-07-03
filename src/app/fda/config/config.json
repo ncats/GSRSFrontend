@@ -1,5 +1,5 @@
 {
-  "version": "3.0.3",
+  "version": "3.0.3u",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -12,6 +12,7 @@
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
   "useDataUrl": false,
+  "apiBaseUrl": "http://localhost:8080/",
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -612,13 +613,7 @@
     },
     {
       "card": "substance-history",
-      "title": "Record History",
-      "filters": [
-        {
-          "filterName": "hasCredentials",
-          "propertyToCheck": "admin"
-        }
-      ]
+      "title": "Record History"
     }
   ],
   "facets": {
