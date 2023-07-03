@@ -12,6 +12,7 @@
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
   "useDataUrl": false,
+  "apiBaseUrl":"http://localhost:8080/",
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -612,13 +613,8 @@
     },
     {
       "card": "substance-history",
-      "title": "Record History",
-      "filters": [
-        {
-          "filterName": "hasCredentials",
-          "propertyToCheck": "admin"
-        }
-      ]
+      "title": "Record History"
+      
     }
   ],
   "facets": {

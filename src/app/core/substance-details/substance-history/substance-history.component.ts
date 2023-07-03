@@ -21,6 +21,7 @@ import {SubstanceCardBaseFilteredList} from '@gsrs-core/substance-details/substa
 import {Subject, Subscription} from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
+import {AuthService} from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-substance-history',
@@ -33,7 +34,7 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
   substanceUpdated = new Subject<SubstanceDetail>();
   latest: any;
   private overlayContainer: HTMLElement;
-
+  isAdmin: boolean;
 
 
   constructor(
@@ -41,8 +42,8 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
     private router: Router,
     public loadingService: LoadingService,
     private overlayContainerService: OverlayContainer,
-    private dialog: MatDialog
-
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {
     super();
   }
@@ -54,6 +55,8 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
     this.latest = result;
   });
   this.overlayContainer = this.overlayContainerService.getContainerElement();
+  this.isAdmin = this.authService.hasRoles('admin');
+  console.log("this.isAdmin: " + this.isAdmin);
   }
 
   ngAfterViewInit() {
