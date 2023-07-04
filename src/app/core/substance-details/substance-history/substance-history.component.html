@@ -36,9 +36,8 @@
     <ng-container matColumnDef="restore" >
         <th mat-header-cell *matHeaderCellDef> </th>
         <td mat-cell *matCellDef="let version"> 
-          <span *ngIf="isAdmin">
-            <button class = "mat-raised-button mat-primary" (click) = "restoreVersion(version.version)">Restore</button> 
-          </span>
+          <button class = "mat-raised-button mat-primary" (click) = "restoreVersion(version.version)"
+              *ngIf="isAdmin">Restore</button> 
         </td>
       </ng-container>
 
