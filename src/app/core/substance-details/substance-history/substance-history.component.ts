@@ -34,7 +34,7 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
   substanceUpdated = new Subject<SubstanceDetail>();
   latest: any;
   private overlayContainer: HTMLElement;
-  isAdmin: boolean;
+  isAdmin: boolean = true;
 
 
   constructor(
@@ -48,6 +48,9 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
     super();
   }
   ngOnInit() {
+    this.isAdmin = this.authService.hasRoles('admin');
+    console.log("calculated this.isAdmin: " + this.isAdmin);
+  
    this.substanceService.getEdits(this.substance.uuid).subscribe( response => {
      this.versions = response;
    }, error => {} );
@@ -55,8 +58,6 @@ export class SubstanceHistoryComponent extends SubstanceCardBase implements OnIn
     this.latest = result;
   });
   this.overlayContainer = this.overlayContainerService.getContainerElement();
-  this.isAdmin = this.authService.hasRoles('admin');
-  console.log("this.isAdmin: " + this.isAdmin);
   }
 
   ngAfterViewInit() {
