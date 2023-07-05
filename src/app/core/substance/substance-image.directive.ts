@@ -14,6 +14,7 @@ export class SubstanceImageDirective implements AfterViewInit {
   private isAfterViewInit = false;
   private privateAtomMaps?: Array<number>;
   private privateVersion?: number;
+  private privateAltId?: string;
 
   constructor(
     private el: ElementRef,
@@ -62,6 +63,14 @@ export class SubstanceImageDirective implements AfterViewInit {
   }
 
   @Input()
+  set stagingId(stagingId: string) {
+    if (stagingId !== this.privateAltId) {
+      this.privateAltId = stagingId;
+      this.setImageSrc();
+    }
+  }
+
+  @Input()
   set atomMaps(atomMaps: Array<number>) {
     if (atomMaps !== this.privateAtomMaps) {
       this.privateAtomMaps = atomMaps;
@@ -72,7 +81,9 @@ export class SubstanceImageDirective implements AfterViewInit {
   private setImageSrc(): void {
     const useDataUrlConfig = this.configService.configData && this.configService.configData.useDataUrl || false;
     if (this.isAfterViewInit) {
+      console.log('avterviewinit');
       if (this.privateEntityId) {
+        console.log('pei');
         if (this.privateVersion) {
           const srcUrl = this.utilsService.getStructureImgUrl(
             this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
@@ -84,6 +95,11 @@ export class SubstanceImageDirective implements AfterViewInit {
         } else {
           const srcUrl = this.utilsService.getStructureImgUrl(
             this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
+          if(this.privateAltId) {
+            console.log('triggered paid');
+            const srcUrl = this.utilsService.getStructureImgUrl(
+              this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, null, this.privateAltId);
+          }
           if (useDataUrlConfig === true) {
             this.setImageSrcAsBlob(srcUrl);
           } else {
@@ -91,6 +107,12 @@ export class SubstanceImageDirective implements AfterViewInit {
           }
         }
     } else { 
+      if(this.privateAltId) {
+        console.log('triggered paid2');
+        console.log(this.privateAltId);
+        const srcUrl = this.utilsService.getStructureImgUrl(
+          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, null, this.privateAltId);
+      }
       const srcUrl =`${this.configService.environment.baseHref || ''}assets/images/noimage.svg`;
       if(this.privateSize){
         this.imageElement.height = this.privateSize;
