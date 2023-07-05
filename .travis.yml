@@ -24,8 +24,6 @@ install:
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
-after_success:
-  - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
 before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
@@ -37,7 +35,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key: ${GIT_ACCESS_TOKEN}
-  file: "../deployable_binaries.zip"
+  file: "deployable_binaries.zip"
   skip_cleanup: true
   on:
-    all_branches: true
+    tags: true
