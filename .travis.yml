@@ -24,6 +24,12 @@ install:
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
+after_success:
+  - ls
+  - zip -r deployable_binaries.zip dist/browser
+  - ls
+  - cp deployable_binaries.zip ../
+  - ls
 before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
