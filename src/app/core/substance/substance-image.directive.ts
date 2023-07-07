@@ -81,9 +81,7 @@ export class SubstanceImageDirective implements AfterViewInit {
   private setImageSrc(): void {
     const useDataUrlConfig = this.configService.configData && this.configService.configData.useDataUrl || false;
     if (this.isAfterViewInit) {
-      console.log('avterviewinit');
       if (this.privateEntityId) {
-        console.log('pei');
         if (this.privateVersion) {
           const srcUrl = this.utilsService.getStructureImgUrl(
             this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, this.privateVersion);
@@ -93,13 +91,14 @@ export class SubstanceImageDirective implements AfterViewInit {
             this.imageElement.src = srcUrl;
           }
         } else {
-          const srcUrl = this.utilsService.getStructureImgUrl(
+          let srcUrl = this.utilsService.getStructureImgUrl(
             this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
-          if(this.privateAltId) {
-            console.log('triggered paid');
-            const srcUrl = this.utilsService.getStructureImgUrl(
+          if (this.privateAltId) {
+            srcUrl = this.utilsService.getStructureImgUrl(
               this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, null, this.privateAltId);
+          } else {
           }
+         
           if (useDataUrlConfig === true) {
             this.setImageSrcAsBlob(srcUrl);
           } else {
@@ -107,13 +106,12 @@ export class SubstanceImageDirective implements AfterViewInit {
           }
         }
     } else { 
+      let srcUrl =`${this.configService.environment.baseHref || ''}assets/images/noimage.svg`;
+
       if(this.privateAltId) {
-        console.log('triggered paid2');
-        console.log(this.privateAltId);
-        const srcUrl = this.utilsService.getStructureImgUrl(
+        srcUrl = this.utilsService.getStructureImgUrl(
           this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, null, this.privateAltId);
       }
-      const srcUrl =`${this.configService.environment.baseHref || ''}assets/images/noimage.svg`;
       if(this.privateSize){
         this.imageElement.height = this.privateSize;
         this.imageElement.width = this.privateSize;
