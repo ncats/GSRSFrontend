@@ -1,0 +1,222 @@
+<!--
+<div class="top-fixed">
+    <div class="actions-container">
+      <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+
+      <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+        *ngIf="validationMessages && validationMessages.length > 0">
+        {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+      </button>
+      <span class="middle-fill"></span>
+      <!- - Register and View In-Vitro Pharmacology buttons - ->
+      <span *ngIf="application">
+        <span *ngIf="application.id">
+          <button mat-flat-button color="primary" [routerLink]="['/application/register']"
+            matTooltip='Register a New In-Vitro Pharmacology'>
+            Register New In-Vitro Pharmacology
+          </button>&nbsp;&nbsp;&nbsp;
+          <a mat-flat-button color="primary" routerLink="/application/{{application.id}}" target="_blank" matTooltip='Opens in a new window'>
+            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+            View Application</a>
+          &nbsp;&nbsp;&nbsp;
+          <span *ngIf="isAdmin">
+            <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
+              matTooltip='Delete this In-Vitro Pharmacology'>
+              Delete
+            </button>&nbsp;&nbsp;&nbsp;
+          </span>
+        </span>
+      </span>
+
+      <!- - Validate and Submit Button - ->
+      &nbsp;
+      <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+    </div>
+
+    <!- - Validation Message Display - ->
+    <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+      <div class="submission-message" *ngIf="submissionMessage">
+        {{submissionMessage}}
+      </div>
+
+      <!- - Validation Message Display and Submit Button - ->
+      <div *ngIf="validationMessages">
+        <span *ngIf=" validationMessages.length > 0">
+          <div class="submission-message" *ngIf='!serverError && !approving'>
+            Please correct or dismiss the following errors and submit again:
+          </div>
+          <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+            <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+              {{message.messageType}}</div>
+            <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
+                  target="_blank">{{link.text}}</a></span></div>
+            <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+              (click)="dismissValidationMessage(i)">
+              <mat-icon svgIcon="cancel"></mat-icon>
+            </button>
+          </div>
+        </span>
+
+        <div class="dismiss-container">
+          <span class="middle-fill"></span>
+          <button mat-flat-button color="primary" (click)="submit()"
+            [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
+            Submit</button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!- - Display Form Fields - ->
+
+  <div class="form-content-container mat-form-field-style">
+    <div class="scrollable-container">
+      <div class="cards-container">
+
+        <div class="" *ngIf="application">
+          <div class="title_box">
+            <div class="title">
+              {{title}}
+            </div>
+
+            <div class="font11px" *ngIf="application.id">
+              <div class="textalignright">
+                <span *ngIf="isDisableData" class="font11px colorred">
+                  Provenance: DARRTS (some fields are non-editable)
+                </span>
+              </div>
+              <br>
+              <div>
+                <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
+                <span class="colorgray">Create Date:</span> {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+                <span class="colorgray">Modified By:</span> {{application.modifiedBy}}&nbsp;&nbsp;&nbsp;
+                <span class="colorgray">Modify Date:</span> {{application.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+              </div>
+            </div>
+          </div>
+
+          <mat-card class="bordergray" *ngIf="application">
+            <mat-card-content>
+
+              <div class="form-row">
+                <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="CENTER" title="Center"
+                  name="center" [model]="application.center" (valueChange)="application.center = $event">
+                </app-cv-input>
+
+                <app-cv-input class="col-1" [disable]="isDisableData" required='true' domain="APPLICATION_TYPE"
+                  title="appType" name="appType" [model]="application.appType"
+                  (valueChange)="application.appType = $event">
+                </app-cv-input>
+
+                <mat-form-field class="col-1">
+                  <input matInput [disabled]="isDisableData" placeholder="Application Number"
+                    [(ngModel)]="application.appNumber" name="appNumber" required />
+                </mat-form-field>
+
+                <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_STATUS"
+                  title="Application Status" name="status" [model]="application.status"
+                  (valueChange)="application.status = $event">
+                </app-cv-input>
+
+                <mat-form-field class="col-1">
+                  <input matInput [disabled]="isDisableData" placeholder="Submit Date (mm/dd/yyyy)"
+                    [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
+                  <mat-hint *ngIf="submitDateMessage"><span class="colorred">{{submitDateMessage}}</span></mat-hint>
+                </mat-form-field>
+
+                <mat-form-field class="col-1">
+                  <input matInput [disabled]="isDisableData" placeholder="Status Date (mm/dd/yyyy)"
+                    [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
+                  <mat-hint *ngIf="statusDateMessage"><span class="colorred">{{statusDateMessage}}</span></mat-hint>
+                </mat-form-field>
+              </div>
+
+
+              <div class="form-row">
+
+                <app-cv-input class="col-1" [disable]="isDisableData" domain="APPLICATION_SUB_TYPE"
+                  title="Application Sub Type" name="appSubType" [model]="application.appSubType"
+                  (valueChange)="application.appSubType = $event">
+                </app-cv-input>
+
+                <mat-form-field class="col-3">
+                  <input matInput [disabled]="isDisableData" placeholder="Division Class Desc"
+                    [(ngModel)]="application.divisionClassDesc" name="divisionClassDesc" />
+                </mat-form-field>
+
+                <app-cv-input class="col-1" domain="PUBLIC_DOMAIN" title="Public Domain" name="publicDomain"
+                  [model]="application.publicDomain" (valueChange)="application.publicDomain = $event">
+                </app-cv-input>
+
+                <mat-form-field class="col-1">
+                  <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
+                    name="nonProprietaryName" />
+                </mat-form-field>
+
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col-6">
+                  <input matInput placeholder="Sponsor Name" [disabled]="isDisableData"
+                    [(ngModel)]="application.sponsorName" name="sponsorName" />
+                </mat-form-field>
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col-6">
+                  <input matInput placeholder="External Title" [disabled]="isDisableData"
+                    [(ngModel)]="application.externalTitle" name="externalTitle" />
+                </mat-form-field>
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col-6">
+                  <input matInput placeholder="Title" [(ngModel)]="application.title" name="title" />
+                </mat-form-field>
+              </div>
+
+              <!- - INDICATION Loop - ->
+              <div *ngFor="let ind of application.applicationIndicationList; let indIndex = index">
+                <div class="row">
+                  <mat-form-field class="col-5-more">
+                    <input matInput placeholder="Indication" [(ngModel)]="ind.indication" name="indication" />
+                  </mat-form-field>
+
+                  <!- - INDICATION Button - ->
+                  <span class="width40px displayinlineblock">
+                    <button mat-icon-button color="primary" *ngIf="indIndex == 0" (click)="addNewIndication()"
+                      matTooltip="Add New Indication">
+                      <mat-icon svgIcon="add_circle_outline"></mat-icon>
+                    </button>
+                  </span>
+                  <!- - Delete Indication - ->
+                  <button mat-icon-button color="primary" [disabled]="application.applicationIndicationList.length == 1"
+                    (click)="confirmDeleteIndication(indIndex, ind.indication)" matTooltip="Delete Indication">
+                    <mat-icon [class.disabled]="application.applicationIndicationList.length == 1">delete_forever
+                    </mat-icon>
+                  </button>
+                  <br>
+                </div>
+              </div> <!- - Indication Loop- ->
+
+              <!- - Product Form - ->
+              <app-application-product-form [application]="application" (ingredientMessageOut)="ingredientMessageOutChange($event)"
+              (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)"></app-application-product-form>
+
+            </mat-card-content>
+
+          </mat-card>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+
+    <br>
+  </div>
+-->
