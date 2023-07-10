@@ -9,9 +9,9 @@ node_js:
   - 14.17.0
 
 before_script:
-  - type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
-  - curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && sudo apt update && sudo apt install gh -y
-
+  - wget https://github.com/cli/cli/releases/latest/download/gh_$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep 'tag_name' | cut -d '"' -f 4)_linux_386.tar.gz
+  - tar xvf gh_$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep 'tag_name' | cut -d '"' -f 4)_linux_386.tar.gz
+  - sudo mv gh_linux_386/gh /usr/local/bin/gh
 
 install:
   
