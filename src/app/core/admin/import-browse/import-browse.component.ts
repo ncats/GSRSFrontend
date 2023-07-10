@@ -230,18 +230,27 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       const skip = this.pageIndex * this.pageSize;
       const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
         .subscribe(pagingResponse => {
-          
-      this.isLoading = false;
-      this.loadingService.setLoading(false);
+          let start = 0;
+          let skipped = 0;
+          let added = 0;
       pagingResponse.content.forEach(record => {
         if ( !record._metadata.importStatus || record._metadata.importStatus !== 'imported') {
           if (this.bulkList[record._metadata.recordId]) {
+            if (! this.bulkList[record._metadata.recordId].checked) {
+              added++;
+            }
             this.bulkList[record._metadata.recordId].checked = true;
           } else {
             this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+            added++;
           }
+        } else {
+          skipped++;
         }
       });
+      console.log('added ' + added + 'records. Skipped '+skipped  + ' not staged records')
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
         }, error => {
           console.log(error);
           this.isLoading = false;
@@ -249,10 +258,12 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     } else {
       this.substances.forEach(record => {
-        if (this.bulkList[record._metadata.recordId]) {
-          this.bulkList[record._metadata.recordId].checked = true;
-        } else {
-          this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+        if ( !record._metadata.importStatus || record._metadata.importStatus !== 'imported') {
+          if (this.bulkList[record._metadata.recordId]) {
+            this.bulkList[record._metadata.recordId].checked = true;
+          } else {
+            this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+          }
         }
       });
     }
