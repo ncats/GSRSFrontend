@@ -51,4 +51,8 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
     });
 }
 
+close() {
+  this.dialog.closeAll();
+}
+
 }
