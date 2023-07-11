@@ -54,6 +54,7 @@ export interface Config {
     elementLabelDisplay?:any;
     bulkSearch?: any
     useDataUrl?: any;
+    userProfile?: any;
 }
 
 export interface LoadedComponents {
