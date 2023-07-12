@@ -151,7 +151,6 @@ export class ImportSummaryComponent implements OnInit {
         }
       });
       match.recordArr = newArr;
-      console.log(match);
     });
   }
 
