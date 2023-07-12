@@ -1,3 +1,11 @@
+.disabled-action-button {
+    cursor: not-allowed !important;
+}
+
+.disabled-action-button:hover {
+    cursor: not-allowed !important;
+}
+
 .mat-card {
     max-width: 1228px;
     margin-bottom: 20px;
@@ -41,6 +49,8 @@ margin-left: 150px !important;
     margin-right: 10px;
 font-size: 18px;
 }
+
+
 
 .action-label {
     font-size:16px;

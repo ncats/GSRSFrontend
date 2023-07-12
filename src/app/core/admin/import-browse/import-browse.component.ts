@@ -248,23 +248,22 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           skipped++;
         }
       });
-      console.log('added ' + added + 'records. Skipped '+skipped  + ' not staged records')
       this.isLoading = false;
       this.loadingService.setLoading(false);
         }, error => {
           console.log(error);
-          this.isLoading = false;
           this.loadingService.setLoading(false);
+          this.isLoading = false;
+          alert('Error: unable to retrieve all staged results. See console for error details');
         });
     } else {
       this.substances.forEach(record => {
-        if ( !record._metadata.importStatus || record._metadata.importStatus !== 'imported') {
           if (this.bulkList[record._metadata.recordId]) {
             this.bulkList[record._metadata.recordId].checked = true;
           } else {
             this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
           }
-        }
+        
       });
     }
     
