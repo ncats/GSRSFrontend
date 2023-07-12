@@ -252,8 +252,9 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loadingService.setLoading(false);
         }, error => {
           console.log(error);
-          this.isLoading = false;
           this.loadingService.setLoading(false);
+          this.isLoading = false;
+          alert('Error: unable to retrieve all staged results. See console for error details');
         });
     } else {
       this.substances.forEach(record => {
