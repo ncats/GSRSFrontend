@@ -6,6 +6,7 @@
     -->
   </a>
 </div>
+
 <div class="bordergray mat-tab-style">
   <mat-tab-group>
 
@@ -196,6 +197,12 @@
       <app-substance-ssg4m [substanceUuid]="substance.uuid" (countSsg4mOut)="getSsg4mCount($event)"
         [substanceName]="substanceName">
       </app-substance-ssg4m>
+    </mat-tab>
+
+    <mat-tab label="Invitro Pharmacology ({{invitroPharmCount}})" *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+      <app-substance-invitro-pharmacology [substanceUuid]="substance.uuid" (countSsg4mOut)="getInvitroPharmCount($event)"
+        [substanceName]="substanceName">
+      </app-substance-invitro-pharmacology>
     </mat-tab>
 
   </mat-tab-group>

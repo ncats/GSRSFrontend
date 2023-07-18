@@ -1,78 +1,29 @@
-<!--
+<br><br><br><br><br>
+TEST
 <div class="top-fixed">
-    <div class="actions-container">
-      <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+  <div class="actions-container">
+    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
 
-      <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-        *ngIf="validationMessages && validationMessages.length > 0">
-        {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
-        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
-      </button>
-      <span class="middle-fill"></span>
-      <!- - Register and View In-Vitro Pharmacology buttons - ->
-      <span *ngIf="application">
-        <span *ngIf="application.id">
-          <button mat-flat-button color="primary" [routerLink]="['/application/register']"
-            matTooltip='Register a New In-Vitro Pharmacology'>
-            Register New In-Vitro Pharmacology
-          </button>&nbsp;&nbsp;&nbsp;
-          <a mat-flat-button color="primary" routerLink="/application/{{application.id}}" target="_blank" matTooltip='Opens in a new window'>
-            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-            View Application</a>
-          &nbsp;&nbsp;&nbsp;
-          <span *ngIf="isAdmin">
-            <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
-              matTooltip='Delete this In-Vitro Pharmacology'>
-              Delete
-            </button>&nbsp;&nbsp;&nbsp;
-          </span>
-        </span>
-      </span>
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
 
-      <!- - Validate and Submit Button - ->
-      &nbsp;
-      <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
-    </div>
+    <span class="middle-fill"></span>
 
-    <!- - Validation Message Display - ->
-    <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
-      <div class="submission-message" *ngIf="submissionMessage">
-        {{submissionMessage}}
-      </div>
 
-      <!- - Validation Message Display and Submit Button - ->
-      <div *ngIf="validationMessages">
-        <span *ngIf=" validationMessages.length > 0">
-          <div class="submission-message" *ngIf='!serverError && !approving'>
-            Please correct or dismiss the following errors and submit again:
-          </div>
-          <div class="validation-message" *ngFor="let message of validationMessages; index as i">
-            <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
-              {{message.messageType}}</div>
-            <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
-                  target="_blank">{{link.text}}</a></span></div>
-            <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-              (click)="dismissValidationMessage(i)">
-              <mat-icon svgIcon="cancel"></mat-icon>
-            </button>
-          </div>
-        </span>
+    
+  </div> <!-- class="actions-container" -->
 
-        <div class="dismiss-container">
-          <span class="middle-fill"></span>
-          <button mat-flat-button color="primary" (click)="submit()"
-            [disabled]="isLoading || (this.validationResult === false)">{{validationMessages && validationMessages.length > 0?'Dismiss All and ':''}}
-            Submit</button>
-        </div>
 
-      </div>
+</div> <!-- class="top-fixed" -->
+<!-- Top Panel Of Buttons End -->
 
-    </div>
-  </div>
 
-  <!- - Display Form Fields - ->
+
+  <!--
+  <!- - Display Invitro Pharmacology Form Fields - ->
 
   <div class="form-content-container mat-form-field-style">
     <div class="scrollable-container">
@@ -217,6 +168,6 @@
       </div>
     </div>
 
-    <br>
+  <br>
   </div>
 -->
