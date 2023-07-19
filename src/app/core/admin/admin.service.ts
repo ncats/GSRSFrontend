@@ -208,7 +208,7 @@ export class AdminService extends BaseHttpService {
 
         }
 
-        public SearchStagedData(skip: any, facets?: any, term?: any, top?: any) {
+        public SearchStagedData(skip: any, facets?: any, term?: any, top?: any, view?: string) {
           let params = new FacetHttpParams({encoder: new CustomEncoder()});
           if (facets){
             params = params.appendFacetParams(facets, true);
@@ -221,6 +221,10 @@ export class AdminService extends BaseHttpService {
           if (top) {
             params = params.append('top',(top));
 
+          }
+
+          if (view) {
+            params = params.append('view',(view));
           }
 
           const options = {
