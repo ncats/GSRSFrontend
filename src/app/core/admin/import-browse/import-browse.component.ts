@@ -228,7 +228,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isLoading = true;
       this.loadingService.setLoading(true);
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances, 'selectable ')
         .subscribe(pagingResponse => {
           let start = 0;
           let skipped = 0;
