@@ -233,21 +233,29 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           let start = 0;
           let skipped = 0;
           let added = 0;
+          if (pagingResponse.content){
+
+          
       pagingResponse.content.forEach(record => {
-        if ( !record._metadata.importStatus || record._metadata.importStatus !== 'imported') {
-          if (this.bulkList[record._metadata.recordId]) {
-            if (! this.bulkList[record._metadata.recordId].checked) {
+        if ( record && record.id) {
+          if (this.bulkList[record.id]) {
+            if (! this.bulkList[record.id].checked) {
               added++;
             }
-            this.bulkList[record._metadata.recordId].checked = true;
+            this.bulkList[record.id].checked = true;
           } else {
-            this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+            this.bulkList[record.id] = {"checked": true, "name": record.name, "id": record.id};
             added++;
           }
         } else {
           skipped++;
         }
       });
+    } else {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      alert('Error: unable to retrieve staged response content');
+    }
       this.isLoading = false;
       this.loadingService.setLoading(false);
         }, error => {
@@ -258,10 +266,11 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     } else {
       this.substances.forEach(record => {
-          if (this.bulkList[record._metadata.recordId]) {
-            this.bulkList[record._metadata.recordId].checked = true;
+        console.log(record);
+          if (this.bulkList[record.id]) {
+            this.bulkList[record.id].checked = true;
           } else {
-            this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+            this.bulkList[record.id.recordId] = {"checked": true, "name": record.name, "id": record.id};
           }
         
       });

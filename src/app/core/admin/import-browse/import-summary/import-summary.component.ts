@@ -182,6 +182,7 @@ export class ImportSummaryComponent implements OnInit {
 
   getMatchSummary() {
     this.substance.matchedRecords.forEach(record => {
+      console.log(record);
       if (record.source && record.source === 'Staging Area'){
         this.adminService.GetStagedRecord(record.ID).subscribe(response => {
           record._name = response._name;
