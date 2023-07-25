@@ -14,7 +14,7 @@ export class BulkActionDialogComponent implements OnInit {
   filtered: Array<any> = [];
   total: number;
   successful = false;
-  displayedColumns = ['ID', 'name', 'status'];
+  displayedColumns = ['ID', 'name'];
   loading = false;
   useScrubber = false;
   scrubberModel: any;
@@ -40,12 +40,12 @@ export class BulkActionDialogComponent implements OnInit {
       this.altStatusCount = 0;
     Object.keys(this.records).forEach(record => {
       if(this.records[record].checked) {
-        const temp = {"ID": record, "checked": true, "record": this.records[record].substance};
+        const temp = {"ID": record, "checked": true, "name": this.records[record].name};
         this.filtered.push(temp);
-        if (this.records[record].substance && this.records[record].substance._metadata && this.records[record].substance._metadata.importStatus
+        /*f (this.records[record].substance && this.records[record].substance._metadata && this.records[record].substance._metadata.importStatus
             && this.records[record].substance._metadata.importStatus !== 'staged') {
               this.altStatusCount++;
-            }
+            }*/
       }
       });
       this.total = this.filtered.length;
