@@ -19,6 +19,8 @@ export class BulkActionDialogComponent implements OnInit {
   useScrubber = false;
   scrubberModel: any;
   deleteStaged = true;
+  altStatusCount = 0;
+  completedRecordCount = 0;
   constructor(
    
     public dialogRef: MatDialogRef<ImportDialogComponent>,
@@ -34,10 +36,16 @@ export class BulkActionDialogComponent implements OnInit {
       this.useScrubber = true;
     }
     if (this.records) {
+      this.filtered = [];
+      this.altStatusCount = 0;
     Object.keys(this.records).forEach(record => {
       if(this.records[record].checked) {
-        const temp = {"ID": record, "checked": true, "record": this.records[record].substance};
+        const temp = {"ID": record, "checked": true, "name": this.records[record].name};
         this.filtered.push(temp);
+        /*f (this.records[record].substance && this.records[record].substance._metadata && this.records[record].substance._metadata.importStatus
+            && this.records[record].substance._metadata.importStatus !== 'staged') {
+              this.altStatusCount++;
+            }*/
       }
       });
       this.total = this.filtered.length;
@@ -138,6 +146,9 @@ export class BulkActionDialogComponent implements OnInit {
         }
         
       } else {
+        if (response && response.completedRecordCount) {
+            this.completedRecordCount = response.completedRecordCount;
+        }
         setTimeout(() => {
           this.processingstatus(id);
         }, 200);

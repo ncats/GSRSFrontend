@@ -39,7 +39,7 @@
   <div class="flex-row">
     <div *ngFor="let component of presentInOne" class="thumb-col">
 
-      <div *ngIf="component.substance.linkingID" class="code">{{component}}</div>
+      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
       <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
 
       <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
@@ -57,7 +57,7 @@
 
 <ng-template #structureTemplate>
   <div class = "close-container" mat-dialog-header>
-      <button mat-mini-fab class = "mat-mini-fab" mat-dialog-close>
+      <button mat-mini-fab class = "mat-mini-fab" (click) = "close()">
           <mat-icon  class = "icon" svgIcon="close"></mat-icon>
         </button>
   </div>

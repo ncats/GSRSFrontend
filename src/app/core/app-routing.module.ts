@@ -47,9 +47,7 @@ const childRoutes: Routes = [
   },
   {
     path: 'substances/register',
-    component: SubstanceFormComponent,
-    canActivate: [CanRegisterSubstanceForm],
-    canDeactivate: [CanDeactivateSubstanceFormGuard]
+    component: SubstanceFormComponent
   },
   {
     path: 'substances/register/:type',
@@ -78,6 +76,11 @@ const childRoutes: Routes = [
     component: SequenceSearchComponent
   },
   {
+    path: 'staging',
+    component: ImportBrowseComponent
+
+  },
+  {
     path: 'login',
     component: LoginComponent
   },
@@ -97,7 +100,6 @@ const childRoutes: Routes = [
   {
     path: 'admin/staging-area',
     component: ImportBrowseComponent,
-    canActivate: [CanActivateAdmin],
     pathMatch: 'full'
 
   },

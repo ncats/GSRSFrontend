@@ -228,32 +228,51 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isLoading = true;
       this.loadingService.setLoading(true);
       const skip = this.pageIndex * this.pageSize;
-      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances)
+      const subscription = this.adminService.SearchStagedData(skip, this.privateFacetParams, this.privateSearchTerm, this.totalSubstances, 'selectable')
         .subscribe(pagingResponse => {
+          let start = 0;
+          let skipped = 0;
+          let added = 0;
+          if (pagingResponse.content){
+
           
-      this.isLoading = false;
-      this.loadingService.setLoading(false);
       pagingResponse.content.forEach(record => {
-        if ( !record._metadata.importStatus || record._metadata.importStatus !== 'imported') {
-          if (this.bulkList[record._metadata.recordId]) {
-            this.bulkList[record._metadata.recordId].checked = true;
+        if ( record && record.id) {
+          if (this.bulkList[record.id]) {
+            if (! this.bulkList[record.id].checked) {
+              added++;
+            }
+            this.bulkList[record.id].checked = true;
           } else {
-            this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
+            this.bulkList[record.id] = {"checked": true, "name": record.name, "id": record.id};
+            added++;
           }
+        } else {
+          skipped++;
         }
       });
+    } else {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      alert('Error: unable to retrieve staged response content');
+    }
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
         }, error => {
           console.log(error);
-          this.isLoading = false;
           this.loadingService.setLoading(false);
+          this.isLoading = false;
+          alert('Error: unable to retrieve all staged results. See console for error details');
         });
     } else {
       this.substances.forEach(record => {
-        if (this.bulkList[record._metadata.recordId]) {
-          this.bulkList[record._metadata.recordId].checked = true;
-        } else {
-          this.bulkList[record._metadata.recordId] = {"checked": true, "substance": record};
-        }
+        console.log(record);
+          if (this.bulkList[record.id]) {
+            this.bulkList[record.id].checked = true;
+          } else {
+            this.bulkList[record.id.recordId] = {"checked": true, "name": record.name, "id": record.id};
+          }
+        
       });
     }
     

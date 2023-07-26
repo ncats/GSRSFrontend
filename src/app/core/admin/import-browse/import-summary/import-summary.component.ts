@@ -151,7 +151,6 @@ export class ImportSummaryComponent implements OnInit {
         }
       });
       match.recordArr = newArr;
-      console.log(match);
     });
   }
 
@@ -183,6 +182,7 @@ export class ImportSummaryComponent implements OnInit {
 
   getMatchSummary() {
     this.substance.matchedRecords.forEach(record => {
+      console.log(record);
       if (record.source && record.source === 'Staging Area'){
         this.adminService.GetStagedRecord(record.ID).subscribe(response => {
           record._name = response._name;
@@ -288,8 +288,46 @@ export class ImportSummaryComponent implements OnInit {
     this.displayAction = action;
     this.loadingService.setLoading(true);
     this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
-      this.doneAction.emit(this.privateSubstance.uuid);
+      if (result.jobStatus === 'completed') {
+        this.loadingService.setLoading(false);
+        this.doneAction.emit(this.privateSubstance.uuid);
+        this.message = "Record " + action + "  successful";
+        if (result) {
+          this.disabled = true;
+          this.performedAction = action;
+        }
+  
+        this.deleted = false;
+        this.dialogRef =  this.dialog.open(this.infoDialog,
+          {data: {'message': 'Record successfuly Created', 'action': action},
+        width: '600px'});
+         const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+          this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
+         });
+
+      } else {
+        setTimeout(() => {
+          this.processingstatus(result.id, action, result);
+        }, 200);
+      }
+     
+    }, error => {
+      this.message = "Error: failed to " + action + " record";
       this.loadingService.setLoading(false);
+      this.dialogRef =  this.dialog.open(this.infoDialog,
+        {data: {'message': 'Error: failed to', 'action': action},
+      width: '600px'});
+       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+
+       });
+    });
+  }
+
+  processingstatus(id: string, action?: any, result?: any): void {
+    this.adminService.processingstatus(id).subscribe(response => {
+      if (response.jobStatus === 'completed') {
+             this.loadingService.setLoading(false);
+              this.doneAction.emit(this.privateSubstance.uuid);
       this.message = "Record " + action + "  successful";
       if (result) {
         this.disabled = true;
@@ -303,15 +341,13 @@ export class ImportSummaryComponent implements OnInit {
        const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
         this.router.navigate(['/admin/staging-area/'], {queryParamsHandling: "preserve"});
        });
-    }, error => {
-      this.message = "Error: failed to " + action + " record";
-      this.loadingService.setLoading(false);
-      this.dialogRef =  this.dialog.open(this.infoDialog,
-        {data: {'message': 'Error: failed to', 'action': action},
-      width: '600px'});
-       const dialogSubscription = this.dialogRef.afterClosed().subscribe(response => {
+      } else {
+        setTimeout(() => {
+          this.processingstatus(id);
+        }, 200);
+      }
+     
 
-       });
     });
   }
 
