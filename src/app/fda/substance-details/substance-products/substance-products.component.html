@@ -200,7 +200,7 @@
     </mat-tab>
 
     <mat-tab label="Invitro Pharmacology ({{invitroPharmCount}})" *ngIf="loadedComponents && loadedComponents.invitropharmacology">
-      <app-substance-invitro-pharmacology [substanceUuid]="substance.uuid" (countSsg4mOut)="getInvitroPharmCount($event)"
+      <app-substance-invitro-pharmacology [substanceUuid]="substance.uuid" [substanceUnii]="substance.approvalID" (countInvitroPharmOut)="getInvitroPharmCount($event)"
         [substanceName]="substanceName">
       </app-substance-invitro-pharmacology>
     </mat-tab>

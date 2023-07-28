@@ -28,7 +28,7 @@
           <div *ngIf="isAdmin; else noLogin">
             <a [routerLink]="['/invitro-pharm', invitro.id]" target="_blank"
               matTooltip='View Invitro Pharmacology Record'>
-              View/Edit
+              View
             </a>
           </div>
           <ng-template #noLogin>
@@ -38,43 +38,68 @@
       </td>
     </ng-container>
 
-    <!--
     <ng-container matColumnDef="assayExternalId">
       <th mat-header-cell *matHeaderCellDef class="width100px">Assay External ID</th>
       <td mat-cell *matCellDef="let invitro">
-        <!- -{{invitro.assayExternalId}} - -> {{ invitro.id }}</td>
+        <div *ngFor="let invitroAssay of invitro.invitroAssays; let i = index">
+          {{invitroAssay.assayExternalId}}
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="assayTitle">
       <th mat-header-cell *matHeaderCellDef class="width100px">Assay Title</th>
       <td mat-cell *matCellDef="let invitro">
-        <!- - {{invitro.assayTitle}} - -> {{ invitro.id }} </td>
+        <div *ngFor="let invitroAssay of invitro.invitroAssays; let i = index">
+          {{invitroAssay.assayTitle}}
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="assayTarget">
       <th mat-header-cell *matHeaderCellDef class="width100px">Assay Target</th>
       <td mat-cell *matCellDef="let invitro">
-        <!- - {{invitro.assayTarget}} - ->  {{ invitro.id }} </td>
+        <div *ngFor="let invitroAssay of invitro.invitroAssays; let i = index">
+          {{invitroAssay.assayTarget}}
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="assayType">
       <th mat-header-cell *matHeaderCellDef class="width100px">Assay Type</th>
       <td mat-cell *matCellDef="let invitro">
-        <!- - {{invitro.assayType}} - ->  {{ invitro.id }}  </td>
+        <div *ngFor="let invitroAssay of invitro.invitroAssays; let i = index">
+          {{invitroAssay.assayType}}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="studyType">
+      <th mat-header-cell *matHeaderCellDef class="width100px">Study Type</th>
+      <td mat-cell *matCellDef="let invitro">
+        <div *ngFor="let invitroAssay of invitro.invitroAssays; let i = index">
+          {{invitroAssay.studyType}}
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="radioligand">
       <th mat-header-cell *matHeaderCellDef class="width100px">Radioligand</th>
       <td mat-cell *matCellDef="let invitro">
-        <!- - {{invitro.radioligand}} - ->  {{ invitro.id }} </td>
+        <div *ngFor="let invitroAssay of invitro.invitroAssays; let i = index">
+          {{invitroAssay.radioligand}}
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="screeningConcent">
       <th mat-header-cell *matHeaderCellDef class="width100px">Screening Concentration</th>
       <td mat-cell *matCellDef="let invitro">
-        <!- - {{invitro.screeningConcentration}} - ->  {{ invitro.id }}  </td>
+        <div *ngFor="let invitroAssay of invitro.invitroAssays; let i = index">
+          {{invitroAssay.screeningConcentration}}
+        </div>
+      </td>
     </ng-container>
-    -->
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

@@ -11,6 +11,24 @@ export interface InvitroPharmacologyOverview {
   modifyDate?: number;
   invitroApprovers?: Array<InvitroApprover>;
   invitroLaboratories?: Array<InvitroApprover>;
+}
+
+export interface InvitroAssay {
+  id?: number;
+  assayExternalId?: string;
+  assayExternalSource?: string;
+  assayTitle?: string;
+  assayTarget?: string;
+  assayTargetUnii?: string;
+  assayType?: string;
+  studyType?: string;
+  internalVersion?: number;
+  createdBy?: string;
+  creationDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  invitroApprovers?: Array<InvitroApprover>;
+  invitroLaboratories?: Array<InvitroApprover>;
   applicationIndicationList?: Array<InvitroLaboratory>;
 }
 

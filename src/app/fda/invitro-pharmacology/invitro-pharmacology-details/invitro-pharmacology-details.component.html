@@ -1,0 +1,352 @@
+<br>
+<div *ngIf="invitroPharm">
+  <div *ngIf="invitroPharm.id; else noRecord">
+    <div class="details-container margintop90px">
+
+      <mat-card class="bordergray">
+        <mat-card-title>
+          <div class="width500px">
+            In-vitro Pharmacology Screening Result&nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+          <div class="width50percent font11px">
+            <span class="colorgray">Created By:</span> {{invitroPharm.createdBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Create
+              Date:</span>{{invitroPharm.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modified By:</span> {{invitroPharm.modifiedBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modify Date:</span> {{invitroPharm.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+          </div>
+        </mat-card-title>
+
+        <mat-card-content>
+
+          <!-- Invitro Pharmacology Overview Begin -->
+          <br><br>
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Application Type:
+              </div>
+              <div class="row-property-value">
+                {{invitroPharm.applicationType}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Reference:
+              </div>
+              <div class="row-property-value">
+                {{invitroPharm.reference}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Application Number:
+              </div>
+              <div class="row-property-value">
+                {{invitroPharm.applicationNumber}}
+              </div>
+            </div>
+          </div>
+          <!-- Overview End -->
+
+
+          <!-- Approver Begin -->
+          <div class="margintop30px marginbottom30px" *ngIf="invitroPharm.approver">
+            <div>
+              <div class="title2">
+                Approver
+              </div>
+              <div>
+                <table class="blueTable">
+                  <thead>
+                    <tr height="30px" valign="top">
+                      <th width="200px">Approver Name</th>
+                      <th width="150px">Approver Title</th>
+                      <th width="150px">Approver Affiliation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ invitroPharm.approver.approverName }}</td>
+                      <td>{{ invitroPharm.approver.approverTitle }}</td>
+                      <td>{{ invitroPharm.approver.approverAffiliation }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Approver End -->
+
+
+          <!-- Laboratory Begin -->
+          <div class="margintop30px marginbottom30px" *ngIf="invitroPharm.approver">
+            <div>
+              <div class="title2">
+                Laboratory
+              </div>
+              <div>
+                <table class="blueTable">
+                  <thead>
+                    <tr height="30px" valign="top">
+                      <th width="200px">Laboratory Name</th>
+                      <th width="150px">Laboratory Address</th>
+                      <th width="150px">City</th>
+                      <th width="150px">State</th>
+                      <th width="150px">Zipcode</th>
+                      <th width="150px">Country</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ invitroPharm.laboratory.laboratoryName }}</td>
+                      <td>{{ invitroPharm.laboratory.laboratoryAddress }}</td>
+                      <td>{{ invitroPharm.laboratory.laboratoryCity }}</td>
+                      <td>{{ invitroPharm.laboratory.laboratoryState }}</td>
+                      <td>{{ invitroPharm.laboratory.laboratoryZipcode }}</td>
+                      <td>{{ invitroPharm.laboratory.laboratoryCountry }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Laboratory End -->
+
+
+          <!-- Assay Lists -->
+          <div class="margintop30px marginbottom30px" *ngFor="let assay of invitroPharm.invitroAssays; let i = index">
+
+            <div *ngIf="i > 0">
+              <br>
+            </div>
+            <div class="title2">
+              <b>Assay &nbsp;<span class="colorblack">{{(i + 1)}} of {{invitroPharm.invitroAssays.length}}</span></b>
+            </div>
+
+            <div class="bordergray">
+              <mat-card>
+                <mat-card-content>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Assay External ID:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.assayExternalId}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Assay External Source:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.assayExternalSource}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Assay Title:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.assayTitle}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Study Type:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.studyType}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Assay Target:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.assayTarget}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Radioligand:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.radioligand}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Assay Target UNII:
+                      </div>
+                      <div class="row-property-value">
+                        <div>
+                          <a [routerLink]="['/substances', assay.assayTargetUnii]" target="_blank">
+                            <span class="fontbold">{{assay.assayTargetUnii}}</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Radioligand UNII:
+                      </div>
+                      <div class="row-property-value">
+                        <div>
+                          <a [routerLink]="['/substances', assay.radioligandUnii]" target="_blank">
+                            <span class="fontbold">{{assay.radioligandUnii}}</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Positive Control:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.positiveControl}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Presentation Type:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.presentationType}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Positive Control UNII:
+                      </div>
+                      <div class="row-property-value">
+                        <div>
+                          <a [routerLink]="['/substances', assay.positiveControlUnii]" target="_blank">
+                            <span class="fontbold">{{assay.positiveControlUnii}}</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Presentation:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.presentation}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Screening Concentration:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.screeningConcentration}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Unit:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.unit}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Percent Inhibition:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.percentInhibition}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Value Type:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.valueType}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Value Units:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.valueUnits}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Value:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.value}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Batch:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.batch}}
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        External Reference:
+                      </div>
+                      <div class="row-property-value">
+                        {{assay.externalReference}}
+                      </div>
+                    </div>
+                  </div>
+
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div> <!-- Assay Loop -->
+
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <br><br><br><br>
+  </div>
+  <ng-template #noRecord>
+    <br><br><br><br>
+    <div class="colororange padtop50px padleft50px">There is no Impurities Data found.</div>
+  </ng-template>
+
+</div>

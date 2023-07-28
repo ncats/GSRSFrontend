@@ -25,7 +25,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   totalRecords = 0;
   invitroPharmOverview: InvitroPharmacologyOverview;
 
-  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/invitropharm' + '/';
+  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/invitropharmacology' + '/';
 
   constructor(
     public http: HttpClient,
@@ -35,11 +35,10 @@ export class InvitroPharmacologyService extends BaseHttpService {
     super(configService);
   }
 
-  /*
-  getProductProvenanceList(
-    substanceUuid: string
+  getByAssayTargetUnii(
+    unii: string
   ): Observable<any> {
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'distprovenance/' + substanceUuid;
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'assaytargetunii/' + unii;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -48,6 +47,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       );
   }
 
+  /*
   getProductElist(
     productId: string
   ): Observable<any> {

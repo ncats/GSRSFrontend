@@ -27,6 +27,7 @@ import { GeneralService } from '../../../service/general.service';
 export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   @Input() substanceUuid: string;
+  @Input() substanceUnii: string;
   @Input() substanceName: string;
   @Output() countInvitroPharmOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -43,9 +44,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   ascDescDir = 'desc';
   private subscriptions: Array<Subscription> = [];
   displayedColumns: string[] = [
-    'view'
-  ];
-  /*
+    'view',
     'assayExternalId',
     'assayTitle',
     'assayTarget',
@@ -53,7 +52,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
     'studyType',
     'radioligand',
     'screeningConcent'
-   */
+  ]
 
   constructor(
     private router: Router,
@@ -92,7 +91,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
     this.setPageEvent(pageEvent);
     const skip = this.page * this.pageSize;
 
-    const subscription = this.invitroPharmService.getInvitroPharmacology(this.substanceUuid).subscribe(results => {
+    const subscription = this.invitroPharmService.getByAssayTargetUnii(this.substanceUnii).subscribe(results => {
       if (results.length > 0) {
         this.paged = results;
         this.invitroPharmTotalRecords = results.length;

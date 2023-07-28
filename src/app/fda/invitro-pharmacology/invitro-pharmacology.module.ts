@@ -29,6 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { InvitroPharmacologyComponent } from './invitro-pharmacology.component';
+import { InvitroPharmacologyDetailsComponent } from './invitro-pharmacology-details/invitro-pharmacology-details.component';
 
 
 const invitroRoutes: Routes = [
@@ -37,8 +38,8 @@ const invitroRoutes: Routes = [
     component: InvitroPharmacologyComponent
   },
   {
-    path: 'invitro/:id/edit',
-    component: InvitroPharmacologyComponent
+    path: 'invitro-pharm/:id',
+    component: InvitroPharmacologyDetailsComponent
   }
 ];
 
@@ -76,7 +77,8 @@ const invitroRoutes: Routes = [
     OverlayModule
   ],
   declarations: [
-    InvitroPharmacologyComponent
+    InvitroPharmacologyComponent,
+    InvitroPharmacologyDetailsComponent
   ],
   exports: [
   ],
