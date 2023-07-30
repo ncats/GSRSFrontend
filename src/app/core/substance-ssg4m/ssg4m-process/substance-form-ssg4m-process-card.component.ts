@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Input } from '@angular/core';
+import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -27,8 +28,11 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   private subscriptions: Array<Subscription> = [];
   showAdvancedSettings = false;
   tabSelectedView = 'Form View';
+  showView = 'form';
   tabSelectedIndex = 0;
+  tabTitle = ['form', 'step', 'scheme'];
   private overlayContainer: HTMLElement;
+
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
@@ -38,7 +42,8 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private http: HttpClient
+    private http: HttpClient,
+    private activatedRoute: ActivatedRoute
   ) {
     super(gaService);
     //  this.analyticsEventCategory = 'substance form ssg4m process';
@@ -57,16 +62,16 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         //TODO: make more configurable and standardized
         window['schemeUtil'].debug = false;
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
-        const httpp=this.http;
+        const httpp = this.http;
         window['schemeUtil'].apiBaseURL = url;
 
         //allow resolution of svgs
         window['schemeUtil'].urlResolver = (u, cb) => {
-            httpp.get(u, {responseType: 'text'}).subscribe(svg=>{
-                 cb(svg);
-            }, error=>{
-                 cb("ERROR");
-            });
+          httpp.get(u, { responseType: 'text' }).subscribe(svg => {
+            cb(svg);
+          }, error => {
+            cb("ERROR");
+          });
         };
         //TODO:
         window['schemeUtil'].onClickReaction = (d) => {
@@ -88,6 +93,13 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         };
       }
     }, 100);
+
+    // Get the parameter from URL and set the tab to either form view, step view, or scheme view.
+    this.showView = this.activatedRoute.snapshot.queryParams['view'] || 'form';
+    let urlTabIndex = this.tabTitle.indexOf(this.showView);
+    if (urlTabIndex != -1) {
+      this.onSelectedIndexChange(urlTabIndex);
+    }
 
   }
 
