@@ -67,7 +67,7 @@ export class MergeActionDialogComponent implements OnInit {
       this.adminService.processingstatus(id).subscribe(response => {
         if (response.results) {
           response.results.forEach(result => {
-            if(result.status === "INTERNAL_SERVER_ERROR") {
+            if(result.status === "INTERNAL_SERVER_ERROR" || result.status === "BAD_REQUEST") {
               this.success = false;
               let temp = result.message;
               if (result.error) {
