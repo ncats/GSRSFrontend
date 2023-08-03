@@ -58,10 +58,11 @@ export class UserProfileComponent implements OnInit {
   }
 
   viewDownloads(): void {
-    this.router.navigate(['/user-downloads']);
     setTimeout(() => {
       this.dialogRef.close();
-    }, 400);
+    });
+    this.router.navigate(['/user-downloads']);
+    
   }
 
   validatePassword(): void {
@@ -93,6 +94,10 @@ export class UserProfileComponent implements OnInit {
         });
   }
 
+}
+
+close() {
+  this.dialog.closeAll();
 }
 
 viewDrafts(): void {

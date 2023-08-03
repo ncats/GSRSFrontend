@@ -426,5 +426,9 @@ export class UserQueryListDialogComponent implements OnInit {
     return true;
   }
 
+  close(){
+    this.dialogRef.close();
+  }
+
 
 }
