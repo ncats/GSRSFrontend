@@ -63,4 +63,7 @@ export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredLis
       this.overlayContainer.style.zIndex = null;
     });
   }
+  close() {
+    this.dialog.closeAll();
+  }
 }

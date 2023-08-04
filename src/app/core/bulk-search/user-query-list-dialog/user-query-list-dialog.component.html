@@ -1,5 +1,5 @@
 <div mat-header>
-        <button mat-mini-fab mat-dialog-close>
+        <button mat-mini-fab mat-dialog-close (click) = "close()">
                 <mat-icon svgIcon="close"></mat-icon>
               </button>
     <div *ngIf = "view == 'all'" >

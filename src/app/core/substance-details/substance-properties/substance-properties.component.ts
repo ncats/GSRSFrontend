@@ -62,4 +62,8 @@ export class SubstancePropertiesComponent extends SubstanceCardBase implements O
     });
   }
 
+  close(){
+    this.dialog.closeAll();
+  }
+
 }

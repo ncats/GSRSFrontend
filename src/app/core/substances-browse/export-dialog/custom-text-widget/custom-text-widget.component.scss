@@ -17,3 +17,37 @@
     height: 18px;
     cursor: pointer;
   }
+
+  .array-remove-button {
+    color: #4793d1;
+    background-color: white;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin-bottom: 8px;
+        margin-right: 0px;
+    min-width: 56px;
+    line-height: 30px;
+    padding: 0 12px;
+    border-radius: 4px;
+    overflow: visible;
+  }
+
+  .array-add-button {
+    background-color: #4793d1;
+    color: white;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin-top: 8px;
+        margin-right: 0px;
+    min-width: 56px;
+    line-height: 30px;
+    padding: 0 12px;
+    border-radius: 4px;
+    overflow: visible;
+  }

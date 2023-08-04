@@ -90,5 +90,5 @@
                     View Edit Drafts
             </button>
             <span class = "middle-fill"></span>
-      <button mat-button mat-dialog-close [disabled] = "loading">Close</button>
+      <button mat-button mat-dialog-close (click) = "close()" [disabled] = "loading">Close</button>
     </mat-dialog-actions>

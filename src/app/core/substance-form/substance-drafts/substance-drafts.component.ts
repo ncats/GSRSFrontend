@@ -207,8 +207,13 @@ export class SubstanceDraftsComponent implements OnInit {
   }
 
 
+  close() {
+    this.dialogRef.close();
+  }
   
 }
+
+
 
 
 export interface SubstanceDraft {
