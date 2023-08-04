@@ -6,7 +6,7 @@
     <div class = "match-row"><span style = "width:15%;font-size:15px">Selected</span>
         <span style ="width: 85%; font-size:15px">Record Name</span></div>
     <div class = "match-row" *ngFor ="let match of matches" >
-            <span style = "width:15%"><mat-radio-button (change) = "select(match)"></mat-radio-button></span>
+            <span style = "width:15%"><mat-radio-button (change) = "select(match.recordId ? match.recordId : match.ID)"></mat-radio-button></span>
             <span style ="width: 85%">{{match._name}}</span>
     </div>
     
@@ -30,6 +30,7 @@
             <div *ngFor = "let error of errors">
                 {{error}}<br/><br/>
             </div>
+
         </div>
         <span *ngIf = "success" style = "margin-top:100px"><b>Fields merged successfully</b></span>
     </div>
@@ -37,7 +38,17 @@
 
 
 <div mat-dialog-actions style = "height: 50px;">
-     <span class = "middle-fill"></span> 
-       <button  mat-button mat-flat-button color = "primary" [disabled] = "!toMerge || completed" (click) = "submit()">Submit</button> &nbsp; 
-     <button mat-button mat-flat-button color = "primary" mat-dialog-close>Cancel</button>
+     <div *ngIf = "success" style = "display:flex;width:100%">
+            <span class = "middle-fill"></span> 
+
+        <button  mat-button mat-flat-button color = "primary" [disabled] = "!(toMerge && toMerge !== null) || completed" (click) = "submit()">Submit</button> &nbsp; 
+        <button mat-button mat-flat-button color = "primary" mat-dialog-close>Cancel</button>
+     </div>
+     <div *ngIf = "!success" style = "display:flex;width:100%">
+            <button mat-button mat-flat-button color = "primary" (click) ="restart()" >Restart</button>
+
+            <span class = "middle-fill"></span> 
+
+        <button mat-button mat-flat-button color = "primary" mat-dialog-close>Close</button>
+     </div>
     </div>

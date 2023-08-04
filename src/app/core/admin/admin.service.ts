@@ -320,7 +320,6 @@ export class AdminService extends BaseHttpService {
                 putParam
               ]
             }
-            console.log
          
           return this.http.put< any >(url, toput);
 

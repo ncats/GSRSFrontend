@@ -23,18 +23,21 @@ export class MergeActionDialogComponent implements OnInit {
     private adminService: AdminService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    console.log(data);
     if(data.recordId) {
+      console.log(data.recordId);
+
       this.entity = data.recordId;
       this.matches = data.matches;
 
     }
     if(data.mergeRecord) {
-      this.toMerge = data.mergeRecord.uuid;
+      this.toMerge = data.mergeRecord.ID;
     }
    }
 
    select(entry: any) {
-    this.toMerge = entry.uuid;
+    this.toMerge = entry;
    } 
 
   ngOnInit(): void {
@@ -54,8 +57,6 @@ export class MergeActionDialogComponent implements OnInit {
 
   submit() {
     this.loading =true;
-    console.log(this.privateMergeModel);
-    console.log(this.toMerge);
     this.adminService.stagedRecordSingleAction(this.entity, 'merge', this.privateMergeModel, this.toMerge).subscribe(response => {
       this.refresh(response.id);
     }, error => {
@@ -63,12 +64,23 @@ export class MergeActionDialogComponent implements OnInit {
     })
   }
 
+  restart() {
+    this.success = true;
+    this.loading = false;
+    this.completed = false;
+    this.mergeResponse = null;
+    this.errors = [];
+    this.mergeModel = {};
+    this.privateMergeModel = {};
+  }
+
     refresh(id: string): void {
       this.adminService.processingstatus(id).subscribe(response => {
         if (response.results) {
           response.results.forEach(result => {
-            if(result.status === "INTERNAL_SERVER_ERROR" || result.status === "BAD_REQUEST") {
-              this.success = false;
+            this.success = result.success;
+
+            if(!this.success) {
               let temp = result.message;
               if (result.error) {
                 temp += ". " + result.error;

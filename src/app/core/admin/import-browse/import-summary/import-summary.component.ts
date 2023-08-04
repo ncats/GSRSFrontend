@@ -474,9 +474,9 @@ export class ImportSummaryComponent implements OnInit {
       temp['mergeRecord'] = selected;
     }
     const dialogRef = this.dialog.open(MergeActionDialogComponent, {
-      minWidth: '40%',
+      minWidth: '50%',
       maxWidth: '90%',
-      height: '70%',
+      height: '80%',
       data: temp
     });
     this.overlayContainer.style.zIndex = '1002';
