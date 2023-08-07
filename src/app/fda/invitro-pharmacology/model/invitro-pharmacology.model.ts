@@ -22,6 +22,8 @@ export interface InvitroAssay {
   assayTargetUnii?: string;
   assayType?: string;
   studyType?: string;
+  batchId?: string;
+  testDate?: number;
   internalVersion?: number;
   createdBy?: string;
   creationDate?: number;
@@ -37,6 +39,8 @@ export interface InvitroApprover {
   approverName?: string;
   approverTitle?: string;
   approverAffiliation?: string;
+  approverPhoneNumber?: string;
+  approverEmail?: string;
   createdBy?: string;
   creationDate?: number;
   modifiedBy?: string;
@@ -47,6 +51,8 @@ export interface InvitroApprover {
 export interface InvitroLaboratory {
   id?: number;
   laboratoryName?: string;
+  laboratoryType?: string;
+  laboratoryAffiliation?: string;
   laboratoryAddress?: string;
   laboratoryCity?: string;
   laboratoryState?: string;

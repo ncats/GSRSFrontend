@@ -30,6 +30,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { InvitroPharmacologyComponent } from './invitro-pharmacology.component';
 import { InvitroPharmacologyDetailsComponent } from './invitro-pharmacology-details/invitro-pharmacology-details.component';
+import { InvitroPharmacologyBrowseComponent } from './invitro-pharmacology-browse/invitro-pharmacology-browse.component';
 
 
 const invitroRoutes: Routes = [
@@ -78,7 +79,8 @@ const invitroRoutes: Routes = [
   ],
   declarations: [
     InvitroPharmacologyComponent,
-    InvitroPharmacologyDetailsComponent
+    InvitroPharmacologyDetailsComponent,
+    InvitroPharmacologyBrowseComponent
   ],
   exports: [
   ],

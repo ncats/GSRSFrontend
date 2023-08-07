@@ -38,6 +38,51 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="assayTarget">
+      <th mat-header-cell *matHeaderCellDef class="width100px">Assay Target</th>
+      <td mat-cell *matCellDef="let assay">
+          {{assay.assayTarget}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ligand">
+      <th mat-header-cell *matHeaderCellDef class="width100px">Ligand/Substate</th>
+      <td mat-cell *matCellDef="let assay">
+          {{assay.ligandSubstrate}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="testCompound">
+      <th mat-header-cell *matHeaderCellDef class="width100px">Test Compound</th>
+      <td mat-cell *matCellDef="let assay">
+          {{assay.testCompound}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="assayType">
+      <th mat-header-cell *matHeaderCellDef class="width100px">Assay Type</th>
+      <td mat-cell *matCellDef="let assay">
+          {{assay.assayType}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="presentationType">
+      <th mat-header-cell *matHeaderCellDef class="width100px">Presentation Type</th>
+      <td mat-cell *matCellDef="let assay">
+          {{assay.presentationType}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ligandConcentUnit">
+      <th mat-header-cell *matHeaderCellDef class="width100px">Ligand/Substrate Concentration Unit</th>
+      <td mat-cell *matCellDef="let assay">
+          {{assay.ligandSubstrateConcentrationUnit}}
+          {{assay.concentrationUnit}}
+      </td>
+    </ng-container>
+
+
+    <!--
     <ng-container matColumnDef="assayExternalId">
       <th mat-header-cell *matHeaderCellDef class="width100px">Assay External ID</th>
       <td mat-cell *matCellDef="let invitro">
@@ -100,6 +145,7 @@
         </div>
       </td>
     </ng-container>
+  -->
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

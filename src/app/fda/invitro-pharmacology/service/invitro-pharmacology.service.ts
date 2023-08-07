@@ -25,7 +25,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   totalRecords = 0;
   invitroPharmOverview: InvitroPharmacologyOverview;
 
-  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/invitropharmacology' + '/';
+  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/assayscreening' + '/';
 
   constructor(
     public http: HttpClient,

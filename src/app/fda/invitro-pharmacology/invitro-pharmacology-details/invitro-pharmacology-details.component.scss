@@ -155,8 +155,14 @@
   border: 1px solid var(--blue-color);
   border-bottom: none;
   height: 35px;
-  background-color: var(--blue-color);
-  color: #FFFFFF;
+  background-color: var(--light-orange-color);
+  color: black;
+  font-weight: 700;
+}
+
+.fieldKey {
+  width: 250px;
+  font-weight: 500;
 }
 
 .margintopneg10px {
@@ -231,8 +237,8 @@
   font-size: 16px;
 }
 
-.font20px {
-  font-size: 20px;
+.font25px {
+  font-size: 25px;
 }
 
 .fontbold {
@@ -368,36 +374,37 @@ legend.border2 {
   margin-bottom:0px;
 }
 
-table.blueTable {
+/* Table Style Begin */
+table.tableStyle {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   border: 1px solid var(--secondary-blue-color);
-  background-color:var(----table-bg-color);
+  background-color: var(--table-bg-color);
   width: 100%;
   text-align: left;
   border-collapse: collapse;
 }
 
-table.blueTable td, table.blueTable th {
+table.tableStyle td, table.tableStyle th {
   border: 1px solid var(--table-th-border-color);
   padding: 3px 2px;
 }
 
-table.blueTable tbody td {
-  font-size: 12px;
+table.tableStyle tbody td {
+  font-size: 18px;
   vertical-align: top;
   padding: 10px 10px;
 }
 
-table.blueTable tr:nth-child(even) {
+table.tableStyle tr:nth-child(even) {
   background: var(--table-tr-even-bg-color);
 }
 
-table.blueTable thead {
+table.tableStyle thead {
   background: var(--table-thead-bg-color); /* Header background */
   border-bottom: 1px solid var(--table-thead-border-color);
 }
 
-table.blueTable thead th {
+table.tableStyle thead th {
   font-size: 12px;
   font-weight: 700;
   color: var(--table-th-color);
@@ -405,11 +412,11 @@ table.blueTable thead th {
   padding: 10px 10px;
 }
 
-table.blueTable thead th:first-child {
+table.tableStyle thead th:first-child {
   border-left: none;
 }
 
-table.blueTable tfoot {
+table.tableStyle tfoot {
   font-size: 14px;
   font-weight: bold;
   color: var(--white-color);
@@ -417,21 +424,22 @@ table.blueTable tfoot {
   border-top: 2px solid var(--table-thead-border-color);
 }
 
-table.blueTable tfoot td {
+table.tableStyle tfoot td {
   font-size: 14px;
 }
 
-table.blueTable tfoot .links {
+table.tableStyle tfoot .links {
   text-align: right;
 }
 
-table.blueTable tfoot .links a{
+table.tableStyle tfoot .links a{
   display: inline-block;
   background: var(--secondary-blue-color);
   color: var(--white-color);
   padding: 2px 8px;
   border-radius: 5px;
 }
+/* Table Style End */
 
 @media(max-width: 700px) {
   .mat-card-title {

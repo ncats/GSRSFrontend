@@ -45,14 +45,22 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   private subscriptions: Array<Subscription> = [];
   displayedColumns: string[] = [
     'view',
-    'assayExternalId',
-    'assayTitle',
     'assayTarget',
+    'ligand',
+    'testCompound',
     'assayType',
-    'studyType',
-    'radioligand',
-    'screeningConcent'
+    'presentationType',
+    'ligandConcentUnit'
   ]
+
+  /*
+  'assayExternalId',
+  'assayTitle',
+  'assayTarget',
+  'assayType',
+  'studyType',
+  'radioligand',
+  'screeningConcent'*/
 
   constructor(
     private router: Router,

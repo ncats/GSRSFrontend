@@ -24,7 +24,7 @@ import { InvitroPharmacologyOverview, InvitroAssay } from '../model/invitro-phar
 export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
   //invitroPharm: InvitroPharmacologyOverview;
-  invitroPharm: any;
+  assayScreening: any;
   id: string;
   substanceName = '';
   flagIconSrcPath: string;
@@ -86,10 +86,10 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
   getInvitroPharmacology(): void {
     const invitroSubscribe = this.invitroPharmacologyService.getInvitroPharmacology(this.id).subscribe(response => {
-      this.invitroPharm = response;
-      if (Object.keys(this.invitroPharm).length > 0) {
+      this.assayScreening = response;
+      if (Object.keys(this.assayScreening).length > 0) {
 
-        this.titleService.setTitle(`Invitro Pharmacology Details`);
+        this.titleService.setTitle(`Invitro Pharmacology Assay Screening Details`);
 
         /*
         // Get Substance Name for SubstanceUuid in SubstanceList
