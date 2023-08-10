@@ -63,7 +63,7 @@
     "lodash": "4.17.21",
     "lucene-query-parser": "1.2.0",
     "moment": "2.29.2",
-    "ng-multiselect-dropdown": "0.2.10",
+    "ng-multiselect-dropdown": "0.3.9",
     "ngx-json-viewer": "2.4.0",
     "ngx-moment": "3.5.0",
     "ngx-schema-form": "2.7.0",
