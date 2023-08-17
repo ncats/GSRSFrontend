@@ -200,7 +200,9 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       //This is a hacky placeholder way to force viz
       //TODO finish this
       const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-      window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+      if (window['schemeUtil']) {
+        window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+      }
     } else {
       document.querySelector("#scheme-viz-view").className = "hidden";
     }
