@@ -1099,6 +1099,31 @@
         "ATC Level 3",
         "ATC Level 4"
       ]
+    },
+    "invitropharmacology": {
+      "default": [
+        "Assay Target",
+        "Assay Target Unii",
+        "Test Compound",
+        "Test Compound Unii",
+        "Ligand",
+        "Ligand Unii",
+        "Control",
+        "Control Unii",
+        "Assay Type",
+        "Assay Study Type",
+        "Presentation Type",
+        "Reference Type",
+        "External Reference",
+        "Approver Name",
+        "Laboratory Name"
+      ],
+      "admin": [
+        "Record Created By",
+        "Record Last Edited By",
+        "Record Create Date",
+        "Record Last Edited"
+      ]
     }
   },
   "codeSystemOrder": [

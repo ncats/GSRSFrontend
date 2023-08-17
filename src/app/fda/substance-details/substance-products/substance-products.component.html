@@ -199,8 +199,8 @@
       </app-substance-ssg4m>
     </mat-tab>
 
-    <mat-tab label="In-vitro Pharma Screening ({{invitroPharmCount}})" *ngIf="loadedComponents && loadedComponents.invitropharmacology">
-      <app-substance-invitro-pharmacology [substanceUuid]="substance.uuid" [substanceUnii]="substance.approvalID" (countInvitroPharmOut)="getInvitroPharmCount($event)"
+    <mat-tab label="In-vitro Pharmacology({{invitroPharmCount}})" *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+      <app-substance-invitro-pharmacology [substance]="substance" [substanceUuid]="substance.uuid" [substanceUnii]="substance.approvalID" (countInvitroPharmOut)="getInvitroPharmCount($event)"
         [substanceName]="substanceName">
       </app-substance-invitro-pharmacology>
     </mat-tab>

@@ -13,13 +13,20 @@ export interface InvitroPharmacologyOverview {
   invitroLaboratories?: Array<InvitroApprover>;
 }
 
-export interface InvitroAssay {
+export interface InvitroAssayScreening {
   id?: number;
   assayExternalId?: string;
   assayExternalSource?: string;
   assayTitle?: string;
+  assayStudyType?: string;
   assayTarget?: string;
   assayTargetUnii?: string;
+  testCompound?: string;
+  testCompoundUnii?: string;
+  ligandSubstrate?: string;
+  ligandSubstrateUnii?: string;
+  control?: string;
+  controlUnii?: string;
   assayType?: string;
   studyType?: string;
   batchId?: string;
@@ -29,9 +36,12 @@ export interface InvitroAssay {
   creationDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
-  invitroApprovers?: Array<InvitroApprover>;
-  invitroLaboratories?: Array<InvitroApprover>;
-  applicationIndicationList?: Array<InvitroLaboratory>;
+  _assayTargetSubId?: string;
+  _testCompoundSubId?: string;
+  _ligandSubstrateSubId?: string;
+  _controlSubId?: string;
+  invitroApprovers?: InvitroApprover;
+  invitroLaboratories?: InvitroApprover;
 }
 
 export interface InvitroApprover {
@@ -82,4 +92,11 @@ export interface ValidationMessage {
 export interface MessageLink {
   href: string;
   text: string;
+}
+
+export interface example {
+  id: string;
+  lastName: string;
+  firstName: string;
+  age: number;
 }

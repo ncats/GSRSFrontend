@@ -160,13 +160,26 @@
   font-weight: 700;
 }
 
+.headerstyle2 {
+  border: 1px solid var(--blue-color);
+  border-bottom: none;
+  height: 35px;
+  background-color: var(--table-th-border-color);    /*--primary-title-color*/
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
 .fieldKey {
-  width: 250px;
-  font-weight: 500;
+  width: 290px;
+  font-weight: 800;
 }
 
 .margintopneg10px {
   margin-top: -10px;
+}
+
+.margintop10px {
+  margin-top: 10px;
 }
 
 .margintop20px {
@@ -177,8 +190,16 @@
   margin-top: 30px;
 }
 
+.margintop40px {
+  margin-top: 40px;
+}
+
 .margintop90px {
   margin-top: 90px;
+}
+
+.marginleft30px {
+  margin-left: 30px;
 }
 
 .marginbottom30px {
@@ -237,8 +258,8 @@
   font-size: 16px;
 }
 
-.font25px {
-  font-size: 25px;
+.font22px {
+  font-size: 22px;
 }
 
 .fontbold {
@@ -285,6 +306,11 @@
   color: var(--orange-color);
 }
 
+.width30px {
+  width: 30px;
+  max-width: 30px;
+}
+
 .width40px {
   width: 40px;
   max-width: 40px;
@@ -305,9 +331,9 @@
   max-width: 400px;
 }
 
-.width500px {
-  width: 500px;
-  max-width: 500px;
+.width550px {
+  width: 550px;
+  max-width: 550px;
 }
 
 .width45percent {
@@ -374,6 +400,15 @@ legend.border2 {
   margin-bottom:0px;
 }
 
+.image-icon {
+  width: 100%;
+  height: 100% !important;
+}
+
+.zoom:hover{
+  cursor: zoom-in;
+}
+
 /* Table Style Begin */
 table.tableStyle {
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -390,7 +425,7 @@ table.tableStyle td, table.tableStyle th {
 }
 
 table.tableStyle tbody td {
-  font-size: 18px;
+  font-size: 16px;
   vertical-align: top;
   padding: 10px 10px;
 }

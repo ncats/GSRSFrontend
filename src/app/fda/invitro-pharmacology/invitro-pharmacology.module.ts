@@ -28,19 +28,42 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+
+/* GSRS Core Imports */
+import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+
+/* Invitro Pharmacology Imports */
 import { InvitroPharmacologyComponent } from './invitro-pharmacology.component';
 import { InvitroPharmacologyDetailsComponent } from './invitro-pharmacology-details/invitro-pharmacology-details.component';
 import { InvitroPharmacologyBrowseComponent } from './invitro-pharmacology-browse/invitro-pharmacology-browse.component';
-
+import { InvitroPharmacologyFormComponent } from './invitro-pharmacology-form/invitro-pharmacology-form.component';
+import { InvitroPharmacologyTextSearchComponent } from './invitro-pharmacology-text-search/invitro-pharmacology-text-search.component';
+import { InvitroPharmacologyDataImportComponent } from './invitro-pharmacology-data-import/invitro-pharmacology-data-import.component';
 
 const invitroRoutes: Routes = [
   {
-    path: 'invitro/register',
-    component: InvitroPharmacologyComponent
+    path: 'browse-invitro-pharm',
+    component: InvitroPharmacologyBrowseComponent,
+    //canActivate: [ActivateProductsComponent]
+  },
+  {
+    path: 'invitro-pharm/register',
+    component: InvitroPharmacologyFormComponent
+  },
+  {
+    path: 'invitro-pharm/:id/edit',
+    component: InvitroPharmacologyFormComponent,
+    //canActivate: [ActivateImpuritiesComponent, CanActivateUpdateImpuritiesFormComponent],
+    //canDeactivate: [CanDeactivateImpuritiesFormComponent]
   },
   {
     path: 'invitro-pharm/:id',
     component: InvitroPharmacologyDetailsComponent
+  },
+  {
+    path: 'import-invitro-pharm',
+    component: InvitroPharmacologyDataImportComponent
   }
 ];
 
@@ -75,12 +98,17 @@ const invitroRoutes: Routes = [
     MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
-    OverlayModule
+    OverlayModule,
+    FacetsManagerModule,
+    SubstanceImageModule,
   ],
   declarations: [
     InvitroPharmacologyComponent,
     InvitroPharmacologyDetailsComponent,
-    InvitroPharmacologyBrowseComponent
+    InvitroPharmacologyBrowseComponent,
+    InvitroPharmacologyFormComponent,
+    InvitroPharmacologyTextSearchComponent,
+    InvitroPharmacologyDataImportComponent
   ],
   exports: [
   ],

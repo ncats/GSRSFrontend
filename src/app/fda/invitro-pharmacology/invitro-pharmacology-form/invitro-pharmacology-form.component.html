@@ -1,0 +1,111 @@
+<div class="top-fixed">
+  <div class="actions-container">
+
+    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
+
+    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+      <span>Export JSON</span>
+    </a>&nbsp;&nbsp;&nbsp;
+
+    <!-- Do not show 'Import JSON' button when in Update Impurities page -->
+    <span *ngIf="assayScreening && !assayScreening.id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
+    <span class="middle-fill"></span>
+
+
+    <!-- Register and View Application buttons -->
+    <span *ngIf="assayScreening">
+      <span *ngIf="assayScreening.id">
+        <button mat-flat-button color="primary" [routerLink]="['/invitro-pharm/register']"
+          matTooltip='Register In-vitro Pharmacology Assay Screening'>
+          Register New Assay Screening
+        </button>&nbsp;&nbsp;&nbsp;
+
+        <a mat-flat-button color="primary" [routerLink]="['/invitro-pharm', assayScreening.id]" target="_blank"
+          matTooltip='View this Assay Screening Record (opens in a new window)'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View Assay Screening Record
+        </a>&nbsp;&nbsp;&nbsp;
+
+        <!--
+        <span *ngIf="isAdmin">
+          <button mat-flat-button color="primary" (click)="confirmDeleteImpurities()"
+            matTooltip='Delete this Impurity'>
+            Delete
+          </button>&nbsp;&nbsp;&nbsp;
+        </span>
+        -->
+      </span>
+    </span>
+
+    <!-- Validate and Submit Button -->
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+
+  </div> <!-- div class=actions-container-->
+</div> <!-- div class=top-fixed -->
+
+
+
+<!-- FORM ENTRY -->
+<!-- Display Form Fields -->
+
+<div class="form-content-container mat-form-field-style">
+  <div class="scrollable-container">
+
+    <!-- Display Message-->
+    <div class="message-style bordergray" *ngIf="message">
+      {{message}}
+    </div>
+
+    <div class="cards-container">
+      <div class="margintop10px" *ngIf="assayScreening">
+
+        <div class="title_box">
+          <div class="width290px">
+            <span class="title">
+              <b>{{title}}</b>
+            </span>
+          </div>
+        </div>
+
+        <mat-card class="bordergray">
+          <mat-card-content>
+
+            <div class="form-row">
+              <mat-form-field class="col-6-1">
+                <input matInput placeholder="Assay Title" [(ngModel)]="assayScreening.assayTitle" name="assayTitle" />
+              </mat-form-field>
+
+              <mat-form-field class="col-6-1">
+                <input matInput placeholder="Assay Study Type" [(ngModel)]="assayScreening.assayStudyType"
+                  name="assayStudyType" />
+              </mat-form-field>
+            </div>
+
+          </mat-card-content>
+        </mat-card>
+
+
+      </div> <!-- *ngIf=assayScreening -->
+    </div> <!-- class=cards-container -->
+
+
+  </div>
+  <br><br><br><br>
+</div>
+
+
+<ng-template #noRecord>
+  <br><br><br><br>
+  <div class="colororange padtop50px padleft50px">There is no Assay Screening Data found.</div>
+</ng-template>

@@ -26,13 +26,24 @@ import { GeneralService } from '../../../service/general.service';
 })
 export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
+  @Input() substance: any;
   @Input() substanceUuid: string;
   @Input() substanceUnii: string;
   @Input() substanceName: string;
   @Output() countInvitroPharmOut: EventEmitter<number> = new EventEmitter<number>();
 
-  invitroPharm: any;
+  assayScreening: any;
+  id: string;
+  assayTargetSubId = '';
+  testCompoundSubId = '';
+  ligandSubId = '';
+  controlSubId = '';
+  assayTargetSubNameMatch = false;
+  testCompoundSubNameMatch = false;
+  ligandSubNameMatch = false;
+  controlSubNameMatch = false;
   invitroPharmTotalRecords = 0;
+
   showSpinner = false;
   pageIndex = 0;
   pageSize = 5;
@@ -45,22 +56,13 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   private subscriptions: Array<Subscription> = [];
   displayedColumns: string[] = [
     'view',
+    'studyType',
     'assayTarget',
-    'ligand',
     'testCompound',
-    'assayType',
-    'presentationType',
-    'ligandConcentUnit'
+    'ligand',
+    'control',
+    'screeningConcentration'
   ]
-
-  /*
-  'assayExternalId',
-  'assayTitle',
-  'assayTarget',
-  'assayType',
-  'studyType',
-  'radioligand',
-  'screeningConcent'*/
 
   constructor(
     private router: Router,
@@ -102,8 +104,65 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
     const subscription = this.invitroPharmService.getByAssayTargetUnii(this.substanceUnii).subscribe(results => {
       if (results.length > 0) {
         this.paged = results;
+        this.assayScreening = results;
         this.invitroPharmTotalRecords = results.length;
         this.countInvitroPharmOut.emit(results.length);
+
+        this.assayScreening.forEach(elementAssay => {
+          if (elementAssay) {
+            if (this.substance.approvalID === elementAssay.assayTargetUnii) {
+              this.assayTargetSubNameMatch = true;
+            }
+            if (this.substance.approvalID === elementAssay.testCompoundUnii) {
+              this.testCompoundSubNameMatch = true;
+            }
+            if (this.substance.approvalID === elementAssay.ligandSubstrateUnii) {
+              this.ligandSubNameMatch = true;
+            }
+            if (this.substance.approvalID === elementAssay.controlUnii) {
+              this.controlSubNameMatch = true;
+            }
+          }
+        });
+
+        /*
+        // Get Substance Id for Test Compound
+        if (this.assayScreening) {
+          if (this.assayScreening.testCompoundUnii) {
+            const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.testCompoundUnii).subscribe
+              (substance => {
+                if (substance) {
+                  this.testCompoundSubId = substance.uuid;
+                }
+              });
+            this.subscriptions.push(testCompoundSubIdSubscription);
+          }
+        }
+
+        // Get Substance Id for Ligand/Substrate
+        if (this.assayScreening.ligandSubstrateUnii) {
+          const ligandSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.ligandSubstrateUnii).subscribe
+            (substance => {
+              if (substance) {
+                this.ligandSubId = substance.uuid;
+              }
+            });
+          this.subscriptions.push(ligandSubIdSubscription);
+        }
+
+        // Get Substance Id for control
+        if (this.assayScreening.controlUnii) {
+          const controlSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.controlUnii).subscribe
+            (substance => {
+              if (substance) {
+                this.controlSubId = substance.uuid;
+              }
+            });
+          this.subscriptions.push(controlSubIdSubscription);
+        }
+        */
+
+
       }
     }, error => {
       this.showSpinner = false;  // Stop progress spinner when error occurs
@@ -112,6 +171,21 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
       this.showSpinner = false;  // Stop progress spinner after done
       subscription.unsubscribe();
     });
+  }
+
+  getSubstanceNames(localName: string):boolean {
+    this.substance.names.forEach(element => {
+      if (element) {
+        if (element.name) {
+          if (element.name === localName) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+    });
+    return false;
   }
 
   /*
