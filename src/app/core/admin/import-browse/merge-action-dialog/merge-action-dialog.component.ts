@@ -78,7 +78,7 @@ export class MergeActionDialogComponent implements OnInit {
       this.adminService.processingstatus(id).subscribe(response => {
         if (response.results) {
           response.results.forEach(result => {
-            this.success = result.success;
+            this.success = result.completeSuccess;
 
             if(!this.success) {
               let temp = result.message;
