@@ -180,13 +180,24 @@ export class ImportSummaryComponent implements OnInit {
     return this.privateBulkAction;
   }
 
-  getMatchSummary() {
-    this.substance.matchedRecords.forEach(record => {
-      console.log(record);
+  changePage(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    const skip = event.pageSize * event.pageIndex;
+      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(skip, (this.pageSize + skip));
+      this.getMatchSummary();
+     
+  }
+
+  getMatchSummary(skip?: any) {
+    if (!skip) {
+      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
+    }
+
+    this.privateMatches.forEach(record => {
       if (record.source && record.source === 'Staging Area'){
         this.adminService.GetStagedRecord(record.ID).subscribe(response => {
           record._name = response._name;
-          this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
         }, error => {
           console.log(error);
         })
@@ -194,7 +205,6 @@ export class ImportSummaryComponent implements OnInit {
         this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
           record.uuid = response.uuid;
           record._name = response._name;
-          this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
         }, error => {
           console.log(error);
         });
@@ -502,13 +512,7 @@ export class ImportSummaryComponent implements OnInit {
     this.showLessCodes = !this.showLessCodes;
   }
 
-  changePage(event: PageEvent) {
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
-    const skip = event.pageSize * event.pageIndex;
-      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(skip, (this.pageSize + skip));
-     
-  }
+  
 
 
 }
