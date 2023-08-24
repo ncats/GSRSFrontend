@@ -40,7 +40,12 @@ export class BulkActionDialogComponent implements OnInit {
       this.altStatusCount = 0;
     Object.keys(this.records).forEach(record => {
       if(this.records[record].checked) {
-        const temp = {"ID": record, "checked": true, "name": this.records[record].name};
+        let temp = {};
+        if (this.records[record].substance) {
+          temp = {"ID": record, "checked": true, "name": this.records[record].substance._name};
+        } else {
+          temp = {"ID": record, "checked": true, "name": this.records[record].name};
+        }
         this.filtered.push(temp);
         /*f (this.records[record].substance && this.records[record].substance._metadata && this.records[record].substance._metadata.importStatus
             && this.records[record].substance._metadata.importStatus !== 'staged') {

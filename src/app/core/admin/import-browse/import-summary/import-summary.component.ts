@@ -486,7 +486,8 @@ export class ImportSummaryComponent implements OnInit {
     const dialogRef = this.dialog.open(MergeActionDialogComponent, {
       minWidth: '50%',
       maxWidth: '90%',
-      height: '80%',
+      minHeight: '600px',
+      maxHeight: '90%',
       data: temp
     });
     this.overlayContainer.style.zIndex = '1002';

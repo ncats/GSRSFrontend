@@ -25,7 +25,6 @@ export class MergeActionDialogComponent implements OnInit {
   ) {
     console.log(data);
     if(data.recordId) {
-      console.log(data.recordId);
 
       this.entity = data.recordId;
       this.matches = data.matches;
@@ -47,7 +46,6 @@ export class MergeActionDialogComponent implements OnInit {
   getMergeSchema() {
     this.adminService.getMergeActionSchema().subscribe(response => {
       this.mergeSchema = response;
-      console.log(response);
     });
   }
 
@@ -77,8 +75,9 @@ export class MergeActionDialogComponent implements OnInit {
     refresh(id: string): void {
       this.adminService.processingstatus(id).subscribe(response => {
         if (response.results) {
+          this.success = response.completeSuccess;
           response.results.forEach(result => {
-            this.success = result.completeSuccess;
+           
 
             if(!this.success) {
               let temp = result.message;

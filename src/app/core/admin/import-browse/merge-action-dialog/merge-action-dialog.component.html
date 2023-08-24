@@ -1,5 +1,5 @@
 <h3 mat-dialog-header>Staging Record Merge</h3>
-<div mat-dialog-content style = "min-height:525px" >
+<div mat-dialog-content style = "min-height:500px" >
     <div *ngIf = "!loading && !completed">
 <sf-form  [schema]="mergeSchema"  [model]="mergeModel" (onChange)="checkValue($event.value)" class = "top-margin"></sf-form>
 <div style = "margin-top:25px;" *ngIf = "!data.mergeRecord"><b>Select a record to merge into</b>
@@ -37,7 +37,7 @@
 </div>
 
 
-<div mat-dialog-actions style = "height: 50px;">
+<div mat-dialog-actions style = "min-height: 50px;">
      <div *ngIf = "success" style = "display:flex;width:100%">
             <span class = "middle-fill"></span> 
 
