@@ -3,6 +3,7 @@ import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoadingService } from '@gsrs-core/loading';
 import { AdminService } from '@gsrs-core/admin/admin.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-bulk-action-dialog',
@@ -21,11 +22,13 @@ export class BulkActionDialogComponent implements OnInit {
   deleteStaged = true;
   altStatusCount = 0;
   completedRecordCount = 0;
+  showMerge = false;
   constructor(
    
     public dialogRef: MatDialogRef<ImportDialogComponent>,
     public loadingService: LoadingService,
     private adminService: AdminService,
+    private configService: ConfigService,
 
 
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -60,6 +63,11 @@ export class BulkActionDialogComponent implements OnInit {
   
 
   ngOnInit(): void {
+    if (this.configService.configData && this.configService.configData.stagingArea) {
+      if (this.configService.configData.stagingArea.mergeAction) {
+        this.showMerge = this.configService.configData.stagingArea.mergeAction
+      }
+    }
   }
 
   deleteStagedRecords(): void {

@@ -1,4 +1,4 @@
-<h3 mat-dialog-header>Staging Record Merge</h3>
+<h3 mat-dialog-header>Staging Record Merge <span class = "experimental-label">(experimental)</span></h3>
 <div mat-dialog-content style = "min-height:500px" >
     <div *ngIf = "!loading && !completed">
 <sf-form  [schema]="mergeSchema"  [model]="mergeModel" (onChange)="checkValue($event.value)" class = "top-margin"></sf-form>
