@@ -272,7 +272,6 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
             this.bulkList[record._metadata.recordId].checked = true;
           } else if (record._metadata.recordId) {
             this.bulkList[record._metadata.recordId] = {"checked": true, "name": record._name, "id": record._metadata.recordId};
-            console.log(this.bulkList[record._metadata.recordId]);
           }
           else {
             this.bulkList[record.id] = {"checked": true, "name": record.name, "id": record.id};
