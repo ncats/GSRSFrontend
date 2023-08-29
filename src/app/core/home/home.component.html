@@ -364,7 +364,7 @@
         </div>
         <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+            <button class="mat-raised-button mat-primary" (click) = "dialogRef.close()" mat-dialog-close>Close</button>
         </div>
     </ng-template>
 
