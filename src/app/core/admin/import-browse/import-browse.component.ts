@@ -266,11 +266,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     } else {
       this.substances.forEach(record => {
-        console.log(record);
-          if (this.bulkList[record.id]) {
+          if (record.id && this.bulkList[record.id]) {
             this.bulkList[record.id].checked = true;
           } else {
-            this.bulkList[record.id.recordId] = {"checked": true, "name": record.name, "id": record.id};
+            this.bulkList[record.id] = {"checked": true, "name": record.name, "id": record.id};
           }
         
       });

@@ -367,7 +367,7 @@
               <span><a class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
                 [routerLink]="['/substances/register']"
               [queryParams]="{stagingID : substance._metadata.recordId}">Edit</a></span>
-            <span  ><button  class ="action-button" [disabled] = "disabled"  color = "primary" mat-button mat-flat-button mat-primary-button
+            <span  ><button *ngIf = "showMerge" class ="action-button" [disabled] = "disabled || !showMerge"  color = "primary" mat-button mat-flat-button mat-primary-button
                (click) = "openMergeModal()">Merge</button></span>
             <span><button class ="action-button" color = "primary" [disabled] = "disabled"  mat-button mat-flat-button mat-primary-button 
               (click) = "doAction('reject')">Reject</button></span>
@@ -411,7 +411,7 @@
                     </ng-container>-->
                     <ng-container matColumnDef="merge">
                       <th mat-header-cell *matHeaderCellDef>  </th>
-                      <td mat-cell *matCellDef="let record"> <span ><button class = "action-button" color = "primary" (click) = "openMergeModal(record)" mat-button mat-flat-button mat-primary-button  [disabled] = "disabled" >Merge</button></span></td>
+                      <td mat-cell *matCellDef="let record"> <span ><button class = "action-button" *ngIf = "showMerge" color = "primary" (click) = "openMergeModal(record)" mat-button mat-flat-button mat-primary-button  [disabled] = "disabled || !showMerge" >Merge</button></span></td>
                     </ng-container>
                 
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

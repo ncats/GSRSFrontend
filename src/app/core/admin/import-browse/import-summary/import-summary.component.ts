@@ -75,6 +75,7 @@ export class ImportSummaryComponent implements OnInit {
   displayedColumns2 = ['type', 'message'];
   message = "";
   private privateMatches: any;
+  showMerge = false;
 
   disabled = false;
   performedAction: string;
@@ -130,11 +131,18 @@ export class ImportSummaryComponent implements OnInit {
     if (this.configService.configData && this.configService.configData.molWeightRounding) {
       this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
     }
+
+    if (this.configService.configData && this.configService.configData.stagingArea) {
+      if (this.configService.configData.stagingArea.mergeAction) {
+        this.showMerge = this.configService.configData.stagingArea.mergeAction
+      }
+    }
   //  this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
   }
 
 
   matchFieldsToCount(matches: any) {
+    console.log(matches);
     matches.forEach(match => {
       let newArr: Array<any> = [];
       match.records.forEach(record => {
@@ -180,13 +188,27 @@ export class ImportSummaryComponent implements OnInit {
     return this.privateBulkAction;
   }
 
-  getMatchSummary() {
-    this.substance.matchedRecords.forEach(record => {
-      console.log(record);
+  changePage(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    const skip = event.pageSize * event.pageIndex;
+      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(skip, (this.pageSize + skip));
+      this.matchFieldsToCount(this.privateMatches);
+
+      this.getMatchSummary();
+     
+  }
+
+  getMatchSummary(skip?: any) {
+    if (!skip) {
+      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
+      this.matchFieldsToCount(this.privateMatches);
+    }
+
+    this.privateMatches.forEach(record => {
       if (record.source && record.source === 'Staging Area'){
         this.adminService.GetStagedRecord(record.ID).subscribe(response => {
           record._name = response._name;
-          this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
         }, error => {
           console.log(error);
         })
@@ -194,7 +216,6 @@ export class ImportSummaryComponent implements OnInit {
         this.substanceService.getSubstanceSummary(record.ID).subscribe(response => {
           record.uuid = response.uuid;
           record._name = response._name;
-          this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(0, 5);
         }, error => {
           console.log(error);
         });
@@ -284,14 +305,14 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   doAction(action: string, mergeID?: string) {
- 
+    console.log(action);
     this.displayAction = action;
     this.loadingService.setLoading(true);
     this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {
       if (result.jobStatus === 'completed') {
         this.loadingService.setLoading(false);
         this.doneAction.emit(this.privateSubstance.uuid);
-        this.message = "Record " + action + "  successful";
+        this.message = this.displayAction + " record action completed successfully";
         if (result) {
           this.disabled = true;
           this.performedAction = action;
@@ -328,8 +349,8 @@ export class ImportSummaryComponent implements OnInit {
       if (response.jobStatus === 'completed') {
              this.loadingService.setLoading(false);
               this.doneAction.emit(this.privateSubstance.uuid);
-      this.message = "Record " + action + "  successful";
-      if (result) {
+              this.message = this.displayAction + " record action completed successfully";
+              if (result) {
         this.disabled = true;
         this.performedAction = action;
       }
@@ -476,7 +497,8 @@ export class ImportSummaryComponent implements OnInit {
     const dialogRef = this.dialog.open(MergeActionDialogComponent, {
       minWidth: '50%',
       maxWidth: '90%',
-      height: '80%',
+      minHeight: '600px',
+      maxHeight: '90%',
       data: temp
     });
     this.overlayContainer.style.zIndex = '1002';
@@ -502,13 +524,7 @@ export class ImportSummaryComponent implements OnInit {
     this.showLessCodes = !this.showLessCodes;
   }
 
-  changePage(event: PageEvent) {
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
-    const skip = event.pageSize * event.pageIndex;
-      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(skip, (this.pageSize + skip));
-     
-  }
+  
 
 
 }

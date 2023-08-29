@@ -55,6 +55,11 @@ export interface Config {
     bulkSearch?: any
     useDataUrl?: any;
     userProfile?: any;
+    stagingArea?: StagingAreaSettings;
+}
+
+export interface StagingAreaSettings {
+    mergeAction?: boolean;
 }
 
 export interface LoadedComponents {

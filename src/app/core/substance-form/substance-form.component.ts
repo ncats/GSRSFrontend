@@ -344,10 +344,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   this.status = response.status;
                   this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
                     this.setFormSections(formSections[response.substanceClass]);
+                    this.isLoading = false;
+                    this.loadingService.setLoading(false);
                   });
                 
               }
             }, error => {
+              this.isLoading = false;
+              this.loadingService.setLoading(false);
               });  
        }  else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
