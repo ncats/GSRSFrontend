@@ -4,6 +4,8 @@ export interface Config {
     apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;
     logoutRedirectUrl?: string;
+    unauthorized?: Unauthorized;
+    sessionChecker?: any;
     googleAnalyticsId?: string;
     version?: string;
     buildDateTime?: string;
@@ -61,6 +63,22 @@ export interface Config {
 export interface StagingAreaSettings {
     mergeAction?: boolean;
 }
+export interface SessionChecker { 
+    check?: boolean;
+    redirectUrl?: string;
+    redirectToLogin?: boolean;
+    alertMessage?: string; 
+    interval?: number;
+}
+
+export interface Unauthorized { 
+    redirectUrl?: string;
+    link?: string;
+    redirectToHome?: boolean;
+    message?: string;
+    showContactEmail?: boolean;
+}
+
 
 export interface LoadedComponents {
     applications?: boolean;

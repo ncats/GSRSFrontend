@@ -59,6 +59,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   private wildCardText: string;
   private classicLinkQueryParams = {};
   showHeaderBar = 'true';
+  sessionChecker = false;
 
   constructor(
     private router: Router,
@@ -145,6 +146,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.classicLinkQueryParamsString = '';
     this.contactEmail = this.configService.configData.contactEmail || null;
     this.navItems = this.configService.configData.navItems || null;
+    this.sessionChecker = this.configService.configData.sessionChecker?.check || null
 
   let notempty = false;
     if (this.loadedComponents) {

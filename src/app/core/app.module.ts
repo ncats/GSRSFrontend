@@ -119,6 +119,9 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
+import { SessionCheckerComponent } from './auth/session-checker.component';
+import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -156,9 +159,9 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
     PwdRecoveryComponent,
     MergeActionDialogComponent,
     UserQueryListDialogComponent,
+    ImportScrubberComponent,
     ListCreateDialogComponent,
-    ImportScrubberComponent
-
+    SessionCheckerComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
@@ -237,6 +240,7 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
     },
     { provide: WidgetRegistry, useClass: DefaultWidgetRegistry },
     CanActivateAdminPage,
+    Location, {provide: LocationStrategy, useClass: PathLocationStrategy},
     ConfigService,
     {
         provide: APP_INITIALIZER,

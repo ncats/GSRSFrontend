@@ -1,5 +1,19 @@
 {
   "version": "3.0.3",
+  "logoutRedirectUrl": "https://google.com",
+  "unauthorized": { 
+    "link": "https://google.com",
+    "message": "You are not authorized to access this resource.<br>Check this link. Login, or use the contact email to request access.",
+    "redirectToHome": true,
+    "redirectUrl": "https://google.com"
+  },
+  "sessionChecker": {
+    "interval": "1",
+    "check": true,
+    "redirectUrl": "https://google.com",
+    "alertMessage": "There's not a valid session."
+  },
+  "apiBaseUrl": "http://localhost:8081/",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
