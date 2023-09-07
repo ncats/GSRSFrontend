@@ -18,9 +18,6 @@
     "apiKey": null,
     "apiToken": null
   },
-  "apiBaseUrl": "http://localhost:9081/",
-  "gsrsHomeBaseUrl": "http://localhost:9081/ginas/app/beta/",
-  "apiSSG4mBaseUrl": "http://localhost:9081/",
   "userProfile": {
     "showChangeUserPasswordButton": false
   },
