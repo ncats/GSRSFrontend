@@ -19,7 +19,7 @@ export class ClinicalTrialEditSubstanceRolesComponent implements OnInit {
 
   rolesList: Array<VocabularyTerm> = [];
   selectedRolesTitle = ""; 
-  substanceRolesForm: FormControl;
+  substanceRolesForm: FormControl = new FormControl();
   initialSelections: Array<string> = [];  
 
   constructor(
