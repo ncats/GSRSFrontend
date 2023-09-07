@@ -18,10 +18,7 @@
     "apiKey": null,
     "apiToken": null
   },
-  "userProfile": {
-    "showChangeUserPasswordButton": false
-  },
-"userRegistration": {
+  "userRegistration": {
     "configurations": {
       "emailForm": {
         "active": false,
