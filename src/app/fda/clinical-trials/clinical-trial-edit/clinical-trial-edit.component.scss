@@ -71,8 +71,7 @@
 }
 
 .trial-detailsheader {
-  margin-top: 2em;
-  margin-bottom: 1em;
+  font-size: 18px;
 }
 
 .trial-detailsone {
@@ -100,4 +99,21 @@
 }
 .copy-button {
   padding: .2em;
+}
+
+.note-index {
+  font-weight: bold;
+}
+.full-width {
+   width: 100%;
+}
+
+.outcome-result-note { 
+  border: 1px solid var(--box-shadow-color-3);
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.button-align-two { 
+  text-align: right;
 }

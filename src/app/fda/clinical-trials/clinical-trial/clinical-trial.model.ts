@@ -6,7 +6,21 @@ export interface ClinicalTrialUSDrug {
   orgSubstanceKey: string;
   orgSubstanceKeyType: 'BDNUM';
   protectedMatch: boolean;
+  substanceRoles: Array<SubstanceRole>;
+  comment: string;
   substanceDisplayName: string;
+}
+
+export interface SubstanceRole {
+  id: number;
+  substanceRole: string;
+}
+
+export interface OutcomeResultNote {
+  id: number;
+  outcome: string;
+  result: string;
+  narrative: string;
 }
 
 export interface BdnumNameAll {
@@ -42,4 +56,5 @@ export interface ClinicalTrial {
   firstReceived: string;
   lastVerified: string;
   primaryCompletionDate: string;
+  outcomeResultNotes: Array<OutcomeResultNote>;
 }
