@@ -18,7 +18,7 @@
     "apiKey": null,
     "apiToken": null
   },
-  "userRegistration": {
+"userRegistration": {
     "configurations": {
       "emailForm": {
         "active": false,
