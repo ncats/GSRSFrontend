@@ -296,8 +296,11 @@ export class ImportSummaryComponent implements OnInit {
 
   deleteRecord() {
     this.adminService.deleteStagedRecord([this.privateSubstance._metadata.recordId]).subscribe(response => {
-      this.message = "Successfully deleted staging area record data";
+      this.message = "Successfully deleted staging area record data. Closing dialog.";
       this.deleted = true;
+      setTimeout(() => {
+        this.dialogRef.close();
+      }, 1500);
     }, error => {
       this.message = "There was a problem deleting staging area record data";
 
