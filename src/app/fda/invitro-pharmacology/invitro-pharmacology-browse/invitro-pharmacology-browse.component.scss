@@ -115,7 +115,7 @@
     display: none;
   }
 
-  .tiles-view{
+  .summary-view{
     display: none;
   }
 }
@@ -129,12 +129,12 @@
     display: block;
   }
 
-  .tiles-view{
+  .summary-view{
     display: none;
   }
 }
 
-.tiles {
+.summary {
   .cards-view {
     display: none;
   }
@@ -143,8 +143,8 @@
     display: none;
   }
 
-  .tiles-view{
-    display: flex;
+  .summary-view{
+    display: block;
   }
 }
 

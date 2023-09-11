@@ -114,9 +114,12 @@
           <span class="main-title">Browse In-vitro Pharmacology</span>
         </div>
 
-        <!-- Table, Full, and Title Views -->
+        <!-- Table, Full, and Summary Views -->
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <mat-button-toggle value="table" matTooltip="Table View">
+          <mat-button-toggle value="table" matTooltip="Screening View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="summary" matTooltip="Summary View">
             <mat-icon svgIcon="list"></mat-icon>
           </mat-button-toggle>
           <mat-button-toggle value="cards" matTooltip="Full View">
@@ -142,23 +145,6 @@
           </button>
         </div>
 
-        <!-- @@@@@@@@@@@@@@@ IMPORT Button : NEED TO BE REMOVED -->
-        <!--
-        <div class="export" *ngIf="isAdmin">
-          <button matTooltip="Import Data" mat-button (click)="importExcelData()"
-            class="mat-button export-button mat-raised-button">
-            <mat-icon svgIcon="get_app"></mat-icon> Import Excel Data
-          </button>
-          <input type="file" (change)="onFileChange($event)" />
-
-          <div id="output"></div>
-          <br>
-          <div *ngIf="willDownload">
-            <a id="download"> Download JSON File </a>
-          </div>
-        </div>
-        -->
-        
         <div class="break"></div>
         <!-- Pagination -->
         <div class="full-paginator">
@@ -197,6 +183,8 @@
         <div class="table-view">
           <div class="responsive">
 
+            &nbsp;<span class="font17px"><b>Screening Table</b></span>
+            <br><br>
             <table mat-table [dataSource]="assayScreening" class="font12px" matSort (matSortChange)="sortData($event)"
               matSortActive="studyType" matSortDirection="asc" matSortDisableClear>
 
@@ -289,6 +277,108 @@
         </div> <!-- class="table-view" -->
 
         <!-- TABLE VIEW END -->
+
+
+        <!-- ************************************ -->
+        <!-- SUMMARY VIEW BEGIN -->
+        <!-- ************************************ -->
+        <div class="summary-view">
+          <div class="responsive">
+
+            &nbsp;<span class="font17px"><b>Summary Table</b></span>
+            <br><br>
+            <table mat-table [dataSource]="assayScreening" class="font12px" matSort (matSortChange)="sortData($event)"
+              matSortActive="studyType" matSortDirection="asc" matSortDisableClear>
+
+              <ng-container matColumnDef="viewDetails">
+                <th mat-header-cell *matHeaderCellDef> View Details </th>
+                <td mat-cell *matCellDef="let assay">
+                  <div class="width120px">
+                    <a class="substance-name" [routerLink]="['/invitro-pharm', assay.id]" target="_blank"
+                      alt="View Assay Screening Record" matTooltip='View Assay Screening Record'>View
+                    </a>&nbsp;&nbsp;&nbsp;
+                    <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                      matTooltip='Edit Assay Screening Record'>
+                      <mat-icon svgIcon="edit"></mat-icon>
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="studyType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Study Type </th>
+                <td mat-cell *matCellDef="let assay"> {{assay.assayStudyType}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assayTarget">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Target </th>
+                <td mat-cell *matCellDef="let assay">
+                  <div *ngIf="assay._assayTargetSubId; else noAssayTargetSubId">
+                    <a [routerLink]="['/substances', assay._assayTargetSubId]" target="_blank"
+                      matTooltip="Go to Substance Details page">
+                      {{ assay.assayTarget }}
+                    </a>
+                  </div>
+                  <ng-template #noAssayTargetSubId>
+                    {{assay.assayTarget}}
+                  </ng-template>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="testCompound">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Test Compound </th>
+                <td mat-cell *matCellDef="let assay">
+                  <div *ngIf="assay._testCompoundSubId; else noTestCompoundSubId">
+                    <a [routerLink]="['/substances', assay._testCompoundSubId]" target="_blank"
+                      matTooltip="Go to Substance Details page">
+                      {{ assay.testCompound }}
+                    </a>
+                  </div>
+                  <ng-template #noTestCompoundSubId>
+                    {{assay.testCompound}}
+                  </ng-template>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ligandSubstrate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ligand/Substrate </th>
+                <td mat-cell *matCellDef="let assay">
+                  <div *ngIf="assay._ligandSubstrateSubId; else noLigandSubstrateSubId">
+                    <a [routerLink]="['/substances', assay._ligandSubstrateSubId]" target="_blank"
+                      matTooltip="Go to Substance Details page">
+                      {{ assay.ligandSubstrate }}
+                    </a>
+                  </div>
+                  <ng-template #noLigandSubstrateSubId>
+                    {{assay.ligandSubstrate}}
+                  </ng-template>
+                </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="control">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Control </th>
+                <td mat-cell *matCellDef="let assay">
+                  <div *ngIf="assay._controlSubId; else noControlSubId">
+                    <a [routerLink]="['/substances', assay._controlSubId]" target="_blank"
+                      matTooltip="Go to Substance Details page">
+                      {{ assay.control }}
+                    </a>
+                  </div>
+                  <ng-template #noControlSubId>
+                    {{assay.control}}
+                  </ng-template>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+          </div>
+        </div> <!-- class="table-view" -->
+
+        <!-- SUMMARY VIEW END -->
 
 
         <!-- ************************************ -->

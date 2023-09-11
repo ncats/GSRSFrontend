@@ -116,7 +116,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In-vitro Pharma Screening",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In-vitro Pharmacology",
       "filters": [
         {}
       ]
@@ -955,7 +955,6 @@
       ]
     },
     "applications": {
-
       "default": [
         "Application Type",
         "Center",
@@ -1103,13 +1102,9 @@
     "invitropharmacology": {
       "default": [
         "Assay Target",
-        "Assay Target Unii",
         "Test Compound",
-        "Test Compound Unii",
         "Ligand",
-        "Ligand Unii",
         "Control",
-        "Control Unii",
         "Assay Type",
         "Assay Study Type",
         "Presentation Type",
@@ -1165,6 +1160,12 @@
       "display": "Browse Adverse Events",
       "path": "browse-adverse-events",
       "order": 14
+    },
+    {
+      "component": "invitropharmacology",
+      "display": "Browse In-vitro Pharmacology",
+      "path": "browse-invitro-pharm",
+      "order": 15
     },
     {
       "display": "Register",

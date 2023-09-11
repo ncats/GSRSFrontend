@@ -5,8 +5,14 @@
 
       <mat-card class="bordergray">
         <mat-card-title>
-          <div class="width550px margintop10px">
+          <div class="width650px margintop10px">
             In-vitro Pharmacology Assay Screening&nbsp;&nbsp;
+
+            <!-- Edit GSRS record button -->
+            <a [routerLink]="['/invitro-pharm', assayScreening.id, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS In-vitro Pharmacology Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>&nbsp;&nbsp;
 
             <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
               matTooltip='Export Json'>
@@ -32,7 +38,7 @@
             <table class="tableStyle">
               <tbody>
                 <tr class="headerstyle2">
-                  <td colspan="2"><span class="font22px">General Information</span></td>
+                  <td colspan="2"><span class="font20px">General Information</span></td>
                 </tr>
 
                 <tr>
@@ -47,7 +53,7 @@
 
                 <tr>
                   <td class="fieldKey">Test Compound:</td>
-                  <td><span class="colororange">{{ assayScreening.testCompound }}</span></td>
+                  <td><span class="colororange fontbold">{{ assayScreening.testCompound }}</span></td>
                 </tr>
 
                 <tr>
@@ -57,7 +63,7 @@
                       <div class="divflex">
                         <div>
                           <a [routerLink]="['/substances', testCompoundSubId]" target="_blank">
-                            <span class="fontbold">{{ assayScreening.testCompoundUnii }}</span>
+                            <span class="">{{ assayScreening.testCompoundUnii }}</span>
                           </a>
                         </div>
                         <div class="marginleft30px margintopneg10px width30px">
@@ -85,8 +91,13 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Percent Inhibition:</td>
-                  <td>{{ assayScreening.percentInhibition }}</td>
+                  <td class="fieldKey">Percent Inhibition Mean:</td>
+                  <td>{{ assayScreening.percentInhibitionMean }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Purity:</td>
+                  <td>{{ assayScreening.purity }}</td>
                 </tr>
 
                 <tr>
@@ -109,7 +120,12 @@
             <table class="tableStyle">
               <tbody>
                 <tr class="headerstyle2">
-                  <td colspan="2"><span class="font22px">Assay Information</span></td>
+                  <td colspan="2"><span class="font20px">Assay Information</span></td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Relationship Type:</td>
+                  <td>{{ assayScreening.relationshipType }}</td>
                 </tr>
 
                 <tr>
@@ -119,7 +135,7 @@
 
                 <tr>
                   <td class="fieldKey">Assay Target:</td>
-                  <td><span class="colororange">{{ assayScreening.assayTarget }}</span></td>
+                  <td><span class="colororange fontbold">{{ assayScreening.assayTarget }}</span></td>
                 </tr>
 
                 <tr>
@@ -129,7 +145,7 @@
                       <div class="divflex">
                         <div>
                           <a [routerLink]="['/substances', assayTargetSubId]" target="_blank">
-                            <span class="fontbold">{{ assayScreening.assayTargetUnii }}</span>
+                            <span class="">{{ assayScreening.assayTargetUnii }}</span>
                           </a>
                         </div>
                         <div class="marginleft30px margintopneg10px width30px">
@@ -148,7 +164,7 @@
 
                 <tr>
                   <td class="fieldKey">Ligand/Substrate:</td>
-                  <td><span class="colororange">{{ assayScreening.ligandSubstrate }}</span></td>
+                  <td><span class="colororange fontbold">{{ assayScreening.ligandSubstrate }}</span></td>
                 </tr>
 
                 <tr>
@@ -158,7 +174,7 @@
                       <div class="divflex">
                         <div>
                           <a [routerLink]="['/substances', ligandSubId]" target="_blank">
-                            <span class="fontbold">{{ assayScreening.ligandSubstrateUnii }}</span>
+                            <span class="">{{ assayScreening.ligandSubstrateUnii }}</span>
                           </a>
                         </div>
                         <div class="marginleft30px margintopneg10px width30px">
@@ -186,7 +202,7 @@
 
                 <tr>
                   <td class="fieldKey">Control:</td>
-                  <td><span class="colororange">{{ assayScreening.control }}</span></td>
+                  <td><span class="colororange fontbold">{{ assayScreening.control }}</span></td>
                 </tr>
 
                 <tr>
@@ -196,7 +212,7 @@
                       <div class="divflex">
                         <div>
                           <a [routerLink]="['/substances', controlSubId]" target="_blank">
-                            <span class="fontbold">{{ assayScreening.controlUnii }}</span>
+                            <span class="">{{ assayScreening.controlUnii }}</span>
                           </a>
                         </div>
                         <div class="marginleft30px margintopneg10px width30px">
@@ -214,6 +230,51 @@
                 </tr>
 
                 <tr>
+                  <td class="fieldKey">Control Type:</td>
+                  <td>{{ assayScreening.controlType }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Control Value Type:</td>
+                  <td>{{ assayScreening.controlValueType }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Control Value Mean:</td>
+                  <td>{{ assayScreening.controlValueMean }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Control Value Low:</td>
+                  <td>{{ assayScreening.controlValueLow }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Control Value High:</td>
+                  <td>{{ assayScreening.controlValueHigh }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Control Value Unit:</td>
+                  <td>{{ assayScreening.controlValueUnit }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Test Value Type:</td>
+                  <td>{{ assayScreening.testValueType }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Test Value:</td>
+                  <td>{{ assayScreening.testValue }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Test Value Unit:</td>
+                  <td>{{ assayScreening.testValueUnit }}</td>
+                </tr>
+
+                <tr>
                   <td class="fieldKey">Presentation Type:</td>
                   <td>{{ assayScreening.presentationType }}</td>
                 </tr>
@@ -222,22 +283,6 @@
                   <td class="fieldKey">Presentation:</td>
                   <td>{{ assayScreening.presentation }}</td>
                 </tr>
-
-                <tr>
-                  <td class="fieldKey">Value Type:</td>
-                  <td>{{ assayScreening.valueType }}</td>
-                </tr>
-
-                <tr>
-                  <td class="fieldKey">Value:</td>
-                  <td>{{ assayScreening.value }}</td>
-                </tr>
-
-                <tr>
-                  <td class="fieldKey">Value Units:</td>
-                  <td>{{ assayScreening.valueUnits }}</td>
-                </tr>
-
               </tbody>
             </table>
           </div>
@@ -249,7 +294,7 @@
             <table class="tableStyle">
               <tbody>
                 <tr class="headerstyle2">
-                  <td colspan="2"><span class="font22px">References</span></td>
+                  <td colspan="2"><span class="font20px">References</span></td>
                 </tr>
 
                 <tr>
@@ -292,7 +337,7 @@
             <table class="tableStyle">
               <tbody>
                 <tr class="headerstyle2">
-                  <td colspan="2"><span class="font22px">Approver Information</span></td>
+                  <td colspan="2"><span class="font20px">Approver Information</span></td>
                 </tr>
 
                 <tr>
@@ -330,7 +375,7 @@
             <table class="tableStyle">
               <tbody>
                 <tr class="headerstyle2">
-                  <td colspan="2"><span class="font22px">Laboratory Information</span></td>
+                  <td colspan="2"><span class="font20px">Laboratory Information</span></td>
                 </tr>
 
                 <tr>

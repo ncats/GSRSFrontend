@@ -258,8 +258,8 @@
   font-size: 16px;
 }
 
-.font22px {
-  font-size: 22px;
+.font20px {
+  font-size: 20px;
 }
 
 .fontbold {
@@ -331,9 +331,9 @@
   max-width: 400px;
 }
 
-.width550px {
-  width: 550px;
-  max-width: 550px;
+.width650px {
+  width: 650px;
+  max-width: 650px;
 }
 
 .width45percent {
@@ -425,13 +425,13 @@ table.tableStyle td, table.tableStyle th {
 }
 
 table.tableStyle tbody td {
-  font-size: 16px;
+  font-size: 15px;
   vertical-align: top;
-  padding: 10px 10px;
+  padding: 8px 8px;
 }
 
 table.tableStyle tr:nth-child(even) {
-  background: var(--table-tr-even-bg-color);
+  background: var(--table-tr-even-bg-color-3);
 }
 
 table.tableStyle thead {

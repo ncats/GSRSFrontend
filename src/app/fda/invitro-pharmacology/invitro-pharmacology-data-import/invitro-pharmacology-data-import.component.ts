@@ -90,6 +90,9 @@ export class InvitroPharmacologyDataImportComponent implements OnInit {
       return;
     }
     else {
+      // Empty the list
+      this.importDataList.length = 0;
+
       const reader: FileReader = new FileReader();
       reader.onload = (e: any) => {
         const bstr: string = e.target.result;

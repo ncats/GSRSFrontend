@@ -37,6 +37,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   impuritiesCount = 0;
   ssg4mCount = 0;
   invitroPharmCount = 0;
+  invitroPharmSummaryCount = 0;
   provenance = '';
   provenanceList = '';
   datasourceList = '';
@@ -148,6 +149,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   getInvitroPharmCount($event) {
     this.invitroPharmCount = $event;
+  }
+
+  getInvitroPharmSummaryCount($event) {
+    this.invitroPharmSummaryCount = $event;
   }
 
   getSubstanceKey() {

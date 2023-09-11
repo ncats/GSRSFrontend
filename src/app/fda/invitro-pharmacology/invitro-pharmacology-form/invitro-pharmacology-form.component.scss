@@ -47,6 +47,27 @@
   /*padding-left: 70px; */
 }
 
+.headerstyle2 {
+  border: 1px solid var(--blue-color);
+  border-bottom: none;
+  height: 35px;
+  background-color: var(--table-th-border-color);    /*--primary-title-color*/
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.fieldKey {
+  width: 290px;
+  font-weight: 800;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+.fieldvalue {
+  width: 95%;
+  padding-left: 5px;
+}
+
 .divflex {
   display: flex;
 }
@@ -314,6 +335,10 @@
   width: 32%;
 }
 
+.width60percent {
+  width: 60%;
+}
+
 .colorgray {
   color: var(--regular-grey-color);
 }
@@ -332,6 +357,10 @@
 
 .font13px {
   font-size: 13px;
+}
+
+.font20px {
+  font-size: 20px;
 }
 
 .textalignright {
@@ -468,17 +497,19 @@ table.tableStyle {
 
 table.tableStyle td, table.tableStyle th {
   border: 1px solid var(--table-th-border-color);
-  padding: 3px 2px;
+  /*padding: 3px 2px;*/
 }
 
 table.tableStyle tbody td {
   font-size: 16px;
   vertical-align: top;
-  padding: 10px 10px;
+  /*padding: 10px 10px;*/
 }
 
 table.tableStyle tr:nth-child(even) {
-  background: var(--table-tr-even-bg-color);
+  /* background: var(--table-tr-even-bg-color);*/
+  /*background: var(--table-tr-even-bg-color-3); */
+  background: var(--table-tr-even-bg-color-3);
 }
 
 table.tableStyle thead {

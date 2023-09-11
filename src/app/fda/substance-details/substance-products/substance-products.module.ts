@@ -22,6 +22,7 @@ import { SubstanceClinicalTrialsEuropeComponent } from './substance-clinical-tri
 import { SubstanceImpuritiesComponent } from './substance-impurities/substance-impurities.component';
 import { SubstanceSsg4mComponent } from './substance-ssg4m/substance-ssg4m.component';
 import { SubstanceInvitroPharmacologyComponent } from './substance-invitro-pharmacology/substance-invitro-pharmacology.component';
+import { SubstanceInvitroPharmacologySummaryComponent } from './substance-invitro-pharmacology-summary/substance-invitro-pharmacology-summary.component';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { SubstanceInvitroPharmacologyComponent } from './substance-invitro-pharm
     SubstanceClinicalTrialsEuropeComponent,
     SubstanceImpuritiesComponent,
     SubstanceSsg4mComponent,
-    SubstanceInvitroPharmacologyComponent
+    SubstanceInvitroPharmacologyComponent,
+    SubstanceInvitroPharmacologySummaryComponent
   ]
 })
 export class SubstanceProductsModule { }

@@ -391,7 +391,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.invitroPharmacologyService
+      data: this.invitroPharmacologyService.assayScreening
     });
 
     //   this.overlayContainer.style.zIndex = '1002';
@@ -402,7 +402,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    let json = this.invitroPharmacologyService;
+    let json = this.invitroPharmacologyService.assayScreening;
     // this.json = this.cleanObject(substanceCopy);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
     this.downloadJsonHref = uri;

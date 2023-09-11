@@ -20,17 +20,17 @@ import { InvitroPharmacologyService } from '../../../invitro-pharmacology/servic
 import { GeneralService } from '../../../service/general.service';
 
 @Component({
-  selector: 'app-substance-invitro-pharmacology',
-  templateUrl: './substance-invitro-pharmacology.component.html',
-  styleUrls: ['./substance-invitro-pharmacology.component.scss']
+  selector: 'app-substance-invitro-pharmacology-summary',
+  templateUrl: './substance-invitro-pharmacology-summary.component.html',
+  styleUrls: ['./substance-invitro-pharmacology-summary.component.scss']
 })
-export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
+export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
   @Input() substance: any;
   @Input() substanceUuid: string;
   @Input() substanceUnii: string;
   @Input() substanceName: string;
-  @Output() countInvitroPharmOut: EventEmitter<number> = new EventEmitter<number>();
+  @Output() countInvitroPharmSummaryOut: EventEmitter<number> = new EventEmitter<number>();
 
   assayScreening: any;
   id: string;
@@ -56,13 +56,15 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   private subscriptions: Array<Subscription> = [];
   displayedColumns: string[] = [
     'view',
-    'relationshipType',
-    'studyType',
+    'assayExternalSource',
+    'assayExternalId',
+    'assayTitle',
+    'assayType',
     'assayTarget',
     'testCompound',
-    'ligand',
     'control',
-    'screeningConcentration'
+    'controlValueMean',
+    'controlValueType'
   ]
 
   constructor(
@@ -107,7 +109,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
         this.paged = results;
         this.assayScreening = results;
         this.invitroPharmTotalRecords = results.length;
-        this.countInvitroPharmOut.emit(results.length);
+        this.countInvitroPharmSummaryOut.emit(results.length);
 
         this.assayScreening.forEach(elementAssay => {
           if (elementAssay) {

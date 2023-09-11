@@ -27,6 +27,12 @@ export interface InvitroAssayScreening {
   ligandSubstrateUnii?: string;
   control?: string;
   controlUnii?: string;
+  controlValueType?: string;
+  controlValue?: string;
+  controlValueUnit?: string;
+  testValueType?: string;
+  testValue?: string;
+  testValueUnit?: string;
   assayType?: string;
   studyType?: string;
   batchId?: string;
