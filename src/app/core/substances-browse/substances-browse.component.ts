@@ -194,6 +194,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   fetchBulkLists() {
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {
       console.log(result);
+    }, error => {
+      console.log(error);
     });
 
   }
@@ -254,6 +256,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       console.log(result);
       this.userLists = result.lists;
 
+        }, error => {
+          console.log(error);
+          this.userLists = null;
         })
       } else {
         this.showDeprecated = false;
