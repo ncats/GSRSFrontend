@@ -18,6 +18,9 @@
     "apiKey": null,
     "apiToken": null
   },
+  "stagingArea": {
+    "mergeAction": false
+  },
 "userRegistration": {
     "configurations": {
       "emailForm": {
