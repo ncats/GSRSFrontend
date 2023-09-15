@@ -221,7 +221,7 @@ export class UserQueryListDialogComponent implements OnInit {
     let navigationExtras: NavigationExtras = {queryParams: {}};
  
       const newtest = this.activeName;
-      navigationExtras.queryParams = {'facets': 'User List*' + this.identifier + ':' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
+      navigationExtras.queryParams = {'facets': 'User List*' + this.identifier.replace(/[.]/g, '!.') + ':' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
   
     this.router.navigate(['/browse-substance'], navigationExtras);
     this.dialogRef.close();
