@@ -56,6 +56,7 @@ export interface Config {
     useDataUrl?: any;
     userProfile?: any;
     stagingArea?: StagingAreaSettings;
+    privacyStatement: string;
 }
 
 export interface StagingAreaSettings {
