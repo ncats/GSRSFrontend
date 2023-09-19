@@ -164,10 +164,12 @@
 </mat-paginator>
 </div>
 
-<div class = "form-row">
+<div class = "form-row" style = "flex-direction:column">
     <br/>
-    {{message}}
+    <div style = "width: 100%">{{message}}</div> 
     <br/>
+    <div *ngIf = "refreshing"><br/>
+        &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; This dialog can safely be closed and the process will continue in the background.</div>
     <span *ngIf = "view === 'import' && viewCreated">
         &nbsp; &nbsp; &nbsp; <a class = "link" (click) = "useCreated()">View new list</a>
     </span>

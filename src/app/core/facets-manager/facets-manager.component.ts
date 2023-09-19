@@ -271,7 +271,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private populateFacets(): void {
-    console.log(this.privateRawFacets);
     if (this.privateRawFacets && this.facetsConfig) {
       if (this.facetsAuthSubscription != null) {
         this.facetsAuthSubscription.unsubscribe();
@@ -283,7 +282,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         this.showAudit = this.authService.hasRoles('admin');
         let facetKeys = Object.keys(this.facetsConfig) || [];
         if (this._facetDisplayType) {
-          if (this._facetDisplayType === 'default' || this._facetDisplayType === 'staging') {
+          if (this._facetDisplayType === 'default' || this.calledFrom === 'staging') {
             facetKeys.forEach(facetKey => {
               if (this.facetsConfig[facetKey].length
                 && (facetKey === 'default' || this.authService.hasRoles(facetKey) || (facetKey === 'staging' && this.calledFrom === 'staging'))) {
