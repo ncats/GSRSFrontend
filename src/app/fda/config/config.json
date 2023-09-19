@@ -1053,7 +1053,8 @@
         "Age Groups",
         "Intervention Type",
         "Study Results",
-        "Conditions"
+        "Conditions",
+        "Substance Role"
       ]
     },
     "clinicaltrialsus": {
@@ -1069,7 +1070,8 @@
         "Age Groups",
         "Intervention Type",
         "Study Results",
-        "Conditions"
+        "Conditions",
+        "Substance Role"
       ]
     },
     "adverseeventpt": {
