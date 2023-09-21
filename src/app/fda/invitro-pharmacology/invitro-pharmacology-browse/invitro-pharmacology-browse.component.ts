@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PageEvent } from '@angular/material/paginator';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Sort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -39,7 +40,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   view = 'cards';
   public privateSearchTerm?: string;
-  public assayScreening: Array<InvitroAssayScreening>;
+  public assays: Array<InvitroAssayScreening>;
   order: string;
   public sortValues = invitroPharmacologySearchSortValues;
   pageIndex: number;
@@ -47,6 +48,15 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   jumpToValue: string;
 
   totalInvitroPharm: number;
+  calculateIc50: string;
+  tabSelectedIndex = 0;
+  viewTabSelectedIndex = 0;
+  assayTargetSummary: string;
+  displayCategory = 'summary';
+
+  targetSummaries: any;
+  substanceNameLists: Array<any> = [];
+  testCompoundList: Array<any> = [];
 
   isLoading = true;
   isError = false;
@@ -76,11 +86,21 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   ascDescDir = 'desc';
   displayedColumns: string[] = [
     'viewDetails',
-    'studyType',
-    'assayTarget',
     'testCompound',
-    'ligandSubstrate',
-    'control'
+    'batchId',
+    'screeningConcentration',
+    'screeningInhibition',
+    'assayTarget',
+    'assayType'
+  ];
+
+  summaryDisplayedColumns: string[] = [
+    'testCompound',
+    'amountValue',
+    'relationshipType',
+    'relatedSubstance',
+    'studyType',
+    'assayType'
   ];
 
   // needed for facets
@@ -169,7 +189,24 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     }
   }
 
+  tabSelectedUpdated(event: MatTabChangeEvent) {
+    if (event) {
+      //  this.category = event.tab.textLabel;
+
+      //  this.setFacetsforTabs();
+    }
+  }
+
+  viewTabSelectedUpdated(event: MatTabChangeEvent) {
+    if (event) {
+      //  this.category = event.tab.textLabel;
+
+      //  this.setFacetsforTabs();
+    }
+  }
+
   searchInvitroPharmacology() {
+    //this.privateSearchTerm = 'root_invitroTestCompound_testCompound:BAF312';
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     const subscription = this.invitroPharmacologyService.getInvitroPharmacology(
@@ -181,10 +218,10 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     )
       .subscribe(pagingResponse => {
         this.isError = false;
-        this.assayScreening = pagingResponse.content;
+        this.assays = pagingResponse.content;
         // didn't work unless I did it like this instead of
         // below export statement
-        this.dataSource = this.assayScreening;
+        this.dataSource = pagingResponse.content;
         this.totalInvitroPharm = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
@@ -196,56 +233,83 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         }
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
+          this.rawFacets.forEach(elementFacet => {
+            if (elementFacet.name === "Test Compound") {
+              const values = elementFacet.values;
+              values.forEach(elementValue => {
+                if (elementValue.label) {
+                  this.substanceNameLists.push(elementValue.label);
+
+                  // CALL Browse By ALL Substance
+                  this.browseByAllSubstance();
+                }
+
+              });
+            }
+          });
+
         }
 
-        // Get Substance Id for Test Compound
-        this.assayScreening.forEach(element => {
+        // LOOP Results:
+        this.assays.forEach(element => {
           if (element) {
 
-            // Get Substance Id for Assay Target
-            if (element.assayTargetUnii) {
-              const assayTargetSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.assayTargetUnii).subscribe
-                (substance => {
-                  if (substance) {
-                    element._assayTargetSubId = substance.uuid;
-                  }
-                });
-              this.subscriptions.push(assayTargetSubIdSubscription);
-            }
+            if (element.assayTarget) {
+              element._targetSummaries = element.invitroTestCompound.invitroRelationships;
 
-            // Get Substance Id for Test Compound
-            if (element.testCompoundUnii) {
-              const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.testCompoundUnii).subscribe
-                (substance => {
-                  if (substance) {
-                    element._testCompoundSubId = substance.uuid;
-                  }
-                });
-              this.subscriptions.push(testCompoundSubIdSubscription);
-            }
+              // Calculate IC50
+              if (element.percentInhibitionMean) {
+                if (element.percentInhibitionMean < 30) {
+                  element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
+                }
+              }
 
-            // Get Substance Id for Ligand/Substrate
-            if (element.ligandSubstrateUnii) {
-              const ligandSubstrateSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.ligandSubstrateUnii).subscribe
-                (substance => {
-                  if (substance) {
-                    element._ligandSubstrateSubId = substance.uuid;
-                  }
-                });
-              this.subscriptions.push(ligandSubstrateSubIdSubscription);
-            }
+              // Get Substance Id for Assay Target
+              if (element.assayTargetUnii) {
+                const assayTargetSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.assayTargetUnii).subscribe
+                  (substance => {
+                    if (substance) {
+                      element._assayTargetSubId = substance.uuid;
+                    }
+                  });
+                this.subscriptions.push(assayTargetSubIdSubscription);
+              }
 
-            // Get Substance Id for Control
-            if (element.controlUnii) {
-              const controlSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.controlUnii).subscribe
-                (substance => {
-                  if (substance) {
-                    element._controlSubId = substance.uuid;
-                  }
-                });
-              this.subscriptions.push(controlSubIdSubscription);
-            }
+              // Get Substance Id for Test Compound
+              if (element.invitroTestCompound.testCompoundUnii) {
+                const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.invitroTestCompound.testCompoundUnii).subscribe
+                  (substance => {
+                    if (substance) {
+                      element.invitroTestCompound._testCompoundSubId = substance.uuid;
+                    }
+                  });
+                this.subscriptions.push(testCompoundSubIdSubscription);
+              }
 
+              // Get Substance Id for Ligand/Substrate
+              if (element.ligandSubstrateUnii) {
+                const ligandSubstrateSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.ligandSubstrateUnii).subscribe
+                  (substance => {
+                    if (substance) {
+                      element._ligandSubstrateSubId = substance.uuid;
+                    }
+                  });
+                this.subscriptions.push(ligandSubstrateSubIdSubscription);
+              }
+
+              // Get Substance Id for Control
+              if (element.controlUnii) {
+                const controlSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.controlUnii).subscribe
+                  (substance => {
+                    if (substance) {
+                      element._controlSubId = substance.uuid;
+                    }
+                  });
+                this.subscriptions.push(controlSubIdSubscription);
+              }
+
+              //
+            }
           }
         });
 
@@ -286,6 +350,29 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
+  }
+
+
+  browseByAllSubstance() {
+    this.substanceNameLists.forEach(elementSubstance => {
+      alert(elementSubstance);
+      const assayList = [];
+      this.assays.forEach(elementAssay => {
+        if (elementAssay.invitroTestCompound) {
+          if (elementAssay.invitroTestCompound.testCompound) {
+            if (elementAssay.invitroTestCompound.testCompound === elementSubstance) {
+              const assay = { 'testCompound': elementSubstance, 'assay': elementAssay };
+              assayList.push(assay);
+            }
+          }
+        }
+      });
+      alert("LENGTH: " + this.testCompoundList.length);
+      this.testCompoundList.push(assayList);
+    });
+
+    alert(this.testCompoundList[0].testCompound);
+    console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
   }
 
   setSearchTermValue() {
@@ -483,6 +570,94 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+  formatValue(v) {
+    if (v) {
+      if (typeof v === 'object') {
+        if (v.display) {
+          return v.display;
+        } else if (v.value) {
+          return v.value;
+        } else {
+          return null;
+        }
+      } else {
+        return v;
+      }
+    }
+    return null;
+  }
+
+  displayAmount(amt: any): string {
+    let ret = '';
+    if (amt) {
+      //if (typeof assay === 'object') {
+      //  if (amt) {
+
+      let addedunits = false;
+      let unittext = this.formatValue(amt.amountUnits);
+      if (!unittext) {
+        unittext = '';
+      }
+      const atype = this.formatValue(amt.amountType);
+      if (atype) {
+        ret += atype + '\n';
+      }
+      if (amt.amountAverage || amt.amountHigh || amt.amountLow) {
+        if (amt.amountAverage) {
+          ret += amt.amountAverage;
+          if (amt.amountUnits) {
+            ret += ' ' + unittext;
+            addedunits = true;
+          }
+        }
+        if (amt.amountHigh || amt.amountLow) {
+          ret += ' [';
+          if (amt.amountHigh && !amt.amountLow) {
+            ret += '<' + amt.amountHigh;
+          } else if (!amt.amountHigh && amt.amountLow) {
+            ret += '>' + amt.amountLow;
+          } else if (amt.amountHigh && amt.amountLow) {
+            ret += amt.amountLow + ' to ' + amt.amountHigh;
+          }
+          ret += '] ';
+          if (!addedunits) {
+            if (amt.amountUnits) {
+              ret += ' ' + unittext;
+              addedunits = true;
+            }
+          }
+        }
+        ret += ' (average) ';
+      }
+
+      /*
+      if (amt.highLimit || amt.lowLimit) {
+        ret += '\n[';
+      }
+      if (amt.highLimit && !amt.lowLimit) {
+        ret += '<' + amt.highLimit;
+      } else if (!amt.highLimit && amt.lowLimit) {
+        ret += '>' + amt.lowLimit;
+      } else if (amt.highLimit && amt.lowLimit) {
+        ret += amt.lowLimit + ' to ' + amt.highLimit;
+      }
+      if (amt.highLimit || amt.lowLimit) {
+        ret += '] ';
+        if (!addedunits) {
+          if (amt.units) {
+            ret += ' ' + unittext;
+            addedunits = true;
+          }
+        }
+        ret += ' (limits)';
+      }
+      */
+      //     }
+      //      }
+    }
+    return ret;
   }
 
 }

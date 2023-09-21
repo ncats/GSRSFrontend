@@ -37,17 +37,45 @@ export interface InvitroAssayScreening {
   studyType?: string;
   batchId?: string;
   testDate?: number;
+  screeningConcentration?: number;
+  percentInhibitionMean?: number;
   internalVersion?: number;
   createdBy?: string;
   creationDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
   _assayTargetSubId?: string;
-  _testCompoundSubId?: string;
   _ligandSubstrateSubId?: string;
   _controlSubId?: string;
+  _calculateIc50?: string;
+  _targetSummaries?: any;
+  invitroTestCompound?: InvitroTestCompound;
   invitroApprovers?: InvitroApprover;
   invitroLaboratories?: InvitroApprover;
+}
+
+export interface InvitroTestCompound {
+  id?: number;
+  testCompound?: string;
+  testCompoundUnii?: string;
+  createdBy?: string;
+  creationDate?: number;
+  modifiedBy?: string;
+  lastModifiedDate?: number;
+  internalVersion?: number;
+  _testCompoundSubId: string;
+  invitroRelationships?: InvitroRelationships;
+}
+
+export interface InvitroRelationships {
+  id?: number;
+  relationshipType?: string;
+  relatedSubstance?: string;
+  createdBy?: string;
+  creationDate?: number;
+  modifiedBy?: string;
+  lastModifiedDate?: number;
+  internalVersion?: number;
 }
 
 export interface InvitroApprover {

@@ -17,6 +17,7 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 
 /* GSRS Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../../invitro-pharmacology/service/invitro-pharmacology.service';
+import { invitroPharmacologySearchSortValues } from '../../../invitro-pharmacology/invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 import { GeneralService } from '../../../service/general.service';
 
 @Component({
@@ -43,6 +44,8 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   ligandSubNameMatch = false;
   controlSubNameMatch = false;
   invitroPharmTotalRecords = 0;
+  order: string;
+  public sortValues = invitroPharmacologySearchSortValues;
 
   showSpinner = false;
   pageIndex = 0;
@@ -54,6 +57,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   etag = '';
   ascDescDir = 'desc';
   private subscriptions: Array<Subscription> = [];
+  /*
   displayedColumns: string[] = [
     'view',
     'relationshipType',
@@ -64,6 +68,17 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
     'control',
     'screeningConcentration'
   ]
+   */
+
+  displayedColumns: string[] = [
+    'viewDetails',
+    'testCompound',
+    'batchId',
+    'screeningConcentration',
+    'screeningInhibition',
+    'assayTarget',
+    'assayType'
+  ];
 
   constructor(
     private router: Router,
@@ -189,53 +204,109 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
     return false;
   }
 
-  /*
-  getSsg4mBySubstanceUuid(pageEvent?: PageEvent) {
-    this.showSpinner = true;  // Start progress spinner
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search In-vitro Pharmacology
+      this.getInvitroPharm();
+    }
+    return;
+  }
 
-    this.setPageEvent(pageEvent);
-    const skip = this.page * this.pageSize;
+  formatValue(v) {
+    if (v) {
+      if (typeof v === 'object') {
+        if (v.display) {
+          return v.display;
+        } else if (v.value) {
+          return v.value;
+        } else {
+          return null;
+        }
+      } else {
+        return v;
+      }
+    }
+    return null;
+  }
 
-    const subscription = this.ssg4mService.getSyntheticPathwayIndexBySubUuid(this.substanceUuid).subscribe(results => {
-      let synthResultsOrganized: Array<any> = [];
+  displayAmount(amt: any): string {
+    let ret = '';
+    if (amt) {
+      //if (typeof assay === 'object') {
+      //  if (amt) {
 
-      if (results.length > 0) {
-        // Loop through the results and organize the data to display in the table.
-        results.forEach(rec => {
-          if (rec.synthPathwaySkey) {
-            let found = false;
-            synthResultsOrganized.forEach(synthOrg => {
-              // If found the key, append Reaction in the same record, or else create a new record
-              if (synthOrg['synthPathwaySkey'] === rec.synthPathwaySkey) {
-                synthOrg.synthDetails.push({'sbstncReactnSectNm': rec.sbstncReactnSectNm, 'sbstncRoleNm': rec.sbstncRoleNm});
-               // alert("FOUND: " + synthOrg['synthPathwaySkey']  + '    ' + rec.synthPathwaySkey);
-                found = true;
-              }
-            });
-
-            //  else { // a new record
-            if (found === false) {
-                const newSynth: any = {synthDetails: []};
-                newSynth.synthPathwaySkey = rec.synthPathwaySkey;
-                newSynth.synthDetails.push({'sbstncReactnSectNm': rec.sbstncReactnSectNm, 'sbstncRoleNm': rec.sbstncRoleNm});
-                synthResultsOrganized.push(newSynth);
+      let addedunits = false;
+      let unittext = this.formatValue(amt.amountUnits);
+      if (!unittext) {
+        unittext = '';
+      }
+      const atype = this.formatValue(amt.amountType);
+      if (atype) {
+        ret += atype + '\n';
+      }
+      if (amt.amountAverage || amt.amountHigh || amt.amountLow) {
+        if (amt.amountAverage) {
+          ret += amt.amountAverage;
+          if (amt.amountUnits) {
+            ret += ' ' + unittext;
+            addedunits = true;
+          }
+        }
+        if (amt.amountHigh || amt.amountLow) {
+          ret += ' [';
+          if (amt.amountHigh && !amt.amountLow) {
+            ret += '<' + amt.amountHigh;
+          } else if (!amt.amountHigh && amt.amountLow) {
+            ret += '>' + amt.amountLow;
+          } else if (amt.amountHigh && amt.amountLow) {
+            ret += amt.amountLow + ' to ' + amt.amountHigh;
+          }
+          ret += '] ';
+          if (!addedunits) {
+            if (amt.amountUnits) {
+              ret += ' ' + unittext;
+              addedunits = true;
             }
           }
-        });
+        }
+        ret += ' (average) ';
       }
-      this.ssg4mTotalRecords = synthResultsOrganized.length;
-      this.paged = synthResultsOrganized;
-      this.countSsg4mOut.emit(synthResultsOrganized.length);
-    }, error => {
-      this.showSpinner = false;  // Stop progress spinner
-      console.log('error');
-    }, () => {
-      this.showSpinner = false;  // Stop progress spinner
-      subscription.unsubscribe();
-    });
-    // this.loadingStatus = '';
-    // this.showSpinner = false;  // Stop progress spinner
+
+      /*
+      if (amt.highLimit || amt.lowLimit) {
+        ret += '\n[';
+      }
+      if (amt.highLimit && !amt.lowLimit) {
+        ret += '<' + amt.highLimit;
+      } else if (!amt.highLimit && amt.lowLimit) {
+        ret += '>' + amt.lowLimit;
+      } else if (amt.highLimit && amt.lowLimit) {
+        ret += amt.lowLimit + ' to ' + amt.highLimit;
+      }
+      if (amt.highLimit || amt.lowLimit) {
+        ret += '] ';
+        if (!addedunits) {
+          if (amt.units) {
+            ret += ' ' + unittext;
+            addedunits = true;
+          }
+        }
+        ret += ' (limits)';
+      }
+      */
+      //     }
+      //      }
+    }
+    return ret;
   }
-  */
 
 }
