@@ -40,7 +40,7 @@
             </button>
           </div>
         </div>
-        <div class="mat-elevation-z2" style = "display:flex;flex-direction:column" *ngIf="smiles">
+        <div class="mat-elevation-z2 smiles-structure-result" style = "" *ngIf="smiles">
           <div style = "width:100%">
           <div>
             <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
@@ -57,10 +57,10 @@
             </span>
             <span class="actions-container">
                 <button mat-icon-button color="primary" (click)="editStructureSearch()">
-                  <mat-icon svgIcon="edit"></mat-icon>
+                  <mat-icon svgIcon="edit" matTooltip = "edit structure search parameters"></mat-icon>
                 </button>
                 <button mat-icon-button color="primary" (click)="clearStructureSearch()">
-                  <mat-icon svgIcon="delete_forever"></mat-icon>
+                  <mat-icon svgIcon="delete_forever" matTooltip = "clear structure search parameters"></mat-icon>
                 </button>
               </span>
               
