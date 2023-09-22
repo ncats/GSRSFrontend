@@ -147,9 +147,9 @@
           <div class="form-row">
 
             <app-substance-text-search class="col-2-1" [searchValue]="impuritiesElution.elutionSolvent"
-              placeholder="Search Substances"
+              placeholder="Elution Solvent/Search Substances"
               (searchPerformed)="nameSearch($event, impuritiesTestIndex, impuritiesElutionIndex)"
-              eventCategory="selectorSearch">
+              (searchValueOut)="searchValueOutChange($event, impuritiesTestIndex, impuritiesElutionIndex)" eventCategory="selectorSearch">
             </app-substance-text-search>
 
             <!--
