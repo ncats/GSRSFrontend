@@ -69,7 +69,7 @@
           
         </div>
           <br/>
-        <div style = "width:100%">
+        <div style = "width:100%; margin-bottom:5px;">
          
           <a color="primary" class = "link" (click)="seedSmiles(this.smiles)">
           Or start a new chemical registration using this Smiles
@@ -219,25 +219,25 @@
           <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()" *ngIf="displayFacets && displayFacets.length > 0">
             <span>RESET</span>
           </button>
-          <div class="mat-elevation-z2" *ngIf="smiles">
-            <div>
+          <div class="mat-elevation-z2" style = "flex-direction: column" *ngIf="smiles">
+            <div  style = "width: 100%">
               <span class="capitalized font-medium-bold no-break">{{structureSearchTerm && searchType}} Query:</span>
               &nbsp;
               <span class="no-break">
                 <input readonly [value] = "this.smiles" class = "smiles-input" />
-                <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
-                    <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Smiles to clipboard"></mat-icon>
-                  </button>
+                
                 <span *ngIf="searchType && searchType == 'similarity'">
                   &nbsp;&ge; {{searchCutoff}}
                 </span>
               </span>
-            </div>
-            <div class="actions-container">
+            
             <!--  <button mat-icon-button color="primary" (click)="clipboard(this.smiles)">
                     <mat-icon  color="primary" svgIcon="paste"></mat-icon>
                   </button>-->
               <!-- if search is coming from Advanced Search -->
+              <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
+                  <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Smiles to clipboard"></mat-icon>
+                </button>
               <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
                 <mat-icon svgIcon="edit" matTooltip="Go back to Advanced Search"></mat-icon>
               </button>
@@ -247,12 +247,11 @@
               </button>
               <button mat-icon-button color="primary" (click)="clearStructureSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>
-              </button>
-              <br/>
-              <div><a color="primary" (click)="seedSmiles(this.smiles)">
+              </button>              
+            </div>
+            <div class = "structure-link"><a color="primary" class = "link" style = "margin:auto" (click)="seedSmiles(this.smiles)">
                 Or start a new chemical registration using this Smiles
               </a></div>
-            </div>
           </div>
           <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
             <div>
