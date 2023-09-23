@@ -101,6 +101,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     'relatedSubstance',
     'studyType',
     'assayType'
+   // 'applicationType'
   ];
 
   // needed for facets
@@ -236,17 +237,19 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           this.rawFacets.forEach(elementFacet => {
             if (elementFacet.name === "Test Compound") {
               const values = elementFacet.values;
+            //  alert("LENGTH VALUES: " + values.length);
               values.forEach(elementValue => {
+             //   alert("LABEL LABEL LABEL: " + elementValue.label);
                 if (elementValue.label) {
+               //   alert("LABEL: " + elementValue.label);
                   this.substanceNameLists.push(elementValue.label);
-
-                  // CALL Browse By ALL Substance
-                  this.browseByAllSubstance();
                 }
-
               });
             }
           });
+
+          // CALL Browse By ALL Substance
+          this.browseByAllSubstance();
 
         }
 
@@ -352,10 +355,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       });
   }
 
-
   browseByAllSubstance() {
     this.substanceNameLists.forEach(elementSubstance => {
-      alert(elementSubstance);
+     // alert(elementSubstance);
       const assayList = [];
       this.assays.forEach(elementAssay => {
         if (elementAssay.invitroTestCompound) {
@@ -367,11 +369,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           }
         }
       });
-      alert("LENGTH: " + this.testCompoundList.length);
+     // alert("LENGTH: " + this.testCompoundList.length);
       this.testCompoundList.push(assayList);
     });
 
-    alert(this.testCompoundList[0].testCompound);
+    //alert(this.testCompoundList[0].testCompound);
     console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
   }
 
