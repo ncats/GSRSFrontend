@@ -1015,6 +1015,7 @@
         "Product NDC",
         "Dosage Form Name",
         "Ingredient Name",
+        "Ingredient Name (Preferred)",
         "Ingredient Type",
         "Product Type",
         "Product Code Type",

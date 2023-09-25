@@ -248,8 +248,10 @@
               <ng-container matColumnDef="productName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodName of product.productNameAllList; let i = index">
-                    {{prodName.productName}}
+                  <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                    <div *ngFor="let prodName of prodProv.productNames; let i = index">
+                      {{prodName.productName}}
+                    </div>
                   </div>
                 </td>
               </ng-container>
@@ -353,7 +355,10 @@
         </div> <!-- class="table-view" -->
         <!-- TABLE VIEW END -->
 
+
+        <!-- *******************************************-->
         <!-- CARD VIEW BEGIN -->
+        <!-- *******************************************-->
         <div class="cards-view" *ngIf="products && products.length; else noRecordProduct">
           <mat-card *ngFor="let product of products; let indexProd = index">
             <mat-card-title>
@@ -433,8 +438,13 @@
                     Product Name:
                   </div>
                   <div class="row-property-value">
+                    <!--
                     <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
-                      <span class="colorlightblue font14px"><b>{{prodName.productName}}</b></span>
+                    -->
+                    <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                      <div *ngFor="let prodName of prodProv.productNames; let i = index">
+                        <span class="colorlightblue font14px"><b>{{prodName.productName}}</b></span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -443,7 +453,9 @@
                     Product Type:
                   </div>
                   <div class="row-property-value">
-                    {{product.productType}}
+                    <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                      {{prodProv.productType}}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -462,7 +474,7 @@
                     Route of Admin:
                   </div>
                   <div class="row-property-value">
-                    {{product.routeName}}
+                    {{product.routeAdmin}}
                   </div>
                 </div>
               </div>
@@ -473,23 +485,36 @@
                     Labeler Name (DUNS):
                   </div>
                   <div class="row-property-value">
+                    <!--
                     <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                      {{prodComp.labelerName}}
-                      <span *ngIf="prodComp.labelerDuns">&nbsp;({{prodComp.labelerDuns}})</span>
+                    -->
+                    <div *ngFor="let prodProv of product.productProvenances">
+                      <div *ngFor="let prodComp of prodProv.productCompanies">
+                        {{prodComp.companyName}}
+                        <div *ngFor="let prodCode of prodComp.productCompanyCodes">
+                          <span
+                            *ngIf="prodCode.companyCodeType && prodCode.companyCodeType.companyCodeType === 'DUNS NUMBER'">
+                            <span *ngIf="prodCode.companyCode">&nbsp;({{prodCode.companyCode}})</span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="row-property">
                   <div class="row-property-key">
                     City, State, Country:
                   </div>
                   <div class="row-property-value">
-                    <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                      {{prodComp.city}}
-                      <span *ngIf="prodComp.state">,</span>
-                      {{prodComp.state}}
-                      <span *ngIf="prodComp.countryWithoutCode">,</span>
-                      {{prodComp.countryWithoutCode}}
+                    <div *ngFor="let prodProv of product.productProvenances">
+                      <div *ngFor="let prodComp of prodProv.productCompanies">
+                        {{prodComp.companyCity}}
+                        <span *ngIf="prodComp.companyState">,</span>
+                        {{prodComp.companyState}}
+                        <span *ngIf="prodComp.companyCountry">,</span>
+                        {{prodComp.companyCountry}}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -501,10 +526,11 @@
                     Dosage Form:
                   </div>
                   <div class="row-property-value">
+                    <!--
                     <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
-                      <span *ngIf="indexIng == 0">
-                        {{ing.dosageFormName}}
-                      </span>
+                    -->
+                    <div *ngFor="let prodManuItem of product.productManufactureItems">
+                      {{prodManuItem.dosageForm}}
                     </div>
                   </div>
                 </div>
@@ -513,7 +539,9 @@
                     Status:
                   </div>
                   <div class="row-property-value">
-                    {{product.status}}
+                    <div *ngFor="let prodProv of product.productProvenances">
+                      {{prodProv.productStatus}}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -565,28 +593,34 @@
 
                     <!-- Display Active Substance -->
                     <ol class="olstyle">
-
+                      <!--
                       <div *ngFor="let prodIngred of product.productIngredientAllList; let indexActiveIngred = index">
+                      -->
+                      <div *ngFor="let prodManuItems of product.productManufactureItems">
+                        <div *ngFor="let prodLot of prodManuItems.productLots">
+                          <div *ngFor="let prodIngred of prodLot.productIngredients; let indexActiveIngred = index">
 
-                        <span *ngIf=" prodIngred.ingredientType">
-                          <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+                            <span *ngIf=" prodIngred.ingredientType">
+                              <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
 
-                            <span *ngIf="prodIngred.substanceName">
-                              <li>
-                                <a [routerLink]="['/substances', prodIngred.substanceUuid]"
-                                  target="_blank">{{prodIngred.substanceName}}
-                                </a>
-                                <button mat-button class="structure-parameters"
-                                  (click)="openImageModal($event, prodIngred.substanceUuid)">
-                                  <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
-                                </button>
-                              </li>
+                                <span *ngIf="prodIngred.substanceName">
+                                  <li>
+                                    <a [routerLink]="['/substances', prodIngred.substanceUuid]"
+                                      target="_blank">{{prodIngred.substanceName}}
+                                    </a>
+                                    <button mat-button class="structure-parameters"
+                                      (click)="openImageModal($event, prodIngred.substanceUuid)">
+                                      <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                                    </button>
+                                  </li>
+                                </span>
+
+                              </span>
                             </span>
 
-                          </span>
-                        </span>
-
-                      </div> <!-- repeat -->
+                          </div> <!-- loop Ingredient -->
+                        </div> <!-- loop Lot -->
+                      </div> <!-- loop ManufactureItems -->
                     </ol>
 
                   </div>

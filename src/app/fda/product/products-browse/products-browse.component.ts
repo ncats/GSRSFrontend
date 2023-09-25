@@ -18,7 +18,7 @@ import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { productSearchSortValues } from './product-search-sort-values';
-import { ProductAll } from '../model/product.model';
+import { Product } from '../model/product.model';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
@@ -39,7 +39,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
-  public products: Array<ProductAll>;
+  public products: Array<Product>;
   order: string;
   public sortValues = productSearchSortValues;
   hasBackdrop = false;
@@ -123,7 +123,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
-    this.gaService.sendPageView('Browse Products');
+    //this.gaService.sendPageView('Browse Products');
 
     this.titleService.setTitle(`P:Browse Products`);
 
@@ -241,7 +241,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         });
 
         // Separate Application Type and Application Number in Product Result.
-        this.separateAppTypeNumber();
+        // COMMETING OUT ?????????
+       // this.separateAppTypeNumber();
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -465,6 +466,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return this.productService.getApiExportUrl(etag, extension);
   }
 
+  /*
   separateAppTypeNumber(): void {
     if (this.products) {
       this.products.forEach((element, index) => {
@@ -492,6 +494,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       });
     }
   }
+  */
 
   isNumber(str: any): boolean {
     if (str) {

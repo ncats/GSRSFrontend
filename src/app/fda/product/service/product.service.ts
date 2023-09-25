@@ -53,14 +53,33 @@ export class ProductService extends BaseHttpService {
       params = params.append('order', order);
     }
 
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'search';
+    // Commenting out, this function calls productsall
+    // const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'search';
+    const url = this.apiBaseUrlWithProductEntityUrl + 'search';
     const options = {
       params: params
     };
 
-    return this.http.get<PagingResponse<ProductAll>>(url, options);
+    // Commenting out, this function calls productsall
+    // return this.http.get<PagingResponse<ProductAll>>(url, options);
+    return this.http.get<PagingResponse<Product>>(url, options);
   }
 
+  // This function is called when doing text search on the facet
+  getProductFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+  // Commenting out, this function calls productsall
+  /*
   getProductFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
@@ -72,9 +91,10 @@ export class ProductService extends BaseHttpService {
     }
     return this.http.get<FacetQueryResponse>(url);
   }
+  */
 
   filterFacets(name: string, category: string): Observable<any> {
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.products.productall.models.ProductMainAll&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
     return this.http.get(url);
   }
 
@@ -101,24 +121,27 @@ export class ProductService extends BaseHttpService {
   }
 
   getExportOptions(etag: string): Observable<any> {
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}`;
+    //const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}`;
+    const url = this.apiBaseUrlWithProductEntityUrl + `export/${etag}`;
     return this.http.get<any>(url);
   }
 
   getApiExportUrl(etag: string, extension: string): string {
-    // const url = `${this.configService.configData.apiBaseUrl}api/v1/productmainall/export/${etag}/${extension}`;
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}/${extension}`;
+    // const url = this.apiBaseUrlWithProductBrowseEntityUrl + `export/${etag}/${extension}`;
+    const url = this.apiBaseUrlWithProductEntityUrl + `export/${etag}/${extension}`;
     return url;
   }
 
   getProductSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
-    return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithProductBrowseEntityUrl + 'suggest?q=' + searchTerm);
+    //return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithProductBrowseEntityUrl + 'suggest?q=' + searchTerm);
+    return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithProductEntityUrl + 'suggest?q=' + searchTerm);
   }
 
   getProductProvenanceList(
-    substanceUuid: string
+    substanceKey: string
   ): Observable<any> {
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'distprovenance/' + substanceUuid;
+    // const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'distprovenance/' + substanceUuid;
+    const url = this.apiBaseUrlWithProductEntityUrl + 'distinctprovenance/' + substanceKey;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -174,9 +197,6 @@ export class ProductService extends BaseHttpService {
     } else { // new Product
       this.product = {
         productProvenances: [],
-        //   productNames: [],
-        //   productCodes: [],
-        //   productCompanies: [],
         productManufactureItems: []
       };
     }
@@ -372,76 +392,6 @@ export class ProductService extends BaseHttpService {
     this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.splice(prodIngredientIndex, 1);
   }
 
-  /*
-  addNewProductName(): void {
-    const newProductName: ProductName = { productTermAndParts: [] };
-    this.product.productNames.unshift(newProductName);
-  }
-
-  deleteProductName(prodNameIndex: number): void {
-    this.product.productNames.splice(prodNameIndex, 1);
-  }
-  */
-
-  /*
-  addNewTermAndTermPart(prodNameIndex: number): void {
-    if (this.product.productNames[prodNameIndex].productTermAndParts == null) {
-      this.product.productNames[prodNameIndex].productTermAndParts = [];
-    }
-    const newProductPartTerm: ProductTermAndPart = {};
-    this.product.productNames[prodNameIndex].productTermAndParts.unshift(newProductPartTerm);
-  }
-
-  deleteTermAndTermPart(prodNameIndex: number, prodNameTermIndex: number): void {
-    this.product.productNames[prodNameIndex].productTermAndParts.splice(prodNameTermIndex, 1);
-  }
-
-  addNewProductCode(): void {
-    const newProductCode: ProductCode = {};
-    this.product.productCodes.unshift(newProductCode);
-  }
-
-
-  deleteProductCode(prodCodeIndex: number): void {
-    this.product.productCodes.splice(prodCodeIndex, 1);
-  }
-
-  deleteProductCode(prodCodeIndex: number): void {
-    this.product.productCodes.splice(prodCodeIndex, 1);
-  }
-  */
-
-  /*
-  addNewProductCompany(): void {
-    const newProductCompany: ProductCompany = { productCompanyCodes: [] };
-    this.product.productCompanies.unshift(newProductCompany);
-  }
-
-  addNewProductCompanyCode(productCompanyIndex: number): void {
-    const newProductCompanyCode: ProductCompanyCode = {};
-    this.product.productCompanies[productCompanyIndex].productCompanyCodes.push(newProductCompanyCode);
-  }
-
-  deleteProductCompany(prodCompanyIndex: number): void {
-    this.product.productCompanies.splice(prodCompanyIndex, 1);
-  }
-
-  deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number): void {
-    this.product.productCompanies[prodCompanyIndex].productCompanyCodes.splice(prodCompanyCodeIndex, 1);
-  }
-  */
-
-  /*
-  addNewProductManufacturer(prodComponentIndex: number): void {
-    const newProductManu: ProductManufacturer = {};
-    this.product.productManufactureItems[prodComponentIndex].productManufacturers.unshift(newProductManu);
-  }
-
-  deleteProductManufacturer(prodComponentIndex: number, prodManuIndex: number): void {
-    this.product.productManufactureItems[prodComponentIndex].productManufacturers.splice(prodManuIndex, 1);
-  }
-  */
-
   copyProductProvenance(productProvenance: any): void {
     const newProductProv = JSON.parse(JSON.stringify(productProvenance));
 
@@ -538,7 +488,6 @@ export class ProductService extends BaseHttpService {
     this.product.productProvenances.unshift(newProductProv);
   }
 
-
   copyProductComponent(productComp: any): void {
     const newProduct = JSON.parse(JSON.stringify(productComp));
 
@@ -609,41 +558,4 @@ export class ProductService extends BaseHttpService {
     this.product.productManufactureItems[prodComponentIndex].productLots[prodLotIndex].productIngredients.unshift(newProduct);
   }
 
-  /*
-  reviewProduct(prodIndex: number): void {
-   //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
- }
-
- addNewIngredient(index: number): void {
-   const newIngredient: ApplicationIngredient = {};
-   this.application.applicationProductList[index].applicationIngredientList.unshift(newIngredient);
- }
-
- deleteIngredient(prodIndex: number, ingredIndex: number): void {
-   this.application.applicationProductList[prodIndex].applicationIngredientList.splice(ingredIndex, 1);
- }
-
- copyIngredient(ingredient: any, prodIndex: number): void {
-   const newIngredient = JSON.parse(JSON.stringify(ingredient));
-   newIngredient.reviewedBy = null;
-   newIngredient.reviewDate = null;
-   this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
- }
-
- reviewIngredient(prodIndex: number, ingredIndex: number): void {
-   //  this.application.applicationProductList[prodIndex].applicationIngredientList.unshift(newIngredient);
- }
-
- getJson() {
-   return this.application;
- }
-
- getUpdateApplicationUrl(): string {
-   return this.baseUrl + 'updateApplication?applicationId=';
- }
-
- getApplicationListExportUrl(bdnum: string): string {
-   return this.baseUrl + 'applicationListExport?bdnum=' + bdnum;
- }
-*/
 }
