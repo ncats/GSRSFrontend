@@ -28,6 +28,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
 import { ProductService } from '../service/product.service';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { GeneralService } from '../../service/general.service';
 
 @Component({
   selector: 'app-products-browse',
@@ -108,6 +109,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
+    private generalService: GeneralService,
     private dialog: MatDialog,
     private titleService: Title) { }
 
@@ -166,7 +168,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.isComponentInit = true;
     this.loadComponent();
-
   }
 
   ngAfterViewInit() {
@@ -235,6 +236,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.matchTypes.sort();
         // Narrow Suggest Search End
 
+        // Get Substance Name for each substance Key
+        this.getSubstanceBySubstanceKey();
+
         // Get list of Export extension options such as .xlsx, .txt
         this.productService.getExportOptions(this.etag).subscribe(response => {
           this.exportOptions = response;
@@ -242,7 +246,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
         // Separate Application Type and Application Number in Product Result.
         // COMMETING OUT ?????????
-       // this.separateAppTypeNumber();
+        // this.separateAppTypeNumber();
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -425,6 +429,59 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.populateUrlQueryParameters();
     this.searchProducts();
     // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
+  getSubstanceBySubstanceKey(): void {
+    this.products.forEach((element, index) => {
+      element.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+        // Sort Product Name by create date descending
+        // elementManuItem.applicationProductNameList.sort((a, b) => {
+        //   return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
+        // });
+
+        elementManuItem.productLots.forEach((elementLot, indexLot) => {
+          elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
+
+            if (elementIngred.substanceKey != null) {
+
+              const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+                if (response) {
+                  elementIngred._substanceUuid = response.uuid;
+                  elementIngred._ingredientName = response._name;
+
+                  /*
+                  // Get Substance Details, uuid, approval_id, substance name
+                  if (elementIngred.substanceKey) {
+                    this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
+                      if (responseInactive) {
+                        elementIngred._substanceUuid = responseInactive.uuid;
+                        elementIngred._ingredientName = responseInactive._name;
+                      }
+                    });
+                  }
+                  */
+
+                  // Get Active Moiety - Relationship
+                  /*
+                  this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+                    relationship = responseRel;
+                    relationship.forEach((elementRel, indexRel) => {
+                      if (elementRel.relationshipName != null) {
+                        elementIngred.activeMoietyName = elementRel.relationshipName;
+                        elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
+                      }
+                    });
+                  });
+                  */
+                } // response
+              });
+              this.subscriptions.push(substanceSubscription);
+            } // substancekey exists
+          }); // loop productIngredients
+        }); // loop productLots
+      }); // loop productManufactureItems
+    });  // loop product
   }
 
   export(extension: string) {

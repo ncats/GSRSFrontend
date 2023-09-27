@@ -32,9 +32,6 @@ export interface Product {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
-  // productNames?: Array<ProductName>;
-  // productCodes?: Array<ProductCode>;
-  // productCompanies?: Array<ProductCompany>;
   productManufactureItems?: Array<ProductComponent>;
   productProvenances?: Array<ProductProvenance>;  //new
 }
@@ -255,6 +252,8 @@ export interface ProductIngredient {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  _substanceUuid?: string;
+  _ingredientName?: string;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
 }

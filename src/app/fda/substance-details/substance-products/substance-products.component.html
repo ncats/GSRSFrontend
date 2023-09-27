@@ -47,6 +47,19 @@
               <ng-container matColumnDef="productNDC">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product ID </th>
                 <td mat-cell *matCellDef="let product">
+
+                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                    <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+                      <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                        <span *ngIf="prodCode.productCode; else noProdCode">
+                          {{prodCode.productCode}}
+                        </span>
+                        <ng-template #noProdCode>(NO ID)</ng-template>
+                      </a>
+                    </span>
+                  </span>
+
+                  <!--
                   <a [routerLink]="['/product', product.id]" target="_blank">
                     <span *ngIf="product.productNDC; else noProdNDCGSRS">
                       {{product.productNDC}}
@@ -55,6 +68,7 @@
                       (NO NDC)
                     </ng-template>
                   </a>
+                  -->
                   &nbsp;&nbsp;
                   <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
                     matTooltip='Edit GSRS Product Record'>
