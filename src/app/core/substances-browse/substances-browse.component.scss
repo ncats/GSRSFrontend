@@ -727,3 +727,10 @@ margin-left: 20px;
 .cdk-overlay-backdrop, .cdk-global-overlay-wrapper {
     display: none !important;
 }
+
+
+.smiles-structure-result {
+    display:flex;
+    flex-direction:column;
+    max-width: 650px;
+}
