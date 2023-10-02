@@ -106,5 +106,5 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(substanceSubscribe);
   }
-  
+
 }
