@@ -27,8 +27,8 @@ export class AdvancedSearchService extends BaseHttpService {
   apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
 
   apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
-  apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
-  apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
+  //apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
+  //apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
 
   apiBaseUrlWithClinicalTrialEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/clinicaltrialsus' + '/';
 
@@ -59,7 +59,7 @@ export class AdvancedSearchService extends BaseHttpService {
   }
 
   getProductCount(): Observable<number> {
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + `@count`;
+    const url = this.apiBaseUrlWithProductEntityUrl + `@count`;
     return this.http.get<number>(url);
   }
 
@@ -129,7 +129,7 @@ export class AdvancedSearchService extends BaseHttpService {
     }
     params = params.appendFacetParams(facets);
 
-    const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'search';
+    const url = this.apiBaseUrlWithProductEntityUrl + 'search';
     const options = {
       params: params
     };
@@ -172,7 +172,7 @@ export class AdvancedSearchService extends BaseHttpService {
         entityUrl = this.apiBaseUrlWithApplicationEntityUrl;
       }
       if (category === 'Product') {
-        entityUrl = this.apiBaseUrlWithProductBrowseEntityUrl;
+        entityUrl = this.apiBaseUrlWithProductEntityUrl;
       }
       if (category === 'Clinical Trial') {
         entityUrl = this.apiBaseUrlWithClinicalTrialEntityUrl;

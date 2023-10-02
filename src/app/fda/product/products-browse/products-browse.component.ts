@@ -74,6 +74,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   invalidPage = false;
   iconSrcPath = '';
   dailyMedUrl = '';
+
+
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
     'productNDC',
@@ -151,7 +153,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -596,8 +598,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  getAppTypeNumberUrl(appType: string, appNumber: string): string {
-    let appUrl = 'browse-applications?search=root_appType:\"^' + appType + '$\" AND root_appNumber:\"^' + appNumber + '$\"';
+  getAppTypeNumberUrl(applicationType: string, applicationNumber: string): string {
+    let appUrl = 'browse-applications?search=root_appType:\"^' + applicationType + '$\" AND root_appNumber:\"^' + applicationNumber + '$\"';
     return appUrl;
   }
 

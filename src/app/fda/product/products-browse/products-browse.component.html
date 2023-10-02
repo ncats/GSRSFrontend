@@ -229,6 +229,7 @@
                   </span>
 
                   <!-- If fromtable is GSRS, display GSRS Details links -->
+                  <!--
                   <span *ngIf="product.fromtable === 'GSRS'">
                     <a class="substance-name" [routerLink]="['/product', product.productId]" target="_blank"
                       alt="View Product Record"><span
@@ -236,12 +237,14 @@
                       <ng-template #noProdNDCSRS>(NO ID)</ng-template>
                     </a>
                     &nbsp;&nbsp;
-                    <!-- Edit GSRS record button -->
+                    <!- - Edit GSRS record button - ->
                     <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
                       matTooltip='Edit Product Record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
                   </span>
+                  -->
+
                 </td>
               </ng-container>
 
@@ -389,9 +392,16 @@
                 <!-- Product Code/ID/Product NDC-->
                 <span *ngFor="let prodProv of product.productProvenances; let i = index">
                   <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+
                     <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
                       <span *ngIf="prodCode.productCode; else noProdCode">
+                        <!--
+                        <span *ngIf="prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE'">
+                        -->
                         {{prodCode.productCode}}
+                        ({{prodCode.productCodeType}})
+                        <!--
+                        </span> -->
                       </span>
                       <ng-template #noProdCode>(NO ID)</ng-template>
                     </a>
@@ -454,21 +464,33 @@
 
               <div>
                 <span class="font13px">Application:</span>&nbsp;
-                <span *ngIf="(product.appType && product.appNumber); else noAppType">
+                <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                  <span class="colormaroon">
+                    <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
+                      target="_blank">
+                      <span class="font14px" *ngIf="prodProv.applicationType">
+                        {{prodProv.applicationType}}
+                      </span>
+                      <span class="font14px" *ngIf="prodProv.applicationNumber">
+                        {{prodProv.applicationNumber}}
+                      </span>
+                    </a>
+                  </span>
                   <!--
+                   <span *ngIf="(product.appType && product.appNumber); else noAppType">
+
                   <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
                     target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
                   </a>
                   -->
-                  <a href="{{getAppTypeNumberUrl(product.appType, product.appNumber)}}" target="_blank"><span
-                      class="approval-id">{{product.appTypeNumber}}</span>
-                  </a>
+
+
+                  <ng-template #noAppType>
+                    <span class="approval-id">
+                      {{product.appTypeNumber}}
+                    </span>
+                  </ng-template>
                 </span>
-                <ng-template #noAppType>
-                  <span class="approval-id">
-                    {{product.appTypeNumber}}
-                  </span>
-                </ng-template>
               </div>
             </mat-card-title>
 
@@ -486,6 +508,10 @@
                     <div *ngFor="let prodProv of product.productProvenances; let i = index">
                       <div *ngFor="let prodName of prodProv.productNames; let i = index">
                         <span class="colorlightblue font14px"><b>{{prodName.productName}}</b></span>
+                        <span class="margintopneg5px" *ngIf="prodName.displayName && prodName.displayName == true">
+                          &nbsp;
+                          <mat-icon matTooltip="Display Name">check</mat-icon>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -505,20 +531,23 @@
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
-                    Nonproprietary Name:
+                    Product Codes:
                   </div>
                   <div class="row-property-value">
-                    {{product.nonProprietaryName}}
+                    <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                      <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+                        <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
+                      </span>
+                    </span>
                   </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Route of Admin:
+                  <div class="row-property">
+                    <div class="row-property-key">
+                      Route of Admin:
+                    </div>
+                    <div class="row-property-value">
+                      {{product.routeAdmin}}
+                    </div>
                   </div>
-                  <div class="row-property-value">
-                    {{product.routeAdmin}}
-                  </div>
-                </div>
               </div>
 
               <div class="row">
@@ -639,7 +668,7 @@
                         <div *ngFor="let prodLot of prodManuItems.productLots">
                           <div *ngFor="let prodIngred of prodLot.productIngredients; let indexActiveIngred = index">
 
-                            <span *ngIf=" prodIngred.ingredientType">
+                            <span *ngIf=" prodIngred.ingredientType; else noIngredientType">
                               <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'">
 
                                 <span *ngIf="prodIngred._ingredientName">
@@ -663,6 +692,18 @@
 
                               </span>
                             </span>
+                            <!-- No Ingredient Type, Display Ingredient Name -->
+                            <ng-template #noIngredientType>
+                              <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                              <div *ngIf="prodIngred._ingredientName">
+                                <li class="">
+                                  <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                    target="_blank">{{prodIngred._ingredientName}}
+                                  </a>
+                                </li>
+                              </div>
+                            </ng-template>
+
 
                           </div> <!-- loop Ingredient -->
                         </div> <!-- loop Lot -->
@@ -678,6 +719,7 @@
                   <div class="row-property-key">
                     Substance Name (Inactive):
                   </div>
+
                   <div class="row-property-value">
                     <!-- Display Other Substance -->
                     <ol class="olstyle">
@@ -687,7 +729,8 @@
 
                             <!-- If Inactive Ingredient, display Substance Name and Ingredient Type-->
                             <div *ngIf=" prodIngred.ingredientType">
-                              <div *ngIf="prodIngred.ingredientType === 'Inactive Ingredient'; else otherIngredientType">
+                              <div
+                                *ngIf="prodIngred.ingredientType === 'Inactive Ingredient'; else otherIngredientType">
 
                                 <div *ngIf="prodIngred._ingredientName">
                                   <li>
@@ -701,15 +744,6 @@
                                         <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
                                       </button>
                                     </div>
-                                    <ng-template #otherIngredientType>
-                                      <span *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
-                                        {{prodIngred._ingredientName}}<br>
-                                        <span class="colorgreen">({{ prodIngred.ingredientType }})
-                                        </span>
-                                      </span>
-                                    </ng-template>
-
-
                                     <ng-template #noInactiveSubUuid>
                                       {{prodIngred._ingredientName}}
                                     </ng-template>
@@ -718,31 +752,25 @@
                                 </div> <!-- if _ingredientName exits -->
 
                               </div>
-                            </div>
+                              <ng-template #otherIngredientType>
+                                <span *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
+                                  {{prodIngred._ingredientName}}<br>
+                                  <span class="colorgreen">({{ prodIngred.ingredientType }})
+                                  </span>
+                                  <br><br>
+                                </span>
+                              </ng-template>
 
-                            <!-- No Ingredient Type -->
-                            <ng-template #noIngredType>
-
-                              <!-- if No Ingredient Type, but have Substance Name, display here. -->
-                              <!--
-                            <div *ngIf="prodIngred._ingredientName">
-                              <li class="">
-                                <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                  target="_blank">{{prodIngred._ingredientName}}
-                                </a>
-                              </li>
-                            </div>  -->
-                            </ng-template>
-
+                            </div> <!-- if Ingredient Type exists -->
 
                           </div> <!-- loop Ingredient -->
                         </div> <!-- loop Lot -->
                       </div> <!-- loop ManufactureItems -->
+
                     </ol>
 
                   </div>
                 </div> <!-- Inactive Substance -->
-
 
 
 
