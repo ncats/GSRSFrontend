@@ -32,7 +32,7 @@ export interface Product {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
-  productManufactureItems?: Array<ProductComponent>;
+  productManufactureItems?: Array<ProductManufactureItem>;
   productProvenances?: Array<ProductProvenance>;  //new
 }
 
@@ -178,7 +178,7 @@ export interface ProductIndication {
   modifyDate?: number;
 }
 
-export interface ProductComponent {
+export interface ProductManufactureItem {
   id?: number;
   charSize?: string;
   charImprintText?: string;
