@@ -60,6 +60,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         loaded = true;
         //setup viz stuff
         //TODO: make more configurable and standardized
+        console.log("About to configure the scheme view");
         window['schemeUtil'].debug = false;
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
         const httpp = this.http;
@@ -87,10 +88,15 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
           //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
           //maybe in the future it should instead be a side window, I don't know.
         };
+
         //TODO:
         window['schemeUtil'].onClickMaterial = (d) => {
           this.openImageModal(d.refuuid, d.name, d.bottomText);
         };
+        
+        if (window['schemeUtil'].executeWhenLoaded) {
+          window['schemeUtil'].executeWhenLoaded();
+        }
       }
     }, 100);
 
@@ -200,8 +206,19 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       //This is a hacky placeholder way to force viz
       //TODO finish this
       const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+
+      console.log("About to load the scheme view");
       if (window['schemeUtil']) {
-        window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+        if (window['schemeUtil'].debug) {
+          window['schemeUtil'].executeWhenLoaded = (() => {
+            console.log("About to render the scheme view");
+            window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+            window['schemeUtil'].executeWhenLoaded = null;
+          });
+        } else {
+          console.log("About to render the scheme view");
+          window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+        }
       }
     } else {
       document.querySelector("#scheme-viz-view").className = "hidden";
