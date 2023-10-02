@@ -88,34 +88,23 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
   }
 
   nameSearch(event: any, impuritiesTestIndex: number, impuritiesElutionIndex: number): void {
-    // Call this function when user selects the Substance Name from the dropdown or click on the Search button.
     this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolvent = event;
 
-    // Set the existing Elustion Solvent Code to null
-    this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolventCode = '';
-
-    if (event) {
-      const substanceSubscribe = this.generalService.getSubstanceByName(event).subscribe(response => {
-        if (response) {
-          if (response.content && response.content.length > 0) {
-            const substance = response.content[0];
-            if (substance) {
-              if (substance.approvalID) {
-                this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolventCode = substance.approvalID;
-              } else if (substance.uuid) {
-                this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolventCode = substance.uuid;
-              }
+    const substanceSubscribe = this.generalService.getSubstanceByName(event).subscribe(response => {
+      if (response) {
+        if (response.content && response.content.length > 0) {
+          const substance = response.content[0];
+          if (substance) {
+            if (substance.approvalID) {
+              this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolventCode = substance.approvalID;
+            } else {
+              this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolventCode = substance.uuid;
             }
           }
         }
-      }, error => {
-      });
-      this.subscriptions.push(substanceSubscribe);
-    }
+      }
+    });
+    this.subscriptions.push(substanceSubscribe);
   }
-
-  searchValueOutChange(event: any, impuritiesTestIndex: number, impuritiesElutionIndex: number) {
-    //this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolventCode = '';
-    this.impuritiesTest.impuritiesElutionSolventList[impuritiesElutionIndex].elutionSolvent = event;
-  }
+  
 }
