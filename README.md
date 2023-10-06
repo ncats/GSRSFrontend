@@ -101,7 +101,7 @@ npm audit fix // this step not needed after angular upgrade
 
 ## Step 6: Run Application for Specific Environment
 
-- Go the the package.json file and look at the scripts property to see what availabe commands exist
+- Go the the package.json file and look at the scripts property to see what available commands exist
 - The commands to run during development begin with "start"
 - Identify the environment you want to run, open your favorite command line tool and run the script starting with "npm run"
  - So to run the public local environment, you would run `npm run start:gsrs:local`
