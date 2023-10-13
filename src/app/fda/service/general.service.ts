@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, Subject, throwError, of } from 'rxjs';
+import { switchMap, map, catchError, takeWhile } from 'rxjs/operators';
+
+/* GSRS Core Imports */
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
-import { map } from 'rxjs/operators';
-import { SubstanceSummary, SubstanceRelationship } from '@gsrs-core/substance/substance.model';
 import { PagingResponse } from '@gsrs-core/utils';
-import { UtilsService } from '@gsrs-core/utils/utils.service';
-import { Facet } from '@gsrs-core/facets-manager';
+import { SubstanceSummary, SubstanceRelationship, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+
 import { Application } from '../application/model/application.model';
 
 @Injectable()
@@ -23,11 +24,8 @@ export class GeneralService extends BaseHttpService {
     super(configService);
   }
 
-  getSubstanceBySubstanceUuid(
-    substanceUuid: string
-  ): Observable<any> {
-
-    const url = this.apiBaseUrl + 'substances(' + substanceUuid + ')';
+  getSubstanceByAnyId(id: string): Observable<any> {
+    const url = this.apiBaseUrl + 'substances(' + id + ')';
     return this.http.get<any>(url).pipe(
       map(results => {
         return results;
@@ -35,12 +33,145 @@ export class GeneralService extends BaseHttpService {
     );
   }
 
+  getSubstanceBySubstanceUuid(substanceUuid: string): Observable<any> {
+    return this.getSubstanceByAnyId(substanceUuid);
+  }
+
+  getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance: SubstanceRelated, substanceKeyType: string): string {
+    let substanceKey = '';
+
+    // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
+    if (substanceKeyType === 'UUID') {
+      substanceKey = relatedSubstance.refuuid;
+
+      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
+    } else if (substanceKeyType === 'APPROVAL_ID') {
+      substanceKey = relatedSubstance.approvalID;
+
+      // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
+    } /*else if (substanceKeyType === 'BDNUM') {
+      // Get the Bdnum/code from Substance by substance uuid
+      this.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
+        if (response) {
+          // substanceKey = response;
+         // subject.next(response);
+        }
+      });
+    } */
+    return substanceKey;
+  }
+
+  getBdnumBySubstanceKeyTypeResolver2(relatedSubstance: SubstanceRelated, substanceKeyType: string): Observable<string> {
+
+    return new Observable(observer => {
+       observer.next("TESTING");
+    });
+
+    /*
+    const url = this.apiBaseUrl + 'substances(' + relatedSubstance.uuid + ')';
+    this.http.get<any>(url).pipe(
+      map(results => {
+        const test = results;
+        test.forEach(sub => {
+          alert(sub.uuid);
+          return sub.uuid;
+        });
+        return "abd";
+      })
+    );
+    */
+
+    /*
+    //let substanceKey = '';
+    let subject1 = new Subject<string>();
+    //subject.next(substanceKey);
+
+    // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
+    if (substanceKeyType === 'UUID') {
+
+      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
+    } else if (substanceKeyType === 'APPROVAL_ID') {
+      //substanceKey = relatedSubstance.approvalID;
+      // subject.next(substanceKey);
+    //  alert(substanceKey);
+      // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
+    } else if (substanceKeyType === 'BDNUM') {
+      // Get the Bdnum/code from Substance by substance uuid
+      this.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
+        if (response) {
+          // substanceKey = response;
+         // subject.next(response);
+        }
+      });
+    }
+    return subject1.asObservable(); */
+  }
+
+  /*
+  getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance: SubstanceRelated, substanceKeyType: string): Observable<string> {
+    //let substanceKey = '';
+    //let substanceKey: Observable<string> = of("");
+    let subject1 = new Subject<string>();
+    //subject.next(substanceKey);
+
+    // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
+    if (substanceKeyType === 'UUID') {
+
+      const subject = new Subject();
+      subject.next('event 0');
+
+      subject.subscribe(event => console.log(event));
+
+      //subject.next(relatedSubstance.refuuid);
+
+      //substanceKey = relatedSubstance.refuuid;
+      //substanceKey = of(relatedSubstance.refuuid);
+      //Observable<string> = substanceKey;
+      //return Observable<number> = from([1, 2, 3, 4]);
+      //subject.next(substanceKey);
+
+      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
+    } else if (substanceKeyType === 'APPROVAL_ID') {
+      //substanceKey = relatedSubstance.approvalID;
+      // subject.next(substanceKey);
+    //  alert(substanceKey);
+      // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
+    } else if (substanceKeyType === 'BDNUM') {
+      // Get the Bdnum/code from Substance by substance uuid
+      this.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
+        if (response) {
+          // substanceKey = response;
+         // subject.next(response);
+        }
+      });
+    }
+    return subject1.asObservable();
+  }
+  */
+
+  getCodeBdnumBySubstanceUuid(substanceUuid: string): Observable<string> {
+    let substanceKey = null;
+    const url = this.apiBaseUrl + 'substances(' + substanceUuid + ')/codes';
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        if (results) {
+          results.forEach((codeObj, index) => {
+            if (codeObj) {
+
+              if ((codeObj.codeSystem) && ((codeObj.codeSystem === 'BDNUM') && (codeObj.type === 'PRIMARY'))) {
+                substanceKey = codeObj.code;
+              }
+            }
+          });
+        }
+        return substanceKey;
+      })
+    );
+  }
+
   getSubstanceCodesBySubstanceUuid(
     substanceUuid: string
   ): Observable<any> {
-    // const url = this.apiBaseUrl + 'substances(' + substanceUuid + ')/codes'
-    // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
-
     const url = this.apiBaseUrl + 'substances(' + substanceUuid + ')/codes';
     return this.http.get<any>(url).pipe(
       map(results => {
@@ -50,21 +181,14 @@ export class GeneralService extends BaseHttpService {
   }
 
   getSubstanceNamesBySubstanceUuid(substanceUuid: string): Observable<Array<any>> {
-
     const url = this.apiBaseUrl + 'substances(' + substanceUuid + ')/names';
     // const url = `${this.apiBaseUrl}substances(${substanceUuid})/names`;
     return this.http.get<Array<any>>(url);
   }
 
-  getSubstanceByAnyId(
-    id: string
-  ): Observable<any> {
-    const url = this.apiBaseUrl + 'substances(' + id + ')';
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
+  getSubstanceRelationships(substanceUuid: string): Observable<Array<SubstanceRelationship>> {
+    const url = `${this.apiBaseUrl}substances(${substanceUuid})/relationships`;
+    return this.http.get<Array<SubstanceRelationship>>(url);
   }
 
   getSubstanceByName(
@@ -96,44 +220,8 @@ export class GeneralService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
-  /*
-  getSubstanceKeyBySubstanceUuid(
-    substanceUuid: string
-  ): string {
-    let substanceKey = null;
-    const url = this.apiBaseUrl + 'substances(' + substanceUuid + ')/codes';
-    const response = this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-
-    response.subscribe(substanceCodes => {
-      if (substanceCodes) {
-        for (let index = 0; index < substanceCodes.length; index++) {
-          if (substanceCodes[index].codeSystem && this.getSubstanceKeyType) {
-            if ((substanceCodes[index].codeSystem === this.getSubstanceKeyType) &&
-              (substanceCodes[index].type === 'PRIMARY')) {
-              substanceKey = substanceCodes[index].code;
-            }
-          }
-        }
-      }
-    });
-    return substanceKey;
-  }
-  */
-
-  getSubstanceRelationships(substanceUuid: string): Observable<Array<SubstanceRelationship>> {
-
-    const url = `${this.apiBaseUrl}substances(${substanceUuid})/relationships`;
-    return this.http.get<Array<SubstanceRelationship>>(url);
-  }
-
   getSearchCount(substanceUuid: string): Observable<any> {
-   const url = `${this.configService.configData.apiBaseUrl}api/v1/searchcounts/` + substanceUuid;
-   // const url = this.baseUrl + 'getSubstanceSearchCountBySubstanceUuid?substanceUuid=' + substanceUuid;
-   // const url = this.apiBaseUrl + 'searchcounts/' + substanceUuid;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/searchcounts/` + substanceUuid;
     return this.http.get<any>(url)
       .pipe(
         map(res => {
@@ -199,59 +287,10 @@ export class GeneralService extends BaseHttpService {
     return fullFacetField;
   }
 
-  // getAppIngredtMatchListCount(substanceUuid: string)
-  //   : Observable<PagingResponse<Application>> {
-  //   let count = 0;
-  //   let fullFacetField = '';
-  //   let result : PagingResponse<Application>;
-  /*
-  this.getSubstanceNamesBySubstanceUuid(substanceUuid).subscribe(responseNames => {
-    if (responseNames) {
-      const names = responseNames;
-      names.forEach((element, index) => {
-        const facetField = "root_applicationProductList_applicationProductNameList_productName:";
-        if (element) {
-          if (element.name) {
-            if (index > 0) {
-              fullFacetField = fullFacetField + " OR ";
-            }
-            fullFacetField = fullFacetField + facetField + "\"" + element.name + "\"";
-          }
-        }
-      });
-
-      // DO Application Search in Product Name
-      const facetParam = { "Has Ingredients": { "params": { "Has No Ingredient": true }, "isAllMatch": false } };
-
-      this.getAppIngredtMatchListSearchResult(null, 0, 10, fullFacetField, facetParam).subscribe(response => {
-      //   alert('RRRRRRR' + JSON.stringify(response));
-      //   if (response) {
-      //     alert("RESULT RESPONSE");
-      //      result = response;
-      //    }
-          return response;
-      });
-    }
-  });
-  */
-  // return result;
-
-  /*
-  const url = this.baseUrl + 'getAppIngredtMatchListCountJson?substanceId=' + substanceUuid + '&citation=';
-  return this.http.get<any>(url)
-    .pipe(
-      map(res => {
-        return res;
-      })
-    );
-  */
-
-  // }
-
   getApplicationIngredientMatchList(substanceUuid: string): Observable<Application> {
     const result = null;
     // result = this.getAppIngredtMatchListCount(substanceUuid);
-  //  JSON.stringify(result);
+    //  JSON.stringify(result);
     return result;
     /*
     const url = this.baseUrl + 'getAppIngredMatchList2?substanceId=' + substanceUuid + '&citation=';
@@ -330,7 +369,12 @@ export class GeneralService extends BaseHttpService {
     return url;
   }
 
-  getSubstanceKeyType(): string {
+  getCurrentDate(): any {
+    const currentDate = new Date();
+    return currentDate;
+  }
+
+  getSubstanceKeyType(entity?: string): any {
     let key = null;
     if (this.configService.configData && this.configService.configData.substance) {
       const substanceConfig = this.configService.configData && this.configService.configData.substance;
@@ -339,9 +383,62 @@ export class GeneralService extends BaseHttpService {
     return key;
   }
 
-  getCurrentDate(): any {
-    const currentDate = new Date();
-    return currentDate;
+  getSubstanceKeyTypeConfig(): any {
+    let key = null;
+    if (this.configService.configData && this.configService.configData.substance) {
+      const substanceConfig = this.configService.configData && this.configService.configData.substance;
+      key = substanceConfig.linking.keyType;
+    }
+    return key;
+  }
+
+  getSubstanceKeyTypeForProductConfig(): any {
+    let keyType = this.getSubstanceKeyTypeConfig();
+
+    // Get Substance Key Type for Product from frontend config
+    let prodKey = null;
+    prodKey = keyType.productKeyType;
+    if (prodKey) {
+      return prodKey;
+    } else {
+      return keyType.default;
+    }
+  }
+
+  getSubstanceKeyTypeForImpuritiesConfig(): any {
+    let keyType = this.getSubstanceKeyTypeConfig();
+
+    // Get Substance Key Type for Impurities from frontend config
+    const appKey = keyType.impuritiesKeyType;
+    if (appKey) {
+      return appKey;
+    } else {
+      return keyType.default;
+    }
+  }
+
+  getSubstanceKeyTypeForClinicalTrialConfig(): any {
+    let keyType = this.getSubstanceKeyTypeConfig();
+
+    // Get Substance Key Type for Clinical Trial from frontend config
+    const clinicalKey = keyType.clinicalTrialKeyType;
+    if (clinicalKey) {
+      return clinicalKey;
+    } else {
+      return keyType.default;
+    }
+  }
+
+  getSubstanceKeyTypeForOrganizationDisplayConfig(): any {
+    let keyType = this.getSubstanceKeyTypeConfig();
+
+    // Get Substance Key Type for Organization Display from frontend config
+    const orgDisplayKey = keyType.clinicalTrialKeyType;
+    if (orgDisplayKey) {
+      return orgDisplayKey;
+    } else {
+      return keyType.default;
+    }
   }
 
 }

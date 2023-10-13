@@ -6,29 +6,33 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { FacetParam } from '@gsrs-core/facets-manager';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
-import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { productSearchSortValues } from './product-search-sort-values';
-import { Product } from '../model/product.model';
-import { environment } from '../../../../environments/environment';
+
+/* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading';
-import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
-import { ProductService } from '../service/product.service';
-import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { environment } from '../../../../environments/environment';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
+import { Facet, FacetParam, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+
+/* GSRS Product Imports */
 import { GeneralService } from '../../service/general.service';
+import { ProductService } from '../service/product.service';
+import { Product } from '../model/product.model';
+import { productSearchSortValues } from './product-search-sort-values';
 
 @Component({
   selector: 'app-products-browse',
@@ -74,7 +78,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   invalidPage = false;
   iconSrcPath = '';
   dailyMedUrl = '';
-
+  downloadJsonHref: any;
+  jsonFileName: string;
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
@@ -121,13 +126,11 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       if (this.router.url === this.previousState[0]) {
         this.ngOnInit();
       }
-
     }, 50);
   }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
-    //this.gaService.sendPageView('Browse Products');
 
     this.titleService.setTitle(`P:Browse Products`);
 
@@ -138,14 +141,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       queryParams: {}
     };
 
-    /*
-    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
-    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
-    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
-    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
-    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
-    */
-
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
 
     if (this.privateSearchTerm) {
@@ -153,7 +148,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -246,9 +241,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           this.exportOptions = response;
         });
 
-        // Separate Application Type and Application Number in Product Result.
-        // COMMETING OUT ?????????
-        // this.separateAppTypeNumber();
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -606,6 +598,24 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   processSubstanceSearch(searchValue: string) {
     this.privateSearchTerm = searchValue;
     this.setSearchTermValue();
+  }
+
+  getProductNameWithDisplayName(productIndex: number, productProvenanceIndex: number, productProvenanceNameIndex: number) {
+    const productNameObj = this.products[productIndex].productProvenances[productProvenanceIndex].productNames[productProvenanceNameIndex];
+    this.products.forEach(product => {
+      if (product) {
+
+      }
+    });
+  }
+
+  saveJSON(productId: number): void {
+    let json = this.products[productId];
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
+
+    const date = new Date();
+    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
   increaseOverlayZindex(): void {

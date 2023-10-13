@@ -1461,7 +1461,10 @@
       "keyType": {
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
-        "clinicalTrialKeyType": "UUID"
+        "clinicalTrialKeyType": "UUID",
+        "productKeyType": "UUID",
+        "applicationKeyType": "UUID",
+        "impuritiesKeyType": "UUID"
       }
     }
   },

@@ -13,6 +13,7 @@
             <div>
               Product Details &nbsp;&nbsp;&nbsp;&nbsp;
             </div>
+            
             <div class="margintopneg10px">
               <!-- Download Json -->
               <span *ngIf="product && product.id">
@@ -22,6 +23,7 @@
                 </a>&nbsp;
               </span>
             </div>
+
             <div>
               <!-- Edit GSRS record button -->
               <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"

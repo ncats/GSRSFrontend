@@ -254,9 +254,11 @@ export interface ProductIngredient {
   modifyDate?: number;
   _substanceUuid?: string;
   _ingredientName?: string;
+  _basisOfStrengthSubstanceUuid?: string;
+  _basisOfStrengthIngredientName?: string;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
-}
+}-0
 
 export interface ProductAll {
   id?: number;
