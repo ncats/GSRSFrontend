@@ -1153,6 +1153,10 @@ margin:auto;
   font-weight: 600;
 }
 
+.fontfamilyarial {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .colorgray {
   color: var(--regular-grey-color);
 }
@@ -1330,65 +1334,45 @@ margin:auto;
 
 
 /* TABS STYLE */
+/*
 :host ::ng-deep .mat-tab-list .mat-tab-label {
-  /*
-  border-width: 1px;
-  border-style: solid;
-  border-color: black;*/
-  /*color: black;*/
-  /*background-color: rgb(247, 241, 241);*/
-  /*border-right: 1px solid rgb(182, 177, 177);*/
   min-width: 180px;
   max-width: 180px;
   text-align: top;
-  margin-bottom: 10px;
-  /* FDA COLOR BLUE CODE Hex: #007CBA */
   color: #007CBA;
   opacity: 1 !important;
-  /*
-  margin-left: 5px;
-  border-radius: 10px 10px 0px 0px;
-  flex-wrap: wrap!important;
-  min-width: 120px;
-  max-width: 120px;
-  height: 35px;*/
 }
 
 :host ::ng-deep .mat-tab-label-content {
   margin-top: -5px;
 }
-/*
+
 ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
   color: red;
   background-color: green;
 }
-*/
 
 :host ::ng-deep .mat-tab-header {
   margin-top: -10px;
-  border-bottom: 2px solid rgb(148, 149, 163);
+  border-bottom: 1px solid rgb(148, 149, 163);
 }
 
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
   background-color: rgb(40, 35, 124);
- /* background: url("../../assets/images/home/tab_active.png");*/
   color: #FFFFFF;
   padding-top: -10px;
-  border-radius: 10px;
-  /*font-weight: bold;*/
-  /*background-color: #FFFFFF;*/
-  /*background-image: url("http://localhost:8081/ginas/app/beta/assets/images/home/tab_active.png");*/
-  /*background-color: rgb(20, 76, 189);*/
-  /*
-   color: rgb(248, 250, 248);
-   background-color: rgb(44, 70, 141);
-
-   opacity: 1;
-     */
+  border-radius: 10px 10px 0px 0px;
 }
 
 :host ::ng-deep .mat-ink-bar {
-  /*background-color: var(--primary-color, --royal-blue-color) !important;
-  height: 3px;*/
   display: none !important;
+}
+*/
+
+/* TABS Style 2 */
+
+.tab-style {
+  border-width: 9px;
+  border-style: solid;
+  border-color: red;
 }

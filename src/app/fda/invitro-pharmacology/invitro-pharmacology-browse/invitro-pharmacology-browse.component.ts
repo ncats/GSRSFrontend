@@ -57,6 +57,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   targetSummaries: any;
   substanceNameLists: Array<any> = [];
   testCompoundList: Array<any> = [];
+  browseSubstanceScreening: Array<any> = [];
 
   isLoading = true;
   isError = false;
@@ -84,6 +85,23 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   lastPage: number;
   invalidPage = false;
   ascDescDir = 'desc';
+  substanceScreeningColumns: string[] = [
+    'viewDetails',
+    'batchId',
+    'screeningConcentration',
+    'screeningInhibition',
+    'assayTarget',
+    'assayType'
+  ];
+
+  substanceSummaryColumns: string[] = [
+    'amountValue',
+    'relationshipType',
+    'relatedSubstance',
+    'studyType',
+    'assayType'
+  ];
+
   displayedColumns: string[] = [
     'viewDetails',
     'testCompound',
@@ -101,7 +119,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     'relatedSubstance',
     'studyType',
     'assayType'
-   // 'applicationType'
+    // 'applicationType'
   ];
 
   // needed for facets
@@ -188,20 +206,21 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     if (this.isFacetsParamsInit && this.isComponentInit) {
       this.searchInvitroPharmacology();
     }
+
+    // Load Browse Substance Tab
+
   }
 
   tabSelectedUpdated(event: MatTabChangeEvent) {
     if (event) {
       //  this.category = event.tab.textLabel;
 
-      //  this.setFacetsforTabs();
     }
   }
 
   viewTabSelectedUpdated(event: MatTabChangeEvent) {
     if (event) {
       //  this.category = event.tab.textLabel;
-
       //  this.setFacetsforTabs();
     }
   }
@@ -233,20 +252,26 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
         }
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+
+          // Get the List of Substance Names/Test Compounds from Facet from Browse Assay Target
           this.rawFacets = pagingResponse.facets;
           this.rawFacets.forEach(elementFacet => {
             if (elementFacet.name === "Test Compound") {
               const values = elementFacet.values;
-            //  alert("LENGTH VALUES: " + values.length);
+              //  alert("LENGTH VALUES: " + values.length);
               values.forEach(elementValue => {
-             //   alert("LABEL LABEL LABEL: " + elementValue.label);
+                //   alert("LABEL LABEL LABEL: " + elementValue.label);
                 if (elementValue.label) {
-               //   alert("LABEL: " + elementValue.label);
+                  //   alert("LABEL: " + elementValue.label);
                   this.substanceNameLists.push(elementValue.label);
                 }
               });
             }
           });
+
+
+          //  this.setFacetsforTabs();
+         // this.loadBrowseSubstanceTab();
 
           // CALL Browse By ALL Substance
           this.browseByAllSubstance();
@@ -355,83 +380,154 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       });
   }
 
+  loadBrowseSubstanceTab() {
+    this.substanceNameLists.forEach(elementSubstance => {
+      const subScreening = { 'testCompound': elementSubstance };
+
+      this.browseSubstanceScreening.push(subScreening);
+      console.log("SUBSTANCE NAME" + elementSubstance);
+    });
+  }
+
   browseByAllSubstance() {
     this.substanceNameLists.forEach(elementSubstance => {
-     // alert(elementSubstance);
-      const assayList = [];
-      this.assays.forEach(elementAssay => {
-        if (elementAssay.invitroTestCompound) {
-          if (elementAssay.invitroTestCompound.testCompound) {
-            if (elementAssay.invitroTestCompound.testCompound === elementSubstance) {
-              const assay = { 'testCompound': elementSubstance, 'assay': elementAssay };
-              assayList.push(assay);
-            }
-          }
-        }
-      });
-     // alert("LENGTH: " + this.testCompoundList.length);
-      this.testCompoundList.push(assayList);
-    });
+      //  const subScreening = { 'testCompound': elementSubstance };
 
-    //alert(this.testCompoundList[0].testCompound);
-    console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
-  }
+      let searchterm = "root_invitroTestCompound_testCompound:" + elementSubstance;
+
+      this.loadingService.setLoading(true);
+      const skip = this.pageIndex * this.pageSize;
+      const subscription = this.invitroPharmacologyService.getAssayByTestCompound(
+        this.order,
+        skip,
+        this.pageSize,
+        searchterm,
+        this.privateFacetParams,
+      )
+        .subscribe(pagingResponse => {
+          this.isError = false;
+          let test = pagingResponse.content;
+          // didn't work unless I did it like this instead of
+          // below export statement
+          let substanceAssay = pagingResponse.content;
+          this.totalInvitroPharm = pagingResponse.total;
+          this.etag = pagingResponse.etag;
+
+
+          substanceAssay.forEach(element => {
+            if (element) {
+
+              if (element.assayTarget) {
+
+                // Calculate IC50
+                if (element.percentInhibitionMean) {
+                  if (element.percentInhibitionMean < 30) {
+                    element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
+                  }
+                }
+              }
+            }
+          });
+
+          const subScreening = { 'testCompound': elementSubstance, 'assay': substanceAssay };
+          this.browseSubstanceScreening.push(subScreening);
+
+      }, error => {
+        console.log('error');
+        const notification: AppNotification = {
+          message: 'There was an error trying to retrieve in-vitro pharmacology data. Please refresh and try again.',
+          type: NotificationType.error,
+          milisecondsToShow: 6000
+        };
+        this.isError = true;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.mainNotificationService.setNotification(notification);
+      }, () => {
+        subscription.unsubscribe();
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+      });
+          /*
+
+         //  this.browseSubstanceScreening.push(subScreening);
+           console.log("SUBSTANCE NAME" + elementSubstance);
+
+
+           const assayList = [];
+           this.assays.forEach(elementAssay => {
+             if (elementAssay.invitroTestCompound) {
+               if (elementAssay.invitroTestCompound.testCompound) {
+                 if (elementAssay.invitroTestCompound.testCompound === elementSubstance) {
+                   const assay = { 'testCompound': elementSubstance, 'assay': elementAssay };
+                   assayList.push(assay);
+                 }
+               }
+             }
+           });
+           // alert("LENGTH: " + this.testCompoundList.length);
+           this.testCompoundList.push(assayList);  */
+        });
+
+      //alert(this.testCompoundList[0].testCompound);
+      console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
+    }
 
   setSearchTermValue() {
-    this.pageSize = 10;
-    this.pageIndex = 0;
-    this.searchInvitroPharmacology();
-  }
+      this.pageSize = 10;
+      this.pageIndex = 0;
+      this.searchInvitroPharmacology();
+    }
 
   clearSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+      const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
 
-    this.privateSearchTerm = '';
-    this.pageIndex = 0;
-    this.pageSize = 10;
+      this.privateSearchTerm = '';
+      this.pageIndex = 0;
+      this.pageSize = 10;
 
-    this.populateUrlQueryParameters();
-    this.searchInvitroPharmacology();
-  }
+      this.populateUrlQueryParameters();
+      this.searchInvitroPharmacology();
+    }
 
   clearFilters(): void {
-    // for facets
-    this.displayFacets.forEach(displayFacet => {
-      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
-    });
-    this.clearSearch();
+      // for facets
+      this.displayFacets.forEach(displayFacet => {
+        displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+      });
+      this.clearSearch();
 
-    this.facetManagerService.clearSelections();
-  }
+      this.facetManagerService.clearSelections();
+    }
 
   populateUrlQueryParameters(): void {
-    const navigationExtras: NavigationExtras = {
-      queryParams: {}
-    };
-    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
-    navigationExtras.queryParams['pageSize'] = this.pageSize;
-    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
-    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+      const navigationExtras: NavigationExtras = {
+        queryParams: {}
+      };
+      navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+      navigationExtras.queryParams['pageSize'] = this.pageSize;
+      navigationExtras.queryParams['pageIndex'] = this.pageIndex;
+      navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
-    this.previousState.push(this.router.url);
-    const urlTree = this.router.createUrlTree([], {
-      queryParams: navigationExtras.queryParams,
-      queryParamsHandling: 'merge',
-      preserveFragment: true
-    });
-    this.location.go(urlTree.toString());
-  }
+      this.previousState.push(this.router.url);
+      const urlTree = this.router.createUrlTree([], {
+        queryParams: navigationExtras.queryParams,
+        queryParamsHandling: 'merge',
+        preserveFragment: true
+      });
+      this.location.go(urlTree.toString());
+    }
 
   get searchTerm(): string {
-    return this.privateSearchTerm;
-  }
+      return this.privateSearchTerm;
+    }
 
   // get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
   //   return this.privateFacetParams;
   // }
 
   sortData(sort: Sort) {
-    if (sort.active) {
+      if(sort.active) {
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
       this.sortValues.forEach(sortValue => {

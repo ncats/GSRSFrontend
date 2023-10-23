@@ -105,6 +105,34 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   }
 
+  getAssayByTestCompound(
+  order: string,
+  skip: number = 0,
+  pageSize: number = 10,
+  searchTerm?: string,
+  facets?: FacetParam
+): Observable<PagingResponse<InvitroAssayScreening>> {
+  let params = new FacetHttpParams();
+  params = params.append('skip', skip.toString());
+  params = params.append('top', pageSize.toString());
+  if (searchTerm !== null && searchTerm !== '') {
+    params = params.append('q', searchTerm);
+  }
+
+  params = params.appendFacetParams(facets);
+
+  if (order != null && order !== '') {
+    params = params.append('order', order);
+  }
+
+  const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'search';
+  const options = {
+    params: params
+  };
+
+  return this.http.get<PagingResponse<InvitroAssayScreening>>(url, options);
+}
+
   getApiExportUrl(etag: string, extension: string): string {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'export/' + etag + '/' + extension;
     return url;

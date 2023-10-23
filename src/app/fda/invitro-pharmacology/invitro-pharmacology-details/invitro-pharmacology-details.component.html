@@ -53,30 +53,40 @@
 
                 <tr>
                   <td class="fieldKey">Test Compound:</td>
-                  <td><span class="colororange fontbold">{{ assayScreening.testCompound }}</span></td>
+                  <td>
+                    <div *ngIf="assayScreening.invitroTestCompound">
+                      <span *ngIf="assayScreening.invitroTestCompound.testCompound">
+                        <span class="colororange fontbold">{{ assayScreening.invitroTestCompound.testCompound }}</span>
+                      </span>
+                    </div>
+                  </td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">Test Compound UNII:</td>
                   <td>
-                    <div *ngIf="assayTargetSubId; else noTestCompoundSubId">
-                      <div class="divflex">
-                        <div>
-                          <a [routerLink]="['/substances', testCompoundSubId]" target="_blank">
-                            <span class="">{{ assayScreening.testCompoundUnii }}</span>
-                          </a>
-                        </div>
-                        <div class="marginleft30px margintopneg10px width30px">
-                          <a role="img" aria-label="substance image" class="zoom"
-                            (click)="openImageModal(testCompoundSubId)">
-                            <img class="image-icon" appSubstanceImage size="90" [entityId]="testCompoundSubId">
-                          </a>
+                    <div *ngIf="assayScreening.invitroTestCompound">
+                      <div *ngIf="assayScreening.invitroTestCompound._testCompoundSubId; else noTestCompoundSubId">
+                        <div class="divflex">
+                          <div>
+                            <a [routerLink]="['/substances', assayScreening.invitroTestCompound._testCompoundSubId]"
+                              target="_blank">
+                              <span class="">{{ assayScreening.invitroTestCompound.testCompoundUnii }}</span>
+                            </a>
+                          </div>
+                          <div class="marginleft30px margintopneg10px width30px">
+                            <a role="img" aria-label="substance image" class="zoom"
+                              (click)="openImageModal(assayScreening.invitroTestCompound._testCompoundSubId)">
+                              <img class="image-icon" appSubstanceImage size="90"
+                                [entityId]="assayScreening.invitroTestCompound._testCompoundSubId">
+                            </a>
+                          </div>
                         </div>
                       </div>
+                      <ng-template #noTestCompoundSubId>
+                        {{ assayScreening.invitroTestCompound.testCompoundUnii }}
+                      </ng-template>
                     </div>
-                    <ng-template #noTestCompoundSubId>
-                      {{ assayScreening.testCompoundUnii }}
-                    </ng-template>
                   </td>
                 </tr>
 
@@ -125,7 +135,15 @@
 
                 <tr>
                   <td class="fieldKey">Relationship Type:</td>
-                  <td>{{ assayScreening.relationshipType }}</td>
+                  <td>
+                    <div *ngIf="assayScreening.invitroTestCompound">
+                      <div *ngIf="assayScreening.invitroTestCompound.invitroRelationships.length > 0">
+                          <div *ngFor="let rel of assayScreening.invitroTestCompound.invitroRelationships">
+                            {{rel.relationshipType}}
+                          </div>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
 
                 <tr>
