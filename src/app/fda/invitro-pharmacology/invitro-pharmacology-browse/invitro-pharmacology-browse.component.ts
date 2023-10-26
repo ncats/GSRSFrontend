@@ -96,10 +96,10 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   substanceSummaryColumns: string[] = [
     'amountValue',
-    'relationshipType',
-    'relatedSubstance',
     'studyType',
     'assayType'
+    // 'relationshipType',
+    //'relatedSubstance',
   ];
 
   displayedColumns: string[] = [
@@ -115,10 +115,10 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   summaryDisplayedColumns: string[] = [
     'testCompound',
     'amountValue',
-    'relationshipType',
-    'relatedSubstance',
     'studyType',
     'assayType'
+    //'relationshipType',
+    //'relatedSubstance',
     // 'applicationType'
   ];
 
