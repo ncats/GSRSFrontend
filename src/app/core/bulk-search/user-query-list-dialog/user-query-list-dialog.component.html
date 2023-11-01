@@ -1,5 +1,5 @@
 <div mat-header>
-        <button mat-mini-fab mat-dialog-close>
+        <button mat-mini-fab mat-dialog-close (click) = "close()">
                 <mat-icon svgIcon="close"></mat-icon>
               </button>
     <div *ngIf = "view == 'all'" >
@@ -8,7 +8,7 @@
             <a *ngIf = "isAdmin" class = "link" (click) = "getUsers()">Other User's Lists</a>
 
             <span class ="middle-fill"></span>
-            <a *ngIf = "isAdmin" class = "link" (click) = "view = 'import'">List Import</a>
+            <a *ngIf = "isAdmin" class = "link" (click) = "view = 'import'">Saved List Import</a>
     </div>
     </div>
     <div *ngIf = "view == 'add'" >
@@ -89,7 +89,7 @@
     <div *ngIf = "view === 'import'">
             <br/><br/><br/>
         <div class = "info">
-            Select a .json list file to import into a new edit form.
+            Select an exported .json saved list file to import into a new form.
         </div>
         <br/><br/>
         <div class = "full-row"> <input  mat-input placeholder="New List Name" [(ngModel)] = "listName" /></div>
@@ -164,10 +164,12 @@
 </mat-paginator>
 </div>
 
-<div class = "form-row">
+<div class = "form-row" style = "flex-direction:column">
     <br/>
-    {{message}}
+    <div style = "width: 100%">{{message}}</div> 
     <br/>
+    <div *ngIf = "refreshing"><br/>
+        &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; This dialog can safely be closed and the process will continue in the background.</div>
     <span *ngIf = "view === 'import' && viewCreated">
         &nbsp; &nbsp; &nbsp; <a class = "link" (click) = "useCreated()">View new list</a>
     </span>

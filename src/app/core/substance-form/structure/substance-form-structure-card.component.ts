@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
 import { SubstanceFormStructureService } from './substance-form-structure.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -44,7 +45,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     private overlayContainerService: OverlayContainer,
     private gaService: GoogleAnalyticsService,
     private substanceService: SubstanceService,
-    private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService
+    private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
+    private activatedRoute: ActivatedRoute
   ) {
     super();
   }
@@ -56,6 +58,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
         const idealStructSubscription = this.substanceFormStructureService.substanceIdealizedStructure.subscribe(structure => {
+          console.log(structure);
           if (structure) {
             this.structure = structure;
           } else {
@@ -72,6 +75,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       } else {
         this.menuLabelUpdate.emit('Structure');
         const structSubscription = this.substanceFormStructureService.substanceStructure.subscribe(structure => {
+          console.log(structure);
+
           this.structure = structure;
           this.loadStructure();
         });
@@ -123,6 +128,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.structureEditor.setMolecule(this.structure.molfile);
       this.smiles = this.structure.smiles;
       this.mol = this.structure.molfile;
+           // imported structures from search results require a second structure refresh to display stereochemistry and other calculated fields
+     if ( this.activatedRoute && this.activatedRoute.snapshot.queryParams && this.activatedRoute.snapshot.queryParams['importStructure']) {
+      setTimeout(()=>{
+        this.updateStructureForm(this.structure.molfile), 2000
+      });
+     }
       this.isInitializing = false;
     }
   }

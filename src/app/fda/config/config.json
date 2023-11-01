@@ -1,5 +1,5 @@
 {
-  "version": "3.0.3",
+  "version": "3.1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -17,6 +17,9 @@
     "apiPassword": null,
     "apiKey": null,
     "apiToken": null
+  },
+  "stagingArea": {
+    "mergeAction": false
   },
 "userRegistration": {
     "configurations": {
@@ -623,6 +626,16 @@
   ],
   "facets": {
     "substances": {
+      "staging": [
+        "Loaded By",
+        "Date Loaded",
+        "Import Status",
+        "Source",
+        "Match Count",
+        "Match Key",
+        "Validation Type",
+        "Validation Message"
+      ],
       "default": [
         "User List",
         "Deprecated",
@@ -1040,7 +1053,8 @@
         "Age Groups",
         "Intervention Type",
         "Study Results",
-        "Conditions"
+        "Conditions",
+        "Substance Role"
       ]
     },
     "clinicaltrialsus": {
@@ -1056,7 +1070,8 @@
         "Age Groups",
         "Intervention Type",
         "Study Results",
-        "Conditions"
+        "Conditions",
+        "Substance Role"
       ]
     },
     "adverseeventpt": {

@@ -54,6 +54,13 @@ export interface Config {
     elementLabelDisplay?:any;
     bulkSearch?: any
     useDataUrl?: any;
+    userProfile?: any;
+    stagingArea?: StagingAreaSettings;
+    privacyStatement: string;
+}
+
+export interface StagingAreaSettings {
+    mergeAction?: boolean;
 }
 
 export interface LoadedComponents {

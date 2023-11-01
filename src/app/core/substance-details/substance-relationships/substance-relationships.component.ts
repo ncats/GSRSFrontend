@@ -212,4 +212,8 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
     }
     return ret;
   }
+
+  close(){
+    this.dialog.closeAll();
+  }
 }

@@ -216,7 +216,7 @@ export class ExportDialogComponent implements OnInit {
       if (response['Newly created configuration']) {
         this.message = 'Newly created configuration: ' + response['Newly created configuration'];
         this.loadedConfig.configurationId = response['Newly created configuration'];
-
+        this.unsaved = false;
       }
     });
   } else {

@@ -20,6 +20,7 @@ install:
   - npm install --legacy-peer-deps
   - npm install webpack
   - npm i --save webpack-sources --legacy-peer-deps
+  - npm install -f @types/ws@8.5.4
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod

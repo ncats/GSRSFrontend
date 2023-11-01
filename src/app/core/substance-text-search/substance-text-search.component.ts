@@ -56,6 +56,9 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
       debounceTime(500),
       distinctUntilChanged(),
       switchMap(searchValue => {
+        if(!searchValue) {
+          searchValue = '';
+        }
         this.query = searchValue;
         this.searchValueOut.emit(this.query);
         const eventCategory = this.eventCategory || 'substanceTextSearch';

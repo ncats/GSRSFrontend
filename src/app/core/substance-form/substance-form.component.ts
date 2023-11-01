@@ -344,10 +344,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   this.status = response.status;
                   this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
                     this.setFormSections(formSections[response.substanceClass]);
+                    this.isLoading = false;
+                    this.loadingService.setLoading(false);
                   });
                 
               }
             }, error => {
+              this.isLoading = false;
+              this.loadingService.setLoading(false);
               });  
        }  else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
@@ -639,6 +643,10 @@ getDrafts() {
     const action = this.activatedRoute.snapshot.queryParams['action'] || null;
     if (action && action === 'import') {
       return false;
+    }
+   const staging = this.activatedRoute.snapshot.queryParams['stagingID'] || null;
+    if (staging && staging.length > 0 ) {
+      return false
     }
     // if config var set and set to 'createdBy then set approval button enabled if user is not creator
     if(this.approvalType === 'createdBy') {

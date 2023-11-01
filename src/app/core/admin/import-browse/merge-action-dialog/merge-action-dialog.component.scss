@@ -5,8 +5,144 @@
     margin-top: 20px;
 }
 
+.experimental-action-label {
+    font-weight:500; 
+    margin-left: 25px;
+}
+
 .spinner {
     width: 100px !important;
 height: 100px !important;
 margin: auto;
 }
+
+.dialog-row {
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.config-label .mat-focused {
+    margin-top: -2px;
+}
+
+.name-form {
+    width: 400px;
+}
+
+.preset {
+    width: 250px;
+}
+
+.top-button {
+    margin-left:5px;
+}
+
+.top-button-container {
+    margin-top: 10px;
+    margin-left: 50px;
+}
+
+.format {
+    margin-left: 10px;
+}
+
+.padding {
+    margin-bottom: 15px;
+    padding-bottom:5px;
+    padding-top: 12px;
+}
+
+.mat-warn {
+    color: var(--regular-red-color);
+  background-color: white;
+  border: 1px solid var(--regular-red-color);
+}
+
+
+::ng-deep sf-string-widget > div {
+    margin-left:50px;
+}
+
+
+::ng-deep .has-success > ::ng-deep sf-string-widget {
+    margin-left:20px;
+ 
+}
+
+
+::ng-deep sf-string-widget > ::ng-deep .control-label {
+    min-width: 250px;
+display: inline-block;
+}
+
+
+.top-label {
+    display: flex;
+    flex-direction:row;
+    width: 100%;
+}
+
+.message {
+    font-weight: 500;
+    margin:10px;
+    font-size:18px;
+}
+
+.message-container {
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    justify-content: center;
+}
+
+.form-row {
+    width:100%;
+    display:flex;
+    flex-direction:row;
+}
+
+.top-margin {
+    margin-top:15px;
+}
+
+.right-margin {
+    margin-right: 10px;
+}
+
+
+
+::ng-deep .array-remove-button {
+    color: #4793d1;
+    background-color: white;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin-bottom: 8px;
+        margin-right: 0px;
+    min-width: 56px;
+    line-height: 30px;
+    padding: 0 12px;
+    border-radius: 4px;
+    overflow: visible;
+  }
+
+  ::ng-deep .array-add-button {
+    background-color: #4793d1;
+    color: white;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin-top: 8px;
+        margin-right: 0px;
+    min-width: 56px;
+    line-height: 30px;
+    padding: 0 12px;
+    border-radius: 4px;
+    overflow: visible;
+  }

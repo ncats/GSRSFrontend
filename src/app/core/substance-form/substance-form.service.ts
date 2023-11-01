@@ -1305,11 +1305,13 @@ export class SubstanceFormService implements OnDestroy {
             for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
               const prop = substanceCopy.modifications.physicalModifications[i];
               let present = false;
-              prop.parameters.forEach(param => {
-                if (param.parameterName) {
-                  present = true;
-                }
-              });
+              if (prop && prop.parameters){
+                prop.parameters.forEach(param => {
+                  if (param.parameterName) {
+                    present = true;
+                  }
+                });
+              }
 
               if (!prop.physicalModificationRole && !present) {
                 const invalidPropertyMessage: ValidationMessage = {
