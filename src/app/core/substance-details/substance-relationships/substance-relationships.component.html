@@ -16,7 +16,7 @@
           <img class="structure-image" appSubstanceImage [entityId]="relationship.relatedSubstance.refuuid">
           <div>
             <a class="substance-name" target = "_blank" style = "height: 18px;" [routerLink]="['/substances', relationship.relatedSubstance.refuuid]" >
-              {{relationship.relatedSubstance.name}}  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
+              <span [innerHTML] = "relationship.relatedSubstance.name"></span> <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
             </a>
           </div>
         </div>
@@ -64,7 +64,7 @@
                   <img class="structure-image" appSubstanceImage [entityId]="relationship.mediatorSubstance.refuuid">
                   <div>
                     <a class="substance-name" target = "_blank" style = "height: 18px;" [routerLink]="['/substances', relationship.mediatorSubstance.refuuid]" >
-                      {{relationship.mediatorSubstance.name}}  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
+                     <span [innerHTML] = "relationship.mediatorSubstance.name"></span>  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
                     </a>
                   </div>
                 </div>
