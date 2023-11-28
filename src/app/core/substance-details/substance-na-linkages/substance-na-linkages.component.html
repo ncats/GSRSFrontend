@@ -6,6 +6,11 @@
       <td mat-cell *matCellDef="let linkage"> {{getLinkageDisplay(linkage.linkage)}} </td>
     </ng-container>
 
+    <ng-container matColumnDef='Structure'>
+        <th mat-header-cell *matHeaderCellDef> Structure </th>
+        <td mat-cell *matCellDef="let linkage"> <img class = "structure" [src] = "linkage.structure" /></td>
+      </ng-container>
+
     <ng-container matColumnDef='Site Range'>
       <th mat-header-cell *matHeaderCellDef> Site Range </th>
       <td mat-cell *matCellDef="let linkage"> {{linkage.sitesShorthand}} </td>
@@ -17,6 +22,6 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row style = "height:145px" *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>

@@ -1,0 +1,137 @@
+.form-container {
+  padding: 5px 10px 12px 10px;
+  position: relative;
+/*  border: 1px solid var(--pale-border-color-rgb);*/
+}
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: var(--notif-backdrop-bg-color);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--notif-backdrop-color);
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+      padding: 0 0px 8px 0;
+  }
+
+  .col {
+      flex-grow: 1;
+      padding-right: 15px;
+  }
+
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); //one column
+    margin-right: 20px;
+  }
+}
+
+.references-container {
+  width: 100%;
+}
+
+.related-substance {
+  min-width: 310px;
+  max-width: 310px;
+}
+
+/*
+.related-substance {
+  min-width: 387px;
+  max-width: 387px;
+}
+*/
+
+::ng-deep .selected-substance {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+  position: relative;
+  img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 220px;
+  }
+}
+
+.divflex {
+  display: flex;
+}
+
+.bordergray {
+  border: 1px solid var(--regular-grey-color);
+}
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.margintopneg50px {
+  margin-top: -50px;
+}
+
+.marginleft45px {
+  margin-left: 45px;
+}
+
+.marginleft30px {
+  margin-left: 30px;
+}
+
+.padtop10px {
+  padding-top: 10px;
+}
+
+.padleft15px {
+  padding-left: 15px;
+}
+
+.height40px {
+  height: 40px;
+}
+
+.font11px {
+  font-size: 11px;
+}
+
+.width80percent {
+  width: 80%;
+}
+
+.button-delete {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -15px;
+}
+
+.colorred {
+  color: red;
+}
+
+/* FDA COLOR BLUE CODE Hex: #007CBA */
+.colorbluefda {
+  color: #007CBA;
+}
+
+hr.style {
+  border: 1px solid rgb(111, 111, 111);
+}
+
+.amount-display {
+  padding-top:11px;
+}

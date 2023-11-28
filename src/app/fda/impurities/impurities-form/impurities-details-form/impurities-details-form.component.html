@@ -18,12 +18,25 @@
       <!-- Left Side -->
       <div class="width25percent textaligncenter">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
-          eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage]="false"
-          header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid">
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
+          header="Related Substance" [subuuid]="impuritiesDetails.relatedSubstanceUuid" [showMorelinks]=true>
         </app-substance-selector>
         <div class="textaligncenter font11px colororange" *ngIf="impuritiesDetails.relatedSubstanceUnii">
           {{impuritiesDetails.relatedSubstanceUnii}}
         </div>
+        <!--
+        <div class="divflex">
+          <div class="col marginleft50px">
+            <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
+              <span class="font11px">Register New</span>
+            </a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
+              <span class="font11px">Search By Structure</span>
+            </a>
+          </div>
+        </div>
+        -->
       </div>
 
       <!-- Right Side -->
@@ -66,9 +79,9 @@
 
 
         <!-- Identity Criteria -->
-        <div class="flex-container margintop10px marginleftneg7px">
+        <div class="margintop10px marginleftneg7px">
 
-          <div class="width25percent width160px padbottom10px marginright10px">
+          <div class="padbottom10px marginright10px">
             <button mat-raised-button color="primary" (click)="addNewIdentityCriteria()"
               matTooltip="Add Identity Criteria">
               <!--
@@ -78,7 +91,7 @@
             </button>
           </div>
 
-          <div class="width75percent">
+          <div class="">
             <div class="marginbottom10px"
               *ngFor="let identityCriteria of impuritiesDetails.identityCriteriaList; let identityCriteriaIndex = index">
 
@@ -97,7 +110,7 @@
                   [model]="identityCriteria.unit" (valueChange)="identityCriteria.unit = $event">
                 </app-cv-input>
 
-                <div class="col-3-1 marginleftneg40px" style="margin-left: -40px;">
+                <div class="col-3-1 marginleftneg20px">
                   <button mat-icon-button color="primary"
                     (click)="confirmDeleteIdentityCriteria(impuritiesDetailsIndex, identityCriteriaIndex)"
                     matTooltip="Delete Identity Criteria {{identityCriteriaIndex + 1}}">

@@ -5,14 +5,15 @@
     .mat-dialog-container {
       padding: 5px;
       position: relative;
+      overflow: hidden;
     }
-    
+
     .mat-dialog-content {
       margin: 0;
       padding: 0;
       max-height: 100%;
     }
-    
+
     .mat-tab-body-content {
       padding-left: 10px;
       padding-right: 10px;
@@ -25,12 +26,41 @@ img {
   height: auto;
 }
 
+.icon-super {
+  vertical-align: top;
+height: 20px;
+}
+
+
+.button-row {
+  margin: 10px 5px;
+  width:100%;
+  display: inline-flex;
+    align-items: flex-end;
+  flex-direction: row;
+}
+
+.modal-button {
+  font-size:15px;
+  margin-right: 10px;
+}
+
+.structure-image-content>div {
+    max-width: 500px;
+    margin: auto;
+}
+/* this is a hack to try to add a scroll bar sometimes */
+mat-dialog-container div[mat-dialog-content] {
+    overflow: auto;
+    height: 100%;
+}
+
 .mat-mini-fab {
   position: absolute;
   right: 17px;
   top: 8px;
-  background-color: rgba(242, 242, 242, .85);
-  color: #404040;
+  background-color: var(--mat-icon-button-bg-color);
+  color: var(--label-color);
   width: 35px;
   height: 35px;
 
@@ -41,4 +71,25 @@ img {
   ::ng-deep .mat-button-wrapper {
       padding: 0;
   }
+}
+
+.approval {
+  position: relative;
+  top: 30px;
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.displayname {
+  width: 80%;
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.viewrecord {
+  color: var(--link-primary-color);
+  font-weight: bold;
+  font-size: 20px;
 }

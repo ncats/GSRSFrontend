@@ -30,11 +30,15 @@ export interface SubstanceBaseExtended {
   moieties?: Array<SubstanceMoiety>;
   _approvalIDDisplay?: string;
   _name?: string;
-  _name_html?: string;
+  _nameHTML?: string;
   _self?: string;
   nucleicAcid?: NucleicAcid;
   changeReason?: string;
   protein?: Protein;
+  $$mixtureParents?: any;
+  $$constituentParents?: any;
+  $$otherID?: string;
+  $$source?: string;
 }
 
 export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
@@ -45,7 +49,17 @@ export interface SubstanceSummary extends SubstanceBase, SubstanceBaseExtended {
   _relationships?: CountRef;
   _moieties?: CountRef;
   _properties?: CountRef;
-  _matchContext?: MatchContext;
+  _matchContext?: any;
+  _mixture?: ParentCountHref;
+  _specifiedSubstance?: ParentCountHref;
+  _matchContents?: Array<string>;
+  mixture?: any;
+  names?: any;
+  specifiedSubstance?: any;
+}
+export interface ParentCountHref {
+  components?: CountRef;
+  constituents?: CountRef;
 }
 
 export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
@@ -61,7 +75,9 @@ export interface SubstanceDetail extends SubstanceBase, SubstanceBaseExtended {
   polymer?: Polymer;
   modifications?: SubstanceModifications;
   specifiedSubstance?: SpecifiedSubstance;
+  specifiedSubstanceG2?: SpecifiedSubstanceG2;
   specifiedSubstanceG3?: SpecifiedSubstanceG3;
+  specifiedSubstanceG4m?: SpecifiedSubstanceG4m;
   _matchContext?: MatchContext;
   fileUrl?: string;	// For precisionFDA
 }
@@ -87,6 +103,7 @@ export interface StructurallyDiverse extends SubstanceBase {
   hybridSpeciesPaternalOrganism?: SubstanceRelated;
   $$diverseType?: string;
   $$storedPart?: Array<string>;
+  access?: Array<string>;
 
 }
 
@@ -98,6 +115,7 @@ export interface Polymer extends SubstanceBase {
   monomers?: Array<Monomer>;
   classification?: PolymerClassification;
   structuralUnits?: Array<StructuralUnit>;
+    access?: Array<string>;
 }
 
 export interface SpecifiedSubstance extends SubstanceBase {
@@ -139,12 +157,14 @@ export interface NucleicAcid extends SubstanceBase {
 
 export interface Sugar extends NucleicAcid {
   sugar?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }
 
 export interface Linkage extends NucleicAcid {
   linkage?: string;
+  structure?: any;
   sitesShorthand?: string;
   sites?: Array<Site>;
 }
@@ -206,7 +226,7 @@ export interface SubstanceName extends SubstanceBase {
   displayName?: boolean;
   references?: Array<string>;
   _self?: string;
-  _name_html?: string;
+  _nameHTML?: string;
 }
 
 export interface SubstanceCode extends SubstanceBase {
@@ -218,6 +238,7 @@ export interface SubstanceCode extends SubstanceBase {
   url?: string;
   references?: Array<string>;
   _self?: string;
+  _isClassification?: boolean;
 }
 
 export interface SubstanceNote extends SubstanceBase {
@@ -268,6 +289,7 @@ export interface SubstanceAmount extends SubstanceBase {
 }
 
 export interface SubstanceReference extends SubstanceBase {
+  linkingID?: any;
   id?: string;
   citation?: string;
   docType?: string;
@@ -278,6 +300,7 @@ export interface SubstanceReference extends SubstanceBase {
   documentDate?: number;
   refuuid?: string;
   uploadedFile?: string;
+  name?: string;
 }
 
 export interface MediatorSubstance extends SubstanceBase {
@@ -361,6 +384,7 @@ export interface SubstanceStructure extends SubstanceBase {
   stereoComments?: string;
   properties?: any;
   links?: any;
+  _formulaHTML?: string;
 }
 
 export interface SubstanceMoiety extends SubstanceStructure {
@@ -438,7 +462,7 @@ export interface Feature {
 
 export interface SpecifiedSubstanceG3 extends SubstanceBase {
   references?: Array<string>;
-  parentSubstance?: SubstanceRelated;
+  parentSubstance?: SpecifiedSubstanceParent;
   grade?: Grade;
   definition?: Definition;
 }
@@ -452,4 +476,172 @@ export interface Grade extends SubstanceBase {
 export interface Definition extends SubstanceBase {
   references?: Array<string>;
   definition?: string;
+}
+
+export interface SpecifiedSubstanceParent extends SubstanceBase {
+  parentSubstance?: SubstanceRelated;
+}
+
+export interface SpecifiedSubstanceG2 extends SubstanceBase {
+  uuid?: string;
+  substanceRole?: string;
+  grade?: string;
+  comments?: string;
+  references?: Array<string>;
+  constituents?: Array<Constituent>;
+  manufacturing?: Array<SpecifiedSubstanceG2Manufacturing>;
+  organization?: SubstanceSsg2Organization;
+}
+
+export interface SubstanceSsg2Name extends SubstanceBase {
+  name?: string;
+  stdName?: string;
+  type?: string;
+  domains?: Array<string>;
+  languages?: Array<string>;
+  nameJurisdiction?: Array<string>;
+  nameOrgs?: Array<string | SubstanceNameOrg>;
+  preferred?: boolean;
+  displayName?: boolean;
+  references?: Array<string>;
+  _self?: string;
+  _nameHTML?: string;
+}
+
+export interface SpecifiedSubstanceG2Manufacturing extends SubstanceBase {
+  manufacturingType?: string;
+  productionMethodType?: string;
+  productionMethodDescription?: string;
+  productionSystemType?: string;
+  productionSystem?: string;
+}
+
+export interface SubstanceSsg2Organization extends SubstanceBase {
+  manufacturerId?: string;
+  manufacturerName?: string;
+  manufacturerRole?: string;
+  issuerofId?: string;
+}
+
+export interface SpecifiedSubstanceG4m extends SubstanceBase {
+  // references?: Array<string>;
+  parentSubstance?: SpecifiedSubstanceParent;
+  process?: Array<SpecifiedSubstanceG4mProcess>;
+  manufactureName?: string;
+  ManufactureId?: string;
+  manufactureIdType?: string;
+  _svg?: string;
+}
+
+export interface SpecifiedSubstanceG4mProcess extends SubstanceBase {
+  // references?: Array<string>;
+  processName?: string;
+  processRole?: string;
+  processType?: string;
+  processDescription?: string;
+  processComments?: string;
+  sites?: Array<SpecifiedSubstanceG4mSite>;
+}
+
+export interface SpecifiedSubstanceG4mSite extends SubstanceBase {
+  siteName?: string;
+  siteIdType?: string;
+  siteId?: string;
+  siteAddress?: string;
+  gpsSiteLocation?: string;
+  siteClearance?: string;
+  companyName?: string;
+  CompanyId?: string;
+  CompanyIdType?: string;
+  siteComments?: string;
+  stages?: Array<SpecifiedSubstanceG4mStage>;
+}
+
+export interface SpecifiedSubstanceG4mStage extends SubstanceBase {
+  stageNumber?: string;
+  stageType?: string;
+  stageRole?: string;
+  stageEquipment?: string;
+  stageComments?: string;
+  criticalParameters?: Array<SpecifiedSubstanceG4mCriticalParameter>;
+  startingMaterials?: Array<SpecifiedSubstanceG4mStartingMaterial>;
+  processingMaterials?: Array<SpecifiedSubstanceG4mProcessingMaterial>;
+  resultingMaterials?: Array<SpecifiedSubstanceG4mResultingMaterial>;
+}
+
+export interface SpecifiedSubstanceG4mCriticalParameter extends SubstanceBase {
+  name?: string;
+  propertyType?: string;
+  value?: SubstanceAmount;
+  parameters?: Array<SubstanceParameter>;
+  referencedSubstance?: SubstanceReference;
+}
+
+export interface SpecifiedSubstanceG4mStartingMaterial extends SubstanceBase {
+  // references?: Array<string>;
+  substanceName?: SubstanceRelated;
+  verbatimName?: string;
+  substanceRole?: string;
+  substanceGrade?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
+  comments?: string;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
+}
+
+export interface SpecifiedSubstanceG4mProcessingMaterial extends SubstanceBase {
+  // references?: Array<string>;
+  substanceName?: SubstanceRelated;
+  verbatimName?: string;
+  substanceRole?: string;
+  substanceGrade?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
+  manufacturerName?: string;
+  manufacturerId?: string;
+  manufacturerIdType?: string;
+  comments?: string;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
+}
+
+export interface SpecifiedSubstanceG4mResultingMaterial extends SubstanceBase {
+  // references?: Array<string>;
+  substanceName?: SubstanceRelated;
+  verbatimName?: string;
+  substanceRole?: string;
+  substanceGrade?: string;
+  specificationType?: string;
+  specificationReference?: string;
+  amount?: SubstanceAmount;
+  references?: Array<string>;
+  comments?: string;
+  manufacturerDetails?: Array<SpecifiedSubstanceG4mManufacturerDetails>;
+  acceptanceCriterias?: Array<SpecifiedSubstanceG4mAcceptanceCriteria>;
+}
+
+export interface SpecifiedSubstanceG4mManufacturerDetails extends SubstanceBase {
+  manufacturerName?: String;
+  manufacturerId?: string;
+  manufacturerIdType?: string;
+}
+
+export interface SpecifiedSubstanceG4mAcceptanceCriteria extends SubstanceBase {
+  acceptanceCriteria?: string;
+  acceptanceCriteriaType?: string;
+}
+
+export interface TableFilterDDModel {
+  value: string;
+  display: string;
+}
+
+export interface TableFilterBoolDDModel {
+  value: boolean;
+  display: boolean;
 }

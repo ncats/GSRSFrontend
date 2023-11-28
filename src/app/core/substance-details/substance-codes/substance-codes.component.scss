@@ -7,9 +7,22 @@
 
 .a-link {
   text-decoration:none;
-  color: #1565C0;
+  color: var(--link-color);
 }
 
+.disabled-btn {
+  color: var(--box-shadow-color-5);
+  background-color: var(--box-shadow-color-3);
+  cursor: pointer;
+  &:hover {
+    cursor: pointer !important;
+  }
+}
+
+.disabled-btn:hover {
+  cursor: pointer !important;
+
+}
 
 .form-row {
   width:100%;
@@ -24,4 +37,9 @@
      width:90%;
    }
    padding-bottom: 25px;
+}
+
+.show-filter-span {
+  display: block;
+  float: right;
 }

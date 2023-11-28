@@ -4,7 +4,7 @@ import {SubstanceAmount, SubstanceDetail, SubstanceProperty} from '../../substan
 import {Subject} from 'rxjs';
 import { UtilsService } from '@gsrs-core/utils';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-substance-properties',
@@ -39,6 +39,16 @@ export class SubstancePropertiesComponent extends SubstanceCardBase implements O
     return this.utilsService.displayAmount(amount);
   }
 
+  codeIsProtected(access: string[]) {
+    let itIs = false;
+    for(let a of access) {
+      if(a.toLowerCase() === 'protected') {
+        itIs = true;
+      }
+    }
+    return itIs;
+  }
+
   openModal(templateRef) {
 
     const dialogRef = this.dialog.open(templateRef, {
@@ -50,6 +60,10 @@ export class SubstancePropertiesComponent extends SubstanceCardBase implements O
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+
+  close(){
+    this.dialog.closeAll();
   }
 
 }

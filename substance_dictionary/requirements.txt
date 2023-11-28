@@ -1,5 +1,25 @@
-numpy==1.18.4
+// - commenting this out for ITRB automated scan - numpy==1.21
 pandas==1.0.3
 python-dateutil==2.8.1
 pytz==2020.1
 six==1.14.0
+openpyxl
+
+======================================================
+Creating Data Dictionary JSON INSTRUCTION
+Added on March 22, 2021
+------------------------------------------------------
+
+-download python-3.9.2-amd64.exe or higher version from https://www.python.org/downloads/
+-install python .exe file in your computer.
+-in DOS prompt, go to directory where python is installed
+ C:\Users\<yourusername>\AppData\Local\Programs\Python\Python39\Scripts
+-intall the following libraries
+-In DOS prompt type, 'pip install pandas'
+-In DOS prompt type 'pip install xlrd'
+-IN DOS prompt type 'pip install openpyxl'
+-copy files create_dictionary.py and data_dictionary.xlsx to  C:\Users\<yourusername>\AppData\Local\Programs\Python\Python39
+-IN DOS prompt, type 'python create_dictionary.py'
+
+
+

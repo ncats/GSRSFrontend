@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
-import { Router, RouterEvent, NavigationEnd, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
+import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
@@ -8,15 +8,21 @@ import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
 import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
-import { MatBottomSheet, MatBottomSheetRef, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { Observable, Subscription } from 'rxjs';
 import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
-import { NavItem } from '../config/config.model';
+import { NavItem, LoadedComponents } from '../config/config.model';
 import { UtilsService } from '@gsrs-core/utils';
 import { take } from 'rxjs/operators';
 import * as moment from 'moment';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
+import { WildcardService } from '@gsrs-core/utils/wildcard.service';
+import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import {sprintf} from "sprintf-js";
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
   selector: 'app-base',
@@ -30,16 +36,9 @@ export class BaseComponent implements OnInit, OnDestroy {
   auth?: Auth;
   environment: Environment;
   searchValue: string;
-  private overlayContainer: HTMLElement;
-  private bottomSheetOpenTimer: any;
-  private bottomSheetRef: MatBottomSheetRef;
-  private bottomSheetCloseTimer: any;
-  private selectedText: string;
-  private subscriptions: Array<Subscription> = [];
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  private classicLinkQueryParams = {};
   isAdmin = false;
   contactEmail: string;
   version?: string;
@@ -48,6 +47,20 @@ export class BaseComponent implements OnInit, OnDestroy {
   clasicBaseHref: string;
   navItems: Array<NavItem>;
   customToolbarComponent: string = '';
+  canRegister = false;
+  registerNav: Array<NavItem>;
+  searchNav: Array<NavItem>;
+  adverseEventShinyHomepageDisplay = false;
+  loadedComponents: LoadedComponents;
+  private overlayContainer: HTMLElement;
+  private bottomSheetOpenTimer: any;
+  private bottomSheetRef: MatBottomSheetRef;
+  private bottomSheetCloseTimer: any;
+  private selectedText: string;
+  private subscriptions: Array<Subscription> = [];
+  private wildCardText: string;
+  private classicLinkQueryParams = {};
+  showHeaderBar = 'true';
 
   constructor(
     private router: Router,
@@ -60,124 +73,12 @@ export class BaseComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private substanceTextSearchService: SubstanceTextSearchService,
     private utilsService: UtilsService,
+    private wildCardService: WildcardService
   ) {
-    this.classicLinkPath = this.configService.environment.clasicBaseHref;
-    this.classicLinkQueryParamsString = '';
-    this.contactEmail = this.configService.configData.contactEmail;
-    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
-    this.navItems = this.configService.configData.navItems;
-    this.customToolbarComponent = this.configService.configData.customToolbarComponent;
-  }
 
-  ngOnInit() {
-
-    const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
-      this.isAdmin = response;
+    this.wildCardService.wildCardObservable.subscribe((data) => {
+      this.wildCardText = data;
     });
-    this.subscriptions.push(roleSubscription);
-
-    this.baseDomain = this.configService.configData.apiUrlDomain;
-
-    this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
-      this.version = this.configService.configData.version || buildInfo.version;
-      this.versionTooltipMessage = `V${this.version}`;
-      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
-    });
-
-    this.overlayContainer = this.overlayContainerService.getContainerElement();
-
-    let urlPath = this.router.routerState.snapshot.url.split('?')[0];
-    this.setClassicLinkPath(urlPath.substring(1));
-
-    if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
-      this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
-      this.setClassicLinkQueryParams(this.activatedRoute.snapshot.queryParamMap);
-    }
-
-    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
-      this.searchValue = params.get('search');
-      this.setClassicLinkQueryParams(params);
-    });
-    this.subscriptions.push(paramsSubscription);
-
-    const authSubscription = this.authService.getAuth().subscribe(auth => {
-      this.auth = auth;
-    });
-    this.subscriptions.push(authSubscription);
-
-    this.environment = this.configService.environment;
-    this.appId = this.environment.appId;
-
-    this.logoSrcPath = `${this.environment.baseHref || '/'}assets/images/gsrs-logo.svg`;
-
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
-      if (event instanceof ResolveEnd) {
-        this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
-        urlPath = event.url.split('?')[0];
-        this.setClassicLinkPath(urlPath.substring(1));
-      }
-
-      if (event instanceof NavigationStart) {
-        this.classicLinkQueryParams = {};
-        this.loadingService.resetLoading();
-      }
-    });
-    this.subscriptions.push(routerSubscription);
-
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
-
-    this.substanceTextSearchService.registerSearchComponent('main-substance-search');
-    const cleanSearchSubscription = this.substanceTextSearchService.setSearchComponentValueEvent('main-substance-search')
-    .subscribe(value => {
-      this.searchValue = value;
-    });
-    this.subscriptions.push(cleanSearchSubscription);
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
-    clearTimeout(this.bottomSheetOpenTimer);
-    clearTimeout(this.bottomSheetCloseTimer);
-  }
-
-  getMainPathSegmentFromUrl(url: string): string {
-    const path = url.split('?')[0];
-    const mainPathPart = path.split('/')[0];
-    return mainPathPart;
-  }
-
-  routeToLogin(): void {
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-        path: this.router.url
-      }
-    };
-
-    this.router.navigate(['/login'], navigationExtras);
-  }
-
-  processSubstanceSearch(searchValue: string) {
-    this.navigateToSearchResults(searchValue);
-  }
-
-  navigateToSearchResults(searchTerm: string) {
-
-    const navigationExtras: NavigationExtras = {
-      queryParams: searchTerm ? { 'search': searchTerm } : null
-    };
-
-    this.router.navigate(['/browse-substance'], navigationExtras);
-  }
-
-  increaseMenuZindex(): void {
-    this.overlayContainer.style.zIndex = '1001';
-  }
-
-  removeZindex(): void {
-    this.overlayContainer.style.zIndex = null;
   }
 
   @HostListener('document:mouseup', ['$event'])
@@ -238,6 +139,187 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnInit() {
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
+
+    this.classicLinkPath = this.configService.environment.clasicBaseHref;
+    this.clasicBaseHref = this.configService.environment.clasicBaseHref;
+    this.classicLinkQueryParamsString = '';
+    this.contactEmail = this.configService.configData.contactEmail || null;
+    this.navItems = this.configService.configData.navItems || null;
+
+  let notempty = false;
+    if (this.loadedComponents) {
+      if (this.loadedComponents.applications) {
+        notempty = true;
+      } else if (this.loadedComponents.clinicaltrials) {
+        notempty = true;
+      } else if (this.loadedComponents.adverseevents) {
+        notempty = true;
+      } else if (this.loadedComponents.impurities) {
+        notempty = true;
+      } else if (this.loadedComponents.products) {
+        notempty = true;
+      } else if (this.loadedComponents.ssg4m) {
+        notempty = true;
+      }
+
+      if (!notempty) {
+        this.loadedComponents = null;
+      }
+    }
+    const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
+      this.isAdmin = response;
+    });
+    this.subscriptions.push(roleSubscription);
+
+    const regSubscription =
+    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
+      this.canRegister = response;
+    });
+    this.subscriptions.push(regSubscription);
+    this.baseDomain = this.configService.configData.apiUrlDomain;
+
+    this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
+      this.version = this.configService.configData.version || buildInfo.version;
+      this.versionTooltipMessage = `V${this.version}`;
+      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
+    });
+    this.navItems.forEach(item => {
+      if (item.display === 'Register') {
+        this.registerNav = item.children;
+      }
+      if (item.display === 'Search') {
+        this.searchNav = item.children;
+      }
+    });
+    if (this.loadedComponents) {
+      for(let i = this.navItems.length - 1; i >= 0; i--) {
+        if (this.navItems[i].children) {
+        for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
+          if (this.navItems[i].children[j].component) {
+            if (!this.loadedComponents[this.navItems[i].children[j].component]) {
+              this.navItems[i].children.splice(j, 1);
+          }
+        }
+        }
+    }
+    if (this.navItems[i].component) {
+      if (!this.loadedComponents[this.navItems[i].component]) {
+        this.navItems.splice(i, 1);
+
+    }
+  }
+  }
+}
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    let urlPath = this.router.routerState.snapshot.url.split('?')[0];
+    this.setClassicLinkPath(urlPath.substring(1));
+
+    if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
+      this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
+      this.setClassicLinkQueryParams(this.activatedRoute.snapshot.queryParamMap);
+    }
+
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
+      this.searchValue = params.get('search');
+      this.setClassicLinkQueryParams(params);
+    });
+    this.subscriptions.push(paramsSubscription);
+
+    const authSubscription2 = this.authService.checkAuth().subscribe(auth => {
+    }, error => {
+      if (error.status === 403 && (this.router.url.split('?')[0] !== '/login' && this.router.url.split('?')[0] !== '/unauthorized')) {
+        this.loadingService.setLoading(false);
+        this.router.navigate(['/unauthorized']);
+      }
+    });
+      this.subscriptions.push(authSubscription2);
+
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      this.auth = auth;
+    }, error => {
+    });
+
+    this.subscriptions.push(authSubscription);
+
+    this.environment = this.configService.environment;
+    this.appId = this.environment.appId;
+
+    this.logoSrcPath = `${this.environment.baseHref || ''}assets/images/gsrs-logo.svg`;
+
+    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+      if (event instanceof ResolveEnd) {
+        this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
+        urlPath = event.url.split('?')[0];
+        this.setClassicLinkPath(urlPath.substring(1));
+      }
+
+      if (event instanceof NavigationStart) {
+        this.classicLinkQueryParams = {};
+        this.loadingService.resetLoading();
+      }
+    });
+    this.subscriptions.push(routerSubscription);
+
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
+
+    this.substanceTextSearchService.registerSearchComponent('main-substance-search');
+    const cleanSearchSubscription = this.substanceTextSearchService.setSearchComponentValueEvent('main-substance-search')
+    .subscribe(value => {
+      this.searchValue = value;
+    });
+    this.subscriptions.push(cleanSearchSubscription);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+    clearTimeout(this.bottomSheetOpenTimer);
+    clearTimeout(this.bottomSheetCloseTimer);
+  }
+
+  getMainPathSegmentFromUrl(url: string): string {
+    const path = url.split('?')[0];
+    const mainPathPart = path.split('/')[0];
+    return mainPathPart;
+  }
+
+  routeToLogin(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        path: this.router.url
+      }
+    };
+
+    this.router.navigate(['/login'], navigationExtras);
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.wildCardService.getTopSearchBoxText(searchValue);
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { search: searchTerm } : null
+    };
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
+  increaseMenuZindex(): void {
+    this.overlayContainer.style.zIndex = '1001';
+  }
+
+  removeZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
   openSearchBottomSheet(searchTerm: string): Observable<void> {
 
     return new Observable(observer => {
@@ -279,6 +361,28 @@ export class BaseComponent implements OnInit, OnDestroy {
         observer.complete();
       }
     });
+  }
+
+  transformMailToPath(item: NavItem) {
+    if(item?.kind && item?.mailToPath) {
+      let subject ='';
+      let email ='';
+      if(item.kind==='contact-us') {
+        email = this.contactEmail;
+      }
+      if(item?.queryParams) {
+        if(item?.queryParams?.subject) {
+          subject = item.queryParams.subject;
+        }
+      }
+      const part1 = sprintf(item.mailToPath, email);
+      let part2 ='';
+      if(subject) {
+        part2 = 'subject='+subject;
+      }
+      return part1+'?'+part2;
+    }
+    return '';
   }
 
   setClassicLinkPath(path: string): void {
@@ -376,6 +480,74 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  viewLists(list?: string): void {
+    let data = {view: 'all'};
+    if (list) {
+      data.view = 'single';
+      data['activeName'] = list.split(':')[1];
+    }
+    const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+      width: '850px',
+      autoFocus: false,
+      data: data
+
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
+      }
+    });
+  }
+
+  logout() {
+    this.authService.logout();
+    setTimeout(() => {
+      if (this.configService.configData && this.configService.configData.logoutRedirectUrl){
+        window.location.href = this.configService.configData.logoutRedirectUrl;
+      } else {
+        this.router.navigate(['/home']);
+      }
+    }, 1200);
+  }
+
+  viewDrafts(): void {
+    const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
+      maxHeight: '85%',
+      width: '70%',
+      data: {view: 'user'}
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+   dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+
+
+      if (response) {
+           this.loadingService.setLoading(true);
+         //  console.log(response.json);
+
+          const read = response.substance;
+
+          if (response.uuid && response.uuid != 'register'){
+           const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
+          this.router.navigateByUrl(url, { state: { record: response.substance } });
+         } else {
+           setTimeout(() => {
+          //   this.overlayContainer.style.zIndex = null;
+             this.router.onSameUrlNavigation = 'reload';
+             let url = '/substances/register/' + response.substance.substanceClass + '?action=import'
+            this.router.navigateByUrl(url, { state: { record: response.substance } });
+
+           }, 500);
+         }
+          }
+
+
+    });
   }
 
 }

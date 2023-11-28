@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DomSanitizer, Title} from '@angular/platform-browser';
-import { MatIconRegistry } from '@angular/material';
+import { MatIconRegistry } from '@angular/material/icon';
 import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
 import {Router, NavigationStart} from '@angular/router';
 
@@ -22,6 +22,10 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'chevron_right',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_right-24px.svg'));
+
+      iconRegistry.addSvgIcon(
+        'chevron_left',
+        sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-chevron_left-24px.svg'));
 
     iconRegistry.addSvgIcon(
       'search',
@@ -181,7 +185,6 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'alarm-on',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-alarm_on-24px.svg'));
-
     // precisionFDA Icons
     iconRegistry.addSvgIcon(
       'pfda_home',
@@ -198,6 +201,18 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'pfda_profile',
       sanitizer.bypassSecurityTrustResourceUrl('assets/icons/pfda/profile.svg'));
+    iconRegistry.addSvgIcon(
+      'view-list',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-view_list-24px.svg'));
+      iconRegistry.addSvgIcon(
+        'glasses',
+        sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-glasses-24px.svg'));
+        iconRegistry.addSvgIcon(
+          'paste',
+          sanitizer.bypassSecurityTrustResourceUrl('assets/icons/baseline-paste-24px.svg'));
+          iconRegistry.addSvgIcon(
+            'help',
+            sanitizer.bypassSecurityTrustResourceUrl('assets/icons/help-outline-24px.svg'));
   }
 
 }

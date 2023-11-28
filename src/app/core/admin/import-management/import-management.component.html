@@ -1,0 +1,281 @@
+<!--<h3>Record Import </h3>-->
+<div class = "top-button-row">
+                <button  class = "top-button" mat-flat-button mat-button color = "primary" [disabled] = "!step || step === 1" (click) = "ImportReload()">New Data Import</button>
+                <button class = "top-button" mat-flat-button mat-button color = "primary" (click) = "stagingArea()">Staging Area</button>
+</div>
+<div *ngIf = "!step || step === 1">
+                <div><h3>Step 1: Record File Import</h3></div>
+<div class = "file-select-container">
+    <form [formGroup] = "uploadForm">      
+            <div class = "full-row">
+ 
+            <div class = "file-row ">
+                    <div><button mat-raised-button (click)="openInput()">Select File to Upload</button></div>
+                    <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
+                    <input id="fileInput" hidden type="file" (change)="onFileSelect($event)" name="file1" accept="{{extension}}">
+            </div>
+
+        
+        </div>
+
+
+
+        <div class = "full-row bottom" style = "min-width:950px" *ngIf = "filename && filename !== ''">
+                <div style = "width:100%; margin-bottom: 15px;"><label>Select Importer </label><br/></div>
+
+            <div class = "half-row importer-radio">
+             <mat-radio-group placeholder="Adapter" name = "adapter"  (change) = "setAdapter($event)">
+                    <div style = "height:32px; margin-right:15px;" *ngFor = "let adapter of demo" >
+                            <mat-radio-button style = "width: 100%" value = '{{adapter.adapterKey}}' [checked] = "adapter.adapterKey == adapterKey">
+                                    {{adapter.adapterName}}</mat-radio-button>
+                         </div>
+                </mat-radio-group>
+            
+        </div>
+           <div class = "half-row">
+                <label> </label>
+            <div style = "height:32px;" *ngFor = "let adapter of demo">{{adapter.description}}. Supported extensions: 
+                <span *ngFor = "let ext of adapter.fileExtensions last as last">{{ext}}{{!last? ',':''}} </span><br/>
+            </div>
+
+        </div>
+       
+           </div>
+
+              
+              <div class = "full-row bottom">
+                   <span class = "middle-fill"></span> 
+                   <div><i>{{message}}</i></div>
+                   <button (click) ="onSubmit()"  class = "mat-button mat-primary mat-flat-button" type="submit" >Upload</button> &nbsp;
+
+
+
+
+                  
+
+                  <div class = "loading-spinner">
+                        <mat-progress-spinner  [color]="accent" mode="indeterminate" diameter = "44" *ngIf = "processing">
+                        </mat-progress-spinner>
+                  </div>
+                 
+
+              </div>
+       
+        
+      </form>
+      </div>
+    </div>
+
+
+
+
+
+    <div *ngIf = "step && step === 3">
+        <div><h3>Step 2: Configure Importer Actions</h3></div>
+        <br/><br/>
+        <div class = "label-value step2-header"  >
+        <div class = "action-list step2-actions-container" style = "display: flex;flex-direction:row;">
+                
+
+                <div class = "label-col label inline-vertical" style = "">
+                    <b>Import Action</b>
+                </div>
+
+                <div class = "details-col inline-vertical" style = "">
+                        <b>Action Details</b>
+                </div>
+                <span class = "middle-fill"></span>
+
+                <div class = "inline-vertical" style = "min-width: 150px; margin-right: -5px;">
+                        <b>Ignore Field</b>
+                </div>
+        
+        </div>
+        <div class = " step2-preview-container" style ="display:flex; justify-content:center">
+                        <b style = "margin-left: auto; margin-right:auto;">Preview</b>               
+                       
+                    </div>      
+                
+                
+                
+        </div>
+        <div class = "full-row">
+                <div class = "step2-actions-container" style = " border-right: 1px solid lightgray;">
+                        <div class = "action-row" style = "width:100%; display:flex" *ngFor = "let action of postResp.adapterSettings.actions, index as $index">
+                                
+                                
+
+                                <div class = "label-col inline-vertical " style = "font-weight: 500;">
+                                        {{action.label? replaceAction(action.label) : "no label"}} 
+                                </div>
+
+
+                                <div class = "detail-button-div" style = "min-width: 100px; max-width: 150px; margin: auto;">
+                                                <button mat-button mat-flat-button class = "mat-button mat-flat-button step2-button" (click) = "openAction( settingTemplate, $index)">Settings </button>
+                                         </div>
+                                <div class = "details-col inline-vertical">
+                                        
+                                               <i class = "inline-vertical  set-width-label">{{action.fileField ? action.fileField + ' field from file' : ''}}</i>
+                                       
+                                </div>
+                                <span class = "middle-fill"></span>
+
+                                <div class = "inline-vertical ignore-col">
+                                                <div style = "margin: auto;">
+                                                        <mat-checkbox style = "margin: auto;" [checked] = "action.actionName == 'no-op'"
+                                                                (change) = "toggleIgnore(action, $index);"></mat-checkbox>
+                                                </div>
+                                        </div>
+                        
+                                
+                        </div>
+                                
+                                       
+                                 
+                       
+
+                                    <button mat-button *ngIf = "postResp.adapter === 'SDF'" (click) = "addRef()">
+                                                Add Reference<mat-icon svgIcon="add_circle_outline"></mat-icon>
+                                              </button>
+
+        </div>
+        <div class = "step2-preview-container">
+                <div style = "width:100%; display:flex;">
+                       <span class ="middle-fill"></span>
+                       
+                       <div style = "width: 235px;margin: auto;">Show &nbsp; &nbsp; <mat-select (selectionChange) = "this.callPreview()" [(ngModel)]="previewLimit" name="previewLimit" class = "preview-limit" >
+                                                <mat-option *ngFor="let term of previewLimitList" [value]="term">
+                                                  {{term}}
+                                                </mat-option>
+                                                </mat-select> &nbsp; records
+                                        </div>              
+                                      
+                                          <button  mat-button mat-flat-button (click) = "callPreview()">{{previewTotal > 0? 'Reload Preview':'Load Preview'}}</button>
+          
+                </div><br/>
+                        <div *ngIf = "previewLoading" style = "margin-left: 50px;">
+                                        <div style = "width:100%"><mat-progress-spinner
+                                                class="spinner"
+                                                [color]="primary"
+                                                [diameter]="100"
+                                                mode = "indeterminate">
+                                            </mat-progress-spinner></div>
+                </div>
+                <div *ngIf = "previewTotal > 0 && !previewLoading" >
+                        <div style = "width:100%;margin-left: 100px;">
+                                <button [disabled] = "previewIndex === 0" mat-button (click)="changePreview('back')">
+                                         <mat-icon svgIcon="chevron_left"></mat-icon>
+                                </button>
+                                Record {{previewIndex + 1}} of {{previewTotal}}
+                                <button [disabled] = "previewIndex === previewTotal - 1" mat-button (click)="changePreview('forward')">
+                                        <mat-icon svgIcon="chevron_right"></mat-icon>
+                                </button>
+                        </div>
+                                <div>  <span>
+                                        
+                                      <a style ="cursor: zoom-in;" (click) = "openImageModal(preview[previewIndex].data)"><img appSubstanceImage [entityId]="preview[previewIndex].data.structureID"
+                                        style = "margin-left: 150px;" ></a>
+                                </span>
+                                <div style = "margin-left: 50px;">
+                                        <div class = "substance-data">
+                                                <div class="label">Names:</div>
+                                                <div class="value space-bottom" *ngFor="let nameObject of preview[previewIndex].data.names">
+                                                <span [innerHTML] = "nameObject._nameHTML ? nameObject._nameHTML : nameObject.name"></span>
+                                                <span *ngIf="nameObject.displayName == true" >
+                                                        <mat-icon class="icon-align blue-font" svgIcon="done"></mat-icon>
+                                                </span>
+                                                </div>
+                                        </div>
+                                        <br/>
+                                        <div class = "substance-data">
+                                                <div class="label">Codes:</div>
+                                                <div class="value space-bottom" *ngFor="let code of preview[previewIndex].data.codes">
+                                                <span style = "font-weight:550">{{code.codeSystem}}</span>: {{code.code}}
+                                                </div>
+                                        </div>
+                                        <br/>
+                                        <div class = "substance-data">
+                                                <div *ngIf = "preview[previewIndex].data.structure && preview[previewIndex].data.structure.formula">
+                                                                <b>Formula</b>: {{preview[previewIndex].data.structure.formula}}   
+                                                </div>
+                                                <div *ngIf = "preview[previewIndex].data.structure && preview[previewIndex].data.structure.mwt">
+                                                                <b>Mol Weight</b>: {{preview[previewIndex].data.structure.mwt}}   
+                                                </div>
+                                        </div>
+                                </div>
+                </div>
+        
+                </div>
+</div>
+        
+        
+
+
+        <div class = "full-row">
+                <br/> <br/>
+            <button mat-button class = "mat-button mat-primary mat-flat-button" (click) = "putSettings()">Use Settings and Continue</button>
+        </div>
+    </div>
+    </div>
+    <div *ngIf = "step && step === 4">
+                <div><h3>Step 3: Record Staging</h3>
+                        <br/>
+                <h4 style = "margin-left:25px">Importing {{filename}}</h4></div>
+
+
+                
+
+         <div class = "loading-window">
+                        <div class = "loader-container">
+
+                                        <div class = "progress-container">
+                                        <!--  <div class = "bar-label">Progress</div>
+                                              <div>  
+                                          <mat-progress-bar class = "load-progress" color="accent" mode="determinate" [value] = "loading? 0: 100" >
+                                          </mat-progress-bar>
+                                          <div class = "label-row">
+                                              <div [style.width.%] = "(1)*(100)"  class = "count-cont">
+                                                      <span class = "count-row-label">{{loading? '0': previewTotal}} / {{previewTotal}}</span>
+                                              </div>
+                                              </div>
+                                      </div>-->
+                                                 
+                                      </div>
+
+                                      <div style = "margin-left: 50px;width:100%">
+                                        <div  *ngIf = "executeLoading"  style = "width:100%"><mat-progress-spinner
+                                                style = "margin:auto"
+                                                [color]="primary"
+                                                [diameter]="100"
+                                                mode = "indeterminate">
+                                            </mat-progress-spinner></div>
+                                            <br/><br/>
+                                            <div>
+                                                   <b>Status:</b> {{executeStatus}}<br/><br/>
+                                                   <b> Records Processed:</b> {{completedRecords}}
+                                            </div>
+                                            <br/><br/>
+                </div>
+         </div>  
+         
+                <button mat-button [disabled] = "executeLoading" class = "mat-button mat-primary mat-flat-button" (click) = "stagingArea(true)">View Records in Staging Area</button>
+
+            </div>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

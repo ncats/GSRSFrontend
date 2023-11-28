@@ -5,25 +5,25 @@
 
       <mat-card class="bordergray">
         <mat-card-title>
-          <div class="divflex">
-            <div class="width250px">
-              Impurities Details
-            </div>
-            <div>
-              <!-- Edit GSRS record button -->
-              <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank"
-                matTooltip='Edit GSRS Impurities Record'>
-                <mat-icon svgIcon="edit"></mat-icon>
-              </a>
-            </div>
-            <div class="width120px">&nbsp;</div>
-            <div class="font11px">
-              <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Create Date:</span>
-              {{impurities.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span class="colorgray">Modify Date:</span> {{impurities.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-            </div>
+          <div class="width300px">
+            Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
+            <!-- Edit GSRS record button -->
+            <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS Impurities Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+            <!-- Copy Impurities -->
+            <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
+              matTooltip='copy Impurities to new registration form' *ngIf="isAdmin">
+              <mat-icon svgIcon="file_copy"></mat-icon>
+            </a>
+          </div>
+          <div class="width60percent font11px">
+            <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Create
+              Date:</span>{{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modify Date:</span> {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
           </div>
         </mat-card-title>
 
@@ -90,21 +90,41 @@
           <div class="row">
             <div class="row-property">
               <div class="row-property-key">
-                Company Product Name:
+                Date Type:
               </div>
               <div class="row-property-value">
-                {{impurities.companyProductName}}
+                {{impurities.dateType}}
               </div>
             </div>
             <div class="row-property">
               <div class="row-property-key">
-                Company Name:
+                Date Type Date:
               </div>
               <div class="row-property-value">
-                {{impurities.companyName}}
+                {{impurities.dateTypeDate|date: 'MM/dd/yyyy'}}
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="row-property">
+              <div class="row-property-key">
+                Product/Substance Name:
+              </div>
+              <div class="row-property-value">
+                {{impurities.productSubstanceName}}
+              </div>
+            </div>
+            <div class="row-property">
+              <div class="row-property-key">
+                Submitter Name:
+              </div>
+              <div class="row-property-value">
+                {{impurities.submitterName}}
+              </div>
+            </div>
+          </div>
+
 
           <!-- Substance Names Lists -->
           <div class="margintop30px marginbottom30px"
@@ -114,7 +134,7 @@
               <br><br><br>
             </div>
             <div class="headerstyle title2 padleft20px">
-              <b>{{(i + 1)}} of {{impurities.impuritiesSubstanceList.length}}.&nbsp;Impurity Substance</b>
+              <b>Impurity Substance&nbsp;<span class="colorblack">{{(i + 1)}} of {{impurities.impuritiesSubstanceList.length}}</span></b>
             </div>
 
             <div class="bordergray">
@@ -137,7 +157,7 @@
                             <span class="colororange font16px fontbold">{{subs.substanceName}}</span>
                           </a>
                         </div>
-                        <div *ngIf="subs.relatedSubstanceUnii"><br>{{subs.relatedSubstanceUnii}}</div>
+                        <div *ngIf="subs.approvalID"><br>{{subs.approvalID}}</div>
                         <div *ngIf="subs.substanceUuid">
                           <img class="structure-img" appSubstanceImage [entityId]="subs.substanceUuid">
                         </div>
@@ -167,9 +187,48 @@
                   <div *ngFor="let impTest of subs.impuritiesTestList; let i = index">
                     <fieldset class="border">
                       <legend class="border">
-                        Test {{(i + 1)}} of {{subs.impuritiesTestList.length}}
+                        Test <span class="colorblack">{{(i + 1)}} of {{subs.impuritiesTestList.length}}</span>&nbsp;
                         <span class="font11px">({{subs.substanceName}})</span>
                       </legend>
+
+                      <!-- Test Fields Start -->
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.sourceType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.source}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.testType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source ID:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.sourceId}}
+                          </div>
+                        </div>
+                      </div>
 
                       <div class="row">
                         <div class="row-property">
@@ -182,10 +241,10 @@
                         </div>
                         <div class="row-property">
                           <div class="row-property-key">
-                            Test Type:
+                            Test Description:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.testType}}
+                            {{impTest.testDescription}}
                           </div>
                         </div>
                       </div>
@@ -193,12 +252,215 @@
                       <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
-                            Test Description:
+                            System:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.testDescription}}
+                            {{impTest.system}}
                           </div>
                         </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Mode:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.mode}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Packing Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnPackingType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Packing Size:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnPackingSize}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Size:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnSize}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Temperature:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnTemperature}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Detection Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.detectionType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Detection Details:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.detectionDetails}}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Injection Volume Amount:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.injectionVolumeAmount}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Flow Rate:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.flowRate}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Diluent:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.diluent}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Standard Solution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.standardSolution}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Sample Solution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.sampleSolution}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            System Suitability Solution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.systemSuitabilitySolution}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Suitability Requirements Resolution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.suitabilityReqResolution}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Suitability Requirements Relative Standard Deviation:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.suitabilityReqRelStandardDeviation}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Elution Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.elutionType}}
+                          </div>
+                        </div>
+                        <div class="width50percent">
+
+                          <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let m = index">
+                            <!-- ROW for Elution -->
+
+                            <div class="row">
+                              <div class="row-property-3">
+                                <div class="row-property-key-3">
+                                  <!--
+                                  <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let m = index">
+
+                                    <span *ngIf="m > 0"><br></span>
+                                    -->
+                                  <div class="bordergraydotted">
+                                    Elution Solvent {{(m+1)}}:
+                                    <!-- if the length of the string is more than 55, add a new line -->
+                                    <span *ngIf="elu.elutionSolvent && elu.elutionSolvent.length > 55">
+                                      <br><br>
+                                    </span>
+                                  </div>
+                                  <div>
+                                    Elution Solvent Id {{(m+1)}}:
+                                  </div>
+                                  <!--
+                                  </div>
+                                   -->
+                                </div>
+                                <div class="row-property-value-3">
+                                  <!--
+                                  <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let n = index">
+
+                                    <span *ngIf="n > 0"><br></span>
+                                      -->
+                                  <div class="bordergraydotted">
+                                    {{elu.elutionSolvent}}
+                                  </div>
+                                  <div>
+                                    {{elu.elutionSolventCode}}
+                                  </div>
+                                  <!--
+                                  </div>
+                                    -->
+                                </div>
+                              </div>
+                            </div>
+                            <div class="divclear"></div>
+                          </div> <!-- loop -->
+                        </div>
+                      </div>
+
+                      <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
                             Comments:
@@ -208,7 +470,7 @@
                           </div>
                         </div>
                       </div>
-
+                      <!-- Test Fields End -->
 
                       <!-- Impurities Details List Begin -->
                       <div class="details-container margintop30px">
@@ -275,41 +537,43 @@
                           <mat-card-title class="title2">
                             Unspecified Impurities ({{impTest.impuritiesUnspecifiedList.length}})
                           </mat-card-title>
-                          <mat-card-content>
-                            <table class="blueTable">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Impurity Type</th>
-                                  <th>Test Type</th>
-                                  <th>Limit Type</th>
-                                  <th>Limit Value</th>
-                                  <th>Unit</th>
-                                  <th>Comments</th>
-                                  <th>Identity Criteria</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr *ngFor="let x of impTest.impuritiesUnspecifiedList; let i = index">
-                                  <td>{{i + 1}}</td>
-                                  <td>{{ x.impurityType }}</td>
-                                  <td>{{ x.testType }}</td>
-                                  <td>{{ x.limitType }}</td>
-                                  <td>{{ x.limitValue }}</td>
-                                  <td>{{ x.unit }}</td>
-                                  <td>{{ x.comments }}</td>
-                                  <td>
-                                    <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
-                                      <span *ngIf="j > 0"><br></span>
-                                      <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
-                                      <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
-                                      <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
-                                    </div>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </mat-card-content>
+                          <div *ngIf="impTest.impuritiesUnspecifiedList.length > 0">
+                            <mat-card-content>
+                              <table class="blueTable">
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Impurity Type</th>
+                                    <th>Test Type</th>
+                                    <th>Limit Type</th>
+                                    <th>Limit Value</th>
+                                    <th>Unit</th>
+                                    <th>Comments</th>
+                                    <th>Identity Criteria</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let x of impTest.impuritiesUnspecifiedList; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td>{{ x.impurityType }}</td>
+                                    <td>{{ x.testType }}</td>
+                                    <td>{{ x.limitType }}</td>
+                                    <td>{{ x.limitValue }}</td>
+                                    <td>{{ x.unit }}</td>
+                                    <td>{{ x.comments }}</td>
+                                    <td>
+                                      <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
+                                        <span *ngIf="j > 0"><br></span>
+                                        <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
+                                        <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
+                                        <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </mat-card-content>
+                          </div>
                         </mat-card>
                       </div>
                       <!-- Unspecified Impurities End -->
@@ -320,106 +584,516 @@
                   </div> <!-- Test List Loop -->
 
 
-                  <!-- Impurities Residual Solvents Begin -->
-                  <div class="details-container margintop30px">
-                    <mat-card class="bordergray">
-                      <mat-card-title class="title2">
-                        Residual Solvents Impurities ({{subs.impuritiesResidualSolventsList.length}})
-                      </mat-card-title>
-                      <mat-card-content>
-                        <table class="blueTable">
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th class="width200px">Related Substance</th>
-                              <th>Pharmaceutical Limit</th>
-                              <th>Test Type</th>
-                              <th>Limit Type</th>
-                              <th>Limit Value</th>
-                              <th>Unit</th>
-                              <th>Comments</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let x of subs.impuritiesResidualSolventsList; let i = index">
-                              <td>{{i + 1}}</td>
-                              <td class="textaligncenter width200px">
-                                <div *ngIf="x.relatedSubstanceUuid">
-                                  <div>
-                                    <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
-                                      target="_blank">{{x.substanceName}}</a>
-                                  </div>
-                                  <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
-                                  <img class="structure-image" appSubstanceImage [entityId]="x.relatedSubstanceUuid">
-                                </div>
-                              </td>
-                              <td>{{ x.pharmaceuticalLimit }}</td>
-                              <td>{{ x.testType }}</td>
-                              <td>{{ x.limitType }}</td>
-                              <td>{{ x.limitValue }}</td>
-                              <td>{{ x.unit }}</td>
-                              <td>{{ x.comments }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </mat-card-content>
-                    </mat-card>
+                  <!-- *******************************************************************-->
+                  <!-- ******* RESIDUAL SOLVENTS TEST LIST BEGIN  ************************-->
+
+                  <!-- Display this if Residual Solvents Test length is 0 -->
+                  <div *ngIf="subs.impuritiesResidualSolventsTestList.length == 0">
+                    <div class="details-container">
+                      <mat-card class="bordergray">
+                        <mat-card-title class="title2">
+                          Residual Solvents Test ({{subs.impuritiesResidualSolventsTestList.length}})
+                        </mat-card-title>
+                      </mat-card>
+                    </div>
                   </div>
-                  <!-- Impurities Residual Solvents End -->
+
+                  <div *ngFor="let impResidualTest of subs.impuritiesResidualSolventsTestList; let i = index">
+                    <fieldset class="border">
+                      <legend class="border">
+                        Residual Solvents Test <span class="colorblack">{{(i + 1)}} of {{subs.impuritiesResidualSolventsTestList.length}}</span>&nbsp;
+                        <span class="font11px">({{subs.substanceName}})</span>
+                      </legend>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impResidualTest.sourceType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source:
+                          </div>
+                          <div class="row-property-value">
+                            {{impResidualTest.source}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impResidualTest.testType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source ID:
+                          </div>
+                          <div class="row-property-value">
+                            {{impResidualTest.sourceId}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test:
+                          </div>
+                          <div class="row-property-value">
+                            {{impResidualTest.test}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Description:
+                          </div>
+                          <div class="row-property-value">
+                            {{impResidualTest.testDescription}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Comments:
+                          </div>
+                          <div class="row-property-value">
+                            {{impResidualTest.comments}}
+                          </div>
+                        </div>
+                      </div>
 
 
-                  <!-- Impurities Inorganic Begin -->
-                  <div class="details-container margintop30px">
-                    <mat-card class="bordergray">
-                      <mat-card-title class="title2">
-                        Inorganic Impurities ({{subs.impuritiesInorganicList.length}})
-                      </mat-card-title>
-                      <mat-card-content>
-                        <table class="blueTable">
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th class="width200px">Related Substance</th>
-                              <th>Test Type</th>
-                              <th>Limit Type</th>
-                              <th>Limit Value</th>
-                              <th>Unit</th>
-                              <th>Comments</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let x of subs.impuritiesInorganicList; let i = index">
-                              <td>{{i + 1}}</td>
-                              <td class="textaligncenter width200px">
-                                <div *ngIf="x.relatedSubstanceUuid">
-                                  <div>
-                                    <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
-                                      target="_blank">{{x.substanceName}}</a>
-                                  </div>
-                                  <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
-                                  <img class="structure-image" appSubstanceImage [entityId]="x.relatedSubstanceUuid">
-                                </div>
-                              </td>
-                              <td>{{ x.testType }}</td>
-                              <td>{{ x.limitType }}</td>
-                              <td>{{ x.limitValue }}</td>
-                              <td>{{ x.unit }}</td>
-                              <td>{{ x.comments }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </mat-card-content>
-                    </mat-card>
+                      <!-- Impurities Residual Solvents Begin -->
+                      <div class="details-container margintop30px">
+                        <mat-card class="bordergray">
+                          <mat-card-title class="title2">
+                            Residual Solvents Impurities ({{impResidualTest.impuritiesResidualSolventsList.length}})
+                          </mat-card-title>
+                          <mat-card-content>
+                            <table class="blueTable">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th class="width200px">Related Substance</th>
+                                  <th>Pharmaceutical Limit</th>
+                                  <th>Test Type</th>
+                                  <th>Limit Type</th>
+                                  <th>Limit Value</th>
+                                  <th>Unit</th>
+                                  <th>Comments</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let x of impResidualTest.impuritiesResidualSolventsList; let i = index">
+                                  <td>{{i + 1}}</td>
+                                  <td class="textaligncenter width200px">
+                                    <div *ngIf="x.relatedSubstanceUuid">
+                                      <div>
+                                        <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                          target="_blank">{{x.substanceName}}</a>
+                                      </div>
+                                      <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
+                                      <img class="structure-image" appSubstanceImage
+                                        [entityId]="x.relatedSubstanceUuid">
+                                    </div>
+                                  </td>
+                                  <td>{{ x.pharmaceuticalLimit }}</td>
+                                  <td>{{ x.testType }}</td>
+                                  <td>{{ x.limitType }}</td>
+                                  <td>{{ x.limitValue }}</td>
+                                  <td>{{ x.unit }}</td>
+                                  <td>{{ x.comments }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                      <!-- Impurities Residual Solvents End -->
+
+
+                      <!-- Impurities Details List Begin -->
+                      <!--
+                        <div class="details-container margintop30px">
+                          <mat-card class="bordergray">
+                            <mat-card-title class="title2">
+                              Impurities ({{impTest.impuritiesDetailsList.length}})
+                            </mat-card-title>
+                            <mat-card-content>
+                              <table class="blueTable">
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th class="width200px">Related Substance</th>
+                                    <th>Source Impurity Name</th>
+                                    <th>Impurity Type</th>
+                                    <th>Limit Type</th>
+                                    <th>Limit Value</th>
+                                    <th>Unit</th>
+                                    <th>Comments</th>
+                                    <th>Identity Criteria</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let x of impTest.impuritiesDetailsList; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td class="textaligncenter width200px">
+                                      <div *ngIf="x.relatedSubstanceUuid">
+                                        <div>
+                                          <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                            target="_blank">{{x.substanceName}}</a>
+                                        </div>
+                                        <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
+                                        <img class="structure-image" appSubstanceImage
+                                          [entityId]="x.relatedSubstanceUuid">
+                                      </div>
+                                    </td>
+                                    <td>{{ x.sourceImpurityName }}</td>
+                                    <td>{{ x.impurityType }}</td>
+                                    <td>{{ x.limitType }}</td>
+                                    <td>{{ x.limitValue }}</td>
+                                    <td>{{ x.unit }}</td>
+                                    <td>{{ x.comments }}</td>
+                                    <td>
+                                      <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
+                                        <span *ngIf="j > 0"><br></span>
+                                        <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
+                                        <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
+                                        <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </mat-card-content>
+                          </mat-card>
+                        </div>
+                        -->
+                      <!-- Impurities Details List End -->
+
+
+
+                      <!-- Unspecified Impurities Begin -->
+                      <!--
+                        <div class="details-container margintop30px">
+                          <mat-card class="bordergray">
+                            <mat-card-title class="title2">
+                              Unspecified Impurities ({{impTest.impuritiesUnspecifiedList.length}})
+                            </mat-card-title>
+                            <mat-card-content>
+                              <table class="blueTable">
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Impurity Type</th>
+                                    <th>Test Type</th>
+                                    <th>Limit Type</th>
+                                    <th>Limit Value</th>
+                                    <th>Unit</th>
+                                    <th>Comments</th>
+                                    <th>Identity Criteria</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let x of impTest.impuritiesUnspecifiedList; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td>{{ x.impurityType }}</td>
+                                    <td>{{ x.testType }}</td>
+                                    <td>{{ x.limitType }}</td>
+                                    <td>{{ x.limitValue }}</td>
+                                    <td>{{ x.unit }}</td>
+                                    <td>{{ x.comments }}</td>
+                                    <td>
+                                      <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
+                                        <span *ngIf="j > 0"><br></span>
+                                        <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
+                                        <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
+                                        <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </mat-card-content>
+                          </mat-card>
+                        </div>
+                        -->
+                      <!-- Unspecified Impurities End -->
+
+                    </fieldset> <!-- TEST -->
+                    <br><br>
+                  </div> <!-- Residual Solvent Test List Loop -->
+
+                  <!-- *******RESIDUAL SOLVENTS TEST LIST END ****************************-->
+
+
+
+                  <!-- **********************************************************************-->
+                  <!-- ******* INORGANIC IMPURITIES TEST LIST BEGIN  ************************-->
+
+                  <!-- Display this if Inorganic Impurities Test length is 0 -->
+                  <div *ngIf="subs.impuritiesInorganicTestList.length == 0">
+                    <div class="details-container margintop30px">
+                      <mat-card class="bordergray">
+                        <mat-card-title class="title2">
+                          Inorganic Impurities Test ({{subs.impuritiesInorganicTestList.length}})
+                        </mat-card-title>
+                      </mat-card>
+                    </div>
                   </div>
-                  <!-- Impurities Residual Solvents End -->
+
+                  <div *ngFor="let impInorganicTest of subs.impuritiesInorganicTestList; let i = index">
+                    <fieldset class="border">
+                      <legend class="border">
+                        Inorganic Impurities Test <span class="colorblack">{{(i + 1)}} of {{subs.impuritiesInorganicTestList.length}}</span>&nbsp;
+                        <span class="font11px">({{subs.substanceName}})</span>
+                      </legend>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impInorganicTest.sourceType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source:
+                          </div>
+                          <div class="row-property-value">
+                            {{impInorganicTest.source}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impInorganicTest.testType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Source ID:
+                          </div>
+                          <div class="row-property-value">
+                            {{impInorganicTest.sourceId}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test:
+                          </div>
+                          <div class="row-property-value">
+                            {{impInorganicTest.test}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Description:
+                          </div>
+                          <div class="row-property-value">
+                            {{impInorganicTest.testDescription}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Comments:
+                          </div>
+                          <div class="row-property-value">
+                            {{impInorganicTest.comments}}
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <!-- Inorganic Impurities List Begin -->
+                      <div class="details-container margintop30px">
+                        <mat-card class="bordergray">
+                          <mat-card-title class="title2">
+                            Inorganic Impurities ({{impInorganicTest.impuritiesInorganicList.length}})
+                          </mat-card-title>
+                          <mat-card-content>
+                            <table class="blueTable">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th class="width200px">Related Substance</th>
+                                  <th>Test Type</th>
+                                  <th>Limit Type</th>
+                                  <th>Limit Value</th>
+                                  <th>Unit</th>
+                                  <th>Comments</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let x of impInorganicTest.impuritiesInorganicList; let i = index">
+                                  <td>{{i + 1}}</td>
+                                  <td class="textaligncenter width200px">
+                                    <div *ngIf="x.relatedSubstanceUuid">
+                                      <div>
+                                        <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                          target="_blank">{{x.substanceName}}</a>
+                                      </div>
+                                      <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
+                                      <img class="structure-image" appSubstanceImage
+                                        [entityId]="x.relatedSubstanceUuid">
+                                    </div>
+                                  </td>
+                                  <td>{{ x.testType }}</td>
+                                  <td>{{ x.limitType }}</td>
+                                  <td>{{ x.limitValue }}</td>
+                                  <td>{{ x.unit }}</td>
+                                  <td>{{ x.comments }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                      <!-- Inorganic Impurities List End -->
+
+                      <!-- Impurities Details List Begin -->
+                      <!--
+                        <div class="details-container margintop30px">
+                          <mat-card class="bordergray">
+                            <mat-card-title class="title2">
+                              Impurities ({{impTest.impuritiesDetailsList.length}})
+                            </mat-card-title>
+                            <mat-card-content>
+                              <table class="blueTable">
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th class="width200px">Related Substance</th>
+                                    <th>Source Impurity Name</th>
+                                    <th>Impurity Type</th>
+                                    <th>Limit Type</th>
+                                    <th>Limit Value</th>
+                                    <th>Unit</th>
+                                    <th>Comments</th>
+                                    <th>Identity Criteria</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let x of impTest.impuritiesDetailsList; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td class="textaligncenter width200px">
+                                      <div *ngIf="x.relatedSubstanceUuid">
+                                        <div>
+                                          <a [routerLink]="['/substances', x.relatedSubstanceUuid]"
+                                            target="_blank">{{x.substanceName}}</a>
+                                        </div>
+                                        <div *ngIf="x.relatedSubstanceUnii"><br>{{x.relatedSubstanceUnii}}</div>
+                                        <img class="structure-image" appSubstanceImage
+                                          [entityId]="x.relatedSubstanceUuid">
+                                      </div>
+                                    </td>
+                                    <td>{{ x.sourceImpurityName }}</td>
+                                    <td>{{ x.impurityType }}</td>
+                                    <td>{{ x.limitType }}</td>
+                                    <td>{{ x.limitValue }}</td>
+                                    <td>{{ x.unit }}</td>
+                                    <td>{{ x.comments }}</td>
+                                    <td>
+                                      <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
+                                        <span *ngIf="j > 0"><br></span>
+                                        <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
+                                        <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
+                                        <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </mat-card-content>
+                          </mat-card>
+                        </div>
+                        -->
+                      <!-- Impurities Details List End -->
+
+
+
+                      <!-- Unspecified Impurities Begin -->
+                      <!--
+                        <div class="details-container margintop30px">
+                          <mat-card class="bordergray">
+                            <mat-card-title class="title2">
+                              Unspecified Impurities ({{impTest.impuritiesUnspecifiedList.length}})
+                            </mat-card-title>
+                            <mat-card-content>
+                              <table class="blueTable">
+                                <thead>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Impurity Type</th>
+                                    <th>Test Type</th>
+                                    <th>Limit Type</th>
+                                    <th>Limit Value</th>
+                                    <th>Unit</th>
+                                    <th>Comments</th>
+                                    <th>Identity Criteria</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let x of impTest.impuritiesUnspecifiedList; let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td>{{ x.impurityType }}</td>
+                                    <td>{{ x.testType }}</td>
+                                    <td>{{ x.limitType }}</td>
+                                    <td>{{ x.limitValue }}</td>
+                                    <td>{{ x.unit }}</td>
+                                    <td>{{ x.comments }}</td>
+                                    <td>
+                                      <div *ngFor="let idenCriteria of x.identityCriteriaList; let j = index">
+                                        <span *ngIf="j > 0"><br></span>
+                                        <b>Criteria Type:</b>&nbsp;{{idenCriteria.identityCriteriaType}}<br>
+                                        <b>Amount Value:</b>&nbsp;{{idenCriteria.amountValue}}<br>
+                                        <b>Unit:</b>&nbsp;{{idenCriteria.unit}}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </mat-card-content>
+                          </mat-card>
+                        </div>
+                        -->
+                      <!-- Unspecified Impurities End -->
+
+                    </fieldset> <!-- TEST -->
+                    <br><br>
+                  </div> <!-- Inorganic Impurities Test List Loop -->
+
+                  <!-- *******INORGANIC IMPURITIES TEST LIST END ****************************-->
 
                 </mat-card-content> <!-- Substance List -->
               </mat-card>
             </div>
 
-
           </div> <!-- Substance LOOP -->
-
 
 
           <!-- Total Impurities Begin -->

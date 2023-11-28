@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>{{reference.uuid ? 'Edit' : 'Add'}} Reference</h1>
-<div mat-dialog-content>
+<div mat-dialog-content name = "reference-dialog-container" id = "reference-dialog-container">
   <app-previous-references (selectedReference) = "fillReference($event)" *ngIf ="showPrev"></app-previous-references>
   <div *ngIf="reference">
-    <app-reference-form [reference]="reference" #referenceForm hideDelete="true"></app-reference-form>
+    <app-reference-form [reference]="reference" #referenceForm hideDelete="true" id = "reference-dialog-form" name = "reference-dialog-form"></app-reference-form>
     <div class="actions">
       <span class="middle-fill"></span>
       <button mat-button (click)="cancel()">Cancel</button>

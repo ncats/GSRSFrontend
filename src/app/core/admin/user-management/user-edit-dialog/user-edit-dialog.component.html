@@ -1,3 +1,4 @@
+<div class="message" [ngClass]="{'error-msg' : isError}">{{message}}</div>
 <div mat-dialog-title class = "title" *ngIf = "!submitted">
         <h1 *ngIf = "newUser">
          Add User
@@ -11,7 +12,7 @@
     <div class = "form-row">
         <div class="username">
         <mat-form-field class = "user-field">
-            <mat-label>User Name</mat-label>
+            <mat-label>Username</mat-label>
                 <input matInput placeholder="user name" [(ngModel)]="user.user.username" required name="name" />
         </mat-form-field>
         </div>
@@ -69,8 +70,6 @@
                 <div>
             </div>
       </div>
-      <div class = "message">{{message}}</div>
-
     </div>
     
     

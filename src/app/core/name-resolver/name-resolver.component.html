@@ -3,7 +3,7 @@
     <mat-form-field class="">
       <input class="search" type="text" placeholder="Search" aria-label="Resolve Name" matInput
         [formControl]="resolverControl" (keydown)="resolveNameKey($event)">
-      <button mat-button matSuffix mat-icon-button (click)="resolveName(resolverControl.value)">
+      <button mat-button matSuffix mat-icon-button (click)="resolveName(resolverControl.value)" aria-label="Resolve Name Search Button">
         <mat-icon class="resolver-search-icon" svgIcon="search"></mat-icon>
       </button>
     </mat-form-field>
@@ -23,7 +23,7 @@
     <ng-container *ngIf="matchedNames">
       <div class='name-result' *ngFor="let name of matchedNames.content">
         <img appSubstanceImage [entityId]="name.uuid" /><br />
-        GSRS duplicate<br />
+        GSRS Record<br />
         {{  name._name}}
         <br />
         <button *ngIf="name.structure" mat-raised-button color="primary" class="name-result-button"

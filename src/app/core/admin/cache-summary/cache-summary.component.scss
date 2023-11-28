@@ -5,7 +5,7 @@
     
 
     &:not(:last-child) {
-        border-bottom: 1px solid rgba(128, 128, 128, .15);
+        border-bottom: 1px solid var(--nth-child-color-1);
     }
 
     .name {
@@ -15,7 +15,7 @@
     }
 
     &:nth-child(even) {
-        background-color: rgba(68, 138, 255, .07);
+        background-color: var(--nth-child-color-2);
     }
 
 }
@@ -55,7 +55,7 @@
     }
 
     .mat-row:nth-child(odd){
-        background-color: rgba(68, 138, 255, .07);
+        background-color: var(--nth-child-color-2);
             }
 
 }

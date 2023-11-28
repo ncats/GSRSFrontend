@@ -35,5 +35,16 @@
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
+
+.button-style {
+  background-color:var(--blue-bg-color-rgb);
+  color: var(--white-color);
+  text-decoration: none;
+  vertical-align: middle;
+  font-weight: 600;
+  text-align: center;
+  line-height: 25px;
+}
+

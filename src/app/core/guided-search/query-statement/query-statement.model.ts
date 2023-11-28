@@ -1,4 +1,4 @@
-import { MatDatepickerInputEvent } from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 export interface QueryStatement {
     condition?: string;

@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { QueryStatement } from './query-statement/query-statement.model';
 
 export interface QueryableSubstanceDictionary {
@@ -9,6 +9,7 @@ export interface QueryableSubstanceDictionary {
         type: string;
         cvDomain?: string;
         priority?: string;
+        suggest?: string;
     };
 }
 
@@ -26,6 +27,7 @@ export interface Command {
 
 export interface CommandInput {
     type?: string;
+    example?: string;
     constructQuery?: (
         queryValue: string | Date | number,
         condition: string,

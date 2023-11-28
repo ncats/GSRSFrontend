@@ -5,7 +5,10 @@
   </mat-form-field>
 </div>
 <div class="responsive">
-  <table [ngClass]="{ 'classification': type == 'classification' }" mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
+  <span class="show-filter-span">
+    <mat-label class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="toggleFilter()">{{showHideFilterText}}</mat-label>
+  </span>
+  <table [ngClass]="{ 'classification': type == 'Codes - Classifications' }" mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="classificationTree">
       <th mat-header-cell *matHeaderCellDef> Classification Tree </th>
@@ -14,7 +17,7 @@
           <mat-icon svgIcon="subdirectory_arrow_right" *ngIf="i > 0"></mat-icon>
           <a
             routerLink="/browse-substance"
-            [queryParams]='{ search: "root_codes_comments:\"" + node + "\""}'>
+            [queryParams]='{ search: "root_codes_comments:\"" + (node | forwardSlash) + "\""}'>
             {{node}}
           </a>
         </div>
@@ -23,7 +26,11 @@
 
     <ng-container matColumnDef="codeSystem">
       <th mat-header-cell *matHeaderCellDef  mat-sort-header> Code System </th>
-      <td mat-cell *matCellDef="let code"> {{code.codeSystem | codeSystemDisplay | async}} </td>
+      <td mat-cell *matCellDef="let code"> {{code.codeSystem | codeSystemDisplay | async}}
+        <span *ngIf="codeIsProtected(code.access)" matTooltip="Not Public">
+          <mat-icon svgIcon="lock" class="icon-align blue-font" *ngIf="codeIsProtected(code.access)"></mat-icon>
+        </span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="code">
@@ -39,10 +46,54 @@
       <td mat-cell *matCellDef="let code"> {{code.type}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="comments">
-      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Comments </th>
+    <ng-container matColumnDef="codeSystemFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <mat-form-field>
+            <input matInput class="form-field" [formControl]="codeSystemFilter" placeholder="Code System Filter">
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let code"> {{code.codeSystem | codeSystemDisplay | async}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="codeFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <mat-form-field>
+            <input matInput class="form-field" [formControl]="codeFilter" placeholder="Code Filter">
+          </mat-form-field>
+        </div>
+      </th>
       <td mat-cell *matCellDef="let code">
-          <button class = "mat-raised-button mat-primary" (click)="openModal(commentTemplate)" [disabled]="!code.comments && !code.codeText " >View</button>  
+        <a  class = 'a-link' *ngIf = "code.url" [href] = "code.url" target = "_blank">{{code.code}}</a>
+        <span *ngIf = "!code.url"> {{code.code}}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="typeFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <mat-form-field appearance="fill">
+            <mat-select [formControl]="typeFilter">
+              <mat-select-trigger>
+                {{typeFilter.value ? typeFilter.value : ''}}
+              </mat-select-trigger>
+              <mat-option [value]="" selected>Select Type Filter</mat-option>
+              <mat-option *ngFor="let type of typeFilterOptions" [value]="type.display">{{type.display}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let code"> {{code.type}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="comments">
+      <th mat-header-cell *matHeaderCellDef  mat-sort-header> Comments  </th>
+      <td mat-cell *matCellDef="let code">
+          <button class = "mat-button mat-primary mat-raised-button" color = "primary" (click)="openModal(commentTemplate)"
+            [ngClass] = "(!code.comments && !code.codeText) ? 'mat-button-disabled':''"
+          [disabled] = "!code.comments && !code.codeText" >{{!code.comments && !code.codeText ? 'None' : 'View'}}</button>  
           <ng-template #commentTemplate>
               <h2 mat-dialog-title>Code Comments</h2>
               <div mat-dialog-content>
@@ -57,7 +108,7 @@
                </div>
               <div mat-dialog-actions>
                 <span class="middle-fill"></span>
-                <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+                <button class="mat-raised-button mat-primary" (click) = "close()" mat-dialog-close>Close</button>
               </div>
               
             </ng-template>
@@ -69,7 +120,9 @@
     <ng-container matColumnDef="references">
       <th mat-header-cell *matHeaderCellDef> References </th>
       <td mat-cell *matCellDef="let code">
-        <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" [disabled]="code.references.length <= 0" >View</button>
+        <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" 
+        [ngClass] = "code.references.length <= 0 ? 'mat-button-disabled':''"
+        [disabled]="code.references.length <= 0" >{{code.references.length <= 0 ? 'None' : 'View'}}</button>
 
         <ng-template #refTemplate>
           <h2 mat-dialog-title>References</h2>
@@ -78,16 +131,30 @@
           </div>
           <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+            <button class="mat-raised-button mat-primary" (click) = "close()">Close</button>
           </div>
         </ng-template>
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="emptyFilter">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+    </ng-container>
+
+    <ng-container matColumnDef="resetFilter">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="tableFilter">
+          <button class = "mat-button mat-button-primary" mat-flat-button color="warn" (click)="resetFilters()">Reset</button>
+        </div>
+      </th>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr [hidden]="hideFilters" mat-header-row *matHeaderRowDef="displayedFilterColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
+<mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="10" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
   [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

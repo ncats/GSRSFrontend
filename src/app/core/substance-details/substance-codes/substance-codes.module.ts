@@ -11,9 +11,12 @@ import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
-import {MatDialogModule} from '@angular/material';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatSortModule} from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
+import { forwardSlash } from './codeSearchPipe';
 
 @NgModule({
   imports: [
@@ -23,6 +26,8 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
     CdkTableModule,
     MatPaginatorModule,
     MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
     ReactiveFormsModule,
     FormsModule,
     MatTreeModule,
@@ -34,7 +39,9 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
     CodeDisplayModule
   ],
   declarations: [
-    SubstanceCodesComponent
-  ]
+    SubstanceCodesComponent,
+    forwardSlash
+  ],
+  providers: [forwardSlash]
 })
 export class SubstanceCodesModule { }

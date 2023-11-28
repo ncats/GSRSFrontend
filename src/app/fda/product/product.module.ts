@@ -16,7 +16,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
-import { MatTabsModule } from '@angular/material';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
@@ -25,6 +26,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { ProductDetailsBaseComponent } from './product-details/product-details-base.component';
@@ -38,33 +40,43 @@ import { ProductIngredientFormComponent } from './product-form/product-ingredien
 import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
+import { ProductTextSearchModule } from './product-text-search/product-text-search.module';
 import { ProductsBrowseComponent } from './products-browse/products-browse.component';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { CanActivateRegisterProductFormComponent } from './product-form/can-activate-register-product-form.component';
+import { CanActivateUpdateProductFormComponent } from './product-form/can-activate-update-product-form.component';
+import { CanDeactivateProductFormComponent } from './product-form/can-deactivate-product-form.component';
+import { ActivateProductsComponent } from './activate-products.component';
 
 const productRoutes: Routes = [
   {
     path: 'browse-products',
-    component: ProductsBrowseComponent
-  },
-  {
-    path: 'products/:id',
-    component: ProductElistDetailsComponent
-  },
-  {
-    path: 'productElistDetails/:id/:src',
-    component: ProductElistDetailsComponent
-  },
-  {
-    path: 'productDetails/:id/:src',
-    component: ProductDetailsComponent
+    component: ProductsBrowseComponent,
+    canActivate: [ActivateProductsComponent]
   },
   {
     path: 'product/register',
-    component: ProductFormComponent
+    component: ProductFormComponent,
+    canActivate: [ActivateProductsComponent, CanActivateRegisterProductFormComponent],
+    canDeactivate: [CanDeactivateProductFormComponent]
   },
   {
     path: 'product/:id/edit',
-    component: ProductFormComponent
+    component: ProductFormComponent,
+    canActivate: [ActivateProductsComponent, CanActivateUpdateProductFormComponent],
+    canDeactivate: [CanDeactivateProductFormComponent]
+  },
+  {
+    path: 'product/:id',
+    component: ProductDetailsComponent,
+    canActivate: [ActivateProductsComponent]
+
+  },
+  {
+    path: 'product-elist/:id',
+    component: ProductElistDetailsComponent,
+    canActivate: [ActivateProductsComponent]
+
   }
 ];
 
@@ -85,6 +97,7 @@ const productRoutes: Routes = [
     MatExpansionModule,
     MatCheckboxModule,
     MatTableModule,
+    MatSortModule,
     MatPaginatorModule,
     MatSelectModule,
     MatSliderModule,
@@ -95,13 +108,15 @@ const productRoutes: Routes = [
     MatTooltipModule,
     MatTabsModule,
     MatBottomSheetModule,
+    MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
     SubstanceImageModule,
     SubstanceSearchSelectorModule,
     SubstanceFormModule,
-    FacetsManagerModule
+    FacetsManagerModule,
+    ProductTextSearchModule
   ],
   declarations: [
     ProductsBrowseComponent,
@@ -111,13 +126,18 @@ const productRoutes: Routes = [
     ProductFormComponent,
     ProductComponentFormComponent,
     ProductLotFormComponent,
-    ProductIngredientFormComponent
+    ProductIngredientFormComponent,
   ],
   exports: [
     ProductsBrowseComponent,
     ProductDetailsBaseComponent,
     ProductDetailsComponent,
     ProductElistDetailsComponent
+  ],
+  providers: [
+    CanActivateRegisterProductFormComponent,
+    CanActivateUpdateProductFormComponent,
+    ActivateProductsComponent
   ]
 })
 
@@ -128,11 +148,15 @@ export class ProductModule {
     });
   }
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: ProductModule,
       providers: [
-        ProductService
+        ProductService,
+        CanActivateRegisterProductFormComponent,
+        CanActivateUpdateProductFormComponent,
+        CanDeactivateProductFormComponent,
+        ActivateProductsComponent
       ]
     };
   }

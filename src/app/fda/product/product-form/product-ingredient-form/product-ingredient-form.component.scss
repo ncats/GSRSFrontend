@@ -7,7 +7,7 @@
   */
     /*padding: 20px;*/
   }
-  
+
 .details-box {
   max-width: 1028px;
   width: 100%;
@@ -16,15 +16,21 @@
 }
 
 .titlegreen {
-  color: green;
+  color: var(--regular-green-color);
   font-size: 17px;
   font-weight: 500;
 }
 
 .titleorange {
-  color: orangered;
+  color: var(--regular-orangered-color);
   font-size: 17px;
   font-weight: 500;
+}
+
+.divflexend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .form-row {
@@ -36,27 +42,27 @@
     width: calc((100% - 20px * 3) / 4);
     margin-right: 20px;
   }
-  
+
   .col-1-4:last-child {
     margin-right: 0px;
-  }  
-  
+  }
+
   .col-half-4 {
     /* width: 159.333px; */
     width: calc((100% - 20px * 7) / 8);
     margin-right: 20px;
   }
-  
+
   .col-half-4:last-child {
     margin-right: 0px;
-  }  
-  
+  }
+
   .col-2-4 {
     /* width: 159.333px; */
     width: calc((100% - 20px * 1) / 2);
     margin-right: 20px;
   }
-  
+
   .col-2-4:last-child {
     margin-right: 0px;
   }
@@ -74,7 +80,7 @@
 
 .col-1-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-half-4 {
   /* width: 159.333px; */
@@ -84,7 +90,7 @@
 
 .col-half-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-2-4 {
   /* width: 159.333px; */
@@ -94,7 +100,7 @@
 
 .col-2-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-1-5 {
   /* width: 159.333px; */
@@ -104,14 +110,14 @@
 
 .col-1-5:last-child {
   margin-right: 0px;
-}  
+}
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .bordergreen {
-  border: 1px solid green;
+  border: 1px solid var(--regular-green-color);
 }
 
 .margintop20px {
@@ -120,6 +126,10 @@
 
 .margintop30px {
   margin-top: 30px;
+}
+
+.maringright10px {
+  margin-right: 10px;
 }
 
 .pad10px {
@@ -139,23 +149,23 @@
 }
 
 .colorgreen {
-  color: green;
+  color: var(--regular-green-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .colororange {
-  color: #d35e04;
+  color: var(--orange-color-2);
 }
 
 .colormaroon {
-  color: maroon;
+  color: var(--regular-maroon-color);
 }
 
 .colorgray {
-  color: gray;
+  color: var(--regular-grey-color);
 }
 
 .fontfamilyhelvetica {
@@ -167,11 +177,11 @@
 }
 
 .margintopminus25 {
-  margin-top: -5px;
+  margin-top: -25px;
 }
 
-.marginbottomminus17px {
-  margin-bottom: -17px;
+.marginbottomminus12px {
+  margin-bottom: -12px;
 }
 
 .padleft220px {
@@ -188,22 +198,22 @@
 
 hr {
   border: none;
-  border-top: 3px dotted green;
-  color: #333;
+  border-top: 3px dotted var(--regular-green-color);
+  color: var(--hr-color);
   overflow: visible;
   text-align: center;
   height: 5px;
 }
 
 fieldset.border {
-  border: solid 1px rgb(230, 115, 22) !important;
+  border: solid 1px var(--orange-color-rgb-2) !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
-  -webkit-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
-  -moz-box-shadow: 3px 6px 11px 1px rgba(110,104,110,0.64);
-  box-shadow: 3px 4px 5px 1px rgba(110,104,110,0.64);
+  -webkit-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 3px 4px 5px 1px var(--fieldset-box-shadow-color);
 }
 
 legend.border {
@@ -211,7 +221,7 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 13px;
-  color: #174793;
+  color: var(--legend-blue-border-color);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
@@ -260,7 +270,7 @@ legend.border {
 
 .formfield3columnwidth {
   width: 540px !important;
-}  
+}
 
 .formfieldfullpagewidth {
   width: 900px;
@@ -270,9 +280,9 @@ legend.border {
   width: 40px;
 }
 
-.disabled { 
-  cursor: not-allowed; 
-} 
+.disabled {
+  cursor: not-allowed;
+}
 
 .prodNameField {
   width: calc((100% - 100px) / (5/4));

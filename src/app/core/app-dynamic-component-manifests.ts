@@ -172,6 +172,18 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceMixtureSourceModule),
   },
   {
+    componentId: 'substance-mixture-parent',
+    path: 'substance-mixture-parent',
+    loadChildren: () => import('./substance-details/substance-mixture-parent/substance-mixture-parent.module')
+      .then(m => m.SubstanceMixtureParentModule),
+  },
+  {
+    componentId: 'substance-hierarchy',
+    path: 'substance-hierarchy',
+    loadChildren: () => import('./substance-details/substance-hierarchy/substance-hierarchy.module')
+      .then(m => m.SubstanceHierarchyModule),
+  },
+  {
     componentId: 'substance-history',
     path: 'substance-history',
     loadChildren: () => import('./substance-details/substance-history/substance-history.module')
@@ -184,6 +196,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
       .then(m => m.SubstanceSsgParentSubstanceModule),
   },
   {
+    componentId: 'substance-ssg1-parent',
+    path: 'substance-ssg1-parent',
+    loadChildren: () => import('./substance-details/substance-ssg1-parent/substance-ssg1-parent.module')
+      .then(m => m.SubstanceSsg1ParentModule),
+  },
+  {
     componentId: 'substance-ssg-grade',
     path: 'substance-ssg-grade',
     loadChildren: () => import('./substance-details/substance-ssg-grade/substance-ssg-grade.module')
@@ -194,6 +212,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'substance-ssg-definition',
     loadChildren: () => import('./substance-details/substance-ssg-definition/substance-ssg-definition.module')
       .then(m => m.SubstanceSsgDefinitionModule),
+  },
+  {
+    componentId: 'substance-dependencies-image',
+    path: 'substance-dependencies-image',
+    loadChildren: () => import('./substance-details/substance-dependencies-image/substance-dependencies-image.module')
+      .then(m => m.SubstanceDependenciesImageModule),
   },
   {
     componentId: 'substance-form-definition',
@@ -330,13 +354,15 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
   {
     componentId: 'substance-form-structurally-diverse-source',
     path: 'substance-form-structurally-diverse-source',
-    loadChildren: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module')
+    loadChildren: () =>
+    import('./substance-form/structurally-diverse/substance-form-structurally-diverse-source/substance-form-structurally-diverse-source.module')
       .then(m => m.SubstanceFormStructurallyDiverseSourceModule)
   },
   {
     componentId: 'substance-form-structurally-diverse-organism',
     path: 'substance-form-structurally-diverse-organism',
-    loadChildren: () => import('./substance-form/structurally-diverse/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module')
+    loadChildren: () =>
+    import('./substance-form/structurally-diverse/substance-form-structurally-diverse-organism/substance-form-structurally-diverse-organism.module')
       .then(m => m.SubstanceFormStructurallyDiverseOrganismModule)
   },
   {
@@ -386,5 +412,23 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
     path: 'ssg-definition-form',
     loadChildren: () => import('./substance-form/ssg-definition-form/ssg-definition-form.module')
       .then(m => m.SsgDefinitionFormModule)
+  },
+  {
+    componentId: 'substance-form-ssg4m-process',
+    path: 'ssg4m-process-form',
+    loadChildren: () => import('./substance-ssg4m/ssg4m-process/substance-form-ssg4m-process.module')
+      .then(m => m.SubstanceSsg4mProcessModule)
+  },
+  {
+    componentId: 'substance-form-ssg2-manufacturing',
+    path: 'substance-form-ssg2-manufacturing',
+    loadChildren: () => import('./substance-ssg2/ssg2-manufacturing/ssg2-manufacturing.module')
+      .then(m => m.Ssg2ManufacturingModule)
+  },
+  {
+    componentId: 'substance-form-ssg2-overview',
+    path: 'substance-form-ssg2-overview',
+    loadChildren: () => import('./substance-ssg2/ssg2-overview-form/ssg2-overview-form.module')
+      .then(m => m.Ssg2OverviewFormModule)
   }
 ];

@@ -1,16 +1,30 @@
 <!-- Buttons: delete, review -->
-<div class="marginbottomminus17px padleft220px">
-  <button mat-icon-button [ngStyle]="{'color':'orangered'}" [disabled]="totalIngredient == 1"
-    (click)="confirmDeleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex)"
-    matTooltip="Delete Ingredient Details {{prodIngredientIndex + 1}}">
-    <mat-icon [class.disabled]="totalIngredient == 1">delete_forever</mat-icon>
-  </button>
-  &nbsp;&nbsp;
-  <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyProductIngredient()"
-    matTooltip="Copy Ingredient Details {{prodIngredientIndex + 1}} to New Ingredient">
-    <mat-icon>file_copy</mat-icon>
-  </button>
-  <!--
+<div class="divflexend marginbottomminus12px padleft220px">
+  <div class="maringright10px">
+    <span class="font11px textalignright" *ngIf="ingredient">
+      <span *ngIf="ingredient.id">
+        <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
+        {{ingredient.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+        <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
+        {{ingredient.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+      </span>
+    </span>
+  </div>
+  <div class="maringright10px">
+    <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyProductIngredient()"
+      matTooltip="Copy Ingredient Details {{prodIngredientIndex + 1}} to New Ingredient">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+  </div>
+  <div>
+    <button mat-icon-button [ngStyle]="{'color':'orangered'}"
+      (click)="confirmDeleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex)"
+      matTooltip="Delete Ingredient Details {{prodIngredientIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
+</div>
+<!--
     &nbsp;&nbsp;
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
       matTooltip="Click to Confirm Ingredient Details {{prodIngredientIndex + 1}} data has been Reviewed">
@@ -20,31 +34,25 @@
       By:{{ingredient.reviewedBy}}&nbsp;{{ingredient.reviewDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
     </span>
   -->
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <span class="font11px textalignright" *ngIf="ingredient">
-    <span *ngIf="ingredient.id">
-      <span class="colorgray">Created By:</span> {{ingredient.createdBy}}&nbsp;&nbsp;&nbsp;
-      {{ingredient.createDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-      <span class="colorgray">Modified By:</span> {{ingredient.modifiedBy}}&nbsp;&nbsp;&nbsp;
-      {{ingredient.modifyDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-    </span>
-  </span>
-</div>
-
 
 <!-- Display Ingredient -->
 <fieldset class="border">
-  <legend class="border">Ingredient Details&nbsp;<b><span
-        class="colorgreen font17px">{{prodIngredientIndex + 1}}</span></b>
+  <legend class="border">Ingredient Details&nbsp;<b><span class="colorgreen font17px">{{prodIngredientIndex +
+        1}}</span></b>
   </legend>
 
   <div class="divflexrow">
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
+        name="applicantIngredName" />
+    </mat-form-field>
+
     <!-- Ingredient Name -->
     <div class="col-1-4 flex-column related-substance">
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
-          (showMessage)="showMessageIngredientName($event)" eventCategory="ingredName" placeholder="Ingredient Name"
-          header="Ingredient Name" [subuuid]="ingredientNameSubstanceUuid">
+          (showMessage)="showMessageIngredientName($event)" (searchValueOut)="searchValueOutChange($event)"
+          eventCategory="ingredName" placeholder="Ingredient Name" header="Ingredient Name" [subuuid]="substanceUuid">
         </app-substance-search-selector>
 
         <div *ngIf="ingredientNameMessage" class="colorred font12px">
@@ -58,11 +66,12 @@
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
-              {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
+              {{active}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
-          <div *ngIf="ingredient.bdnum">
-            <span class="colororange">{{ingredient.bdnum}}</span><span class="colorgray font11px"> (Bdnum)</span>
+          <div *ngIf="ingredient.substanceKey">
+            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px">
+              ({{ingredient.substanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName()"
               matTooltip="Delete Ingredient Name {{prodIngredientIndex + 1}}">
@@ -77,8 +86,9 @@
     <div class="col-1-4 flex-column related-substance">
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
-          (showMessage)="showMessageBasisOfStrength($event)" eventCategory="substanceRelationshipRelatedSub"
-          placeholder="Basis Of Strength" header="Basis Of Strength" [subuuid]="basisofStrengthSubstanceUuid">
+          (showMessage)="showMessageBasisOfStrength($event)" (searchValueOut)="searchValueBasisOutChange($event)"
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Basis Of Strength" header="Basis Of Strength"
+          [subuuid]="basisOfStrengthSubstanceUuid">
         </app-substance-search-selector>
 
         <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
@@ -87,18 +97,18 @@
 
         <!-- Display Basis of Strength Details -->
         <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="basisOfStrengthName">
-            <span class="colormaroon"><b>{{basisOfStrengthName}}</b></span>
+          <div *ngIf="basisOfStrengthIngredientName">
+            <span class="colormaroon"><b>{{basisOfStrengthIngredientName}}</b></span>
             <br>
             <!-- Display Active Moiety -->
             <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
-              {{active.relationshipName}} <span class="colorgray font11px">(Active Moiety)</span>
+              {{active}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
           </div>
 
-          <div *ngIf="ingredient.basisOfStrengthBdnum">
-            <span class="colororange">{{ingredient.basisOfStrengthBdnum}}</span><span class="colorgray font11px">
-              (Bdnum)</span>
+          <div *ngIf="ingredient.basisOfStrengthSubstanceKey">
+            <span class="colororange">{{ingredient.basisOfStrengthSubstanceKey}}</span><span class="colorgray font11px">
+              ({{ingredient.basisOfStrengthSubstanceKeyType}})</span>
             <br>
             <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength()"
               matTooltip="Delete Basis of Strength {{prodIngredientIndex + 1}}">
@@ -119,14 +129,12 @@
       </mat-select>
     </mat-form-field>
     -->
-    <app-cv-input class="col-1-4" domain="PROD_GRADE" title="Grade" name="grade" [model]="ingredient.grade"
-      (valueChange)="ingredient.grade = $event">
-    </app-cv-input>
 
     <div>
       <label>Ingredient Location</label><br>
       <span *ngFor="let data of locationList; let i=index">
-        <mat-checkbox class="font11px" #checkBox [value]="data.value" [(ngModel)]="data.checked" name="data.value" (change)="setSelectedIngredientLocation(data, checkBox)">
+        <mat-checkbox class="font11px" #checkBox [value]="data.value" [(ngModel)]="data.checked" name="data.value"
+          (change)="setSelectedIngredientLocation(data, checkBox)">
           {{data.value}}
         </mat-checkbox>
         &nbsp;
@@ -155,16 +163,6 @@
     <app-cv-input class="col-1-4" domain="INGREDIENT_TYPE" title="Ingredient Type" name="ingredientType"
       [model]="ingredient.ingredientType" (valueChange)="ingredient.ingredientType = $event">
     </app-cv-input>
-    <!--
-    <mat-form-field class="col-1-4">
-      <mat-label>Ingredient Type</mat-label>
-      <mat-select matNativeControl [(ngModel)]="ingredient.ingredientType" name="ingredientType">
-        <mat-option *ngFor="let ingredientType of ingredientTypeList" [value]="ingredientType.value">
-          {{ingredientType.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    -->
 
     <mat-form-field class="col-1-4">
       <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
@@ -181,20 +179,33 @@
     <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit" [model]="ingredient.unit"
       (valueChange)="ingredient.unit = $event">
     </app-cv-input>
+  </div>
 
-    <!--
+  <div class="form-row margintop10px">
     <mat-form-field class="col-1-4">
-      <mat-label>Unit</mat-label>
-      <mat-select matNativeControl [(ngModel)]="ingredient.unit" name="unit">
-        <mat-option *ngFor="let unit of unitList" [value]="unit.value">
-          {{unit.display}}
-        </mat-option>
-      </mat-select>
+      <input matInput placeholder="Original Numerator Number" [(ngModel)]="ingredient.originalNumeratorNumber"
+        name="originalNumeratorNumber" />
     </mat-form-field>
-     -->
+
+    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Original Numerator Unit" name="originalNumeratorUnit"
+      [model]="ingredient.originalNumeratorUnit" (valueChange)="ingredient.originalNumeratorUnit = $event">
+    </app-cv-input>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Original Denominator Number" [(ngModel)]="ingredient.originalDenominatorNumber"
+        name="originalDenominatorNumber" />
+    </mat-form-field>
+
+    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Original Denominator Unit" name="originalDenominatorUnit"
+      [model]="ingredient.originalDenominatorUnit" (valueChange)="ingredient.originalDenominatorUnit = $event">
+    </app-cv-input>
   </div>
 
   <div class="form-row">
+    <app-cv-input class="col-1-4" domain="PROD_GRADE" title="Grade" name="grade" [model]="ingredient.grade"
+      (valueChange)="ingredient.grade = $event">
+    </app-cv-input>
+
     <app-cv-input class="col-1-4" domain="PROD_RELEASE_CHARACTERISTIC" title="Release Characteristics"
       name="releaseCharacteristic" [model]="ingredient.releaseCharacteristic"
       (valueChange)="ingredient.releaseCharacteristic = $event">
@@ -212,6 +223,18 @@
     -->
 
     <mat-form-field class="col-1-4">
+      <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode"
+        name="confidentialityCode" />
+    </mat-form-field>
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Notes" [(ngModel)]="ingredient.notes" name="notes " />
+    </mat-form-field>
+  </div> <!-- row-->
+
+
+  <div class="form-row">
+    <mat-form-field class="col-1-4">
       <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />
     </mat-form-field>
 
@@ -220,9 +243,15 @@
     </mat-form-field>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Notes" [(ngModel)]="ingredient.notes" name="notes " />
+      <input matInput placeholder="Manufacture Ingredient Catalog ID"
+        [(ngModel)]="ingredient.manufactureIngredientCatalogId" name="manufactureIngredientCatalogId " />
     </mat-form-field>
-  </div> <!-- row-->
+
+    <mat-form-field class="col-1-4">
+      <input matInput placeholder="Manufacture Ingredient URL"
+        [(ngModel)]="ingredient.manufactureIngredientUrl" name="manufactureIngredientUrl " />
+    </mat-form-field>
+  </div>
 
 </fieldset>
 <br>

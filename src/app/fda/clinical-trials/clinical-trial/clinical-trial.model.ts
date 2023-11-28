@@ -1,9 +1,26 @@
-export interface ClinicalTrialDrug {
+export interface ClinicalTrialUSDrug {
   id: number;
-  nctNumber: string;
-  substanceUuid: string;
+  trialNumber: string;
+  substanceKey: string;
+  substanceKeyType: 'UUID';
+  orgSubstanceKey: string;
+  orgSubstanceKeyType: 'BDNUM';
   protectedMatch: boolean;
+  substanceRoles: Array<SubstanceRole>;
+  comment: string;
   substanceDisplayName: string;
+}
+
+export interface SubstanceRole {
+  id: number;
+  substanceRole: string;
+}
+
+export interface OutcomeResultNote {
+  id: number;
+  outcome: string;
+  result: string;
+  narrative: string;
 }
 
 export interface BdnumNameAll {
@@ -16,7 +33,7 @@ export interface BdnumNameAll {
 }
 
 export interface ClinicalTrial {
-  nctNumber: string;
+  trialNumber: string;
   title: string;
   recruitment: string;
   phases: string;
@@ -34,10 +51,10 @@ export interface ClinicalTrial {
   locations: string;
   locationList: Array<string>;
   sponsorList: Array<string>;
-  clinicalTrialDrug: Array<ClinicalTrialDrug>;
+  clinicalTrialUSDrug: Array<ClinicalTrialUSDrug>;
   internalVersion: number;
-
   firstReceived: string;
   lastVerified: string;
   primaryCompletionDate: string;
+  outcomeResultNotes: Array<OutcomeResultNote>;
 }

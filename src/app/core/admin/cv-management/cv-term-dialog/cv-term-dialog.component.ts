@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, Inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { VocabularyTerm, Vocabulary, ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 
 @Component({
   selector: 'app-cv-term-dialog',
@@ -13,13 +15,18 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   vocabulary: Vocabulary;
   terms: any;
   message: string;
+  validationMessages = [];
   loading = true;
+  toggled = [];
+  private overlayContainer: HTMLElement;
 
 
   constructor(
     public cvService: ControlledVocabularyService,
     public dialogRef: MatDialogRef<CvTermDialogComponent>,
     public scrollToService: ScrollToService,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.vocabulary = data.vocabulary;
@@ -35,9 +42,12 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
 
   ngOnInit() {
     this.loading = false;
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
 }
 
   ngAfterViewInit() {
+  
     if (this.vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary') {
       this.terms.forEach(term => {
         if (term.simplifiedStructure) {
@@ -50,9 +60,46 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
     }
   }
 
+  updateStructure(term: any, index: any) {
+    this.terms[index] = term;
+  }
+
   getStructure(structure) {
-    this.cvService.getStructure(structure).subscribe(response => {
-      return response;
+    this.cvService.getStructure(structure).subscribe(response => (
+      response
+    ));
+  }
+
+  editTerms(term: any, index): void {
+  //  this.dialog.openDialogs.pop();
+  //  this.overlayContainer.style.zIndex = '1003';
+    let thisy = window.pageYOffset;
+  /*  window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'auto' });*/
+      let dialogConfig = {  width: '70%', height: '85%',data: {vocabulary: this.vocabulary, domain: this.vocabulary.domain, term: term, adminPanel: true}, };
+    const dialogRef = this.dialog.open(FragmentWizardComponent, dialogConfig);
+    this.overlayContainer.style.zIndex = '1003';
+
+    setTimeout(() => {
+    //  this.dialog.openDialogs.pop();
+   // this.overlayContainer.style.zIndex = '10003';
+    },3000);
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      window.scroll({ 
+        top: thisy, 
+        left: 0, 
+        behavior: 'auto' });
+   //   this.overlayContainer.style.zIndex = null;
+      if (response ) {
+          this.terms[index].simplifiedStructure = response;
+          this.terms[index].fragmentStructure = response;
+          this.terms[index].fragmentSrc = this.cvService.getStructureUrl(response);
+          this.terms[index].simpleSrc = this.cvService.getStructureUrl(response);
+
+     //   this.getVocab();
+      }
     });
   }
 
@@ -62,22 +109,70 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
     term.simpleSrc = this.cvService.getStructureUrl(term.simplifiedStructure);
 
   }
- 
+
 
 
   submit(): void {
     this.vocabulary.terms = this.terms;
-    this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
+    this.validationMessages = [];
+    this.cvService.validateVocab(this.vocabulary).subscribe(response => {
+        if(response && response.valid) {
+          this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
+            this.loading = false;
+      if (response.terms && response.terms.length === this.vocabulary.terms.length) {
+        alert('vocabulary updated');
+        setTimeout(() => {
+          this.dialogRef.close(response);
+        }, 200);
+      }
+    },error => {
+        let str = 'Invalid Vocabulary';
+        if (error.error && error.error.message) {
+          str += '\n\n' + error.error.message;
+  
+        }
+       else if(error.message) {
+          str += '\n\n' + error.message;
+        }
+      alert(str);
+        this.loading = false;
+  
+      });
+        } else {
+          if(response && response.validationMessages) {
+            response.validationMessages.forEach(message => {
+              this.validationMessages.push(message);
+            });
+          }
+        }
+    },error => {
+      let str = 'Invalid Vocabulary';
+      if (error.error && error.error.message) {
+        str += '\n\n' + error.error.message;
+
+      }
+     else if(error.message) {
+        str += '\n\n' + error.message;
+      }
+      alert(str);
+      this.loading = false;
+
+    });
+  /*  this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
       this.loading = false;
       if (response.terms && response.terms.length === this.vocabulary.terms.length) {
         alert('vocabulary updated');
-        setTimeout(() => {this.dialogRef.close(response); }, 200);
+        setTimeout(() => {
+          this.dialogRef.close(response);
+        }, 200);
         } else {
           alert('invalid vocabulary');
         }
     }, error => {
       alert('invalid vocabulary');
-    });
+    });*/
+    this.loading = false;
+
   }
 
 

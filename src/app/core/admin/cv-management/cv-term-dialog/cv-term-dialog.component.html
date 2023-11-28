@@ -5,6 +5,17 @@
               </div>
 <div mat-dialog-content class = "content-fix" #scroller>
     <div *ngFor = "let term of terms; index as index; last as last">
+                <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'"> 
+                                <hr style = "width: 100%;">
+                  </div>
+                  <ng-template #index>
+                                <div class = "form-row">
+                        <app-fragment-wizard [vocab] = "vocabulary.domain" style = "margin:auto" [term] = "term" (termUpdated) = "updateStructure(term,index)"></app-fragment-wizard>
+                        </div>
+                  </ng-template>
+               <!-- <div class = "form-row" *ngIf = "toggled[index] && vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'"> 
+                          <app-fragment-wizard [vocab] = "vocabulary.domain" style = "margin:auto" [term] = "term" (termUpdated) = "updateStructure(term,index)"></app-fragment-wizard>
+                  </div>-->
             <div class = "form-row" [id] = "last? 'latest-term': null">
                 <button mat-icon-button (click) = "deleteTerm(index)" class = "delete-icon">
                         <mat-icon svgIcon="delete_forever"></mat-icon>
@@ -32,6 +43,11 @@
                         <mat-checkbox [(ngModel)]="term.selected" matTooltip="selected">
                                 Selected
                         </mat-checkbox>
+                </div >
+                <div class = "checkbox" *ngIf ="vocabulary.vocabularyTermType === 'ix.ginas.models.v1.FragmentControlledVocabulary'">
+                        <button mat-button (click) = "editTerms(term, index)">Edit Structure</button>
+
+                       <!-- <button mat-button (click) = "!toggled[index]? toggled[index] = true : toggled[index] = !toggled[index]">{{toggled[index]?"Hide": "Edit Structure"}}</button>-->
                 </div>
                 </div>
                 <div class = "form-row double-row"
@@ -71,11 +87,18 @@
                        
                        </div>
                </div>
+              
+        
 
         </div>
+        
 </div>
 
     <div mat-dialog-actions class = "actions">
+                <div class = 'validation' *ngIf = "validationMessages.length > 0"><div><b>CV not valid:</b></div>
+                <div class = 'message' *ngFor = "let message of validationMessages"><span class = "{{message.messageType}} type">{{message.messageType}} :</span>{{message.message}}</div>
+                
+                </div>
                 <button mat-button (click) = "addTerm()">Add term</button>
             <span class="middle-fill"></span>
             <button mat-button (click)="cancel()">Cancel</button>

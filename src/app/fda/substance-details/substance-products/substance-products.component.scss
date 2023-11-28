@@ -8,13 +8,13 @@
 
 .mat-tab-style {
   .mat-tab-labels, .mat-tab-label, .mat-tab-link {
-     color: blue;
+     color: var(--regular-blue-color);
   }
 
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .font10px {
@@ -26,7 +26,7 @@
 }
 
 .colorgray {
-	color: gray;
+	color: var(--regular-grey-color);
 }
 
 .padleft15px {
@@ -42,18 +42,18 @@
 }
 
 .colorblue {
-  color: #4b4572;
+  color: var(--deep-purple-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .info-container {
   margin-bottom: 15px;
 
   a {
-    color: rgb(0, 0, 255);;
+    color: var(--deep-blue-color-rgb-2);
     text-decoration: none;
   }
 }
@@ -64,16 +64,17 @@
   left: 0;
   bottom: 56px;
   right: 0;
-  background: rgba(150, 148, 148, 0.15);
+  background: var(--spinner-bg-color);
   z-index: 1;
   display: flex;
   align-items: top; /* Verticle align */
   justify-content: center; /* horizonal align */
 }
 
-/*
-.mat-tab-group.mat-primary .mat-ink-bar {
-  background: white;
-  height: 5px;
+.divflex {
+  display: flex;
 }
-*/
+
+.middle-fill {
+  flex: 1 1 auto;
+}

@@ -13,7 +13,7 @@ import {
   Sugar,
   Linkage,
   NucleicAcid,
-  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification
+  StructurallyDiverse, DisplayStructure, Monomer, PolymerClassification, SubstanceSummary
 } from '../substance/substance.model';
 import {
   SequenceUnit,
@@ -26,6 +26,7 @@ import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
+import { AdminService } from '@gsrs-core/admin/admin.service';
 
 @Injectable()
 export class SubstanceFormService implements OnDestroy {
@@ -55,11 +56,14 @@ export class SubstanceFormService implements OnDestroy {
   resolvedMol = this.nameResolver.asObservable();
   private _bypassUpdateCheck = false;
   private method?: string;
+  private previousHash?: number;
+  storedRelated = {};
 
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
-    private structureService: StructureService
+    private structureService: StructureService,
+    private adminService: AdminService
   ) {
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
   }
@@ -68,19 +72,36 @@ export class SubstanceFormService implements OnDestroy {
     this.unloadSubstance();
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string): Observable<void> {
+  getStoredRelated(header: string) {
+    return (this.storedRelated && this.storedRelated[header]) ? this.storedRelated[header] : null;
+  }
+
+  setStoredRelated(substance: SubstanceSummary, header: string) {
+    this.storedRelated[header] = substance;
+
+    }
+
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
     if (method) {
       this.method = method;
     } else {
       this.method = null;
     }
+    if (mergeConcept) {
+      this.privateSubstance = substance;
+      this.substanceEmitter.next(substance);
+      this.namesUpdated();
+    }
+
+    this.substanceEmitter.subscribe(val => {
+    });
     return new Observable(observer => {
       if (substance != null) {
         this.privateSubstance = substance;
         substanceClass = this.privateSubstance.substanceClass;
       } else {
-        //the second case happens in the forms sometimes but really shouldn't
-        if (substanceClass === 'chemical' || substanceClass === 'structure') { 
+        // the second case happens in the forms sometimes but really shouldn't
+        if (substanceClass === 'chemical' || substanceClass === 'structure') {
           this.privateSubstance = {
             substanceClass: 'chemical',
             references: [],
@@ -148,6 +169,17 @@ export class SubstanceFormService implements OnDestroy {
             relationships: [],
             properties: []
           };
+        } else if (substanceClass === 'specifiedSubstanceG2') {
+          this.privateSubstance = {
+            substanceClass: 'specifiedSubstanceG2',
+            references: [],
+            names: [],
+            specifiedSubstanceG2: {
+              constituents: [],
+              manufacturing: [],
+              references: []
+            }
+          };
         } else if (substanceClass === 'specifiedSubstanceG3') {
           this.privateSubstance = {
             substanceClass: substanceClass,
@@ -155,11 +187,32 @@ export class SubstanceFormService implements OnDestroy {
             names: [],
             specifiedSubstanceG3: {
               parentSubstance: {},
-              definition: {references: []},
-              grade: {references: []}
+              definition: { references: [] },
+              grade: { references: [] }
             },
             codes: [],
             properties: []
+          };
+        } else if (substanceClass === 'specifiedSubstanceG4m') {
+          this.privateSubstance = {
+            substanceClass: substanceClass,
+            // references: [],
+            specifiedSubstanceG4m: {
+              parentSubstance: {},
+              process: [{"processName": "Process 1",
+                sites: [{
+                  stages: [{
+                    "stageNumber": "1",
+                    startingMaterials: [],
+                    processingMaterials: [],
+                    resultingMaterials: [],
+                    criticalParameters: []
+                  }]
+                }]
+              }]
+            }
+            // codes: [],
+            //  properties: []
           };
         } else if (substanceClass === 'polymer') {
           this.privateSubstance = {
@@ -183,13 +236,18 @@ export class SubstanceFormService implements OnDestroy {
             codes: []
           };
         }
-        //default values
-        
-        //TP: default to protected for root level record.
-        this.privateSubstance.access=["protected"];
-        this.privateSubstance.definitionLevel = "COMPLETE";
-        this.privateSubstance.definitionType = "PRIMARY";
-        
+        // default values
+
+        // TP: default to protected for root level record.
+        // ***** AN: Adding this right now for SSG4m and G2 ******
+        if (substanceClass !== 'specifiedSubstanceG4m') {
+          this.privateSubstance.access = ["protected"];
+
+          if (substanceClass !== 'specifiedSubstanceG2') {
+            this.privateSubstance.definitionLevel = "COMPLETE";
+            this.privateSubstance.definitionType = "PRIMARY";
+          }
+        }
       }
 
       this.subClass = this.privateSubstance.substanceClass;
@@ -197,11 +255,11 @@ export class SubstanceFormService implements OnDestroy {
       // Only these two substance classes differ from
       // the name of their JSON defintional element
       // That's why they are used as exceptions
-      
+
       if (this.subClass === 'chemical') {
-        this.subClass = 'structure'; //?
-      } else if (this.subClass === 'specifiedSubstanceG1') { 
-        this.subClass = 'specifiedSubstance'; //?
+        this.subClass = 'structure';
+      } else if (this.subClass === 'specifiedSubstanceG1') {
+        this.subClass = 'specifiedSubstance';
       }
 
       if (this.privateSubstance[this.subClass] == null) {
@@ -261,6 +319,59 @@ export class SubstanceFormService implements OnDestroy {
         observer.complete();
       });
     });
+  }
+
+  setDefinitionFromDefRef(access: any) {
+
+    if (this.privateSubstance.structurallyDiverse) {
+      this.privateSubstance.structurallyDiverse.access = access;
+    } else if (this.privateSubstance.protein) {
+      this.privateSubstance.protein.access = access;
+    } else if (this.privateSubstance.structure) {
+      this.privateSubstance.structure.access = access;
+    } else if (this.privateSubstance.mixture) {
+      this.privateSubstance.mixture.access = access;
+    } else if (this.privateSubstance.polymer) {
+      this.privateSubstance.polymer.access = access;
+    } else if (this.privateSubstance.nucleicAcid) {
+      this.privateSubstance.nucleicAcid.access = access;
+    } else if (this.privateSubstance.specifiedSubstance) {
+      this.privateSubstance.specifiedSubstance.access = access;
+    } else {
+    }
+    this.substanceEmitter.next(this.privateSubstance);
+  }
+
+  getDefinitionForDefRef() {
+
+    if (this.privateSubstance.structurallyDiverse) {
+      return this.privateSubstance.structurallyDiverse.access;
+    } else if (this.privateSubstance.protein) {
+      return this.privateSubstance.protein.access;
+    } else if (this.privateSubstance.structure) {
+      return this.privateSubstance.structure.access;
+    } else if (this.privateSubstance.mixture) {
+      return this.privateSubstance.mixture.access;
+    } else if (this.privateSubstance.polymer) {
+      return this.privateSubstance.polymer.access;
+    } else if (this.privateSubstance.nucleicAcid) {
+      return this.privateSubstance.nucleicAcid.access;
+    } else if (this.privateSubstance.specifiedSubstance) {
+      return this.privateSubstance.specifiedSubstance.access;
+    } else {
+    }
+    this.definitionEmitter.next(this.getDefinition());
+  }
+
+  changeApproval() {
+    const apid = prompt('Enter new ApprovalID:');
+
+    if (apid) {
+      const old = this.privateSubstance.approvalID;
+      this.privateSubstance.approvalID = apid;
+      alert('Approval ID changed from"' + old + '" to "' + apid + '". Submit changes to save');
+      this.definitionEmitter.next(this.getDefinition());
+    }
   }
 
   switchType(substance: SubstanceDetail, newClass: string) {
@@ -385,6 +496,22 @@ export class SubstanceFormService implements OnDestroy {
     }
   }
 
+  autoSave(): boolean {
+    const substanceString = JSON.stringify(this.privateSubstance);
+    if (!this.previousHash) {
+      this.previousHash = this.utilsService.hashCode(substanceString);
+      return false;
+    } else {
+      const match = this.previousHash !== this.utilsService.hashCode(substanceString);
+      if (match) {
+        this.previousHash = this.utilsService.hashCode(substanceString);
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   bypassUpdateCheck(): void {
     this._bypassUpdateCheck = true;
   }
@@ -396,7 +523,7 @@ export class SubstanceFormService implements OnDestroy {
       this.ready().subscribe(() => {
         const definition = this.getDefinition();
         observer.next(definition);
-        // tslint:disable-next-line:no-shadowed-variable
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         this.definitionEmitter.subscribe(definition => {
           observer.next(definition);
         });
@@ -614,7 +741,7 @@ export class SubstanceFormService implements OnDestroy {
     if (this.privateSubstance.properties) {
       this.privateSubstance.properties.forEach(prop => {
         if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
-          const featArr = prop.value.nonNumericValue.split(';');
+          const featArr = prop.value.nonNumericValue ? prop.value.nonNumericValue.split(';') : [];
           featArr.forEach(f => {
             const sites = f.split('-');
             const subunitIndex = Number(sites[0].split('_')[0]);
@@ -932,27 +1059,27 @@ export class SubstanceFormService implements OnDestroy {
 
   // disulfide links start
   copyDisulfideLinks(to: number, from: number): any {
- const test= JSON.parse(JSON.stringify(this.privateSubstance.protein.disulfideLinks));
-const push = [];
-const test3 = [];
-for (let i = 0; i < test.length; i++) {
-  const link = JSON.parse(JSON.stringify(test[i]));
-  if (link['sites'][0].subunitIndex === to || (link['sites'][1].subunitIndex === to)) {
-  } else if (link['sites'][0].subunitIndex === from && link['sites'][1].subunitIndex === from) {
-    const copy = JSON.parse(JSON.stringify(test[i]));
-    copy.sites[0].subunitIndex = to;
-  copy.sites[1].subunitIndex = to;
-  copy.sitesShorthand = copy.sites[0].subunitIndex + '_' + copy.sites[0].residueIndex +
-    ';' + copy.sites[1].subunitIndex + '_' + copy.sites[1].residueIndex;
-    test3.push(link);
-    test3.push(copy);
-  } else {
-    test3.push(link);
-  }
-}
+    const test = JSON.parse(JSON.stringify(this.privateSubstance.protein.disulfideLinks));
+    const push = [];
+    const test3 = [];
+    for (let i = 0; i < test.length; i++) {
+      const link = JSON.parse(JSON.stringify(test[i]));
+      if (link['sites'][0].subunitIndex === to || (link['sites'][1].subunitIndex === to)) {
+      } else if (link['sites'][0].subunitIndex === from && link['sites'][1].subunitIndex === from) {
+        const copy = JSON.parse(JSON.stringify(test[i]));
+        copy.sites[0].subunitIndex = to;
+        copy.sites[1].subunitIndex = to;
+        copy.sitesShorthand = copy.sites[0].subunitIndex + '_' + copy.sites[0].residueIndex +
+          ';' + copy.sites[1].subunitIndex + '_' + copy.sites[1].residueIndex;
+        test3.push(link);
+        test3.push(copy);
+      } else {
+        test3.push(link);
+      }
+    }
 
-this.privateSubstance.protein.disulfideLinks = test3;
-this.emitDisulfideLinkUpdate();
+    this.privateSubstance.protein.disulfideLinks = test3;
+    this.emitDisulfideLinkUpdate();
   }
 
   disulfideLinksUpdated(): Observable<Array<DisulfideLink>> {
@@ -1098,6 +1225,8 @@ this.emitDisulfideLinkUpdate();
     this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
   }
 
+
+
   // end change reason
 
   validateSubstance(): Observable<ValidationResults> {
@@ -1109,24 +1238,24 @@ this.emitDisulfideLinkUpdate();
           for (let i = 0; i < substanceCopy.references.length; i++) {
             const ref = substanceCopy.references[i];
             if (ref.docType !== 'SYSTEM') {
-            if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
-              const invalidReferenceMessage: ValidationMessage = {
-                actionType: 'frontEnd',
-                appliedChange: false,
-                links: [],
-                message: 'All references require a non-empty source type and text/citation value',
-                messageType: 'WARNING',
-                suggestedChange: true
-              };
-              results.validationMessages.push(invalidReferenceMessage);
-              break;
+              if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
+                const invalidReferenceMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'All references require a non-empty source type and text/citation value',
+                  messageType: 'WARNING',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidReferenceMessage);
+                break;
+              }
             }
-          }
           }
           if (substanceCopy.properties) {
             for (let i = 0; i < substanceCopy.properties.length; i++) {
               const prop = substanceCopy.properties[i];
-              if (!prop.propertyType || ! prop.name) {
+              if (!prop.propertyType || !prop.name) {
                 const invalidPropertyMessage: ValidationMessage = {
                   actionType: 'frontEnd',
                   appliedChange: false,
@@ -1157,11 +1286,54 @@ this.emitDisulfideLinkUpdate();
               }
             }
           }
+          if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
+            for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
+              const prop = substanceCopy.polymer.monomers[i];
+              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Monomer #' + (i + 1) + ' requires a selected substance',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
+            for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
+              const prop = substanceCopy.modifications.physicalModifications[i];
+              let present = false;
+              if (prop && prop.parameters){
+                prop.parameters.forEach(param => {
+                  if (param.parameterName) {
+                    present = true;
+                  }
+                });
+              }
+
+              if (!prop.physicalModificationRole && !present) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Physical Modification #' + (i + 1) + ' requires a modification role or valid parameter',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
         }
         observer.next(results);
         observer.complete();
       }, error => {
-        observer.error();
+        observer.error(error);
         observer.complete();
       });
     });
@@ -1175,6 +1347,14 @@ this.emitDisulfideLinkUpdate();
       if (this.privateSubstance.structurallyDiverse.$$storedPart) {
         delete this.privateSubstance.structurallyDiverse.$$storedPart;
       }
+
+      const toclean = ['organismFamily', 'organismGenus', 'organismSpecies', 'organismAuthor', 'infraSpecificName', 'infraSpecificType', 'fractionMaterialType', 'fractionName', 'developmentalStage'];
+      toclean.forEach(field => {
+        if (this.privateSubstance.structurallyDiverse[field] && this.privateSubstance.structurallyDiverse[field] !== null &&
+          this.privateSubstance.structurallyDiverse[field] !== '') {
+          this.privateSubstance.structurallyDiverse[field] = this.privateSubstance.structurallyDiverse[field].trim();
+        }
+      });
     }
     /*
     if (this.privateSubstance.nucleicAcid) {
@@ -1199,54 +1379,54 @@ this.emitDisulfideLinkUpdate();
     and can cause errors upon submission. the view change was to allow the stdName property to be visible to the forms*/
     if (this.privateSubstance.structure) {
 
-      if ( this.privateSubstance.structure.properties) {
+      if (this.privateSubstance.structure.properties) {
         delete this.privateSubstance.structure.properties;
       }
-      if ( this.privateSubstance.structure.links) {
+      if (this.privateSubstance.structure.links) {
         delete this.privateSubstance.structure.links;
       }
     }
     if (this.privateSubstance.polymer && this.privateSubstance.polymer.displayStructure) {
 
-      if ( this.privateSubstance.polymer.displayStructure.properties) {
+      if (this.privateSubstance.polymer.displayStructure.properties) {
         delete this.privateSubstance.polymer.displayStructure.properties;
       }
-      if ( this.privateSubstance.polymer.displayStructure.links) {
+      if (this.privateSubstance.polymer.displayStructure.links) {
         delete this.privateSubstance.polymer.displayStructure.links;
       }
     }
     if (this.privateSubstance.polymer && this.privateSubstance.polymer.idealizedStructure) {
 
-      if ( this.privateSubstance.polymer.idealizedStructure.properties) {
+      if (this.privateSubstance.polymer.idealizedStructure.properties) {
         delete this.privateSubstance.polymer.idealizedStructure.properties;
       }
-      if ( this.privateSubstance.polymer.idealizedStructure.links) {
+      if (this.privateSubstance.polymer.idealizedStructure.links) {
         delete this.privateSubstance.polymer.idealizedStructure.links;
       }
     }
 
     if (this.privateSubstance.moieties) {
       this.privateSubstance.moieties.forEach(moiety => {
-          if (moiety.properties) {
-            delete moiety.properties;
-          }
-          if (moiety.links) {
-            delete moiety.links;
-          }
+        if (moiety.properties) {
+          delete moiety.properties;
+        }
+        if (moiety.links) {
+          delete moiety.links;
+        }
       });
     }
 
     if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
-       && this.privateSubstance.protein.disulfideLinks.length > 0) {
-          for ( let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0;  i--) {
-            if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
-              this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
-              Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
-                Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0 ) {
-                  this.privateSubstance.protein.disulfideLinks.splice(i, 1);
-          }
+      && this.privateSubstance.protein.disulfideLinks.length > 0) {
+      for (let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0; i--) {
+        if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
+          this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
+          Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
+          Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0) {
+          this.privateSubstance.protein.disulfideLinks.splice(i, 1);
         }
-       }
+      }
+    }
     // end view=internal changes
 
     let substanceString = JSON.stringify(this.privateSubstance);
@@ -1261,7 +1441,7 @@ this.emitDisulfideLinkUpdate();
       deletedUuids.forEach(uuid => {
         substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
       });
-      substanceString = substanceString.replace(/,,/g, ',');
+      substanceString = substanceString.replace(/,[,]+/g, ',');
       substanceString = substanceString.replace(/\[,/g, '[');
       substanceString = substanceString.replace(/,\]/g, ']');
       substanceCopy = JSON.parse(substanceString);
@@ -1319,6 +1499,32 @@ this.emitDisulfideLinkUpdate();
     });
   }
 
+  getUNII() {
+    return this.privateSubstance._approvalIDDisplay;
+  }
+
+  importStructure(structure, type) {
+    // import a structure from mol or smiles
+    if(this.privateSubstance) {
+      if (type === 'molfile') {
+        this.privateSubstance.structure.molfile = structure;
+        this.substanceEmitter.next(this.privateSubstance);
+      } else {
+        this.privateSubstance.structure.smiles = structure;
+
+        this.structureService.interpretStructure(structure).pipe(take(1)).subscribe(response => {
+          if (response && response.structure && response.structure.molfile) {
+          this.privateSubstance.structure.molfile = response.structure.molfile;
+          this.substanceEmitter.next(this.privateSubstance);
+          }
+        });
+      }
+    } else {
+      // service substance loaded improperly
+    }
+    
+  }
+
   approveSubstance(): Observable<any> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
@@ -1349,6 +1555,34 @@ this.emitDisulfideLinkUpdate();
           results.serverError = error;
         }
         observer.error(results);
+        observer.complete();
+      });
+    });
+  }
+
+  submitStaging(id: any): Observable<any> {
+    if (this.privateSubstance.structure != null && !this.privateSubstance.structure.uuid) {
+      this.privateSubstance.structure.id = this.utilsService.newUUID();
+      this.privateSubstance.structure.uuid = this.privateSubstance.structure.id;
+    }
+    if (this.privateSubstance.moieties != null && this.privateSubstance.moieties.length) {
+      this.privateSubstance.moieties.forEach(moiety => {
+        if (!moiety.uuid) {
+          moiety.id = this.utilsService.newUUID();
+          moiety.uuid = moiety.id;
+        }
+      });
+    }
+    const substanceCopy = this.cleanSubstance();
+    return new Observable(observer => {
+
+    this.adminService.updateStagingArea(id, substanceCopy).subscribe(response => {
+      console.log(response);
+        observer.next(response);
+          observer.complete();
+      }, error => {
+        console.log(error);
+        observer.error(error);
         observer.complete();
       });
     });
@@ -1435,18 +1669,18 @@ this.emitDisulfideLinkUpdate();
     } else {
       this.method = null;
     }
-        this.definitionEmitter.next(this.getDefinition());
-        if (this.privateSubstance.substanceClass === 'protein') {
-          this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
-        } else if (this.privateSubstance.substanceClass === 'nucleicAcid') {
-          this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
-          this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
-        } else if (this.privateSubstance.substanceClass === 'mixture') {
-          this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
-        }
-        this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
-        this.resetState();
-        this.substanceEmitter.next(this.privateSubstance);
+    this.definitionEmitter.next(this.getDefinition());
+    if (this.privateSubstance.substanceClass === 'protein') {
+      this.substanceSubunitsEmitter.next(this.privateSubstance.protein.subunits);
+    } else if (this.privateSubstance.substanceClass === 'nucleicAcid') {
+      this.substanceSugarsEmitter.next(this.privateSubstance.nucleicAcid.sugars);
+      this.substanceSubunitsEmitter.next(this.privateSubstance.nucleicAcid.subunits);
+    } else if (this.privateSubstance.substanceClass === 'mixture') {
+      this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
+    }
+    this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
+    this.resetState();
+    this.substanceEmitter.next(this.privateSubstance);
   }
 
   stringToSites(slist: string): Array<Site> {
@@ -1456,7 +1690,7 @@ this.emitDisulfideLinkUpdate();
     }
     const toks = slist.split(';');
     const sites = [];
-    // tslint:disable-next-line:forin
+    // eslint-disable-next-line guard-for-in
     for (const i in toks) {
       const l = toks[i];
       if (l === '') {

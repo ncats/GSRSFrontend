@@ -1,0 +1,142 @@
+<div>
+  <div class="process-form-container">
+    <div *ngIf="process.$$deletedCode" class="notification-backdrop">
+      Deleted&nbsp;
+      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+        <mat-icon svgIcon="undo"></mat-icon>
+      </button>
+    </div>
+
+    <!--
+    <button mat-stroked-button color="primary" class="button-add divflexright"
+      matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
+      <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}
+    </button>
+  -->
+    <div class="divflexright">
+      <button mat-stroked-button color="primary" class="button-insert-before" matTooltip="Insert Process Before"
+        (click)="insertProcess(processIndex, 'before')">
+        <mat-icon>arrow_upward</mat-icon>Insert Process Before
+      </button>
+
+      <button mat-stroked-button color="primary" class="button-insert-after" matTooltip="Insert Process After"
+        (click)="insertProcess(processIndex, 'after')">
+        <mat-icon>arrow_downward</mat-icon>Insert Process After
+      </button>
+
+      <button mat-stroked-button color="primary" class="button-delete" matTooltip="Delete Process {{(processIndex+1)}}"
+        (click)="confirmDeleteProcess()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}
+      </button>
+    </div>
+
+    <div class="form-row">
+      <!--
+      <div class="delete-container">
+        <button mat-icon-button matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
+          <mat-icon svgIcon="delete_forever"></mat-icon>
+        </button>
+      </div>
+      -->
+
+      <!-- if Config is not set, as a Default, intitally show some fields and make some fields as Advanced Setting -->
+      <mat-form-field class="col-3-1"
+        *ngIf="configSettingsDisplay['processName'] || (configSettingsDisplay['processName'] === undefined && true)">
+        <input matInput placeholder="Process Name" [(ngModel)]="process.processName" name="process.processName" />
+      </mat-form-field>
+
+      <app-cv-input class="col-3-1"
+        *ngIf="configSettingsDisplay['processRole'] || (configSettingsDisplay['processRole'] === undefined && showAdvancedSettings)"
+        domain="SSG_PROCESS_ROLE" title="Process Role" name="processRole" [model]="process.processRole"
+        (valueChange)="process.processRole = $event">
+      </app-cv-input>
+
+      <app-cv-input class="col-3-1"
+        *ngIf="configSettingsDisplay['processType'] || (configSettingsDisplay['processType'] === undefined && showAdvancedSettings)"
+        domain="SSG_PROCESS_TYPE" title="Process Type" name="processType" [model]="process.processType"
+        (valueChange)="process.processType = $event">
+      </app-cv-input>
+    </div> <!-- form row -->
+
+    <div class="">
+      <div class="form-row">
+        <mat-form-field class="col-2-1"
+          *ngIf="configSettingsDisplay['processDescription'] || (configSettingsDisplay['processDescription'] === undefined && showAdvancedSettings)">
+          <input matInput placeholder="Process Description" [(ngModel)]="process.processDescription"
+            name="process.processDescription" />
+        </mat-form-field>
+
+        <mat-form-field class="col-2-1"
+          *ngIf="configSettingsDisplay['processComments'] || (configSettingsDisplay['processComments'] === undefined && showAdvancedSettings)">
+          <textarea matInput placeholder="Comments" [(ngModel)]="process.processComments" name="process.processComments"
+            rows="1"></textarea>
+        </mat-form-field>
+      </div> <!-- form row -->
+    </div>
+
+    <!-- SITES LIST BEGIN -->
+    <!--
+    <hr>
+    -->
+    <!--  *ngIf="showAdvancedSettings"-->
+    <div>
+      <!--
+      <span matBadge="{{process.sites.length}}" matBadgeOverlap="false">
+        <span class="fontsize18px"><b>Site Information</b></span>
+      </span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Site">
+        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
+      </button>
+      <br><br>
+      </div>
+       -->
+      <div class="margintop10px" [ngClass]="{'marginbottom25px': showAdvancedSettings === true}"
+        *ngFor="let site of process.sites; let siteIndex = index">
+        <fieldset class="border" [ngClass]="{'bordernone': showAdvancedSettings === true}">
+          <legend class="border" *ngIf="showAdvancedSettings === true">Site &nbsp;<b><span
+                class="font17px">{{siteIndex + 1}} of
+                {{process.sites.length}}</span></b>
+          </legend>
+          <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
+            [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
+            (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+          </app-ssg4m-sites>
+
+          <!-- Another Add Button-->
+          <!-- (process.sites && process.sites.length > 0) &&  -->
+          <div class="divflex" *ngIf="showAdvancedSettings">
+            <span class="middle-fill"></span>
+            <button mat-stroked-button color="primary" class="button-add" (click)="addSite()">
+              <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Site
+            </button>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Show Add Site button when Site length is 0 -->
+      <div class="divflexright" *ngIf="!showAdvancedSettings && (process.sites && process.sites.length === 0)"><b>Click on Show All Parameters checkbox to add a Site</b></div>
+      <div class="divflexright" *ngIf="showAdvancedSettings && (process.sites && process.sites.length === 0)">
+        <span class="middle-fill"></span>
+        <button mat-stroked-button color="primary" class="" (click)="addSite()">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Site
+        </button>
+      </div>
+
+      <!--
+      <div class="margintop10px marginbottom20px" *ngFor="let site of process.sites; let siteIndex = index">
+      <fieldset [ngClass]="showAdvancedSettings ? 'border': 'border minimize'">
+        <legend *ngIf="showAdvancedSettings" class="border">Site &nbsp;<b><span class="colorgreen font17px">{{siteIndex + 1}}</span></b>
+        </legend>
+        <app-ssg4m-sites [site]="site" [processIndex]="processIndex" [siteIndex]="siteIndex"
+          [showAdvancedSettings]="showAdvancedSettings" [tabSelectedView]="tabSelectedView"
+          (tabSelectedIndexOut)="tabSelectedIndexOutChange($event)">
+        </app-ssg4m-sites>
+      </fieldset>
+
+      </div> <!-- loop -->
+
+      <!-- SITES LIST END -->
+    </div>
+  </div>
+</div>

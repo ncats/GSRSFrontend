@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';
 import { InterpretStructureResponse } from './structure-post-response.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -34,9 +33,9 @@ export class StructureService {
     const url = `${this.configService.configData.apiBaseUrl}img/${id}.mol`;
     return this.http.get(url, {responseType: 'blob' as 'json'});
   }
-
+  //TODO: this is the inchikey, should be renamed
   getInchi(id: string): Observable<string> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/structure!$inchikey()`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/$structure!$inchikey()`;
     return this.http.get(url, {responseType: 'text'});
   }
 
@@ -45,16 +44,16 @@ export class StructureService {
     return this.http.get(url, {responseType: 'text'});
   }
 
-
+  //TODO: this is the full inchi, should be renamed
   getOtherInchi(id: string): Observable<string> {
   // get the other half of the inchi
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/structure!$inchi()`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/$structure!$inchi()`;
     return this.http.get(url, {responseType: 'text'});
   }
 
   resolveName(name: string): Observable<ResolverResponse[]> {
-    const url = `${this.configService.configData.apiBaseUrl}resolve/${name}`;
-    return this.http.get<ResolverResponse[]>(url);
+    const url = `${this.configService.configData.apiBaseUrl}resolve?name=${encodeURIComponent(name)}`;
+    return this.http.get<ResolverResponse[]>(url).pipe(timeout(15000));
   }
 
   formatFormula(structure: SubstanceStructure ):string {
@@ -91,13 +90,13 @@ export class StructureService {
     return this.http.get<SubstanceDetail>(url, options);
   }
 
-  interpretStructure(mol: string): Observable<InterpretStructureResponse> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/interpretStructure`;
+  interpretStructure(mol: string, mode?: string, standardize?: string ): Observable<InterpretStructureResponse> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/interpretStructure?mode=${mode ? mode:''}&standardize=${(standardize ? standardize:'')}`;
     return this.http.post<InterpretStructureResponse>(url, mol);
   }
 
   molvec(file: any): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/foo/ocrStructure`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/ocrStructure`;
     return this.http.post<any>(url, file);
 
   }

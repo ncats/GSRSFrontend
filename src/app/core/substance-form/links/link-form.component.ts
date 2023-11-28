@@ -7,6 +7,7 @@ import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-link-form',
@@ -23,7 +24,9 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
   siteDisplay: string;
-
+  vocabulary: any;
+  smiles: any;
+  structure: any = null;
   constructor(
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
@@ -36,6 +39,33 @@ export class LinkFormComponent implements OnInit, OnDestroy {
     this.getVocabularies();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.updateDisplay();
+
+    
+   // this.cvService.getStructureUrlFragment(term.fragmentStructure);
+  }
+
+  getStructure() {
+    this.smiles = this.vocabulary[this.privateLink.linkage];
+    if (this.smiles && this.smiles.fragmentStructure) {
+      this.structure = this.cvService.getStructureUrlFragment(this.smiles.fragmentStructure);
+    } else {
+      this.cvService.getDomainVocabulary('NUCLEIC_ACID_LINKAGE').pipe(take(1)).subscribe(response => {
+        let list = response['NUCLEIC_ACID_LINKAGE'].list;
+        let found = false;
+        list.forEach(val => {
+          if (val.value === this.privateLink.linkage) {
+            this.smiles = val;
+            found = true;
+            this.structure = this.cvService.getStructureUrlFragment(this.smiles.fragmentStructure);
+          }
+        });
+        if (!found) {
+          this.structure = null;
+        }
+      });
+    }
+  //  this.structure = this.cvService.getStructureUrlFragment(term.fragmentStructure);
+    
   }
 
   ngOnDestroy() {
@@ -47,11 +77,17 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   @Input()
   set link(link: Link) {
     this.privateLink = link;
+    this.getStructure();
   }
 
   get link(): Link {
     this.updateDisplay();
     return this.privateLink;
+  }
+
+  updateLinkage(event: any) {
+    this.privateLink.linkage = event;
+    this.getStructure();
   }
 
   addRemainingSites(): void {
@@ -88,6 +124,9 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   getVocabularies(): void {
     const subscription = this.cvService.getDomainVocabulary('NUCLEIC_ACID_LINKAGE').subscribe(response => {
       this.linkageTypes = response['NUCLEIC_ACID_LINKAGE'].list;
+      this.vocabulary = response['NUCLEIC_ACID_LINKAGE'].dictionary;
+      this.smiles = this.vocabulary[this.privateLink.linkage];
+      this.getStructure();
     });
     this.subscriptions.push(subscription);
   }

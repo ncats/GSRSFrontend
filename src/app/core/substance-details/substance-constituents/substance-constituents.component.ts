@@ -6,7 +6,7 @@ import {Subject} from 'rxjs';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-substance-constituents',
@@ -62,5 +62,8 @@ export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredLis
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+  close() {
+    this.dialog.closeAll();
   }
 }

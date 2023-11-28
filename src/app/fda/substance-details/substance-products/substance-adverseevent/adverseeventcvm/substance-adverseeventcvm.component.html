@@ -1,11 +1,20 @@
 <div class="padtop5px padleft25px font15px colorblue">
   <b>Adverse Event CVM</b>
   &nbsp;&nbsp;&nbsp;
+  <!--
   <a [href]="exportUrl" target="_blank" matTooltip='Adverse Event CVM Records' *ngIf="totalRecords > 0">
     <button mat-icon-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
   </a>
+  -->
+  <!-- Export Button -->
+  <span class="export" *ngIf="isAdmin && adverseEventCount > 0">
+    <button matTooltip="Export Search Results" mat-button (click)="export()"
+      class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Export
+    </button>
+  </span>
 </div>
 
 <!--
@@ -19,31 +28,32 @@
 
 <div class="responsive mat-table-style">
 
-   <!-- Spinner -->
-   <div *ngIf="showSpinner" class="spinnerstyle">
+  <!-- Spinner -->
+  <div *ngIf="showSpinner" class="spinnerstyle">
     <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
     </mat-progress-spinner>
   </div>
-  
-  <table mat-table [dataSource]="paged">
+
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)" matSortActive="adverseEventCount"
+    matSortDirection="desc" matSortDisableClear>
 
     <ng-container matColumnDef="adverseEvent">
-      <th mat-header-cell *matHeaderCellDef> Adverse Event </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Adverse Event </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.adverseEvent}} </td>
     </ng-container>
 
     <ng-container matColumnDef="species">
-      <th mat-header-cell *matHeaderCellDef> Species </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Species </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.species}} </td>
     </ng-container>
 
     <ng-container matColumnDef="adverseEventCount">
-      <th mat-header-cell *matHeaderCellDef> Adverse Event Count </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Adverse Event Count </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.aeCount}} </td>
     </ng-container>
 
     <ng-container matColumnDef="routeOfAdmin">
-      <th mat-header-cell *matHeaderCellDef> Route of Administration </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Route of Administration </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.routeOfAdmin}} </td>
     </ng-container>
 
@@ -51,6 +61,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
-  (page)="getSubstanceAdverseEventCvm($event)" [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true" (page)="getAdverseEventCvm($event)"
+  [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

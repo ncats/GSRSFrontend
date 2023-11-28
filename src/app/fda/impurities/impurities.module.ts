@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatExpansionModule } from '@angular/material';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
@@ -24,19 +24,30 @@ import { ImpuritiesTestFormComponent } from './impurities-form/impurities-test-f
 import { ImpuritiesSubstanceFormComponent } from './impurities-form/impurities-substance-form/impurities-substance-form.component';
 import { ImpuritiesResidualSolventsFormComponent } from './impurities-form/impurities-residual-solvents-form/impurities-residual-solvents-form.component';
 import { ImpuritiesInorganicFormComponent } from './impurities-form/impurities-inorganic-form/impurities-inorganic-form.component';
+import { CanActivateRegisterImpuritiesFormComponent } from './impurities-form/can-activate-register-impurities-form.component';
+import { CanActivateUpdateImpuritiesFormComponent } from './impurities-form/can-activate-update-impurities-form.component';
+import { CanDeactivateImpuritiesFormComponent } from './impurities-form/can-deactivate-impurities-form.component';
+import { ActivateImpuritiesComponent } from './activate-impurities.component';
+import { ImpuritiesResidualSolventsTestComponent } from './impurities-form/impurities-residual-solvents-test-form/impurities-residual-solvents-test.component';
+import { ImpuritiesInorganicFormTestComponent } from './impurities-form/impurities-inorganic-test-form/impurities-inorganic-form-test.component';
 
 const impurityRoutes: Routes = [
   {
     path: 'impurities/register',
-    component: ImpuritiesFormComponent
+    component: ImpuritiesFormComponent,
+    canActivate: [ActivateImpuritiesComponent, CanActivateRegisterImpuritiesFormComponent],
+    canDeactivate: [CanDeactivateImpuritiesFormComponent]
   },
   {
     path: 'impurities/:id/edit',
-    component: ImpuritiesFormComponent
+    component: ImpuritiesFormComponent,
+    canActivate: [ActivateImpuritiesComponent, CanActivateUpdateImpuritiesFormComponent],
+    canDeactivate: [CanDeactivateImpuritiesFormComponent]
   },
   {
     path: 'impurities/:id',
-    component: ImpuritiesDetailsComponent
+    component: ImpuritiesDetailsComponent,
+    canActivate: [ActivateImpuritiesComponent]
   }
 ];
 
@@ -50,7 +61,9 @@ const impurityRoutes: Routes = [
     ImpuritiesTestFormComponent,
     ImpuritiesSubstanceFormComponent,
     ImpuritiesResidualSolventsFormComponent,
-    ImpuritiesInorganicFormComponent
+    ImpuritiesInorganicFormComponent,
+    ImpuritiesResidualSolventsTestComponent,
+    ImpuritiesInorganicFormTestComponent
   ],
   imports: [
     RouterModule.forChild(impurityRoutes),
@@ -70,7 +83,13 @@ const impurityRoutes: Routes = [
     SubstanceSearchSelectorModule,
     SubstanceSelectorModule,
     SubstanceImageModule
-  ]
+  ],
+  providers: [
+    CanActivateRegisterImpuritiesFormComponent,
+    CanActivateUpdateImpuritiesFormComponent,
+    CanDeactivateImpuritiesFormComponent,
+    ActivateImpuritiesComponent
+ ]
 })
 
 export class ImpuritiesModule {
@@ -80,10 +99,14 @@ export class ImpuritiesModule {
     });
   }
 
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: ImpuritiesModule,
       providers: [
+        CanActivateRegisterImpuritiesFormComponent,
+        CanActivateUpdateImpuritiesFormComponent,
+        CanDeactivateImpuritiesFormComponent,
+        ActivateImpuritiesComponent
       ]
     };
   }

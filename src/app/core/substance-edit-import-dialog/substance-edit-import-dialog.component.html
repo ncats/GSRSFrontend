@@ -1,22 +1,27 @@
 <div mat-dialog-title class = "mat-dialog-title class">
-    <h3>Substance Import</h3>
+    <h3 class="colorblue">{{title}}</h3>
 </div>
+<hr>
 <div mat-dialog-content class = "mat-dialog-content">
     <div class = "info">
         Select a .json file to import into a new edit form.
     </div>
     <div class = "full-row">
-            <div><button mat-raised-button (click)="openInput()">Select File to Import</button></div>
+            <div><button mat-stroked-button class="button-select-file" (click)="openInput()">Select File to Import</button></div>
             <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
             <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
     </div>
-    <div class = "message">
+    <div class = "full-row-col"  *ngIf = "!this.record" style = "margin-top:10px;">
+       <div style = "width:100%" class="padbottom20px">Or paste JSON here:</div>
+       <textarea class="bordergray" [(ngModel)] = "pastedJSON" cdkAutosizeMinRows="8" (ngModelChange)="checkLoaded()" style = "min-height: 180px;"></textarea>
+    </div>
+    <div class = "message" *ngIf="message">
         {{message}}
     </div>
-
 </div>
+<hr>
 <div mat-dialog-actions class = "mat-dialog-actions" >
-        <button mat-flat-button color="primary" matDialogClose>Cancel</button>
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary"  *ngIf = "loaded" (click) ="useFile()">Import</button>
+    <button mat-stroked-button class="button-cancel colorred" matDialogClose>Cancel</button>
+    <span class="middle-fill"></span>
+    <button mat-flat-button class="button-import" [disabled]= "!loaded" (click) ="useFile()">Import</button>
 </div>

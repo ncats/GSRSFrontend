@@ -1,0 +1,301 @@
+.top-fixed {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  /*top: 64px; */
+  width: 100%;
+  background-color: var(--regular-white-color);
+  align-items: center;
+  /*justify-content: center;*/
+  box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
+  z-index: 1001;
+  justify-content: flex-end;
+}
+
+.top-fixed-top {
+  top: 64px;
+}
+
+.zindex2000 {
+  z-index: 2000;
+}
+
+.actions-container {
+  max-width: 100%;
+  width: 100%;
+  background-color: var(--regular-white-color);
+  padding: 10px 45px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-content-container {
+  // position: fixed;
+  // top: 121px;
+  // right: 0;
+  // bottom: 0;
+  // left: 0;
+  overflow: hidden;
+  margin-top: -100;
+  padding-top: 0;
+}
+
+.cards-container {
+  /*margin-top: 15px;*/
+}
+
+.form-header {
+  // padding-bottom:20px;
+  font-weight: 500;
+  font-size: 28px;
+}
+
+.form-header-title-top {
+  padding-top: 150px;
+}
+
+.form-header-no-title-top {
+  padding-top: 100px;
+}
+
+.form-header-title {
+  max-width: 1028px;
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  /*padding-top: 50px;*/
+  /*overflow: hidden;*/
+  /*padding-top: 150px;*/
+  margin: 0 auto;
+}
+
+.cdk-overlay-pane {
+  z-index: 1005;
+}
+
+mat-select-panel {
+  z-index: 1005;
+}
+
+.admin-functions,
+.changeClass {
+  margin-bottom: -15px;
+  margin-left: 30px;
+  margin-right: 5px;
+  margin-top: -10px;
+  color: var(--primary-color);
+
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 20px !important;
+  }
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 5px;
+}
+
+.advanced-features {
+  z-index: 2000 !important;
+
+  display: flex;
+  flex-direction: row;
+  padding-left: 10px;
+}
+
+::ng-deep .cdk-overlay-pane {
+  margin-top: 20px !important;
+}
+
+.mat-accordion {
+  width: 100%;
+  max-width: 1020px;
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.submission-messages {
+  overflow: hidden;
+  height: auto;
+  -webkit-transition: all 500ms ease-out;
+  transition: all 500ms ease-out;
+  max-width: 1028px;
+  width: 100%;
+  background-color: var(--regular-white-color);
+  display: flex;
+  flex-direction: column;
+
+  &.collapsed {
+    max-height: 0;
+  }
+
+  &.expanded {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .submission-message {
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .validation-message {
+    display: flex;
+    padding: 5px 0;
+    align-items: center;
+
+    .message-type {
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-right: 20px;
+      padding: 10px;
+      border-radius: 3px;
+    }
+  }
+
+  .dismiss-container {
+    display: flex;
+  }
+
+  .warning-message {
+    color: var(--warning-dialog-color);
+    background-color: var(--warning-dialog-bg-color);
+
+  }
+
+  .error-message {
+    color: var(--error-dialog-color);
+    background-color: var(--error-dialog-bg-color);
+  }
+
+}
+
+.validate-button {
+  margin-left: 15px;
+}
+
+.mat-expansion-panel-header-title {
+  align-items: center;
+}
+
+.hide-show-messages {
+  margin-left: 10px;
+  border: 1px solid;
+}
+
+.internal-link {
+  color: var(--link-primary-color);
+}
+
+.import-button {
+  margin-left: 15px;
+}
+
+.substance-form-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sub-header {
+  font-weight: 400;
+  padding-right: 5px;
+}
+
+.divflex {
+  display: flex;
+}
+
+.fontsize16px {
+  font-size: 16px;
+}
+
+.fontsize20px {
+  font-size: 20px;
+}
+
+.padall15px {
+  padding: 15px;
+}
+
+.padtop25px {
+  padding-top: 25px;
+}
+
+.padtop70px {
+  padding-top: 50px;
+}
+
+.padleft25px {
+  padding-left: 25px;
+}
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.marginright75px {
+  margin-right: 75px;
+}
+
+.bordergray {
+  border: 1px solid green;
+}
+
+.borderblue {
+  border: 1px solid #007CBA;
+}
+
+.fontbold {
+  font-weight: bold;
+}
+
+/* FDA COLOR BLUE CODE Hex: #007CBA */
+.colorbluefda {
+  color: #007CBA;
+}
+
+.colorred {
+  color: red;
+}
+
+.bkcoloryellow {
+  background-color: rgb(247, 247, 216);
+}
+
+::ng-deep .custom-menu {
+  margin-top: -12px;
+  /*z-index: 4000;*/
+}
+
+.mat-menu-item {
+  color: #007CBA !important;
+}
+
+/*
+button.mat-menu-item{
+  background-color: white;
+}
+
+button.mat-menu-item:hover {
+  background-color: #007CBA;
+  color: #fff !important;
+}
+*/
+
+/* tyler added as quick fix */
+app-substance-form-ssg4m-process-card button[color=primary] {
+  float: right;
+}
+
+.ontopmessage {
+  position: relative;
+  z-index: 2000;
+}
+
+.main-container {
+  position: relative;
+}

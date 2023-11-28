@@ -6,7 +6,7 @@ import { SubstanceFormService } from '../substance-form.service';
 import { StructureService } from '../../structure/structure.service';
 import { LoadingService } from '../../loading/loading.service';
 import { InterpretStructureResponse, StructureImportComponent, StructureImageModalComponent } from '@gsrs-core/structure';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
 import { SubstanceFormStructureService } from './substance-form-structure.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -44,7 +45,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     private overlayContainerService: OverlayContainer,
     private gaService: GoogleAnalyticsService,
     private substanceService: SubstanceService,
-    private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService
+    private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
+    private activatedRoute: ActivatedRoute
   ) {
     super();
   }
@@ -56,6 +58,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
         const idealStructSubscription = this.substanceFormStructureService.substanceIdealizedStructure.subscribe(structure => {
+          console.log(structure);
           if (structure) {
             this.structure = structure;
           } else {
@@ -72,6 +75,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       } else {
         this.menuLabelUpdate.emit('Structure');
         const structSubscription = this.substanceFormStructureService.substanceStructure.subscribe(structure => {
+          console.log(structure);
+
           this.structure = structure;
           this.loadStructure();
         });
@@ -123,6 +128,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.structureEditor.setMolecule(this.structure.molfile);
       this.smiles = this.structure.smiles;
       this.mol = this.structure.molfile;
+           // imported structures from search results require a second structure refresh to display stereochemistry and other calculated fields
+     if ( this.activatedRoute && this.activatedRoute.snapshot.queryParams && this.activatedRoute.snapshot.queryParams['importStructure']) {
+      setTimeout(()=>{
+        this.updateStructureForm(this.structure.molfile), 2000
+      });
+     }
       this.isInitializing = false;
     }
   }
@@ -162,16 +173,15 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
         this.structure.uuid = '';
         this.substanceFormStructureService.updateMoieties(structurePostResponse.moieties);
-
+        if (this.substanceType !== 'polymer') {
         if (structurePostResponse.moieties && structurePostResponse.moieties.length > 1) {
           clearTimeout(this.userMessageTimer);
-
-          this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
-
+            this.userMessage = 'Certain moieties may have been updated and/or deleted. Please check that the changes are correct.';
           this.userMessageTimer = setTimeout(() => {
             this.userMessage = null;
           }, 20000);
         }
+      }
       }
     }
   }
@@ -197,10 +207,14 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   generateSRU(): void {
+    this.loadingService.setLoading(true);
     this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
       if (response.structuralUnits && response.structuralUnits.length > 0) {
         this.substanceFormStructuralUnitsService.updateSRUs(response.structuralUnits);
       }
+      this.loadingService.setLoading(false);
+    }, error => {
+      this.loadingService.setLoading(false);
     });
   }
 

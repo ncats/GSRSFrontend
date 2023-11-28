@@ -6,6 +6,10 @@
     }
 }
 
+.strikethrough {
+    text-decoration: line-through;
+}
+
 .facet-search-loading.mat-progress-bar {
     margin-top: -18px;
     margin-bottom: 1.09em;
@@ -29,7 +33,7 @@
         padding: 0 3px;
         max-width: 150px;
         overflow: hidden;
-        color: #404040;
+        color: var(--label-color);
         white-space: normal;
     }
 
@@ -37,34 +41,53 @@
         padding: 0 0 0 3px;
         overflow: hidden;
         font-weight: 500;
+
+        .number-fix {
+            padding-top: 5px;
+        }
+
+        .button-fix {
+            max-height: 20px;
+            max-width: 50px;
+        }
     }
+}
+
+.count-fix {
+    display: flex;
+}
+
+.user-list-button {
+    padding: 0px 5px;
+    margin-left: 15px;
+    color: var(--link-primary-color);
 }
 
 .include {
     ::ng-deep .mat-checkbox-frame {
-        border-color: #80CBC4;
+        border-color: var(--include-checkbox-border-color);
     }
 
     ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
     ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: #26A69A;
+        background-color: var(--include-checkbox-bg-color);
     }
 }
 
 .exclude {
     margin-left: 5px;
     ::ng-deep .mat-checkbox-frame {
-        border-color: #EF9A9A;
+        border-color: var(--exclude-checkbox-border-color);
     }
 
     ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
     ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: #EF5350;
+        background-color: var(--exclude-checkbox-bg-color);
     }
 }
 
 .show-more {
-    color:#448aff;
+    color: var(--link-primary-color);
 }
 
 .show-more:hover {
@@ -73,7 +96,7 @@
 
 .facet-advanced-options-link {
     margin-top: 7px;
-    color: #448aff;
+    color: var(--link-primary-color);
 }
 
 .facet-actions {
@@ -97,7 +120,7 @@
 .deprecated {
     font-size: 14px;
     margin-left: 25px;
-    color: rgba(0, 0, 0, .70);
+    color: var(--deprecated-color);
     margin-bottom: 15px;
 
 ::ng-deep .mat-checkbox-inner-container {
@@ -109,5 +132,3 @@
         margin-bottom: 10px;
     }
 }
-
-

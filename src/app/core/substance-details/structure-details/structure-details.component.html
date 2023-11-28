@@ -11,7 +11,7 @@
     </div>
     <div class="name-value">
       <div class="name">Molecular Weight</div>
-      <div class="value blue-font">{{structure.mwt}}</div>
+      <div class="value blue-font">{{structure.mwt | number: rounding}}</div>
     </div>
     <div class="name-value">
       <div class="name">Optical Activity</div>
@@ -39,14 +39,14 @@
     </div>
       <div class="name-value" *ngIf="structure.references?.length > 0" >
         <div class="name">
-          <a (click)="toggleReferences()" class='blue-font references-link'>
+          <a tabindex="0" role="link" (click)="toggleReferences()" class='blue-font references-link'>
             <span>{{showDef === false ? 'Show' : 'Hide'}} References</span><mat-icon svgIcon="{{defIcon}}"></mat-icon>
           </a>
         </div>
       </div>
       <div class="name-value" *ngIf="structure.smiles" >
         <div class="name">
-          <a (click)="toggleSmiles()" class='blue-font references-link'>
+          <a tabindex="0" role="link" (click)="toggleSmiles()" class='blue-font references-link'>
             <span>{{showSmiles === false ? 'Show' : 'Hide'}} SMILES / InChi</span><mat-icon svgIcon="{{smilesIcon}}"></mat-icon>
           </a>
         </div>
@@ -67,11 +67,13 @@
       <a class="mat-icon-button" title="Download molfile" [href]="molfileHref" download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.mol">
         <mat-icon svgIcon="get_app"></mat-icon>
       </a>
-      <a class="mat-icon-button" title="Structure Search" [href]="searchHref">
+      <a class="mat-icon-button" title="Structure Search" *ngIf = "!substance.$$source || substance.$$source !== 'staging'"  [href]="searchHref">
         <mat-icon svgIcon="search"></mat-icon>
       </a>
     </div>
-    <img class="structure-img" (click) = "openModal(structureTemplate)" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
+    <img class="structure-img" *ngIf = "!substance.$$source || substance.$$source !== 'staging'" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
+    <img class="structure-img" *ngIf = "substance.$$source && substance.$$source == 'staging'"   appSubstanceImage  size = "250" [entityId]="substance.uuid" [stereo]="showStereo">
+
     <br/>
       <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
 
@@ -109,6 +111,8 @@
 
 <ng-template #structureTemplate>
   <div mat-dialog-content>
-    <img class="structure-img-big" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
+    <img class="structure-img-big" *ngIf = "!substance.$$source || substance.$$source !== 'staging'" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
+    <img class="structure-img-big" *ngIf = "substance.$$source && substance.$$source == 'staging'"   appSubstanceImage  size = "250" [entityId]="substance.uuid" [stereo]="showStereo">
+
   </div>
 </ng-template>

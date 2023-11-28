@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   declarations: []
 })
 export class GsrsModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: GsrsModule
     };

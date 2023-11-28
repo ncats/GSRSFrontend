@@ -9,8 +9,9 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
-import { ApplicationSrs, ValidationMessage } from '../model/application.model';
+import { Application, ValidationMessage } from '../model/application.model';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -23,19 +24,20 @@ import { DatePipe } from '@angular/common';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { FormBuilder } from '@angular/forms';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NativeDateAdapter, DateAdapter, MAT_NATIVE_DATE_FORMATS } from '@angular/material';
+import { NativeDateAdapter, DateAdapter, MAT_NATIVE_DATE_FORMATS } from '@angular/material/core';
 import { element } from 'protractor';
+import { GeneralService } from '../../service/general.service';
 
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
   styleUrls: ['./application-form.component.scss'],
- // encapsulation: ViewEncapsulation.None
+  // encapsulation: ViewEncapsulation.None
 })
 
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  application: ApplicationSrs;
+  application: Application;
   /*
   centerList: Array<VocabularyTerm> = [];
   appTypeList: Array<VocabularyTerm> = [];
@@ -64,6 +66,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   constructor(
     private applicationService: ApplicationService,
+    private generalService: GeneralService,
     private authService: AuthService,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
@@ -74,7 +77,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private titleService: Title) { }
 
   // get submitDateControl() { return this.appForm.get('submitDateControl'); }
 
@@ -94,19 +98,20 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
             this.id = id;
             this.gaService.sendPageView(`Application Edit`);
             this.getApplicationDetails();
-            //   this.getVocabularies();
           }
         } else {
           this.title = 'Register New Application';
           setTimeout(() => {
             this.gaService.sendPageView(`Application Register`);
+            this.titleService.setTitle(`Register Application`);
             this.applicationService.loadApplication();
             this.application = this.applicationService.application;
-            //  this.getVocabularies();
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
         }
+      }, error => {
+        this.loadingService.setLoading(false);
       });
     this.subscriptions.push(routeSubscription);
   }
@@ -122,13 +127,14 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getApplicationDetails(newType?: string): void {
-    this.applicationService.getApplicationDetails(this.id).subscribe(response => {
+    this.applicationService.getApplicationById(this.id).subscribe(response => {
       if (response) {
         this.applicationService.loadApplication(response);
         this.application = this.applicationService.application;
 
         // Check if Data is from external source, and Disable some fields.
         if (this.application) {
+          this.titleService.setTitle(`Edit Application ` + this.application.appType + ' ' + this.application.appNumber);
           if (this.application.provenance) {
             if (this.application.provenance.toLowerCase() === 'darrts') {
               this.isDisableData = true;
@@ -172,9 +178,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.loadingService.setLoading(false);
         this.isLoading = false;
       });
-
     }
-
   }
 
   setValidationMessage(message: string) {
@@ -187,6 +191,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   // Validate data in client side first
   validateClient(): void {
+    this.submissionMessage = null;
     this.validationMessages = [];
     this.validationResult = true;
 
@@ -253,6 +258,14 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
                   this.setValidationMessage('High Limit must be a number');
                 }
               }
+              // Ingredient Name Validation
+              if (elementIngred.$$ingredientNameValidation) {
+                this.setValidationMessage(elementIngred.$$ingredientNameValidation);
+              }
+              // Basis of Strength Validation
+              if (elementIngred.$$basisOfStrengthValidation) {
+                this.setValidationMessage(elementIngred.$$basisOfStrengthValidation);
+              }
             }
           });
 
@@ -265,7 +278,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.loadingService.setLoading(false);
       this.isLoading = false;
     }
-
   }
 
   toggleValidation(): void {
@@ -299,6 +311,20 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
+    // remove non-field form property/field/key from Application object
+    this.application = this.cleanApplication();
+    if (this.application) {
+      if (this.application.id) {
+      } else {
+        if (this.application.provenance === null || this.application.provenance === undefined) {
+          // Set Provenance to GSRS
+          this.application.provenance = 'GSRS';
+        }
+      }
+      // Set service application
+      this.applicationService.application = this.application;
+    }
+
     this.applicationService.saveApplication().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -310,13 +336,17 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (response.id) {
+          this.applicationService.bypassUpdateCheck();
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate(['/application', id, 'edit']);
         }
       }, 4000);
+    }, error => {
+      this.loadingService.setLoading(false);
     }
+
       /*
       , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
@@ -337,7 +367,9 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           }, 8000);
         }
       }*/
+
     );
+
   }
 
   private handleApplicationRetrivalError() {
@@ -379,16 +411,18 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
   deleteApplication(): void {
     this.applicationService.deleteApplication().subscribe(response => {
-      if (response) {
-        this.displayMessageAfterDeleteApp();
-      }
-    });
+      this.applicationService.bypassUpdateCheck();
+      this.displayMessageAfterDeleteApp();
+    }, (err) => {
+      console.log(err);
+    }
+    );
   }
 
   displayMessageAfterDeleteApp() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: 'The application has been deleted',
+        message: 'This application record was deleted successfully',
         type: 'home'
       }
     });
@@ -398,18 +432,40 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
+  cleanApplication(): Application {
+    let applicationStr = JSON.stringify(this.application);
+    let applicationCopy: Application = JSON.parse(applicationStr);
+    applicationCopy.applicationProductList.forEach(elementProd => {
+      if (elementProd != null) {
+        elementProd.applicationIngredientList.forEach(elementIngred => {
+          if (elementIngred != null) {
+            // remove property for Ingredient Name Validation. Do not need in the form JSON
+            if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {
+              delete elementIngred.$$ingredientNameValidation;
+            }
+            // remove property for Basis of Strength Validation. Do not need in the form JSON
+            if (elementIngred.$$basisOfStrengthValidation || elementIngred.$$basisOfStrengthValidation === "") {
+              delete elementIngred.$$basisOfStrengthValidation;
+            }
+          }
+        });
+      }
+    });
+    return applicationCopy;
+  }
+
   showJSON(): void {
+    let cleanApplication = this.cleanApplication();
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.application
+      data: cleanApplication
     });
 
     //   this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
-
   }
 
   addNewIndication() {
@@ -432,51 +488,65 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     this.applicationService.deleteIndication(indIndex);
   }
 
-  public generateFormContorls() {
-    /*
-    this.appForm = this.fb.group({
-      submitDateControl: ['', [Validators.minLength(8), Validators.maxLength(10)]]
-        // , Validators.minLength(6), Validators.maxLength(15), Validators.pattern('^.*(?=.{4,10})(?=.*\\d)(?=.*[a-zA-Z]).*$')])
-    });
-    */
-  }
-  /*
-    dateInputEventSubmitDate(event: MatDatepickerInputEvent<Date>) {
-      this.validateSumitDate(event);
-    }
-    dateChangeEventSubmitDate(event: MatDatepickerInputEvent<Date>) {
-      this.validateSumitDate(event);
-    }
-  */
-
   validateSubmitDate() {
     this.submitDateMessage = '';
     const isValid = this.validateDate(this.application.submitDate);
     if (isValid === false) {
       this.submitDateMessage = 'Submit Date is invalid';
-    }
-    /*
- //   const targetInput = event.targetElement as HTMLInputElement;
- //   console.log('target value: ' + targetInput.value);
-    const submitDateValue = targetInput.value;
-    this.submitDateMessage = '';
-    if (submitDateValue !== null) {
-      if ((submitDateValue.length < 8) || (submitDateValue.length > 10)) {
-        this.submitDateMessage = 'Invalid Submit Date';
-      }
-      if (this.application.submitDate !== null) {
-        this.convertDateFormat(this.application.submitDate);
+    } else {
+      const isValid = this.validateSubmitDateWithStatusDate(this.application.submitDate, this.application.statusDate);
+      if (isValid === false) {
+        this.submitDateMessage = 'Submit Date should be earlier than Status Date;';
       }
     }
-    */
   }
 
   validateStatusDate() {
     this.statusDateMessage = '';
-    const isValid = this.validateDate(this.application.statusDate);
+    let isValid = this.validateDate(this.application.statusDate);
     if (isValid === false) {
       this.statusDateMessage = 'Status Date is invalid';
+    } else {
+      isValid = this.validateFutureDate(this.application.statusDate);
+      if (isValid === false) {
+        this.statusDateMessage = 'Status Date should not be a future date';
+      } else {
+        isValid = this.validateSubmitDateWithStatusDate(this.application.submitDate, this.application.statusDate);
+        if (isValid === false) {
+          this.submitDateMessage = 'Submit Date should be earlier than Status Date;';
+        }
+      }
     }
+  }
+
+  validateFutureDate(dateinput: any): boolean {
+    let isValid = true;
+    // compare if the entered date is future date or not
+    const now = new Date();
+    const nowDate = now.setHours(0, 0, 0);
+    if ((dateinput !== null) && (dateinput.length > 0)) {
+      if ((dateinput.length >= 8) || (dateinput.length <= 10)) {
+        const enteredDate = new Date(dateinput);
+        const enteredDateOnly = enteredDate.setHours(0, 0, 0);
+        if (enteredDateOnly > nowDate) {
+          isValid = false;
+        }
+      }
+    }
+    return isValid;
+  }
+
+  validateSubmitDateWithStatusDate(submitDateInput: any, statusDateInput: any): boolean {
+    let isValid = true;
+    // Submit Date should not be later than Status Date.
+    if ((submitDateInput) && (statusDateInput)) {
+      const submitDt = new Date(submitDateInput).setHours(0, 0, 0);
+      const statusDt = new Date(statusDateInput).setHours(0, 0, 0);
+      if (submitDt > statusDt) {
+        isValid = false;
+      }
+    }
+    return isValid;
   }
 
   validateDate(dateinput: any): boolean {
@@ -514,13 +584,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   convertDateFormat(formDate: any): any {
-    // alert(this.application.submitDate);
-    /*
-    var convertDate = new Date(e.target.value).toISOString().substring(0, 10);
-    this.myForm.get('dob').setValue(convertDate, {
-      onlyself: true
-    })
-    */
     if (formDate !== null) {
       const datepipe = new DatePipe('en-US');
       const date = new Date(formDate);
@@ -528,5 +591,4 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       return formattedDate;
     }
   }
-
 }

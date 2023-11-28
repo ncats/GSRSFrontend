@@ -1,0 +1,47 @@
+<div class = "file-select-container">
+    <form [formGroup] = "uploadForm">      
+            <div class = "full-row">
+ 
+            <div class = "file-row ">
+                    <div><button mat-raised-button (click)="openInput()">Select File to Upload</button></div>
+                    <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
+                    <input id="fileInput" hidden type="file" (change)="onFileSelect($event)" name="file1" accept=".txt, .tsv">
+            </div>
+
+        <div class = "options-row">
+            <div>
+                <mat-form-field>
+                    <mat-select placeholder="File Type" name = "fileType" formControlName ="fileType" [(ngModel)] = "fileType">
+                        <mat-option value="TEXT" selected>
+                            Text (.txt)
+                        </mat-option>
+                        <mat-option value="TSV" selected>
+                            Text (.tsv)
+                        </mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+            </div>
+              <div>
+
+
+              </div>
+        </div>
+        </div>
+              
+              <div class = "full-row bottom">
+                   <span class = "middle-fill"></span> 
+                   <div><i>{{message}}</i></div>
+                   <button (click) ="onSubmit()"  class = "mat-button mat-primary mat-flat-button" type="submit" [disabled] = "processing || !filename">Upload</button>
+                  <div class = "loading-spinner">
+                        <mat-progress-spinner  [color]="accent" mode="indeterminate" diameter = "44" *ngIf = "processing">
+                        </mat-progress-spinner>
+                  </div>
+                 
+
+              </div>
+        </form>
+        <div >
+        </div>
+        
+      </div>

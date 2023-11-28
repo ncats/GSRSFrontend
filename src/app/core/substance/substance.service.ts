@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { Observable, Observer, Subject } from 'rxjs';
+import { interval, Observable, Observer, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -18,10 +18,13 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FacetParam } from '../facets-manager/facet.model';
 import { FacetHttpParams } from '../facets-manager/facet-http-params';
 import { UtilsService } from '../utils/utils.service';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, takeWhile } from 'rxjs/operators';
 import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
+import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
+
 import { stringify } from 'querystring';
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
@@ -47,6 +50,8 @@ export class SubstanceService extends BaseHttpService {
   private searchKeys: { [structureSearchTerm: string]: string } = {};
   public showDeprecated = false;
   private resultEmitter = new Subject<any>();
+  showImagePopup = new Subject<boolean>();
+  imagePopupUnit = new Subject<StructuralUnit>();
   private searchResult: any;
   constructor(
     public http: HttpClient,
@@ -84,6 +89,10 @@ export class SubstanceService extends BaseHttpService {
     searchTerm?: string,
     structureSearchTerm?: string,
     sequenceSearchTerm?: string,
+    // bulkSearchTerm?: string,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
     cutoff?: number,
     type?: string,
     seqType?: string,
@@ -100,10 +109,10 @@ export class SubstanceService extends BaseHttpService {
       this.showDeprecated = false;
     }
     return new Observable(observer => {
-
       if (args.structureSearchTerm != null && args.structureSearchTerm !== '') {
         this.searchSubstanceStructures(
           args.structureSearchTerm,
+          args.searchTerm,
           args.cutoff,
           args.type,
           args.pageSize,
@@ -122,6 +131,7 @@ export class SubstanceService extends BaseHttpService {
         this.searchSubstanceSequences(
           args.sequenceSearchTerm,
           args.sequenceSearchKey,
+          args.searchTerm,
           args.cutoff,
           args.type,
           args.seqType,
@@ -136,8 +146,27 @@ export class SubstanceService extends BaseHttpService {
         }, () => {
           observer.complete();
         });
+      } else if ((args.bulkQID != null &&  args.bulkQID.toString() != '')) {
+        this.searchSubstanceBulk(
+//          args.bulkSearchTerm,
+          args.searchTerm,
+          args.bulkQID,
+          args.searchOnIdentifiers,
+          args.searchEntity,
+          args.cutoff,
+          args.type,
+          args.pageSize,
+          args.facets,
+          args.order,
+          args.skip
+        ).subscribe(response => {
+          observer.next(response);
+        }, error => {
+          observer.error(error);
+        }, () => {
+          observer.complete();
+        });
       } else {
-
         this.searchSubstances(
           args.searchTerm,
           args.pageSize,
@@ -156,7 +185,6 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
-
   searchSubstances(
     searchTerm?: string,
     pageSize: number = 10,
@@ -172,7 +200,6 @@ export class SubstanceService extends BaseHttpService {
     if (searchTerm != null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
-
     params = params.appendFacetParams(facets, this.showDeprecated);
 
     params = params.appendDictionary({
@@ -193,6 +220,7 @@ export class SubstanceService extends BaseHttpService {
 
   searchSubstanceStructures(
     searchTerm: string,
+    querySearchTerm?: string,
     cutoff?: number,
     type: string = 'substructure',
     pageSize: number = 10,
@@ -205,23 +233,31 @@ export class SubstanceService extends BaseHttpService {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
       let url = this.apiBaseUrl;
       let structureFacetsKey: number;
-
       structureFacetsKey = this.utilsService.hashCode(searchTerm, type, cutoff);
 
+      if (type && (type === 'flex' || type === 'exact')) {
+        sync = true;
+      }
       if (!sync && this.searchKeys[structureFacetsKey]) {
-
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
-        params = params.appendDictionary({
-          top: pageSize.toString(),
-          skip: skip.toString()
-        });
+        if(querySearchTerm.length > 0) {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString(),
+            q: querySearchTerm.toString()
+          });
+        } else {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+        }
         if (order != null && order !== '') {
           params = params.append('order', order);
         }
 
       } else {
-
         params = params.append('q', (searchTerm));
         if (type) {
           params = params.append('type', type);
@@ -231,7 +267,19 @@ export class SubstanceService extends BaseHttpService {
           }
         }
         if (sync) {
+          // Do text search along with Exact and Flex Structure search
+          if (querySearchTerm) {
+            params = params.append('qText', querySearchTerm);
+          }
           params = params.append('sync', sync.toString());
+          params = params.appendFacetParams(facets, this.showDeprecated);
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+          if (order != null && order !== '') {
+            params = params.append('order', order);
+          }
         }
         url += 'substances/structureSearch';
       }
@@ -247,6 +295,7 @@ export class SubstanceService extends BaseHttpService {
             const resultKey = response.key;
             this.searchKeys[structureFacetsKey] = resultKey;
             this.processAsyncSearchResults(
+              querySearchTerm,
               url,
               response,
               observer,
@@ -271,6 +320,7 @@ export class SubstanceService extends BaseHttpService {
   searchSubstanceSequences(
     searchTerm?: string,
     searchKey?: string,
+    querySearchTerm?: string,
     cutoff: number = 0.5,
     type?: string,
     seqType?: string,
@@ -278,7 +328,7 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
-    sync: boolean = false
+    sync: boolean = true
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
       let params = new FacetHttpParams({encoder: new CustomEncoder()});
@@ -288,10 +338,11 @@ export class SubstanceService extends BaseHttpService {
       structureFacetsKey = this.utilsService.hashCode(searchTerm, cutoff, type, seqType);
       if ((searchKey && searchKey.length > 30) || (!sync && this.searchKeys[structureFacetsKey])) {
         if (!sync && this.searchKeys[structureFacetsKey]) {
-          url += `status(${this.searchKeys[structureFacetsKey]})/results`;
+          url += `status(${this.searchKeys[structureFacetsKey]})`;
         } else {
-          url += `status(${searchKey})/results`;
+          url += `status(${searchKey})`;
         }
+
         params = params.appendFacetParams(facets, this.showDeprecated);
         params = params.appendDictionary({
           top: pageSize.toString(),
@@ -325,6 +376,7 @@ export class SubstanceService extends BaseHttpService {
             const resultKey = response.key;
             this.searchKeys[structureFacetsKey] = resultKey;
             this.processAsyncSearchResults(
+              querySearchTerm,
               url,
               response,
               observer,
@@ -346,7 +398,90 @@ export class SubstanceService extends BaseHttpService {
     });
   }
 
+  searchSubstanceBulk(
+//    bulkSearchTerm?: string,
+    querySearchTerm?: string,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
+    cutoff?: number,
+    type: string = 'bulk',
+    pageSize: number = 10,
+    facets?: FacetParam,
+    order?: string,
+    skip: number = 0,
+  ): Observable<PagingResponse<SubstanceSummary>> {
+    return new Observable(observer => {
+      let params = new FacetHttpParams({encoder: new CustomEncoder()});
+      let url = this.apiBaseUrl;
+      let bulkFacetsKey: number;
+      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
+      if (this.searchKeys[bulkFacetsKey]) {
+        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
+        params = params.appendFacetParams(facets, this.showDeprecated);
+        if(querySearchTerm.length > 0) {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString(),
+            q: querySearchTerm.toString()
+          });
+        } else {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+        }
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
+      } else {
+        params = params.append('bulkQID', bulkQID.toString());
+        let v  = "false";
+        if(searchOnIdentifiers===true) { v= "true"; }
+        params = params.append('searchOnIdentifiers', v);
+        params = params.append('searchEntity', searchEntity);
+        url += `substances/bulkSearch`;
+      }
+
+      const options = {
+        params: params
+      };
+
+      this.http.get<any>(url, options).subscribe(
+        response => {
+          // call async
+          if (response.results) {
+            const resultKey = response.key;
+            this.searchKeys[bulkFacetsKey] = resultKey;
+            this.processAsyncSearchResults(
+              querySearchTerm,
+              url,
+              response,
+              observer,
+              resultKey,
+              options,
+              pageSize,
+              facets,
+              skip
+            );
+          } else {
+            // consider making API backend provide statusKey in JSON
+            if(this.searchKeys && this.searchKeys[bulkFacetsKey]) {
+              response.statusKey = this.searchKeys[bulkFacetsKey];
+            }
+            observer.next(response);
+            observer.complete();
+          }
+        }, error => {
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+  }
+
   private processAsyncSearchResults(
+    querySearchTerm: string,
     url: string,
     asyncCallResponse: any,
     observer: Observer<PagingResponse<SubstanceDetail>>,
@@ -358,6 +493,7 @@ export class SubstanceService extends BaseHttpService {
     view?: string
   ): void {
     this.getAsyncSearchResults(
+      querySearchTerm,
       searchKey,
       pageSize,
       facets,
@@ -365,11 +501,16 @@ export class SubstanceService extends BaseHttpService {
       view
     )
       .subscribe(response => {
+        // consider making API backend provide statusKey in JSON
+        response.statusKey=searchKey;
         observer.next(response);
         if (!asyncCallResponse.finished) {
           this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+
             setTimeout(() => {
+
               this.processAsyncSearchResults(
+                querySearchTerm,
                 url,
                 searchResponse,
                 observer,
@@ -395,7 +536,11 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
+
+
   private getAsyncSearchResults(
+    querySearchTerm: string,
+    // this is a status
     structureSearchKey: string,
     pageSize?: number,
     facets?: FacetParam,
@@ -416,6 +561,11 @@ export class SubstanceService extends BaseHttpService {
       skip: skip.toString(),
       view: view || ''
     });
+
+    // Added for 3.0.2, Advanced Search:Combine structure Search with query search.
+    if (querySearchTerm != null && querySearchTerm !== '') {
+      params = params.append('q', querySearchTerm);
+    }
 
     const options = {
       params: params
@@ -451,6 +601,32 @@ export class SubstanceService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
+  }
+
+  getAllByEtag(etag: string) {
+    let url = this.apiBaseUrl + 'substances/search?top=1000000&etag=' + etag;
+    return this.http.get<any>(url);
+
+  }
+
+  searchSingleFacet(name: string, value: string) {
+    const url = this.apiBaseUrl + 'substances/search?facet=' + name + '/' + value;
+    return this.http.get<any>(url);
+  }
+
+  searchSingleFacetSimpleCount(name: string, value: string) {
+    const url = this.apiBaseUrl + 'substances/search?facet=' + name + '/' + value + '&simpleSearchOnly=true&fdim=0&top=1&view=key';
+    return this.http.get<any>(url);
+  }
+
+  searchFromString(value: string) {
+    const url = this.apiBaseUrl + 'substances/search?' + value;
+    return this.http.get<PagingResponse<SubstanceSummary>>(url);
+  }
+
+  getRecordCount() {
+    const url = this.apiBaseUrl + 'substances/@count';
+    return this.http.get<any>(url);
   }
 
   getFasta(id: string): Observable<any> {
@@ -511,7 +687,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
   getSafeIconImgUrl(substance: SubstanceDetail , size?: number): SafeUrl {
-    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/ginas/images/noimage.svg`;
+    let imgUrl = `${this.configService.configData.apiBaseUrl}assets/images/noimage.svg`;
     const substanceType = substance.substanceClass;
     if ((substanceType === 'chemical') && (substance.structure.id)) {
       const structureId = substance.structure.id;
@@ -558,6 +734,11 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
+  getDependencies(id: string): Observable<Array<SubstanceDependenciesImageNode>> {
+    const url = `${this.apiBaseUrl}substances(${id})/@dependencies`;
+    return this.http.get<any>(url);
+  }
+
   approveSubstance(keyid: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${keyid})/@approve`;
     return this.http.get(url);
@@ -598,12 +779,28 @@ export class SubstanceService extends BaseHttpService {
   oldLinkFix(link: string): string {
     if (link && link.length > 10) {
       const oid = link.split('/');
-      const link3 = this.baseUrl + 'beta/substances/' + oid[oid.length - 1];
+      const link3 = 'substances/' + oid[oid.length - 1];
       return link3;
     } else {
       return link;
     }
   }
+
+  getPrimaryCode(reference: SubstanceRelated , codeSystem: string): Observable<string> {
+    //TODO: may need to url-encode some codeSystems for spaces/hyphens
+    const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
+    const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
+        return this.http.get<any>(refuuid).pipe(
+          catchError(error => this.http.get(refPname))
+        );
+  }
+  getPrimaryConfigCode(reference: SubstanceRelated): Observable<string> {
+    let cs: string;
+    //TODO: need to establish the config name, and how to deal with default values
+    cs = this.configService.configData && this.configService.configData.primaryCode ? this.configService.configData.primaryCode : 'BDNUM';
+    return this.getPrimaryCode(reference, cs);
+  }
+
 
   getBDNUM(reference: SubstanceRelated ): Observable<string> {
     const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
@@ -613,14 +810,51 @@ export class SubstanceService extends BaseHttpService {
         );
   }
 
-  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+
+
+  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
       url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      if(pageQuery) {
+        url += `&q=${pageQuery}`;
+      }
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
       url = facet._self;
+    }
+    if (otherFacets) {
+      let temp = facet._self.split('&');
+      temp.forEach(val => {
+        if (val.indexOf('facet=') >= 0) {
+          url += '&' + val;
+        }
+      });
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+  // For the staging area browse, to be merged with getSubstanceFacets once back-end staging facet changes are set
+  getStagingFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/stagingArea/search/@facets?wait=false&&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100e&order=%24lastEdited&ffilter=${searchTerm}`;
+      if(pageQuery) {
+        url += `&q=${pageQuery}`;
+      }
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    if (otherFacets) {
+      let temp = facet._self.split('&');
+      temp.forEach(val => {
+        if (val.indexOf('facet=') >= 0) {
+          url += '&' + val;
+        }
+      });
     }
     return this.http.get<FacetQueryResponse>(url);
   }
@@ -653,5 +887,78 @@ export class SubstanceService extends BaseHttpService {
       })
     );
   }
+
+  getMixtureParent(id: string) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search?q=root_mixture_components_substance_refuuid:"${id}"`;
+    return this.http.get< any>(url);
+  }
+  getConstituentParent(id: string) {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search?q=root_specifiedSubstance_constituents_substance_refuuid:"${id}"`;
+    return this.http.get< any>(url);
+  }
+
+
+  getSchema(type?: string, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    if(!type) {
+      type = 'scrubber';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/${type}/@schema`;
+    return this.http.get< any>(url);
+  }
+
+  getConfigs(entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/configs`;
+    return this.http.get< any>(url);
+  }
+
+  getConfigByID(id: string, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config/${id}`;
+    return this.http.get< any>(url);
+  }
+
+  storeNewConfig(config: any, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config`;
+    return this.http.post< any>(url, config);
+  }
+
+  deleteConfig(id: string, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config(${id})`;
+    return this.http.delete< any>(url);
+  }
+
+  updateConfig(id: string, config: any, entity?: string) {
+    if (!entity) {
+      entity = 'substances';
+    }
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config(${id})`;
+
+    return this.http.put< any>(url, config);
+  }
+
+  public GetStagedRecord(id:string) {
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}`;
+    
+    return this.http.get< any >(`${url}`);
+
+  }
+
 }
+
+
+
 

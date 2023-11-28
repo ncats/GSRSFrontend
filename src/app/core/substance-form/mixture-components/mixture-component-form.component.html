@@ -20,7 +20,8 @@
     </div>
 
     <div class ="type">
-      <app-cv-input  domain = "MIXTURE_TYPE" title = "Mixture Component Type" [model] = "component.type" (valueChange)="updateType($event)"></app-cv-input>
+      <app-cv-input  domain = "MIXTURE_TYPE" [ngClass] = "invalid ? 'invalid' : ''" title = "Mixture Component Type *" [model] = "component.type" (valueChange)="updateType($event)"></app-cv-input>
+   <span class = "invalid-note" *ngIf = "invalid">*required</span>
     </div>
 
 </div>

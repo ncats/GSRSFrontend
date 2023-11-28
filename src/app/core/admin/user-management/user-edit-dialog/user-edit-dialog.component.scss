@@ -53,6 +53,14 @@
 
 .message {
     margin: auto;
+    text-align: center;
+    padding: 10px;
+}
+
+.error-msg {
+    background: var(--regular-red-color);
+    color: var(--regular-white-color);
+    border: 1px solid var(--regular-black-color);
 }
 
 .box-label {

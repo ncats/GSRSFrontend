@@ -16,7 +16,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterModule} from '@angular/router';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatChipsModule} from '@angular/material/chips';
-import { MatAutocompleteModule, MatProgressBarModule } from '@angular/material';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
 @NgModule({
     imports: [
@@ -38,7 +40,8 @@ import { MatAutocompleteModule, MatProgressBarModule } from '@angular/material';
         MatRadioModule,
         MatChipsModule,
         MatAutocompleteModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        ElementLabelDisplayModule
     ],
   declarations: [
     SubstanceFormDefinitionComponent

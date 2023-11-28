@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -12,7 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import { fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests, fdaDynamicBrowseComponentManifests } from './fda-dynamic-componet-manifests';
 import { SubstanceCardsModule } from '@gsrs-core/substance-details';
 import { ApplicationModule} from './application/application.module';
@@ -33,6 +34,8 @@ import { ShowApplicationToggleComponent } from './substance-browse/show-applicat
 import { JiraSubmitTicketComponent } from './jira-submit-ticket/jira-submit-ticket.component';
 import { UserManualComponent } from './user-manual/user-manual.component';
 import { ImpuritiesModule } from '../fda/impurities/impurities.module';
+import { AdvancedSearchModule } from '../fda/advanced-search/advanced-search.module';
+import { AdverseEventsBrowseModule } from '../fda/adverse-event/adverse-events-browse.module';
 
 const fdaRoutes: Routes = [
   {
@@ -63,17 +66,20 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
   imports: [
     CommonModule,
     RouterModule.forChild(fdaRoutes),
-   DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
+    DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicSubSummaryComponentManifests),
     DynamicComponentLoaderModule.forRoot(fdaLazyLoadedComponentManifests, fdaDynamicBrowseComponentManifests),
     SubstanceCardsModule.forRoot(fdaSubstanceCardsFilters),
     ClinicalTrialsModule.forRoot(),
     ApplicationModule,
     ProductModule,
     ImpuritiesModule,
+    AdvancedSearchModule,
+    AdverseEventsBrowseModule,
     SubstanceApplicationMatchListModule,
     UserManualModule,
     JiraSubmitTicketModule,
     MatCardModule,
+    MatButtonModule,
     MatIconModule,
     MatTooltipModule,
     MatTabsModule,
@@ -111,7 +117,7 @@ export class FdaModule {
       router.config[0].children.push(route);
     });
   }
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<any> {
     return {
       ngModule: FdaModule,
       providers: [

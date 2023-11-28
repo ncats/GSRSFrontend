@@ -20,6 +20,7 @@ export class SubstanceHierarchyComponent implements OnInit {
   selfNode: HierarchyNode;
   activeNode: any;
   isAdmin: boolean;
+  loading = true;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
   constructor(
     private substanceService: SubstanceService,
@@ -44,11 +45,12 @@ export class SubstanceHierarchyComponent implements OnInit {
       }, error => {
        this.loadHierarchy([this.selfNode]);
       });
+      
       this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
   }
 
   loadHierarchy(orig: any): void {
-
+    this.loading = false;
     if (orig.length === 0) {
       orig.push(this.selfNode);
     }

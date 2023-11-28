@@ -7,12 +7,15 @@ import { SubstanceService } from '../../substance/substance.service';
 import { SubstanceSummary, SubstanceRelationship } from '../../substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceFormDefinition } from '../substance-form.model';
-import { MatChipInputEvent, MatAutocompleteSelectedEvent } from '@angular/material';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-substance-form-definition',
@@ -30,6 +33,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   feature: string;
   substanceClass: string;
   status: string;
+  accessLabel?:string;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   tagsCtrl = new FormControl({value: '', disabled: true});
   private suggestedTags: Array<string>;
@@ -37,14 +41,19 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   private usedSuggestedTags: Array<string> = [];
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  defAccess: Array<any>;
   @ViewChild('tagsInput', { read: ElementRef, static: false }) tagsInput: ElementRef<HTMLInputElement>;
   imported = false;
+  oldlink = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
     public substanceService: SubstanceService,
     private substanceFormService: SubstanceFormService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private configService: ConfigService,
+    private activatedRoute: ActivatedRoute,
+
   ) {
     super();
   }
@@ -63,10 +72,16 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       this.filteredSuggestedTags = this.suggestedTags.filter(tag => tag.toLowerCase().indexOf((value || '').toLowerCase()) > -1);
     });
     this.subscriptions.push(tagsSubscription);
+
+    if (this.configService.configData && this.configService.configData.showOldLinks) {
+      this.oldlink = true;
+
+    }
   }
 
   ngAfterViewInit() {
   const subscription =  this.substanceFormService.definition.subscribe(definition => {
+    this.defAccess = this.substanceFormService.getDefinitionForDefRef();
       this.definition = definition || {};
       this.crossCheckTags();
       if (this.definition.substanceClass === 'structure') {
@@ -113,7 +128,8 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
       }
       this.uuid = this.substanceFormService.getUuid();
       const imported = this.substanceFormService.getMethod();
-      if (imported && imported === 'import') {
+      const source = this.activatedRoute.snapshot.queryParams['source'] || null;
+      if (imported && imported === 'import' && (!source || source !== 'draft')) {
         this.imported = true;
       } else {
         this.imported = false;
@@ -169,6 +185,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   setPrimarySubstance(substance: SubstanceSummary): void {
 
     this.primarySubstance = substance;
+    this.primarySubUuid = substance.uuid;
 
     if (this.definition.relationships == null
       || Object.prototype.toString.call(this.definition.relationships) !== '[object Array]') {
@@ -195,7 +212,7 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   removePrimarySubstance(): void {
     const indexToRemove = this.definition.relationships
-      .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubstance.uuid);
+      .findIndex((relationship) => relationship.relatedSubstance.refuuid === this.primarySubUuid);
     this.definition.relationships.splice(indexToRemove, 1);
     this.primarySubstance = null;
     this.substanceFormService.updateDefinition(this.definition);
@@ -203,6 +220,11 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
 
   updateAccess(access: Array<string>): void {
     this.definition.access = access;
+    this.substanceFormService.updateDefinition(this.definition);
+  }
+
+  updateDefAccess(access: Array<string>): void {
+    this.substanceFormService.setDefinitionFromDefRef(access);
     this.substanceFormService.updateDefinition(this.definition);
   }
 

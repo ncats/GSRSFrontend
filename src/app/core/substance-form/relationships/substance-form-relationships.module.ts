@@ -13,7 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { RelationshipFormComponent } from './relationship-form.component';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
-import { MatTooltipModule } from '@angular/material';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [

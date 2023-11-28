@@ -20,3 +20,10 @@
 <mat-paginator *ngIf="codes && codes.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="10" showFirstLastButtons="true"
   (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
+
+<div *ngIf = "codes && codes.length > 0" style = "display: flex;">
+    <span class="middle-fill"></span>
+    <button mat-button (click)="addCode()"  [disabled] = "isAlternative">
+        Add code <mat-icon svgIcon="add_circle_outline"></mat-icon>
+      </button>
+  </div>

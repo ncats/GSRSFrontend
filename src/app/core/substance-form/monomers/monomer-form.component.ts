@@ -74,15 +74,22 @@ export class MonomerFormComponent implements OnInit, AfterViewInit {
   }
 
   componentUpdated(substance: SubstanceSummary): void {
-    const relatedSubstance: SubstanceRelated = {
-      refPname: substance._name,
-      name: substance._name,
-      refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
-    };
-    this.privateMonomer.monomerSubstance = relatedSubstance;
-    this.relatedSubstanceUuid = this.privateMonomer.monomerSubstance.refuuid;
+
+    if (substance !== null) {
+      const relatedSubstance: SubstanceRelated = {
+        refPname: substance._name,
+        name: substance._name,
+        refuuid: substance.uuid,
+        substanceClass: 'reference',
+        approvalID: substance.approvalID
+      };
+      this.privateMonomer.monomerSubstance = relatedSubstance;
+      this.relatedSubstanceUuid = this.privateMonomer.monomerSubstance.refuuid;
+    } else {
+      this.privateMonomer.monomerSubstance = null;
+      this.relatedSubstanceUuid = null;
+    }
+
 
   }
 

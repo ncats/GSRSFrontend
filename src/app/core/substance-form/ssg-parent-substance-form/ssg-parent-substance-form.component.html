@@ -1,10 +1,24 @@
-<div class="name-form-container" *ngIf="parentSubstance">
+<div class="name-form-container">
   <div class="form-row">
     <div class="related-substance">
       <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Parent Substance" header="Parent Substance"
-        [subuuid]="relatedSubstanceUuid">
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM"
+        [header]="parentSubstanceHeader" [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
     </div>
+
+    <!--
+  <div class="form-row">
+    <div class="col">
+      <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
+        <span class="font11px">Register New</span>
+      </a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
+        <span class="font11px">Search By Structure</span>
+      </a>
+    </div>
   </div>
-</div>
+  -->
+
+  </div>

@@ -1,0 +1,41 @@
+<div class="reg-container">
+    <span class="exitBtn" (click)="exit()">X</span>
+    <mat-card>
+      <mat-card-title>
+        Enter the following to request registration or resolve login/password issue:
+      </mat-card-title>
+      <mat-card-content>
+        <form class="reg-form" [formGroup]="regForm">
+          <mat-form-field>
+            <input matInput placeholder="Enter full name" formControlName="username" autofocus>
+          </mat-form-field>
+          <mat-form-field>
+              <input type="email" matInput placeholder="Enter professional email address" formControlName="email" email>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button color="primary" mat-flat-button [disabled]="regForm.invalid" (click)="register()">SEND REGISTRATION REQUEST</button>
+      </mat-card-actions>
+    </mat-card>
+    <!-- <p *ngIf="username.invalid">username is invalid</p>
+    <p *ngIf="email.invalid">email is invalid</p> -->
+  </div>
+
+  <!-- <h2 mat-dialog-title>{{description}}</h2>
+
+<mat-dialog-content [formGroup]="form">
+  
+    <mat-form-field>
+        <input matInput
+                placeholder="Course Description"
+               formControlName="description">
+    </mat-form-field>
+      ....
+ 
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="close()">Close</button>
+    <button class="mat-raised-button mat-primary"(click)="save()">Save</button>
+</mat-dialog-actions> -->

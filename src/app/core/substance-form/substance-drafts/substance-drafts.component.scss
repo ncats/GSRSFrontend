@@ -1,0 +1,28 @@
+.form-row {
+    display:flex;
+    width: 100%;
+    flex-direction: row;
+}
+
+.title {
+    font-size: 1.17em;
+    font-weight: bold;
+    padding-top: 15px;
+
+}
+
+.head {
+    padding-bottom:15px;
+}
+
+.italics {
+    font-style: italic;
+    color: var(--text-color);
+}
+
+.file-row {
+    width: 40%;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+}

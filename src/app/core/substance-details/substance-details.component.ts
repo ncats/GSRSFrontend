@@ -24,6 +24,7 @@ import { GoogleAnalyticsService } from '../google-analytics/google-analytics.ser
 import { environment } from '../../../environments/environment';
 import {Subject, Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
+import { AdminService } from '@gsrs-core/admin/admin.service';
 
 @Component({
   selector: 'app-substance-details',
@@ -37,6 +38,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   termSubscriber: Subscription;
   substance: SubstanceDetail;
   substanceDetailsProperties: Array<SubstanceDetailsProperty> = [];
+  source = 'substances';
   @ViewChildren('dynamicComponent', { read: ViewContainerRef }) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
@@ -53,7 +55,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private utilsService: UtilsService,
     private gaService: GoogleAnalyticsService,
     private activeRoute: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    private adminService: AdminService
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -61,29 +64,35 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     this.gaService.sendPageView(`Substance Details`);
     this.id = this.activatedRoute.snapshot.params['id'];
     this.version = this.activatedRoute.snapshot.params['version'];
+    this.source = this.activatedRoute.snapshot.queryParams['source'] || 'substances';
     this.loadingService.setLoading(true);
-     this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
-       this.activeRoute.params.subscribe(routeParams => {
-         this.id = routeParams.id;
-         this.version = routeParams.version;
-         if (this.version) {
-           if (Number(this.latestVersion) > Number(this.version)) {
-             this.getSubstanceDetails(this.id, this.version.toString());
-           } else {
-             this.getSubstanceDetails(this.id);
-           }
-         } else {
-           this.getSubstanceDetails(this.id);
-         }
-
-
-       });
-
-     }, error => {
-      this.gaService.sendException('checkVersionCall: error from API call');
-      this.loadingService.setLoading(false);
-      this.handleSubstanceRetrivalError();
-    });
+    if(this.source !== 'staging'){
+      this.checkVersion().subscribe((result: number) => {this.latestVersion = result;
+        this.activeRoute.params.subscribe(routeParams => {
+          this.id = routeParams.id;
+          this.version = routeParams.version;
+          if (this.version) {
+            if (Number(this.latestVersion) > Number(this.version)) {
+              this.getSubstanceDetails(this.id, this.version.toString());
+            } else {
+              this.getSubstanceDetails(this.id);
+            }
+          } else {
+            this.getSubstanceDetails(this.id);
+          }
+ 
+ 
+        });
+ 
+      }, error => {
+       this.gaService.sendException('checkVersionCall: error from API call');
+       this.loadingService.setLoading(false);
+       this.handleSubstanceRetrivalError();
+     });
+    } else {
+      this.getSubstanceDetails(this.id);
+    }
+     
 
 
   }
@@ -91,8 +100,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
 
 
   ngAfterViewInit(): void {
-
-
 
     this.dynamicComponents.changes
       .subscribe(() => {
@@ -103,6 +110,10 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
             this.dynamicComponentLoader
               .getComponentFactory<any>(substanceProperty.dynamicComponentId)
               .subscribe(componentFactory => {
+                if (this.source === 'staging') {
+                  this.substance.$$source = 'staging';
+                  this.substance.uuid =  this.id;
+                }
                 const ref = cRef.createComponent(componentFactory);
                 ref.instance.countUpdate.subscribe(count => {
                   substanceProperty.updateCount(count);
@@ -145,28 +156,67 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   checkVersion() {
     return this.substanceService.checkVersion(this.id);
   }
-
-
   getSubstanceDetails(id: string, version?: string) {
-    this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
-      if (response) {
-        this.titleService.setTitle(response._name);
-        this.substance = response;
-        this.substanceUpdated.next(response);
-        this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance).subscribe(substanceProperty => {
-          if (substanceProperty != null) {
-            this.insertSubstanceProperty(substanceProperty);
+    if (this.source && this.source === 'staging') {
+      this.adminService.GetStagedRecord(id).subscribe(response => {
+        this.processDetailsResponse(id, response);
+      }, error => {
+        this.gaService.sendException('getSubstanceDetails: error from API call');
+        this.loadingService.setLoading(false);
+        this.handleSubstanceRetrivalError();
+      });
+    } else {
+      this.substanceService.getSubstanceDetails(id, version).subscribe(response => {
+        this.processDetailsResponse(id, response);
+      }, error => {
+        this.gaService.sendException('getSubstanceDetails: error from API call');
+        this.loadingService.setLoading(false);
+        this.handleSubstanceRetrivalError();
+      });
+    }
+  }
+
+  processDetailsResponse(id, response) {
+    if (response) {
+      let name = response._name;
+      response.names.forEach(current => {
+        if (current.displayName && current.stdName) {
+          name = current.stdName;
+        }
+      });
+      name = name.replace(/<[^>]*>?/gm, '');
+      this.titleService.setTitle(name);
+      this.substance = response;
+      this.substanceUpdated.next(response);
+      this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance, this.source).subscribe(substanceProperty => {
+        if (substanceProperty != null) {
+          this.insertSubstanceProperty(substanceProperty);
+        }
+      });
+        this.substanceService.getMixtureParent(id).subscribe(response2 => {
+          if (response2 && response2.content && response2.content.length > 0) {
+            this.substance.$$mixtureParents = response2.content;
+            this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance, this.source).subscribe(substanceProperty => {
+              if (substanceProperty != null) {
+                this.insertSubstanceProperty(substanceProperty);
+              }
+            });
           }
         });
-      } else {
-        this.handleSubstanceRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-    }, error => {
-      this.gaService.sendException('getSubstanceDetails: error from API call');
-      this.loadingService.setLoading(false);
+          this.substanceService.getConstituentParent(id).subscribe(response3 => {
+            if (response3 && response3.content && response3.content.length > 0) {
+              this.substance.$$constituentParents = response3.content;
+              this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance, this.source).subscribe(substanceProperty => {
+                if (substanceProperty != null) {
+                  this.insertSubstanceProperty(substanceProperty);
+                }
+              });
+            }
+          });
+    } else {
       this.handleSubstanceRetrivalError();
-    });
+    }
+    this.loadingService.setLoading(false);
   }
 
   private insertSubstanceProperty(property: SubstanceDetailsProperty, startVal?: number, endVal?: number): void {
@@ -203,6 +253,16 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.insertSubstanceProperty(property, m + 1, end);
       return;
     }
+
+
+    this.substanceDetailsProperties.forEach(prop => {
+      if (prop.title === 'identifiers') {
+        prop.title = 'Codes - Identifiers';
+      }
+      if (prop.title === 'classification') {
+        prop.title = 'Codes - Classification';
+      }
+    });
   }
 
   private handleSubstanceRetrivalError() {

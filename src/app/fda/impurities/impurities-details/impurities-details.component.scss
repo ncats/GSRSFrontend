@@ -22,6 +22,10 @@
   display: flex;
 }
 
+.divclear {
+  clear: both;
+}
+
 .flexgrow {
   flex-grow: 1;
   min-height: 60%;
@@ -36,6 +40,7 @@
 
 .mat-card-title {
   display: flex;
+  justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
   flex-direction: row;
@@ -47,10 +52,10 @@
 .row {
   display: flex;
   width: 100%;
-  border-bottom: solid 1px rgba(0, 0, 0, 0.12)
+  border-bottom: solid 1px var(--box-shadow-color-3);
 /*
   &:not(:last-child) {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+    border-bottom: solid 1px var(--box-shadow-color-3);
     }
     */
 }
@@ -63,7 +68,6 @@
 .row-property {
   display: flex;
   width: 50%;
-  /*padding: 8px;*/
 }
 
 .row-property-key {
@@ -72,7 +76,6 @@
   padding: 7px;
   font-size: 12px;
   font-weight: 600;
-  /*background-color: #edeff2;*/
 }
 
 .row-property-value {
@@ -102,12 +105,12 @@
   font-size: 12px;
 }
 
-.row-property-4 {
+.row-property-3 {
   display: flex;
-  width: 25%;
+  width: 100%;
 }
 
-.row-property-key-4 {
+.row-property-key-3 {
   min-width: 40%;
   max-width: 40%;
   padding: 6px;
@@ -115,18 +118,19 @@
   font-weight: 600;
 }
 
-.row-property-value-4 {
+.row-property-value-3 {
   min-width: 60%;
   max-width: 60%;
   padding: 6px;
   font-size: 12px;
+  word-wrap: break-word;
 }
 
 .title {
   font-size: 15px;
   font-weight: bold;
   font-family: Verdana;
-  color: #0857d6;
+  color: var(--primary-title-color);
   padding-right: 5px;
   text-align: top;
   margin-bottom: 9px;
@@ -141,13 +145,14 @@
   white-space: nowrap;
   white-space: normal;
   font-size:18px;
-  color: #0857d6;
+  color: var(--primary-title-color);
 }
 
 .headerstyle {
-  border: 1px solid gray;
-  height: 30px;
-  background-color: rgb(240, 237, 210);
+  border: 1px solid var(--regular-grey-color);
+  border-bottom: none;
+  height: 35px;
+  background-color: var(--light-yellow-color);
 }
 
 .margintopneg10px {
@@ -227,35 +232,43 @@
 }
 
 .fontbold {
-  font-weight: 500;	
+  font-weight: 500;
 }
 
 .colorgray {
-  color: gray;
+  color: var(--regular-grey-color);
 }
 
 .colororange {
-  color: #E55913;
+  color: var(--orange-color);
 }
 
 .colorblue {
-  color: blue;
+  color: var(--regular-blue-color);
 }
 
 .colorgreen {
-  color: green;
+  color: var(--regular-green-color);
+}
+
+.colorblack {
+  color: var(--regular-black-color);
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .borderorange {
-  border: 1px solid orangered;
+  border: 1px solid var(--regular-orangered-color);
+}
+
+.bordergraydotted {
+  border-bottom: 1px dotted var(--regular-grey-color);
 }
 
 .colororange {
-  color: #E55913;
+  color: var(--orange-color);
 }
 
 .width40px {
@@ -273,9 +286,9 @@
   max-width: 200px;
 }
 
-.width250px {
-  width: 250px;
-  max-width: 250px;
+.width300px {
+  width: 300px;
+  max-width: 300px;
 }
 
 .width300px {
@@ -291,6 +304,11 @@
   width: 50%;
 }
 
+.width60percent {
+  width: 60%;
+  max-width: 60%;
+}
+
 .textalignleft {
   text-align: left;
 }
@@ -300,12 +318,11 @@
 }
 
 .backgroundblue {
-  background-color: blue;
+  background-color: var(--regular-blue-color);
 }
 
-
 fieldset.border {
-  border: solid 2px rgb(172, 63, 63) !important;
+  border: solid 2px var(--fieldset-red-border-color)!important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
 }
@@ -315,17 +332,17 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 14px;
-  color: #700819;
+  color: var(--legend-red-border-color);
   font-family: Verdana;
   font-weight: bold;
   padding: 10px;
   margin-bottom: 0px;
-  border: 2px solid orangered;
-  background-color: #eff8ff;
+  border: 2px solid var(--regular-orangered-color);
+  background-color: var(--legend-bg-color);
 }
 
 fieldset.border2 {
-  border: solid 1px #e0e0e0 !important;
+  border: solid 1px var(--pale-border-color) !important;
   padding: 3px 10px 8px 10px;
   border-bottom: none;
 }
@@ -335,7 +352,7 @@ legend.border2 {
   border: none;
   border-bottom: none;
   font-size: 10px;
-  color: #174793;
+  color: var(--legend-blue-border-color);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom:0px;
@@ -343,16 +360,15 @@ legend.border2 {
 
 table.blueTable {
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  /*font-family: Verdana, Geneva, sans-serif;*/
-  border: 1px solid #1C6EA4;
-  background-color:#faf9f6;
+  border: 1px solid var(--secondary-blue-color);
+  background-color:var(----table-bg-color);
   width: 100%;
   text-align: left;
   border-collapse: collapse;
 }
 
 table.blueTable td, table.blueTable th {
-  border: 1px solid #b3b1b1;
+  border: 1px solid var(--table-th-border-color);
   padding: 3px 2px;
 }
 
@@ -363,19 +379,19 @@ table.blueTable tbody td {
 }
 
 table.blueTable tr:nth-child(even) {
-  background: #f1f0f0;
+  background: var(--table-tr-even-bg-color);
 }
 
 table.blueTable thead {
-  background:  #ebece8; /* Header background */
-  border-bottom: 1px solid #444444;
+  background: var(--table-thead-bg-color); /* Header background */
+  border-bottom: 1px solid var(--table-thead-border-color);
 }
 
 table.blueTable thead th {
   font-size: 12px;
   font-weight: 700;
-  color: #1a1a1a;
-  border-left: 1px solid #D0E4F5;
+  color: var(--table-th-color);
+  border-left: 1px solid var(--table-th-border-color-2);
   padding: 10px 10px;
 }
 
@@ -386,9 +402,9 @@ table.blueTable thead th:first-child {
 table.blueTable tfoot {
   font-size: 14px;
   font-weight: bold;
-  color: #FFFFFF;
-  background: #D0E4F5;
-  border-top: 2px solid #444444;
+  color: var(--white-color);
+  background: var(--table-th-border-color-2);
+  border-top: 2px solid var(--table-thead-border-color);
 }
 
 table.blueTable tfoot td {
@@ -401,8 +417,8 @@ table.blueTable tfoot .links {
 
 table.blueTable tfoot .links a{
   display: inline-block;
-  background: #1C6EA4;
-  color: #FFFFFF;
+  background: var(--secondary-blue-color);
+  color: var(--white-color);
   padding: 2px 8px;
   border-radius: 5px;
 }
@@ -421,23 +437,23 @@ table.blueTable tfoot .links a{
 @media(max-width: 918px) {
   .product-property {
         width: 100%;
-        border:1px solid red;
+        border:1px solid var(--regular-red-color);
   }
 
   .row {
     flex-direction: column;
-    
+
     &:not(:last-child) {
       border-bottom: none;
 
       .product-property {
-        border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+        border-bottom: solid 1px var(--box-shadow-color-3);
       }
     }
     &:last-child {
       .row {
         &:not(:last-child) {
-          border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+          border-bottom: solid 1px var(--box-shadow-color-3);
         }
       }
     }

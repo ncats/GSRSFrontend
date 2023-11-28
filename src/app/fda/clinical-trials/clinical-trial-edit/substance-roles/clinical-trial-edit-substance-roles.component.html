@@ -1,0 +1,8 @@
+<mat-form-field>
+<mat-label>Substance Roles</mat-label>
+<mat-select multiple [formControl]="substanceRolesForm"  (selectionChange)="onSelectionChange($event)" title ="{{selectedRolesTitle}}" [disabled]="disabled">
+  <mat-option *ngFor="let role of rolesList" [value]="role.value">
+    {{role.display}}
+  </mat-option>
+</mat-select>
+</mat-form-field>

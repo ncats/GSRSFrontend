@@ -1,0 +1,173 @@
+.divflexspace {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.divflex {
+  display: flex;
+}
+
+.bordergray {
+  border: 1px solid var(--regular-grey-color);
+}
+
+.margintopneg10px {
+  margin-top: -10px;
+}
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.marginbottom10px {
+  margin-bottom: 10px;
+}
+
+.marginbottom20px {
+  margin-top: 20px;
+}
+
+.paddingleft10px {
+  padding-left: 10px;
+}
+
+.paddingleft20px {
+  padding-left: 20px;
+}
+
+.paddingleft25px {
+  padding-left: 25px;
+}
+
+.paddingleft350px {
+  padding-left: 350px;
+}
+
+.paddingtop10px {
+  padding-top: 10px;
+}
+
+.paddingtop15px {
+  padding-top: 15px;
+}
+
+.paddingbottom10px {
+  padding-bottom: 10px;
+}
+
+.font16px {
+  font-size: 16px;
+}
+
+.font30px {
+  font-size: 30px;
+}
+
+.width100percent {
+  width: 100%;
+}
+
+.width33percent {
+  width: 33%;
+}
+
+.textaligncenter {
+  text-align: center;
+}
+
+fieldset.border {
+  border: solid 2px var(--fieldset-blue-border-color) !important;
+  padding: 0 10px 10px 10px;
+  border-bottom: none;
+  border-radius: 8px;
+  min-width: 0;  /* override the default value of min-content */
+  -webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
+  box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);
+}
+
+legend.border {
+  width: auto !important;
+  border: none;
+  border-bottom: none;
+  font-size: 15px;
+  color: var(--legend-blue-border-color);
+  font-family: Verdana;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.structure-img-big {
+  width: 100%;
+  height: auto;
+}
+
+.zoom:hover{
+  cursor:zoom-in;
+}
+
+/* Dialog Class */
+.mat-dialog-container {
+  padding: 5px;
+  position: relative;
+}
+
+.close-button {
+  position: relative;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  line-height: 14px;
+  min-width: auto;
+}
+
+.mat-dialog-content {
+  margin: 0;
+  padding: 0;
+  max-height: 100%;
+}
+
+.mat-tab-body-content {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mat-mini-fab {
+  position: absolute;
+  right: 17px;
+  top: 8px;
+  background-color: var(--mat-icon-button-bg-color);
+  color: var(--label-color);
+  width: 35px;
+  height: 35px;
+
+  &:not(:first-child) {
+      margin-top: 3px;
+  }
+
+  ::ng-deep .mat-button-wrapper {
+      padding: 0;
+  }
+}
+
+::ng-deep {
+  .structure-image-panel {
+
+    .mat-dialog-container {
+      padding: 5px;
+      position: relative;
+    }
+
+    .mat-dialog-content {
+      margin: 0;
+      padding: 0;
+      max-height: 100%;
+    }
+
+    .mat-tab-body-content {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}

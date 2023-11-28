@@ -1,6 +1,6 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
-import { Auth, Role } from './auth.model';
+import { Auth, Role, UserGroup } from './auth.model';
 import { Observable, Subject } from 'rxjs';
 import { map, take, catchError } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -18,9 +18,10 @@ export class AuthService {
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.isLoading = true;
+    /*
     this.fetchAuth().pipe(take(1)).subscribe(auth => {
       if (auth && auth.computedToken != null) {
         this._auth = auth;
@@ -33,11 +34,30 @@ export class AuthService {
       this._authUpdate.next(null);
       this.isLoading = false;
     });
+    */
+    configService.afterLoad().then(cs => {
+      this.fetchAuth().pipe(take(1)).subscribe(auth => {
+        if (auth && auth.computedToken != null) {
+          this._auth = auth;
+        } else {
+          this._auth = null;
+        }
+        this._authUpdate.next(this._auth);
+        this.isLoading = false;
+      }, error => {
+        this._authUpdate.next(null);
+        this.isLoading = false;
+      });
+    });
   }
 
-  private fetchAuth(): Observable<Auth> {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    return this.http.get<Auth>(`${url}whoami`);
+  get auth(): Auth {
+    return this._auth;
+  }
+
+  public checkAuth(): Observable<Auth> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+    return this.http.get<any>(`${url}whoami`);
   }
 
   login(username: string, password: string): Observable<Auth> {
@@ -49,7 +69,7 @@ export class AuthService {
       }
     };
 
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
     return this.http.get<Auth>(`${url}whoami`, options).pipe(
       map(auth => {
         if (auth && auth.computedToken) {
@@ -67,7 +87,7 @@ export class AuthService {
     );
   }
 
-  getAuth(): Observable< Auth > {
+  getAuth(): Observable<Auth> {
     return new Observable(observer => {
 
       if (this._auth != null) {
@@ -91,16 +111,27 @@ export class AuthService {
       }
 
       this._authUpdate.subscribe(auth => {
-
+        try {
+          observer.next(auth);
+        } catch (e) {
+          console.log("Error calling observer");
+        }
+      }, error => {
+        console.log("Error calling observer, registered error");
+        try {
+          observer.next(null);
+        } catch (e) {
+          console.log("Error calling observer, registered error, passed null");
+        }
+      });
+      /*
+      this._authUpdate.subscribe(auth => {
         observer.next(auth);
       }, error => {
         observer.next(null);
       });
+      */
     });
-  }
-
-  get auth(): Auth {
-    return this._auth;
   }
 
   logout(): void {
@@ -115,11 +146,10 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem('authToken');
       const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i];
-          const eqPos = cookie.indexOf('=');
-          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      for (const cookie of cookies) {
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
     }
     const url = `${this.configService.configData.apiBaseUrl}logout`;
@@ -140,12 +170,12 @@ export class AuthService {
     }
   }
 
-  hasRoles(...roles: Array<Role|string>): boolean {
+  hasRoles(...roles: Array<Role | string>): boolean {
     const rolesList = [...roles];
 
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
-      for (let i = 0; i < rolesList.length; i++) {
-        let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
+      for (const r of rolesList) {
+        let role = r.charAt(0).toLowerCase() + r.slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
         if (this._auth.roles.indexOf(role as Role) === -1) {
           return false;
@@ -157,7 +187,27 @@ export class AuthService {
     return true;
   }
 
-  hasRolesAsync(...roles: Array<Role|string>): Observable< boolean > {
+  isInGroups(...group: Array<any | string>): boolean {
+    const groupList = [...group];
+
+    if (this._auth && this._auth.groups && groupList && groupList.length) {
+      for (const r of groupList) {
+        let role = r.charAt(0).toLowerCase() + r.slice(1);
+        role = role.charAt(0).toUpperCase() + role.slice(1);
+        this._auth.groups.forEach(group => {
+          if (group.name === role) {
+            return true;
+          }
+        });
+      }
+      return false;
+    } else {
+      return false;
+    }
+    return true;
+  }
+
+  hasRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasRoles(...roles));
@@ -171,11 +221,11 @@ export class AuthService {
     });
   }
 
-  hasAnyRoles(...roles: Array<Role|string>): boolean {
+  hasAnyRoles(...roles: Array<Role | string>): boolean {
     const rolesList = [...roles];
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
-      for (let i = 0; i < rolesList.length; i++) {
-        let role = rolesList[i].charAt(0).toLowerCase() + rolesList[i].slice(1);
+      for (const r of rolesList) {
+        let role = r.charAt(0).toLowerCase() + r.slice(1);
         role = role.charAt(0).toUpperCase() + role.slice(1);
         if (this._auth.roles.indexOf(role as Role) > -1) {
           return true;
@@ -187,7 +237,7 @@ export class AuthService {
     return false;
   }
 
-  hasAnyRolesAsync(...roles: Array<Role|string>): Observable< boolean > {
+  hasAnyRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasAnyRoles(...roles));
@@ -201,36 +251,72 @@ export class AuthService {
     });
   }
 
-  startUserDownload(fullUrl: string, privateExport: boolean, filename?: string): Observable< any > {
+  startUserDownload(fullUrl: string, privateExport: boolean, filename?: string, id?: string): Observable<any> {
+
     let params = new HttpParams();
+
     if (privateExport) {
       params = params.append('publicOnly', 'false');
     }
     if (filename && filename !== '') {
       params = params.append('filename', filename);
     }
+    if (id) {
+      params = params.append('exportConfigId', id);
+    }
+
     const options = {
       params: params
     };
-    return this.http.get< any >(fullUrl, options);
+
+    return this.http.get<any>(fullUrl, options);
   }
 
-  getUpdateStatus(id: string): Observable< UserDownload > {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    return this.http.get< any >(`${url}profile/downloads/${id}`);
+  getUpdateStatus(id: string): Observable<UserDownload> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+    return this.http.get<any>(`${url}profile/downloads/${id}`);
   }
 
-  changeDownload(url: string): Observable< UserDownload > {
-    return this.http.get< any >(url);
+  changeDownload(url: string): Observable<UserDownload> {
+    return this.http.get<any>(url);
   }
 
   deleteDownload(url: string): any {
-    return this.http.delete< any >(url, {observe: 'response'});
+    return this.http.delete<any>(url, { observe: 'response' });
   }
 
-  getAllDownloads(): Observable< AllUserDownloads > {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    return this.http.get< any >(`${url}profile/downloads`);
+  getAllDownloads(): Observable<AllUserDownloads> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+    return this.http.get<any>(`${url}profile/downloads`);
 
   }
+
+  private fetchAuth(): Observable<Auth> {
+    return new Observable(observer => {
+      this.configService.afterLoad().then(cd => {
+        const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+        this.http.get<Auth>(`${url}whoami`)
+          .subscribe(
+            auth => {
+            //  console.log("Authorized as");
+            //  console.log(auth);
+              observer.next(auth);
+            },
+            err => {
+              console.log("Authorized error");
+              console.log(err);
+              observer.error(err);
+            },
+            () => observer.complete()
+          );
+      });
+    });
+  }
+
+  /*
+  private fetchAuth(): Observable<Auth> {
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+    return this.http.get<Auth>(`${url}whoami`);
+  }
+  */
 }

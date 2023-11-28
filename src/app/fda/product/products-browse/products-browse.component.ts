@@ -1,29 +1,33 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
-
-import { ProductService } from '../service/product.service';
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
-import { ConfigService } from '@gsrs-core/config';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
-import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
-import { Location, LocationStrategy } from '@angular/common';
+import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material';
-
+import { Location, LocationStrategy } from '@angular/common';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import { Sort } from '@angular/material/sort';
+import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { PageEvent } from '@angular/material';
 import { FacetParam } from '@gsrs-core/facets-manager';
-import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
+import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { Subscription } from 'rxjs';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { productSearchSortValues } from './product-search-sort-values';
 import { ProductAll } from '../model/product.model';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ConfigService } from '@gsrs-core/config';
+import { LoadingService } from '@gsrs-core/loading';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
+import { ProductService } from '../service/product.service';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 
 @Component({
   selector: 'app-products-browse',
@@ -32,10 +36,12 @@ import { environment } from '../../../../environments/environment';
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+  view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
   public products: Array<ProductAll>;
   order: string;
+  public sortValues = productSearchSortValues;
   hasBackdrop = false;
   pageIndex: number;
   pageSize: number;
@@ -43,7 +49,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   totalProducts: number;
   isLoading = true;
   isError = false;
-  displayedColumns: string[];
   dataSource = [];
   appType: string;
   appNumber: string;
@@ -57,12 +62,34 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   isAdmin = false;
   etag = '';
   environment: any;
+  narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
   previousState: Array<string> = [];
+  private searchTermHash: number;
+  searchValue: string;
+  isSearchEditable = false;
+  lastPage: number;
+  invalidPage = false;
+  iconSrcPath = '';
+  dailyMedUrl = '';
+  ascDescDir = 'desc';
+  public displayedColumns: string[] = [
+    'productNDC',
+    'productName',
+    'ingredientName',
+    'labelerName',
+    'country',
+    'status',
+    'productNameType',
+    'applicationNumber'
+  ];
 
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
   private isFacetsParamsInit = false;
+  exportOptions: Array<any>;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
 
@@ -80,7 +107,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     private location: Location,
     private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
-    private dialog: MatDialog) { }
+    private utilsService: UtilsService,
+    private dialog: MatDialog,
+    private titleService: Title) { }
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
@@ -95,6 +124,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
     this.gaService.sendPageView('Browse Products');
+
+    this.titleService.setTitle(`P:Browse Products`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -112,10 +143,16 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     */
 
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '';
+
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
-
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -124,8 +161,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     });
     this.subscriptions.push(authSubscription);
 
+    this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
+    this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
+
     this.isComponentInit = true;
     this.loadComponent();
+
   }
 
   ngAfterViewInit() {
@@ -150,10 +191,11 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
     const subscription = this.productService.getProducts(
+      this.order,
       skip,
       this.pageSize,
       this.privateSearchTerm,
-      this.privateFacetParams,
+      this.privateFacetParams
     )
       .subscribe(pagingResponse => {
         this.isError = false;
@@ -161,13 +203,45 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.dataSource = this.products;
         this.totalProducts = pagingResponse.total;
         this.etag = pagingResponse.etag;
+
+        if (pagingResponse.total % this.pageSize === 0) {
+          this.lastPage = (pagingResponse.total / this.pageSize);
+        } else {
+          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+        }
         // Set Facets from paging response
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
           this.rawFacets = pagingResponse.facets;
         }
+
+        // Narrow Suggest Search Begin
+        this.narrowSearchSuggestions = {};
+        this.matchTypes = [];
+        this.narrowSearchSuggestionsCount = 0;
+        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+              this.narrowSearchSuggestions[suggestion.matchType] = [];
+              if (suggestion.matchType === 'WORD') {
+                this.matchTypes.unshift(suggestion.matchType);
+              } else {
+                this.matchTypes.push(suggestion.matchType);
+              }
+            }
+            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+            this.narrowSearchSuggestionsCount++;
+          });
+        }
+        this.matchTypes.sort();
+        // Narrow Suggest Search End
+
+        // Get list of Export extension options such as .xlsx, .txt
+        this.productService.getExportOptions(this.etag).subscribe(response => {
+          this.exportOptions = response;
+        });
+
         // Separate Application Type and Application Number in Product Result.
         this.separateAppTypeNumber();
-
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -199,6 +273,43 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.searchProducts();
   }
 
+  customPage(event: any): void {
+    if (this.validatePageInput(event)) {
+      this.invalidPage = false;
+      const newpage = Number(event.target.value) - 1;
+      this.pageIndex = newpage;
+      this.gaService.sendEvent('productsContent', 'select:page-number', 'pager', newpage);
+      this.populateUrlQueryParameters();
+      this.searchProducts();
+    }
+  }
+
+  validatePageInput(event: any): boolean {
+    if (event && event.target) {
+      const newpage = Number(event.target.value);
+      if (!isNaN(Number(newpage))) {
+        if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  editAdvancedSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'Browse Product search term' :
+      `${this.privateSearchTerm}`;
+    this.gaService.sendEvent('Application Filtering', 'icon-button:edit-advanced-search', eventLabel);
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        'g-search-hash': this.searchTermHash
+      }
+    };
+
+    this.router.navigate(['/advanced-search'], navigationExtras);
+  }
+
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
@@ -214,6 +325,27 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // for facets
   facetsLoaded(numFacetsLoaded: number) {
+  }
+
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      // Search Applications
+      this.searchProducts();
+    }
+    return;
+  }
+
+  updateView(event): void {
+    this.view = event.value;
   }
 
   changePage(pageEvent: PageEvent) {
@@ -285,23 +417,35 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return this.privateFacetParams;
   }
 
-  export() {
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchProducts();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
+  export(extension: string) {
     if (this.etag) {
-      const extension = 'xlsx';
-      const url = this.getApiExportUrl(this.etag, extension);
+      // const extension = 'xlsx';
+      const url1 = this.getApiExportUrl(this.etag, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-          height: '215x',
-          width: '550px',
-          data: { 'extension': extension, 'type': 'BrowseProducts' }
+          // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'BrowseProducts', 'entity': 'products', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
-        dialogReference.afterClosed().subscribe(name => {
+        dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
           if (name && name !== '') {
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
-            this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+            this.authService.startUserDownload(url1, this.privateExport, fullname, id).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -356,6 +500,58 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       return !nan;
     }
     return false;
+  }
+
+  openImageModal($event, subUuid: string): void {
+    // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
+
+    //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+
+    let data: any;
+
+    // if (substance.substanceClass === 'chemical') {
+    data = {
+      structure: subUuid,
+      //   smiles: substance.structure.smiles,
+      uuid: subUuid,
+      //    names: substance.names
+    };
+    // }
+
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: data
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    const subscription = dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    });
+  }
+
+  getAppTypeNumberUrl(appType: string, appNumber: string): string {
+    let appUrl = 'browse-applications?search=root_appType:\"^' + appType + '$\" AND root_appNumber:\"^' + appNumber + '$\"';
+    return appUrl;
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 
 }

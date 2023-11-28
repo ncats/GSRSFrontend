@@ -1,30 +1,57 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { ConfigService } from '@gsrs-core/config';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
 import { AuthService } from '@gsrs-core/auth';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
+import { SubstanceService } from '@gsrs-core/substance';
+import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { UtilsService } from '@gsrs-core/utils';
+import { UsefulLink } from '../config/config.model';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   environment: Environment;
   baseDomain: string;
   isAuthenticated = false;
   contactEmail: string;
+  homeHeader: string;
+  homeContents: string;
   isClosedWelcomeMessage = true;
   imageLoc: any;
   appId: string;
+  customLinks: Array<any>;
+  total: string;
+  isCollapsed = true;
+  hasBackdrop = false;
+  bannerMessage?: string;
+  usefulLinks?: Array<UsefulLink>;
+  
+  
+  // these may be necessary due to a strange quirk
+  // of angular and ngif
+  searchValue: string;
+  loadedComponents: LoadedComponents;
+  
+  
+  private overlayContainer: HTMLElement;
+  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+
 
   browseAll: string;
   application: string;
   chemicon: string;
   clasicBaseHref: string;
 
-  //Config for Adverse Event on Shiny Server
+  // Config for Adverse Event on Shiny Server
   adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
 
@@ -32,7 +59,12 @@ export class HomeComponent implements OnInit {
     private gaService: GoogleAnalyticsService,
     private configService: ConfigService,
     private authService: AuthService,
-    private router: Router
+    private substanceService: SubstanceService,
+    private router: Router,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer,
+    public utilsService: UtilsService,
+
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -40,19 +72,116 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.environment = this.configService.environment;
-    this.application = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_application.png`;
-    this.browseAll = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_browseall.png`;
-    this.chemicon = `${this.configService.environment.baseHref || '/'}assets/icons/home/icon_registersubstance.png`;
+    this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
+    this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
+    this.chemicon = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_registersubstance.png`;
+
     this.appId = this.configService.environment.appId;
+    this.bannerMessage = this.configService.configData.bannerMessage || null;
+    this.usefulLinks = this.configService.configData.usefulLinks || [];
+    this.homeHeader = this.configService.configData.homeHeader || null;
+    this.homeContents = this.configService.configData.homeContents || null;
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
+    // this code cause memory errors in the build process
+    /*let notempty = false;
+    for (const property in this.loadedComponents) {
+      if (this.loadedComponents[property] === true) {
+        notempty = true;
+      }
+    }
+    if (!notempty) {
+      this.loadedComponents = null;
+    }*/
+
+    let notempty = false;
+    if (this.loadedComponents) {
+      if (this.loadedComponents.applications) {
+        notempty = true;
+      } else if (this.loadedComponents.clinicaltrials) {
+        notempty = true;
+      } else if (this.loadedComponents.adverseevents) {
+        notempty = true;
+      } else if (this.loadedComponents.impurities) {
+        notempty = true;
+      } else if (this.loadedComponents.products) {
+        notempty = true;
+      }
+
+      if (!notempty) {
+        this.loadedComponents = null;
+      }
+    }
+
+    this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/`;
+
 
     this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
       this.isAuthenticated = response;
     });
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
-    this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'true';
+    this.customLinks = this.configService.configData.homeDynamicLinks || [];
+    this.customLinks.forEach (link => {
+      link.total = 0;
+      const searchStr = `${link.facetName}:${link.facetValue}`;
+      this.substanceService.searchSingleFacetSimpleCount(link.facetName, link.facetValue).pipe(take(1)).subscribe( response => {
+        if (response){
+        link.total = Number(response.total);
+        } else {
+          link.total = 0;
+        }
+      });
+    });
+    this.substanceService.getRecordCount().subscribe( response => {
+      this.total = response;
+    });
+   // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
+   this.isClosedWelcomeMessage = false;
 
     this.getAdverseEventShinyConfig();
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+  }
+ngAfterViewInit(){
+  this.processResponsiveness();
+  const openSubscription = this.matSideNav.openedStart.subscribe(() => {
+    this.utilsService.handleMatSidenavOpen(1100);
+  });
+  const closeSubscription = this.matSideNav.closedStart.subscribe(() => {
+    this.utilsService.handleMatSidenavClose();
+  });
+
+}
+
+@HostListener('window:resize', ['$event'])
+onResize() {
+  this.processResponsiveness();
+}
+
+private processResponsiveness = () => {
+  setTimeout(() => {
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
+      }
+    }
+  });
+}
+  openSideNav() {
+    this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
+    this.matSideNav.open();
+  }
+
+  routeToCustom(link) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: { 'facets': link.facetName + '*' + link.facetValue + '.true' }
+    };
+    this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
   closeWelcomeMessage(): void {
@@ -62,6 +191,45 @@ export class HomeComponent implements OnInit {
 
   browseSubstances(): void {
     this.router.navigate(['/browse-substance']);
+  }
+
+  openModal(templateRef, tile:UsefulLink) {
+
+    const dialogRef = this.dialog.open(templateRef, {
+      height: '200px',
+      width: '400px',
+      data: {
+        href: tile.href,
+        templateDescription: tile.templateDescription
+      }
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
+
+
+  increaseMenuZindex(): void {
+    this.overlayContainer.style.zIndex = '1001';
+  }
+
+  removeZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.navigateToSearchResults(searchValue);
+  }
+
+  navigateToSearchResults(searchTerm: string) {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: searchTerm ? { 'search': searchTerm } : null
+    };
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
   }
 
   getAdverseEventShinyConfig(): void {

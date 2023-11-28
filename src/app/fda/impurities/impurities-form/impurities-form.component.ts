@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
+import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ImpuritiesService } from '../service/impurities.service';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
-import { AuthService } from '@gsrs-core/auth/auth.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
@@ -10,10 +10,17 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import * as moment from 'moment';
+import { take, map } from 'rxjs/operators';
+import { DatePipe, formatDate } from '@angular/common';
+import { Title } from '@angular/platform-browser';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { FormBuilder } from '@angular/forms';
+import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
@@ -49,6 +56,8 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   substanceName: string;
   substanceNameHintMessage = '';
   panelExpanded = true;
+  downloadJsonHref: any;
+  jsonFileName: string;
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -63,10 +72,11 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private titleService: Title,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-
     const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
     });
@@ -84,24 +94,50 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           if (id !== this.id) {
             this.id = id;
             this.gaService.sendPageView(`Impurity Edit`);
+            this.titleService.setTitle(`Update Impurities`);
             this.getImpurities();
-            //   this.getVocabularies();
           }
-        } else {
+        } else { //Copy Impurities to register form
           this.title = 'Register Impurities';
-          setTimeout(() => {
+          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+          this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
+          if (action && action === 'import' && window.history.state) {
+            this.gaService.sendPageView(`Impurities Import`);
+            const record = window.history.state.record;
+            // this.imported = true;
+            // this.getDetailsFromImport(record.record);
+            // if ((record) && this.jsonValid(record)) {
+            const response = JSON.parse(record);
+            if (response) {
+              this.scrub(response);
+
+              this.impuritiesService.loadImpurities(response);
+              this.impurities = this.impuritiesService.impurities;
+
+              this.loadingService.setLoading(false);
+              this.isLoading = false;
+            }
+            //this.substanceFormService.loadSubstance(this.substanceClass, responseImport).pipe(take(1)).subscribe(() => {
+            // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+            // this.setFormSections(formSections[this.substanceClass]);
+            // });
+            //  }
+            //  }
+          } else if (this.id) { //copy
+            this.getImpurities('copy');
             this.gaService.sendPageView(`Impurities Register`);
-            this.impuritiesService.loadImpurities();
-            this.impurities = this.impuritiesService.impurities;
-
-            // this.impurities.substanceUuid = '479f1396-4958-4f59-9d41-0bd0468c8da7';
-
-            this.loadingService.setLoading(false);
-            this.isLoading = false;
-          });
+          } else {
+            setTimeout(() => {
+              this.gaService.sendPageView(`Impurities Register`);
+              this.titleService.setTitle(`Register Impurities`);
+              this.impuritiesService.loadImpurities();
+              this.impurities = this.impuritiesService.impurities;
+              this.loadingService.setLoading(false);
+              this.isLoading = false;
+            });
+          }
         }
       });
-
     this.subscriptions.push(routeSubscription);
   }
 
@@ -117,6 +153,11 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       const id = this.id.toString();
       const getImpuritySubscribe = this.impuritiesService.getImpurities(id).subscribe(response => {
         if (response) {
+
+          // before copying existing impurities, delete the id
+          if (newType && newType === 'copy') {
+            this.scrub(response);
+          }
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
 
@@ -265,6 +306,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
         if (response.id) {
+          this.impuritiesService.bypassUpdateCheck();
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
@@ -296,6 +338,51 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  addNewImpuritiesSubstance(event: Event) {
+    event.stopPropagation();
+
+    this.impuritiesService.addNewImpuritiesSubstance();
+  }
+
+  addNewImpuritiesTotal() {
+    this.impuritiesService.addNewImpuritiesTotal();
+  }
+
+  confirmDeleteImpurities() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete this Impurities?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteImpurities();
+      }
+    });
+  }
+
+  deleteImpurities(): void {
+    this.impuritiesService.deleteImpurities().subscribe(response => {
+      this.impuritiesService.bypassUpdateCheck();
+      this.displayMessageAfterDeleteImpurities();
+    }, (err) => {
+      console.log(err);
+    }
+    );
+  }
+
+  displayMessageAfterDeleteImpurities() {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: 'This impurities record was deleted successfully',
+        type: 'home'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/home']);
+    });
+  }
+
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -307,25 +394,121 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
-
   }
 
-  addNewImpuritiesSubstance(event: Event) {
-    event.stopPropagation();
+  saveJSON(): void {
+    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
+    let json = this.impurities;
+    // this.json = this.cleanObject(substanceCopy);
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
 
-    this.impuritiesService.addNewImpuritiesSubstance();
+    const date = new Date();
+    this.jsonFileName = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
-  addNewImpuritiesTotal() {
-    this.impuritiesService.addNewImpuritiesTotal();
+  importJSON(): void {
+    let data: any;
+    data = {
+      title: 'Impurities Record Import',
+      entity: 'Impurities',
+    };
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false,
+      data: data
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.loadingService.setLoading(true);
+        this.overlayContainer.style.zIndex = null;
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+        /* const read = JSON.parse(response);
+         if (this.id && read.uuid && this.id === read.uuid) {
+           this.substanceFormService.importSubstance(read, 'update');
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {
+         if ( read.substanceClass === this.substanceClass) {
+           this.imported = true;
+           this.substanceFormService.importSubstance(read);
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {*/
+        setTimeout(() => {
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          if (!this.id) {
+            // new record
+            this.router.navigateByUrl('/impurities/register?action=import', { state: { record: response } });
+          }
+        }, 1000);
+      }
+      // }
+      // }
+    });
   }
 
-  /*
-  panelOpened() {
-     (closed)="panelClosed()" (opened)="panelOpened()" 
+  scrub(oldraw: any): any {
+    const old = oldraw;
+    const idHolders = defiant.json.search(old, '//*[id]');
+    for (let i = 0; i < idHolders.length; i++) {
+      if (idHolders[i].id) {
+        delete idHolders[i].id;
+      }
+    }
+
+    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    for (let i = 0; i < createHolders.length; i++) {
+      delete createHolders[i].creationDate;
+    }
+
+    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    for (let i = 0; i < createdByHolders.length; i++) {
+      delete createdByHolders[i].createdBy;
+    }
+
+    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    for (let i = 0; i < modifyHolders.length; i++) {
+      delete modifyHolders[i].lastModifiedDate;
+    }
+
+    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    for (let i = 0; i < modifiedByHolders.length; i++) {
+      delete modifiedByHolders[i].modifiedBy;
+    }
+
+    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    for (let i = 0; i < intVersionHolders.length; i++) {
+      delete intVersionHolders[i].internalVersion;
+    }
+
+    delete old['creationDate'];
+    delete old['createdBy'];
+    delete old['modifiedBy'];
+    delete old['lastModifiedDate'];
+    delete old['internalVersion'];
+    delete old['$$update'];
+    delete old['_self'];
+
+    return old;
   }
 
-  panelClosed() {
+  updateDateTypeDate(event) {
+    const impDate = new Date(event);
+    // Adding one day since the Date object is decreasing one day.  moment.utc did not work.
+    this.impurities.dateTypeDate = moment(impDate).add(1, 'days').format('MM/DD/yyyy');
   }
-  */
+
 }

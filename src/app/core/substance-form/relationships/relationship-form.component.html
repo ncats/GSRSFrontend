@@ -15,7 +15,7 @@
   <div class="flex-column related-substance">
     <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
       eventCategory="substanceRelationshipRelatedSub" placeholder="Related Substance" [hideImage] = "!viewFull" header="Related Substance"
-      [subuuid]="relatedSubstanceUuid">
+      [subuuid]="relatedSubstanceUuid" [name] = "name">
     </app-substance-selector>
   </div>
   <div class="flex-column form-content">

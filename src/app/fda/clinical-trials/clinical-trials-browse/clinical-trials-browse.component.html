@@ -4,7 +4,7 @@
       (facetsParamsUpdated)="facetsParamsUpdated($event)"
       (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets"
-      configName="ctclinicaltrial"
+      configName="clinicaltrialsus"
       includeFacetSearch="true">
     </app-facets-manager>
   </mat-sidenav>
@@ -40,8 +40,8 @@
   <div>
     <p><strong>All</strong> - search in all indexed fields; wild cards work (e.g health*).</p>
     <p><strong>Title</strong> - search for full words contained in the title field.</p>
-    <p><strong>NCT Number</strong> - search for NCT Number exactly.</p>
-    <p><strong>UUID</strong> - search for substance UUID exactly.</p>
+    <p><strong>Trial Number</strong> - search for Trial Number exactly.</p>
+    <p><strong>Substance Key</strong> - search for Substance Key exactly.</p>
   </div>
 </mat-card>
 </div>
@@ -62,15 +62,15 @@
  <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-        <a class="clinical-trials-browse-edit1"  title="Edit in this tab" [routerLink]="['/edit-clinical-trial', element.nctNumber]" [queryParams]="{}" >Edit</a>&nbsp;<a class="clinical-trials-browse-edit2" target="_blank" title="Edit in new tab" [href]="'edit-clinical-trial/' + element.nctNumber">+</a>
+        <a class="clinical-trials-browse-edit1"  title="Edit in this tab" [routerLink]="['/edit-clinical-trial', element.trialNumber]" [queryParams]="{}" >Edit</a>&nbsp;<a class="clinical-trials-browse-edit2" target="_blank" title="Edit in new tab" [href]="'edit-clinical-trial/' + element.trialNumber">+</a>
     </td>
   </ng-container>
   
-<!-- nctNumber Column -->
-  <ng-container matColumnDef="nctNumber">
-    <th mat-header-cell *matHeaderCellDef>NCT Number</th>
+<!-- trialNumber Column -->
+  <ng-container matColumnDef="trialNumber">
+    <th mat-header-cell *matHeaderCellDef>Trial Number</th>
     <td mat-cell *matCellDef="let element">
-      <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + element.nctNumber">{{element.nctNumber}}</a>
+      <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + element.trialNumber">{{element.trialNumber}}</a>
     </td>
   </ng-container>
 
@@ -78,25 +78,8 @@
   <ng-container matColumnDef="title">
     <th mat-header-cell *matHeaderCellDef>Title</th>
     <td mat-cell *matCellDef="let element">
-      <mat-expansion-panel [disabled]="true" #mep="matExpansionPanel" class='clinical-trials-browse-peak-substances-expansion-panel'>
-        <mat-expansion-panel-header [collapsedHeight]="''" [expandedHeight]="''"> 
-          <div (click)="mep.expanded = !mep.expanded">{{element.title}} <span *ngIf="element.clinicalTrialDrug"> ({{element.clinicalTrialDrug.length}}) </span></div>
-        </mat-expansion-panel-header>
-<div class="clinical-trials-browse-substance-peak">
-<div *ngIf="element.clinicalTrialDrug">
-<div *ngFor="let item of element.clinicalTrialDrug">
-  <a target="_blank" [routerLink]="['/substances', item.substanceUuid]" >{{item.substanceDisplayName}}</a>
-</div>
-</div>
-<pre>
-<div *ngIf="element.clinicalTrialDrug"><div *ngFor="let item of element.clinicalTrialDrug">{{item.substanceDisplayName}}&#9;{{item.substanceUuid}}</div></div>
-</pre>
-<pre>
-<div *ngIf="element.clinicalTrialDrug"><span>{{lodash.map(element.clinicalTrialDrug, 'substanceDisplayName').join("; ")}}</span>&#9;<span>{{lodash.map(element.clinicalTrialDrug, 'substanceUuid').join("; ")}}</span></div>
-</pre>
-</div>
-      </mat-expansion-panel>
-  </td>
+      {{element.title}} <span *ngIf="element.clinicalTrialUSDrug"> ({{element.clinicalTrialUSDrug.length}}) </span>
+    </td>
   </ng-container>
 
   <!-- ID Column -->

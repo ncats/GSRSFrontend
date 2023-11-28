@@ -1,14 +1,23 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { ProductService } from '../../product/service/product.service';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { Sort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
-import { ConfigService } from '@gsrs-core/config';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
+import { FacetParam } from '@gsrs-core/facets-manager';
+import { LoadingService } from '@gsrs-core/loading/loading.service';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { productSearchSortValues } from '../../product/products-browse/product-search-sort-values';
 
 @Component({
   selector: 'app-substance-products',
@@ -26,6 +35,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   advDmeCount = 0;
   advCvmCount = 0;
   impuritiesCount = 0;
+  ssg4mCount = 0;
   provenance = '';
   provenanceList = '';
   datasourceList = '';
@@ -35,40 +45,66 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   foundProvenanceList = false;
   loadingComplete = false;
   substanceName = '';
-
+  public privateSearch?: string;
+  private privateFacetParams: FacetParam;
+  public privateSearchTerm?: string;
+  privateExport = false;
+  disableExport = false;
+  etag = '';
+  etagAllExport = '';
+  loadedComponents: LoadedComponents;
+  public sortValues = productSearchSortValues;
+  order = '$root_productNDC';
+  ascDescDir = 'desc';
   public displayedColumns: string[] = [
     'productNDC',
-    //  'name',
     'productName',
     'labelerName',
     'country',
     'status',
     'productNameType',
     'ingredientType',
-    'activeMoiety',
-    'applicationNumber',
+    'applicationNumber'
   ];
 
   constructor(
+    private router: Router,
     public gaService: GoogleAnalyticsService,
     private productService: ProductService,
     private configService: ConfigService,
-    public authService: AuthService
+    public authService: AuthService,
+    private loadingService: LoadingService,
+    private dialog: MatDialog
   ) {
     super(gaService, productService);
   }
 
   ngOnInit() {
-
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
 
     if (this.substance && this.substance.uuid) {
-      this.getBdnum();
+      this.getSubstanceKey();
+
       // Get Provenance List to Display in Tab
       this.getProductProvenanceList();
-      this.productListExportUrl();
+
+      this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
+      this.getSubstanceProducts(null, 'initial');
+
+      /*
+      this.searchControl.valueChanges.subscribe(value => {
+        if (value) {
+          this.privateSearch =  '\"' + value + '\" AND ' + 'root_productIngredientAllList_substanceUuid:\"'
+          + this.substance.uuid + '\" AND root_provenance:' + this.provenance;
+          this.getSubstanceProducts(null);
+        }
+      }, error => {
+        console.log(error);
+      });
+      */
     }
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -105,7 +141,11 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     this.impuritiesCount = $event;
   }
 
-  getBdnum() {
+  getSsg4mCount($event: any) {
+    this.ssg4mCount = $event;
+  }
+
+  getSubstanceKey() {
     if (this.substance) {
       // Get Substance Name
       this.substanceName = this.substance._name;
@@ -123,29 +163,82 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   getProductProvenanceList(): void {
     this.productService.getProductProvenanceList(this.substance.uuid).subscribe(results => {
-      this.provenanceList = results.provenanceList;
-      if (this.provenanceList.length > 0) {
+      this.provenanceList = results;
+      if (this.provenanceList && this.provenanceList.length > 0) {
         this.foundProvenanceList = true;
       }
       this.loadingComplete = true;
     });
   }
 
-  getSubstanceProducts(pageEvent?: PageEvent): void {
+  getSubstanceProducts(pageEvent?: PageEvent, searchType?: string) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
-    this.productService.getSubstanceProducts(this.substance.uuid, this.provenance, this.page, this.pageSize).subscribe(results => {
-      this.setResultData(results);
-      this.productCount = this.totalRecords;
-      this.loadingStatus = '';
+    const skip = this.page * this.pageSize;
+
+    const subscription = this.productService.getProducts(
+      this.order,
+      skip,
+      this.pageSize,
+      this.privateSearch,
+      this.privateFacetParams
+    ).subscribe(pagingResponse => {
+      if (searchType && searchType === 'initial') {
+        this.etagAllExport = pagingResponse.etag;
+      } else {
+        this.productService.totalRecords = pagingResponse.total;
+        this.setResultData(pagingResponse.content);
+        this.productCount = pagingResponse.total;
+        this.etag = pagingResponse.etag;
+      }
+    }, error => {
       this.showSpinner = false;  // Stop progress spinner
+      console.log('error');
+    }, () => {
+      this.showSpinner = false;  // Stop progress spinner
+      subscription.unsubscribe();
     });
+    this.loadingStatus = '';
+    // this.showSpinner = false;  // Stop progress spinner
   }
 
-  productListExportUrl() {
-    if (this.substance && this.substance.uuid) {
-      this.exportUrl = this.productService.getProductListExportUrl(this.substance.uuid);
+  export() {
+    if (this.etagAllExport) {
+      const extension = 'xlsx';
+      const url = this.getApiExportUrl(this.etagAllExport, extension);
+      if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'substanceProduct', 'entity': 'products', 'hideOptionButtons': true }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(response => {
+          // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.productCount
+                }
+              };
+              const params = { 'total': this.productCount };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+      }
     }
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.productService.getApiExportUrl(etag, extension);
   }
 
   tabSelected($event) {
@@ -162,6 +255,9 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
         // set the current result data to empty or null.
         this.paged = [];
 
+        this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"'
+          + this.substance.uuid + '\" AND root_provenance:' + this.provenance;
+
         this.getSubstanceProducts();
 
       }
@@ -169,5 +265,20 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     }
   }
 
+  sortData(sort: Sort) {
+    if (sort.active) {
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      this.ascDescDir = sort.direction;
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
+          }
+        }
+      });
+      this.getSubstanceProducts();
+    }
+    return;
+  }
 
 }

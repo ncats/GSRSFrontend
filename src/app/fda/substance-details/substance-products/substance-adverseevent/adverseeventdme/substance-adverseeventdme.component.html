@@ -1,11 +1,20 @@
 <div class="padtop5px padleft25px font15px colorblue">
   <b>Adverse Event DME</b>
   &nbsp;&nbsp;&nbsp;
+  <!--
   <a [href]="exportUrl" target="_blank" matTooltip='Adverse Event DME Records' *ngIf="totalRecords > 0">
     <button mat-icon-button color="primary">
       <mat-icon>arrow_downward</mat-icon>Export
     </button>
-  </a>  
+  </a>
+  -->
+  <!-- Export Button -->
+  <span class="export" *ngIf="isAdmin && adverseEventCount > 0">
+    <button matTooltip="Export Search Results" mat-button (click)="export()"
+      class="mat-button export-button mat-raised-button">
+      <mat-icon svgIcon="get_app"></mat-icon> Export
+    </button>
+  </span>
 </div>
 <!--
 <div class="flex-row">
@@ -17,41 +26,42 @@
 -->
 <div class="responsive mat-table-style">
 
-   <!-- Spinner -->
-   <div *ngIf="showSpinner" class="spinnerstyle">
+  <!-- SPINNER -->
+  <div *ngIf="showSpinner" class="spinnerstyle">
     <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
     </mat-progress-spinner>
   </div>
-  
-  <table mat-table [dataSource]="paged">
+
+  <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)" matSortActive="dmeCount"
+    matSortDirection="desc" matSortDisableClear>
 
     <ng-container matColumnDef="dmeReactions">
-      <th mat-header-cell *matHeaderCellDef> DME Reactions </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> DME Reactions </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.dmeReactions}} </td>
     </ng-container>
 
     <ng-container matColumnDef="ptTermMeddra">
-      <th mat-header-cell *matHeaderCellDef> PT Term Meddra </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Term Meddra </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.ptTermMeddra}} </td>
     </ng-container>
 
     <ng-container matColumnDef="caseCount">
-      <th mat-header-cell *matHeaderCellDef> Case Count </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Case Count </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.caseCount}} </td>
     </ng-container>
 
     <ng-container matColumnDef="dmeCount">
-      <th mat-header-cell *matHeaderCellDef> Dme Count </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Dme Count </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.dmeCount}} </td>
     </ng-container>
 
     <ng-container matColumnDef="dmeCountPercent">
-      <th mat-header-cell *matHeaderCellDef> Dme Count Percent </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Dme Count Percent </th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.dmeCountPercent}} </td>
     </ng-container>
 
     <ng-container matColumnDef="weightedAvgPrr">
-      <th mat-header-cell *matHeaderCellDef> Weighted Average PRR</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Weighted Average PRR</th>
       <td mat-cell *matCellDef="let adverse"> {{adverse.weightedAvgPrr | number : '.2-2'}} </td>
     </ng-container>
 
@@ -59,6 +69,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true"
-  (page)="getSubstanceAdverseEventDme($event)" [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator [length]="totalRecords" [pageSize]="5" showFirstLastButtons="true" (page)="getAdverseEventDme($event)"
+  [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

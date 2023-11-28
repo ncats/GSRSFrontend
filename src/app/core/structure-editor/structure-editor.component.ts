@@ -44,10 +44,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
   private jsdrawScriptUrls = [
-    `${environment.baseHref || '/'}assets/dojo/dojo.js`,
-    `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Pro.js`,
-    `${environment.baseHref || '/'}assets/jsdraw/Scilligence.JSDraw2.Resources.js`,
-    `${environment.baseHref || '/'}assets/jsdraw/JSDraw.extensions.js`
+    `${environment.baseHref || ''}assets/dojo/dojo.js`,
+    `${environment.baseHref || ''}assets/jsdraw/Scilligence.JSDraw2.Pro.js`,
+    `${environment.baseHref || ''}assets/jsdraw/Scilligence.JSDraw2.Resources.js`,
+    `${environment.baseHref || ''}assets/jsdraw/JSDraw.extensions.js`
 
   ];
   ketcherFilePath: string;
@@ -106,7 +106,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       window.addEventListener('drop', this.preventDrag);
       window.addEventListener('paste', this.checkPaste);
 
-      this.ketcherFilePath = `${environment.baseHref || '/'}assets/ketcher/ketcher.html`;
+      this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/ketcher.html`;
 
       this.structureEditor = environment.structureEditor;
 
@@ -245,8 +245,18 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   cleanStructure() {
-    const smiles = this.editor.getSmiles();
+    const molfile = this.editor.getMolfile();
 
+    if (molfile != null && molfile !== '') {
+      this.structureService.interpretStructure(molfile).pipe(take(1)).subscribe(response => {
+        if (response && response.structure && response.structure.smiles) {
+          this.cleanStructureSmiles(response.structure.smiles);
+        }
+      });
+    }
+  }
+
+  cleanStructureSmiles(smiles: string) {
     if (smiles != null && smiles !== '') {
       this.structureService.interpretStructure(smiles).pipe(take(1)).subscribe(response => {
         if (response && response.structure && response.structure.molfile) {
@@ -254,6 +264,18 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         }
       });
     }
+  }
+
+
+  standardize(standard: string): void {
+    this.loadingService.setLoading(true);
+    const mol = this.editor.getMolfile();
+    this.structureService.interpretStructure(mol, '', standard).pipe(take(1)).subscribe((response: any) => {
+      if (response && response.structure && response.structure.molfile) {
+        this.editor.setMolecule(response.structure.molfile);
+      }
+      this.loadingService.setLoading(false);
+    }, () => {this.loadingService.setLoading(false); });
   }
 
 }

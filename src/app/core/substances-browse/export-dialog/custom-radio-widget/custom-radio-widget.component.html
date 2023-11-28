@@ -1,0 +1,61 @@
+<div class="widget form-group" *ngIf = "!schema.CVDomain && !schema.enum" [ngClass] ="schema.visibleIf ? 'tabbed': ''" >
+	<label *ngIf="schema.title">{{schema.title}}
+        <sup *ngIf = "schema.comments && !schema.description"  ><mat-icon style ="height: 18px;" color="primary" svgIcon="help"   class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+
+    </label>
+  <span *ngIf="schema.description" class="formHelp">{{schema.description}}
+    <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+	</span>
+	<div [ngClass] = "schema.layout && schema.layout === 'horizontal' ? 'row-layout':''">
+	<div *ngFor="let option of schema.oneOf" class="radio">
+		<label class="horizontal control-label">
+			<input  [formControl]="control" [attr.name]="name" [attr.id]="id + '.' + option.enum[0]" value="{{option.enum[0]}}" type="radio"  [disableControl]="schema.readOnly||option.readOnly">
+			{{option.description? option.descripton : option.enum[0]}}
+		</label>
+	</div>
+</div>
+	<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control" [ngClass] ="schema.visibleIf ? 'tabbed': ''" >
+</div>
+
+<div class="widget form-group" *ngIf = "!schema.CVDomain && schema.enum" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'" >
+	<label *ngIf="schema.title">{{schema.title}}
+        <sup *ngIf = "schema.comments && !schema.description" ><mat-icon color="primary" style ="height: 18px;" svgIcon="help" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+
+    </label>
+  <span *ngIf="schema.description" class="formHelp">{{schema.description}}
+    <sup *ngIf = "schema.comments" ><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+
+	</span>
+	<div [ngClass] = "schema.layout && schema.layout === 'horizontal' ? 'row-layout':''">
+	<div *ngFor="let option of schema.enum" class="radio">
+		<label class="horizontal control-label">
+			<input  [formControl]="control" [attr.name]="name" [attr.id]="id + '.' + option" value="{{option}}" type="radio"  [disableControl]="schema.readOnly">
+			{{option}}
+		</label>
+	</div>
+</div>
+	<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control" [ngClass] ="schema.visibleIf ? 'tabbed': ''" >
+</div>
+
+<div class="widget form-group" *ngIf = "schema.CVDomain" [ngClass] = "schema.visibleIf ? 'indent': 'no-indent'" >
+	<label *ngIf="schema.title">{{schema.title}}
+        <sup *ngIf = "schema.comments && !schema.description"  [matTooltip] = "schema.comments"><mat-icon color="primary" style ="height: 18px;" svgIcon="help"  class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+
+    </label>
+  <span *ngIf="schema.description" class="formHelp">{{schema.description}}
+    <sup *ngIf = "schema.comments"  [matTooltip] = "schema.comments"><mat-icon style ="height: 18px;" svgIcon="help" color="primary" class = "help-icon" (click) = "openModal(info, schema.comments)"></mat-icon></sup>
+	</span>
+	<div [ngClass] = "schema.layout && schema.layout === 'horizontal' ? 'row-layout':''">
+	<div *ngFor="let option of options" class="radio">
+		<label class="horizontal control-label">
+			<input  [formControl]="control" [attr.name]="name" [attr.id]="id + '.' + option.display" value="{{option.value}}" type="radio"  [disableControl]="schema.readOnly||option.readOnly">
+			{{option.display}}
+		</label>
+	</div>
+	</div>
+	<input *ngIf="schema.readOnly" [attr.name]="name" type="hidden" [formControl]="control">
+</div>
+
+<ng-template #info let-data>
+    {{data.comment}}
+  </ng-template>

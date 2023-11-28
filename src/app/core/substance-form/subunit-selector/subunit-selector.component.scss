@@ -89,7 +89,7 @@
   padding-bottom: 20px;
 
   &:not(:last-child) {
-    border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+    border-bottom: solid 1px var(--box-shadow-color-3);
   }
 }
 
@@ -116,12 +116,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: var(--notif-backdrop-bg-color);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: #666;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {
@@ -168,7 +168,6 @@ width:100%;
 
 }
 
-
 .unit-tooltip {
   white-space: pre-line !important;
 }
@@ -184,54 +183,53 @@ width:100%;
 }
 
 .disulfide{
-  color:white;
-  background-color: #cca300;
+  color:var(--regular-white-color);
+  background-color: var(--disulfide-color);
 }
 
 .other{
-  color:white;
-  background-color:darkslateblue;
+  color:var(--regular-white-color);
+  background-color:var(--regular-darkslateblue-color);
 }
 
 .glycosylation{
-  color:white;
-  background-color:#608000;
+  color: var(--regular-white-color);
+  background-color:var(--glycosylation-color);
 }
 
 .N-Glycosylation{
-  color:white;
-  background-color:#0066cc;
+  color:var(--regular-white-color);
+  background-color:var(--n-glycosylation-color);
 }
 
 .C-Glycosylation{
-  color:white;
-  background-color:GRAY;
+  color:var(--regular-white-color);
+  background-color:var(--regular-grey-color);
 }
 
 .O-Glycosylation{
-  color:white;
-  //background-color:darkgoldenrod;
-  background-color:#ff6666;
+  color:var(--regular-white-color);
+  background-color:var(--o-glycosylation-color);
 }
 
 .feature{
-  border-top:1px solid magenta;
-  border-bottom: 1px solid magenta;
+  border-top:1px solid var(--regular-magenta-color);
+  border-bottom: 1px solid var(--regular-magenta-color);
 }
 
 .modification{
-  color:white;
-  background-color:darkgreen;
+  color:var(--regular-white-color);
+  background-color:var(--regular-darkgreen-color);
 }
 
 .chosen {
-  color:black !important;
-  background-color:turquoise !important;
+  color:var(--regular-black-color) !important;
+  background-color:var(--regular-turquoise-color) !important;
 }
 
 .new-disulfide {
-  color:black !important;
-  background-color:lightskyblue !important;
+  color:var(--regular-black-color) !important;
+  background-color:var(--regular-lightskyblue-color) !important;
 }
 
 .selectedSite{
@@ -264,7 +262,7 @@ width:100%;
     font-size: 11px;
     padding-bottom: 3.5px;
     line-height: 11px;
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--dark-label-color);
     font-weight: 400;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     width: 55px;
@@ -286,7 +284,7 @@ width:100%;
 
 .featlink {
   padding-right:7px;
-  color: #4793d1;
+  color: var(--primary-color);
 }
 .featlink a:hover {
   font-weight:bold;
@@ -329,7 +327,6 @@ width:100%;
   }
 }
 
-
 .clear-button {
   width:40px;
 }
@@ -343,15 +340,13 @@ width:100%;
 }
 
 .cys {
-  color: black;
+  color: var(--regular-black-color);
   font-weight: 500;
 }
 
 .unavailable {
-  color:lightgrey!important;
+  color:var(--regular-lightgray-color) !important;
 }
-
-
 
 .invalid_blink {
   animation: blinker .5s linear 1;
@@ -362,25 +357,20 @@ width:100%;
   }
 }
 
-
 .invalid {
-  border: solid red;
-  color: red;
+  border: solid var(--regular-red-color);
+  color: var(--regular-red-color);
 }
 
 .valid {
-  color:black;
+  color:var(--regular-black-color);
 }
 
 .invalid-cysteine {
-  color:red;
+  color:var(--regular-red-color);
 }
 .last-section {
   flex-basis: 0!important;
-}
-
-.last-units {
-
 }
 
 .note {

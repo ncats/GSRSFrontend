@@ -1,16 +1,32 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ConfigService } from '@gsrs-core/config';
+import { ConfigService } from '../config/config.service';
 
 @Pipe({
   name: 'facetDisplay'
 })
 export class FacetDisplayPipe implements PipeTransform {
-  constructor(public configService: ConfigService) {
 
-  }
+  constructor(
+    public configService: ConfigService
+  ) { }
 
   transform(name: any, args?: any): any {
+    //TODO: move this snippet to the constructor to be run only once
+    let codeTerm = 'UNII';
+    if (this.configService.configData && this.configService.configData.approvalCodeName) {
+	     codeTerm = this.configService.configData.approvalCodeName;
+	  }
+
+
+
     if (args) {
+      if (args === 'userList') {
+        if (name.includes(':')){
+          return name.split(':')[1];
+        } else {
+          return name;
+        }
+      }
       if (args === 'types') {
         if (name === 'structurallyDiverse') {
           return 'Structurally Diverse';
@@ -25,7 +41,7 @@ export class FacetDisplayPipe implements PipeTransform {
         }
       } else if (args === 'status') {
         if (name === 'approved') {
-          return 'Validated (UNII)';
+          return 'Validated (' + codeTerm + ')';
         } else if (name === 'non-approved') {
           return 'non-Validated';
         }
@@ -47,13 +63,13 @@ export class FacetDisplayPipe implements PipeTransform {
       return 'Stereochemistry';
     }
     if (name === 'root_lastEdited') {
-      return 'Last Edited';
+      return 'Last Edited Date';
     }
     if (name === 'root_approved') {
-      return 'Last Validated';
+      return 'Last Validated Date';
     }
-    if (name === 'root_approved') {
-      return 'Last Validated';
+    if (name === 'root_created') {
+      return 'Created Date';
     }
     if (name === 'Approved By') {
       return 'Validated By';
@@ -67,8 +83,27 @@ export class FacetDisplayPipe implements PipeTransform {
     if (name === 'GInAS Tag') {
       return 'Source Tag';
     }
-  
+
+    if (name === 'GInAS Domain') {
+      return 'Domain';
+    }
+    if (args === 'relationships') {
+      if (name.indexOf('->') >= 0) {
+        let temp = name.split ('->');
+        if (temp[0].trim() === 'PARENT') {
+          return temp[1].trim() + ' (PARENT)';
+        } else {
+          return temp[0].trim() + ' -> ' + temp[1].trim();
+        }
+      }
+    }
+    if (name === 'root_submitDate') {
+      return 'Submit Date';
+    }
+
     return name.trim();
   }
+
+
 
 }

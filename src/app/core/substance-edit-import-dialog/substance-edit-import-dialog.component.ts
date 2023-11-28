@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 @Component({
@@ -13,16 +13,25 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   loaded = false;
   record: any;
   filename: string;
+  pastedJSON: string;
+  uploaded = false;
+  title = 'Substance Import';
+  entity = 'Substance';
 
   constructor(
     private router: Router,
-    public dialogRef: MatDialogRef<SubstanceEditImportDialogComponent>
-
+    public dialogRef: MatDialogRef<SubstanceEditImportDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit() {
+    if (this.data) {
+      if (this.data.title) {
+        this.title = this.data.title;
+        this.entity = this.data.entity;
+      }
+    }
   }
-
 
   uploadFile(event) {
     if (event.target.files.length !== 1) {
@@ -36,7 +45,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         const response = reader.result.toString();
         if (this.jsonValid(response)) {
           const read = JSON.parse(response);
-          if (!read['substanceClass']) {
+          if (!read['substanceClass'] && this.entity === 'Substance') {
             this.message = 'Error: Invalid JSON format';
             this.loaded = false;
           } else {
@@ -50,12 +59,37 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         }
       };
       reader.readAsText(event.target.files[0]);
+      this.uploaded = true;
     }
   }
 
   useFile() {
+    if (!this.uploaded && this.pastedJSON) {
+        const read = JSON.parse(this.pastedJSON);
+        if (!read['substanceClass']) {
+          this.message = 'Error: Invalid JSON format';
+          this.loaded = false;
+        } else {
+          this.loaded = true;
+          this.record = this.pastedJSON;
+          this.message = '';
+        }
+    }
     this.dialogRef.close(this.record);
   }
+
+
+  checkLoaded() {
+    this.loaded = true;
+    try {
+      JSON.parse(this.pastedJSON);
+      this.message = '';
+  } catch (e) {
+    this.message = 'Error: Invalid JSON format in pasted string';
+    this.loaded = false;
+  }
+}
+
 
   openInput(): void {
     document.getElementById('fileInput').click();

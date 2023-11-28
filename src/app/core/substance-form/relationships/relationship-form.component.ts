@@ -17,6 +17,7 @@ export class RelationshipFormComponent implements OnInit {
   @Output() relationshipDeleted = new EventEmitter<SubstanceRelationship>();
   deleteTimer: any;
   viewFull = true;
+  name?: string;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -45,6 +46,7 @@ export class RelationshipFormComponent implements OnInit {
     }
     this.relatedSubstanceUuid = this.privateRelationship.relatedSubstance && this.privateRelationship.relatedSubstance.refuuid || '';
     this.mediatorSubstanceUuid = this.privateRelationship.mediatorSubstance && this.privateRelationship.mediatorSubstance.refuuid || '';
+    this.name = this.privateRelationship.relatedSubstance.refPname? this.privateRelationship.relatedSubstance.refPname : this.privateRelationship.relatedSubstance.name;
   }
 
   get relationship(): SubstanceRelationship {
@@ -88,6 +90,7 @@ export class RelationshipFormComponent implements OnInit {
   }
 
   mediatorSubstanceUpdated(substance: SubstanceSummary): void {
+    if ( substance !== null) {
     const relatedSubstance:  MediatorSubstance = {
       refPname: substance._name,
       refuuid: substance.uuid,
@@ -95,5 +98,8 @@ export class RelationshipFormComponent implements OnInit {
       approvalID: substance.approvalID
     };
     this.relationship.mediatorSubstance = relatedSubstance;
+  } else {
+    this.relationship.mediatorSubstance = {};
   }
+}
 }

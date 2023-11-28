@@ -1,0 +1,178 @@
+.form-container {
+  padding: 5px 10px 12px 10px;
+  position: relative;
+  /*border: 1px solid var(--pale-border-color-rgb);*/
+}
+
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: var(--notif-backdrop-bg-color);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--notif-backdrop-color);
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+      padding: 0 10px 8px 0;
+  }
+
+  .col {
+      flex-grow: 1;
+      padding-right: 25px;
+  }
+
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); // 1 column
+    margin-right: 20px;
+  }
+}
+
+.verticaltop {
+  vertical-align: top;
+}
+
+.references-container {
+  width: 100%;
+}
+
+::ng-deep .selected-substance {
+  display: flex;
+  flex-direction: column;
+  text-align: left !important;
+  position: relative;
+  img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-width: 220px;
+  }
+}
+
+.divflex {
+  display: flex;
+}
+
+.bordergray {
+  border: 1px solid var(--regular-grey-color);
+}
+
+.fontsize18px {
+  font-size: 18px;
+}
+
+.margintopneg30px {
+  margin-top: -30px;
+}
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.margintop20px {
+  margin-top: 20px;
+}
+
+.marginleftneg10px {
+  margin-left: -10px;
+}
+
+.marginleftneg15px {
+  margin-left: -15px;
+}
+
+.marginleft45px {
+  margin-left: 45px;
+}
+
+.marginleft50px {
+  margin-left: 50px;
+}
+
+.padleftneg10 {
+  padding-left: -10px;
+}
+
+.padleft15px {
+  padding-left: 15px;
+}
+
+.padtop10px {
+  padding-top: 10px;
+}
+
+.height40px {
+  height: 40px;
+}
+
+.font11px {
+  font-size: 11px;
+}
+
+.width300px {
+  width: 300px;
+}
+
+.width80percent {
+  width: 80%;
+}
+
+.button-delete {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -15px;
+}
+
+.colorred {
+  color: red;
+}
+
+hr.style {
+  border: 1px solid rgb(111, 111, 111);
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.related-substance {
+  min-width: 310px;
+  max-width: 310px;
+  /*
+  width: 300px;
+  max-width: 300px;
+  */
+}
+
+/*
+.related-substance {
+  min-width: 387px;
+  max-width: 387px;
+}
+*/
+
+.amount {
+  width: 100%;
+  display: flex;
+}
+
+.amount-display {
+  padding-top:11px;
+}
+
+.middle-fill {
+  flex: 1 1 auto;
+}

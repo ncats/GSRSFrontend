@@ -4,11 +4,10 @@
   flex-direction: column;
   top: 64px;
   width: 100%;
-  background-color: white;
+  background-color: var(--regular-white-color);
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
-  z-index: 1001;
+  box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);  z-index: 1001;
 }
 
 .form-content-container {
@@ -35,7 +34,7 @@
   font-size: 18px;
   font-weight: 700px;
   font-family: Arial, Helvetica, sans-serif;
-  color: blue;
+  color: var(--regular-blue-color);
 
   /*padding-left: 70px; */
 }
@@ -80,7 +79,7 @@
 
 .col-6-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-2-1 {
   width: calc((100% - 20px * 1) / 2);
@@ -89,16 +88,25 @@
 
 .col-2-1:last-child {
   margin-right: 0px;
-}  
+}
+
+.col-3-1 {
+  width: calc((100% - 25px * 2) / 3);
+  margin-right: 25px;
+}
+
+.col-3-1:last-child {
+  margin-right: 0px;
+}
 
 .col-5-1 {
-  width: calc((100% - 30px * 4) / 5); 
+  width: calc((100% - 30px * 4) / 5);
   margin-right: 30px;
 }
 
 .col-5-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-4-1 {
   width: calc((100% - 30px * 3) / 4);
@@ -107,7 +115,7 @@
 
 .col-4-1:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-4 {
   width: calc((100% - 20px) / (6/4));
@@ -116,7 +124,7 @@
 
 .col-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-5 {
   width: calc((100% - 10px) / (6/5));
@@ -125,7 +133,7 @@
 
 .col-5:last-child {
   margin-right: 0px;
-}  
+}
 
 .col-5-more {
   width: calc((100% + 100px) / (6/5));
@@ -178,7 +186,7 @@
 .actions-container {
   max-width: 1028px;
   width: 100%;
-  background-color: white;
+  background-color: var(--regular-white-color);
   padding: 10px;
   display: flex;
 }
@@ -198,7 +206,7 @@
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: white;
+  background-color: var(--regular-white-color);
   display: flex;
   flex-direction: column;
 
@@ -236,16 +244,15 @@
   }
 
   .warning-message {
-    color: #8a6d3b;
-    background-color: #fcf8e3;
+    color: var(--warning-dialog-color);
+    background-color: var(--warning-dialog-bg-color);
 
   }
 
   .error-message {
-    color: #a94442;
-    background-color: #f2dede;
+    color: var(--error-dialog-color);
+    background-color: var(--error-dialog-bg-color);
   }
-
 }
 
 .details-container {
@@ -327,19 +334,19 @@ marginleftneg7px {
 }
 
 .bordergray {
-  border: 1px solid gray;
+  border: 1px solid var(--regular-grey-color);
 }
 
 .borderblue {
-  border: 2px solid rgb(70, 101, 194);
+  border: 2px solid var(--bluish-purple-color);
 }
 
 .bordergreen {
-  border: 1px solid green;
+  border: 1px solid var(--regular-green-color);
 }
 
 .borderbottom {
-  border-bottom: 2px solid blue;
+  border-bottom: 2px solid var(--regular-blue-color);
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -356,20 +363,24 @@ marginleftneg7px {
   width: 25%;
 }
 
+.width55percent {
+  width: 55%;
+}
+
 .width75percent {
   width: 75%;
 }
 
 .colorgray {
-  color: gray;
+  color: var(--regular-grey-color);
 }
 
 .colorred {
-  color: red;
+  color: var(--regular-red-color);
 }
 
 .colorblue {
-  color: blue;
+  color: var(--regular-blue-color);
 }
 
 .font11px {
@@ -392,14 +403,14 @@ marginleftneg7px {
   float: left;
 }
 
-.disabled { 
-  cursor: not-allowed; 
-} 
-
-.disabledfield { 
+.disabled {
   cursor: not-allowed;
-  color: red; 
-} 
+}
+
+.disabledfield {
+  cursor: not-allowed;
+  color: var(--regular-red-color);
+}
 
 /* CV INPUT OVERWRITE WIDTH */
 .cvwidth {
@@ -416,51 +427,51 @@ marginleftneg7px {
 
   /* OVERWRITE MATERIAL INPUT FIELDS */
   .mat-form-field-infix {
-    color: blue;
+    color: var(--regular-blue-color);
   }
 
   .mat-select-value {
-    color: blue;
-  }  
+    color: var(--regular-blue-color);
+  }
 
   .mat-form-field-label {
-    color: rgb(127, 127, 133) !important;
+    color: var(--mat-form-field-label-color) !important;
   }
 
   .mat-form-field-underline {
-    background-color: rgb(68, 68, 218) !important;
-  } 
+    background-color: var(--mat-form-field-underline-bg-color) !important;
+  }
 
   /*Focused: change color of label*/
   .mat-focused .mat-form-field-label {
-    color: rgb(70, 116, 106) !important;
+    color: var(--mat-form-field-focused-color) !important;
   }
 
   /*Focused: change color of underline*/
   .mat-form-field-ripple {
-    background-color: rgb(70, 116, 106) !important;;
-  } 
+    background-color: var(--mat-form-field-focused-color) !important;;
+  }
 
-  .mat-form-field-disabled .mat-form-field-underline 
-  { 
-    background-image: linear-gradient( to right, rgba(0, 0, 0, 1) 0, rgba(0, 0, 0, 0.42) 10%, #c2c7cc 0 ) !important; 
+  .mat-form-field-disabled .mat-form-field-underline
+  {
+    background-image: linear-gradient( to right, var(--img-linear-gradient-start-color) 0, var(--textarea-dark-border-color) 10%, var(--img-linear-gradient-color) 0 ) !important;
     background-size: 1px 100% !important;
-    background-repeat: repeat-x !important; 
+    background-repeat: repeat-x !important;
     cursor: not-allowed;
-  } 
+  }
 
   .mat-form-field-disabled:hover {
     cursor: not-allowed;
   }
 
   mat-hint {
-    color: red !important;
+    color: var(--regular-red-color) !important;
   }
-  
+
 }
 
 .errortext {
-  color: red;
+  color: var(--regular-red-color);
   font-size: 11px;
 }
 
@@ -476,8 +487,8 @@ marginleftneg7px {
 .tabStyle {
   width: 120px;
   height: 30px;
-  border: 1px solid gray;
-  background: #cde3fd;
+  border: 1px solid var(--regular-grey-color);
+  background: var(--tabstyle-bg-color-4);
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topleft: 5px;
@@ -490,8 +501,21 @@ marginleftneg7px {
   font-size: 14px;
   font-weight: bold;
   font-family: Verdana;
-  color: #0857d6;
+  color: var(--primary-title-color);
   padding-left: 30px;
   padding-top: 5px;
   padding-right: 5px;
+}
+
+.top-search {
+  border: 1px solid red;
+  width: 50px;
+  max-width: 50px;
+
+  ::ng-deep .mat-form-field {
+
+    .mat-form-field-label {
+      font-size: 16px;
+    }
+  }
 }

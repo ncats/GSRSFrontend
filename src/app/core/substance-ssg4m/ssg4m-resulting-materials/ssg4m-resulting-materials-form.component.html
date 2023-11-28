@@ -1,0 +1,129 @@
+<div *ngIf="resultingMaterialIndex > 0">
+  <hr class="style">
+</div>
+
+<div class="form-container">
+  <div *ngIf="resultingMaterial.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+
+  <div class="button-delete">
+    <!-- Copy Resulting Material Button -->
+    <button mat-icon-button matTooltip=" Copy this Resulting Material to Starting Material in next Step"
+      (click)="copyResultingToStarting()">
+      <mat-icon class="colorbluefda" svgIcon="file_copy"></mat-icon>
+    </button>
+
+    <!-- Delete Resulting Material Button -->
+    <button mat-icon-button matTooltip="Delete Resulting Material {{(resultingMaterialIndex+1)}}"
+      (click)="confirmDeleteResultingMaterial()">
+      <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+    </button>
+  </div>
+
+  <div class="divflex" style="vertical-align:top;">
+    <!-- FIRST COLUMN START -->
+    <div>
+      <div class="padtop10px related-substance"
+        *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
+        <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+          eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header=""
+          [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+        </app-substance-selector>
+      </div>
+    </div> <!-- FIRST COLUMN END -->
+
+    <!-- SECOND COLUMN START -->
+    <div class="width80percent">
+      <div class="form-row">
+        <mat-form-field class="col"
+          *ngIf="configSettingsDisplay['verbatimName'] || (configSettingsDisplay['verbatimName'] === undefined && true)">
+          <input matInput placeholder="Material Display Name" [(ngModel)]="resultingMaterial.verbatimName"
+            name="resultingMaterial.verbatimName" />
+        </mat-form-field>
+
+        <app-cv-input class="col"
+          *ngIf="configSettingsDisplay['substanceRole'] || (configSettingsDisplay['substanceRole'] === undefined && true)"
+          domain="SSG_SUBSTANCE_ROLE" required='true' title="Substance Role" [model]="resultingMaterial.substanceRole"
+          (valueChange)="updateSubstanceRole($event)"></app-cv-input>
+      </div> <!-- form row -->
+
+      <div class="form-row">
+        <app-cv-input class="col"
+          *ngIf="configSettingsDisplay['substanceGrade'] || (configSettingsDisplay['substanceGrade'] === undefined && true)"
+          domain="SSG_SUBSTANCE_GRADE" title="Substance Grade" [model]="resultingMaterial.substanceGrade"
+          (valueChange)="updateSubstanceGrade($event)">
+        </app-cv-input>
+
+        <mat-form-field class="col"
+          *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && showAdvancedSettings)">
+          <textarea matInput placeholder="Comments" [(ngModel)]="resultingMaterial.comments"
+            name="resultingMaterial.comments" rows="1"></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- Amount -->
+      <div class="form-row">
+        <div class='col margintop10px'
+          *ngIf="configSettingsDisplay['amount'] || (configSettingsDisplay['amount'] === undefined && showAdvancedSettings)">
+          <div class="divflex">
+            <div class="label amt-label">
+              Amount
+              <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
+                <mat-icon svgIcon="add_circle_outline"></mat-icon>
+              </button>
+            </div>
+            <div class="padleft15px amount-display">
+              <div *ngIf="resultingMaterial.amount">
+                {{displayAmount(resultingMaterial.amount)}}
+              </div>
+            </div>
+          </div> <!-- divflex -->
+        </div>
+      </div>
+      <!-- Amount End -->
+
+      <!-- Acceptance Criteria Config, Add button -->
+      <div
+        *ngIf="configSettingsDisplay['acceptanceCriteria'] || (configSettingsDisplay['acceptanceCriteria'] === undefined && true)">
+        <br>
+        <b>Acceptance Criterias: </b>&nbsp;
+        <button mat-raised-button color="primary" class="" matTooltip="Add Acceptance Criteria"
+          (click)="addAcceptanceCriteria(processIndex, siteIndex, stageIndex)">
+          <mat-icon>add_circle_outline</mat-icon>Add Acceptance Criteria
+        </button>
+
+        <!-- Acceptance Criteria Loop -->
+        <div *ngIf="resultingMaterial.acceptanceCriterias != null">
+          <div class="marginbottom10px"
+            *ngFor="let acceptanceCriteria of resultingMaterial.acceptanceCriterias; let acceptanceIndex = index">
+            <div class="form-row">
+              <mat-form-field class="col">
+                <input matInput placeholder="Acceptance Criteria" [(ngModel)]="acceptanceCriteria.acceptanceCriteria"
+                  name="resultingMaterial.acceptanceCriteria" />
+              </mat-form-field>
+
+              <app-cv-input class="col" domain="SSG_ACCEPTANCE_CRITERIA_TYPE" title="Acceptance Criteria Type"
+                [model]="acceptanceCriteria.acceptanceCriteriaType"
+                (valueChange)="updateAcceptanceCriteriaType($event, acceptanceIndex)">
+              </app-cv-input>
+
+              <div class="button-delete">
+                <button mat-icon-button matTooltip="Delete Manufacturer Details{{(acceptanceIndex+1)}}"
+                  (click)="confirmDeleteAcceptanceCriteria(acceptanceIndex)">
+                  <mat-icon class="colorred" svgIcon="delete_forever"></mat-icon>
+                </button>
+              </div>
+            </div>
+          </div> <!-- loop Acceptance Criteria -->
+        </div>
+      </div> <!-- Acceptance Criteria Config -->
+
+
+    </div> <!-- SECOND COLUMN -->
+  </div> <!-- divflex -->
+
+</div>

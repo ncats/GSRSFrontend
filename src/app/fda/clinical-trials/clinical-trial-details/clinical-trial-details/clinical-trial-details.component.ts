@@ -40,7 +40,7 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
-    this.flagIconSrcPath = `${this.configService.environment.baseHref || '/'}assets/icons/fda/united-states.svg`;
+    this.flagIconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/united-states.svg`;
 
   }
 

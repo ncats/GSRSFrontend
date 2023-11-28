@@ -1,0 +1,286 @@
+<div class="div-center margintop50px">
+  <div class="div-flex">
+    <!-- <div class="title">
+      Advanced Search
+    </div> -->
+    <h2 class="title">
+      Advanced Search
+    </h2>
+    <div class="margintop30px marginleft200px">
+      <a [routerLink]="['/structure-search']">
+        <span class="font12px">Structure Search</span>
+      </a>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <a [routerLink]="['/sequence-search']">
+        <span class="font12px">Sequence Search</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Search Button -->
+  <div class="search-button">
+    <div>
+      <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <mat-tab-group class="tab-style margintop30px" [selectedIndex]="tabSelectedIndex"
+    (selectedTabChange)="tabSelectedUpdated($event)">
+    <mat-tab label="Substance">
+      <ng-template mat-tab-label>
+        <div>Substance<br>
+          <div class="font12px">
+            ({{substanceCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Application" *ngIf="loadedComponents && loadedComponents.applications">
+      <ng-template mat-tab-label>
+        <div>Application<br>
+          <!--
+          <div [ngClass]="category === 'Application' ? 'font12px colorwhite' : 'font12px colorblack'">
+          -->
+          <div class="font12px">
+            ({{applicationCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="Product" *ngIf="loadedComponents && loadedComponents.products">
+      <ng-template mat-tab-label>
+        <div>Product<br>
+          <div class="font12px">
+            ({{productCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <!-- Commenting Clinical Trial tabe for 3.0, will work on it in future release. The browse clinical trial not using
+        the same search mechanism as other browsers  -->
+    <!--
+    <mat-tab label="Clinical Trial" *ngIf="loadedComponents && loadedComponents.clinicaltrials">
+      <ng-template mat-tab-label>
+        <div>Clinical Trial<br>
+          <div class="font12px">
+            ({{clinicalTrialCount}})
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    -->
+
+    <mat-tab label="Adverse Event" *ngIf="loadedComponents && loadedComponents.adverseevents">
+      <ng-template mat-tab-label>
+        <div>Adverse Event<br>
+          <div class="font12px">
+            PT ({{adverseEventPtCount}}) &nbsp; DME ({{adverseEventDmeCount}}) &nbsp; CVM ({{adverseEventCvmCount}})
+          </div>
+        </div>
+      </ng-template>
+      <br>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <mat-card>
+    <mat-card-title>
+    </mat-card-title>
+    <mat-card-content>
+      <div class="builder-container">
+        <div class="builder-row"
+          *ngFor="let queryStatement of queryStatements; index as index, first as isFirst, last as isLast">
+          <div class="query-statement-container">
+            <app-advanced-query-statement [category]="category" [queryStatementHash]="queryStatement.queryHash"
+              [index]="index" [queryableDictionary]="queryableSubstanceDict" [queryableOptions]="displayProperties"
+              [queryableOptionsCommon]="displayPropertiesCommon" (queryUpdated)="queryUpdated($event, index)"
+              (processSearchOut)="processSearchOut()">
+            </app-advanced-query-statement>
+          </div>
+
+          <div class="actions-container">
+            <div class="button-container">
+              <button *ngIf="!isFirst || queryStatements.length > 1" mat-icon-button aria-label="remove query statement"
+                (click)="removeQueryStatement(index)">
+                <mat-icon svgIcon="remove_circle_outline"></mat-icon>
+              </button>
+            </div>
+
+            <div class="button-container">
+              <button *ngIf="isLast" mat-icon-button aria-label="add query statement" (click)="addQueryStatement()">
+                <mat-icon svgIcon="add_circle_outline"></mat-icon>
+              </button>
+            </div>
+
+            <!--
+              <div class="query-builder-actions" *ngIf="isFirst">
+                <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
+              </div>
+              -->
+          </div>
+        </div>
+      </div>
+
+      <div class="titlequery" *ngIf="queryDisplay">
+        Query
+      </div>
+      <div class="query-container" *ngIf="queryDisplay">
+        <div class="query-value">
+          {{queryDisplay}}
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+  <!-- FACET VIEW/DISPLAY -->
+  <mat-expansion-panel [expanded]="false" class="margintop10px width100percent" *ngIf="advancedSearchFacetDisplay">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="colorgray"><b>Filter by <span class="colororange">
+              {{category}}</span> Facets({{numFacetsLoaded}})</b>
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="div-flex">
+      <!--
+      <div class="colorgray"><b>Filter by <span class="colororange">
+            {{category}}</span> Facets({{numFacetsLoaded}})</b>
+      </div>
+      -->
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="Search Facet Name" [(ngModel)]="facetNameText" name="facetNameText" />
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="category === 'Substance'">
+        <mat-form-field>
+          <mat-label>Facet View:</mat-label>
+          <mat-select [formControl]="facetViewControl" (selectionChange)="facetViewChange($event)">
+            <mat-option *ngFor="let option of facetViewCategory" [value]="option">
+              {{option}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="align-right">
+        <button class="bordergray" mat-flat-button (click)="togglePanelExpand()">{{panelExpanded? 'Collapse':'Expand'}}
+          All</button>
+      </div>
+    </div>
+    <br>
+
+    <!-- Spinner -->
+    <div *ngIf="showSpinner" class="spinnerstyle">
+      <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
+      </mat-progress-spinner>
+    </div>
+    <div>
+      <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+        [rawFacets]="rawFacets" [configName]="facetKey" includeFacetSearch="true"
+        [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
+        [panelExpanded]="panelExpanded" [facetNameText]="facetNameText" calledFrom="advancedsearch">
+      </app-facets-manager>
+    </div>
+  </mat-expansion-panel>
+
+
+
+  <!--
+  <app-structure-search></app-structure-search>
+  -->
+  <!-- ****************************************************** -->
+  <!-- Structure Editor Begin -->
+
+  <!-- Show Structure Search only for Substance Now -->
+  <div class="width100percent">
+    <div class="panel-style" *ngIf="category === 'Substance'">
+      <mat-expansion-panel [expanded]="true" class="panel-style width100percent">
+        <mat-expansion-panel-header class="">
+          <mat-panel-title class="margintop12px">
+            AND Search Structure
+          </mat-panel-title>
+          <mat-panel-description class="marginleft25px">
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="search-content-container" #contentContainer>
+          <mat-card>
+            <div class="structure-editor-actions-container">
+              <div class="editor-container">
+                <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)">
+                </app-structure-editor>
+              </div>
+              <div class="search-actions">
+                <div class="two">
+                  <mat-form-field class="search-type-select">
+                    <mat-select placeholder="Search type" (selectionChange)="searchTypeSelected($event)"
+                      [formControl]="searchTypeControl" value="substructure">
+                      <mat-option value="substructure">
+                        Substructure
+                      </mat-option>
+                      <mat-option value="similarity">
+                        Similarity
+                      </mat-option>
+                      <mat-option value="exact">
+                        Exact
+                      </mat-option>
+                      <mat-option value="flex">
+                        Flex
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
+                    <div>Similarity cutoff (tanimoto)</div>
+                    <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff"
+                      (input)="searchCutoffChanged($event)"></mat-slider>
+                    <div>{{similarityCutoff}}</div>
+                  </div>
+                </div>
+
+                <!---
+              <div class="action-button-container three">
+                <button class="search-button" name="search" mat-raised-button color="primary"
+                  (click)="searchStructure()">Search</button>
+              </div>
+              <br>
+              -->
+                <div class="action-button-container one">
+                  <button class="import-button" name="export" mat-raised-button color="primary"
+                    (click)="openStructureImportDialog()">Import</button>
+                </div>
+                <div class="action-button-container one">
+                  <button class="export-button" name="import" mat-raised-button color="primary"
+                    (click)="openStructureExportDialog()">Export</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4>
+                Get Structure From Name
+              </h4>
+              <app-name-resolver (structureSelected)="nameResolved($event)"></app-name-resolver>
+            </div>
+          </mat-card>
+        </div>
+      </mat-expansion-panel>
+    </div> <!-- Show Structure only for Substance now -->
+    <!-- Structure Editor End -->
+  </div>
+
+  <!-- Search Button -->
+  <div class="search-button">
+    <div>
+      <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
+    </div>
+    <div (keyup.enter)="processSearch()"></div>
+  </div>
+
+</div>
+<br><br><br>

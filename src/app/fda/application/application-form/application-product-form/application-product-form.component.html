@@ -44,14 +44,14 @@
       <!-- PRODUCT NAME LIST -->
 
       <div *ngFor="let prodName of product.applicationProductNameList; let prodNameIndex = index">
-      
+
         <div class="form-row-prodname">
           <mat-form-field class="prodNameField">
             <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName" name="productName" />
           </mat-form-field>
 
-          <app-cv-input class="col-1-nomargin" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type" name="productNameType"
-            [model]="prodName.productNameType" (valueChange)="prodName.productNameType = $event">
+          <app-cv-input class="col-1-nomargin" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type"
+            name="productNameType" [model]="prodName.productNameType" (valueChange)="prodName.productNameType = $event">
           </app-cv-input>
 
           &nbsp;&nbsp;
@@ -74,21 +74,30 @@
           [model]="product.dosageForm" (valueChange)="product.dosageForm = $event">
         </app-cv-input>
 
+        <!-- Multiple Selection from dropdown of Route of Administration -->
+        <div class="col-1 marginright30px">
+        <app-tag-selector class="tags" (tagsUpdate)="updateRouteAdmin($event, prodIndex)"
+          [tags]="product.routeAdmin ? product.routeAdmin.split('\,') : []" cvDomain="PROD_ROUTE_OF_ADMIN"
+          placeholder="Route of Administration">
+        </app-tag-selector>
+        </div>
+
+        <!--
         <app-cv-input class="col-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
           name="routeAdmin" [model]="product.routeAdmin" (valueChange)="product.routeAdmin = $event">
         </app-cv-input>
+        -->
 
-        <app-cv-input class="col-1" domain="PROD_UNIT_PRESENTATION" title="Unit Of Presentation"
-          name="unitPresentation" [model]="product.unitPresentation"
-          (valueChange)="product.unitPresentation = $event">
+        <app-cv-input class="col-1" domain="PROD_UNIT_PRESENTATION" title="Unit Of Presentation" name="unitPresentation"
+          [model]="product.unitPresentation" (valueChange)="product.unitPresentation = $event">
         </app-cv-input>
 
         <mat-form-field class="col-1">
           <input matInput placeholder="Amount" [(ngModel)]="product.amount" name="amount" />
         </mat-form-field>
 
-        <app-cv-input class="col-1" domain="APPLICATION_UNIT" title="Unit" name="unit"
-          [model]="product.unit" (valueChange)="product.unit = $event">
+        <app-cv-input class="col-1" domain="APPLICATION_UNIT" title="Unit" name="unit" [model]="product.unit"
+          (valueChange)="product.unit = $event">
         </app-cv-input>
       </div>
 
@@ -108,11 +117,11 @@
 
       <div *ngFor="let ingredient of product.applicationIngredientList; let ingredIndex = index">
         <app-ingredient-form [ingredient]="ingredient" [prodIndex]="prodIndex" [ingredIndex]="ingredIndex"
-          [totalIngredient]="product.applicationIngredientList.length">
+          [totalIngredient]="product.applicationIngredientList.length" (ingredientMessageOut)="ingredientMessageOutChange($event)"
+          (basisOfStrengthMessageOut)="basisOfStrengthMessageOutChange($event)">
         </app-ingredient-form>
       </div>
       <!-- INGREDIENT END -->
-
 
     </fieldset>
     <br><br><br>

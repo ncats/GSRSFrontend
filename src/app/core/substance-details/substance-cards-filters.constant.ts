@@ -24,6 +24,10 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
       filter: anyExistsFilter
     },
     {
+        name: 'countFilter',
+        filter: countFilter
+    },
+    {
         name: 'substanceCodes',
         filter: substanceCodesFilter
     },
@@ -34,6 +38,10 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
       name: 'hasCredentials',
       filter: credentialsFilter
+    },
+    {
+        name: 'isInGroups',
+        filter: groupFilter
     }
 ];
 
@@ -70,7 +78,7 @@ export function equalsInArrayFilter(
         let isApproved = false;
         if (filter.value != null && filter.propertyToCheck != null && filter.propertyInArray != null) {
             for (let i = 0; i < substance[filter.propertyToCheck].length; i++) {
-                if ((substance[filter.propertyToCheck][i][filter.propertyInArray]) === filter.value) {
+                if ((substance[filter.propertyToCheck][i][filter.propertyInArray]) == filter.value) {
                     isApproved = true;
                     break;
                 }
@@ -121,6 +129,29 @@ export function anyExistsFilter(
   });
 }
 
+export function countFilter(
+    substance: SubstanceDetail,
+    filter: SubstanceCardFilterParameters
+): Observable<boolean> {
+    return new Observable(observer => {
+        let isApproved = false;
+        let countMin = (filter.countMinimum!=null)?filter.countMinimum:1;
+        let countMax =  (filter.countMaximum!=null)?filter.countMaximum:9999999;
+
+         if (filter.propertyToCheck != null) {
+            const evaluatedProperty = getEvaluatedProperty(substance, filter.propertyToCheck);
+            if (evaluatedProperty != null
+                && (Object.prototype.toString.call(evaluatedProperty) === '[object Array]'
+                    && (evaluatedProperty.length)
+                        && (evaluatedProperty.length >= countMin && evaluatedProperty.length <= countMax))) {
+                isApproved = true;
+            }
+        }
+        observer.next(isApproved);
+        observer.complete();
+    });
+}
+
 export function substanceCodesFilter(
     substance: SubstanceDetail,
     filter: SubstanceCardFilterParameters
@@ -131,7 +162,7 @@ export function substanceCodesFilter(
 
         if (substance.codes && substance.codes.length > 0) {
             for (let i = 0; i < substance.codes.length; i++) {
-                if (substance.codes[i].comments && substance.codes[i].comments.indexOf('|') > -1 && filter.value === 'classification') {
+                if (substance.codes[i]._isClassification && filter.value === 'classification') {
                     isApproved = true;
                     break;
                 } else if (filter.value === 'identifiers') {
@@ -193,6 +224,25 @@ export function substanceRelationshipsFilter(
       let isApproved = false;
       if (filter.propertyToCheck != null) {
         if (auth.hasRoles(filter.propertyToCheck) === true) {
+          isApproved = true;
+        }
+      }
+      observer.next(isApproved);
+      observer.complete();
+    });
+}
+
+export function groupFilter(
+    substance: SubstanceDetail,
+    filter: SubstanceCardFilterParameters,
+    http: HttpClient,
+    auth: AuthService
+  ): Observable<boolean> {
+    return new Observable(observer => {
+
+      let isApproved = false;
+      if (filter.propertyToCheck != null) {
+        if (auth.isInGroups(filter.propertyToCheck) === true) {
           isApproved = true;
         }
       }

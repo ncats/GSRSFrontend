@@ -16,6 +16,7 @@ export class ImpuritiesResidualSolventsFormComponent implements OnInit {
   @Input() impuritiesResidualSolvents: ImpuritiesResidualSolvents;
   @Input() impuritiesResidualIndex: number;
   @Input() impuritiesSubstanceIndex: number;
+  @Input() residualSolventsTestIndex:number;
 
   constructor(
   private impuritiesService: ImpuritiesService,
@@ -37,9 +38,9 @@ export class ImpuritiesResidualSolventsFormComponent implements OnInit {
       }
     });
   }
-  
+
   deleteImpuritiesResidualSolvents() {
-    this.impuritiesService.deleteImpuritiesResidualSolvents(this.impuritiesSubstanceIndex, this.impuritiesResidualIndex);
+    this.impuritiesService.deleteImpuritiesResidualSolvents(this.impuritiesSubstanceIndex, this.residualSolventsTestIndex, this.impuritiesResidualIndex);
   }
 
   relatedSubstanceUpdated(substance: any): void {

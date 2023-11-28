@@ -1,337 +1,598 @@
 <br><br><br>
-
 <mat-sidenav-container>
 
   <mat-sidenav mode="side" opened>
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" configName="applications" includeFacetSearch="true">
     </app-facets-manager>
-
   </mat-sidenav>
-
 
   <!-- Browse Application Content -->
   <mat-sidenav-content>
-    <div class="titlePosition">
-      <span class="title">Browse Applications</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      Total:&nbsp;<span class="totalApp font17px colorgray">{{totalApplications}}</span>
-      &nbsp;&nbsp;
-    </div>
+    <div class="side-nav-content">
+      <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+        <mat-icon svgIcon="chevron_right"></mat-icon>
+      </button>
 
-    <!-- Pagination -->
-    <div class="paginationPosition">
-      <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
-        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)">
-      </mat-paginator>
-    </div>
+      <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
+      <div class="narrow-search-suggestions-container"
+        *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
+        <div class="flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions" style="margin:auto; background-color: white;">
+            <div>
+              Would you like to restrict this search to a field?
+            </div>&nbsp;
+            <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions" style="padding-right: 5px;"
+              (menuOpened)="increaseOverlayZindex()" (menuClosed)="decreaseOverlayZindex()">
+              <span>Fields </span>&nbsp;
+              {{narrowSearchSuggestionsCount}}
+              <mat-icon svgIcon="drop_down"></mat-icon>
+            </button>
+            <button mat-flat-button color="primary" (click)="clearFilters()">
+              <span>RESET</span>
+            </button>
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
+              <div class="narrow-search-dropdown" *ngFor="let matchType of matchTypes">
+                <div *ngIf="((matchType) && (matchType === 'WORD' || matchType === 'FULL'))">
+                  <div class="match-type">
+                    {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                  </div>
+                  <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
+                    (click)="restricSearh(suggestion.luceneQuery)">
+                    <div class="suggestion-display">
+                      {{suggestion.displayField}}
+                    </div>
+                    <div class="suggestion-count">
+                      {{suggestion.count}}
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </mat-menu>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions"
+            style="margin:auto; background-color: white; margin-top: 12px; ">
+            For more options use the <a routerLink="/advanced-search" style="padding-left: 6px;"> Advanced Search</a>
+          </div>
+        </div>
+      </div>
+      <!-- Narrow Search Suggestion End -->
 
-    <br><br><br>
-    <div class="divflex">
-      <!-- Export Application Button -->
-      <div class="marginleft20px marginright40px" *ngIf="isLoggedIn">
-        <button matTooltip="Export Search Results" mat-button (click)="export()"
-          class="mat-button export-button mat-raised-button">
-          <mat-icon svgIcon="get_app"></mat-icon> Export
-        </button>
+
+      <!-- SEARCHTERM -->
+      <ng-template #filterParameters>
+        <div class="search-parameters">
+          <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+            <div>
+              <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+              <span>{{searchTerm}}</span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="clearSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Display Facets selection -->
+          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+            <div class='selected-container'>
+              <span class="capitalized font-medium-bold selected-label">
+                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                {{facet.type}}:
+              </span>
+              <span class="no-break selected-value">
+                {{facet.val}}
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button class="display-button" color="primary"
+                (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+                <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+            <span>RESET</span>
+          </button>
+        </div>
+      </ng-template>
+
+      <!-- Title, Export, Pagination -->
+      <div class="controls-container">
+
+        <div class="title-container">
+          <span class="main-title">Browse Applications</span>
+        </div>
+
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <!-- Sort By -->
+        <mat-form-field class="sort">
+          <mat-label>Sort By</mat-label>
+          <mat-select (selectionChange)="searchApplications()" [(ngModel)]="order">
+            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Export Application Button -->
+        <div class="export" *ngIf="isAdmin">
+          <button matTooltip="Export Search Results" mat-button (click)="export()"
+            class="mat-button export-button mat-raised-button">
+            <mat-icon svgIcon="get_app"></mat-icon> Export
+          </button>
+        </div>
+
+        <div class="break"></div>
+        <!-- Pagination -->
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="marginleft20px">
+      <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-application-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)"
+          eventCategory="applicationSearch">
+        </app-application-text-search>
+
         <!-- Search Any Text Text Box -->
+        <!--
         <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm" size="50" />
+          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
+            size="50" />
         </mat-form-field>
         <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
           <mat-icon svgIcon="search"></mat-icon>
         </button>
-        &nbsp;&nbsp;&nbsp;
-        <button class="activate-search-button" mat-icon-button (click)="clearFilters()">
-          Reset
-        </button>
+        -->
       </div>
-    </div>
 
-    <div class="padleft10px" *ngIf="totalApplications > 0">
-      <!-- Display Facets selection -->
-      <div class="search-parameters">
-        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
-          <div class='selected-container'>
-            <span class="capitalized font-medium-bold selected-label">
-              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
-              {{facet.type}}:
-            </span>
-            <span class="no-break selected-value">
-              {{facet.val}}
-            </span>
+      <!--********** Display Content Details ******* -->
+
+      <div [ngClass]="view">
+
+        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <div class="table-view">
+          <div class="responsive">
+
+            <table mat-table [dataSource]="applications" class="font12px" matSort (matSortChange)="sortData($event)"
+              matSortActive="appNumber" matSortDirection="asc" matSortDisableClear>
+
+              <ng-container matColumnDef="appType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Type </th>
+                <td mat-cell *matCellDef="let application">
+                  <div class="width120px">
+                    <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank"
+                      alt="View Application Record" matTooltip='View Application Record'>
+                      {{application.appType}}
+                      <!--&nbsp;{{application.appNumber}} -->
+                    </a>&nbsp;&nbsp;
+                    <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                      matTooltip='Edit Application Record'>
+                      <mat-icon svgIcon="edit"></mat-icon>
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="appNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
+                <td mat-cell *matCellDef="let application"> {{application.appNumber}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="center">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Center </th>
+                <td mat-cell *matCellDef="let application"> {{application.center}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="provenance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Provenance </th>
+                <td mat-cell *matCellDef="let application"> {{application.provenance}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="applicationStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Status </th>
+                <td mat-cell *matCellDef="let application"> {{application.status}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
+                <td valign="top" mat-cell *matCellDef="let application">
+                  <ol class="olstyle">
+                    <div *ngFor="let prod of application.applicationProductList; let i = index">
+                      <!-- Product Names-->
+                      <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
+                        <li>
+                          {{prodName.productName}}
+                        </li>
+                      </div>
+                    </div>
+                  </ol>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ingredientName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name (Active Ingredient) </th>
+                <td valign="top" mat-cell *matCellDef="let application">
+                  <ol class="olstyle">
+                    <div *ngIf="application.applicationProductList.length > 0; else noRecordProdName">
+                      <div *ngFor="let prod of application.applicationProductList; let indexProd = index">
+                        <div *ngFor="let ing of prod.applicationIngredientList; let indexIng = index">
+                          <div *ngIf="ing._ingredientName">
+                            <div *ngIf="ing.ingredientType">
+                              <div
+                                *ngIf="(ing.ingredientType === 'ACTIVE INGREDIENT') || (ing.ingredientType === 'Active Ingredient')">
+                                <li>
+                                  <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">
+                                    {{ing._ingredientName}}
+                                  </a>
+                                  <!-- Display Structure when rollover icon -->
+                                  <button mat-button class="structure-parameters"
+                                    (click)="openImageModal($event, ing._substanceUuid)">
+                                    <mat-icon>analytics</mat-icon>
+                                  </button>
+                                </li>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ol>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="sponsorName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sponsor Name </th>
+                <td mat-cell *matCellDef="let application"> {{application.sponsorName}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
           </div>
-          <div class="actions-container">
-            <button mat-icon-button class="display-button" color="primary"
-              (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
-              <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
+        </div> <!-- class="table-view" -->
 
-    <!-- Display Content Details -->
-    <div class="substance-cards">
-      <mat-card class="bordergray" *ngFor="let application of applications">
+        <!-- TABLE VIEW END -->
 
-        <mat-card-title class="borderlightorange-bottom">
-          <a class="substance-name" [routerLink]="['/applicationDetails', application.id]" target="_blank">
-            {{application.appType}}&nbsp;{{application.appNumber}}
-          </a>
-          &nbsp;&nbsp;&nbsp;
-          <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
-            matTooltip='Edit GSRS Application Record'>
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>
-          <!--
-          &nbsp;&nbsp;
-          <a [href]="updateApplicationUrl + application.id" target="_blank" *ngIf="isAdmin"
-            matTooltip='Edit GSRS Application Record'>
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>
-          -->
-          <span class="center">Center:&nbsp;{{application.center}}</span>
-          <span class="middle-fill"></span>
-          <a class="approval-id" [routerLink]="['/applicationDetails', application.id]" target="_blank">
-            Status: {{application.status}}
-          </a>
-        </mat-card-title>
+        <!-- CARD VIEW BEGIN -->
+        <div class="cards-view" *ngIf="applications && applications.length; else noRecordApplication">
+          <mat-card *ngFor="let application of applications; let index = index">
+            <mat-card-title>
+              <div>
+                <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank">
+                  {{application.appType}}&nbsp;{{application.appNumber}}
+                </a>
+                &nbsp;&nbsp;&nbsp;
+                <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                  matTooltip='Edit GSRS Application Record'>
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </a>
+              </div>
 
-        <mat-card-content>
+              <div>
+                <span class="center">Center:&nbsp;<span class="colorlightpurple">{{application.center}}</span></span>
+                &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                <span class="center colordarkblue">Provenance:&nbsp;<span
+                    class="colordarkblue">{{application.provenance}}</span></span>
+              </div>
 
+              <div>
+                <a class="approval-id" [routerLink]="['/application', application.id]" target="_blank">
+                  Status: {{application.status}}
+                </a>
+              </div>
+            </mat-card-title>
 
-          <div class="row">
+            <mat-card-content>
 
-            <!-- ***** LEFT SIDE **** -->
-            <div class="width70percent">
               <div class="row">
 
-                <div class="width100percent">
-                  <!--Product-->
+                <!-- ***** LEFT SIDE **** -->
+                <div class="width70percent">
+                  <div class="row">
 
-                  <div *ngIf="application.applicationProductList.length > 0; else noRecordProdName">
+                    <div class="width100percent">
+                      <!--Product-->
 
-                    <div *ngFor="let prod of application.applicationProductList; let index = index">
+                      <div *ngIf="application.applicationProductList.length > 0; else noRecordProdName">
 
-                      <div class="row">
+                        <div *ngFor="let prod of application.applicationProductList; let indexProd = index">
 
-                        <div class="row-property-key-4">
-                          Product Name {{index + 1}}:
-                        </div>
-                        <div class="row-property-value-4">
-                          <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
-                            <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
-                              <div *ngIf="prodName.productName; else noProd">
-                                <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
-                                  &#9642;
-                                  <span class="colorgray">
-                                    <b>{{ prodName.productName }}</b>
-                                  </span>
-                                  <span class="font10px">
-                                    (Deprecated)
-                                  </span>
-                                </div>
-                                <ng-template #noDeprecated>
-                                  &#9642;<span class="font14px colorlightblue"><b>{{ prodName.productName }}</b></span>
-                                </ng-template>
+                          <div class="row">
+
+                            <div class="row-property-key-4">
+                              Product Name {{indexProd + 1}}:
+                            </div>
+                            <div class="row-property-value-4">
+                              <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
+                                <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
+                                  <div *ngIf="prodName.productName; else noProd">
+                                    <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
+                                      &#9642;
+                                      <span class="colorgray">
+                                        <b>{{ prodName.productName }}</b>
+                                      </span>
+                                      <span class="font10px">
+                                        (Deprecated)
+                                      </span>
+                                    </div>
+                                    <ng-template #noDeprecated>
+                                      &#9642;
+                                      <span class="font14px colorlightblue"><b>{{ prodName.productName }}</b></span>
+                                    </ng-template>
+                                  </div>
+                                  <ng-template #noProd>
+                                    (No Product Name)
+                                  </ng-template>
+                                </div> <!-- repeat Product Name -->
                               </div>
-                              <ng-template #noProd>
+                              <ng-template #noProdNameList>
                                 (No Product Name)
                               </ng-template>
-                            </div> <!-- repeat Product Name -->
-                          </div>
-                          <ng-template #noProdNameList>
-                            (No Product Name)
-                          </ng-template>
-                        </div>
-                        <!--
+                            </div>
+                            <!--
                     </div>
                   -->
 
-                      </div>
+                          </div>
 
-                      <div *ngFor="let ing of prod.applicationIngredientList; let indexIng = index">
-                        <div class=" row">
-                          <!--
+                          <div *ngFor="let ing of prod.applicationIngredientList; let indexIng = index">
+                            <div class=" row">
+                              <!--
                       <div class="row-property-4">
                       -->
-                          <div class="row-property-key-4">
-                            Ingredient Name: {{ indexIng + 1}}:
-                          </div>
-                          <div class="row-property-value-4">
+                              <div class="row-property-key-4">
+                                Ingredient Name: {{indexIng + 1}}:
+                              </div>
+                              <div class="row-property-value-4">
 
-                            <!-- Display Ingredient Name -->
-                            <div *ngIf="ing.bdnum; else noIngred">
-                              <span class="colorred">&diams;</span>
-                              <a [routerLink]="['/substances', ing.substanceId]"
-                                target="_blank">{{ing.ingredientName}}</a>
-                              <br>
+                                <!-- Display Ingredient Name -->
+                                <div *ngIf="ing.substanceKey; else noIngred">
+                                  <div class="">
+                                    <span class="colorred">&diams;</span>
+                                    <a [routerLink]="['/substances', ing._substanceUuid]" target="_blank">
+                                      {{ing._ingredientName}}
+                                    </a>
+                                    <!-- Display Structure when rollover icon -->
+                                    <button mat-button class="structure-parameters"
+                                      (click)="openImageModal($event, ing._substanceUuid)">
+                                      <mat-icon>analytics</mat-icon>
+                                    </button>
 
-                              <!-- Display Ingredient Type -->
-                              <div *ngIf="ing.ingredientType">
-                                <div *ngIf="ing.ingredientType === 'Active Ingredient'; else otherIngredType">
-                                  &nbsp;&nbsp;<span class="colorgreen">
-                                    ({{ ing.ingredientType }})
-                                  </span>
+                                    <!--
+                                      <button mat-button class="structure-parameters"
+                                        (mouseover)="openImageModal($event, ing._substanceUuid)">
+                                        <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                                      </button>
+                                      -->
+
+                                    <!--
+                                    <div class="structure-parameters bordergray">
+                                      <button mat-icon-button (click)="openImageModal($event, ing._substanceUuid)">
+                                        <mat-icon class="bordergray">analytics</mat-icon>
+                                      </button>
+                                    -->
+                                    <!--
+                                    &nbsp;&nbsp;
+
+                                    <button mat-button class="structure-parameters"
+                                      (mouseover)="openImageModal($event, ing._substanceUuid)">
+                                      <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                                    </button>
+
+                                    <a class="zoom" (click)="openImageModal($event, ing._substanceUuid)">
+                                      <img class="structure-image" appSubstanceImage [entityId]="ing._substanceUuid"
+                                        size="20" [stereo]="showStereo" [atomMaps]="null">
+                                    </a>
+                                    -->
+                                    <!-- Display Structure -->
+                                    <!--
+                                      <div id="struct_{{index}}_{{indexProd}}_{{indexIng}}" *ngIf="ing._substanceUuid"
+                                        class="structure-style displaynone">
+                                        <img class="structure-img" appSubstanceImage [entityId]="ing._substanceUuid"
+                                          size="400">
+                                      </div>
+
+                                    </div>
+                                    -->
+                                  </div>
+
+                                  <!-- Display Ingredient Type -->
+                                  <div *ngIf="ing.ingredientType">
+                                    <div *ngIf="ing.ingredientType === 'Active Ingredient'; else otherIngredType">
+                                      <span class="colorgreen">({{ ing.ingredientType }})</span>
+                                    </div>
+                                    <ng-template #otherIngredType>
+                                      ({{ ing.ingredientType }})
+                                    </ng-template>
+                                  </div>
+
+                                  <!-- Active Moiety -->
+                                  <div *ngIf="ing.activeMoietyUnii; else noActiveUnii" class="padtop5px">
+                                    <!--
+                                    <span class="colororange">&diams;</span>
+                                    -->
+                                    <a [routerLink]="['/substances', ing.activeMoietyUnii]"
+                                      target="_blank">{{ing.activeMoietyName}}</a>
+                                    <span class="font10px colorgray">&nbsp;(Active Moiety)</span>
+                                    <br>
+                                  </div>
+                                  <ng-template #noActiveUnii>
+                                    <div *ngIf="ing.activeMoietyName">
+                                      {{ing.activeMoietyName}}
+                                      <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
+                                    </div>
+                                  </ng-template>
+
                                 </div>
-                                <ng-template #otherIngredType>
-                                  &nbsp;&nbsp;({{ ing.ingredientType }})
+                                <ng-template #noIngred>
+                                  (No Ingredient Name)
                                 </ng-template>
                               </div>
+                              <!--
+                      </div>
+                      -->
+                              <!--
 
-                              <!-- Active Moiety -->
-                              <div *ngIf="ing.activeMoietyUnii; else noActiveUnii" class="padtop5px">
-                                <span class="colororange">&diams;</span>
-                                <a [routerLink]="['/substances', ing.activeMoietyUnii]"
-                                  target="_blank">{{ing.activeMoietyName}}</a>
-                                <span class="font10px colorgray">&nbsp;(Active Moiety)</span>
-                                <br>
-                              </div>
-                              <ng-template #noActiveUnii>
-                                <div *ngIf="ing.activeMoietyName">
-                                  {{ing.activeMoietyName}}
-                                  <span class="font10px colorgray">&nbsp;(Active Moiety)</span><br>
+                              <div class="row-property-3">
+                                <div class="row-property-key-3">
+                                  Ingred Created By:<br><br>
+                                  Ingred Edited By:
                                 </div>
-                              </ng-template>
+                                <div class="row-property-value-3">
+                                  {{ing.createdBy}}<br>
+                                  {{ing.createDate|date: 'MM/dd/yyyy h:mm:ss a'}}
+                                  <br>
+                                  {{ing.modifiedBy}}<br>
+                                  {{ing.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
+                                </div>
+                              </div>
+                            -->
 
                             </div>
-                            <ng-template #noIngred>
-                              (No Ingredient Name)
-                            </ng-template>
+
+                          </div> <!-- repeat Ingred -->
+
+                        </div> <!-- repeat Prod-->
+
+                      </div>
+
+                      <ng-template #noRecordProdName>
+                        <div class="row">
+                          <div class="row-property-key-4">
+                            Product Name 1:
                           </div>
-                          <!--
-                      </div>
-                      -->
-
-                          <!--
-                <div class="row-property-3" *ngIf="isAdmin">
-                  <div class="row-property-key-3">
-                    Ingred Created By:<br><br>
-                    Ingred Edited By:
-                  </div>
-                  <div class="row-property-value-3">
-                    {{ing.createdBy}}<br>
-                    {{ing.createDate|date: 'MM/dd/yyyy h:mm:ss a'}}
-                    <br>
-                    {{ing.modifiedBy}}<br>
-                    {{ing.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
-                  </div>
-                </div>
-              -->
-
+                          <div class="row-property-value-4">
+                            (No Product Name)
+                          </div>
                         </div>
+                        <div class="row">
+                          <div class="row-property-key-4">
+                            Ingredient Name 1:
+                          </div>
+                          <div class="row-property-value-4">
+                            (No Ingredient Name)
+                          </div>
+                        </div>
+                      </ng-template>
 
-                      </div> <!-- repeat Ingred -->
-
-                    </div> <!-- repeat Prod-->
+                    </div>
 
                   </div>
 
-                  <ng-template #noRecordProdName>
-                    <div class="row">
-                      <div class="row-property-key-4">
-                        Product Name 1:
+
+                  <div class="row">
+                    <div class="row-property-key-4">
+                      Title:
+                    </div>
+                    <div class="row-property-value-4">
+                      {{application.title}}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property-key-4">
+                      Sponsor Name:
+                    </div>
+                    <div class="row-property-value-4">
+                      {{ application.sponsorName}}
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key-3">
+                        Status Date:
                       </div>
-                      <div class="row-property-value-4">
-                        (No Product Name)
+                      <div class="row-property-value-3">
+                        &nbsp;{{application.statusDate}}
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="row-property-key-4">
-                        Ingredient Name 1:
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        <span *ngIf="application._clinicalTrialList">
+                          <span matBadge="{{application._clinicalTrialList.length}}" matBadgeOverlap="false">Clinical
+                            Trials:
+                          </span>
+                        </span>
                       </div>
-                      <div class="row-property-value-4">
-                        (No Ingredient Name)
+                      <div class="row-property-value">
+                        &nbsp;
+                        <div class="" *ngFor="let clinical of application._clinicalTrialList">
+                          &bull;&nbsp;
+                          <span *ngIf="clinical.nctNumber">
+                            <a target="_blank" title="see clinicaltrials.gov"
+                              [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.nctNumber">{{clinical.nctNumber}}</a>
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </ng-template>
-
-                </div>
-
-              </div>
-
-
-              <div class="row">
-                <div class="row-property-key-4">
-                  Title:
-                </div>
-                <div class="row-property-value-4">
-                  {{application.title}}
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property-key-4">
-                  Sponsor Name:
-                </div>
-                <div class="row-property-value-4">
-                  {{ application.sponsorName}}
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key-3">
-                    Status Date:
                   </div>
-                  <div class="row-property-value-3">
-                    &nbsp;{{application.statusDate}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Clinical Trials:
-                    <!--
-                    <span class="badge">0
-                    -->
-                    <!-- {{application.clinicalTrialList.length}}-->
-                    <!--
-                      </span>
-                      -->
-                  </div>
-                  <div class="row-property-value">
-                    <!--
-                      <div class="" *ngFor="let clinical of application.clinicalTrialList">
-                          &bull;&nbsp;{{ clinical.nctNumber }}
-                        </div>
-                        -->
-                  </div>
-                </div>
-              </div>
 
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key-3">
-                    Submit Date:
-                  </div>
-                  <div class="row-property-value-3">
-                    &nbsp;{{application.submitDate}}
-                  </div>
-                </div>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key-3">
+                        Submit Date:
+                      </div>
+                      <div class="row-property-value-3">
+                        &nbsp;{{application.submitDate}}
+                      </div>
+                    </div>
 
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Indications:&nbsp;
-                    <!--
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Indications:&nbsp;
+                        <!--
                     <span class="badge">{{application.applicationIndicationList.length}}</span>
                     -->
-                  </div>
-                  <div class="row-property-value">
-                    <div class="" *ngFor="let ind of application.applicationIndicationList">
-                      <span *ngIf="ind.indication">
-                        &bull;&nbsp;{{ ind.indication }}
-                      </span>
+                      </div>
+                      <div class="row-property-value">
+                        <div class="" *ngFor="let ind of application.applicationIndicationList">
+                          <span *ngIf="ind.indication">
+                            &bull;&nbsp;{{ ind.indication }}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <!--
+                  <!--
               <div class="row-property-3 bordergray">
 
               <div class="row">
@@ -349,72 +610,104 @@
                 </div>
                 <div class="row-property-value-3">
                   {{application.createdBy}}
-                
+
                 {{application.modifiedBy}}<br>
                 {{application.modifyDate|date: 'MM/dd/yyyy h:mm:ss a'}}
-                
+
                 </div>
               </div>
               </div> -->
 
-              <!--
+                  <!--
             </div> -->
-              <!-- left side-->
+                  <!-- left side-->
 
-            </div> <!-- LEFT SIDE -->
-
-
-            <!-- **** RIGH SIDE ****  -->
-            <div class="width30percent">
-
-              <span *ngIf="isAdmin">
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Create By:
-                  </div>
-                  <div class="row-property-value-5">
-                    {{application.createdBy}}
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Create Date:
-                  </div>
-                  <div class="row-property-value-5">
-                    {{application.createDate|date: 'MM/dd/yyyy h:mm a'}}
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Edited By:
-                  </div>
-                  <div class="row-property-value-5">
-                    {{application.modifiedBy}}
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="row-property-key-5">
-                    Edit Date:
-                  </div>
-                  <div class="row-property-value-5">
-                    {{application.modifyDate|date: 'MM/dd/yyyy h:mm a'}}
-                  </div>
-                </div>
-              </span>
-
-            </div> <!-- right side -->
+                </div> <!-- LEFT SIDE -->
 
 
-          </div> <!-- row -->
+                <!-- **** RIGH SIDE ****  -->
 
+                <div class="width30percent">
 
-        </mat-card-content>
+                  <!--  *ngIf="isAdmin" -->
+                  <span>
+                    <div class="row">
+                      <div class="row-property-key-5">
+                        Created By:
+                      </div>
+                      <div class="row-property-value-5">
+                        {{application.createdBy}}
+                      </div>
+                    </div>
 
-      </mat-card>
-    </div>
+                    <div class="row">
+                      <div class="row-property-key-5">
+                        Create Date:
+                      </div>
+                      <div class="row-property-value-5">
+                        {{application.creationDate|date: 'MM/dd/yyyy h:mm a'}}
+                      </div>
+                    </div>
 
+                    <div class="row">
+                      <div class="row-property-key-5">
+                        Edited By:
+                      </div>
+                      <div class="row-property-value-5">
+                        {{application.modifiedBy}}
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="row-property-key-5">
+                        Edit Date:
+                      </div>
+                      <div class="row-property-value-5">
+                        {{application.lastModifiedDate|date: 'MM/dd/yyyy h:mm a'}}
+                      </div>
+                    </div>
+                  </span>
+
+                </div> <!-- right side -->
+
+              </div> <!-- row -->
+
+            </mat-card-content>
+
+          </mat-card>
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
+
+      <!-- Pagination at the bottom of the page -->
+      <div class="controls-container-right">
+        <div class="full-paginator-right">
+          <mat-paginator #paginator [length]="totalApplications" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector-right">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
+      </div> <!-- Pagination Page-->
+
+      <ng-template #noRecordApplication>
+        <!-- No Application Found. -->
+        <!--
+      <div class="padleft10px colorred">
+        <br>
+        No Application records found. Please Reindex to see the Application records here.
+      </div>
+      -->
+      </ng-template>
+
+    </div> <!-- class=side-nav-content -->
   </mat-sidenav-content>
 </mat-sidenav-container>
