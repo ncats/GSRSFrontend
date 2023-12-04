@@ -18,7 +18,7 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroPharmacologyOverview, InvitroAssayScreening } from '../model/invitro-pharmacology.model';
+import { InvitroAssayScreening } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-details',

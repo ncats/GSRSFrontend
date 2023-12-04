@@ -73,7 +73,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   displayedColumns: string[] = [
     'viewDetails',
     'testCompound',
-    'batchId',
+    'batchNumber',
     'screeningConcentration',
     'screeningInhibition',
     'assayTarget',

@@ -1,5 +1,5 @@
 {
-  "version": "3.0.3",
+  "version": "3.1.1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -17,6 +17,9 @@
     "apiPassword": null,
     "apiKey": null,
     "apiToken": null
+  },
+  "stagingArea": {
+    "mergeAction": false
   },
 "userRegistration": {
     "configurations": {
@@ -116,7 +119,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In-vitro Pharmacology",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing",
       "filters": [
         {}
       ]
@@ -624,6 +627,16 @@
   ],
   "facets": {
     "substances": {
+      "staging": [
+        "Loaded By",
+        "Date Loaded",
+        "Import Status",
+        "Source",
+        "Match Count",
+        "Match Key",
+        "Validation Type",
+        "Validation Message"
+      ],
       "default": [
         "User List",
         "Deprecated",
@@ -955,6 +968,7 @@
       ]
     },
     "applications": {
+
       "default": [
         "Application Type",
         "Center",
@@ -997,19 +1011,23 @@
     },
     "products": {
       "default": [
+        "Provenance",
+        "Product ID",
         "Product Name",
         "Nonproprietary Name",
-        "Product NDC",
         "Dosage Form Name",
         "Ingredient Name",
+        "Ingredient Name (Preferred)",
         "Ingredient Type",
         "Product Type",
         "Product Code Type",
-        "Application Number",
-        "Status",
+        "Product Status",
         "Marketing Category Name",
-        "Route of Admin",
+        "Route of Administration",
         "Is Listed",
+        "Indication",
+        "Application Type",
+        "Application Number",
         "Labeler Name",
         "Labeler DUNS Number",
         "Registrant Name",
@@ -1018,7 +1036,9 @@
         "State",
         "Company Country",
         "Country Code",
-        "Provenance"
+        "Company Role",
+        "Manufacturer Name",
+        "Manufacturer Role"
       ],
       "admin": [
         "Record Created By",
@@ -1040,7 +1060,8 @@
         "Age Groups",
         "Intervention Type",
         "Study Results",
-        "Conditions"
+        "Conditions",
+        "Substance Role"
       ]
     },
     "clinicaltrialsus": {
@@ -1056,7 +1077,8 @@
         "Age Groups",
         "Intervention Type",
         "Study Results",
-        "Conditions"
+        "Conditions",
+        "Substance Role"
       ]
     },
     "adverseeventpt": {
@@ -1101,14 +1123,16 @@
     },
     "invitropharmacology": {
       "default": [
+        "Application Type Number",
         "Assay Target",
-        "Test Compound",
+        "Test Agent",
         "Ligand",
         "Control",
         "Assay Type",
-        "Assay Study Type",
+        "Study Type",
         "Presentation Type",
-        "Reference Type",
+        "Reference Source Type",
+        "Reference Source ID",
         "External Reference",
         "Approver Name",
         "Laboratory Name"
@@ -1467,7 +1491,10 @@
       "keyType": {
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
-        "clinicalTrialKeyType": "UUID"
+        "clinicalTrialKeyType": "UUID",
+        "productKeyType": "UUID",
+        "applicationKeyType": "UUID",
+        "impuritiesKeyType": "UUID"
       }
     }
   },

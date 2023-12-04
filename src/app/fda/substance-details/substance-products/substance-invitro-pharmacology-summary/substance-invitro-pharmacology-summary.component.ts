@@ -123,7 +123,7 @@ export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetai
             if (this.substance.approvalID === elementAssay.assayTargetUnii) {
               this.assayTargetSubNameMatch = true;
             }
-            if (this.substance.approvalID === elementAssay.testCompoundUnii) {
+            if (this.substance.approvalID === elementAssay.testAgentUnii) {
               this.testCompoundSubNameMatch = true;
             }
             if (this.substance.approvalID === elementAssay.ligandSubstrateUnii) {

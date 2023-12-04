@@ -42,28 +42,58 @@
                 </tr>
 
                 <tr>
+                  <td class="fieldKey">Assay ID:</td>
+                  <td>{{ assayScreening.assayId }}</td>
+                </tr>
+
+                <tr>
                   <td class="fieldKey">Assay Title:</td>
                   <td>{{ assayScreening.assayTitle }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Study Type:</td>
-                  <td>{{ assayScreening.assayStudyType }}</td>
+                  <td class="fieldKey">Assay Format:</td>
+                  <td>{{ assayScreening.assayFormat }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Test Compound:</td>
+                  <td class="fieldKey">Study Type:</td>
+                  <td>{{ assayScreening.studyType }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Bioassay Type:</td>
+                  <td>{{ assayScreening.bioassayType }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Bioassay:</td>
+                  <td>{{ assayScreening.bioassay }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Detection Method:</td>
+                  <td>{{ assayScreening.detectionMethod }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Buffer Plasma Protein Concentration:</td>
+                  <td>{{ assayScreening.bufferPlasmaProteinConcent }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Test Agent:</td>
                   <td>
-                    <div *ngIf="assayScreening.invitroTestCompound">
-                      <span *ngIf="assayScreening.invitroTestCompound.testCompound">
-                        <span class="colororange fontbold">{{ assayScreening.invitroTestCompound.testCompound }}</span>
+                    <div *ngIf="assayScreening">
+                      <span *ngIf="assayScreening">
+                        <span class="colororange fontbold">{{ assayScreening.testAgent }}</span>
                       </span>
                     </div>
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Test Compound UNII:</td>
+                  <td class="fieldKey">Test Agent UNII:</td>
                   <td>
                     <div *ngIf="assayScreening.invitroTestCompound">
                       <div *ngIf="assayScreening.invitroTestCompound._testCompoundSubId; else noTestCompoundSubId">
@@ -84,7 +114,7 @@
                         </div>
                       </div>
                       <ng-template #noTestCompoundSubId>
-                        {{ assayScreening.invitroTestCompound.testCompoundUnii }}
+                        {{ assayScreening.invitroTestCompound.testAgentUnii }}
                       </ng-template>
                     </div>
                   </td>
@@ -101,8 +131,8 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Percent Inhibition Mean:</td>
-                  <td>{{ assayScreening.percentInhibitionMean }}</td>
+                  <td class="fieldKey">Percent Inhibition:</td>
+                  <td>{{ assayScreening.percentInhibition }}</td>
                 </tr>
 
                 <tr>
@@ -111,13 +141,18 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Batch ID:</td>
-                  <td>{{ assayScreening.batchId }}</td>
+                  <td class="fieldKey">Batch Number:</td>
+                  <td>{{ assayScreening.batchNumber }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Test Date:</td>
-                  <td>{{ assayScreening.testDate | date: 'MM/dd/yyyy' }}</td>
+                  <td class="fieldKey">Report Date:</td>
+                  <td>{{ assayScreening.reportDate | date: 'MM/dd/yyyy' }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Form Received:</td>
+                  <td>{{ assayScreening.formReceived }}</td>
                 </tr>
               </tbody>
             </table>
@@ -253,28 +288,28 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Control Value Type:</td>
-                  <td>{{ assayScreening.controlValueType }}</td>
+                  <td class="fieldKey">Value Type:</td>
+                  <td>{{ assayScreening.valueType }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Control Value Mean:</td>
-                  <td>{{ assayScreening.controlValueMean }}</td>
+                  <td class="fieldKey">Control Reference Value:</td>
+                  <td>{{ assayScreening.controlReferenceValue }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Control Value Low:</td>
-                  <td>{{ assayScreening.controlValueLow }}</td>
+                  <td class="fieldKey">Value Low:</td>
+                  <td>{{ assayScreening.valueLow }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Control Value High:</td>
-                  <td>{{ assayScreening.controlValueHigh }}</td>
+                  <td class="fieldKey">Value High:</td>
+                  <td>{{ assayScreening.valueHigh }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Control Value Unit:</td>
-                  <td>{{ assayScreening.controlValueUnit }}</td>
+                  <td class="fieldKey">Control Reference Unit:</td>
+                  <td>{{ assayScreening.controlReferenceUnit }}</td>
                 </tr>
 
                 <tr>
@@ -301,6 +336,11 @@
                   <td class="fieldKey">Presentation:</td>
                   <td>{{ assayScreening.presentation }}</td>
                 </tr>
+
+                <tr>
+                  <td class="fieldKey">Comments:</td>
+                  <td>{{ assayScreening.comments }}</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -316,30 +356,41 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Assay Reference Type:</td>
-                  <td>{{ assayScreening.assayReferenceType }}</td>
+                  <td class="fieldKey">Reference Source Type:</td>
+                  <td>{{ assayScreening.referenceSourceType }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Assay Reference:</td>
-                  <td>{{ assayScreening.assayReference }}</td>
+                  <td class="fieldKey">Reference Source ID:</td>
+                  <td>{{ assayScreening.referenceSourceId }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Assay External ID:</td>
-                  <td>{{ assayScreening.assayExternalId }}</td>
-                </tr>
-
-                <tr>
-                  <td class="fieldKey">Assay External Source:</td>
-                  <td>{{ assayScreening.assayExternalSource }}</td>
-                </tr>
-
-                <tr>
-                  <td class="fieldKey">Assay External Reference:</td>
+                  <td class="fieldKey">Reference Source Url:</td>
                   <td>
-                    <a href="{{ assayScreening.assayExternalReference }}" target="_blank">
-                      {{ assayScreening.assayExternalReference }}
+                    <span *ngIf="assayScreening.referenceSourceUrl">
+                      <a href="{{assayScreening.referenceSourceUrl}}" target="_blank">
+                        {{assayScreening.referenceSourceUrl}}
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">External Assay ID:</td>
+                  <td>{{ assayScreening.externalAssayId }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">External Source:</td>
+                  <td>{{ assayScreening.externalSource }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">External Reference:</td>
+                  <td>
+                    <a href="{{ assayScreening.externalReference }}" target="_blank">
+                      {{ assayScreening.externalReference }}
                     </a>
                   </td>
                 </tr>
@@ -350,46 +401,46 @@
           <!-- REFERENCES End -->
 
 
-          <!-- APPROVER Begin -->
-          <div class="margintop30px marginbottom30px" *ngIf="assayScreening.invitroApprovers">
+          <!-- SPONSOR Begin -->
+          <div class="margintop30px marginbottom30px" *ngIf="assayScreening.invitroSponsor">
             <table class="tableStyle">
               <tbody>
                 <tr class="headerstyle2">
-                  <td colspan="2"><span class="font20px">Approver Information</span></td>
+                  <td colspan="2"><span class="font20px">Sponsor Information</span></td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Approver Name:</td>
-                  <td>{{ assayScreening.invitroApprovers.approverName }}</td>
+                  <td class="fieldKey">Sponsor Report Submitter Name:</td>
+                  <td>{{ assayScreening.invitroSponsor.approverName }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Approver Title:</td>
-                  <td>{{ assayScreening.invitroApprovers.approverTitle }}</td>
+                  <td class="fieldKey">Sponsor Report Submitter Title:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorTitle }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Approver Affiliation:</td>
-                  <td>{{ assayScreening.invitroApprovers.approverAffiliation }}</td>
+                  <td class="fieldKey">Sponsor Report Submitter Affiliation:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorAffiliation }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Approver Email:</td>
-                  <td>{{ assayScreening.invitroApprovers.approverEmail }}</td>
+                  <td class="fieldKey">Sponsor Report Submitter Email:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorEmail }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Approver Phone Number:</td>
-                  <td>{{ assayScreening.invitroApprovers.approverPhoneNumber }}</td>
+                  <td class="fieldKey">Sponsor Report Submitter Phone Number:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorPhoneNumber }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <!-- APPROVER End -->
+          <!-- Sponsor End -->
 
 
           <!-- LABORATORY Begin -->
-          <div class="margintop30px marginbottom30px" *ngIf="assayScreening.invitroLaboratories">
+          <div class="margintop30px marginbottom30px" *ngIf="assayScreening.invitroLaboratory">
             <table class="tableStyle">
               <tbody>
                 <tr class="headerstyle2">
@@ -398,42 +449,42 @@
 
                 <tr>
                   <td class="fieldKey">Laboratory Name:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryName }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryName }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">Laboratory Type:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryType }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryType }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">Laboratory Affiliation:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryAffiliation }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryAffiliation }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">Laboratory Address:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryAddress }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryAddress }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">City:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryCity }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryCity }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">State:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryState }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryState }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">Zipcode:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryZipcode }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryZipcode }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">Country:</td>
-                  <td>{{ assayScreening.invitroLaboratories.laboratoryCountry }}</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryCountry }}</td>
                 </tr>
               </tbody>
             </table>
