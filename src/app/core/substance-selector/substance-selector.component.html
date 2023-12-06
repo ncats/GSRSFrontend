@@ -26,7 +26,6 @@
         <mat-icon aria-label="Store as default substance for relationship type" svgIcon="move_to_inbox"></mat-icon>
       </button>
     </div>
-
     <div class="section-header">{{header}}</div>
     <div class='tile-title'>
       <span class="approval-id" *ngIf="selectedSubstance.approvalID">
@@ -38,7 +37,7 @@
       [entityId]="selectedSubstance.uuid"></a>
     <div class = "name-div">
       <span >
-        
+
       <a  target="_blank" class = "name-link"
       (click) ="openInNewTab(selectedSubstance.uuid)"  matTooltip="view details in a new tab" >
         <span  [innerHTML] = "selectedSubstance._name" ></span>
@@ -47,9 +46,9 @@
       <span class='code' *ngIf="errorMessage === 'Not in database'"><br />NOT IN DATABASE</span>
     </div>
     <div  >
-      <a class = "under-link" (click)="!!editSelectedSubstance()">Change Selection</a> 
-     
-      
+      <a class = "under-link" (click)="!!editSelectedSubstance()">Change Selection</a>
+
+
       <br/>
 
 

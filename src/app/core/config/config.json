@@ -1,5 +1,4 @@
 {
-
   "version": "3.0.3",
   "contactEmail": "ncatsgsrs@mail.nih.gov",
   "displayMatchApplication": "false",
@@ -663,7 +662,7 @@
           "order": 210
         }
       ]
-    },    
+    },
     {
       "display": "Help",
       "order": 60,
