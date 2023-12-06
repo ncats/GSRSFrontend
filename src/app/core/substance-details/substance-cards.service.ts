@@ -19,7 +19,7 @@ export class SubstanceCardsService {
     public auth: AuthService
   ) { }
 
-  getSubstanceDetailsPropertiesAsync(substance: SubstanceDetail): Observable<SubstanceDetailsProperty> {
+  getSubstanceDetailsPropertiesAsync(substance: SubstanceDetail, source?: string): Observable<SubstanceDetailsProperty> {
     return new Observable(observer => {
       const registeredFilters = this.filters.reduce((acc, val) => acc.concat(val), []);
       const configCards = this.configService.configData.substanceDetailsCards;
@@ -33,6 +33,10 @@ export class SubstanceCardsService {
             card.type,
             order
           );
+          // hard filter cards incompatible with staging area records (revisit if staging model changes significantly)
+          if (source && source === 'staging' && (card.card === 'substance-history' || card.card === 'substance-audit-info' || card.card === 'substance-hierarchy' || card.card === 'fda-substance-product')) {          
+              observer.next(null);
+          } else {
           if (card.filters && card.filters.length) {
             const filterResolver = new FilterResolver(substance, card.filters, registeredFilters, this.http, this.auth);
             filterResolver.resolve().subscribe(response => {
@@ -45,6 +49,7 @@ export class SubstanceCardsService {
           } else {
             observer.next(substanceDetailsProperty);
           }
+        }
         });
       }
 

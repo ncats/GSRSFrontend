@@ -36,7 +36,7 @@ export class UtilsService {
     return this.sanitizer.bypassSecurityTrustUrl(imgUrl);
   }
 
-  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean, atomMaps?: Array<number>, version?: number): string {
+  getStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean, atomMaps?: Array<number>, version?: number, altId?: string): string {
     if (!stereo) {
       stereo = false;
     }
@@ -47,7 +47,10 @@ export class UtilsService {
    if (atomMaps != null) {
       url = `${url}&context=${atomMaps.toString()}`;
     }
-    if (version != null) {
+    if (altId && altId != null) {
+      url = `${url}&recordId=${altId}`;
+    }
+    if (version && version != null) {
       url = `${url}&version=${version}`;
     }
     return url;

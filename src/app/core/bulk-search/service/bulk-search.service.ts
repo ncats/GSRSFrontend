@@ -5,6 +5,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { BulkQuery } from '../bulk-query.model';
 import { BulkSearch } from '../bulk-search.model';
+import { Subject } from 'rxjs';
 
 @Injectable(
   { providedIn: 'root' }
@@ -14,6 +15,8 @@ export class BulkSearchService extends BaseHttpService {
 
   totalRecords: 0;
   baseHref: '';
+  public listEmitter = new Subject<any>();
+
 
   constructor(
     public http: HttpClient,
@@ -119,4 +122,73 @@ export class BulkSearchService extends BaseHttpService {
     };
     return this.http.get<any>(url, options);
   }
+
+  
+  saveBulkSearch(list: string, name: string, etag?: string) {
+    const url = this.apiBaseUrl + `substances/@userList/keys?listName=${name}`;
+   
+    return this.http.post<any>(url, list);
+  }
+
+  saveBulkSearchEtag(list: string, name: string, etag: string) {
+    // save search results as a list by etag
+    const url = this.apiBaseUrl + `substances/@userList/etag/${etag}?listName=${name}`;
+   
+    return this.http.post<any>(url, null);
+  }
+
+  getSaveBulkListStatus(id: string) {
+    // get the status of a call to add a new list.
+    const url = this.apiBaseUrl + `substances/@userList/status/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  getBulkSearchLists() {
+    const url = this.apiBaseUrl + `substances/@userLists/currentUser`;
+    return this.http.get<any>(url);
+  }
+
+  getUserBulkSearchLists(name: string) {
+    // Get any users all saved lists.
+    const url = this.apiBaseUrl + `substances/@userLists/otherUser?name=${name}`;
+    return this.http.get<any>(url);
+  }
+
+  getSingleBulkSearchList(name: string, user?: string) {
+    // Get the keys and other fields of a list. default to active user if not specified
+    let url = this.apiBaseUrl + `substances/@userList/${name}`;
+
+    if(user && user !== null) {
+      url = this.apiBaseUrl + `substances/@userList/${user}/${name}`;
+
+    }
+    return this.http.get<any>(url);
+  }
+
+  editKeysBulkSearchLists(name: string, list: string, operation: string) {
+    // Add or remove keys from a list
+    const url = this.apiBaseUrl + `substances/@userList/currentUser?keys=${list}&listName=${name}&operation=${operation}`;
+    return this.http.put<any>(url, list);
+  }
+
+  editEtagBulkSearchLists(name: string, etag: string, operation: string) {
+    // Add or remove keys from a list
+    const url = this.apiBaseUrl + `substances/@userList/currentUser/etag/${etag}?listName=${name}&operation=${operation}`;
+    return this.http.put<any>(url, null);
+  }
+
+  deleteBulkSearchList(name: string) {
+    // Delete a list from current user
+    const url = this.apiBaseUrl + `substances/@userList/currentUser?listName=${name}`;
+    return this.http.delete<any>(url);
+  }
+
+  deleteUserBulkSearchList(listName: string, userName: string) {
+    // Delete a list from any user
+    const url = this.apiBaseUrl + `substances/@userList/otherUser?listName=${listName}&userName=${userName}`;
+    return this.http.delete<any>(url);
+  }
+
+  
+
 }

@@ -26,6 +26,7 @@ import { UtilsService } from '../utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
 import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
+import { AdminService } from '@gsrs-core/admin/admin.service';
 
 @Injectable()
 export class SubstanceFormService implements OnDestroy {
@@ -61,7 +62,8 @@ export class SubstanceFormService implements OnDestroy {
   constructor(
     private substanceService: SubstanceService,
     public utilsService: UtilsService,
-    private structureService: StructureService
+    private structureService: StructureService,
+    private adminService: AdminService
   ) {
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
   }
@@ -739,7 +741,7 @@ export class SubstanceFormService implements OnDestroy {
     if (this.privateSubstance.properties) {
       this.privateSubstance.properties.forEach(prop => {
         if (prop.propertyType === 'PROTEIN FEATURE' || prop.propertyType === 'NUCLEIC ACID FEATURE') {
-          const featArr = prop.value.nonNumericValue.split(';');
+          const featArr = prop.value.nonNumericValue ? prop.value.nonNumericValue.split(';') : [];
           featArr.forEach(f => {
             const sites = f.split('-');
             const subunitIndex = Number(sites[0].split('_')[0]);
@@ -1305,11 +1307,13 @@ export class SubstanceFormService implements OnDestroy {
             for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
               const prop = substanceCopy.modifications.physicalModifications[i];
               let present = false;
-              prop.parameters.forEach(param => {
-                if (param.parameterName) {
-                  present = true;
-                }
-              });
+              if (prop && prop.parameters){
+                prop.parameters.forEach(param => {
+                  if (param.parameterName) {
+                    present = true;
+                  }
+                });
+              }
 
               if (!prop.physicalModificationRole && !present) {
                 const invalidPropertyMessage: ValidationMessage = {
@@ -1499,6 +1503,28 @@ export class SubstanceFormService implements OnDestroy {
     return this.privateSubstance._approvalIDDisplay;
   }
 
+  importStructure(structure, type) {
+    // import a structure from mol or smiles
+    if(this.privateSubstance) {
+      if (type === 'molfile') {
+        this.privateSubstance.structure.molfile = structure;
+        this.substanceEmitter.next(this.privateSubstance);
+      } else {
+        this.privateSubstance.structure.smiles = structure;
+
+        this.structureService.interpretStructure(structure).pipe(take(1)).subscribe(response => {
+          if (response && response.structure && response.structure.molfile) {
+          this.privateSubstance.structure.molfile = response.structure.molfile;
+          this.substanceEmitter.next(this.privateSubstance);
+          }
+        });
+      }
+    } else {
+      // service substance loaded improperly
+    }
+    
+  }
+
   approveSubstance(): Observable<any> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
@@ -1529,6 +1555,34 @@ export class SubstanceFormService implements OnDestroy {
           results.serverError = error;
         }
         observer.error(results);
+        observer.complete();
+      });
+    });
+  }
+
+  submitStaging(id: any): Observable<any> {
+    if (this.privateSubstance.structure != null && !this.privateSubstance.structure.uuid) {
+      this.privateSubstance.structure.id = this.utilsService.newUUID();
+      this.privateSubstance.structure.uuid = this.privateSubstance.structure.id;
+    }
+    if (this.privateSubstance.moieties != null && this.privateSubstance.moieties.length) {
+      this.privateSubstance.moieties.forEach(moiety => {
+        if (!moiety.uuid) {
+          moiety.id = this.utilsService.newUUID();
+          moiety.uuid = moiety.id;
+        }
+      });
+    }
+    const substanceCopy = this.cleanSubstance();
+    return new Observable(observer => {
+
+    this.adminService.updateStagingArea(id, substanceCopy).subscribe(response => {
+      console.log(response);
+        observer.next(response);
+          observer.complete();
+      }, error => {
+        console.log(error);
+        observer.error(error);
         observer.complete();
       });
     });

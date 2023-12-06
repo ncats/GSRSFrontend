@@ -1,11 +1,13 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { LoadingService } from '@gsrs-core/loading';
 import { Title } from '@angular/platform-browser';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { ProductDetailsBaseComponent } from '../product-details-base.component';
 import { GeneralService } from '../../../service/general.service';
@@ -27,11 +29,13 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
+    cvService: ControlledVocabularyService,
     public authService: AuthService,
-    titleService: Title
+    titleService: Title,
+    public sanitizer: DomSanitizer
   ) {
     super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, titleService);
+      router, gaService, utilsService, cvService, titleService, sanitizer);
   }
 
   ngOnInit() {

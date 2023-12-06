@@ -3,6 +3,7 @@
   <mat-form-field [floatLabel]="'never'" class="search">
     <input matInput placeholder="Search" [formControl]="searchControl">
   </mat-form-field>
+  <app-relationships-download-button style="padding-left: 30px" [substance] = "substance"></app-relationships-download-button>
 </div>
 <div class="responsive">
   <table mat-table [dataSource]="paged" matSort (matSortChange)="sortData($event)">
@@ -15,7 +16,7 @@
           <img class="structure-image" appSubstanceImage [entityId]="relationship.relatedSubstance.refuuid">
           <div>
             <a class="substance-name" target = "_blank" style = "height: 18px;" [routerLink]="['/substances', relationship.relatedSubstance.refuuid]" >
-              {{relationship.relatedSubstance.name}}  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
+              <span [innerHTML] = "relationship.relatedSubstance.name"></span> <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
             </a>
           </div>
         </div>
@@ -31,8 +32,20 @@
     <ng-container matColumnDef="details">
       <th mat-header-cell *matHeaderCellDef > Details </th>
       <td mat-cell *matCellDef="let relationship">
-        <button class = "mat-raised-button mat-primary" (click)="openModal(detailTemplate)" [disabled]="!hasDetails(relationship)" > View</button>
-        <ng-template #detailTemplate>
+          <button class = "mat-raised-button mat-primary" (click)="openModal(detailTemplate)" [disabled]="
+          (!relationship.mediatorSubstance || !relationship.mediatorSubstance.name) 
+          && !(relationship.qualification)
+          && !(relationship.interactionType)
+          && !(relationship.comments)
+          && (!relationship.amount || !relationship.amount.nonNumericValue)"
+          [ngClass] = "((!relationship.mediatorSubstance || !relationship.mediatorSubstance.name) 
+          && !(relationship.qualification)
+          && !(relationship.interactionType)
+          && !(relationship.comments)
+          && (!relationship.amount || !relationship.amount.nonNumericValue)) ? 'mat-button-disabled':''"
+          > View</button>
+          <ng-template #detailTemplate>
+
           <h2 mat-dialog-title>Details</h2>
           <div mat-dialog-content>
             <table class = "details-table mat-table">
@@ -51,7 +64,7 @@
                   <img class="structure-image" appSubstanceImage [entityId]="relationship.mediatorSubstance.refuuid">
                   <div>
                     <a class="substance-name" target = "_blank" style = "height: 18px;" [routerLink]="['/substances', relationship.mediatorSubstance.refuuid]" >
-                      {{relationship.mediatorSubstance.name}}  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
+                     <span [innerHTML] = "relationship.mediatorSubstance.name"></span>  <mat-icon class = "icon"  svgIcon="open_in_new"></mat-icon>
                     </a>
                   </div>
                 </div>
@@ -96,7 +109,7 @@
           </div>
           <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+            <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "close()">Close</button>
           </div>
         </ng-template>
       </td>
@@ -114,7 +127,7 @@
           </div>
           <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+            <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "close()">Close</button>
           </div>
         </ng-template>
 

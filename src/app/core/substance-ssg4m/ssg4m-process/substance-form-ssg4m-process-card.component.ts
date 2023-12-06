@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Input } from '@angular/core';
+import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -27,8 +28,11 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
   private subscriptions: Array<Subscription> = [];
   showAdvancedSettings = false;
   tabSelectedView = 'Form View';
+  showView = 'form';
   tabSelectedIndex = 0;
+  tabTitle = ['form', 'step', 'scheme'];
   private overlayContainer: HTMLElement;
+
   constructor(
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     private substanceFormSsg4mSitesService: SubstanceFormSsg4mSitesService,
@@ -38,7 +42,8 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private http: HttpClient
+    private http: HttpClient,
+    private activatedRoute: ActivatedRoute
   ) {
     super(gaService);
     //  this.analyticsEventCategory = 'substance form ssg4m process';
@@ -55,18 +60,19 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         loaded = true;
         //setup viz stuff
         //TODO: make more configurable and standardized
+        console.log("About to configure the scheme view");
         window['schemeUtil'].debug = false;
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
-        const httpp=this.http;
+        const httpp = this.http;
         window['schemeUtil'].apiBaseURL = url;
 
         //allow resolution of svgs
         window['schemeUtil'].urlResolver = (u, cb) => {
-            httpp.get(u, {responseType: 'text'}).subscribe(svg=>{
-                 cb(svg);
-            }, error=>{
-                 cb("ERROR");
-            });
+          httpp.get(u, { responseType: 'text' }).subscribe(svg => {
+            cb(svg);
+          }, error => {
+            cb("ERROR");
+          });
         };
         //TODO:
         window['schemeUtil'].onClickReaction = (d) => {
@@ -82,12 +88,24 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
           //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
           //maybe in the future it should instead be a side window, I don't know.
         };
+
         //TODO:
         window['schemeUtil'].onClickMaterial = (d) => {
           this.openImageModal(d.refuuid, d.name, d.bottomText);
         };
+        
+        if (window['schemeUtil'].executeWhenLoaded) {
+          window['schemeUtil'].executeWhenLoaded();
+        }
       }
     }, 100);
+
+    // Get the parameter from URL and set the tab to either form view, step view, or scheme view.
+    this.showView = this.activatedRoute.snapshot.queryParams['view'] || 'form';
+    let urlTabIndex = this.tabTitle.indexOf(this.showView);
+    if (urlTabIndex != -1) {
+      this.onSelectedIndexChange(urlTabIndex);
+    }
 
   }
 
@@ -188,7 +206,20 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
       //This is a hacky placeholder way to force viz
       //TODO finish this
       const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-      window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+
+      console.log("About to load the scheme view");
+      if (window['schemeUtil']) {
+        if (window['schemeUtil'].debug) {
+          window['schemeUtil'].executeWhenLoaded = (() => {
+            console.log("About to render the scheme view");
+            window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+            window['schemeUtil'].executeWhenLoaded = null;
+          });
+        } else {
+          console.log("About to render the scheme view");
+          window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+        }
+      }
     } else {
       document.querySelector("#scheme-viz-view").className = "hidden";
     }

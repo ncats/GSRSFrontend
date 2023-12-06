@@ -1,16 +1,20 @@
 <!-- Buttons: delete, review -->
-<div class="marginbottomminus17px padleft235px">
-  <button mat-icon-button [ngStyle]="{'color':'brown'}" [disabled]="totalLot == 1"
-    (click)="confirmDeleteProductLot(prodComponentIndex, prodLotIndex)"
-    matTooltip="Delete Lot Details {{prodLotIndex + 1}}">
-    <mat-icon [class.disabled]="totalLot == 1">delete_forever</mat-icon>
-  </button>
-  &nbsp;&nbsp;
-  <button mat-icon-button [ngStyle]="{'color':'brown'}" (click)="copyProductLot()"
-    matTooltip="Copy Lot Details {{prodLotIndex + 1}} to New Lot">
-    <mat-icon>file_copy</mat-icon>
-  </button>
-    <!--
+<div class="divflexend marginbottomminus12px padleft235px">
+  <div class="maringright10px">
+    <button mat-icon-button [ngStyle]="{'color':'brown'}" (click)="copyProductLot()"
+      matTooltip="Copy Lot Details {{prodLotIndex + 1}} to New Lot">
+      <mat-icon>file_copy</mat-icon>
+    </button>
+  </div>
+  <div>
+    <button mat-icon-button [ngStyle]="{'color':'brown'}"
+      (click)="confirmDeleteProductLot(prodComponentIndex, prodLotIndex)"
+      matTooltip="Delete Lot Details {{prodLotIndex + 1}}">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
+
+  <!--
     &nbsp;&nbsp;
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
       matTooltip="Click to Confirm Ingredient Details {{ingredIndex + 1}} data has been Reviewed">
@@ -28,20 +32,29 @@
   <legend class="border">Lot Details&nbsp;<b><span class="colorgreen font17px">{{prodLotIndex + 1}}</span></b>
   </legend>
 
-  <div class="row margintop10px">
-    <mat-form-field class="col-1-4">
+  <div class="form-row margintop10px">
+    <app-cv-input class="col-5" domain="PROD_LOT_TYPE" title="Lot Type" name="lotType" [model]="productLot.lotType"
+      (valueChange)="productLot.lotType = $event">
+    </app-cv-input>
+
+    <mat-form-field class="col-5">
       <input matInput placeholder="Lot No" [(ngModel)]="productLot.lotNo" name="lotNo" />
     </mat-form-field>
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Expiry Date (mm/dd/yyyy)" (change)="validateExpiryDate()" [(ngModel)]="productLot.expiryDate" name="expiryDate" />
+
+    <mat-form-field class="col-5">
+      <input matInput placeholder="Lot Size" [(ngModel)]="productLot.lotSize" name="lotSize" />
+    </mat-form-field>
+
+    <mat-form-field class="col-5">
+      <input matInput placeholder="Expiry Date (mm/dd/yyyy)" (change)="validateExpiryDate()"
+        [(ngModel)]="productLot.expiryDate" name="expiryDate" />
       <mat-hint *ngIf="expiryDateMessage">{{expiryDateMessage}}</mat-hint>
     </mat-form-field>
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Manufacture Date (mm/dd/yyyy)" (change)="validateManufactureDate()" [(ngModel)]="productLot.manufactureDate" name="manufactureDate" />
+
+    <mat-form-field class="col-5">
+      <input matInput placeholder="Manufacture Date (mm/dd/yyyy)" (change)="validateManufactureDate()"
+        [(ngModel)]="productLot.manufactureDate" name="manufactureDate" />
       <mat-hint *ngIf="manufactureDateMessage">{{manufactureDateMessage}}</mat-hint>
-    </mat-form-field>
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Lot Size" [(ngModel)]="productLot.lotSize" name="lotSize" />
     </mat-form-field>
   </div>
 
@@ -51,20 +64,20 @@
     <br>
     <hr>
     <br>
-    <span matBadge="{{productLot.productIngredientList.length}}" matBadgeOverlap="false">
+    <span matBadge="{{productLot.productIngredients.length}}" matBadgeOverlap="false">
       <span class="titleorange">INGREDIENT </span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button mat-raised-button color="primary" (click)="addNewProductIngredient(prodComponentIndex, prodLotIndex)"
-      matTooltip="Add New Lot">
+      matTooltip="Add New Ingredient">
       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Ingredient
     </button>
     <br><br>
 
     <div class="marginbottom10px"
-      *ngFor="let productIngredient of productLot.productIngredientList; let prodIngredientIndex = index">
+      *ngFor="let productIngredient of productLot.productIngredients; let prodIngredientIndex = index">
       <app-product-ingredient-form [ingredient]="productIngredient"
-        [totalIngredient]="productLot.productIngredientList.length" [prodIngredientIndex]="prodIngredientIndex"
+        [totalIngredient]="productLot.productIngredients.length" [prodIngredientIndex]="prodIngredientIndex"
         [prodLotIndex]="prodLotIndex" [prodComponentIndex]="prodComponentIndex">
       </app-product-ingredient-form>
     </div>

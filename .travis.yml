@@ -2,7 +2,7 @@ dist: trusty
 
 language: node_js
 node_js:
-  - 12.20.0
+  - 14.17.0
 
 
 install:
@@ -20,9 +20,9 @@ install:
   - npm install --legacy-peer-deps
   - npm install webpack
   - npm i --save webpack-sources --legacy-peer-deps
+  - npm install -f @types/ws@8.5.4
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
 after_success:
   - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
-

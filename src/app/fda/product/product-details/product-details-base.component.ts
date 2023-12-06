@@ -1,12 +1,15 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import * as moment from 'moment';
 import { Title } from '@angular/platform-browser';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ProductService } from '../service/product.service';
 import { GeneralService } from '../../service/general.service';
@@ -24,7 +27,10 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   iconSrcPath: string;
   message = '';
   isAdmin = false;
+  downloadJsonHref: any;
+  jsonFileName: string;
   subscriptions: Array<Subscription> = [];
+  languageVocabulary: { [vocabularyTermValue: string]: VocabularyTerm } = {};
 
   constructor(
     public productService: ProductService,
@@ -35,8 +41,9 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
-    public titleService: Title
-  ) { }
+    public cvService: ControlledVocabularyService,
+    public titleService: Title,
+    public sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.loadingService.setLoading(true);
@@ -59,26 +66,49 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
   ngAfterViewInit() { }
 
+  getVocabularies(): void {
+    this.cvService.getDomainVocabulary('LANGUAGE').subscribe(response => {
+      this.languageVocabulary = response['LANGUAGE'] && response['LANGUAGE'].dictionary;
+
+      // Display Language by full description. Example: display 'en' to 'English'.
+      if (this.product.language && this.product.language.length > 0) {
+        if (this.languageVocabulary[this.product.language]) {
+          if (this.languageVocabulary[this.product.language].display) {
+            this.product.language = this.languageVocabulary[this.product.language].display;
+          }
+        }
+      }
+
+      // Display Language by full description in Product Name section
+      this.product.productProvenances.forEach(elementProv => {
+        if (elementProv != null) {
+          elementProv.productNames.forEach(elementName => {
+            if (elementName != null) {
+              if (elementName.language && elementName.language.length > 0) {
+                if (this.languageVocabulary[elementName.language]) {
+                  if (this.languageVocabulary[elementName.language].display) {
+                    elementName.language = this.languageVocabulary[elementName.language].display;
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+    });  // getDomainVocabulary
+  }
+
   getProduct(): void {
     const prodSubscription = this.productService.getProduct(this.productId).subscribe(response => {
       if (response) {
         this.product = response;
         if (Object.keys(this.product).length > 0) {
+          this.titleService.setTitle(`View Product ` + this.product.id);
 
-          // Add title on the browser. Concatenate multiple Product Code
-          let prodCode = '';
-          this.product.productCodeList.forEach((elementProdCode, indexProdCode) => {
-            if (elementProdCode != null) {
-              if (elementProdCode.productCode) {
-                if (indexProdCode > 0) {
-                  prodCode = prodCode.concat('|');
-                }
-                prodCode = prodCode.concat(elementProdCode.productCode);
-              }
-            }
-          });
-          this.titleService.setTitle(`Product ` + prodCode);
+          // Get Language vocabularies
+          this.getVocabularies();
 
+          // Get Ingredient Name for the Substance Key
           this.getSubstanceBySubstanceKey();
         }
       }
@@ -91,11 +121,17 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
   getSubstanceBySubstanceKey() {
     if (this.product != null) {
-      this.product.productComponentList.forEach(elementComp => {
+      this.product.productManufactureItems.forEach(elementComp => {
         if (elementComp != null) {
-          elementComp.productLotList.forEach(elementLot => {
+          elementComp.productLots.forEach(elementLot => {
             if (elementLot != null) {
-              elementLot.productIngredientList.forEach(elementIngred => {
+
+              // Sort Ingredient Name by Inredient Type ('Active Ingredient', 'Inactive Ingredient', etc)
+              if (elementLot.productIngredients.length > 0) {
+                elementLot.productIngredients.sort((a, b) => (a.ingredientType < b.ingredientType ? -1 : 1));
+              }
+
+              elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
                   // Get Substance Details, uuid, approval_id, substance name
                   if (elementIngred.substanceKey) {
@@ -128,47 +164,14 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-  /*
-  getSubstanceDetails() {
-    if (this.product != null) {
-      this.product.productComponentList.forEach(elementComp => {
-        if (elementComp != null) {
-          elementComp.productLotList.forEach(elementLot => {
-            if (elementLot != null) {
-              elementLot.productIngredientList.forEach(elementIngred => {
-                if (elementIngred != null) {
-                  // Get Ingredient Name
-                  if (elementIngred.bdnum) {
-                    this.productService.getSubstanceDetailsByBdnum(elementIngred.bdnum).subscribe(response => {
-                      if (response) {
-                        if (response.substanceId) {
-                          elementIngred.substanceId = response.substanceId;
-                          elementIngred.ingredientName = response.name;
-                        }
-                      }
-                    });
-                  }
+  saveJSON(): void {
+    let json = this.product;
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
 
-                  // Get Basis of Strength
-                  if (elementIngred.basisOfStrengthBdnum) {
-                    this.productService.getSubstanceDetailsByBdnum(elementIngred.basisOfStrengthBdnum).subscribe(response => {
-                      if (response) {
-                        if (response.substanceId) {
-                          elementIngred.basisOfStrengthSubstanceId = response.substanceId;
-                          elementIngred.basisOfStrengthIngredientName = response.name;
-                        }
-                      }
-                    });
-                  }
-                }
-              });
-            }
-          });
-        }
-      });
-    }
+    const date = new Date();
+    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
-  */
 
   private handleSubstanceRetrivalError() {
     this.loadingService.setLoading(false);
@@ -186,6 +189,5 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
   }
-
 
 }

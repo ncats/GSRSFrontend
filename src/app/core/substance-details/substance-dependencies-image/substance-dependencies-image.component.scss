@@ -1,0 +1,44 @@
+.divcenter {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.image-icon {
+  width: 50%;
+  height: 50% !important;
+}
+
+.zoom:hover{
+  cursor: zoom-in;
+}
+
+.width95px {
+  width: 95px;
+}
+
+.width110px {
+  width: 110px;
+}
+
+::ng-deep {
+
+  .structure-image-panel {
+
+    .mat-dialog-container {
+      padding: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mat-dialog-content {
+      margin: 0;
+      padding: 0;
+      max-height: 100%;
+    }
+
+    .mat-tab-body-content {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}

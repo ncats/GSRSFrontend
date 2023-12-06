@@ -52,4 +52,8 @@ export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit
     });
   }
 
+  close() {
+    this.dialog.closeAll();
+  }
+
 }

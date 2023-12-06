@@ -7,37 +7,23 @@
   */
     /*padding: 20px;*/
   }
-  
+
 .details-box {
   max-width: 1028px;
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 20px;
 }
-  
+
+.divflexend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
 .form-row {
   display: flex;
   width: 100%;
-
-  .col-1-4 {
-    /* width: 159.333px; */
-    width: calc((100% - 20px * 3) / 4);
-    margin-right: 20px;
-  }
-  
-  .col-1-4:last-child {
-    margin-right: 0px;
-  }  
-  
-  .col-2-4 {
-    /* width: 159.333px; */
-    width: calc((100% - 20px * 1) / 2);
-    margin-right: 20px;
-  }
-  
-  .col-2-4:last-child {
-    margin-right: 0px;
-  }
 }
 
 .row {
@@ -45,14 +31,40 @@
 }
 
 .col-1-4 {
-  /* width: 159.333px; */
   width: calc((100% - 20px * 3) / 4);
   margin-right: 20px;
 }
 
 .col-1-4:last-child {
   margin-right: 0px;
-}  
+}
+
+.col-3-1 {
+  width: calc((100% - 25px * 2) / 3);  // out of total 3 columns in a row, use 1 column
+  margin-right: 25px;
+}
+
+.col-3-1:last-child {
+  margin-right: 0px;
+}
+
+.col-3-4 {
+  width: calc((100% - 20px * 1) / 1.3);
+  margin-right: 20px;
+}
+
+.col-3-4:last-child {
+  margin-right: 0px;
+}
+
+.col-half-4 {
+  width: calc((100% - 20px * 7) / 8);
+  margin-right: 20px;
+}
+
+.col-half-4:last-child {
+  margin-right: 0px;
+}
 
 .col-2-4 {
   /* width: 159.333px; */
@@ -62,7 +74,7 @@
 
 .col-2-4:last-child {
   margin-right: 0px;
-}  
+}
 
 .bordergray {
   border: 1px solid var(--regular-grey-color);
@@ -78,6 +90,14 @@
 
 .margintop30px {
   margin-top: 30px;
+}
+
+.marginbottom20px {
+  margin-bottom: 20px;
+}
+
+.maringright10px {
+  margin-right: 10px;
 }
 
 .pad10px {
@@ -127,11 +147,11 @@
 }
 
 .margintopminus25 {
-  margin-top: -5px;
+  margin-top: -25px;
 }
 
-.marginbottomminus17px {
-  margin-bottom: -17px;
+.marginbottomminus12px {
+  margin-bottom: -12px;
 }
 
 .padleft250px {
@@ -154,6 +174,7 @@ hr {
 fieldset.border {
   border: solid 1px var(--regular-green-color) !important;
   padding: 0 10px 10px 10px;
+  margin-bottom: 10px;
   border-bottom: none;
   border-radius: 8px;
   min-width: 0;  /* override the default value of min-content */
@@ -186,7 +207,7 @@ legend.border {
 
 .formfield3columnwidth {
   width: 540px !important;
-}  
+}
 
 .formfieldfullpagewidth {
   width: 900px;
@@ -196,9 +217,9 @@ legend.border {
   width: 40px;
 }
 
-.disabled { 
-  cursor: not-allowed; 
-} 
+.disabled {
+  cursor: not-allowed;
+}
 
 .prodNameField {
   width: calc((100% - 100px) / (5/4));

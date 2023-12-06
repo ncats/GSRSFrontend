@@ -1,0 +1,288 @@
+.disabled-action-button {
+    cursor: not-allowed !important;
+}
+
+.disabled-action-button:hover {
+    cursor: not-allowed !important;
+}
+
+.mat-card {
+    max-width: 1228px;
+    margin-bottom: 20px;
+}
+
+.no-matches {
+    margin: 15px;
+}
+
+.mat-card, .controls-container {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.button-wrapper {
+    max-width: 170px;
+}
+
+.loading-label {
+    font-weight: bold;
+min-width: 100px;
+}
+
+.match-link {
+    color: var(--link-primary-color);
+}
+
+.darkgray {
+    color: gray;
+}
+
+.spinner {
+    width: 100px !important;
+height: 100px !important;
+margin: auto;
+margin-top: 75px !important;
+margin-left: 150px !important;
+}
+
+.action-button {
+    margin-right: 10px;
+font-size: 18px;
+}
+
+
+
+.action-label {
+    font-size:16px;
+    margin-right:15px;
+    margin-top:15px;
+}
+
+.name-loading {
+    display: flex;
+    width: 300px;
+}
+.show-more {
+    text-decoration: underline;
+    color: var(--link-primary-color);
+    cursor: pointer;
+}
+
+.mat-card-title {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.moreLink {
+    color: var(--link-primary-color);
+    font-weight: 600;
+    padding-left: 10px;
+    font-size: 15px;
+}
+
+.mat-card-title {
+    white-space: normal;
+
+    .substance-name {
+        color: var(--link-primary-color);
+        text-decoration: none;
+        padding-right: 10px;
+    }
+
+    .status-label {
+        font-size:18px;
+        margin-right: 10px;
+    }
+
+      .status {
+        font-size: 24px;
+        color: var(--pink-span-color);
+        margin-right: 25px;
+      }
+
+}
+
+.warning-label {
+    color: var(--warning-dialog-color);
+    font-weight: 500;
+    background-color: var(--warning-dialog-bg-color);
+    padding: 10px;
+    border-radius: 5px;
+
+  }
+
+  .info-label {
+    color: black;
+    font-weight: 500;
+    background-color: lightgray;
+    padding: 10px;
+    border-radius: 5px;
+
+  }
+
+
+  .error-label {
+    color: var(--error-dialog-color);
+    font-weight: 500;
+    background-color: var(--error-dialog-bg-color);
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+.tab-container {
+    margin-top: 15px;
+}
+
+::ng-deep .mat-tab-label-content {
+    font-size: 17px !important;
+}
+
+.summary-tab-label {
+    font-size: 17px;
+}
+
+.substance-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.tile .structure-container {
+    width:100%;
+    padding-right:0px;
+}
+
+.structure-container {
+    padding-right: 10px;
+}
+
+.mat-card-content {
+
+    .mat-chip-list-container {
+        margin-left: -10px;
+        margin-bottom: 10px;
+    }
+}
+
+.tile .image-thumbnail {
+    margin:auto;
+    margin-bottom:20px;
+    height:175px;
+    width:175px;
+}
+
+.image-thumbnail{
+    min-height:150px;
+    min-width:150px;
+}
+
+.zoom:hover{
+    cursor:zoom-in;
+}
+
+.substance-data {
+    display: flex;
+    flex-direction: row;
+
+    &:not(:last-child) {
+        margin-bottom: 15px;
+    }
+
+    .label {
+        font-weight: bold;
+        min-width: 100px;
+    }
+}
+
+.icon-align{
+    margin-top: -10px;
+    vertical-align: bottom;
+}
+
+.ext-link{
+    color: var(--link-primary-color);
+    text-decoration-style: unset;
+}
+
+@media(max-width: 700px) {
+    .mat-card-title {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .substance-name {
+            margin-bottom: 10px;
+        }
+    }
+
+    .substance-data {
+        flex-direction: column;
+
+        .label {
+            margin-bottom: 10px;
+        }
+
+        .value, .code-system {
+            padding-left: 20px;
+        }
+    }
+}
+
+.lock-icon {
+    color: var(--lock-icon-color);
+}
+
+.validation-container {
+    margin-top: 20px;
+}
+
+@media(max-width: 600px) {
+
+    .substance-content {
+        flex-direction: column;
+
+        .image-thumbnail {
+            margin: 0 auto;
+        }
+    }
+}
+
+.definition {
+  padding: 7px 0px;
+}
+
+.similarity {
+  padding-left: 10px;
+  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+  color: var(--pink-span-color);
+}
+
+.similarity-label {
+  font-style: italic;
+}
+
+.inxight-container {
+    text-align: right;
+    padding-bottom: 15px;
+}
+
+.small-icon {
+    height:20px;
+    width: 20px;
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
+
+.match-context {
+    display: block;
+    font-size: small; 
+    color: var(--regular-green-color);
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.space-bottom {
+    margin-bottom: 5px;
+}

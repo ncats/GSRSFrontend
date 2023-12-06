@@ -216,7 +216,7 @@ export class ExportDialogComponent implements OnInit {
       if (response['Newly created configuration']) {
         this.message = 'Newly created configuration: ' + response['Newly created configuration'];
         this.loadedConfig.configurationId = response['Newly created configuration'];
-
+        this.unsaved = false;
       }
     });
   } else {
@@ -230,10 +230,10 @@ export class ExportDialogComponent implements OnInit {
     this.loadedConfig.scrubberSettings = this.privateScrubberModel;
     this.loadedConfig.expanderSettings = this.privateExpanderModel;
     this.loadedConfig.exporterSettings = this.privateExporterModel;
-
     this.substanceService.updateConfig(this.loadedConfig.configurationId, this.loadedConfig, this.entity).subscribe(response => {
       if (response.Result) {
         this.message = response.Result;
+        this.unsaved = false;
       }
     })
   }

@@ -321,7 +321,10 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           this.application.provenance = 'GSRS';
         }
       }
+      // Set service application
+      this.applicationService.application = this.application;
     }
+
     this.applicationService.saveApplication().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -343,6 +346,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     }, error => {
       this.loadingService.setLoading(false);
     }
+
       /*
       , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;

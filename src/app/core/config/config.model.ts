@@ -3,6 +3,7 @@ export interface Config {
     gsrsHomeBaseUrl?: string;
     apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;
+    logoutRedirectUrl?: string;
     googleAnalyticsId?: string;
     version?: string;
     buildDateTime?: string;
@@ -58,6 +59,13 @@ export interface Config {
     elementLabelDisplay?:any;
     bulkSearch?: any
     useDataUrl?: any;
+    userProfile?: any;
+    stagingArea?: StagingAreaSettings;
+    privacyStatement: string;
+}
+
+export interface StagingAreaSettings {
+    mergeAction?: boolean;
 }
 
 export interface LoadedComponents {
@@ -66,6 +74,7 @@ export interface LoadedComponents {
     clinicaltrials?: boolean;
     adverseevents?: boolean;
     impurities?: boolean;
+    ssg4m?: boolean;
     userRegistration?: boolean;
 }
 

@@ -12,7 +12,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTreeModule} from '@angular/material/tree';
@@ -34,6 +34,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AllFilesComponent } from '@gsrs-core/admin/all-files/all-files.component';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { StructureEditorModule } from '@gsrs-core/structure-editor';
+import { ImportManagementComponent } from '@gsrs-core/admin/import-management/import-management.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-browse.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { ImportSummaryComponent } from '@gsrs-core/admin/import-browse/import-summary/import-summary.component';
+import { RouterModule } from '@angular/router';
+import { MatMenuModule } from '@angular/material/menu';
+import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { CvImportComponent } from '@gsrs-core/admin/import-management/cv-import/cv-import.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
+import { NamesDisplayStagingPipe } from '@gsrs-core/admin/import-browse/name-display.pipe';
+import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
+import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe';
 
 
 
@@ -55,6 +71,8 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor';
   MatButtonModule,
   MatCheckboxModule,
   MatSelectModule,
+  RouterModule,
+  MatMenuModule,
     MatSortModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
@@ -62,7 +80,14 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor';
     MomentModule,
     MatPaginatorModule,
     MatIconModule,
-  StructureEditorModule],
+    MatRadioModule,
+    MatSidenavModule,
+    MatChipsModule,
+  StructureEditorModule,
+  FacetsManagerModule,
+  SubstanceImageModule,
+  ElementLabelDisplayModule,
+],
   declarations: [
     CvManagementComponent,
     ScheduledJobsComponent,
@@ -75,7 +100,15 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor';
     DataManagementComponent,
     MonitorComponent,
     AllFilesComponent,
-    FragmentWizardComponent
+    FragmentWizardComponent,
+    ImportManagementComponent,
+    ImportBrowseComponent,
+    ImportSummaryComponent,
+    ImportDialogComponent,
+    CvImportComponent,
+    BulkActionDialogComponent,
+    NamesDisplayStagingPipe,
+    TakeImportPipe
   ],
   exports: [
     CvManagementComponent,
@@ -89,14 +122,32 @@ import { StructureEditorModule } from '@gsrs-core/structure-editor';
     DataManagementComponent,
     MonitorComponent,
     AllFilesComponent,
-    FragmentWizardComponent
+    FragmentWizardComponent,
+    ImportManagementComponent,
+    ImportBrowseComponent,
+    ImportSummaryComponent,
+    ImportDialogComponent,
+    CvImportComponent,
+    BulkActionDialogComponent
+
   ],
   entryComponents: [
     CvTermDialogComponent,
-    UserEditDialogComponent
+    UserEditDialogComponent,
+    ImportDialogComponent,
+    CvImportComponent,
+    BulkActionDialogComponent,
+    NamesDisplayStagingPipe,
+    TakeImportPipe
+
+
   ],
   providers: [
-    CanActivateAdmin
+    CanActivateAdmin,
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
   ]
 })
 export class AdminModule { }

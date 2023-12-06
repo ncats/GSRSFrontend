@@ -13,6 +13,8 @@ import { Environment } from 'src/environments/environment.model';
 import { Location } from '@angular/common';
 import { DisplayFacet } from './display-facet';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-facets-manager',
@@ -42,6 +44,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   _configName: string;
   _facetNameText: string;
   urlSearch: string;
+  stagingFacets: any;
   private privateFacetParams: FacetParam;
   private privateRawFacets: Array<Facet>;
   private facetSearchChanged = new Subject<{ index: number; query: any; facets?: any; }>();
@@ -60,7 +63,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     private gaService: GoogleAnalyticsService,
     private router: Router,
     private location: Location,
-    private facetManagerService: FacetsManagerService
+    private facetManagerService: FacetsManagerService,
+    private dialog: MatDialog
   ) {
     this.privateFacetParams = {};
     this.facetBuilder = {};
@@ -105,10 +109,14 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
     this._configName = configName;
     if (configName === 'applications' || configName === 'clinicaltrialsus' || configName === 'products'
-    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm') {
+    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm' || configName === 'staging') {
       this.hideDeprecatedCheckbox = true;
     } else {
       this.hideDeprecatedCheckbox = false;
+    }
+    if(this.calledFrom === 'staging') {
+      this.hideDeprecatedCheckbox = true;
+      this.stagingFacets = this.configService.configData.facets[configName];
     }
     this.populateFacets();
   }
@@ -170,6 +178,9 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         distinctUntilChanged(),
         switchMap(event => {
           const facet = this.facets[event.index];
+          if (!facet._self) {
+            facet._self = this.facetManagerService.generateSelfUrl('stagingArea', facet.name);
+          }
           return this.facetsService.getFacetsHandler(facet, event.query, null, this.privateFacetParams, this.urlSearch).pipe(take(1));
         })
       ).subscribe(response => {
@@ -269,13 +280,12 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const facetsCopy = this.privateRawFacets.slice();
         const newFacets = [];
         this.showAudit = this.authService.hasRoles('admin');
-        const facetKeys = Object.keys(this.facetsConfig) || [];
-
+        let facetKeys = Object.keys(this.facetsConfig) || [];
         if (this._facetDisplayType) {
-          if (this._facetDisplayType === 'default') {
+          if (this._facetDisplayType === 'default' || this.calledFrom === 'staging') {
             facetKeys.forEach(facetKey => {
               if (this.facetsConfig[facetKey].length
-                && (facetKey === 'default' || this.authService.hasRoles(facetKey))) {
+                && (facetKey === 'default' || this.authService.hasRoles(facetKey) || (facetKey === 'staging' && this.calledFrom === 'staging'))) {
                 this.facetsConfig[facetKey].forEach(facet => {
                   for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                     this.toggle[facetIndex] = true;
@@ -381,6 +391,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             newFacets.unshift(newFacets.splice(position, 1)[0]);
           }
         });
+        console.log(newFacets);
         this.facets = newFacets;
         this.setShowAdvancedFacetStates();
         this.facetsLoaded.emit(this.facets.length);
@@ -677,8 +688,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   moreFacets(index: number, facet: Facet) {
     this.facets[index].$isLoading = true;
+    // This check for _self should be temporary while it's incorporation in the staging area is complete.
+    // If no meta fields exist, generate what they are expected to look like
     if (facet.$next == null) {
-      facet.$next = facet._self.replace('fskip=0', 'fskip=10');
+      if (!facet._self) {
+          facet._self = this.facetManagerService.generateSelfUrl('stagingArea', facet.name);
+      }
+        facet.$next = facet._self.replace('fskip=0', 'fskip=10');
     }
     this.facetManagerService.getFacetsHandler(this.facets[index], '', facet.$next, this.privateFacetParams, this.urlSearch).pipe(take(1)).subscribe(resp => {
       this.facets[index].$next = resp.nextPageUri;
@@ -721,4 +737,25 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     return this.privateFacetParams;
   }
 
+  editList(list?: string): void {
+    let data = {view: 'all'};
+    if (list) {
+      data.view = 'single';
+      data['activeName'] = list.split(':')[1];
+    }
+    console.log(data);
+    const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+      width: '850px',
+      autoFocus: false,
+            data: data
+
+    });
+   // this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+       // this.overlayContainer.style.zIndex = null;
+      }
+    });
+  }
 }

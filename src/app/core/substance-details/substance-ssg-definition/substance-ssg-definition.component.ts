@@ -54,4 +54,9 @@ export class SubstanceSsgDefinitionComponent extends SubstanceCardBase implement
     });
   }
 
+  close(){
+    this.dialog.closeAll();
+  }
+
+
 }

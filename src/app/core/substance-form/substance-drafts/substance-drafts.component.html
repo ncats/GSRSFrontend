@@ -4,7 +4,7 @@
 
     <div class = "title">Saved Drafts</div>
     <span class="middle-fill"></span>
-    <button  mat-icon-button matTooltip="Close Dialog" mat-dialog-close><mat-icon svgIcon="clear"></mat-icon></button>
+    <button  mat-icon-button matTooltip="Close Dialog" mat-dialog-close (click) = "close()"><mat-icon svgIcon="clear"></mat-icon></button>
             </div>
 
 </div>
@@ -76,6 +76,6 @@
                       </div>
                       
         <span class="middle-fill"></span>
-        <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+        <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "close()">Close</button>
       </div>
       </div>

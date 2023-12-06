@@ -14,6 +14,7 @@ export class SubstanceImageDirective implements AfterViewInit {
   private isAfterViewInit = false;
   private privateAtomMaps?: Array<number>;
   private privateVersion?: number;
+  private privateAltId?: string;
 
   constructor(
     private el: ElementRef,
@@ -62,6 +63,14 @@ export class SubstanceImageDirective implements AfterViewInit {
   }
 
   @Input()
+  set stagingId(stagingId: string) {
+    if (stagingId !== this.privateAltId) {
+      this.privateAltId = stagingId;
+      this.setImageSrc();
+    }
+  }
+
+  @Input()
   set atomMaps(atomMaps: Array<number>) {
     if (atomMaps !== this.privateAtomMaps) {
       this.privateAtomMaps = atomMaps;
@@ -82,8 +91,14 @@ export class SubstanceImageDirective implements AfterViewInit {
             this.imageElement.src = srcUrl;
           }
         } else {
-          const srcUrl = this.utilsService.getStructureImgUrl(
+          let srcUrl = this.utilsService.getStructureImgUrl(
             this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps);
+          if (this.privateAltId) {
+            srcUrl = this.utilsService.getStructureImgUrl(
+              this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, null, this.privateAltId);
+          } else {
+          }
+         
           if (useDataUrlConfig === true) {
             this.setImageSrcAsBlob(srcUrl);
           } else {
@@ -91,7 +106,12 @@ export class SubstanceImageDirective implements AfterViewInit {
           }
         }
     } else { 
-      const srcUrl =`${this.configService.environment.baseHref || ''}assets/images/noimage.svg`;
+      let srcUrl =`${this.configService.environment.baseHref || ''}assets/images/noimage.svg`;
+
+      if(this.privateAltId) {
+        srcUrl = this.utilsService.getStructureImgUrl(
+          this.privateEntityId, this.privateSize, this.privateStereo, this.privateAtomMaps, null, this.privateAltId);
+      }
       if(this.privateSize){
         this.imageElement.height = this.privateSize;
         this.imageElement.width = this.privateSize;

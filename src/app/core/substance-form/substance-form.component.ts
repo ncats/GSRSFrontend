@@ -37,6 +37,10 @@ import { ConfigService } from '@gsrs-core/config';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { UtilsService } from '@gsrs-core/utils';
+import { ungzip, deflate, inflate } from 'pako';
+import { Buffer } from 'buffer';
+import { AdminService } from '@gsrs-core/admin/admin.service';
+
 
 @Component({
   selector: 'app-substance-form',
@@ -189,7 +193,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                this.loadingService.setLoading(false);
                this.router.onSameUrlNavigation = 'reload';
               this.router.navigateByUrl('/substances/register/' + response.substance.substanceClass + '?action=import', { state: { record: response.substance } });
-   
+
              }, 1000);
            }
           }
@@ -214,7 +218,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           }
     });
   }
-  
+
 
   importDialog(): void {
     const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
@@ -272,6 +276,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.router.navigate([this.router.url]);
   }
 
+
+
   ngOnInit() {
     this.loadingService.setLoading(true);
     if (this.configService.configData && this.configService.configData.approvalType) {
@@ -287,15 +293,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
-        
+
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-      
+
         if (params['id']) {
-          
+
           if(action && action === 'import' && window.history.state) {
             const record = window.history.state;
             this.imported = true;
-            
+
             this.getDetailsFromImport(record.record);
           } else {
             const id = params['id'];
@@ -317,7 +323,37 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.getDetailsFromImport(record.record);
             this.gaService.sendPageView(`Substance Register`);
 
-          } else {
+          }  else if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+            this.substanceService.GetStagedRecord(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
+              response.uuid = null;
+
+
+                if (response._name){
+                  let name = response._name;
+                  response.names.forEach(current => {
+                    if (current.displayName && current.stdName) {
+                      name = current.stdName;
+                    }
+                  });
+                  name = name.replace(/<[^>]*>?/gm, '');
+                  this.titleService.setTitle('Edit - ' + name);
+                }
+                if (response) {
+                  this.definitionType = response.definitionType;
+                  this.substanceClass = response.substanceClass;
+                  this.status = response.status;
+                  this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
+                    this.setFormSections(formSections[response.substanceClass]);
+                    this.isLoading = false;
+                    this.loadingService.setLoading(false);
+                  });
+
+              }
+            }, error => {
+              this.isLoading = false;
+              this.loadingService.setLoading(false);
+              });
+       }  else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
           if (this.copy) {
             const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
@@ -365,7 +401,34 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     });
 
-  }
+
+
+}
+
+isBase64(str) {
+  let base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+  let result = decodeURIComponent(str);
+  return base64regex.test(str);
+}
+
+setStructureFromUrl(structure: string, type: string):void {
+  // check if structureUR is encoded molfile or raw smiles string, then import into form
+  /*structure = this.gunzip(structure);
+    structure = decodeURIComponent(structure);
+    this.substanceFormService.importStructure(structure, 'molfile');*/
+    this.substanceFormService.importStructure(structure, 'smiles');
+
+}
+
+
+
+gunzip(t): string{
+
+   const gezipedData = Buffer.from(t, 'base64')
+const gzipedDataArray = Uint8Array.from(gezipedData);
+const ungzipedData = ungzip(gzipedDataArray);
+return new TextDecoder().decode(ungzipedData);
+}
 
 getDrafts() {
   let keys = Object.keys(localStorage);
@@ -392,7 +455,23 @@ getDrafts() {
 
   ngAfterViewInit(): void {
     this.getDrafts();
-    
+    // set structure based on smiles or molfile
+    const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
+    if (structure) {
+     let decode = decodeURIComponent(structure);
+     console.log(decode);
+      setTimeout(() => {
+        this.setStructureFromUrl(decode, 'molfile');
+      });
+    }
+    const json = this.activatedRoute.snapshot.queryParams['jsonStructure'] || null;
+    // TODO add json support
+ //   this.setStructureFromUrl(structure, 'json');
+    if (json) {
+     let decode = decodeURI(json);
+    }
+
+
 
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
@@ -511,7 +590,7 @@ getDrafts() {
       this.openFragmentDialog();
     }
 
-    
+
 
   }
 
@@ -565,6 +644,10 @@ getDrafts() {
     if (action && action === 'import') {
       return false;
     }
+   const staging = this.activatedRoute.snapshot.queryParams['stagingID'] || null;
+    if (staging && staging.length > 0 ) {
+      return false
+    }
     // if config var set and set to 'createdBy then set approval button enabled if user is not creator
     if(this.approvalType === 'createdBy') {
         if (this.definition && this.definition.createdBy && this.user) {
@@ -579,7 +662,7 @@ getDrafts() {
             return false;
           }
           return true;
-    
+
         }
         return false;
         //default to 'lastEditedBy' if not set in config
@@ -599,7 +682,7 @@ getDrafts() {
           return true;
       }
     }
-    
+
   }
 
   showJSON(): void {
@@ -786,7 +869,7 @@ getDrafts() {
     this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
-        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING'|| message.messageType.toUpperCase() === 'NOTICE');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -830,10 +913,27 @@ getDrafts() {
     );
   }
 
+  submitStaging() {
+    this.substanceFormService.submitStaging(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.validationMessages = null;
+      this.showSubmissionMessages = false;
+      this.submissionMessage = '';
+      if (!this.id) {
+        this.id = response.uuid;
+      }
+      this.openSuccessDialog('staging');
+    })
+  }
+
   submit(): void {
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
+    if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+      this.submitStaging();
+    } else {
     this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -863,6 +963,8 @@ getDrafts() {
         }, 8000);
       }
     });
+
+  }
   }
 
   dismissValidationMessage(index: number) {
@@ -981,7 +1083,7 @@ getDrafts() {
           codeSystem: code
         });
       })
-    
+
     const createHolders = defiant.json.search(old, '//*[created]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
@@ -1057,13 +1159,15 @@ getDrafts() {
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view') => {
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view' | 'staging') => {
 
       this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
       } else if (response === 'browse') {
         this.router.navigate(['/browse-substance']);
+      } else if (response === 'staging') {
+        this.router.navigate(['/admin/staging-area']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
       } else if (response === 'viewInPfda') {
@@ -1076,11 +1180,15 @@ getDrafts() {
         }
         this.showSubmissionMessages = true;
         this.validationResult = false;
-        setTimeout(() => {
-          this.showSubmissionMessages = false;
-          this.submissionMessage = '';
-          this.router.navigate(['/substances', this.id, 'edit']);
-        }, 3000);
+        if (type && type === 'staging') {
+          this.submissionMessage = 'Edits to staged substance were saved successfully';
+        } else {
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = '';
+            this.router.navigate(['/substances', this.id, 'edit']);
+          }, 3000);
+        }
       }
     });
     this.subscriptions.push(dialogSubscription);
@@ -1112,7 +1220,7 @@ mergeConcept() {
   saveDraft(auto?: boolean) {
     const json = this.substanceFormService.cleanSubstance();
     const time = new Date().getTime();
-    
+
     const uuid = json.uuid ? json.uuid : 'register';
     const type = json.substanceClass;
     let primary = null;
@@ -1136,7 +1244,7 @@ mergeConcept() {
         'auto': false,
         'file': file
       }
-  
+
      localStorage.setItem(file, JSON.stringify(draft));
      this.draftCount++;
 
@@ -1199,11 +1307,11 @@ mergeConcept() {
 
      localStorage.setItem(file, JSON.stringify(draft));
 
-      
-    }
-    
 
-    
+    }
+
+
+
 
   }
 }

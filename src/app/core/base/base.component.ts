@@ -21,6 +21,8 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import {sprintf} from "sprintf-js";
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
   selector: 'app-base',
@@ -159,6 +161,8 @@ export class BaseComponent implements OnInit, OnDestroy {
       } else if (this.loadedComponents.impurities) {
         notempty = true;
       } else if (this.loadedComponents.products) {
+        notempty = true;
+      } else if (this.loadedComponents.ssg4m) {
         notempty = true;
       }
 
@@ -364,14 +368,14 @@ export class BaseComponent implements OnInit, OnDestroy {
     if(item?.kind && item?.mailToPath) {
       let subject ='';
       let email ='';
-      if(item.kind==='contact-us') { 
+      if(item.kind==='contact-us') {
         email = this.contactEmail;
       }
       if(item?.queryParams) {
         if(item?.queryParams?.subject) {
-          subject = item.queryParams.subject;   
+          subject = item.queryParams.subject;
         }
-      } 
+      }
       const part1 = sprintf(item.mailToPath, email);
       let part2 ='';
       if(subject) {
@@ -379,7 +383,7 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
       return part1+'?'+part2;
     }
-    return '';          
+    return '';
   }
 
   setClassicLinkPath(path: string): void {
@@ -479,10 +483,35 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   }
 
+  viewLists(list?: string): void {
+    let data = {view: 'all'};
+    if (list) {
+      data.view = 'single';
+      data['activeName'] = list.split(':')[1];
+    }
+    const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+      width: '850px',
+      autoFocus: false,
+      data: data
+
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
+      }
+    });
+  }
+
   logout() {
     this.authService.logout();
     setTimeout(() => {
-      this.router.navigate(['/home']);
+      if (this.configService.configData && this.configService.configData.logoutRedirectUrl){
+        window.location.href = this.configService.configData.logoutRedirectUrl;
+      } else {
+        this.router.navigate(['/home']);
+      }
     }, 1200);
   }
 
@@ -493,17 +522,17 @@ export class BaseComponent implements OnInit, OnDestroy {
       data: {view: 'user'}
     });
     this.overlayContainer.style.zIndex = '1002';
-  
+
    dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
-  
-  
+
+
       if (response) {
            this.loadingService.setLoading(true);
          //  console.log(response.json);
-  
+
           const read = response.substance;
-          
+
           if (response.uuid && response.uuid != 'register'){
            const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
           this.router.navigateByUrl(url, { state: { record: response.substance } });
@@ -513,12 +542,12 @@ export class BaseComponent implements OnInit, OnDestroy {
              this.router.onSameUrlNavigation = 'reload';
              let url = '/substances/register/' + response.substance.substanceClass + '?action=import'
             this.router.navigateByUrl(url, { state: { record: response.substance } });
- 
+
            }, 500);
          }
           }
-  
-         
+
+
     });
   }
 

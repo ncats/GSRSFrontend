@@ -50,6 +50,8 @@ import { FormControl } from '@angular/forms';
 import { SubBrowseEmitterService } from './sub-browse-emitter.service';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
 import { I } from '@angular/cdk/keycodes';
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
   selector: 'app-substances-browse',
@@ -115,6 +117,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   private isComponentInit = false;
   sequenceID?: string;
   searchHashFromAdvanced: string;
+  bulkSearchFacet: Facet;
+  userLists: Array<string>;
 
   // needed for facets
   private privateFacetParams: FacetParam;
@@ -158,6 +162,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private title: Title,
     private cvService: ControlledVocabularyService,
     private wildCardService: WildcardService,
+    private bulkSearchService: BulkSearchService,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
   ) {
@@ -183,12 +188,29 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.searchSubstances();
   }
 
+
+
+
+  fetchBulkLists() {
+    this.bulkSearchService.getBulkSearchLists().subscribe(result => {
+      console.log(result);
+    }, error => {
+      console.log(error);
+    });
+
+  }
+
   ngOnInit() {
     this.gaService.sendPageView('Browse Substances');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
 
+      this.bulkSearchService.listEmitter.subscribe(result => {
+        this.userLists = result;
+      });
+
     });
+    
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
@@ -215,7 +237,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchCutoff = Number(this.activatedRoute.snapshot.queryParams['cutoff']) || 0;
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastEdited';
+    // the sort order should be set to default (similarity) for structure searches, last edited for all others
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 
+    (this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '' ? 'default':'$root_lastEdited');
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
@@ -228,6 +252,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
+    this.bulkSearchService.getBulkSearchLists().subscribe( result => {
+      console.log(result);
+      this.userLists = result.lists;
+
+        }, error => {
+          console.log(error);
+          this.userLists = null;
+        })
       } else {
         this.showDeprecated = false;
       }
@@ -511,8 +543,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
           this.substances = pagingResponse.content;
           this.totalSubstances = pagingResponse.total;
+          this.etag = pagingResponse.etag;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
+            
           }
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
@@ -848,6 +882,15 @@ searchTermOkforBeginsWithSearch(): boolean {
     this.searchSubstances();
   }
 
+  seedSmiles(smiles: string) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        importStructure: encodeURIComponent(smiles)
+      }
+    };
+    this.router.navigate(['/substances/register/chemical'], navigationExtras);
+  }
+
   editSequenceSearh(): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'sequence search term' :
       `${this.privateSequenceSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}-${this.privateSearchSeqType}`;
@@ -1157,5 +1200,25 @@ searchTermOkforBeginsWithSearch(): boolean {
     document.execCommand('copy');
     document.body.removeChild(selBox);
   }
+
+  addToList(): void {
+      let data = {view: 'add', etag: this.etag, lists: this.userLists};
+
+      
+      const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+        width: '800px',
+        autoFocus: false,
+              data: data
+  
+      });
+      this.overlayContainer.style.zIndex = '1002';
+  
+      const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+        if (response) {
+          this.overlayContainer.style.zIndex = null;
+        }
+      });
+    }
+  
 
 }

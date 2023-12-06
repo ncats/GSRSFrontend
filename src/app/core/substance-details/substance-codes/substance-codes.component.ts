@@ -204,5 +204,9 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       this.overlayContainer.style.zIndex = null;
     });
   }
+
+  close() {
+    this.dialog.closeAll();
+  }
 }
 

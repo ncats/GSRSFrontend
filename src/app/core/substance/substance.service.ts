@@ -23,6 +23,8 @@ import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
+
 import { stringify } from 'querystring';
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
@@ -435,9 +437,9 @@ export class SubstanceService extends BaseHttpService {
       } else {
         params = params.append('bulkQID', bulkQID.toString());
         let v  = "false";
-        if(searchOnIdentifiers===true) { v= "true"; }   
-        params = params.append('searchOnIdentifiers', v);    
-        params = params.append('searchEntity', searchEntity);    
+        if(searchOnIdentifiers===true) { v= "true"; }
+        params = params.append('searchOnIdentifiers', v);
+        params = params.append('searchEntity', searchEntity);
         url += `substances/bulkSearch`;
       }
 
@@ -503,8 +505,8 @@ export class SubstanceService extends BaseHttpService {
         response.statusKey=searchKey;
         observer.next(response);
         if (!asyncCallResponse.finished) {
-          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {     
-       
+          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+
             setTimeout(() => {
 
               this.processAsyncSearchResults(
@@ -534,7 +536,7 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
- 
+
 
   private getAsyncSearchResults(
     querySearchTerm: string,
@@ -599,6 +601,12 @@ export class SubstanceService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
+  }
+
+  getAllByEtag(etag: string) {
+    let url = this.apiBaseUrl + 'substances/search?top=1000000&etag=' + etag;
+    return this.http.get<any>(url);
+
   }
 
   searchSingleFacet(name: string, value: string) {
@@ -726,6 +734,11 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
+  getDependencies(id: string): Observable<Array<SubstanceDependenciesImageNode>> {
+    const url = `${this.apiBaseUrl}substances(${id})/@dependencies`;
+    return this.http.get<any>(url);
+  }
+
   approveSubstance(keyid: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${keyid})/@approve`;
     return this.http.get(url);
@@ -801,9 +814,32 @@ export class SubstanceService extends BaseHttpService {
 
   getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
     let url: string;
-
     if (searchTerm) {
       url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      if(pageQuery) {
+        url += `&q=${pageQuery}`;
+      }
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    if (otherFacets) {
+      let temp = facet._self.split('&');
+      temp.forEach(val => {
+        if (val.indexOf('facet=') >= 0) {
+          url += '&' + val;
+        }
+      });
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+  // For the staging area browse, to be merged with getSubstanceFacets once back-end staging facet changes are set
+  getStagingFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/stagingArea/search/@facets?wait=false&&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100e&order=%24lastEdited&ffilter=${searchTerm}`;
       if(pageQuery) {
         url += `&q=${pageQuery}`;
       }
@@ -912,6 +948,13 @@ export class SubstanceService extends BaseHttpService {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/${entity}/export/config(${id})`;
 
     return this.http.put< any>(url, config);
+  }
+
+  public GetStagedRecord(id:string) {
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}`;
+    
+    return this.http.get< any >(`${url}`);
+
   }
 
 }

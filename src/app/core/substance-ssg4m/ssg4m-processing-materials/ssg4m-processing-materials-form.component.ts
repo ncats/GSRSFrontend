@@ -1,12 +1,16 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfigService } from '@gsrs-core/config/config.service';
+import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { SubstanceRelated, SubstanceSummary } from '@gsrs-core/substance';
-import { SpecifiedSubstanceG4mProcessingMaterial } from '@gsrs-core/substance/substance.model';
+import { SpecifiedSubstanceG4mProcessingMaterial, SubstanceAmount } from '@gsrs-core/substance/substance.model';
+import { AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
+import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
 
 @Component({
   selector: 'app-ssg4m-processing-materials-form',
@@ -24,10 +28,16 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
   privateProcessingMaterial: SpecifiedSubstanceG4mProcessingMaterial;
   relatedSubstanceUuid: string;
   substance: SubstanceDetail;
+  private overlayContainer: HTMLElement;
+  loading = false;
+  error = false;
   private subscriptions: Array<Subscription> = [];
 
   constructor(
     private substanceFormService: SubstanceFormService,
+    private substanceFormSsg4mStagesService: SubstanceFormSsg4mStagesService,
+    private overlayContainerService: OverlayContainer,
+    private utilsService: UtilsService,
     public configService: ConfigService,
     private dialog: MatDialog
   ) { }
@@ -90,6 +100,12 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
       let substanceRelated = this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].processingMaterials[this.processingMaterialIndex].substanceName;
       this.relatedSubstanceUuid = substanceRelated.refuuid;
     }
+
+    if (this.configSettingsDisplay["references"] === true) {
+      if (this.privateProcessingMaterial.references == null) {
+        this.privateProcessingMaterial.references = [];
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -125,6 +141,18 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
     this.privateProcessingMaterial.substanceRole = role;
   }
 
+  updateSubstanceGrade(grade: string): void {
+    this.privateProcessingMaterial.substanceGrade = grade;
+  }
+
+  updateSpecificationType(specificationType: string): void {
+    this.privateProcessingMaterial.specificationType = specificationType;
+  }
+
+  updateAcceptanceCriteriaType(acceptanceCriteriaType: string, acceptanceIndex): void {
+    this.privateProcessingMaterial.acceptanceCriterias[acceptanceIndex].acceptanceCriteriaType = acceptanceCriteriaType;
+  }
+
   relatedSubstanceUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {
@@ -141,6 +169,14 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
     }
   }
 
+  addManufacturer(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addResultingManufacturerDetails(processIndex, siteIndex, stageIndex, this.processingMaterialIndex);
+  }
+
+  addAcceptanceCriteria(processIndex: number, siteIndex: number, stageIndex: number) {
+    this.substanceFormSsg4mStagesService.addProcessingAcceptanceCriteria(processIndex, siteIndex, stageIndex, this.processingMaterialIndex);
+  }
+
   confirmDeleteProcessingMaterial() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delele Processing Material ' + (this.processingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
@@ -155,6 +191,81 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
 
   deleteProcessingMaterial(): void {
     this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].processingMaterials.splice(this.processingMaterialIndex, 1);
+  }
+
+  confirmDeleteManufacturer(manufacturerIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Manufacturer ' + (manufacturerIndex + 1) + ' for Processing Material ' + (this.processingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteManufacturer(manufacturerIndex);
+      }
+    });
+  }
+
+  deleteManufacturer(manufacturerIndex: number): void {
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].processingMaterials[this.processingMaterialIndex].manufacturerDetails.splice(manufacturerIndex, 1);
+  }
+
+  confirmDeleteAcceptanceCriteria(acceptanceIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Acceptance Criteria ' + (acceptanceIndex + 1) + ' for Processing Material ' + (this.processingMaterialIndex + 1) + ' for Step ' + (this.stageIndex + 1) + ' for Site ' + (this.siteIndex + 1) + ' for Process ' + (this.processIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteAcceptanceCriteria(acceptanceIndex);
+      }
+    });
+  }
+
+  deleteAcceptanceCriteria(acceptanceIndex: number): void {
+    this.substance.specifiedSubstanceG4m.process[this.processIndex].sites[this.siteIndex].stages[this.stageIndex].processingMaterials[this.processingMaterialIndex].acceptanceCriterias.splice(acceptanceIndex, 1);
+  }
+
+  openAmountDialog(): void {
+    if (!this.privateProcessingMaterial.amount) {
+      this.privateProcessingMaterial.amount = {};
+    }
+    const dialogRef = this.dialog.open(AmountFormDialogComponent, {
+      data: {'subsAmount': this.privateProcessingMaterial.amount},
+      width: '990px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(newAmount => {
+      this.overlayContainer.style.zIndex = null;
+      this.privateProcessingMaterial.amount = newAmount;
+    });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  displayAmount(amt: SubstanceAmount): string {
+    return this.utilsService.displayAmount(amt);
+  }
+
+
+  fileSelected(file: File): void {
+    this.error = false;
+    if (file != null) {
+      this.loading = true;
+      this.utilsService.uploadFile(file).subscribe(response => {
+        this.privateProcessingMaterial.specificationReference = response;
+        this.loading = false;
+
+      }, error => {
+        this.loading = false;
+        this.error = true;
+
+      });
+    }
+  }
+
+  downloadDocument(url: string): void {
+    this.substanceFormService.bypassUpdateCheck();
+    window.open(url);
   }
 
 }

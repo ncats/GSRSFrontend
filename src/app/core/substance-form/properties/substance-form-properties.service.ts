@@ -63,6 +63,8 @@ export class SubstanceFormPropertiesService extends SubstanceFormServiceBase<Arr
     if (subPropertyIndex > -1) {
       this.substance.properties.splice(subPropertyIndex, 1);
       this.propertyEmitter.next(this.substance.properties);
+      this.substanceFormService.recalculateAllSites('features');
+
     }
   }
 }

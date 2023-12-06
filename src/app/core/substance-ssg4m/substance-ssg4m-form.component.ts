@@ -102,6 +102,13 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   showFormReadOnly = 'false';
   showRegisterEditTitle = 'true';
   ssg4mSyntheticPathway: Ssg4mSyntheticPathway;
+  saveDelayedMessage = '';
+  isCancelBtnClicked = false;
+  isSavedSuccessful = false;
+  public configSettingsDisplay = {};
+  configSsg4Form: any;
+  configSettingReferences = false;
+  private submitSubscription: any = null;
 
   private jsLibScriptUrls = [
     `${environment.baseHref || ''}assets/pathway/cola.min.js`,
@@ -137,10 +144,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
 
-    let configSsg4Form: any;
-    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
-    // Get 'showRegisterEditTitle' value from config
-    this.showRegisterEditTitle = configSsg4Form.showRegisterEditTitle;
+    this.getConfigSettings();
+    if (this.configSsg4Form) {
+      // Get 'showRegisterEditTitle' value from config
+      this.showRegisterEditTitle = this.configSsg4Form.showRegisterEditTitle;
+    }
+
+    this.substanceClass = 'specifiedSubstanceG4m';
+
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -150,28 +161,73 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             this.id = id;
             this.gaService.sendPageView(`Substance Edit`);
             this.titleService.setTitle('Edit - Specified Substance Group 4 Manufacturing');
-            this.substanceClass = 'specifiedSubstanceG4m';
             const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
             if (newType) {
               this.getSsg4mDetails(newType);
             } else {
               this.getSsg4mDetails();
             }
+          } // if Id
+        } else if (this.activatedRoute.snapshot.queryParams['action']) {  // import in new register form
+          const actionParam = this.activatedRoute.snapshot.queryParams['action'] || null;
+          if (actionParam && actionParam === 'import' && window.history.state) {
+            const record = window.history.state.record;
+            if ((record) && this.jsonValid(record)) {
+              const responseImport = JSON.parse(record);
+              if (responseImport) {
+                this.substanceFormService.loadSubstance(this.substanceClass, responseImport).pipe(take(1)).subscribe(() => {
+                  this.setFormSections(formSections[this.substanceClass]);
+
+                  setTimeout(() => {
+                    this.forceChange = true;
+                    this.dynamicComponents.forEach((cRef, index) => {
+                      this.dynamicComponentLoader
+                        .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
+                        .subscribe(componentFactory => {
+                          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+                          this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+                          this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+                            this.formSections[index].menuLabel = label;
+                          });
+                          const hiddenStateSubscription =
+                            this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                              this.formSections[index].isHidden = isHidden;
+                            });
+                          this.subscriptions.push(hiddenStateSubscription);
+                          this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+                            this.formSections[index].canAddItem = isList;
+                            if (isList) {
+                              const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                                this.formSections[index].matExpansionPanel.open();
+                                this.formSections[index].dynamicComponentRef.instance.addItem();
+                              });
+                              this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                                aieSubscription.unsubscribe();
+                              });
+                            }
+                          });
+                          this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+                        });
+                    });
+                  });
+                });  // load Substance in Import on new Register page
+              }
+            }
           }
-        } /*else { // Import JSON
-          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-          if (action && action === 'import' && window.history.state) {
-            const record = window.history.state;
-            this.imported = true;
-            this.getDetailsFromImport(record.record);
-            this.gaService.sendPageView(`Substance Import`);
-          } else {
-            this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
-            if (this.copy) {
-              const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
-              this.getPartialSubstanceDetails(this.copy, copyType);
-              this.gaService.sendPageView(`Substance Register`);
-            } */ else {  // new record
+
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+
+          // this.imported = true;
+          // this.getDetailsFromImport(record.record);
+          /* }  else {
+              this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
+              if (this.copy) {
+                const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
+                this.getPartialSubstanceDetails(this.copy, copyType);
+                this.gaService.sendPageView(`Substance Register`);
+              } */
+        } else {  // new record
           setTimeout(() => {
             this.gaService.sendPageView(`Substance Register`);
             this.subClass = this.activatedRoute.snapshot.params['type'] || 'specifiedSubstanceG4m';
@@ -183,9 +239,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
               this.isLoading = false;
             });
           });
-        }
-        //  }
-        // }
+        } //else
       });
     this.subscriptions.push(routeSubscription);
     const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
@@ -283,6 +337,38 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         }
         subscription.unsubscribe();
       });
+  }
+
+  private setFormSections(sectionNames: Array<string> = []): void {
+    this.formSections = [];
+    sectionNames.forEach(sectionName => {
+      let canAdd = true;
+      if (this.configSettingReferences === false) {
+        if (sectionName === 'substance-form-references') {
+          canAdd = false;
+        }
+      }
+      if (canAdd === true) {
+        const formSection = new SubstanceFormSection(sectionName);
+        this.formSections.push(formSection);
+      }
+    });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    // let configSsg4Form: any;
+    this.configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'startingMaterial' json values from config
+    let configReferences = this.configSsg4Form.settingsDisplay.references;
+    this.configSettingReferences = false;
+    if (configReferences === 'simple') {
+      this.configSettingReferences = true;
+    } else if (configReferences === 'advanced') {
+      this.configSettingReferences = false;
+    } else if (configReferences === 'removed') {
+      this.configSettingReferences = false;
+    }
   }
 
   openedChange(event: any) {
@@ -490,11 +576,50 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       }
     }, error => {
       // if it is authentication issue or status is 0, reload the current page
+
+      // These lines did not work. Commenting out right now. Caused forever refresh loop.
+      // if (error.status === 0) {
+      //  window.location.reload();
+      // }
+
       if (error.status === 0) {
-        window.location.reload();
+        console.log("Error Status is 0");
+        let totalNumberRefresh = 2;
+        let preventRefresh = parseInt((new URLSearchParams(window.location.search)).get("refreshcount"));
+        // if parameter 'refreshcount' is NOT found in the URL, add refreshcount in the URL.
+        // refresh n/totalNumberRefresh times
+        if (!preventRefresh || (preventRefresh && Number(preventRefresh) < totalNumberRefresh)) {
+          let url = window.location.href;
+          // if question mark '?' found in the URL, add/append '&', otherwise add/append '?' in the URL
+          if (!preventRefresh) { // not found preventRefresh in URL
+            preventRefresh = 1;
+            if (url.indexOf('?') > -1) {
+              url += '&refreshcount=' + preventRefresh;
+            } else {
+              url += '?refreshcount=' + preventRefresh;
+            }
+          } else { // found refreshcount in the URL
+            let currentCountUrl = 'refreshcount=' + preventRefresh;
+            // add 1 to current count
+            preventRefresh = preventRefresh + 1;
+            let newCounturl = 'refreshcount=' + preventRefresh;
+            // replace 'refreshcount=1' to 'refreshcount=2'
+            url = url.replace(currentCountUrl, newCounturl);
+          }
+          // Display error message to users that the page will refresh n number of times.
+          this.errorMessage = "There was a connection problem loading the page. Automatically refreshing " + preventRefresh + " of " + totalNumberRefresh + " times ...<br><br>";
+
+          setTimeout(() => {
+            window.location.href = url;
+          }, 2000);
+        }
       }
+
       this.microserviceStatusUp = false;
-      this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br><br>";
+      if (!this.errorMessage) {
+        this.errorMessage = '';
+      }
+      this.errorMessage = this.errorMessage + "Unable to load the data for Record ID " + this.id + "<br><br>";
       if (error && error.error && error.error.message) {
         this.errorMessage = this.errorMessage + 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
       } else if (error && error.error && (typeof error.error) === 'string') {
@@ -528,7 +653,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.ssg4mSyntheticPathway = response;
 
         if (action && action === 'import' && window.history.state) {
-          this.gaService.sendPageView(`Substance Import`);
+          // this.gaService.sendPageView(`Substance Import`);
           const record = window.history.state.record;
           // this.imported = true;
           // this.getDetailsFromImport(record.record);
@@ -557,17 +682,11 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       } else if (response === null) {
         this.errorMessage = "There is no data found in the database for ID: " + this.id;
       }
-      //else {
-      //  this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br> Please ask your system administrator to examine the website logs and: <br>- verify that the SSG4m microservice is running without error, <br>- check if there are any database connection issues,<br>- make sure the system is using valid authentication credentials into the database.";
-      // this.handleSubstanceRetrivalError();
-      // }
       this.loadingService.setLoading(false);
       this.isLoading = false;
     }, error => {   // Getting Error while getting Record
-      // this.errorMessage = generateErrorMessage;
       if (this.microserviceStatusUp === false) {
       }
-      //  this.errorMessage = "Unable to load the data for Record ID " + this.id + "<br> Please ask your system administrator to examine the website logs and: <br>- verify that the SSG4m microservice is running without error, <br>- check if there are any database connection issues,<br>- make sure the system is using valid authentication credentials into the database.";
       this.gaService.sendException('getSsg4mDetails: error from API call');
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -668,18 +787,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
   }
 
-  private setFormSections(sectionNames: Array<string> = []): void {
-    this.formSections = [];
-    sectionNames.forEach(sectionName => {
-      const formSection = new SubstanceFormSection(sectionName);
-      /* if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
-         (formSection.dynamicComponentName === 'substance-form-names'
-           || formSection.dynamicComponentName === 'substance-form-codes-card'))) {
-       } */
-      this.formSections.push(formSection);
-    });
-  }
-
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {
       message: 'The substance you\'re trying to edit doesn\'t exist.',
@@ -716,12 +823,19 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.showSubmissionMessages = true;
     this.loadingService.setLoading(false);
     this.isLoading = false;
+    // If there is no validation error, submit/save the records without displaying the warning/validation message.
     if (this.validationMessages.length === 0 && true === true) {
-      this.submissionMessage = 'Specified Substance Group 4 is Valid. Would you like to submit?';
+      this.submit();
     }
+    /*
+    if (this.validationMessages.length === 0 && true === true) {
+      this.submissionMessage = 'Record is valid. Would you like to submit?';
+    }
+    */
+    /*
     if (validationType && validationType === 'approval') {
       this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
-    }
+    }*/
     //  }, error => {
     //    this.addServerError(error);
     this.loadingService.setLoading(false);
@@ -869,8 +983,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
   submit(): void {
     this.isLoading = true;
-    this.approving = false;
     this.loadingService.setLoading(true);
+    this.approving = false;
+
     this.json = this.substanceFormService.cleanSubstance();
     let jsonValue = JSON.stringify(this.json);
 
@@ -884,6 +999,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // if New Record, initialize object
       if (this.ssg4mSyntheticPathway == null) {
         this.ssg4mSyntheticPathway = {};
+
+        // Generate GUID SynthPathwayId
+        // this.ssg4mSyntheticPathway.synthPathwayId = '2ead5343-6471-88ae-b0b0-88370d44786e';
         // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
       }
       // Existing Record
@@ -893,30 +1011,56 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as blob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
-      this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
+      // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
+      // after 5 seconds it displays a warning on the top of the UI form.
+      setTimeout(() => {
+        if (this.isSavedSuccessful === false) {
+          this.saveDelayedMessage = "Hmm ... this seems to be taking longer than normal, there may be network issues. <br>Click here to cancel and continue working on the form. We suggest you save a local copy of the JSON.";
+        }
+      }, 5000);
+
+      this.submitSubscription = this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
+        // Stop the spinner
         this.loadingService.setLoading(false);
         this.isLoading = false;
+
+        // Set validation messages to null
         this.validationMessages = null;
         this.showSubmissionMessages = false;
         this.validationResult = false;
-        // this.submissionMessage = 'The record was updated successfully';
-        // if (!this.id) {
+
+        // if Saved Successfully
         if (response && response.synthPathwaySkey) {
-          // this.id = response.synthPathwaySkey.toString();
-          // this.applicationService.bypassUpdateCheck();
-          this.openSuccessDialog();
+          if (response.synthPathwaySkey) {
+            this.id = response.synthPathwaySkey.toString();
+          }
+
+          // if the API communication does resolve, AND the initial save went through, it will replace
+          // the warning message. Only show this message when user clicked on the 'Cancel' button.
+          // After user clicks 'Refresh' button, refresh the page manually.
+          this.isSavedSuccessful = true;
+          if (this.isCancelBtnClicked === true && this.isSavedSuccessful === true) {
+            this.saveDelayedMessage = " Network communication restored, click here to refresh with saved version.";
+          }
+          else {
+            this.saveDelayedMessage = "";
+            this.isCancelBtnClicked = false;
+            // Only show successful dialog and refresh page, if user does not click on the cancel button.
+            this.openSuccessDialog();
+          }
           // Refresh the current page, this will not cause record locking issue
           /* this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
           */
         }
-        // }
-        // this.openSuccessDialog();
       }, (error: SubstanceFormResults) => {
-        this.showSubmissionMessages = true;
         this.loadingService.setLoading(false);
         this.isLoading = false;
+        // If submit was not successful, display Message
+        this.saveDelayedMessage = " Network communication restored, RECORD HAS NOT BEEN SAVED. Please resave the record.";
+
+        this.showSubmissionMessages = true;
         this.submissionMessage = null;
         if (error.validationMessages && error.validationMessages.length) {
           this.validationResult = error.isSuccessfull;
@@ -932,8 +1076,32 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
           }, 8000);
         }
       });
-    };
+      this.subscriptions.push(this.submitSubscription);
+
+    };  //window
+
     window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+  }
+
+  cancelSubmit() {
+    // Stop the loading if user clicks on cancel button
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
+
+    this.isCancelBtnClicked = true;
+    this.saveDelayedMessage = "Warning: Network traffic is delayed, attempting to reconnect to the server ... please save a local copy of the record.";
+  }
+
+  refreshPage() {
+    // Refresh the current page, this will not cause record locking issue
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    if (this.showHeaderBar && this.showHeaderBar === 'false') {
+      const route = '/substances-ssg4m/' + this.id + '/edit?header=' + this.showHeaderBar;
+      this.router.navigateByUrl(route);
+    } else {
+      this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
+    }
   }
 
   dismissValidationMessage(index: number) {
@@ -958,7 +1126,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       message: 'Unknown Server Error'
     };
     if (error && error.error && error.error.message) {
-      alert("HERER HERE");
       message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error && error.error && (typeof error.error) === 'string') {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
@@ -1125,15 +1292,17 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       this.substanceSsg4mService.bypassUpdateCheck();
       if (response === 'continue') {
+
         // Refresh the current page, this will not cause record locking issue
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
         this.router.onSameUrlNavigation = 'reload';
         if (this.showHeaderBar && this.showHeaderBar === 'false') {
           const route = '/substances-ssg4m/' + this.id + '/edit?header=' + this.showHeaderBar;
-         this.router.navigateByUrl(route);
+          this.router.navigateByUrl(route);
         } else {
           this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         }
+
         // } else if (response === 'browse') {
         //  this.router.navigate(['/browse-substance']);
         //  } else if (response === 'home') {

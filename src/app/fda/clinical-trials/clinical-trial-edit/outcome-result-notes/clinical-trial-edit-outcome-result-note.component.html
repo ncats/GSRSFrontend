@@ -1,0 +1,21 @@
+
+<div class="note-form-container">
+    <div class="form-row full-width"> 
+      <div class="full-width">
+        <mat-form-field class="result full-width" >
+          <input [disabled]="disabled" class="full-width" matInput placeholder="Outcome" [(ngModel)]="outcomeResultNote.outcome" required name="outcome" />
+        </mat-form-field>
+
+        <mat-form-field class="result full-width" >
+          <input [disabled]="disabled" class="full-width" matInput placeholder="Result" [(ngModel)]="outcomeResultNote.result" required name="result" />
+        </mat-form-field>
+      </div>
+      <div class="full-width">
+        <div class="full-width">
+          <mat-form-field class="narrative full-width">
+          <textarea [disabled]="disabled" class="full-width" matInput placeholder="Narrative" [(ngModel)]="outcomeResultNote.narrative" name="narrative"></textarea>
+        </mat-form-field>
+        </div>
+      </div>
+  </div>
+</div>

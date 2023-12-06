@@ -55,7 +55,7 @@
     </div>
   </div>
 
-
+  
 <div class = "form-row" [ngStyle] ="{height: !privateTerm.fragmentStructure || privateTerm.fragmentStructure === '' ? '95px':'1px'}">
     <div *ngFor = "let form of forms" >
         <a (click) = "setTermStructure(form.value)"><img class = "structure-img" src = "{{form.url}}" /></a>
@@ -79,6 +79,8 @@
         <div class = 'message-field'>{{message}}</div>
       <span class="middle-fill"></span>
       <button mat-button (click) = "close()">Cancel</button>
+      {{privateTerm.fragmentStructure}}-{{privateTerm.description }}--{{privateTerm.value}}
+
       <button mat-button (click) = "save()" [disabled]="!privateTerm.fragmentStructure || !privateTerm.description || privateTerm.value === ''">
         Save
       </button>

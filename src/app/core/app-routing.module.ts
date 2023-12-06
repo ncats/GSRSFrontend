@@ -22,6 +22,7 @@ import { CanActivateAdmin } from '@gsrs-core/admin/can-activate-admin';
 import { CanActivateAdminPage } from './admin/can-activate-admin-page';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
 import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m/substance-ssg4m-form.component';
+import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-browse.component';
 
 const childRoutes: Routes = [
   {
@@ -46,9 +47,7 @@ const childRoutes: Routes = [
   },
   {
     path: 'substances/register',
-    component: SubstanceFormComponent,
-    canActivate: [CanRegisterSubstanceForm],
-    canDeactivate: [CanDeactivateSubstanceFormGuard]
+    component: SubstanceFormComponent
   },
   {
     path: 'substances/register/:type',
@@ -77,6 +76,11 @@ const childRoutes: Routes = [
     component: SequenceSearchComponent
   },
   {
+    path: 'staging',
+    component: ImportBrowseComponent
+
+  },
+  {
     path: 'login',
     component: LoginComponent
   },
@@ -89,13 +93,21 @@ const childRoutes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [CanActivateAdmin]
+    canActivate: [CanActivateAdmin],
+
+  },
+  
+  {
+    path: 'admin/staging-area',
+    component: ImportBrowseComponent,
+    pathMatch: 'full'
 
   },
   {
     path: 'admin/:function',
     component: AdminComponent,
-    canActivate: [CanActivateAdmin]
+    canActivate: [CanActivateAdmin],
+
 
   },
   {

@@ -12,6 +12,7 @@ export class SubmitSuccessDialogComponent implements OnInit {
   fileUrl: string = null;
 
   public isCoreSubstance = 'true';
+  public staging = false;
 
   constructor(
     public dialogRef: MatDialogRef<SubmitSuccessDialogComponent>,
@@ -42,11 +43,13 @@ export class SubmitSuccessDialogComponent implements OnInit {
       if (this.data.isCoreSubstance) {
         this.isCoreSubstance = this.data.isCoreSubstance;
       }
+      if (this.data.type && this.data.type === 'staging') {
+        this.staging = true;
+      }
     }
   }
 
-
-  dismissDialog(action: 'continue' | 'browse' | 'view' | 'home'|'viewInPfda'): void {
+  dismissDialog(action: 'continue' | 'browse' | 'view' | 'home' | 'viewInPfda'): void {
     this.dialogRef.close(action);
   }
 

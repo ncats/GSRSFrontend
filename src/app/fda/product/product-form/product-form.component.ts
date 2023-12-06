@@ -8,13 +8,16 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Product, ValidationMessage } from '../model/product.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import * as moment from 'moment';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
@@ -45,6 +48,10 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   manufactureDateMessage = '';
   viewProductUrl = '';
   message = '';
+  downloadJsonHref: any;
+  jsonFileName: string;
+  provenanceFieldMessage: Array<String> = [];
+  effectiveTimeMessage: any[][] = [];
 
   constructor(
     private productService: ProductService,
@@ -58,7 +65,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private titleService: Title) { }
+    private titleService: Title,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
@@ -73,20 +81,48 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           this.title = 'Update Product';
           if (id !== this.id) {
             this.id = id;
-            this.gaService.sendPageView(`Product Edit`);
+            this.gaService.sendPageView(`Edit Product`);
+            this.titleService.setTitle(`Edit Product ` + this.id);
             this.getProductDetails();
           }
-        } else {
+        } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
+          this.id = this.activatedRoute.snapshot.queryParams['copyId'];
+          if (this.id) {  //copy from existing Product
+            this.gaService.sendPageView(`Register Product from Copy`);
+            this.titleService.setTitle(`Register Product from Copy ` + this.id);
+            this.title = 'Register New Product from Copy Product ID ' + this.id;
+            this.getProductDetails('copy');
+          }
+        } else if (this.activatedRoute.snapshot.queryParams['action']) {
+          let actionParam = this.activatedRoute.snapshot.queryParams['action'];
+          if (actionParam && actionParam === 'import' && window.history.state) {
+            this.gaService.sendPageView(`Import Product`);
+            this.titleService.setTitle(`Register New Product from Import`);
+            this.title = 'Register New Product from Import';
+            const record = window.history.state.record;
+            const response = JSON.parse(record);
+            if (response) {
+              this.scrub(response);
+              this.productService.loadProduct(response);
+              this.product = this.productService.product;
+              if (this.product.productProvenances == null) {
+                this.product.productProvenances = [];
+              }
+              this.loadingService.setLoading(false);
+              this.isLoading = false;
+            }
+          }
+        } else { // Register New Product
           this.title = 'Register New Product';
           setTimeout(() => {
-            this.gaService.sendPageView(`Product Register`);
+            this.gaService.sendPageView(`Register Product`);
             this.titleService.setTitle(`Register Product`);
             this.productService.loadProduct();
             this.product = this.productService.product;
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
-        }
+        } // else Register
       });
     this.subscriptions.push(routeSubscription);
   }
@@ -100,14 +136,29 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  togglePanel(expanded) {
+    expanded = !expanded;
+  }
+
   getProductDetails(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
       this.productService.getProduct(id).subscribe(response => {
         if (response) {
+
+          // before copy the existing product, delete the ids
+          if (newType && newType === 'copy') {
+            this.scrub(response);
+          }
           this.productService.loadProduct(response);
           this.product = this.productService.product;
-          // Check if there is not Product Code Object, create one
+
+          if (this.product.productProvenances == null) {
+            this.product.productProvenances = [{ productNames: [], productCodes: [], productDocumentations: [] }];
+          }
+
+          /*
+          Check if there is not Product Code Object, create one
           if (this.product.productCodeList.length == 0) {
             this.product.productCodeList = [{}];
           }
@@ -122,9 +173,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             }
           }
-          this.titleService.setTitle(`Edit Product ` + prodCode);
+          */
         } else {
-          this.handleProductRetrivalError();
+          this.message = 'No Product Record found for Id ' + this.id;
         }
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -133,7 +184,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         this.gaService.sendException('getProductDetails: error from API call');
         this.loadingService.setLoading(false);
         this.isLoading = false;
-        this.handleProductRetrivalError();
+        // this.handleProductRetrivalError();
       });
     }
   }
@@ -142,6 +193,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
+    this.provenanceFieldMessage = [];
 
     this.validateClient();
     // If there is no error on client side, check validation on server side
@@ -180,25 +232,31 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.validationMessages = [];
     this.validationResult = true;
 
-    // Validate Expiry Date in Lot
+    // Validate Provenance field in Provenance section
+    this.validateProvenanceField('main-validation');
+
+    // Validate Effective Time in Documentation IDs
+    this.validateEffectiveTime('main-validation');
+
+    // Validate Expiry Date in Lot section
     if ((this.expiryDateMessage !== null) && (this.expiryDateMessage.length > 0)) {
       this.setValidationMessage(this.expiryDateMessage);
     }
 
-    // Validate Manufacture Date in Lot
+    // Validate Manufacture Date in Lot section
     if ((this.manufactureDateMessage !== null) && (this.manufactureDateMessage.length > 0)) {
       this.setValidationMessage(this.manufactureDateMessage);
     }
 
     // Validate Ingredient Average, which should be integer/number
     if (this.product != null) {
-      this.product.productComponentList.forEach(elementComp => {
+      this.product.productManufactureItems.forEach(elementComp => {
         if (elementComp != null) {
-          elementComp.productLotList.forEach(elementLot => {
+          elementComp.productLots.forEach(elementLot => {
             if (elementLot != null) {
 
               // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
-              elementLot.productIngredientList.forEach(elementIngred => {
+              elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
                   if (elementIngred.average) {
                     if (this.isNumber(elementIngred.average) === false) {
@@ -243,6 +301,89 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showSubmissionMessages = !this.showSubmissionMessages;
   }
 
+  updateProvenanceField(prodProvIndex: number, $event) {
+    this.product.productProvenances[prodProvIndex].provenance = $event;
+
+    // Check the Provenance field validation
+    this.validateProvenanceField();
+  }
+
+  validateProvenanceField(type?: string) {
+    // Validate Provenance (required field) in Provenance section
+    if (this.product != null) {
+      this.provenanceFieldMessage = [];
+      this.product.productProvenances.forEach((elementProv, index) => {
+        if (elementProv != null) {
+          if (elementProv.provenance === null || elementProv.provenance === undefined) {
+            if (type && type === 'main-validation') {
+              this.setValidationMessage('Provenance is required in Product Provenance ' + (index + 1));
+            }
+            this.provenanceFieldMessage.push('Provenance is required');
+          } else {
+            this.provenanceFieldMessage.push('');
+          }
+        }
+      });
+    }
+  }
+
+  validateEffectiveTime(type?: string) {
+    // Validate Effective Time in Provenance Documentation IDs section
+    if (this.product != null) {
+      this.product.productProvenances.forEach((elementProv, indexProv) => {
+        if (elementProv != null) {
+          this.effectiveTimeMessage[indexProv] = [];
+          elementProv.productDocumentations.forEach((elementDoc, indexDoc) => {
+            if (elementDoc.effectiveTime) {
+              const isValid = this.validateDate(elementDoc.effectiveTime);
+
+              if (isValid === false) {
+                if (type && type === 'main-validation') {
+                  this.setValidationMessage('Effective Time is invalid in Product Provenance ' + (indexProv + 1) + ' in Product Documentation IDs ' + (indexDoc + 1));
+                }
+                this.effectiveTimeMessage[indexProv][indexDoc] = 'Effective Time is invalid';
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  validateDate(dateinput: any): boolean {
+    let isValid = true;
+    if ((dateinput !== null) && (dateinput.length > 0)) {
+      if ((dateinput.length < 8) || (dateinput.length > 10)) {
+        return false;
+      }
+      const split = dateinput.split('/');
+      if (split.length !== 3 || (split[0].length < 1 || split[0].length > 2) ||
+        (split[1].length < 1 || split[1].length > 2) || split[2].length !== 4) {
+        return false;
+      }
+      if (split.length === 3) {
+        const comstring = split[0] + split[1] + split[2];
+        for (let i = 0; i < split.length; i++) {
+          const valid = this.isNumber(split[i]);
+          if (valid === false) {
+            isValid = false;
+            break;
+          }
+        }
+      }
+    }
+    return isValid;
+  }
+
+  isNumber(str: string): boolean {
+    if ((str !== null) && (str !== '')) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
+
   addServerError(error: any): void {
     this.serverError = true;
     this.validationResult = false;
@@ -272,6 +413,18 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadingService.setLoading(true);
     // remove non-field form property/field/key from Product object
     this.product = this.cleanProduct();
+    if (this.product) {
+      if (this.product.id) {
+      } else {
+        /*
+        if (this.product.provenance === null || this.product.provenance === undefined) {
+          // Set Provenance to GSRS
+          this.product.provenance = 'GSRS';
+        } */
+      }
+      // Set service application
+      this.productService.product = this.product;
+    }
     this.productService.saveProduct().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -330,11 +483,11 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   cleanProduct(): Product {
     let productStr = JSON.stringify(this.product);
     let productCopy: Product = JSON.parse(productStr);
-    productCopy.productComponentList.forEach(elementComp => {
+    productCopy.productManufactureItems.forEach(elementComp => {
       if (elementComp != null) {
-        elementComp.productLotList.forEach(elementLot => {
+        elementComp.productLots.forEach(elementLot => {
           if (elementLot != null) {
-            elementLot.productIngredientList.forEach(elementIngred => {
+            elementLot.productIngredients.forEach(elementIngred => {
               if (elementIngred != null) {
                 // remove property for Ingredient Name Validation. Do not need in the form JSON
                 if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {
@@ -355,18 +508,127 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showJSON(): void {
+    let cleanProduct = this.cleanProduct();
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.product
+      data: cleanProduct
     });
 
     // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
+  }
+
+  saveJSON(): void {
+    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
+    this.cleanProduct();
+    let json = this.product;
+    // this.json = this.cleanObject(substanceCopy);
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
+
+    const date = new Date();
+    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+  }
+
+  importJSON(): void {
+    let data: any;
+    data = {
+      title: 'Product Record Import',
+      entity: 'product',
+    };
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false,
+      data: data
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.loadingService.setLoading(true);
+        this.overlayContainer.style.zIndex = null;
+
+        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+        /* const read = JSON.parse(response);
+         if (this.id && read.uuid && this.id === read.uuid) {
+           this.substanceFormService.importSubstance(read, 'update');
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {
+         if ( read.substanceClass === this.substanceClass) {
+           this.imported = true;
+           this.substanceFormService.importSubstance(read);
+           this.submissionMessage = null;
+           this.validationMessages = [];
+           this.showSubmissionMessages = false;
+           this.loadingService.setLoading(false);
+           this.isLoading = false;
+         } else {*/
+        setTimeout(() => {
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          if (!this.id) {
+            // new record
+            this.router.navigateByUrl('/product/register?action=import', { state: { record: response } });
+          }
+        }, 1000);
+      }
+      // }
+      // }
+    });
+  }
+
+  addNewProductProvenance() {
+    this.productService.addNewProductProvenance();
+
+    // Display Existing Provenance field Validation
+    this.validateProvenanceField();
 
   }
+
+  addNewProductNameInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductNameInProv(prodProvenanceIndex);
+  }
+
+  addNewTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.productService.addNewTermAndTermPartInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  addNewProductCodeInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductCodeInProv(prodProvenanceIndex);
+  }
+
+  addNewProductCompanyInProv(prodProvenanceIndex: number) {
+    this.productService.addNewProductCompanyInProv(prodProvenanceIndex);
+  }
+
+  addNewProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    this.productService.addNewProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex);
+  }
+
+  addNewProductDocumenation(prodProvenanceIndex: number) {
+    // Display Existing Effective Time Validation
+    this.validateEffectiveTime();
+
+    this.productService.addNewProductDocumentation(prodProvenanceIndex);
+  }
+
+  addNewProductIndication(prodProvIndex: number) {
+    this.productService.addNewProductIndication(prodProvIndex);
+  }
+
+  addNewProductComponent() {
+    this.productService.addNewProductComponent();
+  }
+
 
   confirmDeleteProduct(productId: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -403,6 +665,145 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  confirmDeleteProductProvenance(prodProvenanceIndex: number) {
+    // Show existing validation for Provenance field
+    this.validateProvenanceField();
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Provenance ' + (prodProvenanceIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductProvenance(prodProvenanceIndex);
+      }
+    });
+  }
+
+  deleteProductProvenance(prodProvenanceIndex: number) {
+    this.productService.deleteProductProvenance(prodProvenanceIndex);
+  }
+
+  confirmDeleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Name ' + (prodNameIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductNameInProv(prodProvenanceIndex, prodNameIndex);
+      }
+    });
+  }
+
+  deleteProductNameInProv(prodProvenanceIndex: number, prodNameIndex: number) {
+    this.productService.deleteProductNameInProv(prodProvenanceIndex, prodNameIndex);
+  }
+
+  confirmDeleteTermAndTermPartInProv(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Term and Term Part ' + (prodNameTermIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
+      }
+    });
+  }
+
+  deleteProductTermAndTermPart(prodProvenanceIndex: number, prodNameIndex: number, prodNameTermIndex: number) {
+    this.productService.deleteProductTermAndTermPart(prodProvenanceIndex, prodNameIndex, prodNameTermIndex);
+  }
+
+  confirmDeleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Code ' + (prodCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCodeInProv(prodProvenanceIndex, prodCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCodeInProv(prodProvenanceIndex: number, prodCodeIndex: number) {
+    this.productService.deleteProductCodeInProv(prodProvenanceIndex, prodCodeIndex);
+  }
+
+  confirmDeleteProductCompanyInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company ' + (prodCompanyIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyInProv(prodProvenanceIndex, prodCompanyIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyInProv(prodProvenanceIndex: number, prodCompanyIndex: number) {
+    this.productService.deleteProductCompanyInProv(prodProvenanceIndex, prodCompanyIndex);
+  }
+
+  confirmDeleteProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company Code ' + (prodCompanyCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex, prodCompanyCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyCodeInProv(prodProvenanceIndex: number, prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    this.productService.deleteProductCompanyCodeInProv(prodProvenanceIndex, prodCompanyIndex, prodCompanyCodeIndex);
+  }
+
+  confirmDeleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
+    // Display Existing Effective Time Validation
+    this.validateEffectiveTime();
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Documentation IDs ' + (productDocIndex + 1) + ' data?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductDocumentationInProv(prodProvenanceIndex, productDocIndex);
+      }
+    });
+  }
+
+  deleteProductDocumentationInProv(prodProvenanceIndex: number, productDocIndex: number) {
+    this.productService.deleteProductDocumentationInProv(prodProvenanceIndex, productDocIndex);
+  }
+
+  confirmDeleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Indication ' + (prodIndicationIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
+      }
+    });
+  }
+
+  deleteProductIndication(prodProvenanceIndex: number, prodIndicationIndex: number) {
+    this.productService.deleteProductIndication(prodProvenanceIndex, prodIndicationIndex);
+  }
+
+  copyProvenance(productProvenanceIndex: number) {
+    this.productService.copyProductProvenance(this.product.productProvenances[productProvenanceIndex]);
+  }
+
+  /*
   addNewProductName() {
     this.productService.addNewProductName();
   }
@@ -462,7 +863,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteProductCode(prodCodeIndex: number) {
     this.productService.deleteProductCode(prodCodeIndex);
   }
+  */
 
+  /*
   addNewProductCompany() {
     this.productService.addNewProductCompany();
   }
@@ -483,8 +886,43 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.productService.deleteProductCompany(prodCompanyIndex);
   }
 
-  addNewProductComponent() {
-    this.productService.addNewProductComponent();
+  addNewProductCompanyCode(productCompanyIndex: number) {
+    this.productService.addNewProductCompanyCode(productCompanyIndex);
+  }
+
+  confirmDeleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Product Company Code ' + (prodCompanyCodeIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
+      }
+    });
+  }
+
+  deleteProductCompanyCode(prodCompanyIndex: number, prodCompanyCodeIndex: number) {
+    this.productService.deleteProductCompanyCode(prodCompanyIndex, prodCompanyCodeIndex);
+  }
+  */
+
+  changeSelectionDisplayName($event, prodNameIndex: number) {
+    // Only allow to select ONE Display Name check box
+    this.product.productProvenances.forEach(elementProv => {
+      if (elementProv != null) {
+        elementProv.productNames.forEach((elementName, index) => {
+          if (elementName != null) {
+            if (prodNameIndex == index) {
+              elementName.displayName = $event.checked;
+            }
+            else {
+              elementName.displayName = false;
+            }
+          }
+        });
+      }
+    });
   }
 
   expiryDateMessageOutChange($event) {
@@ -495,16 +933,51 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.manufactureDateMessage = $event;
   }
 
-  isNumber(str: any): boolean {
-    if (str) {
-      const num = Number(str);
-      const nan = isNaN(num);
-      return !nan;
-    }
-    return false;
-  }
-
   getViewProductUrl(): string {
     return this.productService.getViewProductUrl(this.id);
+  }
+
+  scrub(oldraw: any): any {
+    const old = oldraw;
+    const idHolders = defiant.json.search(old, '//*[id]');
+    for (let i = 0; i < idHolders.length; i++) {
+      if (idHolders[i].id) {
+        delete idHolders[i].id;
+      }
+    }
+
+    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    for (let i = 0; i < createHolders.length; i++) {
+      delete createHolders[i].creationDate;
+    }
+
+    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    for (let i = 0; i < createdByHolders.length; i++) {
+      delete createdByHolders[i].createdBy;
+    }
+
+    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    for (let i = 0; i < modifyHolders.length; i++) {
+      delete modifyHolders[i].lastModifiedDate;
+    }
+
+    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    for (let i = 0; i < modifiedByHolders.length; i++) {
+      delete modifiedByHolders[i].modifiedBy;
+    }
+
+    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    for (let i = 0; i < intVersionHolders.length; i++) {
+      delete intVersionHolders[i].internalVersion;
+    }
+
+    delete old['creationDate'];
+    delete old['createdBy'];
+    delete old['modifiedBy'];
+    delete old['lastModifiedDate'];
+    delete old['internalVersion'];
+    delete old['$$update'];
+
+    return old;
   }
 }

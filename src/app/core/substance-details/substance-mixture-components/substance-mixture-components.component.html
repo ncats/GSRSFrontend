@@ -4,7 +4,9 @@
   <div class="flex-row wrap">
     <div *ngFor="let component of required" class="thumb-col">
       <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
-      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
+      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
+
       <div>
         <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
@@ -17,8 +19,12 @@
   <h3>Any of these components may be present:</h3>
   <div class="flex-row wrap">
     <div *ngFor="let component of presentInAny" class="thumb-col">
+
       <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
+      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+
       <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
+      </a>
       <div>
         <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
@@ -32,8 +38,12 @@
   <h3>One of these components may be present:</h3>
   <div class="flex-row">
     <div *ngFor="let component of presentInOne" class="thumb-col">
+
       <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
+      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+
       <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
+      </a>
       <div>
         <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
           {{component.substance.name}}
@@ -42,3 +52,20 @@
     </div>
   </div>
 </div>
+
+
+
+<ng-template #structureTemplate>
+  <div class = "close-container" mat-dialog-header>
+      <button mat-mini-fab class = "mat-mini-fab" (click) = "close()">
+          <mat-icon  class = "icon" svgIcon="close"></mat-icon>
+        </button>
+  </div>
+    
+  <div >
+    
+      <div style="height:620px;min-height:621px;width:620px;min-width:601px;margin:auto">
+    <img class="structure-img-big" appSubstanceImage  size = "600" [entityId]="active" >
+    </div>
+  </div>
+</ng-template>

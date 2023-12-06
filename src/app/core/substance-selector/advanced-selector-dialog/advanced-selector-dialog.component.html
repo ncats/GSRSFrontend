@@ -71,6 +71,9 @@
       <button mat-button (click) = "navigateToBrowseSubstance('structure')">
           View in browse page <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
       </button>
+      <button mat-button (click) = "seedSmiles(smiles)">
+        Seed new registration with structure <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button"></mat-icon>
+    </button>
        <span class = "middle-fill"></span>
        <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize" 
        [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
@@ -151,7 +154,7 @@
   
   <div class = "form-row" style = "margin-top: 15px;">
   <app-substance-text-search class="top-search" [searchValue]="searchValue" placeholder = "Search Substances"
-    (searchPerformed)="nameSearch($event)" eventCategory="selectorSearch" 
+    (searchPerformed)="nameSearch($event)" eventCategory="topSearch" 
     >
   </app-substance-text-search>
 </div>

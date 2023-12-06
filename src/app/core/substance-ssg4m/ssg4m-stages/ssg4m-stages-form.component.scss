@@ -23,14 +23,25 @@
   display: flex;
   width: 100%;
 
-  .col-4-1 {
-    width: calc((100% - 20px * 3) / 4); //four column
+
+  .col-1-1 {
+    width: calc((100% - 20px * 1)); // 1 column
     margin-right: 20px;
   }
 
-  .col-1-1 {
-    width: calc((100% - 20px * 1)); //one column
-    margin-right: 10px;
+  .col-2-1 {
+    width: calc((100% - 20px * 1) / 2); // 2 column
+    margin-right: 20px;
+  }
+
+  .col-3-1 {
+    width: calc((100% - 20px * 2) / 3); // 3 column
+    margin-right: 20px;
+  }
+
+  .col-4-1 {
+    width: calc((100% - 20px * 3) / 4); // 4 column
+    margin-right: 20px;
   }
 }
 /*
@@ -92,6 +103,14 @@
 
 .margintop10px {
   margin-top: 10px;
+}
+
+.margintop20px {
+  margin-top: 20px;
+}
+
+.margintop40px {
+  margin-top: 40px;
 }
 
 .marginleft40px {

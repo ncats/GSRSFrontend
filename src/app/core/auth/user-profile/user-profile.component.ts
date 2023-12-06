@@ -7,6 +7,7 @@ import { isString } from 'util';
 import { Router } from '@angular/router';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-user-profile',
@@ -14,6 +15,17 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit {
+
+  /*
+
+  To prevent the change password button from showing add this to the configuration
+
+  "userProfile": {
+    "showChangeUserPasswordButton": false
+  },
+
+  */
+
   user: Auth;
   newPassword = '';
   oldPassword = '';
@@ -21,7 +33,10 @@ export class UserProfileComponent implements OnInit {
   changePassword = false;
   message = '';
   loading = false;
+  showChangeUserPasswordButton: boolean;
+
   constructor(
+    public configService: ConfigService,
     private authService: AuthService,
     private adminService: AdminService,
     private router: Router,
@@ -31,16 +46,23 @@ export class UserProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.showChangeUserPasswordButton = this.configService.configData?.userProfile?.showChangeUserPasswordButton;    
+    if (!this.showChangeUserPasswordButton && this.showChangeUserPasswordButton===false) {
+      this.showChangeUserPasswordButton=false;
+    } else { 
+      this.showChangeUserPasswordButton=true;
+    }
     this.authService.getAuth().pipe(take(1)).subscribe( response => {
       this.user = response;
     });
   }
 
   viewDownloads(): void {
-    this.router.navigate(['/user-downloads']);
     setTimeout(() => {
       this.dialogRef.close();
-    }, 400);
+    });
+    this.router.navigate(['/user-downloads']);
+    
   }
 
   validatePassword(): void {
@@ -72,6 +94,10 @@ export class UserProfileComponent implements OnInit {
         });
   }
 
+}
+
+close() {
+  this.dialog.closeAll();
 }
 
 viewDrafts(): void {
