@@ -923,7 +923,7 @@ getDrafts() {
       if (!this.id) {
         this.id = response.uuid;
       }
-      this.openSuccessDialog('staging');
+      this.openSuccessDialog({type: 'staging'});
     })
   }
 
@@ -1149,7 +1149,7 @@ getDrafts() {
     return old;
   }
 
-  openSuccessDialog({ type, fileUrl }: { type?: 'submit'|'approve', fileUrl?: string }): void {
+  openSuccessDialog({ type, fileUrl }: { type?: 'submit'|'approve'|'staging', fileUrl?: string }): void {
     const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
       data: {
         type: type,
