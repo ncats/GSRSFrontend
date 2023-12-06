@@ -8,7 +8,7 @@
     </mat-icon>
     <span class="middle-fill"></span>
     <div style = "min-width:260px;">
-       
+
         <div style = "font-size:16px; margin-top: -15px; margin-right: -15px;">
             <mat-form-field *ngIf = 'userLists' class = "select-list">
               <mat-label>Add to List</mat-label>
@@ -20,20 +20,20 @@
             </mat-form-field>
             <span >
               <button class = "mat-button" *ngIf = "selectedList" (click) = "addToList()" color = "primary">Add</button>
-        
+
             </span>
             <span style = "margin-right:50px;">
                 <button class = "mat-button" (click) = "createList()" color = "primary">New List</button>
-        
+
               </span>
-        
+
           </div>
           <div class="approval" style = "text-align: end;">
               {{substance.approvalID}}
             </div>
           <br/>
-    
-    
+
+
   </div>
   </mat-card-title>
 
@@ -106,7 +106,7 @@
           </a>
 
        <!--  Reverting back from button to link to allow right click -> new tab opening -->
-         
+
        <!--   <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
             [routerLink]="['/substances', substance.uuid, 'edit']">
             <mat-icon svgIcon="edit"></mat-icon>

@@ -12,6 +12,7 @@
         Browse</button>
     <button *ngIf="isCoreSubstance === 'true' && !staging" mat-flat-button color="primary" (click)="dismissDialog('view')">View
         Substance</button>
+        <button *ngIf="staging" mat-flat-button color="primary" (click)="dismissDialog('staging')">Return to Staging Area</button>
 </div>
 <div class="flex-row dialog-actions" mat-dialog-actions *ngIf="fileUrl">
     <span class="middle-fill"></span>

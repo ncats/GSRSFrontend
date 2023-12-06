@@ -5,7 +5,6 @@ import { ConfigService } from '../config/config.service';
   name: 'facetDisplay'
 })
 export class FacetDisplayPipe implements PipeTransform {
-
   constructor(
     public configService: ConfigService
   ) { }
@@ -83,7 +82,6 @@ export class FacetDisplayPipe implements PipeTransform {
     if (name === 'GInAS Tag') {
       return 'Source Tag';
     }
-
     if (name === 'GInAS Domain') {
       return 'Domain';
     }

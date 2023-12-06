@@ -1307,11 +1307,6 @@ mergeConcept() {
 
      localStorage.setItem(file, JSON.stringify(draft));
 
-
     }
-
-
-
-
   }
 }

@@ -78,7 +78,6 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.customToolbarComponent = this.configService.configData.customToolbarComponent;
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
-
     });
   }
 

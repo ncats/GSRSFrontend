@@ -49,7 +49,7 @@ export class SubmitSuccessDialogComponent implements OnInit {
     }
   }
 
-  dismissDialog(action: 'continue' | 'browse' | 'view' | 'home' | 'viewInPfda'): void {
+  dismissDialog(action: 'continue' | 'browse' | 'view' | 'home' | 'staging' | 'viewInPfda'): void {
     this.dialogRef.close(action);
   }
 
