@@ -21,7 +21,6 @@ export class SubstanceFormSimplifiedNamesCardComponent
   pageSize = 10;
   expanded = true;
   showStd = true;
-  showMore = false;
   appId: string;
   standardizeButton = false;
 
