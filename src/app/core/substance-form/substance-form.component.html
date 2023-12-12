@@ -5,7 +5,8 @@
 </div>
 <div class="top-fixed">
   <div class="actions-container">
-      <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
+    <mat-button-toggle color="primary" style="margin-right: 20px" [checked]="simplifiedFormNameToggle" (change)="toggleSimpleFormChanged($event)">Simple Form</mat-button-toggle>
+    <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
       <button mat-flat-button color="primary" class="draft-button" (click)="showDrafts()">Show Drafts <span class="chip">{{draftCount}}</span></button>
 
     <button mat-flat-button color="primary" class="json-button" (click)="showJSON()">Show JSON</button>
@@ -56,7 +57,7 @@
             </ng-container>
             <ng-container *ngIf="isAdmin === true || isUpdater === true">
               <mat-option value="glyco" [disabled]="substanceClass !== 'protein'">
-                Predict N-Glycosylation Sites 
+                Predict N-Glycosylation Sites
               </mat-option>
               <mat-option value="disulfide" [disabled]="substanceClass != 'protein'">
                 Predict disulfide links by monoclonal antibody type
@@ -79,30 +80,30 @@
                 <div class = "cell"><a>d706be08-4015-4fa2-80e6-567cf7e2e23f</a></div>
                 <div class = "cell">April 1, 2022 08:05</div>
                 <div class = "cell"><button mat-button mat-primary-button>Load Draft</button></div>
-              </div> 
+              </div>
               <div class = "form-row">
                   <div class = "cell"><mat-icon svgIcon="delete_forever"></mat-icon></div>
                   <div class = "cell"><a>d706be08-4015-4fa2-80e6-567cf7e2e23f</a></div>
                   <div class = "cell">April 1, 2022 08:00</div>
                   <div class = "cell"><button mat-button mat-primary-button>Load Draft</button></div>
-                </div> 
+                </div>
 
               <div class = "form-row">
                   <div class = "cell"><mat-icon svgIcon="delete_forever"></mat-icon></div>
                   <div class = "cell">register = protein</div>
                   <div class = "cell">April 1, 2022 08:00</div>
                   <div class = "cell"><button mat-button mat-primary-button>Load Draft</button></div>
-                </div> 
+                </div>
 
-                
+
         </div>
-          
+
         <div mat-dialog-actions>
             <span class="middle-fill"></span>
             <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "dialogRef.close()">Close</button>
           </div>
       </ng-template>
-      
+
 
       <div class="changeClass advanced" *ngIf="feature === 'changeClass'">
         <mat-form-field>
@@ -156,7 +157,7 @@
           Submit</button>
           <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false"
            >
-          Cancel</button> 
+          Cancel</button>
         <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
           [disabled]="isLoading || !canApprove"> Confirm Approval</button>
 
