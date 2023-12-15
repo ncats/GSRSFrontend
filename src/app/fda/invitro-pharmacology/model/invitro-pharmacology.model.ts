@@ -26,8 +26,6 @@ export interface InvitroAssayScreening {
   valueType?: string;
   controlReferenceValue?: string;
   controlReferenceUnit?: string;
-  valueLow?: number;
-  valueHight?: number;
   valueFlags?: string;
   comments?: string;
   assayTarget?: string;
@@ -61,7 +59,7 @@ export interface InvitroAssayScreening {
   _assayTargetSubId?: string;
   _ligandSubstrateSubId?: string;
   _controlSubId?: string;
-  _calculateIc50?: string;
+  _calculateIC50?: string;
   _assayTargetSummaries?: Array<any>;
   invitroRelationship?: InvitroRelationship;
   invitroApprover?: InvitroApprover;

@@ -95,29 +95,39 @@
                 <tr>
                   <td class="fieldKey">Test Agent UNII:</td>
                   <td>
-                    <div *ngIf="assayScreening.invitroTestCompound">
-                      <div *ngIf="assayScreening.invitroTestCompound._testCompoundSubId; else noTestCompoundSubId">
-                        <div class="divflex">
-                          <div>
-                            <a [routerLink]="['/substances', assayScreening.invitroTestCompound._testCompoundSubId]"
-                              target="_blank">
-                              <span class="">{{ assayScreening.invitroTestCompound.testCompoundUnii }}</span>
-                            </a>
-                          </div>
-                          <div class="marginleft30px margintopneg10px width30px">
-                            <a role="img" aria-label="substance image" class="zoom"
-                              (click)="openImageModal(assayScreening.invitroTestCompound._testCompoundSubId)">
-                              <img class="image-icon" appSubstanceImage size="90"
-                                [entityId]="assayScreening.invitroTestCompound._testCompoundSubId">
-                            </a>
-                          </div>
+
+                    <div *ngIf="assayScreening.testAgentUnii">
+                      {{assayScreening.testAgentUnii}}
+                    </div>
+
+                    <!--
+                    <div *ngIf="assayScreening.invitroTestCompound._testCompoundSubId; else noTestCompoundSubId">
+                      <div class="divflex">
+                        <div>
+                          <a [routerLink]="['/substances', assayScreening.invitroTestCompound._testCompoundSubId]"
+                            target="_blank">
+                            <span class="">{{ assayScreening.invitroTestCompound.testCompoundUnii }}</span>
+                          </a>
+                        </div>
+                        <div class="marginleft30px margintopneg10px width30px">
+                          <a role="img" aria-label="substance image" class="zoom"
+                            (click)="openImageModal(assayScreening.invitroTestCompound._testCompoundSubId)">
+                            <img class="image-icon" appSubstanceImage size="90"
+                              [entityId]="assayScreening.invitroTestCompound._testCompoundSubId">
+                          </a>
                         </div>
                       </div>
-                      <ng-template #noTestCompoundSubId>
-                        {{ assayScreening.invitroTestCompound.testAgentUnii }}
-                      </ng-template>
                     </div>
+                    <ng-template #noTestCompoundSubId>
+                      {{ assayScreening.invitroTestCompound.testAgentUnii }}
+                    </ng-template>
+                    -->
                   </td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Test Agent Formula Molecular Weight:</td>
+                  <td>{{ assayScreening.formulaMolecularWeight }}</td>
                 </tr>
 
                 <tr>
@@ -171,12 +181,17 @@
                 <tr>
                   <td class="fieldKey">Relationship Type:</td>
                   <td>
-                    <div *ngIf="assayScreening.invitroTestCompound">
-                      <div *ngIf="assayScreening.invitroTestCompound.invitroRelationships.length > 0">
-                          <div *ngFor="let rel of assayScreening.invitroTestCompound.invitroRelationships">
-                            {{rel.relationshipType}}
-                          </div>
-                      </div>
+                    <div *ngIf="assayScreening.invitroRelationship">
+                      {{assayScreening.invitroRelationship.relationshipType}}
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Related Substance:</td>
+                  <td>
+                    <div *ngIf="assayScreening.invitroRelationship">
+                      {{assayScreening.invitroRelationship.relatedSubstance}}
                     </div>
                   </td>
                 </tr>
@@ -298,33 +313,63 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Value Low:</td>
-                  <td>{{ assayScreening.valueLow }}</td>
+                  <td class="fieldKey">Value Flags:</td>
+                  <td>{{ assayScreening.valueFlags }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Value High:</td>
-                  <td>{{ assayScreening.valueHigh }}</td>
+                  <td class="fieldKey">Control Reference Value Unit:</td>
+                  <td>{{ assayScreening.controlReferenceValueUnit }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Control Reference Unit:</td>
-                  <td>{{ assayScreening.controlReferenceUnit }}</td>
+                  <td class="fieldKey">Test Concentration:</td>
+                  <td>{{ assayScreening.testConcentration }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Test Value Type:</td>
-                  <td>{{ assayScreening.testValueType }}</td>
+                  <td class="fieldKey">Test Concentration Unit:</td>
+                  <td>{{ assayScreening.testConcentrationUnit }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Test Value:</td>
-                  <td>{{ assayScreening.testValue }}</td>
+                  <td class="fieldKey">Solvent Concentration:</td>
+                  <td>{{ assayScreening.solventConcentration }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Test Value Unit:</td>
-                  <td>{{ assayScreening.testValueUnit }}</td>
+                  <td class="fieldKey">Solvent Concentration Unit:</td>
+                  <td>{{ assayScreening.solventConcentrationUnit }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Stock Concentration:</td>
+                  <td>{{ assayScreening.stockConcentration }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Stock Solvent:</td>
+                  <td>{{ assayScreening.stockSolvent }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Solution State:</td>
+                  <td>{{ assayScreening.solutionState }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Vehicle Composition:</td>
+                  <td>{{ assayScreening.vehicleComposition }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Endpoint Type:</td>
+                  <td>{{ assayScreening.endpointType }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Result Type:</td>
+                  <td>{{ assayScreening.resultType }}</td>
                 </tr>
 
                 <tr>
@@ -382,12 +427,12 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">External Source:</td>
+                  <td class="fieldKey">External Assay Source:</td>
                   <td>{{ assayScreening.externalSource }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">External Reference:</td>
+                  <td class="fieldKey">External Assay Reference URL:</td>
                   <td>
                     <a href="{{ assayScreening.externalReference }}" target="_blank">
                       {{ assayScreening.externalReference }}

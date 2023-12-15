@@ -47,27 +47,6 @@
   /*padding-left: 70px; */
 }
 
-.headerstyle2 {
-  border: 1px solid var(--blue-color);
-  border-bottom: none;
-  height: 35px;
-  background-color: var(--table-th-border-color);    /*--primary-title-color*/
-  color: #FFFFFF;
-  font-weight: 700;
-}
-
-.fieldKey {
-  width: 290px;
-  font-weight: 800;
-  padding-top: 5px;
-  padding-left: 5px;
-}
-
-.fieldvalue {
-  width: 95%;
-  padding-left: 5px;
-}
-
 .divflex {
   display: flex;
 }
@@ -484,6 +463,34 @@ hr {
   border-bottom: 1px solid var(--regular-gainsboro-color);
 }
 
+.height35px {
+  height: 35px !important;
+  padding-left: 5px;
+  padding-top: 3px;
+}
+
+.headerstyle2 {
+  border: 1px solid var(--blue-color);
+  border-bottom: none;
+  height: 35px;
+  background-color: var(--table-th-border-color);    /*--primary-title-color*/
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.fieldKey {
+  width: 290px;
+  font-weight: 800;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+.fieldvalue {
+  width: 95%;
+  height: 40px;
+  padding-left: 5px;
+  margin-bottom: -1em;
+}
 
 /* Table Style Begin */
 table.tableStyle {
@@ -500,9 +507,10 @@ table.tableStyle td, table.tableStyle th {
   /*padding: 3px 2px;*/
 }
 
-table.tableStyle tbody td {
+table.tableStyle td {
   font-size: 16px;
   vertical-align: top;
+  height: 50px;
   /*padding: 10px 10px;*/
 }
 

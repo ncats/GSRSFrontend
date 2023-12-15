@@ -92,36 +92,29 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   invalidPage = false;
   ascDescDir = 'desc';
 
-  displayedColumns: string[] = [
-    'viewDetails',
+  assaySummaryDisplayedColumns: string[] = [
     'testAgent',
-    'batchNumber',
-    'screeningConcentration',
-    'screeningInhibition',
-    'assayTarget',
-    'assayType'
+    'screenConcentration',
+    'valueType',
+    'value',
+    'relationshipType',
+    'assayType',
+    'studyType',
   ];
 
   assayTargetSummaryDisplayedColumns: string[] = [
+    'viewDetails',
     'testAgent',
     'screenConcentration',
-    'percentInhibition',
     'valueType',
-    'assayType',
-    'studyType',
     'relationshipType',
-    'relatedSubstance'
-  ];
-
-  assaySummaryDisplayedColumns: string[] = [
-    'testCompound',
-    'screenConcentration',
-    'percentInhibition',
-    'valueType',
-    'assayType',
-    'studyType',
-    'relationshipType',
-    'relatedSubstance'
+    'referenceSource'
+    //'testAgent'
+    //'screenConcentration',
+    //'valueType',
+    // 'relationshipType',
+    // 'relatedSubstance'
+    //'source'
   ];
 
   substanceSummaryColumns: string[] = [
@@ -132,8 +125,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     'assayTarget',
     'assayType',
     'studyType',
-    'relationshipType',
-    'relatedSubstance',
+    'relationshipType'
   ];
 
   substanceScreeningColumns: string[] = [
@@ -242,7 +234,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.searchInvitroPharmacology();
     }
 
-    // Load Browse Substance Tab
 
   }
 
@@ -335,6 +326,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           this.browseByAllApplication();
         }
 
+
         // LOOP Results:
         this.assays.forEach(element => {
           if (element) {
@@ -345,14 +337,17 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               element._assayTargetSummaries = [];
               element._assayTargetSummaries.push(element);
 
+             // element._calculateIC50 = this.calculate1C50()
+
               // Calculate IC50
-            /*  if (element.percentInhibitionMean) {
-                if (element.percentInhibitionMean < 30) {
-                  element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
+              /*  if (element.percentInhibitionMean) {
+                  if (element.percentInhibition < 30) {
+                    element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
+                  }
                 }
-              }
-            */
+              */
               // Get Substance Id for Assay Target
+              /*
               if (element.assayTargetUnii) {
                 const assayTargetSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.assayTargetUnii).subscribe
                   (substance => {
@@ -373,6 +368,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
                   });
                 this.subscriptions.push(testCompoundSubIdSubscription);
               }
+              */
 
               // Get Substance Id for Ligand/Substrate
               if (element.ligandSubstrateUnii) {
@@ -494,7 +490,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             }
           });
 
-          const subScreening = { 'testCompound': elementSubstance, 'assay': substanceAssay };
+          const subScreening = { 'testAgent': elementSubstance, 'assay': substanceAssay };
           this.browseSubstanceList.push(subScreening);
 
         }, error => {
@@ -626,6 +622,17 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     //console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
   }
 
+  calculate1C50(percentInhibition, controlValueType, screeningConcentration): string {
+    let calculateIC50 = '';
+
+    if (percentInhibition) {
+      if (percentInhibition < 30) {
+        calculateIC50 = controlValueType + ' > ' + screeningConcentration;
+      }
+    }
+    return calculateIC50;
+  }
+
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -680,6 +687,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   // }
 
   sortData(sort: Sort) {
+    /*
     if (sort.active) {
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
@@ -693,7 +701,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       // Search Applications
       this.searchInvitroPharmacology();
     }
-    return;
+    return;*/
   }
 
   openSideNav() {
