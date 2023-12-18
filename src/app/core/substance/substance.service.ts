@@ -815,7 +815,7 @@ export class SubstanceService extends BaseHttpService {
   getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=0&fskip=0&ffilter=${searchTerm}`;
       if(pageQuery) {
         url += `&q=${pageQuery}`;
       }
