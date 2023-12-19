@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from  '@angular/material/dialog';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
 
 @Component({
@@ -15,7 +15,7 @@ export class SessionExpirationDialogComponent implements OnInit {
   timeRemainingSeconds: number;
   dialogTitle: string;
   dialogMessage: string;
-  private updateDialogInterval: number;
+  private updateDialogInterval: any;
 
   constructor(
     public dialogRef: MatDialogRef<SessionExpirationDialogComponent>,
