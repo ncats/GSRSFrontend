@@ -229,6 +229,7 @@
                         <mat-icon svgIcon="edit"></mat-icon>
                       </a>
 
+                      <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
                       &nbsp;&nbsp;
                       <span *ngIf="prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE'">
                         <a href="{{dailyMedUrl}}{{prodCode.productCode}}" target="_blank" alt="Go to DailyMed website"
@@ -239,10 +240,10 @@
                           matTooltip="opens in new window">
                         </mat-icon>
                       </span>
+                      -->
 
                     </span> <!-- loop productCode -->
                   </span> <!-- loop productProvenance-->
-
 
 
                   <!--
@@ -455,6 +456,13 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
                 <td mat-cell *matCellDef="let product">
                   <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                    <span class="font14px" *ngIf="prodProv.applicationType">
+                      {{prodProv.applicationType}}
+                    </span>
+                    <span class="font14px" *ngIf="prodProv.applicationNumber">
+                      {{prodProv.applicationNumber}}
+                    </span>
+                    <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
                     <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
                       target="_blank">
                       <span class="font14px" *ngIf="prodProv.applicationType">
@@ -464,6 +472,7 @@
                         {{prodProv.applicationNumber}}
                       </span>
                     </a>
+                    -->
                   </span>
                   <!--
                     *ngIf="(product.appType && product.appNumber); else noAppType">
@@ -696,6 +705,7 @@
                               <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
                                 <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
 
+                                <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
                                 &nbsp;&nbsp;
                                 <span *ngIf="prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE'">
                                   <a href="{{dailyMedUrl}}{{prodCode.productCode}}" target="_blank"
@@ -705,6 +715,7 @@
                                   <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                                   </mat-icon>
                                 </span>
+                                -->
 
                               </span>
                             </span>
@@ -753,6 +764,13 @@
                           </div>
                           <div class="row-property-value">
                             <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                              <span class="font14px" *ngIf="prodProv.applicationType">
+                                {{prodProv.applicationType}}
+                              </span>
+                              <span class="font14px" *ngIf="prodProv.applicationNumber">
+                                {{prodProv.applicationNumber}}
+                              </span>
+                              <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
                               <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
                                 target="_blank">
                                 <span class="font14px" *ngIf="prodProv.applicationType">
@@ -762,6 +780,7 @@
                                   {{prodProv.applicationNumber}}
                                 </span>
                               </a>
+                            -->
                             </span>
                           </div>
                         </div>
