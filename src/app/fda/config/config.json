@@ -556,7 +556,7 @@
     {
       "card": "substance-relationships",
       "type": "CONSTITUENT",
-      "title": "Relationships: Constitents",
+      "title": "Relationships: Constituents",
       "filters": [
         {
           "filterName": "exists",
