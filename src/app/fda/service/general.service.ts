@@ -396,10 +396,23 @@ export class GeneralService extends BaseHttpService {
     let keyType = this.getSubstanceKeyTypeConfig();
 
     // Get Substance Key Type for Product from frontend config
-    let prodKey = null;
-    prodKey = keyType.productKeyType;
-    if (prodKey) {
-      return prodKey;
+    let key = null;
+    key = keyType.productKeyType;
+    if (key) {
+      return key;
+    } else {
+      return keyType.default;
+    }
+  }
+
+  getSubstanceKeyTypeForApplicationConfig(): any {
+    let keyType = this.getSubstanceKeyTypeConfig();
+
+    // Get Substance Key Type for Application from frontend config
+    let key = null;
+    key = keyType.applicationKeyType;
+    if (key) {
+      return key;
     } else {
       return keyType.default;
     }
@@ -409,9 +422,9 @@ export class GeneralService extends BaseHttpService {
     let keyType = this.getSubstanceKeyTypeConfig();
 
     // Get Substance Key Type for Impurities from frontend config
-    const appKey = keyType.impuritiesKeyType;
-    if (appKey) {
-      return appKey;
+    const key = keyType.impuritiesKeyType;
+    if (key) {
+      return key;
     } else {
       return keyType.default;
     }
@@ -421,9 +434,9 @@ export class GeneralService extends BaseHttpService {
     let keyType = this.getSubstanceKeyTypeConfig();
 
     // Get Substance Key Type for Clinical Trial from frontend config
-    const clinicalKey = keyType.clinicalTrialKeyType;
-    if (clinicalKey) {
-      return clinicalKey;
+    const key = keyType.clinicalTrialKeyType;
+    if (key) {
+      return key;
     } else {
       return keyType.default;
     }
@@ -433,9 +446,9 @@ export class GeneralService extends BaseHttpService {
     let keyType = this.getSubstanceKeyTypeConfig();
 
     // Get Substance Key Type for Organization Display from frontend config
-    const orgDisplayKey = keyType.clinicalTrialKeyType;
-    if (orgDisplayKey) {
-      return orgDisplayKey;
+    const key = keyType.orgDisplayKeyType;
+    if (key) {
+      return key;
     } else {
       return keyType.default;
     }

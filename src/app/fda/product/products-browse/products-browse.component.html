@@ -197,7 +197,11 @@
       <!-- ******** Display Content Details ******** -->
       <div [ngClass]="view">
 
-        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <!-- **************************************************************** -->
+        <!-- **************************************************************** -->
+        <!-- TABLE VIEW BEGIN                                                 -->
+        <!-- **************************************************************** -->
+
         <div class="table-view">
           <div class="responsive">
 
@@ -485,7 +489,6 @@
         <!-- TABLE VIEW END -->
 
 
-
         <!-- **************************************************************** -->
         <!-- **************************************************************** -->
         <!-- CARD VIEW BEGIN -->
@@ -497,16 +500,66 @@
           <mat-card *ngFor="let product of products; let indexProd = index">
             <mat-card-content class="margintopneg15">
 
+              <div class="divflex marginleftneg10px">
+
+                <div>
+                  &nbsp;&nbsp;&nbsp;
+                  <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                    <span class="font16px"><b>View Details</b></span>
+                  </a>
+                </div>
+
+                <!-- ***** BUTTONS BEGIN ***** -->
+
+                <!-- Edit GSRS record button -->
+                <div class="" *ngIf="isAdmin">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank"
+                    matTooltip='Edit GSRS Product Record'>
+                    <mat-icon class="margintopneg10px" svgIcon="edit"></mat-icon>
+                  </a>
+                </div>
+
+                <!-- Download Json For this record -->
+                <div class="margintopneg10" *ngIf="isAdmin">
+                  <span *ngIf="product && product.id">
+                    <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON(product.id)"
+                      download="{{jsonFileName}}.json" matTooltip='Download JSON'>
+                      <mat-icon class="" svgIcon="get_app"></mat-icon>
+                    </a>
+                  </span>
+                </div>
+
+                <div class="margintopneg10" *ngIf="isAdmin">
+                  <!-- Copy Product to New Register -->
+                  <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
+                    matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
+                    <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
+                  </a>
+                </div>
+                <div>
+                  <span>
+                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+                    </mat-icon>
+                  </span>
+                </div>
+                <!-- ***** BUTTONS END ***** -->
+              </div>
+
               <!-- GROUP BY PROVENANCE BEGIN -->
-              <mat-tab-group class="">
-                <!-- Display data in each tab for each Provenance -->
-                <mat-tab class="margintopneg15"
-                  *ngFor="let prodProv1 of product.productProvenances; let indexProv1 = index">
+              <mat-tab-group class="margintop10px">
+
+                <!-- ######################################################################## -->
+                <!-- MAT-TAB: PROVENANCE BEGIN - Display data in each tab for each Provenance -->
+                <!-- #########################################################################-->
+
+                <mat-tab class="margintopneg10"
+                  *ngFor="let prodProv of product.productProvenances; let indexProv = index">
 
                   <ng-template mat-tab-label>
                     <span class="font13px colorlightblue">Provenance:</span>&nbsp;
                     <span class="colorred font16px">
-                      {{prodProv1.provenance}}
+                      {{prodProv.provenance}}
                     </span>
                   </ng-template>
 
@@ -516,54 +569,63 @@
 
                     <mat-title>
 
+                      <div class="middle-fill">&nbsp;</div>
+                    </mat-title>
+
+                    <mat-card-content class="marginleftneg15px">
+                      <!-- COMMENT THIS OUT NOW
+
                       <div class="divflex marginleftneg10px">
                         <div>
                           <span class="font13px">Product Name:</span>&nbsp;&nbsp;
                         </div>
 
-                        <div>
-                          <!-- Product Name Display BEGIN -->
+                          <div>
+                          <!- - Product Name Display BEGIN - ->
 
-                          <!-- Check and loop Product Provenances-->
+                          <!- - Check and loop Product Provenances- ->
+                          <!- -
                           <span *ngIf="product.productProvenances.length > 0; else noProdNameFromProv">
                             <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                            - ->
+                          <!- - Check and loop Product Names - ->
+                          <span *ngIf="prodProv.productNames.length > 0; else noProdNameFromName">
+                            <span *ngFor="let prodName of prodProv.productNames">
 
-                              <!-- Check and loop Product Names-->
-                              <span *ngIf="prodProv.productNames.length > 0; else noProdNameFromName">
-                                <span *ngFor="let prodName of prodProv.productNames">
-
-                                  <!-- if Product Name exits -->
-                                  <span *ngIf="prodName.productName; else noProdName">
-                                    <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
-                                      <span
-                                        *ngIf="prodName.displayName && prodName.displayName == true; else noDisplayName">
-                                        {{prodName.productName}}
-                                      </span>
-                                      <ng-template #noDisplayName>
-                                        <a class="substance-name" [routerLink]="['/product', product.id]"
-                                          target="_blank">
-                                          (NO Product Name)
-                                        </a>
-                                      </ng-template>
-                                    </a>
+                              <!- - if Product Name exits - ->
+                              <span *ngIf="prodName.productName; else noProdName">
+                                <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                                  <span
+                                    *ngIf="prodName.displayName && prodName.displayName == true; else noDisplayName">
+                                    {{prodName.productName}}
                                   </span>
-                                  <ng-template #noProdName>
+                                  <ng-template #noDisplayName>
                                     <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
                                       (NO Product Name)
                                     </a>
                                   </ng-template>
-
-                                </span> <!-- for loop ProductNames -->
-                              </span> <!-- if productNames size > 0 -->
-                              <ng-template #noProdNameFromName>
+                                </a>
+                              </span>
+                              <ng-template #noProdName>
                                 <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
                                   (NO Product Name)
                                 </a>
                               </ng-template>
 
+                            </span> <!- - for loop ProductNames - ->
+                          </span> <!- - if productNames size > 0 - ->
+                          <ng-template #noProdNameFromName>
+                            <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                              (NO Product Name)
+                            </a>
+                          </ng-template>
 
-                            </span> <!-- for loop ProductProvenances -->
-                          </span> <!-- if productProdvenances size > 0 -->
+
+                          <!- - </span> - ->
+                          <!- - for loop ProductProvenances - ->
+                          <!- - </span> - ->
+                          <!- - if productProdvenances size > 0 - ->
+
                           <ng-template #noProdNameFromProv>
                             <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
                               (NO Product Name)
@@ -571,51 +633,12 @@
                           </ng-template>
 
                         </div>
-                        <!-- Product Name Display END -->
+                        <!- - Product Name Display END  - ->
 
 
-                        <!-- Edit GSRS record button -->
-                        <div class="" *ngIf="isAdmin">
-                          &nbsp;&nbsp;&nbsp;
-                          <a [routerLink]="['/product', product.id, 'edit']" target="_blank"
-                            matTooltip='Edit GSRS Product Record'>
-                            <mat-icon class="margintopneg10px" svgIcon="edit"></mat-icon>
-                          </a>
-                        </div>
+                      </div> <!- - class=divflex - ->
+                      COMMENT END HERE -->
 
-                        <!-- Download Json For this record -->
-                        <div class="margintopneg10" *ngIf="isAdmin">
-                          <span *ngIf="product && product.id">
-                            <a button mat-icon-button color="primary" [href]="downloadJsonHref"
-                              (click)="saveJSON(product.id)" download="{{jsonFileName}}.json"
-                              matTooltip='Download JSON'>
-                              <mat-icon class="" svgIcon="get_app"></mat-icon>
-                            </a>
-                          </span>
-                        </div>
-
-                        <div class="margintopneg10" *ngIf="isAdmin">
-                          <!-- Copy Product to New Register -->
-                          <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
-                            matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
-                            <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
-                          </a>
-                        </div>
-                        <div>
-                          <span>
-                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"
-                              *ngIf="isAdmin">
-                            </mat-icon>
-                          </span>
-                        </div>
-
-                      </div>
-
-                      <div class="middle-fill">&nbsp;</div>
-                    </mat-title>
-
-
-                    <mat-card-content class="marginleftneg15px margintop10px">
 
                       <div class="row">
                         <div class="row-property">
@@ -626,7 +649,11 @@
                             <!--
                             <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
                             -->
+                            <!--
                             <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                            -->
+
+                            <div *ngIf="prodProv.productNames.length > 0; else noProductName">
                               <div *ngFor="let prodName of prodProv.productNames; let i = index">
                                 <div class="divflex">
                                   <div class="colorlightblue font14px"><b>{{prodName.productName}}</b></div>
@@ -637,6 +664,13 @@
                                 </div>
                               </div>
                             </div>
+                            <ng-template #noProductName>
+                              (No Product Name)
+                            </ng-template>
+
+                            <!--
+                            </div>
+                            -->
                           </div>
                         </div>
 
@@ -762,35 +796,6 @@
                         </div>
                       </div>
 
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Dosage Form:
-                          </div>
-                          <div class="row-property-value">
-                            <!--
-                            <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
-                            -->
-                            <div *ngFor="let prodManuItem of product.productManufactureItems">
-                              {{prodManuItem.dosageForm}}
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Route of Admin:
-                          </div>
-                          <div class="row-property-value">
-                            {{product.routeAdmin}}
-                          </div>
-                        </div>
-                      </div>
-
-
                     </mat-card-content>
                   </mat-card>
                   <!-- INSIDE TAB MAT_CARD END -->
@@ -801,6 +806,69 @@
               <!-- GROUP BY PROVENANCE END -->
 
 
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Dosage Form:
+                  </div>
+                  <div class="row-property-value">
+                    <!--
+                    <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
+                    -->
+                    <div *ngFor="let prodManuItem of product.productManufactureItems">
+                      {{prodManuItem.dosageForm}}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Route of Admin:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.routeAdmin}}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Display Audit Details -->
+              <div class="row" *ngIf="isAdmin">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Create Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Edit Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="isAdmin">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Created By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.createdBy}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Edited By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.modifiedBy}}
+                  </div>
+                </div>
+              </div>
 
               <div class="row">
                 <div class="row-property">
@@ -945,46 +1013,6 @@
 
 
               </div> <!-- row Substance Name-->
-
-
-              <!-- Display Audit Details -->
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Create Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Edit Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Created By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.createdBy}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Edited By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.modifiedBy}}
-                  </div>
-                </div>
-              </div>
 
             </mat-card-content>
           </mat-card>
