@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -80,6 +81,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   dailyMedUrl = '';
   downloadJsonHref: any;
   jsonFileName: string;
+  tabSelectedIndex = 0;
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
@@ -624,6 +626,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+
+  tabSelectedUpdated(event: MatTabChangeEvent) {
+    if (event) {
+      //this.tabSelectedIndex = event.index;
+    }
   }
 
 }

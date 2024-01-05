@@ -509,12 +509,12 @@
           <mat-card *ngFor="let product of products; let indexProd = index">
             <mat-card-content class="margintopneg15">
 
-              <div class="divflex marginleftneg10px">
+              <div class="divflex marginleftneg10px margintop10px">
 
                 <div>
                   &nbsp;&nbsp;&nbsp;
                   <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
-                    <span class="font16px"><b>View Details</b></span>
+                    <span class="font18px"><b>View Details</b></span>
                   </a>
                 </div>
 
@@ -556,7 +556,7 @@
               </div>
 
               <!-- GROUP BY PROVENANCE BEGIN -->
-              <mat-tab-group class="margintop10px">
+              <mat-tab-group class="margintop15px" (selectedTabChange)="tabSelectedUpdated($event)">
 
                 <!-- ######################################################################## -->
                 <!-- MAT-TAB: PROVENANCE BEGIN - Display data in each tab for each Provenance -->
@@ -574,7 +574,8 @@
 
                   <!-- Product Provenance TAB Begin -->
                   <!-- INSIDE TAB MAT-CARD BEGIN -->
-                  <mat-card class="style">
+                  <!--
+                  <mat-card class="style width90percent bordergray">
 
                     <mat-title>
 
@@ -582,7 +583,9 @@
                     </mat-title>
 
                     <mat-card-content class="marginleftneg15px">
-                      <!-- COMMENT THIS OUT NOW
+                    -->
+
+                  <!-- COMMENT THIS OUT NOW
 
                       <div class="divflex marginleftneg10px">
                         <div>
@@ -649,63 +652,62 @@
                       COMMENT END HERE -->
 
 
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Product Names:
-                          </div>
-                          <div class="row-property-value">
-                            <!--
+                  <div class="row margintop10px">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Names:
+                      </div>
+                      <div class="row-property-value">
+                        <!--
                             <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
                             -->
-                            <!--
+                        <!--
                             <div *ngFor="let prodProv of product.productProvenances; let i = index">
                             -->
 
-                            <div *ngIf="prodProv.productNames.length > 0; else noProductName">
-                              <div *ngFor="let prodName of prodProv.productNames; let i = index">
-                                <div class="divflex">
-                                  <div class="colorlightblue font14px"><b>{{prodName.productName}}</b></div>
-                                  <div *ngIf="prodName.displayName && prodName.displayName == true">
-                                    &nbsp;
-                                    <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
-                                  </div>
-                                </div>
+                        <div *ngIf="prodProv.productNames.length > 0; else noProductName">
+                          <div *ngFor="let prodName of prodProv.productNames; let i = index">
+                            <div class="divflex">
+                              <div class="colorlightblue font16px"><b>{{prodName.productName}}</b></div>
+                              <div *ngIf="prodName.displayName && prodName.displayName == true">
+                                &nbsp;
+                                <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
                               </div>
                             </div>
-                            <ng-template #noProductName>
-                              (No Product Name)
-                            </ng-template>
+                          </div>
+                        </div>
+                        <ng-template #noProductName>
+                          (No Product Name)
+                        </ng-template>
 
-                            <!--
+                        <!--
                             </div>
                             -->
-                          </div>
-                        </div>
-
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Product Status:
-                          </div>
-                          <div class="row-property-value">
-                            <div *ngFor="let prodProv of product.productProvenances">
-                              {{prodProv.productStatus}}
-                            </div>
-                          </div>
-                        </div>
                       </div>
+                    </div>
 
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Product Codes:
-                          </div>
-                          <div class="row-property-value">
-                            <span *ngFor="let prodProv of product.productProvenances; let i = index">
-                              <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
-                                <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Status:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodProv.productStatus}}
+                      </div>
+                    </div>
+                  </div>
 
-                                <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Codes:
+                      </div>
+                      <div class="row-property-value">
+
+                        <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+                          <span *ngIf="i > 0"><br></span>
+                          <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
+
+                          <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
                                 &nbsp;&nbsp;
                                 <span *ngIf="prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE'">
                                   <a href="{{dailyMedUrl}}{{prodCode.productCode}}" target="_blank"
@@ -716,36 +718,31 @@
                                   </mat-icon>
                                 </span>
                                 -->
-
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Product Type:
-                          </div>
-                          <div class="row-property-value">
-                            <div *ngFor="let prodProv of product.productProvenances; let i = index">
-                              {{prodProv.productType}}
-                            </div>
-                          </div>
-                        </div>
+                        </span>
                       </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Type:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodProv.productType}}
+                      </div>
+                    </div>
+                  </div>
 
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Labeler Name:
-                          </div>
-                          <div class="row-property-value">
-                            <!--
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Labeler Name:
+                      </div>
+                      <div class="row-property-value">
+                        <!--
                             <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
                             -->
-                            <div *ngFor="let prodProv of product.productProvenances">
-                              <div *ngFor="let prodComp of prodProv.productCompanies">
-                                {{prodComp.companyName}}
-                                <!--
+                        <div *ngFor="let prodComp of prodProv.productCompanies">
+                          {{prodComp.companyName}}
+                          <!--
                                 <div *ngFor="let prodCode of prodComp.productCompanyCodes">
                                   <span
                                     *ngIf="prodCode.companyCodeType && prodCode.companyCodeType.companyCodeType === 'DUNS NUMBER'">
@@ -753,24 +750,23 @@
                                   </span>
                                 </div>
                                  -->
-                              </div>
-                            </div>
-                          </div>
                         </div>
+                      </div>
+                    </div>
 
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Application Type Number:
-                          </div>
-                          <div class="row-property-value">
-                            <span *ngFor="let prodProv of product.productProvenances; let i = index">
-                              <span class="font14px" *ngIf="prodProv.applicationType">
-                                {{prodProv.applicationType}}
-                              </span>
-                              <span class="font14px" *ngIf="prodProv.applicationNumber">
-                                {{prodProv.applicationNumber}}
-                              </span>
-                              <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Application Type Number:
+                      </div>
+                      <div class="row-property-value">
+
+                        <span class="font14px" *ngIf="prodProv.applicationType">
+                          {{prodProv.applicationType}}
+                        </span>
+                        <span class="font14px" *ngIf="prodProv.applicationNumber">
+                          {{prodProv.applicationNumber}}
+                        </span>
+                        <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
                               <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
                                 target="_blank">
                                 <span class="font14px" *ngIf="prodProv.applicationType">
@@ -781,42 +777,42 @@
                                 </span>
                               </a>
                             -->
-                            </span>
-                          </div>
-                        </div>
                       </div>
+                    </div>
+                  </div>
 
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            City, State, Country:
-                          </div>
-                          <div class="row-property-value">
-                            <div *ngFor="let prodProv of product.productProvenances">
-                              <div *ngFor="let prodComp of prodProv.productCompanies">
-                                {{prodComp.companyCity}}
-                                <span *ngIf="prodComp.companyState">,</span>
-                                {{prodComp.companyState}}
-                                <span *ngIf="prodComp.companyCountry">,</span>
-                                {{prodComp.companyCountry}}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Public Domain:
-                          </div>
-                          <div class="row-property-value">
-                            <div *ngFor="let prodProv of product.productProvenances; let i = index">
-                              {{prodProv.publicDomain}}
-                            </div>
-                          </div>
-                        </div>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        City, State, Country:
                       </div>
+                      <div class="row-property-value">
 
+                        <div *ngFor="let prodComp of prodProv.productCompanies">
+                          {{prodComp.companyCity}}
+                          <span *ngIf="prodComp.companyState">,</span>
+                          {{prodComp.companyState}}
+                          <span *ngIf="prodComp.companyCountry">,</span>
+                          {{prodComp.companyCountry}}
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Public Domain:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodProv.publicDomain}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--
                     </mat-card-content>
                   </mat-card>
+                   -->
+
                   <!-- INSIDE TAB MAT_CARD END -->
 
 
@@ -846,6 +842,25 @@
                   </div>
                   <div class="row-property-value">
                     {{product.routeAdmin}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Manufacturer Name:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.manufacturerName}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Total Manufacture Items:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.productManufactureItems.length}}
                   </div>
                 </div>
               </div>
@@ -896,7 +911,7 @@
                   </div>
                   <div class="row-property-value">
 
-                    <!-- Display Active Substance -->
+                    <!-- Display ACTIVE Substance -->
                     <ol class="olstyle">
                       <div *ngFor="let prodManuItems of product.productManufactureItems">
                         <div *ngFor="let prodLot of prodManuItems.productLots">

@@ -835,9 +835,8 @@ width:150px;
 .row-property-key {
 	min-width: 38%;
 	max-width: 38%;
-	padding: 7px;
-        font-weight: bold;
-
+	padding: 8px;
+  font-weight: bold;
 }
 
 .row-property-value {
@@ -901,6 +900,10 @@ width:150px;
   font-size: 17px;
 }
 
+.font18px {
+  font-size: 18px;
+}
+
 .colorgray {
   color: var(--regular-grey-color);
 }
@@ -953,6 +956,10 @@ width:150px;
   margin-top: 10px;
 }
 
+.margintop15px {
+  margin-top: 15px;
+}
+
 .margintop20px {
   margin-top: 20px;
 }
@@ -997,28 +1004,24 @@ width:150px;
   width: 120px;
 }
 
-.width40 {
-   width: 40%;
-}
-
-.width30 {
-   width: 30%;
-}
-
-.width100percent {
-  width: 100%;
-}
-
-.width70percent {
-  width: 70%;
+.width350px {
+  width: 350px;
 }
 
 .width30percent {
   width: 30%;
 }
 
-.width350px {
-  width: 350px;
+.width70percent {
+  width: 70%;
+}
+
+.width90percent {
+  width: 100%;
+}
+
+.width100percent {
+  width: 100%;
 }
 
 .totalstyle {
