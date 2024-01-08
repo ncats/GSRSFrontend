@@ -4,15 +4,20 @@ import { Subscription } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import * as moment from 'moment';
 import { Title } from '@angular/platform-browser';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+
+/* GSRS Core Import */
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
 import { MainNotificationService } from '@gsrs-core/main-notification';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
+
+/* GSRS Product Import */
 import { ProductService } from '../service/product.service';
 import { GeneralService } from '../../service/general.service';
+import { Product } from '../model/product.model';
 
 @Component({
   selector: 'app-product-details-base',
@@ -23,7 +28,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
   productId: string;
   src: string;
-  product: any;
+  product: Product;
   iconSrcPath: string;
   message = '';
   isAdmin = false;

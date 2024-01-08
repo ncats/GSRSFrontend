@@ -6,28 +6,34 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { FacetParam } from '@gsrs-core/facets-manager';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
-import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { productSearchSortValues } from './product-search-sort-values';
-import { ProductAll } from '../model/product.model';
-import { environment } from '../../../../environments/environment';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+
+/* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading';
-import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
+import { environment } from '../../../../environments/environment';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
+import { Facet, FacetParam, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+
+/* GSRS Product Imports */
+import { GeneralService } from '../../service/general.service';
 import { ProductService } from '../service/product.service';
-import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { Product } from '../model/product.model';
+import { productSearchSortValues } from './product-search-sort-values';
 
 @Component({
   selector: 'app-products-browse',
@@ -39,7 +45,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
-  public products: Array<ProductAll>;
+  public products: Array<Product>;
   order: string;
   public sortValues = productSearchSortValues;
   hasBackdrop = false;
@@ -73,6 +79,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   invalidPage = false;
   iconSrcPath = '';
   dailyMedUrl = '';
+  downloadJsonHref: any;
+  jsonFileName: string;
+  tabSelectedIndex = 0;
+
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
     'productNDC',
@@ -108,6 +118,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     private locationStrategy: LocationStrategy,
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
+    private generalService: GeneralService,
     private dialog: MatDialog,
     private titleService: Title) { }
 
@@ -117,13 +128,11 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       if (this.router.url === this.previousState[0]) {
         this.ngOnInit();
       }
-
     }, 50);
   }
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
-    this.gaService.sendPageView('Browse Products');
 
     this.titleService.setTitle(`P:Browse Products`);
 
@@ -134,14 +143,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       queryParams: {}
     };
 
-    /*
-    navigationExtras.queryParams['searchTerm'] = this.activatedRoute.snapshot.queryParams['searchTerm'] || '';
-    navigationExtras.queryParams['order'] = this.activatedRoute.snapshot.queryParams['order'] || '';
-    navigationExtras.queryParams['pageSize'] = this.activatedRoute.snapshot.queryParams['pageSize'] || '10';
-    navigationExtras.queryParams['pageIndex'] = this.activatedRoute.snapshot.queryParams['pageIndex'] || '0';
-    navigationExtras.queryParams['skip'] = this.activatedRoute.snapshot.queryParams['skip'] || '10';
-    */
-
     this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
 
     if (this.privateSearchTerm) {
@@ -149,7 +150,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'default';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -166,7 +167,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.isComponentInit = true;
     this.loadComponent();
-
   }
 
   ngAfterViewInit() {
@@ -235,13 +235,14 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.matchTypes.sort();
         // Narrow Suggest Search End
 
+        // Get Substance Name for each substance Key
+        this.getSubstanceBySubstanceKey();
+
         // Get list of Export extension options such as .xlsx, .txt
         this.productService.getExportOptions(this.etag).subscribe(response => {
           this.exportOptions = response;
         });
 
-        // Separate Application Type and Application Number in Product Result.
-        this.separateAppTypeNumber();
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -426,6 +427,59 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
+  getSubstanceBySubstanceKey(): void {
+    this.products.forEach((element, index) => {
+      element.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+        // Sort Product Name by create date descending
+        // elementManuItem.applicationProductNameList.sort((a, b) => {
+        //   return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
+        // });
+
+        elementManuItem.productLots.forEach((elementLot, indexLot) => {
+          elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
+
+            if (elementIngred.substanceKey != null) {
+
+              const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+                if (response) {
+                  elementIngred._substanceUuid = response.uuid;
+                  elementIngred._ingredientName = response._name;
+
+                  /*
+                  // Get Substance Details, uuid, approval_id, substance name
+                  if (elementIngred.substanceKey) {
+                    this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
+                      if (responseInactive) {
+                        elementIngred._substanceUuid = responseInactive.uuid;
+                        elementIngred._ingredientName = responseInactive._name;
+                      }
+                    });
+                  }
+                  */
+
+                  // Get Active Moiety - Relationship
+                  /*
+                  this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+                    relationship = responseRel;
+                    relationship.forEach((elementRel, indexRel) => {
+                      if (elementRel.relationshipName != null) {
+                        elementIngred.activeMoietyName = elementRel.relationshipName;
+                        elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
+                      }
+                    });
+                  });
+                  */
+                } // response
+              });
+              this.subscriptions.push(substanceSubscription);
+            } // substancekey exists
+          }); // loop productIngredients
+        }); // loop productLots
+      }); // loop productManufactureItems
+    });  // loop product
+  }
+
   export(extension: string) {
     if (this.etag) {
       // const extension = 'xlsx';
@@ -465,6 +519,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return this.productService.getApiExportUrl(etag, extension);
   }
 
+  /*
   separateAppTypeNumber(): void {
     if (this.products) {
       this.products.forEach((element, index) => {
@@ -492,6 +547,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       });
     }
   }
+  */
 
   isNumber(str: any): boolean {
     if (str) {
@@ -536,8 +592,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  getAppTypeNumberUrl(appType: string, appNumber: string): string {
-    let appUrl = 'browse-applications?search=root_appType:\"^' + appType + '$\" AND root_appNumber:\"^' + appNumber + '$\"';
+  getAppTypeNumberUrl(applicationType: string, applicationNumber: string): string {
+    let appUrl = 'browse-applications?search=root_appType:\"^' + applicationType + '$\" AND root_appNumber:\"^' + applicationNumber + '$\"';
     return appUrl;
   }
 
@@ -546,12 +602,37 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.setSearchTermValue();
   }
 
+  getProductNameWithDisplayName(productIndex: number, productProvenanceIndex: number, productProvenanceNameIndex: number) {
+    const productNameObj = this.products[productIndex].productProvenances[productProvenanceIndex].productNames[productProvenanceNameIndex];
+    this.products.forEach(product => {
+      if (product) {
+
+      }
+    });
+  }
+
+  saveJSON(productId: number): void {
+    let json = this.products[productId];
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
+
+    const date = new Date();
+    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+  }
+
   increaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = '1002';
   }
 
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+
+  tabSelectedUpdated(event: MatTabChangeEvent) {
+    if (event) {
+      //this.tabSelectedIndex = event.index;
+    }
   }
 
 }

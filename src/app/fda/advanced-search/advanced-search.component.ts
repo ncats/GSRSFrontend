@@ -492,7 +492,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.rawFacets = this.rawFacetsApplication;
         this.facetKey = 'applications';
       } else if (this.category === 'Product') {
-        this.dictionaryFileName = 'productall_dictionary.json';
+        this.dictionaryFileName = 'product_dictionary.json';
         this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
         this.rawFacets = this.rawFacetsProduct;
         this.facetKey = 'products';

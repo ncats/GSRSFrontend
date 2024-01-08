@@ -10,12 +10,14 @@
       </span>
     </span>
   </div>
+
   <div class="maringright10px">
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="copyProductIngredient()"
       matTooltip="Copy Ingredient Details {{prodIngredientIndex + 1}} to New Ingredient">
       <mat-icon>file_copy</mat-icon>
     </button>
   </div>
+
   <div>
     <button mat-icon-button [ngStyle]="{'color':'orangered'}"
       (click)="confirmDeleteProductIngredient(prodComponentIndex, prodLotIndex, prodIngredientIndex)"
@@ -24,6 +26,7 @@
     </button>
   </div>
 </div>
+
 <!--
     &nbsp;&nbsp;
     <button mat-icon-button [ngStyle]="{'color':'orangered'}" (click)="confirmReviewIngredient()"
@@ -42,12 +45,29 @@
   </legend>
 
   <div class="divflexrow">
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Applicant Ingredient Name" [(ngModel)]="ingredient.applicantIngredName"
         name="applicantIngredName" />
     </mat-form-field>
 
-    <!-- Ingredient Name -->
+    <!-- Substance Selector for Substance/Ingredient Name -->
+    <div class="col-4-1">
+      <app-substance-selector (selectionUpdated)="ingredientNameUpdated($event)"
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/UNII/BDNUM/CAS RN" header=""
+        [subuuid]="ingredientNameSubstanceUuid" [showMorelinks]="true">
+      </app-substance-selector>
+    </div>
+
+    <!-- Substance Selector for Basis of Strength Name -->
+    <div class="col-4-1">
+      <app-substance-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/UNII/BDNUM/CAS RN" header=""
+        [subuuid]="basisOfStrengthSubstanceUuid" [showMorelinks]="true">
+      </app-substance-selector>
+    </div>
+
+    <!-- Ingredient Name (OLD CODE)-->
+    <!--
     <div class="col-1-4 flex-column related-substance">
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
@@ -59,12 +79,12 @@
           {{ingredientNameMessage}}
         </div>
 
-        <!-- Display Ingredient Name Details -->
+        <!- - Display Ingredient Name Details - ->
         <div class="padall5px fontfamilyhelvetica">
           <div *ngIf="ingredientName">
             <span class="colormaroon"><b>{{ingredientName}}</b></span>
             <br>
-            <!-- Display Active Moiety -->
+            <!-- Display Active Moiety - ->
             <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
               {{active}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
@@ -81,8 +101,10 @@
         </div>
       </div>
     </div>
+    -->
 
     <!-- Basis of Strength -->
+    <!--
     <div class="col-1-4 flex-column related-substance">
       <div class="related-substance-border">
         <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
@@ -95,12 +117,12 @@
           {{basisOfStrengthMessage}}
         </div>
 
-        <!-- Display Basis of Strength Details -->
+        <!- - Display Basis of Strength Details - ->
         <div class="padall5px fontfamilyhelvetica">
           <div *ngIf="basisOfStrengthIngredientName">
             <span class="colormaroon"><b>{{basisOfStrengthIngredientName}}</b></span>
             <br>
-            <!-- Display Active Moiety -->
+            <!- - Display Active Moiety - ->
             <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
               {{active}} <span class="colorgray font11px">(Active Moiety)</span>
             </div>
@@ -118,6 +140,7 @@
         </div>
       </div>
     </div>
+    -->
 
     <!--
     <mat-form-field class="col-1-4">
@@ -130,7 +153,7 @@
     </mat-form-field>
     -->
 
-    <div>
+    <div class="col-4-1">
       <label>Ingredient Location</label><br>
       <span *ngFor="let data of locationList; let i=index">
         <mat-checkbox class="font11px" #checkBox [value]="data.value" [(ngModel)]="data.checked" name="data.value"
@@ -141,30 +164,14 @@
       </span>
     </div>
 
-    <!--
-    <mat-form-field class="col-1-4">
-      <div *ngFor="let data of locationList; let i=index">
-        <mat-checkbox [(ngModel)]="checked" name="data.name">
-          {{ data.name }}
-        </mat-checkbox>
-      </div>
-    </mat-form-field>
-    -->
-    <!--
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Ingredient Location" [(ngModel)]="ingredient.ingredientLocation"
-        name="ingredientLocation" />
-    </mat-form-field>
-  -->
-
   </div> <!-- row-->
 
   <div class="form-row margintop10px">
-    <app-cv-input class="col-1-4" domain="INGREDIENT_TYPE" title="Ingredient Type" name="ingredientType"
+    <app-cv-input class="col-4-1" domain="INGREDIENT_TYPE" title="Ingredient Type" name="ingredientType"
       [model]="ingredient.ingredientType" (valueChange)="ingredient.ingredientType = $event">
     </app-cv-input>
 
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Average" [(ngModel)]="ingredient.average" name="average" />
     </mat-form-field>
 
@@ -176,80 +183,68 @@
       <input matInput placeholder="High" [(ngModel)]="ingredient.high" name="high" />
     </mat-form-field>
 
-    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit" [model]="ingredient.unit"
+    <app-cv-input class="col-4-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="ingredient.unit"
       (valueChange)="ingredient.unit = $event">
     </app-cv-input>
   </div>
 
   <div class="form-row margintop10px">
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Original Numerator Number" [(ngModel)]="ingredient.originalNumeratorNumber"
         name="originalNumeratorNumber" />
     </mat-form-field>
 
-    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Original Numerator Unit" name="originalNumeratorUnit"
+    <app-cv-input class="col-4-1" domain="PROD_UNIT" title="Original Numerator Unit" name="originalNumeratorUnit"
       [model]="ingredient.originalNumeratorUnit" (valueChange)="ingredient.originalNumeratorUnit = $event">
     </app-cv-input>
 
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Original Denominator Number" [(ngModel)]="ingredient.originalDenominatorNumber"
         name="originalDenominatorNumber" />
     </mat-form-field>
 
-    <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Original Denominator Unit" name="originalDenominatorUnit"
+    <app-cv-input class="col-4-1" domain="PROD_UNIT" title="Original Denominator Unit" name="originalDenominatorUnit"
       [model]="ingredient.originalDenominatorUnit" (valueChange)="ingredient.originalDenominatorUnit = $event">
     </app-cv-input>
   </div>
 
   <div class="form-row">
-    <app-cv-input class="col-1-4" domain="PROD_GRADE" title="Grade" name="grade" [model]="ingredient.grade"
+    <app-cv-input class="col-4-1" domain="PROD_GRADE" title="Grade" name="grade" [model]="ingredient.grade"
       (valueChange)="ingredient.grade = $event">
     </app-cv-input>
 
-    <app-cv-input class="col-1-4" domain="PROD_RELEASE_CHARACTERISTIC" title="Release Characteristics"
+    <app-cv-input class="col-4-1" domain="PROD_RELEASE_CHARACTERISTIC" title="Release Characteristics"
       name="releaseCharacteristic" [model]="ingredient.releaseCharacteristic"
       (valueChange)="ingredient.releaseCharacteristic = $event">
     </app-cv-input>
-    <!--
-    <mat-form-field class="col-1-4">
-      <mat-label>Release Characteristics</mat-label>
-      <mat-select matNativeControl [(ngModel)]="ingredient.releaseCharacteristic" name="releaseCharacteristic">
-        <mat-option *ngFor="let releaseCharacteristic of releaseCharacteristicList"
-          [value]="releaseCharacteristic.value">
-          {{releaseCharacteristic.display}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    -->
 
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Confidentiality Code" [(ngModel)]="ingredient.confidentialityCode"
         name="confidentialityCode" />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Notes" [(ngModel)]="ingredient.notes" name="notes " />
     </mat-form-field>
   </div> <!-- row-->
 
-
   <div class="form-row">
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />
-    </mat-form-field>
-
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Lot No" [(ngModel)]="ingredient.ingredLotNo" name="ingredLotNo" />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4">
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Manufacturer" [(ngModel)]="ingredient.manufacturer" name="manufacturer" />
+    </mat-form-field>
+
+    <mat-form-field class="col-4-1">
       <input matInput placeholder="Manufacture Ingredient Catalog ID"
         [(ngModel)]="ingredient.manufactureIngredientCatalogId" name="manufactureIngredientCatalogId " />
     </mat-form-field>
 
-    <mat-form-field class="col-1-4">
-      <input matInput placeholder="Manufacture Ingredient URL"
-        [(ngModel)]="ingredient.manufactureIngredientUrl" name="manufactureIngredientUrl " />
+    <mat-form-field class="col-4-1">
+      <input matInput placeholder="Manufacture Ingredient URL" [(ngModel)]="ingredient.manufactureIngredientUrl"
+        name="manufactureIngredientUrl " />
     </mat-form-field>
   </div>
 

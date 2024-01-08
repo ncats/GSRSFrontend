@@ -13,6 +13,7 @@
             <div>
               Product Details &nbsp;&nbsp;&nbsp;&nbsp;
             </div>
+
             <div class="margintopneg10px">
               <!-- Download Json -->
               <span *ngIf="product && product.id">
@@ -22,6 +23,7 @@
                 </a>&nbsp;
               </span>
             </div>
+
             <div>
               <!-- Edit GSRS record button -->
               <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
@@ -166,7 +168,7 @@
         <div class="row">
           <div class="row-property">
             <div class="row-property-key">
-              Manufacturer:
+              Manufacturer Name:
             </div>
             <div class="row-property-value">
               {{product.manufacturerName}}
@@ -1160,18 +1162,18 @@
                               <div class="row">
                                 <div class="row-property">
                                   <div class="row-property-key-2">
-                                    High:
-                                  </div>
-                                  <div class="row-property-value-2">
-                                    {{ ingred.high }}
-                                  </div>
-                                </div>
-                                <div class="row-property">
-                                  <div class="row-property-key-2">
                                     Unit:
                                   </div>
                                   <div class="row-property-value-2">
                                     {{ ingred.unit }}
+                                  </div>
+                                </div>
+                                <div class="row-property">
+                                  <div class="row-property-key-2">
+                                    High:
+                                  </div>
+                                  <div class="row-property-value-2">
+                                    {{ ingred.high }}
                                   </div>
                                 </div>
                               </div>
