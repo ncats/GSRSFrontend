@@ -36,6 +36,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
+import { PfdaToolbarComponent } from './base/pfda-toolbar/pfda-toolbar.component';
 import { HomeComponent } from './home/home.component';
 import { RegistrarsComponent } from './registrars/registrars.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
@@ -124,6 +125,7 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
     AppComponent,
     PageNotFoundComponent,
     BaseComponent,
+    PfdaToolbarComponent,
     HomeComponent,
     UnauthorizedComponent,
     SubstancesBrowseComponent,

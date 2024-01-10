@@ -34,6 +34,11 @@ export interface Config {
     advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
+    customToolbarComponent?: string;
+    sessionExpirationWarning?: SessionExpirationWarning;
+    disableReferenceDocumentUpload?: boolean;
+    externalSiteWarning?: ExternalSiteWarning;
+    pfdaBaseUrl?: string;
     homeDynamicLinks?: Array<any>;
     registrarDynamicLinks?: Array<any>;
     registrarDynamicLinks2?: Array<any>;
@@ -57,6 +62,7 @@ export interface Config {
     userProfile?: any;
     stagingArea?: StagingAreaSettings;
     privacyStatement: string;
+    appId?: string;
 }
 
 export interface StagingAreaSettings {
@@ -118,4 +124,15 @@ export interface AuthenticateAs {
     apiPassword?: string,
     apiKey?: string,
     apiToken?: string;
+}
+
+export interface SessionExpirationWarning {
+    maxSessionDurationMinutes: number;
+    extendSessionApiUrl: string;
+}
+
+export interface ExternalSiteWarning {
+    enabled: boolean;
+    dialogTitle: string;
+    dialogMessage: string;
 }

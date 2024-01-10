@@ -902,7 +902,7 @@ getDrafts() {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
-      this.openSuccessDialog('approve');
+      this.openSuccessDialog({ type: 'approve' });
       this.submissionMessage = 'Substance was approved successfully';
       this.showSubmissionMessages = true;
       this.validationResult = false;
@@ -931,7 +931,7 @@ getDrafts() {
       if (!this.id) {
         this.id = response.uuid;
       }
-      this.openSuccessDialog('staging');
+      this.openSuccessDialog({ type: 'staging' });
     })
   }
 
@@ -951,7 +951,7 @@ getDrafts() {
       if (!this.id) {
         this.id = response.uuid;
       }
-      this.openSuccessDialog();
+      this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
     }, (error: SubstanceFormResults) => {
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -1160,8 +1160,15 @@ getDrafts() {
     return old;
   }
 
-  openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {data: {'type':type}});
+  openSuccessDialog({ type, fileUrl }: { type?: 'submit'|'approve'|'staging', fileUrl?: string }): void {
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: {
+        type: type,
+        fileUrl: fileUrl ? fileUrl : null
+      },
+      disableClose: true
+    });
+
     this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view' | 'staging') => {
@@ -1175,6 +1182,9 @@ getDrafts() {
         this.router.navigate(['/admin/staging-area']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
+      } else if (response === 'viewInPfda') {
+        // View the submitted substance file in the user's precisionFDA home
+        window.location.assign(fileUrl);
       } else {
         this.submissionMessage = 'Substance was saved successfully!';
         if (type && type === 'approve') {
@@ -1182,7 +1192,7 @@ getDrafts() {
         }
         this.showSubmissionMessages = true;
         this.validationResult = false;
-        if (type && type === 'staging') {
+        if (type && type == 'staging') {
           this.submissionMessage = 'Edits to staged substance were saved successfully';
         } else {
           setTimeout(() => {

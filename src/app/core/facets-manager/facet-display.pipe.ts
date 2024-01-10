@@ -5,6 +5,7 @@ import { ConfigService } from '../config/config.service';
   name: 'facetDisplay'
 })
 export class FacetDisplayPipe implements PipeTransform {
+
   constructor(
     public configService: ConfigService
   ) { }
@@ -46,6 +47,18 @@ export class FacetDisplayPipe implements PipeTransform {
         }
       }
     }
+    if(this.configService && this.configService.configData.facetDisplay) {
+      let returned = name;
+      this.configService.configData.facetDisplay.forEach(facet => {
+        if (name === facet.value) {
+          returned = facet.display;
+          return facet.display;
+        }
+      });
+      if (returned !== name) {
+        return returned;
+      }
+    }
     if (name.toLowerCase() === 'substancestereochemistry') {
       return 'Stereochemistry';
     }
@@ -70,6 +83,7 @@ export class FacetDisplayPipe implements PipeTransform {
     if (name === 'GInAS Tag') {
       return 'Source Tag';
     }
+
     if (name === 'GInAS Domain') {
       return 'Domain';
     }

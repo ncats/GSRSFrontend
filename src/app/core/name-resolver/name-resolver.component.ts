@@ -8,6 +8,10 @@ import { ResolverResponse } from '../structure/structure-post-response.model';
 import { SubstanceService } from '../substance/substance.service';
 import { StructureService } from '../structure/structure.service';
 import {SafeUrl} from '@angular/platform-browser';
+import { ConfigService, ExternalSiteWarning } from '@gsrs-core/config';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ExternalSiteWarningDialogComponent } from './external-site-warning-dialog/external-site-warning-dialog.component';
 
 @Component({
   selector: 'app-name-resolver',
@@ -22,14 +26,23 @@ export class NameResolverComponent implements OnInit {
   matchedNames: PagingResponse<SubstanceSummary>;
   @Output() structureSelected = new EventEmitter<string>();
   @Input() startingName?: string;
+  // External site warning dialog for precisionFDA
+  externalSiteWarning: ExternalSiteWarning;
+  private overlayContainer: HTMLElement;
 
   constructor(
+    private configService: ConfigService,
     private loadingService: LoadingService,
     private substanceService: SubstanceService,
-    private structureService: StructureService
-  ) { }
+    private structureService: StructureService,
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer
+    ) { }
 
   ngOnInit() {
+    this.externalSiteWarning = this.configService.configData.externalSiteWarning;
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
     if (this.startingName) {
       this.resolverControl.setValue(this.startingName);
       setTimeout( () => {
@@ -45,6 +58,15 @@ export class NameResolverComponent implements OnInit {
   }
 
   resolveName(name: string): void {
+    if (this.shouldShowExternalSiteWarningDialog() === true) {
+      this.showExternalSiteWarningDialog();
+      return;
+    }
+
+    this.resolveNameInternal(name);
+  }
+
+  resolveNameInternal(name: string): void {
     this.errorMessage = '';
     this.resolvedNames = [];
     this.matchedNames = null;
@@ -71,4 +93,24 @@ export class NameResolverComponent implements OnInit {
     this.structureSelected.emit(molfile);
   }
 
+  shouldShowExternalSiteWarningDialog(): boolean {
+    if (!this.externalSiteWarning || !this.externalSiteWarning.enabled) {
+      return false;
+    }
+    return localStorage.getItem('externalSiteWarningDontAskAgain') != 'true';
+  }
+
+  showExternalSiteWarningDialog(): void {
+    const dialogRef = this.dialog.open(ExternalSiteWarningDialogComponent, {
+      width: '800px',
+      autoFocus: false
+    });
+    this.overlayContainer.style.zIndex = '1002';
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+      if (response) {
+        this.resolveNameInternal(this.resolverControl.value);
+      }
+    });
+  }
 }

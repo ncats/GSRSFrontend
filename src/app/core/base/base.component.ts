@@ -3,6 +3,7 @@ import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart,
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
+import { SessionExpirationComponent } from '../auth/session-expiration/session-expiration.component'
 import { ConfigService } from '../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '../loading/loading.service';
@@ -45,6 +46,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
+  customToolbarComponent: string = '';
   canRegister = false;
   registerNav: Array<NavItem>;
   searchNav: Array<NavItem>;
@@ -73,6 +75,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private wildCardService: WildcardService
   ) {
+
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
     });

@@ -17,13 +17,13 @@
     <div class="side-nav-content">
       <div class="substance-details" *ngIf="substance">
         <div class="title-container">
+          <h1 class = "substance-title" [innerHTML] = "substance._name"></h1>
           <h1 *ngIf = "source !== 'staging'" class = "substance-title" [innerHTML] = "substance._nameHTML ? substance._nameHTML : substance._name"></h1>
           <span  *ngIf = "source == 'staging'">
             <h2 class = "approvalIDColor">Staging Area Record</h2>
               <h1 class = "substance-title" [innerHTML] = "substance._nameHTML ? substance._nameHTML : substance._name"></h1>
 
           </span>
-
           <span class = "middle-fill"></span>
           <div *ngIf = "substance.approvalID" class = "approvalID">{{substance.approvalID}}</div>
         </div>

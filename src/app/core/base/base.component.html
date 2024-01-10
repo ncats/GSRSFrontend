@@ -1,4 +1,4 @@
-<mat-toolbar class="mat-elevation-z3" color="primary" *ngIf="showHeaderBar === 'true'">
+<mat-toolbar class="mat-elevation-z3" color="primary" *ngIf="showHeaderBar === 'true' && !customToolbarComponent || customToolbarComponent.length == 0">
   <div class="logo-container">
     <span class="logo">
       <a routerLink="/home" aria-label="home">
@@ -211,6 +211,10 @@
   </a>
   </div>
 </mat-toolbar>
+<div *ngIf="customToolbarComponent == 'precisionFDA'">
+  <app-pfda-toolbar></app-pfda-toolbar>
+</div>
 <app-main-notification></app-main-notification>
+<app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
 <router-outlet></router-outlet>
