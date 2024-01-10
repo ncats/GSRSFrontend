@@ -4,10 +4,6 @@ language: node_js
 node_js:
   - 14.17.0
 
-env:
-  global:
-    - TRAVIS_TAG=buildRelease
-
 install:
 
   - cp package.dev.json package.json
