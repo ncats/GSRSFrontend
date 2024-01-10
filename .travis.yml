@@ -33,13 +33,14 @@ after_success:
   - ls
   - cp deployable_binaries.zip ../
   - ls
+  - echo "$TRAVIS_TAG"
+  - "curl -X DELETE -H 'authorization: token ${GIT_ACCESS_TOKEN}' \"https://api.github.com/repos/ncats/GSRSFrontend/git/refs/tags/${TRAVIS_TAG}\""
+ 
 
 before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
-  - echo "$TRAVIS_TAG"
-  - "curl -X DELETE -H 'authorization: token ${GIT_ACCESS_TOKEN}' \"https://api.github.com/repos/ncats/GSRSFrontend/git/refs/tags/$TRAVIS_TAG\""
-  - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then git tag $TRAVIS_TAG; fi
+ - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then git tag $TRAVIS_TAG; fi
   - echo "$TRAVIS_TAG"
 
 deploy:
