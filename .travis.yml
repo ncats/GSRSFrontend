@@ -40,9 +40,7 @@ before_deploy:
   - echo "before deploy"
   - echo "$TRAVIS_TAG"
   - gh release delete $TRAVIS_TAG --repo ncats/gsrsFrontend --yes || true
-  - >-
-    curl -X DELETE -H "Authorization: token ${GIT_ACCESS_TOKEN}" \
-    @github.com/ncats/GSRSFrontend/git/refs/tags/$TRAVIS_TAG
+  - "curl -X DELETE -H \"Authorization: token ${GIT_ACCESS_TOKEN}\" \ @github.com/ncats/GSRSFrontend/git/refs/tags/$TRAVIS_TAG"
   - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then git tag $TRAVIS_TAG; fi
   - echo "$TRAVIS_TAG"
 
