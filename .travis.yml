@@ -4,6 +4,11 @@ language: node_js
 node_js:
   - 14.17.0
 
+env:
+  global:
+    - TRAVIS_TAG=buildRelease
+
+
 
 install:
 
@@ -26,3 +31,25 @@ script:
   - npm run build:fda:prod
 after_success:
   - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
+ - zip -r deployable_binaries.zip dist/browser
+  - ls
+  - cp deployable_binaries.zip ../
+  - ls
+before_deploy:
+  # Set up git user name and tag this commit
+  - echo "before deploy"
+  - echo "$TRAVIS_TAG"
+  - gh release delete $TRAVIS_TAG --repo ncats/gsrsFrontend --yes || true
+  - >-
+    curl -X DELETE -H "Authorization: token ${GIT_ACCESS_TOKEN}" \
+    @github.com/ncats/GSRSFrontend/git/refs/tags/$TRAVIS_TAG
+  - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then git tag $TRAVIS_TAG; fi
+  - echo "$TRAVIS_TAG"
+
+deploy:
+  provider: releases
+  api_key: ${GIT_ACCESS_TOKEN}
+  file: "../deployable_binaries.zip"
+  skip_cleanup: true
+  on:
+    all_branches: true
