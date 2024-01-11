@@ -34,12 +34,12 @@ after_success:
   - cp deployable_binaries.zip ../
   - ls
   - echo "$TRAVIS_TAG"
- 
+
 
 before_deploy:
   # Set up git user name and tag this commit
   - echo "before deploy"
- - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then git tag $TRAVIS_TAG; fi
+  - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then git tag $TRAVIS_TAG; fi
   - echo "$TRAVIS_TAG"
 
 deploy:
