@@ -243,22 +243,6 @@
                   "with": "src/environments/environment.fda.local.ts"
                 }
               ]
-            },
-            "cbg.prod": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.cbg.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
             }
           }
         },
@@ -291,9 +275,6 @@
             },
             "gsrs.prod": {
               "browserTarget": "gsrs-client:build:gsrs.prod"
-            },
-            "cbg.prod": {
-              "browserTarget": "gsrs-client:build:cbg.prod"
             }
           }
         },
