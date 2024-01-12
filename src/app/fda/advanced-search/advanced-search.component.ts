@@ -18,7 +18,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { transform } from 'lodash';
 import { environment } from '../../../environments/environment';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
@@ -47,7 +47,6 @@ import { ProductService } from '../product/service/product.service';
 import { ClinicalTrialService } from '../clinical-trials/clinical-trial/clinical-trial.service';
 import { AdverseEventService } from '../adverse-event/service/adverseevent.service';
 import { AdvancedSearchService } from './service/advanced-search.service';
-
 @Component({
   selector: 'app-advanced-search',
   templateUrl: './advanced-search.component.html',
@@ -803,7 +802,9 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       /*****************************************************************************/
 
       if (this.category === 'Substance') {
-        const mol = this.editor.getMolfile();
+        let mol = '';
+        this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+          mol = response;
         if (mol && mol.length > 72) {
           this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
             const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
@@ -849,6 +850,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           this.router.navigate(['/browse-substance'], navigationExtras);
           //    }
         }
+      });
       }
       else if (this.category === 'Application') {
         this.router.navigate(['/browse-applications'], navigationExtras);
@@ -936,13 +938,16 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   openStructureExportDialog(): void {
+    let mol = '';
+    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
     this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
     const dialogRef = this.dialog.open(StructureExportComponent, {
       height: 'auto',
       width: '650px',
       data: {
-        molfile: this.editor.getMolfile(),
-        smiles: this.editor.getSmiles()
+        molfile: mol,
+        smiles: '' //this.editor.getSmiles()
       }
     });
     this.overlayContainer.style.zIndex = '1002';
@@ -951,6 +956,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     }, () => {
       this.overlayContainer.style.zIndex = null;
     });
+  });
   }
 
   searchCutoffChanged(event): void {

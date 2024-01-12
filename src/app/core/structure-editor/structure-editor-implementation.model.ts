@@ -1,7 +1,7 @@
 import { Ketcher } from 'ketcher-wrapper';
 import { JSDraw } from 'jsdraw-wrapper';
 import { Editor } from './structure.editor.model';
-import { Observable } from 'rxjs';
+import { Observable, from, pipe, take } from 'rxjs';
 
 export class EditorImplementation implements Editor {
     private ketcher?: Ketcher;
@@ -12,9 +12,14 @@ export class EditorImplementation implements Editor {
         this.jsdraw = jsdraw;
     }
 
-    getMolfile(): string {
+    
+
+    getMolfile(): Observable<any> {
         if (this.ketcher != null) {
-            return this.ketcher.getMolfile();
+            from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
+                return result;});
+            
+           
         } else if (this.jsdraw != null) {
             const chargeLine = this.getMCharge();
             let mfile = this.jsdraw.getMolfile();
@@ -34,18 +39,23 @@ export class EditorImplementation implements Editor {
                     }
                 }
             }
-
-            return this.clean(mfile);
+            return new Observable<string>(observer => {
+                observer.next(this.clean(mfile));
+            });
         } else {
-            return null;
+            console.log('returning null');
+            return null as Observable<any>;
         }
     }
 
-    getSmiles(): string {
+    getSmiles(): Observable<string> {
         if (this.ketcher != null) {
-            return this.ketcher.getSmiles();
+            from(this.ketcher.getSmiles()).pipe(take(1)).subscribe(result => { console.log(result);
+                return result;});
         } else if (this.jsdraw != null) {
-            return this.jsdraw.getSmiles();
+            return new Observable<string>(observer => {
+                observer.next(this.jsdraw.getSmiles());
+            });
         }
     }
 
@@ -101,11 +111,15 @@ export class EditorImplementation implements Editor {
         return new Observable<string>(observer => {
             if (this.jsdraw != null) {
                 this.jsdraw.options.ondatachange = () => {
-                    const molFile = this.getMolfile();
-                    observer.next(molFile);
+                    this.getMolfile().pipe(take(1)).subscribe(result => { 
+                        observer.next(result);
+                    });
                 };
-            } else {
-                observer.next('');
+            } else if (this.ketcher != null) {
+                this.getMolfile().pipe(take(1)).subscribe(result => { 
+                    console.log(result);
+                    return result;
+                });
             }
         });
     }

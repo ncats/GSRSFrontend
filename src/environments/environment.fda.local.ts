@@ -6,6 +6,7 @@ environment.clasicBaseHref = '/ginas/app/';
 // __alex__ should make change here.
 environment.appId = 'fda';
 environment.isAnalyticsPrivate = true;
+environment.structureEditor = 'ketcher';
 
 // environment.apiBaseUrl = 'http://localhost:9000/ginas/app/';
  // environment.apiBaseUrl = 'http://localhost:8080/';

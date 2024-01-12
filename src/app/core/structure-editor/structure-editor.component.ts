@@ -106,7 +106,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       window.addEventListener('drop', this.preventDrag);
       window.addEventListener('paste', this.checkPaste);
 
-      this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/ketcher.html`;
+      this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/index.html`;
 
       this.structureEditor = environment.structureEditor;
 
@@ -139,7 +139,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ketcherOnLoad(ketcher: Ketcher): void {
     this.ketcher = ketcher;
+    console.log(ketcher);
     this.editor = new EditorImplementation(this.ketcher);
+    console.log(this.editor);
     this.editorOnLoad.emit(this.editor);
   }
 
@@ -245,8 +247,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   cleanStructure() {
-    const molfile = this.editor.getMolfile();
-
+    let molfile ='';
+    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      molfile = response;
     if (molfile != null && molfile !== '') {
       this.structureService.interpretStructure(molfile).pipe(take(1)).subscribe(response => {
         if (response && response.structure && response.structure.smiles) {
@@ -254,6 +257,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         }
       });
     }
+  });
   }
 
   cleanStructureSmiles(smiles: string) {
@@ -269,13 +273,16 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   standardize(standard: string): void {
     this.loadingService.setLoading(true);
-    const mol = this.editor.getMolfile();
+    let mol ='';
+    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
     this.structureService.interpretStructure(mol, '', standard).pipe(take(1)).subscribe((response: any) => {
       if (response && response.structure && response.structure.molfile) {
         this.editor.setMolecule(response.structure.molfile);
       }
       this.loadingService.setLoading(false);
     }, () => {this.loadingService.setLoading(false); });
-  }
+  });
+}
 
 }
