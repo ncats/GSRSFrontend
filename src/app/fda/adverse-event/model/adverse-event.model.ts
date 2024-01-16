@@ -12,6 +12,7 @@ export interface AdverseEventPt {
   ptCountPercent?: string;
   ptCountTotalVsDrug?: string;
   prr?: string;
+  _faersDashboardUrl?: string;
 }
 
 export interface AdverseEventDme {

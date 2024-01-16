@@ -23,18 +23,20 @@ export class MergeActionDialogComponent implements OnInit {
     private adminService: AdminService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    console.log(data);
     if(data.recordId) {
+
       this.entity = data.recordId;
       this.matches = data.matches;
 
     }
     if(data.mergeRecord) {
-      this.toMerge = data.mergeRecord.uuid;
+      this.toMerge = data.mergeRecord.ID;
     }
    }
 
    select(entry: any) {
-    this.toMerge = entry.uuid;
+    this.toMerge = entry;
    } 
 
   ngOnInit(): void {
@@ -43,7 +45,7 @@ export class MergeActionDialogComponent implements OnInit {
 
   getMergeSchema() {
     this.adminService.getMergeActionSchema().subscribe(response => {
-      this.mergeSchema = {"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://gsrs.ncats.nih.gov/#/import.merge.schema.json","title":"Import Merge Parameters","description":"Options when data from one substance is merged into another","type":"object","properties":{"mergeReferences":{"comments":"Copy references from new substance into existing substance","title":"Merge References","type":"boolean"},"mergeNames":{"comments":"Copy names from new substance into existing substance","type":"boolean","title":"Merge Names"},"mergeCodes":{"comments":"Copy codes from new substance into existing substance","type":"boolean","title":"Merge Codes"},"mergeProperties":{"comments":"Copy properties from new substance into existing substance","type":"boolean","title":"Merge Properties"},"mergeNotes":{"comments":"Copy notes from new substance into existing substance","type":"boolean","title":"Merge Notes"},"mergeNotesNoteUniqueness":{"comments":"When merging notes, eliminate duplicates from the new items","type":"boolean","title":"Note uniqueness","visibleIf":{"mergeNotes":[true]}},"mergeRelationships":{"comments":"Copy relationships from new substance into existing substance","type":"boolean","title":"Merge Relationships"},"mergeRelationshipsRelationshipUniqueness":{"comments":"When merging relationship, eliminate duplicates from the new items","type":"boolean","title":"Relationship Uniqueness","visibleIf":{"mergeRelationships":[true]}},"mergeModifications":{"comments":"Copy modifications from new substance into existing substance (see separate selections for Agent, Structural and Physical)","type":"boolean","title":"Copy modifications from new substance into existing substance"}},"mergeModificationsMergeStructuralModifications":{"comments":"When merging modifications, include structural modifications","type":"boolean","title":"Merge Structural Modifications","visibleIf":{"mergeModifications":[true]}},"mergeModificationsMergeAgentModifications":{"comments":"When merging modifications, include agent modifications","type":"boolean","title":"Merge Agent Modifications","visibleIf":{"mergeModifications":[true]}},"mergeModificationsMergePhysicalModifications":{"comments":"When merging modifications, include physical modifications","type":"boolean","title":"Merge Physical Modifications","visibleIf":{"mergeModifications":[true]}},"skipLevelingReferences":{"comments":"When merging codes, names, properties, etc., skip the step of copying references attached to these things","type":"boolean","title":"Skip Leveling References"},"required":[],"constraints":[{"if":"removeCodesBySystem","then":{"oneOf":[["removeCodesBySystemCodeSystemsToRemove","removeCodesBySystemCodeSystemsToKeep"]]}}]};
+      this.mergeSchema = response;
     });
   }
 
@@ -60,12 +62,24 @@ export class MergeActionDialogComponent implements OnInit {
     })
   }
 
+  restart() {
+    this.success = true;
+    this.loading = false;
+    this.completed = false;
+    this.mergeResponse = null;
+    this.errors = [];
+    this.mergeModel = {};
+    this.privateMergeModel = {};
+  }
+
     refresh(id: string): void {
       this.adminService.processingstatus(id).subscribe(response => {
         if (response.results) {
+          this.success = response.completeSuccess;
           response.results.forEach(result => {
-            if(result.status === "INTERNAL_SERVER_ERROR") {
-              this.success = false;
+           
+
+            if(!this.success) {
               let temp = result.message;
               if (result.error) {
                 temp += ". " + result.error;

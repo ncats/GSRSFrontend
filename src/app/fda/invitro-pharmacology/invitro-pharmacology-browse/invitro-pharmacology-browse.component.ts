@@ -96,7 +96,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     'testAgent',
     'screenConcentration',
     'valueType',
-    'value',
+   // 'value',
     'relationshipType',
     'assayType',
     'studyType',

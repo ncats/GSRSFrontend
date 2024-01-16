@@ -79,6 +79,20 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     'prr'
   ];
 
+  adverseEventShinySubstanceNameDisplay = false;
+  adverseEventShinyAdverseEventDisplay = false;
+  adverseEventShinySubstanceNameURL: string;
+  adverseEventShinyAdverseEventURL: string;
+  adverseEventShinySubstanceNameURLWithParam: string;
+  adverseEventShinyAdverseEventURLWithParam: string;
+
+  // FAERS DASHBOARD
+  FAERSDashboardAdverseEventUrl: string;
+  FAERSDashboardSubstanceName: string;
+  FAERSDashboardSearchTerm = "/select/Search%20Term/"; // FAERS Adverse Event 'Substance Name'
+  FAERSDashboardReactionTerm = "/select/Reaction%20Term/"; // GSRS Adverse Event 'PT Term'
+  FAERSDashboardReactionGroup = "/select/Reaction%20Group/"; // GSRS Adverse Event 'Prim SOC'
+
   constructor(
     public adverseEventService: AdverseEventService,
     public generalService: GeneralService,
@@ -142,6 +156,10 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
     this.isComponentInit = true;
     this.loadComponent();
+
+    // FAERS DASHBOARD
+    this.getFaersDashboardUrl();
+
   }
 
   ngAfterViewInit() {
@@ -246,6 +264,10 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
         }
         this.matchTypes.sort();
         // Narrow Suggest Search End
+
+        // Loop through the AE PT search results and get the FAERS name from the database
+        this.getFaersDashboardRecordByName();
+
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -446,7 +468,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -477,6 +499,44 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+  getFaersDashboardRecordByName(): void {
+    // Get FAERS Name from database table that contains 'P' and 'G' in name.
+    // Example: Acetazolamide (G) instead of GSRS name Acetazolamide
+    this.adverseEventPtList.forEach((element, index) => {
+      if (element.name != null) {
+        const faersNameSubscription = this.adverseEventService.getFaersDashboardRecordByName(element.name).subscribe(results => {
+          if (results) {
+            if (results.name) {
+              element._faersDashboardUrl = this.FAERSDashboardAdverseEventUrl + results.name + this.FAERSDashboardReactionTerm;
+            }
+          }
+        });
+        this.subscriptions.push(faersNameSubscription);
+      }
+    });
+  }
+
+  getFaersDashboardUrl(): void {
+    if (this.configService.configData) {
+      if (this.configService.configData.FAERSDashboardAdverseEventUrl
+        && this.configService.configData.FAERSDashboardAdverseEventUrl !== null) {
+        const faersUrlConfig = this.configService.configData.FAERSDashboardAdverseEventUrl;
+
+        // FULL FAERS DASHBOARD URL
+        // faersUrl + /select/Search%20Term/ + FaersName + /select/Reaction%20Term/ + ptTerm + /select/Reaction%20Group/ + primSoc;
+        this.FAERSDashboardAdverseEventUrl = faersUrlConfig + this.FAERSDashboardSearchTerm;
+      }
+    }
+  }
+
+  getDecodeURL(value: string): string {
+    let result = '';
+    if (value !== null) {
+      result = decodeURIComponent(value);
+    }
+    return result;
   }
 
 }

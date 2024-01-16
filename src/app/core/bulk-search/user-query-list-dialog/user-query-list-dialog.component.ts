@@ -48,6 +48,7 @@ export class UserQueryListDialogComponent implements OnInit {
   pastedJson: any;
   viewCreated = false;
   downloadJsonHref: SafeUrl;
+  refreshing = false;
 
   constructor(
     private bulkSearchService: BulkSearchService,
@@ -99,6 +100,8 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   addList(): void {
+    this.refreshing = false;
+
     let found = false;
     this.lists.forEach(item => {
       if (item === this.listName) {
@@ -110,15 +113,19 @@ export class UserQueryListDialogComponent implements OnInit {
       this.bulkSearchService.saveBulkSearchEtag(null, this.listName, this.etag).subscribe( response => {
         this.loadID = response.id;
         setTimeout(() => {
+          
           this.refresh('add');
           }, 100);
         this.message = "Status: sending request";
         this.showAddButtons = true;
       }, error => {
         this.message = "Error: There was a problem adding a new list";
+        this.loading = false;
+
       })
     } else {
       this.message = "Cannot add: This list name is already used";
+      this.loading = false;
     }
   }
 
@@ -150,6 +157,8 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   appendList(): void {
+    this.refreshing = false;
+
     let found = false;
     this.lists.forEach(item => {
       if (item === this.listName) {
@@ -176,6 +185,8 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   useUser(name: string) {
+    this.refreshing = false;
+
     this.viewCreated = false;
     this.setUser = null;
     this.loaded = false;
@@ -187,6 +198,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   pageChange(pageEvent?: PageEvent): void {
+    this.refreshing = false;
 
     if (pageEvent != null) {
 
@@ -221,7 +233,7 @@ export class UserQueryListDialogComponent implements OnInit {
     let navigationExtras: NavigationExtras = {queryParams: {}};
  
       const newtest = this.activeName;
-      navigationExtras.queryParams = {'facets': 'User List*' + this.identifier + ':' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
+      navigationExtras.queryParams = {'facets': 'User List*' + this.identifier.replace(/[.]/g, '!.') + ':' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
   
     this.router.navigate(['/browse-substance'], navigationExtras);
     this.dialogRef.close();
@@ -231,9 +243,13 @@ export class UserQueryListDialogComponent implements OnInit {
     this.bulkSearchService.getSaveBulkListStatus(this.loadID).pipe(take(1)).subscribe(response => {
 
     this.status = response.status;
+    this.refreshing = true;
+    console.log(response);
         this.message = "Status: " + this.status;
         if (this.status === 'Completed.') {
           this.loading = false;
+          this.refreshing = false;
+
         } else {
           setTimeout(() => {
           this.refresh(type);
@@ -242,11 +258,13 @@ export class UserQueryListDialogComponent implements OnInit {
     }, error => {
         setTimeout(() => {
           this.refresh(type);
+          console.log(error);
           }, 1000);
     })
   }
   
   getUserLists(): void {
+    this.refreshing = false;
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {
       this.bulkSearchService.listEmitter.next(result.lists);
       this.lists = result.lists;
@@ -302,6 +320,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   getUsers() {
+    this.refreshing = false;
     this.viewCreated = false;
     this.loaded = false;
     this.view = 'users';
@@ -311,6 +330,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   useDraft(draft: any) {
+    this.refreshing = false;
     this.viewCreated = false;
     this.message = '';
     this.activeName = draft;
@@ -337,6 +357,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   uploadFile(event) {
+    this.refreshing = false;
     this.viewCreated = false;
     if (event.target.files.length !== 1) {
       this.message = 'No file selected';
@@ -367,6 +388,7 @@ export class UserQueryListDialogComponent implements OnInit {
 
   useFile() {
     this.loading =true;
+    this.refreshing = false;
     this.viewCreated = false;
     if (this.loaded && this.pastedJson) {
         const read = JSON.parse(this.pastedJson);
@@ -395,6 +417,7 @@ export class UserQueryListDialogComponent implements OnInit {
   useCreated() {
     this.view = "single";
     this.viewCreated = false;
+    this.refreshing = false;
     this.loaded = false;
     this.useDraft(this.listName);
   }
@@ -424,6 +447,10 @@ export class UserQueryListDialogComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  close(){
+    this.dialogRef.close();
   }
 
 

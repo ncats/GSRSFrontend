@@ -19,6 +19,8 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
   substanceUpdated = new Subject<SubstanceDetail>();
   private overlayContainer: HTMLElement;
   rounding = '1.0-2';
+  stagingId: any = null;
+  
 
   constructor(
               private utilService: UtilsService,
@@ -33,6 +35,10 @@ export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnI
   ngOnInit() {
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
+
+      if (this.substance.$$source && this.substance.$$source === 'staging') {
+        this.stagingId = this.substance.uuid;
+      }
       if (this.substance != null && this.substance.moieties != null) {
         this.moieties = JSON.parse(JSON.stringify(this.substance.moieties));
         this.moieties.forEach( unit => {

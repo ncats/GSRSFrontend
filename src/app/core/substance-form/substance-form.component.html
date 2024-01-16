@@ -64,6 +64,9 @@
               <mat-option value="fragment" [disabled]="substanceClass != 'protein' && substanceClass != 'nucleicAcid' ">
                 Register a Fragment
               </mat-option>
+              <mat-option value="regenRefs" >
+                Regenerate reference UUIDs
+              </mat-option>
             </ng-container>
           </mat-select>
         </mat-form-field>
@@ -96,7 +99,7 @@
           
         <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" mat-dialog-close>Close</button>
+            <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "dialogRef.close()">Close</button>
           </div>
       </ng-template>
       

@@ -1,12 +1,12 @@
-<h3 mat-dialog-header>Staging Record Merge</h3>
-<div mat-dialog-content style = "min-height:525px" >
+<h3 mat-dialog-header>Staging Record Merge <span class = "experimental-label">(experimental)</span></h3>
+<div mat-dialog-content style = "min-height:500px" >
     <div *ngIf = "!loading && !completed">
 <sf-form  [schema]="mergeSchema"  [model]="mergeModel" (onChange)="checkValue($event.value)" class = "top-margin"></sf-form>
 <div style = "margin-top:25px;" *ngIf = "!data.mergeRecord"><b>Select a record to merge into</b>
     <div class = "match-row"><span style = "width:15%;font-size:15px">Selected</span>
         <span style ="width: 85%; font-size:15px">Record Name</span></div>
     <div class = "match-row" *ngFor ="let match of matches" >
-            <span style = "width:15%"><mat-radio-button (change) = "select(match)"></mat-radio-button></span>
+            <span style = "width:15%"><mat-radio-button (change) = "select(match.recordId ? match.recordId : match.ID)"></mat-radio-button></span>
             <span style ="width: 85%">{{match._name}}</span>
     </div>
     
@@ -30,14 +30,25 @@
             <div *ngFor = "let error of errors">
                 {{error}}<br/><br/>
             </div>
+
         </div>
         <span *ngIf = "success" style = "margin-top:100px"><b>Fields merged successfully</b></span>
     </div>
 </div>
 
 
-<div mat-dialog-actions style = "height: 50px;">
-     <span class = "middle-fill"></span> 
-       <button  mat-button mat-flat-button color = "primary" [disabled] = "!toMerge || completed" (click) = "submit()">Submit</button> &nbsp; 
-     <button mat-button mat-flat-button color = "primary" mat-dialog-close>Cancel</button>
+<div mat-dialog-actions style = "min-height: 50px;">
+     <div *ngIf = "success" style = "display:flex;width:100%">
+            <span class = "middle-fill"></span> 
+
+        <button  mat-button mat-flat-button color = "primary" [disabled] = "!(toMerge && toMerge !== null) || completed" (click) = "submit()">Submit</button> &nbsp; 
+        <button mat-button mat-flat-button color = "primary" mat-dialog-close (click) = "dialogRef.close()">Cancel</button>
+     </div>
+     <div *ngIf = "!success" style = "display:flex;width:100%">
+            <button mat-button mat-flat-button color = "primary" (click) ="restart()" >Restart</button>
+
+            <span class = "middle-fill"></span> 
+
+        <button mat-button mat-flat-button color = "primary" mat-dialog-close (click) = "dialogRef.close()">Close</button>
+     </div>
     </div>

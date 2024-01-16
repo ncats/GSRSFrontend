@@ -3,6 +3,7 @@ import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoadingService } from '@gsrs-core/loading';
 import { AdminService } from '@gsrs-core/admin/admin.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-bulk-action-dialog',
@@ -19,11 +20,15 @@ export class BulkActionDialogComponent implements OnInit {
   useScrubber = false;
   scrubberModel: any;
   deleteStaged = true;
+  altStatusCount = 0;
+  completedRecordCount = 0;
+  showMerge = false;
   constructor(
    
     public dialogRef: MatDialogRef<ImportDialogComponent>,
     public loadingService: LoadingService,
     private adminService: AdminService,
+    private configService: ConfigService,
 
 
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -34,10 +39,21 @@ export class BulkActionDialogComponent implements OnInit {
       this.useScrubber = true;
     }
     if (this.records) {
+      this.filtered = [];
+      this.altStatusCount = 0;
     Object.keys(this.records).forEach(record => {
       if(this.records[record].checked) {
-        const temp = {"ID": record, "checked": true, "record": this.records[record].substance};
+        let temp = {};
+        if (this.records[record].substance) {
+          temp = {"ID": record, "checked": true, "name": this.records[record].substance._name};
+        } else {
+          temp = {"ID": record, "checked": true, "name": this.records[record].name};
+        }
         this.filtered.push(temp);
+        /*f (this.records[record].substance && this.records[record].substance._metadata && this.records[record].substance._metadata.importStatus
+            && this.records[record].substance._metadata.importStatus !== 'staged') {
+              this.altStatusCount++;
+            }*/
       }
       });
       this.total = this.filtered.length;
@@ -47,6 +63,11 @@ export class BulkActionDialogComponent implements OnInit {
   
 
   ngOnInit(): void {
+    if (this.configService.configData && this.configService.configData.stagingArea) {
+      if (this.configService.configData.stagingArea.mergeAction) {
+        this.showMerge = this.configService.configData.stagingArea.mergeAction
+      }
+    }
   }
 
   deleteStagedRecords(): void {
@@ -138,6 +159,9 @@ export class BulkActionDialogComponent implements OnInit {
         }
         
       } else {
+        if (response && response.completedRecordCount) {
+            this.completedRecordCount = response.completedRecordCount;
+        }
         setTimeout(() => {
           this.processingstatus(id);
         }, 200);

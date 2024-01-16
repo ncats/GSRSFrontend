@@ -9,7 +9,7 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
-import { Product, ProductComponent, ValidationMessage } from '../../model/product.model';
+import { Product, ProductManufactureItem, ValidationMessage } from '../../model/product.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +24,7 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 })
 export class ProductComponentFormComponent implements OnInit {
 
-  @Input() productComponent: ProductComponent;
+  @Input() productComponent: ProductManufactureItem;
   @Input() totalComponent: number;
   @Input() prodComponentIndex: number;
   @Output() expiryDateMessageOut = new EventEmitter<string>();

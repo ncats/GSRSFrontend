@@ -272,7 +272,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private populateFacets(): void {
-    console.log(this.privateRawFacets);
     if (this.privateRawFacets && this.facetsConfig) {
       if (this.facetsAuthSubscription != null) {
         this.facetsAuthSubscription.unsubscribe();
@@ -283,9 +282,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         const newFacets = [];
         this.showAudit = this.authService.hasRoles('admin');
         let facetKeys = Object.keys(this.facetsConfig) || [];
-
         if (this._facetDisplayType) {
-          if (this._facetDisplayType === 'default' || 'staging') {
+          if (this._facetDisplayType === 'default' || this.calledFrom === 'staging') {
             facetKeys.forEach(facetKey => {
               if (this.facetsConfig[facetKey].length
                 && (facetKey === 'default' || this.authService.hasRoles(facetKey) || (facetKey === 'staging' && this.calledFrom === 'staging'))) {
@@ -332,7 +330,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               }
             });
           } else if (this._facetDisplayType === 'facetView' && this._facetViewCategorySelected !== 'All') {
-            console.log('type is facetview');
             if (this._configName && this._configName === 'substances') {
               this.facetsConfig['facetView'].forEach(categoryRow => {
                 const category = categoryRow['category'];

@@ -29,6 +29,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { MatMenuModule } from '@angular/material/menu';
 import { ActivateClinicalTrialsComponent } from './activate-clinical-trials.component';
+import { ClinicalTrialEditSubstanceRolesComponent } from './clinical-trial-edit/substance-roles/clinical-trial-edit-substance-roles.component';
+import { ClinicalTrialEditOutcomeResultNoteComponent } from './clinical-trial-edit/outcome-result-notes/clinical-trial-edit-outcome-result-note.component'
 
 const clinicalTrialsRoutes: Routes = [
    {
@@ -88,6 +90,8 @@ const clinicalTrialsRoutes: Routes = [
     MiniSearchComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
+    ClinicalTrialEditSubstanceRolesComponent,
+    ClinicalTrialEditOutcomeResultNoteComponent,
     ClinicalTrialAddComponent,
     ClinicalTrialDetailsComponent,
     ClinicalTrialEuropeDetailsComponent,
@@ -97,6 +101,8 @@ const clinicalTrialsRoutes: Routes = [
     MiniSearchComponent,
     ClinicalTrialsBrowseComponent,
     ClinicalTrialEditComponent,
+    ClinicalTrialEditSubstanceRolesComponent,
+    ClinicalTrialEditOutcomeResultNoteComponent,
     ClinicalTrialAddComponent
   ],
   providers: [

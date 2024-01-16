@@ -103,7 +103,7 @@
       <h3>Systematic Names:</h3>
   <mat-list >
       <mat-list-item *ngFor = "let name of systematic">
-        {{name}}
+        <span [innerHTML] = "name"></span>
       </mat-list-item>
   </mat-list>
 </div>

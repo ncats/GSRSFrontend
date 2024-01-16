@@ -1,5 +1,5 @@
 {
-  "version": "3.1.1",
+  "version": "3.1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -557,7 +557,7 @@
     {
       "card": "substance-relationships",
       "type": "CONSTITUENT",
-      "title": "Relationships: Constitents",
+      "title": "Relationships: Constituents",
       "filters": [
         {
           "filterName": "exists",
@@ -1492,7 +1492,7 @@
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
         "clinicalTrialKeyType": "UUID",
-        "productKeyType": "UUID",
+        "productKeyType": "APPROVAL_ID",
         "applicationKeyType": "UUID",
         "impuritiesKeyType": "UUID"
       }

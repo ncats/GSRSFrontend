@@ -87,7 +87,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   processQuery(url: string) {
     if (url.indexOf('status(') < 0) {
       this.browseLink = true;
-      if (url.indexOf('v1/productsall') > 0) {
+      if (url.indexOf('v1/products') > 0) {
         this.type = 'product';
       } else if ((url.indexOf('v1/applications') > 0) || (url.indexOf('v1/applicationsall') > 0)) {
         this.type = 'application';

@@ -450,7 +450,7 @@ export class SubstanceSsg4mService implements OnDestroy {
 
   getSyntheticPathwayIndexBySubUuid(subUuid: string) {
     // const url = `${this.configService.configData.apiBaseUrl}api/v1/ssg4m/${id}`;
-    const url = this.apiBaseUrlSsg4mEntityUrl + '/indexbysubuuid/' + subUuid;
+    const url = this.apiBaseUrlSsg4mEntityUrl + 'indexbysubuuid/' + subUuid;
 
     return this.http.get<any>(url);
    // return this.http.get<Ssg4mSyntheticPathway>(url);

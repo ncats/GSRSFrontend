@@ -1,32 +1,22 @@
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router} from '@angular/router';
 import { ClinicalTrialService } from '../clinical-trial/clinical-trial.service';
-import { ClinicalTrial, BdnumNameAll } from '../clinical-trial/clinical-trial.model';
+import { ClinicalTrial, OutcomeResultNote } from '../clinical-trial/clinical-trial.model';
 import { ClinicalTrialUSDrug } from '../clinical-trial/clinical-trial.model';
-import { MiniSearchComponent } from '../mini-search/mini-search.component';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 import * as _ from 'lodash';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { MatTableModule } from '@angular/material/table';
 import { MatTable } from '@angular/material/table';
-
-import { FormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import {MatCheckboxModule} from '@angular/material/checkbox';
 import {AuthService} from '@gsrs-core/auth/auth.service';
-import { Pipe, PipeTransform } from '@angular/core';
-import { tap, switchMap, map, concat, concatMap, delay, mergeMap } from 'rxjs/operators';
+import { switchMap, map, concat, concatMap, delay, mergeMap } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { Observable, throwError, of } from 'rxjs';
-import { GeneralService } from '../../service/general.service';
-import { L } from '@angular/cdk/keycodes';
-import { MatMenuModule } from '@angular/material/menu';
+import { Observable } from 'rxjs';
 
-// import { Auth } from '../../../core/auth/auth.model';
 
 /**
  * @title Table with editing
@@ -39,6 +29,8 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDestroy {
   clinicalTrial: ClinicalTrial;
+  outcomeResultNotes: Array<OutcomeResultNote>;
+
   defaultSubstanceKeyType = 'UUID';
   agencySubstanceKeyType = 'UUID';
 
@@ -77,30 +69,18 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit() {
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
-      // testing
-      // this.isAdmin = true;
       if (this.isAdmin) {
-        this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'orgSubstanceKey', 'link', 'delete'];
+        this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
        } else {
-         this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'orgSubstanceKey', 'link'];
+         this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
        }
     });
     this.pageSize = 10;
     this.pageIndex = 0;
-    /*
-    this.activatedRoute
-      .queryParamMap
-      .subscribe(params => {
-        this._trialNumber = params.get('trialNumber') || '';
-        this.getClinicalTrial();
-      });
-    */
-
-        this.activatedRoute.paramMap.subscribe(params => {
-        this._trialNumber = params.get('trialNumber');
-    this.getClinicalTrial();
-
-      });
+    this.activatedRoute.paramMap.subscribe(params => {
+      this._trialNumber = params.get('trialNumber');
+      this.getClinicalTrial();
+    });
   }
 
     ngAfterViewInit() {}
@@ -127,29 +107,8 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
     this.dataSource.data = this.dataSource.data;
   }
 
-  reportMiniSearchOutput_OLD(data) {
-   this.clinicalTrialService.getSubstanceDetailsFromName(data.value).subscribe(
-    substanceDetails => {
-      if (substanceDetails === null
-          || substanceDetails.content === null
-          || substanceDetails.content[0] === undefined
-//          || substanceDetails.content[0].name===String('NULL')
-//          || substanceDetails.content[0].name===String('null')
-        ) {
-        this.dataSource.data[data.myIndex].substanceKey = null;
-        this.dataSource.data[data.myIndex].orgSubstanceKey = null;
-
-        } else {
-        this.dataSource.data[data.myIndex].name = data.value;
-        if (substanceDetails.content[0] !== undefined) {
-          this.dataSource.data[data.myIndex].substanceKey = substanceDetails.content[0].uuid;
-          // this.dataSource.data[data.myIndex].orgSubstanceKey = getOrgSubstanceKeyFromSubstanceCodes()
-        }
-        }
-    }, () => {
-      this.dataSource.data[data.myIndex].substanceKey = null;
-    }
-);
+  reportSubstanceRolesOutput(data) {    
+    this.dataSource.data[data.tableRowIndex].substanceRoles = data.value;      
     this.dataSource.data = this.dataSource.data;
   }
 
@@ -190,7 +149,8 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
               substanceKey: element.substanceKey,
               substanceKeyType: element.substanceKeyType,
               name: '',
-              protectedMatch: element.protectedMatch
+              protectedMatch: element.protectedMatch,
+              substanceRoles: element.substanceRoles
             });
             substanceObs.push(this.clinicalTrialService.getSubstanceDetailsFromSubstanceKey(element.substanceKey));
           });
@@ -212,10 +172,9 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
             if (complements[element.substanceKey]) {
               element.name = complements[element.substanceKey].name;
               element.orgSubstanceKey = complements[element.substanceKey].orgSubstanceKey;
-              console.log('element.orgSubstanceKey: ' + element.orgSubstanceKey);
             }
           });
-          // don't know why but deep clone makes the myInitialSearch value work as expected perhaps by rerending table.
+          // don't know why but deep clone makes the myInitialSearch value work as expected perhaps by rerendering table.
           const data = _.cloneDeep(this.dataSource.data);
           // but this doesn't work.
           // const data = [...this.dataSource.data];
@@ -225,9 +184,6 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
       )
       );
     const subscription = trialObs$.subscribe(() => {
-      // this.table.renderRows();
-      // console.log('table:');
-      // console.log("table:", this.table);
       }, () => {
         const notification: AppNotification = {
           message: 'There was an error trying to retrieve clinical trial. Please refresh and try again.',
@@ -251,7 +207,6 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
         for (const element of substance.codes) {
           if (element.codeSystem && element.codeSystem === 'BDNUM') {
             if (element.type && element.type === 'PRIMARY') {
-              console.log('bdnum: ' + element.code);
               code = element.code;
               break;
             }
@@ -260,131 +215,6 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
       }
       return code;
     }
-
-    // OLD2
-    getClinicalTrialOLD2() {
-    this.loadingService.setLoading(true);
-    this.dataSource.data = [];
-    console.log('XXXX ab' + this._trialNumber);
-
-    const trialSubscription = this.clinicalTrialService.getClinicalTrial(this._trialNumber)
-      .subscribe(data => {
-        this.isError = false;
-        console.log('XXXX ac' + data);
-        if (data.clinicalTrialUSDrug !== null) {
-          const _observables: Array<Observable<any>> = [];
-          data.clinicalTrialUSDrug.forEach(element => {
-          this.dataSource.data.push({
-              id: element.id,
-              substanceKey: element.substanceKey,
-              substanceKeyType: element.substanceKeyType,
-              name: null,
-              protectedMatch: element.protectedMatch
-           });
-            _observables.push(this.clinicalTrialService.getSubstanceDetailsFromSubstanceKey(element.substanceKey));
-          });
-          const substanceSubscriptions = forkJoin(_observables).subscribe({
-            next: substances => {
-              const complements = {};
-              substances.forEach(substance => {
-                complements[substance.uuid] = { 'substanceKey': substance.uuid, 'name': substance._name };
-              });
-              console.log('complements: ');
-              console.log(complements);
-
-
-              this.dataSource.data.forEach(element => {
-                // if (complements[element.substanceKey]) {
-                  console.log('sk: ');
-                console.log(element.substanceKey);
-                  console.log('name: ');
-                  console.log(complements[element.substanceKey].name);
-
-                  element.name = complements[element.substanceKey].name;
-                // }
-              });
-            },
-            complete: () => console.log('This is how it ends!')
-          });
-          // this.subscriptions.push(substanceSubscriptions);
-
-
-          // Weird, why is this necessary?substanceName
-          this.clinicalTrial = data;
-          this.dataSource.data = this.dataSource.data;
-          console.log('this.dataSource.data');
-          console.log(this.dataSource.data);
-        }
-
-      }, () => {
-        const notification: AppNotification = {
-          message: 'There was an error trying to retrieve clinical trial. Please refresh and try again.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
-  }
-
-  // OLD1
-  getClinicalTrialOLD1() {
-    this.loadingService.setLoading(true);
-    this.dataSource.data = [];
-    console.log('XXXX ab' + this._trialNumber);
-
-    const trialSubscription = this.clinicalTrialService.getClinicalTrial(this._trialNumber)
-      .subscribe(data => {
-        this.isError = false;
-        console.log('XXXX ac' + data);
-        if (data.clinicalTrialUSDrug !== null) {
-
-          data.clinicalTrialUSDrug.forEach(element => {
-            let substanceName = null;
-            const subscription =
-            this.clinicalTrialService.getSubstanceDetailsFromSubstanceKey(element.substanceKey).subscribe(substance => {
-              substanceName = substance._name;
-              console.log('substanceName: ' + substanceName);
-            });
-            // this.subscriptions.push(subscription);
-
-            this.dataSource.data.push({
-              id: element.id,
-              substanceKey: element.substanceKey,
-              substanceKeyType: element.substanceKeyType,
-              name: substanceName,
-              protectedMatch: element.protectedMatch
-            });
-          });
-          // this.subscriptions.push(trialSubscription);
-
-          // Weird, why is this necessary?substanceName
-          this.clinicalTrial = data;
-          this.dataSource.data = this.dataSource.data;
-          console.log('this.dataSource.data');
-          console.log(this.dataSource.data);
-        }
-
-      }, () => {
-        const notification: AppNotification = {
-          message: 'There was an error trying to retrieve clinical trial. Please refresh and try again.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
-  }
 
   updateClinicalTrial() {
     // var that = this;
@@ -398,6 +228,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
       ctd.substanceKey = element.substanceKey;
       ctd.substanceKeyType = element.substanceKeyType;
       ctd.protectedMatch = element.protectedMatch;
+      ctd.substanceRoles = element.substanceRoles;
       newClinicalTrialUSDrugs.push(ctd);
     });
     newClinicalTrial.clinicalTrialUSDrug = newClinicalTrialUSDrugs;
@@ -419,7 +250,8 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
               id: element.id,
               substanceKey: element.substanceKey,
               name: element.substanceDisplayName,
-              protectedMatch: element.protectedMatch
+              protectedMatch: element.protectedMatch,
+              substanceRoles: element.substanceRoles
             }
           );
           // Weird, why is this necessary?
@@ -540,6 +372,15 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
       document.execCommand('copy');
       document.body.removeChild(x);
   }
+
+  addOutcomeResultNote() {  
+    this.clinicalTrial.outcomeResultNotes.push({id: null, outcome: "", result: "", narrative: ""});
+  }
+
+  removeOutcomeResultNote(i) {
+    this.clinicalTrial.outcomeResultNotes.splice(i, 1);
+  }
+
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {

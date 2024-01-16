@@ -223,10 +223,18 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> PT Count </th>
                 <td mat-cell *matCellDef="let adverse">
                   <div *ngIf="FAERSDashboardAdverseEventUrl; else noFaersLink">
-                    <a href="{{FAERSDashboardAdverseEventUrl}}{{getDecodeURL(adverse.ptTerm | titlecase)}}{{FAERSDashboardReactionGroup}}{{getDecodeURL(adverse.primSoc | titlecase)}}"
-                      target="_blank" title="FAERS Public Dashboard">
-                      <div [innerHTML]="adverse.ptCount"></div>
-                    </a>
+                    <div class="divflex">
+                      <div>
+                        <a href="{{adverse._faersDashboardUrl}}{{getDecodeURL(adverse.ptTerm | titlecase)}}{{FAERSDashboardReactionGroup}}{{getDecodeURL(adverse.primSoc | titlecase)}}"
+                          target="_blank" title="Go to FAERS Public Dashboard website to see more details ">
+                          <div [innerHTML]="adverse.ptCount"></div>
+                        </a>
+                      </div>
+                      <div>&nbsp;
+                        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="link opens in new window">
+                        </mat-icon>
+                      </div>
+                    </div>
                     <span class="colorgray font10px">FAERS Public Dashboard</span>
                   </div>
                   <ng-template #noFaersLink>
@@ -327,7 +335,24 @@
                     PT Count:
                   </div>
                   <div class="row-property-value">
-                    {{adverse.ptCount}}
+                    <div *ngIf="FAERSDashboardAdverseEventUrl; else noFaersLink">
+                      <div class="divflex">
+                        <div>
+                          <a href="{{adverse._faersDashboardUrl}}{{getDecodeURL(adverse.ptTerm | titlecase)}}{{FAERSDashboardReactionGroup}}{{getDecodeURL(adverse.primSoc | titlecase)}}"
+                            target="_blank" title="Go to FAERS Public Dashboard website to see more details ">
+                            <div [innerHTML]="adverse.ptCount"></div>
+                          </a>
+                        </div>
+                        <div>&nbsp;
+                          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="link opens in new window">
+                          </mat-icon>
+                        </div>
+                      </div>
+                      <span class="colorgray font10px">FAERS Public Dashboard</span>
+                    </div>
+                    <ng-template #noFaersLink>
+                      <div [innerHTML]="adverse.ptCount"></div>
+                    </ng-template>
                   </div>
                 </div>
                 <div class="row-property">

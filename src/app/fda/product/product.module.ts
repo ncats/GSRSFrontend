@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ProductService } from './service/product.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
@@ -27,26 +26,34 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { OverlayModule } from '@angular/cdk/overlay';
+
+/* GSRS Core Imports */
+import { SubstanceSelectorModule } from '../../core/substance-selector/substance-selector.module';
+import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
+import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
+import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
+
+/* GSRS Product Imports */
+import { ProductTextSearchModule } from './product-text-search/product-text-search.module';
+import { ProductService } from './service/product.service';
+
+import { ProductsBrowseComponent } from './products-browse/products-browse.component';
 import { ProductDetailsBaseComponent } from './product-details/product-details-base.component';
 import { ProductDetailsComponent } from './product-details/product-details/product-details.component';
 import { ProductElistDetailsComponent } from './product-details/product-elist-details/product-elist-details.component';
-import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { ProductFormComponent } from './product-form/product-form.component';
 import { ProductComponentFormComponent } from './product-form/product-component/product-component-form.component';
 import { ProductLotFormComponent } from './product-form/product-lot-form/product-lot-form.component';
 import { ProductIngredientFormComponent } from './product-form/product-ingredient-form/product-ingredient-form.component';
-import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
-import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
-import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
-import { ProductTextSearchModule } from './product-text-search/product-text-search.module';
-import { ProductsBrowseComponent } from './products-browse/products-browse.component';
-import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { CanActivateRegisterProductFormComponent } from './product-form/can-activate-register-product-form.component';
 import { CanActivateUpdateProductFormComponent } from './product-form/can-activate-update-product-form.component';
 import { CanDeactivateProductFormComponent } from './product-form/can-deactivate-product-form.component';
 import { ActivateProductsComponent } from './activate-products.component';
+
 
 const productRoutes: Routes = [
   {
@@ -70,13 +77,11 @@ const productRoutes: Routes = [
     path: 'product/:id',
     component: ProductDetailsComponent,
     canActivate: [ActivateProductsComponent]
-
   },
   {
     path: 'product-elist/:id',
     component: ProductElistDetailsComponent,
     canActivate: [ActivateProductsComponent]
-
   }
 ];
 
@@ -112,8 +117,9 @@ const productRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
-    SubstanceImageModule,
+    SubstanceSelectorModule,
     SubstanceSearchSelectorModule,
+    SubstanceImageModule,
     SubstanceFormModule,
     FacetsManagerModule,
     ProductTextSearchModule
@@ -137,6 +143,7 @@ const productRoutes: Routes = [
   providers: [
     CanActivateRegisterProductFormComponent,
     CanActivateUpdateProductFormComponent,
+    CanDeactivateProductFormComponent,
     ActivateProductsComponent
   ]
 })
