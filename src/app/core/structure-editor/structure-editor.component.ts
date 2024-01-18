@@ -87,6 +87,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     if (this.jsdraw && this.jsdraw.activated) {
       this.catchPaste(event);
     }
+    else if (this.ketcher) {
+      this.catchPaste(event);
+    }
   }
 
 
@@ -137,12 +140,15 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  ketcherOnLoad(ketcher: Ketcher): void {
-    this.ketcher = ketcher;
-    console.log(ketcher);
-    this.editor = new EditorImplementation(this.ketcher);
-    console.log(this.editor);
-    this.editorOnLoad.emit(this.editor);
+  ketcherOnLoad(ketcher: any): void {
+
+    setTimeout(() => {
+       this.ketcher = ketcher;
+       this.editor = new EditorImplementation(this.ketcher);
+       console.log(this.editor);
+       this.editorOnLoad.emit(this.editor);
+    }, 1000);
+   
   }
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
@@ -248,7 +254,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   cleanStructure() {
     let molfile ='';
-    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().subscribe(response => {
       molfile = response;
     if (molfile != null && molfile !== '') {
       this.structureService.interpretStructure(molfile).pipe(take(1)).subscribe(response => {

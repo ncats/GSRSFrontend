@@ -15,9 +15,13 @@ export class EditorImplementation implements Editor {
     
 
     getMolfile(): Observable<any> {
+        return new Observable<any>(observer => {
         if (this.ketcher != null) {
-            from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
-                return result;});
+            from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
+
+                
+                observer.next(result);
+            });
             
            
         } else if (this.jsdraw != null) {
@@ -39,14 +43,15 @@ export class EditorImplementation implements Editor {
                     }
                 }
             }
-            return new Observable<string>(observer => {
+           
                 observer.next(this.clean(mfile));
-            });
+        
         } else {
             console.log('returning null');
-            return null as Observable<any>;
+            observer.next(null);
         }
-    }
+    });
+}
 
     getSmiles(): Observable<string> {
         if (this.ketcher != null) {
@@ -116,10 +121,16 @@ export class EditorImplementation implements Editor {
                     });
                 };
             } else if (this.ketcher != null) {
-                this.getMolfile().pipe(take(1)).subscribe(result => { 
-                    console.log(result);
-                    return result;
-                });
+                this.ketcher.editor.subscribe('change',  operations => { 
+                    from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
+                        observer.next(result);
+                    });
+                    
+                 });
+                
+            }
+            else {
+                observer.next(null);
             }
         });
     }

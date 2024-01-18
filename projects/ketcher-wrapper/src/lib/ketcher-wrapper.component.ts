@@ -22,11 +22,10 @@ export class KetcherWrapperComponent implements OnInit {
   ngOnInit() {
     this.safeKetcherFilePath = this.sanitizer.bypassSecurityTrustResourceUrl(this.ketcherFilePath);
     this.ketcherFrame.nativeElement.onload = () => {
-      console.log('loaded');
+     setTimeout(() => {
       this.ketcherOnLoad.emit(this.ketcherFrame.nativeElement.contentWindow['ketcher']);
-      console.log('loaded');
+     }, 1000) 
     };
-    console.log(this.ketcherFrame.nativeElement);
   }
 
 }

@@ -93,15 +93,18 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   search(): void {
-    let mol = ''
-     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
-      mol = response;
-
-      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-        const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
-        this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+    let mol = '';
+    this.loadingService.setLoading(true);
+     this.editor.getMolfile().pipe(take(1)).subscribe(resp => {
+      mol = resp;
+      this.structureService.interpretStructure(mol).subscribe(response => {
+      //  const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+      //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+        this.loadingService.setLoading(false);
         this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
-      }, () => {});
+      }, error => {
+        console.log(error);
+      });
     });
   
     
@@ -122,7 +125,6 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
 
 
   private navigateToBrowseSubstance(structureSearchTerm: string, smiles?: string): void {
-
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
@@ -152,7 +154,9 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
 
 
-    this.router.navigate(['/browse-substance'], navigationExtras);
+    this.router.navigate(['/browse-substance'], navigationExtras).then(() => window.location.reload());
+
+
   }
 
   searchTypeSelected(event): void {
