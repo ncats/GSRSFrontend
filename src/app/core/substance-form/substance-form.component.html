@@ -5,10 +5,10 @@ x
   <img (click)="showHidePopup()" class="image-popped-up" appSubstanceImage
        [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
 </div>
-<div *ngIf="simplifiedFormNameToggle; else simplifiedActionsComponent">
+<div *ngIf="!simplifiedForm; else simplifiedActionsComponent">
   <div class="top-fixed">
     <div class="actions-container">
-      <mat-button-toggle style="margin-right: 20px" [checked]="simplifiedFormNameToggle"
+      <mat-button-toggle style="margin-right: 20px" [checked]="simplifiedForm"
                          (change)="toggleSimpleFormChanged($event)">Simple Form
       </mat-button-toggle>
       <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
@@ -193,7 +193,7 @@ x
   </div>
 </div>
 
-<div [ngClass]="simplifiedFormNameToggle ? 'form-content-container' : 'small-form-content-container'">
+<div [ngClass]="!simplifiedForm ? 'form-content-container' : 'small-form-content-container'">
   <div class="scrollable-container">
     <div class="cards-container">
       <mat-accordion multi="true">
@@ -228,7 +228,7 @@ x
 <ng-template #simplifiedActionsComponent>
   <div class="top-fixed small-top-fixed">
     <div class="actions-container small-actions-container">
-      <mat-button-toggle class="small-button" style="margin-right: 20px" [checked]="simplifiedFormNameToggle"
+      <mat-button-toggle class="small-button" style="margin-right: 20px" [checked]="simplifiedForm"
                          (change)="toggleSimpleFormChanged($event)">Simple Form
       </mat-button-toggle>
       <button mat-flat-button color="primary" class="small-button" (click)="saveDraft()">Save Draft</button>
