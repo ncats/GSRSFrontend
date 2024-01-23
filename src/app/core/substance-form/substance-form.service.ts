@@ -1522,7 +1522,7 @@ export class SubstanceFormService implements OnDestroy {
     } else {
       // service substance loaded improperly
     }
-    
+
   }
 
   approveSubstance(): Observable<any> {
@@ -2005,6 +2005,11 @@ export class SubstanceFormService implements OnDestroy {
 
   }
 
+  validationMutations(){
+    this.privateSubstance.names = this.privateSubstance.names.filter(x=>x.name)
+    this.privateSubstance.codes = this.privateSubstance.codes.filter(x=>x.code)
+    this.substanceEmitter.next(this.privateSubstance);
+  }
   guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -2024,8 +2029,8 @@ export class SubstanceFormService implements OnDestroy {
         ref.uuid = nid;
     });
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');    
-    
+    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+
     const refHolders = defiant.json.search(old, '//*[references]');
 
     for (let i = 0; i < refHolders.length; i++) {

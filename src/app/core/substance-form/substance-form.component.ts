@@ -181,7 +181,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       if (response) {
         this.loadingService.setLoading(true);
-        //  console.log(response.json);
 
         const read = response.substance;
         if (this.id && read.uuid && this.id === read.uuid) {
@@ -465,7 +464,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
     if (structure) {
       let decode = decodeURIComponent(structure);
-      console.log(decode);
       setTimeout(() => {
         this.setStructureFromUrl(decode, 'molfile');
       });
@@ -880,6 +878,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     } else {
       this.approving = false;
     }
+
+    this.substanceFormService.validationMutations()
+
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
@@ -1241,7 +1242,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   updateHiddenFormSections() {
     for (const s of this.formSections) {
-      console.log(s.dynamicComponentName)
       if (['substance-form-codes-card', 'substance-form-structure'].includes(s.dynamicComponentName)) {
         s.isHidden = false
         continue
@@ -1346,7 +1346,5 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
     }
-
-
   }
 }
