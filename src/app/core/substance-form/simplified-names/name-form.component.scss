@@ -13,6 +13,10 @@
   color: var(--primary-color);
 }
 
+.text-area{
+  height:12px
+}
+
 .chevron {
     width: 20px;
     line-height: 67px;
@@ -59,7 +63,6 @@
     .name, .tags, .domains {
         flex-grow: 1;
         padding-right: 15px;
-        padding-top: 15px;
     }
 
     .jurisdiction {
