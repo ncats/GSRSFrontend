@@ -86,6 +86,7 @@ import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragme
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
+import { SimplifiedCodesComponent } from './simplified-codes/simplified-codes.component';
 
 @NgModule({
   imports: [
@@ -154,7 +155,8 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent
+    SubstanceDraftsComponent,
+    SimplifiedCodesComponent
   ],
   exports: [
     SubstanceFormComponent,
