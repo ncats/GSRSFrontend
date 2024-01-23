@@ -198,6 +198,7 @@ x
     <div class="cards-container">
       <mat-accordion multi="true">
         <mat-expansion-panel #expansionPanel
+                             [class.small-mat-expansion-panel-spacing]="simplifiedForm"
                              [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
                              *ngFor="let section of formSections; index as index; last as isLast"
                              [id]="section.dynamicComponentName"

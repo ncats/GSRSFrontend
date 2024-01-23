@@ -262,6 +262,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
             .then(m => m.SubstanceFormCodesModule),
     },
     {
+      componentId: 'substance-form-simplified-codes-card',
+      path: 'substance-form-simplified-codes-card',
+      loadChildren: () => import('./substance-form/simplified-codes/substance-form-simplified-codes.module')
+        .then(m => m.SubstanceFormSimplifiedCodesModule),
+    },
+    {
         componentId: 'substance-form-relationships',
         path: 'substance-form-relationships',
         loadChildren: () => import('./substance-form/relationships/substance-form-relationships.module')

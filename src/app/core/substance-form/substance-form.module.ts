@@ -82,11 +82,9 @@ import { PreviousReferencesComponent } from '@gsrs-core/substance-form/reference
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
-import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
-import { SimplifiedCodesComponent } from './simplified-codes/simplified-codes.component';
 
 @NgModule({
   imports: [
@@ -155,8 +153,7 @@ import { SimplifiedCodesComponent } from './simplified-codes/simplified-codes.co
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent,
-    SimplifiedCodesComponent
+    SubstanceDraftsComponent
   ],
   exports: [
     SubstanceFormComponent,

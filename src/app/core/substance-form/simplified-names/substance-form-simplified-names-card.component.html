@@ -15,9 +15,3 @@
 <mat-paginator *ngIf="names && names.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="10" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
   [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
-<!--<div *ngIf = "names && names.length > 0" style = "display: flex;">-->
-<!--    <span class = "middle-fill"></span>-->
-<!--    <button mat-button (click)="addName()" [disabled] = "isAlternative">-->
-<!--        Add substance name <mat-icon svgIcon="add_circle_outline"></mat-icon>-->
-<!--      </button>-->
-<!--</div>-->

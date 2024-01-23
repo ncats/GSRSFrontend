@@ -6,6 +6,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
         'substance-form-structure',
         'substance-form-moieties',
         'substance-form-codes-card',
+        'substance-form-simplified-codes-card',
         'substance-form-relationships',
         'substance-form-notes',
         'substance-form-properties',

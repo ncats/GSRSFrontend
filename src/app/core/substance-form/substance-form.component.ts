@@ -67,7 +67,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   definitionType: string;
   expandedComponents = [
     'substance-form-definition',
-    'substance-form-simplified',
+    'substance-form-simplified-names',
+    'substance-form-simplified-codes-card',
     'substance-form-structure',
     'substance-form-moieties',
     'substance-form-references'
@@ -1242,12 +1243,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   updateHiddenFormSections() {
     for (const s of this.formSections) {
-      if (['substance-form-codes-card', 'substance-form-structure'].includes(s.dynamicComponentName)) {
+      if (['substance-form-structure'].includes(s.dynamicComponentName)) {
         s.isHidden = false
         continue
       }
 
-      if (['substance-form-simplified-names'].includes(s.dynamicComponentName)) {
+      if (['substance-form-simplified-names','substance-form-simplified-codes-card'].includes(s.dynamicComponentName)) {
         s.isHidden = !this.simplifiedForm
         continue
       }
