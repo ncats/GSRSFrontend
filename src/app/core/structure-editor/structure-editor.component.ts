@@ -8,7 +8,7 @@ import {
   Inject,
   OnDestroy,
   ViewChild,
-  ElementRef, AfterViewInit
+  ElementRef, AfterViewInit, HostListener
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Ketcher } from 'ketcher-wrapper';
@@ -76,12 +76,38 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  @HostListener('paste', ['$event']) private testing123(event: any) {
+   // console.log('host paste');
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    this.catchPaste(event);
+  }
+
+  @HostListener('drop', ['$event']) private dropper(event: any) {
+  //  console.log('drop');
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  }
+
+  @HostListener('dragover', ['$event']) private dragger(event: DragEvent) {
+   // console.log('drag');
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  }
+
+
   private preventDrag = (event: DragEvent) => {
+   // console.log('prevent drag');
     event.preventDefault();
   }
 
 // override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
+   // console.log('checkPaste');
+    event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
     if (this.jsdraw && this.jsdraw.activated) {
@@ -105,9 +131,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
 
+      
+
       window.addEventListener('dragover', this.preventDrag);
       window.addEventListener('drop', this.preventDrag);
-      window.addEventListener('paste', this.checkPaste);
+    //  window.addEventListener('paste', this.checkPaste);
 
       this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/index.html`;
 
@@ -147,7 +175,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
        this.editor = new EditorImplementation(this.ketcher);
        console.log(this.editor);
        this.editorOnLoad.emit(this.editor);
+       
     }, 1000);
+
+    
    
   }
 
@@ -162,6 +193,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   onDropHandler(object: any): void {
+    console.log('drop handler');
     if (object.invalidFlag) {
       this.canvasMessage = 'The selected file could not be read';
     } else {
@@ -215,6 +247,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   catchPaste(event: ClipboardEvent): void {
+    console.log('catch paste');
     const send: any = {};
     let valid = false;
     const items = event.clipboardData.items;
