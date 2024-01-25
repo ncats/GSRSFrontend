@@ -1248,7 +1248,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         continue
       }
 
-      if (['substance-form-simplified-names','substance-form-simplified-codes-card'].includes(s.dynamicComponentName)) {
+      if (['substance-form-simplified-names','substance-form-simplified-codes-card','substance-form-simplified-references'].includes(s.dynamicComponentName)) {
         s.isHidden = !this.simplifiedForm
         continue
       }

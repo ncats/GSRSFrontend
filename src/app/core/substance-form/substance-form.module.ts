@@ -17,7 +17,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScrollToModule } from '../scroll-to/scroll-to.module';
 import { DomainReferencesComponent } from './references/domain-references/domain-references.component';
-import { ReferenceFormComponent } from './references/reference-form.component';
 import { RefernceFormDialogComponent } from './references/references-dialogs/refernce-form-dialog.component';
 import { ReuseReferencesDialogComponent } from './references/references-dialogs/reuse-references-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -127,7 +126,6 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
     AccessManagerComponent,
     TagSelectorComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent,
     RefernceFormDialogComponent,
     PreviousReferencesComponent,
     ReuseReferencesDialogComponent,
@@ -153,13 +151,12 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent
+    SubstanceDraftsComponent,
   ],
   exports: [
     SubstanceFormComponent,
     AccessManagerComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent,
     PreviousReferencesComponent,
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,

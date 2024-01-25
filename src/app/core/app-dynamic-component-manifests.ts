@@ -231,6 +231,12 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
         loadChildren: () => import('./substance-form/references/substance-form-references.module')
             .then(m => m.SubstanceFormReferencesModule),
     },
+  {
+    componentId: 'substance-form-simplified-references',
+    path: 'substance-form-simplified-references',
+    loadChildren: () => import('./substance-form/simplified-references/substance-form-simplified-references.module')
+      .then(m => m.SubstanceFormSimplifiedReferencesModule),
+  },
     {
         componentId: 'substance-form-names',
         path: 'substance-form-names',

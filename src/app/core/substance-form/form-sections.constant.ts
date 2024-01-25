@@ -11,6 +11,7 @@ export const formSections: { [substanceType: string]: Array<string> } = {
         'substance-form-notes',
         'substance-form-properties',
         'substance-form-references',
+        'substance-form-simplified-references',
         'substance-form-change-reason'
     ],
   protein: [

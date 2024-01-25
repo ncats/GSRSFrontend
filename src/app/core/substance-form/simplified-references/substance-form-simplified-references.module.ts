@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubstanceFormReferencesCardComponent } from './substance-form-references-card.component';
+import { SubstanceFormSimplifiedReferencesCardComponent } from './substance-form-simplified-references-card.component';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader';
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
@@ -16,8 +16,7 @@ import {ReferenceFormComponent} from "./reference-form.component";
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormReferencesCardComponent),
-    SubstanceFormModule,
+    DynamicComponentLoaderModule.forChild(SubstanceFormSimplifiedReferencesCardComponent),
     MatDividerModule,
     ScrollToModule,
     MatIconModule,
@@ -26,14 +25,12 @@ import {ReferenceFormComponent} from "./reference-form.component";
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
-  ],
-  exports:[
-    ReferenceFormComponent,
+    MatInputModule,
+    SubstanceFormModule
   ],
   declarations: [
-    SubstanceFormReferencesCardComponent,
+    SubstanceFormSimplifiedReferencesCardComponent,
     ReferenceFormComponent
   ]
 })
-export class SubstanceFormReferencesModule { }
+export class SubstanceFormSimplifiedReferencesModule { }
