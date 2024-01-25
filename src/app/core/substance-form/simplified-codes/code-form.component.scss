@@ -32,19 +32,16 @@
 .form-row {
     display: flex;
     justify-content: space-between;
+    padding: 0 10px;
     align-items: flex-end;
 
     .delete-container {
         padding: 0 10px 8px 0;
     }
 
-    .code-system, .code-system-type, .type {
-        flex-grow: 3;
+    .code-system,.code{
+        flex-grow: 1;
         padding-right: 15px;
-    }
-
-    .code {
-      flex-grow: 1;
     }
 
     .code-text, .url {

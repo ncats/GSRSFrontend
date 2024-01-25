@@ -25,8 +25,13 @@
   padding: 0 10px;
   align-items: flex-end;
 
-  .checkbox-container {
-    padding-bottom: 18px;
+  .delete-container {
+    padding: 0 10px 8px 0;
+  }
+
+  .source-type, .citation{
+    flex-grow: 1;
+    padding-right: 15px;
   }
 }
 
@@ -35,7 +40,7 @@
   margin: 5px 0 10px 0;
 }
 
-.source-type, .citation, .url {
+.url {
   width: 30%;
 }
 
