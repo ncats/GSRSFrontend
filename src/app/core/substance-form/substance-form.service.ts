@@ -104,14 +104,15 @@ export class SubstanceFormService implements OnDestroy {
       } else {
         // the second case happens in the forms sometimes but really shouldn't
         if (substanceClass === 'chemical' || substanceClass === 'structure') {
+          // TODO: make this loading specific to spiplified form if possible.
           this.privateSubstance = {
             substanceClass: 'chemical',
             references: [],
-            names: [],
+            names: [{name:""}],
             structure: {
               molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
             },
-            codes: [],
+            codes: [{codeSystem:"CAS"}],
             relationships: [],
             properties: []
           };

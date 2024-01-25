@@ -16,14 +16,6 @@
     <app-cv-input required='true' class="code-system" key='Code System' title="Code System" name="code"
                   [model]="code.codeSystem" (valueChange)="setCodeSystemType($event)">
     </app-cv-input>
-    <div class="key-value-pair code-system-type" *ngIf="code.codeSystem">
-      <div class="key">
-        Code System Type
-      </div>
-      <div class="value">
-        {{ codeSystemType }}
-      </div>
-    </div>
 
     <mat-form-field class="code">
       <input matInput placeholder="Code" [(ngModel)]="code.code" required name="code"/>
