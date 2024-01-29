@@ -18,6 +18,14 @@
   font-size: 14px;
 }
 
+.font15px {
+  font-size: 15px;
+}
+
+.font16px {
+  font-size: 16px;
+}
+
 .font17px {
   font-size: 17px;
 }
@@ -32,6 +40,14 @@
 
 .fontfamilyarial {
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.fontfamilyverdana {
+  font-family: Verdana;
+}
+
+.coloroffwhite {
+  color: var(--regular-offwhite-color);
 }
 
 .colorgray {
@@ -58,6 +74,14 @@
   color: var(--link-primary-color);
 }
 
+.colornavy {
+  color: var(--regular-navy-color);
+}
+
+.colorbrown {
+  color: var(--regular-brown-color);
+}
+
 .colordarkgrey {
   color: var(--darkgrey-color);
 }
@@ -80,6 +104,10 @@
 
 .padtop10px {
   padding-top: 10px;
+}
+
+.padtop15px {
+  padding-top: 15px;
 }
 
 .padleft10px {
@@ -1380,3 +1408,77 @@ margin:auto;
   border-style: solid;
   border-color: red;
 }
+
+/* TAB STYLE BEGIN */
+:host ::ng-deep .mat-tab-list .mat-tab-label {
+  /*
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;*/
+  /*color: black;*/
+  /*background-color: rgb(247, 241, 241);*/
+  /*border-right: 1px solid rgb(182, 177, 177);*/
+  min-width: 210px;
+  max-width: 210px;
+  height: 40px;
+  padding-top: 5px;
+  text-align: top;
+  /*margin-bottom: 10px;*/
+  color: #393939;
+  opacity: 1 !important;
+  border-radius: 10px 10px 0px 0px;
+  margin-right: 7px;
+
+  /*
+  margin-left: 5px;
+
+  flex-wrap: wrap!important;
+  min-width: 120px;
+  max-width: 120px;
+  height: 35px;*/
+}
+
+:host ::ng-deep .mat-tab-label-content {
+  margin-top: -5px;
+}
+/*
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color: red;
+  background-color: green;
+}
+*/
+
+:host ::ng-deep .mat-tab-header {
+  margin-top: -10px; /* tab margin*/
+  /*border-bottom: 2px solid rgb(148, 149, 163); */
+  border-bottom: 1px solid rgb(205, 201, 201);
+}
+
+:host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  /*background-color: var(--tabstyle-bg-color-6);*/
+  background: url("../../../../../src/app/core/assets/images/home/tab_active_two.png");
+  /*background: url("../../../core/assets/images/home/tab_active.png");*/
+  /* FDA COLOR BLUE CODE Hex: #007CBA */
+  /*color: #007CBA; */
+  color: #FFFFFF;
+  font-weight: bold;
+  padding-top: -10px;
+
+  /*font-weight: bold;*/
+  /*background-color: #FFFFFF;*/
+  /*background-image: url("http://localhost:8081/ginas/app/beta/assets/images/home/tab_active.png");*/
+  /*background-color: rgb(20, 76, 189);*/
+  /*
+   color: rgb(248, 250, 248);
+   background-color: rgb(44, 70, 141);
+
+   opacity: 1;
+     */
+}
+
+:host ::ng-deep .mat-ink-bar {
+  /*background-color: var(--primary-color, --royal-blue-color) !important;
+  height: 3px;*/
+  display: none !important;
+}
+/* TAB STYLE END */

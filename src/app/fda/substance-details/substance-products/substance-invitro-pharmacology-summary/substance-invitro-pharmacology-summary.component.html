@@ -39,6 +39,7 @@
       </td>
     </ng-container>
 
+
     <ng-container matColumnDef="testAgent">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Test Compound </th>
       <td mat-cell *matCellDef="let assay">
@@ -49,7 +50,7 @@
           </a>
         </div>
         <ng-template #noTestCompoundSubId>
-          {{assay.invitroTestCompound.testAgent}}
+          {{assay.testAgent}}
         </ng-template>
       </td>
     </ng-container>
@@ -58,26 +59,24 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount Value</th>
       <td mat-cell *matCellDef="let assay">
         {{assay._calculateIc50}}
-        <!--
-        {{assay.controlValueType}}&nbsp;
-        {{displayAmount(assay)}}
-        -->
       </td>
     </ng-container>
 
     <ng-container matColumnDef="relationshipType">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Relationship Type </th>
       <td mat-cell *matCellDef="let assay">
-        <div *ngIf="assay.invitroTestCompound">
-          <div *ngIf="assay.invitroTestCompound.invitroRelationships.length > 0">
-            <div *ngFor="let rel of assay.invitroTestCompound.invitroRelationships">
+
+        <!--
+          <div *ngIf="assay.invitroRelationships.length > 0">
+            <div *ngFor="let rel of assay.invitroRelationships">
               {{rel.relationshipType}}
             </div>
-          </div>
         </div>
+      -->
       </td>
     </ng-container>
 
+    <!--
     <ng-container matColumnDef="relatedSubstance">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Related Substance </th>
       <td mat-cell *matCellDef="let assay">
@@ -89,7 +88,7 @@
           </div>
         </div>
       </td>
-    </ng-container>
+    </ng-container>  -->
 
     <ng-container matColumnDef="studyType">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Study Type </th>

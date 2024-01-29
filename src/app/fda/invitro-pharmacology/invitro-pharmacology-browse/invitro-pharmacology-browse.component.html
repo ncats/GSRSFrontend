@@ -199,14 +199,14 @@
               <div>Browse By All Assay
                 <div class="font12px">
                   <div class="font12px">
-                    (<span class="colorblue font12px fontbold">{{totalCountAssayTarget}}</span>)
+                    (<span class="colororange font12px fontbold">{{totalCountAssayTarget}}</span>)
                   </div>
                 </div>
               </div>
             </ng-template>
 
             <div>
-              <div class="font17px padtop10px padbottom10px"><b>Browse By Assay</b></div><br>
+              <div class="font17px padtop15px padbottom10px"><b>Browse By All Assay</b></div><br>
 
               <div class="cards-view" *ngIf="assays && assays.length; else noRecordInvitro">
 
@@ -310,7 +310,7 @@
                       <!-- ASSAY: SUMMARY VIEW TAB BEGIN                         -->
                       <!-- ***************************************************** -->
 
-                      <div><span class="font17px colororange fontfamilyarial"><b>Summary Table</b></span>
+                      <div><span class="font14px colorbrown fontfamilyverdana"><b>Summary View</b></span>
                         <br><br>
                         <div class="row">
                           <div class="row-property">
@@ -321,7 +321,15 @@
                               {{assay.assayTitle}}
                             </div>
                           </div>
-
+                          <div class="row-property">
+                            <div class="row-property-key">
+                              Reference Source:
+                            </div>
+                            <div class="row-property-value">
+                              {{assay.referenceSourceType}}&nbsp;
+                              {{assay.referenceSourceId}}
+                            </div>
+                          </div>
                           <!--
                           <div class="row-property">
                             <div class="row-property-key">
@@ -342,13 +350,13 @@
                         <div class="row">
                           <div class="row-property">
                             <div class="row-property-key">
-                              Reference Source:
+                              Laboratory Name:
                             </div>
                             <div class="row-property-value">
-                              {{assay.referenceSourceType}}&nbsp;
-                              {{assay.referenceSourceId}}
+                              {{assay.invitroLaboratory.laboratoryName}}
                             </div>
                           </div>
+
                           <div class="row-property">
                             <div class="row-property-key">
                               External Source:
@@ -460,7 +468,7 @@
                           <ng-container matColumnDef="valueType">
                             <th mat-header-cell *matHeaderCellDef> Value Type </th>
                             <td mat-cell *matCellDef="let assaysum">
-                              {{assaysum.valueType}}
+                              {{assaysum._calculateIC50}}
                             </td>
                           </ng-container>
 
@@ -473,7 +481,7 @@
                             </ng-container>
                             -->
 
-                            <!--
+                          <!--
                           <ng-container matColumnDef="value">
                             <th mat-header-cell *matHeaderCellDef> Value Type </th>
                             <td mat-cell *matCellDef="let assaysum">
@@ -492,7 +500,7 @@
                           </ng-container>
 
                           <ng-container matColumnDef="assayType">
-                            <th mat-header-cell *matHeaderCellDef> Assay Type </th>
+                            <th mat-header-cell *matHeaderCellDef> Bioassay Type </th>
                             <td mat-cell *matCellDef="let assaysum"> {{assaysum.assayType}} </td>
                           </ng-container>
 
@@ -586,12 +594,12 @@
             <ng-template mat-tab-label>
               <div>Browse By Assay Target
                 <div class="font12px">
-                  (<span class="colorblue font12px fontbold">{{totalCountAssayTarget}}</span>)
+                  (<span class="colororange font12px fontbold">{{totalCountAssayTarget}}</span>)
                 </div>
               </div>
             </ng-template>
 
-            <div class="font17px padtop10px padbottom10px"><b>Browse By Assay Target</b></div><br>
+            <div class="font17px padtop15px padbottom10px"><b>Browse By Assay Target</b></div><br>
 
             <div class="cards-view" *ngIf="assays && assays.length; else noRecordInvitro">
 
@@ -703,7 +711,7 @@
                     <!-- ***************************************************** -->
 
                     <div>
-                      <span class="font17px colororange fontfamilyarial"><b>Summary Table</b></span>
+                      <span class="font14px colorbrown fontfamilyverdana"><b>Summary View</b></span>
                       <br>
 
                       <!--
@@ -832,7 +840,7 @@
                         <ng-container matColumnDef="valueType">
                           <th mat-header-cell *matHeaderCellDef> Value Type </th>
                           <td mat-cell *matCellDef="let assaysum">
-                            {{assaysum.valueType}}
+                            {{assaysum._calculateIC50}}
                           </td>
                         </ng-container>
 
@@ -888,13 +896,13 @@
           <mat-tab label="">
             <ng-template mat-tab-label>
               <div>Browse By Substance
-                <div class="colorblue font12px fontbold">
+                <div class="colororange font12px fontbold">
                   ({{totalCountSubstance}})
                 </div>
               </div>
             </ng-template>
 
-            <div class="font17px padtop10px padbottom10px"><b>Browse By Substance</b></div>
+            <div class="font17px padtop15px padbottom10px"><b>Browse By Substance</b></div>
             <br>
 
             <div class="cards-view" *ngIf="browseSubstanceList.length; else noRecordInvitro">
@@ -902,7 +910,7 @@
                 <mat-card-title>
 
                   <div>
-                    <span class="font13px">Test Compound/Substance:</span>&nbsp;
+                    <span class="font13px">Test Agent/Substance:</span>&nbsp;
 
                     {{testComp.testAgent}}
                     <!--
@@ -1062,7 +1070,7 @@
                         <!-- ********************************************** -->
 
                         <br>
-                        <span class="font17px colororange fontfamilyarial"><b>Summary Table</b></span>
+                        <span class="font14px colorbrown fontfamilyverdana"><b>Summary View</b></span>
                         <br><br>
 
                         <div>
@@ -1172,7 +1180,7 @@
                             <ng-container matColumnDef="valueType">
                               <th mat-header-cell *matHeaderCellDef> Value Type </th>
                               <td mat-cell *matCellDef="let assaysum">
-                                {{assaysum.valueType}}
+                                {{assaysum._calculateIC50}}
                               </td>
                             </ng-container>
 
@@ -1192,7 +1200,7 @@
                             </ng-container>
 
                             <ng-container matColumnDef="assayType">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Type </th>
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Bioassay Type </th>
                               <td mat-cell *matCellDef="let assay"> {{assay.assayType}} </td>
                             </ng-container>
 
@@ -1298,7 +1306,7 @@
 
                         <div>
                           <br>
-                          <span class="font17px colororange fontfamilyarial"><b>Screening Table</b></span>
+                          <span class="font14px colorbrown fontfamilyverdana"><b>Screening View</b></span>
                           <br><br>
 
                           <table mat-table [dataSource]="testComp.assay" class="font12px" matSort
@@ -1367,7 +1375,7 @@
                             </ng-container>
 
                             <ng-container matColumnDef="assayType">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Type </th>
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Bioassay Type </th>
                               <td mat-cell *matCellDef="let assay"> {{assay.assayType}} </td>
                             </ng-container>
 
@@ -1427,22 +1435,20 @@
 
 
 
-
-
           <!-- ######################################################################## -->
           <!-- BROWSE BY APPLICATION TAB                                                -->
           <!-- ######################################################################## -->
 
           <mat-tab label="">
             <ng-template mat-tab-label>
-              <div>Browse By Application
-                <div class="colorblue font12px fontbold">
+              <div>Browse By Application/Source
+                <div class="colororange font12px fontbold">
                   ({{totalCountApplication}})
                 </div>
               </div>
             </ng-template>
 
-            <div class="font17px padtop10px padbottom10px"><b>Browse By Application</b></div>
+            <div class="font17px padtop15px padbottom10px"><b>Browse By Application/Source</b></div>
             <br>
 
             <div class="cards-view" *ngIf="browseApplicationList.length; else noRecordInvitro">
@@ -1593,6 +1599,8 @@
                   <div *ngIf="app">
                     <br>
                     <!-- MAT TAB Group inside Browse Substance -->
+
+                    <!--
                     <mat-tab-group [(selectedIndex)]="viewTabSelectedIndex"
                       (selectedTabChange)="viewTabSelectedUpdated($event)">
 
@@ -1603,22 +1611,22 @@
                             </div>
                           </div>
                         </ng-template>
+                      -->
 
+                    <!-- ********************************************** -->
+                    <!-- APPLICATION SUMMARY VIEW BEGIN                 -->
+                    <!-- ********************************************** -->
 
-                        <!-- ********************************************** -->
-                        <!-- APPLICATION SUMMARY VIEW BEGIN                 -->
-                        <!-- ********************************************** -->
+                    <br>
+                    <span class="font14px colorbrown fontfamilyverdana"><b>Summary View</b></span>
+                    <br><br>
 
-                        <br>
-                        <span class="font17px colororange fontfamilyarial"><b>Summary Table</b></span>
-                        <br><br>
+                    <div>
+                      <table mat-table [dataSource]="app.assay" class="font12px" matSort
+                        (matSortChange)="sortData($event)" matSortActive="studyType" matSortDirection="asc"
+                        matSortDisableClear>
 
-                        <div>
-                          <table mat-table [dataSource]="app.assay" class="font12px" matSort
-                            (matSortChange)="sortData($event)" matSortActive="studyType" matSortDirection="asc"
-                            matSortDisableClear>
-
-                            <!--
+                        <!--
                             <ng-container matColumnDef="viewDetails">
                               <th mat-header-cell *matHeaderCellDef> View Details </th>
                               <td mat-cell *matCellDef="let assay">
@@ -1635,7 +1643,7 @@
                             </ng-container>
                              -->
 
-                            <!--
+                        <!--
                             <ng-container matColumnDef="testCompound">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Test Compound </th>
                               <td mat-cell *matCellDef="let assay">
@@ -1652,7 +1660,7 @@
                             </ng-container>
                             -->
 
-                            <!--
+                        <!--
                             <ng-container matColumnDef="amountValue">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount Value</th>
                               <td mat-cell *matCellDef="let assay">
@@ -1661,7 +1669,7 @@
                             </ng-container>
                             -->
 
-                            <!--
+                        <!--
                             <ng-container matColumnDef="relationshipType">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Relationship Type </th>
                               <td mat-cell *matCellDef="let assay">
@@ -1689,91 +1697,91 @@
                             </ng-container>
                             -->
 
-                            <ng-container matColumnDef="viewDetails">
-                              <th mat-header-cell *matHeaderCellDef> View Details </th>
-                              <td mat-cell *matCellDef="let assay">
-                                <div class="width100px">
-                                  <a class="substance-name" [routerLink]="['/invitro-pharm', assay.id]" target="_blank"
-                                    alt="View Assay Screening Record" matTooltip='View Assay Screening Record'>View
-                                  </a>&nbsp;&nbsp;&nbsp;
-                                  <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                                    matTooltip='Edit Assay Screening Record'>
-                                    <mat-icon svgIcon="edit"></mat-icon>
-                                  </a>
-                                </div>
-                              </td>
-                            </ng-container>
+                        <ng-container matColumnDef="viewDetails">
+                          <th mat-header-cell *matHeaderCellDef> View Details </th>
+                          <td mat-cell *matCellDef="let assay">
+                            <div class="width100px">
+                              <a class="substance-name" [routerLink]="['/invitro-pharm', assay.id]" target="_blank"
+                                alt="View Assay Screening Record" matTooltip='View Assay Screening Record'>View
+                              </a>&nbsp;&nbsp;&nbsp;
+                              <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                                matTooltip='Edit Assay Screening Record'>
+                                <mat-icon svgIcon="edit"></mat-icon>
+                              </a>
+                            </div>
+                          </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="screenConcentration">
-                              <th mat-header-cell *matHeaderCellDef> Screening Concentration </th>
-                              <td mat-cell *matCellDef="let assaysum">
-                                {{assaysum.screeningConcentration}}&nbsp;
-                                {{assaysum.screeningConcentrationUnit}}
-                              </td>
-                            </ng-container>
+                        <ng-container matColumnDef="screenConcentration">
+                          <th mat-header-cell *matHeaderCellDef> Screening Concentration </th>
+                          <td mat-cell *matCellDef="let assaysum">
+                            {{assaysum.screeningConcentration}}&nbsp;
+                            {{assaysum.screeningConcentrationUnit}}
+                          </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="percentInhibition">
-                              <th mat-header-cell *matHeaderCellDef> %inhibition </th>
-                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.percentInhibition}} </td>
-                            </ng-container>
+                        <ng-container matColumnDef="percentInhibition">
+                          <th mat-header-cell *matHeaderCellDef> %inhibition </th>
+                          <td mat-cell *matCellDef="let assaysum"> {{assaysum.percentInhibition}} </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="valueType">
-                              <th mat-header-cell *matHeaderCellDef> Value Type </th>
-                              <td mat-cell *matCellDef="let assaysum">
-                                {{assaysum.valueType}}
-                              </td>
-                            </ng-container>
+                        <ng-container matColumnDef="valueType">
+                          <th mat-header-cell *matHeaderCellDef> Value Type </th>
+                          <td mat-cell *matCellDef="let assaysum">
+                            {{assaysum._calculateIC50}}
+                          </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="assayTarget">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Target </th>
-                              <td mat-cell *matCellDef="let assay">
-                                <div *ngIf="assay._assayTargetSubId; else noAssayTargetSubId">
-                                  <a [routerLink]="['/substances', assay._assayTargetSubId]" target="_blank"
-                                    matTooltip="Go to Substance Details page">
-                                    {{ assay.assayTarget }}
-                                  </a>
-                                </div>
-                                <ng-template #noAssayTargetSubId>
-                                  {{assay.assayTarget}}
-                                </ng-template>
-                              </td>
-                            </ng-container>
+                        <ng-container matColumnDef="assayTarget">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Target </th>
+                          <td mat-cell *matCellDef="let assay">
+                            <div *ngIf="assay._assayTargetSubId; else noAssayTargetSubId">
+                              <a [routerLink]="['/substances', assay._assayTargetSubId]" target="_blank"
+                                matTooltip="Go to Substance Details page">
+                                {{ assay.assayTarget }}
+                              </a>
+                            </div>
+                            <ng-template #noAssayTargetSubId>
+                              {{assay.assayTarget}}
+                            </ng-template>
+                          </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="assayType">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Type </th>
-                              <td mat-cell *matCellDef="let assay"> {{assay.assayType}} </td>
-                            </ng-container>
+                        <ng-container matColumnDef="assayType">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Bioassay Type </th>
+                          <td mat-cell *matCellDef="let assay"> {{assay.assayType}} </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="studyType">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Study Type </th>
-                              <td mat-cell *matCellDef="let assay"> {{assay.studyType}} </td>
-                            </ng-container>
+                        <ng-container matColumnDef="studyType">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Study Type </th>
+                          <td mat-cell *matCellDef="let assay"> {{assay.studyType}} </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="relationshipType">
-                              <th mat-header-cell *matHeaderCellDef> Relationship Type </th>
-                              <td mat-cell *matCellDef="let assaysum">
-                                <div *ngIf="assaysum.invitroRelationship">
-                                  {{assaysum.invitroRelationship.relationshipType}}
-                                </div>
-                              </td>
-                            </ng-container>
+                        <ng-container matColumnDef="relationshipType">
+                          <th mat-header-cell *matHeaderCellDef> Relationship Type </th>
+                          <td mat-cell *matCellDef="let assaysum">
+                            <div *ngIf="assaysum.invitroRelationship">
+                              {{assaysum.invitroRelationship.relationshipType}}
+                            </div>
+                          </td>
+                        </ng-container>
 
-                            <ng-container matColumnDef="relatedSubstance">
-                              <th width="180px" mat-header-cell *matHeaderCellDef> Related Substance </th>
-                              <td mat-cell *matCellDef="let assaysum">
-                                <div *ngIf="assaysum.invitroRelationship">
-                                  {{assaysum.invitroRelationship.relatedSubstance}}
-                                </div>
-                              </td>
-                            </ng-container>
+                        <ng-container matColumnDef="relatedSubstance">
+                          <th width="180px" mat-header-cell *matHeaderCellDef> Related Substance </th>
+                          <td mat-cell *matCellDef="let assaysum">
+                            <div *ngIf="assaysum.invitroRelationship">
+                              {{assaysum.invitroRelationship.relatedSubstance}}
+                            </div>
+                          </td>
+                        </ng-container>
 
-                            <!--
+                        <!--
                             <ng-container matColumnDef="applicationType">
                               <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Type </th>
                               <td mat-cell *matCellDef="let assaylocal"> {{assay.applicationType}} </td>
                             </ng-container>
                           -->
-                            <!--
+                        <!--
         <ng-container matColumnDef="assayTarget">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Target </th>
           <td mat-cell *matCellDef="let assay">
@@ -1816,20 +1824,22 @@
         </ng-container>
         -->
 
-                            <tr mat-header-row *matHeaderRowDef="applicationSummaryColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: applicationSummaryColumns;"></tr>
-                          </table>
+                        <tr mat-header-row *matHeaderRowDef="applicationSummaryColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: applicationSummaryColumns;"></tr>
+                      </table>
 
-                        </div>
+                    </div>
 
 
+                    <!--
                       </mat-tab>
-                      <!-- SUBSTANCE SUMMARY VIEW TAB END -->
+                    -->
+                    <!-- SUMMARY VIEW TAB END -->
 
-
-
-
+                    <!--
                     </mat-tab-group>
+                    -->
+
                   </div>
                   <!-- END TAB  -->
 

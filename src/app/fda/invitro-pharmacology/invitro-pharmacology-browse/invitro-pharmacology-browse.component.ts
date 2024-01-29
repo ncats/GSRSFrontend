@@ -337,7 +337,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               element._assayTargetSummaries = [];
               element._assayTargetSummaries.push(element);
 
-             // element._calculateIC50 = this.calculate1C50()
+              element._calculateIC50 = this.calculate1C50(element.valueType, element.percentInhibition, element.screeningConcentration)
 
               // Calculate IC50
               /*  if (element.percentInhibitionMean) {
@@ -477,6 +477,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             if (element) {
 
               if (element.assayTarget) {
+
+                element._calculateIC50 = this.calculate1C50(element.valueType, element.percentInhibition, element.screeningConcentration)
 
                 /*
                 // Calculate IC50
@@ -622,13 +624,20 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     //console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
   }
 
-  calculate1C50(percentInhibition, controlValueType, screeningConcentration): string {
+  calculate1C50(valueType, percentInhibition, screeningConcentration): string {
     let calculateIC50 = '';
-
+    // if percentInhibition < 30, then IC50 > Screening Concentration
+    // if percentInhibition between 30 and 60, then IC50 approx. = Screening Concentration
+    // if percentInhibition above 60, then IC50 < Screening Concentration
     if (percentInhibition) {
       if (percentInhibition < 30) {
-        calculateIC50 = controlValueType + ' > ' + screeningConcentration;
+        calculateIC50 = valueType + ' > ' + screeningConcentration;
+      } else if (percentInhibition >= 30 && percentInhibition <= 60) {
+        calculateIC50 = valueType + ' approx. = ' + screeningConcentration;
+      } else if (percentInhibition > 60) {
+        calculateIC50 = valueType + ' < ' + screeningConcentration;
       }
+
     }
     return calculateIC50;
   }

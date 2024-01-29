@@ -59,10 +59,10 @@ export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetai
   private subscriptions: Array<Subscription> = [];
   summaryDisplayedColumns: string[] = [
     'viewDetails',
-    'testCompound',
+    'testAgent',
     'amountValue',
     'relationshipType',
-    'relatedSubstance',
+   /* 'relatedSubstance',*/
     'studyType',
     'assayType'
   ];

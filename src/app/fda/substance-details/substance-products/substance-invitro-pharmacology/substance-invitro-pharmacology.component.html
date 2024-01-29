@@ -39,15 +39,15 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="testCompound">
+    <ng-container matColumnDef="testAgent">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="width100px">Test Compound</th>
       <td mat-cell *matCellDef="let assay">
         <div *ngIf="testCompoundSubNameMatch == true; else noTestCompoundSubName">
-          <span class="colororange">{{ assay.testCompound }}</span>
+          <span class="colororange">{{ assay.testAgent }}</span>
         </div>
         <ng-template #noTestCompoundSubName>
           <a [routerLink]="['/substances', assay.testCompoundUnii]" target="_blank">
-            {{ assay.invitroTestCompound.testCompound}}
+            {{ assay.testAgent}}
           </a>
         </ng-template>
       </td>
