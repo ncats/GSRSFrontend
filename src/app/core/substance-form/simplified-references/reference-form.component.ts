@@ -36,6 +36,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
+    // Private domain by default.
+    this.reference.publicDomain = false;
   }
 
   ngAfterViewInit() {
@@ -49,6 +51,14 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   updateAccess(access: Array<string>): void {
     this.reference.access = access;
+  }
+
+  setSourceType(event?: any): void {
+    if (event) {
+      this.reference.docType = event;
+      // Mirror source type to citation.
+      this.reference.citation = event
+    }
   }
 
   updateTags(tags: Array<string>): void {

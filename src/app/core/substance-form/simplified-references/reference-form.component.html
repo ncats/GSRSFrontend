@@ -14,7 +14,7 @@
     </div>
 
     <app-cv-input required = 'true' class="source-type" domain = 'DOCUMENT_TYPE'  title = "Source Type" [model] = "reference.docType"
-                  (valueChange)= "reference.docType = $event" name = "docType">
+                  (valueChange)= "setSourceType($event)">
     </app-cv-input>
 
     <mat-form-field class="citation">
