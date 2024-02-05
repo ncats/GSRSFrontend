@@ -47,6 +47,7 @@ import {ungzip, deflate, inflate} from 'pako';
 import {Buffer} from 'buffer';
 import {AdminService} from '@gsrs-core/admin/admin.service';
 import {MatButtonToggleChange} from "@angular/material/button-toggle";
+import {tr} from "cronstrue/dist/i18n/locales/tr";
 
 
 @Component({
@@ -55,8 +56,10 @@ import {MatButtonToggleChange} from "@angular/material/button-toggle";
   styleUrls: ['./substance-form.component.scss']
 })
 export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
+  private static simplifiedSuffix = '-simplified';
+
   @Input()
-  simplifiedForm = true // TODO:Set depending on config
+  simplifiedForm = false
 
   isLoading = true;
   id?: string;
@@ -114,6 +117,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   UNII: string;
   approvalType = 'lastEditedBy';
   previousState: number;
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -371,15 +375,23 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               this.gaService.sendPageView(`Substance Register`);
             } else {
               setTimeout(() => {
+                let type = this.activatedRoute.snapshot.params['type'] || 'chemical';
+                let defaultValues = false
+                if (type.endsWith(SubstanceFormComponent.simplifiedSuffix)){
+                  this.simplifiedForm = true
+                  defaultValues = true
+                  type = type.slice(0, -SubstanceFormComponent.simplifiedSuffix.length)
+                }
+
                 this.gaService.sendPageView(`Substance Register`);
-                this.subClass = this.activatedRoute.snapshot.params['type'] || 'chemical';
-                this.substanceClass = this.subClass;
+                this.subClass = type;
+                this.substanceClass = type;
                 this.titleService.setTitle('Register - ' + this.subClass);
-                this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+
+                this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined, defaultValues).pipe(take(1)).subscribe(() => {
                   this.setFormSections(formSections[this.subClass]);
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
-
                 });
               });
             }
@@ -1232,13 +1244,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   fixLink(link: string) {
     return this.substanceService.oldLinkFix(link);
-  }
-
-
-  @Output()
-  toggleSimpleFormChanged(event: MatButtonToggleChange) {
-    this.simplifiedForm = event.source.checked
-    this.updateHiddenFormSections()
   }
 
   updateHiddenFormSections() {

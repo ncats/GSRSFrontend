@@ -8,9 +8,6 @@ x
 <div *ngIf="!simplifiedForm; else simplifiedActionsComponent">
   <div class="top-fixed">
     <div class="actions-container">
-      <mat-button-toggle style="margin-right: 20px" [checked]="simplifiedForm"
-                         (change)="toggleSimpleFormChanged($event)">Simple Form
-      </mat-button-toggle>
       <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
       <button mat-flat-button color="primary" class="draft-button" (click)="showDrafts()">Show Drafts <span
         class="chip">{{ draftCount }}</span></button>
@@ -229,9 +226,6 @@ x
 <ng-template #simplifiedActionsComponent>
   <div class="top-fixed small-top-fixed">
     <div class="actions-container small-actions-container">
-      <mat-button-toggle class="small-button" style="margin-right: 20px" [checked]="simplifiedForm"
-                         (change)="toggleSimpleFormChanged($event)">Simple Form
-      </mat-button-toggle>
       <button mat-flat-button color="primary" class="small-button" (click)="saveDraft()">Save Draft</button>
       <button mat-flat-button color="primary" class="draft-button small-button" (click)="showDrafts()">Show Drafts <span
         class="chip">{{ draftCount }}</span></button>
