@@ -149,7 +149,6 @@ export class AdminService extends BaseHttpService {
         }*/
 
         public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
-          console.log(file);
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview`;
          if (limit) {
            if(limit === 'all') {

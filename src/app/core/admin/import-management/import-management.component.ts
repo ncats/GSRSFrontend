@@ -234,7 +234,7 @@ ngOnInit() {
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
     this.adminService.postAdapterFile(formData, this.adapterKey).pipe(take(1)).subscribe(response => {
-      console.log(response);
+     // console.log(response);
       this.loadingService.setLoading(false);
      this.step = 3;
       this.postResp = response;

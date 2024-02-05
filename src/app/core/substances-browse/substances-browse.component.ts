@@ -193,7 +193,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   fetchBulkLists() {
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {
-      console.log(result);
+     // console.log(result);
     }, error => {
       console.log(error);
     });
@@ -253,7 +253,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       if (auth) {
         this.isLoggedIn = true;
     this.bulkSearchService.getBulkSearchLists().subscribe( result => {
-      console.log(result);
+     // console.log(result);
       this.userLists = result.lists;
 
         }, error => {

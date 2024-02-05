@@ -137,4 +137,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     window.open(url);
   }
 
+  updateDoctype(event: any): void {
+    console.log(event);
+  }
+
 }

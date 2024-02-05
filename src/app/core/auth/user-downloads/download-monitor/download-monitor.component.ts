@@ -94,6 +94,8 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
       } else if
       ((url.indexOf('v1/adverseeventpt') > 0) || (url.indexOf('v1/adverseeventdme') > 0) || (url.indexOf('v1/adverseeventcvm') > 0)) {
         this.type = 'adverseevent';
+      }else if ((url.indexOf('structure') > 0)) {
+        this.type = 'structure'; // set to not browse since links are not valid
       } else {
         this.type = 'browse';
       }

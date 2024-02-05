@@ -589,6 +589,9 @@ getDrafts() {
     if (this.feature === 'fragment') {
       this.openFragmentDialog();
     }
+    if (this.feature === 'regenRefs') {
+      this.regenRefs();
+    }
 
     
 
@@ -629,6 +632,11 @@ getDrafts() {
 
   disulfide(): void {
     this.substanceFormService.disulfideLinks();
+    this.feature = undefined;
+  }
+
+  regenRefs(): void {
+    this.substanceFormService.referenceScrub();
     this.feature = undefined;
   }
 
@@ -1021,16 +1029,19 @@ getDrafts() {
     }
   }
 
-  scrub(oldraw: any, importType: string): any {
-    function guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
+  //generate new uuid string for following scubber functions
+  guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
     }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
+  scrub(oldraw: any, importType?: string): any {
+    
     const old = oldraw;
 
     const idHolders = defiant.json.search(old, '//*[id]');
@@ -1040,7 +1051,7 @@ getDrafts() {
       if (idMap[oid]) {
         idHolders[i].id = idMap[oid];
       } else {
-        const nid = guid();
+        const nid = this.guid();
         idHolders[i].id = nid;
         idMap[oid] = nid;
       }
@@ -1056,7 +1067,7 @@ getDrafts() {
           uuidHolders[i].id = _map[ouuid];
         }
       } else {
-        const nid = guid();
+        const nid = this.guid();
         uuidHolders[i].uuid = nid;
         _map[ouuid] = nid;
         if (uuidHolders[i].id) {

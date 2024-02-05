@@ -6,8 +6,8 @@
     </button>
   </div>
   <div class="form-row">
-    <app-cv-input required = 'true' class="source-type" domain = 'DOCUMENT_TYPE'  title = "Source Type" [model] = "reference.docType"
-                  (valueChange)= "reference.docType = $event" name = "docType">
+    <app-cv-input required = 'true' class="source-type" domain = 'DOCUMENT_TYPE'  title = "Source Type test" [model] = "reference.docType"
+                  (valueChange) = "updateDoctype($event)" name = "docType">
     </app-cv-input>
     <mat-form-field class="citation">
       <input matInput placeholder="Source Text/Citation" [(ngModel)]="reference.citation" required name="citation" />

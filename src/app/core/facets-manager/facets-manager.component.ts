@@ -391,7 +391,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
             newFacets.unshift(newFacets.splice(position, 1)[0]);
           }
         });
-        console.log(newFacets);
+       // console.log(newFacets);
         this.facets = newFacets;
         this.setShowAdvancedFacetStates();
         this.facetsLoaded.emit(this.facets.length);
@@ -743,7 +743,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       data.view = 'single';
       data['activeName'] = list.split(':')[1];
     }
-    console.log(data);
+   // console.log(data);
     const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
       width: '850px',
       autoFocus: false,
