@@ -1,26 +1,30 @@
 <br>
 <div *ngIf="assayScreening">
   <div *ngIf="assayScreening.id; else noRecord">
-    <div class="details-container margintop90px">
+    <div class="details-container details-box margintop50px">
 
-      <mat-card class="bordergray">
-        <mat-card-title>
-          <div class="width650px margintop10px">
+      <div class="divflexrow margintop20px">
+        <div class="divflex">
+          <div class="title margintop10px">
             In-vitro Pharmacology Assay Screening&nbsp;&nbsp;
+          </div>
 
-            <!-- Edit GSRS record button -->
+          <!-- Edit GSRS record button -->
+          <div class="margintop10px">
             <a [routerLink]="['/invitro-pharm', assayScreening.id, 'edit']" target="_blank" *ngIf="isAdmin"
               matTooltip='Edit GSRS In-vitro Pharmacology Record'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>&nbsp;&nbsp;
+          </div>
 
+          <div class="margintop10px">
             <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
               matTooltip='Export Json'>
               <mat-icon svgIcon="get_app"></mat-icon>
             </a>&nbsp;&nbsp;&nbsp;
           </div>
 
-          <div class="width50percent font11px margintop10px">
+          <div class="width40percent font11px margintop10px">
             <span class="colorgray">Created By:</span> {{assayScreening.createdBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Create
               Date:</span>{{assayScreening.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
@@ -28,12 +32,20 @@
             <span class="colorgray">Modify Date:</span> {{assayScreening.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss
             a'}}
           </div>
+
+        </div> <!-- class=divflex -->
+      </div> <!-- class=divflexrow -->
+    </div>
+
+
+    <!-- DETAILS INFORMATION Begin -->
+
+      <mat-card class="margintop10px bordergray">
+        <mat-card-title>
+
         </mat-card-title>
 
         <mat-card-content>
-
-          <!-- GENERAL INFORMATION Begin -->
-          <br>
           <div class="margintop10px marginbottom30px">
             <table class="tableStyle">
               <tbody>
@@ -401,24 +413,13 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Reference Source Type:</td>
-                  <td>{{ assayScreening.referenceSourceType }}</td>
+                  <td class="fieldKey">Application/Reference/Source Type:</td>
+                  <td>{{ assayScreening.applicationReferenceSourceType }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Reference Source ID:</td>
-                  <td>{{ assayScreening.referenceSourceId }}</td>
-                </tr>
-
-                <tr>
-                  <td class="fieldKey">Reference Source Url:</td>
-                  <td>
-                    <span *ngIf="assayScreening.referenceSourceUrl">
-                      <a href="{{assayScreening.referenceSourceUrl}}" target="_blank">
-                        {{assayScreening.referenceSourceUrl}}
-                      </a>
-                    </span>
-                  </td>
+                  <td class="fieldKey">Application/Reference/Source Number:</td>
+                  <td>{{ assayScreening.applicationReferenceSourceNumber }}</td>
                 </tr>
 
                 <tr>
@@ -455,28 +456,63 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Sponsor Report Submitter Name:</td>
-                  <td>{{ assayScreening.invitroSponsor.approverName }}</td>
+                  <td class="fieldKey">Sponsor Contact Name:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorContactName }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Sponsor Report Submitter Title:</td>
-                  <td>{{ assayScreening.invitroSponsor.sponsorTitle }}</td>
-                </tr>
-
-                <tr>
-                  <td class="fieldKey">Sponsor Report Submitter Affiliation:</td>
+                  <td class="fieldKey">Sponsor Affiliation:</td>
                   <td>{{ assayScreening.invitroSponsor.sponsorAffiliation }}</td>
                 </tr>
 
                 <tr>
+                  <td class="fieldKey">Sponsor Street Address:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorStreetAddress }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Sponsor City:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorCity }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Sponsor State:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorState }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Sponsor Zipcode:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorZipcode }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Sponsor Country:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorCountry }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Sponsor Report Submitter Name:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorReportSubmitterName }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Sponsor Report Submitter Title:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorReportSubmitterTitle }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Sponsor Report Submitter Affiliation:</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorReportSubmitterAffiliation }}</td>
+                </tr>
+
+                <tr>
                   <td class="fieldKey">Sponsor Report Submitter Email:</td>
-                  <td>{{ assayScreening.invitroSponsor.sponsorEmail }}</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorReportSubmitterEmail }}</td>
                 </tr>
 
                 <tr>
                   <td class="fieldKey">Sponsor Report Submitter Phone Number:</td>
-                  <td>{{ assayScreening.invitroSponsor.sponsorPhoneNumber }}</td>
+                  <td>{{ assayScreening.invitroSponsor.sponsorReportSubmitterPhoneNumber }}</td>
                 </tr>
               </tbody>
             </table>
@@ -498,18 +534,18 @@
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Laboratory Type:</td>
-                  <td>{{ assayScreening.invitroLaboratory.laboratoryType }}</td>
-                </tr>
-
-                <tr>
                   <td class="fieldKey">Laboratory Affiliation:</td>
                   <td>{{ assayScreening.invitroLaboratory.laboratoryAffiliation }}</td>
                 </tr>
 
                 <tr>
-                  <td class="fieldKey">Laboratory Address:</td>
-                  <td>{{ assayScreening.invitroLaboratory.laboratoryAddress }}</td>
+                  <td class="fieldKey">Laboratory Type:</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryType }}</td>
+                </tr>
+
+                <tr>
+                  <td class="fieldKey">Laboratory Street Address:</td>
+                  <td>{{ assayScreening.invitroLaboratory.laboratoryStreetAddress }}</td>
                 </tr>
 
                 <tr>
@@ -539,9 +575,9 @@
         </mat-card-content>
       </mat-card>
 
-    </div>
+
     <br><br><br><br>
-  </div>
+  </div> <!-- *ngIf="assayScreening.id -->
   <ng-template #noRecord>
     <br><br><br><br>
     <div class="colororange padtop50px padleft50px">There is no Assay Screening Data found.</div>

@@ -101,9 +101,9 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         if (params['id']) {
           const id = params['id'];
           this.title = 'Update In-vitro Pharmacology';
-          if (id !== this.id) {
+          if (id !== this.id) { //Edit
             this.id = id;
-            this.titleService.setTitle(`Update In-vitro Pharmacology Assay Screening`);
+            this.titleService.setTitle(`Edit In-vitro Pharm ` + this.id);
             this.getImpurities();
           }
         } else { //Copy In-vitro Pharmacology Assay Screening to register form
@@ -127,7 +127,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
             }
           } else if (this.id) { //copy
             this.getImpurities('copy');
-          } else {
+          } else { // Register New
             setTimeout(() => {
               this.titleService.setTitle(`Register Invitro-pharmacology assay screening`);
               this.invitroPharmacologyService.loadAssayScreening();

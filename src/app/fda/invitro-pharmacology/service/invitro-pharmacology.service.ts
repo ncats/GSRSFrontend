@@ -150,7 +150,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       this.assayScreening = assayScreening;
     } else {
       this.assayScreening = {
-        invitroApprover: {},
+        invitroSponsor: {},
         invitroLaboratory: {}
       };
     }

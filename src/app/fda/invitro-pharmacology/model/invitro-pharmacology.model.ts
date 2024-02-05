@@ -45,9 +45,8 @@ export interface InvitroAssayScreening {
   screeningConcentrationUnit?: string;
   solventConcentration?: string;
   solventConcentrationUnit?: string;
-  referenceSourceType?: string;
-  referenceSourceId?: string;
-  referenceSourceUrl?: string
+  applicationReferenceSourceType?: string;
+  applicationReferenceSourceNumber?: string;
   externalAssayId?: string;
   externalAssaySource?: string;
   externalAssayReferenceUrl?: string;
@@ -62,7 +61,7 @@ export interface InvitroAssayScreening {
   _calculateIC50?: string;
   _assayTargetSummaries?: Array<any>;
   invitroRelationship?: InvitroRelationship;
-  invitroApprover?: InvitroApprover;
+  invitroSponsor?: InvitroSponsor;
   invitroLaboratory?: InvitroLaboratory;
 }
 
@@ -90,13 +89,20 @@ export interface InvitroRelationship {
   internalVersion?: number;
 }
 
-export interface InvitroApprover {
+export interface InvitroSponsor {
   id?: number;
-  approverName?: string;
-  approverTitle?: string;
-  approverAffiliation?: string;
-  approverPhoneNumber?: string;
-  approverEmail?: string;
+  sponsorContactName?: string;
+  sponsorAffiliation?: string;
+  sponsorStreetAddress?: string;
+  sponsorCity?: string;
+  sponsorState?: string;
+  sponsorZipcode?: string;
+  sponsorCountry?: string;
+  sponsorReportSubmitterName?: string;
+  sponsorRepoortSubmitterTitle?: string;
+  sponsorReportSubmitterAffiliation?: string;
+  sponsorReportSubmitterEmail?: string;
+  sponsorReportSubmitterPhoneNumber?: string;
   createdBy?: string;
   creationDate?: number;
   modifiedBy?: string;
@@ -107,9 +113,9 @@ export interface InvitroApprover {
 export interface InvitroLaboratory {
   id?: number;
   laboratoryName?: string;
-  laboratoryType?: string;
   laboratoryAffiliation?: string;
-  laboratoryAddress?: string;
+  laboratoryType?: string;
+  laboratoryStreetAddress?: string;
   laboratoryCity?: string;
   laboratoryState?: string;
   laboratoryZipcode?: string;

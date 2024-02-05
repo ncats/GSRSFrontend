@@ -107,7 +107,7 @@
 
     <div *ngIf="assayScreening">
       <div *ngIf="assayScreening.id; else noRecord">
-        <div class="details-container margintop90px">
+        <div class="details-container">
 
 
           <div class="cards-container">
@@ -466,6 +466,9 @@
                   </table>
 
 
+                  <!--
+                  <table class="tableStyle">
+                  -->
                   <table class="tableStyle">
                     <tbody>
                       <tr class="headerstyle2">
@@ -624,12 +627,12 @@
                       </tr>
 
                       <tr>
-                        <td class="fieldKey">Laboratory Address:</td>
+                        <td class="fieldKey">Laboratory Street Address:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroLaboratory.laboratoryAddress"
-                              name="laboratoryAddress" />
+                              [(ngModel)]="assayScreening.invitroLaboratory.laboratoryStreetAddress"
+                              name="laboratoryStreetAddress" />
                           </mat-form-field>
                         </td>
                       </tr>

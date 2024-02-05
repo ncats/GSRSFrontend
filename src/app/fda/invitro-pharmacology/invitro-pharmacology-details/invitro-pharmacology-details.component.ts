@@ -27,7 +27,7 @@ import { InvitroAssayScreening } from '../model/invitro-pharmacology.model';
 })
 export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
-  assayScreening: any;
+  assayScreening: InvitroAssayScreening;
   id: string;
   assayTargetSubId = '';
   testCompoundSubId = '';
@@ -115,8 +115,8 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
         }
 
         // Get Substance Id for Test Compound
-        if (this.assayScreening.testCompoundUnii) {
-          const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.testCompoundUnii).subscribe
+        if (this.assayScreening.testAgentUnii) {
+          const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.testAgentUnii).subscribe
             (substance => {
               if (substance) {
                 this.testCompoundSubId = substance.uuid;
