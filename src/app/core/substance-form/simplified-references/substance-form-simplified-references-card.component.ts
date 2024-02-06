@@ -7,6 +7,9 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/references/substance-form-references.service";
+import {DomainsWithReferences} from "@gsrs-core/substance-form/references/domain-references/domain.references.model";
+import { domainKeys } from '../references/domain-references/domain-keys.constant';
+import {take} from "rxjs/operators";
 
 @Component({
   selector: 'app-substance-form-references-card',
@@ -16,6 +19,8 @@ import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/referenc
 export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCardBaseFilteredList<SubstanceReference>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   references: Array<SubstanceReference>;
+  private domainKeys = domainKeys;
+  private domainsWithReferences: DomainsWithReferences;
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
 
@@ -49,7 +54,13 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
       this.page = 0;
       this.pageChange();
     });
+
+    const domainsSubscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
+      this.domainsWithReferences = domainsWithReferences;
+    });
+
     this.subscriptions.push(referencesSubscription);
+    this.subscriptions.push(domainsSubscription);
   }
 
   ngOnDestroy() {
@@ -64,6 +75,8 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
 
   addSubstanceReference(): void {
     const addedReference = this.substanceFormReferencesService.addSubstanceReference({});
+    this.applyToAll(addedReference.uuid)
+
     setTimeout(() => {
       this.scrollToService.scrollToElement(addedReference.uuid, 'center');
     }, 10);
@@ -73,4 +86,26 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     this.substanceFormReferencesService.deleteSubstanceReference(reference);
   }
 
+  applyToAll(uuid: string): void {
+    this.applyReference(this.domainsWithReferences.definition.domain, uuid);
+    this.domainKeys.map(key=>this.domainsWithReferences[key]?.domains).forEach(domains => {
+      if (domains) {
+        domains.forEach((domain: any) => {
+          this.applyReference(domain, uuid);
+        });
+      }
+    });
+
+    this.substanceFormReferencesService.emitReferencesUpdate();
+  }
+
+  applyReference(domain: any, uuid: string): void {
+    if (!domain.references) {
+      domain.references = [];
+    }
+
+    if (domain.references.indexOf(uuid) === -1) {
+      domain.references.push(uuid);
+    }
+  }
 }
