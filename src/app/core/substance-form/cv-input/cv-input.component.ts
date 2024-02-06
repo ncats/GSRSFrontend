@@ -48,7 +48,8 @@ export class CvInputComponent implements OnInit, OnDestroy {
     if (this.vocabulary) {
       this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
     } else if (this.key) {
-      this.dictionary = this.dictionaryService.getDictionaryRow(this.key);
+      this.dictionary = this.
+      dictionaryService.getDictionaryRow(this.key);
       if (!this.title) {
         this.title = this.dictionary.fieldName;
       }
@@ -126,10 +127,10 @@ export class CvInputComponent implements OnInit, OnDestroy {
 
   openDialog(vocab: any, term: string): void {
     let thisy = window.pageYOffset;
-    window.scroll({ 
-      top: 0, 
-      left: 0, 
-      behavior: 'auto' 
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'auto'
 });
 
    // this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -143,10 +144,10 @@ export class CvInputComponent implements OnInit, OnDestroy {
       });
       this.overlayContainer.style.zIndex = '1005';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
-      window.scroll({ 
-        top: thisy, 
-        left: 0, 
-        behavior: 'auto' 
+      window.scroll({
+        top: thisy,
+        left: 0,
+        behavior: 'auto'
   });
       this.overlayContainer.style.zIndex = null;
       if (response ) {
@@ -164,10 +165,10 @@ export class CvInputComponent implements OnInit, OnDestroy {
   //    this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
    //   this.overlayContainer.style.zIndex = null;
-   window.scroll({ 
-    top: thisy, 
-    left: 0, 
-    behavior: 'auto' 
+   window.scroll({
+    top: thisy,
+    left: 0,
+    behavior: 'auto'
 });
       if (response ) {
         this.privateMod = response.display;
