@@ -57,6 +57,13 @@ export interface Config {
     userProfile?: any;
     stagingArea?: StagingAreaSettings;
     privacyStatement: string;
+    CVDisplayOrder ?: {
+            [name: string]: Array<string>;
+    };
+}
+
+export interface CVDisplay {
+
 }
 
 export interface StagingAreaSettings {
