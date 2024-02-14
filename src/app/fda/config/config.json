@@ -556,7 +556,7 @@
     {
       "card": "substance-relationships",
       "type": "CONSTITUENT",
-      "title": "Relationships: Constitents",
+      "title": "Relationships: Constituents",
       "filters": [
         {
           "filterName": "exists",
@@ -1010,19 +1010,23 @@
     },
     "products": {
       "default": [
+        "Provenance",
+        "Product ID",
         "Product Name",
         "Nonproprietary Name",
-        "Product NDC",
         "Dosage Form Name",
         "Ingredient Name",
+        "Ingredient Name (Preferred)",
         "Ingredient Type",
         "Product Type",
         "Product Code Type",
-        "Application Number",
-        "Status",
+        "Product Status",
         "Marketing Category Name",
-        "Route of Admin",
+        "Route of Administration",
         "Is Listed",
+        "Indication",
+        "Application Type",
+        "Application Number",
         "Labeler Name",
         "Labeler DUNS Number",
         "Registrant Name",
@@ -1031,7 +1035,9 @@
         "State",
         "Company Country",
         "Country Code",
-        "Provenance"
+        "Company Role",
+        "Manufacturer Name",
+        "Manufacturer Role"
       ],
       "admin": [
         "Record Created By",
@@ -1455,7 +1461,10 @@
       "keyType": {
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
-        "clinicalTrialKeyType": "UUID"
+        "clinicalTrialKeyType": "UUID",
+        "productKeyType": "UUID",
+        "applicationKeyType": "UUID",
+        "impuritiesKeyType": "UUID"
       }
     }
   },
