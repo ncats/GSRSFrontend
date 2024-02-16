@@ -6,6 +6,7 @@ import { AuthService } from '../../auth/auth.service';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { Auth } from '../../auth/auth.model';
 import { Subscription } from 'rxjs';
+import { NavItem } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-pfda-toolbar',
@@ -18,6 +19,7 @@ export class PfdaToolbarComponent implements OnInit {
   homeIconPath: string;
   auth?: Auth;
   searchValue: string;
+  registerItems: Array<NavItem>;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
@@ -28,7 +30,7 @@ export class PfdaToolbarComponent implements OnInit {
     private overlayContainerService: OverlayContainer,
     private substanceTextSearchService: SubstanceTextSearchService,
     public authService: AuthService
-  ) { 
+  ) {
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       this.auth = auth;
     });
@@ -59,6 +61,11 @@ export class PfdaToolbarComponent implements OnInit {
       this.searchValue = value;
     });
     this.subscriptions.push(cleanSearchSubscription);
+
+    // Items for header menu "Register new substance"
+    // Specified in file nav-items.constant.ts and additional substances may be specified in the config.json file
+    const regNavItem = this.configService.configData.navItems.find((nI) => nI.display === 'Register');
+    this.registerItems = regNavItem === undefined || regNavItem.children === undefined ? [] : regNavItem.children;
   }
 
   processSubstanceSearch(searchValue: string) {
