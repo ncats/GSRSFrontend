@@ -28,7 +28,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayScreening, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-form',
@@ -37,7 +37,7 @@ import { InvitroAssayScreening, ValidationMessage } from '../model/invitro-pharm
 })
 export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
-  assayScreening: InvitroAssayScreening;
+  assay: InvitroAssayInformation;
   id?: number;
 
   showSubmissionMessages = false;
@@ -120,7 +120,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
               this.scrub(response);
 
               this.invitroPharmacologyService.loadAssayScreening(response);
-              this.assayScreening = this.invitroPharmacologyService.assayScreening;
+              this.assay = this.invitroPharmacologyService.assay;
 
               this.loadingService.setLoading(false);
               this.isLoading = false;
@@ -131,7 +131,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               this.titleService.setTitle(`Register Invitro-pharmacology assay screening`);
               this.invitroPharmacologyService.loadAssayScreening();
-              this.assayScreening = this.invitroPharmacologyService.assayScreening;
+              this.assay = this.invitroPharmacologyService.assay;
               this.loadingService.setLoading(false);
               this.isLoading = false;
             });
@@ -159,7 +159,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
             this.scrub(response);
           }
           this.invitroPharmacologyService.loadAssayScreening(response);
-          this.assayScreening = this.invitroPharmacologyService.assayScreening;
+          this.assay = this.invitroPharmacologyService.assay;
 
           // if (this.impurities.substanceUuid) {
           //   this.getSubstancePreferredName(this.impurities.substanceUuid);
@@ -391,7 +391,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.invitroPharmacologyService.assayScreening
+      data: this.invitroPharmacologyService.assay
     });
 
     //   this.overlayContainer.style.zIndex = '1002';
@@ -402,7 +402,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    let json = this.invitroPharmacologyService.assayScreening;
+    let json = this.invitroPharmacologyService.assay;
     // this.json = this.cleanObject(substanceCopy);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
     this.downloadJsonHref = uri;

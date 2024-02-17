@@ -80,6 +80,15 @@
   font-weight: 700;
 }
 
+.headerstyle3 {
+  border: 1px solid var(--blue-color);
+  border-bottom: none;
+  height: 35px;
+  background-color: #d3d3d3;    /*--primary-title-color*/
+  color: #230fc0;
+  font-weight: 700;
+}
+
 .fieldKey {
   width: 320px;
   font-weight: 800;

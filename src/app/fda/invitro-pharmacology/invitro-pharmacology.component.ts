@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 /* GSRS Imports */
-import { InvitroAssayScreening, ValidationMessage } from './model/invitro-pharmacology.model';
+import { InvitroAssayInformation, ValidationMessage } from './model/invitro-pharmacology.model';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { InvitroAssayScreening, ValidationMessage } from './model/invitro-pharma
 })
 export class InvitroPharmacologyComponent implements OnInit {
 
-  invitropharm: InvitroAssayScreening;
+  assayInfo: InvitroAssayInformation;
   id?: number;
 
   isLoading = true;

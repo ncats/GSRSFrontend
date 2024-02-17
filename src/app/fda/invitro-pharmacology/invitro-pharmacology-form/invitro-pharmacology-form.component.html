@@ -8,7 +8,7 @@
     </a>&nbsp;&nbsp;&nbsp;
 
     <!-- Do not show 'Import JSON' button when in Update Impurities page -->
-    <span *ngIf="assayScreening && !assayScreening.id">
+    <span *ngIf="assay && !assay.id">
       <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
     </span>
 
@@ -21,14 +21,14 @@
 
 
     <!-- Register and View Application buttons -->
-    <span *ngIf="assayScreening">
-      <span *ngIf="assayScreening.id">
+    <span *ngIf="assay">
+      <span *ngIf="assay.id">
         <button mat-flat-button color="primary" [routerLink]="['/invitro-pharm/register']"
           matTooltip='Register In-vitro Pharmacology Assay Screening'>
           Register New Assay Screening
         </button>&nbsp;&nbsp;&nbsp;
 
-        <a mat-flat-button color="primary" [routerLink]="['/invitro-pharm', assayScreening.id]" target="_blank"
+        <a mat-flat-button color="primary" [routerLink]="['/invitro-pharm', assay.id]" target="_blank"
           matTooltip='View this Assay Screening Record (opens in a new window)'>
           <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
           View Assay Screening Record
@@ -105,8 +105,8 @@
       {{message}}
     </div>
 
-    <div *ngIf="assayScreening">
-      <div *ngIf="assayScreening.id; else noRecord">
+    <div *ngIf="assay">
+      <div *ngIf="assay.id; else noRecord">
         <div class="details-container">
 
 
@@ -120,7 +120,7 @@
                     <b>{{title}}</b>
 
                     <!-- Edit GSRS record button -->
-                    <a [routerLink]="['/invitro-pharm', assayScreening.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                    <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
                       matTooltip='Edit GSRS In-vitro Pharmacology Record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>&nbsp;&nbsp;
@@ -132,11 +132,11 @@
                   </div>
 
                   <div class="width50percent font11px margintop10px">
-                    <span class="colorgray">Created By:</span> {{assayScreening.createdBy}}&nbsp;&nbsp;&nbsp;
+                    <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
                     <span class="colorgray">Create
-                      Date:</span>{{assayScreening.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Modified By:</span> {{assayScreening.modifiedBy}}&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Modify Date:</span> {{assayScreening.lastModifiedDate|date: 'MM/dd/yyyy
+                      Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+                    <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+                    <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy
                     hh:mm:ss
                     a'}}
                   </div>
@@ -154,7 +154,7 @@
                         <td class="fieldKey">Assay Title:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayTitle" name="assayTitle" />
+                            <input matInput placeholder="" [(ngModel)]="assay.assayTitle" name="assayTitle" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -163,7 +163,7 @@
                         <td class="fieldKey">Study Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.studyType" name="studyType" />
+                            <input matInput placeholder="" [(ngModel)]="assay.studyType" name="studyType" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -172,7 +172,7 @@
                         <td class="fieldKey">Test Agent:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.testCompound"
+                            <input matInput placeholder="" [(ngModel)]="assay.testCompound"
                               name="testCompound" />
                           </mat-form-field>
                         </td>
@@ -182,7 +182,7 @@
                         <td class="fieldKey">Test Agent UNII:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.testCompoundUnii"
+                            <input matInput placeholder="" [(ngModel)]="assay.testCompoundUnii"
                               name="testCompoundUnii" />
                           </mat-form-field>
                         </td>
@@ -192,7 +192,7 @@
                         <td class="fieldKey">Screening Concentration:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.screeningConcentration"
+                            <input matInput placeholder="" [(ngModel)]="assay.screeningConcentration"
                               name="screeningConcentration" />
                           </mat-form-field>
                         </td>
@@ -202,7 +202,7 @@
                         <td class="fieldKey">Screening Concentration Unit:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.screeningConcentrationUnit"
+                            <input matInput placeholder="" [(ngModel)]="assay.screeningConcentrationUnit"
                               name="screeningConcentrationUnit" />
                           </mat-form-field>
                         </td>
@@ -212,7 +212,7 @@
                         <td class="fieldKey">Percent Inhibition Mean:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.percentInhibitionMean"
+                            <input matInput placeholder="" [(ngModel)]="assay.percentInhibitionMean"
                               name="percentInhibitionMean" />
                           </mat-form-field>
                         </td>
@@ -222,7 +222,7 @@
                         <td class="fieldKey">Purity:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.purity" name="purity" />
+                            <input matInput placeholder="" [(ngModel)]="assay.purity" name="purity" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -231,7 +231,7 @@
                         <td class="fieldKey">Batch ID:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.batchNumber"
+                            <input matInput placeholder="" [(ngModel)]="assay.batchNumber"
                               name="batchNumber" />
                           </mat-form-field>
                         </td>
@@ -241,7 +241,7 @@
                         <td class="fieldKey">Report Date:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.reportDate" name="reportDate" />
+                            <input matInput placeholder="" [(ngModel)]="assay.reportDate" name="reportDate" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -259,7 +259,7 @@
                         <td class="fieldKey">Relationship Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.relationshipType"
+                            <input matInput placeholder="" [(ngModel)]="assay.relationshipType"
                               name="relationshipType" />
                           </mat-form-field>
                         </td>
@@ -269,7 +269,7 @@
                         <td class="fieldKey">Assay Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayType" name="assayType" />
+                            <input matInput placeholder="" [(ngModel)]="assay.assayType" name="assayType" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -278,7 +278,7 @@
                         <td class="fieldKey">Assay Target:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayTarget"
+                            <input matInput placeholder="" [(ngModel)]="assay.assayTarget"
                               name="assayTarget" />
                           </mat-form-field>
                         </td>
@@ -288,7 +288,7 @@
                         <td class="fieldKey">Assay Target UNII:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayTargetUnii"
+                            <input matInput placeholder="" [(ngModel)]="assay.assayTargetUnii"
                               name="assayTargetUnii" />
                           </mat-form-field>
                         </td>
@@ -298,7 +298,7 @@
                         <td class="fieldKey">Ligand/Substrate:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.ligandSubstrate"
+                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrate"
                               name="ligandSubstrate" />
                           </mat-form-field>
                         </td>
@@ -308,7 +308,7 @@
                         <td class="fieldKey">Ligand/Substrate UNII:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.ligandSubstrateUnii"
+                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateUnii"
                               name="ligandSubstrateUnii" />
                           </mat-form-field>
                         </td>
@@ -318,7 +318,7 @@
                         <td class="fieldKey">Ligand/Substrate Concentration:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.ligandSubstrateConcentration"
+                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateConcentration"
                               name="ligandSubstrateConcentration" />
                           </mat-form-field>
                         </td>
@@ -328,7 +328,7 @@
                         <td class="fieldKey">Ligand/Substrate Concentration Unit:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.ligandSubstrateConcentrationUnit"
+                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateConcentrationUnit"
                               name="ligandSubstrateConcentrationUnit" />
                           </mat-form-field>
                         </td>
@@ -338,7 +338,7 @@
                         <td class="fieldKey">Control:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.control" name="control" />
+                            <input matInput placeholder="" [(ngModel)]="assay.control" name="control" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -347,7 +347,7 @@
                         <td class="fieldKey">Control UNII:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.controlUnii"
+                            <input matInput placeholder="" [(ngModel)]="assay.controlUnii"
                               name="controlUnii" />
                           </mat-form-field>
                         </td>
@@ -357,7 +357,7 @@
                         <td class="fieldKey">Control Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.controlType"
+                            <input matInput placeholder="" [(ngModel)]="assay.controlType"
                               name="controlType" />
                           </mat-form-field>
                         </td>
@@ -367,7 +367,7 @@
                         <td class="fieldKey">Control Value Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.controlValueType"
+                            <input matInput placeholder="" [(ngModel)]="assay.controlValueType"
                               name="controlValueType" />
                           </mat-form-field>
                         </td>
@@ -377,7 +377,7 @@
                         <td class="fieldKey">Control Value Mean:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.controlValueMean"
+                            <input matInput placeholder="" [(ngModel)]="assay.controlValueMean"
                               name="controlValueMean" />
                           </mat-form-field>
                         </td>
@@ -387,7 +387,7 @@
                         <td class="fieldKey">Control Value Low:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.controlValueLow"
+                            <input matInput placeholder="" [(ngModel)]="assay.controlValueLow"
                               name="controlValueLow" />
                           </mat-form-field>
                         </td>
@@ -397,7 +397,7 @@
                         <td class="fieldKey">Control Value High:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.controlValueHigh"
+                            <input matInput placeholder="" [(ngModel)]="assay.controlValueHigh"
                               name="controlValueHigh" />
                           </mat-form-field>
                         </td>
@@ -407,7 +407,7 @@
                         <td class="fieldKey">Control Value Unit:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.controlValueUnit"
+                            <input matInput placeholder="" [(ngModel)]="assay.controlValueUnit"
                               name="controlValueUnit" />
                           </mat-form-field>
                         </td>
@@ -417,7 +417,7 @@
                         <td class="fieldKey">Test Value Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.testValueType"
+                            <input matInput placeholder="" [(ngModel)]="assay.testValueType"
                               name="testValueType" />
                           </mat-form-field>
                         </td>
@@ -427,7 +427,7 @@
                         <td class="fieldKey">Test Value:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.testValue" name="testValue" />
+                            <input matInput placeholder="" [(ngModel)]="assay.testValue" name="testValue" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -436,7 +436,7 @@
                         <td class="fieldKey">Test Value Unit:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.testValueUnit"
+                            <input matInput placeholder="" [(ngModel)]="assay.testValueUnit"
                               name="testValueUnit" />
                           </mat-form-field>
                         </td>
@@ -446,7 +446,7 @@
                         <td class="fieldKey">Presentation Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.presentationType"
+                            <input matInput placeholder="" [(ngModel)]="assay.presentationType"
                               name="presentationType" />
                           </mat-form-field>
                         </td>
@@ -456,7 +456,7 @@
                         <td class="fieldKey">Presentation:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.presentation"
+                            <input matInput placeholder="" [(ngModel)]="assay.presentation"
                               name="presentation" />
                           </mat-form-field>
                         </td>
@@ -479,7 +479,7 @@
                         <td class="fieldKey">Assay Reference Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayReferenceType"
+                            <input matInput placeholder="" [(ngModel)]="assay.assayReferenceType"
                               name="assayReferenceType" />
                           </mat-form-field>
                         </td>
@@ -489,7 +489,7 @@
                         <td class="fieldKey">Assay Reference:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayReference"
+                            <input matInput placeholder="" [(ngModel)]="assay.assayReference"
                               name="assayReference" />
                           </mat-form-field>
                         </td>
@@ -499,7 +499,7 @@
                         <td class="fieldKey">Assay External ID:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayExternalId"
+                            <input matInput placeholder="" [(ngModel)]="assay.assayExternalId"
                               name="assayExternalId" />
                           </mat-form-field>
                         </td>
@@ -509,7 +509,7 @@
                         <td class="fieldKey">Assay External Source:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayExternalSource"
+                            <input matInput placeholder="" [(ngModel)]="assay.assayExternalSource"
                               name="assayExternalSource" />
                           </mat-form-field>
                         </td>
@@ -519,7 +519,7 @@
                         <td class="fieldKey">Assay External Reference:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.assayExternalReference"
+                            <input matInput placeholder="" [(ngModel)]="assay.assayExternalReference"
                               name="assayExternalReference" />
                           </mat-form-field>
                         </td>
@@ -538,7 +538,7 @@
                         <td class="fieldKey">Approver Name:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.invitroSponsor.approverName"
+                            <input matInput placeholder="" [(ngModel)]="assay.invitroSponsor.approverName"
                               name="approverName" />
                           </mat-form-field>
                         </td>
@@ -548,7 +548,7 @@
                         <td class="fieldKey">Approver Title:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.invitroSponsor.approverTitle"
+                            <input matInput placeholder="" [(ngModel)]="assay.invitroSponsor.approverTitle"
                               name="approverTitle" />
                           </mat-form-field>
                         </td>
@@ -559,7 +559,7 @@
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroSponsor.approverAffiliation"
+                              [(ngModel)]="assay.invitroSponsor.approverAffiliation"
                               name="approverAffiliation" />
                           </mat-form-field>
                         </td>
@@ -569,7 +569,7 @@
                         <td class="fieldKey">Approver Email:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.invitroSponsor.approverEmail"
+                            <input matInput placeholder="" [(ngModel)]="assay.invitroSponsor.approverEmail"
                               name="approverEmail" />
                           </mat-form-field>
                         </td>
@@ -580,7 +580,7 @@
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroSponsor.approverPhoneNumber"
+                              [(ngModel)]="assay.invitroSponsor.approverPhoneNumber"
                               name="approverPhoneNumber" />
                           </mat-form-field>
                         </td>
@@ -599,7 +599,7 @@
                         <td class="fieldKey">Laboratory Name:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.invitroLaboratory.laboratoryName"
+                            <input matInput placeholder="" [(ngModel)]="assay.invitroLaboratory.laboratoryName"
                               name="laboratoryName" />
                           </mat-form-field>
                         </td>
@@ -609,7 +609,7 @@
                         <td class="fieldKey">Laboratory Type:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.invitroLaboratory.laboratoryType"
+                            <input matInput placeholder="" [(ngModel)]="assay.invitroLaboratory.laboratoryType"
                               name="laboratoryType" />
                           </mat-form-field>
                         </td>
@@ -620,7 +620,7 @@
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroLaboratory.laboratoryAffiliation"
+                              [(ngModel)]="assay.invitroLaboratory.laboratoryAffiliation"
                               name="laboratoryAffiliation" />
                           </mat-form-field>
                         </td>
@@ -631,7 +631,7 @@
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroLaboratory.laboratoryStreetAddress"
+                              [(ngModel)]="assay.invitroLaboratory.laboratoryStreetAddress"
                               name="laboratoryStreetAddress" />
                           </mat-form-field>
                         </td>
@@ -641,7 +641,7 @@
                         <td class="fieldKey">City:</td>
                         <td>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assayScreening.invitroLaboratory.laboratoryCity"
+                            <input matInput placeholder="" [(ngModel)]="assay.invitroLaboratory.laboratoryCity"
                               name="laboratoryCity" />
                           </mat-form-field>
                         </td>
@@ -652,7 +652,7 @@
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroLaboratory.laboratoryState" name="laboratoryState" />
+                              [(ngModel)]="assay.invitroLaboratory.laboratoryState" name="laboratoryState" />
                           </mat-form-field>
                         </td>
                       </tr>
@@ -662,7 +662,7 @@
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroLaboratory.laboratoryZipcode"
+                              [(ngModel)]="assay.invitroLaboratory.laboratoryZipcode"
                               name="laboratoryZipcode" />
                           </mat-form-field>
                         </td>
@@ -673,7 +673,7 @@
                         <td>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="assayScreening.invitroLaboratory.laboratoryCountry"
+                              [(ngModel)]="assay.invitroLaboratory.laboratoryCountry"
                               name="laboratoryCountry" />
                           </mat-form-field>
                         </td>
@@ -686,7 +686,7 @@
               </mat-card>
 
 
-            </div> <!-- *ngIf=assayScreening -->
+            </div> <!-- *ngIf=assay -->
           </div> <!-- class=cards-container -->
 
 

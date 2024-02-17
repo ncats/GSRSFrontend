@@ -18,7 +18,7 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayScreening } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-details',
@@ -27,7 +27,7 @@ import { InvitroAssayScreening } from '../model/invitro-pharmacology.model';
 })
 export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
-  assayScreening: InvitroAssayScreening;
+  assay: InvitroAssayInformation;
   id: string;
   assayTargetSubId = '';
   testCompoundSubId = '';
@@ -98,14 +98,15 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
   getInvitroPharmacology(): void {
     const invitroSubscribe = this.invitroPharmacologyService.getAssayScreening(this.id).subscribe(response => {
-      this.assayScreening = response;
-      if (Object.keys(this.assayScreening).length > 0) {
+      this.assay = response;
+      if (Object.keys(this.assay).length > 0) {
 
         this.titleService.setTitle(`Invitro Pharmacology Assay Screening Details`);
 
+        /*
         // Get Substance Id for Target Assay
-        if (this.assayScreening.assayTargetUnii) {
-          const assayTargetSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.assayTargetUnii).subscribe
+        if (this.assay.assayTargetSubId) {
+          const assayTargetSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.assayTargetUnii).subscribe
             (substance => {
               if (substance) {
                 this.assayTargetSubId = substance.uuid;
@@ -113,10 +114,13 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
             });
           this.subscriptions.push(assayTargetSubIdSubscription);
         }
+        */
+
+        /*
 
         // Get Substance Id for Test Compound
-        if (this.assayScreening.testAgentUnii) {
-          const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.testAgentUnii).subscribe
+        if (this.assay.testAgentApprovalId) {
+          const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.testAgentUnii).subscribe
             (substance => {
               if (substance) {
                 this.testCompoundSubId = substance.uuid;
@@ -124,10 +128,12 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
             });
           this.subscriptions.push(testCompoundSubIdSubscription);
         }
+        */
 
+        /*
         // Get Substance Id for Ligand/Substrate
-        if (this.assayScreening.ligandSubstrateUnii) {
-          const ligandSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.ligandSubstrateUnii).subscribe
+        if (this.assay.ligandSubstrateApprovalId) {
+          const ligandSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.ligandSubstrateUnii).subscribe
             (substance => {
               if (substance) {
                 this.ligandSubId = substance.uuid;
@@ -135,10 +141,12 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
             });
           this.subscriptions.push(ligandSubIdSubscription);
         }
-
+        */
+       
+        /*
         // Get Substance Id for control
-        if (this.assayScreening.controlUnii) {
-          const controlSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assayScreening.controlUnii).subscribe
+        if (this.assay.controlUnii) {
+          const controlSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.controlUnii).subscribe
             (substance => {
               if (substance) {
                 this.controlSubId = substance.uuid;
@@ -146,7 +154,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
             });
           this.subscriptions.push(controlSubIdSubscription);
         }
-
+        */
 
         /*
         // Get Substance Name for SubstanceUuid in SubstanceList
@@ -232,7 +240,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    let json = this.assayScreening;
+    let json = this.assay;
     // this.json = this.cleanObject(substanceCopy);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
     this.downloadJsonHref = uri;

@@ -33,7 +33,7 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayScreening } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
 import { invitroPharmacologySearchSortValues } from '../invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 
 @Component({

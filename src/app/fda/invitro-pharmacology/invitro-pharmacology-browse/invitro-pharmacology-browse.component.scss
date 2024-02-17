@@ -30,6 +30,10 @@
   font-size: 17px;
 }
 
+.font18px {
+  font-size: 18px;
+}
+
 .fontbold {
   font-weight: bold;
 }
@@ -66,12 +70,18 @@
   color: var(--regular-orange-color);
 }
 
+.colororangered {
+  color: var(--regular-orangered-color);
+}
+
 .colorlightpurple {
   color: var(--purple-color);
 }
 
 .colorblue {
-  color: var(--link-primary-color);
+  /* FDA COLOR BLUE CODE Hex: #007CBA */
+  color: #007CBA;
+  /*color: var(--link-primary-color); */
 }
 
 .colornavy {
@@ -120,6 +130,10 @@
 
 .padbottom10px {
   padding-bottom: 10px;
+}
+
+.margintopneg5px {
+  margin-top: -5px;
 }
 
 .margintopneg20px {
@@ -748,7 +762,13 @@
 .mat-card-title {
   white-space: normal;
 
-  .substance-name {
+  .view-detail-link {
+    color: var(--link-primary-color);
+    padding-right: 10px;
+    font-size: 16px;
+  }
+
+  .title-link {
     color: var(--link-primary-color);
     padding-right: 10px;
   }
@@ -1208,15 +1228,28 @@ margin:auto;
 }
 
 .row-property-key {
-	min-width: 32%;
-	max-width: 32%;
+	min-width: 35%;
+	max-width: 35%;
 	padding: 7px;
-        font-weight: bold;
+  font-weight: bold;
 }
 
 .row-property-value {
-	min-width: 68%;
-	max-width: 68%;
+	min-width: 65%;
+	max-width: 65%;
+	padding: 5px;
+}
+
+.row-property-key-two {
+	min-width: 45%;
+	max-width: 45%;
+	padding: 7px;
+  font-weight: bold;
+}
+
+.row-property-value-two {
+	min-width: 55%;
+	max-width: 55%;
 	padding: 5px;
 }
 
@@ -1363,8 +1396,6 @@ margin:auto;
   }
 }
 
-
-
 /* TABS STYLE */
 /*
 :host ::ng-deep .mat-tab-list .mat-tab-label {
@@ -1418,16 +1449,16 @@ margin:auto;
   /*color: black;*/
   /*background-color: rgb(247, 241, 241);*/
   /*border-right: 1px solid rgb(182, 177, 177);*/
-  min-width: 210px;
-  max-width: 210px;
-  height: 40px;
+  min-width: 220px;
+  max-width: 220px;
+  height: 45px;
   padding-top: 5px;
+  margin-right: 7px;
   text-align: top;
   /*margin-bottom: 10px;*/
   color: #393939;
   opacity: 1 !important;
   border-radius: 10px 10px 0px 0px;
-  margin-right: 7px;
 
   /*
   margin-left: 5px;
@@ -1455,9 +1486,8 @@ margin:auto;
 }
 
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  /*background-color: var(--tabstyle-bg-color-6);*/
-  background: url("../../../../../src/app/core/assets/images/home/tab_active_two.png");
-  /*background: url("../../../core/assets/images/home/tab_active.png");*/
+  background-color: var(--tabstyle-bg-color-7);
+  /*background: url("../../../../../src/app/core/assets/images/home/tab_active_two.png");*/
   /* FDA COLOR BLUE CODE Hex: #007CBA */
   /*color: #007CBA; */
   color: #FFFFFF;

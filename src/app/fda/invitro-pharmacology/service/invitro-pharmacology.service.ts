@@ -12,7 +12,7 @@ import { Facet, FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-co
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
 /* GSRS Invitro Pharmacology Imports */
-import { InvitroAssayScreening } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
 
 @Injectable(
   {
@@ -24,7 +24,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   private _bypassUpdateCheck = false;
   totalRecords = 0;
-  assayScreening: InvitroAssayScreening;
+  assay: InvitroAssayInformation;
 
   apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/assayscreening' + '/';
 
@@ -42,7 +42,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     pageSize: number = 10,
     searchTerm?: string,
     facets?: FacetParam
-  ): Observable<PagingResponse<InvitroAssayScreening>> {
+  ): Observable<PagingResponse<InvitroAssayInformation>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
@@ -61,7 +61,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       params: params
     };
 
-    return this.http.get<PagingResponse<InvitroAssayScreening>>(url, options);
+    return this.http.get<PagingResponse<InvitroAssayInformation>>(url, options);
   }
 
   getInvitroPharmacologyFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
@@ -111,7 +111,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   pageSize: number = 10,
   searchTerm?: string,
   facets?: FacetParam
-): Observable<PagingResponse<InvitroAssayScreening>> {
+): Observable<PagingResponse<InvitroAssayInformation>> {
   let params = new FacetHttpParams();
   params = params.append('skip', skip.toString());
   params = params.append('top', pageSize.toString());
@@ -130,7 +130,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     params: params
   };
 
-  return this.http.get<PagingResponse<InvitroAssayScreening>>(url, options);
+  return this.http.get<PagingResponse<InvitroAssayInformation>>(url, options);
 }
 
   getApiExportUrl(etag: string, extension: string): string {
@@ -144,14 +144,13 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
 
   // Initialize or load data in In-vitro Pharmacology Object
-  loadAssayScreening(assayScreening?: InvitroAssayScreening): void {
+  loadAssayScreening(assayScreening?: InvitroAssayInformation): void {
     // if Update/Exist Assay Screening
     if (assayScreening != null) {
-      this.assayScreening = assayScreening;
+      this.assay = assayScreening;
     } else {
-      this.assayScreening = {
-        invitroSponsor: {},
-        invitroLaboratory: {}
+      this.assay = {
+        invitroInformationReferences: []
       };
     }
   }
@@ -178,7 +177,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       );
   }
 
-  saveAssayScreening(): Observable<InvitroAssayScreening> {
+  saveAssayScreening(): Observable<InvitroAssayInformation> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl;
     const params = new HttpParams();
     const options = {
@@ -189,11 +188,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
       }
     };
     // Update Product
-    if ((this.assayScreening != null) && (this.assayScreening.id)) {
-      return this.http.put<InvitroAssayScreening>(url, this.assayScreening, options);
+    if ((this.assay != null) && (this.assay.id)) {
+      return this.http.put<InvitroAssayInformation>(url, this.assay, options);
     } else {
       // Save New Product
-      return this.http.post<InvitroAssayScreening>(url, this.assayScreening, options);
+      return this.http.post<InvitroAssayInformation>(url, this.assay, options);
     }
   }
 

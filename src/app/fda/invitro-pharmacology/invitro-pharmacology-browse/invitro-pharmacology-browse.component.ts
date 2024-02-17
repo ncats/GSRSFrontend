@@ -28,7 +28,7 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { example, InvitroAssayScreening } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
 import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-search-sort-values';
 
 @Component({
@@ -38,14 +38,24 @@ import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-sear
 })
 export class InvitroPharmacologyBrowseComponent implements OnInit {
 
+  public assays: Array<InvitroAssayInformation>;
+
   view = 'cards';
   public privateSearchTerm?: string;
-  public assays: Array<InvitroAssayScreening>;
+
   order: string;
   public sortValues = invitroPharmacologySearchSortValues;
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
+
+  pageIndexReference = 0;
+  pageSizeReference: number;
+
+  totalCountBrowseAllAssay: number;
+  totalCountBrowseAssayTarget: number;
+  totalCountBrowseTestAgent: number;
+  totalCountSearchReference: number;
 
   totalCountAssayTarget: number;
   totalCountSubstance: number;
@@ -59,11 +69,16 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   targetSummaries: any;
   // assayTargetSummary: Array<any> = [];
 
-  substanceNameLists: Array<any> = [];
+  testAgentLists: Array<any> = [];
   applicationTypeNumLists: Array<any> = [];
 
+  // Lists of data for Browse tabs
+  testAgentListForBrowse: Array<any> = [];
   browseSubstanceList: Array<any> = [];
-  browseApplicationList: Array<any> = [];
+  referenceListForBrowse: Array<any> = [];
+
+  downloadJsonHref: any;
+  jsonFileName: string;
 
   isLoading = true;
   isError = false;
@@ -96,10 +111,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     'testAgent',
     'screenConcentration',
     'valueType',
-   // 'value',
-    'relationshipType',
+    // 'value',
+    // 'relationshipType',
+    'reference',
     'assayType',
-    'studyType',
+    'studyType'
   ];
 
   assayTargetSummaryDisplayedColumns: string[] = [
@@ -231,10 +247,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   private loadComponent(): void {
     if (this.isFacetsParamsInit && this.isComponentInit) {
-      this.searchInvitroPharmacology();
+      this.searchInvitroAssay();
     }
-
-
   }
 
   tabSelectedUpdated(event: MatTabChangeEvent) {
@@ -251,10 +265,12 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     }
   }
 
-  searchInvitroPharmacology() {
+  searchInvitroAssay() {
     //Clear the existing lists
-    this.substanceNameLists = [];
-    this.applicationTypeNumLists = []
+    this.testAgentListForBrowse = [];
+    this.referenceListForBrowse = [];
+
+    // Set total Counts to 0
     this.totalCountSubstance = 0;
     this.totalCountApplication = 0;
 
@@ -270,13 +286,13 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       .subscribe(pagingResponse => {
         this.isError = false;
         this.assays = pagingResponse.content;
+
         // didn't work unless I did it like this instead of
         // below export statement
         this.dataSource = pagingResponse.content;
         this.totalCountAssayTarget = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
-        // alert('This etag' + this.etag);
         if (pagingResponse.total % this.pageSize === 0) {
           this.lastPage = (pagingResponse.total / this.pageSize);
         } else {
@@ -284,24 +300,43 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         }
 
         if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-
-          // Get the List of Substance Names/Test Compounds from Facet from Browse Assay Target
           this.rawFacets = pagingResponse.facets;
+
+          // Sideway Facets or selected Facets
+          let sideWayfacets = [];
+          if (pagingResponse.sideway || pagingResponse.sideway.length > 1) {
+            sideWayfacets = pagingResponse.sideway;
+          }
+
+          /*
           this.rawFacets.forEach(elementFacet => {
+            // Get Facet: Test Agent for Browse by Substance Tab
             if (elementFacet.name === "Test Agent") {
               const values = elementFacet.values;
-              //  alert("LENGTH VALUES: " + values.length);
               values.forEach(elementValue => {
-                //   alert("LABEL LABEL LABEL: " + elementValue.label);
                 if (elementValue.label) {
-                  //   alert("LABEL: " + elementValue.label);
-                  this.substanceNameLists.push(elementValue.label);
+                  this.testAgentLists.push(elementValue.label);
                 }
               });
             }
 
+
             // Get Facet: Application Type Number for Browse by Application Tab
             if (elementFacet.name === "Application Type Number") {
+              const values = elementFacet.values;
+              values.forEach(elementValue => {
+                if (elementValue.label) {
+                  let value = "Application Type Number/" + elementValue.label;
+                  if (sideWayfacets.includes(value)) {
+
+
+                  }
+                  this.applicationTypeNumLists.push(elementValue.label);
+                }
+              });
+
+
+
               const appSelectedLabels = elementFacet.selectedLabels;
               if (appSelectedLabels && appSelectedLabels.length > 0) {
                 JSON.stringify(appSelectedLabels);
@@ -312,32 +347,114 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
                   this.applicationTypeNumLists.push(elementValue.label);
                 }
               });
+
             }
 
-          });
+          });  // this.rawFacets.forEach
+           */
 
           //  this.setFacetsforTabs();
           // this.loadBrowseSubstanceTab();
 
           // CALL Browse By Substance
-          this.browseByAllSubstance();
+          //this.browseByAllSubstance();
 
-          // CALL Browse By Application
-          this.browseByAllApplication();
-        }
+          // CALL Browse By Reference/Application
+          //this.searchReference();
+          //}
+        } // for each paging facets
+
+        // LOOP Results pagingResponse.content:
+
+        this.assays.forEach(assay => {
+          if (assay) {
+            assay._assayTargetSummaries = [];
+
+            assay.invitroInformationReferences.forEach(infoRef => {
+
+              assay._assayTargetSummaries.push(infoRef);
+
+              // ******** Get Reference List for 'Browse by Reference' tab.
+              if (infoRef.invitroReference) {
+                if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
+                  let appTypeNum = infoRef.invitroReference.referenceApplicationType + infoRef.invitroReference.referenceApplicationNumber;
+
+                  // Check if value exists in the key or not
+                  //const checkRoleExistence = this.referenceListForBrowse.some(({ appTypeNumber }) => appTypeNumber == appTypeNum)
+
+                  // Get the index if the value exists in the key 'appTypeNumber'
+                  const index = this.referenceListForBrowse.findIndex(record => record.appTypeNumber === appTypeNum);
+
+                  if (index > -1) {
+                    let assayReferenceList2 = [];
+                    assayReferenceList2 = this.referenceListForBrowse[index].assayReference;
+                    assayReferenceList2.push(assay);
+                    this.referenceListForBrowse[index].assayReference = assayReferenceList2;
+                  } else {
+                    // For each assay
+                    let assayReferenceList = [];
+                    assayReferenceList.push(assay);
+                    const appScreening = { 'appTypeNumber': appTypeNum, 'assayReference': assayReferenceList };
+                    this.referenceListForBrowse.push(appScreening);
+                  }
+
+                  // Get total count for Browse Reference/Application
+                  this.totalCountApplication = this.referenceListForBrowse.length;
+                }
+              } // if invitroReference exists
 
 
-        // LOOP Results:
-        this.assays.forEach(element => {
-          if (element) {
+              // ******* Get Test Agent/Substance List for 'Browse by Test Agent/Substance' tab.
+              if (infoRef.invitroAssayResult) {
+                infoRef.invitroAssayResult.forEach(result => {
+                  if (result) {
+                    if (result.invitroTestAgent) {
+                      if (result.invitroTestAgent.testAgent) {
 
-            if (element.assayTarget) {
-              //  element._targetSummaries = element.invitroTestCompound.invitroRelationships;
+                        // Get the index if the value exists in the key 'appTypeNumber'
+                        const indexTestAgent = this.testAgentListForBrowse.findIndex(record => record.testAgent === result.invitroTestAgent.testAgent);
 
-              element._assayTargetSummaries = [];
-              element._assayTargetSummaries.push(element);
+                        if (indexTestAgent > -1) {
+                          let assayReferenceList2 = [];
+                          assayReferenceList2 = this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList;
+                          assayReferenceList2.push(assay);
+                          this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList = assayReferenceList2;
+                        } else {
+                          // For each assay
+                          let assayList = [];
+                          assayList.push(assay);
+                          const appScreening = { 'testAgent': result.invitroTestAgent.testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList};
+                          this.testAgentListForBrowse.push(appScreening);
+                        }
+                      } // if result.invitroTestAgent.testAgent exists
 
-              element._calculateIC50 = this.calculate1C50(element.valueType, element.percentInhibition, element.screeningConcentration)
+                    }
+
+                  }
+                });
+
+                // Get total count for Browse Test Agent/Substance
+                this.totalCountBrowseTestAgent = this.testAgentListForBrowse.length;
+
+                // Check if value exists in the key or not
+                //  const checkRoleExistence = this.referenceListForBrowse.some(({ appTypeNumber }) => appTypeNumber == appTypeNum)
+
+                // Get the index if the value exists in the key 'appTypeNumber'
+                //  const index = this.referenceListForBrowse.findIndex(record => record.appTypeNumber === appTypeNum);
+
+              }
+
+
+
+              /*
+              if (element.assayTarget) {
+                //  element._targetSummaries = element.invitroTestCompound.invitroRelationships;
+
+                element._assayTargetSummaries = [];
+                element._assayTargetSummaries.push(element);
+
+                element._calculateIC50 = this.calculate1C50(element.valueType, element.percentInhibition, element.screeningConcentration)
+                 */
 
               // Calculate IC50
               /*  if (element.percentInhibitionMean) {
@@ -370,6 +487,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               }
               */
 
+              /*
               // Get Substance Id for Ligand/Substrate
               if (element.ligandSubstrateUnii) {
                 const ligandSubstrateSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.ligandSubstrateUnii).subscribe
@@ -391,11 +509,15 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
                   });
                 this.subscriptions.push(controlSubIdSubscription);
               }
+              */
 
               //
-            }
-          }
-        });
+              //}
+
+            });  //invitroInformationReferences.forEach
+          } // if assay
+        }); // this.assays.forEach
+
 
         // Narrow Suggest Search Begin
         this.narrowSearchSuggestions = {};
@@ -434,23 +556,25 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
       });
-  }
 
-  /*
-  loadBrowseSubstanceTab() {
-    this.substanceNameLists.forEach(elementSubstance => {
-      const subScreening = { 'testCompound': elementSubstance };
+    //} //
 
-      this.browseSubstanceList.push(subScreening);
-    });
+    /*
+    loadBrowseSubstanceTab() {
+      this.substanceNameLists.forEach(elementSubstance => {
+        const subScreening = { 'testCompound': elementSubstance };
+
+        this.browseSubstanceList.push(subScreening);
+      });
+    }
+    */
   }
-  */
 
   browseByAllSubstance() {
     // Get total count for Browse Substance
-    this.totalCountSubstance = this.substanceNameLists.length;
+    this.totalCountSubstance = this.testAgentLists.length;
 
-    this.substanceNameLists.forEach(elementSubstance => {
+    this.testAgentLists.forEach(elementSubstance => {
       //  const subScreening = { 'testCompound': elementSubstance };
 
       let searchterm = "root_testAgent:" + elementSubstance;
@@ -476,19 +600,20 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           substanceAssay.forEach(element => {
             if (element) {
 
+              /*
               if (element.assayTarget) {
 
                 element._calculateIC50 = this.calculate1C50(element.valueType, element.percentInhibition, element.screeningConcentration)
-
-                /*
-                // Calculate IC50
-                if (element.percentInhibitionMean) {
-                  if (element.percentInhibitionMean < 30) {
-                    element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
-                  }
+              */
+              /*
+              // Calculate IC50
+              if (element.percentInhibitionMean) {
+                if (element.percentInhibitionMean < 30) {
+                  element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
                 }
-                */
               }
+              */
+              // }
             }
           });
 
@@ -536,13 +661,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     //console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
   }
 
-  browseByAllApplication() {
-    // Get total count for Browse Substance
-    this.totalCountApplication = this.applicationTypeNumLists.length;
 
+  /*
+  searchReference() {
     this.applicationTypeNumLists.forEach(elementApp => {
 
-      //   let searchterm = "root_referenceSourceType:" + elementApp;
       let searchterm = "root_Application Number Type:" + elementApp;
 
       this.loadingService.setLoading(true);
@@ -555,6 +678,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         this.privateFacetParams,
       )
         .subscribe(pagingResponse => {
+          let totalCountSearchReference = pagingResponse.total;
           this.isError = false;
           let test = pagingResponse.content;
           // didn't work unless I did it like this instead of
@@ -567,21 +691,19 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             if (element) {
 
               if (element.assayTarget) {
-
-                /*
-                // Calculate IC50
-                if (element.percentInhibitionMean) {
-                  if (element.percentInhibitionMean < 30) {
-                    element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
-                  }
-                }
-                */
               }
+
             }
           });
 
-          const appScreening = { 'appTypeNumber': elementApp, 'assay': substanceAssay };
-          this.browseApplicationList.push(appScreening);
+          if (totalCountSearchReference > 0) {
+            const appScreening = { 'appTypeNumber': elementApp, 'assay': substanceAssay };
+            this.browseApplicationList.push(appScreening);
+
+            // Get total count for Browse Reference/Application
+            this.totalCountApplication = this.browseApplicationList.length;
+
+          }
 
         }, error => {
           console.log('error');
@@ -599,30 +721,10 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
         });
-      /*
 
-     //  this.browseSubstanceScreening.push(subScreening);
-       console.log("SUBSTANCE NAME" + elementSubstance);
-
-
-       const assayList = [];
-       this.assays.forEach(elementAssay => {
-         if (elementAssay.invitroTestCompound) {
-           if (elementAssay.invitroTestCompound.testCompound) {
-             if (elementAssay.invitroTestCompound.testCompound === elementSubstance) {
-               const assay = { 'testCompound': elementSubstance, 'assay': elementAssay };
-               assayList.push(assay);
-             }
-           }
-         }
-       });
-       // alert("LENGTH: " + this.testCompoundList.length);
-       this.testCompoundList.push(assayList);  */
     });
-
-    //alert(this.testCompoundList[0].testCompound);
-    //console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
   }
+  */
 
   calculate1C50(valueType, percentInhibition, screeningConcentration): string {
     let calculateIC50 = '';
@@ -645,7 +747,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.searchInvitroPharmacology();
+    this.searchInvitroAssay();
   }
 
   clearSearch(): void {
@@ -656,7 +758,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.pageSize = 10;
 
     this.populateUrlQueryParameters();
-    this.searchInvitroPharmacology();
+    this.searchInvitroAssay();
   }
 
   clearFilters(): void {
@@ -708,7 +810,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         }
       });
       // Search Applications
-      this.searchInvitroPharmacology();
+      this.searchInvitroAssay();
     }
     return;*/
   }
@@ -738,7 +840,25 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.pageSize = pageEvent.pageSize;
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
-    this.searchInvitroPharmacology();
+    this.searchInvitroAssay();
+  }
+
+  changePageReference(pageEvent: PageEvent) {
+    let eventAction;
+    let eventValue;
+
+    if (this.pageSizeReference !== pageEvent.pageSize) {
+      eventAction = 'select:page-size';
+      eventValue = pageEvent.pageSize;
+    } else if (this.pageIndexReference !== pageEvent.pageIndex) {
+      eventAction = 'icon-button:page-number';
+      eventValue = pageEvent.pageIndex + 1;
+    }
+
+    this.pageSizeReference = pageEvent.pageSize;
+    this.pageIndexReference = pageEvent.pageIndex;
+    this.populateUrlQueryParameters();
+    //this.searchReference();
   }
 
   customPage(event: any): void {
@@ -747,7 +867,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       const newpage = Number(event.target.value) - 1;
       this.pageIndex = newpage;
       this.populateUrlQueryParameters();
-      this.searchInvitroPharmacology();
+      this.searchInvitroAssay();
     }
   }
 
@@ -772,7 +892,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.isFacetsParamsInit = true;
       this.loadComponent();
     } else {
-      this.searchInvitroPharmacology();
+      this.searchInvitroAssay();
     }
   }
 
@@ -855,6 +975,15 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  saveJSON(id: number): void {
+    let json = this.assays[id];
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
+
+    const date = new Date();
+    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
   displayAmount(amt: any): string {

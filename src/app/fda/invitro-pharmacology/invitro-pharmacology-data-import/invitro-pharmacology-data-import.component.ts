@@ -28,7 +28,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayScreening, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-data-import',
@@ -141,7 +141,7 @@ export class InvitroPharmacologyDataImportComponent implements OnInit {
       if (element) {
         console.log("index: " + index + "     " + JSON.stringify(element));
         this.message = this.message + "index: " + index + "     " + JSON.stringify(element) + "\n\n";
-        this.invitroPharmacologyService.assayScreening = JSON.parse(JSON.stringify(element));
+        this.invitroPharmacologyService.assay = JSON.parse(JSON.stringify(element));
        this.invitroPharmacologyService.saveAssayScreening().subscribe(response => {
         this.message = "";
         this.submitMessage = "Import Successful";
