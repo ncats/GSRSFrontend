@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
-import {HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS, HttpClientXsrfModule} from '@angular/common/http';
+import { HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
