@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
-import { HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS, HttpClientXsrfModule} from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -120,6 +120,7 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
+import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -227,7 +228,7 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
     SubstanceFormSsg4mStartingMaterialsModule,
     SubstanceSsg2Module,
     Ssg2ManufacturingModule,
-    SchemaFormModule.forRoot(),   
+    SchemaFormModule.forRoot(),
     BulkSearchModule,
     ElementLabelDisplayModule,
     PrivacyStatementModule
@@ -247,6 +248,7 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
         multi: true
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: CsrfTokenInterceptor, multi: true },
     {provide: WidgetRegistry, useClass: MyWidgetRegistry}
   ],
   bootstrap: [AppComponent],
