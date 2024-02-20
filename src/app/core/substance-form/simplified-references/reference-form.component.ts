@@ -25,7 +25,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   error = false;
   private subscriptions: Array<Subscription> = [];
   constructor(
-    private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
@@ -38,6 +37,9 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // Private domain by default.
     this.reference.publicDomain = false;
+
+    // Protected access by default.
+    this.reference.access = ["protected"]
   }
 
   ngAfterViewInit() {

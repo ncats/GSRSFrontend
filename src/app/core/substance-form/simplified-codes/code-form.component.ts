@@ -25,6 +25,9 @@ export class CodeFormComponent implements OnInit {
 
   ngOnInit() {
     this.getVocabularies();
+
+    // Protected access by default.
+    this.privateCode.access = ["protected"]
   }
 
   @Input()

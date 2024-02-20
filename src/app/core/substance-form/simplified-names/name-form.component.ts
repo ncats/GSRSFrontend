@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { SubstanceName, SubstanceNameOrg } from '../../substance/substance.model';
-import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
-import { FormControl } from '@angular/forms';
-import { MatRadioChange } from '@angular/material/radio';
-import { UtilsService } from '../../utils/utils.service';
-import { Subscription } from 'rxjs';
+import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {SubstanceName, SubstanceNameOrg} from '../../substance/substance.model';
+import {ControlledVocabularyService} from '../../controlled-vocabulary/controlled-vocabulary.service';
+import {FormControl} from '@angular/forms';
+import {MatRadioChange} from '@angular/material/radio';
+import {UtilsService} from '../../utils/utils.service';
+import {Subscription} from 'rxjs';
 import {NameResolverDialogComponent} from '@gsrs-core/name-resolver/name-resolver-dialog.component';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import { SubstanceFormNamesService } from '@gsrs-core/substance-form/names/substance-form-names.service';
+import {SubstanceFormNamesService} from '@gsrs-core/substance-form/names/substance-form-names.service';
 
 @Component({
   selector: 'app-name-form',
@@ -36,7 +36,8 @@ export class NameFormComponent implements OnInit, OnDestroy {
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
     private nameFormService: SubstanceFormNamesService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -45,7 +46,8 @@ export class NameFormComponent implements OnInit, OnDestroy {
     });
     definition.unsubscribe();
 
-
+    // Protected access by default.
+    this.privateName.access = ["protected"]
   }
 
   ngOnDestroy() {
@@ -57,7 +59,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   @Input()
   set show(val: boolean) {
     if (val != null) {
-     this.viewFull = val;
+      this.viewFull = val;
     }
   }
 
@@ -68,7 +70,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   @Input()
   set standardized(val: boolean) {
     if (val != null) {
-     this.showStd = val;
+      this.showStd = val;
     }
   }
 
@@ -143,7 +145,8 @@ export class NameFormComponent implements OnInit, OnDestroy {
       if (molfile != null && molfile !== '') {
         this.substanceFormService.resolvedName(molfile);
       }
-    }, () => {});
+    }, () => {
+    });
   }
 
   getNameOrgs(name: SubstanceName): Array<SubstanceNameOrg> {

@@ -108,11 +108,11 @@ export class SubstanceFormService implements OnDestroy {
             {
               substanceClass: 'chemical',
               references: [],
-              names: [{name: ""}],
+              names: [{name: "", access:["protected"]}],
               structure: {
                 molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
               },
-              codes: [{codeSystem: "CAS"}],
+              codes: [{codeSystem: "CAS", access:["protected"]}],
               relationships: [],
               properties: []
             } :
