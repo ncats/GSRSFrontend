@@ -3,7 +3,7 @@ import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-cl
 import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
-import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substance-form-names.service";
@@ -19,7 +19,6 @@ export class SubstanceFormSimplifiedNamesCardComponent
   names: Array<SubstanceName>;
   private subscriptions: Array<Subscription> = [];
   pageSize = 10;
-  expanded = true;
   showStd = true;
   appId: string;
   standardizeButton = false;
@@ -67,11 +66,6 @@ export class SubstanceFormSimplifiedNamesCardComponent
 
   ngAfterViewInit() {
 
-  }
-
-
-  collapse() {
-    this.expanded = !this.expanded;
   }
 
   standardize(): void {

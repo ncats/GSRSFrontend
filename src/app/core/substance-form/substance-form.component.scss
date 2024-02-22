@@ -3,7 +3,7 @@
   display: block; /* Hidden by default */
   width: 100%; /* Full width (cover the whole page) */
   height: 100%; /* Full height (cover the whole page) */
-  top: 0; 
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
@@ -11,9 +11,11 @@
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }
+
 .hide {
-  display: none!important;
+  display: none !important;
 }
+
 .center-screen {
   z-index: 2;
   position: fixed;
@@ -25,45 +27,51 @@
   margin-right: -50%;
   transform: translate(-50%, -50%);
 }
+
 .center-screen img {
   transition-duration: 4s;
   margin: 0 auto;
   display: block;
 }
+
 .center-screen img:hover {
   transform: scale(1.7);
   -webkit-transform: scale(1.7);
   -moz-transform: scale(1.7);
   z-index: 0;
 }
+
 .image-popped-up {
   width: 100%;
   height: 100%;
   padding: 10px;
 }
+
 .close-out {
   padding: 10px;
   float: right;
   font-weight: 500;
   cursor: pointer;
 }
+
 .top-fixed {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    top: 64px;
-    width: 100%;
-    background-color: var(--regular-white-color);
-    align-items: center;
-    justify-content: center;
-    box-shadow:     0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
-    z-index: 1001;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 64px;
+  width: 100%;
+  background-color: var(--regular-white-color);
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
+  z-index: 1001;
 }
 
 .cdk-overlay-pane {
   z-index: 1005;
 }
-mat-select-panel{
+
+mat-select-panel {
   z-index: 1005;
 }
 
@@ -83,50 +91,57 @@ mat-select-panel{
 ::ng-deep .mat-form-field-wrapper {
   padding-bottom: 5px;
 }
+
 .advanced-features {
   z-index: 2000 !important;
 
-  display:flex;
+  display: flex;
   flex-direction: row;
   padding-left: 10px;
 }
+
 ::ng-deep .cdk-overlay-pane {
   margin-top: 20px !important;
 }
 
 .form-content-container {
-    // position: fixed;
-    // top: 121px;
-    // right: 0;
-    // bottom: 0;
-    // left: 0;
-    overflow: hidden;
-    padding-top: 121px;
+  overflow: hidden;
+  padding-top: 121px;
+}
+
+
+.small-form-content-container {
+  overflow: hidden;
+  padding-top: 90px;
 }
 
 .actions-container {
-    max-width: 1128px;
-    width: 100%;
-    background-color: var(--regular-white-color);
-    padding: 10px;
-    display: flex;
+  max-width: 1128px;
+  width: 100%;
+  background-color: var(--regular-white-color);
+  padding: 10px;
+  display: flex;
+}
+
+.small-actions-container {
+  padding: 10px;
 }
 
 .mat-accordion {
-    width: 100%;
-    max-width: 1020px;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 1020px;
+  box-sizing: border-box;
 }
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 .validation-body {
-  max-width:95%;
-   display:flex;
-   max-width: 960px;
-word-break: break-word;
+  max-width: 95%;
+  display: flex;
+  max-width: 960px;
+  word-break: break-word;
 }
 
 .validation-dismiss {
@@ -167,8 +182,8 @@ word-break: break-word;
       text-transform: uppercase;
       font-weight: 500;
       margin-right: 20px;
-      padding:10px;
-      border-radius:3px;
+      padding: 10px;
+      border-radius: 3px;
       height: 40px;
       min-width: 95px;
     }
@@ -198,10 +213,6 @@ word-break: break-word;
 
 }
 
-.validate-button{
-  margin-left:15px;
-}
-
 .mat-expansion-panel-header-title {
   align-items: center;
 }
@@ -215,6 +226,10 @@ word-break: break-word;
   color: var(--link-primary-color);
 }
 
+.validate-button {
+  margin-left: 15px;
+}
+
 .import-button {
   margin-left: 15px;
 }
@@ -226,6 +241,15 @@ word-break: break-word;
 .draft-button {
   margin-left: 15px;
 }
+
+.small-button {
+  height: 30px;
+  font-size: 11px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .chip {
   background-color: var(--regular-white-color);
