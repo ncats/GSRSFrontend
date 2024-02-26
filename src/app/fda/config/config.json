@@ -1121,9 +1121,8 @@
         "Application Type Number",
         "Application Type",
         "Application Number",
-        "Assay Target",
+        "Target Name",
         "Test Agent",
-        "Ligand",
         "Control",
         "Control Type",
         "Assay Type",
@@ -1132,8 +1131,10 @@
         "Presentation Type",
         "External Assay ID",
         "External Assay Source",
-        "Approver Name",
-        "Laboratory Name"
+        "Report Number",
+        "Laboratory Name",
+        "Sponsor Contact Name",
+        "Sponsor Report Submitter Name"
       ],
       "admin": [
         "Record Created By",

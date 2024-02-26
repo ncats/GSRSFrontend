@@ -118,6 +118,7 @@
                 <mat-card-title>
                   <div class="width650px margintop10px">
                     <b>{{title}}</b>
+                    &nbsp;&nbsp;
 
                     <!-- Edit GSRS record button -->
                     <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
@@ -147,7 +148,16 @@
                   <table class="tableStyle">
                     <tbody>
                       <tr class="headerstyle2">
-                        <td colspan="2" class="height35px"><span class="font20px">General Information</span></td>
+                        <td colspan="2" class="height35px"><span class="font20px">Assay Information</span></td>
+                      </tr>
+
+                      <tr>
+                        <td class="fieldKey">Assay ID:</td>
+                        <td>
+                          <mat-form-field class="fieldvalue">
+                            <input matInput placeholder="" [(ngModel)]="assay.assayId" name="assayId" />
+                          </mat-form-field>
+                        </td>
                       </tr>
 
                       <tr>
@@ -168,6 +178,7 @@
                         </td>
                       </tr>
 
+                      <!--
                       <tr>
                         <td class="fieldKey">Test Agent:</td>
                         <td>
@@ -245,10 +256,12 @@
                           </mat-form-field>
                         </td>
                       </tr>
+                      -->
 
                     </tbody>
                   </table>
 
+                  <!--
                   <table class="tableStyle">
                     <tbody>
                       <tr class="headerstyle2">
@@ -284,6 +297,7 @@
                         </td>
                       </tr>
 
+                      <!--
                       <tr>
                         <td class="fieldKey">Assay Target UNII:</td>
                         <td>
@@ -464,11 +478,9 @@
 
                     </tbody>
                   </table>
-
+                  -->
 
                   <!--
-                  <table class="tableStyle">
-                  -->
                   <table class="tableStyle">
                     <tbody>
                       <tr class="headerstyle2">
@@ -527,7 +539,9 @@
 
                     </tbody>
                   </table>
+                  -->
 
+                  <!--
                   <table class="tableStyle">
                     <tbody>
                       <tr class="headerstyle2">
@@ -588,7 +602,9 @@
 
                     </tbody>
                   </table>
+                  -->
 
+                  <!--
                   <table class="tableStyle">
                     <tbody>
                       <tr class="headerstyle2">
@@ -681,6 +697,7 @@
 
                     </tbody>
                   </table>
+                  -->
 
                 </mat-card-content>
               </mat-card>

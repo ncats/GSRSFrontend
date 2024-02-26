@@ -39,6 +39,10 @@
   clear: both;
 }
 
+.divhide {
+  display: none;
+}
+
 .title {
   font-size: 25px;
   font-weight: bold;
@@ -81,11 +85,23 @@
 }
 
 .headerstyle3 {
+  background: #C7C7C7;
+  background: linear-gradient(270deg, #C7C7C7, #FFFFFF);
   border: 1px solid var(--blue-color);
   border-bottom: none;
   height: 35px;
-  background-color: #d3d3d3;    /*--primary-title-color*/
-  color: #230fc0;
+  border-radius: 15px 15px 0px 0px;
+  color: #2e19c9;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.headerstyle4 {
+  border: 1px solid var(--blue-color);
+  border-bottom: none;
+  height: 35px;
+  background-color: #ddefdd;
+  color: black;
   font-weight: 700;
 }
 
@@ -212,12 +228,24 @@
   margin-bottom: 80px;
 }
 
+.padtop5px {
+  padding-top: 5px;
+}
+
+.padtop7px {
+  padding-top: 7px;
+}
+
 .padtop17px {
   padding-top: 17px;
 }
 
 .padtop50px {
   padding-top: 50px;
+}
+
+.padleft10px {
+  padding-left: 10px;
 }
 
 .padleft20px {
@@ -230,6 +258,10 @@
 
 .padleft200px {
   padding-left: 200px;
+}
+
+.padtop10px {
+  padding-top: 10px;
 }
 
 .padbottom10px {
@@ -326,9 +358,19 @@
   max-width: 650px;
 }
 
+.width30percent {
+  width: 30%;
+  max-width: 30%;
+}
+
 .width40percent {
   width: 40%;
   max-width: 40%;
+}
+
+.width45percent {
+  width: 45%;
+  max-width: 45%;
 }
 
 .width50percent {
@@ -339,6 +381,16 @@
 .width60percent {
   width: 60%;
   max-width: 60%;
+}
+
+.width70percent {
+  width: 70%;
+  max-width: 70%;
+}
+
+.width100percent {
+  width: 100%;
+  max-width: 100%;
 }
 
 .textalignleft {
@@ -363,6 +415,10 @@
 
 .backgroundblue {
   background-color: var(--regular-blue-color);
+}
+
+.backgroundlightorange {
+  background-color: #f9e8d6;
 }
 
 fieldset.border {
@@ -417,7 +473,6 @@ table.tableStyle {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   border: 1px solid var(--secondary-blue-color);
   background-color: var(--table-bg-color);
-
   text-align: left;
   border-collapse: collapse;
 }
@@ -428,7 +483,7 @@ table.tableStyle td, table.tableStyle th {
 }
 
 table.tableStyle tbody td {
-  font-size: 15px;
+  font-size: 14px;
   vertical-align: top;
   padding: 8px 8px;
 }
@@ -497,6 +552,16 @@ table.tableStyle tfoot .links a{
   white-space: nowrap;
   white-space: normal;
   font-size: 26px;
+}
+
+::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
+  padding: 0 12px 10px;
+  border: 1px solid gray;
+}
+
+.mat-expansion-panel-header {
+  padding: 0 12px;
+  /*background-color: #dfdfdf;*/
 }
 
 @media(max-width: 700px) {

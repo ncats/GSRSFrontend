@@ -73,7 +73,6 @@ export class InvitroPharmacologyService extends BaseHttpService {
     } else {
       url = facet._self;
     }
-    alert(url);
     return this.http.get<FacetQueryResponse>(url);
   }
 
@@ -141,7 +140,6 @@ export class InvitroPharmacologyService extends BaseHttpService {
   getInvitroPharmacologySearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
     return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithInvitroPharmEntityUrl + 'suggest?q=' + searchTerm);
   }
-
 
   // Initialize or load data in In-vitro Pharmacology Object
   loadAssayScreening(assayScreening?: InvitroAssayInformation): void {

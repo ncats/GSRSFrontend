@@ -86,13 +86,13 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   private handleSubstanceRetrivalError() {
     this.loadingService.setLoading(false);
     const notification: AppNotification = {
-      message: 'The web address above is incorrect. You\'re being forwarded to Browse Substances',
+      message: 'The web address above is incorrect. You\'re being forwarded to Home Page',
       type: NotificationType.error,
       milisecondsToShow: 4000
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/browse-substance']);
+      this.router.navigate(['/home']);
     }, 5000);
   }
 
@@ -101,7 +101,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
       this.assay = response;
       if (Object.keys(this.assay).length > 0) {
 
-        this.titleService.setTitle(`Invitro Pharmacology Assay Screening Details`);
+        this.titleService.setTitle(`Invitro Pharmacology Assay Details ` + this.id);
 
         /*
         // Get Substance Id for Target Assay
@@ -142,7 +142,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
           this.subscriptions.push(ligandSubIdSubscription);
         }
         */
-       
+
         /*
         // Get Substance Id for control
         if (this.assay.controlUnii) {

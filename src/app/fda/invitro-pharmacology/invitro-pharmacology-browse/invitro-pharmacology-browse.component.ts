@@ -52,14 +52,15 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   pageIndexReference = 0;
   pageSizeReference: number;
 
+  totalCountAllAssay: number;
   totalCountBrowseAllAssay: number;
-  totalCountBrowseAssayTarget: number;
+  totalCountBrowseTargetName: number;
   totalCountBrowseTestAgent: number;
   totalCountSearchReference: number;
 
   totalCountAssayTarget: number;
   totalCountSubstance: number;
-  totalCountApplication: number;
+  totalCountReference: number;
 
   calculateIc50: string;
   tabSelectedIndex = 0;
@@ -74,8 +75,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   // Lists of data for Browse tabs
   testAgentListForBrowse: Array<any> = [];
+  browseTargetNameList: Array<any> = [];
   browseSubstanceList: Array<any> = [];
-  referenceListForBrowse: Array<any> = [];
+  browseByReferenceList: Array<any> = [];
 
   downloadJsonHref: any;
   jsonFileName: string;
@@ -108,12 +110,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   ascDescDir = 'desc';
 
   assaySummaryDisplayedColumns: string[] = [
+    'referenceSource',
     'testAgent',
-    'screenConcentration',
-    'valueType',
-    // 'value',
-    // 'relationshipType',
-    'reference',
+    'testAgentConcentration',
+    'resultValue',
+    'calculatedValue',
     'assayType',
     'studyType'
   ];
@@ -121,47 +122,42 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   assayTargetSummaryDisplayedColumns: string[] = [
     'viewDetails',
     'testAgent',
-    'screenConcentration',
-    'valueType',
+    'testAgentConcentration',
+    'calculatedValue',
     'relationshipType',
     'referenceSource'
-    //'testAgent'
-    //'screenConcentration',
-    //'valueType',
-    // 'relationshipType',
-    // 'relatedSubstance'
-    //'source'
   ];
 
-  substanceSummaryColumns: string[] = [
+  testAgentSummaryColumns: string[] = [
     'viewDetails',
-    'screenConcentration',
-    'percentInhibition',
-    'valueType',
+    'referenceSource',
+    'testAgentConcentration',
+    'resultValue',
+    'calculatedValue',
     'assayTarget',
     'assayType',
     'studyType',
     'relationshipType'
   ];
 
-  substanceScreeningColumns: string[] = [
+  testAgentScreeningColumns: string[] = [
     'viewDetails',
-    'screeningConcentration',
+    'testAgentConcentration',
     'screeningInhibition',
     'assayTarget',
     'assayType'
   ];
 
-  applicationSummaryColumns: string[] = [
+  referenceSummaryColumns: string[] = [
     'viewDetails',
-    'screenConcentration',
-    'percentInhibition',
-    'valueType',
+    'testAgent',
+    'testAgentConcentration',
+    'resultValue',
+    'calculatedValue',
     'assayTarget',
     'assayType',
     'studyType',
-    'relationshipType',
-    'relatedSubstance'
+    'relationshipType'
   ];
 
   // needed for facets
@@ -266,13 +262,13 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   }
 
   searchInvitroAssay() {
-    //Clear the existing lists
+    //Clear the existing Browse By lists
     this.testAgentListForBrowse = [];
-    this.referenceListForBrowse = [];
+    this.browseByReferenceList = [];
 
     // Set total Counts to 0
-    this.totalCountSubstance = 0;
-    this.totalCountApplication = 0;
+    this.totalCountBrowseTestAgent = 0;
+    this.totalCountReference = 0;
 
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
@@ -291,6 +287,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         // below export statement
         this.dataSource = pagingResponse.content;
         this.totalCountAssayTarget = pagingResponse.total;
+        this.totalCountBrowseAllAssay = pagingResponse.count;
         this.etag = pagingResponse.etag;
 
         if (pagingResponse.total % this.pageSize === 0) {
@@ -364,157 +361,184 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           //}
         } // for each paging facets
 
-        // LOOP Results pagingResponse.content:
 
+        // ****** LOOP Results pagingResponse.content ***********
         this.assays.forEach(assay => {
           if (assay) {
+
             assay._assayTargetSummaries = [];
 
+            // ******* Get data list for 'Browse by Target Name' tab.
+            if (assay.targetName) {
+
+              /*
+              // Get the index if the value exists in the key 'targetName'
+              const indexTargetName = this.browseTargetNameList.findIndex(record => record.targetName === assay.targetName);
+              if (indexTargetName > -1) { // found in the existing list
+                let assayReferenceList2 = [];
+                assayReferenceList2 = this.browseTargetNameList[indexTargetName].targetNameSummaryList;
+                assayReferenceList2.push(assaySummary);
+                this.browseTargetNameList[indexTargetName].targetNameSummaryList = assayReferenceList2;
+              } else {
+                let assayList = [];
+                assayList.push(assaySummary);
+                const appScreening = { 'targetName': assay.targetName, 'targetNameSummaryList': assayList };
+                this.browseTargetNameList.push(appScreening);
+              }
+
+              // Get total count for Browse Test Agent/Substance
+              this.totalCountBrowseTargetName = this.browseTargetNameList.length;
+             */
+            } // if assay.targetName exists
+
+
+            /* Assay Informtion Reference loop */
             assay.invitroInformationReferences.forEach(infoRef => {
 
-              assay._assayTargetSummaries.push(infoRef);
+              // For each assay
+              const assaySummary: any = {};
+              assaySummary.id = assay.id;
+              assaySummary.targetName = assay.targetName;
+              assaySummary.bioassayType = assay.bioassayType;
+              assaySummary.studyType = assay.studyType;
 
+
+              //const allAssaySummaryList = [];
+              //allAssaySummaryList.push(assaySummary);
+
+              //  const allAssayScreening = {'allAssaySummaryList': allAssaySummaryList};
+              // this.testAgentListForBrowse.push(appScreening);
+
+
+              // ########################################################################
               // ******** Get Reference List for 'Browse by Reference' tab.
               if (infoRef.invitroReference) {
+
                 if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
-                  let appTypeNum = infoRef.invitroReference.referenceApplicationType + infoRef.invitroReference.referenceApplicationNumber;
+                  let referenceSourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
 
-                  // Check if value exists in the key or not
-                  //const checkRoleExistence = this.referenceListForBrowse.some(({ appTypeNumber }) => appTypeNumber == appTypeNum)
+                  // Get the index if the value exists in the key 'referenceSourceTypeNumber'
+                  const sourceFoundIndex = this.browseByReferenceList.findIndex(record => record.referenceSourceTypeNumber === referenceSourceTypeNumber);
 
-                  // Get the index if the value exists in the key 'appTypeNumber'
-                  const index = this.referenceListForBrowse.findIndex(record => record.appTypeNumber === appTypeNum);
+                  // If referenceSourceTypeNumber value found in the existing browser list, add the current assay.
+                  if (sourceFoundIndex > -1) {
+                    /*
+                    let referenceSummaryListTemp = [];
+                    referenceSummaryListTemp = this.browseByReferenceList[sourceFoundIndex].referenceSummaryList;
+                    referenceSummaryListTemp.push(assaySummary);
+                    this.browseByReferenceList[sourceFoundIndex].referenceSummaryList = referenceSummaryListTemp; */
+                    this.browseByReferenceList[sourceFoundIndex].referenceSummaryList.push(assaySummary);
 
-                  if (index > -1) {
-                    let assayReferenceList2 = [];
-                    assayReferenceList2 = this.referenceListForBrowse[index].assayReference;
-                    assayReferenceList2.push(assay);
-                    this.referenceListForBrowse[index].assayReference = assayReferenceList2;
                   } else {
-                    // For each assay
-                    let assayReferenceList = [];
-                    assayReferenceList.push(assay);
-                    const appScreening = { 'appTypeNumber': appTypeNum, 'assayReference': assayReferenceList };
-                    this.referenceListForBrowse.push(appScreening);
-                  }
+                    let referenceSummaryList = [];
+                    referenceSummaryList.push(assaySummary);
+
+                    const appScreening = { 'referenceSourceTypeNumber': referenceSourceTypeNumber, 'referenceSummaryList': referenceSummaryList };
+                    this.browseByReferenceList.push(appScreening);
+
+                  } // else
 
                   // Get total count for Browse Reference/Application
-                  this.totalCountApplication = this.referenceListForBrowse.length;
-                }
+                  this.totalCountReference = this.browseByReferenceList.length;
+
+                } // if Reference Source Type or Number exists
               } // if invitroReference exists
 
 
-              // ******* Get Test Agent/Substance List for 'Browse by Test Agent/Substance' tab.
-              if (infoRef.invitroAssayResult) {
-                infoRef.invitroAssayResult.forEach(result => {
+              // ########################################################################
+              // ******** Get Test Agent List for 'Browse by Test Agent' tab.
+              infoRef.invitroAssayInfoRefTestAgents.forEach(infoRefTestAgent => {
+
+                // LOOP: Invitro Result
+                let testAgentConcentration;
+                let testAgentConcentrationUnits = '';
+                let resultValue;
+                let resultValueUnits = '';
+                infoRefTestAgent.invitroAssayResult.forEach(result => {
                   if (result) {
-                    if (result.invitroTestAgent) {
-                      if (result.invitroTestAgent.testAgent) {
+                    testAgentConcentration = result.testAgentConcentration;
+                    testAgentConcentrationUnits = result.testAgentConcentrationUnits;
+                    resultValue = result.resultValue;
+                    resultValueUnits = result.resultValueUnits;
 
-                        // Get the index if the value exists in the key 'appTypeNumber'
-                        const indexTestAgent = this.testAgentListForBrowse.findIndex(record => record.testAgent === result.invitroTestAgent.testAgent);
-
-                        if (indexTestAgent > -1) {
-                          let assayReferenceList2 = [];
-                          assayReferenceList2 = this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList;
-                          assayReferenceList2.push(assay);
-                          this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList = assayReferenceList2;
-                        } else {
-                          // For each assay
-                          let assayList = [];
-                          assayList.push(assay);
-                          const appScreening = { 'testAgent': result.invitroTestAgent.testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList};
-                          this.testAgentListForBrowse.push(appScreening);
-                        }
-                      } // if result.invitroTestAgent.testAgent exists
-
-                    }
-
+                    // Invitro Summary
+                    // if (result.invitroSummary) {
+                    //    assaySummary.relationshipType = result.invitroSummary.relationshipType;
+                    //  }
                   }
                 });
+
+                // if Test Agent exists
+                if (infoRefTestAgent.invitroTestAgent) {
+                  if (infoRefTestAgent.invitroTestAgent.testAgent) {
+
+                    let sourceTypeNumber = '';
+                    if (infoRef.invitroReference) {
+                      if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
+                        sourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
+                      }
+                    }
+
+                    assaySummary.testAgent = infoRefTestAgent.invitroTestAgent.testAgent;
+
+                    // Create row/object for All Assay Summary View
+                    let assaySum = this.createSummaryList(assay, sourceTypeNumber, infoRefTestAgent.invitroTestAgent.testAgent, testAgentConcentration, testAgentConcentrationUnits, resultValue, resultValueUnits);
+                    assay._assayTargetSummaries.push(assaySum);
+
+                    // Get the index if the value exists in the key 'testAgent'
+                    const indexTestAgent = this.testAgentListForBrowse.findIndex(record => record.testAgent === infoRefTestAgent.invitroTestAgent.testAgent);
+
+                    if (indexTestAgent > -1) {
+                      // Add in the exsting card record
+                      this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList.push(assaySum);
+                    } else {
+                      // Create new card record
+                      let assayList = [];
+                      assayList.push(assaySum);
+                      const appScreening = { 'testAgent': infoRefTestAgent.invitroTestAgent.testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
+                      this.testAgentListForBrowse.push(appScreening);
+                    }
+
+                  } // if testAgent exists
+                } // if invitroTestAgent exists
+
+
+                // ******* Get Test Agent/Substance List for 'Browse by Test Agent/Substance' tab.
+                /*
+                if (infoRefTestAgent.invitroAssayResult) {
+                  infoRefTestAgent.invitroAssayResult.forEach(result => {
+                    if (result) {
+                      //  if (result.invitroTestAgent) {
+                      //   if (result.invitroTestAgent.testAgent) {
+
+                      // Get the index if the value exists in the key 'appTypeNumber'
+                      const indexTestAgent = this.testAgentListForBrowse.findIndex(record => record.testAgent === result.invitroTestAgent.testAgent);
+
+                      if (indexTestAgent > -1) {
+                        let assayReferenceList2 = [];
+                        assayReferenceList2 = this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList;
+                        assayReferenceList2.push(assaySummary);
+                        this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList = assayReferenceList2;
+                      } else {
+                        let assayList = [];
+                        assayList.push(assaySummary);
+                        const appScreening = { 'testAgent': result.invitroTestAgent.testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
+                        this.testAgentListForBrowse.push(appScreening);
+                      }
+                      //  }
+                      // } // if result.invitroTestAgent.testAgent exists
+                    }
+                  });
+                }
+                */
 
                 // Get total count for Browse Test Agent/Substance
                 this.totalCountBrowseTestAgent = this.testAgentListForBrowse.length;
 
-                // Check if value exists in the key or not
-                //  const checkRoleExistence = this.referenceListForBrowse.some(({ appTypeNumber }) => appTypeNumber == appTypeNum)
+              });  // LOOP: invitroAssayInfoRefTestAgents end
 
-                // Get the index if the value exists in the key 'appTypeNumber'
-                //  const index = this.referenceListForBrowse.findIndex(record => record.appTypeNumber === appTypeNum);
+            });  // FOR LOOP: invitroInformationReferences.forEach
 
-              }
-
-
-
-              /*
-              if (element.assayTarget) {
-                //  element._targetSummaries = element.invitroTestCompound.invitroRelationships;
-
-                element._assayTargetSummaries = [];
-                element._assayTargetSummaries.push(element);
-
-                element._calculateIC50 = this.calculate1C50(element.valueType, element.percentInhibition, element.screeningConcentration)
-                 */
-
-              // Calculate IC50
-              /*  if (element.percentInhibitionMean) {
-                  if (element.percentInhibition < 30) {
-                    element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
-                  }
-                }
-              */
-              // Get Substance Id for Assay Target
-              /*
-              if (element.assayTargetUnii) {
-                const assayTargetSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.assayTargetUnii).subscribe
-                  (substance => {
-                    if (substance) {
-                      element._assayTargetSubId = substance.uuid;
-                    }
-                  });
-                this.subscriptions.push(assayTargetSubIdSubscription);
-              }
-
-              // Get Substance Id for Test Compound
-              if (element.testAgentUnii) {
-                const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.testAgentUnii).subscribe
-                  (substance => {
-                    if (substance) {
-                //      element.invitroTestCompound._testCompoundSubId = substance.uuid;
-                    }
-                  });
-                this.subscriptions.push(testCompoundSubIdSubscription);
-              }
-              */
-
-              /*
-              // Get Substance Id for Ligand/Substrate
-              if (element.ligandSubstrateUnii) {
-                const ligandSubstrateSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.ligandSubstrateUnii).subscribe
-                  (substance => {
-                    if (substance) {
-                      element._ligandSubstrateSubId = substance.uuid;
-                    }
-                  });
-                this.subscriptions.push(ligandSubstrateSubIdSubscription);
-              }
-
-              // Get Substance Id for Control
-              if (element.controlUnii) {
-                const controlSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(element.controlUnii).subscribe
-                  (substance => {
-                    if (substance) {
-                      element._controlSubId = substance.uuid;
-                    }
-                  });
-                this.subscriptions.push(controlSubIdSubscription);
-              }
-              */
-
-              //
-              //}
-
-            });  //invitroInformationReferences.forEach
           } // if assay
         }); // this.assays.forEach
 
@@ -568,6 +592,26 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       });
     }
     */
+  }
+
+  createSummaryList(assay: any,  referenceSource: string, testAgent: string, testAgentConcentration: string,
+    testAgentConcentrationUnits: string, resultValue: string, resultValueUnits: string) : any {
+    const assaySummary: any = {};
+    assaySummary.id = assay.id;
+    assaySummary.targetName = assay.targetName;
+    assaySummary.bioassayType = assay.bioassayType;
+    assaySummary.studyType = assay.studyType;
+    assaySummary.referenceSource = referenceSource;
+    assaySummary.testAgent = testAgent;
+    assaySummary.testAgentConcentration = testAgentConcentration;
+    assaySummary.testAgentConcentrationUnits = testAgentConcentrationUnits;
+    assaySummary.resultValue = resultValue;
+    assaySummary.resultValueUnits = resultValueUnits;
+
+    return assaySummary;
+
+    // Add to the All Assay Summary List
+    //assay._assayTargetSummaries.push(assaySummary);
   }
 
   browseByAllSubstance() {
@@ -983,7 +1027,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.downloadJsonHref = uri;
 
     const date = new Date();
-    this.jsonFileName = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+    this.jsonFileName = 'Invitro_Pharmacology_Assay_' + id + '_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
   displayAmount(amt: any): string {

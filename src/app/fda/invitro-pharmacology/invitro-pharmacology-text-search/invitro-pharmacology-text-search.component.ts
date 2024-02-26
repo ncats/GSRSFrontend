@@ -83,20 +83,22 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
       })
     ).subscribe((response: SubstanceSuggestionsGroup) => {
       this.substanceSuggestionsGroup = response;
-      let showTypes = ['Assay_Target', 'Ligand', 'Laboratory_Name', 'Ligand_Unii'];
+      let showTypes = ['Target_Name', 'Test_Agent', 'Application_Type_Number', 'Laboratory_Name', 'Control_Type'];
       this.suggestionsFields = Object.keys(this.substanceSuggestionsGroup).filter(function (item) {
         return showTypes.indexOf(item) > -1;
       });
       // this.suggestionsFields.sort(function (x, y) { return x === 'Display_Name' ? -1 : y === 'Display_Name' ? 1 : 0; });
       this.suggestionsFields.forEach((value, index) => {
-        if (value === 'Assay_Target') {
-          this.suggestionsFields[index] = { value: 'Assay_Target', display: 'Assay Target' };
-        } else if (value === 'Ligand') {
-          this.suggestionsFields[index] = { value: 'Ligand', display: 'Ligand' };
+        if (value === 'Target_Name') {
+          this.suggestionsFields[index] = { value: 'Target_Name', display: 'Target Name' };
+        } else if (value === 'Test_Agent') {
+          this.suggestionsFields[index] = { value: 'Test_Agent', display: 'Test Agent' };
+        } else if (value === 'Application_Type_Number') {
+          this.suggestionsFields[index] = { value: 'Application_Type_Number', display: 'Application Type Number' };
         } else if (value === 'Laboratory_Name') {
           this.suggestionsFields[index] = { value: 'Laboratory_Name', display: 'Laboratory Name' };
-        } else if (value === 'Ligand_Unii') {
-          this.suggestionsFields[index] = { value: 'Ligand_Unii', display: 'Ligand Unii' };
+        } else if (value === 'Control_Type') {
+          this.suggestionsFields[index] = { value: 'Control_Type', display: 'Control Type' };
         } else {
           this.suggestionsFields[index] = { value: value, display: value };
         }
