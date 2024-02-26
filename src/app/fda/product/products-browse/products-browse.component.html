@@ -197,7 +197,11 @@
       <!-- ******** Display Content Details ******** -->
       <div [ngClass]="view">
 
-        <!-- ***** TABLE VIEW BEGIN ***** -->
+        <!-- **************************************************************** -->
+        <!-- **************************************************************** -->
+        <!-- TABLE VIEW BEGIN                                                 -->
+        <!-- **************************************************************** -->
+
         <div class="table-view">
           <div class="responsive">
 
@@ -205,9 +209,45 @@
               matSortDisableClear>
 
               <ng-container matColumnDef="productNDC">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product ID </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Code</th>
                 <td class="width120px" mat-cell *matCellDef="let product">
-                  <!-- If fromtable is SPL, display SPL Details links -->
+
+                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
+
+                    <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+
+                      <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                        <span *ngIf="prodCode.productCode; else noProdCode">
+                          {{prodCode.productCode}}
+                        </span>
+                        <ng-template #noProdCode>(NO ID)</ng-template>
+                      </a>
+
+                      <!-- Edit GSRS record button -->
+                      <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                        matTooltip='Edit GSRS Product Record'>
+                        <mat-icon svgIcon="edit"></mat-icon>
+                      </a>
+
+                      <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
+                      &nbsp;&nbsp;
+                      <span *ngIf="prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE'">
+                        <a href="{{dailyMedUrl}}{{prodCode.productCode}}" target="_blank" alt="Go to DailyMed website"
+                          title="Go to DailyMed website">
+                          <img [src]="iconSrcPath">
+                        </a>
+                        <mat-icon class="small-icon margintop20px" svgIcon="open_in_new"
+                          matTooltip="opens in new window">
+                        </mat-icon>
+                      </span>
+                      -->
+
+                    </span> <!-- loop productCode -->
+                  </span> <!-- loop productProvenance-->
+
+
+                  <!--
+                  <!- - If fromtable is SPL, display SPL Details links - ->
                   <span *ngIf="product.fromtable === 'SPL'">
                     <div class="padtop7px">
                       <a class="substance-name" [routerLink]="['/product-elist', product.productId]" target="_blank"
@@ -227,8 +267,10 @@
                       </ng-container>
                     </div>
                   </span>
+                   -->
 
                   <!-- If fromtable is GSRS, display GSRS Details links -->
+                  <!--
                   <span *ngIf="product.fromtable === 'GSRS'">
                     <a class="substance-name" [routerLink]="['/product', product.productId]" target="_blank"
                       alt="View Product Record"><span
@@ -236,20 +278,24 @@
                       <ng-template #noProdNDCSRS>(NO ID)</ng-template>
                     </a>
                     &nbsp;&nbsp;
-                    <!-- Edit GSRS record button -->
+                    <!- - Edit GSRS record button - ->
                     <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
                       matTooltip='Edit Product Record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
                   </span>
+                  -->
+
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="productName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodName of product.productNameAllList; let i = index">
-                    {{prodName.productName}}
+                  <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                    <div *ngFor="let prodName of prodProv.productNames; let i = index">
+                      {{prodName.productName}}
+                    </div>
                   </div>
                 </td>
               </ng-container>
@@ -257,6 +303,55 @@
               <ng-container matColumnDef="ingredientName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Name (Active Ingredient) </th>
                 <td valign="top" mat-cell *matCellDef="let product">
+
+                  <ol class="olstyle">
+                    <div *ngFor="let prodManuItems of product.productManufactureItems">
+                      <div *ngFor="let prodLot of prodManuItems.productLots">
+                        <div *ngFor="let prodIngred of prodLot.productIngredients; let indexActiveIngred = index">
+
+                          <span *ngIf=" prodIngred.ingredientType; else noIngredientType">
+                            <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'">
+
+                              <span *ngIf="prodIngred._ingredientName">
+                                <li>
+
+                                  <div *ngIf="prodIngred._substanceUuid; else noActiveSubUuid">
+                                    <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                      target="_blank">{{prodIngred._ingredientName}}
+                                    </a>
+                                    <button mat-button class="structure-parameters"
+                                      (click)="openImageModal($event, prodIngred._substanceUuid)">
+                                      <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
+                                    </button>
+                                  </div>
+                                  <ng-template #noActiveSubUuid>
+                                    {{prodIngred._ingredientName}}
+                                  </ng-template>
+
+                                </li>
+                              </span>
+
+                            </span>
+                          </span>
+                          <!-- No Ingredient Type, Display Ingredient Name -->
+                          <ng-template #noIngredientType>
+                            <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                            <div *ngIf="prodIngred._ingredientName">
+                              <li class="">
+                                <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                  target="_blank">{{prodIngred._ingredientName}}
+                                </a>
+                              </li>
+                            </div>
+                          </ng-template>
+
+
+                        </div> <!-- loop Ingredient -->
+                      </div> <!-- loop Lot -->
+                    </div> <!-- loop ManufactureItems -->
+                  </ol>
+
+                  <!--
                   <ol class="olstyle">
                     <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
                       <div *ngIf="ing.substanceName">
@@ -276,14 +371,28 @@
                       </div>
                     </div>
                   </ol>
+                  -->
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="labelerName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Labeler Name </th>
                 <td mat-cell *matCellDef="let product"> {{product.labelerName}}
+                  <!--
                   <div *ngFor="let prodComp of product.productCompanyAllList; let i = index">
                     {{prodComp.labelerName}}
+                  </div>
+                  -->
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    <div *ngFor="let prodComp of prodProv.productCompanies">
+                      {{prodComp.companyName}}
+                      <div *ngFor="let prodCode of prodComp.productCompanyCodes">
+                        <span
+                          *ngIf="prodCode.companyCodeType && prodCode.companyCodeType.companyCodeType === 'DUNS NUMBER'">
+                          <span *ngIf="prodCode.companyCode">&nbsp;({{prodCode.companyCode}})</span>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </td>
               </ng-container>
@@ -291,20 +400,39 @@
               <ng-container matColumnDef="country">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
                 <td mat-cell *matCellDef="let product">
+                  <!--
                   <div *ngFor="let prodComp of product.productCompanyAllList; let i = index">
                     {{prodComp.countryWithoutCode}}
+                  </div>
+                  -->
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    <div *ngFor="let prodComp of prodProv.productCompanies">
+                      {{prodComp.companyCity}}
+                      <span *ngIf="prodComp.companyState">,</span>
+                      {{prodComp.companyState}}
+                      <span *ngIf="prodComp.companyCountry">,</span>
+                      {{prodComp.companyCountry}}
+                    </div>
                   </div>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                <td mat-cell *matCellDef="let product"> {{product.status}} </td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Status </th>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    {{prodProv.productStatus}}
+                  </div>
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="productNameType">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Type </th>
-                <td mat-cell *matCellDef="let product"> {{product.productType}} </td>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    {{prodProv.productType}}
+                  </div>
+                </td>
               </ng-container>
 
               <!--
@@ -326,13 +454,28 @@
 
               <ng-container matColumnDef="applicationNumber">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
-                <td mat-cell *matCellDef="let product"><span
+                <td mat-cell *matCellDef="let product">
+                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                    <span class="font14px" *ngIf="prodProv.applicationType">
+                      {{prodProv.applicationType}}
+                    </span>
+                    <span class="font14px" *ngIf="prodProv.applicationNumber">
+                      {{prodProv.applicationNumber}}
+                    </span>
+                    <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
+                    <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
+                      target="_blank">
+                      <span class="font14px" *ngIf="prodProv.applicationType">
+                        {{prodProv.applicationType}}
+                      </span>
+                      <span class="font14px" *ngIf="prodProv.applicationNumber">
+                        {{prodProv.applicationNumber}}
+                      </span>
+                    </a>
+                    -->
+                  </span>
+                  <!--
                     *ngIf="(product.appType && product.appNumber); else noAppType">
-                    <!--
-                  <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
-                    target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
-                  </a>
-                  -->
                     <a href="{{getAppTypeNumberUrl(product.appType, product.appNumber)}}" target="_blank"><span
                         class="approval-id">{{product.appTypeNumber}}</span>
                     </a>
@@ -342,6 +485,7 @@
                       {{product.appTypeNumber}}
                     </span>
                   </ng-template>
+                -->
                 </td>
               </ng-container>
 
@@ -353,147 +497,329 @@
         </div> <!-- class="table-view" -->
         <!-- TABLE VIEW END -->
 
+
+        <!-- **************************************************************** -->
+        <!-- **************************************************************** -->
         <!-- CARD VIEW BEGIN -->
+        <!-- **************************************************************** -->
+
         <div class="cards-view" *ngIf="products && products.length; else noRecordProduct">
+
+          <!-- FIRST MAT-CARD  -->
           <mat-card *ngFor="let product of products; let indexProd = index">
-            <mat-card-title>
-              <div>
-                <span class="font13px">Product ID:</span>&nbsp;
+            <mat-card-content class="margintopneg15">
 
-                <!-- If fromtable is SPL, display SPL Details links -->
-                <span *ngIf="product.fromtable === 'SPL'">
-                  <a class="substance-name" [routerLink]="['/product-elist', product.productId]" target="_blank"><span
-                      *ngIf="product.productNDC; else noProdNDC">{{product.productNDC}}</span>
-                    <ng-template #noProdNDC>(NO ID)</ng-template>
+              <div class="divflex marginleftneg10px margintop10px">
+
+                <div>
+                  &nbsp;&nbsp;&nbsp;
+                  <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                    <span class="font18px"><b>View Details</b></span>
                   </a>
-                  <ng-container *ngIf="product.productNDC !== null">
-                    &nbsp;&nbsp;
-                    <a href="{{dailyMedUrl}}{{product.productNDC}}" target="_blank" alt="Go to DailyMed website"
-                      title="Go to DailyMed website">
-                      <img [src]="iconSrcPath">
-                    </a>
-                    <mat-icon class="small-icon margintop20px" svgIcon="open_in_new" matTooltip="opens in new window">
-                    </mat-icon>
-                  </ng-container>
-                </span>
+                </div>
 
-                &nbsp;&nbsp;&nbsp;
-                <!-- If fromtable is GSRS, display GSRS Details links -->
-                <span *ngIf="product.fromtable === 'GSRS'">
-                  <a class="substance-name" [routerLink]="['/product', product.productId]" target="_blank"><span
-                      *ngIf="product.productNDC; else noProdNDCSRS">{{product.productNDC}}</span>
-                    <ng-template #noProdNDCSRS>(NO ID)</ng-template>
-                  </a>
+                <!-- ***** BUTTONS BEGIN ***** -->
 
-                  <!-- Edit GSRS record button -->
-                  <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
+                <!-- Edit GSRS record button -->
+                <div class="" *ngIf="isAdmin">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank"
                     matTooltip='Edit GSRS Product Record'>
-                    <mat-icon svgIcon="edit"></mat-icon>
+                    <mat-icon class="margintopneg10px" svgIcon="edit"></mat-icon>
                   </a>
-                </span>
+                </div>
+
+                <!-- Download Json For this record -->
+                <div class="margintopneg10" *ngIf="isAdmin">
+                  <span *ngIf="product && product.id">
+                    <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON(product.id)"
+                      download="{{jsonFileName}}.json" matTooltip='Download JSON'>
+                      <mat-icon class="" svgIcon="get_app"></mat-icon>
+                    </a>
+                  </span>
+                </div>
+
+                <div class="margintopneg10" *ngIf="isAdmin">
+                  <!-- Copy Product to New Register -->
+                  <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
+                    matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
+                    <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
+                  </a>
+                </div>
+                <div>
+                  <span>
+                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+                    </mat-icon>
+                  </span>
+                </div>
+                <!-- ***** BUTTONS END ***** -->
               </div>
 
-              <div class="center">
-                <span class="font13px">Company Country:</span><span class="colororange font17px">&nbsp;
-                  <!--{{product.countryWithoutCode}}-->
-                  <span *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                    <span *ngIf="prodComp.countryWithoutCode">
-                      <span *ngIf="indexComp > 0">|</span>
-                      {{prodComp.countryWithoutCode}}
+              <!-- GROUP BY PROVENANCE BEGIN -->
+              <mat-tab-group class="margintop15px" (selectedTabChange)="tabSelectedUpdated($event)">
+
+                <!-- ######################################################################## -->
+                <!-- MAT-TAB: PROVENANCE BEGIN - Display data in each tab for each Provenance -->
+                <!-- #########################################################################-->
+
+                <mat-tab class="margintopneg10"
+                  *ngFor="let prodProv of product.productProvenances; let indexProv = index">
+
+                  <ng-template mat-tab-label>
+                    <span class="font13px colorlightblue">Provenance:</span>&nbsp;
+                    <span class="colorred font16px">
+                      {{prodProv.provenance}}
                     </span>
-                  </span>
-                </span>
-              </div>
+                  </ng-template>
 
-              <div>
-                <span class="font13px">Application:</span>&nbsp;
-                <span *ngIf="(product.appType && product.appNumber); else noAppType">
+                  <!-- Product Provenance TAB Begin -->
+                  <!-- INSIDE TAB MAT-CARD BEGIN -->
                   <!--
-                  <a [routerLink]="['/applicationDarrtsDetails', product.appType, product.appNumber]"
-                    target="_blank"><span class="approval-id">{{product.appTypeNumber}}</span>
-                  </a>
-                  -->
-                  <a href="{{getAppTypeNumberUrl(product.appType, product.appNumber)}}" target="_blank"><span
-                      class="approval-id">{{product.appTypeNumber}}</span>
-                  </a>
-                </span>
-                <ng-template #noAppType>
-                  <span class="approval-id">
-                    {{product.appTypeNumber}}
-                  </span>
-                </ng-template>
-              </div>
-            </mat-card-title>
+                  <mat-card class="style width90percent bordergray">
 
-            <mat-card-content>
+                    <mat-title>
 
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Product Name:
-                  </div>
-                  <div class="row-property-value">
-                    <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
-                      <span class="colorlightblue font14px"><b>{{prodName.productName}}</b></span>
+                      <div class="middle-fill">&nbsp;</div>
+                    </mat-title>
+
+                    <mat-card-content class="marginleftneg15px">
+                    -->
+
+                  <!-- COMMENT THIS OUT NOW
+
+                      <div class="divflex marginleftneg10px">
+                        <div>
+                          <span class="font13px">Product Name:</span>&nbsp;&nbsp;
+                        </div>
+
+                          <div>
+                          <!- - Product Name Display BEGIN - ->
+
+                          <!- - Check and loop Product Provenances- ->
+                          <!- -
+                          <span *ngIf="product.productProvenances.length > 0; else noProdNameFromProv">
+                            <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                            - ->
+                          <!- - Check and loop Product Names - ->
+                          <span *ngIf="prodProv.productNames.length > 0; else noProdNameFromName">
+                            <span *ngFor="let prodName of prodProv.productNames">
+
+                              <!- - if Product Name exits - ->
+                              <span *ngIf="prodName.productName; else noProdName">
+                                <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                                  <span
+                                    *ngIf="prodName.displayName && prodName.displayName == true; else noDisplayName">
+                                    {{prodName.productName}}
+                                  </span>
+                                  <ng-template #noDisplayName>
+                                    <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                                      (NO Product Name)
+                                    </a>
+                                  </ng-template>
+                                </a>
+                              </span>
+                              <ng-template #noProdName>
+                                <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                                  (NO Product Name)
+                                </a>
+                              </ng-template>
+
+                            </span> <!- - for loop ProductNames - ->
+                          </span> <!- - if productNames size > 0 - ->
+                          <ng-template #noProdNameFromName>
+                            <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                              (NO Product Name)
+                            </a>
+                          </ng-template>
+
+
+                          <!- - </span> - ->
+                          <!- - for loop ProductProvenances - ->
+                          <!- - </span> - ->
+                          <!- - if productProdvenances size > 0 - ->
+
+                          <ng-template #noProdNameFromProv>
+                            <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                              (NO Product Name)
+                            </a>
+                          </ng-template>
+
+                        </div>
+                        <!- - Product Name Display END  - ->
+
+
+                      </div> <!- - class=divflex - ->
+                      COMMENT END HERE -->
+
+
+                  <div class="row margintop10px">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Names:
+                      </div>
+                      <div class="row-property-value">
+                        <!--
+                            <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
+                            -->
+                        <!--
+                            <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                            -->
+
+                        <div *ngIf="prodProv.productNames.length > 0; else noProductName">
+                          <div *ngFor="let prodName of prodProv.productNames; let i = index">
+                            <div class="divflex">
+                              <div class="colorlightblue font16px"><b>{{prodName.productName}}</b></div>
+                              <div *ngIf="prodName.displayName && prodName.displayName == true">
+                                &nbsp;
+                                <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <ng-template #noProductName>
+                          (No Product Name)
+                        </ng-template>
+
+                        <!--
+                            </div>
+                            -->
+                      </div>
+                    </div>
+
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Status:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodProv.productStatus}}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Product Type:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.productType}}
-                  </div>
-                </div>
-              </div>
 
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Nonproprietary Name:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.nonProprietaryName}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Route of Admin:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.routeName}}
-                  </div>
-                </div>
-              </div>
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Codes:
+                      </div>
+                      <div class="row-property-value">
 
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Labeler Name (DUNS):
-                  </div>
-                  <div class="row-property-value">
-                    <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                      {{prodComp.labelerName}}
-                      <span *ngIf="prodComp.labelerDuns">&nbsp;({{prodComp.labelerDuns}})</span>
+                        <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+                          <span *ngIf="i > 0"><br></span>
+                          <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
+
+                          <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
+                                &nbsp;&nbsp;
+                                <span *ngIf="prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE'">
+                                  <a href="{{dailyMedUrl}}{{prodCode.productCode}}" target="_blank"
+                                    alt="Go to DailyMed website" title="Go to DailyMed website">
+                                    <img [src]="iconSrcPath">
+                                  </a>
+                                  <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                                  </mat-icon>
+                                </span>
+                                -->
+                        </span>
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Product Type:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodProv.productType}}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    City, State, Country:
-                  </div>
-                  <div class="row-property-value">
-                    <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
-                      {{prodComp.city}}
-                      <span *ngIf="prodComp.state">,</span>
-                      {{prodComp.state}}
-                      <span *ngIf="prodComp.countryWithoutCode">,</span>
-                      {{prodComp.countryWithoutCode}}
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Labeler Name:
+                      </div>
+                      <div class="row-property-value">
+                        <!--
+                            <div *ngFor="let prodComp of product.productCompanyAllList; let indexComp = index">
+                            -->
+                        <div *ngFor="let prodComp of prodProv.productCompanies">
+                          {{prodComp.companyName}}
+                          <!--
+                                <div *ngFor="let prodCode of prodComp.productCompanyCodes">
+                                  <span
+                                    *ngIf="prodCode.companyCodeType && prodCode.companyCodeType.companyCodeType === 'DUNS NUMBER'">
+                                    <span *ngIf="prodCode.companyCode">&nbsp;({{prodCode.companyCode}})</span>
+                                  </span>
+                                </div>
+                                 -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Application Type Number:
+                      </div>
+                      <div class="row-property-value">
+
+                        <span class="font14px" *ngIf="prodProv.applicationType">
+                          {{prodProv.applicationType}}
+                        </span>
+                        <span class="font14px" *ngIf="prodProv.applicationNumber">
+                          {{prodProv.applicationNumber}}
+                        </span>
+                        <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
+                              <a href="{{getAppTypeNumberUrl(prodProv.applicationType, prodProv.applicationNumber)}}"
+                                target="_blank">
+                                <span class="font14px" *ngIf="prodProv.applicationType">
+                                  {{prodProv.applicationType}}
+                                </span>
+                                <span class="font14px" *ngIf="prodProv.applicationNumber">
+                                  {{prodProv.applicationNumber}}
+                                </span>
+                              </a>
+                            -->
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+
+                  <div class="row">
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        City, State, Country:
+                      </div>
+                      <div class="row-property-value">
+
+                        <div *ngFor="let prodComp of prodProv.productCompanies">
+                          {{prodComp.companyCity}}
+                          <span *ngIf="prodComp.companyState">,</span>
+                          {{prodComp.companyState}}
+                          <span *ngIf="prodComp.companyCountry">,</span>
+                          {{prodComp.companyCountry}}
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="row-property">
+                      <div class="row-property-key">
+                        Public Domain:
+                      </div>
+                      <div class="row-property-value">
+                        {{prodProv.publicDomain}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--
+                    </mat-card-content>
+                  </mat-card>
+                   -->
+
+                  <!-- INSIDE TAB MAT_CARD END -->
+
+
+                </mat-tab>
+              </mat-tab-group>
+              <!-- GROUP BY PROVENANCE END -->
+
 
               <div class="row">
                 <div class="row-property">
@@ -501,19 +827,60 @@
                     Dosage Form:
                   </div>
                   <div class="row-property-value">
+                    <!--
                     <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
-                      <span *ngIf="indexIng == 0">
-                        {{ing.dosageFormName}}
-                      </span>
+                    -->
+                    <div *ngFor="let prodManuItem of product.productManufactureItems">
+                      {{prodManuItem.dosageForm}}
                     </div>
+                  </div>
+                </div>
+
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Route of Admin:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.routeAdmin}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Manufacturer Name:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.manufacturerName}}
                   </div>
                 </div>
                 <div class="row-property">
                   <div class="row-property-key">
-                    Status:
+                    Total Manufacture Items:
                   </div>
                   <div class="row-property-value">
-                    {{product.status}}
+                    {{product.productManufactureItems.length}}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Display Audit Details -->
+              <div class="row" *ngIf="isAdmin">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Create Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Edit Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
                   </div>
                 </div>
               </div>
@@ -537,25 +904,6 @@
                 </div>
               </div>
 
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Create Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Edit Date:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-              </div>
-
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
@@ -563,95 +911,148 @@
                   </div>
                   <div class="row-property-value">
 
-                    <!-- Display Active Substance -->
+                    <!-- Display ACTIVE Substance -->
                     <ol class="olstyle">
+                      <div *ngFor="let prodManuItems of product.productManufactureItems">
+                        <div *ngFor="let prodLot of prodManuItems.productLots">
+                          <div *ngFor="let prodIngred of prodLot.productIngredients; let indexActiveIngred = index">
 
-                      <div *ngFor="let prodIngred of product.productIngredientAllList; let indexActiveIngred = index">
+                            <span *ngIf=" prodIngred.ingredientType; else noIngredientType">
+                              <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'">
 
-                        <span *ngIf=" prodIngred.ingredientType">
-                          <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'; else otherIngredType">
+                                <span *ngIf="prodIngred._ingredientName">
+                                  <li>
 
-                            <span *ngIf="prodIngred.substanceName">
-                              <li>
-                                <a [routerLink]="['/substances', prodIngred.substanceUuid]"
-                                  target="_blank">{{prodIngred.substanceName}}
-                                </a>
-                                <button mat-button class="structure-parameters"
-                                  (click)="openImageModal($event, prodIngred.substanceUuid)">
-                                  <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
-                                </button>
-                              </li>
+                                    <!-- Has Substance Uuid -->
+                                    <span *ngIf="prodIngred._substanceUuid; else noActiveSubUuid">
+                                      <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                        target="_blank">{{prodIngred._ingredientName}}
+                                      </a>
+
+                                      <!-- Display Ingredient Strength/Average and Unit -->
+                                      &nbsp;&nbsp;
+                                      <span *ngIf="prodIngred.average">
+                                        {{prodIngred.average}}
+                                        <span *ngIf="prodIngred.unit">
+                                          {{prodIngred.unit}}
+                                        </span>
+                                      </span>
+
+                                      <button mat-button class="structure-parameters"
+                                        (click)="openImageModal($event, prodIngred._substanceUuid)">
+                                        <mat-icon style="padding:0px;margin:0px;"
+                                          mat-tooltip="Show Substance Name chemical structure">analytics
+                                        </mat-icon>
+                                      </button>
+                                    </span>
+                                    <ng-template #noActiveSubUuid>
+                                      {{prodIngred._ingredientName}}
+                                    </ng-template>
+
+                                  </li>
+                                </span>
+
+                              </span>
                             </span>
+                            <!-- No Ingredient Type, Display Ingredient Name -->
+                            <ng-template #noIngredientType>
+                              <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                              <div *ngIf="prodIngred._ingredientName">
+                                <li class="">
+                                  <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                    target="_blank">{{prodIngred._ingredientName}}
+                                  </a>
+                                </li>
+                              </div>
+                            </ng-template>
 
-                          </span>
-                        </span>
-
-                      </div> <!-- repeat -->
+                          </div> <!-- loop Ingredient -->
+                        </div> <!-- loop Lot -->
+                      </div> <!-- loop ManufactureItems -->
                     </ol>
 
                   </div>
-                </div>
+                </div> <!-- Active Substance -->
 
 
+                <!-- Display Inactive Substance -->
                 <div class="row-property">
                   <div class="row-property-key">
                     Substance Name (Inactive):
                   </div>
+
                   <div class="row-property-value">
                     <!-- Display Other Substance -->
                     <ol class="olstyle">
-                      <div *ngFor="let prodIngred of product.productIngredientAllList; let indexIngred = index">
+                      <div *ngFor="let prodManuItems of product.productManufactureItems">
+                        <div *ngFor="let prodLot of prodManuItems.productLots">
+                          <div *ngFor="let prodIngred of prodLot.productIngredients; let indexInactIngred = index">
 
-                        <!-- If Ingredient Type is not null -->
-                        <div *ngIf="prodIngred.ingredientType; else noIngredType">
+                            <!-- If Inactive Ingredient, display Substance Name and Ingredient Type-->
+                            <div *ngIf=" prodIngred.ingredientType">
+                              <div
+                                *ngIf="prodIngred.ingredientType === 'Inactive Ingredient'; else otherIngredientType">
 
-                          <!-- If Not Active Ingredient, display Substance Name and Ingredient Type-->
-                          <div *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
+                                <div *ngIf="prodIngred._ingredientName">
+                                  <li>
 
-                            <div *ngIf="prodIngred.substanceName">
-                              <li class="">
-                                <a [routerLink]="['/substances', prodIngred.substanceUuid]"
-                                  target="_blank">{{prodIngred.substanceName}}
-                                </a>
-                                <button mat-button class="structure-parameters"
-                                  (click)="openImageModal($event, prodIngred.substanceUuid)">
-                                  <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
-                                </button>
-                              </li>
-                            </div>
+                                    <div *ngIf="prodIngred._substanceUuid; else noInactiveSubUuid">
+                                      <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                        target="_blank">{{prodIngred._ingredientName}}
+                                      </a>
 
-                            <div
-                              *ngIf="(prodIngred.ingredientType !== 'Active Ingredient') && (prodIngred.ingredientType !== 'Inactive Ingredient')">
-                              <span class="colorgreen">({{ prodIngred.ingredientType }})
-                              </span>
-                            </div>
-                          </div>
+                                      <!-- Display Ingredient Strength/Average and Unit -->
+                                      &nbsp;&nbsp;
+                                      <span *ngIf="prodIngred.average">
+                                        {{prodIngred.average}}
+                                        <span *ngIf="prodIngred.unit">
+                                          {{prodIngred.unit}}
+                                        </span>
+                                      </span>
 
-                        </div>
+                                      <button mat-button class="structure-parameters"
+                                        (click)="openImageModal($event, prodIngred._substanceUuid)">
+                                        <mat-icon style="padding:0px;margin:0px;"
+                                          mat-tooltip="Show Substance Name chemical structure">analytics
+                                        </mat-icon>
+                                      </button>
+                                    </div>
+                                    <ng-template #noInactiveSubUuid>
+                                      {{prodIngred._ingredientName}}
+                                    </ng-template>
 
-                        <!-- No Ingredient Type -->
-                        <ng-template #noIngredType>
-                          <!-- if No Ingredient Type, but have Substance Name, display here. -->
-                          <div *ngIf="prodIngred.substanceName">
-                            <li class="">
-                              <a [routerLink]="['/substances', prodIngred.substanceUuid]"
-                                target="_blank">{{prodIngred.substanceName}}
-                              </a>
-                            </li>
-                          </div>
-                        </ng-template>
+                                  </li>
+                                </div> <!-- if _ingredientName exits -->
 
-                      </div> <!-- repeat -->
+                              </div>
+                              <ng-template #otherIngredientType>
+                                <span *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
+                                  {{prodIngred._ingredientName}}<br>
+                                  <span class="colorgreen">({{ prodIngred.ingredientType }})
+                                  </span>
+                                  <br><br>
+                                </span>
+                              </ng-template>
+
+                            </div> <!-- if Ingredient Type exists -->
+
+                          </div> <!-- loop Ingredient -->
+                        </div> <!-- loop Lot -->
+                      </div> <!-- loop ManufactureItems -->
+
                     </ol>
 
                   </div>
-                </div>
+                </div> <!-- Inactive Substance -->
 
-              </div>
+
+              </div> <!-- row Substance Name-->
 
             </mat-card-content>
-
           </mat-card>
+          <!-- FIRST MAT-CARD END -->
+
+
         </div> <!-- class=cards -->
       </div> <!-- [ngClass]=view -->
 

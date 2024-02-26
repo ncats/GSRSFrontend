@@ -138,7 +138,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_appNumber';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_created';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.overlayContainer = this.overlayContainerService.getContainerElement();

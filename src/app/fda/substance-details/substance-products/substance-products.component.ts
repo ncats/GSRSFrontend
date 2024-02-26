@@ -36,6 +36,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   advCvmCount = 0;
   impuritiesCount = 0;
   ssg4mCount = 0;
+
   provenance = '';
   provenanceList = '';
   datasourceList = '';
@@ -45,24 +46,30 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   foundProvenanceList = false;
   loadingComplete = false;
   substanceName = '';
+  loadedComponents: LoadedComponents;
+
+  // Search variables
+  public privateSearchBase = 'root_productManufactureItems_productLots_productIngredients_substanceKey:';
   public privateSearch?: string;
-  private privateFacetParams: FacetParam;
   public privateSearchTerm?: string;
+  private privateFacetParams: FacetParam;
+  public sortValues = productSearchSortValues;
+  order = '$root_productNDC';
+  ascDescDir = 'desc';
+
+  // Export variables
   privateExport = false;
   disableExport = false;
   etag = '';
   etagAllExport = '';
-  loadedComponents: LoadedComponents;
-  public sortValues = productSearchSortValues;
-  order = '$root_productNDC';
-  ascDescDir = 'desc';
+
   public displayedColumns: string[] = [
     'productNDC',
     'productName',
     'labelerName',
     'country',
     'status',
-    'productNameType',
+    'productType',
     'ingredientType',
     'applicationNumber'
   ];
@@ -91,20 +98,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       // Get Provenance List to Display in Tab
       this.getProductProvenanceList();
 
-      this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
+      // Commenting out after removing productsall
+      //this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
+      this.privateSearch = this.privateSearchBase + '\"' + this.bdnum + '\"';
       this.getSubstanceProducts(null, 'initial');
-
-      /*
-      this.searchControl.valueChanges.subscribe(value => {
-        if (value) {
-          this.privateSearch =  '\"' + value + '\" AND ' + 'root_productIngredientAllList_substanceUuid:\"'
-          + this.substance.uuid + '\" AND root_provenance:' + this.provenance;
-          this.getSubstanceProducts(null);
-        }
-      }, error => {
-        console.log(error);
-      });
-      */
     }
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -162,7 +159,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
 
   getProductProvenanceList(): void {
-    this.productService.getProductProvenanceList(this.substance.uuid).subscribe(results => {
+    this.productService.getProductProvenanceList(this.bdnum).subscribe(results => {
       this.provenanceList = results;
       if (this.provenanceList && this.provenanceList.length > 0) {
         this.foundProvenanceList = true;
@@ -245,21 +242,20 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     if ($event) {
       const evt: any = $event.tab;
       const textLabel: string = evt.textLabel;
-      // Get Country and fromTable/Source from Tab Label
+
+      // Get distinct Provenance from server side and display Product data based on the provenance on each tab
       if (textLabel != null) {
         this.loadingStatus = 'Loading data...';
         this.provenance = textLabel;
-        //  const index = textLabel.indexOf(' ');
-        //  const tab = textLabel.slice(0, index);
-        // this.country = textLabel.slice(index + 1, textLabel.length);
+
         // set the current result data to empty or null.
         this.paged = [];
 
-        this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"'
-          + this.substance.uuid + '\" AND root_provenance:' + this.provenance;
+        // Set criterial and search Product based on Substance Key and Provenance
+        this.privateSearch = this.privateSearchBase + '\"' + this.bdnum + '\" AND root_productProvenances_provenance:' + this.provenance;
 
+        // Search Product
         this.getSubstanceProducts();
-
       }
 
     }
@@ -267,7 +263,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
 
   sortData(sort: Sort) {
     if (sort.active) {
-      const orderIndex = this.displayedColumns.indexOf(sort.active).toString(); // + 2; // Adding 2, for name and bdnum.
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
       this.sortValues.forEach(sortValue => {
         if (sortValue.displayedColumns && sortValue.direction) {

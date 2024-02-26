@@ -1,9 +1,6 @@
 <div class="info-container">
   <a *ngIf="substance && substance.uuid" aria-label="FDA details"
     [href]="baseDomain + '/ginas/app/substance/' + substance.uuid + '#fdadetails'" target="_blank">
-    <!-- COMMENTING THIS OUT SINCE WE DO NOT HAVE CLASSIC VIEW IN 3.0
-    For data export, sorting and searching of the tabs below please use the classic view here
-    -->
   </a>
 </div>
 <div class="bordergray mat-tab-style">
@@ -16,20 +13,17 @@
         <div class="padleft25px colorblue"><b>No Product Found</b></div>
         <br>
       </div>
+
+      <!-- PRODUCT PROVENANCE TABS -->
       <mat-tab-group (selectedTabChange)="tabSelected($event)">
         <mat-tab label="{{prov}}" *ngFor="let prov of provenanceList; let index = index">
+
           <div class="divflex padtop5px padleft25px font15px colorblue">
             <b> {{prov}}</b>
             &nbsp;&nbsp;&nbsp;
             <span class="colorred">{{loadingStatus}}</span>
             &nbsp;&nbsp;&nbsp;
-            <!--
-            <a [href]="exportUrl" target="_blank" matTooltip='Product Records' *ngIf="totalRecords > 0">
-              <button mat-icon-button color="primary">
-                <mat-icon>arrow_downward</mat-icon>Export All Products
-              </button>
-            </a>
-            -->
+
             <!-- Export Button -->
             <span class="export" *ngIf="isAdmin && totalRecords > 0">
               <button matTooltip="Export Search Results" mat-button (click)="export()"
@@ -40,6 +34,7 @@
 
           </div>
 
+          <!-- Data Table -->
           <div class="responsive mat-table-style">
             <div *ngIf="showSpinner" class="spinnerstyle">
               <mat-progress-spinner diameter="80" color="warn" mode="indeterminate">
@@ -52,22 +47,35 @@
               <ng-container matColumnDef="productNDC">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product ID </th>
                 <td mat-cell *matCellDef="let product">
-                  <span *ngIf="product.fromtable === 'GSRS'">
-                    <a [routerLink]="['/product', product.productId]" target="_blank">
-                      <span *ngIf="product.productNDC; else noProdNDCGSRS">
-                        {{product.productNDC}}
-                      </span>
-                      <ng-template #noProdNDCGSRS>
-                        (NO NDC)
-                      </ng-template>
-                    </a>
-                    &nbsp;&nbsp;
-                    <a [routerLink]="['/product', product.productId, 'edit']" target="_blank" *ngIf="isAdmin"
-                      matTooltip='Edit GSRS Product Record'>
-                      <mat-icon svgIcon="edit"></mat-icon>
-                    </a>
+
+                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                    <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+                      <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                        <span *ngIf="prodCode.productCode; else noProdCode">
+                          {{prodCode.productCode}}
+                        </span>
+                        <ng-template #noProdCode>(NO ID)</ng-template>
+                      </a>
+                    </span>
                   </span>
-                  <span *ngIf="product.fromtable != 'GSRS'">
+
+                  <!--
+                  <a [routerLink]="['/product', product.id]" target="_blank">
+                    <span *ngIf="product.productNDC; else noProdNDCGSRS">
+                      {{product.productNDC}}
+                    </span>
+                    <ng-template #noProdNDCGSRS>
+                      (NO NDC)
+                    </ng-template>
+                  </a>
+                  -->
+                  &nbsp;&nbsp;
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                    matTooltip='Edit GSRS Product Record'>
+                    <mat-icon svgIcon="edit"></mat-icon>
+                  </a>
+
+                  <!--
                     <a [routerLink]="['/product-elist', product.productId]" target="_blank">
                       <span *ngIf="product.productNDC; else noProdNDC">
                         {{product.productNDC}}
@@ -76,16 +84,17 @@
                         (NO NDC)
                       </ng-template>
                     </a>
-                    <br><span class="font10px colorgray">({{product.fromtable}})</span>
-                  </span>
+                  -->
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="productName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodName of product.productNameAllList; let i = index">
-                    {{prodName.productName}}
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    <div *ngFor="let prodName of prodProv.productNames">
+                      {{prodName.productName}}
+                    </div>
                   </div>
                 </td>
               </ng-container>
@@ -93,8 +102,10 @@
               <ng-container matColumnDef="labelerName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Labeler Name </th>
                 <td mat-cell *matCellDef="let product"> {{product.labelerName}}
-                  <div *ngFor="let prodComp of product.productCompanyAllList; let i = index">
-                    {{prodComp.labelerName}}
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    <div *ngFor="let prodComp of prodProv.productCompanies">
+                      {{prodComp.companyName}}
+                    </div>
                   </div>
                 </td>
               </ng-container>
@@ -102,29 +113,45 @@
               <ng-container matColumnDef="country">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
                 <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodComp of product.productCompanyAllList; let i = index">
-                    {{prodComp.countryWithoutCode}}
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    <div *ngFor="let prodComp of prodProv.productCompanies">
+                      {{prodComp.companyCountry}}
+                    </div>
                   </div>
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                <td mat-cell *matCellDef="let product"> {{product.status}} </td>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    {{prodProv.productStatus}}
+                  </div>
+                </td>
               </ng-container>
 
-              <ng-container matColumnDef="productNameType">
+              <ng-container matColumnDef="productType">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Type </th>
-                <td mat-cell *matCellDef="let product"> {{product.productType}} </td>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    {{prodProv.productType}}
+                  </div>
+                </td>
               </ng-container>
 
               <ng-container matColumnDef="ingredientType">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Ingredient Type </th>
                 <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodIng of product.productIngredientAllList; let i = index">
-                    <div *ngIf="prodIng.substanceUuid">
-                      <div *ngIf="(substance.uuid === prodIng.substanceUuid)">
-                        {{prodIng.ingredientType}}
+                  <div *ngFor="let prodManuItem of product.productManufactureItems">
+                    <div *ngFor="let prodLot of prodManuItem.productLots">
+                      <div *ngFor="let prodIngred of prodLot.productIngredients">
+
+                        <div *ngIf="prodIngred.substanceKey">
+                          <div *ngIf="(bdnum === prodIngred.substanceKey)">
+                            {{prodIngred.ingredientType}}
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -133,7 +160,11 @@
 
               <ng-container matColumnDef="applicationNumber">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
-                <td mat-cell *matCellDef="let product"> {{product.appTypeNumber}} </td>
+                <td mat-cell *matCellDef="let product">
+                  <div *ngFor="let prodProv of product.productProvenances">
+                    {{prodProv.applicationType}}&nbsp;{{prodProv.applicationNumber}}
+                  </div>
+                  {{product.appTypeNumber}} </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -49,7 +49,6 @@ export class ImportDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // console.log(this.fieldList);
   }
 
   switchAction(action?: any) {
