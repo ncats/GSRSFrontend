@@ -80,7 +80,7 @@ export class BulkActionDialogComponent implements OnInit {
     this.adminService.deleteStagedRecord(toSend).subscribe(response => {
       this.successful = true;
         this.loading = false;
-      console.log(response);
+    //  console.log(response);
     }, error => {
       console.log(error);
       this.successful = true;
