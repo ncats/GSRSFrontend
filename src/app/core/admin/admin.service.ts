@@ -114,7 +114,6 @@ export class AdminService extends BaseHttpService {
         }
 
         public loadData(form: any) {
-          console.log(form);
           const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/admin/load`;
           return this.http.post< any >(url, form);
         }
@@ -149,7 +148,6 @@ export class AdminService extends BaseHttpService {
         }*/
 
         public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
-          console.log(file);
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview`;
          if (limit) {
            if(limit === 'all') {
@@ -278,8 +276,7 @@ export class AdminService extends BaseHttpService {
         }
 
         public stagedRecordMultiAction(records:any, action: string, scrubber?: any) {
-          console.log(records);
-          console.log(scrubber);
+
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
           let toput = {
             "stagingAreaRecords":
@@ -296,7 +293,6 @@ export class AdminService extends BaseHttpService {
             if (scrubber) {
               toput.processingActions[0].parameters['scrubberSettings'] = scrubber;
             }
-            console.log(toput);
          
           return this.http.put< any >(url, toput);
 

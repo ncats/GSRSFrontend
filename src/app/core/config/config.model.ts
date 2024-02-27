@@ -57,6 +57,7 @@ export interface Config {
     userProfile?: any;
     stagingArea?: StagingAreaSettings;
     privacyStatement: string;
+    structureEditor?: 'ketcher' | 'jsdraw';
 }
 
 export interface StagingAreaSettings {
