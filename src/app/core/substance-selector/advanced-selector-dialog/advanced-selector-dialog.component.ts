@@ -13,6 +13,7 @@ import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { ConfigService } from '@gsrs-core/config';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { searchSortValues } from '@gsrs-core/utils';
+import { take } from 'rxjs';
 @Component({
   selector: 'app-advanced-selector-dialog',
   templateUrl: './advanced-selector-dialog.component.html',
@@ -124,12 +125,15 @@ private privateSequenceSearchKey?: string;
   }
 
   standardize(standard: string): void {
-    const mol = this.editor.getMolfile();
+    let mol = ''
+     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
     this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
       if (response && response.structure && response.structure.molfile) {
         this.editor.setMolecule(response.structure.molfile);
       }
     }, () => {});
+    });
   }
 
   onTabChanged(event: any): void {
@@ -212,13 +216,16 @@ private privateSequenceSearchKey?: string;
   }
 
   search(): void {
-    const mol = this.editor.getMolfile();
+    let mol = '';
+    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
     this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
       this.smiles = response.structure.smiles;
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
     }, () => {});
-  }
+  });
+}
 
 
   nameResolved(molfile: string): void {
@@ -405,8 +412,8 @@ private privateSequenceSearchKey?: string;
           height: 'auto',
           width: '650px',
           data: {
-            molfile: this.editor.getMolfile(),
-            smiles: this.editor.getSmiles()
+            molfile:'',// this.editor.getMolfile(),
+            smiles: ''// this.editor.getSmiles()
           }
         });
       //  this.overlayContainer.style.zIndex = '1002';

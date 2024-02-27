@@ -3,6 +3,7 @@ export interface Ketcher {
     apiPath: string;
     buildDate: string;
     buildNumber?: string;
+    editor?: any;
     getSmiles: () => string;
     saveSmiles: () => Promise<any>;
     getMolfile: () => string;
