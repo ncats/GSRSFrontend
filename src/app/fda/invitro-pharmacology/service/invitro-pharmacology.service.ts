@@ -44,8 +44,10 @@ export class InvitroPharmacologyService extends BaseHttpService {
     facets?: FacetParam
   ): Observable<PagingResponse<InvitroAssayInformation>> {
     let params = new FacetHttpParams();
+
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
+
     if (searchTerm !== null && searchTerm !== '') {
       params = params.append('q', searchTerm);
     }
@@ -148,7 +150,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       this.assay = assayScreening;
     } else {
       this.assay = {
-        invitroInformationReferences: []
+      //  invitroInformationReferences: []
       };
     }
   }
@@ -167,6 +169,18 @@ export class InvitroPharmacologyService extends BaseHttpService {
     unii: string
   ): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'assaytargetunii/' + unii;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAssayByTestAgent(
+    testAgent: string
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'assayTestAgent/' + testAgent;
     return this.http.get<any>(url)
       .pipe(
         map(result => {

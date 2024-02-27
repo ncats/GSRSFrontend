@@ -33,7 +33,22 @@ export interface InvitroAssayInformation {
   _controlSubId?: string;
   _calculateIC50?: string;
   _assayTargetSummaries?: Array<any>;
-  invitroInformationReferences?: Array<InvitroInformationReferences>;
+  //invitroInformationReferences?: Array<InvitroInformationReferences>;
+  invitroAssayScreenings?: Array<InvitroAssayScreening>;
+}
+
+export interface InvitroAssayScreening {
+  id?: number;
+  createdBy?: string;
+  creationDate?: number;
+  modifiedBy?: string;
+  lastModifiedDate?: number;
+  internalVersion?: number;
+  invitroReference?: InvitroReference;
+  invitroTestAgent?: InvitroTestAgent;
+  invitroAssayResult?: InvitroAssayResult;
+  invitroControls?: Array<InvitroControl>;
+ // invitroAssayInfoRefTestAgents?: Array<InvitroAssayInfoReferenceTestAgent>;
 }
 
 export interface InvitroInformationReferences {

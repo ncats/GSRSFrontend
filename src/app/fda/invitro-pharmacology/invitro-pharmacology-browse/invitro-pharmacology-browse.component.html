@@ -480,7 +480,7 @@
                       <ng-container matColumnDef="referenceSource">
                         <th mat-header-cell *matHeaderCellDef> Reference Source</th>
                         <td mat-cell *matCellDef="let assaysum">
-                          {{assaysum.referenceSource}}
+                          {{assaysum.referenceSourceTypeNumber}}
                         </td>
                       </ng-container>
 
@@ -488,13 +488,6 @@
                         <th mat-header-cell *matHeaderCellDef> Test Agent </th>
                         <td mat-cell *matCellDef="let assaysum">
                           {{assaysum.testAgent}}
-                          <!--
-                          <div *ngFor="let result of assaysum.invitroAssayResult; let index = index">
-                            <span *ngIf="result.invitroTestAgent">
-                              {{result.invitroTestAgent.testAgent}}
-                            </span>
-                          </div>
-                        -->
                         </td>
                       </ng-container>
 
@@ -503,12 +496,6 @@
                         <td mat-cell *matCellDef="let assaysum">
                           {{assaysum.testAgentConcentration}}
                           {{assaysum.testAgentConcentrationUnits}}
-                          <!--
-                          <div *ngFor="let result of assaysum.invitroAssayResult; let index = index">
-                            {{result.testAgentConcentration}}&nbsp;
-                            {{result.testAgentConcentrationUnits}}
-                          </div>
-                        -->
                         </td>
                       </ng-container>
 
@@ -523,38 +510,9 @@
                       <ng-container matColumnDef="calculatedValue">
                         <th mat-header-cell *matHeaderCellDef> Calculated Value </th>
                         <td mat-cell *matCellDef="let assaysum">
-                          {{assaysum._calculateIC50}}
+                          {{assaysum.calculateIC50Value}}
                         </td>
                       </ng-container>
-
-                      <!--
-                            <ng-container matColumnDef="amountValue">
-                              <th mat-header-cell *matHeaderCellDef>Amount Value</th>
-                              <td mat-cell *matCellDef="let assaysum">
-                                {{assay._calculateIc50}}
-                              </td>
-                            </ng-container>
-                            -->
-
-                      <!--
-                          <ng-container matColumnDef="value">
-                            <th mat-header-cell *matHeaderCellDef> Value Type </th>
-                            <td mat-cell *matCellDef="let assaysum">
-                              {{assaysum.valueType}}
-                            </td>
-                          </ng-container>
-                          -->
-
-                      <!-- AAAAAAAAAAAAA
-                          <ng-container matColumnDef="relationshipType">
-                            <th mat-header-cell *matHeaderCellDef> Relationship Type </th>
-                            <td mat-cell *matCellDef="let assaysum">
-                              <div *ngIf="assaysum.invitroRelationship">
-                                {{assaysum.invitroRelationship.relationshipType}}
-                              </div>
-                            </td>
-                          </ng-container>
-                             -->
 
                       <ng-container matColumnDef="assayType">
                         <th mat-header-cell *matHeaderCellDef> Bioassay Type </th>
@@ -648,16 +606,18 @@
             <ng-template mat-tab-label>
               <div>View By Target Name
                 <div class="font12px">
-                  (<span class="font12px fontbold">{{totalCountBrowseTargetName}}</span>)
+                  (<span class="font12px fontbold">
+                    {{browseByTargetNameList.length}}
+                  </span>)
                 </div>
               </div>
             </ng-template>
 
             <div class="font17px padtop15px padbottom10px"><b>View By Target Name</b></div><br>
 
-            <div class="cards-view" *ngIf="browseTargetNameList.length > 0; else noRecordInvitro">
+            <div class="cards-view" *ngIf="browseByTargetNameList.length > 0; else noRecordInvitro">
 
-              <mat-card *ngFor="let assayTar of browseTargetNameList; let index = index">
+              <mat-card *ngFor="let assayTar of browseByTargetNameList; let index = index">
 
                 <mat-card-title>
                   <!--
@@ -719,7 +679,9 @@
                           Target Name:
                         </div>
                         <div class="row-property-value">
-                          <span class="colorblue font17px fontbold">{{assayTar.targetName}}</span>
+                          <span class="colorblue font17px fontbold">
+                            {{assayTar.targetName}}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -754,6 +716,11 @@
                           </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="referenceSource">
+                          <th mat-header-cell *matHeaderCellDef> Reference Source </th>
+                          <td mat-cell *matCellDef="let assaysum"> {{assaysum.referenceSourceTypeNumber}} </td>
+                        </ng-container>
+
                         <ng-container matColumnDef="testAgent">
                           <th mat-header-cell *matHeaderCellDef> Test Agent </th>
                           <td mat-cell *matCellDef="let assaysum">
@@ -769,27 +736,32 @@
                           </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="resultValue">
+                          <th mat-header-cell *matHeaderCellDef> Result Value </th>
+                          <td mat-cell *matCellDef="let assaysum"> {{assaysum.resultValue}} </td>
+                        </ng-container>
+
                         <ng-container matColumnDef="calculatedValue">
                           <th mat-header-cell *matHeaderCellDef> Calculated Value </th>
                           <td mat-cell *matCellDef="let assaysum">
-                            {{assaysum._calculateIC50}}
+                            {{assaysum.calculateIC50Value}}
                           </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="assayType">
+                          <th mat-header-cell *matHeaderCellDef> Bioassay Type </th>
+                          <td mat-cell *matCellDef="let assay"> {{assay.bioassayType}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="studyType">
+                          <th mat-header-cell *matHeaderCellDef> Study Type </th>
+                          <td mat-cell *matCellDef="let assay"> {{assay.studyType}} </td>
                         </ng-container>
 
                         <ng-container matColumnDef="relationshipType">
                           <th mat-header-cell *matHeaderCellDef> Relationship Type </th>
                           <td mat-cell *matCellDef="let assaysum">
                             {{assaysum.relationshipType}}
-                          </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="referenceSource">
-                          <th width="180px" mat-header-cell *matHeaderCellDef> Reference Source </th>
-                          <td mat-cell *matCellDef="let assaysum">
-                            <div *ngIf="assaysum">
-                              {{assaysum.referenceSourceType}}&nbsp;
-                              {{assaysum.referenceSourceId}}
-                            </div>
                           </td>
                         </ng-container>
 
@@ -820,16 +792,16 @@
             <ng-template mat-tab-label>
               <div>View By Test Agent
                 <div class="font12px fontbold">
-                  ({{totalCountBrowseTestAgent}})
+                  ({{browseByTestAgentList.length}})
                 </div>
               </div>
             </ng-template>
 
-            <div class="font17px padtop15px padbottom10px"><b>View By TestAgent/Substance</b></div>
+            <div class="font17px padtop15px padbottom10px"><b>View By Test Agent</b></div>
             <br>
 
-            <div class="cards-view" *ngIf="testAgentListForBrowse.length; else noRecordInvitro">
-              <mat-card *ngFor="let testComp of testAgentListForBrowse; let index = index">
+            <div class="cards-view" *ngIf="browseByTestAgentList.length; else noRecordInvitro">
+              <mat-card *ngFor="let testAgt of browseByTestAgentList; let index = index">
                 <mat-card-title>
 
                   <div>
@@ -977,13 +949,14 @@
                         Test Agent:
                       </div>
                       <div class="row-property-value">
-                        <span class="colorblue font17px fontbold">{{testComp.testAgent}}</span>
+                        <span class="colorblue font17px fontbold">
+                          {{testAgt.testAgent}}</span>
                       </div>
                     </div>
                   </div>
 
 
-                  <div *ngIf="testComp">
+                  <div *ngIf="testAgt">
                     <br><br>
                     <!-- MAT TAB Group inside Browse Substance -->
                     <mat-tab-group [(selectedIndex)]="viewTabSelectedIndex"
@@ -993,23 +966,23 @@
                         <ng-template mat-tab-label>
                           <div>Summary View
                             <div class="font12px">
-                              ({{testComp.testAgentSummaryList.length}})
+                              ({{testAgt.testAgentSummaryList.length}})
                             </div>
                           </div>
                         </ng-template>
 
 
                         <!-- ************************************************** -->
-                        <!-- TEST AGENT/SUBSTANCE TAB: SUMMARY VIEW BEGIN       -->
+                        <!-- TEST AGENT TAB: SUMMARY VIEW BEGIN                 -->
                         <!-- ************************************************** -->
 
                         <br>
                         <span class="font14px colorbrown fontfamilyverdana"><b>Summary View</b></span>
-                        &nbsp;<b>({{testComp.testAgentSummaryList.length}})</b>
+                        &nbsp;<b>({{testAgt.testAgentSummaryList.length}})</b>
                         <br><br>
 
                         <div>
-                          <table mat-table [dataSource]="testComp.testAgentSummaryList" class="font12px" matSort
+                          <table mat-table [dataSource]="testAgt.testAgentSummaryList" class="font12px" matSort
                             (matSortChange)="sortData($event)" matSortActive="studyType" matSortDirection="asc"
                             matSortDisableClear>
 
@@ -1043,15 +1016,6 @@
                                 <ng-template #noTestCompoundSubId>
                                   {{assay.testCompound}}
                                 </ng-template>
-                              </td>
-                            </ng-container>
-                            -->
-
-                            <!--
-                            <ng-container matColumnDef="amountValue">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount Value</th>
-                              <td mat-cell *matCellDef="let assay">
-                                {{assay._calculateIc50}}
                               </td>
                             </ng-container>
                             -->
@@ -1099,10 +1063,9 @@
                               </td>
                             </ng-container>
 
-
                             <ng-container matColumnDef="referenceSource">
                               <th mat-header-cell *matHeaderCellDef> Reference Source </th>
-                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.referenceSource}} </td>
+                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.referenceSourceTypeNumber}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="testAgentConcentration">
@@ -1121,7 +1084,7 @@
                             <ng-container matColumnDef="calculatedValue">
                               <th mat-header-cell *matHeaderCellDef> Calculated Value </th>
                               <td mat-cell *matCellDef="let assaysum">
-                                {{assaysum._calculateIC50}}
+                                {{assaysum.calculateIC50Value}}
                               </td>
                             </ng-container>
 
@@ -1228,7 +1191,7 @@
 
 
                       <!-- ***************************************************** -->
-                      <!-- Test Agent/SUBSTANCE Tab: SCREENING VIEW Tab BEGIN    -->
+                      <!-- Test Agent Tab: SCREENING VIEW Tab BEGIN              -->
                       <!-- ***************************************************** -->
 
                       <mat-tab label="">
@@ -1236,7 +1199,7 @@
                           <br>
                           <div>Screening View
                             <div class="font12px">
-                              ({{testComp.testAgentScreeningList.length}})
+                              ({{testAgt.testAgentScreeningList.length}})
                             </div>
                           </div>
                         </ng-template>
@@ -1244,10 +1207,10 @@
                         <div>
                           <br>
                           <span class="font14px colorbrown fontfamilyverdana"><b>Screening View</b></span>
-                          &nbsp;<b>({{testComp.testAgentScreeningList.length}})</b>
+                          &nbsp;<b>({{testAgt.testAgentScreeningList.length}})</b>
                           <br><br>
 
-                          <table mat-table [dataSource]="testComp.testAgentScreeningList" class="font12px" matSort
+                          <table mat-table [dataSource]="testAgt.testAgentScreeningList" class="font12px" matSort
                             (matSortChange)="sortData($event)" matSortActive="studyType" matSortDirection="asc"
                             matSortDisableClear>
 
@@ -1381,7 +1344,7 @@
             <ng-template mat-tab-label>
               <div>View By Reference
                 <div class="colorblack font12px fontbold">
-                  ({{totalCountReference}})
+                  ({{browseByReferenceList.length}})
                 </div>
               </div>
             </ng-template>
@@ -1433,7 +1396,6 @@
                     <!-- ********************************************** -->
                     <!-- REFERENCE SUMMARY VIEW BEGIN                   -->
                     <!-- ********************************************** -->
-
                     <br>
                     <span class="font14px colorbrown fontfamilyverdana"><b>Summary View</b></span>
                     &nbsp;<b>({{app.referenceSummaryList.length}})</b>
@@ -1462,13 +1424,6 @@
                         <th mat-header-cell *matHeaderCellDef> Test Agent </th>
                         <td mat-cell *matCellDef="let assaysum">
                           {{assaysum.testAgent}}
-                          <!--
-                          <div *ngFor="let result of assaysum.invitroAssayResult; let index = index">
-                            <span *ngIf="result.invitroTestAgent">
-                              {{result.invitroTestAgent.testAgent}}
-                            </span>
-                          </div>
-                        -->
                         </td>
                       </ng-container>
 
@@ -1488,7 +1443,7 @@
                       <ng-container matColumnDef="calculatedValue">
                         <th mat-header-cell *matHeaderCellDef> Calculated Value </th>
                         <td mat-cell *matCellDef="let assaysum">
-                          {{assaysum._calculateIC50}}
+                          {{assaysum.calculateIC50Value}}
                         </td>
                       </ng-container>
 

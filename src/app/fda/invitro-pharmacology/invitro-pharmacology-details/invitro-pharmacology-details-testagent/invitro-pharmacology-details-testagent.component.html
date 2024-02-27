@@ -1,0 +1,149 @@
+<div class="divcenter margintop90px">
+
+  <div class="font22px">
+    <b>Details by Test Agent</b>
+  </div>
+
+  <div class="margintop20px">
+    <b>Test Agent:
+      <span class="colorblue font16px">BAF312</span>
+    </b>
+  </div>
+
+</div> <!-- class=divcenter-->
+
+
+<mat-card class="margintop20px">
+  <mat-card-content>
+    <!-- **** MAT-ACCORDIAN BEGIN *** -->
+    <mat-accordion multi="true">
+
+
+      <table mat-table [dataSource]="assays" class="font12px">
+
+        <!--
+          <ng-container matColumnDef="referenceSource">
+            <th mat-header-cell *matHeaderCellDef> Reference Source</th>
+            <td mat-cell *matCellDef="let assaysum">
+              {{assaysum.referenceSource}}
+            </td>
+          </ng-container>
+        -->
+          <ng-container matColumnDef="targetName">
+            <th mat-header-cell *matHeaderCellDef> Target Name </th>
+            <td mat-cell *matCellDef="let assaysum">
+              {{assaysum.targetName}}
+            </td>
+          </ng-container>
+
+          <!--
+          <ng-container matColumnDef="testAgentConcentration">
+            <th mat-header-cell *matHeaderCellDef> Test Agent Concentration </th>
+            <td mat-cell *matCellDef="let assaysum">
+              {{assaysum.testAgentConcentration}}
+              {{assaysum.testAgentConcentrationUnits}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="resultValue">
+            <th mat-header-cell *matHeaderCellDef> Result Value </th>
+            <td mat-cell *matCellDef="let assaysum">
+              {{assaysum.resultValue}}&nbsp;
+              {{assaysum.resultValueUnits}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="calculatedValue">
+            <th mat-header-cell *matHeaderCellDef> Calculated Value </th>
+            <td mat-cell *matCellDef="let assaysum">
+              {{assaysum._calculateIC50}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assayType">
+            <th mat-header-cell *matHeaderCellDef> Bioassay Type </th>
+            <td mat-cell *matCellDef="let assaysum"> {{assay.bioassayType}} </td>
+          </ng-container>
+        -->
+        <ng-container matColumnDef="studyType">
+          <th mat-header-cell *matHeaderCellDef> Study Type </th>
+          <td mat-cell *matCellDef="let assaysum">
+            {{assaysum.studyType}}
+          </td>
+        </ng-container>
+
+
+
+        <!--
+                  <ng-container matColumnDef="applicationType">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Type </th>
+                    <td mat-cell *matCellDef="let assaylocal"> {{assay.applicationType}} </td>
+                  </ng-container>  -->
+
+        <!--
+    <ng-container matColumnDef="assayTarget">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Assay Target </th>
+      <td mat-cell *matCellDef="let assay">
+        <div *ngIf="assay._assayTargetSubId; else noAssayTargetSubId">
+          <a [routerLink]="['/substances', assay._assayTargetSubId]" target="_blank"
+            matTooltip="Go to Substance Details page">
+            {{ assay.assayTarget }}
+          </a>
+        </div>
+        <ng-template #noAssayTargetSubId>
+          {{assay.assayTarget}}
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="control">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Control </th>
+      <td mat-cell *matCellDef="let assay">
+        <div *ngIf="assay._controlSubId; else noControlSubId">
+          <a [routerLink]="['/substances', assay._controlSubId]" target="_blank"
+            matTooltip="Go to Substance Details page">
+            {{ assay.control }}
+          </a>
+        </div>
+        <ng-template #noControlSubId>
+          {{assay.control}}
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="controlAmount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Control Value Type/Average/High/Low/Unit</th>
+      <td mat-cell *matCellDef="let assay">
+        {{assay.controlValueType}}&nbsp;
+        {{assay.controlValueMean}}&nbsp;
+        {{assay.controlValueLow}}&nbsp;
+        {{assay.controlValueHigh}}&nbsp;
+        {{assay.controlValueUnit}}&nbsp;
+      </td>
+    </ng-container>
+    -->
+
+        <tr mat-header-row *matHeaderRowDef="assaySummaryDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: assaySummaryDisplayedColumns;"></tr>
+      </table>
+
+
+
+      <!--
+      <mat-expansion-panel [expanded]="false">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="bordergray">
+            <div class="headerstyle title2 padtop7px padleft10px">
+
+
+            </div>
+          </mat-panel-title>
+
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    -->
+
+    </mat-accordion>
+
+  </mat-card-content>
+</mat-card>

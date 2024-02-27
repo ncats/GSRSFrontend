@@ -39,18 +39,12 @@ import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-sear
 export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   public assays: Array<InvitroAssayInformation>;
+  targetSummaries: any;
 
-  view = 'cards';
-  public privateSearchTerm?: string;
-
-  order: string;
-  public sortValues = invitroPharmacologySearchSortValues;
-  pageIndex: number;
-  pageSize: number;
-  jumpToValue: string;
-
-  pageIndexReference = 0;
-  pageSizeReference: number;
+  // Browse by tabs, data lists
+  browseByTargetNameList: Array<any> = [];
+  browseByTestAgentList: Array<any> = [];
+  browseByReferenceList: Array<any> = [];
 
   totalCountAllAssay: number;
   totalCountBrowseAllAssay: number;
@@ -62,22 +56,25 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   totalCountSubstance: number;
   totalCountReference: number;
 
+  // Constants
+  view = 'cards';
+  displayCategory = 'summary';
+  ascDescDir = 'desc';
+
+  public privateSearchTerm?: string;
+
+  order: string;
+  public sortValues = invitroPharmacologySearchSortValues;
+  pageIndex: number;
+  pageSize: number;
+  jumpToValue: string;
+
+  pageIndexReference = 0;
+  pageSizeReference: number;
+
   calculateIc50: string;
   tabSelectedIndex = 0;
   viewTabSelectedIndex = 0;
-  displayCategory = 'summary';
-
-  targetSummaries: any;
-  // assayTargetSummary: Array<any> = [];
-
-  testAgentLists: Array<any> = [];
-  applicationTypeNumLists: Array<any> = [];
-
-  // Lists of data for Browse tabs
-  testAgentListForBrowse: Array<any> = [];
-  browseTargetNameList: Array<any> = [];
-  browseSubstanceList: Array<any> = [];
-  browseByReferenceList: Array<any> = [];
 
   downloadJsonHref: any;
   jsonFileName: string;
@@ -107,7 +104,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   searchValue: string;
   lastPage: number;
   invalidPage = false;
-  ascDescDir = 'desc';
 
   assaySummaryDisplayedColumns: string[] = [
     'referenceSource',
@@ -121,11 +117,14 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   assayTargetSummaryDisplayedColumns: string[] = [
     'viewDetails',
+    'referenceSource',
     'testAgent',
     'testAgentConcentration',
+    'resultValue',
     'calculatedValue',
-    'relationshipType',
-    'referenceSource'
+    'assayType',
+    'studyType',
+    'relationshipType'
   ];
 
   testAgentSummaryColumns: string[] = [
@@ -263,7 +262,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   searchInvitroAssay() {
     //Clear the existing Browse By lists
-    this.testAgentListForBrowse = [];
+    this.browseByTargetNameList = [];
+    this.browseByTestAgentList = [];
     this.browseByReferenceList = [];
 
     // Set total Counts to 0
@@ -304,6 +304,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           if (pagingResponse.sideway || pagingResponse.sideway.length > 1) {
             sideWayfacets = pagingResponse.sideway;
           }
+
 
           /*
           this.rawFacets.forEach(elementFacet => {
@@ -362,11 +363,19 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         } // for each paging facets
 
 
+        this.createAllAssayScreeningList();
+
+        this.createTargetNameList();
+
+        this.createTestAgentList();
+
+        this.createReferenceScreeningList();
+
         // ****** LOOP Results pagingResponse.content ***********
         this.assays.forEach(assay => {
           if (assay) {
 
-            assay._assayTargetSummaries = [];
+            //assay._assayTargetSummaries = [];
 
             // ******* Get data list for 'Browse by Target Name' tab.
             if (assay.targetName) {
@@ -392,152 +401,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             } // if assay.targetName exists
 
 
-            /* Assay Informtion Reference loop */
-            assay.invitroInformationReferences.forEach(infoRef => {
-
-              // For each assay
-              const assaySummary: any = {};
-              assaySummary.id = assay.id;
-              assaySummary.targetName = assay.targetName;
-              assaySummary.bioassayType = assay.bioassayType;
-              assaySummary.studyType = assay.studyType;
-
-
-              //const allAssaySummaryList = [];
-              //allAssaySummaryList.push(assaySummary);
-
-              //  const allAssayScreening = {'allAssaySummaryList': allAssaySummaryList};
-              // this.testAgentListForBrowse.push(appScreening);
-
-
-              // ########################################################################
-              // ******** Get Reference List for 'Browse by Reference' tab.
-              if (infoRef.invitroReference) {
-
-                if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
-                  let referenceSourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
-
-                  // Get the index if the value exists in the key 'referenceSourceTypeNumber'
-                  const sourceFoundIndex = this.browseByReferenceList.findIndex(record => record.referenceSourceTypeNumber === referenceSourceTypeNumber);
-
-                  // If referenceSourceTypeNumber value found in the existing browser list, add the current assay.
-                  if (sourceFoundIndex > -1) {
-                    /*
-                    let referenceSummaryListTemp = [];
-                    referenceSummaryListTemp = this.browseByReferenceList[sourceFoundIndex].referenceSummaryList;
-                    referenceSummaryListTemp.push(assaySummary);
-                    this.browseByReferenceList[sourceFoundIndex].referenceSummaryList = referenceSummaryListTemp; */
-                    this.browseByReferenceList[sourceFoundIndex].referenceSummaryList.push(assaySummary);
-
-                  } else {
-                    let referenceSummaryList = [];
-                    referenceSummaryList.push(assaySummary);
-
-                    const appScreening = { 'referenceSourceTypeNumber': referenceSourceTypeNumber, 'referenceSummaryList': referenceSummaryList };
-                    this.browseByReferenceList.push(appScreening);
-
-                  } // else
-
-                  // Get total count for Browse Reference/Application
-                  this.totalCountReference = this.browseByReferenceList.length;
-
-                } // if Reference Source Type or Number exists
-              } // if invitroReference exists
-
-
-              // ########################################################################
-              // ******** Get Test Agent List for 'Browse by Test Agent' tab.
-              infoRef.invitroAssayInfoRefTestAgents.forEach(infoRefTestAgent => {
-
-                // LOOP: Invitro Result
-                let testAgentConcentration;
-                let testAgentConcentrationUnits = '';
-                let resultValue;
-                let resultValueUnits = '';
-                infoRefTestAgent.invitroAssayResult.forEach(result => {
-                  if (result) {
-                    testAgentConcentration = result.testAgentConcentration;
-                    testAgentConcentrationUnits = result.testAgentConcentrationUnits;
-                    resultValue = result.resultValue;
-                    resultValueUnits = result.resultValueUnits;
-
-                    // Invitro Summary
-                    // if (result.invitroSummary) {
-                    //    assaySummary.relationshipType = result.invitroSummary.relationshipType;
-                    //  }
-                  }
-                });
-
-                // if Test Agent exists
-                if (infoRefTestAgent.invitroTestAgent) {
-                  if (infoRefTestAgent.invitroTestAgent.testAgent) {
-
-                    let sourceTypeNumber = '';
-                    if (infoRef.invitroReference) {
-                      if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
-                        sourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
-                      }
-                    }
-
-                    assaySummary.testAgent = infoRefTestAgent.invitroTestAgent.testAgent;
-
-                    // Create row/object for All Assay Summary View
-                    let assaySum = this.createSummaryList(assay, sourceTypeNumber, infoRefTestAgent.invitroTestAgent.testAgent, testAgentConcentration, testAgentConcentrationUnits, resultValue, resultValueUnits);
-                    assay._assayTargetSummaries.push(assaySum);
-
-                    // Get the index if the value exists in the key 'testAgent'
-                    const indexTestAgent = this.testAgentListForBrowse.findIndex(record => record.testAgent === infoRefTestAgent.invitroTestAgent.testAgent);
-
-                    if (indexTestAgent > -1) {
-                      // Add in the exsting card record
-                      this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList.push(assaySum);
-                    } else {
-                      // Create new card record
-                      let assayList = [];
-                      assayList.push(assaySum);
-                      const appScreening = { 'testAgent': infoRefTestAgent.invitroTestAgent.testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
-                      this.testAgentListForBrowse.push(appScreening);
-                    }
-
-                  } // if testAgent exists
-                } // if invitroTestAgent exists
-
-
-                // ******* Get Test Agent/Substance List for 'Browse by Test Agent/Substance' tab.
-                /*
-                if (infoRefTestAgent.invitroAssayResult) {
-                  infoRefTestAgent.invitroAssayResult.forEach(result => {
-                    if (result) {
-                      //  if (result.invitroTestAgent) {
-                      //   if (result.invitroTestAgent.testAgent) {
-
-                      // Get the index if the value exists in the key 'appTypeNumber'
-                      const indexTestAgent = this.testAgentListForBrowse.findIndex(record => record.testAgent === result.invitroTestAgent.testAgent);
-
-                      if (indexTestAgent > -1) {
-                        let assayReferenceList2 = [];
-                        assayReferenceList2 = this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList;
-                        assayReferenceList2.push(assaySummary);
-                        this.testAgentListForBrowse[indexTestAgent].testAgentSummaryList = assayReferenceList2;
-                      } else {
-                        let assayList = [];
-                        assayList.push(assaySummary);
-                        const appScreening = { 'testAgent': result.invitroTestAgent.testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
-                        this.testAgentListForBrowse.push(appScreening);
-                      }
-                      //  }
-                      // } // if result.invitroTestAgent.testAgent exists
-                    }
-                  });
-                }
-                */
-
-                // Get total count for Browse Test Agent/Substance
-                this.totalCountBrowseTestAgent = this.testAgentListForBrowse.length;
-
-              });  // LOOP: invitroAssayInfoRefTestAgents end
-
-            });  // FOR LOOP: invitroInformationReferences.forEach
 
           } // if assay
         }); // this.assays.forEach
@@ -582,20 +445,343 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       });
 
     //} //
-
-    /*
-    loadBrowseSubstanceTab() {
-      this.substanceNameLists.forEach(elementSubstance => {
-        const subScreening = { 'testCompound': elementSubstance };
-
-        this.browseSubstanceList.push(subScreening);
-      });
-    }
-    */
   }
 
-  createSummaryList(assay: any,  referenceSource: string, testAgent: string, testAgentConcentration: string,
-    testAgentConcentrationUnits: string, resultValue: string, resultValueUnits: string) : any {
+  createAllAssayScreeningList() {
+
+    this.assays.forEach(assay => {
+      if (assay) {
+        assay._assayTargetSummaries = [];
+
+        /* Assay Informtion Reference loop */
+        assay.invitroAssayScreenings.forEach(screening => {
+
+          // For each assay
+          const assaySummary: any = {};
+          assaySummary.id = assay.id;
+          assaySummary.targetName = assay.targetName;
+          assaySummary.bioassayType = assay.bioassayType;
+          assaySummary.studyType = assay.studyType;
+
+          /* Invitro Reference Object exists */
+          if (screening.invitroReference) {
+            assaySummary.referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+          }
+
+          /* Invitro Test Agent Object exists */
+          if (screening.invitroTestAgent) {
+            assaySummary.testAgent = screening.invitroTestAgent.testAgent;
+          }
+
+          /* Invitro Assay Result Object exists */
+          if (screening.invitroAssayResult) {
+            assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
+            assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+
+            assaySummary.resultValue = screening.invitroAssayResult.resultValue;
+            assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
+          }
+
+          /* LOOP: Invitro Assay Control exists */
+          if (screening.invitroControls.length > 0) {
+            screening.invitroControls.forEach(ctr => {
+              if (ctr) {
+                if (ctr.resultType) {
+                  assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
+                }
+              }
+            });
+          }
+
+          // Add/Push screening data into the summary list
+          assay._assayTargetSummaries.push(assaySummary);
+
+        }); // LOOP: AssayScreenings
+      } // if assay exists
+    }); // LOOOP: assays
+  }
+
+  createTargetNameList() {
+    // Loop through each assay
+    this.assays.forEach(assay => {
+      if (assay) {
+
+        /* Assay Informtion Reference loop */
+        assay.invitroAssayScreenings.forEach(screening => {
+
+          // For each assay
+          const assaySummary: any = {};
+          assaySummary.id = assay.id;
+          assaySummary.targetName = assay.targetName;
+          assaySummary.bioassayType = assay.bioassayType;
+          assaySummary.studyType = assay.studyType;
+
+          /* Invitro Assay Result Object exists */
+          if (screening.invitroAssayResult) {
+            assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
+            assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+
+            assaySummary.resultValue = screening.invitroAssayResult.resultValue;
+            assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
+          }
+
+          /* LOOP: Invitro Assay Control exists */
+          if (screening.invitroControls.length > 0) {
+            screening.invitroControls.forEach(ctr => {
+              if (ctr) {
+                if (ctr.resultType) {
+                  assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
+                }
+              }
+            });
+          }
+
+          /* Invitro Reference Object exists */
+          let referenceSourceTypeNumber = '';
+          if (screening.invitroReference) {
+            referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+            assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+          } // if invitroReference exists
+
+          /* Invitro Test Agent Object exists */
+          if (screening.invitroTestAgent) {
+            assaySummary.testAgent = screening.invitroTestAgent.testAgent;
+          } // if invitroTestAgent exists
+
+          if (assay.targetName) {
+            let targetName = '';
+            targetName = assay.targetName;
+            assaySummary.targetName = targetName;
+
+            // Get the index if the value exists in the key 'targetName'
+            const indexTargetName = this.browseByTargetNameList.findIndex(record => record.targetName === targetName);
+
+            if (indexTargetName > -1) {
+              // Add in the exsting card record
+              this.browseByTargetNameList[indexTargetName].targetNameSummaryList.push(assaySummary);
+            } else {
+              // Create new card record
+              let assayList = [];
+              assayList.push(assaySummary);
+              const appScreening = { 'targetName': targetName, 'targetNameSummaryList': assayList };
+              this.browseByTargetNameList.push(appScreening);
+            } // else
+
+          } // if targetName exists
+
+        }); // LOOP: AssayScreenings
+      } // if assay exists
+    }); // LOOOP: assays
+  }
+
+  createTestAgentList() {
+    // Loop through each assay
+    this.assays.forEach(assay => {
+      if (assay) {
+
+        /* Assay Informtion Reference loop */
+        assay.invitroAssayScreenings.forEach(screening => {
+
+          // For each assay
+          const assaySummary: any = {};
+          assaySummary.id = assay.id;
+          assaySummary.targetName = assay.targetName;
+          assaySummary.bioassayType = assay.bioassayType;
+          assaySummary.studyType = assay.studyType;
+
+          /* Invitro Assay Result Object exists */
+          if (screening.invitroAssayResult) {
+            assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
+            assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+
+            assaySummary.resultValue = screening.invitroAssayResult.resultValue;
+            assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
+          }
+
+          /* LOOP: Invitro Assay Control exists */
+          if (screening.invitroControls.length > 0) {
+            screening.invitroControls.forEach(ctr => {
+              if (ctr) {
+                if (ctr.resultType) {
+                  assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
+                }
+              }
+            });
+          }
+
+          /* Invitro Reference Object exists */
+          let referenceSourceTypeNumber = '';
+          if (screening.invitroReference) {
+            referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+            assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+          } // if invitroReference exists
+
+
+          /* Invitro Test Agent Object exists */
+          if (screening.invitroTestAgent) {
+            let testAgent = '';
+            testAgent = screening.invitroTestAgent.testAgent;
+            assaySummary.testAgent = testAgent;
+
+            // Get the index if the value exists in the key 'testAgent'
+            const indexTestAgent = this.browseByTestAgentList.findIndex(record => record.testAgent === testAgent);
+
+            if (indexTestAgent > -1) {
+              // Add in the exsting card record
+              this.browseByTestAgentList[indexTestAgent].testAgentSummaryList.push(assaySummary);
+            } else {
+              // Create new card record
+              let assayList = [];
+              assayList.push(assaySummary);
+              const appScreening = { 'testAgent': testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
+              this.browseByTestAgentList.push(appScreening);
+            } // else
+          } // if invitroTestAgent exists
+
+        }); // LOOP: AssayScreenings
+      } // if assay exists
+    }); // LOOOP: assays
+  }
+
+  createReferenceScreeningList() {
+    // Loop through each assay
+    this.assays.forEach(assay => {
+      if (assay) {
+
+        /* Assay Informtion Reference loop */
+        assay.invitroAssayScreenings.forEach(screening => {
+
+          // For each assay
+          const assaySummary: any = {};
+          assaySummary.id = assay.id;
+          assaySummary.targetName = assay.targetName;
+          assaySummary.bioassayType = assay.bioassayType;
+          assaySummary.studyType = assay.studyType;
+
+          /* Invitro Test Agent Object exists */
+          if (screening.invitroTestAgent) {
+            assaySummary.testAgent = screening.invitroTestAgent.testAgent;
+          }
+
+          /* Invitro Assay Result Object exists */
+          if (screening.invitroAssayResult) {
+            assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
+            assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+
+            assaySummary.resultValue = screening.invitroAssayResult.resultValue;
+            assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
+          }
+
+          /* LOOP: Invitro Assay Control exists */
+          if (screening.invitroControls.length > 0) {
+            screening.invitroControls.forEach(ctr => {
+              if (ctr) {
+                if (ctr.resultType) {
+                  assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
+                }
+              }
+            });
+          }
+
+          /* Invitro Reference Object exists */
+          let referenceSourceTypeNumber = '';
+          if (screening.invitroReference) {
+            referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+            assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+
+            // Get the index if the value exists in the key 'referenceSourceTypeNumber'
+            const sourceFoundIndex = this.browseByReferenceList.findIndex(record => record.referenceSourceTypeNumber === referenceSourceTypeNumber);
+
+            // If referenceSourceTypeNumber value found in the existing browser list, add the current assay.
+            if (sourceFoundIndex > -1) {
+              this.browseByReferenceList[sourceFoundIndex].referenceSummaryList.push(assaySummary);
+            } else {
+              let referenceSummaryList = [];
+              referenceSummaryList.push(assaySummary);
+
+              const appScreening = { 'referenceSourceTypeNumber': referenceSourceTypeNumber, 'referenceSummaryList': referenceSummaryList };
+              this.browseByReferenceList.push(appScreening);
+            } // else
+
+          } // if invitroReference exists
+
+        }); // LOOP: AssayScreenings
+      } // if assay exists
+    }); // LOOOP: assays
+  }
+
+  createSummaryList(assay: any): any {
+    if (assay) {
+
+      /* Assay Informtion Reference loop */
+      assay.invitroInformationReferences.forEach(infoRef => {
+
+        // For each assay
+        const assaySummary: any = {};
+        assaySummary.id = assay.id;
+        assaySummary.targetName = assay.targetName;
+        assaySummary.bioassayType = assay.bioassayType;
+        assaySummary.studyType = assay.studyType;
+
+        if (infoRef.invitroReference) {
+
+          if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
+            let referenceSourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
+
+            assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+          }
+        }
+
+        infoRef.invitroAssayInfoRefTestAgents.forEach(infoRefTestAgent => {
+
+          // LOOP: Invitro Result
+          let testAgentConcentration;
+          let testAgentConcentrationUnits = '';
+          let resultValue;
+          let resultValueUnits = '';
+
+          // Invitro Result loop
+          infoRefTestAgent.invitroAssayResult.forEach(result => {
+            if (result) {
+
+              testAgentConcentration = result.testAgentConcentration;
+              testAgentConcentrationUnits = result.testAgentConcentrationUnits;
+              resultValue = result.resultValue;
+              resultValueUnits = result.resultValueUnits;
+
+              // Invitro Summary
+              // if (result.invitroSummary) {
+              //    assaySummary.relationshipType = result.invitroSummary.relationshipType;
+              //  }
+            }
+          });
+
+          // if Test Agent exists
+          if (infoRefTestAgent.invitroTestAgent) {
+            if (infoRefTestAgent.invitroTestAgent.testAgent) {
+
+              let sourceTypeNumber = '';
+              if (infoRef.invitroReference) {
+                if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
+                  sourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
+                }
+              }
+
+              assaySummary.testAgent = infoRefTestAgent.invitroTestAgent.testAgent;
+
+              // Create row/object for All Assay Summary View
+              let assaySum = this.createSummaryObject(assay, sourceTypeNumber, infoRefTestAgent.invitroTestAgent.testAgent, testAgentConcentration, testAgentConcentrationUnits, resultValue, resultValueUnits);
+
+            } // if testAgent exists
+          } // if invitroTestAgent exists
+
+        }); // LOOP: invitroAssayInfoRefTestAgents
+      }); // LOOP: invitroInformationReferences
+    } // if assay exists
+  }
+
+  createSummaryObject(assay: any, referenceSource: string, testAgent: string, testAgentConcentration: string,
+    testAgentConcentrationUnits: string, resultValue: string, resultValueUnits: string): any {
     const assaySummary: any = {};
     assaySummary.id = assay.id;
     assaySummary.targetName = assay.targetName;
@@ -612,97 +798,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
     // Add to the All Assay Summary List
     //assay._assayTargetSummaries.push(assaySummary);
-  }
-
-  browseByAllSubstance() {
-    // Get total count for Browse Substance
-    this.totalCountSubstance = this.testAgentLists.length;
-
-    this.testAgentLists.forEach(elementSubstance => {
-      //  const subScreening = { 'testCompound': elementSubstance };
-
-      let searchterm = "root_testAgent:" + elementSubstance;
-
-      this.loadingService.setLoading(true);
-      const skip = this.pageIndex * this.pageSize;
-      const subscription = this.invitroPharmacologyService.getAssayByTestCompound(
-        this.order,
-        skip,
-        this.pageSize,
-        searchterm,
-        this.privateFacetParams,
-      )
-        .subscribe(pagingResponse => {
-          this.isError = false;
-          let test = pagingResponse.content;
-          // didn't work unless I did it like this instead of
-          // below export statement
-          let substanceAssay = pagingResponse.content;
-          this.etag = pagingResponse.etag;
-
-
-          substanceAssay.forEach(element => {
-            if (element) {
-
-              /*
-              if (element.assayTarget) {
-
-                element._calculateIC50 = this.calculate1C50(element.valueType, element.percentInhibition, element.screeningConcentration)
-              */
-              /*
-              // Calculate IC50
-              if (element.percentInhibitionMean) {
-                if (element.percentInhibitionMean < 30) {
-                  element._calculateIc50 = element.controlValueType + ' > ' + element.screeningConcentration;
-                }
-              }
-              */
-              // }
-            }
-          });
-
-          const subScreening = { 'testAgent': elementSubstance, 'assay': substanceAssay };
-          this.browseSubstanceList.push(subScreening);
-
-        }, error => {
-          console.log('error');
-          const notification: AppNotification = {
-            message: 'There was an error trying to retrieve in-vitro pharmacology data. Please refresh and try again.',
-            type: NotificationType.error,
-            milisecondsToShow: 6000
-          };
-          this.isError = true;
-          this.isLoading = false;
-          this.loadingService.setLoading(this.isLoading);
-          this.mainNotificationService.setNotification(notification);
-        }, () => {
-          subscription.unsubscribe();
-          this.isLoading = false;
-          this.loadingService.setLoading(this.isLoading);
-        });
-      /*
-
-     //  this.browseSubstanceScreening.push(subScreening);
-       console.log("SUBSTANCE NAME" + elementSubstance);
-
-
-       const assayList = [];
-       this.assays.forEach(elementAssay => {
-         if (elementAssay.invitroTestCompound) {
-           if (elementAssay.invitroTestCompound.testCompound) {
-             if (elementAssay.invitroTestCompound.testCompound === elementSubstance) {
-               const assay = { 'testCompound': elementSubstance, 'assay': elementAssay };
-               assayList.push(assay);
-             }
-           }
-         }
-       });
-       // alert("LENGTH: " + this.testCompoundList.length);
-       this.testCompoundList.push(assayList);  */
-    });
-
-    //alert(this.testCompoundList[0].testCompound);
-    //console.log('AAAA: ' + JSON.stringify(this.testCompoundList));
   }
 
 
@@ -770,21 +865,21 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   }
   */
 
-  calculate1C50(valueType, percentInhibition, screeningConcentration): string {
+  calculate1C50(valueType, percentInhibition, testAgentConcentration): string {
     let calculateIC50 = '';
-    // if percentInhibition < 30, then IC50 > Screening Concentration
-    // if percentInhibition between 30 and 60, then IC50 approx. = Screening Concentration
-    // if percentInhibition above 60, then IC50 < Screening Concentration
+    // if percentInhibition < 30, then IC50 > Test Agent Concentration
+    // if percentInhibition between 30 and 60, then IC50 approx. = Test Agent Concentration
+    // if percentInhibition above 60, then IC50 < Test Agent Concentration
     if (percentInhibition) {
       if (percentInhibition < 30) {
-        calculateIC50 = valueType + ' > ' + screeningConcentration;
+        calculateIC50 = valueType + ' > ' + testAgentConcentration;
       } else if (percentInhibition >= 30 && percentInhibition <= 60) {
-        calculateIC50 = valueType + ' approx. = ' + screeningConcentration;
+        calculateIC50 = valueType + ' approx. = ' + testAgentConcentration;
       } else if (percentInhibition > 60) {
-        calculateIC50 = valueType + ' < ' + screeningConcentration;
+        calculateIC50 = valueType + ' < ' + testAgentConcentration;
       }
-
     }
+
     return calculateIC50;
   }
 
