@@ -76,7 +76,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  @HostListener('paste', ['$event']) private testing123(event: any) {
+  @HostListener('paste', ['$event']) private paster(event: any) {
    // console.log('host paste');
     event.preventDefault();
     event.stopPropagation();
@@ -173,7 +173,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     setTimeout(() => {
        this.ketcher = ketcher;
        this.editor = new EditorImplementation(this.ketcher);
-       console.log(this.editor);
        this.editorOnLoad.emit(this.editor);
        
     }, 1000);
@@ -193,7 +192,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   onDropHandler(object: any): void {
-    console.log('drop handler');
     if (object.invalidFlag) {
       this.canvasMessage = 'The selected file could not be read';
     } else {
@@ -247,7 +245,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   catchPaste(event: ClipboardEvent): void {
-    console.log('catch paste');
     const send: any = {};
     let valid = false;
     const items = event.clipboardData.items;

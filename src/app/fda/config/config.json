@@ -1,15 +1,15 @@
 {
-  "apiBaseUrl": "https://gsrs.ncats.nih.gov/ginas/app/",
-  "version": "3.1 SR4",
-  "contactEmail": "NCATSSubstanceReg@mail.nih.gov",
-  "displayMatchApplication": "false",
+  "version": "3.1",
+  "contactEmail": "GSRSSupport@fda.hhs.gov",
+  "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
-  "bannerMessage": "SubstanceReg-DEV Test Instance",
+  "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/95239e26-e0be-42d9-a960-9a5f7f1c25ee/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
+  "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
-  "approvalCodeName":"UNII",
+  "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "authenticateAs": {
@@ -24,16 +24,15 @@
 "userRegistration": {
     "configurations": {
       "emailForm": {
-        "active": true,
-        "userAdminRecipientEmails": ["NCATSSubstanceReg@mail.nih.gov"],
-        "instanceApplicationName": "SubstanceReg-DEV",
-        "instanceApplicationSubjectTag": "SubstanceReg-DEV",
+        "active": false,
+        "userAdminRecipientEmails": ["email1@domain.com", "email1@domain.com"],
+        "instanceApplicationName": "GSRS",
+        "instanceApplicationSubjectTag": "GSRS",
         "registrationAccessEmailSubjectTemplate": "[%s] User registration/access issue",
         "registrationAccessEmailBodyTemplate": "Please register this new user OR resolve login access issue in %s\n\nUsername: %s\nUser email: %s\n\nTo the USER making the request, please provide below any details that will help the Admin facilitate your request:\n\n"
       }
     }
   },
-  "privacyStatement": "<h2>NCATS Substance Registration Privacy Statement</h2>\n\n<p>Protecting your privacy is important to NCATS. This website links to other National Institutes of Health (NIH) sites, federal agency sites, and private organization sites.  NCATS does not collect personally identifiable information (PII) about you during your visit to this site unless you choose to provide it.</p>\n\n<p>NCATS does, however, collect information from visitors who read, browse, and/or download information from this site to better understand how the public uses the site and how to make it more helpful.  Please contact us using the information in the \"Contact\" section if you have any questions about our policies.</p>\n\n<h3>Types of Information Collected</h3>\n\n</p>When you browse through any website, certain information about your visit can be collected. NCATS automatically collects and temporarily stores the following type of information about your visit:</p>\n\n<ul>\n\t<li>Domain from which you access the Internet.</li>\n\t<li>IP address (an IP address is a number that is automatically assigned to a computer when surfing the Web).</li>\n\t<li>Operating system and information about the browser used when visiting the site.</li>\n\t<li>Date and time of your visit.</li>\n\t<li>Pages you visited.</li>\n\t<li>Address of the website that connected you to NCATS (such as google.com or bing.com).</li>\n</ul>\n\n<p>NCATS uses this information to measure the number of visitors to our site and its various sections and to help make our site more useful to visitors.</p>\n\n<p>In addition to the above information collected from anonymous visitors to the site, other information is collected and stored when users register or log in to submit data. NCATS uses this information to create user accounts and to connect with users of the resource. Specifically, the following information is collected from a registration form and mapped to a locally created account:</p>\n\n<ul>\n\t<li>Your name</li>\n\t<li>Your professional email address</li>\n</ul>\n\n<p>Contact information from the registration form is used only if clarification is needed on a product that has been entered.  This process is necessary to ensure a robust approval process of entries.</p>\n\n<h3>Consent</h3>\n\n<p>When visitor access this site, they may register their name and email address.  Please note that by visiting this site, you accept the practices described in this Privacy Statement and consent to the collection and use of your information as described in this notice. This site allows you to access Substance Registration hosted by and under the management of NCATS.  If we decide to change our privacy policy, we will post those changes on this page so that you are always aware of what information we collect, how we use it, and under what circumstances we disclose it.</p>\n\n\n<p>Last revised: March 1, 2023</p>\n",
   "elementLabelDisplay": {
     "labels": {
       "substance_names_name": {
@@ -64,14 +63,14 @@
     "Approval_ID"
   ],
   "loadedComponents": {
-    "applications": false,
-    "products": false,
-    "clinicaltrials": false,
-    "adverseevents": false,
-    "impurities": false,
-    "ssg2": false,
-    "ssg4m": false,
-    "userRegistration": true 
+    "applications": true,
+    "products": true,
+    "clinicaltrials": true,
+    "adverseevents": true,
+    "impurities": true,
+    "ssg2": true,
+    "ssg4m": true,
+    "userRegistration": false
   },
   "usefulLinks": [
     {
@@ -119,7 +118,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing",
       "filters": [
         {}
       ]
@@ -557,7 +556,7 @@
     {
       "card": "substance-relationships",
       "type": "CONSTITUENT",
-      "title": "Relationships: Constitents",
+      "title": "Relationships: Constituents",
       "filters": [
         {
           "filterName": "exists",
@@ -1011,19 +1010,23 @@
     },
     "products": {
       "default": [
+        "Provenance",
+        "Product ID",
         "Product Name",
         "Nonproprietary Name",
-        "Product NDC",
         "Dosage Form Name",
         "Ingredient Name",
+        "Ingredient Name (Preferred)",
         "Ingredient Type",
         "Product Type",
         "Product Code Type",
-        "Application Number",
-        "Status",
+        "Product Status",
         "Marketing Category Name",
-        "Route of Admin",
+        "Route of Administration",
         "Is Listed",
+        "Indication",
+        "Application Type",
+        "Application Number",
         "Labeler Name",
         "Labeler DUNS Number",
         "Registrant Name",
@@ -1032,7 +1035,9 @@
         "State",
         "Company Country",
         "Country Code",
-        "Provenance"
+        "Company Role",
+        "Manufacturer Name",
+        "Manufacturer Role"
       ],
       "admin": [
         "Record Created By",
@@ -1133,6 +1138,65 @@
       "order": 10
     },
     {
+      "component": "applications",
+      "display": "Browse Applications",
+      "path": "browse-applications",
+      "order": 11
+    },
+    {
+      "component": "products",
+      "display": "Browse Products",
+      "path": "browse-products",
+      "order": 12
+    },
+    {
+      "component": "clinicaltrials",
+      "display": "Browse Clinical Trials",
+      "path": "browse-clinical-trials",
+      "order": 13
+    },
+    {
+      "component": "adverseevents",
+      "display": "Browse Adverse Events",
+      "path": "browse-adverse-events",
+      "order": 14
+    },
+    {
+      "display": "Register",
+      "children": [
+        {
+          "component": "ssg2",
+          "display": "G2 Specified Substance",
+          "path": "substances-ssg2/register",
+          "order": 180
+        },
+        {
+          "component": "ssg4m",
+          "display": "G4 Specified Substance Manufacturing",
+          "path": "substances-ssg4m/register",
+          "order": 190
+        },
+        {
+          "component": "applications",
+          "display": "Application",
+          "path": "application/register",
+          "order": 200
+        },
+        {
+          "component": "products",
+          "display": "Product",
+          "path": "product/register",
+          "order": 210
+        },
+        {
+          "component": "impurities",
+          "display": "Impurities",
+          "path": "impurities/register",
+          "order": 220
+        }
+      ]
+    },
+    {
       "display": "Search",
       "children": [
         {
@@ -1167,8 +1231,13 @@
       "children": [
         {
           "display": "User Manual",
-          "href": "https://gsrs.ncats.nih.gov/downloads/Substance%20Registration%20-%20October%202019.docx",
+          "path": "user-manual",
           "order": 10
+        },
+        {
+          "display": "Submit a Helpdesk Ticket (JIRA)",
+          "path": "jira-submit",
+          "order": 20
         },
         {
           "component": "",
@@ -1179,12 +1248,6 @@
           "order": 30
         }
       ]
-    },
-    {
-      "component": "",
-      "display": "Privacy Statement",
-      "path": "privacy-statement",
-      "order": 220
     },
     {
       "component": "",
@@ -1398,7 +1461,10 @@
       "keyType": {
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
-        "clinicalTrialKeyType": "UUID"
+        "clinicalTrialKeyType": "UUID",
+        "productKeyType": "UUID",
+        "applicationKeyType": "UUID",
+        "impuritiesKeyType": "UUID"
       }
     }
   },
@@ -1490,4 +1556,3 @@
     }
   }
 }
-
