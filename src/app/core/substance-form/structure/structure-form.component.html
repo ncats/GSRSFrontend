@@ -70,9 +70,9 @@
       </app-access-manager>-->
     </div>
   </div>
-  <div class="form-row">
+  <div class="form-row" *ngIf = "structure.atropisomerism && structure.atropisomerism == 'Yes' ">
     <div class="stereo-comments">
-      <div class="textarea-label">Stereo Comments</div>
+      <div class="textarea-label" >Stereo Comments</div>
       <textarea placeholder="Enter text here" [(ngModel)]="structure.stereoComments" name="stereoComments"></textarea>
     </div>
   </div>
