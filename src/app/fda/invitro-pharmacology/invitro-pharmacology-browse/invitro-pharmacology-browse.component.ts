@@ -46,6 +46,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   browseByTestAgentList: Array<any> = [];
   browseByReferenceList: Array<any> = [];
 
+  allAssaysList: Array<InvitroAssayInformation> = [];
+
   totalCountAllAssay: number;
   totalCountBrowseAllAssay: number;
   totalCountBrowseTargetName: number;
@@ -471,6 +473,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Test Agent Object exists */
           if (screening.invitroTestAgent) {
             assaySummary.testAgent = screening.invitroTestAgent.testAgent;
+            assaySummary.testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
           }
 
           /* Invitro Assay Result Object exists */
@@ -546,6 +549,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Test Agent Object exists */
           if (screening.invitroTestAgent) {
             assaySummary.testAgent = screening.invitroTestAgent.testAgent;
+            assaySummary.testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
           } // if invitroTestAgent exists
 
           if (assay.targetName) {
@@ -620,8 +624,10 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Test Agent Object exists */
           if (screening.invitroTestAgent) {
             let testAgent = '';
+            let testAgentSubstanceUuid = '';
             testAgent = screening.invitroTestAgent.testAgent;
             assaySummary.testAgent = testAgent;
+            testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
 
             // Get the index if the value exists in the key 'testAgent'
             const indexTestAgent = this.browseByTestAgentList.findIndex(record => record.testAgent === testAgent);
@@ -633,7 +639,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               // Create new card record
               let assayList = [];
               assayList.push(assaySummary);
-              const appScreening = { 'testAgent': testAgent, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
+              const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
               this.browseByTestAgentList.push(appScreening);
             } // else
           } // if invitroTestAgent exists
@@ -661,6 +667,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Test Agent Object exists */
           if (screening.invitroTestAgent) {
             assaySummary.testAgent = screening.invitroTestAgent.testAgent;
+            assaySummary.testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
           }
 
           /* Invitro Assay Result Object exists */

@@ -210,15 +210,18 @@
                   <div class="headerstyle title2 padtop7px padleft10px">
                     {{(i+1)}} of {{assay.invitroAssayScreenings.length}}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <!--
                     <span *ngIf="screening.invitroReference">
                       Reference: {{screening.invitroReference.referenceApplicationType}}&nbsp;
                       {{screening.invitroReference.referenceApplicationNumber}}
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
+                          -->
                     <span *ngIf="screening.invitroTestAgent">
                       Test Agent: {{screening.invitroTestAgent.testAgent}}&nbsp;
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
+
                   </div>
                 </mat-panel-title>
               </mat-expansion-panel-header>
@@ -264,6 +267,7 @@
                   </tbody>
                 </table>
               </div> <!-- if invitroReference exists -->
+
 
               <!-- ########################################################## -->
 
@@ -465,35 +469,37 @@
 
 
               <!-- LOOP: Control List -->
-              <div class="margintop20px">
-                <table class="tableStyle">
-                  <tbody>
-                    <tr class="headerstyle3">
-                      <td colspan="6"><span class="font16px">Control
-                          ({{(screening.invitroControls.length)}})
-                        </span>
-                      </td>
-                    </tr>
+              <div *ngIf="screening.invitroControls">
+                <div class="margintop20px">
+                  <table class="tableStyle">
+                    <tbody>
+                      <tr class="headerstyle3">
+                        <td colspan="6"><span class="font16px">Control
+                            ({{(screening.invitroControls.length)}})
+                          </span>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <th>Control</th>
-                      <th>Control Approval ID</th>
-                      <th>Control Type</th>
-                      <th>Control Reference Value</th>
-                      <th>Control Reference Value Units</th>
-                      <th>Result Type</th>
-                    </tr>
+                      <tr>
+                        <th>Control</th>
+                        <th>Control Approval ID</th>
+                        <th>Control Type</th>
+                        <th>Control Reference Value</th>
+                        <th>Control Reference Value Units</th>
+                        <th>Result Type</th>
+                      </tr>
 
-                    <tr *ngFor="let ctr of screening.invitroControls; let indexControl = index">
-                      <td>{{ctr.control}}</td>
-                      <td>{{ctr.controlApprovalId}}</td>
-                      <td>{{ctr.controlType}}</td>
-                      <td>{{ctr.controlReferenceValue}}</td>
-                      <td>{{ctr.controlReferenceValueUnits}}</td>
-                      <td>{{ctr.resultType}}</td>
-                    <tr>
-                  </tbody>
-                </table>
+                      <tr *ngFor="let ctr of screening.invitroControls; let indexControl = index">
+                        <td>{{ctr.control}}</td>
+                        <td>{{ctr.controlApprovalId}}</td>
+                        <td>{{ctr.controlType}}</td>
+                        <td>{{ctr.controlReferenceValue}}</td>
+                        <td>{{ctr.controlReferenceValueUnits}}</td>
+                        <td>{{ctr.resultType}}</td>
+                      <tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <!-- LOOP: Control List END -->
 
@@ -602,82 +608,83 @@
               </div> <!-- if Assay Summary exist -->
 
 
-              <div class="margintop20px" *ngIf="screening.invitroReference.invitroSponsor">
-                <table class="tableStyle">
-                  <tbody>
-                    <tr class="headerstyle3">
-                      <td colspan="2"><span class="font16px">Sponsor</span></td>
-                    </tr>
-                    <tr>
-                      <td class="fieldKey">Sponsor Contact Name:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.invitroSponsor.sponsorContactName}}
-                        </div>
-                      </td>
-                    </tr>
+              <div *ngIf="screening.invitroReference">
+                <div class="margintop20px" *ngIf="screening.invitroReference.invitroSponsor">
+                  <table class="tableStyle">
+                    <tbody>
+                      <tr class="headerstyle3">
+                        <td colspan="2"><span class="font16px">Sponsor</span></td>
+                      </tr>
+                      <tr>
+                        <td class="fieldKey">Sponsor Contact Name:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroReference.invitroSponsor.sponsorContactName}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Sponsor Affiliation:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.invitroSponsor.sponsorAffiliation}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Sponsor Affiliation:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroReference.invitroSponsor.sponsorAffiliation}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Sponsor Street Address:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.invitroSponsor.sponsorStreetAddress}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Sponsor Street Address:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroReference.invitroSponsor.sponsorStreetAddress}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Sponsor City:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.invitroSponsor.sponsorCity}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Sponsor City:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroReference.invitroSponsor.sponsorCity}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Sponsor State:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.invitroSponsor.sponsorState}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Sponsor State:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroReference.invitroSponsor.sponsorState}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Sponsor Zipcode:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.invitroSponsor.sponsorZipcode}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Sponsor Zipcode:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroReference.invitroSponsor.sponsorZipcode}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Sponsor Country:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.invitroSponsor.sponsorCountry}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Sponsor Country:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroReference.invitroSponsor.sponsorCountry}}
+                          </div>
+                        </td>
+                      </tr>
 
-                  </tbody>
-                </table>
-              </div> <!-- if invitroSponsor exists -->
+                    </tbody>
+                  </table>
+                </div> <!-- if invitroSponsor exists -->
+              </div>
 
-
-               <!-- Report Submitter Details -->
-               <div class="margintop20px" *ngIf="screening.invitroSubmitterReport">
+              <!-- Report Submitter Details -->
+              <div class="margintop20px" *ngIf="screening.invitroSubmitterReport">
                 <table class="tableStyle">
                   <tbody>
                     <tr class="headerstyle3">

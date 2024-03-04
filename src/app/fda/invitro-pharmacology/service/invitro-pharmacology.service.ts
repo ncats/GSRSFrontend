@@ -12,7 +12,7 @@ import { Facet, FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-co
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
 /* GSRS Invitro Pharmacology Imports */
-import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssayScreening } from '../model/invitro-pharmacology.model';
 
 @Injectable(
   {
@@ -25,6 +25,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   private _bypassUpdateCheck = false;
   totalRecords = 0;
   assay: InvitroAssayInformation;
+  assayScreening: InvitroAssayInformation;
 
   apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/assayscreening' + '/';
 
@@ -107,32 +108,32 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getAssayByTestCompound(
-  order: string,
-  skip: number = 0,
-  pageSize: number = 10,
-  searchTerm?: string,
-  facets?: FacetParam
-): Observable<PagingResponse<InvitroAssayInformation>> {
-  let params = new FacetHttpParams();
-  params = params.append('skip', skip.toString());
-  params = params.append('top', pageSize.toString());
-  if (searchTerm !== null && searchTerm !== '') {
-    params = params.append('q', searchTerm);
+    order: string,
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<InvitroAssayInformation>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'search';
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<InvitroAssayInformation>>(url, options);
   }
-
-  params = params.appendFacetParams(facets);
-
-  if (order != null && order !== '') {
-    params = params.append('order', order);
-  }
-
-  const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'search';
-  const options = {
-    params: params
-  };
-
-  return this.http.get<PagingResponse<InvitroAssayInformation>>(url, options);
-}
 
   getApiExportUrl(etag: string, extension: string): string {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'export/' + etag + '/' + extension;
@@ -143,20 +144,52 @@ export class InvitroPharmacologyService extends BaseHttpService {
     return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithInvitroPharmEntityUrl + 'suggest?q=' + searchTerm);
   }
 
-  // Initialize or load data in In-vitro Pharmacology Object
+  // Initialize or load data in In-vitro Pharmacology ASSAY
+  loadAssay(assay?: InvitroAssayInformation): void {
+    // if Update/Exist Assay
+    if (assay != null) {
+      this.assay = assay;
+    } else {
+      this.assay = {
+        //  invitroInformationReferences: []
+      };
+    }
+  }
+
+  // Initialize or load data in In-vitro Pharmacology SCREENING
   loadAssayScreening(assayScreening?: InvitroAssayInformation): void {
     // if Update/Exist Assay Screening
     if (assayScreening != null) {
-      this.assay = assayScreening;
+      this.assayScreening = assayScreening;
     } else {
-      this.assay = {
-      //  invitroInformationReferences: []
+      this.assayScreening = {
+        //  invitroInformationReferences: []
       };
     }
   }
 
   getAssayScreening(id: string): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + id;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAllAssays(): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allAssays';
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAllScreeningTestAgents(): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allScreeningTestAgents';
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -189,7 +222,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       );
   }
 
-  saveAssayScreening(): Observable<InvitroAssayInformation> {
+  saveAssay(): Observable<InvitroAssayInformation> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl;
     const params = new HttpParams();
     const options = {
@@ -199,13 +232,18 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    // Update Product
+    // Update In-vitro Pharmacology ASSAY
     if ((this.assay != null) && (this.assay.id)) {
       return this.http.put<InvitroAssayInformation>(url, this.assay, options);
     } else {
-      // Save New Product
+      // Save New In-vitro Pharmacology ASSAY
       return this.http.post<InvitroAssayInformation>(url, this.assay, options);
     }
+  }
+
+  addNewScreening(): void {
+    const newInvitroAssayScreening: InvitroAssayScreening = {invitroTestAgent: {}};
+    this.assay.invitroAssayScreenings.unshift(newInvitroAssayScreening);
   }
 
   bypassUpdateCheck(): void {

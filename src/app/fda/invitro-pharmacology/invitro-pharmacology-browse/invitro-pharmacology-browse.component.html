@@ -176,7 +176,6 @@
         </app-invitro-pharmacology-text-search>
       </div>
 
-
       <!-- ****************************************** -->
       <!-- ********** Display Content Details ******* -->
       <!-- ****************************************** -->
@@ -206,7 +205,20 @@
             </ng-template>
 
             <div>
-              <div class="font17px padtop15px padbottom10px"><b>Browse By All Assay</b></div><br>
+              <div class="divflex">
+                <div class=" font17px padtop15px padbottom10px">
+                  <b>Browse By All Assay</b>
+                </div>
+
+                <!-- Link to All Assay page -->
+                <div class="marginleft40px padtop15px">
+                  <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
+                    target="_blank" alt="View All Assays" matTooltip='View All Assays'><b>View All Assay Lists</b>
+                  </a>&nbsp;&nbsp;&nbsp;
+                </div>
+
+              </div> <!-- class=divflex-->
+              <br>
 
               <div class="cards-view" *ngIf="assays && assays.length; else noRecordInvitro">
 
@@ -327,122 +339,68 @@
                     <!-- ALL ASSAY TAB: DETAILS                                -->
                     <!-- ***************************************************** -->
 
-                    <div>
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Assay ID:
-                          </div>
-                          <div class="row-property-value">
-                            <span class="colorblue font17px fontbold">{{assay.assayId}}</span>
-                          </div>
+                    <div class="row">
+                      <div class="row-property">
+                        <div class="row-property-key">
+                          Assay ID:
                         </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            External Assay ID:
-                          </div>
-                          <div class="row-property-value">
-                            {{assay.externalAssayId}}
-                          </div>
+                        <div class="row-property-value">
+                          <span class="colorblue font17px fontbold">{{assay.assayId}}</span>
                         </div>
                       </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Assay Target Name:
-                          </div>
-                          <div class="row-property-value">
-                            <b>{{assay.targetName}}</b>
-                          </div>
+                      <div class="row-property">
+                        <div class="row-property-key">
+                          External Assay ID:
                         </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            External Assay Source:
-                          </div>
-                          <div class="row-property-value">
-                            {{assay.externalAssaySource}}
-                          </div>
+                        <div class="row-property-value">
+                          {{assay.externalAssayId}}
                         </div>
                       </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Assay Title:
-                          </div>
-                          <div class="row-property-value">
-                            {{assay.assayTitle}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Reference Source:
-                          </div>
-                          <div class="row-property-value">
-                            <div *ngFor="let infoRef of assay.invitroInformationReferences; let indexInfoRef = index">
-                              <div *ngIf="infoRef.invitroReference">
-                                {{infoRef.invitroReference.referenceApplicationType}}&nbsp;
-                                {{infoRef.invitroReference.referenceApplicationNumber}}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!--
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Reference/Application:
-                          </div>
-                          <div class="row-property-value">
-                            <div *ngFor="let infoRef of assay.invitroInformationReferences; let indexInfoRef = index">
-                              <div *ngIf="infoRef.invitroReference">
-                                {{infoRef.invitroReference.referenceApplicationType}}&nbsp;
-                                {{infoRef.invitroReference.referenceApplicationNumber}}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      -->
-
-                      <!--
-                          <div class="row-property">
-                            <div class="row-property-key">
-                              External Reference:
-                            </div>
-                            <div class="row-property-value">
-                              <span *ngIf="assay.externalReference">
-                                <a href="{{assay.externalReference}}" _blank="target">
-                                  {{assay.externalReference}}
-                                </a>
-                              </span>
-                            </div>
-                          </div>
-                          -->
-
                     </div>
-                    <!--
-                        <div class="row">
-                          <div class="row-property-key-4">
-                            Study Type:
-                          </div>
-                          <div class="row-property-value-4">
-                            {{ assay.assayStudyType}}
-                          </div>
-                        </div>
 
-                        <div class="row">
-                          <div class="row-property-key-4">
-                            Assay Type:
-                          </div>
-                          <div class="row-property-value-4">
-                            {{ assay.assayType}}
+                    <div class="row">
+                      <div class="row-property">
+                        <div class="row-property-key">
+                          Assay Target Name:
+                        </div>
+                        <div class="row-property-value">
+                          <b>{{assay.targetName}}</b>
+                        </div>
+                      </div>
+                      <div class="row-property">
+                        <div class="row-property-key">
+                          External Assay Source:
+                        </div>
+                        <div class="row-property-value">
+                          {{assay.externalAssaySource}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="row-property">
+                        <div class="row-property-key">
+                          Assay Title:
+                        </div>
+                        <div class="row-property-value">
+                          {{assay.assayTitle}}
+                        </div>
+                      </div>
+                      <div class="row-property">
+                        <div class="row-property-key">
+                          Reference Source:
+                        </div>
+                        <div class="row-property-value">
+                          <div *ngFor="let infoRef of assay.invitroInformationReferences; let indexInfoRef = index">
+                            <div *ngIf="infoRef.invitroReference">
+                              {{infoRef.invitroReference.referenceApplicationType}}&nbsp;
+                              {{infoRef.invitroReference.referenceApplicationNumber}}
+                            </div>
                           </div>
                         </div>
-                         -->
+                      </div>
+                    </div>
+
 
                     <!-- SORTING TABLE
                         <table mat-table [dataSource]="assay._assayTargetSummaries" class="font12px" matSort
@@ -487,7 +445,15 @@
                       <ng-container matColumnDef="testAgent">
                         <th mat-header-cell *matHeaderCellDef> Test Agent </th>
                         <td mat-cell *matCellDef="let assaysum">
-                          {{assaysum.testAgent}}
+                          <span *ngIf="assaysum.testAgentSubstanceUuid; else noAllAssayTestAgentSubId">
+                            <a [routerLink]="['/substances', assaysum.testAgentSubstanceUuid]" target="_blank"
+                              matTooltip="Go to Substance Details page">
+                              {{assaysum.testAgent}}
+                            </a>
+                          </span>
+                          <ng-template #noAllAssayTestAgentSubId>
+                            {{assaysum.testAgent}}
+                          </ng-template>
                         </td>
                       </ng-container>
 
@@ -724,7 +690,15 @@
                         <ng-container matColumnDef="testAgent">
                           <th mat-header-cell *matHeaderCellDef> Test Agent </th>
                           <td mat-cell *matCellDef="let assaysum">
-                            {{assaysum.testAgent}}
+                            <span *ngIf="assaysum.testAgentSubstanceUuid; else noTargetNameTestAgentSubId">
+                              <a [routerLink]="['/substances', assaysum.testAgentSubstanceUuid]" target="_blank"
+                                matTooltip="Go to Substance Details page">
+                                {{assaysum.testAgent}}
+                              </a>
+                            </span>
+                            <ng-template #noTargetNameTestAgentSubId>
+                              {{assaysum.testAgent}}
+                            </ng-template>
                           </td>
                         </ng-container>
 
@@ -797,7 +771,18 @@
               </div>
             </ng-template>
 
-            <div class="font17px padtop15px padbottom10px"><b>View By Test Agent</b></div>
+            <div class="divflex">
+              <div class="font17px padtop15px padbottom10px">
+                <b>View By Test Agent</b>
+              </div>
+              <!-- Link to All Assay page -->
+              <div class="marginleft40px padtop15px">
+                <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-testagents'}"
+                  target="_blank" alt="View All Test Agents" matTooltip='View All Test Agents'><b>View All Test
+                    Agents</b>
+                </a>&nbsp;&nbsp;&nbsp;
+              </div>
+            </div> <!-- class=divflex -->
             <br>
 
             <div class="cards-view" *ngIf="browseByTestAgentList.length; else noRecordInvitro">
@@ -950,11 +935,19 @@
                       </div>
                       <div class="row-property-value">
                         <span class="colorblue font17px fontbold">
-                          {{testAgt.testAgent}}</span>
+                          <span *ngIf="testAgt.testAgentSubstanceUuid; else noTestAgentTestAgentSubId">
+                            <a [routerLink]="['/substances', testAgt.testAgentSubstanceUuid]" target="_blank"
+                              matTooltip="Go to Substance Details page">
+                              {{testAgt.testAgent}}
+                            </a>
+                          </span>
+                          <ng-template #noTestAgentTestAgentSubId>
+                            {{testAgt.testAgent}}
+                          </ng-template>
+                        </span>
                       </div>
                     </div>
                   </div>
-
 
                   <div *ngIf="testAgt">
                     <br><br>
@@ -1423,7 +1416,15 @@
                       <ng-container matColumnDef="testAgent">
                         <th mat-header-cell *matHeaderCellDef> Test Agent </th>
                         <td mat-cell *matCellDef="let assaysum">
-                          {{assaysum.testAgent}}
+                          <span *ngIf="assaysum.testAgentSubstanceUuid; else noReferenceTestAgentSubId">
+                            <a [routerLink]="['/substances', assaysum.testAgentSubstanceUuid]" target="_blank"
+                              matTooltip="Go to Substance Details page">
+                              {{assaysum.testAgent}}
+                            </a>
+                          </span>
+                          <ng-template #noReferenceTestAgentSubId>
+                            {{assaysum.testAgent}}
+                          </ng-template>
                         </td>
                       </ng-container>
 

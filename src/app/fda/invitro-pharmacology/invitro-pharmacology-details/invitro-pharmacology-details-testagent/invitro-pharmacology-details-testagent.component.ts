@@ -28,7 +28,8 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service'
-import { InvitroAssayInformation } from '../../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssayScreening } from '../../model/invitro-pharmacology.model';
+import { invitroPharmacologySearchSortValues } from '../../invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 
 @Component({
   selector: 'app-invitro-pharmacology-details-testagent',
@@ -38,10 +39,19 @@ import { InvitroAssayInformation } from '../../model/invitro-pharmacology.model'
 
 export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
-  view = 'cards';
+  allAssaysList: Array<InvitroAssayInformation> = [];
+  allScreeningTestAgents: Array<any> = [];
+
+  showSpinner = false;
+  //view = 'cards';
   public privateSearchTerm?: string;
 
+  view = 'all-assays';
+  ascDescDir = 'desc';
+
   order: string;
+  public sortValues = invitroPharmacologySearchSortValues;
+
   pageIndex: number;
   pageSize: number;
   jumpToValue: string;
@@ -71,7 +81,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   applicationTypeNumLists: Array<any> = [];
 
   // Lists of data for Browse tabs
-  testAgentListForBrowse: Array<any> = [];
+  testAgentList: Array<any> = [];
   browseTargetNameList: Array<any> = [];
   browseSubstanceList: Array<any> = [];
   browseByReferenceList: Array<any> = [];
@@ -104,15 +114,44 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   searchValue: string;
   lastPage: number;
   invalidPage = false;
-  ascDescDir = 'desc';
+
+  allAssayColumns: string[] = [
+    'number',
+    'viewDetails',
+    'totalScreening',
+    'testAgent',
+    'assayId',
+    'externalAssayId',
+    'externalAssaySource',
+    'targetTitle',
+    'targetName',
+    'humanHomologTargetName',
+    'studyType',
+    'bioassayType',
+    'modifyDate'
+  ];
+
+  testAgentSummaryColumns: string[] = [
+    'viewDetails',
+    'referenceSource',
+    'testAgent',
+    'targetName',
+    'testAgentConcentration',
+    'resultValue',
+    /*'calculatedValue',
+    'assayTarget',*/
+    //'assayType',
+    'studyType',
+    // 'relationshipType'
+  ];
 
   assaySummaryDisplayedColumns: string[] = [
-  /*  'referenceSource', */
+    /*  'referenceSource', */
     'targetName',
-   /* 'testAgentConcentration',
-    'resultValue',
-    'calculatedValue',
-    'assayType',*/
+    /* 'testAgentConcentration',
+     'resultValue',
+     'calculatedValue',
+     'assayType',*/
     'studyType'
   ];
 
@@ -125,17 +164,6 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     'referenceSource'
   ];
 
-  testAgentSummaryColumns: string[] = [
-    'viewDetails',
-    'referenceSource',
-    'testAgentConcentration',
-    'resultValue',
-    'calculatedValue',
-    'assayTarget',
-    'assayType',
-    'studyType',
-    'relationshipType'
-  ];
 
   testAgentScreeningColumns: string[] = [
     'viewDetails',
@@ -168,53 +196,187 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private titleService: Title,
-    private overlayContainerService: OverlayContainer,
-    private sanitizer: DomSanitizer,
+    private configService: ConfigService,
     private authService: AuthService,
     private utilsService: UtilsService,
     private loadingService: LoadingService,
-    private mainNotificationService: MainNotificationService,
-    private configService: ConfigService,
     private facetManagerService: FacetsManagerService,
+    private mainNotificationService: MainNotificationService,
     private generalService: GeneralService,
     private invitroPharmacologyService: InvitroPharmacologyService,
+    private titleService: Title,
+    private overlayContainerService: OverlayContainer,
     private location: Location,
     private locationStrategy: LocationStrategy,
+    private sanitizer: DomSanitizer,
     private dialog: MatDialog
   ) { }
-
 
   public assays: Array<InvitroAssayInformation>;
 
   ngOnInit(): void {
-    this.getAssayByTestAgent();
+    // Check Login
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      }
+      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+    });
+    this.subscriptions.push(authSubscription);
+
+    this.view = this.activatedRoute.snapshot.queryParams['view'];
+
+    if (this.view && this.view === 'all-assays') {
+      this.getAllAssays();
+    } else if (this.view && this.view === 'all-testagents') {
+      this.getAssayByTestAgent();
+    } else {
+      this.getAllAssays();
+    }
+  }
+
+  getAllAssays(): void {
+    this.showSpinner = true;  // Start progress spinner
+    this.loadingService.setLoading(true);
+    this.titleService.setTitle(`View All Assays`);
+
+    const invitroSubscribe = this.invitroPharmacologyService.getAllAssays().subscribe(response => {
+      this.assays = response;
+      this.allAssaysList = response;
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.showSpinner = false;  // Stop progress spinner
+    }, () => {
+      this.subscriptions.push(invitroSubscribe);
+      this.loadingService.setLoading(false);
+      this.showSpinner = false;  // Stop progress spinner
+    });
   }
 
   getAssayByTestAgent() {
-
+    this.showSpinner = true;  // Start progress spinner
     this.loadingService.setLoading(true);
-    ////const skip = this.pageIndex * this.pageSize;
+    this.titleService.setTitle(`View All Test Agents`);
 
-    this.privateSearchTerm = "root_invitroInformationReferences_invitroAssayInfoRefTestAgents_invitroTestAgent_testAgent:" + 'BAF312';
+    const invitroSubscribe = this.invitroPharmacologyService.getAllAssays().subscribe(response => {
+      this.assays = response;
+      this.allAssaysList = response;
 
-    const subscription = this.invitroPharmacologyService.getAssayByTestAgent('BAF312')
-      .subscribe(response => {
-        this.assays = response;
+      //this.privateSearchTerm = "root_invitroInformationReferences_invitroAssayInfoRefTestAgents_invitroTestAgent_testAgent:" + 'BAF312';
 
-        // ****** LOOP Results pagingResponse.content ***********
-        this.assays.forEach(assay => {
-          if (assay) {
+      // ****** LOOP Results pagingResponse.content ***********
+      this.assays.forEach(assay => {
+        if (assay) {
 
-            assay._assayTargetSummaries = [];
+          const assaySummary: any = {};
+          assaySummary.id = assay.id;
+          assaySummary.targetName = assay.targetName;
+          assaySummary.bioassayType = assay.bioassayType;
+          assaySummary.studyType = assay.studyType;
 
-            // ******* Get data list for 'Browse by Target Name' tab.
-            if (assay.targetName) {
+          assay.invitroAssayScreenings.forEach(screening => {
+            if (screening.invitroTestAgent) {
+
+              if (screening.invitroTestAgent.testAgent) {
+
+                if (screening.invitroAssayResult) {
+                  assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
+                  assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+
+                  assaySummary.resultValue = screening.invitroAssayResult.resultValue;
+                  assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
+                }
+
+                if (screening.invitroReference) {
+                  let referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+                  assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+                } // if invitroReference exists
+
+                /* Invitro Test Agent Object exists */
+                let testAgent = '';
+                let testAgentSubstanceUuid = '';
+                testAgent = screening.invitroTestAgent.testAgent;
+                assaySummary.testAgent = testAgent;
+                testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
+
+                // Get the index if the value exists in the key 'testAgent'
+                const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
+
+                if (indexTestAgent > -1) {
+                  // Add in the exsting card record
+                  this.allScreeningTestAgents[indexTestAgent].testAgentSummaryList.push(assaySummary);
+                } else {
+
+                  // Create new card record
+                  let assayList = [];
+                  assayList.push(assaySummary);
+                  const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentSummaryList': assayList };
+                  this.allScreeningTestAgents.push(appScreening);
+                } // else
+
+              } // testAgent exists
+
+            } // if invitroTestAgent exists
+
+          }); // LOOP: invitroAssayScreenings
+
+          // ******* Get data list for 'Browse by Target Name' tab.
+          if (assay.targetName) {
+          }
+
+          //his.testAgentList.push(assaySummary);
+        }  // if assay exists
+      });  // LOOP: assays
+
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.showSpinner = false;  // Stop progress spinner
+    }, () => {
+      this.subscriptions.push(invitroSubscribe);
+      this.loadingService.setLoading(false);
+      this.showSpinner = false;  // Stop progress spinner
+    });
+  }
+
+  createTestAgentLists() {
+    // ****** LOOP Results pagingResponse.content ***********
+    this.allScreeningTestAgents.forEach(assay => {
+      if (assay) {
+        const assaySummary: any = {};
+        assaySummary.id = assay.id;
+        assaySummary.targetName = assay.targetName;
+        assaySummary.bioassayType = assay.bioassayType;
+        assaySummary.studyType = assay.studyType;
+
+        assay.invitroAssayScreenings.forEach(screening => {
+          if (screening.invitroTestAgent) {
+            if (screening.invitroTestAgent.testAgent && screening.invitroTestAgent.testAgent === 'BAF312') {
+              assaySummary.testAgent = screening.invitroTestAgent.testAgent;
+
+              if (screening.invitroAssayResult) {
+                assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
+                assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+
+                assaySummary.resultValue = screening.invitroAssayResult.resultValue;
+                assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
+              }
+
+              if (screening.invitroReference) {
+                let referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+                assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+              } // if invitroReference exists
             }
           }
         });
-      });
-   // } // if assay exists
+
+        // ******* Get data list for 'Browse by Target Name' tab.
+        if (assay.targetName) {
+        }
+
+        this.testAgentList.push(assaySummary);
+      } // if assay
+    });
+
   }
 
   createSummaryObject(assay: any, referenceSource: string, testAgent: string, testAgentConcentration: string,

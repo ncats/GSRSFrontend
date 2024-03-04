@@ -106,12 +106,12 @@
     </div>
 
     <div *ngIf="assay">
-      <div *ngIf="assay.id; else noRecord">
+      <div>
         <div class="details-container">
 
 
           <div class="cards-container">
-            <div class="margintop10px"  style="width:100%;">
+            <div class="margintop10px" style="width:100%;">
 
 
               <mat-card class="bordergray">
@@ -145,7 +145,7 @@
 
                 <mat-card-content>
 
-                  <table class="tableStyle">
+                  <table class="" *ngIf="assay">
                     <tbody>
                       <tr class="headerstyle2">
                         <td colspan="2" class="height35px"><span class="font20px">Assay Information</span></td>
@@ -699,9 +699,39 @@
                   </table>
                   -->
 
+
+                  <button mat-button class="marginright30px bordergreen" color="primary"
+                    (click)="addNewScreening(); $event.stopPropagation()" matTooltip="Add New Screening">
+                    <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
+                  </button>
+
+                  <div class="marginbottom15px"
+                  *ngFor="let screening of assay.invitroAssayScreenings; let screeningIndex = index">
+                       {{(screeningIndex+1)}}
+
+
+                  <br>
+                  <b>Test Agent Details</b>
+                  <br>
+
+
+
+                  <div class="form-row" *ngIf="screening.invitroTestAgent">
+
+                    <mat-form-field class="col-2-1">
+                      <input matInput placeholder="Test Agent" [(ngModel)]="screening.invitroTestAgent.testAgent" name="testAgent" />
+                    </mat-form-field>
+                  </div>
+
+
+                  <div> <!-- LOOP: invitroAssayScreenings -->
+
+                  </div>
+
+                  </div>
+
                 </mat-card-content>
               </mat-card>
-
 
             </div> <!-- *ngIf=assay -->
           </div> <!-- class=cards-container -->

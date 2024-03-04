@@ -41,6 +41,7 @@ import { InvitroPharmacologyFormComponent } from './invitro-pharmacology-form/in
 import { InvitroPharmacologyTextSearchComponent } from './invitro-pharmacology-text-search/invitro-pharmacology-text-search.component';
 import { InvitroPharmacologyDataImportComponent } from './invitro-pharmacology-data-import/invitro-pharmacology-data-import.component';
 import { InvitroPharmacologyDetailsTestagentComponent } from './invitro-pharmacology-details/invitro-pharmacology-details-testagent/invitro-pharmacology-details-testagent.component';
+import { InvitroPharmacologyAssayFormComponent } from './invitro-pharmacology-form/invitro-pharmacology-assay-form/invitro-pharmacology-assay-form.component';
 
 const invitroRoutes: Routes = [
   {
@@ -49,7 +50,23 @@ const invitroRoutes: Routes = [
     //canActivate: [ActivateProductsComponent]
   },
   {
-    path: 'invitro-pharm/register',
+    path: 'invitro-pharm/assay/register',
+    component: InvitroPharmacologyAssayFormComponent
+  },
+  {
+    path: 'invitro-pharm/assay/:id/edit',
+    component: InvitroPharmacologyAssayFormComponent
+  },
+  {
+    path: 'invitro-pharm/assay/:id',
+    component: InvitroPharmacologyAssayFormComponent
+  },
+  {
+    path: 'invitro-pharm/screening/register',
+    component: InvitroPharmacologyFormComponent
+  },
+  {
+    path: 'invitro-pharm/screening/:id/edit',
     component: InvitroPharmacologyFormComponent
   },
   {
@@ -63,7 +80,7 @@ const invitroRoutes: Routes = [
     component: InvitroPharmacologyDetailsComponent
   },
   {
-    path: 'invitro-pharm/:view/:value',
+    path: 'invitro-pharm',
     component: InvitroPharmacologyDetailsTestagentComponent
   },
   {
@@ -114,7 +131,8 @@ const invitroRoutes: Routes = [
     InvitroPharmacologyFormComponent,
     InvitroPharmacologyTextSearchComponent,
     InvitroPharmacologyDataImportComponent,
-    InvitroPharmacologyDetailsTestagentComponent
+    InvitroPharmacologyDetailsTestagentComponent,
+    InvitroPharmacologyAssayFormComponent
   ],
   exports: [
   ],

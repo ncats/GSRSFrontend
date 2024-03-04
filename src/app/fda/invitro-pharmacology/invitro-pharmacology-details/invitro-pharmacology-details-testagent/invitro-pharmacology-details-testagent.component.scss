@@ -37,7 +37,8 @@
 }
 
 .divcenter {
-  max-width: 1028px;
+  /*max-width: 1028px;*/
+  max-width: 96%;
   margin: 0 auto;
 }
 
@@ -202,6 +203,10 @@
   margin-top: 10px;
 }
 
+.margintop15px {
+  margin-top: 15px;
+}
+
 .margintop20px {
   margin-top: 20px;
 }
@@ -224,6 +229,10 @@
 
 .marginleft30px {
   margin-left: 30px;
+}
+
+.marginleft60px {
+  margin-left: 60px;
 }
 
 .marginbottom30px {
@@ -300,6 +309,14 @@
 
 .font16px {
   font-size: 16px;
+}
+
+.font17px {
+  font-size: 17px;
+}
+
+.font18px {
+  font-size: 18px;
 }
 
 .font20px {
@@ -479,6 +496,23 @@ legend.border2 {
 
 .zoom:hover{
   cursor: zoom-in;
+}
+
+.responsive {
+  overflow: auto;
+}
+
+.spinnerstyle {
+  position: absolute;
+  top: 10;
+  left: 0;
+  bottom: 200px;
+  right: 0;
+  background: var(--spinner-bg-color);
+  z-index: 1;
+  display: flex;
+  align-items: top; /* Verticle align */
+  justify-content: center; /* horizonal align */
 }
 
 /* Table Style Begin */

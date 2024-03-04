@@ -1222,6 +1222,18 @@
           "display": "Impurities",
           "path": "impurities/register",
           "order": 220
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "In-vitro Pharmacology Assay",
+          "path": "invitro-pharm/assay/register",
+          "order": 230
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "In-vitro Pharmacology Screening",
+          "path": "invitro-pharm/screening/register",
+          "order": 240
         }
       ]
     },

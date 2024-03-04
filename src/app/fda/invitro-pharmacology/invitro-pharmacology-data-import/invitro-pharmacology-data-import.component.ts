@@ -142,7 +142,7 @@ export class InvitroPharmacologyDataImportComponent implements OnInit {
         console.log("index: " + index + "     " + JSON.stringify(element));
         this.message = this.message + "index: " + index + "     " + JSON.stringify(element) + "\n\n";
         this.invitroPharmacologyService.assay = JSON.parse(JSON.stringify(element));
-       this.invitroPharmacologyService.saveAssayScreening().subscribe(response => {
+       this.invitroPharmacologyService.saveAssay().subscribe(response => {
         this.message = "";
         this.submitMessage = "Import Successful";
         });

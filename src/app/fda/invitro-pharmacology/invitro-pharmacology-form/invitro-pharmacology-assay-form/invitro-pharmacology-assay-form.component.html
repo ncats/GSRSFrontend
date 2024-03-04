@@ -1,0 +1,320 @@
+<div class="top-fixed">
+  <div class="actions-container">
+
+    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
+
+    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+      <span>Export JSON</span>
+    </a>&nbsp;&nbsp;&nbsp;
+
+    <!-- Do not show 'Import JSON' button when in Update Impurities page -->
+    <span *ngIf="assay && !assay.id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
+    <span class="middle-fill"></span>
+
+    <!-- Validate and Submit Button -->
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+  </div> <!-- div class=actions-container-->
+
+
+  <!-- Validation Message Display -->
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+
+
+    <!-- Validation Message Display and Submit Button -->
+    <div *ngIf="validationMessages">
+      <span *ngIf=" validationMessages.length > 0">
+        <div class="submission-message" *ngIf='!serverError && !approving'>
+          Please correct or dismiss the following errors and submit again:
+        </div>
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+            {{message.messageType}}</div>
+          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
+                target="_blank">{{link.text}}</a></span></div>
+          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+            (click)="dismissValidationMessage(i)">
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </div>
+      </span>
+
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()"
+          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
+          validationMessages.length > 0?'Dismiss All and ':''}}
+          Submit</button>
+      </div>
+    </div>
+    <!-- Validation Message and Submit Button -->
+
+  </div> <!-- div class=actions-container -->
+</div> <!-- div class=top-fixed -->
+
+
+<!-- ####################################################################### -->
+<!-- FORM ENTRY BEGIN -->
+<!-- Display Form Fields -->
+
+<div class="form-content-container mat-form-field-style bordergray">
+  <div class="scrollable-container">
+
+    <div class="divcenter">
+      <!-- Display Message-->
+      <div class="message-style bordergray" *ngIf="message">
+        {{message}}
+      </div>
+
+
+      <div class="divflex">
+
+        <div class="width650px margintop10px">
+          <b>{{title}}</b>
+          &nbsp;&nbsp;
+
+          <!-- Edit GSRS record button -->
+          <span *ngIf="assay && assay.id">
+            <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS In-vitro Pharmacology Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>
+          </span>
+          &nbsp;&nbsp;
+
+          <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
+            matTooltip='Export Json'>
+            <mat-icon svgIcon="get_app"></mat-icon>
+          </a>&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <div class="width50percent font11px margintop10px" *ngIf="assay && assay.id">
+          <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Create
+            Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy
+          hh:mm:ss
+          a'}}
+        </div>
+      </div> <!-- class=divflex -->
+
+       <!-- Link to All Assay page -->
+       <div class="marginleft40px padtop15px">
+        <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
+          target="_blank" alt="View All Assays" matTooltip='View All Assays'><b>View All Assay Lists</b>
+        </a>&nbsp;&nbsp;&nbsp;
+      </div>
+
+    </div> <!-- class=divcenter -->
+
+
+    <div class="details-container">
+
+      <div class="cards-container">
+        <div class="margintop10px" style="width:100%;">
+
+          <mat-card class="bordergray">
+
+            <mat-card-title>
+
+            </mat-card-title>
+
+            <mat-card-content>
+              <table class="marginbottom30px width100percent bordergray">
+                <tbody>
+                  <tr class="">
+                    <td colspan="2" class="height35px"><span class="font20px">Assay Information</span></td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Assay ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.assayId" name="assayId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Assay Title:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.assayTitle" name="assayTitle" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Assay Format:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.assayFormat" name="assayFormat" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Bioassay Type:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.bioassayType" name="bioassayType" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Bioassay Class:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.bioassayClass" name="bioassayClass" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Study Type:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.studyType" name="studyType" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Detection Method:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.detectionMethod" name="detectionMethod" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Buffer Plasma Protein Concentration:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.bufferPlasmaProteinConcent"
+                          name="bufferPlasmaProteinConcent" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Target Name:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.targetName" name="targetName" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Target Name Approval ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.targetNameApprovalId"
+                          name="targetNameApprovalId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Target Species:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.targetSpecies" name="targetSpecies" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Human Homolog Target:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.humanHomologTarget"
+                          name="humanHomologTarget" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Human Homolog Target Approval ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.humanHomologTargetApprovalId"
+                          name="humanHomologTargetApprovalId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">External Assay ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssayId" name="externalAssayId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">External Assay Source:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssaySource"
+                          name="externalAssaySource" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">External Assay Reference:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssayReference"
+                          name="externalAssayReference" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">External Assay Reference URL:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssayReferenceUrl"
+                          name="externalAssayReferenceUrl" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+
+            </mat-card-content>
+          </mat-card>
+
+        </div> <!-- *ngIf=assay -->
+      </div> <!-- class=cards-container -->
+
+    </div> <!-- class=details-container -->
+    <br><br><br><br>
+  </div>
+</div> <!-- class=form-content-container -->
+
+<ng-template #noRecord>
+  <br><br><br><br>
+  <div class="colororange padtop50px padleft50px">There is no Assay Screening Data found.</div>
+</ng-template>

@@ -13,29 +13,30 @@ import * as XLSX from 'xlsx';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { UtilsService } from '../../../core/utils/utils.service';
+import { UtilsService } from '../../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
+import { ControlledVocabularyService } from '../../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
-import { GeneralService } from '../../service/general.service';
+import { GeneralService } from '../../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
-import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 /* Invitro Pharmacology Imports */
-import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service'
+import { InvitroAssayInformation, ValidationMessage } from '../../model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-invitro-pharmacology-form',
-  templateUrl: './invitro-pharmacology-form.component.html',
-  styleUrls: ['./invitro-pharmacology-form.component.scss']
+  selector: 'app-invitro-pharmacology-assay-form',
+  templateUrl: './invitro-pharmacology-assay-form.component.html',
+  styleUrls: ['./invitro-pharmacology-assay-form.component.scss']
 })
-export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
+
+export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy {
 
   assay: InvitroAssayInformation;
   id?: number;
@@ -85,6 +86,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     private generalService: GeneralService,
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
+
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
@@ -199,7 +201,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
 
       if (this.validationMessages.length === 0 && this.validationResult === true) {
-        this.submissionMessage = 'Invitro Pharmacology Assay Screening is Valid. Would you like to submit?';
+        this.submissionMessage = 'In-vitro Pharmacology Assay is Valid. Would you like to submit?';
       }
       /* }, error => {
          this.addServerError(error);
@@ -296,12 +298,12 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.loadingService.setLoading(true);
     // Set service assay
     this.invitroPharmacologyService.assay = this.assay;
-    console.log("ASSSSSSSSSSSAY: " + JSON.stringify(this.assay));
+
     this.invitroPharmacologyService.saveAssay().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
-      this.submissionMessage = 'In-vitro Pharmacology Assay Screening data was saved successfully!';
+      this.submissionMessage = 'In-vitro Pharmacology Assay data was saved successfully!';
       this.showSubmissionMessages = true;
       this.validationResult = false;
       setTimeout(() => {
@@ -312,7 +314,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
-          this.router.navigate(['/invitro-pharm', id]);
+          this.router.navigate(['/invitro-pharm/assay', id, 'edit']);
         }
       }, 4000);
     }
@@ -337,11 +339,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         }
       }*/
     );
-  }
-
-
-  addNewScreening(event: Event) {
-    this.invitroPharmacologyService.addNewScreening();
   }
 
   /*
@@ -461,7 +458,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           this.loadingService.setLoading(false);
           if (!this.id) {
             // new record
-            this.router.navigateByUrl('/impurities/register?action=import', { state: { record: response } });
+            this.router.navigateByUrl('/invitr-pharm/assay/register?action=import', { state: { record: response } });
           }
         }, 1000);
       }

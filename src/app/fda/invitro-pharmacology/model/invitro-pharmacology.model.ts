@@ -20,6 +20,7 @@ export interface InvitroAssayInformation {
   externalAssayId?: string;
   externalAssaySource?: string;
   externalAssayReference?: string;
+  externalAssayReferenceUrl?: string;
   percentInhibition?: number;
   presentationType?: string;
   presentation?: string;
@@ -110,6 +111,7 @@ export interface InvitroTestAgent {
   id?: number;
   testAgent?: string;
   testAgentApprovalId?: string;
+  testAgentSubstanceUuid?: string;
   testAgentSmileString?: string;
   activeMoiety?: string;
   activeMoietyApprovalId?: string;
