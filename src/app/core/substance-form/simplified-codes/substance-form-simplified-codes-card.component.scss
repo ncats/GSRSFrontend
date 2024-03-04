@@ -1,0 +1,41 @@
+.mat-divider.mat-divider-inset {
+    margin-left: 0;
+}
+
+.mat-divider {
+    border-top-color: var(--text-color);
+}
+
+.code {
+
+    &:nth-child(odd) {
+        background-color: var(--nth-child-color-2);
+
+        ::ng-deep {
+
+            .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+                background-color: var(--nth-child-color-3);
+            }
+        }
+    }
+
+    &:nth-child(even) {
+        ::ng-deep {
+
+            .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
+                background-color: var(--nth-child-color-1);
+            }
+        }
+    }
+
+    ::ng-deep {
+        .mat-expansion-panel, .mat-table, textarea {
+            background-color: var(--regular-transparent-color);
+        }
+    }
+}
+
+.search {
+    width: 400px;
+    max-width: 100%;
+}

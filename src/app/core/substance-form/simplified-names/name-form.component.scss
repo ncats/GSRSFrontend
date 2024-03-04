@@ -1,0 +1,61 @@
+.name-form-container {
+    padding: 10px 3px 4px 3px;
+    position: relative;
+}
+
+.collapse {
+    padding: 10px 5px 6px 5px;
+    position: relative;
+}
+
+.resolve {
+  padding: 0 20px 20px 0;
+  color: var(--primary-color);
+}
+
+.text-area{
+  height:12px
+}
+
+.notification-backdrop {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    z-index: 10;
+    background-color: var(--notif-backdrop-bg-color);
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--notif-backdrop-color);
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .delete-container {
+        padding: 0 10px 8px 0;
+    }
+
+    .checkbox-container, .radio-container {
+        padding-bottom: 18px;
+    }
+
+    .radio-container, .checkbox-container {
+        padding-right: 15px;
+    }
+
+    .name, .tags, .domains {
+        flex-grow: 1;
+        padding-right: 15px;
+    }
+
+    .jurisdiction {
+        flex-grow: 1;
+    }
+}

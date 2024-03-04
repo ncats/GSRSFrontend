@@ -19,7 +19,6 @@ export class SubstanceCardBaseFilteredList<T> extends SubstanceFormBase {
     }
 
     pageChange(pageEvent?: PageEvent, analyticsEventCategory?: string): void {
-
         if (pageEvent != null) {
 
             let eventAction;
