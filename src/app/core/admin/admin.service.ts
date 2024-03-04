@@ -276,8 +276,7 @@ export class AdminService extends BaseHttpService {
         }
 
         public stagedRecordMultiAction(records:any, action: string, scrubber?: any) {
-          console.log(records);
-          console.log(scrubber);
+
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/@bulkactasync?persistChangedObject=true`;
           let toput = {
             "stagingAreaRecords":
@@ -294,7 +293,6 @@ export class AdminService extends BaseHttpService {
             if (scrubber) {
               toput.processingActions[0].parameters['scrubberSettings'] = scrubber;
             }
-            console.log(toput);
          
           return this.http.put< any >(url, toput);
 
