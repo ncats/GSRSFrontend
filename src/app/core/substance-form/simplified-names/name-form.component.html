@@ -1,0 +1,34 @@
+<div class="name-form-container" [ngClass] = "!viewFull? 'collapse':'name-form-container'" >
+  <div *ngIf="name.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete name" (click)="deleteName()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+
+    <mat-form-field class="name">
+      <textarea matInput class="text-area" placeholder="Name" [(ngModel)]="name.name" required name="name" (keypress)="preventNewLine($event)"></textarea>
+    </mat-form-field>
+
+    <a class="resolve" *ngIf="name.name && name.name.length > 0 && substanceType === 'structure'"
+       (click)="resolve()">resolve</a>
+
+    <app-cv-input required='true' class="name-type" key="Name Type Code" title="Type" [model]="name.type"
+      (valueChange)="name.type = $event">
+    </app-cv-input>
+
+    <div>
+      <app-access-manager  (accessOut)="updateAccess($event)" [access]="name.access">
+      </app-access-manager>
+    </div>
+  </div>
+</div>
+
+
