@@ -1,0 +1,29 @@
+<div class="code-form-container">
+  <div *ngIf="code.$$deletedCode" class="notification-backdrop">
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
+  </div>
+
+  <div class="form-row">
+    <div class="delete-container">
+      <button mat-icon-button matTooltip="Delete code" (click)="deleteCode()">
+        <mat-icon svgIcon="delete_forever"></mat-icon>
+      </button>
+    </div>
+
+    <app-cv-input required='true' class="code-system" key='Code System' title="Code System" name="code"
+                  [model]="code.codeSystem" (valueChange)="setCodeSystemType($event)">
+    </app-cv-input>
+
+    <mat-form-field class="code">
+      <input matInput placeholder="Code" [(ngModel)]="code.code" required name="code"/>
+    </mat-form-field>
+
+    <div>
+      <app-access-manager (accessOut)="updateAccess($event)" [access]="code.access">
+      </app-access-manager>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,11 @@ export const navItems: Array<NavItem> = [
                 path: 'substances/register/chemical',
                 order: 10
             },
+          {
+                display: 'Chemical (Simplified)',
+                path: 'substances/register/chemical-simplified',
+                order: 10
+            },
             {
                 display: 'Protein',
                 path: 'substances/register/protein',
