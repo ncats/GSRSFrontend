@@ -60,10 +60,9 @@ export interface Config {
     CVDisplayOrder ?: {
             [name: string]: Array<string>;
     };
-}
-
-export interface CVDisplay {
-
+    codeSystemMapping?: {
+        [code: string]: string;
+    };
 }
 
 export interface StagingAreaSettings {
