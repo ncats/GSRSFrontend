@@ -8,7 +8,7 @@ import {
   Inject,
   OnDestroy,
   ViewChild,
-  ElementRef, AfterViewInit
+  ElementRef, AfterViewInit, HostListener
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Ketcher } from 'ketcher-wrapper';
@@ -76,15 +76,44 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  @HostListener('paste', ['$event']) private paster(event: any) {
+   // console.log('host paste');
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    this.catchPaste(event);
+  }
+
+  @HostListener('drop', ['$event']) private dropper(event: any) {
+  //  console.log('drop');
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  }
+
+  @HostListener('dragover', ['$event']) private dragger(event: DragEvent) {
+   // console.log('drag');
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  }
+
+
   private preventDrag = (event: DragEvent) => {
+   // console.log('prevent drag');
     event.preventDefault();
   }
 
 // override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
+   // console.log('checkPaste');
+    event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
     if (this.jsdraw && this.jsdraw.activated) {
+      this.catchPaste(event);
+    }
+    else if (this.ketcher) {
       this.catchPaste(event);
     }
   }
@@ -102,11 +131,13 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
 
+      
+
       window.addEventListener('dragover', this.preventDrag);
       window.addEventListener('drop', this.preventDrag);
-      window.addEventListener('paste', this.checkPaste);
+    //  window.addEventListener('paste', this.checkPaste);
 
-      this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/ketcher.html`;
+      this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/index.html`;
 
       this.structureEditor = environment.structureEditor;
 
@@ -137,10 +168,17 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  ketcherOnLoad(ketcher: Ketcher): void {
-    this.ketcher = ketcher;
-    this.editor = new EditorImplementation(this.ketcher);
-    this.editorOnLoad.emit(this.editor);
+  ketcherOnLoad(ketcher: any): void {
+
+    setTimeout(() => {
+       this.ketcher = ketcher;
+       this.editor = new EditorImplementation(this.ketcher);
+       this.editorOnLoad.emit(this.editor);
+       
+    }, 1000);
+
+    
+   
   }
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
@@ -245,8 +283,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   cleanStructure() {
-    const molfile = this.editor.getMolfile();
-
+    let molfile ='';
+    this.editor.getMolfile().subscribe(response => {
+      molfile = response;
     if (molfile != null && molfile !== '') {
       this.structureService.interpretStructure(molfile).pipe(take(1)).subscribe(response => {
         if (response && response.structure && response.structure.smiles) {
@@ -254,6 +293,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         }
       });
     }
+  });
   }
 
   cleanStructureSmiles(smiles: string) {
@@ -269,13 +309,16 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   standardize(standard: string): void {
     this.loadingService.setLoading(true);
-    const mol = this.editor.getMolfile();
+    let mol ='';
+    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
     this.structureService.interpretStructure(mol, '', standard).pipe(take(1)).subscribe((response: any) => {
       if (response && response.structure && response.structure.molfile) {
         this.editor.setMolecule(response.structure.molfile);
       }
       this.loadingService.setLoading(false);
     }, () => {this.loadingService.setLoading(false); });
-  }
+  });
+}
 
 }

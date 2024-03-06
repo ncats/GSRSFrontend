@@ -62,6 +62,10 @@ export class ConfigService {
                 if (config.contactEmail == null && environment.contactEmail != null) {
                     config.contactEmail = environment.contactEmail;
                 }
+                //make ketcher / jsdraw configurable after build
+                if (config.structureEditor != null) {
+                    environment.structureEditor = config.structureEditor;
+                }
 
                 let navItemsCopy = navItems.slice();
                 if (config.navItems && config.navItems.length) {

@@ -63,6 +63,7 @@ export interface Config {
     codeSystemMapping?: {
         [code: string]: string;
     };
+    structureEditor?: 'ketcher' | 'jsdraw';
 }
 
 export interface StagingAreaSettings {
