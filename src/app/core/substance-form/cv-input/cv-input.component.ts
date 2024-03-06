@@ -90,8 +90,9 @@ export class CvInputComponent implements OnInit, OnDestroy {
       vocab = this.vocabulary;
     }
     let vocabName = this.vocabName;
+    console.log(this.key);
     if(this.key && this.key !== '') {
-      vocabName = this.key;
+      // wrong format, ignore for now
     }
     if (this.configService && this.configService.configData && this.configService.configData.CVDisplayOrder && this.configService.configData.CVDisplayOrder[vocabName] ) {
       let configOrder = this.configService.configData.CVDisplayOrder[vocabName] ;
@@ -103,8 +104,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
             vocab.unshift(item);
           }
         });
-
-      }
+    }
       this.vocabulary = vocab;
     }
   }
