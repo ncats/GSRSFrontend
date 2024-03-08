@@ -99,6 +99,18 @@ export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterView
           this.suggestionsFields[index] = { value: 'Laboratory_Name', display: 'Laboratory Name' };
         } else if (value === 'Control_Type') {
           this.suggestionsFields[index] = { value: 'Control_Type', display: 'Control Type' };
+        } else if (value === 'Control') {
+          this.suggestionsFields[index] = { value: 'Control', display: 'Control' };
+        } else if (value === 'Study_Type') {
+          this.suggestionsFields[index] = { value: 'Study_Type', display: 'Study Type' };
+        } else if (value === 'Relationship_Type') {
+          this.suggestionsFields[index] = { value: 'Relationship_Type', display: 'Relationship Type' };
+        } else if (value === 'Laboratory_Name') {
+          this.suggestionsFields[index] = { value: 'Laboratory_Name', display: 'Laboratory Name' };
+        } else if (value === 'Bioassay_Type') {
+          this.suggestionsFields[index] = { value: 'Bioassay_Type', display: 'Bioassay Type' };
+        } else if (value === 'Assay_Format') {
+          this.suggestionsFields[index] = { value: 'Assay_Format', display: 'Assay Format' };
         } else {
           this.suggestionsFields[index] = { value: value, display: value };
         }

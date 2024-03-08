@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { FormControl } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -39,6 +40,9 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   assay: InvitroAssayInformation;
   id?: number;
+  existingAssayControl = new FormControl();
+
+  existingAssayList: Array<InvitroAssayInformation> = [];
 
   showSubmissionMessages = false;
   submissionMessage: string;
@@ -87,6 +91,14 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.existingAssayControl.valueChanges.subscribe(valueIndex => {
+      console.log('name has changed:', valueIndex)
+      this.assay.id = this.existingAssayList[valueIndex].id;
+      this.assay.internalVersion = this.existingAssayList[valueIndex].internalVersion;
+      this.assay.externalAssayId = this.existingAssayList[valueIndex].externalAssayId;
+      this.assay.externalAssaySource = this.existingAssayList[valueIndex].externalAssaySource;
+    });
+
     this.isAdmin = this.authService.hasRoles('admin');
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -96,10 +108,10 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       .subscribe(params => {
         if (params['id']) {
           const id = params['id'];
-          this.title = 'Update In-vitro Pharmacology Assay';
+          this.title = 'Update In-vitro Pharmacology Screening';
           if (id !== this.id) {
             this.id = id;
-            this.titleService.setTitle(`Edit In-vitro Pharmacology Assay ` + this.id);
+            this.titleService.setTitle(`Edit In-vitro Pharmacology Screening ` + this.id);
             this.getInvitroPharmacologyDetails();
             //this.assay =
           }
@@ -113,8 +125,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         } else if (this.activatedRoute.snapshot.queryParams['action']) {
           let actionParam = this.activatedRoute.snapshot.queryParams['action'];
           if (actionParam && actionParam === 'import' && window.history.state) {
-            this.titleService.setTitle(`Register New Product from Import`);
-            this.title = 'Register New Product from Import';
+            this.titleService.setTitle(`Register New In-vitro Pharmacology from Import`);
+            this.title = 'Register New In-vitro Pharmacology from Import';
             const record = window.history.state.record;
             const response = JSON.parse(record);
             if (response) {
@@ -130,11 +142,15 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           }
         } else { // Register New In-vitro Pharamcology Assay
 
-          this.title = 'Register New In-vitro Pharmacology Assay';
+          this.title = 'Register New In-vitro Pharmacology Screening';
           setTimeout(() => {
-            this.titleService.setTitle(`Register In-vitro Pharmacology Assay`);
-            this.invitroPharmacologyService.loadAssay();
+            this.titleService.setTitle(`Register In-vitro Pharmacology Screening`);
+            this.invitroPharmacologyService.loadScreening();
             this.assay = this.invitroPharmacologyService.assay;
+
+            // Load Assay records suggestions/TypeAhead
+            this.loadAssayTypeAhead();
+
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
@@ -152,10 +168,10 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   getInvitroPharmacologyDetails(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
-      const getImpuritySubscribe = this.invitroPharmacologyService.getAssayScreening(id).subscribe(response => {
+      const getInvitroSubscribe = this.invitroPharmacologyService.getAssayScreening(id).subscribe(response => {
         if (response) {
 
-          // before copying existing impurities, delete the id
+          // before copying existing invitro pharamcology, delete the id
           if (newType && newType === 'copy') {
             this.scrub(response);
           }
@@ -172,8 +188,25 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.handleProductRetrivalError();
       });
-      this.subscriptions.push(getImpuritySubscribe);
+      this.subscriptions.push(getInvitroSubscribe);
     }
+  }
+
+  loadAssayTypeAhead() {
+    const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssays().subscribe(response => {
+      if (response) {
+        this.existingAssayList = response;
+      } else {
+        this.handleProductRetrivalError();
+      }
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.handleProductRetrivalError();
+    });
+    this.subscriptions.push(getInvitroSubscribe);
   }
 
   validate(): void {
@@ -186,7 +219,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
     // If there is no error on client side, check validation on server side
     if (this.validationMessages.length === 0) {
-      // this.impuritiesService.validateImpurities().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       //   this.validationMessages = results.validationMessages.filter(
       //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
@@ -223,24 +255,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   validateClient(): void {
     this.validationMessages = [];
     this.validationResult = true;
-
-    /*
-    // Validate Subsance
-    if (this.impurities.impuritiesSubstanceList.length === 0) {
-      this.setValidationMessage('Substance Name is required');
-    }
-
-    // Validate Substance Name
-    if (this.impurities != null) {
-      this.impurities.impuritiesSubstanceList.forEach((elementSub, index) => {
-        if (elementSub != null) {
-          if (elementSub.substanceUuid == null) {
-            this.setValidationMessage('Substance Name (' + (index + 1) + ') is required');
-          }
-        }
-      });
-    }
-    */
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -287,7 +301,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/invitro-pharm/register']);
-      this.invitroPharmacologyService.loadAssayScreening();
+      this.invitroPharmacologyService.loadScreening();
     }, 5000);
   }
 
@@ -296,7 +310,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.loadingService.setLoading(true);
     // Set service assay
     this.invitroPharmacologyService.assay = this.assay;
-    console.log("ASSSSSSSSSSSAY: " + JSON.stringify(this.assay));
     this.invitroPharmacologyService.saveAssay().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -461,7 +474,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           this.loadingService.setLoading(false);
           if (!this.id) {
             // new record
-            this.router.navigateByUrl('/impurities/register?action=import', { state: { record: response } });
+            this.router.navigateByUrl('/invitro-pharm/register?action=import', { state: { record: response } });
           }
         }, 1000);
       }

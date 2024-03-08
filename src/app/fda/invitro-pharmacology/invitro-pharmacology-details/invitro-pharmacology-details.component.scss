@@ -70,7 +70,7 @@
   border: 1px solid var(--blue-color);
   border-bottom: none;
   height: 35px;
-  background-color: var(--light-orange-color);
+  background-color: var(--regular-light-yellow-color);
   color: black;
   font-weight: 700;
 }
@@ -79,7 +79,7 @@
   border: 1px solid var(--blue-color);
   border-bottom: none;
   height: 35px;
-  background-color: var(--table-th-border-color);    /*--primary-title-color*/
+  background-color: var(--regular-light-yellow-color);    /*--primary-title-color*/
   color: #FFFFFF;
   font-weight: 700;
 }
@@ -194,6 +194,10 @@
 
 .margintop10px {
   margin-top: 10px;
+}
+
+.margintop15px {
+  margin-top: 15px;
 }
 
 .margintop20px {
@@ -338,9 +342,9 @@
   max-width: 40px;
 }
 
-.width120px {
-  width: 120px;
-  max-width: 120px;
+.width50px {
+  width: 50px;
+  max-width: 50px;
 }
 
 .width200px {
@@ -376,6 +380,11 @@
 .width50percent {
   width: 50%;
   max-width: 50%;
+}
+
+.width57percent {
+  width: 57%;
+  max-width: 57%;
 }
 
 .width60percent {
@@ -472,13 +481,13 @@ table.tableStyle {
   width: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   border: 1px solid var(--secondary-blue-color);
-  background-color: var(--table-bg-color);
+  /*background-color: var(--table-bg-color);*/
   text-align: left;
   border-collapse: collapse;
 }
 
 table.tableStyle td, table.tableStyle th {
-  border: 1px solid var(--table-th-border-color);
+  border: 1px solid var(--regular-lightgray-color);
   padding: 3px 2px;
 }
 
@@ -489,7 +498,7 @@ table.tableStyle tbody td {
 }
 
 table.tableStyle tr:nth-child(even) {
-  background: var(--table-tr-even-bg-color-3);
+  /*background: var(--table-tr-even-bg-color-3);*/
 }
 
 table.tableStyle thead {

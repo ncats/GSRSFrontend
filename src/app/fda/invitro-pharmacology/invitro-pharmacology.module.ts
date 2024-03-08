@@ -32,6 +32,8 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 /* GSRS Core Imports */
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
+import { SubstanceFormModule } from '@gsrs-core/substance-form/substance-form.module';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyComponent } from './invitro-pharmacology.component';
@@ -62,11 +64,7 @@ const invitroRoutes: Routes = [
     component: InvitroPharmacologyAssayFormComponent
   },
   {
-    path: 'invitro-pharm/screening/register',
-    component: InvitroPharmacologyFormComponent
-  },
-  {
-    path: 'invitro-pharm/screening/:id/edit',
+    path: 'invitro-pharm/register',
     component: InvitroPharmacologyFormComponent
   },
   {
@@ -123,6 +121,8 @@ const invitroRoutes: Routes = [
     OverlayModule,
     FacetsManagerModule,
     SubstanceImageModule,
+    SubstanceTextSearchModule,
+    SubstanceFormModule
   ],
   declarations: [
     InvitroPharmacologyComponent,

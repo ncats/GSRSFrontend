@@ -12,7 +12,7 @@ import { Facet, FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-co
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
 /* GSRS Invitro Pharmacology Imports */
-import { InvitroAssayInformation, InvitroAssayScreening } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssayScreening, ValidationResults} from '../model/invitro-pharmacology.model';
 
 @Injectable(
   {
@@ -25,9 +25,8 @@ export class InvitroPharmacologyService extends BaseHttpService {
   private _bypassUpdateCheck = false;
   totalRecords = 0;
   assay: InvitroAssayInformation;
-  assayScreening: InvitroAssayInformation;
 
-  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/assayscreening' + '/';
+  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/invitropharm' + '/';
 
   constructor(
     public http: HttpClient,
@@ -144,27 +143,49 @@ export class InvitroPharmacologyService extends BaseHttpService {
     return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithInvitroPharmEntityUrl + 'suggest?q=' + searchTerm);
   }
 
+  // Initialize or load data in In-vitro Pharmacology ASSAY ONLY
+  loadAssayOnly(assay?: InvitroAssayInformation): void {
+    // if Update/Exist Assay
+    if (assay != null) {
+      this.assay = assay;
+
+      //Delete the Screening Data Object, show only Assay data/Object
+      delete this.assay.invitroAssayScreenings;
+    } else {
+      const newInvitroAssayInformation: InvitroAssayInformation = {};
+      this.assay = newInvitroAssayInformation;
+    }
+  }
+
   // Initialize or load data in In-vitro Pharmacology ASSAY
   loadAssay(assay?: InvitroAssayInformation): void {
     // if Update/Exist Assay
     if (assay != null) {
       this.assay = assay;
     } else {
-      this.assay = {
-        //  invitroInformationReferences: []
+      const newInvitroAssayInformation: InvitroAssayInformation =
+      {
+        invitroAssayScreenings: [{
+          invitroReference: { invitroSponsor: {} },
+          invitroTestAgent: {},
+          invitroAssayResult: {},
+          invitroSummary: {},
+          invitroLaboratory: {},
+          invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
+        }]
       };
+      this.assay = newInvitroAssayInformation;
     }
   }
 
   // Initialize or load data in In-vitro Pharmacology SCREENING
-  loadAssayScreening(assayScreening?: InvitroAssayInformation): void {
+  loadScreening(assayScreening?: InvitroAssayInformation): void {
     // if Update/Exist Assay Screening
     if (assayScreening != null) {
-      this.assayScreening = assayScreening;
-    } else {
-      this.assayScreening = {
-        //  invitroInformationReferences: []
-      };
+      this.assay = assayScreening;
+    } else { // new
+      const newInvitroAssayInformation: InvitroAssayInformation = {invitroAssayScreenings: []};
+      this.assay = newInvitroAssayInformation;
     }
   }
 
@@ -241,8 +262,34 @@ export class InvitroPharmacologyService extends BaseHttpService {
     }
   }
 
+  validateAssay(): Observable<ValidationResults> {
+    return new Observable(observer => {
+      this.validateAssayServer().subscribe(results => {
+        observer.next(results);
+        observer.complete();
+      }, error => {
+        observer.error();
+        observer.complete();
+      });
+    });
+  }
+
+  validateAssayServer(): Observable<ValidationResults> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + '@validate';
+    return this.http.post(url, this.assay);
+  }
+
   addNewScreening(): void {
-    const newInvitroAssayScreening: InvitroAssayScreening = {invitroTestAgent: {}};
+    const newInvitroAssayScreening: InvitroAssayScreening =
+    {
+      /*
+      invitroReference: { invitroSponsor: {} },
+      invitroTestAgent: {},
+      invitroAssayResult: {},
+      invitroSummary: {},
+      invitroLaboratory: {},
+      invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }*/
+    };
     this.assay.invitroAssayScreenings.unshift(newInvitroAssayScreening);
   }
 

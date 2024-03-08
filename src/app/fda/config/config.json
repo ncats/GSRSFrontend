@@ -1118,9 +1118,9 @@
     "invitropharmacology": {
       "default": [
         "Assay ID",
-        "Application Type Number",
-        "Application Type",
-        "Application Number",
+        "Reference Source Type Number",
+        "Reference Source Type",
+        "Reference Source Number",
         "Target Name",
         "Test Agent",
         "Control",
@@ -1232,7 +1232,7 @@
         {
           "component": "invitropharmacology",
           "display": "In-vitro Pharmacology Screening",
-          "path": "invitro-pharm/screening/register",
+          "path": "invitro-pharm/register",
           "order": 240
         }
       ]

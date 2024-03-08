@@ -5,8 +5,8 @@
 
       <div class="divflexrow margintop20px">
         <div class="divflex">
-          <div class="title margintop10px width45percent">
-            In-vitro Pharmacology Assay Details&nbsp;&nbsp;
+          <div class="title margintop10px width57percent">
+            In-vitro Pharmacology Assay/Screening Details&nbsp;&nbsp;
           </div>
 
           <!-- Edit GSRS record button -->
@@ -25,7 +25,7 @@
           </div>
 
           <!-- Filler -->
-          <div class="width120px">&nbsp;</div>
+          <div class="width30px">&nbsp;</div>
 
           <div class="width30percent font11px margintop10px">
             <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
@@ -50,15 +50,33 @@
 
       <mat-card-content>
         <div class="margintop10px marginbottom30px">
-          <table class="tableStyle">
-            <tbody>
-              <tr class="headerstyle2">
-                <td colspan="2"><span class="font20px">Assay Information</span></td>
-              </tr>
+          <span class="colorblue font20px"><b>Assay Information</b></span>
 
+          <table class="tableStyle margintop15px">
+            <tbody>
               <tr>
                 <td class="fieldKey">Assay ID:</td>
                 <td>{{ assay.assayId }}</td>
+              </tr>
+
+              <tr>
+                <td class="fieldKey">External Assay ID:</td>
+                <td><b>{{ assay.externalAssayId }}</b></td>
+              </tr>
+
+              <tr>
+                <td class="fieldKey">External Assay Source:</td>
+                <td><b>{{ assay.externalAssaySource }}</b></td>
+              </tr>
+
+              <tr>
+                <td class="fieldKey">External Assay Reference:</td>
+                <td>{{assay.externalAssayReference}}</td>
+              </tr>
+
+              <tr>
+                <td class="fieldKey">External Assay Reference URL:</td>
+                <td>{{assay.externalAssayReferenceUrl}}</td>
               </tr>
 
               <tr>
@@ -72,23 +90,33 @@
               </tr>
 
               <tr>
-                <td class="fieldKey">Study Type:</td>
-                <td>{{ assay.studyType }}</td>
-              </tr>
-
-              <tr>
                 <td class="fieldKey">Bioassay Type:</td>
                 <td>{{ assay.bioassayType }}</td>
               </tr>
 
               <tr>
-                <td class="fieldKey">Bioassay:</td>
-                <td>{{ assay.bioassay }}</td>
+                <td class="fieldKey">Bioassay Class:</td>
+                <td>{{ assay.bioassayClass }}</td>
+              </tr>
+
+              <tr>
+                <td class="fieldKey">Study Type:</td>
+                <td>{{ assay.studyType }}</td>
               </tr>
 
               <tr>
                 <td class="fieldKey">Detection Method:</td>
                 <td>{{ assay.detectionMethod }}</td>
+              </tr>
+
+              <tr>
+                <td class="fieldKey">Presentation Type:</td>
+                <td>{{ assay.presentationType }}</td>
+              </tr>
+
+              <tr>
+                <td class="fieldKey">Presentation:</td>
+                <td>{{ assay.presentation }}</td>
               </tr>
 
               <tr>
@@ -143,12 +171,12 @@
               -->
 
               <tr>
-                <td class="fieldKey">Target in the Test Name:</td>
+                <td class="fieldKey">Target Name:</td>
                 <td>{{ assay.targetName }}</td>
               </tr>
 
               <tr>
-                <td class="fieldKey">Target in the Test Approval ID:</td>
+                <td class="fieldKey">Target Name Approval ID:</td>
                 <td>{{ assay.targetNameApprovalId }}</td>
               </tr>
 
@@ -168,23 +196,13 @@
               </tr>
 
               <tr>
-                <td class="fieldKey">External Assay ID:</td>
-                <td>{{ assay.externalAssayId }}</td>
+                <td class="fieldKey">Ligand/Substrate:</td>
+                <td>{{ assay.ligandSubstrate }}</td>
               </tr>
 
               <tr>
-                <td class="fieldKey">External Assay Source:</td>
-                <td>{{ assay.externalAssaySource }}</td>
-              </tr>
-
-              <tr>
-                <td class="fieldKey">External Assay Reference:</td>
-                <td>{{assay.externalAssayReference}}</td>
-              </tr>
-
-              <tr>
-                <td class="fieldKey">External Assay Reference URL:</td>
-                <td>{{assay.externalAssayReferenceUrl}}</td>
+                <td class="fieldKey">Ligand/Substrate Approval ID:</td>
+                <td>{{ assay.ligandSubstrateApprovalId }}</td>
               </tr>
 
             </tbody>
@@ -210,13 +228,6 @@
                   <div class="headerstyle title2 padtop7px padleft10px">
                     {{(i+1)}} of {{assay.invitroAssayScreenings.length}}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <!--
-                    <span *ngIf="screening.invitroReference">
-                      Reference: {{screening.invitroReference.referenceApplicationType}}&nbsp;
-                      {{screening.invitroReference.referenceApplicationNumber}}
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </span>
-                          -->
                     <span *ngIf="screening.invitroTestAgent">
                       Test Agent: {{screening.invitroTestAgent.testAgent}}&nbsp;
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -250,7 +261,7 @@
                       <td class="fieldKey">Reference Number:</td>
                       <td>
                         <div>
-                          {{screening.invitroReference.referenceApplicationNumber}}
+                          {{screening.invitroReference.referenceSourceNumber}}
                         </div>
                       </td>
                     </tr>
@@ -420,8 +431,8 @@
                       <td class="fieldKey">Result Value and Units:</td>
                       <td>
                         <div>
-                          {{screening.invitroAssayResult.valueObtained}}&nbsp;
-                          {{screening.invitroAssayResult.valueUnits}}
+                          {{screening.invitroAssayResult.resultValue}}&nbsp;
+                          {{screening.invitroAssayResult.resultValueUnits}}
                         </div>
                       </td>
                     </tr>
@@ -855,8 +866,7 @@
       </mat-card-content>
     </mat-card>
 
-
-    <br><br><br><br>
+    <br><br><br>
   </div> <!-- *ngIf="assay.id -->
   <ng-template #noRecord>
     <br><br><br><br>

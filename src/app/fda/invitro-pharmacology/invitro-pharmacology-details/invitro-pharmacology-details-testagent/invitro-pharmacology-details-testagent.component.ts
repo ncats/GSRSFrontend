@@ -288,7 +288,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                 }
 
                 if (screening.invitroReference) {
-                  let referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+                  let referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
                   assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
                 } // if invitroReference exists
 
@@ -362,7 +362,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
               }
 
               if (screening.invitroReference) {
-                let referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+                let referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
                 assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
               } // if invitroReference exists
             }

@@ -467,7 +467,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
           /* Invitro Reference Object exists */
           if (screening.invitroReference) {
-            assaySummary.referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+            assaySummary.referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
           }
 
           /* Invitro Test Agent Object exists */
@@ -528,6 +528,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
           }
 
+          /* Invitro Assay Summary Object exists */
+          if (screening.invitroSummary) {
+            assaySummary.relationshipType = screening.invitroSummary.relationshipType;
+          }
+
           /* LOOP: Invitro Assay Control exists */
           if (screening.invitroControls.length > 0) {
             screening.invitroControls.forEach(ctr => {
@@ -542,7 +547,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Reference Object exists */
           let referenceSourceTypeNumber = '';
           if (screening.invitroReference) {
-            referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
             assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
           } // if invitroReference exists
 
@@ -602,6 +607,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
           }
 
+          /* Invitro Assay Summary Object exists */
+          if (screening.invitroSummary) {
+            assaySummary.relationshipType = screening.invitroSummary.relationshipType;
+          }
+
           /* LOOP: Invitro Assay Control exists */
           if (screening.invitroControls.length > 0) {
             screening.invitroControls.forEach(ctr => {
@@ -616,7 +626,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Reference Object exists */
           let referenceSourceTypeNumber = '';
           if (screening.invitroReference) {
-            referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
             assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
           } // if invitroReference exists
 
@@ -679,6 +689,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
           }
 
+          /* Invitro Assay Summary Object exists */
+          if (screening.invitroSummary) {
+            assaySummary.relationshipType = screening.invitroSummary.relationshipType;
+          }
+
           /* LOOP: Invitro Assay Control exists */
           if (screening.invitroControls.length > 0) {
             screening.invitroControls.forEach(ctr => {
@@ -693,7 +708,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Reference Object exists */
           let referenceSourceTypeNumber = '';
           if (screening.invitroReference) {
-            referenceSourceTypeNumber = screening.invitroReference.referenceApplicationType + ' ' + screening.invitroReference.referenceApplicationNumber;
+            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
             assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
 
             // Get the index if the value exists in the key 'referenceSourceTypeNumber'
@@ -732,8 +747,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
         if (infoRef.invitroReference) {
 
-          if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
-            let referenceSourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
+          if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceSourceNumber)) {
+            let referenceSourceTypeNumber = infoRef.invitroReference.referenceSourceType + ' ' + infoRef.invitroReference.referenceSourceNumber;
 
             assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
           }
@@ -769,8 +784,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
               let sourceTypeNumber = '';
               if (infoRef.invitroReference) {
-                if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceApplicationNumber)) {
-                  sourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceApplicationNumber;
+                if ((infoRef.invitroReference.referenceApplicationType) || (infoRef.invitroReference.referenceSourceNumber)) {
+                  sourceTypeNumber = infoRef.invitroReference.referenceApplicationType + ' ' + infoRef.invitroReference.referenceSourceNumber;
                 }
               }
 
@@ -807,76 +822,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     //assay._assayTargetSummaries.push(assaySummary);
   }
 
-
-  /*
-  searchReference() {
-    this.applicationTypeNumLists.forEach(elementApp => {
-
-      let searchterm = "root_Application Number Type:" + elementApp;
-
-      this.loadingService.setLoading(true);
-      const skip = this.pageIndex * this.pageSize;
-      const subscription = this.invitroPharmacologyService.getAssayByTestCompound(
-        this.order,
-        skip,
-        this.pageSize,
-        searchterm,
-        this.privateFacetParams,
-      )
-        .subscribe(pagingResponse => {
-          let totalCountSearchReference = pagingResponse.total;
-          this.isError = false;
-          let test = pagingResponse.content;
-          // didn't work unless I did it like this instead of
-          // below export statement
-          let substanceAssay = pagingResponse.content;
-          this.etag = pagingResponse.etag;
-
-
-          substanceAssay.forEach(element => {
-            if (element) {
-
-              if (element.assayTarget) {
-              }
-
-            }
-          });
-
-          if (totalCountSearchReference > 0) {
-            const appScreening = { 'appTypeNumber': elementApp, 'assay': substanceAssay };
-            this.browseApplicationList.push(appScreening);
-
-            // Get total count for Browse Reference/Application
-            this.totalCountApplication = this.browseApplicationList.length;
-
-          }
-
-        }, error => {
-          console.log('error');
-          const notification: AppNotification = {
-            message: 'There was an error trying to retrieve in-vitro pharmacology data. Please refresh and try again.',
-            type: NotificationType.error,
-            milisecondsToShow: 6000
-          };
-          this.isError = true;
-          this.isLoading = false;
-          this.loadingService.setLoading(this.isLoading);
-          this.mainNotificationService.setNotification(notification);
-        }, () => {
-          subscription.unsubscribe();
-          this.isLoading = false;
-          this.loadingService.setLoading(this.isLoading);
-        });
-
-    });
-  }
-  */
-
   calculate1C50(valueType, percentInhibition, testAgentConcentration): string {
     let calculateIC50 = '';
-    // if percentInhibition < 30, then IC50 > Test Agent Concentration
-    // if percentInhibition between 30 and 60, then IC50 approx. = Test Agent Concentration
-    // if percentInhibition above 60, then IC50 < Test Agent Concentration
+    // if percentInhibition/resultValue < 30, then IC50 > Test Agent Concentration
+    // if percentInhibition/resultValue between 30 and 60, then IC50 approx. = Test Agent Concentration
+    // if percentInhibition/resultValue above 60, then IC50 < Test Agent Concentration
     if (percentInhibition) {
       if (percentInhibition < 30) {
         calculateIC50 = valueType + ' > ' + testAgentConcentration;

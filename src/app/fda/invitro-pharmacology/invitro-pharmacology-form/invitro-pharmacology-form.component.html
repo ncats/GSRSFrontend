@@ -97,652 +97,303 @@
 <!-- FORM ENTRY BEGIN -->
 <!-- Display Form Fields -->
 
-<div class="form-content-container mat-form-field-style bordergray">
+<div class="form-content-container mat-form-field-style">
   <div class="scrollable-container">
 
     <!-- Display Message-->
-    <div class="message-style bordergray" *ngIf="message">
+    <div class="message-style" *ngIf="message">
       {{message}}
     </div>
 
     <div *ngIf="assay">
-      <div>
-        <div class="details-container">
 
-
-          <div class="cards-container">
-            <div class="margintop10px" style="width:100%;">
-
-
-              <mat-card class="bordergray">
-                <mat-card-title>
-                  <div class="width650px margintop10px">
-                    <b>{{title}}</b>
-                    &nbsp;&nbsp;
-
-                    <!-- Edit GSRS record button -->
-                    <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                      matTooltip='Edit GSRS In-vitro Pharmacology Record'>
-                      <mat-icon svgIcon="edit"></mat-icon>
-                    </a>&nbsp;&nbsp;
-
-                    <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
-                      matTooltip='Export Json'>
-                      <mat-icon svgIcon="get_app"></mat-icon>
-                    </a>&nbsp;&nbsp;&nbsp;
-                  </div>
-
-                  <div class="width50percent font11px margintop10px">
-                    <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Create
-                      Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-                    <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy
-                    hh:mm:ss
-                    a'}}
-                  </div>
-                </mat-card-title>
-
-                <mat-card-content>
-
-                  <table class="" *ngIf="assay">
-                    <tbody>
-                      <tr class="headerstyle2">
-                        <td colspan="2" class="height35px"><span class="font20px">Assay Information</span></td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay ID:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayId" name="assayId" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay Title:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayTitle" name="assayTitle" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Study Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.studyType" name="studyType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <!--
-                      <tr>
-                        <td class="fieldKey">Test Agent:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.testCompound"
-                              name="testCompound" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Test Agent UNII:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.testCompoundUnii"
-                              name="testCompoundUnii" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Screening Concentration:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.screeningConcentration"
-                              name="screeningConcentration" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Screening Concentration Unit:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.screeningConcentrationUnit"
-                              name="screeningConcentrationUnit" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Percent Inhibition Mean:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.percentInhibitionMean"
-                              name="percentInhibitionMean" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Purity:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.purity" name="purity" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Batch ID:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.batchNumber"
-                              name="batchNumber" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Report Date:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.reportDate" name="reportDate" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-                      -->
-
-                    </tbody>
-                  </table>
-
-                  <!--
-                  <table class="tableStyle">
-                    <tbody>
-                      <tr class="headerstyle2">
-                        <td colspan="2"><span class="font20px">Assay Information</span></td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Relationship Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.relationshipType"
-                              name="relationshipType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayType" name="assayType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay Target:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayTarget"
-                              name="assayTarget" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <!--
-                      <tr>
-                        <td class="fieldKey">Assay Target UNII:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayTargetUnii"
-                              name="assayTargetUnii" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Ligand/Substrate:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrate"
-                              name="ligandSubstrate" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Ligand/Substrate UNII:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateUnii"
-                              name="ligandSubstrateUnii" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Ligand/Substrate Concentration:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateConcentration"
-                              name="ligandSubstrateConcentration" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Ligand/Substrate Concentration Unit:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateConcentrationUnit"
-                              name="ligandSubstrateConcentrationUnit" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.control" name="control" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control UNII:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.controlUnii"
-                              name="controlUnii" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.controlType"
-                              name="controlType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control Value Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.controlValueType"
-                              name="controlValueType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control Value Mean:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.controlValueMean"
-                              name="controlValueMean" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control Value Low:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.controlValueLow"
-                              name="controlValueLow" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control Value High:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.controlValueHigh"
-                              name="controlValueHigh" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Control Value Unit:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.controlValueUnit"
-                              name="controlValueUnit" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Test Value Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.testValueType"
-                              name="testValueType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Test Value:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.testValue" name="testValue" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Test Value Unit:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.testValueUnit"
-                              name="testValueUnit" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Presentation Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.presentationType"
-                              name="presentationType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Presentation:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.presentation"
-                              name="presentation" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-                  -->
-
-                  <!--
-                  <table class="tableStyle">
-                    <tbody>
-                      <tr class="headerstyle2">
-                        <td colspan="2"><span class="font20px">References</span></td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay Reference Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayReferenceType"
-                              name="assayReferenceType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay Reference:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayReference"
-                              name="assayReference" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay External ID:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayExternalId"
-                              name="assayExternalId" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay External Source:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayExternalSource"
-                              name="assayExternalSource" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Assay External Reference:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.assayExternalReference"
-                              name="assayExternalReference" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-                  -->
-
-                  <!--
-                  <table class="tableStyle">
-                    <tbody>
-                      <tr class="headerstyle2">
-                        <td colspan="2"><span class="font20px">Approver Information</span></td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Approver Name:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.invitroSponsor.approverName"
-                              name="approverName" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Approver Title:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.invitroSponsor.approverTitle"
-                              name="approverTitle" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Approver Affiliation:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assay.invitroSponsor.approverAffiliation"
-                              name="approverAffiliation" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Approver Email:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.invitroSponsor.approverEmail"
-                              name="approverEmail" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Approver Phone Number:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assay.invitroSponsor.approverPhoneNumber"
-                              name="approverPhoneNumber" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-                  -->
-
-                  <!--
-                  <table class="tableStyle">
-                    <tbody>
-                      <tr class="headerstyle2">
-                        <td colspan="2"><span class="font20px">Laboratory Information</span></td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Laboratory Name:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.invitroLaboratory.laboratoryName"
-                              name="laboratoryName" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Laboratory Type:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.invitroLaboratory.laboratoryType"
-                              name="laboratoryType" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Laboratory Affiliation:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assay.invitroLaboratory.laboratoryAffiliation"
-                              name="laboratoryAffiliation" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Laboratory Street Address:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assay.invitroLaboratory.laboratoryStreetAddress"
-                              name="laboratoryStreetAddress" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">City:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="assay.invitroLaboratory.laboratoryCity"
-                              name="laboratoryCity" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">State:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assay.invitroLaboratory.laboratoryState" name="laboratoryState" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Zipcode:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assay.invitroLaboratory.laboratoryZipcode"
-                              name="laboratoryZipcode" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="fieldKey">Country:</td>
-                        <td>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assay.invitroLaboratory.laboratoryCountry"
-                              name="laboratoryCountry" />
-                          </mat-form-field>
-                        </td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-                  -->
-
-
-                  <button mat-button class="marginright30px bordergreen" color="primary"
-                    (click)="addNewScreening(); $event.stopPropagation()" matTooltip="Add New Screening">
-                    <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
-                  </button>
-
-                  <div class="marginbottom15px"
-                  *ngFor="let screening of assay.invitroAssayScreenings; let screeningIndex = index">
-                       {{(screeningIndex+1)}}
-
-
-                  <br>
-                  <b>Test Agent Details</b>
-                  <br>
-
-
-
-                  <div class="form-row" *ngIf="screening.invitroTestAgent">
-
-                    <mat-form-field class="col-2-1">
-                      <input matInput placeholder="Test Agent" [(ngModel)]="screening.invitroTestAgent.testAgent" name="testAgent" />
-                    </mat-form-field>
-                  </div>
-
-
-                  <div> <!-- LOOP: invitroAssayScreenings -->
-
-                  </div>
-
-                  </div>
-
-                </mat-card-content>
-              </mat-card>
-
-            </div> <!-- *ngIf=assay -->
-          </div> <!-- class=cards-container -->
-
-
+      <div class="divflex margintop20px">
+        <div class="width600px font24px">
+          <b>{{title}}</b>
+          &nbsp;&nbsp;
+
+          <!-- Edit GSRS record button -->
+          <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            matTooltip='Edit GSRS In-vitro Pharmacology Record'>
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>&nbsp;&nbsp;
+
+          <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
+            matTooltip='Export Json'>
+            <mat-icon svgIcon="get_app"></mat-icon>
+          </a>&nbsp;&nbsp;&nbsp;
         </div>
-        <br><br><br><br>
-      </div>
-    </div>
-  </div>
-</div>
+
+        <div class="width50percent font11px margintop10px" *ngIf="assay.id">
+          <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Create
+            Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy
+          hh:mm:ss
+          a'}}
+        </div>
+      </div> <!-- class=divflex -->
+
+
+      <!-- ############################################################ -->
+      <!-- ASSAY DETAILS FORM BEGIN                                     -->
+      <!-- ************************************************************ -->
+      <div class="details-container">
+
+        <div class="margintop10px" style="width:100%;">
+
+          <mat-card class="margintop10px">
+            <mat-card-title>
+            <!-- <span class="colorblue font20px"><b>Assay Information</b></span>  -->
+            </mat-card-title>
+
+            <mat-card-content>
+
+              <!--
+              <b>Select From Existing Assays: {{existingAssayList.length}}</b> &nbsp;&nbsp;<br>
+              -->
+
+              <div class="font15px">Step 1: Select from Existing Assays</div><br><br>
+
+              <mat-form-field class="width100percent">
+                <mat-label>Select From Existing Assay</mat-label>
+                <mat-select [formControl]="existingAssayControl">
+                  <mat-option *ngFor="let asy of existingAssayList; let index = index" [value]="index">
+                    ID:{{asy.id}}&nbsp;&nbsp;
+                    External Assay ID:{{asy.externalAssayId}}&nbsp;&nbsp;
+                    External Assay Source:{{asy.externalAssaySource}}&nbsp;&nbsp;
+                    Target Name:{{asy.targetName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+
+              <!-- Existing Assay Suggestions/TypeAhead Begin -->
+              <!--
+              <mat-form-field [floatLabel]="'never'" class="search-form-field space-right-small" [ngClass]="source">
+                <input class="search" type="text" [placeholder]="placeholder" aria-label="Search" matInput
+                  [formControl]="searchControl" [matAutocomplete]="substanceSearchAuto" (focus)="focused()">
+
+                <mat-hint *ngIf="hintMessage">{{hintMessage}}</mat-hint>
+                <mat-error *ngIf="searchControl.invalid">{{errorMessage}}</mat-error>
+
+                <mat-autocomplete class="substance-select" panelWidth="auto" #substanceSearchAuto="matAutocomplete"
+                  (optionSelected)="substanceSearchOptionSelected($event)" (closed)="autoCompleteClosed()">
+                  <div *ngFor="let field of suggestionsFields">
+                    <div class="substance-suggestion-field"><span
+                        class='field-styling'><b>{{field['display']}}</b></span></div>
+
+                    <mat-option *ngFor="let suggestion of existingAssayList" [value]="suggestion.key">
+                      <div [innerHTML]="highlight(suggestion.id)" class="suggestion-styling">{{suggestion.id}}</div>
+                    </mat-option>
+
+                  </div>
+                  <pre aria-hidden="true" class="mat-option overflow-comp" id='overflow'></pre>
+                </mat-autocomplete>
+
+              </mat-form-field>
+              -->
+              <!-- Existing Assay Suggestions/TypeAhead End -->
+
+              <!-- ASSAY INFORMATION DETAILS BEGIN -->
+
+              <!--
+              <table class="width100percent" *ngIf="assay">
+                <tbody>
+
+                  <tr>
+                    <td class="fieldKey">Assay ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.assayId" name="assayId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Assay Title:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.assayTitle" name="assayTitle" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="fieldKey">Study Type:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.studyType" name="studyType" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Assay Format:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.assayFormat" name="assayFormat" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Bioassay Type:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.bioassayType" name="bioassayType" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Detection Method:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.detectionMethod" name="detectionMethod" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Target in the Test Name:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.targetName" name="targetName" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Target Name Approval ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.targetNameApprovalId"
+                          name="targetNameApprovalId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Target Species:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.targetSpecies" name="targetSpecies" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Human Homolog Target:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.humanHomologTarget"
+                          name="humanHomologTarget" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">Human Homolog Target Approval ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.humanHomologTargetApprovalId"
+                          name="humanHomologTargetApprovalId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">External Assay Source:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssaySource"
+                          name="externalAssaySource" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">External Assay Source ID:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssayId" name="externalAssayId" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">External Assay Reference:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssayReference"
+                          name="externalAssayReference" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">External Assay Source:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssaySource"
+                          name="externalAssaySource" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                  <tr class="bordergray">
+                    <td class="fieldKey">External Assay Reference URL:</td>
+                    <td>
+                      <mat-form-field class="fieldvalue">
+                        <input matInput placeholder="" [(ngModel)]="assay.externalAssayReferenceUrl"
+                          name="externalAssayReferenceUrl" />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+              -->
+              <!-- ASSAY INFORMATION DEATILS END -->
+
+
+              <!-- ####################################################-->
+              <!-- SCREENING DETAILS BEGIN -->
+              <br><br>
+              <div class="font18px">
+                <b>Total Screenings: {{(assay.invitroAssayScreenings.length)}}</b>
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
+                  (click)="addNewScreening(); $event.stopPropagation()" matTooltip="Add New Screening">
+                  <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add New Screening</span>
+                </button>
+              </div>
+
+              <!-- Screening Loop -->
+              <div class="marginbottom15px"
+                *ngFor="let screening of assay.invitroAssayScreenings; let screeningIndex = index">
+
+
+
+
+
+                <!-- ASSAY SCREENING END -->
+
+              </div> <!-- LOOP: invitroAssayScreenings -->
+
+            </mat-card-content>
+          </mat-card>
+
+        </div> <!-- class=width100 -->
+      </div> <!-- class=cards-container -->
+    </div> <!-- class=details-container -->
+
+
+  </div> <!-- class=scrollable-container -->
+</div> <!-- class=form-content-container -->
 
 
 <ng-template #noRecord>
