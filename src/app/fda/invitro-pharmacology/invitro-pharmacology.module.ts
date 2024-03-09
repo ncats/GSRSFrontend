@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatStepperModule } from '@angular/material/stepper';
 
 /* GSRS Core Imports */
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
@@ -116,6 +117,7 @@ const invitroRoutes: Routes = [
     MatTabsModule,
     MatBottomSheetModule,
     MatProgressSpinnerModule,
+    MatStepperModule,
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,

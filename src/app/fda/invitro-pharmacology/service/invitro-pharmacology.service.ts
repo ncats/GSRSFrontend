@@ -184,7 +184,13 @@ export class InvitroPharmacologyService extends BaseHttpService {
     if (assayScreening != null) {
       this.assay = assayScreening;
     } else { // new
-      const newInvitroAssayInformation: InvitroAssayInformation = {invitroAssayScreenings: []};
+      const newInvitroAssayInformation: InvitroAssayInformation =
+     {
+        invitroAssayScreenings: [ /*{
+        /*invitroReference: {},
+        invitroTestAgent: {}
+      } */  ]
+      };
       this.assay = newInvitroAssayInformation;
     }
   }
@@ -282,15 +288,22 @@ export class InvitroPharmacologyService extends BaseHttpService {
   addNewScreening(): void {
     const newInvitroAssayScreening: InvitroAssayScreening =
     {
-      /*
       invitroReference: { invitroSponsor: {} },
       invitroTestAgent: {},
       invitroAssayResult: {},
       invitroSummary: {},
       invitroLaboratory: {},
-      invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }*/
+      invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
     };
-    this.assay.invitroAssayScreenings.unshift(newInvitroAssayScreening);
+    this.assay.invitroAssayScreenings.push(newInvitroAssayScreening);
+  }
+
+  deleteAssay() {
+    /*this.assay.invitroAssayScreenings.splice(screeningIndex, 1); */
+  }
+
+  deleteScreening(screeningIndex: number) {
+    this.assay.invitroAssayScreenings.splice(screeningIndex, 1);
   }
 
   bypassUpdateCheck(): void {

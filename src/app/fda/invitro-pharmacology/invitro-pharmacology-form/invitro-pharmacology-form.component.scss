@@ -58,8 +58,25 @@
   margin: 0 auto;
 }
 
-.mat-card {
-  max-width: 1140px;
+.divflexrow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.details-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.details-box {
+  max-width: 1028px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
 .row {
@@ -69,6 +86,7 @@
 .form-row {
   display: flex;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .row-property {
@@ -178,90 +196,16 @@
   flex: 1 1 auto;
 }
 
-.submission-messages {
-  overflow: hidden;
-  height: auto;
-  -webkit-transition: all 500ms ease-out;
-  transition: all 500ms ease-out;
-  max-width: 1028px;
-  width: 100%;
-  background-color: var(--regular-white-color);
-  display: flex;
-  flex-direction: column;
-
-  &.collapsed {
-    max-height: 0;
-  }
-
-  &.expanded {
-    max-height: 500px;
-    overflow-y: auto;
-    padding: 10px;
-  }
-
-  .submission-message {
-    font-weight: 500;
-    text-align: center;
-  }
-
-  .validation-message {
-    display: flex;
-    padding: 5px 0;
-    align-items: center;
-
-    .message-type {
-      text-transform: uppercase;
-      font-weight: 500;
-      margin-right: 20px;
-      padding:10px;
-      border-radius:3px;
-    }
-  }
-
-  .dismiss-container {
-    display: flex;
-  }
-
-  .warning-message {
-    color: var(--warning-dialog-color);
-    background-color: var(--warning-dialog-bg-color);
-
-  }
-
-  .error-message {
-    color: var(--error-dialog-color);
-    background-color: var(--error-dialog-bg-color);
-  }
-
-}
-
-.divflexrow {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
-.details-container {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.details-box {
-  max-width: 1028px;
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-}
-
 .margintopneg10px {
   margin-top: -10px;
 }
 
 .margintopneg40px {
   margin-top: -40px;
+}
+
+.margintop5px {
+  margin-top: 5px;
 }
 
 .margintop10px {
@@ -274,6 +218,14 @@
 
 .margintop25px {
   margin-top: 25px;
+}
+
+.margintop30px {
+  margin-top: 30px;
+}
+
+.margintop40px {
+  margin-top: 40px;
 }
 
 .margintop90px {
@@ -332,6 +284,14 @@ marginbottom40px {
   width: 200px;
 }
 
+.width290px {
+  width: 290px;
+}
+
+.width400px {
+  width: 400px;
+}
+
 .width600px {
   width: 800px;
 }
@@ -344,12 +304,24 @@ marginbottom40px {
   width: 60%;
 }
 
+.width80percent {
+  width: 80%;
+}
+
+.width90percent {
+  width: 90%;
+}
+
 .width100percent {
   width: 100%;
 }
 
 .colorgray {
   color: var(--regular-grey-color);
+}
+
+.colorblack {
+  color: black;
 }
 
 .colorred {
@@ -380,6 +352,10 @@ marginbottom40px {
   font-size: 15px;
 }
 
+.font16px {
+  font-size: 16px;
+}
+
 .font18px {
   font-size: 18px;
 }
@@ -396,16 +372,28 @@ marginbottom40px {
   font-size: 24px;
 }
 
+.fontbold {
+  font-weight: bold;
+}
+
 .textalignright {
   text-align: right;
 }
 
-.displayinlineblock {
-  display: inline-block;
+.textalignleft {
+  text-align: left;
 }
 
 .floatleft {
   float: left;
+}
+
+.alignright {
+  margin-left: auto;
+}
+
+.displayinlineblock {
+  display: inline-block;
 }
 
 .disabled {
@@ -430,11 +418,11 @@ marginbottom40px {
 
 hr {
   border: none;
-  border-top: 2px dotted var(--regular-green-color);
+  border-top: 4px dotted var(--regular-green-color);
   color: var(--hr-color);
   overflow: visible;
   text-align: center;
-  height: 5px;
+  height: 4px;
 }
 
 .tabStyle {
@@ -442,6 +430,10 @@ hr {
   height: 30px;
   border: 1px solid var(--regular-grey-color);
   background: var(--tabstyle-bg-img-end-color);
+}
+
+.mat-card {
+  max-width: 1140px;
 }
 
 .mat-form-field-style > {
@@ -533,17 +525,19 @@ hr {
 }
 
 .fieldKey {
-  width: 290px;
+  width: 350px;
   font-weight: 800;
-  padding-top: 5px;
+  padding-top: 20px;
   padding-left: 5px;
+  margin-right: 10px;
 }
 
 .fieldvalue {
   width: 95%;
   height: 40px;
   padding-left: 5px;
-  margin-bottom: -1em;
+  padding-right: 5px;
+  background-color: #f7f7f7;
 }
 
 fieldset.border {
@@ -562,11 +556,79 @@ legend.border {
   width: auto !important;
   border: none;
   border-bottom: none;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--legend-blue-border-color);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+.custom-badge {
+  .mat-badge-content {
+    background: var(--mustard-color);
+    color: var(--regular-white-color);
+  }
+  .mat-badge-medium .mat-badge-above .mat-badge-top .mat-badge-content {
+    top: unset;
+    right: unset;
+  }
+}
+
+.submission-messages {
+  overflow: hidden;
+  height: auto;
+  -webkit-transition: all 500ms ease-out;
+  transition: all 500ms ease-out;
+  max-width: 1028px;
+  width: 100%;
+  background-color: var(--regular-white-color);
+  display: flex;
+  flex-direction: column;
+
+  &.collapsed {
+    max-height: 0;
+  }
+
+  &.expanded {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .submission-message {
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .validation-message {
+    display: flex;
+    padding: 5px 0;
+    align-items: center;
+
+    .message-type {
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-right: 20px;
+      padding:10px;
+      border-radius:3px;
+    }
+  }
+
+  .dismiss-container {
+    display: flex;
+  }
+
+  .warning-message {
+    color: var(--warning-dialog-color);
+    background-color: var(--warning-dialog-bg-color);
+
+  }
+
+  .error-message {
+    color: var(--error-dialog-color);
+    background-color: var(--error-dialog-bg-color);
+  }
+
 }
 
 /* Table Style Begin */
@@ -587,7 +649,7 @@ table.tableStyle td, table.tableStyle th {
 table.tableStyle td {
   font-size: 16px;
   vertical-align: top;
-  height: 50px;
+  height: 30px;
   /*padding: 10px 10px;*/
 }
 
@@ -608,6 +670,7 @@ table.tableStyle thead th {
   color: var(--table-th-color);
   border-left: 1px solid var(--table-th-border-color-2);
   padding: 10px 10px;
+  background: #ededed;
 }
 
 table.tableStyle thead th:first-child {

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
@@ -30,6 +30,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
 import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
   selector: 'app-invitro-pharmacology-form',
@@ -41,8 +42,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   assay: InvitroAssayInformation;
   id?: number;
   existingAssayControl = new FormControl();
-
   existingAssayList: Array<InvitroAssayInformation> = [];
+  existingAssayMessage = '';
 
   showSubmissionMessages = false;
   submissionMessage: string;
@@ -75,7 +76,17 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
+  firstFormGroup = this._formBuilder.group({
+    firstCtrl: ['', Validators.required],
+  });
+  secondFormGroup = this._formBuilder.group({
+    secondCtrl: ['', Validators.required],
+  });
+  isLinear = false;
+
+
   constructor(
+    private _formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private sanitizer: DomSanitizer,
@@ -91,18 +102,22 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // When All existing Assay data is selected, assign assay details
     this.existingAssayControl.valueChanges.subscribe(valueIndex => {
-      console.log('name has changed:', valueIndex)
       this.assay.id = this.existingAssayList[valueIndex].id;
       this.assay.internalVersion = this.existingAssayList[valueIndex].internalVersion;
       this.assay.externalAssayId = this.existingAssayList[valueIndex].externalAssayId;
       this.assay.externalAssaySource = this.existingAssayList[valueIndex].externalAssaySource;
+      this.assay.targetName = this.existingAssayList[valueIndex].targetName;
     });
 
+    // Get Username and Admin details
     this.isAdmin = this.authService.hasRoles('admin');
+    this.username = this.authService.getUser();
+
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.username = this.authService.getUser();
+
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -148,15 +163,17 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
             this.invitroPharmacologyService.loadScreening();
             this.assay = this.invitroPharmacologyService.assay;
 
-            // Load Assay records suggestions/TypeAhead
-            this.loadAssayTypeAhead();
-
             this.loadingService.setLoading(false);
             this.isLoading = false;
           });
         } // else Register
       });
+
     this.subscriptions.push(routeSubscription);
+
+    // Load Assay records suggestions/TypeAhead
+    this.loadAssayTypeAhead();
+
   }
 
   ngOnDestroy(): void {
@@ -481,6 +498,67 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // }
       // }
     });
+  }
+
+  nameSearch(event: any, fieldName: string, screeningIndex): void {
+
+    if (fieldName && fieldName === 'testAgent') {
+      // Assign to Target Name
+      this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgent = event;
+    } else if (fieldName === 'humanHomologTarget') {
+      this.assay.humanHomologTarget = event;
+    } else if (fieldName === 'ligandSubstrate') {
+      this.assay.ligandSubstrate = event;
+    }
+
+    const substanceSubscribe = this.generalService.getSubstanceByName(event).subscribe(response => {
+      if (response) {
+        if (response.content && response.content.length > 0) {
+          const substance = response.content[0];
+          console.log("AAAAAAAAAAAAAAA: " + JSON.stringify(substance));
+          if (substance) {
+            if (substance.approvalID) {
+              // Assign to Target Name Approval ID
+              if (fieldName && fieldName === 'testAgent') {
+                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentApprovalId = substance.approvalID;
+
+                // Get Structure Smiles, Formula Weight
+                if (substance.structure) {
+                  if (substance.structure.smiles) {
+                    this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSmileString = substance.structure.smiles;
+                  }
+                  if (substance.structure.formula) {
+                    this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.molecularFormulaWeight = substance.structure.formula;
+                  }
+                }
+
+              } else if (fieldName === 'humanHomologTarget') {
+                this.assay.humanHomologTargetApprovalId = substance.approvalID;
+              } else if (fieldName === 'ligandSubstrate') {
+                this.assay.ligandSubstrateApprovalId = substance.approvalID;
+              }
+            }
+          }
+        }
+      }
+    });
+    this.subscriptions.push(substanceSubscribe);
+  }
+
+  confirmDeleteScreening(screeningIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Screening ' + (screeningIndex + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteScreening(screeningIndex);
+      }
+    });
+  }
+
+  deleteScreening(screeningIndex: number) {
+    this.invitroPharmacologyService.deleteScreening(screeningIndex);
   }
 
   scrub(oldraw: any): any {

@@ -61,7 +61,6 @@ export interface InvitroInformationReferences {
   lastModifiedDate?: number;
   internalVersion?: number;
   invitroReference?: InvitroReference;
-  invitroAssayInfoRefTestAgents?: Array<InvitroAssayInfoReferenceTestAgent>;
 }
 
 export interface InvitroReference {
@@ -91,21 +90,6 @@ export interface InvitroSponsor {
   modifiedBy?: string;
   lastModifiedDate?: number;
   internalVersion?: number;
-}
-
-export interface InvitroAssayInfoReferenceTestAgent {
-  id?: number;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
-  invitroTestAgent?: InvitroTestAgent;
-  invitroAssayResult?: Array<InvitroAssayResult>
-  invitroControls?: Array<InvitroControl>;
-  invitroSummary?: InvitroSummary;
-  invitroLaboratory?: InvitroLaboratory;
-  invitroSubmitterReport?: InvitroSubmitterReport;
 }
 
 export interface InvitroTestAgent {
