@@ -28,9 +28,9 @@ import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.co
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 /* Invitro Pharmacology Imports */
-import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
+import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
 import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
-import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
+//import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
   selector: 'app-invitro-pharmacology-form',

@@ -309,6 +309,11 @@
 
                           <ng-template matStepLabel>
                             <span class="font16px colorblack">Reference</span>
+                            <br>
+                            <span class="font11px" *ngIf="screening.invitroReference">
+                              {{screening.invitroReference.referenceSourceType}}&nbsp;
+                              {{screening.invitroReference.referenceSourceNumber}}
+                            </span>
                           </ng-template>
 
                           <!-- REFERENCE DETAILS BEGIN -->
@@ -357,6 +362,7 @@
                                   name="digitalObjectIdentifier" />
                               </mat-form-field>
                             </div>
+
                           </div> <!-- if screening.invitroReference exists -->
                           <!-- REFERENCE DETAILS END -->
 
@@ -710,6 +716,10 @@
                       <mat-step>
                         <ng-template matStepLabel>
                           <span class="font16px colorblack">Test Agent</span>
+                          <br>
+                          <span class="font11px" *ngIf="screening.invitroTestAgent">
+                            {{screening.invitroTestAgent.testAgent}}&nbsp;
+                          </span>
                         </ng-template>
 
                         <!-- TEST AGENT DETAILS BEGIN -->

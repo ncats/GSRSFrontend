@@ -45,6 +45,11 @@ import { InvitroPharmacologyTextSearchComponent } from './invitro-pharmacology-t
 import { InvitroPharmacologyDataImportComponent } from './invitro-pharmacology-data-import/invitro-pharmacology-data-import.component';
 import { InvitroPharmacologyDetailsTestagentComponent } from './invitro-pharmacology-details/invitro-pharmacology-details-testagent/invitro-pharmacology-details-testagent.component';
 import { InvitroPharmacologyAssayFormComponent } from './invitro-pharmacology-form/invitro-pharmacology-assay-form/invitro-pharmacology-assay-form.component';
+import { CanActivateRegisterInvitroPharmacologyFormComponent } from './invitro-pharmacology-form/can-activate-register-invitro-pharmacology-form.component';
+import { CanActivateUpdateInvitroPharmacologyFormComponent } from './invitro-pharmacology-form/can-activate-update-invitro-pharmacology-form.component';
+import { CanDeactivateInvitroScreeningFormComponent } from './invitro-pharmacology-form/can-deactivate-invitro-screening-form.component';
+import { CanDeactivateInvitroAssayFormComponent } from './invitro-pharmacology-form/can-deactivate-invitro-assay-form.component';
+import { ActivateInvitroPharmacologyComponent } from './activate-invitro-pharmacology.component';
 
 const invitroRoutes: Routes = [
   {
@@ -54,11 +59,15 @@ const invitroRoutes: Routes = [
   },
   {
     path: 'invitro-pharm/assay/register',
-    component: InvitroPharmacologyAssayFormComponent
+    component: InvitroPharmacologyAssayFormComponent,
+    canActivate: [ActivateInvitroPharmacologyComponent, CanActivateRegisterInvitroPharmacologyFormComponent],
+    canDeactivate: [CanDeactivateInvitroAssayFormComponent]
   },
   {
     path: 'invitro-pharm/assay/:id/edit',
-    component: InvitroPharmacologyAssayFormComponent
+    component: InvitroPharmacologyAssayFormComponent,
+    canActivate: [ActivateInvitroPharmacologyComponent, CanActivateRegisterInvitroPharmacologyFormComponent],
+    canDeactivate: [CanDeactivateInvitroAssayFormComponent]
   },
   {
     path: 'invitro-pharm/assay/:id',
@@ -66,13 +75,15 @@ const invitroRoutes: Routes = [
   },
   {
     path: 'invitro-pharm/register',
-    component: InvitroPharmacologyFormComponent
+    component: InvitroPharmacologyFormComponent,
+    canActivate: [ActivateInvitroPharmacologyComponent, CanActivateRegisterInvitroPharmacologyFormComponent],
+    canDeactivate: [CanDeactivateInvitroScreeningFormComponent]
   },
   {
     path: 'invitro-pharm/:id/edit',
     component: InvitroPharmacologyFormComponent,
-    //canActivate: [ActivateImpuritiesComponent, CanActivateUpdateImpuritiesFormComponent],
-    //canDeactivate: [CanDeactivateImpuritiesFormComponent]
+    canActivate: [ActivateInvitroPharmacologyComponent, CanActivateUpdateInvitroPharmacologyFormComponent],
+    canDeactivate: [CanDeactivateInvitroScreeningFormComponent]
   },
   {
     path: 'invitro-pharm/:id',
@@ -139,6 +150,10 @@ const invitroRoutes: Routes = [
   exports: [
   ],
   providers: [
+    CanActivateRegisterInvitroPharmacologyFormComponent,
+    CanActivateUpdateInvitroPharmacologyFormComponent,
+    CanDeactivateInvitroScreeningFormComponent,
+    ActivateInvitroPharmacologyComponent
   ]
 })
 
@@ -153,6 +168,10 @@ export class InvitroPharmaModule {
     return {
       ngModule: InvitroPharmaModule,
       providers: [
+        CanActivateRegisterInvitroPharmacologyFormComponent,
+        CanActivateUpdateInvitroPharmacologyFormComponent,
+        CanDeactivateInvitroScreeningFormComponent,
+        ActivateInvitroPharmacologyComponent
       ]
     };
   }

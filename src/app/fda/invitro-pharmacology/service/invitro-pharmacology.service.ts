@@ -23,8 +23,9 @@ import { InvitroAssayInformation, InvitroAssayScreening, ValidationResults} from
 export class InvitroPharmacologyService extends BaseHttpService {
 
   private _bypassUpdateCheck = false;
-  totalRecords = 0;
+  private assayStateHash?: number;
   assay: InvitroAssayInformation;
+  totalRecords = 0;
 
   apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/invitropharm' + '/';
 
@@ -304,6 +305,16 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   deleteScreening(screeningIndex: number) {
     this.assay.invitroAssayScreenings.splice(screeningIndex, 1);
+  }
+
+  get isInvitroPharmacologyUpdated(): boolean {
+    const invitroString = JSON.stringify(this.assay);
+    if (this._bypassUpdateCheck) {
+      this._bypassUpdateCheck = false;
+      return false;
+    } else {
+      return this.assayStateHash !== this.utilsService.hashCode(invitroString);
+    }
   }
 
   bypassUpdateCheck(): void {
