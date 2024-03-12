@@ -584,6 +584,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.invitroPharmacologyService.deleteScreening(screeningIndex);
   }
 
+  selectionChangeExistingReference(event, ReferenceId, screeningIndex) {
+    alert("GGGGGGGGGGGGGGGGG");
+     alert(event);
+  }
+
   scrub(oldraw: any): any {
     const old = oldraw;
     const idHolders = defiant.json.search(old, '//*[id]');

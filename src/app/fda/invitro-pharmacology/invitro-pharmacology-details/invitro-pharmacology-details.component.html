@@ -9,10 +9,18 @@
             In-vitro Pharmacology Assay/Screening Details&nbsp;&nbsp;
           </div>
 
-          <!-- Edit GSRS record button -->
+          <!-- Edit GSRS record button ASSAY -->
+          <div class="margintop10px">
+            <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS In-vitro Pharmacology ASSAY Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>&nbsp;&nbsp;
+          </div>
+
+          <!-- Edit GSRS record button SCREENING -->
           <div class="margintop10px">
             <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-              matTooltip='Edit GSRS In-vitro Pharmacology Record'>
+              matTooltip='Edit GSRS In-vitro Pharmacology SCREENING Record'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>&nbsp;&nbsp;
           </div>

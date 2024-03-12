@@ -334,8 +334,8 @@
                               <div class="marginleft20px">
                                 <mat-form-field class="width300px">
                                   <mat-label>Select From Existing Reference</mat-label>
-                                  <mat-select [formControl]="existingReferenceControl">
-                                    <mat-option *ngFor="let ref of existingReferenceList; let indexReference = index" [value]="index">
+                                  <mat-select [formControl]="existingReferenceControl" (selectionChange)="selectionChangeExistingReference($event.value, ref.id, screeningIndex)">
+                                    <mat-option *ngFor="let ref of existingReferenceList; let indexReference = index" [value]="ref.id">
                                       {{ref.referenceSourceType}}&nbsp;&nbsp;
                                       {{ref.referenceSourceNumber}}
                                     </mat-option>
