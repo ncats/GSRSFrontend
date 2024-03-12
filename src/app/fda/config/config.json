@@ -119,7 +119,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In-vitro Pharmacology",
       "filters": [
         {}
       ]
@@ -1123,6 +1123,7 @@
         "Reference Source Number",
         "Target Name",
         "Test Agent",
+        "Assay Title",
         "Control",
         "Control Type",
         "Assay Type",

@@ -4,27 +4,27 @@ export const invitroPharmacologySearchSortValues = [
     'display': 'Relevance'
   },
   {
-    'value': '^root_assayTarget',
-    'display': 'Assay Target, A-Z',
+    'value': '^root_targetName',
+    'display': 'Target Name, A-Z',
     'displayedColumns': 'assayTarget',
     'direction': 'asc'
   },
   {
-    'value': '$root_assayTarget',
-    'display': 'Assay Target, Z-A',
+    'value': '$root_targetName',
+    'display': 'Target Name, Z-A',
     'displayedColumns': 'assayTarget',
     'direction': 'desc'
   },
   {
-    'value': '^root_testCompound',
-    'display': 'Test Compound, A-Z',
+    'value': '^root_invitroAssayScreenings_invitroTestAgent_testAgent',
+    'display': 'Test Agent, A-Z',
     'displayedColumns': 'testCompound',
     'direction': 'asc'
   },
   {
-    'value': '$root_testCompound',
-    'display': 'Test Compound, Z-A',
-    'displayedColumns': 'testCompound',
+    'value': '$root_invitroAssayScreenings_invitroTestAgent_testAgent',
+    'display': 'Test Agent, Z-A',
+    'displayedColumns': 'testAgent',
     'direction': 'desc'
   },
   {

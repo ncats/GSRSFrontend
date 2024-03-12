@@ -25,6 +25,7 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { environment } from '../../../../environments/environment';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
@@ -74,6 +75,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   pageIndexReference = 0;
   pageSizeReference: number;
 
+  exportOptions: Array<any>;
+
   calculateIc50: string;
   tabSelectedIndex = 0;
   viewTabSelectedIndex = 0;
@@ -82,6 +85,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   jsonFileName: string;
 
   isLoading = true;
+
   isError = false;
   isAdmin: boolean;
   isLoggedIn = false;
@@ -215,7 +219,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_studyType';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
@@ -428,6 +432,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         }
         this.matchTypes.sort();
         // Narrow Suggest Search End
+
+        // Get list of Export extension options such as .xlsx, .txt
+        this.invitroPharmacologyService.getExportOptions(this.etag).subscribe(response => {
+          this.exportOptions = response;
+        });
 
       }, error => {
         console.log('error');
@@ -1056,6 +1065,54 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.overlayContainer.style.zIndex = null;
   }
 
+  saveJSON(id: number): void {
+    let json = this.assays[id];
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
+
+    const date = new Date();
+    this.jsonFileName = 'Invitro_Pharmacology_Assay_' + id + '_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+  }
+
+  export(extension: string) {
+    if (this.etag) {
+      let entity = this.invitroPharmacologyService.invitroPharmEntityEndpoint;
+      const url1 = this.getApiExportUrl(this.etag, extension);
+      if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'BrowseInvitroPharmacology', 'entity': entity, 'hideOptionButtons': true }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(response => {
+          // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url1, this.privateExport, fullname, id).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.totalCountAllAssay
+                }
+              };
+              const params = { 'total': this.totalCountAllAssay };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+      }
+    }
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.invitroPharmacologyService.getApiExportUrl(etag, extension);
+  }
+
   formatValue(v) {
     if (v) {
       if (typeof v === 'object') {
@@ -1071,15 +1128,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       }
     }
     return null;
-  }
-
-  saveJSON(id: number): void {
-    let json = this.assays[id];
-    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
-    this.downloadJsonHref = uri;
-
-    const date = new Date();
-    this.jsonFileName = 'Invitro_Pharmacology_Assay_' + id + '_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
   displayAmount(amt: any): string {

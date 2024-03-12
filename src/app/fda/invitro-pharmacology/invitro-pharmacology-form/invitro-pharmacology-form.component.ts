@@ -29,7 +29,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
-import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroReference, ValidationMessage } from '../model/invitro-pharmacology.model';
 //import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
@@ -41,8 +41,12 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   assay: InvitroAssayInformation;
   id?: number;
+
   existingAssayControl = new FormControl();
+  existingReferenceControl = new FormControl();
+
   existingAssayList: Array<InvitroAssayInformation> = [];
+  existingReferenceList: Array<InvitroReference> = [];
   existingAssayMessage = '';
 
   showSubmissionMessages = false;
@@ -171,9 +175,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(routeSubscription);
 
-    // Load Assay records suggestions/TypeAhead
+    // Load All Existing Assays suggestions/TypeAhead
     this.loadAssayTypeAhead();
 
+    // Load All Existing References in Suggestions/TypeAhead
+    this.loadReferencesTypeAhead();
   }
 
   ngOnDestroy(): void {
@@ -213,6 +219,23 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssays().subscribe(response => {
       if (response) {
         this.existingAssayList = response;
+      } else {
+        this.handleProductRetrivalError();
+      }
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.handleProductRetrivalError();
+    });
+    this.subscriptions.push(getInvitroSubscribe);
+  }
+
+  loadReferencesTypeAhead() {
+    const getInvitroSubscribe = this.invitroPharmacologyService.getAllReferences().subscribe(response => {
+      if (response) {
+        this.existingReferenceList = response;
       } else {
         this.handleProductRetrivalError();
       }

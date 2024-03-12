@@ -113,10 +113,12 @@
           &nbsp;&nbsp;
 
           <!-- Edit GSRS record button -->
-          <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-            matTooltip='Edit GSRS In-vitro Pharmacology Record'>
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>&nbsp;&nbsp;
+          <span *ngIf="assay.createdBy">
+            <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+              matTooltip='Edit GSRS In-vitro Pharmacology Record'>
+              <mat-icon svgIcon="edit"></mat-icon>
+            </a>&nbsp;&nbsp;
+          </span>
 
           <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
             matTooltip='Export Json'>
@@ -125,13 +127,15 @@
         </div>
 
         <div class="width50percent font11px margintop10px" *ngIf="assay.id">
-          <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Create
-            Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy
-          hh:mm:ss
-          a'}}
+          <span *ngIf="assay.createdBy">
+            <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Create
+              Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+            <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy
+            hh:mm:ss
+            a'}}
+          </span>
         </div>
       </div> <!-- class=divflex -->
 
@@ -309,20 +313,36 @@
 
                           <ng-template matStepLabel>
                             <span class="font16px colorblack">Reference</span>
+                            <!--
                             <br>
                             <span class="font11px" *ngIf="screening.invitroReference">
                               {{screening.invitroReference.referenceSourceType}}&nbsp;
                               {{screening.invitroReference.referenceSourceNumber}}
                             </span>
+                            -->
                           </ng-template>
 
                           <!-- REFERENCE DETAILS BEGIN -->
                           <div *ngIf="screening.invitroReference">
 
                             <div class="divflex margintop20px width95percent">
-                              <div>
+
+                              <div class="margintop15px">
                                 Enter new data below or select from existing Reference:
                               </div>
+
+                              <div class="marginleft20px">
+                                <mat-form-field class="width300px">
+                                  <mat-label>Select From Existing Reference</mat-label>
+                                  <mat-select [formControl]="existingReferenceControl">
+                                    <mat-option *ngFor="let ref of existingReferenceList; let indexReference = index" [value]="index">
+                                      {{ref.referenceSourceType}}&nbsp;&nbsp;
+                                      {{ref.referenceSourceNumber}}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+
                               <!-- NEXT BUTTON -->
                               <div class="alignright">
                                 <button mat-button matStepperNext>Next</button>
@@ -332,7 +352,7 @@
                             <!-- Form Entry -->
                             <div class="form-row margintop10px">
                               <div class="fieldKey">
-                                <mat-label>Reference Source Type:</mat-label>
+                                <mat-label>Reference Source Type:&nbsp;<span class="colorred">*</span></mat-label>
                               </div>
 
                               <app-cv-input class="fieldvalue" domain="INVITRO_REFERENCE_SOURCE_TYPE" title=""
@@ -343,7 +363,7 @@
 
                             <div class="form-row margintop10px">
                               <div class="fieldKey">
-                                <mat-label>Reference Source Number:</mat-label>
+                                <mat-label>Reference Source Number:&nbsp;<span class="colorred">*</span></mat-label>
                               </div>
                               <mat-form-field class="fieldvalue">
                                 <input matInput placeholder=""
@@ -496,22 +516,57 @@
                       <mat-step>
 
                         <ng-template matStepLabel>
-                          <span class="font16px colorblack">Sponsor Report Submitter</span>
+                          <span class="font16px colorblack">Report Submitter</span>
                         </ng-template>
 
-                        <!-- SPONSOR SUBMITTER DETAILS BEGIN -->
+
+                        <!-- REPORT DETAILS BEGIN -->
                         <div *ngIf="screening.invitroSubmitterReport">
+
+                          <div class="divflex margintop20px width95percent">
+                            <div>
+                              Enter new Report data below:
+                            </div>
+                            <!-- NEXT BUTTON -->
+                            <div class="alignright">
+                              <button mat-button matStepperPrevious>Back</button>
+                              <button mat-button matStepperNext>Next</button>
+                            </div>
+                          </div>
+
+                          <div class="font16px fontbold">Report Details</div>
+                          <br>
+
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
+                              <mat-label>Report Number:</mat-label>
+                            </div>
+                            <mat-form-field class="fieldvalue">
+                              <input matInput placeholder="" [(ngModel)]="screening.invitroSubmitterReport.reportNumber"
+                                name="reportNumber" />
+                            </mat-form-field>
+                          </div>
+
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
+                              <mat-label>Report Date:</mat-label>
+                            </div>
+                            <mat-form-field class="fieldvalue">
+                              <input matInput placeholder="" [(ngModel)]="screening.invitroSubmitterReport.reportDate"
+                                name="reportDate" />
+                            </mat-form-field>
+                          </div>
+                          <br>
+                          <!-- REPORT DETAILS END -->
+
+
+                          <!-- LOOP SPONSOR SUBMITTER DETAILS BEGIN -->
                           <div class="marginbottom15px"
                             *ngFor="let sponsorSub of screening.invitroSubmitterReport.invitroSponsorSubmitters; let sponsorSubIndex = index">
 
                             <div class="divflex margintop20px width95percent">
                               <div>
                                 Enter new data below or select from existing Sponsor Submitter:
-                              </div>
-                              <!-- NEXT BUTTON -->
-                              <div class="alignright">
-                                <button mat-button matStepperPrevious>Back</button>
-                                <button mat-button matStepperNext>Next</button>
                               </div>
                             </div>
 
@@ -598,6 +653,12 @@
 
                         <ng-template matStepLabel>
                           <span class="font16px colorblack">Laboratory</span>
+                          <!--
+                          <br>
+                          <span class="font11px" *ngIf="screening.invitroLaboratory">
+                            {{screening.invitroLaboratory.laboratoryName}}&nbsp;
+                          </span>
+                          -->
                         </ng-template>
 
                         <!-- LABORATORY DETAILS BEGIN -->
@@ -716,10 +777,12 @@
                       <mat-step>
                         <ng-template matStepLabel>
                           <span class="font16px colorblack">Test Agent</span>
+                          <!--
                           <br>
                           <span class="font11px" *ngIf="screening.invitroTestAgent">
                             {{screening.invitroTestAgent.testAgent}}&nbsp;
                           </span>
+                          -->
                         </ng-template>
 
                         <!-- TEST AGENT DETAILS BEGIN -->

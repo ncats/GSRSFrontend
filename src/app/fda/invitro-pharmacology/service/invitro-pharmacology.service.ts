@@ -27,7 +27,8 @@ export class InvitroPharmacologyService extends BaseHttpService {
   assay: InvitroAssayInformation;
   totalRecords = 0;
 
-  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/invitropharm' + '/';
+  invitroPharmEntityEndpoint = 'invitropharmacology';
+  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/' + this.invitroPharmEntityEndpoint + '/';
 
   constructor(
     public http: HttpClient,
@@ -70,7 +71,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   getInvitroPharmacologyFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = this.apiBaseUrlWithInvitroPharmEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.invitropharmacology.models.AssayScreening&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = this.apiBaseUrlWithInvitroPharmEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.invitropharmacology.models.InvitroAssayInformation&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -80,7 +81,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   filterFacets(name: string, category: string): Observable<any> {
-    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.invitropharmacology.models.AssayScreening&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + `search/@facets?wait=false&kind=gov.hhs.gsrs.invitropharmacology.models.InvitroAssayInformation&skip=0&fdim=200&sideway=true&field=${category}&top=14448&fskip=0&fetch=100&order=%24lastUpdated&ffilter=${name}`;
     return this.http.get(url);
   }
 
@@ -133,6 +134,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<InvitroAssayInformation>>(url, options);
+  }
+
+  getExportOptions(etag: string): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + `export/${etag}`;
+    return this.http.get<any>(url);
   }
 
   getApiExportUrl(etag: string, extension: string): string {
@@ -216,8 +222,18 @@ export class InvitroPharmacologyService extends BaseHttpService {
       );
   }
 
-  getAllScreeningTestAgents(): Observable<any> {
-    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allScreeningTestAgents';
+  getAllTestAgents(): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allTestAgents';
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAllReferences(): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allReferences';
     return this.http.get<any>(url)
       .pipe(
         map(result => {
