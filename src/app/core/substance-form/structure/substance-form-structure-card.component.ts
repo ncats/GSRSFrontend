@@ -58,7 +58,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
         const idealStructSubscription = this.substanceFormStructureService.substanceIdealizedStructure.subscribe(structure => {
-          console.log(structure);
           if (structure) {
             this.structure = structure;
           } else {
@@ -75,7 +74,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       } else {
         this.menuLabelUpdate.emit('Structure');
         const structSubscription = this.substanceFormStructureService.substanceStructure.subscribe(structure => {
-          console.log(structure);
 
           this.structure = structure;
           this.loadStructure();
