@@ -139,51 +139,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     'targetName',
     'testAgentConcentration',
     'resultValue',
-    /*'calculatedValue',
-    'assayTarget',*/
-    //'assayType',
-    'studyType',
-    // 'relationshipType'
-  ];
-
-  assaySummaryDisplayedColumns: string[] = [
-    /*  'referenceSource', */
-    'targetName',
-    /* 'testAgentConcentration',
-     'resultValue',
-     'calculatedValue',
-     'assayType',*/
     'studyType'
-  ];
-
-  assayTargetSummaryDisplayedColumns: string[] = [
-    'viewDetails',
-    'targetName',
-    'testAgentConcentration',
-    'calculatedValue',
-    'relationshipType',
-    'referenceSource'
-  ];
-
-
-  testAgentScreeningColumns: string[] = [
-    'viewDetails',
-    'testAgentConcentration',
-    'screeningInhibition',
-    'assayTarget',
-    'assayType'
-  ];
-
-  referenceSummaryColumns: string[] = [
-    'viewDetails',
-    'testAgent',
-    'testAgentConcentration',
-    'resultValue',
-    'calculatedValue',
-    'assayTarget',
-    'assayType',
-    'studyType',
-    'relationshipType'
   ];
 
   // needed for facets
@@ -305,8 +261,13 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
             /* Invitro Reference Object exists */
             let referenceSourceTypeNumber = '';
+            let referenceSourceNumber = '';
             if (screening.invitroReference) {
-              referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
+              // Need this so it will not display undefined value
+              if (screening.invitroReference.referenceSourceNumber) {
+                referenceSourceNumber = screening.invitroReference.referenceSourceNumber;
+              }
+              referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + referenceSourceNumber;
               assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
             } // if invitroReference exists
 
@@ -352,69 +313,5 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
       this.showSpinner = false;  // Stop progress spinner
     });
   }
-
-  /*
-  createTestAgentLists() {
-    // ****** LOOP Results pagingResponse.content ***********
-    this.allScreeningTestAgents.forEach(assay => {
-      if (assay) {
-        const assaySummary: any = {};
-        assaySummary.id = assay.id;
-        assaySummary.targetName = assay.targetName;
-        assaySummary.bioassayType = assay.bioassayType;
-        assaySummary.studyType = assay.studyType;
-
-        assay.invitroAssayScreenings.forEach(screening => {
-          if (screening.invitroTestAgent) {
-            if (screening.invitroTestAgent.testAgent && screening.invitroTestAgent.testAgent === 'BAF312') {
-              assaySummary.testAgent = screening.invitroTestAgent.testAgent;
-
-              if (screening.invitroAssayResult) {
-                assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
-                assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
-
-                assaySummary.resultValue = screening.invitroAssayResult.resultValue;
-                assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
-              }
-
-              if (screening.invitroReference) {
-                let referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
-                assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
-              } // if invitroReference exists
-            }
-          }
-        });
-
-        // ******* Get data list for 'Browse by Target Name' tab.
-        if (assay.targetName) {
-        }
-
-        this.testAgentList.push(assaySummary);
-      } // if assay
-    });
-
-  }
-  */
-  /*
- createSummaryObject(assay: any, referenceSource: string, testAgent: string, testAgentConcentration: string,
-   testAgentConcentrationUnits: string, resultValue: string, resultValueUnits: string): any {
-   const assaySummary: any = {};
-   assaySummary.id = assay.id;
-   assaySummary.targetName = assay.targetName;
-   assaySummary.bioassayType = assay.bioassayType;
-   assaySummary.studyType = assay.studyType;
-   assaySummary.referenceSource = referenceSource;
-   assaySummary.testAgent = testAgent;
-   assaySummary.testAgentConcentration = testAgentConcentration;
-   assaySummary.testAgentConcentrationUnits = testAgentConcentrationUnits;
-   assaySummary.resultValue = resultValue;
-   assaySummary.resultValueUnits = resultValueUnits;
-
-   return assaySummary;
-
-   // Add to the All Assay Summary List
-   //assay._assayTargetSummaries.push(assaySummary);
- }
- */
 
 }

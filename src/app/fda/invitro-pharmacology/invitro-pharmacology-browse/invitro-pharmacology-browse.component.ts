@@ -519,15 +519,15 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.assays.forEach(assay => {
       if (assay) {
 
+        // For each assay
+        const assaySummary: any = {};
+        assaySummary.id = assay.id;
+        //assaySummary.targetName = assay.targetName;
+        assaySummary.bioassayType = assay.bioassayType;
+        assaySummary.studyType = assay.studyType;
+
         /* Assay Informtion Reference loop */
         assay.invitroAssayScreenings.forEach(screening => {
-
-          // For each assay
-          const assaySummary: any = {};
-          assaySummary.id = assay.id;
-          assaySummary.targetName = assay.targetName;
-          assaySummary.bioassayType = assay.bioassayType;
-          assaySummary.studyType = assay.studyType;
 
           /* Invitro Assay Result Object exists */
           if (screening.invitroAssayResult) {
@@ -567,28 +567,31 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             assaySummary.testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
           } // if invitroTestAgent exists
 
-          if (assay.targetName) {
-            let targetName = '';
-            targetName = assay.targetName;
-            assaySummary.targetName = targetName;
-
-            // Get the index if the value exists in the key 'targetName'
-            const indexTargetName = this.browseByTargetNameList.findIndex(record => record.targetName === targetName);
-
-            if (indexTargetName > -1) {
-              // Add in the exsting card record
-              this.browseByTargetNameList[indexTargetName].targetNameSummaryList.push(assaySummary);
-            } else {
-              // Create new card record
-              let assayList = [];
-              assayList.push(assaySummary);
-              const appScreening = { 'targetName': targetName, 'targetNameSummaryList': assayList };
-              this.browseByTargetNameList.push(appScreening);
-            } // else
-
-          } // if targetName exists
-
         }); // LOOP: AssayScreenings
+
+        if (assay.targetName) {
+          let targetName = '';
+          targetName = assay.targetName;
+          assaySummary.targetName = targetName;
+
+          // Get the index if the value exists in the key 'targetName'
+          const indexTargetName = this.browseByTargetNameList.findIndex(record => record.targetName === targetName);
+
+          if (indexTargetName > -1) {
+            // Add in the exsting card record
+            this.browseByTargetNameList[indexTargetName].targetNameSummaryList.push(assaySummary);
+          } else {
+            // Create new card record
+            let assayList = [];
+            if (assay.invitroAssayScreenings.length > 0) {
+              assayList.push(assaySummary);
+            }
+            const appScreening = { 'targetName': targetName, 'targetNameSummaryList': assayList };
+            this.browseByTargetNameList.push(appScreening);
+          } // else
+
+        } // if targetName exists
+
       } // if assay exists
     }); // LOOOP: assays
   }

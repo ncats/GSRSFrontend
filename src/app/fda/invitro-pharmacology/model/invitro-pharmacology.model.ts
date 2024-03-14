@@ -10,6 +10,7 @@ export interface InvitroAssayInformation {
   bufferPlasmaProteinConcent?: string;
   targetName?: string;
   targetNameApprovalId?: string;
+  targetNameSubstanceUuid?: string;
   targetSpecies?: string;
   humanHomologTarget?: string;
   humanHomologTargetApprovalId?: string;

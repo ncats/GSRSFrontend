@@ -469,7 +469,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   nameSearch(event: any, fieldName: string): void {
 
     if (fieldName && fieldName === 'targetName') {
-      // Assign to Target Name
       this.assay.targetName = event;
     } else if (fieldName === 'humanHomologTarget') {
       this.assay.humanHomologTarget = event;
@@ -482,8 +481,13 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         if (response.content && response.content.length > 0) {
           const substance = response.content[0];
           if (substance) {
+            // Assign Substance UUID
+            if (fieldName && fieldName === 'targetName') {
+              this.assay.targetNameSubstanceUuid = substance.uuid;
+            }
+
+            // Assign Substance Approval ID
             if (substance.approvalID) {
-              // Assign to Target Name Approval ID
               if (fieldName && fieldName === 'targetName') {
                 this.assay.targetNameApprovalId = substance.approvalID;
               } else if (fieldName === 'humanHomologTarget') {
@@ -491,10 +495,11 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
               } else if (fieldName === 'ligandSubstrate') {
                 this.assay.ligandSubstrateApprovalId = substance.approvalID;
               }
-            }
-          }
-        }
-      }
+            } // if Substance Approval ID
+            
+          } // if Substance exists
+        } // if response content > 0
+      } // if response
     });
     this.subscriptions.push(substanceSubscribe);
   }

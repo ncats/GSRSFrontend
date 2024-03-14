@@ -423,7 +423,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     );
   }
 
-
   addNewScreening(event: Event) {
     this.invitroPharmacologyService.addNewScreening();
   }
@@ -557,7 +556,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   nameSearch(event: any, fieldName: string, screeningIndex): void {
 
     if (fieldName && fieldName === 'testAgent') {
-      // Assign to Target Name
       this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgent = event;
     } else if (fieldName === 'humanHomologTarget') {
       this.assay.humanHomologTarget = event;
@@ -569,31 +567,37 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       if (response) {
         if (response.content && response.content.length > 0) {
           const substance = response.content[0];
+
+          // If Substance found
           if (substance) {
-            if (substance.approvalID) {
-              // Assign to Target Name Approval ID
-              if (fieldName && fieldName === 'testAgent') {
-                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentApprovalId = substance.approvalID;
 
-                // Get Structure Smiles, Formula Weight
-                if (substance.structure) {
-                  if (substance.structure.smiles) {
-                    this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSmileString = substance.structure.smiles;
-                  }
-                  if (substance.structure.formula) {
-                    this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.molecularFormulaWeight = substance.structure.formula;
-                  }
-                }
-
-              } else if (fieldName === 'humanHomologTarget') {
-                this.assay.humanHomologTargetApprovalId = substance.approvalID;
-              } else if (fieldName === 'ligandSubstrate') {
-                this.assay.ligandSubstrateApprovalId = substance.approvalID;
-              }
+            // Assign Substance UUID
+            if (fieldName && fieldName === 'testAgent') {
+              this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSubstanceUuid = substance.uuid;
             }
-          }
-        }
-      }
+
+            // Assign Substance Approval ID
+            if (substance.approvalID) {
+
+              if (fieldName && fieldName === 'testAgent') {
+                // Assign to Test Agent Approval ID
+                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentApprovalId = substance.approvalID;
+              }
+            } // if Substance Approval ID exists
+
+            // Assign to Structure Smiles and Formula Weight
+            if (substance.structure) {
+              if (substance.structure.smiles) {
+                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSmileString = substance.structure.smiles;
+              }
+              if (substance.structure.formula) {
+                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.molecularFormulaWeight = substance.structure.formula;
+              }
+            } // if Substance Structure exists
+            
+          } // if Substance exists
+        } // if response content > 0
+      } // if response
     });
     this.subscriptions.push(substanceSubscribe);
   }

@@ -1,5 +1,5 @@
 {
-  "version": "3.1",
+  "version": "3.1.1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -1120,7 +1120,7 @@
         "Assay ID",
         "Reference Source Type Number",
         "Reference Source Type",
-        "Reference Source Number",
+        "Reference Source",
         "Target Name",
         "Test Agent",
         "Assay Title",
