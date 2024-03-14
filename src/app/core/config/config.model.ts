@@ -71,6 +71,7 @@ export interface LoadedComponents {
     adverseevents?: boolean;
     impurities?: boolean;
     ssg4m?: boolean;
+    invitropharmacology?: boolean;
     userRegistration?: boolean;
 }
 

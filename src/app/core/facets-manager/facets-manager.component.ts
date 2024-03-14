@@ -109,7 +109,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.facetsConfig = this.configService.configData.facets && this.configService.configData.facets[configName] || {};
     this._configName = configName;
     if (configName === 'applications' || configName === 'clinicaltrialsus' || configName === 'products'
-    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm' || configName === 'staging') {
+    || configName === 'adverseeventpt' || configName === 'adverseeventdme' || configName === 'adverseeventcvm'
+    || configName === 'invitropharmacology' || configName === 'staging') {
       this.hideDeprecatedCheckbox = true;
     } else {
       this.hideDeprecatedCheckbox = false;
@@ -440,13 +441,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
 
   setShowAdvancedFacetStates() {
     // When there is at least one facet param value that is false (aka red/negative)
-    // set the advancedState to true. This is run so the user doesn't get confused 
-    // by negative selections not showing on page reload. 
+    // set the advancedState to true. This is run so the user doesn't get confused
+    // by negative selections not showing on page reload.
 
     this.facets.forEach( f => {
       if (this.privateFacetParams[f.name] && this.privateFacetParams[f.name].params) {
         Object.keys(this.privateFacetParams[f.name].params).every(sub => {
-          if (this.privateFacetParams[f.name].params[sub] !== undefined 
+          if (this.privateFacetParams[f.name].params[sub] !== undefined
             && this.privateFacetParams[f.name].params[sub] === false  
             ) {
               f.$showAdvanced = true;
