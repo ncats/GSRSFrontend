@@ -115,6 +115,9 @@ export interface InvitroTestAgent {
 
 export interface InvitroAssayResult {
   id?: number;
+  plasmaProteinAdded?: string;
+  dataType?: string;
+  numberOfTests?: string;
   testAgentConcentration?: number;
   testAgentConcentrationUnits?: string;
   testConcentrationActiveMoiety?: number;

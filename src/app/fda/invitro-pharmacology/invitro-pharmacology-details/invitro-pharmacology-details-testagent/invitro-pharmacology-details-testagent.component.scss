@@ -231,6 +231,10 @@
   margin-left: 30px;
 }
 
+.marginleft50px {
+  margin-left: 50px;
+}
+
 .marginleft60px {
   margin-left: 60px;
 }
@@ -367,6 +371,21 @@
 .width40px {
   width: 40px;
   max-width: 40px;
+}
+
+.width70px {
+  width: 70px;
+  max-width: 70px;
+}
+
+.width100px {
+  width: 100px;
+  max-width: 100px;
+}
+
+.width110px {
+  width: 110px;
+  max-width: 110px;
 }
 
 .width120px {
@@ -519,21 +538,21 @@ legend.border2 {
 table.tableStyle {
   width: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  border: 1px solid var(--secondary-blue-color);
-  background-color: var(--table-bg-color);
   text-align: left;
   border-collapse: collapse;
+  border: 1px solid var(--secondary-blue-color);
+  background-color: var(--table-bg-color);
 }
 
 table.tableStyle td, table.tableStyle th {
-  border: 1px solid var(--table-th-border-color);
   padding: 3px 2px;
+  border: 1px solid var(--table-th-border-color);
 }
 
-table.tableStyle tbody td {
-  font-size: 14px;
+table.tableStyle td {
+  font-size: 12px;
   vertical-align: top;
-  padding: 8px 8px;
+  padding: 5px 5px;
 }
 
 table.tableStyle tr:nth-child(even) {
@@ -542,13 +561,13 @@ table.tableStyle tr:nth-child(even) {
 
 table.tableStyle thead {
   background: var(--table-thead-bg-color); /* Header background */
-  border-bottom: 1px solid var(--table-thead-border-color);
+  /*border-bottom: 1px solid var(--table-thead-border-color);*/
 }
 
-table.tableStyle thead th {
+table.tableStyle th {
   font-size: 12px;
   font-weight: 700;
-  color: var(--table-th-color);
+  color: black;
   border-left: 1px solid var(--table-th-border-color-2);
   padding: 10px 10px;
 }
@@ -581,6 +600,11 @@ table.tableStyle tfoot .links a{
   border-radius: 5px;
 }
 /* Table Style End */
+
+ol {
+  padding-left: 15px;
+  margin-top: 0px;
+}​
 
 /* overwrite original .mat-card style */
 .mat-card {

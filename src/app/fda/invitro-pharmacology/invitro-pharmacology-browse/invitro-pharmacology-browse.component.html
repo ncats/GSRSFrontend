@@ -171,7 +171,8 @@
         <!-- Pagination -->
         <div class="full-paginator">
           <mat-paginator #paginator [length]="totalCountAssayTarget" [pageIndex]="pageIndex" [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 50, 100, 200, 500, 1000, 5000]" [showFirstLastButtons]="true" (page)="changePage($event)">
+            [pageSizeOptions]="[5, 10, 50, 100, 200, 500, 1000, 5000]" [showFirstLastButtons]="true"
+            (page)="changePage($event)">
           </mat-paginator>
 
           <div class="page-selector">
@@ -230,11 +231,20 @@
                 </div>
 
                 <!-- Link to All Assay page -->
+                <div class="marginleft40px margintop10px bordergray">
+                  <a mat-flat-button color="basic" [routerLink]="['/invitro-pharm']"
+                    [queryParams]="{view : 'all-assays'}" target="_blank" matTooltip='Opens in a new window'>
+                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+                    View All Assay Lists
+                  </a>
+                </div>
+                <!--
                 <div class="marginleft40px padtop15px">
                   <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
                     target="_blank" alt="View All Assays" matTooltip='View All Assays'><b>View All Assay Lists</b>
                   </a>&nbsp;&nbsp;&nbsp;
                 </div>
+                -->
 
               </div> <!-- class=divflex-->
               <br>
@@ -794,13 +804,15 @@
               <div class="font17px padtop15px padbottom10px">
                 <b>View By Test Agent</b>
               </div>
+
               <!-- Link to All Assay page -->
-              <div class="marginleft40px padtop15px">
-                <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-testagents'}"
-                  target="_blank" alt="View All Test Agents" matTooltip='View All Test Agents'><b>View All Test
-                    Agents</b>
-                </a>&nbsp;&nbsp;&nbsp;
+              <div class="marginleft40px margintop10px bordergray">
+                <a mat-flat-button color="basic" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-testagents'}" target="_blank" matTooltip='Opens in a new window'>
+                  <mat-icon class="small-icon" svgIcon="open_in_new" alt="View All Test Agents" matTooltip="View All Test Agents. Opens in new window"></mat-icon>
+                  View All Test Agents
+                </a>
               </div>
+
             </div> <!-- class=divflex -->
             <br>
 
@@ -1073,6 +1085,11 @@
                                   </a>
                                 </div>
                               </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="testAgent">
+                              <th mat-header-cell *matHeaderCellDef> Test Agent </th>
+                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.testAgent}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="referenceSource">
@@ -1527,7 +1544,8 @@
         <div class="full-paginator-right">
 
           <mat-paginator #paginator [length]="totalCountAssayTarget" [pageIndex]="pageIndex" [pageSize]="pageSize"
-            [pageSizeOptions]="[5, 10, 50, 100, 200, 500, 1000, 5000]" [showFirstLastButtons]="true" (page)="changePage($event)">
+            [pageSizeOptions]="[5, 10, 50, 100, 200, 500, 1000, 5000]" [showFirstLastButtons]="true"
+            (page)="changePage($event)">
           </mat-paginator>
 
           <div class="page-selector-right">

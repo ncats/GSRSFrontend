@@ -135,6 +135,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   testAgentSummaryColumns: string[] = [
     'viewDetails',
+    'testAgent',
     'referenceSource',
     'testAgentConcentration',
     'resultValue',

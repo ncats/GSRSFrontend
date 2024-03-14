@@ -195,6 +195,7 @@
                         <th>External Assay ID</th>
                         <th>External Assay Source</th>
                         <th>Target Name</th>
+                        <th>Test Agents</th>
                       </tr>
                       <tr>
                         <td>
@@ -207,6 +208,10 @@
                         <td>{{assay.externalAssayId}}</td>
                         <td>{{assay.externalAssaySource}}</td>
                         <td>{{assay.targetName}}</td>
+                        <td>
+                          <div [innerHtml]="screeningDetails">
+                          </div>
+                        </td>
                       </tr>
                     </table>
                     <br><br>
@@ -331,11 +336,14 @@
                                 Enter new data below or select from existing Reference:
                               </div>
 
+                              <!-- Existing Reference Suggestions/TypeAhead -->
                               <div class="marginleft20px">
                                 <mat-form-field class="width300px">
                                   <mat-label>Select From Existing Reference</mat-label>
-                                  <mat-select [formControl]="existingReferenceControl" (selectionChange)="selectionChangeExistingReference($event.value, ref.id, screeningIndex)">
-                                    <mat-option *ngFor="let ref of existingReferenceList; let indexReference = index" [value]="ref.id">
+                                  <mat-select [formControl]="existingReferenceControl"
+                                    (selectionChange)="selectionChangeExistingReference($event.value, ref.id, screeningIndex)">
+                                    <mat-option *ngFor="let ref of existingReferenceList; let indexReference = index"
+                                      [value]="ref.id">
                                       {{ref.referenceSourceType}}&nbsp;&nbsp;
                                       {{ref.referenceSourceNumber}}
                                     </mat-option>
@@ -792,6 +800,21 @@
                             <div>
                               Enter new data below or select from existing Test Agent:
                             </div>
+
+                            <!-- Existing Reference Suggestions/TypeAhead -->
+                            <div class="marginleft20px">
+                              <mat-form-field class="width300px">
+                                <mat-label>Select From Existing Test Agent</mat-label>
+                                <mat-select [formControl]="existingTestAgentControl"
+                                  (selectionChange)="selectionChangeExistingTestAgent($event.value, testAgt.id, screeningIndex)">
+                                  <mat-option *ngFor="let testAgt of existingTestAgentList; let indexTestAgent = index"
+                                    [value]="testAgt.id">
+                                    {{testAgt.testAgent}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+
                             <!-- NEXT BUTTON -->
                             <div class="alignright">
                               <button mat-button matStepperPrevious>Back</button>
@@ -945,6 +968,39 @@
                           <!-- Form Entry -->
                           <div class="form-row margintop10px">
                             <div class="fieldKey">
+                              <mat-label>Plasma Protein Added?</mat-label>
+                            </div>
+
+                            <mat-checkbox class="fieldvalue padtop10px"
+                              [checked]="screening.invitroAssayResult.plasmaProteinAdded"
+                              (change)="setPlasmaProteinCheckBox($event.checked, screeningIndex)">
+                            </mat-checkbox>
+                          </div>
+
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
+                              <mat-label>Type of Data:</mat-label>
+                            </div>
+
+                            <app-cv-input class="fieldvalue" domain="INVITRO_DATA_TYPE" title="" name="dataType"
+                              [model]="screening.invitroAssayResult.dataType"
+                              (valueChange)="screening.invitroAssayResult.dataType = $event">
+                            </app-cv-input>
+                          </div>
+
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
+                              <mat-label>Number of Tests:</mat-label>
+                            </div>
+
+                            <app-cv-input class="fieldvalue" domain="INVITRO_NUMBER_OF_TESTS" title=""
+                              name="numberOfTests" [model]="screening.invitroAssayResult.numberOfTests"
+                              (valueChange)="screening.invitroAssayResult.numberOfTests = $event">
+                            </app-cv-input>
+                          </div>
+
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
                               <mat-label>Test Agent Concentration:</mat-label>
                             </div>
                             <mat-form-field class="fieldvalue">
@@ -958,11 +1014,12 @@
                             <div class="fieldKey">
                               <mat-label>Test Agent Concentration Units:</mat-label>
                             </div>
-                            <mat-form-field class="fieldvalue">
-                              <input matInput placeholder=""
-                                [(ngModel)]="screening.invitroAssayResult.testAgentConcentrationUnits"
-                                name="testAgentConcentrationUnits" />
-                            </mat-form-field>
+
+                            <app-cv-input class="fieldvalue" domain="AMOUNT_UNIT" title=""
+                              name="testAgentConcentrationUnits"
+                              [model]="screening.invitroAssayResult.testAgentConcentrationUnits"
+                              (valueChange)="screening.invitroAssayResult.testAgentConcentrationUnits = $event">
+                            </app-cv-input>
                           </div>
 
                           <div class="form-row">
@@ -980,11 +1037,35 @@
                             <div class="fieldKey">
                               <mat-label>Test Concentration Units of Active M:</mat-label>
                             </div>
+
+                            <app-cv-input class="fieldvalue" domain="AMOUNT_UNIT" title=""
+                              name="testConcentrationUnitsActiveMoiety"
+                              [model]="screening.invitroAssayResult.testConcentrationUnitsActiveMoiety"
+                              (valueChange)="screening.invitroAssayResult.testConcentrationUnitsActiveMoiety = $event">
+                            </app-cv-input>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="fieldKey">
+                              <mat-label>Ligand/Substrate Concentration:</mat-label>
+                            </div>
                             <mat-form-field class="fieldvalue">
                               <input matInput placeholder=""
-                                [(ngModel)]="screening.invitroAssayResult.testConcentrationUnitsActiveMoiety"
-                                name="testConcentrationUnitsActiveMoiety" />
+                                [(ngModel)]="screening.invitroAssayResult.ligandSubstrateConcentration"
+                                name="ligandSubstrateConcentration" />
                             </mat-form-field>
+                          </div>
+
+                          <div class="form-row">
+                            <div class="fieldKey">
+                              <mat-label>Ligand/Substrate Concentration Units:</mat-label>
+                            </div>
+
+                            <app-cv-input class="fieldvalue" domain="AMOUNT_UNIT" title=""
+                              name="ligandSubstrateConcentrationUnits"
+                              [model]="screening.invitroAssayResult.ligandSubstrateConcentrationUnits"
+                              (valueChange)="screening.invitroAssayResult.ligandSubstrateConcentrationUnits = $event">
+                            </app-cv-input>
                           </div>
 
                           <div class="form-row">
@@ -1001,10 +1082,11 @@
                             <div class="fieldKey">
                               <mat-label>Result Value Units:</mat-label>
                             </div>
-                            <mat-form-field class="fieldvalue">
-                              <input matInput placeholder="" [(ngModel)]="screening.invitroAssayResult.resultValueUnits"
-                                name="resultValueUnits" />
-                            </mat-form-field>
+
+                            <app-cv-input class="fieldvalue" domain="AMOUNT_UNIT" title="" name="resultValueUnits"
+                              [model]="screening.invitroAssayResult.resultValueUnits"
+                              (valueChange)="screening.invitroAssayResult.resultValueUnits = $event">
+                            </app-cv-input>
                           </div>
 
                           <div class="form-row">

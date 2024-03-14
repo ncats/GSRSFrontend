@@ -118,14 +118,15 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   allAssayColumns: string[] = [
     'number',
     'viewDetails',
+    'update',
     'totalScreening',
+    'reference',
     'testAgent',
     'assayId',
     'externalAssayId',
     'externalAssaySource',
-    'targetTitle',
     'targetName',
-    'humanHomologTargetName',
+    'targetTitle',
     'studyType',
     'bioassayType',
     'modifyDate'
@@ -268,64 +269,78 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
       this.assays.forEach(assay => {
         if (assay) {
 
-          const assaySummary: any = {};
-          assaySummary.id = assay.id;
-          assaySummary.targetName = assay.targetName;
-          assaySummary.bioassayType = assay.bioassayType;
-          assaySummary.studyType = assay.studyType;
-
           assay.invitroAssayScreenings.forEach(screening => {
+
+            // For each assay
+            const assaySummary: any = {};
+            assaySummary.id = assay.id;
+            assaySummary.targetName = assay.targetName;
+            assaySummary.bioassayType = assay.bioassayType;
+            assaySummary.studyType = assay.studyType;
+
+            /* Invitro Assay Result Object exists */
+            if (screening.invitroAssayResult) {
+              assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
+              assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+
+              assaySummary.resultValue = screening.invitroAssayResult.resultValue;
+              assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
+            }
+
+            /* Invitro Assay Summary Object exists */
+            if (screening.invitroSummary) {
+              assaySummary.relationshipType = screening.invitroSummary.relationshipType;
+            }
+
+            /* LOOP: Invitro Assay Control exists */
+            if (screening.invitroControls.length > 0) {
+              screening.invitroControls.forEach(ctr => {
+                if (ctr) {
+                  if (ctr.resultType) {
+                    // assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
+                  }
+                }
+              });
+            }
+
+            /* Invitro Reference Object exists */
+            let referenceSourceTypeNumber = '';
+            if (screening.invitroReference) {
+              referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
+              assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+            } // if invitroReference exists
+
+
+            /* Invitro Test Agent Object exists */
             if (screening.invitroTestAgent) {
 
-              if (screening.invitroTestAgent.testAgent) {
+              let testAgent = '';
+              let testAgentSubstanceUuid = '';
+              testAgent = screening.invitroTestAgent.testAgent;
+              assaySummary.testAgent = testAgent;
+              testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
 
-                if (screening.invitroAssayResult) {
-                  assaySummary.testAgentConcentration = screening.invitroAssayResult.testAgentConcentration;
-                  assaySummary.testAgentConcentrationUnits = screening.invitroAssayResult.testAgentConcentrationUnits;
+              // Get the index if the value exists in the key 'testAgent'
+              const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
 
-                  assaySummary.resultValue = screening.invitroAssayResult.resultValue;
-                  assaySummary.resultValueUnits = screening.invitroAssayResult.resultValueUnits;
-                }
-
-                if (screening.invitroReference) {
-                  let referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
-                  assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
-                } // if invitroReference exists
-
-                /* Invitro Test Agent Object exists */
-                let testAgent = '';
-                let testAgentSubstanceUuid = '';
-                testAgent = screening.invitroTestAgent.testAgent;
-                assaySummary.testAgent = testAgent;
-                testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
-
-                // Get the index if the value exists in the key 'testAgent'
-                const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
-
-                if (indexTestAgent > -1) {
-                  // Add in the exsting card record
-                  this.allScreeningTestAgents[indexTestAgent].testAgentSummaryList.push(assaySummary);
-                } else {
-
-                  // Create new card record
-                  let assayList = [];
-                  assayList.push(assaySummary);
-                  const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentSummaryList': assayList };
-                  this.allScreeningTestAgents.push(appScreening);
-                } // else
-
-              } // testAgent exists
-
+              if (indexTestAgent > -1) {
+                // Add in the exsting card record
+                this.allScreeningTestAgents[indexTestAgent].testAgentSummaryList.push(assaySummary);
+              } else {
+                // Create new card record
+                let assayList = [];
+                assayList.push(assaySummary);
+                const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
+                this.allScreeningTestAgents.push(appScreening);
+              } // else
             } // if invitroTestAgent exists
 
           }); // LOOP: invitroAssayScreenings
 
           // ******* Get data list for 'Browse by Target Name' tab.
-          if (assay.targetName) {
-          }
 
-          //his.testAgentList.push(assaySummary);
         }  // if assay exists
+
       });  // LOOP: assays
 
     }, error => {
@@ -338,6 +353,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     });
   }
 
+  /*
   createTestAgentLists() {
     // ****** LOOP Results pagingResponse.content ***********
     this.allScreeningTestAgents.forEach(assay => {
@@ -378,25 +394,27 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     });
 
   }
+  */
+  /*
+ createSummaryObject(assay: any, referenceSource: string, testAgent: string, testAgentConcentration: string,
+   testAgentConcentrationUnits: string, resultValue: string, resultValueUnits: string): any {
+   const assaySummary: any = {};
+   assaySummary.id = assay.id;
+   assaySummary.targetName = assay.targetName;
+   assaySummary.bioassayType = assay.bioassayType;
+   assaySummary.studyType = assay.studyType;
+   assaySummary.referenceSource = referenceSource;
+   assaySummary.testAgent = testAgent;
+   assaySummary.testAgentConcentration = testAgentConcentration;
+   assaySummary.testAgentConcentrationUnits = testAgentConcentrationUnits;
+   assaySummary.resultValue = resultValue;
+   assaySummary.resultValueUnits = resultValueUnits;
 
-  createSummaryObject(assay: any, referenceSource: string, testAgent: string, testAgentConcentration: string,
-    testAgentConcentrationUnits: string, resultValue: string, resultValueUnits: string): any {
-    const assaySummary: any = {};
-    assaySummary.id = assay.id;
-    assaySummary.targetName = assay.targetName;
-    assaySummary.bioassayType = assay.bioassayType;
-    assaySummary.studyType = assay.studyType;
-    assaySummary.referenceSource = referenceSource;
-    assaySummary.testAgent = testAgent;
-    assaySummary.testAgentConcentration = testAgentConcentration;
-    assaySummary.testAgentConcentrationUnits = testAgentConcentrationUnits;
-    assaySummary.resultValue = resultValue;
-    assaySummary.resultValueUnits = resultValueUnits;
+   return assaySummary;
 
-    return assaySummary;
-
-    // Add to the All Assay Summary List
-    //assay._assayTargetSummaries.push(assaySummary);
-  }
+   // Add to the All Assay Summary List
+   //assay._assayTargetSummaries.push(assaySummary);
+ }
+ */
 
 }
