@@ -556,11 +556,11 @@ table.tableStyle {
 
 table.tableStyle td, table.tableStyle th {
   padding: 3px 2px;
-  border: 1px solid var(--table-th-border-color);
+  border: 1px solid var(--table-th-border-color-3);
 }
 
 table.tableStyle td {
-  font-size: 12px;
+  font-size: 13px;
   vertical-align: top;
   padding: 5px 5px;
 }
@@ -575,11 +575,12 @@ table.tableStyle thead {
 }
 
 table.tableStyle th {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: black;
-  border-left: 1px solid var(--table-th-border-color-2);
   padding: 10px 10px;
+  border-left: 1px solid var(--table-th-border-color-2);
+  background: var(--regular-offwhite-color);
 }
 
 table.tableStyle thead th:first-child {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormBuilder } from '@angular/forms';
@@ -39,6 +39,8 @@ import { anyExistsFilter } from '@gsrs-core/substance-details';
 
 export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy {
 
+  @ViewChildren('checkBox') checkBox: QueryList<any>;
+
   assay: InvitroAssayInformation;
   id?: number;
 
@@ -47,6 +49,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   validationMessages: Array<ValidationMessage> = [];
   validationResult = false;
   message = '';
+
+  assaySetList: Array<any> = [];
 
   copy: string;
   serverError: boolean;
@@ -81,6 +85,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     private titleService: Title,
     private overlayContainerService: OverlayContainer,
     private authService: AuthService,
+    private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
@@ -90,56 +95,68 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
 
   ngOnInit() {
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.loadingService.setLoading(true);
-    this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.username = this.authService.getUser();
-    const routeSubscription = this.activatedRoute
-      .params
-      .subscribe(params => {
-        if (params['id']) {
-          const id = params['id'];
-          this.title = 'Update In-vitro Pharmacology Assay Only';
-          if (id !== this.id) {
-            this.id = id;
-            this.titleService.setTitle(`Edit In-vitro Pharmacology Assay Only ` + this.id);
-            this.getInvitroPharmacologyDetails();
-          }
-        } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
-          this.id = this.activatedRoute.snapshot.queryParams['copyId'];
-          if (this.id) {  //copy from existing Product
-            this.titleService.setTitle(`Register In-vitro Pharmacology from Copy ` + this.id);
-            this.title = 'Register New Invitro-Pharmacology Assay from Copy Assay Id ' + this.id;
-            // this.getProductDetails('copy');
-          }
-        } else if (this.activatedRoute.snapshot.queryParams['action']) {
-          let actionParam = this.activatedRoute.snapshot.queryParams['action'];
-          if (actionParam && actionParam === 'import' && window.history.state) {
-            this.titleService.setTitle(`Register New In-vitro Pharamcology Assay from Import`);
-            this.title = 'Register New In-vitro Pharamcology Assay from Import';
-            const record = window.history.state.record;
-            const response = JSON.parse(record);
-            if (response) {
-              this.scrub(response);
-              this.invitroPharmacologyService.loadAssayOnly(response);
+    setTimeout(() => {
+
+      this.isAdmin = this.authService.hasRoles('admin');
+      this.loadingService.setLoading(true);
+      this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+      // Get Username and Admin details
+      this.isAdmin = this.authService.hasRoles('admin');
+      this.username = this.authService.getUser();
+
+      const routeSubscription = this.activatedRoute
+        .params
+        .subscribe(params => {
+          if (params['id']) {
+            const id = params['id'];
+            this.title = 'Update In-vitro Pharmacology Assay Only';
+            if (id !== this.id) {
+              this.id = id;
+              this.titleService.setTitle(`Edit In-vitro Pharmacology Assay Only ` + this.id);
+              this.getInvitroPharmacologyDetails();
+            }
+          } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
+            this.id = this.activatedRoute.snapshot.queryParams['copyId'];
+            if (this.id) {  //copy from existing Product
+              this.titleService.setTitle(`Register In-vitro Pharmacology from Copy ` + this.id);
+              this.title = 'Register New Invitro-Pharmacology Assay from Copy Assay Id ' + this.id;
+              // this.getProductDetails('copy');
+            }
+          } else if (this.activatedRoute.snapshot.queryParams['action']) {
+            let actionParam = this.activatedRoute.snapshot.queryParams['action'];
+            if (actionParam && actionParam === 'import' && window.history.state) {
+              this.titleService.setTitle(`Register New In-vitro Pharamcology Assay from Import`);
+              this.title = 'Register New In-vitro Pharamcology Assay from Import';
+              const record = window.history.state.record;
+              const response = JSON.parse(record);
+              if (response) {
+                this.scrub(response);
+                this.invitroPharmacologyService.loadAssayOnly(response);
+                this.assay = this.invitroPharmacologyService.assay;
+                this.loadingService.setLoading(false);
+                this.isLoading = false;
+              }
+            }
+          } else { // Register New In-vitro Pharamcology Assay
+
+            this.title = 'Register New In-vitro Pharmacology Assay Only';
+            setTimeout(() => {
+              this.titleService.setTitle(`Register In-vitro Pharmacology Assay Only`);
+              this.invitroPharmacologyService.loadAssayOnly();
               this.assay = this.invitroPharmacologyService.assay;
               this.loadingService.setLoading(false);
               this.isLoading = false;
-            }
-          }
-        } else { // Register New In-vitro Pharamcology Assay
+            });
+          } // else Register
+        });
+      this.subscriptions.push(routeSubscription);
 
-          this.title = 'Register New In-vitro Pharmacology Assay Only';
-          setTimeout(() => {
-            this.titleService.setTitle(`Register In-vitro Pharmacology Assay Only`);
-            this.invitroPharmacologyService.loadAssayOnly();
-            this.assay = this.invitroPharmacologyService.assay;
-            this.loadingService.setLoading(false);
-            this.isLoading = false;
-          });
-        } // else Register
-      });
-    this.subscriptions.push(routeSubscription);
+      // Get Assay Set vocabulary terms
+      this.getVocabularies();
+      this.loadAssaySet();
+
+    }, 600);
   }
 
   ngOnDestroy(): void {
@@ -172,6 +189,50 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         this.handleProductRetrivalError();
       });
       this.subscriptions.push(getInvitroSubscribe);
+    }
+  }
+
+  getVocabularies(): void {
+    this.cvService.getDomainVocabulary('INVITRO_ASSAY_SET').subscribe(response => {
+      let vocabulary = response['INVITRO_ASSAY_SET'].dictionary;
+      if (vocabulary !== null) {
+        const keys = Object.keys(vocabulary);
+        keys.forEach(key => {
+          if (key) {
+            const setObj: any = {};
+            setObj.value = key;
+            // setObj.checked = false;
+            this.assaySetList.push(setObj);
+          }
+        })
+      }
+    }, error => {
+    });
+  }
+
+  loadAssaySet() {
+    if ((this.assay.assaySet) && (this.assay.assaySet.length > 0)) {
+      const arrSet = this.assay.assaySet.split(',');
+      for (let i = 0; i < this.assaySetList.length; i++) {
+        for (let j = 0; j < arrSet.length; j++) {
+          if (this.assaySetList[i].value === arrSet[j]) {
+            this.assaySetList[i].checked = true;
+          }
+        }
+      }
+    }
+  }
+
+  setSelectedAssaySet(data: any, checkbox) {
+    let selStr = '';
+    const selected = [];
+    const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
+    checked.forEach(data1 => {
+      selected.push(data1.value);
+    });
+    if (selected.length > 0) {
+      selStr = selected.join(',');
+      this.assay.assaySet = selStr;
     }
   }
 
@@ -216,24 +277,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   validateClient(): void {
     this.validationMessages = [];
     this.validationResult = true;
-
-    /*
-    // Validate Subsance
-    if (this.impurities.impuritiesSubstanceList.length === 0) {
-      this.setValidationMessage('Substance Name is required');
-    }
-
-    // Validate Substance Name
-    if (this.impurities != null) {
-      this.impurities.impuritiesSubstanceList.forEach((elementSub, index) => {
-        if (elementSub != null) {
-          if (elementSub.substanceUuid == null) {
-            this.setValidationMessage('Substance Name (' + (index + 1) + ') is required');
-          }
-        }
-      });
-    }
-    */
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -331,42 +374,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       }*/
     );
   }
-
-  /*
-  addNewImpuritiesSubstance(event: Event) {
-    event.stopPropagation();
-
-    this.invitroPharmacologyService.addNewImpuritiesSubstance();
-  }
-
-  addNewImpuritiesTotal() {
-    this.invitroPharmacologyService.addNewImpuritiesTotal();
-  }
-
-  confirmDeleteImpurities() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delete this Impurities?' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteImpurities();
-      }
-    });
-  }
-  */
-
-  /*
-  deleteImpurities(): void {
-    this.invitroPharmacologyService.deleteImpurities().subscribe(response => {
-      this.invitroPharmacologyService.bypassUpdateCheck();
-      this.displayMessageAfterDeleteImpurities();
-    }, (err) => {
-      console.log(err);
-    }
-    );
-  }
-  */
 
   displayMessageAfterDeleteImpurities() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -496,7 +503,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                 this.assay.ligandSubstrateApprovalId = substance.approvalID;
               }
             } // if Substance Approval ID
-            
+
           } // if Substance exists
         } // if response content > 0
       } // if response

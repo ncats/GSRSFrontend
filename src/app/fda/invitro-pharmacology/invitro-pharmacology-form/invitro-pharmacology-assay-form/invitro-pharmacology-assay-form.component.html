@@ -138,6 +138,21 @@
 
           <mat-card-content class="marginright10px">
 
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Assay Set:&nbsp;<span class="colorred">*</span></mat-label>
+              </div>
+              <div class="fieldvalue">
+                <span *ngFor="let data of assaySetList; let i=index">
+                  <mat-checkbox class="font13px" #checkBox [value]="data.value" [(ngModel)]="data.checked"
+                    name="data.value" (change)="setSelectedAssaySet(data, checkBox)">
+                    {{data.value}}
+                  </mat-checkbox>
+                  &nbsp;
+                </span>
+              </div>
+            </div>
+
             <div class="form-row" *ngIf="assay && assay.id">
               <div class="fieldKey">
                 <mat-label>Assay ID:</mat-label>
@@ -202,6 +217,15 @@
               </div>
               <app-cv-input class="fieldvalue" domain="INVITRO_ASSAY_FORMAT" title="" name="assayFormat"
                 [model]="assay.assayFormat" (valueChange)="assay.assayFormat = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Assay Mode:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="INVITRO_ASSAY_MODE" title="" name="assayMode"
+                [model]="assay.assayMode" (valueChange)="assay.assayMode = $event">
               </app-cv-input>
             </div>
 

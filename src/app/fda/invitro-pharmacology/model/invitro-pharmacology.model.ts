@@ -1,6 +1,11 @@
 export interface InvitroAssayInformation {
   id?: number;
   assayId?: string;
+  externalAssayId?: string;
+  externalAssaySource?: string;
+  externalAssayReference?: string;
+  externalAssayReferenceUrl?: string;
+  assaySet?: string;
   assayTitle?: string;
   assayFormat?: string;
   bioassayType?: string;
@@ -18,10 +23,6 @@ export interface InvitroAssayInformation {
   ligandSubstrateApprovalId?: string;
   ligandSubstrateConcentration?: string;
   ligandSubstrateConcentrationUnits?: string;
-  externalAssayId?: string;
-  externalAssaySource?: string;
-  externalAssayReference?: string;
-  externalAssayReferenceUrl?: string;
   percentInhibition?: number;
   presentationType?: string;
   presentation?: string;

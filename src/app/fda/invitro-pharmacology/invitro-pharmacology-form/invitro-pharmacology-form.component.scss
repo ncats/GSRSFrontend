@@ -103,7 +103,16 @@
   font-weight: 600;
 }
 
-.col-6-1 {
+.col-7-1 {     /* seven columns in one row  */
+  width: calc((100% - 25px * 6) / 7);
+  margin-right: 25px;
+}
+
+.col-7-1:last-child {
+  margin-right: 0px;
+}
+
+.col-6-1 {     /* six columns in one row  */
   width: calc((100% - 25px * 5) / 6);
   margin-right: 25px;
 }
@@ -112,7 +121,7 @@
   margin-right: 0px;
 }
 
-.col-2 {
+.col-2 {      /* two columns in one row */
   width: calc((100% - 30px * 2) / 3);
   margin-right: 30px;
 }
@@ -200,8 +209,8 @@
   margin-top: -10px;
 }
 
-.margintopneg40px {
-  margin-top: -40px;
+.margintopneg15px {
+  margin-top: -15px;
 }
 
 .margintop5px {
@@ -256,6 +265,14 @@ marginbottom40px {
   margin-left: 30px;
 }
 
+.marginleft100px {
+  margin-left: 100px;
+}
+
+.marginright20px {
+  margin-right: 20px;
+}
+
 .padtop5px {
   padding-top: 5px;
 }
@@ -276,16 +293,34 @@ marginbottom40px {
   border: 1px solid var(--regular-green-color);
 }
 
-.width40px {
-  width: 40px;
+.width30px {
+  width: 30px;
+  min-width: 30px;
 }
 
-.width50px {
-  width: 50px;
+.width40px {
+  width: 40px;
+  min-width: 40px;
+}
+
+.width70px {
+  width: 70px;
+  min-width: 70px;
+}
+
+.width86px {
+  width: 86px;
+  min-width: 86px;
+}
+
+.width100px {
+  width: 100px;
+  min-width: 100px;
 }
 
 .width200px {
   width: 200px;
+  min-width: 200px;
 }
 
 .width290px {
@@ -312,6 +347,10 @@ marginbottom40px {
   width: 60%;
 }
 
+.width75percent {
+  width: 75%;
+}
+
 .width80percent {
   width: 80%;
 }
@@ -326,6 +365,10 @@ marginbottom40px {
 
 .colorgray {
   color: var(--regular-grey-color);
+}
+
+.colorlightblack {
+  color: rgb(98, 95, 95);
 }
 
 .colorblack {
@@ -364,6 +407,10 @@ marginbottom40px {
   font-size: 16px;
 }
 
+.font17px {
+  font-size: 17px;
+}
+
 .font18px {
   font-size: 18px;
 }
@@ -382,6 +429,10 @@ marginbottom40px {
 
 .fontbold {
   font-weight: bold;
+}
+
+.fontverdana {
+  font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
 .textalignright {
@@ -655,7 +706,7 @@ table.tableStyle td, table.tableStyle th {
 }
 
 table.tableStyle td {
-  font-size: 16px;
+  font-size: 14px;
   vertical-align: top;
   height: 30px;
   /*padding: 10px 10px;*/

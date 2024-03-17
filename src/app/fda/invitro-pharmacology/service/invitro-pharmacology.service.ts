@@ -12,7 +12,7 @@ import { Facet, FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-co
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
 /* GSRS Invitro Pharmacology Imports */
-import { InvitroAssayInformation, InvitroAssayScreening, ValidationResults} from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssayScreening, ValidationResults } from '../model/invitro-pharmacology.model';
 
 @Injectable(
   {
@@ -178,6 +178,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
           invitroAssayResult: {},
           invitroSummary: {},
           invitroLaboratory: {},
+          invitroControls: [{}],
           invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
         }]
       };
@@ -192,11 +193,16 @@ export class InvitroPharmacologyService extends BaseHttpService {
       this.assay = assayScreening;
     } else { // new
       const newInvitroAssayInformation: InvitroAssayInformation =
-     {
-        invitroAssayScreenings: [ /*{
-        /*invitroReference: {},
-        invitroTestAgent: {}
-      } */  ]
+      {
+        invitroAssayScreenings: [{
+          invitroReference: { invitroSponsor: {} },
+          invitroTestAgent: {},
+          invitroAssayResult: {},
+          invitroSummary: {},
+          invitroLaboratory: {},
+          invitroControls: [{}],
+          invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
+        }]
       };
       this.assay = newInvitroAssayInformation;
     }
@@ -310,6 +316,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       invitroAssayResult: {},
       invitroSummary: {},
       invitroLaboratory: {},
+      invitroControls: [{}],
       invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
     };
     this.assay.invitroAssayScreenings.push(newInvitroAssayScreening);

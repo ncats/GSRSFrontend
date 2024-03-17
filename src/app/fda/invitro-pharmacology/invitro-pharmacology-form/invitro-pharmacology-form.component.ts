@@ -105,6 +105,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private authService: AuthService,
     private utilsService: UtilsService,
+    private cvService: ControlledVocabularyService,
     private loadingService: LoadingService,
     private mainNotificationService: MainNotificationService,
     private generalService: GeneralService,
@@ -112,7 +113,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // When All existing Assay data is selected, assign assay details
+    // Control Change: When All existing Assay data is selected, assign assay details
     this.existingAssayControl.valueChanges.subscribe(valueIndex => {
       this.assay.id = this.existingAssayList[valueIndex].id;
       this.assay.internalVersion = this.existingAssayList[valueIndex].internalVersion;
@@ -261,7 +262,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(getInvitroSubscribe);
   }
-
 
   loadTestAgentsTypeAhead() {
     const getInvitroSubscribe = this.invitroPharmacologyService.getAllTestAgents().subscribe(response => {
@@ -427,42 +427,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.invitroPharmacologyService.addNewScreening();
   }
 
-  /*
-  addNewImpuritiesSubstance(event: Event) {
-    event.stopPropagation();
-
-    this.invitroPharmacologyService.addNewImpuritiesSubstance();
-  }
-
-  addNewImpuritiesTotal() {
-    this.invitroPharmacologyService.addNewImpuritiesTotal();
-  }
-
-  confirmDeleteImpurities() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delete this Impurities?' }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result === true) {
-        this.deleteImpurities();
-      }
-    });
-  }
-  */
-
-  /*
-  deleteImpurities(): void {
-    this.invitroPharmacologyService.deleteImpurities().subscribe(response => {
-      this.invitroPharmacologyService.bypassUpdateCheck();
-      this.displayMessageAfterDeleteImpurities();
-    }, (err) => {
-      console.log(err);
-    }
-    );
-  }
-  */
-
   displayMessageAfterDeleteImpurities() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -594,7 +558,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
                 this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.molecularFormulaWeight = substance.structure.formula;
               }
             } // if Substance Structure exists
-            
+
           } // if Substance exists
         } // if response content > 0
       } // if response
@@ -602,12 +566,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(substanceSubscribe);
   }
 
-
-  selectionChangeExistingReference(event, ReferenceId, screeningIndex) {
-
+  selectionChangeExistingReference(event, screeningIndex) {
+    this.assay.invitroAssayScreenings[screeningIndex].invitroReference.referenceSourceType = event;
   }
 
-  selectionChangeExistingTestAgent(event, ReferenceId, screeningIndex) {
+  selectionChangeExistingTestAgent(event, screeningIndex) {
 
   }
 
