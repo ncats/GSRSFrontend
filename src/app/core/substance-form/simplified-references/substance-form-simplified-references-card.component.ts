@@ -105,7 +105,7 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
 
   addDefaultSubstanceReference(): void {
     const addedReference = this.substanceFormReferencesService.addSubstanceReference(
-      {docType: "MANUFACTURER PRODUCT DESCRIPTION", citation: "MANUFACTURER PRODUCT DESCRIPTION"}
+      {docType: "MANUFACTURER PRODUCT DESCRIPTION", citation: ""}
     );
     this.applyToAll(addedReference.uuid)
   }

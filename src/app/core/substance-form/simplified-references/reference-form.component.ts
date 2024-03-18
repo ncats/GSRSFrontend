@@ -58,8 +58,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   setSourceType(event?: any): void {
     if (event) {
       this.reference.docType = event;
-      // Mirror source type to citation.
-      this.reference.citation = event
     }
   }
 
