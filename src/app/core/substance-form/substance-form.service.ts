@@ -107,7 +107,7 @@ export class SubstanceFormService implements OnDestroy {
           this.privateSubstance = defaultValues ?
             {
               substanceClass: 'chemical',
-              references: [],
+              references: [{docType:"MANUFACTURER PRODUCT DESCRIPTION", citation:"MANUFACTURER PRODUCT DESCRIPTION"}],
               names: [{name: "", access:["protected"]}],
               structure: {
                 molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
