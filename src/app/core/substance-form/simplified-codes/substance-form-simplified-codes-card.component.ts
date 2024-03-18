@@ -4,7 +4,7 @@ import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceCode } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import {first, Subscription} from 'rxjs';
+import {combineLatest, first, Subscription} from 'rxjs';
 import { SubstanceFormCodesService } from '../codes/substance-form-codes.service';
 
 @Component({
@@ -65,9 +65,17 @@ export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBase
     this.subscriptions.push(codesSubscription);
 
     // Init default.
-    this.substanceFormCodesService.substanceCodes.pipe(first()).subscribe(()=>{
-      this.addDefaultSubstanceCode()
-    })
+    const defaultSubscription = combineLatest([this.substanceFormService.simplifiedForm, this.substanceFormCodesService.substanceCodes.pipe(first())]).subscribe({
+      next: ([simplified, codes]) => {
+        if (simplified && codes.length == 0){
+          this.addDefaultSubstanceCode()
+        }
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
+    this.subscriptions.push(defaultSubscription)
   }
 
   ngOnDestroy() {

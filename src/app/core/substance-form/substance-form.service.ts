@@ -84,7 +84,7 @@ export class SubstanceFormService implements OnDestroy {
 
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean, simplified?: boolean): Observable<void> {
     if (method) {
       this.method = method;
     } else {
@@ -271,6 +271,7 @@ export class SubstanceFormService implements OnDestroy {
         this.privateSubstance[this.subClass] = {};
       }
       this.initForm();
+      this.simplifiedFormEmitter.next(simplified === true)
       this.substanceEmitter.next(this.privateSubstance);
       observer.next();
       observer.complete();

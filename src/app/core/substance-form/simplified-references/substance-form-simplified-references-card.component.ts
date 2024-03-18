@@ -4,7 +4,7 @@ import {SubstanceReference} from '@gsrs-core/substance/substance.model';
 import {MatDialog} from '@angular/material/dialog';
 import {ScrollToService} from '../../scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {first, Subscription} from 'rxjs';
+import {combineLatest, first, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/references/substance-form-references.service";
 import {DomainsWithReferences} from "@gsrs-core/substance-form/references/domain-references/domain.references.model";
@@ -29,6 +29,7 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
   private overlayContainer: HTMLElement;
 
   constructor(
+    private substanceFormService: SubstanceFormService,
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private substanceFormNamesService: SubstanceFormNamesService,
     private substanceFormCodesService: SubstanceFormCodesService,
@@ -78,9 +79,17 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     this.subscriptions.push(domainsSubscription);
 
     // Init default.
-    this.substanceFormReferencesService.substanceReferences.pipe(first()).subscribe(()=>{
-      this.addDefaultSubstanceReference()
-    })
+    const defaultSubscription = combineLatest([this.substanceFormService.simplifiedForm, this.substanceFormReferencesService.substanceReferences.pipe(first())]).subscribe({
+      next: ([simplified, references]) => {
+        if (simplified && references.length == 0){
+          this.addDefaultSubstanceReference()
+        }
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
+    this.subscriptions.push(defaultSubscription)
   }
 
   ngOnDestroy() {

@@ -4,7 +4,7 @@ import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import {first, Subscription} from 'rxjs';
+import {combineLatest, first, last, Subscription} from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substance-form-names.service";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
@@ -65,9 +65,17 @@ export class SubstanceFormSimplifiedNamesCardComponent
     this.subscriptions.push(namesSubscription);
 
     // Init default.
-    this.substanceFormNamesService.substanceNames.pipe(first()).subscribe(()=>{
-      this.addDefaultSubstanceName()
-    })
+    const defaultSubscription = combineLatest([this.substanceFormService.simplifiedForm, this.substanceFormNamesService.substanceNames.pipe(first())]).subscribe({
+      next: ([simplified, names]) => {
+        if (simplified && names.length == 0){
+          this.addDefaultSubstanceName()
+        }
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
+    this.subscriptions.push(defaultSubscription)
   }
 
   ngAfterViewInit() {
