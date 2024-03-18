@@ -4,7 +4,7 @@ import { SubstanceFormService } from '../substance-form.service';
 import { SubstanceCode } from '@gsrs-core/substance/substance.model';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { Subscription } from 'rxjs';
+import {first, Subscription} from 'rxjs';
 import { SubstanceFormCodesService } from '../codes/substance-form-codes.service';
 
 @Component({
@@ -64,7 +64,10 @@ export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBase
     });
     this.subscriptions.push(codesSubscription);
 
-    this.addDefaultSubstanceCode()
+    // Init default.
+    this.substanceFormCodesService.substanceCodes.pipe(first()).subscribe(()=>{
+      this.addDefaultSubstanceCode()
+    })
   }
 
   ngOnDestroy() {

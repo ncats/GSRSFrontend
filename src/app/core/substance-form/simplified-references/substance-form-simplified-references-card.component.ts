@@ -4,7 +4,7 @@ import {SubstanceReference} from '@gsrs-core/substance/substance.model';
 import {MatDialog} from '@angular/material/dialog';
 import {ScrollToService} from '../../scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
-import {Subscription} from 'rxjs';
+import {first, Subscription} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/references/substance-form-references.service";
 import {DomainsWithReferences} from "@gsrs-core/substance-form/references/domain-references/domain.references.model";
@@ -77,7 +77,10 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     this.subscriptions.push(structureApplySubscription);
     this.subscriptions.push(domainsSubscription);
 
-    this.addDefaultSubstanceReference()
+    // Init default.
+    this.substanceFormReferencesService.substanceReferences.pipe(first()).subscribe(()=>{
+      this.addDefaultSubstanceReference()
+    })
   }
 
   ngOnDestroy() {

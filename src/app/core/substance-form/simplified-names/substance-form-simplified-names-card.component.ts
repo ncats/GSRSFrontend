@@ -64,7 +64,10 @@ export class SubstanceFormSimplifiedNamesCardComponent
     });
     this.subscriptions.push(namesSubscription);
 
-    this.addDefaultSubstanceName()
+    // Init default.
+    this.substanceFormNamesService.substanceNames.pipe(first()).subscribe(()=>{
+      this.addDefaultSubstanceName()
+    })
   }
 
   ngAfterViewInit() {
