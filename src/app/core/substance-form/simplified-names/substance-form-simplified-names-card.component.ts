@@ -4,9 +4,10 @@ import { SubstanceName } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormService } from '../substance-form.service';
 import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { Subscription } from 'rxjs';
+import {first, Subscription} from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substance-form-names.service";
+import {tr} from "cronstrue/dist/i18n/locales/tr";
 
 @Component({
   selector: 'app-substance-form-names-card',
@@ -62,10 +63,11 @@ export class SubstanceFormSimplifiedNamesCardComponent
       this.pageChange();
     });
     this.subscriptions.push(namesSubscription);
+
+    this.addDefaultSubstanceName()
   }
 
   ngAfterViewInit() {
-
   }
 
   standardize(): void {
@@ -77,6 +79,14 @@ export class SubstanceFormSimplifiedNamesCardComponent
     this.componentDestroyed.emit();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  addDefaultSubstanceName(): void {
+    this.substanceFormNamesService.addSubstanceName({
+      displayName: true,
+      name:"",
+      access:["protected"],
     });
   }
 
@@ -102,5 +112,4 @@ export class SubstanceFormSimplifiedNamesCardComponent
   deleteName(name: SubstanceName): void {
     this.substanceFormNamesService.deleteSubstanceName(name);
   }
-
 }

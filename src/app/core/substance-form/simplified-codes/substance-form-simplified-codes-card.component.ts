@@ -63,6 +63,8 @@ export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBase
       this.pageChange();
     });
     this.subscriptions.push(codesSubscription);
+
+    this.addDefaultSubstanceCode()
   }
 
   ngOnDestroy() {
@@ -74,6 +76,13 @@ export class SubstanceFormSimplifiedCodesCardComponent extends SubstanceCardBase
 
   addItem(): void {
     this.addCode();
+  }
+
+  addDefaultSubstanceCode(): void {
+    this.substanceFormCodesService.addSubstanceCode({
+      codeSystem: "CAS",
+      access:["protected"]
+    });
   }
 
   addCode(): void {

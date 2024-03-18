@@ -83,7 +83,7 @@ export class SubstanceFormService implements OnDestroy {
 
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean, defaultValues?: boolean): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
     if (method) {
       this.method = method;
     } else {
@@ -104,18 +104,7 @@ export class SubstanceFormService implements OnDestroy {
       } else {
         // the second case happens in the forms sometimes but really shouldn't
         if (substanceClass === 'chemical' || substanceClass === 'structure') {
-          this.privateSubstance = defaultValues ?
-            {
-              substanceClass: 'chemical',
-              references: [{docType:"MANUFACTURER PRODUCT DESCRIPTION", citation:"MANUFACTURER PRODUCT DESCRIPTION"}],
-              names: [{name: "", access:["protected"]}],
-              structure: {
-                molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
-              },
-              codes: [{codeSystem: "CAS", access:["protected"]}],
-              relationships: [],
-              properties: []
-            } :
+          this.privateSubstance =
             {
               substanceClass: 'chemical',
               references: [],

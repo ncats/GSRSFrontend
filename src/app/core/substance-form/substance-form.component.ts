@@ -377,10 +377,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             } else {
               setTimeout(() => {
                 let type = this.activatedRoute.snapshot.params['type'] || 'chemical';
-                let defaultValues = false
                 if (type.endsWith(SubstanceFormComponent.simplifiedSuffix)){
                   this.simplifiedForm = true
-                  defaultValues = true
                   type = type.slice(0, -SubstanceFormComponent.simplifiedSuffix.length)
                 }
 
@@ -389,7 +387,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.substanceClass = type;
                 this.titleService.setTitle('Register - ' + this.subClass);
 
-                this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined, defaultValues).pipe(take(1)).subscribe(() => {
+                this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined).pipe(take(1)).subscribe(() => {
                   this.setFormSections(formSections[this.subClass]);
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
