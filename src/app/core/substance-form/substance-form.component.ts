@@ -58,9 +58,7 @@ import {tr} from "cronstrue/dist/i18n/locales/tr";
 export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   private static simplifiedSuffix = '-simplified';
 
-  @Input()
   simplifiedForm = false
-
   isLoading = true;
   id?: string;
   formSections: Array<SubstanceFormSection> = [];
@@ -378,7 +376,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
               setTimeout(() => {
                 let type = this.activatedRoute.snapshot.params['type'] || 'chemical';
                 if (type.endsWith(SubstanceFormComponent.simplifiedSuffix)){
-                  this.simplifiedForm = true
+                  this.substanceFormService.setSimplifiedForm(true)
                   type = type.slice(0, -SubstanceFormComponent.simplifiedSuffix.length)
                 }
 
@@ -421,6 +419,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       });
     });
+    const simplifiedFormSubscription = this.substanceFormService.simplifiedForm.subscribe(value=>{
+      this.simplifiedForm = value
+    })
+    this.subscriptions.push(simplifiedFormSubscription);
   }
 
   isBase64(str) {

@@ -43,6 +43,7 @@ export class SubstanceFormService implements OnDestroy {
   private substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
   private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
   private substanceFormActionEmitter = new ReplaySubject<'load' | 'unload'>();
+  private simplifiedFormEmitter = new ReplaySubject<boolean>();
 
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private subClass: string;
@@ -278,6 +279,14 @@ export class SubstanceFormService implements OnDestroy {
 
   get substanceFormAction(): Observable<'load' | 'unload'> {
     return this.substanceFormActionEmitter.asObservable();
+  }
+
+  get simplifiedForm(): Observable<boolean> {
+    return this.simplifiedFormEmitter.asObservable();
+  }
+
+  setSimplifiedForm(value: boolean) {
+    this.simplifiedFormEmitter.next(value)
   }
 
   initForm(): void {
