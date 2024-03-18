@@ -72,6 +72,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'substance-form-definition',
     'substance-form-simplified-names',
     'substance-form-simplified-codes-card',
+    'substance-form-simplified-references',
     'substance-form-structure',
     'substance-form-moieties',
     'substance-form-references'
