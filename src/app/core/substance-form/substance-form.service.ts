@@ -43,6 +43,7 @@ export class SubstanceFormService implements OnDestroy {
   private substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
   private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
   private substanceFormActionEmitter = new ReplaySubject<'load' | 'unload'>();
+  private simplifiedFormEmitter = new ReplaySubject<boolean>();
 
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private subClass: string;
@@ -83,7 +84,7 @@ export class SubstanceFormService implements OnDestroy {
 
   }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean, defaultValues?: boolean): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean, simplified?: boolean): Observable<void> {
     if (method) {
       this.method = method;
     } else {
@@ -104,18 +105,7 @@ export class SubstanceFormService implements OnDestroy {
       } else {
         // the second case happens in the forms sometimes but really shouldn't
         if (substanceClass === 'chemical' || substanceClass === 'structure') {
-          this.privateSubstance = defaultValues ?
-            {
-              substanceClass: 'chemical',
-              references: [],
-              names: [{name: "", access:["protected"]}],
-              structure: {
-                molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
-              },
-              codes: [{codeSystem: "CAS", access:["protected"]}],
-              relationships: [],
-              properties: []
-            } :
+          this.privateSubstance =
             {
               substanceClass: 'chemical',
               references: [],
@@ -281,6 +271,7 @@ export class SubstanceFormService implements OnDestroy {
         this.privateSubstance[this.subClass] = {};
       }
       this.initForm();
+      this.simplifiedFormEmitter.next(simplified === true)
       this.substanceEmitter.next(this.privateSubstance);
       observer.next();
       observer.complete();
@@ -289,6 +280,14 @@ export class SubstanceFormService implements OnDestroy {
 
   get substanceFormAction(): Observable<'load' | 'unload'> {
     return this.substanceFormActionEmitter.asObservable();
+  }
+
+  get simplifiedForm(): Observable<boolean> {
+    return this.simplifiedFormEmitter.asObservable();
+  }
+
+  setSimplifiedForm(value: boolean) {
+    this.simplifiedFormEmitter.next(value)
   }
 
   initForm(): void {

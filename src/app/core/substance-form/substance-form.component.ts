@@ -58,9 +58,7 @@ import {tr} from "cronstrue/dist/i18n/locales/tr";
 export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   private static simplifiedSuffix = '-simplified';
 
-  @Input()
   simplifiedForm = false
-
   isLoading = true;
   id?: string;
   formSections: Array<SubstanceFormSection> = [];
@@ -72,6 +70,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     'substance-form-definition',
     'substance-form-simplified-names',
     'substance-form-simplified-codes-card',
+    'substance-form-simplified-references',
     'substance-form-structure',
     'substance-form-moieties',
     'substance-form-references'
@@ -376,11 +375,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             } else {
               setTimeout(() => {
                 let type = this.activatedRoute.snapshot.params['type'] || 'chemical';
-                let defaultValues = false
+                let simplified = false;
                 if (type.endsWith(SubstanceFormComponent.simplifiedSuffix)){
-                  this.simplifiedForm = true
-                  defaultValues = true
                   type = type.slice(0, -SubstanceFormComponent.simplifiedSuffix.length)
+                  simplified = true
                 }
 
                 this.gaService.sendPageView(`Substance Register`);
@@ -388,7 +386,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.substanceClass = type;
                 this.titleService.setTitle('Register - ' + this.subClass);
 
-                this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined, defaultValues).pipe(take(1)).subscribe(() => {
+                this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined, simplified).pipe(take(1)).subscribe(() => {
                   this.setFormSections(formSections[this.subClass]);
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
@@ -422,6 +420,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       });
     });
+    const simplifiedFormSubscription = this.substanceFormService.simplifiedForm.subscribe(value=>{
+      this.simplifiedForm = value
+    })
+    this.subscriptions.push(simplifiedFormSubscription);
   }
 
   isBase64(str) {

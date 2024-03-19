@@ -240,82 +240,10 @@ x
         {{ showSubmissionMessages ? 'Hide' : 'Show' }} messages
         <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
       </button>
-      <div *ngIf="isAdmin === true || isUpdater === true" class="advanced-features">
-        <div class="admin-functions">
-          <mat-form-field>
-            <mat-label>Advanced Features</mat-label>
-            <mat-select name="Feature" [ngModel]="feature" (openedChange)="openedChange($event)"
-                        (selectionChange)="useFeature($event)" disableOptionCentering>
-              <ng-container>
-                <mat-option value="changeClass" [disabled]="!id">
-                  Change Substance Class
-                </mat-option>
-                <mat-option value="approved" [disabled]="status === 'approved'">
-                  Change Status to approved
-                </mat-option>
-                <mat-option value="pending" [disabled]="status === 'pending'">
-                  Change Status to pending
-                </mat-option>
-                <mat-option value="setPrivate">
-                  Set Definition to private
-                </mat-option>
-                <mat-option value="setPublic">
-                  Set Definition to public
-                </mat-option>
-                <mat-option value="unapprove">
-                  Un-approve record (Remove approval ID)
-                </mat-option>
-                <mat-option value="changeApproval"
-                            [disabled]="!id || status === 'pending' || (substanceClass === 'concept' && UNII === 'non-approved record')">
-                  Change Approval ID
-                </mat-option>
-                <mat-option value="concept" [disabled]="substanceClass != 'concept'">
-                  Set concept status to non-approved
-                </mat-option>
-                <mat-option value="merge">
-                  Merge subconcept
-                </mat-option>
-                <mat-option value="switch">
-                  Switch primary and alt definitions
-                </mat-option>
-              </ng-container>
-              <ng-container *ngIf="isAdmin === true || isUpdater === true">
-                <mat-option value="glyco" [disabled]="substanceClass !== 'protein'">
-                  Predict N-Glycosylation Sites
-                </mat-option>
-                <mat-option value="disulfide" [disabled]="substanceClass != 'protein'">
-                  Predict disulfide links by monoclonal antibody type
-                </mat-option>
-                <mat-option value="fragment"
-                            [disabled]="substanceClass != 'protein' && substanceClass != 'nucleicAcid' ">
-                  Register a Fragment
-                </mat-option>
-              </ng-container>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="changeClass advanced" *ngIf="feature === 'changeClass'">
-          <mat-form-field>
-            <mat-label>New Class</mat-label>
-            <mat-select name="definitionType" (selectionChange)="changeClass($event)"
-                        (openedChange)="openedChange($event)" disableOptionCentering>
-              <mat-option *ngFor="let class of classes" [value]="class" [disabled]="class === substanceClass">
-                {{ class }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
       <span class="middle-fill"></span>
       <button mat-flat-button color="primary" class="validate-button small-button" (click)="validate()">Validate and
         Submit
       </button>
-      <button mat-flat-button color="primary" class="validate-button small-button" [disabled]="!canApprove || approving"
-              *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
-              (click)="validate('approval')">Approve
-      </button>
-
     </div>
   </div>
 </ng-template>

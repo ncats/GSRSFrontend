@@ -95,25 +95,8 @@ export class NameFormComponent implements OnInit, OnDestroy {
     return this.privateName || {};
   }
 
-  priorityUpdated(event: MatRadioChange) {
-    this.privateName.displayName = (event.value === 'true');
-    this.priorityUpdate.emit(this.privateName);
-  }
-
   updateAccess(access: Array<string>): void {
     this.privateName.access = access;
-  }
-
-  updateLanguages(languages: Array<string>): void {
-    this.privateName.languages = languages;
-  }
-
-  updateDomains(domains: Array<string>): void {
-    this.privateName.domains = domains;
-  }
-
-  updateJurisdiction(jurisdiction: Array<string>): void {
-    this.privateName.nameJurisdiction = jurisdiction;
   }
 
   deleteName(): void {
@@ -147,13 +130,6 @@ export class NameFormComponent implements OnInit, OnDestroy {
       }
     }, () => {
     });
-  }
-
-  getNameOrgs(name: SubstanceName): Array<SubstanceNameOrg> {
-    if (!name.nameOrgs) {
-      name.nameOrgs = [];
-    }
-    return name.nameOrgs as Array<SubstanceNameOrg>;
   }
 
   preventNewLine(event: KeyboardEvent): void {

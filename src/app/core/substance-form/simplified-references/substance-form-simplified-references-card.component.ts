@@ -1,15 +1,19 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { SubstanceCardBaseFilteredList, SubstanceCardBaseList } from '../base-classes/substance-form-base-filtered-list';
-import { SubstanceReference } from '@gsrs-core/substance/substance.model';
-import { MatDialog } from '@angular/material/dialog';
-import { ScrollToService } from '../../scroll-to/scroll-to.service';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { Subscription } from 'rxjs';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
+import {SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '../base-classes/substance-form-base-filtered-list';
+import {SubstanceReference} from '@gsrs-core/substance/substance.model';
+import {MatDialog} from '@angular/material/dialog';
+import {ScrollToService} from '../../scroll-to/scroll-to.service';
+import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
+import {combineLatest, first, Subscription} from 'rxjs';
+import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/references/substance-form-references.service";
 import {DomainsWithReferences} from "@gsrs-core/substance-form/references/domain-references/domain.references.model";
-import { domainKeys } from '../references/domain-references/domain-keys.constant';
+import {domainKeys} from '../references/domain-references/domain-keys.constant';
 import {take} from "rxjs/operators";
+import {SubstanceFormService} from "@gsrs-core/substance-form/substance-form.service";
+import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substance-form-names.service";
+import {SubstanceFormCodesService} from "@gsrs-core/substance-form/codes/substance-form-codes.service";
+import {SubstanceFormStructureService} from "@gsrs-core/substance-form/structure/substance-form-structure.service";
 
 @Component({
   selector: 'app-substance-form-references-card',
@@ -25,7 +29,11 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
   private overlayContainer: HTMLElement;
 
   constructor(
+    private substanceFormService: SubstanceFormService,
     private substanceFormReferencesService: SubstanceFormReferencesService,
+    private substanceFormNamesService: SubstanceFormNamesService,
+    private substanceFormCodesService: SubstanceFormCodesService,
+    private substanceFormStructureService: SubstanceFormStructureService,
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
@@ -55,12 +63,33 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
       this.pageChange();
     });
 
+    // Ensure all simplified references are added to all elements.
+    const nameApplySubscription = this.substanceFormNamesService.substanceNames.subscribe(()=>this.applyAllReferencesToAll())
+    const codesApplySubscription = this.substanceFormCodesService.substanceCodes.subscribe(()=>this.applyAllReferencesToAll())
+    const structureApplySubscription = this.substanceFormStructureService.substanceStructure.subscribe(()=>this.applyAllReferencesToAll())
+
     const domainsSubscription = this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
       this.domainsWithReferences = domainsWithReferences;
     });
 
     this.subscriptions.push(referencesSubscription);
+    this.subscriptions.push(nameApplySubscription);
+    this.subscriptions.push(codesApplySubscription);
+    this.subscriptions.push(structureApplySubscription);
     this.subscriptions.push(domainsSubscription);
+
+    // Init default.
+    const defaultSubscription = combineLatest([this.substanceFormService.simplifiedForm, this.substanceFormReferencesService.substanceReferences.pipe(first())]).subscribe({
+      next: ([simplified, references]) => {
+        if (simplified && references.length == 0){
+          this.addDefaultSubstanceReference()
+        }
+      },
+      error: error => {
+        console.error(error);
+      }
+    });
+    this.subscriptions.push(defaultSubscription)
   }
 
   ngOnDestroy() {
@@ -69,8 +98,16 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
       subscription.unsubscribe();
     });
   }
+
   addItem(): void {
     this.addSubstanceReference();
+  }
+
+  addDefaultSubstanceReference(): void {
+    const addedReference = this.substanceFormReferencesService.addSubstanceReference(
+      {docType: "MANUFACTURER PRODUCT DESCRIPTION", citation: ""}
+    );
+    this.applyToAll(addedReference.uuid)
   }
 
   addSubstanceReference(): void {
@@ -82,13 +119,19 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     }, 10);
   }
 
+  applyAllReferencesToAll(): void {
+    for(const ref of this.references){
+      this.applyToAll(ref.uuid)
+    }
+  }
+
   deleteReference(reference: SubstanceReference): void {
     this.substanceFormReferencesService.deleteSubstanceReference(reference);
   }
 
   applyToAll(uuid: string): void {
     this.applyReference(this.domainsWithReferences.definition.domain, uuid);
-    this.domainKeys.map(key=>this.domainsWithReferences[key]?.domains).forEach(domains => {
+    this.domainKeys.map(key => this.domainsWithReferences[key]?.domains).forEach(domains => {
       if (domains) {
         domains.forEach((domain: any) => {
           this.applyReference(domain, uuid);

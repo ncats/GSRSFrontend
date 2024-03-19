@@ -30,12 +30,14 @@ export class SubstanceFormCodesService extends SubstanceFormServiceBase<Array<Su
     return this.propertyEmitter.asObservable();
   }
 
-  addSubstanceCode(): void {
-    const newCode: SubstanceCode = {
-      references: [],
-      access: []
-    };
-    this.substance.codes.unshift(newCode);
+  addSubstanceCode(code?: SubstanceCode): void {
+    if (code === undefined) {
+      code = {
+        references: [],
+        access: []
+      };
+    }
+    this.substance.codes.unshift(code);
     this.propertyEmitter.next(this.substance.codes);
   }
 

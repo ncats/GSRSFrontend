@@ -58,8 +58,6 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   setSourceType(event?: any): void {
     if (event) {
       this.reference.docType = event;
-      // Mirror source type to citation.
-      this.reference.citation = event
     }
   }
 
@@ -111,40 +109,4 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     }
   }
-
-  openPreviousDialog(): void {
-      const dialogRef = this.dialog.open(PreviousReferencesDialogComponent, {
-        data: {},
-        width: '990px'
-      });
-      this.overlayContainer.style.zIndex = '1002';
-      const dialogSubscription = dialogRef.afterClosed().subscribe(ref => {
-        this.overlayContainer.style.zIndex = null;
-       if (ref) {
-         if (ref.citation && ref.citation !== '' && ref.docType && ref.docType !== '') {
-          this.fillReference(ref);
-        }
-       }
-      });
-      this.subscriptions.push(dialogSubscription);
-    }
-
-    fillReference(ref: SubstanceReference) {
-      this.showPrev = false;
-      this.reference.access = ref.access;
-      this.reference.citation = ref.citation;
-      this.reference.deprecated = ref.deprecated;
-      this.reference.docType = ref.docType;
-      this.reference.publicDomain = ref.publicDomain;
-      this.reference.tags = ref.tags;
-      this.reference.uploadedFile = ref.uploadedFile;
-      this.reference.url = ref.url || null;
-      this.reference.id = ref.id || null;
-    }
-
-  downloadDocument(url: string): void {
-    this.substanceFormService.bypassUpdateCheck();
-    window.open(url);
-  }
-
 }
