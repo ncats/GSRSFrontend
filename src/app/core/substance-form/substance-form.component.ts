@@ -818,6 +818,14 @@ getDrafts() {
         if (response._name) {
           delete response._name;
         }
+        if (response.names && response.names.length > 0) {
+            response.names.forEach(name => {
+              if (name.stdName) {
+                name.stdName = null;
+              }
+            });
+        }
+
         this.scrub(response, type);
         this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
           this.setFormSections(formSections[response.substanceClass]);
