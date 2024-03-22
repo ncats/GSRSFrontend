@@ -861,7 +861,7 @@ export class SubstanceService extends BaseHttpService {
 
 
   getSubstanceReferences(top: number = 10, user: string): Observable<any> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/references/search?top=${top}&order=$lastEdited&q=root_lastEditedBy:"${user}" AND NOT (root_docType:SYSTEM)  AND NOT (root_docType:BDNUM)`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/references/search?top=${top}&order=$lastEdited&q=root_lastEditedBy:"${user}" AND NOT (root_docType:SYSTEM) AND NOT (root_docType:VALIDATION_MESSAGE) AND NOT (root_docType:BATCH_IMPORT) AND NOT (root_docType:BDNUM)`;
     return this.http.get< any>(url);
   }
 
