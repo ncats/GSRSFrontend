@@ -1,5 +1,5 @@
 {
-  "version": "3.1",
+  "version": "3.1.1",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -70,6 +70,7 @@
     "impurities": true,
     "ssg2": true,
     "ssg4m": true,
+    "invitropharmacology": true,
     "userRegistration": false
   },
   "usefulLinks": [
@@ -118,7 +119,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In-vitro Pharmacology",
       "filters": [
         {}
       ]
@@ -1010,23 +1011,19 @@
     },
     "products": {
       "default": [
-        "Provenance",
-        "Product ID",
         "Product Name",
         "Nonproprietary Name",
+        "Product NDC",
         "Dosage Form Name",
         "Ingredient Name",
-        "Ingredient Name (Preferred)",
         "Ingredient Type",
         "Product Type",
         "Product Code Type",
-        "Product Status",
-        "Marketing Category Name",
-        "Route of Administration",
-        "Is Listed",
-        "Indication",
-        "Application Type",
         "Application Number",
+        "Status",
+        "Marketing Category Name",
+        "Route of Admin",
+        "Is Listed",
         "Labeler Name",
         "Labeler DUNS Number",
         "Registrant Name",
@@ -1035,9 +1032,7 @@
         "State",
         "Company Country",
         "Country Code",
-        "Company Role",
-        "Manufacturer Name",
-        "Manufacturer Role"
+        "Provenance"
       ],
       "admin": [
         "Record Created By",
@@ -1119,6 +1114,35 @@
         "ATC Level 3",
         "ATC Level 4"
       ]
+    },
+    "invitropharmacology": {
+      "default": [
+        "Assay ID",
+        "Reference Source Type Number",
+        "Reference Source Type",
+        "Reference Source",
+        "Target Name",
+        "Test Agent",
+        "Assay Title",
+        "Control",
+        "Control Type",
+        "Assay Type",
+        "Study Type",
+        "Relationship Type",
+        "Presentation Type",
+        "External Assay ID",
+        "External Assay Source",
+        "Report Number",
+        "Laboratory Name",
+        "Sponsor Contact Name",
+        "Sponsor Report Submitter Name"
+      ],
+      "admin": [
+        "Record Created By",
+        "Record Last Edited By",
+        "Record Create Date",
+        "Record Last Edited"
+      ]
     }
   },
   "codeSystemOrder": [
@@ -1162,6 +1186,12 @@
       "order": 14
     },
     {
+      "component": "invitropharmacology",
+      "display": "Browse In-vitro Pharmacology",
+      "path": "browse-invitro-pharm",
+      "order": 15
+    },
+    {
       "display": "Register",
       "children": [
         {
@@ -1193,6 +1223,18 @@
           "display": "Impurities",
           "path": "impurities/register",
           "order": 220
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "In-vitro Pharmacology Assay",
+          "path": "invitro-pharm/assay/register",
+          "order": 230
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "In-vitro Pharmacology Screening",
+          "path": "invitro-pharm/register",
+          "order": 240
         }
       ]
     },
@@ -1462,7 +1504,7 @@
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
         "clinicalTrialKeyType": "UUID",
-        "productKeyType": "UUID",
+        "productKeyType": "APPROVAL_ID",
         "applicationKeyType": "UUID",
         "impuritiesKeyType": "UUID"
       }

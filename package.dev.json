@@ -69,10 +69,8 @@
     "web-animations-js": "2.3.2",
     "zone.js": "0.11.4",
     "z-schema": "5.0.4",
-    "jexl": "2.3.0"
-
-
-
+    "jexl": "2.3.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "13.2.1",

@@ -1,0 +1,360 @@
+<div class="top-fixed">
+  <div class="actions-container">
+
+    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
+
+    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+      <span>Export JSON</span>
+    </a>&nbsp;&nbsp;&nbsp;
+
+    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+    <span *ngIf="assay && !assay.id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
+    <span class="middle-fill"></span>
+
+    <!-- Assay Details Link -->
+    <a mat-flat-button color="primary" routerLink="/invitro-pharm/{{assay.id}}" target="_blank"
+      matTooltip='Opens in a new window' *ngIf="assay && assay.id">
+      View Assay Details
+      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+    <!-- Validate and Submit Button -->
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+  </div> <!-- div class=actions-container-->
+
+
+  <!-- Validation Message Display -->
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+
+
+    <!-- Validation Message Display and Submit Button -->
+    <div *ngIf="validationMessages">
+      <span *ngIf=" validationMessages.length > 0">
+        <div class="submission-message" *ngIf='!serverError && !approving'>
+          Please correct or dismiss the following errors and submit again:
+        </div>
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+            {{message.messageType}}</div>
+          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
+                target="_blank">{{link.text}}</a></span></div>
+          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+            (click)="dismissValidationMessage(i)">
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </div>
+      </span>
+
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()"
+          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
+          validationMessages.length > 0?'Dismiss All and ':''}}
+          Submit</button>
+      </div>
+    </div>
+    <!-- Validation Message and Submit Button -->
+
+  </div> <!-- div class=actions-container -->
+</div> <!-- div class=top-fixed -->
+
+
+<div class="form-content-container mat-form-field-style" *ngIf="assay">
+  <div class="scrollable-container">
+
+    <div class="divcenter">
+      <!-- Display Message-->
+      <div class="message-style bordergray" *ngIf="message">
+        {{message}}
+      </div>
+
+      <div class="divflex margintop20px">
+
+        <div class="width650px font24px">
+          <b>{{title}}</b>
+          &nbsp;&nbsp;
+
+          <!-- Edit GSRS record button -->
+          <!--
+          <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            matTooltip='Edit GSRS In-vitro Pharmacology Record'>
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>&nbsp;&nbsp;
+          -->
+
+          <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
+            matTooltip='Export Json'>
+            <mat-icon svgIcon="get_app"></mat-icon>
+          </a>&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <div class="width50percent font11px margintop10px" *ngIf="assay && assay.id">
+          <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss
+          a'}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+        </div>
+      </div> <!-- class=divflex -->
+
+      <!-- Link to All Assay page -->
+      <!--
+      <div class="marginleft40px padtop15px">
+        <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
+          target="_blank" alt="View All Assays" matTooltip='View All Assays'><b>View All Assay Lists</b>
+        </a>&nbsp;&nbsp;&nbsp;
+      </div>
+      -->
+    </div> <!-- class=divcenter -->
+
+
+    <!-- ############################################################ -->
+    <!-- ASSAY DETAILS FORM BEGIN                                     -->
+    <!-- ************************************************************ -->
+    <div class="details-container">
+
+      <div class="margintop20px width100percent">
+
+        <mat-card class="bordergray">
+
+          <mat-card-title>
+            <span class="colorblue font20px"><b>Assay Information</b></span>
+          </mat-card-title>
+
+          <mat-card-content class="marginright10px">
+
+            <div class="form-row" *ngIf="assay && assay.id">
+              <div class="fieldKey">
+                <mat-label>Assay ID:</mat-label>
+              </div>
+              <div class="width95percent padtop18px">
+                <span *ngIf="assay.assayId">
+                  <b>{{assay.assayId}}</b>
+                </span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>External Assay ID:&nbsp;<span class="colorred">*</span></mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.externalAssayId" name="externalAssayId" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>External Assay Source:&nbsp;<span class="colorred">*</span></mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.externalAssaySource" name="externalAssaySource" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>External Assay Reference:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.externalAssayReference"
+                  name="externalAssayReference" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>External Assay Reference URL:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.externalAssayReferenceUrl"
+                  name="externalAssayReferenceUrl" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Assay Title:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.assayTitle" name="assayTitle" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Assay Format:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="INVITRO_ASSAY_FORMAT" title="" name="assayFormat"
+                [model]="assay.assayFormat" (valueChange)="assay.assayFormat = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Bioassay Type:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="INVITRO_BIOASSAY_TYPE" title="" name="bioassayType"
+                [model]="assay.bioassayType" (valueChange)="assay.bioassayType = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Bioassay Class:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="INVITRO_BIOASSAY_CLASS" title="" name="bioassayClass"
+                [model]="assay.bioassayClass" (valueChange)="assay.bioassayClass = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Study Type:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="INVITRO_STUDY_TYPE" title="" name="studyType"
+                [model]="assay.studyType" (valueChange)="assay.studyType = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Detection Method:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="INVITRO_DETECTION_METHOD" title="" name="detectionMethod"
+                [model]="assay.detectionMethod" (valueChange)="assay.detectionMethod = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Presentation Type:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="INVITRO_PRESENTATION_TYPE" title="" name="presentationType"
+                [model]="assay.presentationType" (valueChange)="assay.presentationType = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Presentation:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.presentation" name="presentation" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Buffer Plasma Protein Concentration:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.bufferPlasmaProteinConcent"
+                  name="bufferPlasmaProteinConcent" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Target Name:&nbsp;<span class="colorred">*</span></mat-label>
+              </div>
+
+              <!-- Substance Text Search Suggestions/TypeAhead -->
+              <app-substance-text-search class="fieldvalue" [searchValue]="assay.targetName"
+                placeholder="Search Substances" (searchPerformed)="nameSearch($event, 'targetName')"
+                eventCategory="selectorSearch">
+              </app-substance-text-search>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Target Name Approval ID:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.targetNameApprovalId" name="targetNameApprovalId" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Target Species:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.targetSpecies" name="targetSpecies" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Human Homolog Target:</mat-label>
+              </div>
+
+              <!-- Substance Text Search Suggestions/TypeAhead -->
+              <app-substance-text-search class="fieldvalue" [searchValue]="assay.humanHomologTarget"
+                placeholder="Search Substances" (searchPerformed)="nameSearch($event, 'humanHomologTarget')"
+                eventCategory="selectorSearch">
+              </app-substance-text-search>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Human Homolog Target Approval ID:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.humanHomologTargetApprovalId"
+                  name="humanHomologTargetApprovalId" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Ligand/Substrate:</mat-label>
+              </div>
+
+              <!-- Substance Text Search Suggestions/TypeAhead -->
+              <app-substance-text-search class="fieldvalue" [searchValue]="assay.ligandSubstrate"
+                placeholder="Search Substances" (searchPerformed)="nameSearch($event, 'ligandSubstrate')"
+                eventCategory="selectorSearch">
+              </app-substance-text-search>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Ligand/Substrate Approval ID:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateApprovalId"
+                  name="ligandSubstrateApprovalId" />
+              </mat-form-field>
+            </div>
+
+            <br>
+          </mat-card-content>
+        </mat-card>
+
+      </div> <!-- *ngIf=assay -->
+
+    </div> <!-- class=details-container -->
+    <br><br><br><br>
+  </div>
+</div> <!-- class=form-content-container -->
+
+<ng-template #noRecord>
+  <br><br><br><br>
+  <div class="colororange padtop50px padleft50px">There is no Assay Screening Data found.</div>
+</ng-template>
