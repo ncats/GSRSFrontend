@@ -1,8 +1,14 @@
 <div appDragDropPaste (dropHandler)="onDropHandler($event)" class="z-index"  [ngClass]="tempClass">
+  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()">Toggle Editor to {{structureEditor === 'ketcher' ? 'JSDraw' : 'Ketcher'}}</button>
+  <div style = "width: 100%">
+    <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="structureEditor === 'ketcher'" style = "width:990px"></ncats-jsdraw-wrapper>
+  </div>
+  <div style = "width: 100%">
+    <ncats-ketcher-wrapper [ketcherFilePath]="ketcherFilePath" (ketcherOnLoad)="ketcherOnLoad($event)" [hidden]="structureEditor === 'jsdraw'">
+    </ncats-ketcher-wrapper>
+  </div>
 
-<ncats-ketcher-wrapper [ketcherFilePath]="ketcherFilePath" (ketcherOnLoad)="ketcherOnLoad($event)" *ngIf="structureEditor == 'ketcher'">
-</ncats-ketcher-wrapper>
-<ncats-jsdraw-wrapper oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" *ngIf="structureEditor == 'jsdraw'"></ncats-jsdraw-wrapper>
+
 
 <div id ="canvas-container">
   <div class="below-editor-container">

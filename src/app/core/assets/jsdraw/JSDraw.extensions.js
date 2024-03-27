@@ -912,6 +912,7 @@ var callback = function(){
         // Note that this is still an issue if there is more than one editor being used at one
         // time. JSDraw will need to fix.
         JSDraw2.Editor.atomlistDlg=null;
+        JSDraw2.Editor.width=960;
         
         // This prevents the context menu from spawning more events on right-click events
         (function() {

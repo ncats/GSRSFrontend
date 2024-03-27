@@ -141,7 +141,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
       this.structureEditor = environment.structureEditor;
 
-      if (environment.structureEditor === 'jsdraw' && !window['JSDraw']) {
+      if ( !window['JSDraw']) {
 
         // this is extremely hacky but no way around it
 
@@ -172,19 +172,35 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
     setTimeout(() => {
        this.ketcher = ketcher;
-       this.editor = new EditorImplementation(this.ketcher);
+       this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
        this.editorOnLoad.emit(this.editor);
        
     }, 1000);
 
+  }
+
+  toggleEditor() {
     
-   
+    if (this.structureEditor === 'ketcher' ) {
+      this.structureEditor = 'jsdraw';
+      this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
+      this.editorOnLoad.emit(this.editor);
+    } else {
+      this.structureEditor = 'ketcher';
+      this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
+       this.editorOnLoad.emit(this.editor);
+       console.log(this.jsdraw.options);
+    }
   }
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
+    console.log('loaded');
     this.jsdraw = jsdraw;
-    this.editor = new EditorImplementation(null, this.jsdraw);
-    this.editorOnLoad.emit(this.editor);
+   // if (this.structureEditor === 'jsdraw'){
+      this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
+      this.editorOnLoad.emit(this.editor);
+  //  }
+    
   }
 
   get _jsdrawScriptUrls(): Array<string> {
