@@ -37,6 +37,7 @@ export interface InvitroAssayInformation {
   _calculateIC50?: string;
   _assayTargetSummaries?: Array<any>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;
+  invitroSummaries?: Array<InvitroSummary>;
 }
 
 export interface InvitroAssayScreening {
@@ -49,20 +50,9 @@ export interface InvitroAssayScreening {
   invitroReference?: InvitroReference;
   invitroTestAgent?: InvitroTestAgent;
   invitroAssayResult?: InvitroAssayResult;
-  invitroSummary?: InvitroSummary;
   invitroControls?: Array<InvitroControl>;
   invitroLaboratory?: InvitroLaboratory;
   invitroSubmitterReport?: InvitroSubmitterReport;
-}
-
-export interface InvitroInformationReferences {
-  id?: number;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
-  invitroReference?: InvitroReference;
 }
 
 export interface InvitroReference {
@@ -118,6 +108,9 @@ export interface InvitroTestAgent {
 export interface InvitroAssayResult {
   id?: number;
   plasmaProteinAdded?: string;
+  plasmaProtein?: string;
+  plasmaProteinConcentration?: string;
+  plasmaProteinConcentrationUnits?: string;
   dataType?: string;
   numberOfTests?: string;
   testAgentConcentration?: number;
@@ -153,17 +146,15 @@ export interface InvitroControl {
 
 export interface InvitroSummary {
   id?: number;
-  summaryTestAgent?: string;
-  summaryTargetName?: string;
+  testAgent?: string;
   relationshipType?: string;
+  interactionType?: string;
   resultType?: string;
-  result?: string;
-  resultUnits?: string;
-  amountType?: string;
-  amountAverage?: number;
-  amountLow?: number;
-  amountHigh?: number;
-  amountUnits?: string;
+  resultValueAverage?: number;
+  resultValueLow?: number;
+  resultValueHigh?: number;
+  resultValueUnits?: string;
+  comments?: string;
   createdBy?: string;
   creationDate?: number;
   modifiedBy?: string;

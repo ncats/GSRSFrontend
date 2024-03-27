@@ -1,10 +1,10 @@
 <div class="middle-content-container">
-    
+
         <mat-card class="search-section">
           <mat-card-title>
             Search
           </mat-card-title>
-      
+
           <mat-card-content class="left-search">
             <mat-nav-list>
               <h3 class="register-header">
@@ -18,7 +18,7 @@
               </a>
               <span *ngIf="!loadedComponents">
                 <mat-divider></mat-divider>
-      
+
                 <a mat-list-item routerLink="/structure-search">
                   <mat-icon matListIcon svgIcon="search"></mat-icon>
                   Structure Search
@@ -37,7 +37,7 @@
               <span *ngIf="loadedComponents">
                 <span *ngIf="loadedComponents && loadedComponents.applications">
                 <mat-divider></mat-divider>
-      
+
                 <a mat-list-item routerLink="/browse-applications">
                   <mat-icon matListIcon svgIcon="glasses"></mat-icon>
                   Browse Applications
@@ -58,13 +58,26 @@
                 </a>
               </span>
               <span *ngIf="loadedComponents && loadedComponents.adverseevents">
+                <!-- We are not using Shiny. Right now Browse Adverse Event link
+                not showing, therefore commenting this out -->
+                <!--
                 <div *ngIf="adverseEventShinyHomepageDisplay === true">
+                -->
                   <mat-divider></mat-divider>
-                  <a mat-list-item [href]="adverseEventShinyHomepageURL" target="_blank">
+                  <a mat-list-item routerLink="/browse-adverse-events">
                     <mat-icon matListIcon svgIcon="glasses"></mat-icon>
                     Browse Adverse Events
                   </a>
+                <!--
                 </div>
+                -->
+                </span>
+                <span *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+                  <mat-divider></mat-divider>
+                  <a mat-list-item routerLink="/browse-invitro-pharm">
+                    <mat-icon matListIcon svgIcon="glasses"></mat-icon>
+                    Browse In-vitro Pharmacology
+                  </a>
                 </span>
                 <mat-divider></mat-divider>
                 <a mat-list-item routerLink="/structure-search">
@@ -133,10 +146,10 @@
                   </a>
                   <span>
                     <mat-divider></mat-divider>
-      
+
                     <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
                       <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-      
+
                       Specified Substance Group 1
                     </a>
                   </span>
@@ -162,24 +175,38 @@
                           Impurities
                         </a>
                       </span>
+                      <span *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+                        <mat-divider></mat-divider>
+                        <a mat-list-item routerLink="/invitro-pharm/assay/register">
+                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          In-vitro Pharmacology Assay
+                        </a>
+                      </span>
+                      <span *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+                        <mat-divider></mat-divider>
+                        <a mat-list-item routerLink="/invitro-pharm/register">
+                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          In-vitro Pharmacology Screening
+                        </a>
+                      </span>
 
-          
+
                      <!--   <mat-divider></mat-divider>
                         <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                           Biomarker
                           <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
                         </a>
-          
+
                         <mat-divider></mat-divider>
                         <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
                           <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                           Indication
                           <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
                         </a>-->
-          
+
                       </span>
-      
+
                 </mat-nav-list>
               </div>
              <!--   <mat-divider [vertical]="true" class="divider-vertical" *ngIf="appId === 'fda'"></mat-divider>
@@ -190,45 +217,45 @@
                 <mat-nav-list class="other-list">
                   <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
                     <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-      
+
                     Specified Substance Group 1
                   </a>
                   <mat-divider></mat-divider>
                 <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG2'">
                     <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-      
+
                     Specified Substance Group 2
                     <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-      
+
                   </a>
                   <mat-divider></mat-divider>
                   <a mat-list-item routerLink="/substances/register/specifiedSubstanceG3">
                     <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                     Specified Substance Group 3
                   </a>
-                  
+
                   <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG3'">
                     <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                     Specified Substance Group 3
                     <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
                   </a>
-                 
+
                   <mat-divider></mat-divider>
                   <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4'">
                     <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                     Specified Substance Group 4
                     <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
                   </a>
-      
+
                   <mat-divider></mat-divider>
                   <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4Manufacturing'">
                     <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
                     Specified Substance Group 4 Manufacturing
                     <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-                  </a> 
-      
-                  
-      
+                  </a>
+
+
+
                 </mat-nav-list>
               </div>-->
             </div>
@@ -247,7 +274,7 @@
                                 Statistics/ Quick Search</h3>
                         <mat-nav-list class="other-list" >
                             <span  *ngFor = "let link of customLinks1; last as isLast; let ind = index">
-                                <a mat-list-item [routerLink] = "['/browse-substance']"  
+                                <a mat-list-item [routerLink] = "['/browse-substance']"
                                  [queryParams]="{facets: link.queryParams}"   >
                                         <div class = "entry2">
                                                 <div class = "label2">
@@ -265,11 +292,11 @@
                         <mat-divider [vertical]="true" class="divider-vertical" *ngIf="customLinks2"></mat-divider>
               <div class="register-main" >
                 <mat-nav-list class="other-list">
-                        
+
                     <div class = "header-padding" style = "height: 61px;" >
                     </div>
                     <span  *ngFor = "let link of customLinks2; last as isLast; let ind = index">
-                            <a mat-list-item [routerLink] = "['/browse-substance']"  
+                            <a mat-list-item [routerLink] = "['/browse-substance']"
                              [queryParams]="{facets: link.queryParams}"   (click) = "routeToCustom(link)">
                                     <div class = "entry2">
                                             <div class = "label2">
@@ -282,7 +309,7 @@
                             </a>
                             <mat-divider *ngIf = "!isLast"></mat-divider>
                     </span>
-                    
+
                     </mat-nav-list>
                 </div>
                 </div>

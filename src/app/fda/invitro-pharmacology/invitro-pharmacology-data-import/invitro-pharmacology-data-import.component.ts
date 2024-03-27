@@ -112,7 +112,7 @@ export class InvitroPharmacologyDataImportComponent implements OnInit {
 
         data.forEach((element, index) => {
           if (element) {
-           // console.log("index: " + index + "     " + JSON.stringify(element));
+           console.log("index: " + index + "     " + JSON.stringify(element));
 
             this.importDataList.push(element);
             this.message = this.message + "index: " + index + "     " + JSON.stringify(element) + "\n\n";

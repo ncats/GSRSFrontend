@@ -31,6 +31,7 @@
   <table border="1" *ngIf="message" class="bordergray">
     <tr class="font11px">
       <th>#</th>
+      <th>Assay Set</th>
       <th>External Source</th>
       <th>External ID</th>
       <th>Batch ID</th>
@@ -59,6 +60,7 @@
     </tr>
     <tr class="font11px" *ngFor="let assay of importDataList; let index = index">
       <td>{{(index+1)}}</td>
+      <td>{{assay.assayExternalId"}}</td>
       <td>{{assay.assayExternalSource}}</td>
       <td>{{assay.assayExternalId}}</td>
       <td>{{assay.batchNumber}}</td>

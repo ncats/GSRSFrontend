@@ -1,0 +1,293 @@
+<div class="top-fixed">
+
+  <!-- Buttons -->
+  <div class="actions-container">
+
+    <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>&nbsp;&nbsp;&nbsp;
+
+    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+      <span>Export JSON</span>
+    </a>&nbsp;&nbsp;&nbsp;
+
+    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+    <span *ngIf="assay && !assay.id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
+    <span class="middle-fill"></span>
+
+    <!-- Assay Details Link -->
+    <a mat-flat-button color="primary" routerLink="/invitro-pharm/{{assay.id}}" target="_blank"
+      matTooltip='Opens in a new window' *ngIf="assay && assay.id">
+      View Assay Details
+      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+    <!-- Validate and Submit Button -->
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+  </div> <!-- div class=actions-container-->
+
+
+  <!-- Validation Message Display -->
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+
+    <!-- Validation Message Display and Submit Button -->
+    <div *ngIf="validationMessages">
+      <span *ngIf=" validationMessages.length > 0">
+        <div class="submission-message" *ngIf='!serverError && !approving'>
+          Please correct or dismiss the following errors and submit again:
+        </div>
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+            {{message.messageType}}</div>
+          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
+                target="_blank">{{link.text}}</a></span></div>
+          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+            (click)="dismissValidationMessage(i)">
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </div>
+      </span>
+
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()"
+          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
+          validationMessages.length > 0?'Dismiss All and ':''}}
+          Submit</button>
+      </div>
+    </div>
+    <!-- Validation Message and Submit Button END -->
+  </div> <!-- div submission-messages collapsed/expanded -->
+
+</div> <!-- div class=top-fixed -->
+
+
+<!-- Form Title and Authentication Details -->
+<div class="form-content-container mat-form-field-style" *ngIf="assay">
+  <div class="scrollable-container">
+
+    <div class="divcenter headerstyle margintop20px bordergray">
+      <!-- Display Message-->
+      <div class="message-style bordergray" *ngIf="message">
+        {{message}}
+      </div>
+
+      <div class="divflex margintop10px">
+
+        <div class="width650px font24px">
+          <b>{{title}}</b>
+          &nbsp;&nbsp;
+
+          <!-- Edit GSRS record button -->
+          <!--
+          <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            matTooltip='Edit GSRS In-vitro Pharmacology Record'>
+            <mat-icon svgIcon="edit"></mat-icon>
+          </a>&nbsp;&nbsp;
+          -->
+
+          <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
+            matTooltip='Export Json'>
+            <mat-icon svgIcon="get_app"></mat-icon>
+          </a>&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <div class="width50percent font11px margintop10px" *ngIf="assay && assay.id">
+          <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss
+          a'}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+        </div>
+      </div> <!-- class=divflex -->
+
+      <!-- Link to All Assay page -->
+      <!--
+      <div class="marginleft40px padtop15px">
+        <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
+          target="_blank" alt="View All Assays" matTooltip='View All Assays'><b>View All Assay Lists</b>
+        </a>&nbsp;&nbsp;&nbsp;
+      </div>
+      -->
+    </div> <!-- class=divcenter -->
+
+    <!-- ############################################################ -->
+    <!-- ASSAY DETAILS FORM BEGIN                                     -->
+    <!-- ************************************************************ -->
+    <div class="details-container">
+      <div class="width100percent">
+
+        <mat-card>
+
+          <mat-card-title>
+            <span class="colorblue font20px"><b></b></span>
+          </mat-card-title>
+
+          <mat-card-content class="marginright10px">
+
+            <div class="divflex">
+              <div class="font18px fontbold">
+                Total Summaries: {{assayList.length}}
+              </div>
+
+              <mat-form-field class="col-6-2">
+                <mat-label>Select Existing Assay Target Name</mat-label>
+                <mat-select [formControl]="existingAssayControl"
+                  (selectionChange)="selectionChangeAssay($event, index)">
+                  <mat-option *ngFor="let asy of existingAssayList; let index = index" [value]="index">
+                    ID:{{asy.id}}&nbsp;&nbsp;
+                    External Assay ID:{{asy.externalAssayId}}&nbsp;&nbsp;
+                    External Assay Source:{{asy.externalAssaySource}}&nbsp;&nbsp;
+                    Target Name:{{asy.targetName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              
+              <div class="font18px marginleft30px margintopneg10px">
+                <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
+                  (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
+                  <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>
+                </button>&nbsp;&nbsp;
+              </div>
+            </div>
+
+            <!-- Loop-->
+            <div class="divradius divshadow margintop20px" *ngFor="let summary of assayList; let index = index">
+
+              <div *ngFor="let sum of summary.invitroSummaries; let index = index">
+
+
+                <div class="divflex" style="vertical-align:top;">
+
+                  <div class="margintop10px width20px">
+                    <b>{{(index+1)}}</b>
+                  </div>
+
+                  <!-- FIRST COLUMN START -->
+                  <div>
+                    <div class="marginleft10px padtop10px related-substance">
+                      <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+                        eventCategory="substanceRelationshipRelatedSub"
+                        placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
+                        [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+                      </app-substance-selector>
+                    </div>
+                    <br>
+                  </div> <!-- FIRST COLUMN END -->
+
+                  <!-- SECOND COLUMN START -->
+                  <div class="width70percent marginleft20px">
+
+                    <div class="form-row margintop10px">
+
+                      <mat-form-field class="col-6-2">
+                        <mat-label>Select Existing Assay Target Name</mat-label>
+                        <mat-select [formControl]="existingAssayControl"
+                          (selectionChange)="selectionChangeAssay($event, index)">
+                          <mat-option *ngFor="let asy of existingAssayList; let index = index" [value]="index">
+                            ID:{{asy.id}}&nbsp;&nbsp;
+                            External Assay ID:{{asy.externalAssayId}}&nbsp;&nbsp;
+                            External Assay Source:{{asy.externalAssaySource}}&nbsp;&nbsp;
+                            Target Name:{{asy.targetName}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <div class="width200px">
+                        <span *ngIf="summary.targetName">
+                          <span class="font11px"><b>Selected Target Name:</b></span><br>
+                          {{summary.targetName}}
+                        </span>
+                      </div>
+
+                      <div class="width100px alignright">
+                        <span *ngIf="index == 0">
+                          <br>
+                          <mat-checkbox [checked]="false" (change)="setApplyAllData($event.checked) ">
+                            <span class="font11px">
+                              Apply to All</span>
+                          </mat-checkbox>
+                        </span>
+                      </div>
+
+                    </div> <!-- form-row -->
+
+                    <div class="form-row">
+                      <app-cv-input class="col-3-1" domain="RELATIONSHIP_TYPE" title="Relationship Type"
+                        name="relationshipType" [model]="summary.relationshipType"
+                        (valueChange)="sum.relationshipType = $event">
+                      </app-cv-input>
+
+                      <app-cv-input class="col-3-1" domain="INTERACTION_TYPE" title="Interaction Type"
+                        name="interactionType" [model]="summary.interactionType"
+                        (valueChange)="sum.interactionType = $event">
+                      </app-cv-input>
+
+                      <app-cv-input class="col-3-1" domain="QUALIFICATION" title="Result Type" name="resultType"
+                        [model]="summary.resultType" (valueChange)="summary.resultType = $event">
+                      </app-cv-input>
+
+                    </div> <!-- form-row-->
+
+                    <div class="form-row">
+
+                      <mat-form-field class="col-3-1">
+                        <input matInput placeholder="Result Value Average" [(ngModel)]="summary.resultValueAverage"
+                          name="resultValueAverage" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3-1-half">
+                        <input matInput placeholder="Result Value Low" [(ngModel)]="summary.resultValueLow"
+                          name="resultValueLow" />
+                      </mat-form-field>
+
+                      <mat-form-field class="col-3-1-half">
+                        <input matInput placeholder="Result Value High" [(ngModel)]="summary.resultValueHigh"
+                          name="resultValueHigh" />
+                      </mat-form-field>
+
+                      <app-cv-input class="col-3-1" domain="AMOUNT_UNIT" title="Result Value Units"
+                        name="resultValueUnits" [model]="summary.resultValueUnits"
+                        (valueChange)="summary.resultValueUnits = $event">
+                      </app-cv-input>
+
+                    </div> <!-- form-row -->
+
+                    <div class="form-row">
+                      <mat-form-field class="col-1">
+                        <textarea matInput placeholder="Comments" [(ngModel)]="summary.comments" name="comments"
+                          rows="1"></textarea>
+                      </mat-form-field>
+                    </div> <!-- form-row -->
+
+
+                  </div> <!-- width80percent -->
+                </div> <!-- divflex -->
+
+              </div> <!-- For Loop: Summaries -->
+
+            </div> <!-- For Loop -->
+
+          </mat-card-content>
+        </mat-card>
+        <br>
+
+      </div> <!-- div class=width100percent-->
+    </div> <!-- div class=details-container-->
+
+  </div> <!-- div class=scrollable-container-->
+</div> <!-- div class=form-content-container-->

@@ -1235,6 +1235,12 @@
           "display": "In-vitro Pharmacology Screening",
           "path": "invitro-pharm/register",
           "order": 240
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "In-vitro Pharmacology Summary",
+          "path": "invitro-pharm/summary/register",
+          "order": 260
         }
       ]
     },

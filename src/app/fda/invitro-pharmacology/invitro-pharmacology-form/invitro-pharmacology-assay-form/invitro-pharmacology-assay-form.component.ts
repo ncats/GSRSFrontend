@@ -51,6 +51,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   message = '';
 
   assaySetList: Array<any> = [];
+  existingAssaySetList: Array<string> = [];
 
   copy: string;
   serverError: boolean;
@@ -93,7 +94,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-
   ngOnInit() {
     setTimeout(() => {
 
@@ -104,6 +104,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       // Get Username and Admin details
       this.isAdmin = this.authService.hasRoles('admin');
       this.username = this.authService.getUser();
+
+      // Get All the Assay Sets for checkbox
+      this.getAllAssaySets();
 
       const routeSubscription = this.activatedRoute
         .params
@@ -118,10 +121,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
             }
           } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
             this.id = this.activatedRoute.snapshot.queryParams['copyId'];
-            if (this.id) {  //copy from existing Product
+            if (this.id) {  //copy from existing Assay
               this.titleService.setTitle(`Register In-vitro Pharmacology from Copy ` + this.id);
               this.title = 'Register New Invitro-Pharmacology Assay from Copy Assay Id ' + this.id;
-              // this.getProductDetails('copy');
             }
           } else if (this.activatedRoute.snapshot.queryParams['action']) {
             let actionParam = this.activatedRoute.snapshot.queryParams['action'];
@@ -151,10 +153,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
           } // else Register
         });
       this.subscriptions.push(routeSubscription);
-
-      // Get Assay Set vocabulary terms
-      this.getVocabularies();
-      this.loadAssaySet();
 
     }, 600);
   }
@@ -192,6 +190,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     }
   }
 
+  /*
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('INVITRO_ASSAY_SET').subscribe(response => {
       let vocabulary = response['INVITRO_ASSAY_SET'].dictionary;
@@ -208,6 +207,24 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       }
     }, error => {
     });
+  }
+  */
+
+  getAllAssaySets() {
+    const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssaySets().subscribe(response => {
+      if (response) {
+        this.existingAssaySetList = response;
+      } else {
+        this.handleProductRetrivalError();
+      }
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.handleProductRetrivalError();
+    });
+    this.subscriptions.push(getInvitroSubscribe);
   }
 
   loadAssaySet() {

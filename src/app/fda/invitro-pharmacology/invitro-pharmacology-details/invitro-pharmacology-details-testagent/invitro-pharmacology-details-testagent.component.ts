@@ -244,9 +244,9 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             }
 
             /* Invitro Assay Summary Object exists */
-            if (screening.invitroSummary) {
+          /*  if (screening.invitroSummary) {
               assaySummary.relationshipType = screening.invitroSummary.relationshipType;
-            }
+            } */
 
             /* LOOP: Invitro Assay Control exists */
             if (screening.invitroControls.length > 0) {

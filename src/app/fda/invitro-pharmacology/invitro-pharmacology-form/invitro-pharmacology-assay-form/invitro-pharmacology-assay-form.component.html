@@ -77,13 +77,13 @@
 <div class="form-content-container mat-form-field-style" *ngIf="assay">
   <div class="scrollable-container">
 
-    <div class="divcenter">
+    <div class="divcenter headerstyle margintop20px bordergray">
       <!-- Display Message-->
       <div class="message-style bordergray" *ngIf="message">
         {{message}}
       </div>
 
-      <div class="divflex margintop20px">
+      <div class="divflex margintop10px">
 
         <div class="width650px font24px">
           <b>{{title}}</b>
@@ -97,18 +97,18 @@
           </a>&nbsp;&nbsp;
           -->
 
-          <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
+          <a [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
             matTooltip='Export Json'>
-            <mat-icon svgIcon="get_app"></mat-icon>
+            <mat-icon svgIcon="get_app" [ngStyle]="{'color':'white'}"></mat-icon>
           </a>&nbsp;&nbsp;&nbsp;
         </div>
 
-        <div class="width50percent font11px margintop10px" *ngIf="assay && assay.id">
-          <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss
-          a'}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+        <div class="width40percent margintop10px marginleft30px font11px colorwhite" *ngIf="assay && assay.id">
+          <span>Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
+          <span>Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss
+          a'}}<br>
+          <span class="colorwhite">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
+          <span class="colorwhite">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
         </div>
       </div> <!-- class=divflex -->
 
@@ -127,31 +127,16 @@
     <!-- ASSAY DETAILS FORM BEGIN                                     -->
     <!-- ************************************************************ -->
     <div class="details-container">
-
-      <div class="margintop20px width100percent">
+      <div class="width100percent">
 
         <mat-card class="bordergray">
 
+          <!--
           <mat-card-title>
             <span class="colorblue font20px"><b>Assay Information</b></span>
           </mat-card-title>
-
+          -->
           <mat-card-content class="marginright10px">
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Assay Set:&nbsp;<span class="colorred">*</span></mat-label>
-              </div>
-              <div class="fieldvalue">
-                <span *ngFor="let data of assaySetList; let i=index">
-                  <mat-checkbox class="font13px" #checkBox [value]="data.value" [(ngModel)]="data.checked"
-                    name="data.value" (change)="setSelectedAssaySet(data, checkBox)">
-                    {{data.value}}
-                  </mat-checkbox>
-                  &nbsp;
-                </span>
-              </div>
-            </div>
 
             <div class="form-row" *ngIf="assay && assay.id">
               <div class="fieldKey">
@@ -166,11 +151,17 @@
 
             <div class="form-row">
               <div class="fieldKey">
-                <mat-label>External Assay ID:&nbsp;<span class="colorred">*</span></mat-label>
+                <mat-label>Assay Set:&nbsp;<span class="colorred">*</span></mat-label>
               </div>
-              <mat-form-field class="fieldvalue">
-                <input matInput placeholder="" [(ngModel)]="assay.externalAssayId" name="externalAssayId" />
-              </mat-form-field>
+              <div class="fieldvalue padtop5px">
+                <span *ngFor="let data of existingAssaySetList; let i=index">
+                  <mat-checkbox class="font13px" #checkBox [value]="data.assaySet"
+                    name="data.assaySet" [checked]="true" (change)="setSelectedAssaySet(data, checkBox)">
+                    {{data.assaySet}}
+                  </mat-checkbox>
+                  &nbsp;
+                </span>
+              </div>
             </div>
 
             <div class="form-row">
@@ -179,6 +170,15 @@
               </div>
               <mat-form-field class="fieldvalue">
                 <input matInput placeholder="" [(ngModel)]="assay.externalAssaySource" name="externalAssaySource" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>External Assay ID:&nbsp;<span class="colorred">*</span></mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.externalAssayId" name="externalAssayId" />
               </mat-form-field>
             </div>
 
@@ -262,6 +262,15 @@
               </div>
               <app-cv-input class="fieldvalue" domain="INVITRO_DETECTION_METHOD" title="" name="detectionMethod"
                 [model]="assay.detectionMethod" (valueChange)="assay.detectionMethod = $event">
+              </app-cv-input>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Public Domain:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="PUBLIC_DOMAIN" title="" name="publicDomain"
+                [model]="assay.publicDomain" (valueChange)="assay.publicDomain = $event">
               </app-cv-input>
             </div>
 
@@ -367,6 +376,25 @@
               </mat-form-field>
             </div>
 
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Standard Ligand/Sub Concentration:</mat-label>
+              </div>
+              <mat-form-field class="fieldvalue">
+                <input matInput placeholder="" [(ngModel)]="assay.standardLigandSubstrateConcentration"
+                  name="standardLigandSubstrateConcentration" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="fieldKey">
+                <mat-label>Standard Ligand/Sub Concent Units:</mat-label>
+              </div>
+              <app-cv-input class="fieldvalue" domain="AMOUNT_UNIT" title="" name="standardLigandSubstrateConcentrationUnits"
+                [model]="assay.standardLigandSubstrateConcentrationUnits" (valueChange)="assay.standardLigandSubstrateConcentrationUnits = $event">
+              </app-cv-input>
+            </div>
+
             <br>
           </mat-card-content>
         </mat-card>
@@ -374,7 +402,7 @@
       </div> <!-- *ngIf=assay -->
 
     </div> <!-- class=details-container -->
-    <br><br><br><br>
+    <br><br><br>
   </div>
 </div> <!-- class=form-content-container -->
 
