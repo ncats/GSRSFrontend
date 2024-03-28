@@ -52,7 +52,7 @@
     "compression": "1.7.3",
     "core-js": "2.5.4",
     "cronstrue": "1.94.0",
-    "defiant.js": "2.2.6",
+    "defiant.js": "2.2.8",
     "file-select": "file:dist/file-select/file-select-0.0.1.tgz",
     "hammerjs": "2.0.8",
     "helmet": "3.21.2",
