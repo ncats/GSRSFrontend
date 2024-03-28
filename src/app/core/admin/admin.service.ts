@@ -292,6 +292,7 @@ export class AdminService extends BaseHttpService {
             }
             if (scrubber) {
               toput.processingActions[0].parameters['scrubberSettings'] = scrubber;
+              toput.processingActions[0]["processingActionName"] = "Scrub";
             }
          
           return this.http.put< any >(url, toput);
@@ -316,7 +317,8 @@ export class AdminService extends BaseHttpService {
                 putParam
               ]
             }
-         
+
+            
           return this.http.put< any >(url, toput);
 
         }

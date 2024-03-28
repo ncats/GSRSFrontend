@@ -172,8 +172,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
     setTimeout(() => {
        this.ketcher = ketcher;
-       this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
+       if (this.structureEditor === 'ketcher'){
+
+       this.editor = new EditorImplementation(this.ketcher);
        this.editorOnLoad.emit(this.editor);
+       }
        
     }, 1000);
 
@@ -183,11 +186,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     
     if (this.structureEditor === 'ketcher' ) {
       this.structureEditor = 'jsdraw';
-      this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
+      this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
     } else {
       this.structureEditor = 'ketcher';
-      this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
+      this.editor = new EditorImplementation(this.ketcher, null);
        this.editorOnLoad.emit(this.editor);
        console.log(this.jsdraw.options);
     }
@@ -196,10 +199,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   jsDrawOnLoad(jsdraw: JSDraw): void {
     console.log('loaded');
     this.jsdraw = jsdraw;
-   // if (this.structureEditor === 'jsdraw'){
-      this.editor = new EditorImplementation(this.ketcher, this.jsdraw);
+    if (this.structureEditor === 'jsdraw'){
+      this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
-  //  }
+    }
     
   }
 
