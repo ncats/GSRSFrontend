@@ -17,6 +17,8 @@ import { RouterModule } from '@angular/router';
 import { DecodeUriPipe } from '@gsrs-core/auth/user-downloads/download-monitor/decodeURI.pipe';
 import { FileSizePipe } from '@gsrs-core/auth/user-downloads/download-monitor/fileSize.pipe';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SessionExpirationComponent } from './session-expiration/session-expiration.component';
+import { SessionExpirationDialogComponent } from './session-expiration/session-expiration-dialog/session-expiration-dialog.component';
 
 @NgModule({
   imports: [
@@ -39,13 +41,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UserProfileComponent,
     UserDownloadsComponent,
     DownloadMonitorComponent,
+    SessionExpirationComponent,
+    SessionExpirationDialogComponent,
     DecodeUriPipe,
     FileSizePipe
+  ],
+  entryComponents: [
+    SessionExpirationDialogComponent
   ],
   exports: [
     LoginComponent,
     UserProfileComponent,
     DownloadMonitorComponent,
+    SessionExpirationComponent,
     UserDownloadsComponent
   ]
 })

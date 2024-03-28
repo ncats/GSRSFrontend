@@ -15,6 +15,7 @@ export interface SubstanceFormDefinition {
     status?: string;
     approvalID?: string;
     _name?: string;
+    _name_html?: string;
     _nameHTML?: string;
     relationships?: Array<SubstanceRelationship>;
     tags?: Array<string>;
@@ -26,6 +27,7 @@ export interface SubstanceFormResults {
     valid?: boolean;
     validationMessages?: Array<ValidationMessage>;
     serverError?: any;
+    fileUrl?: string;	// For precisionFDA
 }
 
 export interface ValidationResults {

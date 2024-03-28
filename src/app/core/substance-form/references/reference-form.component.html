@@ -40,7 +40,7 @@
           <mat-icon svgIcon="delete_forever"></mat-icon>
         </button>
       </div>
-      <div *ngIf="!reference.uploadedFile">
+      <div *ngIf="!(disableReferenceDocumentUpload || reference.uploadedFile)">
         <button mat-button ncatsFileSelect (selectedFile)="fileSelected($event)">
           <span>Upload Document</span>&nbsp;
           <mat-icon svgIcon="cloud_upload"></mat-icon>

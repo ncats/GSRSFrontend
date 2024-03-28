@@ -1,0 +1,106 @@
+<mat-toolbar class="pfda-toolbar">
+  <div class="logo-container">
+  <span class="pfda-logo">
+    <a [href]="pfdaBaseUrl" aria-label="precisionFDA Home">
+      <img [src]="logoSrcPath" alt="precisionFDA Home" />
+    </a>
+  </span>
+  </div>
+
+  <a [href]="pfdaBaseUrl + 'home'" aria-label="My Home">
+    <div class="pfda-toolbar-button">
+      <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_home"></mat-icon>
+      <!-- <img class="pfda-toolbar-button-icon" [src]="homeIconPath"> -->
+      <div class="pfda-toolbar-button-title">Back Home</div>
+    </div>
+  </a>
+
+  <div class="pfda-toolbar-spacer"></div>
+
+  <a routerLink="/home" aria-label ="GSRS Home">
+    <div class="pfda-toolbar-button active">
+      <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_gsrs"></mat-icon>
+      <div class="pfda-toolbar-button-title">GSRS</div>
+    </div>
+  </a>
+
+  <span aria-label ="Register New Substance" title="Register New Substance"
+        *ngIf="registerItems !== undefined && registerItems.length > 0">
+    <div class="pfda-toolbar-button" [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()" style="cursor: pointer">
+      <mat-icon class="pfda-toolbar-button-icon" svgIcon="outline-description"></mat-icon>
+      <div class="pfda-toolbar-button-title">New Substance</div>
+    </div>
+    <mat-menu #nav="matMenu" (closed)="removeZindex()" class = "reg-a">
+      <div *ngFor="let navItem of registerItems">
+        <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
+          {{navItem.display}}
+        </a>
+      </div>
+    </mat-menu>
+  </span>
+
+  <span class="middle-fill"></span>
+
+  <app-substance-text-search class="top-search" [searchValue]="searchValue"
+    (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
+    (closed)="removeZindex()">
+  </app-substance-text-search>
+
+  <a href="mailto:precisionfda-support@dnanexus.com">
+    <div class="pfda-toolbar-button">
+      <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_support"></mat-icon>
+      <div class="pfda-toolbar-button-title">Support</div>
+    </div>
+  </a>
+
+  <a [href]="pfdaBaseUrl + 'docs'">
+    <div class="pfda-toolbar-button">
+      <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_questionmark"></mat-icon>
+      <div class="pfda-toolbar-button-title">Getting Started</div>
+    </div>
+  </a>
+
+  <div>
+    <a class="pfda-user-button" [href]="pfdaBaseUrl + 'login'" *ngIf="!auth">
+      <div class="pfda-toolbar-button">
+        <mat-icon class="pfda-toolbar-button-icon" svgIcon="account_circle"></mat-icon>
+        <div class="pfda-toolbar-button-title">Login</div>
+      </div>
+    </a>
+
+    <a class="pfda-user-button" [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip="user menu" *ngIf="auth">
+      <div class="pfda-toolbar-button">
+        <mat-icon class="pfda-toolbar-button-icon" svgIcon="account_circle"></mat-icon>
+        <div class="pfda-toolbar-button-title" *ngIf="auth && auth.identifier">{{auth.identifier}}</div>
+      </div>
+    </a>
+    <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
+      <a mat-menu-item [href]="pfdaBaseUrl + 'profile'">
+        <span>Profile</span>
+      </a>
+      <!-- <a mat-menu-item [href]="pfdaBaseUrl + '/users/${user!.dxuser}'">
+        <span>Public Profile</span>
+      </a> -->
+      <a mat-menu-item routerLink="/user-downloads">
+        <span>User Downloads</span>
+      </a>
+      <a mat-menu-item [href]="pfdaBaseUrl + 'licenses'">
+        <span>Manage Licenses</span>
+      </a>
+      <a mat-menu-item [href]="pfdaBaseUrl + 'account/notifications'">
+        <span>Notification Settings</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-menu-item [href]="pfdaBaseUrl + 'about'">
+        <span>About</span>
+      </a>
+      <a mat-menu-item [href]="pfdaBaseUrl + 'guidelines'">
+        <span>Guidelines</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-menu-item [href]="pfdaBaseUrl + 'ginas/app/logout'">
+        <span>Log Out</span>
+      </a>
+    </mat-menu>
+  </div>
+</mat-toolbar>

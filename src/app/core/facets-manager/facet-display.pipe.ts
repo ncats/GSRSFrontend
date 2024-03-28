@@ -46,6 +46,18 @@ export class FacetDisplayPipe implements PipeTransform {
         }
       }
     }
+    if(this.configService && this.configService.configData.facetDisplay) {
+      let returned = name;
+      this.configService.configData.facetDisplay.forEach(facet => {
+        if (name === facet.value) {
+          returned = facet.display;
+          return facet.display;
+        }
+      });
+      if (returned !== name) {
+        return returned;
+      }
+    }
     if (name.toLowerCase() === 'substancestereochemistry') {
       return 'Stereochemistry';
     }
