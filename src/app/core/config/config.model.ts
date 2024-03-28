@@ -62,6 +62,12 @@ export interface Config {
     userProfile?: any;
     stagingArea?: StagingAreaSettings;
     privacyStatement: string;
+    CVDisplayOrder ?: {
+            [name: string]: Array<string>;
+    };
+    codeSystemMapping?: {
+        [code: string]: string;
+    };
     structureEditor?: 'ketcher' | 'jsdraw';
 }
 

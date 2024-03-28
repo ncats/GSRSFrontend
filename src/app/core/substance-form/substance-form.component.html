@@ -117,7 +117,7 @@
       </div>
     </div>
     <span class="middle-fill"></span>
-    <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate and Submit</button>
+    <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate for Submission</button>
     <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
       *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
       (click)="validate('approval')">Approve</button>
