@@ -44,9 +44,9 @@ export class AmountFormComponent implements OnInit {
         console.log(value);
         if(value === null) {
           this.averageControl.setValue('');
-        } else if(value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
+        } else if(value && value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
           this.averageControl.setValue('');
-        } else if(value.toString().match(/^[-E0-9,.]*$/)) { // what we want
+        } else if(value && value.toString().match(/^[-E0-9,.]*$/)) { // what we want
         } else {
           this.averageControl.setValue('');
         }
@@ -58,9 +58,9 @@ export class AmountFormComponent implements OnInit {
 
         if(value === null) {
           this.lowControl.setValue('');
-        } else if(value.toString().length === 1 && value.match(/[a-z]/i)) {
+        } else if(value && value.toString().length === 1 && value.match(/[a-z]/i)) {
           this.lowControl.setValue('');
-        } else if(value.toString().match(/^[-E0-9,.]*$/)) { // what we want
+        } else if(value && value.toString().match(/^[-E0-9,.]*$/)) { // what we want
         } else {
           this.lowControl.setValue('');
         }
@@ -72,9 +72,9 @@ export class AmountFormComponent implements OnInit {
 
         if(value === null) {
           this.highControl.setValue('');
-        } else if(value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
+        } else if(value && value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
           this.highControl.setValue('');
-        } else if(value.toString().match(/^[-E0-9,.]*$/)) { // what we want
+        } else if(value && value.toString().match(/^[-E0-9,.]*$/)) { // what we want
         } else {
           this.highControl.setValue('');
         }
@@ -84,9 +84,9 @@ export class AmountFormComponent implements OnInit {
       this.lowLimitControl.valueChanges.subscribe(value => {
         if(value === null) {
           this.lowLimitControl.setValue('');
-        } else if(value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
+        } else if(value && value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
           this.lowLimitControl.setValue('');
-        } else if(value.match(/^[-E0-9,.]*$/)) { // what we want
+        } else if(value && value.match(/^[-E0-9,.]*$/)) { // what we want
         } else {
           this.lowLimitControl.setValue('');
         }
@@ -96,9 +96,9 @@ export class AmountFormComponent implements OnInit {
       this.highLimitControl.valueChanges.subscribe(value => {
         if(value === null) {
           this.highLimitControl.setValue('');
-        } else if(value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
+        } else if(value && value.toString().length === 1 && value.toString().match(/[a-z]/i)) {
           this.highLimitControl.setValue('');
-        } else if(value.toString().match(/^[-E0-9,.]*$/)) { // what we want
+        } else if(value && value.toString().match(/^[-E0-9,.]*$/)) { // what we want
         } else {
           this.highLimitControl.setValue('');
         }
