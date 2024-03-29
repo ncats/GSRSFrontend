@@ -29,7 +29,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
-import { InvitroAssayInformation, InvitroAssayScreening, InvitroReference, InvitroTestAgent, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssayScreening, InvitroLaboratory, InvitroReference, InvitroSponsor, InvitroTestAgent, ValidationMessage } from '../model/invitro-pharmacology.model';
 //import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
@@ -48,6 +48,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   existingAssayControl = new FormControl();
   existingAssaySetControl = new FormControl();
   existingReferenceControl = new FormControl();
+  existingSponsorControl = new FormControl();
+  existingLaboratoryControl = new FormControl();
   existingTestAgentControl = new FormControl();
 
   // Suggestions/TypeAhead/Dropdown
@@ -55,13 +57,20 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   existingAssaysByAssaySetList: Array<InvitroAssayInformation> = [];
   existingAssaySetList: Array<any> = [];
   existingReferenceList: Array<InvitroReference> = [];
+  existingSponsorList: Array<InvitroSponsor> = [];
+  existingLaboratoryList: Array<InvitroLaboratory> = [];
   existingTestAgentList: Array<InvitroTestAgent> = [];
 
   selectedAssaySet = '';
 
+  // Selection
+  radioSelectedReference = 'selectedExistingReference';
+  radioSelectedSponsor = 'selectedExistingSponsor';
+
   assayMessage = '';
   referenceMessage = '';
 
+  showMoreLessFields = true;
   screeningDetails = '';
 
   showSubmissionMessages = false;
@@ -196,8 +205,14 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     // Get All Assay Sets
     this.getAllAssaySets();
 
-    // Get All Existing References in Suggestions/TypeAhead
-    this.loadReferencesTypeAhead();
+    // Get All Existing References for Dropdown
+    this.getExistingReferences();
+
+    // Get All Existing Sponsors for Dropdown
+    this.getExistingSponsors();
+
+    // Get All Existing Laboratories for Dropdown
+    this.getExistingLaboratories();
 
     // Get All Existing Test Agents in Suggestions/TypeAhead
     this.loadTestAgentsTypeAhead();
@@ -311,11 +326,44 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(getInvitroSubscribe);
   }
 
-
-  loadReferencesTypeAhead() {
+  getExistingReferences() {
     const getInvitroSubscribe = this.invitroPharmacologyService.getAllReferences().subscribe(response => {
       if (response) {
         this.existingReferenceList = response;
+      } else {
+        this.handleProductRetrivalError();
+      }
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.handleProductRetrivalError();
+    });
+    this.subscriptions.push(getInvitroSubscribe);
+  }
+
+  getExistingSponsors() {
+    const getInvitroSubscribe = this.invitroPharmacologyService.getAllSponsors().subscribe(response => {
+      if (response) {
+        this.existingSponsorList = response;
+      } else {
+        this.handleProductRetrivalError();
+      }
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }, error => {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.handleProductRetrivalError();
+    });
+    this.subscriptions.push(getInvitroSubscribe);
+  }
+
+  getExistingLaboratories() {
+    const getInvitroSubscribe = this.invitroPharmacologyService.getAllLaboratories().subscribe(response => {
+      if (response) {
+        this.existingLaboratoryList = response;
       } else {
         this.handleProductRetrivalError();
       }
@@ -442,7 +490,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     }, 5000);
   }
 
-  setData(){
+  setData() {
 
   }
 
@@ -498,6 +546,10 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   }
 
   addNewReference() {
+
+  }
+
+  addNewControl() {
 
   }
 
@@ -662,11 +714,30 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   }
 
+  toggleShowMoreLessFields() {
+    this.showMoreLessFields = !this.showMoreLessFields;
+  }
+
+  changeSelectionRadioReference(event) {
+    this.radioSelectedReference = event.value;
+  }
+
+  changeSelectionRadioSponsor(event) {
+    this.radioSelectedSponsor = event.value;
+  }
+
+  selectionChangeExistingLaboratory() {
+
+  }
+
+  copyAssaySummaryRow() {
+
+  }
+
   setApplyAllData(checkBoxValue: any): void {
     if (checkBoxValue === true) {
       let indexFirstAssayScreening = this.existingAssaysByAssaySetList[0].invitroAssayScreenings.length - 1;
       this.existingAssaysByAssaySetList.forEach((assay, indexAssay) => {
-        console.log("AAAA " + indexAssay);
         if (indexAssay != 0) {
 
           let indexScreening = assay.invitroAssayScreenings.length - 1;

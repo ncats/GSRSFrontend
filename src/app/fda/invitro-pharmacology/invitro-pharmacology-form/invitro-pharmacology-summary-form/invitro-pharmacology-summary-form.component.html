@@ -101,7 +101,7 @@
 
           <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
             matTooltip='Export Json'>
-            <mat-icon svgIcon="get_app"></mat-icon>
+            <mat-icon svgIcon="get_app" [ngStyle]="{'color':'white'}"></mat-icon>
           </a>&nbsp;&nbsp;&nbsp;
         </div>
 
@@ -143,6 +143,13 @@
                 Total Summaries: {{assayList.length}}
               </div>
 
+              <div class="font18px marginleft30px margintopneg10px">
+                <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
+                  (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
+                  <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>
+                </button>&nbsp;&nbsp;
+              </div>
+
               <mat-form-field class="col-6-2">
                 <mat-label>Select Existing Assay Target Name</mat-label>
                 <mat-select [formControl]="existingAssayControl"
@@ -156,14 +163,8 @@
                 </mat-select>
               </mat-form-field>
 
-              
-              <div class="font18px marginleft30px margintopneg10px">
-                <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
-                  (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
-                  <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>
-                </button>&nbsp;&nbsp;
-              </div>
             </div>
+
 
             <!-- Loop-->
             <div class="divradius divshadow margintop20px" *ngFor="let summary of assayList; let index = index">

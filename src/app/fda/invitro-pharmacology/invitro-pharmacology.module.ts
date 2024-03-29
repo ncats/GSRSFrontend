@@ -22,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -141,6 +142,7 @@ const invitroRoutes: Routes = [
     MatButtonToggleModule,
     MatTooltipModule,
     MatTabsModule,
+    MatRadioModule,
     MatBottomSheetModule,
     MatProgressSpinnerModule,
     MatStepperModule,

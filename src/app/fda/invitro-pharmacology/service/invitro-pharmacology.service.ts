@@ -159,7 +159,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       //Delete the Screening Data Object, show only Assay data/Object
       delete this.assay.invitroAssayScreenings;
     } else {
-      const newInvitroAssayInformation: InvitroAssayInformation = {};
+      const newInvitroAssayInformation: InvitroAssayInformation = {invitroAssaySets: []};
       this.assay = newInvitroAssayInformation;
     }
   }
@@ -250,6 +250,26 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   getAllReferences(): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allReferences';
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAllSponsors(): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allSponsors';
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAllLaboratories(): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allLaboratories';
     return this.http.get<any>(url)
       .pipe(
         map(result => {
