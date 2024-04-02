@@ -660,7 +660,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   regenRefs(): void {
     this.substanceFormService.referenceScrub();
     this.feature = undefined;
-  }ngOnDestroy(): void {
+  }
+  ngOnDestroy(): void {
     // this.substanceFormService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
