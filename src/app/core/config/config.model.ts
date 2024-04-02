@@ -69,6 +69,8 @@ export interface Config {
         [code: string]: string;
     };
     structureEditor?: 'ketcher' | 'jsdraw';
+    nameFormPageSizeOptions?: Array<number>;
+    nameFormPageSizeDefault?: number;
 }
 
 export interface StagingAreaSettings {

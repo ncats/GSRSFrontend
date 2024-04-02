@@ -90,7 +90,6 @@ export class CvInputComponent implements OnInit, OnDestroy {
       vocab = this.vocabulary;
     }
     let vocabName = this.vocabName;
-    console.log(this.key);
     if(this.key && this.key !== '') {
       // wrong format, ignore for now
     }

@@ -24,6 +24,7 @@ export class SubstanceFormNamesCardComponent
   showMore = false;
   appId: string;
   standardizeButton = false;
+  pageSizeOptions = [5, 10, 25, 100];
 
   constructor(
     private substanceFormNamesService: SubstanceFormNamesService,
@@ -41,6 +42,15 @@ export class SubstanceFormNamesCardComponent
     this.menuLabelUpdate.emit('Names');
     this.appId = this.configService.environment.appId;
     this.standardizeButton = this.configService.configData.showNameStandardizeButton || false;
+    console.log(this.configService.configData);
+    if (this.configService && this.configService.configData && this.configService.configData.nameFormPageSizeOptions) {
+        this.pageSizeOptions = this.configService.configData.nameFormPageSizeOptions;
+        console.log('set');
+    }
+    if (this.configService && this.configService.configData && this.configService.configData.nameFormPageSizeDefault) {
+      this.pageSize = this.configService.configData.nameFormPageSizeDefault;
+      console.log('set2');
+    }
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
       //  this.canAddItemUpdate.emit(false);
