@@ -632,6 +632,8 @@ export class SubstanceFormService implements OnDestroy {
       lastEdited: this.privateSubstance.lastEdited,
       lastEditedBy: this.privateSubstance.lastEditedBy,
       _name: this.privateSubstance._name,
+      _name_html: this.privateSubstance._nameHTML,
+
       tags: this.privateSubstance.tags
     };
     if (this.privateSubstance.status) {
@@ -1633,6 +1635,12 @@ export class SubstanceFormService implements OnDestroy {
         } else if (this.privateSubstance.substanceClass === 'mixture') {
           this.substanceSubunitsEmitter.next(this.privateSubstance.mixture.components);
         }
+
+        // For precisionFDA
+        if (substance.fileUrl) {
+          results.fileUrl = substance.fileUrl;
+        }
+
         this.substanceChangeReasonEmitter.next(this.privateSubstance.changeReason);
         this.substanceService.getSubstanceDetails(results.uuid).subscribe(resp => {
           this.privateSubstance = resp;

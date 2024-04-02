@@ -25,7 +25,6 @@
     "build:fda:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --configuration=fda.prod && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "build:gsrs:pre-prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.pre-prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "build:gsrs:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
-    "build:cbg:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/gsrs/app/beta/ --aot=true --configuration=cbg.prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "test": "ng test",
     "lint": "ng lint",
     "tslint": "tslint",
@@ -70,10 +69,8 @@
     "web-animations-js": "2.3.2",
     "zone.js": "0.11.4",
     "z-schema": "5.0.4",
-    "jexl": "2.3.0"
-
-
-
+    "jexl": "2.3.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "13.2.1",

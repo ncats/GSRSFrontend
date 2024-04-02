@@ -1,0 +1,12 @@
+<h2 mat-dialog-title class="dialog-title">
+  {{externalSiteWarning.dialogTitle}}
+</h2>
+<div mat-dialog-content>
+  {{externalSiteWarning.dialogMessage}}
+</div>
+<div class="dialog-actions flex-row" mat-dialog-actions>
+  <mat-checkbox class="dialog-checkbox" [(ngModel)]="dontAskAgain">Don't Ask Again</mat-checkbox>
+  <span class="middle-fill"></span>
+  <button mat-flat-button color="primary" (click)="cancelDialog()">No</button>
+  <button mat-flat-button color="primary" (click)="acceptDialog()">Yes</button>
+</div>

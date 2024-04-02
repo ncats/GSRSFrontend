@@ -4,8 +4,8 @@ import { JSDraw } from './jsdraw.model';
 
 @Component({
   selector: 'ncats-jsdraw-wrapper',
-  template: `<div [id]="randomId" dataformat="molfile"></div>`,
-  styles: []
+  template: `<div id="randomId" class="jsdrawRandom" dataformat="molfile"  style="width:968px"></div>`,
+  styles: ['::ng-deep .jsdrawRandom { width:968px !important}; ']
 })
 export class JsdrawWrapperComponent implements AfterViewInit {
   randomId: string;

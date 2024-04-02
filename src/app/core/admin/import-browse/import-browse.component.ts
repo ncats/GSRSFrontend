@@ -35,7 +35,6 @@ import { Title } from '@angular/platform-browser';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { FormControl } from '@angular/forms';
 import { WildcardService } from '@gsrs-core/utils/wildcard.service';
-import { I } from '@angular/cdk/keycodes';
 import { SubstanceDetail, SubstanceName, SubstanceCode, SubstanceService } from '@gsrs-core/substance';
 import { ConfigService } from '@gsrs-core/config';
 import { SubBrowseEmitterService } from '@gsrs-core/substances-browse/sub-browse-emitter.service';
@@ -43,12 +42,12 @@ import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService, AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AuthService } from '@gsrs-core/auth';
-import { environment } from '@environment/environment.cbg.prod';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-action-dialog/bulk-action-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
+import {Environment} from "@environment/environment.model";
 
 @Component({
   selector: 'app-import-browse',
@@ -73,6 +72,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public exactMatchSubstances: Array<SubstanceDetail>;
 
+  environment: Environment;
   searchOnIdentifiers: boolean;
   searchEntity: string;
   pageIndex: number;
@@ -201,7 +201,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.bulkList[recordId] = {"checked": checked, "substance": event.substance};
     }
-    
+
   }
 
   bulkActionDialog() {
@@ -219,7 +219,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           this.bulkList = response;
         }
         this.overlayContainer.style.zIndex = null;
-       
+
       });
   }
 
@@ -235,7 +235,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           let added = 0;
           if (pagingResponse.content){
 
-          
+
       pagingResponse.content.forEach(record => {
         if ( record && record.id) {
           if (this.bulkList[record.id]) {
@@ -276,11 +276,11 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           else {
             this.bulkList[record.id] = {"checked": true, "name": record.name, "id": record.id};
           }
-        
+
       });
     }
-    
-    
+
+
   }
 
   deselectAll() {
@@ -299,14 +299,14 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
       this.overlayContainer.style.zIndex = '1002';
-  
+
       dialogref.afterClosed().subscribe(result => {
         this.overlayContainer.style.zIndex = null;
-  
+
         if(result) {
           this.scrubberModel = result;
         }
-        
+
       });
   }
 
@@ -317,7 +317,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.adminService.getImportScrubberSchema().subscribe(response => {
       this.scrubberSchema = response;
     });
-     
+
     this.gaService.sendPageView('Staging Area');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
@@ -370,6 +370,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getStagingFacets );
 
+    this.environment = this.configService.environment;
+
     this.subscriptions.push(authSubscription);
     this.isComponentInit = true;
     this.loadComponent();
@@ -386,10 +388,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.adminService.GetStagedRecord(record.recordId).subscribe( resp => {
           this.records.push(resp);
           this.idMapping[resp.uuid] = record.recordId;
-          
+
         });
       });
-    }); 
+    });
   }
 
   setUpPrivateSearchTerm() {
@@ -589,7 +591,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getRecord(id: string): Observable<any> { 
+  getRecord(id: string): Observable<any> {
     let subject = new Subject<string>();
     let ids = [];
     let sources = [];
@@ -607,7 +609,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
             }
           }
-          
+
         });
       });
       let items = [];
@@ -712,7 +714,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
             this.lastPage = Math.floor(this.totalSubstances / this.pageSize + 1);
           }
 
-          
+
           pagingResponse.content.forEach(entry => {
             this.getRecord(entry._metadata.recordId).subscribe(response => {
               this.substances.push(response);
@@ -727,7 +729,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
           this.matchTypes = [];
           this.narrowSearchSuggestionsCount = 0;
           this.loadingService.setLoading(false);
-         
+
         //  this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API call');
@@ -770,7 +772,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
         }, () => {
           subscription.unsubscribe();
-       /*  
+       /*
           this.substances.forEach(substance => {
             this.setSubstanceNames(substance.uuid);
             this.setSubstanceCodes(substance.uuid);
@@ -888,11 +890,11 @@ searchTermOkforBeginsWithSearch(): boolean {
 
 
   populateUrlQueryParameters(): void {
-    
+
   }
 
   editAdvancedSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'advanced search term' :
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'advanced search term' :
       `${this.privateSearchTerm}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
     // ** BEGIN: Store in Local Storage for Advanced Search
@@ -946,7 +948,7 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   editStructureSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'structure search term' :
       `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
 
@@ -966,7 +968,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearStructureSearch(): void {
 
-    const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'structure search term' :
       `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-structure-search', eventLabel);
 
@@ -981,7 +983,7 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   editSequenceSearh(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'sequence search term' :
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'sequence search term' :
       `${this.privateSequenceSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}-${this.privateSearchSeqType}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-sequence-search', eventLabel);
 
@@ -1001,7 +1003,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearSequenceSearch(): void {
 
-    const eventLabel = environment.isAnalyticsPrivate ? 'sequence search term' :
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'sequence search term' :
       `${this.privateSequenceSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}-${this.privateSearchSeqType}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-sequence-search', eventLabel);
 
@@ -1017,7 +1019,7 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   editBulkSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'bulk search term' :
       `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-bulk-search', eventLabel);
 
@@ -1033,7 +1035,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearBulkSearch(): void {
 
-    const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'bulk search term' :
     `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
 
@@ -1052,7 +1054,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   clearSearch(): void {
 
-    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-search', eventLabel);
 
     this.privateSearchTerm = '';
@@ -1173,7 +1175,7 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   openImageModal(substance: any): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
+    const eventLabel = this.environment.isAnalyticsPrivate ? 'substance' : substance._name;
         this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;

@@ -34,6 +34,11 @@ export interface Config {
     advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
+    customToolbarComponent?: string;
+    sessionExpirationWarning?: SessionExpirationWarning;
+    disableReferenceDocumentUpload?: boolean;
+    externalSiteWarning?: ExternalSiteWarning;
+    pfdaBaseUrl?: string;
     homeDynamicLinks?: Array<any>;
     registrarDynamicLinks?: Array<any>;
     registrarDynamicLinks2?: Array<any>;
@@ -57,6 +62,13 @@ export interface Config {
     userProfile?: any;
     stagingArea?: StagingAreaSettings;
     privacyStatement: string;
+    CVDisplayOrder ?: {
+            [name: string]: Array<string>;
+    };
+    codeSystemMapping?: {
+        [code: string]: string;
+    };
+    structureEditor?: 'ketcher' | 'jsdraw';
 }
 
 export interface StagingAreaSettings {
@@ -70,6 +82,7 @@ export interface LoadedComponents {
     adverseevents?: boolean;
     impurities?: boolean;
     ssg4m?: boolean;
+    invitropharmacology?: boolean;
     userRegistration?: boolean;
 }
 
@@ -118,4 +131,15 @@ export interface AuthenticateAs {
     apiPassword?: string,
     apiKey?: string,
     apiToken?: string;
+}
+
+export interface SessionExpirationWarning {
+    maxSessionDurationMinutes: number;
+    extendSessionApiUrl: string;
+}
+
+export interface ExternalSiteWarning {
+    enabled: boolean;
+    dialogTitle: string;
+    dialogMessage: string;
 }

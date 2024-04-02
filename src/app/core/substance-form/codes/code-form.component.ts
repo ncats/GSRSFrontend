@@ -4,6 +4,7 @@ import { ControlledVocabularyService } from '../../controlled-vocabulary/control
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-code-form',
@@ -19,10 +20,13 @@ export class CodeFormComponent implements OnInit {
   codeTypeList: Array<VocabularyTerm> = [];
   deleteTimer: any;
   viewFull = true;
+  codeSystemMapping: any;
 
   constructor(
     private cvService: ControlledVocabularyService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    public configService: ConfigService
+
   ) { }
 
   ngOnInit() {
@@ -56,6 +60,10 @@ export class CodeFormComponent implements OnInit {
       this.setCodeSystemType();
       this.codeTypeList = response['CODE_TYPE'].list;
     });
+    if (this.configService.configData && this.configService.configData.codeSystemMapping) {
+      //This config object is meant to map certain code system values with an automatically filled out code value on selection.
+      this.codeSystemMapping = this.configService.configData.codeSystemMapping;
+    }
   }
 
   deleteCode(): void {
@@ -89,6 +97,10 @@ export class CodeFormComponent implements OnInit {
     if (this.privateCode != null && this.codeSystemDictionary != null) {
       this.codeSystemType = this.codeSystemDictionary[this.privateCode.codeSystem]
         && this.codeSystemDictionary[this.privateCode.codeSystem].systemCategory || '';
+    }
+
+    if (this.codeSystemMapping && this.codeSystemMapping[this.code.codeSystem]) {
+      this.code.code = this.codeSystemMapping[this.code.codeSystem];
     }
   }
 

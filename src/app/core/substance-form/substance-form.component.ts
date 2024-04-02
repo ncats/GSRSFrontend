@@ -360,7 +360,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   this.isLoading = false;
                   this.loadingService.setLoading(false);
                 });
-
               }
             }, error => {
               this.isLoading = false;
@@ -490,7 +489,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       let decode = decodeURI(json);
     }
 
-
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
 
@@ -615,6 +613,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.feature === 'regenRefs') {
       this.regenRefs();
     }
+
 
 
   }
@@ -841,6 +840,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         if (response._name) {
           delete response._name;
         }
+        if (response.names && response.names.length > 0) {
+            response.names.forEach(name => {
+              if (name.stdName) {
+                name.stdName = null;
+              }
+            });
+        }
+
         this.scrub(response, type);
         this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
           this.setFormSections(formSections[response.substanceClass]);
@@ -928,7 +935,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.loadingService.setLoading(false);
         this.isLoading = false;
         this.validationMessages = null;
-        this.openSuccessDialog('approve');
+        this.openSuccessDialog({ type: 'approve' });
         this.submissionMessage = 'Substance was approved successfully';
         this.showSubmissionMessages = true;
         this.validationResult = false;
@@ -957,7 +964,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       if (!this.id) {
         this.id = response.uuid;
       }
-      this.openSuccessDialog('staging');
+      this.openSuccessDialog({type: 'staging'});
     })
   }
 
@@ -977,7 +984,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         if (!this.id) {
           this.id = response.uuid;
         }
-        this.openSuccessDialog();
+        this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
       }, (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
         this.loadingService.setLoading(false);
@@ -1123,7 +1130,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         codeSystem: code
       });
     })
-
     const createHolders = defiant.json.search(old, '//*[created]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
@@ -1191,8 +1197,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     return old;
   }
 
-  openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {data: {'type': type}});
+  openSuccessDialog({ type, fileUrl }: { type?: 'submit'|'approve'|'staging', fileUrl?: string }): void {
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: {
+        type: type,
+        fileUrl: fileUrl
+      },
+      disableClose: true
+    });
     this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view' | 'staging') => {
@@ -1206,6 +1218,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.router.navigate(['/admin/staging-area']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
+      } else if (response === 'viewInPfda') {
+        // View the submitted substance file in the user's precisionFDA home
+        window.location.assign(fileUrl);
       } else {
         this.submissionMessage = 'Substance was saved successfully!';
         if (type && type === 'approve') {

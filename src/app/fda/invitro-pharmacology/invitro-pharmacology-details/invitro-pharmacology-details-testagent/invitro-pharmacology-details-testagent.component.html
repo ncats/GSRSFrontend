@@ -1,0 +1,303 @@
+<div class="divcenter margintop90px">
+
+  <!-- Display All Assays if ?view='all-assays' -->
+  <div *ngIf="view && view === 'all-assays'">
+
+    <div class="divflex">
+      <div class="margintop20px font22px">
+        <b>All In-vitro Pharmacology Assays
+          <span class="colorblue">({{allAssaysList.length}})
+          </span>
+        </b>
+      </div>
+
+      <!-- Link to All Test Agents page -->
+      <div class="marginleft50px margintop10px">
+        <a mat-flat-button color="primary" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-testagents'}"
+          target="_blank" alt="View All Test Agents" matTooltip='View All Test Agents, Opens in a new window'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View All Test Agents
+        </a>
+      </div>
+    </div> <!-- class=divflex -->
+    <br>
+
+    <div class="responsive">
+
+      <table class="tableStyle margintop15px font12px" mat-table [dataSource]="allAssaysList">
+
+        <ng-container matColumnDef="number">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let assaysum; let index = index;">
+            {{(index+1)}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="viewDetails">
+          <th mat-header-cell *matHeaderCellDef> View Details </th>
+          <td class="width40px" mat-cell *matCellDef="let assaysum">
+            <div>
+              &nbsp;&nbsp;
+              <a class="substance-name" [routerLink]="['/invitro-pharm', assaysum.id]" target="_blank"
+                alt="View Assay and Screening Record" matTooltip='View Assay Record'>View
+              </a><br>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="update">
+          <th mat-header-cell *matHeaderCellDef> Update </th>
+          <td class="width70px" mat-cell *matCellDef="let assaysum">
+            <div>
+              &nbsp;&nbsp;
+              <!-- Edit Assay Data -->
+              <a [routerLink]="['/invitro-pharm/assay', assaysum.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                matTooltip='Edit Assay Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>&nbsp;
+
+              <!-- Edit Screening Data -->
+              <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                matTooltip='Edit Screening Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalScreening">
+          <th mat-header-cell *matHeaderCellDef> Total Screening</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.invitroAssayScreenings.length}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reference">
+          <th mat-header-cell *matHeaderCellDef> Reference</th>
+          <td class="width120px" mat-cell *matCellDef="let assay">
+            <!-- Assay Screening Loop -->
+            <div *ngFor="let screening of assay.invitroAssayScreenings; let i = index">
+              <div *ngIf="screening.invitroReference">
+                {{(i+1)}}.
+                <span
+                  *ngIf="screening.invitroReference.referenceSourceType || screening.invitroReference.referenceSourceType">
+                  {{screening.invitroReference.referenceSourceType}}&nbsp;
+                  {{screening.invitroReference.referenceSourceNumber}}
+                  <br>
+                </span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="testAgent">
+          <th mat-header-cell *matHeaderCellDef> Test Agent</th>
+          <td class="width120px" mat-cell *matCellDef="let assay">
+            <!-- Assay Screening Loop -->
+            <ol>
+              <div *ngFor="let screening of assay.invitroAssayScreenings; let i = index">
+                <div *ngIf="screening.invitroTestAgent">
+                  <div *ngIf="screening.invitroTestAgent.testAgent">
+                    <li>
+                      <span *ngIf="screening.invitroTestAgent.testAgentSubstanceUuid; else noReferenceTestAgentSubId">
+                        <a [routerLink]="['/substances', screening.invitroTestAgent.testAgentSubstanceUuid]"
+                          target="_blank" matTooltip="Go to Substance Details page">
+                          {{screening.invitroTestAgent.testAgent}}
+                        </a>
+                      </span>
+                      <ng-template #noReferenceTestAgentSubId>
+                        {{screening.invitroTestAgent.testAgent}}
+                      </ng-template>
+                    </li>
+                  </div>
+                </div>
+              </div> <!-- For Loop: TestAgent-->
+            </ol>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assayId">
+          <th mat-header-cell *matHeaderCellDef> Assay ID</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.assayId}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="externalAssayId">
+          <th mat-header-cell *matHeaderCellDef> External Assay ID</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.externalAssayId}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="externalAssaySource">
+          <th mat-header-cell *matHeaderCellDef> External Assay Source</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.externalAssaySource}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="targetName">
+          <th mat-header-cell *matHeaderCellDef> Target Name</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.targetName}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="targetTitle">
+          <th mat-header-cell *matHeaderCellDef> Target Title</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.assayTitle}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="studyType">
+          <th mat-header-cell *matHeaderCellDef> Study Type</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.studyType}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="bioassayType">
+          <th mat-header-cell *matHeaderCellDef> Bioassay Type</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.bioassayType}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="modifyDate">
+          <th mat-header-cell *matHeaderCellDef> Modify Date</th>
+          <td mat-cell *matCellDef="let assay">
+            {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="allAssayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: allAssayColumns;"></tr>
+      </table>
+
+    </div> <!-- responsivie -->
+    <br><br>
+  </div> <!-- view = all-assays -->
+
+
+  <!-- ####################################################### -->
+  <!-- ####################################################### -->
+  <!-- Display All Test Agents if ?view='all-testagents'       -->
+  <!-- ####################################################### -->
+
+  <div *ngIf="view && view === 'all-testagents'">
+
+    <div class="divflex">
+      <div class="margintop20px font22px">
+        <b>All In-vitro Pharmacology Test Agents
+          <span class="colorblue">({{allScreeningTestAgents.length}})
+          </span>
+        </b>
+      </div>
+
+      <!-- Link to All Assay page -->
+      <div class="marginleft50px margintop10px">
+        <a mat-flat-button color="primary" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
+          target="_blank" alt="View All Assay Lists" matTooltip='View All Assay Lists, Opens in a new window'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          View All Assay Lists
+        </a>
+      </div>
+
+    </div> <!-- class=divflex -->
+    <br><br>
+
+    <div *ngFor="let screen of allScreeningTestAgents; let index = index">
+
+      <div><b>{{(index+1)}}.&nbsp;&nbsp;Test Agent:
+          <span class="colorblue font18px">
+            <span *ngIf="screen.testAgentSubstanceUuid; else noTestAgentTestAgentSubId">
+              <a [routerLink]="['/substances', screen.testAgentSubstanceUuid]" target="_blank"
+                matTooltip="Go to Substance Details page">
+                {{screen.testAgent}}
+              </a>
+            </span>
+            <ng-template #noTestAgentTestAgentSubId>
+              {{screen.testAgent}}
+            </ng-template>
+          </span>
+        </b>
+      </div>
+
+      <br>
+      <div class="margintop18px font16px">
+        <b>Summary Data ({{screen.testAgentSummaryList.length}})</b>
+      </div>
+
+      <table mat-table [dataSource]="screen.testAgentSummaryList" class="margintop10px font12px">
+
+        <ng-container matColumnDef="viewDetails">
+          <th mat-header-cell *matHeaderCellDef> View Details </th>
+          <td class="width100px" mat-cell *matCellDef="let assaysum">
+            <div>
+              <a class="substance-name" [routerLink]="['/invitro-pharm', assaysum.id]" target="_blank"
+                alt="View Assay Screening Record" matTooltip='View Assay Screening Record'>View
+              </a>&nbsp;&nbsp;&nbsp;
+              <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                matTooltip='Edit Assay Screening Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="referenceSource">
+          <th mat-header-cell *matHeaderCellDef> Reference Source</th>
+          <td class="width100px" mat-cell *matCellDef="let assaysum">
+            {{assaysum.referenceSourceTypeNumber}}
+          </td>
+        </ng-container>
+        -
+        <ng-container matColumnDef="testAgent">
+          <th mat-header-cell *matHeaderCellDef> Test Agent </th>
+          <td class="width150px" mat-cell *matCellDef="let assaysum">
+            {{assaysum.testAgent}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="targetName">
+          <th mat-header-cell *matHeaderCellDef> Target Name </th>
+          <td class="width170px" mat-cell *matCellDef="let assaysum">
+            {{assaysum.targetName}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="testAgentConcentration">
+          <th mat-header-cell *matHeaderCellDef> Test Agent Concentration </th>
+          <td class="width120px" mat-cell *matCellDef="let assaysum">
+            {{assaysum.testAgentConcentration}}
+            {{assaysum.testAgentConcentrationUnits}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="resultValue">
+          <th mat-header-cell *matHeaderCellDef> Result Value </th>
+          <td class="width120px" mat-cell *matCellDef="let assaysum">
+            {{assaysum.resultValue}}&nbsp;
+            {{assaysum.resultValueUnits}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="studyType">
+          <th mat-header-cell *matHeaderCellDef> Study Type </th>
+          <td class="width120px" mat-cell *matCellDef="let assaysum">
+            {{assaysum.studyType}}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="testAgentSummaryColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: testAgentSummaryColumns;"></tr>
+      </table>
+      <br><br>
+
+    </div> <!-- Loop: allScreeningTestAgents -->
+
+  </div> <!-- view = all-testagent -->
+
+</div> <!-- class=divcenter-->

@@ -7,6 +7,7 @@ import { EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { take } from 'rxjs';
 
 
 @Component({
@@ -328,7 +329,9 @@ private overlayContainer: HTMLElement;
 
 
 
-
+   let smiles = '';
+   this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+     smiles = response;
     var tt = this.getPossibleSmiles(this.editor.getSmiles());
     let stars = 0;
     let dom = "";
@@ -361,37 +364,39 @@ private overlayContainer: HTMLElement;
       this.forms.push(temp);
     });
 
+  });
+
   }
 
   getFragmentCV() {
-    if (this.editor.getSmiles() && this.editor.getSmiles() !== '') {
-     
-      if(!this.vocabulary) {
-        this.CVService.getFragmentCV().subscribe(data => {
-          this.dat = {};
-    
-         this.domains = data.content;
-    
-         if (this.vocab) {
-          this.fragmentType(this.vocab);
-         }
-    
-        
-        });
+    this.editor.getSmiles().pipe(take(1)).subscribe(resp => {
+      if (resp && resp != '') {
+        if(!this.vocabulary) {
+          this.CVService.getFragmentCV().subscribe(data => {
+            this.dat = {};
+      
+           this.domains = data.content;
+      
+           if (this.vocab) {
+            this.fragmentType(this.vocab);
+           }
+      
+          
+          });
+        } else {
+          if (this.vocab) {
+            this.fragmentType(this.vocab, this.vocabulary);
+           }
+        }
       } else {
-        if (this.vocab) {
-          this.fragmentType(this.vocab, this.vocabulary);
-         }
+        this.message = "No Structure Detected in editor";
+        setTimeout(() => {
+          this.message = null;
+        }, 4000);
       }
-    } else {
-      this.message = "No Structure Detected in editor";
-      setTimeout(() => {
-        this.message = null;
-      }, 4000);
-    }
-    
-    
+      });
   }
+  
   checkImg(term: any) {
     term.fragmentSrc = this.CVService.getStructureUrlFragment(term.fragmentStructure);
     term.simpleSrc = this.CVService.getStructureUrlFragment(term.simplifiedStructure);

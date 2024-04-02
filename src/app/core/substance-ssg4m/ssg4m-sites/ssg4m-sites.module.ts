@@ -10,10 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ScrollToModule } from '../../scroll-to/scroll-to.module';
-// import { SubstanceFormNotesCardComponent } from './substance-form-notes-card.component';
-import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { SubstanceFormModule } from '../../substance-form/substance-form.module';
-// import { SubstanceFormSsg4mSitesCardComponent} from '../ssg4m-sites/ssg4m-sites.module'
 import { Ssg4mStagesModule } from '../ssg4m-stages/substance-form-ssg4m-stages.module';
 import { Ssg4mSitesComponent } from './ssg4m-sites.component';
 

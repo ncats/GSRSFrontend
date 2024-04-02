@@ -20,7 +20,7 @@ export class SubstanceFormNamesCardComponent
   private subscriptions: Array<Subscription> = [];
   pageSize = 10;
   expanded = true;
-  showStd = true;
+  showStd = false;
   showMore = false;
   appId: string;
   standardizeButton = false;
