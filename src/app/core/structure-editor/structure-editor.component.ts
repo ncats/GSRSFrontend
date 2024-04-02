@@ -114,7 +114,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.catchPaste(event);
     }
     else if (this.ketcher) {
-      this.catchPaste(event);
+    //  this.catchPaste(event);
     }
   }
 

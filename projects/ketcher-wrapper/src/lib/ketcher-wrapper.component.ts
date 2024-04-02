@@ -34,11 +34,11 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
-    this.renderer.listen(window, 'blur', () => this.onWindowBlur());
+   // this.renderer.listen(window, 'blur', () => this.onWindowBlur());
   }
 
   
-
+/* Disabling molvec for ketcher for now to reduce headaches since JSdraw is still loaded
   @HostListener('mouseover')
   private onIframeMouseOver() {
     this.iframeMouseOver = true;
@@ -76,7 +76,7 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
      
       window.focus();
     }, 100);
-  }
+  }*/
 
 
 }
