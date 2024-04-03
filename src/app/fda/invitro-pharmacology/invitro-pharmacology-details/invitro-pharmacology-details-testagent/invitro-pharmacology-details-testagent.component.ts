@@ -264,8 +264,8 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             let referenceSourceNumber = '';
             if (screening.invitroReference) {
               // Need this so it will not display undefined value
-              if (screening.invitroReference.referenceSourceNumber) {
-                referenceSourceNumber = screening.invitroReference.referenceSourceNumber;
+              if (screening.invitroReference.referenceSource) {
+                referenceSourceNumber = screening.invitroReference.referenceSource;
               }
               referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + referenceSourceNumber;
               assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;

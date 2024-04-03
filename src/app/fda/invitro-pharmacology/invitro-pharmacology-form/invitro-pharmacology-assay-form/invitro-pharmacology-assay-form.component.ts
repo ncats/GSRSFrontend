@@ -117,8 +117,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
               this.titleService.setTitle(`Edit In-vitro Pharmacology Assay Only ` + this.id);
               this.getInvitroPharmacologyDetails();
 
-               // Get All the Assay Sets for checkbox
-               this.getAllAssaySets();
+              // Get All the Assay Sets for checkbox
+              this.getAllAssaySets();
             }
           } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
             this.id = this.activatedRoute.snapshot.queryParams['copyId'];
@@ -142,7 +142,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
               }
             }
           } else { // Register New In-vitro Pharamcology Assay
-
             this.title = 'Register New In-vitro Pharmacology Assay Only';
             setTimeout(() => {
               this.titleService.setTitle(`Register In-vitro Pharmacology Assay Only`);
@@ -254,10 +253,10 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
     checked.forEach(data1 => {
       const set: InvitroAssaySet = {};
-     // JSON.stringify({set.assaySet = data1});
+      // JSON.stringify({set.assaySet = data1});
       this.assay.invitroAssaySets.push(set);
 
-     // selected.push(data1.value);
+      // selected.push(data1.value);
     });
     /*
     if (selected.length > 0) {
@@ -360,6 +359,33 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
+
+    // Get Substance UUID for Target Name
+    if (this.assay.targetNameApprovalId) {
+      const substanceSubscription = this.generalService.getSubstanceByAnyId(this.assay.targetNameApprovalId).subscribe(response => {
+        if (response) {
+          this.assay.targetNameSubstanceUuid = response.uuid;
+        }
+      });
+      this.subscriptions.push(substanceSubscription);
+
+    } else if (this.assay.targetName) {
+      const subSubscription = this.generalService.getSubstanceByName(this.assay.targetName).subscribe(response => {
+        if (response) {
+          if (response.content && response.content.length > 0) {
+            response.content.forEach(sub => {
+              if (sub._name && sub._name === this.assay.targetName) {
+                if (sub.uuid) {
+                  this.assay.targetNameSubstanceUuid = sub.uuid;
+                }
+              }
+            });
+          }
+        }
+      });
+      this.subscriptions.push(subSubscription);
+    }
+
     // Set service assay
     this.invitroPharmacologyService.assay = this.assay;
 
@@ -382,6 +408,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         }
       }, 4000);
     }
+
+
       /*
       , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
@@ -543,10 +571,18 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
   scrub(oldraw: any): any {
     const old = oldraw;
+
     const idHolders = defiant.json.search(old, '//*[id]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
+      }
+    }
+
+    const assayIdHolders = defiant.json.search(old, '//*[assayId]');
+    for (let i = 0; i < assayIdHolders.length; i++) {
+      if (assayIdHolders[i].assayId) {
+        delete assayIdHolders[i].assayId;
       }
     }
 

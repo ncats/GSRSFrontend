@@ -179,7 +179,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
           invitroAssayResult: {},
           invitroLaboratory: {},
           invitroControls: [{}],
-          invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
+          invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
         }]
       };
       this.assay = newInvitroAssayInformation;
@@ -201,7 +201,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
           invitroAssayResult: {},
           invitroLaboratory: {},
           invitroControls: [{}],
-          invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
+          invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
         }]
       };
       this.assay = newInvitroAssayInformation;
@@ -260,6 +260,16 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   getAllSponsors(): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allSponsors';
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAllSponsorSubmitters(): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'allSponsorSubmitters';
     return this.http.get<any>(url)
       .pipe(
         map(result => {
@@ -356,7 +366,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       invitroAssayResult: {},
       invitroLaboratory: {},
       invitroControls: [{}],
-      invitroSubmitterReport: { invitroSponsorSubmitters: [{}] }
+      invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
     };
     this.assay.invitroAssayScreenings.push(newInvitroAssayScreening);
   }

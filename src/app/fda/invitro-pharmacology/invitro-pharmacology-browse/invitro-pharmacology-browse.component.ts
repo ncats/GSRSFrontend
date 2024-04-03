@@ -477,7 +477,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
           /* Invitro Reference Object exists */
           if (screening.invitroReference) {
-            assaySummary.referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
+            assaySummary.referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSource;
           }
 
           /* Invitro Test Agent Object exists */
@@ -558,7 +558,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Reference Object exists */
           let referenceSourceTypeNumber = '';
           if (screening.invitroReference) {
-            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
+            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSource;
             assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
           } // if invitroReference exists
 
@@ -640,7 +640,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Reference Object exists */
           let referenceSourceTypeNumber = '';
           if (screening.invitroReference) {
-            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
+            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSource;
             assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
           } // if invitroReference exists
 
@@ -722,7 +722,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Reference Object exists */
           let referenceSourceTypeNumber = '';
           if (screening.invitroReference) {
-            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSourceNumber;
+            referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + screening.invitroReference.referenceSource;
             assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
 
             // Get the index if the value exists in the key 'referenceSourceTypeNumber'

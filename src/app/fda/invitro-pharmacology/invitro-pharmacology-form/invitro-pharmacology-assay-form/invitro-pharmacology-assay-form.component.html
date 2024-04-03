@@ -138,17 +138,6 @@
           -->
           <mat-card-content class="marginright10px">
 
-            <div class="form-row" *ngIf="assay && assay.id">
-              <div class="fieldKey">
-                <mat-label>Assay ID:</mat-label>
-              </div>
-              <div class="width95percent padtop18px">
-                <span *ngIf="assay.assayId">
-                  <b>{{assay.assayId}}</b>
-                </span>
-              </div>
-            </div>
-
             <div class="form-row">
               <div class="fieldKey">
                 <mat-label>Assay Set:&nbsp;<span class="colorred">*</span></mat-label>
@@ -160,6 +149,17 @@
                     {{data.value}}
                   </mat-checkbox>
                   &nbsp;
+                </span>
+              </div>
+            </div>
+
+            <div class="form-row" *ngIf="assay && assay.id">
+              <div class="fieldKey">
+                <mat-label>Assay ID:</mat-label>
+              </div>
+              <div class="width95percent padtop18px">
+                <span *ngIf="assay.assayId">
+                  <b>{{assay.assayId}}</b>
                 </span>
               </div>
             </div>
@@ -179,16 +179,6 @@
               </div>
               <mat-form-field class="fieldvalue">
                 <input matInput placeholder="" [(ngModel)]="assay.externalAssayId" name="externalAssayId" />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>External Assay Reference:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input matInput placeholder="" [(ngModel)]="assay.externalAssayReference"
-                  name="externalAssayReference" />
               </mat-form-field>
             </div>
 
@@ -267,15 +257,6 @@
 
             <div class="form-row">
               <div class="fieldKey">
-                <mat-label>Public Domain:</mat-label>
-              </div>
-              <app-cv-input class="fieldvalue" domain="PUBLIC_DOMAIN" title="" name="publicDomain"
-                [model]="assay.publicDomain" (valueChange)="assay.publicDomain = $event">
-              </app-cv-input>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
                 <mat-label>Presentation Type:</mat-label>
               </div>
               <app-cv-input class="fieldvalue" domain="INVITRO_PRESENTATION_TYPE" title="" name="presentationType"
@@ -294,12 +275,11 @@
 
             <div class="form-row">
               <div class="fieldKey">
-                <mat-label>Buffer Plasma Protein Concentration:</mat-label>
+                <mat-label>Public Domain:</mat-label>
               </div>
-              <mat-form-field class="fieldvalue">
-                <input matInput placeholder="" [(ngModel)]="assay.bufferPlasmaProteinConcent"
-                  name="bufferPlasmaProteinConcent" />
-              </mat-form-field>
+              <app-cv-input class="fieldvalue" domain="PUBLIC_DOMAIN" title="" name="publicDomain"
+                [model]="assay.publicDomain" (valueChange)="assay.publicDomain = $event">
+              </app-cv-input>
             </div>
 
             <div class="form-row">

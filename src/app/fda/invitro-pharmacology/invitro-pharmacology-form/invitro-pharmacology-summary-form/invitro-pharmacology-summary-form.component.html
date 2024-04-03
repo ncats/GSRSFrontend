@@ -150,71 +150,69 @@
                 </button>&nbsp;&nbsp;
               </div>
 
-              <mat-form-field class="col-6-2">
-                <mat-label>Select Existing Assay Target Name</mat-label>
-                <mat-select [formControl]="existingAssayControl"
-                  (selectionChange)="selectionChangeAssay($event, index)">
-                  <mat-option *ngFor="let asy of existingAssayList; let index = index" [value]="index">
-                    ID:{{asy.id}}&nbsp;&nbsp;
-                    External Assay ID:{{asy.externalAssayId}}&nbsp;&nbsp;
-                    External Assay Source:{{asy.externalAssaySource}}&nbsp;&nbsp;
-                    Target Name:{{asy.targetName}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+              <!-- TEST AGENT - Select Substance -->
+              <div class="marginleft10px padtop10px related-substance">
+                <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+                  eventCategory="substanceRelationshipRelatedSub"
+                  placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
+                  [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+                </app-substance-selector>
+              </div>
 
             </div>
 
 
             <!-- Loop-->
-            <div class="divradius divshadow margintop20px" *ngFor="let summary of assayList; let index = index">
+            <div class="divradius divshadow margintop20px" *ngFor="let assay of assayList; let indexAssay = index">
 
-              <div *ngFor="let sum of summary.invitroSummaries; let index = index">
-
+              <!-- Loop-->
+              <div *ngFor="let summary of assay.invitroSummaries; let indexSummary = index">
 
                 <div class="divflex" style="vertical-align:top;">
 
                   <div class="margintop10px width20px">
-                    <b>{{(index+1)}}</b>
+                    <b>{{(indexAssay+1)}}</b>
                   </div>
 
-                  <!-- FIRST COLUMN START -->
-                  <div>
-                    <div class="marginleft10px padtop10px related-substance">
-                      <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-                        eventCategory="substanceRelationshipRelatedSub"
-                        placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
-                        [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
-                      </app-substance-selector>
-                    </div>
-                    <br>
-                  </div> <!-- FIRST COLUMN END -->
-
-                  <!-- SECOND COLUMN START -->
-                  <div class="width70percent marginleft20px">
+                  <!-- START -->
+                  <div class="marginleft20px">
 
                     <div class="form-row margintop10px">
 
-                      <mat-form-field class="col-6-2">
+                      <!-- TARGET NAME - Select from Existing Assay Target Name -->
+                      <mat-form-field class="col-3-1">
                         <mat-label>Select Existing Assay Target Name</mat-label>
                         <mat-select [formControl]="existingAssayControl"
-                          (selectionChange)="selectionChangeAssay($event, index)">
-                          <mat-option *ngFor="let asy of existingAssayList; let index = index" [value]="index">
+                          (selectionChange)="selectionChangeAssay($event, indexAssay)">
+                          <mat-option *ngFor="let asy of assay._existingAssayList; let index = index" [value]="index">
                             ID:{{asy.id}}&nbsp;&nbsp;
-                            External Assay ID:{{asy.externalAssayId}}&nbsp;&nbsp;
                             External Assay Source:{{asy.externalAssaySource}}&nbsp;&nbsp;
+                            External Assay ID:{{asy.externalAssayId}}&nbsp;&nbsp;
                             Target Name:{{asy.targetName}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
 
-                      <div class="width200px">
+                      <!--
+                      <div class="col-4-1">
                         <span *ngIf="summary.targetName">
                           <span class="font11px"><b>Selected Target Name:</b></span><br>
                           {{summary.targetName}}
                         </span>
                       </div>
+                      -->
+                      <app-cv-input class="col-3-1" domain="RELATIONSHIP_TYPE" title="Relationship Type"
+                        name="relationshipType" [model]="summary.relationshipType"
+                        (valueChange)="summary.relationshipType = $event">
+                      </app-cv-input>
 
+                      <app-cv-input class="col-3-1" domain="INTERACTION_TYPE" title="Interaction Type"
+                        name="interactionType" [model]="summary.interactionType"
+                        (valueChange)="summary.interactionType = $event">
+                      </app-cv-input>
+
+
+                      <!--
                       <div class="width100px alignright">
                         <span *ngIf="index == 0">
                           <br>
@@ -224,44 +222,32 @@
                           </mat-checkbox>
                         </span>
                       </div>
+                      -->
 
                     </div> <!-- form-row -->
 
+
                     <div class="form-row">
-                      <app-cv-input class="col-3-1" domain="RELATIONSHIP_TYPE" title="Relationship Type"
-                        name="relationshipType" [model]="summary.relationshipType"
-                        (valueChange)="sum.relationshipType = $event">
-                      </app-cv-input>
-
-                      <app-cv-input class="col-3-1" domain="INTERACTION_TYPE" title="Interaction Type"
-                        name="interactionType" [model]="summary.interactionType"
-                        (valueChange)="sum.interactionType = $event">
-                      </app-cv-input>
-
-                      <app-cv-input class="col-3-1" domain="QUALIFICATION" title="Result Type" name="resultType"
+                      <app-cv-input class="col-5-1" domain="QUALIFICATION" title="Result Type" name="resultType"
                         [model]="summary.resultType" (valueChange)="summary.resultType = $event">
                       </app-cv-input>
 
-                    </div> <!-- form-row-->
-
-                    <div class="form-row">
-
-                      <mat-form-field class="col-3-1">
+                      <mat-form-field class="col-5-1">
                         <input matInput placeholder="Result Value Average" [(ngModel)]="summary.resultValueAverage"
                           name="resultValueAverage" />
                       </mat-form-field>
 
-                      <mat-form-field class="col-3-1-half">
+                      <mat-form-field class="col-5-1">
                         <input matInput placeholder="Result Value Low" [(ngModel)]="summary.resultValueLow"
                           name="resultValueLow" />
                       </mat-form-field>
 
-                      <mat-form-field class="col-3-1-half">
+                      <mat-form-field class="col-5-1">
                         <input matInput placeholder="Result Value High" [(ngModel)]="summary.resultValueHigh"
                           name="resultValueHigh" />
                       </mat-form-field>
 
-                      <app-cv-input class="col-3-1" domain="AMOUNT_UNIT" title="Result Value Units"
+                      <app-cv-input class="col-5-1" domain="AMOUNT_UNIT" title="Result Value Units"
                         name="resultValueUnits" [model]="summary.resultValueUnits"
                         (valueChange)="summary.resultValueUnits = $event">
                       </app-cv-input>
@@ -276,7 +262,7 @@
                     </div> <!-- form-row -->
 
 
-                  </div> <!-- width80percent -->
+                  </div> <!--  -->
                 </div> <!-- divflex -->
 
               </div> <!-- For Loop: Summaries -->

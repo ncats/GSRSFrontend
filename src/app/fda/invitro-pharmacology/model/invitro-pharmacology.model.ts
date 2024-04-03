@@ -1,18 +1,24 @@
 export interface InvitroAssayInformation {
   id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
   assayId?: string;
   externalAssayId?: string;
   externalAssaySource?: string;
-  externalAssayReference?: string;
   externalAssayReferenceUrl?: string;
-  assaySet?: string;
   assayTitle?: string;
   assayFormat?: string;
+  assayMode?: string;
   bioassayType?: string;
   bioassayClass?: string;
   studyType?: string;
   detectionMethod?: string;
-  bufferPlasmaProteinConcent?: string;
+  presentationType?: string;
+  presentation?: string;
+  publicDomain?: string;
   targetName?: string;
   targetNameApprovalId?: string;
   targetNameSubstanceUuid?: string;
@@ -23,19 +29,12 @@ export interface InvitroAssayInformation {
   ligandSubstrateApprovalId?: string;
   ligandSubstrateConcentration?: string;
   ligandSubstrateConcentrationUnits?: string;
-  percentInhibition?: number;
-  presentationType?: string;
-  presentation?: string;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  modifyDate?: number;
-  internalVersion?: number;
   _assayTargetSubId?: string;
   _ligandSubstrateSubId?: string;
   _controlSubId?: string;
   _calculateIC50?: string;
   _assayTargetSummaries?: Array<any>;
+  _existingAssayList?: Array<any>;
   invitroAssaySets?: Array<InvitroAssaySet>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;
   invitroSummaries?: Array<InvitroSummary>;
@@ -43,44 +42,49 @@ export interface InvitroAssayInformation {
 
 export interface InvitroAssaySet {
   id?: number;
-  assaySet?: string;
+  createdDate?: number;
   createdBy?: string;
-  creationDate?: number;
+  modifiedDate?: number;
   modifiedBy?: string;
-  lastModifiedDate?: number;
   internalVersion?: number;
+  assaySet?: string;
 }
 
 export interface InvitroAssayScreening {
   id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
   invitroReference?: InvitroReference;
+  invitroSponsorReport?: InvitroSponsorReport;
+  invitroLaboratory?: InvitroLaboratory;
   invitroTestAgent?: InvitroTestAgent;
   invitroAssayResult?: InvitroAssayResult;
   invitroControls?: Array<InvitroControl>;
-  invitroLaboratory?: InvitroLaboratory;
-  invitroSubmitterReport?: InvitroSubmitterReport;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
 }
 
 export interface InvitroReference {
   id?: number;
-  referenceSourceType?: string;
-  referenceSourceNumber?: string;
-  digitalObjectIdentifier?: string;
+  createdDate?: number;
   createdBy?: string;
-  creationDate?: number;
+  modifiedDate?: number;
   modifiedBy?: string;
-  lastModifiedDate?: number;
   internalVersion?: number;
+  referenceSourceType?: string;
+  referenceSource?: string;
+  digitalObjectIdentifier?: string;
   invitroSponsor?: InvitroSponsor;
 }
 
 export interface InvitroSponsor {
   id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
   sponsorContactName?: string;
   sponsorAffiliation?: string;
   sponsorStreetAddress?: string;
@@ -88,75 +92,117 @@ export interface InvitroSponsor {
   sponsorState?: string;
   sponsorZipcode?: string;
   sponsorCountry?: string;
+}
+
+export interface InvitroSponsorReport {
+  id?: number;
+  createdDate?: number;
   createdBy?: string;
-  creationDate?: number;
+  modifiedDate?: number;
   modifiedBy?: string;
-  lastModifiedDate?: number;
   internalVersion?: number;
+  reportNumber?: string;
+  reportDate?: number;
+  invitroSponsorSubmitters?: Array<InvitroSponsorSubmitter>;
+}
+
+export interface InvitroSponsorSubmitter {
+  id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
+  sponsorReportSubmitterName?: string;
+  sponsorRepoortSubmitterTitle?: string;
+  sponsorReportSubmitterAffiliation?: string;
+  sponsorReportSubmitterEmail?: string;
+  sponsorReportSubmitterPhoneNumber?: string;
+  sponsorReportSubmitterAssayType?: string;
+}
+
+export interface InvitroLaboratory {
+  id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
+  laboratoryName?: string;
+  laboratoryAffiliation?: string;
+  laboratoryType?: string;
+  laboratoryStreetAddress?: string;
+  laboratoryCity?: string;
+  laboratoryState?: string;
+  laboratoryZipcode?: string;
+  laboratoryCountry?: string;
 }
 
 export interface InvitroTestAgent {
   id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
   testAgent?: string;
   testAgentApprovalId?: string;
   testAgentSubstanceUuid?: string;
   testAgentSmileString?: string;
+  testAgentMolecularFormulaWeight?: string;
   activeMoiety?: string;
   activeMoietyApprovalId?: string;
-  molecularFormulaWeight?: string;
   casRegistryNumber?: string;
   batchNumber?: string;
   purity?: string;
-  solutionState?: string;
   vehicleComposition?: string;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
 }
 
 export interface InvitroAssayResult {
   id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
+  testAgentConcentration?: number;
+  testAgentConcentrationUnits?: string;
+  resultValue?: number;
+  resultValueUnits?: string;
+  ligandSubstrateConcentration?: number;
+  ligandSubstrateConcentrationUnits?: string;
   plasmaProteinAdded?: string;
   plasmaProtein?: string;
-  plasmaProteinConcentration?: string;
+  plasmaProteinConcentration?: number;
   plasmaProteinConcentrationUnits?: string;
   dataType?: string;
   numberOfTests?: string;
-  testAgentConcentration?: number;
-  testAgentConcentrationUnits?: string;
-  testConcentrationActiveMoiety?: number;
-  testConcentrationUnitsActiveMoiety?: string;
-  resultValue?: number;
-  resultValueUnits?: string;
-  assayMode?: string;
-  assayMeasurement?: string;
   comments?: string;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
+  assayMeasurement?: string;
 }
 
 export interface InvitroControl {
   id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
   control?: string;
   controlApprovalId?: string;
   controlType?: string;
   controlReferenceValue?: string;
   controlReferenceValueUnits?: string;
   resultType?: string;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
 }
 
 export interface InvitroSummary {
   id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
   testAgent?: string;
   relationshipType?: string;
   interactionType?: string;
@@ -166,55 +212,6 @@ export interface InvitroSummary {
   resultValueHigh?: number;
   resultValueUnits?: string;
   comments?: string;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
-}
-
-export interface InvitroLaboratory {
-  id?: number;
-  laboratoryName?: string;
-  laboratoryAffiliation?: string;
-  laboratoryType?: string;
-  laboratoryStreetAddress?: string;
-  laboratoryCity?: string;
-  laboratoryState?: string;
-  laboratoryZipcode?: string;
-  laboratoryCountry?: string;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
-}
-
-export interface InvitroSubmitterReport {
-  id?: number;
-  reportNumber?: string;
-  reportDate?: number;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
-  invitroSponsorSubmitters?: Array<InvitroSponsorSubmitter>;
-}
-
-export interface InvitroSponsorSubmitter {
-  id?: number;
-  sponsorReportSubmitterName?: string;
-  sponsorRepoortSubmitterTitle?: string;
-  sponsorReportSubmitterAffiliation?: string;
-  sponsorReportSubmitterEmail?: string;
-  sponsorReportSubmitterPhoneNumber?: string;
-  sponsorReportSubmitterAssayType?: string;
-  createdBy?: string;
-  creationDate?: number;
-  modifiedBy?: string;
-  lastModifiedDate?: number;
-  internalVersion?: number;
 }
 
 export interface ValidationResults {

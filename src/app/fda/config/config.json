@@ -1118,7 +1118,7 @@
     "invitropharmacology": {
       "default": [
         "Assay ID",
-        "Reference Source Type Number",
+        "Reference Type and Source",
         "Reference Source Type",
         "Reference Source",
         "Target Name",
