@@ -341,6 +341,27 @@ export class InvitroPharmacologyService extends BaseHttpService {
     }
   }
 
+  saveMultipleAssays(bulkAssays: any): Observable<InvitroAssayInformation> {
+    alert("AAAAA");
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + "saveBulkAssays";
+    const params = new HttpParams();
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    };
+    console.log()
+    // Update In-vitro Pharmacology ASSAY
+   // if ((this.assay != null) && (this.assay.id)) {
+      return this.http.put<InvitroAssayInformation>(url, bulkAssays, options);
+   // } else {
+      // Save New In-vitro Pharmacology ASSAY
+    //  return this.http.post<InvitroAssayInformation>(url, this.assay, options);
+   // }
+  }
+
   validateAssay(): Observable<ValidationResults> {
     return new Observable(observer => {
       this.validateAssayServer().subscribe(results => {

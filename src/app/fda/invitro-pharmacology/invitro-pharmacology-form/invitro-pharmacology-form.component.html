@@ -292,7 +292,7 @@
                     <form [formGroup]="firstFormGroup">
 
                       <ng-template matStepLabel>
-                        <span class="font16px colorblack">ReferenceS and Sponsor</span>
+                        <span class="font16px colorblack">Reference and Sponsor</span>
 
                         <br>
                         <span class="colormaroon font11px fontbold" *ngIf="screening.invitroReference">
@@ -576,7 +576,7 @@
                   <mat-step>
 
                     <ng-template matStepLabel>
-                      <span class="font16px colorblack">Report and Laboratory</span>
+                      <span class="font16px colorblack">Report Submitter and Laboratory</span>
                       <span class="colormaroon font11px fontbold" *ngIf="screening.invitroSubmitterReport">
                         <span *ngIf="screening.invitroSubmitterReport.reportNumber">
                           <br>
@@ -970,7 +970,18 @@
 
                       <!-- Test Agent Form Entry BEGIN -->
                       <div *ngIf="radioSelectedTestAgent == 'selectedNewTestAgent'">
-                        <div class="form-row margintop10px">
+
+                        <div class="form-row margintop15px">
+                          <div class="fieldKey">
+                            <mat-label>Test Agent Company Code:</mat-label>
+                          </div>
+                          <mat-form-field class="fieldvalue">
+                            <input matInput placeholder="" [(ngModel)]="screening.invitroTestAgent.testAgentCompanyCode"
+                              name="testAgentCompanyCode" />
+                          </mat-form-field>
+                        </div>
+
+                        <div class="form-row">
                           <div class="fieldKey">
                             <mat-label>Test Agent:</mat-label>
                           </div>
@@ -1151,13 +1162,24 @@
 
                       <hr>
                       <!-- Show More fields link -->
-                      <div class="width120px margintop15px marginright20px alignright font13px">
-                        <a href="" (click)="toggleShowMoreLessFields(); false">
-                          <span *ngIf="showMoreLessFields">Show More Fields...</span>
-                          <span *ngIf="!showMoreLessFields">Show Less Fields...</span>
-                        </a>
+                      <div class="divflex">
+                        <div>
+                          <b>Test Agent: </b>
+                          <span class="font16px" *ngIf="screening.invitroTestAgent.testAgent">
+                            <b>{{screening.invitroTestAgent.testAgent}}</b>
+                          </span>
+                        </div>
+
+                        <div class="width120px margintop15px marginright20px alignright font13px"
+                          *ngIf="existingAssaysByAssaySetList.length > 0">
+                          <a href="" (click)="toggleShowMoreLessFields(); false">
+                            <span *ngIf="showMoreLessFields">Show More Fields...</span>
+                            <span *ngIf="!showMoreLessFields">Show Less Fields...</span>
+                          </a>
+                        </div>
                       </div>
 
+                      <!-- RESULT FOR LOOP -->
                       <div class="divradius divshadow margintop20px"
                         *ngFor="let assay of existingAssaysByAssaySetList; let indexAssay = index">
 
@@ -1172,6 +1194,7 @@
                             </a>
                           </div>
                         </div>
+
 
                         <!-- Result - FIRST ROW  -->
                         <div class="divflex width100percent">
@@ -1212,15 +1235,16 @@
                                 (valueChange)="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.resultValueUnits = $event">
                               </app-cv-input>
 
-                              <div class="width100px margintop10px alignright">
-                                <span *ngIf="index == 0">
-                                  <mat-checkbox [checked]="false" (change)="setApplyAllData($event.checked) ">
+                              <span *ngIf="indexAssay == 0">
+                                <div class="width100px margintop10px alignright">
+                                  <mat-checkbox [checked]="false" (change)="applyToAllData($event.checked, indexAssay)"
+                                    matTooltip="Apply the values of these four fields in all the rows">
                                     <span class="font12px">
                                       Apply to All
                                     </span>
                                   </mat-checkbox>
-                                </span>
-                              </div>
+                                </div>
+                              </span>
 
                             </div>
                           </div> <!-- class=form-row -->
@@ -1246,7 +1270,7 @@
 
                             <mat-form-field class="col-4-1">
                               <input matInput placeholder="Ligand/Substrate Concentration"
-                                [(ngModel)]="screening.invitroAssayResult.ligandSubstrateConcentration"
+                                [(ngModel)]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.ligandSubstrateConcentration"
                                 name="ligandSubstrateConcentration" />
                             </mat-form-field>
 
@@ -1274,7 +1298,7 @@
 
                             <mat-form-field class="col-4-1">
                               <input matInput placeholder="Plasma Protein Concentration"
-                                [(ngModel)]="screening.invitroAssayResult.plasmaProteinConcentration"
+                                [(ngModel)]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.plasmaProteinConcentration"
                                 name="plasmaProteinConcentration" />
                             </mat-form-field>
 
@@ -1301,12 +1325,14 @@
                             </mat-form-field>
 
                             <app-cv-input class="col-4-1" domain="INVITRO_DATA_TYPE" title="Type of Data:"
-                              name="dataType" [model]="screening.invitroAssayResult.dataType"
+                              name="dataType"
+                              [model]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.dataType"
                               (valueChange)="screening.invitroAssayResult.dataType = $event">
                             </app-cv-input>
 
                             <app-cv-input class="col-4-1" domain="INVITRO_NUMBER_OF_TESTS" title="Number of Tests"
-                              name="numberOfTests" [model]="screening.invitroAssayResult.numberOfTests"
+                              name="numberOfTests"
+                              [model]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.numberOfTests"
                               (valueChange)="screening.invitroAssayResult.numberOfTests = $event">
                             </app-cv-input>
                           </div>
@@ -1314,8 +1340,18 @@
 
                           <!-- Form Entry -->
                           <!-- CONTROL DETAILS BEGIN -->
-                          <!-- Control Loop -->
-                          <div class="margintop30px" *ngIf="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroControls">
+
+                          <!-- Add New Control Button -->
+                          <div class="font18px marginleft30px margintopneg10px">
+                            <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
+                              (click)="addNewControl(indexAssay); $event.stopPropagation()" matTooltip="Add Control">
+                              <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add Control</span>
+                            </button>&nbsp;&nbsp;
+                          </div>
+
+                          <!-- If Control Exists -->
+                          <div class="margintop30px borderbottom"
+                            *ngIf="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroControls">
 
                             <div class="divflex">
                               <div class="marginleft10px font18px">
@@ -1324,17 +1360,9 @@
                                 </b>
                               </div>
 
-                              <div class="font18px marginleft30px margintopneg10px">
-                                <button mat-flat-button color="primary" class="marginright30px bordergreen"
-                                  color="primary" (click)="addNewControl(indexAssay); $event.stopPropagation()"
-                                  matTooltip="Add Control">
-                                  <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add Control</span>
-                                </button>&nbsp;&nbsp;
-                              </div>
-
                             </div> <!-- class=divflex -->
 
-
+                            <!-- Control Loop -->
                             <div class="marginbottom15px"
                               *ngFor="let ctrl of assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroControls; let indexCtrl = index">
 
@@ -1344,14 +1372,15 @@
                                   <hr>
                                 </div>
 
-                                <div class="width30px margintop15px">
+                                <div class="width30px margintop20px">
                                   {{(indexCtrl+1)}}
                                 </div>
 
                                 <!-- Substance Text Search Suggestions/TypeAhead -->
                                 <app-substance-text-search class="col-3-1" [searchValue]="ctrl.control"
                                   placeholder="Control - Search Substances"
-                                  (searchPerformed)="nameSearch($event, 'control')" eventCategory="selectorSearch">
+                                  (searchPerformed)="nameSearch($event, 'control', indexAssay, indexCtrl)"
+                                  eventCategory="selectorSearch">
                                 </app-substance-text-search>
 
                                 <mat-form-field class="col-3-1">
@@ -1360,7 +1389,8 @@
                                 </mat-form-field>
 
                                 <app-cv-input class="col-3-1" domain="INVITRO_CONTROL_TYPE" title="Control Type"
-                                  name="controlType" [model]="ctrl.controlType" (valueChange)="controlType = $event">
+                                  name="controlType" [model]="ctrl.controlType"
+                                  (valueChange)="ctrl.controlType = $event">
                                 </app-cv-input>
                               </div>
 
@@ -1371,7 +1401,7 @@
 
                                 <app-cv-input class="col-3-1" domain="QUALIFICATION" title="Control Value Type"
                                   name="controlValueType" [model]="ctrl.controlValueType"
-                                  (valueChange)="controlValueType = $event">
+                                  (valueChange)="ctrl.controlValueType = $event">
                                 </app-cv-input>
 
                                 <mat-form-field class="col-3-1">
@@ -1381,7 +1411,7 @@
 
                                 <app-cv-input class="col-3-1" domain="AMOUNT_UNIT" title="Control Reference Value Units"
                                   name="controlReferenceValueUnits" [model]="ctrl.controReferenceValueUnits"
-                                  (valueChange)="controReferenceValueUnits = $event">
+                                  (valueChange)="ctrl.controReferenceValueUnits = $event">
                                 </app-cv-input>
                               </div>
 
@@ -1400,7 +1430,7 @@
 
                     <!-- BACK and NEXT BUTTON -->
                     <div *ngIf="existingAssaysByAssaySetList.length > 0" class="divflex margintop20px width95percent">
-                      <div class=" alignright">
+                      <div class="alignright">
                         <button mat-button matStepperPrevious>Back</button>
                       </div>
                     </div>

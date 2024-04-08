@@ -145,6 +145,7 @@ export interface InvitroTestAgent {
   modifiedDate?: number;
   modifiedBy?: string;
   internalVersion?: number;
+  testAgentCompanyCode?: string;
   testAgent?: string;
   testAgentApprovalId?: string;
   testAgentSubstanceUuid?: string;
@@ -204,6 +205,7 @@ export interface InvitroSummary {
   modifiedBy?: string;
   internalVersion?: number;
   testAgent?: string;
+  testAgentSubstanceUuid?: string;
   relationshipType?: string;
   interactionType?: string;
   resultType?: string;

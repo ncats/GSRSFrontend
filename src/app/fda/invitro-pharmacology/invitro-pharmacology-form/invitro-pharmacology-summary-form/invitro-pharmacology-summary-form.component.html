@@ -141,17 +141,20 @@
             <div class="divflex">
               <div class="font18px fontbold">
                 Total Summaries: {{assayList.length}}
-              </div>
 
-              <div class="font18px marginleft30px margintopneg10px">
-                <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
-                  (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
-                  <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>
-                </button>&nbsp;&nbsp;
+                <br><br>
+
+                <!-- Add More Summary Button -->
+                <div class="font18px">
+                  <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
+                    (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
+                    <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>
+                  </button>&nbsp;&nbsp;
+                </div>
               </div>
 
               <!-- TEST AGENT - Select Substance -->
-              <div class="marginleft10px padtop10px related-substance">
+              <div class="marginleft100px padtop10px related-substance">
                 <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
                   eventCategory="substanceRelationshipRelatedSub"
                   placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
@@ -159,25 +162,41 @@
                 </app-substance-selector>
               </div>
 
-            </div>
+            </div> <!-- class=divflex -->
 
 
-            <!-- Loop-->
+            <!-- Loop Assays -->
             <div class="divradius divshadow margintop20px" *ngFor="let assay of assayList; let indexAssay = index">
 
-              <!-- Loop-->
+              <!-- Loop summaries -->
               <div *ngFor="let summary of assay.invitroSummaries; let indexSummary = index">
 
                 <div class="divflex" style="vertical-align:top;">
 
-                  <div class="margintop10px width20px">
+                  <div class="margintop10px width30px">
+                    &nbsp;&nbsp;&nbsp;
                     <b>{{(indexAssay+1)}}</b>
+                    <br><br>
+                    <button mat-icon-button color="primary" (click)="confirmDeleteAssay(indexAssay)"
+                      matTooltip="Delete this record">
+                      <mat-icon>delete_forever</mat-icon>
+                    </button>
                   </div>
 
                   <!-- START -->
                   <div class="marginleft20px">
 
                     <div class="form-row margintop10px">
+
+                      <!-- TARGET NAME - Select Substance -->
+                      <div class="col-3-1 padtop10px related-substance">
+                        <app-substance-selector (selectionUpdated)="targetNameUpdated($event)"
+                          eventCategory="substanceRelationshipRelatedSub"
+                          placeholder="Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
+                          [subuuid]="targetNameSubstanceUuid" [showMorelinks]="true">
+                        </app-substance-selector>
+                      </div>
+
 
                       <!-- TARGET NAME - Select from Existing Assay Target Name -->
                       <mat-form-field class="col-3-1">
@@ -193,14 +212,13 @@
                         </mat-select>
                       </mat-form-field>
 
-                      <!--
-                      <div class="col-4-1">
-                        <span *ngIf="summary.targetName">
+                      <div class="col-3-1">
+                        <span *ngIf="assay.targetName">
                           <span class="font11px"><b>Selected Target Name:</b></span><br>
-                          {{summary.targetName}}
+                          {{assay.targetName}}
                         </span>
                       </div>
-                      -->
+
                       <app-cv-input class="col-3-1" domain="RELATIONSHIP_TYPE" title="Relationship Type"
                         name="relationshipType" [model]="summary.relationshipType"
                         (valueChange)="summary.relationshipType = $event">
@@ -210,20 +228,6 @@
                         name="interactionType" [model]="summary.interactionType"
                         (valueChange)="summary.interactionType = $event">
                       </app-cv-input>
-
-
-                      <!--
-                      <div class="width100px alignright">
-                        <span *ngIf="index == 0">
-                          <br>
-                          <mat-checkbox [checked]="false" (change)="setApplyAllData($event.checked) ">
-                            <span class="font11px">
-                              Apply to All</span>
-                          </mat-checkbox>
-                        </span>
-                      </div>
-                      -->
-
                     </div> <!-- form-row -->
 
 
@@ -251,8 +255,8 @@
                         name="resultValueUnits" [model]="summary.resultValueUnits"
                         (valueChange)="summary.resultValueUnits = $event">
                       </app-cv-input>
-
                     </div> <!-- form-row -->
+
 
                     <div class="form-row">
                       <mat-form-field class="col-1">
@@ -261,13 +265,43 @@
                       </mat-form-field>
                     </div> <!-- form-row -->
 
+                    <!-- Reference -->
+                    <div class="font13px textalignleft">
+                      <b>References</b>
+                    </div>
 
-                  </div> <!--  -->
-                </div> <!-- divflex -->
+                    <!-- Reference -->
+                    <div class="form-row margintop10px">
+                      <app-cv-input class="col-3-1" domain="INVITRO_REFERENCE_SOURCE_TYPE" title="Reference Source Type"
+                        name="referenceSourceType" [model]="summary.referenceSourceType"
+                        (valueChange)="summary.referenceSourceType = $event">
+                      </app-cv-input>
 
-              </div> <!-- For Loop: Summaries -->
+                      <mat-form-field class="col-3-1">
+                        <input matInput placeholder="Reference Source" [(ngModel)]="summary.referenceSource"
+                          name="referenceSource" />
+                      </mat-form-field>
 
-            </div> <!-- For Loop -->
+                      <mat-form-field class="col-3-1">
+                        <input matInput placeholder="Reference Source Url" [(ngModel)]="summary.referenceSourceUrl"
+                          name="referenceSourceUrl" />
+                      </mat-form-field>
+                    </div> <!-- form-row -->
+
+                  </div> <!-- class=marginleft20px -->
+                </div> <!-- class=divflex -->
+
+              </div> <!-- Loop Summaries -->
+
+            </div> <!-- Loop Assays -->
+
+            <!-- Add More Summary Button -->
+            <div class="font18px margintop20px">
+              <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
+                (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
+                <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>
+              </button>&nbsp;&nbsp;
+            </div>
 
           </mat-card-content>
         </mat-card>
