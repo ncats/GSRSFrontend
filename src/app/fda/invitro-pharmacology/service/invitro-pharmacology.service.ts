@@ -172,13 +172,13 @@ export class InvitroPharmacologyService extends BaseHttpService {
     } else {
       const newInvitroAssayInformation: InvitroAssayInformation =
       {
-        invitroSummaries:[{}],
         invitroAssayScreenings: [{
           invitroReference: { invitroSponsor: {} },
           invitroTestAgent: {},
           invitroAssayResult: {},
           invitroLaboratory: {},
           invitroControls: [{}],
+          invitroSummary:{},
           invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
         }]
       };
@@ -186,27 +186,28 @@ export class InvitroPharmacologyService extends BaseHttpService {
     }
   }
 
+  /*
   // Initialize or load data in In-vitro Pharmacology SCREENING
-  loadScreening(assayScreening?: InvitroAssayInformation): void {
+  loadScreening(assayScreening?: InvitroAssayScreening): void {
     // if Update/Exist Assay Screening
     if (assayScreening != null) {
       this.assay = assayScreening;
     } else { // new
       const newInvitroAssayInformation: InvitroAssayInformation =
       {
-        invitroSummaries:[{}],
         invitroAssayScreenings: [{
           invitroReference: { invitroSponsor: {} },
           invitroTestAgent: {},
           invitroAssayResult: {},
           invitroLaboratory: {},
           invitroControls: [{}],
+          invitroSummary:{},
           invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
         }]
       };
       this.assay = newInvitroAssayInformation;
     }
-  }
+  }*/
 
   getAssayScreening(id: string): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + id;
@@ -322,6 +323,18 @@ export class InvitroPharmacologyService extends BaseHttpService {
       );
   }
 
+  getTestAgentSummaries(
+    testAgentId: number
+  ): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'testAgentSummaries/' + testAgentId;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
   saveAssay(): Observable<InvitroAssayInformation> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl;
     const params = new HttpParams();
@@ -342,7 +355,6 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   saveMultipleAssays(bulkAssays: any): Observable<InvitroAssayInformation> {
-    alert("AAAAA");
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + "saveBulkAssays";
     const params = new HttpParams();
     const options = {
@@ -352,10 +364,28 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    console.log()
     // Update In-vitro Pharmacology ASSAY
    // if ((this.assay != null) && (this.assay.id)) {
       return this.http.put<InvitroAssayInformation>(url, bulkAssays, options);
+   // } else {
+      // Save New In-vitro Pharmacology ASSAY
+    //  return this.http.post<InvitroAssayInformation>(url, this.assay, options);
+   // }
+  }
+
+  saveMultipleScreenings(bulkScreenings: any): Observable<InvitroAssayInformation> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + "saveBulkScreenings";
+    const params = new HttpParams();
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    };
+    // Update In-vitro Pharmacology ASSAY
+   // if ((this.assay != null) && (this.assay.id)) {
+      return this.http.put<InvitroAssayInformation>(url, bulkScreenings, options);
    // } else {
       // Save New In-vitro Pharmacology ASSAY
     //  return this.http.post<InvitroAssayInformation>(url, this.assay, options);
@@ -394,7 +424,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   addNewSummary(): void {
     const newInvitroSummary: InvitroSummary = {};
-    this.assay.invitroSummaries.push(newInvitroSummary);
+   // this.assay.invitroSummaries.push(newInvitroSummary);
   }
 
   deleteAssay() {

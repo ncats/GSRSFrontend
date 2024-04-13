@@ -207,7 +207,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           this.title = 'Register New In-vitro Pharmacology Screening';
           setTimeout(() => {
             this.titleService.setTitle(`Register In-vitro Pharmacology Screening`);
-            this.invitroPharmacologyService.loadScreening();
+            this.invitroPharmacologyService.loadAssay();
             this.assay = this.invitroPharmacologyService.assay;
 
             this.loadingService.setLoading(false);
@@ -532,7 +532,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
       this.router.navigate(['/invitro-pharm/register']);
-      this.invitroPharmacologyService.loadScreening();
+      this.invitroPharmacologyService.loadAssay();
     }, 5000);
   }
 

@@ -10,10 +10,11 @@
     </a>&nbsp;&nbsp;&nbsp;
 
     <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+    <!--
     <span *ngIf="assay && !assay.id">
       <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
     </span>
-
+    -->
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -22,12 +23,13 @@
     <span class="middle-fill"></span>
 
     <!-- Assay Details Link -->
+    <!--
     <a mat-flat-button color="primary" routerLink="/invitro-pharm/{{assay.id}}" target="_blank"
       matTooltip='Opens in a new window' *ngIf="assay && assay.id">
       View Assay Details
       <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
     </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
+    -->
 
     <!-- Validate and Submit Button -->
     &nbsp;
@@ -76,7 +78,7 @@
 
 
 <!-- Form Title and Authentication Details -->
-<div class="form-content-container mat-form-field-style" *ngIf="assay">
+<div class="form-content-container mat-form-field-style">
   <div class="scrollable-container">
 
     <div class="divcenter headerstyle margintop20px bordergray">
@@ -105,27 +107,30 @@
           </a>&nbsp;&nbsp;&nbsp;
         </div>
 
+        <!--
         <div class="width50percent font11px margintop10px" *ngIf="assay && assay.id">
           <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
           <span class="colorgray">Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss
           a'}}&nbsp;&nbsp;&nbsp;
           <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
           <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-        </div>
+        </div> -->
       </div> <!-- class=divflex -->
 
-      <!-- Link to All Assay page -->
-      <!--
-      <div class="marginleft40px padtop15px">
-        <a class="substance-name" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
-          target="_blank" alt="View All Assays" matTooltip='View All Assays'><b>View All Assay Lists</b>
-        </a>&nbsp;&nbsp;&nbsp;
+      <!-- Link to All Test Agent page -->
+      <div class="marginleft40px margintop10px">
+        <a mat-flat-button class="bordergray" color="basic" [routerLink]="['/invitro-pharm']"
+          [queryParams]="{view : 'all-testagents'}" target="_blank" matTooltip='Opens in a new window'>
+          <mat-icon class="small-icon" svgIcon="open_in_new" alt="View All Test Agents"
+            matTooltip="View All Test Agents. Opens in new window"></mat-icon>
+          View All Test Agents
+        </a>
       </div>
-      -->
+
     </div> <!-- class=divcenter -->
 
     <!-- ############################################################ -->
-    <!-- ASSAY DETAILS FORM BEGIN                                     -->
+    <!-- SCREENING/SUMMARY DETAILS FORM BEGIN                                     -->
     <!-- ************************************************************ -->
     <div class="details-container">
       <div class="width100percent">
@@ -140,10 +145,9 @@
 
             <div class="divflex">
               <div class="font18px fontbold">
-                Total Summaries: {{assayList.length}}
+                Total Summaries: {{screeningList.length}}
 
                 <br><br>
-
                 <!-- Add More Summary Button -->
                 <div class="font18px">
                   <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
@@ -155,54 +159,53 @@
 
               <!-- TEST AGENT - Select Substance -->
               <div class="marginleft100px padtop10px related-substance">
-                <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+                <app-substance-selector (selectionUpdated)="testAgentUpdated($event)"
                   eventCategory="substanceRelationshipRelatedSub"
                   placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
-                  [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+                  [subuuid]="testAgentSubstanceUuid" [showMorelinks]="true">
                 </app-substance-selector>
               </div>
 
             </div> <!-- class=divflex -->
 
 
-            <!-- Loop Assays -->
-            <div class="divradius divshadow margintop20px" *ngFor="let assay of assayList; let indexAssay = index">
+            <!-- Loop Screening/Summary -->
+            <div class="divradius divshadow margintop20px"
+              *ngFor="let screening of screeningList; let indexScreening = index">
 
-              <!-- Loop summaries -->
-              <div *ngFor="let summary of assay.invitroSummaries; let indexSummary = index">
+              <div class="divflex" style="vertical-align:top;">
 
-                <div class="divflex" style="vertical-align:top;">
+                <div class="margintop10px width30px">
+                  &nbsp;&nbsp;&nbsp;
+                  <b>{{(indexScreening+1)}}</b>
+                  <br><br>
+                  <button mat-icon-button color="primary" (click)="confirmDeleteAssay(indexScreening)"
+                    matTooltip="Delete this record">
+                    <mat-icon>delete_forever</mat-icon>
+                  </button>
+                </div>
 
-                  <div class="margintop10px width30px">
-                    &nbsp;&nbsp;&nbsp;
-                    <b>{{(indexAssay+1)}}</b>
-                    <br><br>
-                    <button mat-icon-button color="primary" (click)="confirmDeleteAssay(indexAssay)"
-                      matTooltip="Delete this record">
-                      <mat-icon>delete_forever</mat-icon>
-                    </button>
-                  </div>
+                <!-- START -->
+                <div class="marginleft20px">
 
-                  <!-- START -->
-                  <div class="marginleft20px">
+                  <div class="form-row margintop10px">
 
-                    <div class="form-row margintop10px">
-
-                      <!-- TARGET NAME - Select Substance -->
-                      <div class="col-3-1 padtop10px related-substance">
-                        <app-substance-selector (selectionUpdated)="targetNameUpdated($event)"
-                          eventCategory="substanceRelationshipRelatedSub"
-                          placeholder="Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
-                          [subuuid]="targetNameSubstanceUuid" [showMorelinks]="true">
-                        </app-substance-selector>
-                      </div>
+                    <!-- TARGET NAME - Select Substance -->
+                    <div class="col-3-1 padtop10px related-substance">
+                      <app-substance-selector (selectionUpdated)="targetNameUpdated($event, indexScreening)"
+                        eventCategory="substanceRelationshipRelatedSub"
+                        placeholder="Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
+                        [subuuid]="screening.invitroSummary.targetNameSubstanceUuid" [showMorelinks]="true">
+                      </app-substance-selector>
+                    </div>
 
 
-                      <!-- TARGET NAME - Select from Existing Assay Target Name -->
+                    <!-- TARGET NAME - Select from Existing Assay Target Name -->
+                    <!--
                       <mat-form-field class="col-3-1">
                         <mat-label>Select Existing Assay Target Name</mat-label>
                         <mat-select [formControl]="existingAssayControl"
-                          (selectionChange)="selectionChangeAssay($event, indexAssay)">
+                          (selectionChange)="selectionChangeExistingAssay($event, indexAssay)">
                           <mat-option *ngFor="let asy of assay._existingAssayList; let index = index" [value]="index">
                             ID:{{asy.id}}&nbsp;&nbsp;
                             External Assay Source:{{asy.externalAssaySource}}&nbsp;&nbsp;
@@ -211,6 +214,11 @@
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
+                      -->
+
+                    <!-- Search Existing Assay -->
+
+                    <!--
 
                       <div class="col-3-1">
                         <span *ngIf="assay.targetName">
@@ -218,85 +226,88 @@
                           {{assay.targetName}}
                         </span>
                       </div>
+                    -->
 
-                      <app-cv-input class="col-3-1" domain="RELATIONSHIP_TYPE" title="Relationship Type"
-                        name="relationshipType" [model]="summary.relationshipType"
-                        (valueChange)="summary.relationshipType = $event">
-                      </app-cv-input>
+                    <app-cv-input class="col-3-1" domain="RELATIONSHIP_TYPE" title="Relationship Type"
+                      name="relationshipType" [model]="screening.invitroSummary.relationshipType"
+                      (valueChange)="screening.invitroSummary.relationshipType = $event">
+                    </app-cv-input>
 
-                      <app-cv-input class="col-3-1" domain="INTERACTION_TYPE" title="Interaction Type"
-                        name="interactionType" [model]="summary.interactionType"
-                        (valueChange)="summary.interactionType = $event">
-                      </app-cv-input>
-                    </div> <!-- form-row -->
-
-
-                    <div class="form-row">
-                      <app-cv-input class="col-5-1" domain="QUALIFICATION" title="Result Type" name="resultType"
-                        [model]="summary.resultType" (valueChange)="summary.resultType = $event">
-                      </app-cv-input>
-
-                      <mat-form-field class="col-5-1">
-                        <input matInput placeholder="Result Value Average" [(ngModel)]="summary.resultValueAverage"
-                          name="resultValueAverage" />
-                      </mat-form-field>
-
-                      <mat-form-field class="col-5-1">
-                        <input matInput placeholder="Result Value Low" [(ngModel)]="summary.resultValueLow"
-                          name="resultValueLow" />
-                      </mat-form-field>
-
-                      <mat-form-field class="col-5-1">
-                        <input matInput placeholder="Result Value High" [(ngModel)]="summary.resultValueHigh"
-                          name="resultValueHigh" />
-                      </mat-form-field>
-
-                      <app-cv-input class="col-5-1" domain="AMOUNT_UNIT" title="Result Value Units"
-                        name="resultValueUnits" [model]="summary.resultValueUnits"
-                        (valueChange)="summary.resultValueUnits = $event">
-                      </app-cv-input>
-                    </div> <!-- form-row -->
+                    <app-cv-input class="col-3-1" domain="INTERACTION_TYPE" title="Interaction Type"
+                      name="interactionType" [model]="screening.invitroSummary.interactionType"
+                      (valueChange)="screening.invitroSummary.interactionType = $event">
+                    </app-cv-input>
+                  </div> <!-- form-row -->
 
 
-                    <div class="form-row">
-                      <mat-form-field class="col-1">
-                        <textarea matInput placeholder="Comments" [(ngModel)]="summary.comments" name="comments"
-                          rows="1"></textarea>
-                      </mat-form-field>
-                    </div> <!-- form-row -->
+                  <div class="form-row">
+                    <app-cv-input class="col-5-1" domain="QUALIFICATION" title="Result Type" name="resultType"
+                      [model]="screening.invitroSummary.resultType"
+                      (valueChange)="screening.invitroSummary.resultType = $event">
+                    </app-cv-input>
 
-                    <!-- Reference -->
+                    <mat-form-field class="col-5-1">
+                      <input matInput placeholder="Result Value Average"
+                        [(ngModel)]="screening.invitroSummary.resultValueAverage" name="resultValueAverage" />
+                    </mat-form-field>
+
+                    <mat-form-field class="col-5-1">
+                      <input matInput placeholder="Result Value Low"
+                        [(ngModel)]="screening.invitroSummary.resultValueLow" name="resultValueLow" />
+                    </mat-form-field>
+
+                    <mat-form-field class="col-5-1">
+                      <input matInput placeholder="Result Value High"
+                        [(ngModel)]="screening.invitroSummary.resultValueHigh" name="resultValueHigh" />
+                    </mat-form-field>
+
+                    <app-cv-input class="col-5-1" domain="AMOUNT_UNIT" title="Result Value Units"
+                      name="resultValueUnits" [model]="screening.invitroSummary.resultValueUnits"
+                      (valueChange)="screening.invitroSummary.resultValueUnits = $event">
+                    </app-cv-input>
+                  </div> <!-- form-row -->
+
+
+                  <div class="form-row">
+                    <mat-form-field class="col-1">
+                      <textarea matInput placeholder="Comments" [(ngModel)]="screening.invitroSummary.comments"
+                        name="comments" rows="1"></textarea>
+                    </mat-form-field>
+                  </div> <!-- form-row -->
+
+                  <!-- Reference -->
+                  <!--
                     <div class="font13px textalignleft">
                       <b>References</b>
                     </div>
 
-                    <!-- Reference -->
+                    <!- - Reference - ->
+
                     <div class="form-row margintop10px">
                       <app-cv-input class="col-3-1" domain="INVITRO_REFERENCE_SOURCE_TYPE" title="Reference Source Type"
-                        name="referenceSourceType" [model]="summary.referenceSourceType"
-                        (valueChange)="summary.referenceSourceType = $event">
+                        name="referenceSourceType" [model]="screening.invitroSummary.referenceSourceType"
+                        (valueChange)="screening.invitroSummary.referenceSourceType = $event">
                       </app-cv-input>
 
                       <mat-form-field class="col-3-1">
-                        <input matInput placeholder="Reference Source" [(ngModel)]="summary.referenceSource"
+                        <input matInput placeholder="Reference Source" [(ngModel)]="screening.invitroSummary.referenceSource"
                           name="referenceSource" />
                       </mat-form-field>
 
                       <mat-form-field class="col-3-1">
-                        <input matInput placeholder="Reference Source Url" [(ngModel)]="summary.referenceSourceUrl"
+                        <input matInput placeholder="Reference Source Url" [(ngModel)]="screening.invitroSummary.referenceSourceUrl"
                           name="referenceSourceUrl" />
                       </mat-form-field>
-                    </div> <!-- form-row -->
+                    </div> -->
+                  <!-- form-row -->
 
-                  </div> <!-- class=marginleft20px -->
-                </div> <!-- class=divflex -->
+                </div> <!-- class=marginleft20px -->
+              </div> <!-- class=divflex -->
 
-              </div> <!-- Loop Summaries -->
-
-            </div> <!-- Loop Assays -->
+            </div> <!-- Loop Summaries -->
 
             <!-- Add More Summary Button -->
-            <div class="font18px margintop20px">
+            <div class="font18px margintop20px" *ngIf="screeningList.length > 1">
               <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
                 (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
                 <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>

@@ -59,6 +59,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   // Suggestions/TypeAhead/Dropdown
   existingAssayList: Array<InvitroAssayInformation> = [];
   assayList: Array<InvitroAssayInformation> = [];
+  screeningList: Array<InvitroAssayScreening> = [];
   newAssayList: Array<InvitroAssayInformation> = [];
 
   existingAssaySetList: Array<any> = [];
@@ -138,8 +139,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
           if (id !== this.id) {
             this.id = id;
             this.titleService.setTitle(`Edit In-vitro Pharmacology Summary ` + this.id);
-            this.getInvitroPharmacologyDetails();
-            //this.assay =
+            this.getTestAgentSummariesDetails();
           }
         }
         else if (this.activatedRoute.snapshot.queryParams['copyId']) {
@@ -171,11 +171,11 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
             this.invitroPharmacologyService.loadAssay();
             this.assay = this.invitroPharmacologyService.assay;
 
-            // Get All Existing Assays suggestions/TypeAhead
-            this.getAllExistingAssays();
+            // *************** Get All Existing Assays suggestions/TypeAhead
+            //this.getAllExistingAssays();
 
             // Add One row of New Summary when page loads
-            //this.addNewSummary();
+            this.addNewSummary();
 
             this.loadingService.setLoading(false);
             this.isLoading = false;
@@ -195,18 +195,31 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     });
   }
 
-  getInvitroPharmacologyDetails(newType?: string): void {
+  getTestAgentSummariesDetails(newType?: string): void {
     if (this.id != null) {
-      const id = this.id.toString();
-      const getInvitroSubscribe = this.invitroPharmacologyService.getAssayScreening(id).subscribe(response => {
+      const getInvitroSubscribe = this.invitroPharmacologyService.getTestAgentSummaries(this.id).subscribe(response => {
         if (response) {
 
-          // before copying existing invitro pharamcology, delete the id
-          if (newType && newType === 'copy') {
-            this.scrub(response);
+         // this.invitroPharmacologyService.loadScreening(response);
+          this.screeningList = response;
+
+          if (this.screeningList.length > 0) {
+          if (this.screeningList[0].invitroTestAgent)
+            if (this.screeningList[0].invitroTestAgent.testAgentSubstanceUuid) {
+              this.testAgentSubstanceUuid = this.screeningList[0].invitroTestAgent.testAgentSubstanceUuid;
+              this.testAgent = this.screeningList[0].invitroTestAgent.testAgent;
+            }
           }
-          this.invitroPharmacologyService.loadAssay(response);
-          this.assay = this.invitroPharmacologyService.assay;
+
+          this.screeningList.forEach(screening => {
+            if (screening) {
+              if (screening.invitroSummary) {
+                if (screening.invitroSummary.targetNameSubstanceUuid) {
+
+                }
+              }
+            }
+          });
 
           this.loadingService.setLoading(false);
           this.isLoading = false;
@@ -225,7 +238,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       if (response) {
         this.existingAssayList = response;
 
-        this.addNewSummary();
+       // this.addNewSummary();
       }
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -370,9 +383,24 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     this.validationResult = true;
 
     // Validate Test Agent
+    /*
     if (this.testAgent == null) {
       this.setValidationMessage('Test Agent is required');
-    }
+    }*/
+
+     // Validate Target Name
+     this.screeningList.forEach((screening, index) => {
+        if (screening) {
+
+          screening.testing = "RRRRRRRRRRRRRRRR";
+
+          /*if (screening.invitroSummary) {
+            if (!screening.invitroSummary.targetNameSubstanceUuid) {
+              this.setValidationMessage('Target Name is required in row ' + (index+1));
+            }
+          } */
+        }
+     });
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -418,8 +446,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/invitro-pharm/register']);
-      this.invitroPharmacologyService.loadScreening();
+      this.router.navigate(['/invitro-pharm/summary/register']);
+     // this.invitroPharmacologyService.loadScreening();
     }, 5000);
   }
 
@@ -429,6 +457,37 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
     let assaySavedCount = 0;
 
+    this.invitroPharmacologyService.saveMultipleScreenings(this.screeningList).subscribe(response => {
+
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.validationMessages = null;
+      this.submissionMessage = 'In-vitro Pharmacology Assay Summary data was saved successfully!';
+      this.showSubmissionMessages = true;
+      this.validationResult = false;
+      setTimeout(() => {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = '';
+
+        let id = null;
+        if (response) {
+          if (response[0].invitroTestAgent) {
+            if (response[0].invitroTestAgent.testAgent) {
+              id = response[0].invitroTestAgent.id;
+              if (id) {
+                // Saved Successfully, reload this update page
+                this.invitroPharmacologyService.bypassUpdateCheck();
+                this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+                this.router.onSameUrlNavigation = 'reload';
+                this.router.navigate(['/invitro-pharm/summary/', id, 'edit']);
+              }
+            }
+          }
+        } // response
+      }, 4000);
+
+    });
+    /*
     //LOOP through each Assay, and save.  Save Multiple Assays.
     for (const assay of this.newAssayList) {
 
@@ -461,8 +520,9 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
           console.log("Regiser Invitro Pharmacology Summary - ERROR Saving Summary Data");
         } // else
       }); // save Subscribe
+      */
 
-    } // for assay
+   // } // for assay
 
   }
 
@@ -470,7 +530,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.scrub(this.newAssayList)
+     // data: this.scrub(this.newAssayList)
+     data: this.screeningList
       // data: this.invitroPharmacologyService.assay
     });
 
@@ -545,27 +606,29 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   }
 
   addNewSummary() {
-    const newAssay: InvitroAssayInformation = { invitroSummaries: [{}] };
+    const newAssay: InvitroAssayInformation = {invitroAssayScreenings: [{invitroSummary: {}}]};
 
+    let newScreening: InvitroAssayScreening = {invitroSummary: {}, invitroTestAgent: {}};
     newAssay._existingAssayList = this.existingAssayList;
 
+    this.screeningList.push(newScreening);
     this.assayList.push(newAssay);
   }
 
-  confirmDeleteAssay(indexAssay: number) {
+  confirmDeleteAssay(indexScreening: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: 'Are you sure you want to delete Summary record ' + (indexAssay + 1) + ' ?' }
+      data: { message: 'Are you sure you want to delete Summary record ' + (indexScreening + 1) + ' ?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result === true) {
-        this.deleteAssay(indexAssay);
+        this.deleteAssay(indexScreening);
       }
     });
   }
 
-  deleteAssay(indexAssay: number) {
-    this.assayList.splice(indexAssay, 1);
+  deleteAssay(indexScreening: number) {
+    this.screeningList.splice(indexScreening, 1);
   }
 
   displayMessageAfterDeleteSummarities() {
@@ -581,21 +644,25 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     });
   }
 
-  relatedSubstanceUpdated(substance: SubstanceSummary): void {
+  testAgentUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
       this.testAgentSubstanceUuid = substance.uuid
       this.testAgent = substance._name;
 
-      // this.newTestAgent.testAgent = substance._name,
-      // this.newTestAgent.testAgentSubstanceUuid = substance.uuid
-      // this.newTestAgent.testAgentApprovalId = substance.approvalID
+      this.screeningList.forEach(screening => {
+        if (screening) {
+          screening.invitroTestAgent.testAgent = 'AAAAAAAAAAA';
+          screening.invitroTestAgent.id = 1;
+          screening.invitroTestAgent.internalVersion = 2;
+        }
+      });
     }
   }
 
-  targetNameUpdated(substance: SubstanceSummary): void {
+  targetNameUpdated(substance: SubstanceSummary, indexScreening: number): void {
     if (substance != null) {
-      //this.SubstanceUuid = substance.uuid
-      this.testAgent = substance._name;
+      this.screeningList[indexScreening].invitroSummary.targetNameSubstanceUuid = substance.uuid;
+      this.screeningList[indexScreening].invitroSummary.targetName = substance._name;
     }
   }
 
@@ -648,29 +715,22 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     this.subscriptions.push(substanceSubscribe);
   }
 
-  selectionChangeAssay(event, indexAssay) {
+  selectionChangeExistingAssay(event, indexAssay) {
     let existingAssayIndex = event.value;
 
     // Select the assay
     const newAssay = this.existingAssayList[existingAssayIndex];
 
     // Set data in the summary object
-    const newSummary = this.assayList[indexAssay].invitroSummaries[0];
-    newSummary.testAgent = this.testAgent;
-    newSummary.testAgentSubstanceUuid = this.testAgentSubstanceUuid;
+  //  const newSummary = this.assayList[indexAssay].invitroAssayScreenings;
+  //  newSummary.testAgent = this.testAgent;
+  //  newSummary.testAgentSubstanceUuid = this.testAgentSubstanceUuid;
 
-    newAssay.invitroSummaries.push(newSummary);
+   // newAssay.invitroSummaries.push(newSummary);
     this.newAssayList.push(newAssay);
 
     this.assayList[indexAssay].targetName = newAssay.targetName;
 
-  }
-
-  selectionChangeExistingAssaySet(event) {
-    if (event) {
-      this.getAllAssysByAssaySet(event);
-      this.selectedAssaySet = event;
-    }
   }
 
   selectionChangeExistingReference(event) {
@@ -689,6 +749,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   setApplyAllData(checkBoxValue: any): void {
     if (checkBoxValue === true) {
+      /*
       let indexFirstAssay = this.assayList[0].invitroSummaries.length - 1;
       this.assayList.forEach((assay, indexAssay) => {
         if (indexAssay != 0) {
@@ -696,12 +757,12 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
           //Copy Summary data from first row to all the other rows
           assay.invitroSummaries[indexSummaries].resultType = this.assayList[0].invitroSummaries[indexSummaries].resultType;
-          /* assay.invitroAssayScreenings[indexScreening].invitroAssayResult.testAgentConcentrationUnits = this.existingAssaysByAssaySetList[0].invitroAssayScreenings[indexFirstAssayScreening].invitroAssayResult.testAgentConcentrationUnits;
-           assay.invitroAssayScreenings[indexScreening].invitroAssayResult.resultValue = this.existingAssaysByAssaySetList[0].invitroAssayScreenings[indexFirstAssayScreening].invitroAssayResult.resultValue;
-           assay.invitroAssayScreenings[indexScreening].invitroAssayResult.resultValueUnits = this.existingAssaysByAssaySetList[0].invitroAssayScreenings[indexFirstAssayScreening].invitroAssayResult.resultValueUnits;
-           */
+          // assay.invitroAssayScreenings[indexScreening].invitroAssayResult.testAgentConcentrationUnits = this.existingAssaysByAssaySetList[0].invitroAssayScreenings[indexFirstAssayScreening].invitroAssayResult.testAgentConcentrationUnits;
+          // assay.invitroAssayScreenings[indexScreening].invitroAssayResult.resultValue = this.existingAssaysByAssaySetList[0].invitroAssayScreenings[indexFirstAssayScreening].invitroAssayResult.resultValue;
+          // assay.invitroAssayScreenings[indexScreening].invitroAssayResult.resultValueUnits = this.existingAssaysByAssaySetList[0].invitroAssayScreenings[indexFirstAssayScreening].invitroAssayResult.resultValueUnits;
+
         }
-      });
+      }); */
     }
   }
 

@@ -205,6 +205,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   }
 
   sortData(sort: Sort) {
+    /*
     if (sort.active) {
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
@@ -218,7 +219,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
       // Search In-vitro Pharmacology
       this.getInvitroPharm();
     }
-    return;
+    return; */
   }
 
   formatValue(v) {

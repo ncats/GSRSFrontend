@@ -248,16 +248,20 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   }
 
   setSelectedAssaySet(data: any, checkbox) {
+    console.log("AAAAAAAAAA" + JSON.stringify(checkbox));
     let selStr = '';
     const selected = [];
+    /*
     const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
     checked.forEach(data1 => {
       const set: InvitroAssaySet = {};
-      // JSON.stringify({set.assaySet = data1});
-      this.assay.invitroAssaySets.push(set);
+      set.assaySet = data1;
+      alert(JSON.stringify(data1));
+    //  this.assay.invitroAssaySets.push(set);
 
       // selected.push(data1.value);
-    });
+    }); */
+
     /*
     if (selected.length > 0) {
       selStr = selected.join(',');
@@ -408,8 +412,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         }
       }, 4000);
     }
-
-
       /*
       , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;

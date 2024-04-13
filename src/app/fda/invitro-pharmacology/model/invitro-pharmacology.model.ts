@@ -37,7 +37,7 @@ export interface InvitroAssayInformation {
   _existingAssayList?: Array<any>;
   invitroAssaySets?: Array<InvitroAssaySet>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;
-  invitroSummaries?: Array<InvitroSummary>;
+  //invitroSummaries?: Array<InvitroSummary>;
 }
 
 export interface InvitroAssaySet {
@@ -63,6 +63,8 @@ export interface InvitroAssayScreening {
   invitroTestAgent?: InvitroTestAgent;
   invitroAssayResult?: InvitroAssayResult;
   invitroControls?: Array<InvitroControl>;
+  invitroSummary?: InvitroSummary;
+  testing?: string;
 }
 
 export interface InvitroReference {
@@ -206,6 +208,8 @@ export interface InvitroSummary {
   internalVersion?: number;
   testAgent?: string;
   testAgentSubstanceUuid?: string;
+  targetName?: string;
+  targetNameSubstanceUuid?: string;
   relationshipType?: string;
   interactionType?: string;
   resultType?: string;
