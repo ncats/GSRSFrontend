@@ -57,6 +57,7 @@ export interface InvitroAssayScreening {
   modifiedDate?: number;
   modifiedBy?: string;
   internalVersion?: number;
+  invitroAssayResultInformation?: InvitroAssayResultInformation;
   invitroReference?: InvitroReference;
   invitroSponsorReport?: InvitroSponsorReport;
   invitroLaboratory?: InvitroLaboratory;
@@ -65,6 +66,21 @@ export interface InvitroAssayScreening {
   invitroControls?: Array<InvitroControl>;
   invitroSummary?: InvitroSummary;
   testing?: string;
+  _show?: boolean;
+}
+
+export interface InvitroAssayResultInformation {
+  id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
+  testAgent?: string;
+  invitroReference?: InvitroReference;
+  invitroLaboratory?: InvitroLaboratory;
+  invitroSponsor?: InvitroSponsor;
+  invitroSponsorReport?: InvitroSponsorReport;
 }
 
 export interface InvitroReference {

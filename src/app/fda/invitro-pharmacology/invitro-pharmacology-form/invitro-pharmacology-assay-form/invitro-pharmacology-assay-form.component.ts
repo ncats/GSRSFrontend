@@ -248,7 +248,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   }
 
   setSelectedAssaySet(data: any, checkbox) {
-    console.log("AAAAAAAAAA" + JSON.stringify(checkbox));
     let selStr = '';
     const selected = [];
     /*

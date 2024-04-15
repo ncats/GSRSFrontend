@@ -13,6 +13,7 @@ import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestion
 
 /* GSRS Invitro Pharmacology Imports */
 import { InvitroAssayInformation, InvitroAssayScreening, InvitroSummary, ValidationResults } from '../model/invitro-pharmacology.model';
+import { identity } from 'lodash';
 
 @Injectable(
   {
@@ -186,6 +187,28 @@ export class InvitroPharmacologyService extends BaseHttpService {
     }
   }
 
+  // Initialize or load data in In-vitro Pharmacology ASSAY
+  loadAssaySummaries(assay?: InvitroAssayInformation): void {
+    // if Update/Exist Assay
+    if (assay != null) {
+      this.assay = assay;
+    } else {
+      const newInvitroAssayInformation: InvitroAssayInformation =
+      {
+        invitroAssayScreenings: [{
+          invitroReference: { invitroSponsor: {} },
+          invitroTestAgent: {},
+          invitroAssayResult: {},
+          invitroLaboratory: {},
+          invitroControls: [{}],
+          invitroSummary:{},
+          invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
+        }]
+      };
+      this.assay = newInvitroAssayInformation;
+    }
+  }
+
   /*
   // Initialize or load data in In-vitro Pharmacology SCREENING
   loadScreening(assayScreening?: InvitroAssayScreening): void {
@@ -211,6 +234,16 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   getAssayScreening(id: string): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + id;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
+  getAssaysByResultInfoId(id: string): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'assaysByResultInfoId/' + id;
     return this.http.get<any>(url)
       .pipe(
         map(result => {
