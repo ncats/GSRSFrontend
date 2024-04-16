@@ -17,7 +17,7 @@ export class PwdRecoveryComponent implements OnInit {
     private dialogRef: MatDialogRef<PwdRecoveryComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: string
   ) { 
-    console.log('data:::', data);
+   // console.log('data:::', data);
   }
 
   ngOnInit(): void {

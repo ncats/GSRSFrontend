@@ -2093,4 +2093,3 @@ interface TestSequence {
   subgroups?: Array<any>;
   subunits?: Array<SequenceUnit>;
 }
-

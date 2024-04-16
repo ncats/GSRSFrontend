@@ -318,7 +318,7 @@ openMessageDialog(message: string) {
     let exists = false;
     let toPut = "";
     this.bulkSearchService.getSingleBulkSearchList(this.selectedList).subscribe(record => {
-      console.log(record);
+     // console.log(record);
       record.lists.forEach(entry =>{
         if (entry.key === this.privateSubstance.uuid) {
           exists = true;
