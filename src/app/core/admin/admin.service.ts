@@ -293,6 +293,9 @@ export class AdminService extends BaseHttpService {
             if (scrubber) {
               toput.processingActions[0].parameters['scrubberSettings'] = scrubber;
               toput.processingActions[0]["processingActionName"] = "Scrub";
+              toput.processingActions[1] = {"parameters": {
+
+              }, "processingActionName": action}
             }
          
           return this.http.put< any >(url, toput);

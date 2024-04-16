@@ -592,7 +592,15 @@ getDrafts() {
     if (this.feature === 'regenRefs') {
       this.regenRefs();
     }
+    if (this.feature === 'regenUUID') {
+      if(confirm('Warning: This will regenerate the substance UUID which will cause issues with already registered substances. Are you sure you want to continue?')){
+        this.substanceFormService.regenUUID();
+        alert('Substance UUID has been regenerated');
+      }
+    }
 
+
+    
 
 
   }
