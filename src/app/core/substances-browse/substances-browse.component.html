@@ -50,7 +50,7 @@
                 <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
                     <mat-icon svgIcon="paste" matTooltip = "Copy Smiles to clipboard"></mat-icon>
                   </button>
-                  
+
               <span *ngIf="searchType && searchType == 'similarity'">
                 &nbsp;&ge; {{searchCutoff}}
               </span>
@@ -63,19 +63,19 @@
                   <mat-icon svgIcon="delete_forever" matTooltip = "clear structure search parameters"></mat-icon>
                 </button>
               </span>
-              
+
           </div>
-         
-          
+
+
         </div>
           <br/>
         <div style = "width:100%; margin-bottom:5px;">
-         
+
           <a color="primary" class = "link" (click)="seedSmiles(this.smiles)">
           Or start a new chemical registration using this Smiles
         </a></div>
         </div>
-        
+
         <div class="mat-elevation-z2" *ngIf="sequenceSearchTerm">
           <div>
             <span class="capitalized font-medium-bold no-break">Sequence Query:</span>
@@ -93,12 +93,12 @@
             </button>
           </div>
         </div>
-        
+
       </div>
-      
-     
+
+
     </div>
-    
+
     <div *ngIf="bulkSearchQueryId">
       <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true" (closed)="bulkSearchPanelOpen = false"
         style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
@@ -113,7 +113,7 @@
 
             <div>
               <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
-              <span *ngIf="bulkSearchQueryId"> 
+              <span *ngIf="bulkSearchQueryId">
               | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
               </span>
               Bulk Search
@@ -126,7 +126,7 @@
               [isCollapsed]="isBulkSearchCollapsed"
             ></app-bulk-search-results-summary>
           </div>
-        </mat-expansion-panel>           
+        </mat-expansion-panel>
     </div>
 
     <div class="break"></div>
@@ -192,7 +192,7 @@
             <div class="actions-container">
               <button mat-icon-button color="primary" (click)="editAdvancedSearch()">
                 <mat-icon svgIcon="edit" matTooltip="Go to Advanced Search"></mat-icon>
-              </button>    
+              </button>
               <button mat-icon-button color="primary" (click)="clearSearch()" style="width: 25px">
                 <mat-icon svgIcon="delete_forever" matTooltip="Delete search"></mat-icon>
               </button>
@@ -225,12 +225,12 @@
               &nbsp;
               <span class="no-break">
                 <input readonly [value] = "this.smiles" class = "smiles-input" />
-                
+
                 <span *ngIf="searchType && searchType == 'similarity'">
                   &nbsp;&ge; {{searchCutoff}}
                 </span>
               </span>
-            
+
             <!--  <button mat-icon-button color="primary" (click)="clipboard(this.smiles)">
                     <mat-icon  color="primary" svgIcon="paste"></mat-icon>
                   </button>-->
@@ -247,7 +247,7 @@
               </button>
               <button mat-icon-button color="primary" (click)="clearStructureSearch()">
                 <mat-icon svgIcon="delete_forever"></mat-icon>
-              </button>              
+              </button>
             </div>
             <div class = "structure-link"><a color="primary" class = "link" style = "margin:auto" (click)="seedSmiles(this.smiles)">
                 Or start a new chemical registration using this Smiles
@@ -272,14 +272,14 @@
           </div>
           <span class = "middle-fill"></span>
 
-          
+
         </div>
 
-        
+
       </ng-template>
-      
+
       <div *ngIf="(substances && substances.length)">
-        
+
       <div>
         <div class="sub-search-div">
           <p class="sub-search-text red-text">Results below are an incomplete preview</p>
@@ -667,6 +667,6 @@
       [codeSystems]="codes[substance.uuid] && codes[substance.uuid].codeSystems"
       [userLists] = "userLists">
     </app-substance-summary-card>
-    
+
   </div>
 </div>

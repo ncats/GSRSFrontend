@@ -9,6 +9,7 @@ import {CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.c
 import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
 import {AuthService} from '@gsrs-core/auth';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
+import { ConfigService } from '@gsrs-core/config';
 
 /*
   used for any input that uses cv vocabulary to handle custom values after selecting 'other'
@@ -41,12 +42,15 @@ export class CvInputComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
     private dictionaryService: DataDictionaryService,
-    private authService: AuthService
+    private authService: AuthService,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
     if (this.vocabulary) {
       this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
+      this.sortFromConfig();
+
     } else if (this.key) {
       this.dictionary = this.dictionaryService.getDictionaryRow(this.key);
       if (!this.title) {
@@ -55,6 +59,8 @@ export class CvInputComponent implements OnInit, OnDestroy {
       this.vocabName = this.dictionary.CVDomain;
      const cvSubscription =  this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
         this.vocabulary = response[this.vocabName].list;
+        this.sortFromConfig();
+
       });
       this.subscriptions.push(cvSubscription);
     } else {
@@ -62,6 +68,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
     this.vocabName = this.domain;
       const cvSubscription =  this.cvService.getDomainVocabulary(this.vocabName).subscribe(response => {
         this.vocabulary = response[this.vocabName].list;
+        this.sortFromConfig();
       });
       this.subscriptions.push(cvSubscription);
 
@@ -74,6 +81,31 @@ export class CvInputComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  //sort dropdown based on config settings
+  //for example "CVDisplayOrder": {  "DOCUMENT_TYPE": ["IND", "NDA"], 
+  sortFromConfig(vocab?: any) {
+    if (!vocab) {
+      vocab = this.vocabulary;
+    }
+    let vocabName = this.vocabName;
+    if(this.key && this.key !== '') {
+      // wrong format, ignore for now
+    }
+    if (this.configService && this.configService.configData && this.configService.configData.CVDisplayOrder && this.configService.configData.CVDisplayOrder[vocabName] ) {
+      let configOrder = this.configService.configData.CVDisplayOrder[vocabName] ;
+      for(let i = configOrder.length-1; i >=0; i--) {
+        let check = configOrder[i];
+        vocab.forEach(function(item,j){
+          if(item.value == check){
+            vocab.splice(j, 1);
+            vocab.unshift(item);
+          }
+        });
+    }
+      this.vocabulary = vocab;
+    }
   }
 
   @Input()

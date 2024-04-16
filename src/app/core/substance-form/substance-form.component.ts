@@ -193,7 +193,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                this.loadingService.setLoading(false);
                this.router.onSameUrlNavigation = 'reload';
               this.router.navigateByUrl('/substances/register/' + response.substance.substanceClass + '?action=import', { state: { record: response.substance } });
-   
+
              }, 1000);
            }
           }
@@ -218,7 +218,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           }
     });
   }
-  
+
 
   importDialog(): void {
     const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
@@ -293,15 +293,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
-        
+
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-      
+
         if (params['id']) {
-          
+
           if(action && action === 'import' && window.history.state) {
             const record = window.history.state;
             this.imported = true;
-            
+
             this.getDetailsFromImport(record.record);
           } else {
             const id = params['id'];
@@ -347,12 +347,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                     this.isLoading = false;
                     this.loadingService.setLoading(false);
                   });
-                
+
               }
             }, error => {
               this.isLoading = false;
               this.loadingService.setLoading(false);
-              });  
+              });
        }  else {
           this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
           if (this.copy) {
@@ -401,7 +401,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       });
     });
 
-    
+
 
 }
 
@@ -423,7 +423,7 @@ setStructureFromUrl(structure: string, type: string):void {
 
 
 gunzip(t): string{
-  
+
    const gezipedData = Buffer.from(t, 'base64')
 const gzipedDataArray = Uint8Array.from(gezipedData);
 const ungzipedData = ungzip(gzipedDataArray);
@@ -470,8 +470,8 @@ getDrafts() {
     if (json) {
      let decode = decodeURI(json);
     }
-    
-    
+
+
 
     const subscription = this.dynamicComponents.changes
       .subscribe(() => {
@@ -593,7 +593,7 @@ getDrafts() {
       this.regenRefs();
     }
 
-    
+
 
   }
 
@@ -670,7 +670,7 @@ getDrafts() {
             return false;
           }
           return true;
-    
+
         }
         return false;
         //default to 'lastEditedBy' if not set in config
@@ -690,7 +690,7 @@ getDrafts() {
           return true;
       }
     }
-    
+
   }
 
   showJSON(): void {
@@ -818,6 +818,14 @@ getDrafts() {
         if (response._name) {
           delete response._name;
         }
+        if (response.names && response.names.length > 0) {
+            response.names.forEach(name => {
+              if (name.stdName) {
+                name.stdName = null;
+              }
+            });
+        }
+
         this.scrub(response, type);
         this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
           this.setFormSections(formSections[response.substanceClass]);
@@ -902,7 +910,7 @@ getDrafts() {
       this.loadingService.setLoading(false);
       this.isLoading = false;
       this.validationMessages = null;
-      this.openSuccessDialog('approve');
+      this.openSuccessDialog({ type: 'approve' });
       this.submissionMessage = 'Substance was approved successfully';
       this.showSubmissionMessages = true;
       this.validationResult = false;
@@ -931,7 +939,7 @@ getDrafts() {
       if (!this.id) {
         this.id = response.uuid;
       }
-      this.openSuccessDialog('staging');
+      this.openSuccessDialog({type: 'staging'});
     })
   }
 
@@ -951,7 +959,7 @@ getDrafts() {
       if (!this.id) {
         this.id = response.uuid;
       }
-      this.openSuccessDialog();
+      this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
     }, (error: SubstanceFormResults) => {
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -971,7 +979,7 @@ getDrafts() {
         }, 8000);
       }
     });
-         
+
   }
   }
 
@@ -1094,7 +1102,7 @@ getDrafts() {
           codeSystem: code
         });
       })
-    
+
     const createHolders = defiant.json.search(old, '//*[created]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
@@ -1160,8 +1168,14 @@ getDrafts() {
     return old;
   }
 
-  openSuccessDialog(type?: string): void {
-    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {data: {'type':type}});
+  openSuccessDialog({ type, fileUrl }: { type?: 'submit'|'approve'|'staging', fileUrl?: string }): void {
+    const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
+      data: {
+        type: type,
+        fileUrl: fileUrl
+      },
+      disableClose: true
+    });
     this.overlayContainer.style.zIndex = '1002';
 
     const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view' | 'staging') => {
@@ -1175,6 +1189,9 @@ getDrafts() {
         this.router.navigate(['/admin/staging-area']);
       } else if (response === 'view') {
         this.router.navigate(['/substances', this.id]);
+      } else if (response === 'viewInPfda') {
+        // View the submitted substance file in the user's precisionFDA home
+        window.location.assign(fileUrl);
       } else {
         this.submissionMessage = 'Substance was saved successfully!';
         if (type && type === 'approve') {
@@ -1222,7 +1239,7 @@ mergeConcept() {
   saveDraft(auto?: boolean) {
     const json = this.substanceFormService.cleanSubstance();
     const time = new Date().getTime();
-    
+
     const uuid = json.uuid ? json.uuid : 'register';
     const type = json.substanceClass;
     let primary = null;
@@ -1246,7 +1263,7 @@ mergeConcept() {
         'auto': false,
         'file': file
       }
-  
+
      localStorage.setItem(file, JSON.stringify(draft));
      this.draftCount++;
 
@@ -1309,11 +1326,6 @@ mergeConcept() {
 
      localStorage.setItem(file, JSON.stringify(draft));
 
-      
     }
-    
-
-    
-
   }
 }

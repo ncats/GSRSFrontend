@@ -18,7 +18,7 @@
         {{ 'displayNameShortTitle' | elementLabel : 'substance_names_name' }}
       </mat-radio-button>
     </div>
-    <div class="checkbox-container column-checkbox">
+    <div class="checkbox-container column-checkbox" *ngIf="showStd && viewFull">
       <mat-checkbox [(ngModel)]="name.preferred" matTooltip="{{ 'preferredTitle' | elementLabel : 'substance_names_name' }}">
         {{ 'preferredShortTitle' | elementLabel : 'substance_names_name' }}
       </mat-checkbox>

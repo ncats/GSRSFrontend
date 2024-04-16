@@ -13,6 +13,8 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
 import { Title } from '@angular/platform-browser';
 import * as _ from 'lodash';
+import { pipeline } from 'stream';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-structure-search',
@@ -91,26 +93,38 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   search(): void {
-    const mol = this.editor.getMolfile();
-    this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-      const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
-      this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
-      this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
-    }, () => {});
+    let mol = '';
+    this.loadingService.setLoading(true);
+     this.editor.getMolfile().pipe(take(1)).subscribe(resp => {
+      mol = resp;
+      this.structureService.interpretStructure(mol).subscribe(response => {
+      //  const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+      //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+        this.loadingService.setLoading(false);
+        this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
+      }, error => {
+        console.log(error);
+      });
+    });
+  
+    
   }
 
   standardize(standard: string): void {
-    const mol = this.editor.getMolfile();
+    let mol = ''
+     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
     this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
       if (response && response.structure && response.structure.molfile) {
         this.editor.setMolecule(response.structure.molfile);
       }
-    }, () => {});
+      }, () => {});
+    });
   }
+    
 
 
   private navigateToBrowseSubstance(structureSearchTerm: string, smiles?: string): void {
-
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
@@ -140,7 +154,9 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
 
 
-    this.router.navigate(['/browse-substance'], navigationExtras);
+    this.router.navigate(['/browse-substance'], navigationExtras).then(() => window.location.reload());
+
+
   }
 
   searchTypeSelected(event): void {
@@ -179,6 +195,9 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   openStructureExportDialog(): void {
+    let mol = ''
+     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
     this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
     const dialogRef = this.dialog.open(StructureExportComponent, {
       height: 'auto',
@@ -194,6 +213,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       this.overlayContainer.style.zIndex = null;
     }, () => {
       this.overlayContainer.style.zIndex = null;
+    });
     });
   }
 

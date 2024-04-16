@@ -4,7 +4,7 @@ import { JSDraw } from './jsdraw.model';
 
 @Component({
   selector: 'ncats-jsdraw-wrapper',
-  template: `<div [id]="randomId" dataformat="molfile"></div>`,
+  template: `<div [id]="randomId" dataformat="molfile"  ></div>`,
   styles: []
 })
 export class JsdrawWrapperComponent implements AfterViewInit {

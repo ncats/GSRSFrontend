@@ -1,0 +1,88 @@
+$pfda-padding-main: 32px;
+$pfda-navbar-height: 64px;
+$pfda-navbar-blue: #343E4D;
+$pfda-navbar-active-blue: #2f5373;
+$pfda-navbar-item-hover: #a0c2e0;
+$pfda-navbar-spacer-colour: #5f768a;
+
+$screenSmall: 850px;
+$screenMedium: 1045px;
+
+
+.pfda-toolbar {
+	background-color: $pfda-navbar-blue;
+	color: white;
+	font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 16px;
+	padding: 0 8px;
+	height: auto;
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	@media(min-width: $screenSmall) {
+		padding: 0 $pfda-padding-main;
+		height: $pfda-navbar-height;
+	}
+}
+
+.pfda-toolbar-inner {
+	display: flex;
+	align-items: center;
+}
+
+.pfda-logo img {
+	width: 144px;
+	margin-top: 4px;
+}
+
+.pfda-toolbar-button {
+	display: flex;
+	flex-flow: column nowrap;
+	align-self: flex-end;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 6px;
+
+	&:hover {
+		color: $pfda-navbar-item-hover;
+	}
+
+	&.active {
+		color: white;
+		background-color: $pfda-navbar-active-blue;
+	}
+
+	&-icon, .mat-icon {
+		display: flex;
+		align-items: flex-end;
+		height: 18px;
+		margin: 3px 0px 2px 0px;
+	}
+
+	&-title {
+		display: none;
+		margin-top: 4px;
+
+		@media(min-width: $screenSmall) {
+			display: inline;
+		}
+	}
+}
+
+.pfda-toolbar-spacer {
+	border-right: 1px solid $pfda-navbar-spacer-colour;
+	width: 1px;
+	height: 38px;
+	margin: 0px 4px;
+}
+
+.pfda-user-button {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

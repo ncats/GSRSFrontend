@@ -6,8 +6,10 @@
 
     
 <div *ngIf = "oldReferences.length > 0">
+  
+  
     <span class = "explain"> Select a recently submitted reference to populate the form</span>
-        <table mat-table matSort [dataSource]="oldReferences">
+        <table mat-table matSort [dataSource]="pagedReferences">
             <ng-container matColumnDef="use">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Use </th>
                 <td mat-cell *matCellDef="let reference"><a class = "reuse-button" (click) = "selectReference(reference)">select</a> </td>
@@ -41,9 +43,19 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row class = "narrow-row" *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
+
+          <div class="full-paginator">
+            <mat-paginator #paginator [length]="oldReferences.length" [pageIndex]="pageIndex" [pageSize]="pageSize" 
+            (page)="changePage($event)" [showFirstLastButtons]="false">
+         </mat-paginator>
+          </div>
     </div>
     <div *ngIf = "oldReferences.length === 0">
         <i>No previous references found for this user</i>
         </div>
 
     </div>
+
+
+
+    

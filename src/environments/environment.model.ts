@@ -4,7 +4,7 @@ export interface Environment {
     baseHref: string;
     clasicBaseHref: string;
     production: boolean;
-    appId: 'fda' | 'gsrs' | 'cbg';
+    appId: 'fda' | 'gsrs';
     structureEditor: 'ketcher' | 'jsdraw';
     googleAnalyticsId: string;
     version: string;
