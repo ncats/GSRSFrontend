@@ -244,9 +244,9 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             }
 
             /* Invitro Assay Summary Object exists */
-            if (screening.invitroSummary) {
-              assaySummary.relationshipType = screening.invitroSummary.relationshipType;
-            }
+            /*  if (screening.invitroSummary) {
+                assaySummary.relationshipType = screening.invitroSummary.relationshipType;
+              } */
 
             /* LOOP: Invitro Assay Control exists */
             if (screening.invitroControls.length > 0) {
@@ -262,39 +262,42 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             /* Invitro Reference Object exists */
             let referenceSourceTypeNumber = '';
             let referenceSourceNumber = '';
-            if (screening.invitroReference) {
-              // Need this so it will not display undefined value
-              if (screening.invitroReference.referenceSourceNumber) {
-                referenceSourceNumber = screening.invitroReference.referenceSourceNumber;
-              }
-              referenceSourceTypeNumber = screening.invitroReference.referenceSourceType + ' ' + referenceSourceNumber;
-              assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
-            } // if invitroReference exists
+            if (screening.invitroAssayResultInformation) {
+              if (screening.invitroAssayResultInformation.invitroReference) {
+                // Need this so it will not display undefined value
+                if (screening.invitroAssayResultInformation.invitroReference.referenceSource) {
+                  referenceSourceNumber = screening.invitroAssayResultInformation.invitroReference.referenceSource;
+                }
+                referenceSourceTypeNumber = screening.invitroAssayResultInformation.invitroReference.referenceSourceType + ' ' + referenceSourceNumber;
+                assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
+              } // if invitroReference exists
 
 
-            /* Invitro Test Agent Object exists */
-            if (screening.invitroTestAgent) {
+              /* Invitro Test Agent Object exists */
+              if (screening.invitroAssayResultInformation.invitroTestAgent) {
 
-              let testAgent = '';
-              let testAgentSubstanceUuid = '';
-              testAgent = screening.invitroTestAgent.testAgent;
-              assaySummary.testAgent = testAgent;
-              testAgentSubstanceUuid = screening.invitroTestAgent.testAgentSubstanceUuid;
+                let testAgent = '';
+                let testAgentSubstanceUuid = '';
+                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
+                assaySummary.testAgent = testAgent;
+                testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
 
-              // Get the index if the value exists in the key 'testAgent'
-              const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
+                // Get the index if the value exists in the key 'testAgent'
+                const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
 
-              if (indexTestAgent > -1) {
-                // Add in the exsting card record
-                this.allScreeningTestAgents[indexTestAgent].testAgentSummaryList.push(assaySummary);
-              } else {
-                // Create new card record
-                let assayList = [];
-                assayList.push(assaySummary);
-                const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
-                this.allScreeningTestAgents.push(appScreening);
-              } // else
-            } // if invitroTestAgent exists
+                if (indexTestAgent > -1) {
+                  // Add in the exsting card record
+                  this.allScreeningTestAgents[indexTestAgent].testAgentSummaryList.push(assaySummary);
+                } else {
+                  // Create new card record
+                  let assayList = [];
+                  assayList.push(assaySummary);
+                  const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
+                  this.allScreeningTestAgents.push(appScreening);
+                } // else
+              } // if invitroTestAgent exists
+
+            } //  if invitroAssayResultInformation exists
 
           }); // LOOP: invitroAssayScreenings
 

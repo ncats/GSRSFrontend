@@ -34,6 +34,10 @@
   font-size: 18px;
 }
 
+.font20px {
+  font-size: 20px;
+}
+
 .fontbold {
   font-weight: bold;
 }
@@ -144,6 +148,22 @@
   margin-top: 10px;
 }
 
+.marginbottom10px {
+  margin-bottom: 10px;
+}
+
+.marginleftneg10px {
+  margin-left: -10px;
+}
+
+.marginleft10px {
+  margin-left: 10px;
+}
+
+.marginleft15px {
+  margin-left: 15px;
+}
+
 .marginleft20px {
   margin-left: 20px;
 }
@@ -152,12 +172,32 @@
   margin-left: 40px;
 }
 
+.marginright10px {
+  margin-right: 10px;
+}
+
 .marginright40px {
   margin-right: 40px;
 }
 
+.width80px {
+  width: 80px;
+}
+
 .width100px {
   width: 100px;
+}
+
+.width110px {
+  width: 110px;
+}
+
+.width120px {
+  width: 120px;
+}
+
+.width150px {
+  width: 150px;
 }
 
 .width200px {
@@ -178,6 +218,26 @@
 
 .width70percent {
   width: 70%;
+}
+
+.textalignleft {
+  text-align: left;
+}
+
+.textalignright {
+  text-align: right;
+}
+
+.alignleft {
+  margin-left: 0 auto;
+}
+
+.alignright {
+  margin-left: auto;
+}
+
+.positionabsolute {
+  position: absolute;
 }
 
 ::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {

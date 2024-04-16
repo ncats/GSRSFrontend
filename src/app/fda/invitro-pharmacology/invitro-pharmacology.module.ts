@@ -22,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -35,6 +36,7 @@ import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
 import { SubstanceFormModule } from '@gsrs-core/substance-form/substance-form.module';
+import { SubstanceSelectorModule } from '../../core/substance-selector/substance-selector.module';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyComponent } from './invitro-pharmacology.component';
@@ -49,7 +51,9 @@ import { CanActivateRegisterInvitroPharmacologyFormComponent } from './invitro-p
 import { CanActivateUpdateInvitroPharmacologyFormComponent } from './invitro-pharmacology-form/can-activate-update-invitro-pharmacology-form.component';
 import { CanDeactivateInvitroScreeningFormComponent } from './invitro-pharmacology-form/can-deactivate-invitro-screening-form.component';
 import { CanDeactivateInvitroAssayFormComponent } from './invitro-pharmacology-form/can-deactivate-invitro-assay-form.component';
+import { CanDeactivateInvitroSummaryFormComponent } from './invitro-pharmacology-form/can-deactivate-invitro-summary-form.component';
 import { ActivateInvitroPharmacologyComponent } from './activate-invitro-pharmacology.component';
+import { InvitroPharmacologySummaryFormComponent } from './invitro-pharmacology-form/invitro-pharmacology-summary-form/invitro-pharmacology-summary-form.component';
 
 const invitroRoutes: Routes = [
   {
@@ -84,6 +88,18 @@ const invitroRoutes: Routes = [
     component: InvitroPharmacologyFormComponent,
     canActivate: [ActivateInvitroPharmacologyComponent, CanActivateUpdateInvitroPharmacologyFormComponent],
     canDeactivate: [CanDeactivateInvitroScreeningFormComponent]
+  },
+  {
+    path: 'invitro-pharm/summary/register',
+    component: InvitroPharmacologySummaryFormComponent,
+    canActivate: [ActivateInvitroPharmacologyComponent, CanActivateRegisterInvitroPharmacologyFormComponent],
+    canDeactivate: [CanDeactivateInvitroSummaryFormComponent]
+  },
+  {
+    path: 'invitro-pharm/summary/:id/edit',
+    component: InvitroPharmacologySummaryFormComponent,
+    canActivate: [ActivateInvitroPharmacologyComponent, CanActivateUpdateInvitroPharmacologyFormComponent],
+    canDeactivate: [CanDeactivateInvitroSummaryFormComponent]
   },
   {
     path: 'invitro-pharm/:id',
@@ -126,6 +142,7 @@ const invitroRoutes: Routes = [
     MatButtonToggleModule,
     MatTooltipModule,
     MatTabsModule,
+    MatRadioModule,
     MatBottomSheetModule,
     MatProgressSpinnerModule,
     MatStepperModule,
@@ -135,7 +152,8 @@ const invitroRoutes: Routes = [
     FacetsManagerModule,
     SubstanceImageModule,
     SubstanceTextSearchModule,
-    SubstanceFormModule
+    SubstanceFormModule,
+    SubstanceSelectorModule
   ],
   declarations: [
     InvitroPharmacologyComponent,
@@ -145,7 +163,8 @@ const invitroRoutes: Routes = [
     InvitroPharmacologyTextSearchComponent,
     InvitroPharmacologyDataImportComponent,
     InvitroPharmacologyDetailsTestagentComponent,
-    InvitroPharmacologyAssayFormComponent
+    InvitroPharmacologyAssayFormComponent,
+    InvitroPharmacologySummaryFormComponent
   ],
   exports: [
   ],
