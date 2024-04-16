@@ -137,6 +137,7 @@
       </div> <!-- if assay exists -->
     </div> <!-- class=divcenter -->
 
+
     <!-- ############################################################ -->
     <!-- ASSAY DETAILS FORM BEGIN                                     -->
     <!-- ************************************************************ -->
@@ -299,23 +300,23 @@
                         <span class="font16px colorblack">Reference and Laboratory</span>
 
                         <br>
-                        <span class="colormaroon font11px fontbold" *ngIf="screening.invitroReference">
-                          <span *ngIf="screening.invitroReference.referenceSourceType">
-                            Reference:&nbsp;{{screening.invitroReference.referenceSourceType}}&nbsp;
-                            {{screening.invitroReference.referenceSourceNumber}}&nbsp;
+                        <span class="colormaroon font11px fontbold" *ngIf="assayResultInfo.invitroReference">
+                          <span *ngIf="assayResultInfo.invitroReference.referenceSourceType">
+                            Reference:&nbsp;{{assayResultInfo.invitroReference.referenceSourceType}}&nbsp;
+                            {{assayResultInfo.invitroReference.referenceSource}}&nbsp;
                             <br>
                           </span>
                         </span>
 
-                        <span class="colormaroon font11px fontbold" *ngIf="screening.invitroReference.invitroSponsor">
-                          <span *ngIf="screening.invitroReference.invitroSponsor.sponsorContactName">
-                            Sponsor:&nbsp;{{screening.invitroReference.invitroSponsor.sponsorContactName}}
+                        <span class="colormaroon font11px fontbold" *ngIf="assayResultInfo.invitroLaboratory">
+                          <span *ngIf="assayResultInfo.invitroLaboratory.laboratoryName">
+                            Laboratory:&nbsp;{{assayResultInfo.invitroLaboratory.laboratoryName}}
                           </span>
                         </span>
                       </ng-template>
 
                       <!-- REFERENCE DETAILS BEGIN -->
-                      <div class="margintop30px" *ngIf="screening.invitroReference">
+                      <div class="margintop30px">
 
                         <div class="divflex margintop15px width95percent">
 
@@ -400,37 +401,39 @@
                         <!--
                         <div *ngIf="radioSelectedReference == 'selectedNewReference'">
                         -->
-                        <div class="form-row margintop10px">
-                          <div class="fieldKey">
-                            <mat-label>Reference Source Type:&nbsp;<span class="colorred">*</span></mat-label>
+                        <div *ngIf="assayResultInfo.invitroReference">
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
+                              <mat-label>Reference Source Type:&nbsp;<span class="colorred">*</span></mat-label>
+                            </div>
+
+                            <app-cv-input class="fieldvalue" domain="INVITRO_REFERENCE_SOURCE_TYPE" title=""
+                              name="referenceSourceType" [model]="assayResultInfo.invitroReference.referenceSourceType"
+                              (valueChange)="assayResultInfo.invitroReference.referenceSourceType = $event">
+                            </app-cv-input>
                           </div>
 
-                          <app-cv-input class="fieldvalue" domain="INVITRO_REFERENCE_SOURCE_TYPE" title=""
-                            name="referenceSourceType" [model]="assayResultInfo.invitroReference.referenceSourceType"
-                            (valueChange)="assayResultInfo.invitroReference.referenceSourceType = $event">
-                          </app-cv-input>
-                        </div>
-
-                        <div class="form-row margintop10px">
-                          <div class="fieldKey">
-                            <mat-label>Reference Source:&nbsp;<span class="colorred">*</span></mat-label>
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
+                              <mat-label>Reference Source:&nbsp;<span class="colorred">*</span></mat-label>
+                            </div>
+                            <mat-form-field class="fieldvalue">
+                              <input matInput placeholder=""
+                                [(ngModel)]="assayResultInfo.invitroReference.referenceSource" name="referenceSource" />
+                            </mat-form-field>
                           </div>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assayResultInfo.invitroReference.referenceSourceNumber"
-                              name="referenceSourceNumber" />
-                          </mat-form-field>
-                        </div>
 
-                        <div class="form-row margintop10px">
-                          <div class="fieldKey">
-                            <mat-label>Reference Digital Object Identifier:</mat-label>
+                          <div class="form-row margintop10px">
+                            <div class="fieldKey">
+                              <mat-label>Reference Digital Object Identifier:</mat-label>
+                            </div>
+                            <mat-form-field class="fieldvalue">
+                              <input matInput placeholder=""
+                                [(ngModel)]="assayResultInfo.invitroReference.digitalObjectIdentifier"
+                                name="digitalObjectIdentifier" />
+                            </mat-form-field>
                           </div>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder=""
-                              [(ngModel)]="assayResultInfo.invitroReference.digitalObjectIdentifier"
-                              name="digitalObjectIdentifier" />
-                          </mat-form-field>
+
                         </div>
                         <!--
                         </div>
@@ -499,9 +502,10 @@
                           <div class="fieldKey">
                             <mat-label>Laboratory Name:&nbsp;<span class="colorred">*</span></mat-label>
                           </div>
+
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="screening.invitroLaboratory.laboratoryName"
-                              name="laboratoryName" />
+                            <input matInput placeholder=""
+                              [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryName" name="laboratoryName" />
                           </mat-form-field>
                         </div>
 
@@ -510,8 +514,8 @@
                             <mat-label>Laboratory Type:</mat-label>
                           </div>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="screening.invitroLaboratory.laboratoryType"
-                              name="laboratoryType" />
+                            <input matInput placeholder=""
+                              [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryType" name="laboratoryType" />
                           </mat-form-field>
                         </div>
 
@@ -521,7 +525,7 @@
                           </div>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="screening.invitroLaboratory.laboratoryAffiliation"
+                              [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryAffiliation"
                               name="laboratoryAffiliation" />
                           </mat-form-field>
                         </div>
@@ -532,7 +536,7 @@
                           </div>
                           <mat-form-field class="fieldvalue">
                             <input matInput placeholder=""
-                              [(ngModel)]="screening.invitroLaboratory.laboratoryStreetAddress"
+                              [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryStreetAddress"
                               name="laboratoryStreetAddress" />
                           </mat-form-field>
                         </div>
@@ -542,8 +546,8 @@
                             <mat-label>City:</mat-label>
                           </div>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="screening.invitroLaboratory.laboratoryCity"
-                              name="laboratoryCity" />
+                            <input matInput placeholder=""
+                              [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryCity" name="laboratoryCity" />
                           </mat-form-field>
                         </div>
 
@@ -552,8 +556,8 @@
                             <mat-label>State:</mat-label>
                           </div>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="screening.invitroLaboratory.laboratoryState"
-                              name="laboratoryState" />
+                            <input matInput placeholder=""
+                              [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryState" name="laboratoryState" />
                           </mat-form-field>
                         </div>
 
@@ -562,7 +566,8 @@
                             <mat-label>Zipcode:</mat-label>
                           </div>
                           <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="screening.invitroLaboratory.laboratoryZipcode"
+                            <input matInput placeholder=""
+                              [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryZipcode"
                               name="laboratoryZipcode" />
                           </mat-form-field>
                         </div>
@@ -573,8 +578,8 @@
                           </div>
 
                           <app-cv-input class="fieldvalue" domain="PROD_COUNTRY_CODE" title="" name="laboratoryCountry"
-                            [model]="screening.invitroLaboratory.laboratoryCountry"
-                            (valueChange)="screening.invitroLaboratory.laboratoryCountry = $event">
+                            [model]="assayResultInfo.invitroLaboratory.laboratoryCountry"
+                            (valueChange)="assayResultInfo.invitroLaboratory.laboratoryCountry = $event">
                           </app-cv-input>
                         </div>
 
@@ -605,22 +610,30 @@
                       <span class="font16px colorblack">Sponsor, Submitters, and Report</span>
 
                       <span class="colormaroon font11px fontbold" *ngIf="assayResultInfo.invitroSponsor">
-
-                        <!--
-                        <span *ngIf="screening.invitroReference.referenceSourceType">
-                          Reference:&nbsp;{{screening.invitroReference.referenceSourceType}}&nbsp;
-                          {{screening.invitroReference.referenceSourceNumber}}&nbsp;
+                        <span *ngIf="assayResultInfo.invitroSponsor.sponsorContactName">
                           <br>
-                        </span> -->
-
-                      </span>
-                      <!--
-                      <span class="colormaroon font11px fontbold" *ngIf="screening.invitroReference.invitroSponsor">
-                        <span *ngIf="screening.invitroReference.invitroSponsor.sponsorContactName">
-                          Sponsor:&nbsp;{{screening.invitroReference.invitroSponsor.sponsorContactName}}
+                          Sponsor:&nbsp;{{assayResultInfo.invitroSponsor.sponsorContactName}}&nbsp;
                         </span>
                       </span>
-                       -->
+
+                      <span class="colormaroon font11px fontbold" *ngIf="assayResultInfo.invitroSponsorReport">
+                        <span class="colormaroon font11px fontbold"
+                          *ngIf="assayResultInfo.invitroSponsorReport.invitroSponsorSubmitters.length > 0">
+                          <span
+                            *ngIf="assayResultInfo.invitroSponsorReport.invitroSponsorSubmitters[0].sponsorReportSubmitterName">
+                            <br>
+                            Submitter:&nbsp;{{assayResultInfo.invitroSponsorReport.invitroSponsorSubmitters[0].sponsorReportSubmitterName}}
+                          </span>
+                        </span>
+
+                        <span class="colormaroon font11px fontbold">
+                          <span *ngIf="assayResultInfo.invitroSponsorReport.reportNumber">
+                            <br>
+                            Report:&nbsp;{{assayResultInfo.invitroSponsorReport.reportNumber}}
+                          </span>
+                        </span>
+                      </span>
+
                     </ng-template>
 
                     <!-- ********************************************* -->
@@ -673,11 +686,9 @@
                         <!-- **** RADIO BUTTON END **** -->
 
                         <!-- BACK and NEXT BUTTON -->
-                        <div class="divflex margintop20px width95percent">
-                          <div class=" alignright">
-                            <button mat-button matStepperPrevious>Back</button>
-                            <button mat-button matStepperNext>Next</button>
-                          </div>
+                        <div class="alignright">
+                          <button mat-button matStepperPrevious>Back</button>
+                          <button mat-button matStepperNext>Next</button>
                         </div>
 
                       </div> <!-- divflex -->
@@ -692,8 +703,7 @@
                           <mat-label>Sponsor Contact Name:&nbsp;<span class="colorred">*</span></mat-label>
                         </div>
                         <mat-form-field class="fieldvalue">
-                          <input matInput placeholder=""
-                            [(ngModel)]="screening.invitroReference.invitroSponsor.sponsorContactName"
+                          <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsor.sponsorContactName"
                             name="sponsorContactName" />
                         </mat-form-field>
                       </div>
@@ -703,8 +713,7 @@
                           <mat-label>Sponsor Affiliation:</mat-label>
                         </div>
                         <mat-form-field class="fieldvalue">
-                          <input matInput placeholder=""
-                            [(ngModel)]="screening.invitroReference.invitroSponsor.sponsorAffiliation"
+                          <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsor.sponsorAffiliation"
                             name="sponsorAffiliation" />
                         </mat-form-field>
                       </div>
@@ -715,7 +724,7 @@
                         </div>
                         <mat-form-field class="fieldvalue">
                           <input matInput placeholder=""
-                            [(ngModel)]="screening.invitroReference.invitroSponsor.sponsorStreetAddress"
+                            [(ngModel)]="assayResultInfo.invitroSponsor.sponsorStreetAddress"
                             name="sponsorStreetAddress" />
                         </mat-form-field>
                       </div>
@@ -725,8 +734,8 @@
                           <mat-label>Sponsor City:</mat-label>
                         </div>
                         <mat-form-field class="fieldvalue">
-                          <input matInput placeholder=""
-                            [(ngModel)]="screening.invitroReference.invitroSponsor.sponsorCity" name="sponsorCity" />
+                          <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsor.sponsorCity"
+                            name="sponsorCity" />
                         </mat-form-field>
                       </div>
 
@@ -735,8 +744,8 @@
                           <mat-label>Sponsor State:</mat-label>
                         </div>
                         <mat-form-field class="fieldvalue">
-                          <input matInput placeholder=""
-                            [(ngModel)]="screening.invitroReference.invitroSponsor.sponsorState" name="sponsorState" />
+                          <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsor.sponsorState"
+                            name="sponsorState" />
                         </mat-form-field>
                       </div>
 
@@ -745,8 +754,7 @@
                           <mat-label>Sponsor Zipcode:</mat-label>
                         </div>
                         <mat-form-field class="fieldvalue">
-                          <input matInput placeholder=""
-                            [(ngModel)]="screening.invitroReference.invitroSponsor.sponsorZipcode"
+                          <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsor.sponsorZipcode"
                             name="sponsorZipcode" />
                         </mat-form-field>
                       </div>
@@ -757,8 +765,8 @@
                         </div>
 
                         <app-cv-input class="fieldvalue" domain="PROD_COUNTRY_CODE" title="" name="sponsorCountry"
-                          [model]="screening.invitroReference.invitroSponsor.sponsorCountry"
-                          (valueChange)="screening.invitroReference.invitroSponsor.sponsorCountry = $event">
+                          [model]="assayResultInfo.invitroSponsor.sponsorCountry"
+                          (valueChange)="assayResultInfo.invitroSponsor.sponsorCountry = $event">
                         </app-cv-input>
                       </div>
                       <!--
@@ -781,11 +789,11 @@
                   -->
 
                     <!-- SPONSOR REPORT DETAILS BEGIN -->
-                    <div class="margintop30px" *ngIf="assayResultInfo.invitroSponsorReport">
+                    <div class="margintop10px" *ngIf="assayResultInfo.invitroSponsorReport">
 
                       <!-- SPONSOR SUBMITTER DETAILS BEGIN -->
                       <br>
-                      <div class="divflex margintop30px width95percent">
+                      <div class="divflex margintop20px width95percent">
 
                         <div class="padtop5px colorblue font18px fontbold fontverdana">
                           Sponsor Report Submitter
@@ -909,32 +917,36 @@
                     </div>
                       -->
 
+
                     <!-- SPONSOR REPORT BEGIN -->
-                    <div class="divflex margintop20px width95percent">
-                      <div class="padtop5px colorblue font18px fontbold fontverdana">
-                        Report
+                    <div *ngIf="assayResultInfo.invitroSponsorReport">
+                      <div class="divflex margintop30px width95percent">
+                        <div class="padtop5px colorblue font18px fontbold fontverdana">
+                          Report
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="form-row margintop10px">
-                      <div class="fieldKey">
-                        <mat-label>Report Number:&nbsp;<span class="colorred">*</span></mat-label>
+                      <div class="form-row margintop10px">
+                        <div class="fieldKey">
+                          <mat-label>Report Number:&nbsp;<span class="colorred">*</span></mat-label>
+                        </div>
+                        <mat-form-field class="fieldvalue">
+                          <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsorReport.reportNumber"
+                            name="reportNumber" />
+                        </mat-form-field>
                       </div>
-                      <mat-form-field class="fieldvalue">
-                        <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsorReport.reportNumber"
-                          name="reportNumber" />
-                      </mat-form-field>
-                    </div>
 
-                    <div class="form-row margintop10px">
-                      <div class="fieldKey">
-                        <mat-label>Report Date:</mat-label>
+                      <div class="form-row margintop10px">
+                        <div class="fieldKey">
+                          <mat-label>Report Date:</mat-label>
+                        </div>
+                        <mat-form-field class="fieldvalue">
+                          <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsorReport.reportDate"
+                            name="reportDate" />
+                        </mat-form-field>
                       </div>
-                      <mat-form-field class="fieldvalue">
-                        <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroSponsorReport.reportDate"
-                          name="reportDate" />
-                      </mat-form-field>
-                    </div>
+
+                    </div> <!-- if sponsor report exists -->
                     <!-- REPORT DETAILS END -->
 
                     <!-- NEXT BUTTON -->
@@ -953,18 +965,18 @@
                   <mat-step>
                     <ng-template matStepLabel>
                       <span class="font16px colorblack">Test Agent</span>
-                      <span class="colormaroon font11px fontbold" *ngIf="screening.invitroTestAgent">
-                        <span *ngIf="screening.invitroTestAgent.testAgent">
+                      <span class="colormaroon font11px fontbold" *ngIf="assayResultInfo.invitroTestAgent">
+                        <span *ngIf="assayResultInfo.invitroTestAgent.testAgent">
                           <br>
-                          {{screening.invitroTestAgent.testAgent}}&nbsp;
+                          {{assayResultInfo.invitroTestAgent.testAgent}}&nbsp;
                         </span>
                       </span>
                     </ng-template>
 
                     <!-- TEST AGENT DETAILS BEGIN -->
-                    <div *ngIf="screening.invitroTestAgent">
+                    <div *ngIf="assayResultInfo.invitroTestAgent">
 
-                      <div class="divflex margintop30px width95percent">
+                      <div class="divflex margintop10px width95percent">
 
                         <div class="padtop5px colorblue font18px fontbold fontverdana">
                           Test Agent
@@ -1018,6 +1030,7 @@
 
 
                       <!-- Test Agent Form Entry BEGIN -->
+                      <!--
                       <div *ngIf="radioSelectedTestAgent == 'selectedNewTestAgent'">
 
                         <div class="form-row margintop15px">
@@ -1029,30 +1042,48 @@
                               name="testAgentCompanyCode" />
                           </mat-form-field>
                         </div>
+                         -->
+                      <div *ngIf="assayResultInfo.invitroTestAgent">
+                        <div class="divcenter">
 
-                        <div class="form-row">
-                          <div class="fieldKey">
-                            <mat-label>Test Agent:</mat-label>
+                          <!-- TEST AGENT - Select Substance -->
+                          <div class="marginleft350px padtop10px width300px">
+                            <app-substance-selector (selectionUpdated)="testAgentUpdated($event)"
+                              eventCategory="substanceRelationshipRelatedSub"
+                              placeholder="*Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
+                              [subuuid]="testAgentSubstanceUuid" [showMorelinks]="true">
+                            </app-substance-selector>
                           </div>
 
-                          <!-- Substance Text Search Suggestions/TypeAhead -->
-                          <app-substance-text-search class="fieldvalue"
-                            [searchValue]="screening.invitroTestAgent.testAgent" placeholder="Search Substances"
-                            (searchPerformed)="nameSearch($event, 'testAgent', screeningIndex)"
-                            eventCategory="selectorSearch">
-                          </app-substance-text-search>
+                        </div> <!-- divcenter -->
+                      </div>
+
+                      <!--
+                        <div class="fieldKey">
+                          <mat-label>Test Agent:</mat-label>
                         </div>
 
-                        <div class="form-row">
-                          <div class="fieldKey">
-                            <mat-label>Test Agent Approval ID:</mat-label>
-                          </div>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="screening.invitroTestAgent.testAgentApprovalId"
-                              name="testAgentApprovalId" />
-                          </mat-form-field>
-                        </div>
+                        <!- - Substance Text Search Suggestions/TypeAhead - ->
+                        <app-substance-text-search class="fieldvalue"
+                          [searchValue]="screening.invitroTestAgent.testAgent" placeholder="Search Substances"
+                          (searchPerformed)="nameSearch($event, 'testAgent', screeningIndex)"
+                          eventCategory="selectorSearch">
+                        </app-substance-text-search>
+                        -->
 
+                      <!--
+                      <div class="form-row">
+                        <div class="fieldKey">
+                          <mat-label>Test Agent Approval ID:</mat-label>
+                        </div>
+                        <mat-form-field class="fieldvalue">
+                          <input matInput placeholder="" [(ngModel)]="screening.invitroTestAgent.testAgentApprovalId"
+                            name="testAgentApprovalId" />
+                        </mat-form-field>
+                      </div>
+                      -->
+
+                      <!--
                         <div class="form-row">
                           <div class="fieldKey">
                             <mat-label>Test Agent Smile String:</mat-label>
@@ -1104,9 +1135,10 @@
                               name="casRegistryNumber" />
                           </mat-form-field>
                         </div>
+                      -->
 
-
-                        <!-- MOVE TO NEW TABLE -->
+                      <!-- MOVE TO NEW TABLE -->
+                      <!--
                         <div class="form-row">
                           <div class="fieldKey">
                             <mat-label>Batch Number:</mat-label>
@@ -1136,10 +1168,12 @@
                               name="vehicleComposition" />
                           </mat-form-field>
                         </div>
-                      </div>
+                         -->
+                      <!--
+                      </div> -->
                       <!-- Test Agent Form Entry END -->
 
-                    </div> <!-- if screening.invitroTestAgent exists -->
+                    </div> <!-- if assayResultInfo.invitroTestAgent exists -->
                     <!-- TEST AGENT DETAILS END -->
 
 
@@ -1159,44 +1193,39 @@
                   <!-- ################# RESULTS STEP ################# -->
                   <mat-step>
                     <ng-template matStepLabel>
-                      <span class="font16px colorblack">Results and Controls</span>
+                      <span class="font16px colorblack">Results&nbsp;({{existingAssaysByAssaySetList.length}}) and
+                        Controls</span>
                     </ng-template>
 
                     <!-- RESULT DETAILS BEGIN -->
                     <div *ngIf="screening.invitroAssayResult">
 
-                      <div class="divflex margintop10px width95percent">
+                      <div class="divflex margintop30px width95percent">
 
                         <div class="padtop5px colorblue font18px fontbold fontverdana">
-                          Results
+                          Results&nbsp;({{existingAssaysByAssaySetList.length}})
                         </div>
 
-                        <!-- Select Assays from Assay Sets Dropdown -->
-                        <div class="margintopneg15px marginleft100px padtop5px">
-                          <mat-form-field class="width300px">
-                            <mat-label>Select Assays from Assay Set: </mat-label>
-                            <mat-select [formControl]="existingAssaySetControl"
-                              (selectionChange)="selectionChangeExistingAssaySet($event.value)">
-                              <mat-option *ngFor="let asySet of existingAssaySetList; let indexAssaySet = index"
-                                [value]="asySet.assaySet">
-                                {{asySet.assaySet}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
+                        <!-- Show Assay Set dropdown only in register page -->
+                        <div *ngIf="!id">
+                          <!-- Select Assays from Assay Sets Dropdown -->
+                          <div class="margintopneg15px marginleft100px padtop5px">
+                            <mat-form-field class="width300px">
+                              <mat-label>Select Assays from Assay Set: </mat-label>
+                              <mat-select [formControl]="existingAssaySetControl"
+                                (selectionChange)="selectionChangeExistingAssaySet($event.value)">
+                                <mat-option *ngFor="let asySet of existingAssaySetList; let indexAssaySet = index"
+                                  [value]="asySet.assaySet">
+                                  {{asySet.assaySet}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
 
-                          <!-- Display Message -->
-                          <div *ngIf="assayMessage">
-                            <span class="font12px colorred">{{assayMessage}}</span>
+                            <!-- Display Message -->
+                            <div *ngIf="assayMessage">
+                              <span class="font12px colorred">{{assayMessage}}</span>
+                            </div>
                           </div>
-                        </div>
-
-                        <div class="marginleft30px margintop5px" *ngIf="selectedAssaySet">
-                          Selected Assay Set: <span class="font16px"><b>{{selectedAssaySet}}</b></span>
-                        </div>
-
-                        <div class="marginleft30px margintop5px" *ngIf="selectedAssaySet">
-                          Total Assays: <span
-                            class="font16px colorblue"><b>{{existingAssaysByAssaySetList.length}}</b></span>
                         </div>
 
                         <!-- NEXT BUTTON -->
@@ -1206,19 +1235,24 @@
 
                       </div> <!-- class=divflex -->
 
-
                       <!-- *********************************************************************-->
                       <!-- *********************************************************************-->
                       <!-- RESULTS                                                              -->
                       <!-- *********************************************************************-->
 
-                      <hr>
                       <!-- Show More fields link -->
-                      <div class="divflex">
+                      <div class="divflex margintop20px">
                         <div>
-                          <b>Test Agent: </b>
-                          <span class="font16px" *ngIf="screening.invitroTestAgent.testAgent">
-                            <b>{{screening.invitroTestAgent.testAgent}}</b>
+                          <span class="font16px" *ngIf="selectedAssaySet">
+                            Selected Assay Set: <span class="font16px"><b>{{selectedAssaySet}}</b></span>
+                            <br>
+                          </span>
+                          <span class="font16px" *ngIf="assayResultInfo.invitroTestAgent">
+                            <span class="font16px" *ngIf="assayResultInfo.invitroTestAgent.testAgent">
+                              Test Agent:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              &nbsp;&nbsp;&nbsp;&nbsp;
+                              <b>{{assayResultInfo.invitroTestAgent.testAgent}}</b>
+                            </span>
                           </span>
                         </div>
 
@@ -1226,8 +1260,8 @@
                         <div class="width120px margintop15px marginright20px alignright font13px"
                           *ngIf="existingAssaysByAssaySetList.length > 0">
                           <a href="" (click)="toggleShowMoreLessFields(); false">
-                            <span *ngIf="showMoreLessFields">Show More Fields...</span>
-                            <span *ngIf="!showMoreLessFields">Show Less Fields...</span>
+                            <span *ngIf="showMoreLessFields">Show More Fields</span>
+                            <span *ngIf="!showMoreLessFields">Show Less Fields</span>
                           </a>
                         </div>
                       </div> <!-- divflex -->
@@ -1239,6 +1273,8 @@
 
                         <div class="divradius divshadow margintop20px"
                           *ngFor="let screening of assay.invitroAssayScreenings; let indexScreening = index">
+
+
 
                           <!-- IF SHOW IS TRUE -->
 
@@ -1359,23 +1395,21 @@
                                   Added?
                                 </mat-checkbox>
 
-                                <!-- Substance Text Search Suggestions/TypeAhead -->
-                                <app-substance-text-search class="col-4-1"
-                                  [searchValue]="screening.invitroAssayResult.plasmaProtein"
-                                  placeholder="Plasma Protein - Search Substances"
-                                  (searchPerformed)="nameSearch($event, 'targetName')" eventCategory="selectorSearch">
-                                </app-substance-text-search>
+                                <mat-form-field class="col-4-1">
+                                  <input matInput placeholder="Protein"
+                                    [(ngModel)]="screening.invitroAssayResult.protein" name="protein" />
+                                </mat-form-field>
 
                                 <mat-form-field class="col-4-1">
                                   <input matInput placeholder="Plasma Protein Concentration"
-                                    [(ngModel)]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.plasmaProteinConcentration"
+                                    [(ngModel)]="screening.invitroAssayResult.plasmaProteinConcentration"
                                     name="plasmaProteinConcentration" />
                                 </mat-form-field>
 
                                 <app-cv-input class="col-4-1" domain="AMOUNT_UNIT"
                                   title="Plasma Protein Concentration Units" name="plasmaProteinConcentrationUnits"
-                                  [model]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.plasmaProteinConcentrationUnits"
-                                  (valueChange)="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.plasmaProteinConcentrationUnits = $event">
+                                  [model]="screening.invitroAssayResult.plasmaProteinConcentrationUnits"
+                                  (valueChange)="screening.invitroAssayResult.plasmaProteinConcentrationUnits = $event">
                                 </app-cv-input>
                               </div>
 
@@ -1383,68 +1417,87 @@
                               <!-- Fourth row -->
                               <div class="form-row margintop10px">
                                 <mat-form-field class="col-4-1">
-                                  <textarea matInput placeholder="Comments"
-                                    [(ngModel)]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.comments"
-                                    name="comments" rows="1"></textarea>
+                                  <input matInput placeholder="Batch Number"
+                                    [(ngModel)]="screening.invitroAssayResult.batchNumber" name="batchNumber" />
                                 </mat-form-field>
 
                                 <mat-form-field class="col-4-1">
-                                  <textarea matInput placeholder="Measurements"
-                                    [(ngModel)]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.assayMeasurement"
-                                    name="assayMeasurement" rows="1"></textarea>
+                                  <input matInput placeholder="Test Date"
+                                    [(ngModel)]="screening.invitroAssayResult.testDate" name="testDate" />
                                 </mat-form-field>
 
                                 <app-cv-input class="col-4-1" domain="INVITRO_DATA_TYPE" title="Type of Data:"
-                                  name="dataType"
-                                  [model]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.dataType"
+                                  name="dataType" [model]="screening.invitroAssayResult.dataType"
                                   (valueChange)="screening.invitroAssayResult.dataType = $event">
                                 </app-cv-input>
 
                                 <app-cv-input class="col-4-1" domain="INVITRO_NUMBER_OF_TESTS" title="Number of Tests"
-                                  name="numberOfTests"
-                                  [model]="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroAssayResult.numberOfTests"
+                                  name="numberOfTests" [model]="screening.invitroAssayResult.numberOfTests"
                                   (valueChange)="screening.invitroAssayResult.numberOfTests = $event">
                                 </app-cv-input>
+                              </div>
+
+
+                              <!-- Fifth row -->
+                              <div class="form-row margintop10px">
+                                <mat-form-field class="col-2">
+                                  <textarea matInput placeholder="Comments"
+                                    [(ngModel)]="screening.invitroAssayResult.comments" name="comments"
+                                    rows="1"></textarea>
+                                </mat-form-field>
+
+                                <mat-form-field class="col-2">
+                                  <textarea matInput placeholder="Measurements"
+                                    [(ngModel)]="screening.invitroAssayResult.assayMeasurement" name="assayMeasurement"
+                                    rows="1"></textarea>
+                                </mat-form-field>
                               </div>
 
 
                               <!-- Form Entry -->
                               <!-- CONTROL DETAILS BEGIN -->
 
-                              <!-- Add New Control Button -->
-                              <div class="font18px marginleft30px margintopneg10px">
-                                <button mat-flat-button color="primary" class="marginright30px bordergreen"
-                                  color="primary" (click)="addNewControl(indexAssay); $event.stopPropagation()"
-                                  matTooltip="Add Control">
-                                  <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add Control</span>
-                                </button>&nbsp;&nbsp;
-                              </div>
-
                               <!-- If Control Exists -->
-                              <div class="margintop30px borderbottom"
-                                *ngIf="assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroControls">
+                              <div class="margintop30px marginbottom20px borderbottom"
+                                *ngIf="screening.invitroControls">
 
-                                <div class="divflex">
+                                <div class="divflex marginbottom20px">
                                   <div class="marginleft10px font18px">
-                                    <b>Controls&nbsp;&nbsp;
-                                      ({{(assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroControls.length)}})
+                                    <b>Controls&nbsp;
+                                      ({{(screening.invitroControls.length)}})
                                     </b>
+                                  </div>
+
+                                  <!-- Add New Control Button -->
+                                  <div class="font18px textalignleft marginleft20px">
+                                    <button mat-flat-button color="primary" color="primary"
+                                      (click)="addNewControl(indexAssay, indexScreening); $event.stopPropagation()"
+                                      matTooltip="Add Control">
+                                      <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add Control</span>
+                                    </button>&nbsp;&nbsp;
                                   </div>
 
                                 </div> <!-- class=divflex -->
 
                                 <!-- Control Loop -->
-                                <div class="marginbottom15px"
-                                  *ngFor="let ctrl of assay.invitroAssayScreenings[assay.invitroAssayScreenings.length-1].invitroControls; let indexCtrl = index">
+                                <div class="margintop30px marginbottom20px"
+                                  *ngFor="let ctrl of screening.invitroControls; let indexCtrl = index">
 
                                   <div class="form-row">
-
                                     <div *ngIf="indexCtrl > 0">
                                       <hr>
                                     </div>
 
-                                    <div class="width30px margintop20px">
+                                    <div class="width40px marginleftneg5px">
                                       {{(indexCtrl+1)}}
+
+                                      <!-- Delete Control button -->
+                                      <br>
+                                      <button mat-icon-button color="primary"
+                                        (click)="confirmDeleteControl(indexAssay, indexScreening, indexCtrl)"
+                                        matTooltip="Delete this control record">
+                                        <mat-icon>delete_forever</mat-icon>
+                                      </button>
                                     </div>
 
                                     <!-- Substance Text Search Suggestions/TypeAhead -->

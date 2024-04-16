@@ -57,6 +57,7 @@ export interface InvitroAssayScreening {
   modifiedDate?: number;
   modifiedBy?: string;
   internalVersion?: number;
+  assaySet?: string;
   invitroAssayResultInformation?: InvitroAssayResultInformation;
   invitroReference?: InvitroReference;
   invitroSponsorReport?: InvitroSponsorReport;
@@ -81,6 +82,7 @@ export interface InvitroAssayResultInformation {
   invitroLaboratory?: InvitroLaboratory;
   invitroSponsor?: InvitroSponsor;
   invitroSponsorReport?: InvitroSponsorReport;
+  invitroTestAgent?: InvitroTestAgent;
 }
 
 export interface InvitroReference {
@@ -194,6 +196,8 @@ export interface InvitroAssayResult {
   plasmaProtein?: string;
   plasmaProteinConcentration?: number;
   plasmaProteinConcentrationUnits?: string;
+  batchNumber?: string;
+  testDate?: string;
   dataType?: string;
   numberOfTests?: string;
   comments?: string;

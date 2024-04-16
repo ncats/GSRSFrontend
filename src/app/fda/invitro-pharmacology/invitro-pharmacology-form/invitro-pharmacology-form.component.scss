@@ -187,7 +187,7 @@
 }
 
 .col-2 {  /* 2 columns in one row */
-  width: calc((100% - 30px * 2) / 3);
+  width: calc((100% - 30px * 1) / 2);
   margin-right: 25px;
 }
 
@@ -310,16 +310,20 @@
   margin-top: 90px;
 }
 
-marginbottom10px {
+.marginbottom10px {
   margin-bottom: 10px;
 }
 
-marginbottom20px {
+.marginbottom20px {
   margin-bottom: 20px;
 }
 
-marginbottom40px {
+.marginbottom40px {
   margin-bottom: 40px;
+}
+
+.marginleftneg5px {
+  margin-left: -5px;
 }
 
 .marginleft10px {
@@ -348,6 +352,10 @@ marginbottom40px {
 
 .marginleft170px {
   margin-left: 170px;
+}
+
+.marginleft350px {
+  margin-left: 350px;
 }
 
 .marginright5px {
