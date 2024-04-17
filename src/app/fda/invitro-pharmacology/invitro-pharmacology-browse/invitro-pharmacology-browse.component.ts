@@ -545,12 +545,12 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           assayObj.studyType = assay.studyType;
 
           if (screening.invitroAssayResultInformation) {
-            /* Invitro Reference Object exists */
-            let referenceSourceTypeNumber = '';
-            let referenceSourceType = '';
-            let referenceSource = '';
 
+            /* Invitro Reference Object exists */
             if (screening.invitroAssayResultInformation.invitroReference) {
+              let referenceSourceTypeNumber = '';
+              let referenceSourceType = '';
+              let referenceSource = '';
               if (screening.invitroAssayResultInformation.invitroReference.referenceSourceType) {
                 referenceSourceType = screening.invitroAssayResultInformation.invitroReference.referenceSourceType;
               }
