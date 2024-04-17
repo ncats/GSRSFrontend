@@ -1527,6 +1527,11 @@ export class SubstanceFormService implements OnDestroy {
     
   }
 
+  regenUUID(): void {
+    this.privateSubstance.uuid = this.utilsService.newUUID();
+    this.substanceEmitter.next(this.privateSubstance);
+  }
+
   approveSubstance(): Observable<any> {
     return new Observable(observer => {
       const results: SubstanceFormResults = {
@@ -2077,7 +2082,107 @@ export class SubstanceFormService implements OnDestroy {
     this.substanceEmitter.next(this.privateSubstance);
   }
 
+
+  //by Tyler, convert smiles, single, and 3 letter amino acids. convert 3 to 1, 1 to 3, and 1 to SMILES
+  aminoSmilesConversion(value: string, direction: string): string {
+    const aminoLookups = {
+      "A": "ALA",
+      "C": "CYS",
+      "D": "ASP",
+      "E": "GLU",
+      "F": "PHE",
+      "G": "GLY",
+      "H": "HIS",
+      "I": "ILE",
+      "K": "LYS",
+      "L": "LEU",
+      "M": "MET",
+      "N": "ASN",
+      "P": "PRO",
+      "Q": "GLN",
+      "R": "ARG",
+      "S": "SER",
+      "T": "THR",
+      "V": "VAL",
+      "W": "TRP",
+      "Y": "TYR"
+    };
+
+    
+    const aaSmilesLookup={
+        "A": "N[C@@H](C)C(=O)",
+        "a": "N[C@H](C)C(=O)",
+        "C": "N[C@@H](CS)C(=O)",
+        "c": "N[C@H](CS)C(=O)",       
+        "D": "N[C@@H](CC(=O)O)C(=O)",
+        "d": "N[C@H](CC(=O)O)C(=O)",        
+        "E": "N[C@@H](CCC(=O)O)C(=O)",
+        "e": "N[C@H](CCC(=O)O)C(=O)",          
+        "F": "N[C@@H](CC$1C=CC=CC=$1)C(=O)",
+        "f": "N[C@H](CC$1C=CC=CC=$1)C(=O)",
+        "G": "NCC(=O)",
+        "g": "NCC(=O)",
+        "H": "N[C@@H](CC$1=CNC=N$1)C(=O)",
+        "h": "N[C@H](CC$1=CNC=N$1)C(=O)",
+        "I": "N[C@@H]([C@@H](C)CC)C(=O)",
+        "i": "N[C@H]([C@@H](C)CC)C(=O)",
+        "K": "N[C@@H](CCCCN)C(=O)",
+        "k": "N[C@H](CCCCN)C(=O)",
+        "L": "N[C@@H](CC(C)C)C(=O)",
+        "l": "N[C@H](CC(C)C)C(=O)",
+        "M": "N[C@@H](CCSC)C(=O)",
+        "m": "N[C@H](CCSC)C(=O)",
+        "N": "N[C@@H](CC(=O)N)C(=O)",
+        "n": "N[C@H](CC(=O)N)C(=O)",
+        "P": "N$1[C@@H](CCC$1)C(=O)",
+        "p": "N$1[C@H](CCC$1)C(=O)",
+        "Q": "N[C@@H](CCC(=O)N)C(=O)",
+        "q": "N[C@H](CCC(=O)N)C(=O)",
+        "R": "N[C@@H](CCCNC(=N)N)C(=O)",
+        "r": "N[C@H](CCCNC(=N)N)C(=O)",
+        "S": "N[C@@H](CO)C(=O)",
+        "s": "N[C@H](CO)C(=O)",
+        "T": "N[C@@H]([C@H](O)C)C(=O)",
+        "t": "N[C@H]([C@H](O)C)C(=O)",
+        "V": "N[C@@H](C(C)C)C(=O)",
+        "v": "N[C@H](C(C)C)C(=O)",
+        "W": "N[C@@H](CC$1=CNC$2=C$1C=CC=C$2)C(=O)",
+        "w": "N[C@H](CC$1=CNC$2=C$1C=CC=C$2)C(=O)",
+        "Y": "N[C@@H](CC$1C=CC(O)=CC=$1)C(=O)",
+        "y": "N[C@H](CC$1C=CC(O)=CC=$1)C(=O)",
+        ".": "O.",
+        ";": "O."
+    };
+
+    Object.keys(aminoLookups)
+        .map(k => {
+          aminoLookups[aminoLookups[k]] = k;
+        });
+
+        if (direction === 'toSmiles') {
+          let smi = value.split("")
+              .map(am=>aaSmilesLookup[am].replace(/[$]/g,""))
+              .join("") + "O";
+      
+        return smi;
+        } else if (direction === 'toThree') {
+          return value.split("")
+          .map(aa => aminoLookups[aa.toUpperCase()])
+          .map(aa => (aa) ? aa : "UNK")
+          .map(aa => aa[0] + (aa[1] + aa[2]).toLowerCase())
+          .join("-");
+        } else {
+          return value.split("-")
+          .map(aa => aminoLookups[aa.toUpperCase()])
+          .map(aa => (aa) ? aa : "X")
+          .join("");
+        }
+  }
+
+
 }
+
+
 
 
 
