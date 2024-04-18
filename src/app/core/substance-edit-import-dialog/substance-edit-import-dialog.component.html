@@ -1,27 +1,40 @@
 <div mat-dialog-title class = "mat-dialog-title class">
     <h3 class="colorblue">{{title}}</h3>
 </div>
-<hr>
-<div mat-dialog-content class = "mat-dialog-content">
-    <div class = "info">
+<div mat-dialog-content class = "mat-dialog-content" style="height: 370px">
+  <mat-tab-group (selectedTabChange)="onTabChanged($event)">
+    <mat-tab label="Upload file">
+      <div class = "info">
         Select a .json file to import into a new edit form.
-    </div>
-    <div class = "full-row">
-            <div><button mat-stroked-button class="button-select-file" (click)="openInput()">Select File to Import</button></div>
-            <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
-            <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
-    </div>
-    <div class = "full-row-col"  *ngIf = "!this.record" style = "margin-top:10px;">
-       <div style = "width:100%" class="padbottom20px">Or paste JSON here:</div>
-       <textarea class="bordergray" [(ngModel)] = "pastedJSON" cdkAutosizeMinRows="8" (ngModelChange)="checkLoaded()" style = "min-height: 180px;"></textarea>
-    </div>
-    <div class = "message" *ngIf="message">
-        {{message}}
-    </div>
+      </div>
+      <div class = "full-row">
+        <div><button mat-stroked-button class="button-select-file" (click)="openInput()">Select File to Import</button></div>
+        <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
+        <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
+      </div>
+    </mat-tab>
+    <mat-tab label="Paste JSON">
+      <div class = "full-row-col" style="margin-top:10px;">
+        <div style = "width:100%" class="padbottom20px">Paste JSON here:</div>
+        <textarea class="bordergray" [(ngModel)]="pastedJSON" cdkAutosizeMinRows="8" (ngModelChange)="validatePastedJson()" style = "min-height: 180px;"></textarea>
+      </div>
+    </mat-tab>
+    <mat-tab label="Import from URL" *ngIf="customToolbarComponent === 'precisionFDA'">
+      <div class="full-row-col" style="height: 80px; position: relative">
+        <mat-form-field class="example-full-width" style="position: absolute; bottom: 0; width: 96%">
+          <mat-label>URL</mat-label>
+          <input matInput [(ngModel)]="pastedUrl" placeholder="Public URL of a JSON file" (ngModelChange)="validatePastedUrl()" />
+        </mat-form-field>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <div class = "error-message" *ngIf="message">
+    {{message}}
+  </div>
 </div>
 <hr>
 <div mat-dialog-actions class = "mat-dialog-actions" >
     <button mat-stroked-button class="button-cancel colorred" matDialogClose>Cancel</button>
     <span class="middle-fill"></span>
-    <button mat-flat-button class="button-import" [disabled]= "!loaded" (click) ="useFile()">Import</button>
+    <button mat-flat-button class="button-import" [disabled]= "!loaded" (click) ="importJson()">Import</button>
 </div>
