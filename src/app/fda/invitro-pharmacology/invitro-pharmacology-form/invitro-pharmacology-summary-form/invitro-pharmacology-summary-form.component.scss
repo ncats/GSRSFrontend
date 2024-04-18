@@ -151,8 +151,9 @@
 
 .form-row {
   display: flex;
-  width: 100%;
+  width: 97%;
   margin-bottom: 5px;
+  margin-right: 20px;
 }
 
 .row-property {
@@ -215,7 +216,7 @@
 }
 
 .col-2 {  /* 2 columns in one row */
-  width: calc((100% - 30px * 2) / 3);
+  width: calc((100% - 30px * 1) / 2);
   margin-right: 25px;
 }
 
@@ -450,6 +451,14 @@ marginbottom40px {
 }
 
 .width600px {
+  width: 800px;
+}
+
+.width600px {
+  width: 800px;
+}
+
+.width800px {
   width: 800px;
 }
 

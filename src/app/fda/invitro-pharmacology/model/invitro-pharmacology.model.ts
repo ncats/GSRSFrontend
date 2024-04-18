@@ -70,6 +70,8 @@ export interface InvitroAssayScreening {
   invitroSummary?: InvitroSummary;
   testing?: string;
   _show?: boolean;
+  _assayResults?: Array<any>;
+  _selectedAssay?: any;
 }
 
 export interface InvitroAssayResultInformation {

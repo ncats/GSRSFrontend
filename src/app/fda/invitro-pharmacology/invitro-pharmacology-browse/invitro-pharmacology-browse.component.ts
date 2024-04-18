@@ -41,7 +41,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   public sortValues = invitroPharmacologySearchSortValues;
   public assays: Array<InvitroAssayInformation>;
   targetSummaries: any;
-
+  
   // Browse by tabs, data lists
   browseByTargetNameList: Array<any> = [];
   browseByTestAgentList: Array<any> = [];
