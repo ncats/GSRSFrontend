@@ -184,10 +184,20 @@
                 <td class="fieldKey">Target Name:</td>
                 <td>
                   <div *ngIf="assay.targetNameSubstanceUuid; else noTargetNameSubUuid">
+                    <!-- Go to Substance Details page -->
                     <a [routerLink]="['/substances', assay.targetNameSubstanceUuid]" target="_blank"
                       matTooltip="Go to Substance Details page">
                       <b>{{assay.targetName}}</b>
                     </a>
+                    <!-- Display Chemical Structure -->
+                    <div class="marginleft30px margintopneg10px width100px">
+                      <a role="img" aria-label="substance image" class="zoom"
+                        (click)="openImageModal(assay.targetNameSubstanceUuid)">
+                        <img class="image-icon" appSubstanceImage size="90"
+                          [entityId]="assay.targetNameSubstanceUuid">
+                      </a>
+                    </div>
+
                   </div>
                   <ng-template #noTargetNameSubUuid>
                     <b>{{assay.targetName}}</b>
@@ -505,6 +515,24 @@
                         <div>
                           {{screening.invitroAssayResult.plasmaProteinConcentration}}&nbsp;
                           {{screening.invitroAssayResult.plasmaProteinConcentrationUnits}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Batch Number:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.batchNumber}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Test Date:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.testDate}}
                         </div>
                       </td>
                     </tr>

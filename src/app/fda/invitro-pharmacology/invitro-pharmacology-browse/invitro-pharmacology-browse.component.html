@@ -1001,6 +1001,18 @@
                           </ng-template>
                         </span>
                       </div>
+
+                      <!-- Edit SUMMARY Record -->
+                      <div class="marginleft40px">
+                        <mat-icon svgIcon="edit"></mat-icon>
+                      </div>
+                      <div>
+                        <a [routerLink]="['/invitro-pharm/summary', testAgt.testAgentId, 'edit']" target="_blank"
+                          *ngIf="isAdmin" matTooltip='Edit Assay Summary Record'>
+                          <span class="font13px">Edit Summary Record</span>
+                        </a>
+                      </div>
+
                     </div>
                   </div>
 
@@ -1086,8 +1098,9 @@
                                                   target="_blank" alt="View Assay Screening Record"
                                                   matTooltip='View Assay Record'>View
                                                 </a>&nbsp;&nbsp;&nbsp;
-                                                <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']" target="_blank"
-                                                  *ngIf="isAdmin" matTooltip='Edit Assay Summary Record'>
+                                                <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']"
+                                                  target="_blank" *ngIf="isAdmin"
+                                                  matTooltip='Edit Assay Summary Record'>
                                                   <mat-icon svgIcon="edit"></mat-icon>
                                                 </a>
                                               </div>
@@ -1441,6 +1454,17 @@
                                     <mat-icon svgIcon="edit"></mat-icon>
                                   </a>
                                 </div>
+                              </td>
+                            </ng-container>
+
+
+                            <ng-container matColumnDef="isFromResult">
+                              <th mat-header-cell *matHeaderCellDef> From Result Data </th>
+                              <td class="width80px" mat-cell *matCellDef="let assaysum">
+                                <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == '1'">
+                                  <mat-icon matTooltip="This Summary data is from Result data">check_circle_outline
+                                  </mat-icon>
+                                </span>
                               </td>
                             </ng-container>
 
