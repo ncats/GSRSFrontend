@@ -190,18 +190,19 @@
 
                   <div class="form-row margintop10px">
 
-                    <!-- TARGET NAME - Select Substance -->
-                    <div class="col-3-1 padtop10px related-substance">
-                      <app-substance-selector (selectionUpdated)="targetNameUpdated($event, indexScreening)"
-                        eventCategory="substanceRelationshipRelatedSub"
-                        placeholder="Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
-                        [subuuid]="screening.invitroSummary.targetNameSubstanceUuid" [showMorelinks]="true">
-                      </app-substance-selector>
-                    </div>
+                    <div class="divflex">
 
+                      <!-- TARGET NAME - Select Substance -->
+                      <div class="padtop10px related-substance">
+                        <app-substance-selector (selectionUpdated)="targetNameUpdated($event, indexScreening)"
+                          eventCategory="substanceRelationshipRelatedSub"
+                          placeholder="Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
+                          [subuuid]="screening.invitroSummary.targetNameSubstanceUuid" [showMorelinks]="true">
+                        </app-substance-selector>
+                      </div>
 
-                    <!-- TARGET NAME - Select from Existing Assay Target Name -->
-                    <!--
+                      <!-- TARGET NAME - Select from Existing Assay Target Name -->
+                      <!--
                       <mat-form-field class="col-3-1">
                         <mat-label>Select Existing Assay Target Name</mat-label>
                         <mat-select [formControl]="existingAssayControl"
@@ -216,9 +217,9 @@
                       </mat-form-field>
                       -->
 
-                    <!-- Search Existing Assay -->
+                      <!-- Search Existing Assay -->
 
-                    <!--
+                      <!--
 
                       <div class="col-3-1">
                         <span *ngIf="assay.targetName">
@@ -228,15 +229,70 @@
                       </div>
                     -->
 
-                    <app-cv-input class="col-3-1" domain="RELATIONSHIP_TYPE" title="Relationship Type"
-                      name="relationshipType" [model]="screening.invitroSummary.relationshipType"
-                      (valueChange)="screening.invitroSummary.relationshipType = $event">
-                    </app-cv-input>
+                      <div class="width800px marginleft10px">
 
-                    <app-cv-input class="col-3-1" domain="INTERACTION_TYPE" title="Interaction Type"
-                      name="interactionType" [model]="screening.invitroSummary.interactionType"
-                      (valueChange)="screening.invitroSummary.interactionType = $event">
-                    </app-cv-input>
+                        <div class="form-row">
+                          <div class="width300px margintop10px">
+                            <app-invitro-pharmacology-text-search placeholder="Search for Existing Assay"
+                              styling="homePage" [searchValue]="searchValue"
+                              (searchPerformed)="processSubstanceSearch($event, indexScreening)"
+                              eventCategory="invitroPharmacologySearch">
+                            </app-invitro-pharmacology-text-search>
+                          </div>
+
+                          <!-- Selected Assay -->
+                          <div class="margintop10px" *ngIf="screening._selectedAssay">
+                           Assay Target Name: <b>{{screening._selectedAssay.targetName}}</b>&nbsp;
+                           <br>
+                           External Source: <b>{{screening._selectedAssay.externalAssaySource}}&nbsp;
+                           {{screening._selectedAssay.externalAssayId}}</b>
+                          </div>
+
+                        </div> <!-- form-row -->
+
+                        <div class="font11px" *ngIf="screening._assayResults && screening._assayResults.length > 0">
+                          <table class="tableStyle">
+                            <tr>
+                              <th>#</th>
+                              <th>Select</th>
+                              <th>External Source</th>
+                              <th>External Assay ID</th>
+                              <th>Assay Target Name</th>
+                              <th>Assay Title</th>
+                            </tr>
+                            <tr class="font11px" *ngFor="let assayResult of screening._assayResults; let indexResult = index">
+                              <td>{{(indexResult+1)}}</td>
+                              <td class="font11px">
+                                <mat-radio-group name="radioAssayResult">
+                                  <mat-radio-button class="font11px" value="indexResult" [checked]='false'
+                                  (change)="changeSelectionRadioAssay($event, indexResult, indexScreening)">
+                                  </mat-radio-button>
+                                </mat-radio-group>
+                              </td>
+                              <td class="font11px">{{assayResult.externalAssaySource}}</td>
+                              <td class="font11px">{{assayResult.externalAssayId}}</td>
+                              <td class="font11px">{{assayResult.targetName}}</td>
+                              <td class="font11px">{{assayResult.assayTitle}}</td>
+                            </tr> <!-- FOR LOOP: assay result -->
+                          </table>
+                        </div>
+                        <br>
+
+                        <div class="form-row">
+                          <app-cv-input class="col-2" domain="RELATIONSHIP_TYPE" title="Relationship Type"
+                            name="relationshipType" [model]="screening.invitroSummary.relationshipType"
+                            (valueChange)="screening.invitroSummary.relationshipType = $event">
+                          </app-cv-input>
+
+                          <app-cv-input class="col-2" domain="INTERACTION_TYPE" title="Interaction Type"
+                            name="interactionType" [model]="screening.invitroSummary.interactionType"
+                            (valueChange)="screening.invitroSummary.interactionType = $event">
+                          </app-cv-input>
+                        </div>
+
+                      </div> <!-- width85percent -->
+                    </div> <!-- divflex -->
+
                   </div> <!-- form-row -->
 
 

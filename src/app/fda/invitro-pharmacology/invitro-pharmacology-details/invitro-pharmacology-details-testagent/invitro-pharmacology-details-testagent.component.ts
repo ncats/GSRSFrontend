@@ -42,6 +42,9 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   allAssaysList: Array<InvitroAssayInformation> = [];
   allScreeningTestAgents: Array<any> = [];
 
+  totalResultRecords = 0;
+  totalSummaryRecords = 0;
+
   showSpinner = false;
   //view = 'cards';
   public privateSearchTerm?: string;
@@ -118,28 +121,30 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   allAssayColumns: string[] = [
     'number',
     'viewDetails',
-    'update',
-    'totalScreening',
-    'reference',
-    'testAgent',
     'assayId',
     'externalAssayId',
     'externalAssaySource',
     'targetName',
     'targetTitle',
-    'studyType',
     'bioassayType',
-    'modifyDate'
+    'reference',
+    'totalResult',
+    'totalSummary',
+    'modifiedDate'
   ];
 
   testAgentSummaryColumns: string[] = [
+    'number',
     'viewDetails',
+    'isFromResult',
     'referenceSource',
     'testAgent',
     'targetName',
-    'testAgentConcentration',
+    'bioassayType',
     'resultValue',
-    'studyType'
+    'resultType',
+    'relationshipType',
+    'interactionType'
   ];
 
   // needed for facets
@@ -200,6 +205,31 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     const invitroSubscribe = this.invitroPharmacologyService.getAllAssays().subscribe(response => {
       this.assays = response;
       this.allAssaysList = response;
+
+      this.allAssaysList.forEach(assay => {
+        this.totalResultRecords = 0;
+         this.totalSummaryRecords = 0;
+        assay.invitroAssayScreenings.forEach(screening => {
+
+          /* Invitro Assay Result Object exists */
+          if (screening.invitroAssayResult) {
+            // Count total number of Result record exists for this assay
+            this.totalResultRecords = this.totalResultRecords + 1;
+          } // if invitroAssayResult object exists
+
+          /* Invitro Assay Summary Object exists */
+          if (screening.invitroSummary) {
+            // Count total number of Summary record exists for this assay
+            this.totalSummaryRecords = this.totalSummaryRecords + 1;
+          } // if invitroAssayResult object exists
+
+        }); // LOOP: screening
+
+        assay._totalResultRecords = this.totalResultRecords;
+        assay._totalSummaryRecords = this.totalSummaryRecords;
+
+      }); // LOOP: assay
+
     }, error => {
       this.loadingService.setLoading(false);
       this.showSpinner = false;  // Stop progress spinner
@@ -259,10 +289,26 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
               });
             }
 
+            if (screening.invitroSummary) {
+
+              assaySummary.summaryResultValueAvg = screening.invitroSummary.resultValueAverage;
+              assaySummary.summaryResultValueLow = screening.invitroSummary.resultValueLow;
+              assaySummary.summaryResultValueHigh = screening.invitroSummary.resultValueHigh;
+              assaySummary.summaryResultValueUnits = screening.invitroSummary.resultValueUnits;
+
+              assaySummary.resultType = screening.invitroSummary.resultType;
+              assaySummary.relationshipType = screening.invitroSummary.relationshipType;
+              assaySummary.interactionType = screening.invitroSummary.interactionType;
+
+              assaySummary.isFromResult = screening.invitroSummary.isFromResult;
+
+            }
+
             /* Invitro Reference Object exists */
-            let referenceSourceTypeNumber = '';
-            let referenceSourceNumber = '';
             if (screening.invitroAssayResultInformation) {
+
+              let referenceSourceTypeNumber = '';
+              let referenceSourceNumber = '';
               if (screening.invitroAssayResultInformation.invitroReference) {
                 // Need this so it will not display undefined value
                 if (screening.invitroAssayResultInformation.invitroReference.referenceSource) {
@@ -278,9 +324,11 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
                 let testAgent = '';
                 let testAgentSubstanceUuid = '';
+
                 testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
                 assaySummary.testAgent = testAgent;
-                testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                assaySummary.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
 
                 // Get the index if the value exists in the key 'testAgent'
                 const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
@@ -292,7 +340,10 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                   // Create new card record
                   let assayList = [];
                   assayList.push(assaySummary);
-                  const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList };
+                  const appScreening = {
+                    'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentId': testAgentId,
+                    'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList
+                  };
                   this.allScreeningTestAgents.push(appScreening);
                 } // else
               } // if invitroTestAgent exists

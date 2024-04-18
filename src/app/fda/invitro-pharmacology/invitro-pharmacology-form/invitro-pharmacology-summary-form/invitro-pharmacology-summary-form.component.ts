@@ -27,6 +27,7 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 import { SubstanceRelationship, SubstanceSummary, SubstanceRelated, MediatorSubstance } from '@gsrs-core/substance/substance.model';
+import { FacetParam } from '@gsrs-core/facets-manager';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service';
@@ -40,10 +41,16 @@ import { InvitroAssayInformation, InvitroAssayScreening, InvitroSummary, Invitro
 export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestroy {
 
   newTestAgent: InvitroTestAgent = {};   //???? can remove
+  public privateSearchTerm?: string;
+  private privateFacetParams: FacetParam;
+  pageSize = 10;
+  pageIndex = 0;
 
   // Need this variables
   testAgentSubstanceUuid: string;
   testAgent: string;
+
+  assayResults: Array<InvitroAssayInformation> = [];
 
   assay: InvitroAssayInformation;   //??? can remove
   selectedAssay: InvitroAssayInformation;
@@ -195,6 +202,49 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     });
   }
 
+  processSubstanceSearch(searchValue: string, indexScreening: number) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue(indexScreening);
+  }
+
+  setSearchTermValue(indexScreening: number) {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.searchInvitroAssay(indexScreening);
+  }
+
+  searchInvitroAssay(indexScreening: number) {
+    this.loadingService.setLoading(true);
+    let order = "root_modifiedDate";
+    let skip = this.pageIndex * this.pageSize;
+    const subscription = this.invitroPharmacologyService.getInvitroPharmacology(
+      order,
+      skip,
+      this.pageSize,
+      this.privateSearchTerm,
+      this.privateFacetParams,
+    )
+      .subscribe(pagingResponse => {
+        this.screeningList[indexScreening]._assayResults = pagingResponse.content;
+
+      }, error => {
+        console.log('error');
+        const notification: AppNotification = {
+          message: 'There was an error trying to retrieve in-vitro pharmacology data. Please refresh and try again.',
+          type: NotificationType.error,
+          milisecondsToShow: 6000
+        };
+        // this.isError = true;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.mainNotificationService.setNotification(notification);
+      }, () => {
+        subscription.unsubscribe();
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+      });
+  }
+
   getTestAgentSummariesDetails(newType?: string): void {
     if (this.id != null) {
       const getInvitroSubscribe = this.invitroPharmacologyService.getTestAgentSummaries(this.id).subscribe(response => {
@@ -203,13 +253,15 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
           // this.invitroPharmacologyService.loadScreening(response);
           this.screeningList = response;
 
-          // Load Test Ageng
+          // Load Test Agent
           if (this.screeningList.length > 0) {
-            if (this.screeningList[0].invitroTestAgent)
-              if (this.screeningList[0].invitroTestAgent.testAgentSubstanceUuid) {
-                this.testAgentSubstanceUuid = this.screeningList[0].invitroTestAgent.testAgentSubstanceUuid;
-                this.testAgent = this.screeningList[0].invitroTestAgent.testAgent;
-              }
+            if (this.screeningList[0].invitroAssayResultInformation) {
+              if (this.screeningList[0].invitroAssayResultInformation.invitroTestAgent)
+                if (this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid) {
+                  this.testAgentSubstanceUuid = this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                  this.testAgent = this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgent;
+                }
+            }
           }
 
           // Loop Screenings
@@ -403,8 +455,6 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     // Validate Target Name
     this.screeningList.forEach((screening, index) => {
       if (screening) {
-
-        screening.testing = "RRRRRRRRRRRRRRRR";
 
         /*if (screening.invitroSummary) {
           if (!screening.invitroSummary.targetNameSubstanceUuid) {
@@ -664,8 +714,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       this.screeningList.forEach(screening => {
         if (screening) {
           screening.invitroTestAgent.testAgent = 'AAAAAAAAAAA';
-         // screening.invitroTestAgent.id = 1;
-         // screening.invitroTestAgent.internalVersion = 2;
+          // screening.invitroTestAgent.id = 1;
+          // screening.invitroTestAgent.internalVersion = 2;
         }
       });
     }
@@ -727,7 +777,17 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     this.subscriptions.push(substanceSubscribe);
   }
 
-  selectionChangeExistingAssay(event, indexAssay) {
+  changeSelectionRadioAssay(event, indexAssayResult: number, indexScreening: number) {
+    let existingAssayIndex = event.value;
+
+    // Select the assay
+    this.screeningList[indexScreening]._selectedAssay = this.screeningList[indexScreening]._assayResults[indexAssayResult];
+
+    this.screeningList[indexScreening]._assayResults = [];
+
+  }
+
+  selectionChangeExistingAssay(event, indexAssay: number) {
     let existingAssayIndex = event.value;
 
     // Select the assay

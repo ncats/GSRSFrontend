@@ -35,6 +35,8 @@ export interface InvitroAssayInformation {
   _calculateIC50?: string;
   _assayTargetSummaries?: Array<any>;
   _existingAssayList?: Array<any>;
+  _totalResultRecords?: number;
+  _totalSummaryRecords?: number;
   invitroAssaySets?: Array<InvitroAssaySet>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;
   //invitroSummaries?: Array<InvitroSummary>;
@@ -68,6 +70,8 @@ export interface InvitroAssayScreening {
   invitroSummary?: InvitroSummary;
   testing?: string;
   _show?: boolean;
+  _assayResults?: Array<any>;
+  _selectedAssay?: any;
 }
 
 export interface InvitroAssayResultInformation {
@@ -238,6 +242,7 @@ export interface InvitroSummary {
   resultValueHigh?: number;
   resultValueUnits?: string;
   comments?: string;
+  isFromResult?: string;
 }
 
 export interface ValidationResults {

@@ -8,9 +8,11 @@
     </a>&nbsp;&nbsp;&nbsp;
 
     <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+    <!--
     <span *ngIf="assay && !assay.id">
       <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
     </span>
+    -->
 
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="validationMessages && validationMessages.length > 0">

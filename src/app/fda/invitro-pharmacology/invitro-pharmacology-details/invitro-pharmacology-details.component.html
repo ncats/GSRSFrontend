@@ -12,18 +12,20 @@
           <!-- Edit GSRS record button ASSAY -->
           <div class="margintop10px">
             <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-              matTooltip='Edit GSRS In-vitro Pharmacology ASSAY Record'>
+              matTooltip='Edit GSRS In-vitro Pharmacology ASSAY Record ONLY'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>&nbsp;&nbsp;
           </div>
 
           <!-- Edit GSRS record button SCREENING -->
+          <!--
           <div class="margintop10px">
             <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
               matTooltip='Edit GSRS In-vitro Pharmacology SCREENING Record'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>&nbsp;&nbsp;
           </div>
+          -->
 
           <div class="margintop10px">
             <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
@@ -38,9 +40,9 @@
           <div class="width30percent font11px margintop10px">
             <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Create
-              Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              Date:</span>{{assay.createdDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss
+            <span class="colorgray">Modify Date:</span> {{assay.modifiedDate|date: 'MM/dd/yyyy hh:mm:ss
             a'}}
           </div>
 
@@ -127,6 +129,11 @@
                 <td>{{ assay.presentation }}</td>
               </tr>
 
+              <tr>
+                <td class="fieldKey">Public Domain:</td>
+                <td>{{ assay.publicDomain }}</td>
+              </tr>
+
               <!--
                 <tr>
                   <td class="fieldKey">Test Agent:</td>
@@ -175,7 +182,29 @@
 
               <tr>
                 <td class="fieldKey">Target Name:</td>
-                <td>{{ assay.targetName }}</td>
+                <td>
+                  <div *ngIf="assay.targetNameSubstanceUuid; else noTargetNameSubUuid">
+                    <!-- Go to Substance Details page -->
+                    <a [routerLink]="['/substances', assay.targetNameSubstanceUuid]" target="_blank"
+                      matTooltip="Go to Substance Details page">
+                      <b>{{assay.targetName}}</b>
+                    </a>
+                    <!-- Display Chemical Structure -->
+                    <!--
+                    <div class="marginleft30px margintopneg10px width100px">
+                      <a role="img" aria-label="substance image" class="zoom"
+                        (click)="openImageModal(assay.targetNameSubstanceUuid)">
+                        <img class="image-icon" appSubstanceImage size="90"
+                          [entityId]="assay.targetNameSubstanceUuid">
+                      </a>
+                    </div>
+                    -->
+
+                  </div>
+                  <ng-template #noTargetNameSubUuid>
+                    <b>{{assay.targetName}}</b>
+                  </ng-template>
+                </td>
               </tr>
 
               <tr>
@@ -208,6 +237,13 @@
                 <td>{{ assay.ligandSubstrateApprovalId }}</td>
               </tr>
 
+              <tr>
+                <td class="fieldKey">Standard Ligand/Sub Concentration and Units:</td>
+                <td>{{ assay.standardLigandSubstrateConcentration }}&nbsp;
+                  {{ assay.standardLigandSubstrateConcentrationUnits}}
+                </td>
+              </tr>
+
             </tbody>
           </table>
         </div>
@@ -231,9 +267,11 @@
                   <div class="headerstyle title2 padtop7px padleft10px">
                     {{(i+1)}} of {{assay.invitroAssayScreenings.length}}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <span *ngIf="screening.invitroTestAgent">
-                      Test Agent: {{screening.invitroTestAgent.testAgent}}&nbsp;
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span *ngIf="screening.invitroAssayResultInformation">
+                      <span *ngIf="screening.invitroAssayResultInformation.invitroTestAgent">
+                        Test Agent: {{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </span>
                     </span>
 
                   </div>
@@ -245,42 +283,44 @@
               </div>
 
               <!-- Invitro Reference Begin -->
-              <div class="margintop20px" *ngIf="screening.invitroReference">
-                <table class="tableStyle">
-                  <tbody>
-                    <tr class="headerstyle3">
-                      <td colspan="2"><span class="font16px">Assay Reference</span></td>
-                    </tr>
-                    <tr>
-                      <td class="fieldKey">Reference Type:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.referenceSourceType}}
-                        </div>
-                      </td>
-                    </tr>
+              <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation">
+                <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation.invitroReference">
+                  <table class="tableStyle">
+                    <tbody>
+                      <tr class="headerstyle3">
+                        <td colspan="2"><span class="font16px">Assay Reference</span></td>
+                      </tr>
+                      <tr>
+                        <td class="fieldKey">Reference Type:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroReference.referenceSourceType}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Reference Number:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.referenceSourceNumber}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Reference Number:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroReference.referenceSourceNumber}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Digital Object Identifier:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroReference.digitalObjectIdentifier}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Digital Object Identifier:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroReference.digitalObjectIdentifier}}
+                          </div>
+                        </td>
+                      </tr>
 
-                  </tbody>
-                </table>
-              </div> <!-- if invitroReference exists -->
+                    </tbody>
+                  </table>
+                </div> <!-- if invitroReference exists -->
+              </div> <!-- if invitroAssayResultInformation exists -->
 
 
               <!-- ########################################################## -->
@@ -308,108 +348,111 @@
                 -->
 
               <!-- Test Agent Details BEGIN -->
-              <div class="margintop20px" *ngIf="screening.invitroTestAgent">
-                <table class="tableStyle">
-                  <tbody>
-                    <tr class="headerstyle3">
-                      <td colspan="2"><span class="font16px">Test Agent</span>
-                        <!-- <a href="">Show More</a> -->
-                      </td>
-                    </tr>
+              <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation">
+                <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation.invitroTestAgent">
+                  <table class="tableStyle">
+                    <tbody>
+                      <tr class="headerstyle3">
+                        <td colspan="2"><span class="font16px">Test Agent</span>
+                          <!-- <a href="">Show More</a> -->
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Test Agent:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.testAgent}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Test Agent:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Test Agent Approval ID:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.testAgentApprovalId}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Test Agent Approval ID:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.testAgentApprovalId}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Test Agent Smiles String:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.testAgentSmileString}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Test Agent Smiles String:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.testAgentSmileString}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Test Agent Molecular Formula Weight:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.molecularFormlaWeight}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Test Agent Molecular Formula Weight:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.molecularFormlaWeight}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Active Moiety:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.activeMoiety}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Active Moiety:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.activeMoiety}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Active Moiety Approval ID:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.activeMoietyApprovalId}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Active Moiety Approval ID:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.activeMoietyApprovalId}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">CAS Registry Number:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.casRegistryNumber}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">CAS Registry Number:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.casRegistryNumber}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Batch Number:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.batchNumber}}
-                        </div>
-                      </td>
-                    </tr>
+                      <!--
+                      <tr>
+                        <td class="fieldKey">Batch Number:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.batchNumber}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Purity (%):</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.purity}}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="fieldKey">Purity (%):</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.purity}}
+                          </div>
+                        </td>
+                      </tr>
 
-                    <tr>
-                      <td class="fieldKey">Vehicle Composition:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroTestAgent.vehicleComposition}}
-                        </div>
-                      </td>
-                    </tr>
-
-                  </tbody>
-                </table>
-              </div> <!-- if testAgent Exists -->
+                      <tr>
+                        <td class="fieldKey">Vehicle Composition:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroTestAgent.vehicleComposition}}
+                          </div>
+                        </td>
+                      </tr>
+                    -->
+                    </tbody>
+                  </table>
+                </div> <!-- if testAgent Exists -->
+              </div> <!-- if invitroAssayResultInformation exists -->
 
 
               <!-- Assay Result Details BEGIN -->
@@ -441,20 +484,75 @@
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Test Concentration and Units of Active Moiety:</td>
+                      <td class="fieldKey">Ligand/Substrate Concentration and Units:</td>
                       <td>
                         <div>
-                          {{screening.invitroAssayResult.testConcentrationActiveMoiety}}&nbsp;
-                          {{screening.invitroAssayResult.testConcentrationUnitsActiveMoiety}}
+                          {{screening.invitroAssayResult.ligandSubstrateConcentration}}&nbsp;
+                          {{screening.invitroAssayResult.ligandSubstrateConcentrationUnits}}
                         </div>
                       </td>
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Assay Mode:</td>
+                      <td class="fieldKey">Plasma Protein Added:</td>
                       <td>
                         <div>
-                          {{screening.invitroAssayResult.assayMode}}
+                          {{screening.invitroAssayResult.plasmaProteinAdded}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Protein:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.protein}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Plasma Protein Concentration and Units:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.plasmaProteinConcentration}}&nbsp;
+                          {{screening.invitroAssayResult.plasmaProteinConcentrationUnits}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Batch Number:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.batchNumber}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Test Date:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.testDate}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Number Of Tests:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.numberOfTests}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="fieldKey">Type of Data:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroAssayResult.dataType}}
                         </div>
                       </td>
                     </tr>
@@ -527,19 +625,10 @@
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Test Agent:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroSummary.summaryTestAgent}}
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
                       <td class="fieldKey">Target Name:</td>
                       <td>
                         <div>
-                          {{screening.invitroSummary.summaryTargetName}}
+                          {{screening.invitroSummary.targetName}}
                         </div>
                       </td>
                     </tr>
@@ -554,6 +643,15 @@
                     </tr>
 
                     <tr>
+                      <td class="fieldKey">Interaction Type:</td>
+                      <td>
+                        <div>
+                          {{screening.invitroSummary.interactionType}}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
                       <td class="fieldKey">Result Type:</td>
                       <td>
                         <div>
@@ -563,56 +661,46 @@
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Result and Units:</td>
+                      <td class="fieldKey">Result Value (Average):</td>
                       <td>
                         <div>
-                          {{screening.invitroSummary.result}}&nbsp;
-                          {{screening.invitroSummary.resultUnits}}
+                          {{screening.invitroSummary.resultValueAverage}}
                         </div>
                       </td>
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Amount Type:</td>
+                      <td class="fieldKey">Result Value (Low):</td>
                       <td>
                         <div>
-                          {{screening.invitroSummary.amountType}}
+                          {{screening.invitroSummary.resultValueLow}}
                         </div>
                       </td>
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Amount Average:</td>
+                      <td class="fieldKey">Result Value (High):</td>
                       <td>
                         <div>
-                          {{screening.invitroSummary.amountAverage}}
+                          {{screening.invitroSummary.resultValueHigh}}
                         </div>
                       </td>
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Amount Low:</td>
+                      <td class="fieldKey">Result Value Units:</td>
                       <td>
                         <div>
-                          {{screening.invitroSummary.amountLow}}
+                          {{screening.invitroSummary.resultValueUnits}}
                         </div>
                       </td>
                     </tr>
 
                     <tr>
-                      <td class="fieldKey">Amount High:</td>
+                      <td class="fieldKey">Comments:</td>
                       <td>
                         <div>
-                          {{screening.invitroSummary.amountHigh}}
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td class="fieldKey">Amount Units</td>
-                      <td>
-                        <div>
-                          {{screening.invitroSummary.amountUnits}}
+                          {{screening.invitroSummary.comments}}
                         </div>
                       </td>
                     </tr>
@@ -622,8 +710,9 @@
               </div> <!-- if Assay Summary exist -->
 
 
-              <div *ngIf="screening.invitroReference">
-                <div class="margintop20px" *ngIf="screening.invitroReference.invitroSponsor">
+              <!-- Sponsor Details -->
+              <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation">
+                <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation.invitroSponsor">
                   <table class="tableStyle">
                     <tbody>
                       <tr class="headerstyle3">
@@ -633,7 +722,7 @@
                         <td class="fieldKey">Sponsor Contact Name:</td>
                         <td>
                           <div>
-                            {{screening.invitroReference.invitroSponsor.sponsorContactName}}
+                            {{screening.invitroAssayResultInformation.invitroSponsor.sponsorContactName}}
                           </div>
                         </td>
                       </tr>
@@ -642,7 +731,7 @@
                         <td class="fieldKey">Sponsor Affiliation:</td>
                         <td>
                           <div>
-                            {{screening.invitroReference.invitroSponsor.sponsorAffiliation}}
+                            {{screening.invitroAssayResultInformation.invitroSponsor.sponsorAffiliation}}
                           </div>
                         </td>
                       </tr>
@@ -651,7 +740,7 @@
                         <td class="fieldKey">Sponsor Street Address:</td>
                         <td>
                           <div>
-                            {{screening.invitroReference.invitroSponsor.sponsorStreetAddress}}
+                            {{screening.invitroAssayResultInformation.invitroSponsor.sponsorStreetAddress}}
                           </div>
                         </td>
                       </tr>
@@ -660,7 +749,7 @@
                         <td class="fieldKey">Sponsor City:</td>
                         <td>
                           <div>
-                            {{screening.invitroReference.invitroSponsor.sponsorCity}}
+                            {{screening.invitroAssayResultInformation.invitroSponsor.sponsorCity}}
                           </div>
                         </td>
                       </tr>
@@ -669,7 +758,7 @@
                         <td class="fieldKey">Sponsor State:</td>
                         <td>
                           <div>
-                            {{screening.invitroReference.invitroSponsor.sponsorState}}
+                            {{screening.invitroAssayResultInformation.invitroSponsor.sponsorState}}
                           </div>
                         </td>
                       </tr>
@@ -678,7 +767,7 @@
                         <td class="fieldKey">Sponsor Zipcode:</td>
                         <td>
                           <div>
-                            {{screening.invitroReference.invitroSponsor.sponsorZipcode}}
+                            {{screening.invitroAssayResultInformation.invitroSponsor.sponsorZipcode}}
                           </div>
                         </td>
                       </tr>
@@ -687,7 +776,7 @@
                         <td class="fieldKey">Sponsor Country:</td>
                         <td>
                           <div>
-                            {{screening.invitroReference.invitroSponsor.sponsorCountry}}
+                            {{screening.invitroAssayResultInformation.invitroSponsor.sponsorCountry}}
                           </div>
                         </td>
                       </tr>
@@ -695,78 +784,83 @@
                     </tbody>
                   </table>
                 </div> <!-- if invitroSponsor exists -->
-              </div>
-
-              <!-- Report Submitter Details -->
-              <div class="margintop20px" *ngIf="screening.invitroSubmitterReport">
-                <table class="tableStyle">
-                  <tbody>
-                    <tr class="headerstyle3">
-                      <td colspan="2"><span class="font16px">Sponsor Report Submitter</span></td>
-                    </tr>
-
-                    <tr>
-                      <td class="fieldKey">Report Number:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroSubmitterReport.reportNumber}}
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td class="fieldKey">Report Date:</td>
-                      <td>
-                        <div>
-                          {{screening.invitroSubmitterReport.reportDate|date: 'MM/dd/yyyy'}}
-                        </div>
-                      </td>
-                    </tr>
+              </div> <!-- if invitroAssayResultInformation exists -->
 
 
-                    <!-- Report Submitter Table BEGIN-->
-                    <tr>
-                      <td colspan="2">
-                        <div class="margintop10px font14px">
-                          <b>Sponsor Report Submitters
-                            &nbsp;
-                            ({{screening.invitroSubmitterReport.invitroSponsorSubmitters.length}})
-                          </b>
-                        </div>
+              <!-- Report Details -->
+              <div *ngIf="screening.invitroAssayResultInformation">
+                <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation.invitroSponsorReport">
+                  <table class="tableStyle">
+                    <tbody>
+                      <tr class="headerstyle3">
+                        <td colspan="2"><span class="font16px">Sponsor Report Submitter</span></td>
+                      </tr>
 
-                        <table class="width100percent margintop10px">
-                          <tbody>
-                            <tr>
-                              <th>Submitter Name</th>
-                              <th>Submitter Title</th>
-                              <th>Submitter Affiliation</th>
-                              <th>Submitter Email</th>
-                              <th>Submitter Phone Number</th>
-                              <th>Submitter Assay Type</th>
-                            </tr>
+                      <tr>
+                        <td class="fieldKey">Report Number:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroSponsorReport.reportNumber}}
+                          </div>
+                        </td>
+                      </tr>
 
-                            <tr
-                              *ngFor="let sub of screening.invitroSubmitterReport.invitroSponsorSubmitters; let indexSub = index">
-                              <td>{{sub.sponsorReportSubmitterName}}</td>
-                              <td>{{sub.sponsorReportSubmitterTitle}}</td>
-                              <td>{{sub.sponsorReportSubmitterAffiliation}}</td>
-                              <td>{{sub.sponsorReportSubmitterEmail}}</td>
-                              <td>{{sub.sponsorReportSubmitterPhoneNumber}}</td>
-                              <td>{{sub.sponsorReportSubmitterAssayType}}</td>
-                            </tr> <!-- Submitters Loop -->
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                    <!-- Table Report Submitter END -->
+                      <tr>
+                        <td class="fieldKey">Report Date:</td>
+                        <td>
+                          <div>
+                            {{screening.invitroAssayResultInformation.invitroSponsorReport.reportDate|date:
+                            'MM/dd/yyyy'}}
+                          </div>
+                        </td>
+                      </tr>
 
-                  </tbody>
-                </table>
-              </div> <!-- if Report Submitter exist -->
 
+                      <!-- Report Submitter Table BEGIN-->
+                      <tr>
+                        <td colspan="2">
+                          <div class="margintop10px font14px">
+                            <b>Sponsor Report Submitters
+                              &nbsp;
+                              ({{screening.invitroAssayResultInformation.invitroSponsorReport.invitroSponsorSubmitters.length}})
+                            </b>
+                          </div>
+
+                          <table class="width100percent margintop10px">
+                            <tbody>
+                              <tr>
+                                <th>Submitter Name</th>
+                                <th>Submitter Title</th>
+                                <th>Submitter Affiliation</th>
+                                <th>Submitter Email</th>
+                                <th>Submitter Phone Number</th>
+                                <th>Submitter Assay Type</th>
+                              </tr>
+
+                              <tr
+                                *ngFor="let sub of screening.invitroAssayResultInformation.invitroSponsorReport.invitroSponsorSubmitters; let indexSub = index">
+                                <td>{{sub.sponsorReportSubmitterName}}</td>
+                                <td>{{sub.sponsorReportSubmitterTitle}}</td>
+                                <td>{{sub.sponsorReportSubmitterAffiliation}}</td>
+                                <td>{{sub.sponsorReportSubmitterEmail}}</td>
+                                <td>{{sub.sponsorReportSubmitterPhoneNumber}}</td>
+                                <td>{{sub.sponsorReportSubmitterAssayType}}</td>
+                              </tr> <!-- Submitters Loop -->
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                      <!-- Table Report Submitter END -->
+
+                    </tbody>
+                  </table>
+                </div> <!-- if Report Submitter exist -->
+              </div> <!--  resultInformation exists -->
 
               <!-- Laboratory Details -->
-              <div class="margintop30px marginbottom30px" *ngIf="screening.invitroLaboratory">
+              <div class="margintop20px" *ngIf="screening.invitroAssayResultInformation"></div>
+              <div class="margintop30px marginbottom30px"
+                *ngIf="screening.invitroAssayResultInformation.invitroLaboratory">
                 <table class="tableStyle">
                   <tbody>
                     <tr class="headerstyle3">
@@ -777,7 +871,7 @@
                       <td class="fieldKey">Laboratory Name:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryName}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryName}}
                         </div>
                       </td>
                     </tr>
@@ -786,7 +880,7 @@
                       <td class="fieldKey">Laboratory Affiliation:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryAffiliation}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryAffiliation}}
                         </div>
                       </td>
                     </tr>
@@ -795,7 +889,7 @@
                       <td class="fieldKey">Laboratory Type:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryType}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryType}}
                         </div>
                       </td>
                     </tr>
@@ -804,7 +898,7 @@
                       <td class="fieldKey">Laboratory Street Address:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryStreetAddress}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryStreetAddress}}
                         </div>
                       </td>
                     </tr>
@@ -813,7 +907,7 @@
                       <td class="fieldKey">Laboratory City:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryCity}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryCity}}
                         </div>
                       </td>
                     </tr>
@@ -822,7 +916,7 @@
                       <td class="fieldKey">Laboratory State:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryState}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryState}}
                         </div>
                       </td>
                     </tr>
@@ -831,7 +925,7 @@
                       <td class="fieldKey">Laboratory Zipcode:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryZipcode}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryZipcode}}
                         </div>
                       </td>
                     </tr>
@@ -840,7 +934,7 @@
                       <td class="fieldKey">Laboratory Country:</td>
                       <td>
                         <div>
-                          {{screening.invitroLaboratory.laboratoryCountry}}
+                          {{screening.invitroAssayResultInformation.invitroLaboratory.laboratoryCountry}}
                         </div>
                       </td>
                     </tr>
@@ -848,14 +942,6 @@
                   </tbody>
                 </table>
               </div> <!-- if Laboratory exist -->
-
-              <!--
-                </mat-expansion-panel>
-                  -->
-              <!--
-              </div> -->
-              <!-- LOOP: Assay Information Reference Test Agent Details END -->
-
 
             </mat-expansion-panel> <!-- For Reference -->
 

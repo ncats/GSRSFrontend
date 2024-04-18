@@ -41,7 +41,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   public sortValues = invitroPharmacologySearchSortValues;
   public assays: Array<InvitroAssayInformation>;
   targetSummaries: any;
-
+  
   // Browse by tabs, data lists
   browseByTargetNameList: Array<any> = [];
   browseByTestAgentList: Array<any> = [];
@@ -138,6 +138,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   testAgentSummaryColumns: string[] = [
     'viewDetails',
+    'isFromResult',
     'referenceSource',
     'testAgent',
     'assayTarget',
@@ -545,12 +546,12 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           assayObj.studyType = assay.studyType;
 
           if (screening.invitroAssayResultInformation) {
-            /* Invitro Reference Object exists */
-            let referenceSourceTypeNumber = '';
-            let referenceSourceType = '';
-            let referenceSource = '';
 
+            /* Invitro Reference Object exists */
             if (screening.invitroAssayResultInformation.invitroReference) {
+              let referenceSourceTypeNumber = '';
+              let referenceSourceType = '';
+              let referenceSource = '';
               if (screening.invitroAssayResultInformation.invitroReference.referenceSourceType) {
                 referenceSourceType = screening.invitroAssayResultInformation.invitroReference.referenceSourceType;
               }
@@ -615,6 +616,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             summaryObj.relationshipType = screening.invitroSummary.relationshipType;
             summaryObj.interactionType = screening.invitroSummary.interactionType;
 
+            summaryObj.isFromResult = screening.invitroSummary.isFromResult;
+
             assayObj.summary = summaryObj;
 
             assayObj.summaries = [];
@@ -632,6 +635,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
               assayObj.testAgent = testAgent;
               testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+              let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
 
               // Get the index if the value exists in the key 'testAgent'
               const indexTestAgent = this.browseByTestAgentList.findIndex(record => record.testAgent === testAgent);
@@ -648,7 +652,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
                 // Create new card record
                 let assayList = [];
                 assayList.push(assayObj);
-                const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentScreeningList': assayList, 'testAgentSummaryList': summaryList };
+                const appScreening = { 'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentId': testAgentId,
+                'testAgentScreeningList': assayList, 'testAgentSummaryList': summaryList };
                 this.browseByTestAgentList.push(appScreening);
               } // else
             } // if invitroTestAgent exists
@@ -1036,10 +1041,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   }
 
   openImageModal($event, subUuid: string): void {
-    // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-
-    //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
-
     let data: any;
 
     // if (substance.substanceClass === 'chemical') {
