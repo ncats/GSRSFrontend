@@ -1041,10 +1041,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   }
 
   openImageModal($event, subUuid: string): void {
-    // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-
-    //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
-
     let data: any;
 
     // if (substance.substanceClass === 'chemical') {

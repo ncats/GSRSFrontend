@@ -203,13 +203,15 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
           // this.invitroPharmacologyService.loadScreening(response);
           this.screeningList = response;
 
-          // Load Test Ageng
+          // Load Test Agent
           if (this.screeningList.length > 0) {
-            if (this.screeningList[0].invitroTestAgent)
-              if (this.screeningList[0].invitroTestAgent.testAgentSubstanceUuid) {
-                this.testAgentSubstanceUuid = this.screeningList[0].invitroTestAgent.testAgentSubstanceUuid;
-                this.testAgent = this.screeningList[0].invitroTestAgent.testAgent;
-              }
+            if (this.screeningList[0].invitroAssayResultInformation) {
+              if (this.screeningList[0].invitroAssayResultInformation.invitroTestAgent)
+                if (this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid) {
+                  this.testAgentSubstanceUuid = this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                  this.testAgent = this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgent;
+                }
+            }
           }
 
           // Loop Screenings
@@ -664,8 +666,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       this.screeningList.forEach(screening => {
         if (screening) {
           screening.invitroTestAgent.testAgent = 'AAAAAAAAAAA';
-         // screening.invitroTestAgent.id = 1;
-         // screening.invitroTestAgent.internalVersion = 2;
+          // screening.invitroTestAgent.id = 1;
+          // screening.invitroTestAgent.internalVersion = 2;
         }
       });
     }
