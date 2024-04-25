@@ -51,6 +51,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   validationResult = false;
   message = '';
 
+  newAssaySetObject: InvitroAssaySet;
+  newAssaySet: string;
+
   checkBoxAssaySetList: Array<any> = [];
   existingAssaySetList: Array<any> = [];
 
@@ -115,10 +118,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
             if (id !== this.id) {
               this.id = id;
               this.titleService.setTitle(`Edit In-vitro Pharmacology Assay Only ` + this.id);
+              // Get existing Assay
               this.getInvitroPharmacologyDetails();
-
-              // Get All the Assay Sets for checkbox
-              this.getAllAssaySets();
             }
           } else if (this.activatedRoute.snapshot.queryParams['copyId']) {
             this.id = this.activatedRoute.snapshot.queryParams['copyId'];
@@ -180,6 +181,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
           this.invitroPharmacologyService.loadAssayOnly(response);
           this.assay = this.invitroPharmacologyService.assay;
 
+          // Get All the Assay Sets for checkbox
+          this.getAllAssaySets();
+
         } else {
           this.handleProductRetrivalError();
         }
@@ -219,7 +223,13 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       if (response) {
         this.existingAssaySetList = response;
 
-        this.loadCheckBoxAssaySetList();
+        // Create checboxes
+        this.createAssaySetCheckBoxes();
+
+        if (this.id) {
+          // if Assay record exists, load the Assay set in the checkboxes
+          this.loadCheckBoxAssaySetList();
+        }
 
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -232,40 +242,82 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     this.subscriptions.push(getInvitroSubscribe);
   }
 
-  loadCheckBoxAssaySetList() {
+  createAssaySetCheckBoxes() {
+    // Create checkboxes for each existing Assay Set from database
     this.existingAssaySetList.forEach(set => {
-      let test = { value: set.assaySet, checked: false };
-      this.checkBoxAssaySetList.push(test);
-    });
-
-    this.assay.invitroAssaySets.forEach(asySet => {
-      if (asySet.assaySet) {
-        // Get the index if the value exists in the key 'value'
-        const indexSet = this.checkBoxAssaySetList.findIndex(record => record.value === asySet.assaySet);
-        this.checkBoxAssaySetList[indexSet].checked = true;
-      }
+      let setObj = { value: set.assaySet, checked: false };
+      this.checkBoxAssaySetList.push(setObj);
     });
   }
 
-  setSelectedAssaySet(data: any, checkbox) {
-    let selStr = '';
-    const selected = [];
-    /*
-    const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
-    checked.forEach(data1 => {
-      const set: InvitroAssaySet = {};
-      set.assaySet = data1;
-      alert(JSON.stringify(data1));
-    //  this.assay.invitroAssaySets.push(set);
+  loadCheckBoxAssaySetList() {
+    // For existing Assay, when loading data, loop through the associated assay sets, and assign check in the checkbox
+    if (this.assay) {
+      this.assay.invitroAssaySets.forEach(asySet => {
+        if (asySet.assaySet) {
+          // Get the index if the value exists in the key 'value'
+          const indexSet = this.checkBoxAssaySetList.findIndex(record => record.value === asySet.assaySet);
+          // check the box for the found assay set
+          this.checkBoxAssaySetList[indexSet].checked = true;
+        }
+      });
+    }
+  }
 
-      // selected.push(data1.value);
-    }); */
+  setSelectedAssaySet($event, data: any, indexCheckbox: number) {
+    // const set = this.existingAssaySetList[indexCheckbox];
+    // this.assay.invitroAssaySets.push(set);
 
-    /*
-    if (selected.length > 0) {
-      selStr = selected.join(',');
-      this.assay.assaySet = selStr;
-    }*/
+    //const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
+
+    // To get the actual values instead of just the element
+    const checkedItems = this.checkBoxAssaySetList.filter((x, index) => this.checkBox.find((c, i) => i == index).checked).map(x => x.value);
+
+    // Get all the values that are checked.  Loop through the checkboxes and assay.assaySets.
+    // add the values in assay.assaySet if not there, or remove if there.
+
+    // Clear the existing lists in the assay
+    this.assay.invitroAssaySets = [];
+
+    checkedItems.forEach(assaySet => {
+      // Get the index if the value exists in the key 'value'
+      const indexSet = this.existingAssaySetList.findIndex(record => record.assaySet === assaySet);
+
+      // found
+      if (indexSet > -1) {
+        const set = this.existingAssaySetList[indexSet];
+        this.assay.invitroAssaySets.push(set);
+      } else {  // Not found add new one
+
+      }
+
+      /*
+      let found = false;
+      this.assay.invitroAssaySets.forEach(asySet => {
+        if (asySet.assaySet) {
+          // match in assay and checked in checkbox
+          if (asySet.assaySet === data) {
+          } else {
+
+          }
+        }
+      });  */
+
+      //const set: InvitroAssaySet = {};
+      //set.assaySet = data;
+      // const set = this.existingAssaySetList[indexCheckbox];
+      //this.assay.invitroAssaySets.push(set);
+    });
+  }
+
+  addNewAssaySet() {
+    this.newAssaySetObject = { assaySet: this.newAssaySet };
+    this.existingAssaySetList.push(this.newAssaySetObject);
+
+    let setObj = { value: this.newAssaySet, checked: false };
+    this.checkBoxAssaySetList.push(setObj);
+
+    // this.loadCheckBoxAssaySetList();
   }
 
   validate(): void {
@@ -354,7 +406,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/invitro-pharm/register']);
+      this.router.navigate(['/invitro-pharm/assay/register']);
       this.invitroPharmacologyService.loadAssay();
     }, 5000);
   }

@@ -1241,6 +1241,12 @@
           "display": "In-vitro Pharmacology Summary",
           "path": "invitro-pharm/summary/register",
           "order": 260
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "Import In-vitro Pharm Assay",
+          "path": "invitro-pharm/import/assay",
+          "order": 270
         }
       ]
     },
