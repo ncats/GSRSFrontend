@@ -231,6 +231,7 @@ export interface ProductIngredient {
   highLimit?: string;
   nonNumericValue?: string;
   ingredientType?: string;
+  ingredientFunction?: string;
   unit?: string;
   grade?: string;
   manufacturer?: string;

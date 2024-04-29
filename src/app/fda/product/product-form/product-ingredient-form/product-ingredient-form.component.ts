@@ -196,7 +196,11 @@ export class ProductIngredientFormComponent implements OnInit {
   }
 
   ingredientNameUpdated(substance: SubstanceSummary): void {
+
+    // Clear values
     this.ingredientNameMessage = '';
+    this.ingredientNameSubstanceUuid = '';
+    this.ingredientNameActiveMoiety = [];
 
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {
@@ -213,7 +217,7 @@ export class ProductIngredientFormComponent implements OnInit {
           // set substance uuid for the releated subtance structure
           this.ingredientNameSubstanceUuid = relatedSubstance.refuuid;
 
-          // Clear the Validation Message
+          // Clear the Validation Message and Active Moiety Length
           this.ingredientNameMessage = '';
           this.ingredientNameActiveMoiety.length = 0;
 
@@ -224,10 +228,9 @@ export class ProductIngredientFormComponent implements OnInit {
           /* SUBSTANCE KEY RESOLVER BEGIN                       */
           /**************************************************** */
           if (!this.substanceKeyTypeConfig) {
-            alert('There is no Substance configuration found in frontend config file: substance.linking.keyType.productKeyType. Unable to add Ingredient Name when saving this record.');
+            alert('There is no Substance Key Type configuration found in the frontend config file: substance.linking.keyType.productKeyType:"UUID". Unable to add Ingredient Name when saving this record.');
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
-            //this.testing(this.ingredient.substanceKey, relatedSubstance);
             // KEY RESOLVER
             if (this.substanceKeyTypeConfig === 'UUID' || this.substanceKeyTypeConfig === 'APPROVAL_ID') {
               this.ingredient.substanceKey = this.generalService.getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance, this.substanceKeyTypeConfig);
@@ -245,77 +248,28 @@ export class ProductIngredientFormComponent implements OnInit {
           }
           // ******** SUBSTANCE KEY RESOLVER END *************
 
-
-          // Populate Basis of Strength if it is empty/null, same as Ingredient Name
+          // Populate BASIS OF STRENGTH if it is empty/null, same as Ingredient Name
           if (!this.ingredient.basisOfStrengthSubstanceKey) {
 
             // Clear the Validation Message
             this.basisOfStrengthMessage = '';
             this.ingredient.$$basisOfStrengthValidation = '';
-
-            this.ingredient.basisOfStrengthSubstanceKey = this.ingredient.substanceKey;
-            this.ingredient.basisOfStrengthSubstanceKeyType = this.ingredient.substanceKeyType;
 
             // set substance uuid for the basis of strength releated subtance structure
             this.basisOfStrengthSubstanceUuid = this.ingredientNameSubstanceUuid;
 
-            //this.basisOfStrengthIngredientName = relatedSubstance.name;
-            //this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
-            // Get Active Moiety
-            //this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
-          }
+            this.ingredient.basisOfStrengthSubstanceKey = this.ingredient.substanceKey;
+            this.ingredient.basisOfStrengthSubstanceKeyType = this.ingredient.substanceKeyType;
 
-
-          /*
-         // Substance Key Type fOUND in frontend config
-         // If Substance Key Type found in the frontend config, set value of this Ingredient Substance Key Type
-         this.ingredient.substanceKeyType = this.substanceKeyTypeConfig;
-
-         // If Substance Key Type is UUID in the frontend config, set value of this Ingredient Substance Key to Substance Uuid
-         if (this.substanceKeyTypeConfig === 'UUID') {
-           this.ingredient.substanceKey = relatedSubstance.refuuid;
-         // If Substance Key Type is APPROVAL_ID in the frontend config, set value of this Ingredient Substance Key to Substance Approval ID
-         } else if (this.substanceKeyTypeConfig === 'APPROVAL_ID') {
-           this.ingredient.substanceKey = relatedSubstance.approvalID;
-           // If Substance Key Type is BDNUM in the frontend config, set value of this Ingredient Substance Key to Substance Key/Bdnum/Code
-         } else if (this.substanceKeyTypeConfig === 'BDNUM') {
-           // Get the Bdnum/code from Substance by substance uuid
-           this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
-             if (response) {
-               this.ingredient.substanceKey = response;
-             }
-           });
-         }
-         */
-
-
-          /*
-          this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
-
-          this.substanceUuid = relatedSubstance.refuuid;
-          this.ingredientName = relatedSubstance.name;
-
-          // Clear the Validation Message
-          this.ingredientNameMessage = '';
-          this.ingredient.$$ingredientNameValidation = '';
-
-          // Populate Basis of Strength if it is empty/null
-          if (!this.ingredient.basisOfStrengthSubstanceKey) {
-
-            // Clear the Validation Message
-            this.basisOfStrengthMessage = '';
-            this.ingredient.$$basisOfStrengthValidation = '';
-
-            this.basisOfStrengthIngredientName = relatedSubstance.name;
-            this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
             // Get Active Moiety
             this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
           }
 
           // Get Active Moiety
-          this.getActiveMoiety(this.substanceUuid, 'ingredientname');
-          */
-          //}
+          if (this.ingredientNameSubstanceUuid) {
+            this.getActiveMoiety(this.ingredientNameSubstanceUuid, 'ingredientname');
+          }
+
         }
       }
       // else substance is null
@@ -326,18 +280,12 @@ export class ProductIngredientFormComponent implements OnInit {
     }
   }
 
-  testing(var1: string, relatedSubstance: SubstanceRelated) {
-    // KEY RESOLVER
-    if (this.substanceKeyTypeConfig === 'UUID' || this.substanceKeyTypeConfig === 'APPROVAL_ID') {
-      var1 = this.generalService.getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance, this.substanceKeyTypeConfig);
-    } else if (this.substanceKeyTypeConfig === 'BDNUM') {
-      this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
-        var1 = response;
-      });
-    }
-  }
-
   basisOfStrengthUpdated(substance: SubstanceSummary): void {
+    // Clear values
+    this.basisOfStrengthMessage = '';
+    this.basisOfStrengthSubstanceUuid = '';
+    this.basisOfStrengthActiveMoiety = [];
+
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {
         refPname: substance._name,
@@ -365,7 +313,7 @@ export class ProductIngredientFormComponent implements OnInit {
           /* SUBSTANCE KEY RESOLVER BEGIN                       */
           /**************************************************** */
           if (!this.substanceKeyTypeConfig) {
-            alert('There is no Substance configuration found in frontend config file: substance.linking.keyType.productKeyType. Unable to add Ingredient Name when saving this record.');
+            alert('There is no Substance configuration found in frontend config file: substance.linking.keyType.productKeyType:"UUID". Unable to add Ingredient Name when saving this record.');
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
             // KEY RESOLVER
@@ -380,26 +328,10 @@ export class ProductIngredientFormComponent implements OnInit {
           }
           // ******** SUBSTANCE KEY RESOLVER END *************
 
-          /*
-          if (!this.substanceKeyTypeConfig) {
-            alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Basis of Strength');
-            this.basisOfStrengthMessage = 'Add Substance Key Type in Config';
-          } else {
-            this.getSubstanceCode(relatedSubstance.refuuid, 'basisofstrength');
-
-            this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
-            this.basisOfStrengthIngredientName = relatedSubstance.name;
-
-            // Clear the Validation Message
-            this.basisOfStrengthMessage = '';
-            this.ingredient.$$basisOfStrengthValidation = '';
-
-            // Get Active Moiety
+          // Get Active Moiety for Basis of Strength
+          if (this.basisOfStrengthSubstanceUuid) {
             this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
           }
-        } // If relatedSubstance.refuuid != null
-        */
-
 
         } // if relatedSubstance.refuuid is not null
       } // if relatedSubstance is not null
@@ -422,7 +354,7 @@ export class ProductIngredientFormComponent implements OnInit {
               this.ingredientName = response._name;
 
               // Get Active Moiety
-              //this.getActiveMoiety(this.ingredientNameSubstanceUuid, 'ingredientname');
+              this.getActiveMoiety(this.ingredientNameSubstanceUuid, 'ingredientname');
             }
           }
         });

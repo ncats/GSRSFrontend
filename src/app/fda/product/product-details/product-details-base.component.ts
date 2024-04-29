@@ -26,6 +26,8 @@ import { Product } from '../model/product.model';
 })
 export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  ingredientNameActiveMoiety = new Array<String>();
+  basisOfStrengthActiveMoiety = new Array<String>();
   productId: string;
   src: string;
   product: Product;
@@ -144,6 +146,11 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                       if (response) {
                         elementIngred._substanceUuid = response.uuid;
                         elementIngred._ingredientName = response._name;
+
+                        // Get Active Moiety
+                        if (elementIngred._substanceUuid) {
+                          this.getActiveMoiety(elementIngred._substanceUuid, 'ingredientname');
+                        }
                       }
                     });
                     this.subscriptions.push(subSubscription);
@@ -166,6 +173,32 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           }); // Lot Loop
         }
       }); // Component Loop
+    }
+  }
+
+  getActiveMoiety(substanceUuid: string, type: string) {
+    if (substanceUuid != null) {
+      // Get Active Moiety - Relationship
+      this.generalService.getSubstanceRelationships(substanceUuid).subscribe(responseRel => {
+        if (responseRel) {
+          if (responseRel && responseRel.length > 0) {
+            for (let i = 0; i < responseRel.length; i++) {
+              const relType = responseRel[i].type;
+              // if type is ACTIVE MOIETY, get Relationship Name
+              if (relType && relType === 'ACTIVE MOIETY') {
+                if (responseRel[i].relatedSubstance.name) {
+                  if ((type != null) && (type === 'ingredientname')) {
+                    this.ingredientNameActiveMoiety.push(responseRel[i].relatedSubstance.name);
+                  } else {
+                    this.basisOfStrengthActiveMoiety.push(responseRel[i].relatedSubstance.name);
+                  }
+                }
+                break;
+              }
+            }
+          }
+        }
+      });
     }
   }
 

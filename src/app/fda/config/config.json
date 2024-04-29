@@ -1510,7 +1510,7 @@
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
         "clinicalTrialKeyType": "UUID",
-        "productKeyType": "APPROVAL_ID",
+        "productKeyType": "UUID",
         "applicationKeyType": "UUID",
         "impuritiesKeyType": "UUID"
       }
