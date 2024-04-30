@@ -3,7 +3,7 @@
   <mat-label>{{title}} {{required? ' *':''}}</mat-label>
   <mat-select [(ngModel)]="privateMod" name="term" (ngModelChange)="select($event)" [disabled] = "disable">
     <mat-option [value] = 'null' *ngIf = "privateMod" ><span class = 'deselect' >Clear selection</span></mat-option>
-  <mat-option *ngFor="let term of vocabulary" [value]=" term.value">
+  <mat-option *ngFor="let term of vocabulary" [value]="term.value">
     {{term.display}}
   </mat-option>
   <mat-option *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== ''"

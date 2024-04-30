@@ -17,7 +17,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScrollToModule } from '../scroll-to/scroll-to.module';
 import { DomainReferencesComponent } from './references/domain-references/domain-references.component';
-import { ReferenceFormComponent } from './references/reference-form.component';
 import { RefernceFormDialogComponent } from './references/references-dialogs/refernce-form-dialog.component';
 import { ReuseReferencesDialogComponent } from './references/references-dialogs/reuse-references-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -82,7 +81,6 @@ import { PreviousReferencesComponent } from '@gsrs-core/substance-form/reference
 import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/references/previous-references/previous-references-dialog/previous-references-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-disulfide-dialog/copy-disulfide-dialog.component';
-import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { MatSortModule } from '@angular/material/sort';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
@@ -130,7 +128,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     AccessManagerComponent,
     TagSelectorComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent,
     RefernceFormDialogComponent,
     PreviousReferencesComponent,
     ReuseReferencesDialogComponent,
@@ -156,13 +153,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent
+    SubstanceDraftsComponent,
   ],
   exports: [
     SubstanceFormComponent,
     AccessManagerComponent,
     DomainReferencesComponent,
-    ReferenceFormComponent,
     PreviousReferencesComponent,
     RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,

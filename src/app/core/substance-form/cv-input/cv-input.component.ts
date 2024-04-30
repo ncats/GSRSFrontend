@@ -52,7 +52,8 @@ export class CvInputComponent implements OnInit, OnDestroy {
       this.sortFromConfig();
 
     } else if (this.key) {
-      this.dictionary = this.dictionaryService.getDictionaryRow(this.key);
+      this.dictionary = this.
+      dictionaryService.getDictionaryRow(this.key);
       if (!this.title) {
         this.title = this.dictionary.fieldName;
       }
