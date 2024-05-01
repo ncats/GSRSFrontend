@@ -1510,7 +1510,7 @@
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
         "clinicalTrialKeyType": "UUID",
-        "productKeyType": "APPROVAL_ID",
+        "productKeyType": "UUID",
         "applicationKeyType": "UUID",
         "impuritiesKeyType": "UUID"
       }
@@ -1600,6 +1600,9 @@
         "substanceGrade": "advanced",
         "acceptanceCriteria": "advanced",
         "amount": "advanced"
+      },
+      "stepView": {
+        "showAmountValues": "false"
       }
     }
   }

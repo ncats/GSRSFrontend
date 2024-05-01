@@ -62,6 +62,9 @@ export interface ImpuritiesTesting {
   standardSolution?: string;
   sampleSolution?: string;
   systemSuitabilitySolution?: string;
+  otherSolution?: string;
+  solutionADescription?: string;
+  solutionBDescription?: string;
   suitabilityReqResolution?: string;
   suitabilityReqRelStandardDeviation?: string;
   elutionType?: string;
@@ -76,6 +79,7 @@ export interface ImpuritiesTesting {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  impuritiesSolutionTableList?: Array<ImpuritiesSolutionTable>;
   impuritiesElutionSolventList?: Array<ImpuritiesElutionSolvent>;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
@@ -85,6 +89,18 @@ export interface ImpuritiesElutionSolvent {
   id?: number;
   elutionSolvent?: string;
   elutionSolventCode?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesSolutionTable {
+  id?: number;
+  solutionTime?: string;
+  solutionAPercent?: string;
+  solutionBPercent?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

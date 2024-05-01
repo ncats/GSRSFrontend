@@ -231,6 +231,7 @@ export interface ProductIngredient {
   highLimit?: string;
   nonNumericValue?: string;
   ingredientType?: string;
+  ingredientFunction?: string;
   unit?: string;
   grade?: string;
   manufacturer?: string;
@@ -254,8 +255,10 @@ export interface ProductIngredient {
   modifyDate?: number;
   _substanceUuid?: string;
   _ingredientName?: string;
+  _ingredientNameActiveMoieties?: Array<String>;
   _basisOfStrengthSubstanceUuid?: string;
   _basisOfStrengthIngredientName?: string;
+  _basisOfStrengthActiveMoieties?: Array<String>;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
 }-0

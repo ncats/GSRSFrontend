@@ -4,10 +4,11 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { Environment } from 'src/environments/environment.model';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
+import { UtilsService } from '@gsrs-core/utils';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SubstanceFormSsg4mProcessService } from '../ssg4m-process/substance-form-ssg4m-process.service';
-import { SubstanceDetail, SpecifiedSubstanceG4mProcess } from '@gsrs-core/substance/substance.model';
+import { SubstanceDetail, SpecifiedSubstanceG4mProcess, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { SubstanceSsg4mService } from '../substance-ssg4m-form.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   @Input() showStageIndex = -1;  // -1 Show all records
   showSubstanceRole = true;
   showCriticalParameter = false;
+  showAmountValues = false;
   imageLoc: any;
   environment: Environment;
   substance: SubstanceDetail;
@@ -34,6 +36,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     private configService: ConfigService,
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
     private substanceSsg4mService: SubstanceSsg4mService,
+    private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
   ) { }
@@ -52,15 +55,33 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/arrow.png`;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
+    // Get Configuration values
+    this.getConfigSettings();
+
     // Get GSRS Frontend URL fron config
     this.getHomepageUrl();
-    //this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'stepView.showAmountValues' json values from config
+    let confStepView = null;
+    if (configSsg4Form) {
+      confStepView = configSsg4Form.settingsDisplay.stepView;
+      if (confStepView) {
+        this.showAmountValues = configSsg4Form.settingsDisplay.stepView.showAmountValues;
+      }
+    }
+
+    alert(this.showAmountValues);
   }
 
   openImageModal(subUuid: string, approvalID: string, displayName: string): void {
@@ -96,10 +117,6 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  displayAmount(amt, propertyName: string): string {
-    return this.displayAmountCompose(amt, propertyName);
-  }
-
   editInForm() {
     this.tabSelectedIndexOut.emit(0);
   }
@@ -115,6 +132,10 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   getHomepageUrl() {
     // Get GSRS Frontend URL fron config
     this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
+  }
+
+  displayAmount(amt: SubstanceAmount): string {
+    return this.utilsService.displayAmount(amt);
   }
 
   displayAmountCompose(amt, propertyType: string): string {
@@ -144,7 +165,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
           if (!unittext) {
             unittext = '';
           }
-          /* const atype = formatValue(amt.type); */
+          // const atype = formatValue(amt.type);
           const atype = formatValue(propertyType);
           if (atype) {
             ret += atype + ':' + '\n';
@@ -204,4 +225,5 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     }
     return ret;
   }
+
 }
