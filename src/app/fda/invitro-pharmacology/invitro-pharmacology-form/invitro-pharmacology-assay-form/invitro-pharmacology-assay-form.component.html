@@ -99,18 +99,17 @@
           </a>&nbsp;&nbsp;
           -->
 
-          <a [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
-            matTooltip='Export Json'>
+          <a [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json" matTooltip='Export Json'>
             <mat-icon svgIcon="get_app" [ngStyle]="{'color':'white'}"></mat-icon>
           </a>&nbsp;&nbsp;&nbsp;
         </div>
 
-        <div class="width40percent margintop10px marginleft30px font11px colorwhite" *ngIf="assay && assay.id">
+        <div class="width40percent marginleft30px font11px colorwhite" *ngIf="assay && assay.id">
           <span>Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
-          <span>Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss
+          <span>Create Date:</span>{{assay.createdDate|date: 'MM/dd/yyyy hh:mm:ss
           a'}}<br>
           <span class="colorwhite">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-          <span class="colorwhite">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+          <span class="colorwhite">Modify Date:</span> {{assay.modifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
         </div>
       </div> <!-- class=divflex -->
 
@@ -144,16 +143,31 @@
               <div class="fieldKey">
                 <mat-label>Assay Set:&nbsp;<span class="colorred">*</span></mat-label>
               </div>
-              <div class="fieldvalue padtop5px">
-                <span *ngFor="let data of checkBoxAssaySetList; let i=index">
-                  <mat-checkbox class="font13px" #checkBox [value]="data.value"
-                    name="data.value" [checked]="data.checked" (change)="setSelectedAssaySet(data, checkBox)">
-                    {{data.value}}
-                  </mat-checkbox>
-                  &nbsp;
-                </span>
-              </div>
-            </div>
+
+              <div class="divflex fieldvalue">
+                <div class="padtop5px">
+                  <span *ngFor="let data of checkBoxAssaySetList; let indexCheckbox = index">
+                    <mat-checkbox class="marginright15px font13px" #checkBox [value]="data.value" name="data.value"
+                      [checked]="data.checked" (change)="setSelectedAssaySet($event, data, indexCheckbox)">
+                      {{data.value}}
+                    </mat-checkbox>
+                  </span>
+                </div>
+
+                <!-- Add New Assay Set -->
+                <mat-form-field class="marginleft15px width150px">
+                  <input matInput placeholder="Enter New Assay Set" [(ngModel)]="newAssaySet" name="newAssaySet" />
+                </mat-form-field>
+
+                <div class="marginleft15px">
+                  <button mat-flat-button color="primary" (click)="addNewAssaySet()">Add New
+                    Assay Set</button>
+                </div>
+
+              </div> <!-- divflex -->
+
+
+            </div> <!-- form-row -->
 
             <div class="form-row" *ngIf="assay && assay.id">
               <div class="fieldKey">
@@ -372,8 +386,10 @@
               <div class="fieldKey">
                 <mat-label>Standard Ligand/Sub Concent Units:</mat-label>
               </div>
-              <app-cv-input class="fieldvalue" domain="AMOUNT_UNIT" title="" name="standardLigandSubstrateConcentrationUnits"
-                [model]="assay.standardLigandSubstrateConcentrationUnits" (valueChange)="assay.standardLigandSubstrateConcentrationUnits = $event">
+              <app-cv-input class="fieldvalue" domain="AMOUNT_UNIT" title=""
+                name="standardLigandSubstrateConcentrationUnits"
+                [model]="assay.standardLigandSubstrateConcentrationUnits"
+                (valueChange)="assay.standardLigandSubstrateConcentrationUnits = $event">
               </app-cv-input>
             </div>
 
