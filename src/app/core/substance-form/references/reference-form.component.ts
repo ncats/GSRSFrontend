@@ -27,6 +27,7 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   showPrev = false;
   loading = false;
   error = false;
+  citationMapping: any;
   private subscriptions: Array<Subscription> = [];
   constructor(
     private cvService: ControlledVocabularyService,
@@ -41,6 +42,10 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.disableReferenceDocumentUpload = this.configService.configData.disableReferenceDocumentUpload;
+    if (this.configService.configData && this.configService.configData.citationMapping) {
+      //This config object is meant to map certain source type values with an automatically filled out citation value on selection.
+      this.citationMapping = this.configService.configData.citationMapping;
+    }
   }
 
   ngAfterViewInit() {
@@ -138,6 +143,16 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   downloadDocument(url: string): void {
     this.substanceFormService.bypassUpdateCheck();
     window.open(url);
+  }
+
+  setSourceType(event: any): void {
+    if (event) {
+      this.reference.docType = event;
+    }
+    if (this.citationMapping && this.citationMapping[this.reference.docType]) {
+      this.reference.citation = this.citationMapping[this.reference.docType];
+    }
+
   }
 
 }

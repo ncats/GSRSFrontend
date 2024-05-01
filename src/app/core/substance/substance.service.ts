@@ -812,10 +812,12 @@ export class SubstanceService extends BaseHttpService {
 
 
 
-  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string): Observable<FacetQueryResponse> {
+  getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string, sort?: string, order?: string): Observable<FacetQueryResponse> {
     let url: string;
+    console.log('this one');
+    //console.log(nextUrl);
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `http://gsrs-test-public.ncats.io:8080/api/v1/substances/search/@facets?wait=false&kind=ix.ginas.models.v1.Substance&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&ffilter=${searchTerm}`;
       if(pageQuery) {
         url += `&q=${pageQuery}`;
       }
@@ -832,6 +834,24 @@ export class SubstanceService extends BaseHttpService {
         }
       });
     }
+    if (sort) {
+      if(url.indexOf('sortBy') !== -1){
+
+      } else {
+        url += "&sortBy=" + sort;
+      }
+    }
+    if (order) {
+      if(url.indexOf('sortDesc') !== -1){
+
+      } else {
+        url += "&sortDesc=" + order;
+      }
+    }
+
+    url = url.replace('http://localhost:8081/','http://gsrs-test-public.ncats.io:8080/' );
+    console.log(url);
+
     return this.http.get<FacetQueryResponse>(url);
   }
 
