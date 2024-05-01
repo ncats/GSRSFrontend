@@ -1,0 +1,205 @@
+<div class="top-fixed">
+  <div class="actions-container">
+
+    <span>
+      <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
+    </span>
+
+    <!--
+    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+      <span>Export JSON</span>
+    </a>&nbsp;&nbsp;&nbsp;
+    -->
+
+    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+    <!--
+    <span *ngIf="assay && !assay.id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+    -->
+
+    <!--
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
+    <span class="middle-fill"></span>
+
+    <!- - Assay Details Link - ->
+    <a mat-flat-button color="primary" routerLink="/invitro-pharm/{{assay.id}}" target="_blank"
+      matTooltip='Opens in a new window' *ngIf="assay && assay.id">
+      View Assay Details
+      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+    <!- - Validate and Submit Button - ->
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+  </div> <!- - div class=actions-container- ->
+
+
+  <!- - Validation Message Display - ->
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+
+
+    <!- - Validation Message Display and Submit Button - ->
+    <div *ngIf="validationMessages">
+      <span *ngIf=" validationMessages.length > 0">
+        <div class="submission-message" *ngIf='!serverError && !approving'>
+          Please correct or dismiss the following errors and submit again:
+        </div>
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+            {{message.messageType}}</div>
+          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
+                target="_blank">{{link.text}}</a></span></div>
+          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+            (click)="dismissValidationMessage(i)">
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </div>
+      </span>
+
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()"
+          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
+          validationMessages.length > 0?'Dismiss All and ':''}}
+          Submit</button>
+      </div>
+    </div>
+    <!- - Validation Message and Submit Button - ->
+    -->
+
+  </div> <!-- div class=actions-container -->
+</div> <!-- div class=top-fixed -->
+
+<div class="form-content-container">
+  <div class="scrollable-container">
+
+  <div class="divcenter margintop20px marginleft30px">
+
+    <div class="headerstyle margintop20px bordergray">
+
+      <div class="padtop15px font18px fontbold">
+        <b>Import Bulk Assays ONLY </b>
+      </div>
+
+    </div> <!--  -->
+
+    <br><br>
+    <b>Select a file to Import Assays Only:</b>&nbsp;&nbsp;
+
+    <!-- Import EXCEL DATA and convert to JSON -->
+    <input type="file" (change)="onFileChange($event)" />
+
+    <!-- -->
+    <div id="output"></div>
+    <br>
+    <div *ngIf="willDownload">
+      <a id="download"> Download JSON File </a>
+    </div>
+    <br>
+
+    <!-- Import Assay JSON into the Database -->
+    <span>
+      <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disabled">Import Data
+        into Database</button>
+    </span>
+
+    <br><br>
+    <span *ngIf="submitMessage" class="colorgreen">{{submitMessage}}</span>
+
+    <!-- DISPLAY JSON -->
+    <!--
+<div *ngIf="message">
+  {{message}}
+</div>
+-->
+
+    <div *ngIf="importDataList.length > 0">
+      <b>Total Records ready for import into the database:&nbsp;
+        <span class="colorgreen font18px">{{importDataList.length}}</span></b>
+
+      <br><br>
+      <table class="tableStyle bordergray">
+        <tr class="font11px">
+          <th>#</th>
+          <th>Assay Set</th>
+          <th>External Assay Source</th>
+          <th>External Assay ID</th>
+          <th>External Assay Reference URL</th>
+          <th>Assay Title</th>
+          <th>Assay Format</th>
+          <th>Assay Mode</th>
+          <th>Bioassay Type</th>
+          <th>Bioassay Class</th>
+          <th>Study Type</th>
+          <th>Detection Method</th>
+          <th>Presention Type</th>
+          <th>Presentation</th>
+          <th>Public Domain</th>
+          <th>Assay Target Name</th>
+          <th>Assay Target Name Approval ID</th>
+          <th>Target Species</th>
+          <th>Human Homolog Target Name</th>
+          <th>Human homolog Target Name Approval ID</th>
+          <th>Ligand/Substate</th>
+          <th>Ligand/Substrate Approval ID</th>
+          <th>Standard Ligand/Substrate Concentration</th>
+          <th>Standard Ligand/Substrate Concentration Units</th>
+        </tr>
+
+        <tr valing="top" class="font11px" *ngFor="let assay of importDataList; let index = index">
+          <td>{{(index+1)}}</td>
+          <td></td>
+          <td>{{assay.externalAssaySource}}</td>
+          <td>{{assay.externalAssayId}}</td>
+          <td>{{assay.externalAssayReferenceUrl}}</td>
+          <td>{{assay.assayTitle}}</td>
+          <td>{{assay.assayFormat}}</td>
+          <td>{{assay.assayMode}}</td>
+          <td>{{assay.bioassayType}}</td>
+          <td>{{assay.bioassayClass}}</td>
+          <td>{{assay.studyType}}</td>
+          <td>{{assay.detectionMethod}}</td>
+          <td>{{assay.presentationType}}</td>
+          <td>{{assay.presentation}}</td>
+          <td>{{assay.publicDomain}}</td>
+          <td>{{assay.targetName}}</td>
+          <td>{{assay.targetNameApprovalId}}</td>
+          <td>{{assay.targetSpecies}}</td>
+          <td>{{assay.humanHomologTarget}}</td>
+          <td>{{assay.humanHomologTargetApprovalId}}</td>
+          <td>{{assay.ligandSubstrate}}</td>
+          <td>{{assay.ligandSubstrateApprovalId}}</td>
+          <td>{{assay.standardLigandSubstrateConcentration}}</td>
+          <td>{{assay.standardLigandSubstrateConcentrationUnits}}</td>
+        </tr>
+      </table>
+    </div>
+    <br>
+
+  </div> <!-- divcenter marginto90px-->
+  <br>
+
+  <div class="marginleft30px" *ngIf="importDataList.length > 0">
+    <!-- Import Assay JSON into the Database -->
+    <span>
+      <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disabled">Import Data
+        into Database</button>
+    </span>
+  </div>
+  <br><br>
+
+  </div> <!-- scrollable-container -->
+</div> <!-- form-content-container -->
+
+<br><br>
