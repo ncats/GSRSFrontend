@@ -23,6 +23,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   @Input() showStageIndex = -1;  // -1 Show all records
   showSubstanceRole = true;
   showCriticalParameter = false;
+  showAmountValues = false;
   imageLoc: any;
   environment: Environment;
   substance: SubstanceDetail;
@@ -54,15 +55,33 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/arrow.png`;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
+    // Get Configuration values
+    this.getConfigSettings();
+
     // Get GSRS Frontend URL fron config
     this.getHomepageUrl();
-    //this.gsrsHomeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || '';
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  getConfigSettings(): void {
+    // Get SSG4 Config Settings from config.json file to show and hide fields in the form
+    let configSsg4Form: any;
+    configSsg4Form = this.configService.configData && this.configService.configData.ssg4Form || null;
+    // *** IMPORTANT: get the correct value. Get 'stepView.showAmountValues' json values from config
+    let confStepView = null;
+    if (configSsg4Form) {
+      confStepView = configSsg4Form.settingsDisplay.stepView;
+      if (confStepView) {
+        this.showAmountValues = configSsg4Form.settingsDisplay.stepView.showAmountValues;
+      }
+    }
+
+    alert(this.showAmountValues);
   }
 
   openImageModal(subUuid: string, approvalID: string, displayName: string): void {

@@ -255,8 +255,10 @@ export interface ProductIngredient {
   modifyDate?: number;
   _substanceUuid?: string;
   _ingredientName?: string;
+  _ingredientNameActiveMoieties?: Array<String>;
   _basisOfStrengthSubstanceUuid?: string;
   _basisOfStrengthIngredientName?: string;
+  _basisOfStrengthActiveMoieties?: Array<String>;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
 }-0

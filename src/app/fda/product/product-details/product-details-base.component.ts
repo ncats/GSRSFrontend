@@ -140,31 +140,56 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
               elementLot.productIngredients.forEach(elementIngred => {
                 if (elementIngred != null) {
+                  elementIngred._ingredientNameActiveMoieties = [];
+
                   // Get Substance Details, uuid, approval_id, substance name
                   if (elementIngred.substanceKey) {
                     const subSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
                       if (response) {
                         elementIngred._substanceUuid = response.uuid;
                         elementIngred._ingredientName = response._name;
+                        let substanceApprovalId = response.approvalID;
 
-                        // Get Active Moiety
-                        if (elementIngred._substanceUuid) {
-                          this.getActiveMoiety(elementIngred._substanceUuid, 'ingredientname');
-                        }
-                      }
+                        // if Substance is public
+                        if (response.access && response.access.length < 1) {
+
+                          // Get Active Moiety, only if Substance is APPROVED
+                          if (substanceApprovalId) {
+                            this.getActiveMoiety(elementIngred, substanceApprovalId, 'ingredientname');
+                          } // if Substance Approval ID exists
+
+                        } // if Substance is public
+
+                      } // if reponse
                     });
                     this.subscriptions.push(subSubscription);
                   }
 
                   // Get Basis of Strength
                   if (elementIngred.basisOfStrengthSubstanceKey) {
+
+                    elementIngred._basisOfStrengthActiveMoieties = [];
+
                     const subBasisSubscription = this.generalService.getSubstanceByAnyId(elementIngred.basisOfStrengthSubstanceKey)
                       .subscribe(response => {
                         if (response) {
                           elementIngred._basisOfStrengthSubstanceUuid = response.uuid;
                           elementIngred._basisOfStrengthIngredientName = response._name;
-                        }
+                          let bosSubstanceApprovalId = response.approvalID;
+
+                          // if Substance is public
+                          if (response.access && response.access.length < 1) {
+
+                            // Get Active Moiety, only if Substance is APPROVED
+                            if (bosSubstanceApprovalId) {
+                              this.getActiveMoiety(elementIngred, bosSubstanceApprovalId, 'basisofstrength');
+                            } // if Substance Approval ID exists
+
+                          } // if Substance is public
+
+                        } // response
                       });
+
                     this.subscriptions.push(subBasisSubscription);
                   }
                 }
@@ -176,21 +201,23 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-  getActiveMoiety(substanceUuid: string, type: string) {
+  getActiveMoiety(elementIngred: any, substanceUuid: string, type: string) {
     if (substanceUuid != null) {
       // Get Active Moiety - Relationship
       this.generalService.getSubstanceRelationships(substanceUuid).subscribe(responseRel => {
         if (responseRel) {
           if (responseRel && responseRel.length > 0) {
+
+
             for (let i = 0; i < responseRel.length; i++) {
               const relType = responseRel[i].type;
               // if type is ACTIVE MOIETY, get Relationship Name
               if (relType && relType === 'ACTIVE MOIETY') {
                 if (responseRel[i].relatedSubstance.name) {
                   if ((type != null) && (type === 'ingredientname')) {
-                    this.ingredientNameActiveMoiety.push(responseRel[i].relatedSubstance.name);
-                  } else {
-                    this.basisOfStrengthActiveMoiety.push(responseRel[i].relatedSubstance.name);
+                    elementIngred._ingredientNameActiveMoieties.push(responseRel[i].relatedSubstance.name);
+                  } else { // basis of strength
+                    elementIngred._basisOfStrengthActiveMoieties.push(responseRel[i].relatedSubstance.name);
                   }
                 }
                 break;

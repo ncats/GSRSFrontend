@@ -70,9 +70,12 @@
                           </div>
                         </div> <!-- if substanceName object exists -->
 
-                        <!-- if Amount exists, Display values-->
-                        <div *ngIf="startingMaterial.amount">
-                          {{displayAmount(startingMaterial.amount)}}
+                        <!-- if AMOUNT exists, Display values-->
+                        <!-- ONLY DISPLAY if setting in the configuration is true -->
+                        <div *ngIf="showAmountValues && showAmountValues == 'true'">
+                          <div *ngIf="startingMaterial.amount">
+                            {{displayAmount(startingMaterial.amount)}}
+                          </div>
                         </div>
 
                       </div> <!-- Starting Material Loop -->
@@ -111,9 +114,12 @@
                               </div>
                             </div> <!-- if substanceName object exists -->
 
-                            <!-- if Amount exists, Display values-->
-                            <div *ngIf="processingMaterial.amount">
-                              {{displayAmount(processingMaterial.amount)}}
+                            <!-- if AMOUNT exists, Display values-->
+                            <!-- ONLY DISPLAY if setting in the configuration is true -->
+                            <div *ngIf="showAmountValues && showAmountValues == 'true'">
+                              <div *ngIf="processingMaterial.amount">
+                                {{displayAmount(processingMaterial.amount)}}
+                              </div>
                             </div>
 
                           </div> <!-- substanceRole !== 'Solvent' -->
@@ -163,9 +169,12 @@
 
                             </div> <!-- if substanceName object exists -->
 
-                            <!-- if Amount exists, Display values-->
-                            <div *ngIf="processingMaterial.amount">
-                              {{displayAmount(processingMaterial.amount)}}
+                            <!-- if AMOUNT exists, Display values-->
+                            <!-- ONLY DISPLAY if setting in the configuration is true -->
+                            <div *ngIf="showAmountValues && showAmountValues == 'true'">
+                              <div *ngIf="processingMaterial.amount">
+                                {{displayAmount(processingMaterial.amount)}}
+                              </div>
                             </div>
 
                           </div> <!-- substanceRole !== 'Solvent' -->
@@ -220,9 +229,12 @@
                           </div>
                         </div> <!-- if substanceName object exists -->
 
-                        <!-- if Amount exists, Display values-->
-                        <div *ngIf="resultingMaterial.amount">
-                          {{displayAmount(resultingMaterial.amount)}}
+                        <!-- if AMOUNT exists, Display values-->
+                        <!-- ONLY DISPLAY if setting in the configuration is true -->
+                        <div *ngIf="showAmountValues && showAmountValues == 'true'">
+                          <div *ngIf="resultingMaterial.amount">
+                            {{displayAmount(resultingMaterial.amount)}}
+                          </div>
                         </div>
 
                       </div> <!-- Resulting Material Loop -->

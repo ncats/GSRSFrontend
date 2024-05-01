@@ -1600,6 +1600,9 @@
         "substanceGrade": "advanced",
         "acceptanceCriteria": "advanced",
         "amount": "advanced"
+      },
+      "stepView": {
+        "showAmountValues": "false"
       }
     }
   }

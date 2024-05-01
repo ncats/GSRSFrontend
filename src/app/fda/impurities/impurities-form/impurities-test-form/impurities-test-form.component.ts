@@ -41,6 +41,26 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.addNewImpuritiesElutionSolvent(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
   }
 
+  addNewSolutionTableDetails() {
+    this.impuritiesService.addNewSolutionTableDetails(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
+  }
+
+  confirmDeleteImpuritiesSolutionTable(solutionTableIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Solution Table row ' + (solutionTableIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteImpuritiesSolutionTable(solutionTableIndex);
+      }
+    });
+  }
+
+  deleteImpuritiesSolutionTable(solutionTableIndex: number) {
+    this.impuritiesService.deleteImpuritiesSolutionTable(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, solutionTableIndex);
+  }
+
   addNewImpuritiesDetails() {
     this.createNewImpurities(null);
   }
