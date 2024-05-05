@@ -41,7 +41,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   public sortValues = invitroPharmacologySearchSortValues;
   public assays: Array<InvitroAssayInformation>;
   targetSummaries: any;
-  
+
   // Browse by tabs, data lists
   browseByTargetNameList: Array<any> = [];
   browseByTestAgentList: Array<any> = [];
@@ -387,6 +387,10 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           assayObj.studyType = assay.studyType;
 
           if (screening.invitroAssayResultInformation) {
+
+            if (screening.invitroAssayResultInformation.id) {
+              assayObj.assayResultInfoId = screening.invitroAssayResultInformation.id;
+            }
 
             /* Invitro Reference Object exists */
             let referenceSourceTypeNumber = '';

@@ -54,6 +54,7 @@ import { CanDeactivateInvitroAssayFormComponent } from './invitro-pharmacology-f
 import { CanDeactivateInvitroSummaryFormComponent } from './invitro-pharmacology-form/can-deactivate-invitro-summary-form.component';
 import { ActivateInvitroPharmacologyComponent } from './activate-invitro-pharmacology.component';
 import { InvitroPharmacologySummaryFormComponent } from './invitro-pharmacology-form/invitro-pharmacology-summary-form/invitro-pharmacology-summary-form.component';
+import { InvitroPharmacologyScreeningDataImportComponent } from './invitro-pharmacology-screening-data-import/invitro-pharmacology-screening-data-import.component';
 
 const invitroRoutes: Routes = [
   {
@@ -112,6 +113,10 @@ const invitroRoutes: Routes = [
   {
     path: 'invitro-pharm/import/assay',
     component: InvitroPharmacologyAssayDataImportComponent
+  },
+  {
+    path: 'invitro-pharm/import/screening',
+    component: InvitroPharmacologyScreeningDataImportComponent
   }
 ];
 
@@ -164,7 +169,8 @@ const invitroRoutes: Routes = [
     InvitroPharmacologyAssayDataImportComponent,
     InvitroPharmacologyDetailsTestagentComponent,
     InvitroPharmacologyAssayFormComponent,
-    InvitroPharmacologySummaryFormComponent
+    InvitroPharmacologySummaryFormComponent,
+    InvitroPharmacologyScreeningDataImportComponent
   ],
   exports: [
   ],

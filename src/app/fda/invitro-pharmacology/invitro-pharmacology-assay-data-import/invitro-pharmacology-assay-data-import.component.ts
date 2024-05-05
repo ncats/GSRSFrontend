@@ -240,7 +240,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     let json: any = {};
     alert(this.importedAssayJson);
     if (this.importedAssayJson !== undefined || this.importedAssayJson != null) {
-      alert("AAAAAAAAAAAAA");
       json = this.importedAssayJson;
     }
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {

@@ -102,6 +102,23 @@ export interface InvitroReference {
   invitroSponsor?: InvitroSponsor;
 }
 
+export interface InvitroLaboratory {
+  id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
+  laboratoryName?: string;
+  laboratoryAffiliation?: string;
+  laboratoryType?: string;
+  laboratoryStreetAddress?: string;
+  laboratoryCity?: string;
+  laboratoryState?: string;
+  laboratoryZipcode?: string;
+  laboratoryCountry?: string;
+}
+
 export interface InvitroSponsor {
   id?: number;
   createdDate?: number;
@@ -143,23 +160,6 @@ export interface InvitroSponsorSubmitter {
   sponsorReportSubmitterEmail?: string;
   sponsorReportSubmitterPhoneNumber?: string;
   sponsorReportSubmitterAssayType?: string;
-}
-
-export interface InvitroLaboratory {
-  id?: number;
-  createdDate?: number;
-  createdBy?: string;
-  modifiedDate?: number;
-  modifiedBy?: string;
-  internalVersion?: number;
-  laboratoryName?: string;
-  laboratoryAffiliation?: string;
-  laboratoryType?: string;
-  laboratoryStreetAddress?: string;
-  laboratoryCity?: string;
-  laboratoryState?: string;
-  laboratoryZipcode?: string;
-  laboratoryCountry?: string;
 }
 
 export interface InvitroTestAgent {
