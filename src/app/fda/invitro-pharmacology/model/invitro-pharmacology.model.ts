@@ -27,8 +27,8 @@ export interface InvitroAssayInformation {
   humanHomologTargetApprovalId?: string;
   ligandSubstrate?: string;
   ligandSubstrateApprovalId?: string;
-  ligandSubstrateConcentration?: string;
-  ligandSubstrateConcentrationUnits?: string;
+  standardLigandSubstrateConcentration?: string;
+  standardLigandSubstrateConcentrationUnits?: string;
   _assayTargetSubId?: string;
   _ligandSubstrateSubId?: string;
   _controlSubId?: string;

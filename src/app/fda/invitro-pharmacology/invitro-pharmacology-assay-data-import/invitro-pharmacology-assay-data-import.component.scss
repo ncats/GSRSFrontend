@@ -12,7 +12,8 @@
 }
 
 .form-content-container {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding-top: 110px;
 }
 
@@ -51,8 +52,27 @@
   display: flex;
 }
 
-.mat-card {
-  max-width: 1140px;
+.divflex {
+  display: flex;
+}
+
+.divcenter {
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.divradius {
+  border-radius: 6px 6px 0px 0px;
+}
+
+.headerstyle {
+  border-radius: 7px 7px 0px 0px;
+  border: 1px solid var(--blue-color);
+  background-color: var(--table-th-border-color);  /*--primary-title-color*/
+  border-bottom: none;
+  padding-left: 10px;
+  height: 50px;
+  color: #FFFFFF;
 }
 
 .row {
@@ -95,7 +115,6 @@
 .col-2:last-child {
   margin-right: 0px;
 }
-
 
 .col-6-2 {
   width: calc((100% - 25px * 2) / 3);
@@ -170,6 +189,10 @@
 
 .middle-fill {
   flex: 1 1 auto;
+}
+
+.mat-card {
+  max-width: 1140px;
 }
 
 .submission-messages {
@@ -270,6 +293,10 @@
   margin-top: 90px;
 }
 
+.margintop150px {
+  margin-top: 150px;
+}
+
 .marginleft20px {
   margin-left: 20px;
 }
@@ -284,6 +311,10 @@
 
 .padtop10px {
   padding-top: 10px;
+}
+
+.padtop15px {
+  padding-top: 15px;
 }
 
 .padtop17px {
@@ -336,6 +367,14 @@
 
 .font13px {
   font-size: 13px;
+}
+
+.font16px {
+  font-size: 16px;
+}
+
+.font18px {
+  font-size: 18px;
 }
 
 .textalignright {
@@ -459,7 +498,6 @@ hr {
   border-bottom: 1px solid var(--regular-gainsboro-color);
 }
 
-
 /* Table Style Begin */
 table.tableStyle {
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -472,7 +510,7 @@ table.tableStyle {
 
 table.tableStyle td, table.tableStyle th {
   border: 1px solid var(--table-th-border-color);
-  padding: 3px 2px;
+  padding: 5px 5px;
 }
 
 table.tableStyle tbody td {

@@ -91,25 +91,8 @@
 
     <div class="form-row">
       <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Standard Solution" [(ngModel)]="impuritiesTest.standardSolution"
-          name="standardSolution"></textarea>
-      </mat-form-field>
-
-      <mat-form-field class="col-2-1">
         <textarea matInput placeholder="Detection Details" [(ngModel)]="impuritiesTest.detectionDetails"
           name="detectionDetails"></textarea>
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Sample Solution" [(ngModel)]="impuritiesTest.sampleSolution"
-          name="sampleSolution"></textarea>
-      </mat-form-field>
-
-      <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="System Suitability Solution" [(ngModel)]="impuritiesTest.systemSuitabilitySolution"
-          name="systemSuitabilitySolution"></textarea>
       </mat-form-field>
     </div>
 
@@ -123,6 +106,17 @@
         <textarea matInput placeholder="Suitability Requirements Relative Standard Deviation"
           [(ngModel)]="impuritiesTest.suitabilityReqRelStandardDeviation"
           name="suitabilityReqRelStandardDeviation"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
+          name="testDescription"></textarea>
+      </mat-form-field>
+
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments"></textarea>
       </mat-form-field>
     </div>
 
@@ -178,20 +172,102 @@
     </div>
     <!-- //new 3.1 end -->
 
-    <div class="form-row">
+
+    <!-- SOLUTION -->
+    <div class="margintop10px">
+      <b>SOLUTION</b>
+    </div>
+
+    <div class="form-row margintop20px">
       <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
-          name="testDescription"></textarea>
+        <textarea matInput placeholder="Sample Solution" [(ngModel)]="impuritiesTest.sampleSolution"
+          name="sampleSolution"></textarea>
       </mat-form-field>
 
       <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments"></textarea>
+        <textarea matInput placeholder="System Suitability Solution"
+          [(ngModel)]="impuritiesTest.systemSuitabilitySolution" name="systemSuitabilitySolution"></textarea>
       </mat-form-field>
     </div>
 
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Standard Solution" [(ngModel)]="impuritiesTest.standardSolution"
+          name="standardSolution"></textarea>
+      </mat-form-field>
+
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Other Solution" [(ngModel)]="impuritiesTest.otherSolution"
+          name="otherSolution"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Solution A" [(ngModel)]="impuritiesTest.solutionADescription"
+          name="solutionADescription" row="1"></textarea>
+      </mat-form-field>
+
+      <mat-form-field class="col-2-1">
+        <textarea matInput placeholder="Solution B" [(ngModel)]="impuritiesTest.solutionBDescription"
+          name="solutionBDescription" row="1"></textarea>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="addNewSolutionTableDetails()"
+      matTooltip="Add New Solution Table Details">
+      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Solution Table Details
+    </button>
+
+    <!-- SOLUTION TABLE BEGIN -->
+    <div class="form-row margintop20px">
+      <table class="tableStyle bordergray">
+        <tr>
+          <th>#</th>
+          <th>Action</th>
+          <th>Time (min)</th>
+          <th>Solution A (%)</th>
+          <th>Solution B (%)</th>
+        </tr>
+        <tr *ngFor="let solutionTable of impuritiesTest.impuritiesSolutionTableList; let solutionTableIndex = index">
+          <td>
+            {{(solutionTableIndex+1)}}
+          </td>
+
+          <td>
+            <button class="marginleft20px" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesSolutionTable(solutionTableIndex)"
+              matTooltip="Delete Solution Table {{solutionTableIndex + 1}}">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </td>
+
+          <td>
+            <mat-form-field class="width100percent">
+              <input matInput placeholder="Time (min)" [(ngModel)]="solutionTable.solutionTime"
+                name="solutionTime" />
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field class="width100percent">
+              <input matInput placeholder="Solution A (%)" [(ngModel)]="solutionTable.solutionAPercent"
+                name="solutionAPercent" />
+            </mat-form-field>
+          </td>
+
+          <td>
+            <mat-form-field class="width100percent">
+              <input matInput placeholder="Solution B (%)" [(ngModel)]="solutionTable.solutionBPercent"
+                name="solutionBPercent" />
+            </mat-form-field>
+          </td>
+
+        </tr>
+      </table>
+    </div>
 
     <!-- IMPURITIES DETAILS LIST BEGIN -->
-    <div class="divflex margintop10px">
+    <div class="divflex margintop30px">
       <div class="titleblue">
         <span matBadge="{{impuritiesTest.impuritiesDetailsList.length}}" matBadgeColor="accent" matBadgeSize="medium"
           matBadgeOverlap="false">

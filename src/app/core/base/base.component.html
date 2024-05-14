@@ -98,6 +98,7 @@
       <a mat-menu-item routerLink="/browse-adverse-events">
         Browse Adverse Events
       </a>
+      <mat-divider></mat-divider>
       <div *ngIf="adverseEventShinyHomepageDisplay === true">
         <mat-divider></mat-divider>
 
@@ -105,6 +106,12 @@
           Browse Adverse Events
         </a>
         </div>
+      </span>
+
+      <span *ngIf = "loadedComponents.invitropharmacology">
+        <a mat-menu-item routerLink="/browse-invitro-pharm">
+          Browse In-vitro Pharmacology
+        </a>
       </span>
 
       </mat-menu>

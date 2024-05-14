@@ -134,7 +134,8 @@
               <br><br><br>
             </div>
             <div class="headerstyle title2 padleft20px">
-              <b>Impurity Substance&nbsp;<span class="colorblack">{{(i + 1)}} of {{impurities.impuritiesSubstanceList.length}}</span></b>
+              <b>Impurity Substance&nbsp;<span class="colorblack">{{(i + 1)}} of
+                  {{impurities.impuritiesSubstanceList.length}}</span></b>
             </div>
 
             <div class="bordergray">
@@ -324,7 +325,7 @@
                           </div>
                         </div>
                       </div>
-                      
+
                       <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
@@ -355,48 +356,29 @@
                         </div>
                         <div class="row-property">
                           <div class="row-property-key">
-                            Standard Solution:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.standardSolution}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Sample Solution:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.sampleSolution}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            System Suitability Solution:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.systemSuitabilitySolution}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
                             Suitability Requirements Resolution:
                           </div>
                           <div class="row-property-value">
                             {{impTest.suitabilityReqResolution}}
                           </div>
                         </div>
+                      </div>
+
+                      <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
                             Suitability Requirements Relative Standard Deviation:
                           </div>
                           <div class="row-property-value">
                             {{impTest.suitabilityReqRelStandardDeviation}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Comments:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.comments}}
                           </div>
                         </div>
                       </div>
@@ -418,11 +400,6 @@
                             <div class="row">
                               <div class="row-property-3">
                                 <div class="row-property-key-3">
-                                  <!--
-                                  <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let m = index">
-
-                                    <span *ngIf="m > 0"><br></span>
-                                    -->
                                   <div class="bordergraydotted">
                                     Elution Solvent {{(m+1)}}:
                                     <!-- if the length of the string is more than 55, add a new line -->
@@ -438,38 +415,106 @@
                                    -->
                                 </div>
                                 <div class="row-property-value-3">
-                                  <!--
-                                  <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let n = index">
-
-                                    <span *ngIf="n > 0"><br></span>
-                                      -->
                                   <div class="bordergraydotted">
                                     {{elu.elutionSolvent}}
                                   </div>
                                   <div>
                                     {{elu.elutionSolventCode}}
                                   </div>
-                                  <!--
-                                  </div>
-                                    -->
                                 </div>
                               </div>
                             </div>
                             <div class="divclear"></div>
-                          </div> <!-- loop -->
+                          </div> <!-- loop Elution Solvent -->
+
+                        </div>
+                      </div>
+
+                      <!-- Solution BEGIN -->
+                      <div class="font14px colorblue margintop20px"><b>SOLUTION</b></div>
+
+                      <div class="row margintop20px">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Sample Solution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.sampleSolution}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            System Suitability Solution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.systemSuitabilitySolution}}
+                          </div>
                         </div>
                       </div>
 
                       <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
-                            Comments:
+                            Standard Solution:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.comments}}
+                            {{impTest.standardSolution}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Other Solution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.otherSolution}}
                           </div>
                         </div>
                       </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Solution A:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.solutionADescription}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Solution B:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.solutionBDescription}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row margintop20px">
+                        <table class="blueTable">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th class="width200px">Time (min)</th>
+                              <th>Solution A (%)</th>
+                              <th>Solution B (%)</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <tr *ngFor="let solTable of impTest.impuritiesSolutionTableList; let m = index">
+                              <td class="width40px">{{m + 1}}</td>
+                              <td class="width200px">{{solTable.solutionTime}}</td>
+                              <td class="width200px">{{solTable.solutionAPercent}}</td>
+                              <td class="width200px">{{solTable.solutionBPercent}}</td>
+                            </tr>
+                          </tbody>
+
+                        </table>
+                      </div>
+                      <!-- Solution END -->
+
+
                       <!-- Test Fields End -->
 
                       <!-- Impurities Details List Begin -->
@@ -601,7 +646,8 @@
                   <div *ngFor="let impResidualTest of subs.impuritiesResidualSolventsTestList; let i = index">
                     <fieldset class="border">
                       <legend class="border">
-                        Residual Solvents Test <span class="colorblack">{{(i + 1)}} of {{subs.impuritiesResidualSolventsTestList.length}}</span>&nbsp;
+                        Residual Solvents Test <span class="colorblack">{{(i + 1)}} of
+                          {{subs.impuritiesResidualSolventsTestList.length}}</span>&nbsp;
                         <span class="font11px">({{subs.substanceName}})</span>
                       </legend>
 
@@ -856,7 +902,8 @@
                   <div *ngFor="let impInorganicTest of subs.impuritiesInorganicTestList; let i = index">
                     <fieldset class="border">
                       <legend class="border">
-                        Inorganic Impurities Test <span class="colorblack">{{(i + 1)}} of {{subs.impuritiesInorganicTestList.length}}</span>&nbsp;
+                        Inorganic Impurities Test <span class="colorblack">{{(i + 1)}} of
+                          {{subs.impuritiesInorganicTestList.length}}</span>&nbsp;
                         <span class="font11px">({{subs.substanceName}})</span>
                       </legend>
 
