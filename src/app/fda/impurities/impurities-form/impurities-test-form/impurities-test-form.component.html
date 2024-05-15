@@ -83,16 +83,13 @@
         (valueChange)="impuritiesTest.mode = $event">
       </app-cv-input>
 
-      <app-cv-input class="col-2-1" domain="IMPURITIES_DETECTION_TYPE" title="Detection Type" name="detectionType"
+      <app-cv-input class="col-4-1" domain="IMPURITIES_DETECTION_TYPE" title="Detection Type" name="detectionType"
         [model]="impuritiesTest.detectionType" (valueChange)="impuritiesTest.detectionType = $event">
       </app-cv-input>
 
-    </div>
-
-    <div class="form-row">
-      <mat-form-field class="col-2-1">
+      <mat-form-field class="col-4-1">
         <textarea matInput placeholder="Detection Details" [(ngModel)]="impuritiesTest.detectionDetails"
-          name="detectionDetails"></textarea>
+          name="detectionDetails" row="1"></textarea>
       </mat-form-field>
     </div>
 
@@ -121,37 +118,42 @@
     </div>
 
     <div class="form-row">
-      <div class="divflex col-2-1">
-        <app-cv-input class="width55percent padright20px" domain="IMPURITIES_ELUTION_TYPE" title="Elution Type"
-          name="elutionType" [model]="impuritiesTest.elutionType" (valueChange)="impuritiesTest.elutionType = $event">
-        </app-cv-input>
+      <div class="divflex">
 
+        <div class="width280px">
+          <app-cv-input class="padright20px" domain="IMPURITIES_ELUTION_TYPE" title="Elution Type" name="elutionType"
+            [model]="impuritiesTest.elutionType" (valueChange)="impuritiesTest.elutionType = $event">
+          </app-cv-input>
+        </div>
+
+        <div class="marginleft20px">
+          <button mat-raised-button color="primary" (click)="addNewSolution()" matTooltip="Add New Solution">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add New Solution
+          </button>
+        </div>
+
+        <!--  Removing in Release 3.1.1 WE DO NOT NEED THIS
         <div class="">
           <button mat-raised-button color="primary" (click)="addNewElutionSolvent($event)"
             matTooltip="Add New Elution Solvent">
             <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Elution Solvent
           </button>
         </div>
+        -->
       </div>
 
+      <!-- Removing in Release 3.1.1 WE DO NOT NEED THIS -->
       <!-- Elution Solvent LOOP -->
+      <!--
       <div class="col-2-1">
         <div class=""
           *ngFor="let impuritiesElution of impuritiesTest.impuritiesElutionSolventList; let impuritiesElutionIndex = index">
           <div class="form-row">
-
             <app-substance-text-search class="col-2-1" [searchValue]="impuritiesElution.elutionSolvent"
               placeholder="Search Substances"
               (searchPerformed)="nameSearch($event, impuritiesTestIndex, impuritiesElutionIndex)"
               eventCategory="selectorSearch">
             </app-substance-text-search>
-
-            <!--
-            <mat-form-field class="col-2-1">
-              <input matInput placeholder="Elution Solvent" [(ngModel)]="impuritiesElution.elutionSolvent"
-                name="elutionSolvent" />
-            </mat-form-field>
-            -->
 
             <mat-form-field class="col-2-1 padright20px">
               <input matInput placeholder="Elution Solvent Id" [(ngModel)]="impuritiesElution.elutionSolventCode"
@@ -166,19 +168,103 @@
               </button>
             </div>
           </div>
-        </div> <!-- Solvent Loop -->
+        </div>
+      </div> -->
+      <!-- Removing in Release 3.1.1 WE DO NOT NEED THIS -->
+
+    </div>
+
+    <div class="" *ngFor="let impuritiesSolution of impuritiesTest.impuritiesSolutionList; let solutionIndex = index">
+      <div class="form-row">
+        <mat-form-field class="col-1">
+          <textarea matInput placeholder="Solution {{impuritiesSolution.solutionLetter}}"
+            [(ngModel)]="impuritiesSolution.solutionDescription" name="solutionDescription" row="1"></textarea>
+        </mat-form-field>
+
+        <!-- Delete Solution Row -->
+        <button class="marginleft20px" mat-icon-button color="primary"
+          (click)="confirmDeleteImpuritiesSolution(solutionIndex)"
+          matTooltip="Delete Solution {{getLetter(solutionIndex)}}">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
       </div>
-
-    </div>
-    <!-- //new 3.1 end -->
-
-
-    <!-- SOLUTION -->
-    <div class="margintop10px">
-      <b>SOLUTION</b>
     </div>
 
-    <div class="form-row margintop20px">
+
+    <!-- Mobile Phase Table -->
+    <!-- Only Show Mobile Phase Table when Eution Type is 'Isocratic' and
+         at least one Solution is added aboved -->
+    <div
+      *ngIf="(impuritiesTest.elutionType && impuritiesTest.elutionType === 'Isocratic') && impuritiesTest.impuritiesSolutionList.length > 0">
+      <div class="divflex">
+        <div class="margintop10px">
+          <span class="font14px"><b>Mobile Phase</b></span>
+        </div>
+
+        <div class="width40px">&nbsp;</div>
+
+        <div class="marginleft50px">
+          <button mat-raised-button color="primary" (click)="addNewSolutionTableDetails()"
+            matTooltip="Add New Solution Table Details">
+            <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Row
+          </button>
+        </div>
+      </div> <!-- divflex -->
+
+
+      <!-- Mobile Phase TABLE BEGIN -->
+
+      <!-- if Elution Type in the dropdown selection is 'Isocratic', show Mobile Phase Table.
+       Add Solution Column as Solution A, Solution B, etc is getting added  -->
+
+      <div class="form-row margintop20px">
+        <table class="tableStyle bordergray">
+          <tr>
+            <th class="width5percent">#</th>
+            <th class="width15percent">Time (min)</th>
+            <span class="width80percent"
+              *ngFor="let impuritiesSolution of impuritiesTest.impuritiesSolutionList; let solutionIndex = index">
+              <th class="width80percent">Solution {{getLetter(solutionIndex)}} (%)</th>
+            </span>
+          </tr>
+
+          <tr *ngFor="let solutionTable of impuritiesTest.impuritiesSolutionTableList; let solutionTableIndex = index">
+            <td class="width5percent">
+              {{(solutionTableIndex+1)}}
+
+              <!-- Delete Mobile Phase Row -->
+              <button class="marginleft20px" mat-icon-button color="primary"
+                (click)="confirmDeleteImpuritiesSolutionTable(solutionTableIndex)"
+                matTooltip="Delete Mobile Phase Row {{solutionTableIndex + 1}}">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </td>
+
+            <td class="width15percent">
+              <mat-form-field class="">
+                <input matInput placeholder="Time (min)" [(ngModel)]="solutionTable.solutionTime" name="solutionTime" />
+              </mat-form-field>
+            </td>
+
+            <span class="width100percent"
+              *ngFor="let impuritiesSolution of impuritiesTest.impuritiesSolutionList; let solutionIndex = index">
+              <td class="">
+                <mat-form-field>
+                  <input matInput placeholder="Solution {{impuritiesSolution.solutionLetter}} (%)"
+                    [(ngModel)]="solutionTable.solutionAPercent" name="solutionAPercent" />
+                </mat-form-field>
+              </td>
+            </span>
+
+          </tr>
+        </table>
+      </div> <!-- form-row -->
+      <br>
+
+    </div> <!-- if Elution Type == 'Isocratic' -->
+
+
+    <div class="form-row">
       <mat-form-field class="col-2-1">
         <textarea matInput placeholder="Sample Solution" [(ngModel)]="impuritiesTest.sampleSolution"
           name="sampleSolution"></textarea>
@@ -202,69 +288,6 @@
       </mat-form-field>
     </div>
 
-    <div class="form-row">
-      <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Solution A" [(ngModel)]="impuritiesTest.solutionADescription"
-          name="solutionADescription" row="1"></textarea>
-      </mat-form-field>
-
-      <mat-form-field class="col-2-1">
-        <textarea matInput placeholder="Solution B" [(ngModel)]="impuritiesTest.solutionBDescription"
-          name="solutionBDescription" row="1"></textarea>
-      </mat-form-field>
-    </div>
-
-    <button mat-raised-button color="primary" (click)="addNewSolutionTableDetails()"
-      matTooltip="Add New Solution Table Details">
-      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Solution Table Details
-    </button>
-
-    <!-- SOLUTION TABLE BEGIN -->
-    <div class="form-row margintop20px">
-      <table class="tableStyle bordergray">
-        <tr>
-          <th>#</th>
-          <th>Action</th>
-          <th>Time (min)</th>
-          <th>Solution A (%)</th>
-          <th>Solution B (%)</th>
-        </tr>
-        <tr *ngFor="let solutionTable of impuritiesTest.impuritiesSolutionTableList; let solutionTableIndex = index">
-          <td>
-            {{(solutionTableIndex+1)}}
-          </td>
-
-          <td>
-            <button class="marginleft20px" mat-icon-button color="primary" (click)="confirmDeleteImpuritiesSolutionTable(solutionTableIndex)"
-              matTooltip="Delete Solution Table {{solutionTableIndex + 1}}">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </td>
-
-          <td>
-            <mat-form-field class="width100percent">
-              <input matInput placeholder="Time (min)" [(ngModel)]="solutionTable.solutionTime"
-                name="solutionTime" />
-            </mat-form-field>
-          </td>
-
-          <td>
-            <mat-form-field class="width100percent">
-              <input matInput placeholder="Solution A (%)" [(ngModel)]="solutionTable.solutionAPercent"
-                name="solutionAPercent" />
-            </mat-form-field>
-          </td>
-
-          <td>
-            <mat-form-field class="width100percent">
-              <input matInput placeholder="Solution B (%)" [(ngModel)]="solutionTable.solutionBPercent"
-                name="solutionBPercent" />
-            </mat-form-field>
-          </td>
-
-        </tr>
-      </table>
-    </div>
 
     <!-- IMPURITIES DETAILS LIST BEGIN -->
     <div class="divflex margintop30px">

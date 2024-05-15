@@ -5,6 +5,15 @@
       <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
     </span>
 
+    <span class="middle-fill"></span>
+
+    <!-- Import Assay JSON into the Database -->
+    <div class="marginleft50px" *ngIf="isAdmin">
+      <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disableImportButton">
+        Import Data into Database
+      </button>
+    </div>
+
     <!--
     <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
       <span>Export JSON</span>
@@ -88,125 +97,354 @@
 
       <div class="headerstyle margintop20px bordergray">
 
-        <div class="padtop15px font18px fontbold">
+        <div class="padtop15px font20px fontbold">
           <b>Import Assay Screening Data </b>
         </div>
 
-      </div> <!--  -->
+      </div> <!-- class="headerstyle  -->
 
       <br><br>
-      <b>Select a file to Import Assay Screening data:</b>&nbsp;&nbsp;
+      <div class="divflex">
 
-      <!-- Import EXCEL DATA and convert to JSON -->
-      <input type="file" (change)="onFileChange($event)" />
+        <b>Select a file to Import Assay Screening data:</b>&nbsp;&nbsp;
 
-      <!-- -->
-      <div id="output"></div>
-      <br>
-      <div *ngIf="willDownload">
-        <a id="download"> Download JSON File </a>
-      </div>
-      <br>
+        <input type="file" (change)="onFileChange($event)" />
 
-      <!-- Import Assay JSON into the Database -->
-      <span>
-        <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disabled">Import
-          Data
-          into Database</button>
-      </span>
+        <br><br>
+        <span *ngIf="submitMessage" class="colorgreen">{{submitMessage}}</span>
 
-      <br><br>
-      <span *ngIf="submitMessage" class="colorgreen">{{submitMessage}}</span>
+      </div> <!-- class divflex -->
 
       <!-- DISPLAY JSON -->
       <!--
-<div *ngIf="message">
-  {{message}}
-</div>
--->
+      <div *ngIf="message">
+        {{message}}
+      </div>
+      -->
 
-      <div class="divflex font13px">
+      <!-- Display Data from Excel file to import into the database -->
+      <div class="divflex margintop30px font13px">
 
         <!-- Invitro Reference -->
-        <div class="width400px">
+        <div class="width32percent">
+
+          <!-- Sheet -->
+          <div class="headerstyle2 font15px">
+            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 1.Reference, Laboratory
+          </div><br><br>
+
           <span *ngIf="invitroReference">
-            <span class="font15px">
-              <mat-icon>list_alt</mat-icon>&nbsp;Sheet 1: Reference, Laboratory</span><br><br>
             <span class="font14px"><b>1. Reference Information</b></span><br><br>
-            <span class="fieldKey">Reference Source Type:</span>{{invitroReference.referenceSourceType}}<br>
-            <span class="fieldKey">Reference Source Id:</span>{{invitroReference.referenceSource}}<br>
-            <span class="fieldKey">Reference URL:</span>{{invitroReference.digitalObjectIdentifier}}
+
+            <span class="fieldKey">Reference Source Type <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroReference.referenceSourceType}}</span><br>
+
+            <span class="fieldKey">Reference Source Id:</span>
+            <span class="fieldvalue">{{invitroReference.referenceSource}}</span><br>
+
+            <span class="fieldKey">Reference URL:</span>
+            <span class="fieldvalue">{{invitroReference.digitalObjectIdentifier}}</span>
           </span>
+
 
           <br><br>
           <!-- Invitro Laboratory -->
           <span *ngIf="invitroLaboratory">
-            <span class="font14px"><b>2. Laboratory Information</b></span><br><br>
-            <span class="fieldKey">Laboratory Name *:</span>{{invitroLaboratory.laboratoryName}}<br>
-            <span class="fieldKey">Laboratory Affiliation:</span>{{invitroLaboratory.laboratoryAffiliation}}<br>
-            <span class="fieldKey">Laboratory Type:</span>{{invitroLaboratory.laboratoryType}}<br>
-            <span class="fieldKey">Laboratory Street Address:</span>{{invitroLaboratory.laboratoryStreetAddress}}
+            <span class="font14px"><b>2. Laboratory Information</b></span>
+            <br><br>
+
+            <span class="fieldKey">Laboratory Name <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}</span><br>
+
+            <span class="fieldKey">Laboratory Affiliation:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryAffiliation}}</span><br>
+
+            <span class="fieldKey">Laboratory Type:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryType}}</span><br>
+
+            <span class="fieldKey">Laboratory Street Address:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryStreetAddress}}</span><br>
+
+            <span class="fieldKey">Laboratory City:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryCity}}</span><br>
+
+            <span class="fieldKey">Laboratory State:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryState}}</span><br>
+
+            <span class="fieldKey">Laboratory Zipcode:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryZipcode}}</span><br>
+
+            <span class="fieldKey">Laboratory Country:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryCountry}}</span>
           </span>
         </div>
 
+
         <!-- 2nd Sheet -->
-        <div class="width400px">
-          <span *ngIf="invitroReference">
-            <span class="font15px">
-              <mat-icon>list_alt</mat-icon>&nbsp;Sheet 2: Sponsor,Submitter,Report</span><br><br>
+        <div class="width32percent">
+
+          <!-- Sheet -->
+          <div class="headerstyle2 font15px">
+            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 2.Sponsor,Submitter,Report
+          </div><br><br>
+
+          <!-- Invitro Sponsor -->
+          <span *ngIf="invitroSponsor">
             <span class="font14px"><b>3. Sponsor Information</b></span><br><br>
-            <span class="fieldKey">Reference Source Type:</span>{{invitroReference.referenceSourceType}}<br>
-            <span class="fieldKey">Reference Source Id:</span>{{invitroReference.referenceSource}}<br>
-            <span class="fieldKey">Reference URL:</span>{{invitroReference.digitalObjectIdentifier}}
+
+            <span class="fieldKey">Sponsor Contact Name <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroSponsor.sponsorContactName}}</span><br>
+
+            <span class="fieldKey">Sponsor Affiliation:</span>
+            <span class="fieldvalue">{{invitroSponsor.sponsorAffiliation}}</span><br>
+
+            <span class="fieldKey">Sponsor Street Address:</span>
+            <span class="fieldvalue">{{invitroSponsor.sponsorStreetAddress}}</span><br>
+
+            <span class="fieldKey">Sponsor City:</span>
+            <span class="fieldvalue">{{invitroSponsor.sponsorCity}}</span><br>
+
+            <span class="fieldKey">Sponsor State:</span>
+            <span class="fieldvalue">{{invitroSponsor.sponsorState}}</span><br>
+
+            <span class="fieldKey">Sponsor Zipcode:</span>
+            <span class="fieldvalue">{{invitroSponsor.sponsorZipcode}}</span><br>
+
+            <span class="fieldKey">Sponsor Country:</span>
+            <span class="fieldvalue">{{invitroSponsor.sponsorCountry}}</span>
           </span>
 
           <br><br>
-          <!-- Invitro Laboratory -->
-          <span *ngIf="invitroLaboratory">
+          <!-- Invitro Sponsor Submitters  -->
+          <span *ngIf="invitroSponsorReport">
+
             <span class="font14px"><b>4. Report Submitter Information</b></span><br><br>
-            <span class="fieldKey">Laboratory Name *:</span>{{invitroLaboratory.laboratoryName}}<br>
-            <span class="fieldKey">Laboratory Affiliation:</span>{{invitroLaboratory.laboratoryAffiliation}}<br>
-            <span class="fieldKey">Laboratory Type:</span>{{invitroLaboratory.laboratoryType}}<br>
-            <span class="fieldKey">Laboratory Street Address:</span>{{invitroLaboratory.laboratoryStreetAddress}}
+
+            <div *ngFor="let submitter of invitroSponsorReport.invitroSponsorSubmitters; let index = index">
+
+              <span class="fieldKey">Sponsor Report Submitter Name <span class="colorred">*</span>:</span>
+              <span class="fieldvalue">{{submitter.sponsorReportSubmitterName}}</span><br>
+
+              <span class="fieldKey">Sponsor Report Submitter Title:</span>
+              <span class="fieldvalue">{{submitter.sponsorRepoortSubmitterTitle}}</span><br>
+
+              <span class="fieldKey">Sponsor Report Submitter Affiliation:</span>
+              <span class="fieldvalue">{{submitter.sponsorReportSubmitterAffiliation}}</span><br>
+
+              <span class="fieldKey">Sponsor Report Submitter Email:</span>
+              <span class="fieldvalue">{{submitter.sponsorReportSubmitterEmail}}</span><br>
+
+              <span class="fieldKey">Sponsor Report Submitter Phone Number:</span>
+              <span class="fieldvalue">{{submitter.sponsorReportSubmitterPhoneNumber}}</span><br>
+
+              <span class="fieldKey">Sponsor Report Submitter Assay Type:</span>
+              <span class="fieldvalue">{{submitter.sponsorReportSubmitterAssayType}}</span><br>
+            </div> <!-- Loop Submitters -->
+
           </span>
 
           <br><br>
-          <!-- Invitro Laboratory -->
-          <span *ngIf="invitroLaboratory">
+          <!-- Invitro Sponsor Report -->
+          <span *ngIf="invitroSponsorReport">
             <span class="font14px"><b>5. Report Information</b></span><br><br>
-            <span class="fieldKey">Laboratory Name *:</span>{{invitroLaboratory.laboratoryName}}<br>
-            <span class="fieldKey">Laboratory Affiliation:</span>{{invitroLaboratory.laboratoryAffiliation}}<br>
-            <span class="fieldKey">Laboratory Type:</span>{{invitroLaboratory.laboratoryType}}<br>
-            <span class="fieldKey">Laboratory Street Address:</span>{{invitroLaboratory.laboratoryStreetAddress}}
+
+            <span class="fieldKey">Report Number <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroSponsorReport.reportNumber}}</span><br>
+
+            <span class="fieldKey">Report Date <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroSponsorReport.reportDate}}</span><br>
           </span>
         </div>
 
 
         <!-- 3rd Sheet -->
-        <div class="width400px">
-          <span *ngIf="invitroReference">
-            <span class="font15px">
-              <mat-icon>list_alt</mat-icon>&nbsp;Sheet 3: Test Agent,Batch Number</span><br><br>
+        <div class="width32percent">
+
+          <!-- Sheet -->
+          <div class="headerstyle2 font15px">
+            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 3.Test Agent,Batch Number
+          </div><br><br>
+
+          <!-- Invitro Test Agent -->
+          <span *ngIf="invitroTestAgent">
             <span class="font14px"><b>6. Test Agent Information</b></span><br><br>
-            <span class="fieldKey">Reference Source Type:</span>{{invitroReference.referenceSourceType}}<br>
-            <span class="fieldKey">Reference Source Id:</span>{{invitroReference.referenceSource}}<br>
-            <span class="fieldKey">Reference URL:</span>{{invitroReference.digitalObjectIdentifier}}
+
+            <span class="fieldKey">Test Agent ID (Company Code) <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroTestAgent.testAgentCompanyCode}}</span><br>
+
+            <span class="fieldKey">Test Agent Name (FDA) <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroTestAgent.testAgent}}</span><br>
+
+            <span class="fieldKey">Test Agent Approval ID/UNII:</span>
+            <span class="fieldvalue">{{invitroTestAgent.testAgentApprovalId}}</span><br>
+
+            <span class="fieldKey">Test Agent CAS Number:</span>
+            <span class="fieldvalue">{{invitroTestAgent.casRegistryNumber}}</span><br>
+
+            <span class="fieldKey">Active Moiety:</span>
+            <span class="fieldvalue">{{invitroTestAgent.activeMoiety}}</span><br>
+
+            <span class="fieldKey">Active Moiety Approval ID/UNII:</span>
+            <span class="fieldvalue">{{invitroTestAgent.activeMoiety}}</span><br>
           </span>
 
           <br><br>
           <!-- Invitro Laboratory -->
           <span *ngIf="invitroLaboratory">
             <span class="font14px"><b>7. Batch Information</b></span><br><br>
-            <span class="fieldKey">Laboratory Name *:</span>{{invitroLaboratory.laboratoryName}}<br>
-            <span class="fieldKey">Laboratory Affiliation:</span>{{invitroLaboratory.laboratoryAffiliation}}<br>
-            <span class="fieldKey">Laboratory Type:</span>{{invitroLaboratory.laboratoryType}}<br>
-            <span class="fieldKey">Laboratory Street Address:</span>{{invitroLaboratory.laboratoryStreetAddress}}
+
+            <span class="fieldKey">Batch Number:</span>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}</span><br>
           </span>
         </div>
 
       </div> <!-- divflex-->
 
-      
+
+      <div class="divflex margintop30px font13px">
+
+        <!-- 4th Sheet -->
+        <div class="width95percent">
+
+          <!-- Sheet -->
+          <div class="headerstyle2 font15px">
+            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 4.Assay Controls
+          </div><br><br>
+
+          <span *ngIf="invitroReference">
+            <table class="tableStyle">
+              <tr>
+                <td>Number</td>
+                <td>External Assay Source <span class="colorred">*</span></td>
+                <td>External Assay ID <span class="colorred">*</span></td>
+                <td>Assay ID</td>
+                <td>Control Substance</td>
+                <td>Type of Control</td>
+                <td>Control Value Type</td>
+                <td>Control Value</td>
+                <td>Control Value Units</td>
+              </tr>
+
+              <tr valing="top" class="font11px" *ngFor="let ctrl of invitroControlsTemp; let index = index">
+                <td>{{(index+1)}}</td>
+                <td>{{ctrl.externalAssaySource}}</td>
+                <td>{{ctrl.externalAssayId}}</td>
+                <td>{{ctrl.assayId}}</td>
+                <td>{{ctrl.control}}</td>
+                <td>{{ctrl.controlType}}</td>
+                <td>{{ctrl.controlValueType}}</td>
+                <td>{{ctrl.controlValue}}</td>
+                <td>{{ctrl.controlValueUnits}}</td>
+              </tr>
+            </table>
+          </span>
+
+        </div> <!-- class="width95percent" -->
+
+      </div> <!-- class=divflex -->
+
+
+      <!-- ************************************************************** -->
+      <!-- SHEET 5. Assay Results -->
+      <div class="margintop30px font13px bordergray">
+        <div class="width95percent bordergray">
+
+          <div class="headerstyle2 font15px">
+            <mat-icon>list_alt</mat-icon>&nbsp;Sheet 5.Assay Results
+          </div><br><br>
+
+          <span>
+            <table class="tableStyle">
+              <tr>
+                <td>Number</td>
+                <td>Assay found in Database</td>
+                <td>External Assay Source <span class="colorred">*</span></td>
+                <td>External Assay ID <span class="colorred">*</span></td>
+                <td>External Assay URL/Document Link</td>
+                <td>Assay ID</td>
+                <td>Test Date (mm/dd/yyyy)</td>
+                <td>Test Agent Concentration</td>
+                <td>Test Agent Concentration Units</td>
+                <td>Result Value</td>
+                <td>Result Value Units</td>
+                <td>Ligand/Substrate Concentration</td>
+                <td>Ligand/Substrate Concentration Units</td>
+                <td>Plasma Protein Added?</td>
+                <td>Protein</td>
+                <td>Plasma Protein Concentration</td>
+                <td>Plasma Protein Concentration Units</td>
+                <td>Type of Data</td>
+                <td>Number of Tests</td>
+                <td>Comments</td>
+                <td>Measurements</td>
+              </tr>
+
+              <tr valing="top" class="font11px" *ngFor="let result of invitroResultsTemp; let index = index">
+
+                <td>{{(index+1)}}</td>
+
+                <td>
+                  <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'true'">
+                    <div class="backgroundgreen"><span class="colorwhite">YES</span></div>
+                  </span>
+                  <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'">
+                    <div class="backgroundred"><span class="colorwhite">NO
+                      </span>
+                    </div>
+                    <br>
+                    <!-- Register Assay Link -->
+                    <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank" *ngIf="isAdmin"
+                      matTooltip='Register In-vitro Pharmacology Assay'> Register Assay
+                    </a>
+                  </span>
+                  <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'Error getting Assay'">
+                    <div class="backgroundred"><span class="colorwhite">ERROR</span></div>
+                  </span>
+                </td>
+
+                <td>
+                  <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundAssaySource">
+                    <span class="colorred"><b>{{result.externalAssaySource}}</b></span>
+                  </div>
+                  <ng-template #foundAssaySource>
+                    {{result.externalAssaySource}}
+                  </ng-template>
+                </td>
+
+                <td>
+                  <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundExternalAssayId">
+                    <span class="colorred"><b>{{result.externalAssayId}}</b></span>
+                  </div>
+                  <ng-template #foundExternalAssayId>
+                    {{result.externalAssayId}}
+                  </ng-template>
+                </td>
+
+                <td>{{result.externalAssayUrl}}</td>
+                <td>{{result.assayId}}</td>
+                <td>{{result.testDate}}</td>
+                <td>{{result.testAgentConcentration}}</td>
+                <td>{{result.testAgentConcentrationUnits}}</td>
+                <td>{{result.resultValue}}</td>
+                <td>{{result.resultValueUnits}}</td>
+                <td>{{result.ligandSubstrateConcentration}}</td>
+                <td>{{result.ligandSubstrateConcentrationUnits}}</td>
+                <td>{{result.plasmaProteinAdded}}</td>
+                <td>{{result.protein}}</td>
+                <td>{{result.plasmaProteinConcentration}}</td>
+                <td>{{result.plasmaProteinConcentrationUnits}}</td>
+                <td>{{result.dataType}}</td>
+                <td>{{result.numberOfTests}}</td>
+                <td>{{result.comments}}</td>
+                <td>{{result.assayMeasurement}}</td>
+              </tr>
+            </table>
+          </span>
+
+        </div> <!-- class="width95percent" -->
+      </div> <!--  SHEET 5 class=divflex-->
+
+
       <div *ngIf="importDataList.length > 0">
         <b>Total Records ready for import into the database:&nbsp;
           <span class="colorgreen font18px">{{importDataList.length}}</span></b>
@@ -273,12 +511,13 @@
     </div> <!-- divcenter marginto90px-->
     <br>
 
+
     <div class="marginleft30px" *ngIf="importDataList.length > 0">
       <!-- Import Assay JSON into the Database -->
       <span>
         <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disabled">Import
-          Data
-          into Database</button>
+          Data into Database
+        </button>
       </span>
     </div>
     <br><br>

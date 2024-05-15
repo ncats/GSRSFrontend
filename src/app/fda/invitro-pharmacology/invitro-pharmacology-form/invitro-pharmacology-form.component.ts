@@ -671,7 +671,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     // Remove extra fields before saving
     this.scrubExtraFields();
 
-    this.invitroPharmacologyService.saveMultipleAssays(this.existingAssaysByAssaySetList).subscribe(response => {
+    this.invitroPharmacologyService.saveBulkAssays(this.existingAssaysByAssaySetList).subscribe(response => {
 
       this.loadingService.setLoading(false);
       this.isLoading = false;

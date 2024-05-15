@@ -37,6 +37,7 @@ export interface InvitroAssayInformation {
   _existingAssayList?: Array<any>;
   _totalResultRecords?: number;
   _totalSummaryRecords?: number;
+  _assaySet?: string;
   invitroAssaySets?: Array<InvitroAssaySet>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;
   //invitroSummaries?: Array<InvitroSummary>;
@@ -68,7 +69,8 @@ export interface InvitroAssayScreening {
   invitroAssayResult?: InvitroAssayResult;
   invitroControls?: Array<InvitroControl>;
   invitroSummary?: InvitroSummary;
-  testing?: string;
+  screeningImportFileName?: string;
+  _ownerId?: number;
   _show?: boolean;
   _assayResults?: Array<any>;
   _selectedAssay?: any;
@@ -143,7 +145,7 @@ export interface InvitroSponsorReport {
   modifiedBy?: string;
   internalVersion?: number;
   reportNumber?: string;
-  reportDate?: number;
+  reportDate?: string;
   invitroSponsorSubmitters?: Array<InvitroSponsorSubmitter>;
 }
 

@@ -66,6 +66,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle("IVP Import Assay Data");
   }
 
   ngOnDestroy(): void {
@@ -111,8 +112,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
       // Read the Excel file
       reader.onload = (e: any) => {
 
-        let heading = [['FirstName', 'Last Name', 'Email']];
-
         const bstr: string = e.target.result;
         const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
 
@@ -154,7 +153,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             element["standardLigandSubstrateConcentrationUnits"] = this.replaceUndefinedValue(element["Standard Ligand/Substrate Concentration Units"]);
 
             // Assay Set
-            element["assaySet"] = this.replaceUndefinedValue(element["Assay Set"]);
+            element["_assaySet"] = this.replaceUndefinedValue(element["Assay Set"]);
 
 
             // Delete the key. 23 Fields

@@ -182,16 +182,6 @@
           [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="productSearch">
         </app-product-text-search>
 
-        <!-- Search Any Text Text Box -->
-        <!--
-        <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
-            size="50" />
-        </mat-form-field>
-        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-        -->
       </div>
 
       <!-- ******** Display Content Details ******** -->
@@ -658,17 +648,17 @@
                         Product Names:
                       </div>
                       <div class="row-property-value">
-                        <!--
-                            <div *ngFor="let prodName of product.productNameAllList; let indexName = index">
-                            -->
-                        <!--
-                            <div *ngFor="let prodProv of product.productProvenances; let i = index">
-                            -->
-
+                        <!-- Product Names -->
                         <div *ngIf="prodProv.productNames.length > 0; else noProductName">
                           <div *ngFor="let prodName of prodProv.productNames; let i = index">
                             <div class="divflex">
-                              <div class="colorlightblue font16px"><b>{{prodName.productName}}</b></div>
+                              <div class="colorlightblue font16px"><b>{{prodName.productName}}</b>
+
+                                <span *ngIf="prodName.productNameType">
+                                  <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
+                                </span>
+
+                              </div>
                               <div *ngIf="prodName.displayName && prodName.displayName == true">
                                 &nbsp;
                                 <mat-icon class="margintopneg5" matTooltip="Display Name">check</mat-icon>
@@ -679,10 +669,6 @@
                         <ng-template #noProductName>
                           (No Product Name)
                         </ng-template>
-
-                        <!--
-                            </div>
-                            -->
                       </div>
                     </div>
 

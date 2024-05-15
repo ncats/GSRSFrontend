@@ -519,7 +519,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
     let assaySavedCount = 0;
 
-    this.invitroPharmacologyService.saveMultipleScreenings(this.screeningList).subscribe(response => {
+    this.invitroPharmacologyService.saveBulkScreenings(this.screeningList).subscribe(response => {
 
       this.loadingService.setLoading(false);
       this.isLoading = false;
