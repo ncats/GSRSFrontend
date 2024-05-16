@@ -28,7 +28,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-assay-data-import',
@@ -42,7 +42,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   importDataList: Array<any> = [];
   importedBulkAssayJson: Array<InvitroAssayInformation> = [];
   importedAssayJson: any;
-
   message = '';
   submitMessage = '';
   disabled = "true";
@@ -153,8 +152,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             element["standardLigandSubstrateConcentrationUnits"] = this.replaceUndefinedValue(element["Standard Ligand/Substrate Concentration Units"]);
 
             // Assay Set
-            element["_assaySet"] = this.replaceUndefinedValue(element["Assay Set"]);
-
+            let assaySet = this.replaceUndefinedValue(element["Assay Set"]);
+            this.createAssaySet(element);
 
             // Delete the key. 23 Fields
             delete element["External Assay Source"];
@@ -183,7 +182,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             delete element["Standard Ligand/Substrate Concentration"]
             delete element["Standard Ligand/Substrate Concentration Units"]
 
-            delete element["Assay Set"]
+           // delete element["Assay Set"]
 
             // Add to list
             this.importDataList.push(element);
@@ -220,6 +219,16 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   }
   */
 
+  createAssaySet(element: any) {
+    const newAssaySet: InvitroAssaySet = {};
+
+    let sets: Array<InvitroAssaySet> = [];
+    let assaySet = this.replaceUndefinedValue(element["Assay Set"]);
+    newAssaySet.assaySet = assaySet;
+    sets.push(newAssaySet);
+    element["invitroAssaySets"] = sets;
+  }
+
   importAssayJSONIntoDatabase() {
     // Loop through each Assay JSON Record, and save into the database
     this.importedAssayJson.forEach((element, index) => {
@@ -228,8 +237,13 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
         this.message = this.message + "index: " + index + "     " + JSON.stringify(element) + "\n\n";
         this.invitroPharmacologyService.assay = JSON.parse(JSON.stringify(element));
         this.invitroPharmacologyService.saveAssay().subscribe(response => {
-          this.message = "";
+          if (response) {
+            if (response.id) {
+
+            }
+            this.message = "";
           this.submitMessage = "Import Successful";
+          }
         });
       }
     })
@@ -237,7 +251,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
   showJSON(): void {
     let json: any = {};
-    alert(this.importedAssayJson);
     if (this.importedAssayJson !== undefined || this.importedAssayJson != null) {
       json = this.importedAssayJson;
     }

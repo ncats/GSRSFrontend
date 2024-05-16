@@ -62,10 +62,6 @@ export interface InvitroAssayScreening {
   internalVersion?: number;
   assaySet?: string;
   invitroAssayResultInformation?: InvitroAssayResultInformation;
-  invitroReference?: InvitroReference;
-  invitroSponsorReport?: InvitroSponsorReport;
-  invitroLaboratory?: InvitroLaboratory;
-  invitroTestAgent?: InvitroTestAgent;
   invitroAssayResult?: InvitroAssayResult;
   invitroControls?: Array<InvitroControl>;
   invitroSummary?: InvitroSummary;
@@ -83,8 +79,9 @@ export interface InvitroAssayResultInformation {
   modifiedDate?: number;
   modifiedBy?: string;
   internalVersion?: number;
+  batchNumber?: string;
   testAgent?: string;
-  invitroReference?: InvitroReference;
+  invitroReferences?: Array<InvitroReference>;
   invitroLaboratory?: InvitroLaboratory;
   invitroSponsor?: InvitroSponsor;
   invitroSponsorReport?: InvitroSponsorReport;
@@ -98,10 +95,16 @@ export interface InvitroReference {
   modifiedDate?: number;
   modifiedBy?: string;
   internalVersion?: number;
-  referenceSourceType?: string;
-  referenceSource?: string;
+  sourceType?: string;
+  sourceId?: string;
+  sourceCitation?: string;
+  sourceUrl?: string;
   digitalObjectIdentifier?: string;
-  invitroSponsor?: InvitroSponsor;
+  tags?: string;
+  recordAccess?: string;
+  uploadedFile?: string;
+  publicDomain?: boolean;
+  primaryReference?: boolean;
 }
 
 export interface InvitroLaboratory {

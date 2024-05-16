@@ -174,13 +174,10 @@ export class InvitroPharmacologyService extends BaseHttpService {
       const newInvitroAssayInformation: InvitroAssayInformation =
       {
         invitroAssayScreenings: [{
-          invitroReference: { invitroSponsor: {} },
-          invitroTestAgent: {},
+          invitroAssayResultInformation: { invitroReferences: [], invitroLaboratory: {}, invitroSponsor: {}, invitroSponsorReport: { invitroSponsorSubmitters: [] }, invitroTestAgent: {} },
           invitroAssayResult: {},
-          invitroLaboratory: {},
           invitroControls: [{}],
-          invitroSummary: {},
-          invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
+          invitroSummary: {}
         }]
       };
       this.assay = newInvitroAssayInformation;
@@ -196,41 +193,15 @@ export class InvitroPharmacologyService extends BaseHttpService {
       const newInvitroAssayInformation: InvitroAssayInformation =
       {
         invitroAssayScreenings: [{
-          invitroReference: { invitroSponsor: {} },
-          invitroTestAgent: {},
+          invitroAssayResultInformation: { invitroReferences: [], invitroLaboratory: {}, invitroSponsor: {}, invitroSponsorReport: { invitroSponsorSubmitters: [] }, invitroTestAgent: {} },
           invitroAssayResult: {},
-          invitroLaboratory: {},
           invitroControls: [{}],
-          invitroSummary: {},
-          invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
+          invitroSummary: {}
         }]
       };
       this.assay = newInvitroAssayInformation;
     }
   }
-
-  /*
-  // Initialize or load data in In-vitro Pharmacology SCREENING
-  loadScreening(assayScreening?: InvitroAssayScreening): void {
-    // if Update/Exist Assay Screening
-    if (assayScreening != null) {
-      this.assay = assayScreening;
-    } else { // new
-      const newInvitroAssayInformation: InvitroAssayInformation =
-      {
-        invitroAssayScreenings: [{
-          invitroReference: { invitroSponsor: {} },
-          invitroTestAgent: {},
-          invitroAssayResult: {},
-          invitroLaboratory: {},
-          invitroControls: [{}],
-          invitroSummary:{},
-          invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
-        }]
-      };
-      this.assay = newInvitroAssayInformation;
-    }
-  }*/
 
   getAssayScreening(id: string): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + id;
@@ -409,11 +380,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
     };
     // Update In-vitro Pharmacology ASSAY
     //if ((this.assay != null) && (this.assay.id)) {
-      return this.http.put<InvitroAssayInformation>(url, this.assay, options);
-  //  } else {
-  //    // Save New In-vitro Pharmacology ASSAY
-  //    return this.http.post<InvitroAssayInformation>(url, this.assay, options);
-  //  }
+    return this.http.put<InvitroAssayInformation>(url, this.assay, options);
+    //  } else {
+    //    // Save New In-vitro Pharmacology ASSAY
+    //    return this.http.post<InvitroAssayInformation>(url, this.assay, options);
+    //  }
   }
 
   saveBulkAssays(bulkAssays: any): Observable<InvitroAssayInformation> {
@@ -432,9 +403,9 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
   saveScreening(screening: any, assayId: number): Observable<InvitroAssayScreening> {
     //Remove last slash /
-   // let entityUrl = this.apiBaseUrlWithInvitroPharmEntityUrl.replace(/\/+$/, '');
-   // alert(entityUrl);
-   // const url = entityUrl + '(' + assayId + ')/screening';
+    // let entityUrl = this.apiBaseUrlWithInvitroPharmEntityUrl.replace(/\/+$/, '');
+    // alert(entityUrl);
+    // const url = entityUrl + '(' + assayId + ')/screening';
     let url = this.apiBaseUrlWithInvitroPharmEntityUrl + assayId + '/screening';
     let params = new HttpParams();
     const options = {
@@ -445,12 +416,12 @@ export class InvitroPharmacologyService extends BaseHttpService {
       }
     };
     // Update In-vitro Pharmacology Screening
-//    if ((this.assay != null) && (this.assay.id)) {
-      return this.http.post<InvitroAssayScreening>(url, screening, options);
- //   } else {
-      // Save New In-vitro Pharmacology Screening
- //     return this.http.post<InvitroAssayScreening>(url, this.assay, options);
-  //  }
+    //    if ((this.assay != null) && (this.assay.id)) {
+    return this.http.post<InvitroAssayScreening>(url, screening, options);
+    //   } else {
+    // Save New In-vitro Pharmacology Screening
+    //     return this.http.post<InvitroAssayScreening>(url, this.assay, options);
+    //  }
   }
 
   saveBulkScreenings(bulkScreenings: any): Observable<InvitroAssayInformation> {
@@ -487,12 +458,10 @@ export class InvitroPharmacologyService extends BaseHttpService {
   addNewScreening(): void {
     const newInvitroAssayScreening: InvitroAssayScreening =
     {
-      invitroReference: { invitroSponsor: {} },
-      invitroTestAgent: {},
+      invitroAssayResultInformation: { invitroReferences: [], invitroLaboratory: {}, invitroSponsor: {}, invitroSponsorReport: {invitroSponsorSubmitters: []}, invitroTestAgent: {}},
       invitroAssayResult: {},
-      invitroLaboratory: {},
       invitroControls: [{}],
-      invitroSponsorReport: { invitroSponsorSubmitters: [{}] }
+      invitroSummary: {}
     };
     this.assay.invitroAssayScreenings.push(newInvitroAssayScreening);
   }
@@ -524,4 +493,31 @@ export class InvitroPharmacologyService extends BaseHttpService {
     this._bypassUpdateCheck = true;
   }
 
+
+  getReferenceFields(screening: InvitroAssayScreening): any {
+    let referenceSourceType = '';
+    let referenceSourceId = '';
+    let referenceSourceTypeAndId = '';
+
+    if (screening.invitroAssayResultInformation) {
+
+      screening.invitroAssayResultInformation.invitroReferences.forEach(reference => {
+        if (reference) {
+          if (reference.primaryReference) {
+            if (reference.primaryReference == true) {
+              if (reference.sourceType) {
+                referenceSourceType = reference.sourceType;
+              }
+              if (reference.sourceId) {
+                referenceSourceId = reference.sourceId;
+              }
+              referenceSourceTypeAndId = referenceSourceType + ' ' + referenceSourceId;
+            } // if primaryReference is true
+          } // if primaryRefernce is not null
+        }
+      });
+    }
+
+    return referenceSourceTypeAndId;
+  }
 }

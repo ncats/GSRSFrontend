@@ -271,11 +271,11 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
               //Delete the Assay Result Information Object, show only Summary related data/Object
               delete screening.invitroAssayResultInformation;
 
-              delete screening.invitroTestAgent;
+             // delete screening.invitroTestAgent;
 
               delete screening.invitroControls;
 
-              delete screening.invitroReference;
+           //   delete screening.invitroReference;
 
               if (screening.invitroSummary) {
                 if (screening.invitroSummary.targetNameSubstanceUuid) {
@@ -670,7 +670,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   addNewSummary() {
     const newAssay: InvitroAssayInformation = { invitroAssayScreenings: [{ invitroSummary: {} }] };
 
-    let newScreening: InvitroAssayScreening = { invitroSummary: {}, invitroTestAgent: {} };
+    let newScreening: InvitroAssayScreening = { invitroSummary: {}};
     newAssay._existingAssayList = this.existingAssayList;
 
     this.screeningList.push(newScreening);
@@ -713,7 +713,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
       this.screeningList.forEach(screening => {
         if (screening) {
-          screening.invitroTestAgent.testAgent = 'AAAAAAAAAAA';
+         // screening.invitroTestAgent.testAgent = 'AAAAAAAAAAA';
           // screening.invitroTestAgent.id = 1;
           // screening.invitroTestAgent.internalVersion = 2;
         }
@@ -731,7 +731,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   nameSearch(event: any, fieldName: string, screeningIndex): void {
 
     if (fieldName && fieldName === 'testAgent') {
-      this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgent = event;
+     // this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgent = event;
     } else if (fieldName === 'humanHomologTarget') {
       this.assay.humanHomologTarget = event;
     } else if (fieldName === 'ligandSubstrate') {
@@ -748,7 +748,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
             // Assign Substance UUID
             if (fieldName && fieldName === 'testAgent') {
-              this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSubstanceUuid = substance.uuid;
+            //  this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSubstanceUuid = substance.uuid;
             }
 
             // Assign Substance Approval ID
@@ -756,17 +756,17 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
               if (fieldName && fieldName === 'testAgent') {
                 // Assign to Test Agent Approval ID
-                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentApprovalId = substance.approvalID;
+              //  this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentApprovalId = substance.approvalID;
               }
             } // if Substance Approval ID exists
 
             // Assign to Structure Smiles and Formula Weight
             if (substance.structure) {
               if (substance.structure.smiles) {
-                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSmileString = substance.structure.smiles;
+             //   this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSmileString = substance.structure.smiles;
               }
               if (substance.structure.formula) {
-                this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentMolecularFormulaWeight = substance.structure.formula;
+            //    this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentMolecularFormulaWeight = substance.structure.formula;
               }
             } // if Substance Structure exists
 
@@ -808,8 +808,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   selectionChangeExistingReference(event) {
     if (event) {
       let reference = (event.split('||'));
-      this.assay.invitroAssayScreenings[0].invitroReference.referenceSourceType = reference[0];
-      this.assay.invitroAssayScreenings[0].invitroReference.referenceSource = reference[1];
+    //  this.assay.invitroAssayScreenings[0].invitroReference.referenceSourceType = reference[0];
+    //  this.assay.invitroAssayScreenings[0].invitroReference.referenceSource = reference[1];
 
       this.referenceMessage = "";
     }

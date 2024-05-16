@@ -137,12 +137,15 @@
             <span class="font14px"><b>1. Reference Information</b></span><br><br>
 
             <span class="fieldKey">Reference Source Type <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroReference.referenceSourceType}}</span><br>
+            <span class="fieldvalue">{{invitroReference.sourceType}}</span><br>
+
+            <span class="fieldKey">Reference Source/Citation <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroReference.sourceCitation}}</span><br>
 
             <span class="fieldKey">Reference Source Id:</span>
-            <span class="fieldvalue">{{invitroReference.referenceSource}}</span><br>
+            <span class="fieldvalue">{{invitroReference.sourceId}}</span><br>
 
-            <span class="fieldKey">Reference URL:</span>
+            <span class="fieldKey">Reference Digital Object Identifier:</span>
             <span class="fieldvalue">{{invitroReference.digitalObjectIdentifier}}</span>
           </span>
 
@@ -289,12 +292,12 @@
           </span>
 
           <br><br>
-          <!-- Invitro Laboratory -->
-          <span *ngIf="invitroLaboratory">
+          <!-- Batch Number -->
+          <span *ngIf="invitroResultInfo">
             <span class="font14px"><b>7. Batch Information</b></span><br><br>
 
             <span class="fieldKey">Batch Number:</span>
-            <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}</span><br>
+            <span class="fieldvalue">{{invitroResultInfo.batchNumber}}</span><br>
           </span>
         </div>
 
@@ -346,8 +349,8 @@
 
       <!-- ************************************************************** -->
       <!-- SHEET 5. Assay Results -->
-      <div class="margintop30px font13px bordergray">
-        <div class="width95percent bordergray">
+      <div class="margintop30px font13px">
+        <div class="width95percent">
 
           <div class="headerstyle2 font15px">
             <mat-icon>list_alt</mat-icon>&nbsp;Sheet 5.Assay Results

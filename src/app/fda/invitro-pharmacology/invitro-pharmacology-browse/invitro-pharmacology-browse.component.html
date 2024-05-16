@@ -476,7 +476,7 @@
                       <ng-container matColumnDef="referenceSource">
                         <th mat-header-cell *matHeaderCellDef> Reference Source</th>
                         <td mat-cell *matCellDef="let assaysum">
-                          {{assaysum.referenceSourceTypeNumber}}
+                          {{assaysum.referenceSourceTypeAndId}}
                         </td>
                       </ng-container>
 
@@ -1128,7 +1128,7 @@
                                           <ng-container matColumnDef="referenceSource">
                                             <th mat-header-cell *matHeaderCellDef> Reference Source </th>
                                             <td mat-cell *matCellDef="let assaysum">
-                                              {{assaysum.referenceSourceTypeNumber}} </td>
+                                              {{assaysum.referenceSourceTypeAndId}} </td>
                                           </ng-container>
 
                                           <ng-container matColumnDef="testAgent">
@@ -1269,7 +1269,7 @@
 
                             <ng-container matColumnDef="referenceSource">
                               <th mat-header-cell *matHeaderCellDef> Reference Source </th>
-                              <td mat-cell *matCellDef="let assayscreen"> {{assayscreen.referenceSourceTypeNumber}}
+                              <td mat-cell *matCellDef="let assayscreen"> {{assayscreen.referenceSourceTypeAndId}}
                               </td>
                             </ng-container>
 
@@ -1488,7 +1488,7 @@
 
                             <ng-container matColumnDef="referenceSource">
                               <th mat-header-cell *matHeaderCellDef> Reference Source </th>
-                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.referenceSourceTypeNumber}} </td>
+                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.referenceSourceTypeAndId}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="testAgent">

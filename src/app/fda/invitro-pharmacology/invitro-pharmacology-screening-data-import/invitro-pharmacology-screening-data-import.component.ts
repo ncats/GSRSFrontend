@@ -119,7 +119,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         const excelFileData: string = e.target.result;
 
         // Load Excel File data into the WorkBook object
-        const workbook: XLSX.WorkBook = XLSX.read(excelFileData, { type: 'binary' });
+        const workbook: XLSX.WorkBook = XLSX.read(excelFileData, { type: 'binary',  cellDates: true,
+        cellNF: true});
 
         this.readInvitroReference(workbook);
 
@@ -134,8 +135,6 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         this.createInvitroTestAgent(workbook);
 
         this.createInvitroBatchNumber(workbook);
-
-        this.createInvitroLaboratory(workbook);
 
         this.createInvitroControls(workbook);
 
@@ -158,8 +157,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     const worksheetName = workbook.SheetNames[1];
     const worksheetRefLab: XLSX.WorkSheet = workbook.Sheets[worksheetName];
 
-    // Read Range A1:A4 in Sheet 2, Read the Key to create JSON object
-    var range = { s: { r: 0, c: 0 }, e: { r: 3, c: 0 } }; // A1:A4
+    // Read Range in Sheet 2, Read the Key to create JSON object
+    var range = { s: { r: 0, c: 0 }, e: { r: 5, c: 0 } }; // A1:A5
 
     // Loop through the range
     for (var R = range.s.r; R <= range.e.r; ++R) {
@@ -184,10 +183,12 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
           if (worksheetRefLab[cellKey].v) {
             if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Type *') {
-              this.invitroReference.referenceSourceType = this.getValue(worksheetRefLab[cellKeyValue]);
+              this.invitroReference.sourceType = this.getValue(worksheetRefLab[cellKeyValue]);
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source/Citation *') {
+              this.invitroReference.sourceCitation = this.getValue(worksheetRefLab[cellKeyValue]);
             } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Id') {
-              this.invitroReference.referenceSource = this.getValue(worksheetRefLab[cellKeyValue]);
-            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference URL') {
+              this.invitroReference.sourceId = this.getValue(worksheetRefLab[cellKeyValue]);
+            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Digital Object Identifier') {
               this.invitroReference.digitalObjectIdentifier = this.getValue(worksheetRefLab[cellKeyValue]);
             }
           } // if value is not null
@@ -198,7 +199,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     } // for loop Row
 
     // Set Reference to InvitroAssayResultInformation
-    this.invitroResultInfo.invitroReference = this.invitroReference;
+    // this.invitroResultInfo.invitroReferences[0].primaryReference = true;
+    // this.invitroResultInfo.invitroReferences[0] = this.invitroReference;
 
   }
 
@@ -208,8 +210,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     const worksheetName = workbook.SheetNames[1];
     const worksheetRefLab: XLSX.WorkSheet = workbook.Sheets[worksheetName];
 
-    // Read Range A7:A15 in Sheet 2, Read the Key to create JSON object
-    var range = { s: { r: 6, c: 0 }, e: { r: 14, c: 0 } }; // A7:A15
+    // Read Range in Sheet 2, Read the Key to create JSON object
+    var range = { s: { r: 6, c: 0 }, e: { r: 15, c: 0 } }; // A7:A16
 
     // Loop through the range
     for (var R = range.s.r; R <= range.e.r; ++R) {
@@ -392,7 +394,14 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
             if (worksheet[cellKey].v.trim() === 'Report Number *') {
               this.invitroSponsorReport.reportNumber = this.getValue(worksheet[cellKeyValue]);
             } else if (worksheet[cellKey].v.trim() === 'Report Date *') {
-              this.invitroSponsorReport.reportDate = this.getValue(worksheet[cellKeyValue]);
+
+              // Convert Report Date from Number to Date datatype
+              if (this.getValue(worksheet[cellKeyValue])) {
+                const parsedReportDate: Date = new Date(this.getValue(worksheet[cellKeyValue]));
+                let reportDate = moment(parsedReportDate).format('MM/DD/yyyy');
+
+                this.invitroSponsorReport.reportDate = reportDate;
+              }
             }
           } // if value is not null
         } // else
@@ -457,7 +466,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     const worksheetName = workbook.SheetNames[3];
     const worksheet: XLSX.WorkSheet = workbook.Sheets[worksheetName];
 
-    // Read Range A11:A11 in Sheet 3, Read the Key to create JSON object
+    // Read Range in Sheet 3, Read the Key to create JSON object
     var rangeRefLab = { s: { r: 10, c: 0 }, e: { r: 10, c: 0 } }; // A11:A11
 
     // Loop through the range
@@ -480,7 +489,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
           if (worksheet[cellKey].v) {
             if (worksheet[cellKey].v.trim() === 'Batch Number') {
-              this.invitroTestAgent.testAgentCompanyCode = this.getValue(worksheet[cellKeyValue]);
+              this.invitroResultInfo.batchNumber = this.getValue(worksheet[cellKeyValue]);
             }
           } // if value is not null
         } // else
@@ -543,7 +552,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         element["externalAssayId"] = this.replaceUndefinedValue(element["External Assay ID *"]);
         element["externalAssayUrl"] = this.replaceUndefinedValue(element["External Assay URL/Document Link"]);
         element["assayId"] = this.replaceUndefinedValue(element["Assay ID"]);
-        element["testDate"] = this.replaceUndefinedValue(element["Test Date (mm/dd/yyyy)"]);
+        let testDateNum = this.replaceUndefinedValue(element["Test Date (mm/dd/yyyy)"]);
         element["testAgentConcentration"] = this.replaceUndefinedValue(element["Test Agent Concentration"]);
         element["testAgentConcentrationUnits"] = this.replaceUndefinedValue(element["Test Agent Concentration Units"]);
         element["resultValue"] = this.replaceUndefinedValue(element["Result Value"]);
@@ -558,6 +567,14 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         element["numberOfTests"] = this.replaceUndefinedValue(element["Number of Tests"]);
         element["comments"] = this.replaceUndefinedValue(element["Comments"]);
         element["assayMeasurement"] = this.replaceUndefinedValue(element["Measurements"]);
+
+        // Convert testDate from Number to Date datatype
+        if (testDateNum) {
+          const parsedTestDate: Date = new Date(testDateNum);
+          let testDate = moment(parsedTestDate).format('MM/DD/yyyy');
+
+          element["testDate"] = testDate;
+        }
 
         // Delete Excel Object key
         delete element["External Assay Source *"];
@@ -631,7 +648,6 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     this.disableImportButton = 'false';
   }
 
-
   createNewScreeningData(assay: InvitroAssayInformation, resultElement: any) {
     // Create new screening object
     const screening: InvitroAssayScreening = {};
@@ -667,7 +683,6 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     newObject = tempObject;
 
     return newObject;
-
   }
 
   createInvitroResult(object: any): any {
@@ -697,7 +712,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       let scrubScreening = this.scrub(firstScreeningToSave);
 
       firstScreeningToSave.invitroAssayResultInformation = {};
-      firstScreeningToSave.invitroAssayResultInformation.invitroReference = this.invitroReference;
+      firstScreeningToSave.invitroAssayResultInformation.invitroReferences[0] = this.invitroReference;
 
       const saveFirstScreeningSubscribe = this.invitroPharmacologyService.saveScreening(scrubScreening, assayId).subscribe(responseFirstScreening => {
         if (responseFirstScreening) {
@@ -753,10 +768,18 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   importAssayJSONIntoDatabase() {
 
+    this.loadingService.setLoading(true);
+
     let savedResultInfo: any;
     if (this.assayToSave.length > 0) {
 
       let firstAssayToSave = this.assayToSave[0];
+
+      // Set Reference to Result Information Object
+      this.invitroResultInfo.invitroLaboratory = this.invitroLaboratory;
+      this.invitroResultInfo.invitroSponsor = this.invitroSponsor;
+      this.invitroResultInfo.invitroSponsorReport = this.invitroSponsorReport;
+      this.invitroResultInfo.invitroTestAgent = this.invitroTestAgent;
 
       // Set invitroAssayResultInformation in first Assay Record
       firstAssayToSave.invitroAssayScreenings[firstAssayToSave.invitroAssayScreenings.length - 1].invitroAssayResultInformation = this.invitroResultInfo;
@@ -796,8 +819,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
                     });
 
-                  //  assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = {};
-                  //  assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id = savedResultInfo.id;
+                    //  assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = {};
+                    //  assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id = savedResultInfo.id;
 
                     // Assign the assay to service assay
                     this.invitroPharmacologyService.assay = assay;
@@ -809,6 +832,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
                           // // this.showSubmissionMessages = false;
                           //  this.submissionMessage = '';
                           if (response.id) {
+                            this.loadingService.setLoading(false);
+
                             this.invitroPharmacologyService.bypassUpdateCheck();
                             const id = response.id;
                             this.router.routeReuseStrategy.shouldReuseRoute = () => false;

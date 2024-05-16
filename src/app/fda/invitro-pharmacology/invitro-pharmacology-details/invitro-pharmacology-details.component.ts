@@ -72,7 +72,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.handleSubstanceRetrivalError();
     }
-    this.loadingService.setLoading(false);
+    //this.loadingService.setLoading(false);
   }
 
   ngOnDestroy(): void {
@@ -103,6 +103,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
         this.titleService.setTitle(`Invitro Pharmacology Assay Details ` + this.id);
 
+        this.loadingService.setLoading(false);
         /*
         // Get Substance Id for Target Assay
         if (this.assay.assayTargetSubId) {
@@ -226,8 +227,9 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
           });
         });
         */
-      }
+      } // response
     }, error => {
+      this.loadingService.setLoading(false);
       this.handleSubstanceRetrivalError();
     });
     this.subscriptions.push(invitroSubscribe);
