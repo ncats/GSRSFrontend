@@ -28,7 +28,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-assay-data-import',
@@ -42,7 +42,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   importDataList: Array<any> = [];
   importedBulkAssayJson: Array<InvitroAssayInformation> = [];
   importedAssayJson: any;
-
   message = '';
   submitMessage = '';
   disabled = "true";
@@ -66,6 +65,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle("IVP Import Assay Data");
   }
 
   ngOnDestroy(): void {
@@ -111,8 +111,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
       // Read the Excel file
       reader.onload = (e: any) => {
 
-        let heading = [['FirstName', 'Last Name', 'Email']];
-
         const bstr: string = e.target.result;
         const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
 
@@ -154,8 +152,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             element["standardLigandSubstrateConcentrationUnits"] = this.replaceUndefinedValue(element["Standard Ligand/Substrate Concentration Units"]);
 
             // Assay Set
-            element["assaySet"] = this.replaceUndefinedValue(element["Assay Set"]);
-
+            let assaySet = this.replaceUndefinedValue(element["Assay Set"]);
+            this.createAssaySet(element);
 
             // Delete the key. 23 Fields
             delete element["External Assay Source"];
@@ -184,7 +182,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             delete element["Standard Ligand/Substrate Concentration"]
             delete element["Standard Ligand/Substrate Concentration Units"]
 
-            delete element["Assay Set"]
+           // delete element["Assay Set"]
 
             // Add to list
             this.importDataList.push(element);
@@ -221,6 +219,16 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   }
   */
 
+  createAssaySet(element: any) {
+    const newAssaySet: InvitroAssaySet = {};
+
+    let sets: Array<InvitroAssaySet> = [];
+    let assaySet = this.replaceUndefinedValue(element["Assay Set"]);
+    newAssaySet.assaySet = assaySet;
+    sets.push(newAssaySet);
+    element["invitroAssaySets"] = sets;
+  }
+
   importAssayJSONIntoDatabase() {
     // Loop through each Assay JSON Record, and save into the database
     this.importedAssayJson.forEach((element, index) => {
@@ -229,8 +237,13 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
         this.message = this.message + "index: " + index + "     " + JSON.stringify(element) + "\n\n";
         this.invitroPharmacologyService.assay = JSON.parse(JSON.stringify(element));
         this.invitroPharmacologyService.saveAssay().subscribe(response => {
-          this.message = "";
+          if (response) {
+            if (response.id) {
+
+            }
+            this.message = "";
           this.submitMessage = "Import Successful";
+          }
         });
       }
     })
@@ -238,9 +251,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
   showJSON(): void {
     let json: any = {};
-    alert(this.importedAssayJson);
     if (this.importedAssayJson !== undefined || this.importedAssayJson != null) {
-      alert("AAAAAAAAAAAAA");
       json = this.importedAssayJson;
     }
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {

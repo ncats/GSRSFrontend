@@ -100,8 +100,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
   ngOnInit() {
     setTimeout(() => {
-
-      this.isAdmin = this.authService.hasRoles('admin');
       this.loadingService.setLoading(true);
       this.overlayContainer = this.overlayContainerService.getContainerElement();
 

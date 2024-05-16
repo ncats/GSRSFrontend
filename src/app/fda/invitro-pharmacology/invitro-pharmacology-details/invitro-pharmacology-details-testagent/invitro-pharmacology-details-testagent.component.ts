@@ -208,7 +208,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
       this.allAssaysList.forEach(assay => {
         this.totalResultRecords = 0;
-         this.totalSummaryRecords = 0;
+        this.totalSummaryRecords = 0;
         assay.invitroAssayScreenings.forEach(screening => {
 
           /* Invitro Assay Result Object exists */
@@ -307,8 +307,10 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             /* Invitro Reference Object exists */
             if (screening.invitroAssayResultInformation) {
 
+              /*
               let referenceSourceTypeNumber = '';
               let referenceSourceNumber = '';
+
               if (screening.invitroAssayResultInformation.invitroReference) {
                 // Need this so it will not display undefined value
                 if (screening.invitroAssayResultInformation.invitroReference.referenceSource) {
@@ -317,7 +319,9 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                 referenceSourceTypeNumber = screening.invitroAssayResultInformation.invitroReference.referenceSourceType + ' ' + referenceSourceNumber;
                 assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
               } // if invitroReference exists
+              */
 
+              assaySummary.referenceSourceTypeNumber = this.getReferenceFields(screening);
 
               /* Invitro Test Agent Object exists */
               if (screening.invitroAssayResultInformation.invitroTestAgent) {
@@ -366,6 +370,36 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
       this.loadingService.setLoading(false);
       this.showSpinner = false;  // Stop progress spinner
     });
+  }
+
+  getReferenceFields(screening: InvitroAssayScreening): any {
+    let referenceSourceType = '';
+    let referenceSourceId = '';
+    let referenceSourceTypeAndId = '';
+
+    if (screening.invitroAssayResultInformation) {
+
+      if (screening.invitroAssayResultInformation.invitroReferences.length > 0) {
+        screening.invitroAssayResultInformation.invitroReferences.forEach(reference => {
+          if (reference) {
+            if (reference.primaryReference) {
+              if (reference.primaryReference == true) {
+                if (reference.sourceType) {
+                  referenceSourceType = reference.sourceType;
+                }
+                if (reference.sourceId) {
+                  referenceSourceId = reference.sourceId;
+                }
+                referenceSourceTypeAndId = referenceSourceType + ' ' + referenceSourceId;
+              } // if primaryReference is true
+            } // if primaryRefernce is not null
+          }
+        });
+      } // screening.invitroAssayResultInformation.invitroReferences
+    } // screening.invitroAssayResultInformation
+
+    return referenceSourceTypeAndId;
+
   }
 
 }

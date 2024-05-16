@@ -1247,6 +1247,12 @@
           "display": "Import In-vitro Pharm Assay",
           "path": "invitro-pharm/import/assay",
           "order": 270
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "Import In-vitro Pharm Screening",
+          "path": "invitro-pharm/import/screening",
+          "order": 280
         }
       ]
     },
@@ -1608,7 +1614,7 @@
         "amount": "advanced"
       },
       "stepView": {
-        "showAmountValues": "false"
+        "showAmountValues": "true"
       }
     }
   }

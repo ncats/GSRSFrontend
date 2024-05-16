@@ -455,21 +455,28 @@
 
                       <!-- Edit/Update RESULT/SCREENING record -->
                       <ng-container matColumnDef="viewDetails">
-                        <th mat-header-cell *matHeaderCellDef> View Details </th>
-                        <td mat-cell *matCellDef="let assayscreening" class="width80px">
-                          <div>
-                            <a [routerLink]="['/invitro-pharm', assayscreening.id, 'edit']" target="_blank"
-                              *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                        <th mat-header-cell *matHeaderCellDef> Edit Screening </th>
+                        <td mat-cell *matCellDef="let assayscreening" class="width110px">
+                          <div class="divflex">
+                            <!-- Edit SUMMARY Record -->
+                            <div class="">
                               <mat-icon svgIcon="edit"></mat-icon>
-                            </a>
-                          </div>
+                            </div>
+                            <div class="margintop5px">
+                              <a [routerLink]="['/invitro-pharm', assayscreening.assayResultInfoId, 'edit']"
+                                target="_blank" *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                                <span class="font12px">Edit Screening</span>
+                              </a>
+                            </div>
+                          </div> <!-- divflex -->
+
                         </td>
                       </ng-container>
 
                       <ng-container matColumnDef="referenceSource">
                         <th mat-header-cell *matHeaderCellDef> Reference Source</th>
                         <td mat-cell *matCellDef="let assaysum">
-                          {{assaysum.referenceSourceTypeNumber}}
+                          {{assaysum.referenceSourceTypeAndId}}
                         </td>
                       </ng-container>
 
@@ -1121,7 +1128,7 @@
                                           <ng-container matColumnDef="referenceSource">
                                             <th mat-header-cell *matHeaderCellDef> Reference Source </th>
                                             <td mat-cell *matCellDef="let assaysum">
-                                              {{assaysum.referenceSourceTypeNumber}} </td>
+                                              {{assaysum.referenceSourceTypeAndId}} </td>
                                           </ng-container>
 
                                           <ng-container matColumnDef="testAgent">
@@ -1262,7 +1269,7 @@
 
                             <ng-container matColumnDef="referenceSource">
                               <th mat-header-cell *matHeaderCellDef> Reference Source </th>
-                              <td mat-cell *matCellDef="let assayscreen"> {{assayscreen.referenceSourceTypeNumber}}
+                              <td mat-cell *matCellDef="let assayscreen"> {{assayscreen.referenceSourceTypeAndId}}
                               </td>
                             </ng-container>
 
@@ -1481,7 +1488,7 @@
 
                             <ng-container matColumnDef="referenceSource">
                               <th mat-header-cell *matHeaderCellDef> Reference Source </th>
-                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.referenceSourceTypeNumber}} </td>
+                              <td mat-cell *matCellDef="let assaysum"> {{assaysum.referenceSourceTypeAndId}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="testAgent">

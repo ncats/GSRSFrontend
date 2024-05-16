@@ -55,7 +55,7 @@
     <!-- Substance Selector for Substance/Ingredient Name -->
     <div class="col-4-1">
       <app-substance-selector (selectionUpdated)="ingredientNameUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/UNII/BDNUM/CAS RN" header=""
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Ingredient Name" header="Ingredient Name"
         [subuuid]="ingredientNameSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
 
@@ -70,7 +70,7 @@
     <!-- Substance Selector for Basis of Strength Name -->
     <div class="col-4-1">
       <app-substance-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/UNII/BDNUM/CAS RN" header=""
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Basis of Strength" header="Basis of Strength"
         [subuuid]="basisOfStrengthSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
 

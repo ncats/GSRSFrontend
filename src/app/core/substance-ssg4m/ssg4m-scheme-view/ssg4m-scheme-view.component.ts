@@ -45,11 +45,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     const processSubscription = this.substanceFormSsg4mProcessService.specifiedSubstanceG4mProcess.subscribe(process => {
       this.processList = process;
     });
-    // const subscription = this.substanceFormService.substance.subscribe(substance => {
-    //  this.substance = JSON.stringify(substance);
-    //   this.process = JSON.stringify(this.substance);
-    //   alert("JSON: " + JSON.stringify(this.substance));
-    //  });
+
     this.subscriptions.push(processSubscription);
     this.environment = this.configService.environment;
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/arrow.png`;
@@ -80,24 +76,16 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
         this.showAmountValues = configSsg4Form.settingsDisplay.stepView.showAmountValues;
       }
     }
-
-    alert(this.showAmountValues);
   }
 
   openImageModal(subUuid: string, approvalID: string, displayName: string): void {
-    // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-
-    //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
-
     let data: any;
-    // if (substance.substanceClass === 'chemical') {
     data = {
       structure: subUuid,
       uuid: subUuid,
       approvalID: approvalID,
       displayName: displayName
     };
-    // }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '96%',

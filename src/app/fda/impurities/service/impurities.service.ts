@@ -10,7 +10,7 @@ import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import {
   Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting, ImpuritiesElutionSolvent,
-  ImpuritiesSolutionTable, ImpuritiesUnspecified, ImpuritiesResidualSolventsTest, ImpuritiesResidualSolvents, ImpuritiesInorganicTest,
+  ImpuritiesSolution, ImpuritiesSolutionTable, ImpuritiesUnspecified, ImpuritiesResidualSolventsTest, ImpuritiesResidualSolvents, ImpuritiesInorganicTest,
   ImpuritiesInorganic, ImpuritiesTotal, ValidationResults, IdentityCriteria
 } from '../model/impurities.model';
 
@@ -194,7 +194,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewTest(impuritiesSubstanceIndex: number): void {
-    const newTest: ImpuritiesTesting = { impuritiesElutionSolventList: [], impuritiesSolutionTableList: [], impuritiesDetailsList: [], impuritiesUnspecifiedList: [] };
+    const newTest: ImpuritiesTesting = { impuritiesElutionSolventList: [], impuritiesSolutionList: [], impuritiesSolutionTableList: [], impuritiesDetailsList: [], impuritiesUnspecifiedList: [] };
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList.unshift(newTest);
   }
 
@@ -203,6 +203,13 @@ export class ImpuritiesService extends BaseHttpService {
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
       .impuritiesTestList[impuritiesTestIndex]
       .impuritiesElutionSolventList.push(newElution);
+  }
+
+  addNewSolution(impuritiesSubstanceIndex: number, impuritiesTestIndex: number) {
+    const newSolution: ImpuritiesSolution = {};
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
+      .impuritiesTestList[impuritiesTestIndex]
+      .impuritiesSolutionList.push(newSolution);
   }
 
   addNewSolutionTableDetails(impuritiesSubstanceIndex: number, impuritiesTestIndex: number) {
@@ -278,6 +285,10 @@ export class ImpuritiesService extends BaseHttpService {
 
   deleteImpuritiesTest(impuritiesSubstanceIndex: number, impuritiesTestIndex: number): void {
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList.splice(impuritiesTestIndex, 1);
+  }
+
+  deleteImpuritiesSolution(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, solutionIndex: number): void {
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex].impuritiesSolutionList.splice(solutionIndex, 1);
   }
 
   deleteImpuritiesSolutionTable(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, solutionTableIndex: number): void {
