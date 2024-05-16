@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { FacetDisplayPipe } from './facet-display.pipe';
 import { FacetFilterPipe } from './facet-filter.pipe';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
     MatCheckboxModule,
     FormsModule,
     MatIconModule,

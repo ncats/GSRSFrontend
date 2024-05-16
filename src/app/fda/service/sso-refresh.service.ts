@@ -22,7 +22,7 @@ export class SsoRefreshService implements OnDestroy {
   ) {
     if (isPlatformBrowser(this.platformId)) {
 
-      if (window.location.pathname.indexOf('/ginas/app/beta/') > -1) {
+      if (window.location.pathname.indexOf('/ginas/app/ui/') > -1) {
         this.baseHref = '/ginas/app/';
       }
     }
