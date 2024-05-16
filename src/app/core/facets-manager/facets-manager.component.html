@@ -46,7 +46,7 @@
       <div class="facet-advanced-options-link" *ngIf="facet.$showAdvanced">
         <mat-form-field class="sort">
           <mat-label>Sort Results By</mat-label>
-          <mat-select (openedChange)="facetOrderChange(topIndex, $event)" [ngModel] = "facetSort[topIndex]" (selectionChange)="facetOrderChange(topIndex, facet, $event)">
+          <mat-select [ngModel] = "facetSort[topIndex]" (selectionChange)="facetOrderChange(topIndex, facet, $event)">
            <!--<mat-option *ngFor="let option of sortValues" [value]="option.value">
               {{option.display}}
             </mat-option>--> 

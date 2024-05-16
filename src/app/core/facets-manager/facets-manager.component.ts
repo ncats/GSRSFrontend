@@ -193,7 +193,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           
           index = event.index;
           const facet = this.facets[event.index];
-          this.facetOrderChange(event.index, facet);
           if (!facet._self) {
             facet._self = this.facetManagerService.generateSelfUrl('stagingArea', facet.name);
           }
@@ -222,7 +221,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         });
         this.activeSearchedFaced.values = this.activeSearchedFaced.values.concat(response.content);
         this.searchText[this.activeSearchedFaced.name].isLoading = false;
-        this.facetOrderChange(index, this.activeSearchedFaced);
+        this.facetOrderChange(index, this.activeSearchedFaced, 'facetSearch', 'facetSearch');
       }, error => {
         this.searchText[this.activeSearchedFaced.name].isLoading = false;
       });
@@ -761,31 +760,49 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   filterFacets(index: number, searchTerm: string, faceName: string): void {
     this.searchText[faceName].isLoading = true;
     this.activeSearchedFaced = this.facets[index];
-    this.facetOrderChange(index, this.activeSearchedFaced);
-    console.log(this.facetSort[index]);
+    //this.facetOrderChange(index, this.activeSearchedFaced, null, 'facetSearch');
+    
     this.facetSearchChanged.next({ index: index, query: searchTerm, facets: this.privateFacetParams });
-    setTimeout(  ()=>  this.facetOrderChange(index, this.activeSearchedFaced)
+    setTimeout(  ()=>  this.facetOrderChange(index, this.activeSearchedFaced, null, 'facetSearch')
 , 500  );
   }
-  facetOrderChange( index, facet, event?) {
-    //re-fetch facets from server if clicking more... otherwise frontend sort if facet is displaying search results.
-    if (event) {
-      this.facetSort[index] = event.value;
-      if (this.searchText[facet]) {
 
-      if(this.facetSort[index]) {
+
+  sortFacets(index: number, rawFacets?: any) {
+    if(this.facetSort[index]) {
+      if (rawFacets) {
         if (this.facetSort[index] === 'count') {
-          this.facets[index].values = this.facets[index].values.sort((a, b) => a.count-b.count);
+          this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => b.count-a.count);
         }
         else if (this.facetSort[index] === 'inverse') {
-          this.facets[index].values = this.facets[index].values.sort((a, b) => a.count-b.count);
+          this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => a.count-b.count);
         } else if (this.facetSort[index] === 'AZ') {
-          this.facets[index].values = this.facets[index].values.sort((a, b) => a.label.localeCompare(b.label));
-
+          this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => a.label.localeCompare(b.label));  
         } else if (this.facetSort[index] === 'ZA') {
-          this.facets[index].values = this.facets[index].values.sort((a, b) => b.label.localeCompare(a.label));
+          this.activeSearchedFaced.values = this.facets[index].values.sort((a, b) => b.label.localeCompare(a.label));
         }
       }
+      if (this.facetSort[index] === 'count') {
+        this.facets[index].values = this.facets[index].values.sort((a, b) => b.count-a.count);
+      }
+      else if (this.facetSort[index] === 'inverse') {
+        this.facets[index].values = this.facets[index].values.sort((a, b) => a.count-b.count);
+      } else if (this.facetSort[index] === 'AZ') {
+        this.facets[index].values = this.facets[index].values.sort((a, b) => a.label.localeCompare(b.label));
+      } else if (this.facetSort[index] === 'ZA') {
+        this.facets[index].values = this.facets[index].values.sort((a, b) => b.label.localeCompare(a.label));
+      }
+    }
+  }
+
+  facetOrderChange( index, facet, event?, source?) {
+    //re-fetch facets from server if clicking more... otherwise frontend sort if facet is displaying search results.
+    if (event && event.value) {
+      this.facetSort[index] = event.value;
+     }
+      if (this.searchText[facet.name] || source && source == 'facetSearch') {
+        
+        this.sortFacets(index, 'facetSearch');
     } else {
       let sort = 'count';
       let order = 'true';
@@ -805,6 +822,9 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         this.facets[index].values = resp.content;
         this.facets[index].$fetched = this.facets[index].values;
         this.facets[index].$total = resp.ftotal;
+        if(this.searchText[facet.name]){
+          this.sortFacets(index);
+         } 
       //  this.facets[index].$isLoading = false;
       //  this.searchText[facet.name].isLoading = false;
       }, error => {
@@ -812,7 +832,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       // this.searchText[facet.name].isLoading = false;
       });
     }
-  }
+  
 
   }
   
