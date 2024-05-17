@@ -51,6 +51,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ];
   ketcherFilePath: string;
+  firstload = true;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -140,6 +141,14 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/index.html`;
 
       this.structureEditor = environment.structureEditor;
+      let pref = sessionStorage.getItem('gsrsStructureEditor');
+      if (pref) {
+        if (pref === 'ketcher') {
+          this.structureEditor = 'ketcher';
+        } else if (pref === 'jsdraw') {
+          this.structureEditor = 'jsdraw';
+        }
+      }
 
       if ( !window['JSDraw']) {
 
@@ -170,15 +179,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ketcherOnLoad(ketcher: any): void {
 
-    setTimeout(() => {
-       this.ketcher = ketcher;
-       if (this.structureEditor === 'ketcher'){
 
-    //   this.editor = new EditorImplementation(this.ketcher);
-     //  this.editorOnLoad.emit(this.editor);
-       }
-       
-    }, 1000);
+       this.ketcher = ketcher;
+      
 
   }
 
@@ -188,19 +191,31 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.structureEditor = 'jsdraw';
       this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
+      sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
     } else {
+      sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
+
       this.structureEditor = 'ketcher';
       this.editor = new EditorImplementation(this.ketcher);
        this.editorOnLoad.emit(this.editor);
-       console.log(this.jsdraw.options);
     }
   }
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
-    console.log('loaded');
     this.jsdraw = jsdraw;
       this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
+      if (this.firstload && this.structureEditor === 'ketcher' ) {
+        setTimeout(() => {
+          this.firstload = false;
+          this.editor = new EditorImplementation(this.ketcher);
+          this.editorOnLoad.emit(this.editor);
+        }, 1000);
+        
+
+      } else if (this.firstload) {
+        this.firstload = false;
+      }
     
   }
 
