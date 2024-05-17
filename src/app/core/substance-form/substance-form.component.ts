@@ -459,7 +459,6 @@ getDrafts() {
     const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
     if (structure) {
      let decode = decodeURIComponent(structure);
-     console.log(decode);
       setTimeout(() => {
         this.setStructureFromUrl(decode, 'molfile');
       });
