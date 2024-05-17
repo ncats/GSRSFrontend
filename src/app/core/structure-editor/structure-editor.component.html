@@ -13,9 +13,12 @@
 <div id ="canvas-container">
   <div class="below-editor-container">
       
-    <div class="molvec-message" >
-        Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
+    <div class="molvec-message" *ngIf = "structureEditor === 'ketcher'">
+        Switch to JSDraw temporarily to load an image into the editor
     </div>
+    <div class="molvec-message" *ngIf = "structureEditor === 'jsdraw'">
+      Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
+  </div>
    
     <div class = "options">
         <button mat-button color="primary" [matMenuTriggerFor]="importMenu">Structure Options &#9660; </button>
