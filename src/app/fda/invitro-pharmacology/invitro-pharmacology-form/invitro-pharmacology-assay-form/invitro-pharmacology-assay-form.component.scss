@@ -88,7 +88,8 @@
 .headerstyle {
   border-radius: 7px 7px 0px 0px;
   border: 1px solid var(--blue-color);
-  background-color: var(--table-th-border-color);  /*--primary-title-color*/
+  background-color: var(--table-th-border-color);
+  /*--primary-title-color*/
   border-bottom: none;
   padding-left: 10px;
   height: 50px;
@@ -108,6 +109,15 @@
   height: 40px;
   padding-left: 5px;
   background-color: #fafafa;
+}
+
+.fieldValueCheckboxes {
+  width: 635px;
+  max-width: 635px;
+  height: 100px;
+  padding-left: 10px;
+  display: inline-block;
+  overflow: auto;
 }
 
 .divflexrow {
@@ -336,6 +346,10 @@
   margin-right: 15px;
 }
 
+.marginbottom10px {
+  margin-bottom: 10px;
+}
+
 .marginbottom30px {
   margin-bottom: 30px;
 }
@@ -354,6 +368,10 @@
 
 .bordergray {
   border: 1px solid var(--regular-grey-color);
+}
+
+.borderlightgray {
+  border: 1px solid var(--regular-lightgray-color);
 }
 
 .bordergreen {
@@ -378,6 +396,10 @@
 
 .width200px {
   width: 200px;
+}
+
+.width620px {
+  width: 620px;
 }
 
 .width32percent {
@@ -561,6 +583,32 @@ hr {
   height: 35px !important;
   padding-left: 5px;
   padding-top: 3px;
+}
+
+.height100px {
+  height: 100px !important;
+  padding-left: 5px;
+  padding-top: 3px;
+}
+
+fieldset.border {
+  border: solid 2px var(--fieldset-red-border-color)!important;
+  padding: 0 10px 10px 10px;
+  border-bottom: none;
+}
+
+legend.border {
+  width: auto !important;
+  border: none;
+  border-bottom: none;
+  font-size: 14px;
+  color: var(--legend-red-border-color);
+  font-family: Verdana;
+  font-weight: bold;
+  padding: 10px;
+  margin-bottom: 0px;
+  border: 2px solid var(--regular-orangered-color);
+  background-color: var(--legend-bg-color);
 }
 
 /* Table Style Begin */

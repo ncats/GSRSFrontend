@@ -119,8 +119,10 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         const excelFileData: string = e.target.result;
 
         // Load Excel File data into the WorkBook object
-        const workbook: XLSX.WorkBook = XLSX.read(excelFileData, { type: 'binary',  cellDates: true,
-        cellNF: true});
+        const workbook: XLSX.WorkBook = XLSX.read(excelFileData, {
+          type: 'binary', cellDates: true,
+          cellNF: true
+        });
 
         this.readInvitroReference(workbook);
 
@@ -811,7 +813,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
                     assay.invitroAssayScreenings.forEach(screening => {
                       // Assign the first invitroAssayResultInformation here.
 
-                      // screening.invitroAssayResultInformation = savedResultInfo;
+                     // screening.invitroAssayResultInformation = savedResultInfo;
 
                       //  screening.invitroAssayResultInformation = {};
                       //  screening.invitroAssayResultInformation.id = savedResultInfo.id;
@@ -819,8 +821,9 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
                     });
 
-                    //  assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = {};
-                    //  assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id = savedResultInfo.id;
+                      assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = savedResultInfo;
+                      //assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = {};
+                      //assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id = savedResultInfo.id;
 
                     // Assign the assay to service assay
                     this.invitroPharmacologyService.assay = assay;

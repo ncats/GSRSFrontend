@@ -260,7 +260,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   }
 
   createResultInfoObject() {
-    this.assayResultInfo.invitroReferences = [{primaryReference: true}];
+    this.assayResultInfo.invitroReferences = [{ primaryReference: true }];
     this.assayResultInfo.invitroLaboratory = {};
     this.assayResultInfo.invitroSponsor = {};
     this.assayResultInfo.invitroSponsorReport = { invitroSponsorSubmitters: [{}] };
@@ -274,11 +274,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // LOOP: screenings list
       assay.invitroAssayScreenings.forEach((screening, indexScreening) => {
         // if Registering NEW RECORD, copy this Result Reference, Lab, Sponsor, Test Agent Info
-        if (!this.id) {
+      //  if (!this.id) {
           if (screening._show == true) {
             screening.invitroAssayResultInformation = this.assayResultInfo;
           }
-        }
+      //  }
       });
     });
   }
@@ -311,6 +311,13 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
                         this.createResultInfoObject();
                       }
 
+                      this.assayResultInfo = screening.invitroAssayResultInformation;
+
+
+                      /*
+                      this.assayResultInfo.batchNumber = screening.invitroAssayResultInformation.batchNumber;
+
+
                       if (this.assayResultInfo.invitroReferences == null) {
                         this.assayResultInfo.invitroReferences = [];
                       }
@@ -318,18 +325,19 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
                       if (screening.invitroAssayResultInformation.invitroReferences.length > 0) {
                         this.assayResultInfo.invitroReferences = screening.invitroAssayResultInformation.invitroReferences;
                       }
-                      /*
-                        screening.invitroAssayResultInformation.invitroReferences.forEach((reference, index) => {
-                           if (reference) {
-                            if (reference.primaryReference) {
-                              if (reference.primaryReference == true) {
-                                this.referenceIndex = index;
-                                this.assayResultInfo.invitroReferences[index] = reference;
-                              }
-                            }
-                           }
-                        });
-                      } */
+
+                       // screening.invitroAssayResultInformation.invitroReferences.forEach((reference, index) => {
+                       //    if (reference) {
+                       //     if (reference.primaryReference) {//
+                       //       if (reference.primaryReference == true) {
+                       //         this.referenceIndex = index;
+                       //         this.assayResultInfo.invitroReferences[index] = reference;
+                       //       }
+                       //     }
+                       //    }
+                       // });
+
+                      }
 
                       if (screening.invitroAssayResultInformation.invitroLaboratory) {
                         this.assayResultInfo.invitroLaboratory = screening.invitroAssayResultInformation.invitroLaboratory;
@@ -342,17 +350,17 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
                       if (screening.invitroAssayResultInformation.invitroSponsorReport) {
                         this.assayResultInfo.invitroSponsorReport = screening.invitroAssayResultInformation.invitroSponsorReport;
                       }
-
+                       */
                       if (screening.invitroAssayResultInformation.invitroTestAgent) {
-                        this.assayResultInfo.invitroTestAgent = screening.invitroAssayResultInformation.invitroTestAgent;
+                     //   this.assayResultInfo.invitroTestAgent = screening.invitroAssayResultInformation.invitroTestAgent;
                         this.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
                       }
 
-                      this.assayResultInfo.batchNumber = screening.invitroAssayResultInformation.batchNumber;
-                    }
 
-                  }
-                }
+                    } // if invitroAssayResultInformation.id == this.id
+
+                  } // if invitroAssayResultInformation exists
+                } // if screening
               });
             }
           });
@@ -398,234 +406,234 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   }
   */
 
-  getAllAssaySets() {
-    const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssaySets().subscribe(response => {
-      if (response) {
-        this.existingAssaySetList = response;
-      }
+                      getAllAssaySets() {
+                        const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssaySets().subscribe(response => {
+                          if (response) {
+                            this.existingAssaySetList = response;
+                          }
 
-      //  this.loadingService.setLoading(false);
-      //  this.isLoading = false;
-    }, error => {
-      // this.loadingService.setLoading(false);
-      // this.isLoading = false;
-      this.loadingService.setLoading(false);
-      this.handleRecordRetrivalError();
-    });
-    this.subscriptions.push(getInvitroSubscribe);
-  }
+                          //  this.loadingService.setLoading(false);
+                          //  this.isLoading = false;
+                        }, error => {
+                          // this.loadingService.setLoading(false);
+                          // this.isLoading = false;
+                          this.loadingService.setLoading(false);
+                          this.handleRecordRetrivalError();
+                        });
+                        this.subscriptions.push(getInvitroSubscribe);
+                      }
 
-  getAllAssysByAssaySet(assaySet: string) {
-    this.assayMessage = "Loading Assays ...";
-    const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssysByAssaySet(assaySet).subscribe(response => {
-      if (response) {
-        this.existingAssaysByAssaySetList = response;
+                      getAllAssysByAssaySet(assaySet: string) {
+                        this.assayMessage = "Loading Assays ...";
+                        const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssysByAssaySet(assaySet).subscribe(response => {
+                          if (response) {
+                            this.existingAssaysByAssaySetList = response;
 
-        // LOOP: assay list
-        this.existingAssaysByAssaySetList.forEach((assay, indexAssay) => {
-          if (assay.invitroAssayScreenings == null) {
-            assay.invitroAssayScreenings = [];
+                            // LOOP: assay list
+                            this.existingAssaysByAssaySetList.forEach((assay, indexAssay) => {
+                              if (assay.invitroAssayScreenings == null) {
+                                assay.invitroAssayScreenings = [];
+                              }
+
+                              // add new screening
+                              const newInvitroAssayScreening: InvitroAssayScreening =
+                              {
+                                // invitroReference: { invitroSponsor: {} },
+                                //  invitroSponsorReport: { invitroSponsorSubmitters: [{}] },
+                                //  invitroLaboratory: {},
+                                //   invitroTestAgent: {},
+                                invitroAssayResult: {},
+                                invitroControls: []
+                              };
+
+                              // Set to show on the UI
+                              newInvitroAssayScreening._show = true;
+
+                              newInvitroAssayScreening.assaySet = this.selectedAssaySet;
+
+                              // Push new screening record in existing Assay
+                              assay.invitroAssayScreenings.push(newInvitroAssayScreening);
+
+                              // Delete Assay Set Object
+                              //  delete assay.invitroAssaySets;
+
+                            }); // LOOP: assay
+
+                          } else {
+                            this.handleRecordRetrivalError();
+                          }
+                          // this.loadingService.setLoading(false);
+                          //this.isLoading = false;
+                          this.assayMessage = "";
+                        }, error => {
+                          // this.loadingService.setLoading(false);
+                          // this.isLoading = false;
+                          // this.assayMessage = "";
+                          this.handleRecordRetrivalError();
+
+                        });
+                        this.subscriptions.push(getInvitroSubscribe);
+                      }
+
+                      getExistingReferences() {
+                        const getInvitroSubscribe = this.invitroPharmacologyService.getAllReferences().subscribe(response => {
+                          if (response) {
+                            this.existingReferenceList = response;
+                          } else {
+                            this.handleRecordRetrivalError();
+                          }
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                        }, error => {
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                          this.handleRecordRetrivalError();
+                        });
+                        this.subscriptions.push(getInvitroSubscribe);
+                      }
+
+                      getExistingSponsors() {
+                        const getInvitroSubscribe = this.invitroPharmacologyService.getAllSponsors().subscribe(response => {
+                          if (response) {
+                            this.existingSponsorList = response;
+                          } else {
+                            this.handleRecordRetrivalError();
+                          }
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                        }, error => {
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                          this.handleRecordRetrivalError();
+                        });
+                        this.subscriptions.push(getInvitroSubscribe);
+                      }
+
+                      getAllSponsorSubmitters() {
+                        const getInvitroSubscribe = this.invitroPharmacologyService.getAllSponsorSubmitters().subscribe(response => {
+                          if (response) {
+                            this.existingSponsorSubmittersList = response;
+                          } else {
+                            this.handleRecordRetrivalError();
+                          }
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                        }, error => {
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                          this.handleRecordRetrivalError();
+                        });
+                        this.subscriptions.push(getInvitroSubscribe);
+                      }
+
+                      getExistingLaboratories() {
+                        const getInvitroSubscribe = this.invitroPharmacologyService.getAllLaboratories().subscribe(response => {
+                          if (response) {
+                            this.existingLaboratoryList = response;
+                          } else {
+                            this.handleRecordRetrivalError();
+                          }
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                        }, error => {
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                          this.handleRecordRetrivalError();
+                        });
+                        this.subscriptions.push(getInvitroSubscribe);
+                      }
+
+                      loadTestAgentsTypeAhead() {
+                        const getInvitroSubscribe = this.invitroPharmacologyService.getAllTestAgents().subscribe(response => {
+                          if (response) {
+                            this.existingTestAgentList = response;
+                          } else {
+                            this.handleRecordRetrivalError();
+                          }
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                        }, error => {
+                          this.loadingService.setLoading(false);
+                          this.isLoading = false;
+                          this.handleRecordRetrivalError();
+                        });
+                        this.subscriptions.push(getInvitroSubscribe);
+                      }
+
+                      validate(): void {
+                        this.isLoading = true;
+                        this.serverError = false;
+                        this.loadingService.setLoading(true);
+
+                        // Check validation on Client side.
+                        this.validateClient();
+
+                        // If there is no error on client side, check validation on server side
+                        if(this.validationMessages.length === 0) {
+                this.submissionMessage = null;
+                //   this.validationMessages = results.validationMessages.filter(
+                //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+                //   this.validationResult = results.valid;
+
+                this.validationResult = true;
+                this.showSubmissionMessages = true;
+                this.loadingService.setLoading(false);
+                this.isLoading = false;
+
+
+                if (this.validationMessages.length === 0 && this.validationResult === true) {
+                  this.submissionMessage = 'Invitro Pharmacology Assay Screening is Valid. Would you like to submit?';
+                }
+                /* }, error => {
+                   this.addServerError(error);
+                   this.loadingService.setLoading(false);
+                   this.isLoading = false;
+                 });
+                 */
+              }
+              //  }
+            }
+
+            setValidationMessage(message: string) {
+              const validate: ValidationMessage = {};
+              validate.message = message;
+              validate.messageType = 'ERROR';
+              this.validationMessages.push(validate);
+              this.validationResult = false;
+            }
+
+            // Validate data in client side first
+            validateClient(): void {
+              this.validationMessages = [];
+              this.validationResult = true;
+
+              if(this.validationMessages.length > 0) {
+            this.showSubmissionMessages = true;
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
           }
 
-          // add new screening
-          const newInvitroAssayScreening: InvitroAssayScreening =
-          {
-            // invitroReference: { invitroSponsor: {} },
-            //  invitroSponsorReport: { invitroSponsorSubmitters: [{}] },
-            //  invitroLaboratory: {},
-            //   invitroTestAgent: {},
-            invitroAssayResult: {},
-            invitroControls: []
+        }
+
+        toggleValidation(): void {
+          this.showSubmissionMessages = !this.showSubmissionMessages;
+        }
+
+        addServerError(error: any): void {
+          this.serverError = true;
+          this.validationResult = false;
+          this.validationMessages = null;
+
+          const message: ValidationMessage = {
+            actionType: 'server failure',
+            links: [],
+            appliedChange: false,
+            suggestedChange: false,
+            messageType: 'ERROR',
+            message: 'Unknown Server Error'
           };
-
-          // Set to show on the UI
-          newInvitroAssayScreening._show = true;
-
-          newInvitroAssayScreening.assaySet = this.selectedAssaySet;
-
-          // Push new screening record in existing Assay
-          assay.invitroAssayScreenings.push(newInvitroAssayScreening);
-
-          // Delete Assay Set Object
-          //  delete assay.invitroAssaySets;
-
-        }); // LOOP: assay
-
-      } else {
-        this.handleRecordRetrivalError();
-      }
-      // this.loadingService.setLoading(false);
-      //this.isLoading = false;
-      this.assayMessage = "";
-    }, error => {
-      // this.loadingService.setLoading(false);
-      // this.isLoading = false;
-      // this.assayMessage = "";
-      this.handleRecordRetrivalError();
-
-    });
-    this.subscriptions.push(getInvitroSubscribe);
-  }
-
-  getExistingReferences() {
-    const getInvitroSubscribe = this.invitroPharmacologyService.getAllReferences().subscribe(response => {
-      if (response) {
-        this.existingReferenceList = response;
-      } else {
-        this.handleRecordRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }, error => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleRecordRetrivalError();
-    });
-    this.subscriptions.push(getInvitroSubscribe);
-  }
-
-  getExistingSponsors() {
-    const getInvitroSubscribe = this.invitroPharmacologyService.getAllSponsors().subscribe(response => {
-      if (response) {
-        this.existingSponsorList = response;
-      } else {
-        this.handleRecordRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }, error => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleRecordRetrivalError();
-    });
-    this.subscriptions.push(getInvitroSubscribe);
-  }
-
-  getAllSponsorSubmitters() {
-    const getInvitroSubscribe = this.invitroPharmacologyService.getAllSponsorSubmitters().subscribe(response => {
-      if (response) {
-        this.existingSponsorSubmittersList = response;
-      } else {
-        this.handleRecordRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }, error => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleRecordRetrivalError();
-    });
-    this.subscriptions.push(getInvitroSubscribe);
-  }
-
-  getExistingLaboratories() {
-    const getInvitroSubscribe = this.invitroPharmacologyService.getAllLaboratories().subscribe(response => {
-      if (response) {
-        this.existingLaboratoryList = response;
-      } else {
-        this.handleRecordRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }, error => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleRecordRetrivalError();
-    });
-    this.subscriptions.push(getInvitroSubscribe);
-  }
-
-  loadTestAgentsTypeAhead() {
-    const getInvitroSubscribe = this.invitroPharmacologyService.getAllTestAgents().subscribe(response => {
-      if (response) {
-        this.existingTestAgentList = response;
-      } else {
-        this.handleRecordRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }, error => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleRecordRetrivalError();
-    });
-    this.subscriptions.push(getInvitroSubscribe);
-  }
-
-  validate(): void {
-    this.isLoading = true;
-    this.serverError = false;
-    this.loadingService.setLoading(true);
-
-    // Check validation on Client side.
-    this.validateClient();
-
-    // If there is no error on client side, check validation on server side
-    if (this.validationMessages.length === 0) {
-      this.submissionMessage = null;
-      //   this.validationMessages = results.validationMessages.filter(
-      //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-      //   this.validationResult = results.valid;
-
-      this.validationResult = true;
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-
-
-      if (this.validationMessages.length === 0 && this.validationResult === true) {
-        this.submissionMessage = 'Invitro Pharmacology Assay Screening is Valid. Would you like to submit?';
-      }
-      /* }, error => {
-         this.addServerError(error);
-         this.loadingService.setLoading(false);
-         this.isLoading = false;
-       });
-       */
-    }
-    //  }
-  }
-
-  setValidationMessage(message: string) {
-    const validate: ValidationMessage = {};
-    validate.message = message;
-    validate.messageType = 'ERROR';
-    this.validationMessages.push(validate);
-    this.validationResult = false;
-  }
-
-  // Validate data in client side first
-  validateClient(): void {
-    this.validationMessages = [];
-    this.validationResult = true;
-
-    if (this.validationMessages.length > 0) {
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }
-
-  }
-
-  toggleValidation(): void {
-    this.showSubmissionMessages = !this.showSubmissionMessages;
-  }
-
-  addServerError(error: any): void {
-    this.serverError = true;
-    this.validationResult = false;
-    this.validationMessages = null;
-
-    const message: ValidationMessage = {
-      actionType: 'server failure',
-      links: [],
-      appliedChange: false,
-      suggestedChange: false,
-      messageType: 'ERROR',
-      message: 'Unknown Server Error'
-    };
-    if (error && error.error && error.error.message) {
-      message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
+          if(error && error.error && error.error.message) {
+            message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error && error.error && (typeof error.error) === 'string') {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
     } else if (error && error.message) {
@@ -661,9 +669,9 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
     // Copy this when registering
     // call copy, THIS LINE MUST be before this.scrubExtraFields() call
-    if (!this.id) {
+   // if (!this.id) {
       this.copyResultInfoForSaving();
-    }
+   // }
 
     // Remove extra fields before saving
     this.scrubExtraFields();
@@ -925,8 +933,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   selectionChangeExistingReference(event) {
     if (event) {
       let reference = (event.split('||'));
-    //  this.assay.invitroAssayScreenings[0].invitroReference.referenceSourceType = reference[0];
-    //  this.assay.invitroAssayScreenings[0].invitroReference.referenceSource = reference[1];
+      //  this.assay.invitroAssayScreenings[0].invitroReference.referenceSourceType = reference[0];
+      //  this.assay.invitroAssayScreenings[0].invitroReference.referenceSource = reference[1];
 
       this.referenceMessage = "";
     }
@@ -934,7 +942,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   selectionChangeExistingSponsor(event) {
     if (event) {
-   //   this.assay.invitroAssayScreenings[0].invitroReference.invitroSponsor.sponsorContactName = event;
+      //   this.assay.invitroAssayScreenings[0].invitroReference.invitroSponsor.sponsorContactName = event;
     }
   }
 
@@ -946,13 +954,13 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   selectionChangeExistingLaboratory(event) {
     if (event) {
-   //   this.assay.invitroAssayScreenings[0].invitroLaboratory.laboratoryName = event;
+      //   this.assay.invitroAssayScreenings[0].invitroLaboratory.laboratoryName = event;
     }
   }
 
   selectionChangeExistingTestAgent(event, screeningIndex) {
     if (event) {
-   //   this.assay.invitroAssayScreenings[0].invitroTestAgent.testAgent = event;
+      //   this.assay.invitroAssayScreenings[0].invitroTestAgent.testAgent = event;
     }
   }
 

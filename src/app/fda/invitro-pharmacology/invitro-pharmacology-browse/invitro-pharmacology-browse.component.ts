@@ -483,8 +483,13 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
           if (screening.invitroAssayResultInformation) {
 
+            // Result Info ID
+            if (screening.invitroAssayResultInformation.id) {
+              assayObj.assayResultInfoId = screening.invitroAssayResultInformation.id;
+            }
+
             // Reference Fields
-            // assayObj.referenceSourceTypeAndId = this.getReferenceFields(screening);
+            assayObj.referenceSourceTypeAndId = this.getReferenceFields(screening);
 
             /*
             let referenceSourceTypeNumber = '';
@@ -530,7 +535,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               if (assay.invitroAssayScreenings.length > 0) {
                 assayList.push(assayObj);
               }
-              const appScreening = { 'targetName': targetName, 'targetNameSummaryList': assayList };
+              const appScreening = { 'targetName': targetName, 'id': assayObj.id, 'targetNameSummaryList': assayList };
               this.browseByTargetNameList.push(appScreening);
             } // else
 
@@ -560,6 +565,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           assayObj.studyType = assay.studyType;
 
           if (screening.invitroAssayResultInformation) {
+
+            // Result Info ID
+            if (screening.invitroAssayResultInformation.id) {
+              assayObj.assayResultInfoId = screening.invitroAssayResultInformation.id;
+            }
 
             // Reference Fields
             assayObj.referenceSourceTypeAndId = this.getReferenceFields(screening);
@@ -614,6 +624,15 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             // summaryObj.summary = screening.invitroSummary;
 
             if (screening.invitroAssayResultInformation) {
+
+              // Result Info ID
+              if (screening.invitroAssayResultInformation.id) {
+                summaryObj.assayResultInfoId = screening.invitroAssayResultInformation.id;
+              }
+
+              // Reference Fields
+              summaryObj.referenceSourceTypeAndId = this.getReferenceFields(screening);
+
               if (screening.invitroAssayResultInformation.invitroTestAgent) {
                 summaryObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
                 summaryObj.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;

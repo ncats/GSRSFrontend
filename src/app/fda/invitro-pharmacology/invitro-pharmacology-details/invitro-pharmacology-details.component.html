@@ -64,6 +64,17 @@
 
           <table class="tableStyle margintop15px">
             <tbody>
+
+              <tr>
+                <td class="fieldKey">Assay Sets:</td>
+                <td>
+                  <span *ngFor="let asySet of assay.invitroAssaySets; let i = index">
+                    <span *ngIf="i > 0">, </span>
+                    {{ asySet.assaySet }}
+                  </span>
+                </td>
+              </tr>
+
               <tr>
                 <td class="fieldKey">Assay ID:</td>
                 <td>{{ assay.assayId }}</td>

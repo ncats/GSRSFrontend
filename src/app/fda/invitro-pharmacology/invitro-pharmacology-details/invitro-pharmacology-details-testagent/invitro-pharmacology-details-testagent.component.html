@@ -117,27 +117,31 @@
               <div *ngIf="screening.invitroAssayResultInformation">
 
                 <div class="divflex">
-                <span *ngIf="i > 0">
-                  <br>
-                </span>
-
-                <div>
-                  {{(i+1)}}.
-                </div>
-
-                <!-- Reference -->
-                <!--
-                <div *ngIf="screening.invitroAssayResultInformation.invitroReference">
-                  <span
-                    *ngIf="screening.invitroAssayResultInformation.invitroReference.referenceSourceType || screening.invitroAssayResultInformation.invitroReference.referenceSourceType">
-                    {{screening.invitroAssayResultInformation.invitroReference.referenceSourceType}}&nbsp;
-                    {{screening.invitroAssayResultInformation.invitroReference.referenceSourceNumber}}
+                  <span *ngIf="i > 0">
                     <br>
                   </span>
-                </div>
-                -->
 
-              </div> <!-- divflex -->
+                  <div>
+                    {{(i+1)}}.
+                  </div>
+
+                  <!-- Reference -->
+                  <div *ngIf="screening.invitroAssayResultInformation.invitroReferences.length > 0">
+                    <div
+                      *ngFor="let ref of screening.invitroAssayResultInformation.invitroReferences; let indexReference = index">
+
+                      <span *ngIf="ref.primaryReference == true">
+                        <span *ngIf="ref.sourceType || ref.sourceId">
+                          {{ref.sourceType}}&nbsp;
+                          {{ref.sourceId}}
+                          <br>
+                        </span>
+                      </span>
+
+                    </div> <!-- LOOP Reference -->
+                  </div> <!-- if References length > 0-->
+
+                </div> <!-- divflex -->
 
                 <!-- Test Agent -->
                 <div *ngIf="screening.invitroAssayResultInformation.invitroTestAgent">
