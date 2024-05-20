@@ -1,7 +1,7 @@
 <div appDragDropPaste (dropHandler)="onDropHandler($event)" class="z-index"  [ngClass]="tempClass">
   <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()">Toggle Editor to {{structureEditor === 'ketcher' ? 'JSDraw' : 'Ketcher'}}</button>
   <div style = "width: 100%">
-    <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="structureEditor === 'ketcher'" style = "width:990px"></ncats-jsdraw-wrapper>
+    <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="structureEditor === 'ketcher' && !firstload" style = "width:990px"></ncats-jsdraw-wrapper>
   </div>
   <div style = "width: 100%">
     <ncats-ketcher-wrapper [ketcherFilePath]="ketcherFilePath" (ketcherOnLoad)="ketcherOnLoad($event)" [hidden]="structureEditor === 'jsdraw'">
@@ -13,9 +13,12 @@
 <div id ="canvas-container">
   <div class="below-editor-container">
       
-    <div class="molvec-message" >
-        Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
+    <div class="molvec-message" *ngIf = "structureEditor === 'ketcher'">
+        Switch to JSDraw temporarily to load an image into the editor
     </div>
+    <div class="molvec-message" *ngIf = "structureEditor === 'jsdraw'">
+      Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
+  </div>
    
     <div class = "options">
         <button mat-button color="primary" [matMenuTriggerFor]="importMenu">Structure Options &#9660; </button>

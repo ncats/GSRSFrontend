@@ -47,9 +47,9 @@ app.get('/api/*', (req, res) => {
 // app.get('*.*', express.static(join(DIST_FOLDER, 'browser')));
 
 // START test implementation in java/play server
-app.get('/ginas/app/beta*.*', (req, res) => {
+app.get('/ginas/app/ui*.*', (req, res) => {
   console.log(req.path);
-  const path = req.path.replace('/ginas/app/beta', '');
+  const path = req.path.replace('/ginas/app/ui', '');
   res.sendFile(join(DIST_FOLDER, 'browser' + path));
 });
 app.get('*.*', (req, res) => {
