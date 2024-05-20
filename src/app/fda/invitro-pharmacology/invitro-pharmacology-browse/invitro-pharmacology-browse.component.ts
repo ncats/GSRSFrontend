@@ -483,6 +483,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
           if (screening.invitroAssayResultInformation) {
 
+            // Result Info ID
             if (screening.invitroAssayResultInformation.id) {
               assayObj.assayResultInfoId = screening.invitroAssayResultInformation.id;
             }
@@ -565,6 +566,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
           if (screening.invitroAssayResultInformation) {
 
+            // Result Info ID
+            if (screening.invitroAssayResultInformation.id) {
+              assayObj.assayResultInfoId = screening.invitroAssayResultInformation.id;
+            }
+
             // Reference Fields
             assayObj.referenceSourceTypeAndId = this.getReferenceFields(screening);
 
@@ -618,6 +624,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             // summaryObj.summary = screening.invitroSummary;
 
             if (screening.invitroAssayResultInformation) {
+
+              // Result Info ID
+              if (screening.invitroAssayResultInformation.id) {
+                summaryObj.assayResultInfoId = screening.invitroAssayResultInformation.id;
+              }
 
               // Reference Fields
               summaryObj.referenceSourceTypeAndId = this.getReferenceFields(screening);
