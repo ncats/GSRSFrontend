@@ -211,7 +211,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   /*
   setDownload(data) {
     this.willDownload = true;
-    setTimeout(() => {
+
+     setTimeout(() => {
       const el = document.querySelector("#download");
       el.setAttribute("href", `data:text/json;charset=utf-8,${encodeURIComponent(data)}`);
       el.setAttribute("download", 'xlsxtojson.json');
@@ -232,6 +233,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   importAssayJSONIntoDatabase() {
     // Loop through each Assay JSON Record, and save into the database
     this.importedAssayJson.forEach((element, index) => {
+
+      setTimeout(() => {
       if (element) {
         //  console.log("index: " + index + "     " + JSON.stringify(element));
         this.message = this.message + "index: " + index + "     " + JSON.stringify(element) + "\n\n";
@@ -246,6 +249,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
           }
         });
       }
+    }, 10000);  // timeout
+
     })
   }
 

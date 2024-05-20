@@ -129,13 +129,17 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
             let actionParam = this.activatedRoute.snapshot.queryParams['action'];
             if (actionParam && actionParam === 'import' && window.history.state) {
               this.titleService.setTitle(`Register New In-vitro Pharamcology Assay from Import`);
-              this.title = 'Register New In-vitro Pharamcology Assay from Import';
+              this.title = 'Register In-vitro Pharamcology Assay from Import';
               const record = window.history.state.record;
               const response = JSON.parse(record);
               if (response) {
                 this.scrub(response);
                 this.invitroPharmacologyService.loadAssayOnly(response);
                 this.assay = this.invitroPharmacologyService.assay;
+
+                // Get All the Assay Sets for checkbox
+                this.getAllAssaySets();
+
                 this.loadingService.setLoading(false);
                 this.isLoading = false;
               }
@@ -172,7 +176,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       const getInvitroSubscribe = this.invitroPharmacologyService.getAssayScreening(id).subscribe(response => {
         if (response) {
 
-          // before copying existing impurities, delete the id
+          // before copying existing invitro pharmacology record, delete the id
           if (newType && newType === 'copy') {
             this.scrub(response);
           }
@@ -283,9 +287,28 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
       // found
       if (indexSet > -1) {
-        const set = this.existingAssaySetList[indexSet];
-        this.assay.invitroAssaySets.push(set);
-      } else {  // Not found add new one
+        const existingAssaySetObject = this.existingAssaySetList[indexSet];
+
+        // If Assay already exists into the database, or it is not new Assay, or updating the exising Assay,
+        // set the entire AssaySet object to Assay's invitroAssaySets list
+        if (this.assay.id) { // existing Assay/Update
+          // Set the existing AssaySet in the Assay
+          this.assay.invitroAssaySets.push(existingAssaySetObject);
+        } else {  // New Assay/Register
+          const newAssaySet: InvitroAssaySet = {};
+          // if New Assay, only assign AssaySet id if it exists
+          //  if (existingAssaySetObject.id) {
+          //    newAssaySet.id = existingAssaySetObject.id;
+          //  } else {
+          //    newAssaySet.assaySet = existingAssaySetObject.assaySet;
+          //  }
+
+          // Push the new object to list
+          // this.assay.invitroAssaySets.push(newAssaySet);
+
+          this.assay.invitroAssaySets.push(existingAssaySetObject);
+        }
+      } else {  // Not found in the Existing AsssaySets into the database
 
       }
 
@@ -449,6 +472,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       this.submissionMessage = 'In-vitro Pharmacology Assay data was saved successfully!';
       this.showSubmissionMessages = true;
       this.validationResult = false;
+
       setTimeout(() => {
         this.showSubmissionMessages = false;
         this.submissionMessage = '';
@@ -461,6 +485,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         }
       }, 4000);
     }
+
+
       /*
       , (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
@@ -662,11 +688,14 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       delete intVersionHolders[i].internalVersion;
     }
 
+
     delete old['creationDate'];
     delete old['createdBy'];
     delete old['modifiedBy'];
     delete old['lastModifiedDate'];
     delete old['internalVersion'];
+    delete old['externalAssaySource'];
+    delete old['externalAssayId'];
     delete old['$$update'];
     delete old['_self'];
 
