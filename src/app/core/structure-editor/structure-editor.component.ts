@@ -19,6 +19,8 @@ import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
 import { take } from 'rxjs/operators';
 import * as _ from 'lodash';
+import { ConfigService } from '@gsrs-core/config';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
   selector: 'app-structure-editor',
@@ -40,6 +42,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   canvasToggle = true;
   canvasMessage = '';
   tempClass = "";
+  enableJSDraw = true;
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
@@ -57,6 +60,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     @Inject(PLATFORM_ID) private platformId: Object,
     private structureService: StructureService,
     private loadingService: LoadingService,
+    private configService: ConfigService,
+    private substanceFormService: SubstanceFormService,
     private elementRef: ElementRef
   ) { }
 
@@ -130,6 +135,12 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngOnInit() {
+    if (this.configService && this.configService.configData && this.configService.configData.jsdrawLicense ) {
+      this.enableJSDraw = this.configService.configData.jsdrawLicense;
+      if (!this.enableJSDraw) {
+        this.structureEditor = 'ketcher';
+      }
+    }
     if (isPlatformBrowser(this.platformId)) {
 
       
@@ -142,7 +153,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
       this.structureEditor = environment.structureEditor;
       let pref = sessionStorage.getItem('gsrsStructureEditor');
-      if (pref) {
+      if (pref && this.enableJSDraw) {
         if (pref === 'ketcher') {
           this.structureEditor = 'ketcher';
         } else if (pref === 'jsdraw') {
@@ -178,11 +189,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ketcherOnLoad(ketcher: any): void {
-
-
        this.ketcher = ketcher;
-      
-
   }
 
   toggleEditor() {
@@ -206,17 +213,32 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
       if (this.firstload && this.structureEditor === 'ketcher' ) {
-        setTimeout(() => {
           this.firstload = false;
-          this.editor = new EditorImplementation(this.ketcher);
-          this.editorOnLoad.emit(this.editor);
-        }, 1000);
-        
-
+          this.waitForKetcherFirstLoad();
       } else if (this.firstload) {
         this.firstload = false;
       }
     
+  }
+
+  async waitForKetcherFirstLoad(): Promise<void> {
+    await this.waitForNonNull(() => this.ketcher);
+    setTimeout(() => {
+      this.editor = new EditorImplementation(this.ketcher);
+      this.editorOnLoad.emit(this.editor);
+    }, 150);
+    
+  }
+
+  waitForNonNull(variable: () => any): Promise<void> {
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if (variable() && variable() !== null) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 100); 
+    });
   }
 
   get _jsdrawScriptUrls(): Array<string> {

@@ -226,6 +226,8 @@ export class SubstanceTextSearchComponent implements OnInit, AfterViewInit, OnDe
 
   topSearchClean(searchTerm): string {
     if (searchTerm && searchTerm.length > 0) {
+      //escape literal forward slashes in a search first
+      searchTerm = searchTerm.replace("/", "\/");
       searchTerm = searchTerm.trim();
       // Should rename this util method to looksLikeFieldNameSearchTerm 
       const looksComplex = this.utilsService.looksLikeComplexSearchTerm(searchTerm);

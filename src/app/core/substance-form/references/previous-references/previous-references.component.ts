@@ -77,6 +77,10 @@ displayedColumns: string[] = ['use', 'citation', 'type', 'tags', 'dateAcessed'];
     const skip = 10 * pageEvent.pageIndex;
     this.pagedReferences = JSON.parse(JSON.stringify( this.oldReferences)).slice(skip, (this.pageSize + skip));
   }
+
+  selectReference(ref: SubstanceReference) {
+    this.selectedReference.emit(ref);
+  }
   
     
   
