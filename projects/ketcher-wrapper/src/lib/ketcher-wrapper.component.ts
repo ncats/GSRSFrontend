@@ -28,7 +28,7 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
      setTimeout(() => {
         this.ketcherOnLoad.emit(this.ketcherFrame.nativeElement.contentWindow['ketcher']);
       let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
-    }, 1000);
+    }, 10);
     };
   }
 
