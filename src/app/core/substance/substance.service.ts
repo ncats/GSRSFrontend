@@ -727,7 +727,7 @@ export class SubstanceService extends BaseHttpService {
   validateSubstance(substance: SubstanceDetail, stagingID?: string): Observable<ValidationResults> {
     let url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
     if (stagingID) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/stagingArea(${stagingID}/@validate`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/stagingArea(${stagingID})/@validate`;
     }
     return this.http.post(url, substance);
   }
