@@ -889,7 +889,11 @@ getDrafts() {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
+    let stagingID = null;
+    if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+      stagingID = this.activatedRoute.snapshot.queryParams['stagingID'];
+    }
+    this.substanceFormService.validateSubstance(stagingID).pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING'|| message.messageType.toUpperCase() === 'NOTICE');
