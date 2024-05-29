@@ -101,6 +101,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   editorOnLoad(editor: Editor): void {
+    console.log('editor loaded');
     this.loadingService.setLoading(false);
     this.structureEditor = editor;
     this.loadStructure();
@@ -121,6 +122,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   loadStructure(): void {
+    console.log(this.structure);
+    console.log(this.structureEditor);
     if (this.structure && this.structureEditor && this.structure.molfile) {
       this.isInitializing = true;
       this.structureEditor.setMolecule(this.structure.molfile);

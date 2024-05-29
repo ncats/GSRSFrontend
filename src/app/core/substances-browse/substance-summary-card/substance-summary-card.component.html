@@ -220,7 +220,7 @@
         <div class="substance-data substance-code-systems" *ngIf="codeSystems">
           <div class="label">Codes:</div>
           <div [hidden]="!showLessCodes">
-            <div class="margin-bottom" *ngFor="let codeSystemName of codeSystemNames | take: 5; index as codeindex">
+            <div class="margin-10" *ngFor="let codeSystemName of codeSystemNames | take: 5; index as codeindex">
               <div class="code-system">
                 <span class="label">{{(codeSystemVocab && codeSystemVocab[codeSystemName]) ? codeSystemVocab[codeSystemName].display : codeSystemName}}
 

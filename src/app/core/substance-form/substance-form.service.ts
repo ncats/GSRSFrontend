@@ -1506,6 +1506,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   importStructure(structure, type) {
+    console.log('importStructure');
     // import a structure from mol or smiles
     if(this.privateSubstance) {
       if (type === 'molfile') {

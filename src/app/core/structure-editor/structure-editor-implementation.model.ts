@@ -15,9 +15,38 @@ export class EditorImplementation implements Editor {
     
 
     getMolfile(): Observable<any> {
+        console.log('getting molfile');
         return new Observable<any>(observer => {
-        if (this.ketcher != null) {
+            if (this.jsdraw != null) {
+                console.log('getting from jsdraw')
+    
+                const chargeLine = this.getMCharge();
+                let mfile = this.jsdraw.getMolfile();
+                mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
+    
+                if (mfile.indexOf('M  CHG') < 0) {
+                    if (chargeLine !== null) {
+                        const lines = mfile.split('\n');
+                        for (let i = lines.length - 1; i >= 3; i--) {
+                            if (lines[i] === 'M  END') {
+                                const old = lines[i];
+                                lines[i] = chargeLine;
+                                lines[i + 1] = old;
+                                mfile = lines.join('\n');
+                                break;
+                            }
+                        }
+                    }
+                }
+                    
+                    observer.next(this.clean(mfile));
+       
+            
+           
+        } else  if (this.ketcher) {
+            console.log('getting from ketcher')
             from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
+                console.log(result);
                 let mfile = result;
                 mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
                 const chargeLine = this.getMCharge();
@@ -36,32 +65,9 @@ export class EditorImplementation implements Editor {
                     }
                 }
                 
-                observer.next(mfile);
+                observer.next(this.clean(mfile));
             }
         });
-            
-           
-        } else if (this.jsdraw != null) {
-            const chargeLine = this.getMCharge();
-            let mfile = this.jsdraw.getMolfile();
-            mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
-
-            if (mfile.indexOf('M  CHG') < 0) {
-                if (chargeLine !== null) {
-                    const lines = mfile.split('\n');
-                    for (let i = lines.length - 1; i >= 3; i--) {
-                        if (lines[i] === 'M  END') {
-                            const old = lines[i];
-                            lines[i] = chargeLine;
-                            lines[i + 1] = old;
-                            mfile = lines.join('\n');
-                            break;
-                        }
-                    }
-                }
-            }
-           
-                observer.next(this.clean(mfile));
         
         } else {
             console.log('returning null');
@@ -86,6 +92,7 @@ export class EditorImplementation implements Editor {
             .replace(/\n/g, '|_|')
             .replace(/[@][|][_][|]/g, '')
             .replace(/[|][_][|]/g, '\n');
+            console.log(molfile);
       
         // This corrects a rather silly bug
         // where JSDraw repeats SMT groups for polymers,
@@ -104,6 +111,7 @@ export class EditorImplementation implements Editor {
                     }
                     tset[l]=1;
                  });
+                 console.log(dupCount);
            if(dupCount>0){
                // This just replaces each SMT line with the STY group number defined before it
                // The '!#!' and '@' symbols are used as temporary "protecting groups"
@@ -118,9 +126,15 @@ export class EditorImplementation implements Editor {
     }
 
     setMolecule(molfile: string): void {
+        console.log(molfile);
+        console.log('setting molecule');
         if (this.ketcher != null) {
+            console.log('ketcher not null');
+            molfile = this.clean(molfile);
+            console.log(molfile);
             this.ketcher.setMolecule(molfile);
         } else if (this.jsdraw != null) {
+            console.log('jsdraw not null');
             // from simple tests, this should push the current molecule down
             // on the undo stack.
             this.jsdraw.pushundo();
@@ -130,16 +144,18 @@ export class EditorImplementation implements Editor {
     }
 
     structureUpdated(): Observable<string> {
+        console.log('updated');
         return new Observable<string>(observer => {
             if (this.jsdraw != null) {
                 this.jsdraw.options.ondatachange = () => {
-                    this.getMolfile().pipe(take(1)).subscribe(result => { 
+                    this.getMolfile().pipe(take(1)).subscribe(result => { console.log(result);
                         observer.next(result);
                     });
                 };
             } else if (this.ketcher != null) {
                 this.ketcher.editor.subscribe('change',  operations => { 
-                    from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
+                    console.log('ketch change detected');
+                    from(this.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
                         observer.next(result);
                     });
                     

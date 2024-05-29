@@ -107,12 +107,16 @@ margin-bottom: 5px;
     cursor:zoom-in;
 }
 
+.margin-10 {
+    margin-bottom:10px;
+}
+
 .substance-data {
     display: flex;
     flex-direction: row;
 
     &:not(:last-child) {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .label {

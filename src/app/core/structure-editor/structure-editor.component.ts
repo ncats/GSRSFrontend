@@ -33,6 +33,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   @Output() loadedMolfile = new EventEmitter<string>();
   private ketcher: Ketcher;
   private jsdraw: JSDraw;
+  ketcherLoaded = false;
+  jsdrawLoaded = false;
   structureEditor: string;
   anchorElement: HTMLAnchorElement;
   smiles: string;
@@ -190,6 +192,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ketcherOnLoad(ketcher: any): void {
        this.ketcher = ketcher;
+       this.ketcherLoaded = true;
   }
 
   toggleEditor() {
@@ -210,6 +213,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
     this.jsdraw = jsdraw;
+    this.jsdrawLoaded = true;
       this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
       if (this.firstload && this.structureEditor === 'ketcher' ) {
