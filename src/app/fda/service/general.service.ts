@@ -7,7 +7,7 @@ import { switchMap, map, catchError, takeWhile } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
-import { SubstanceSummary, SubstanceRelationship, SubstanceRelated } from '@gsrs-core/substance/substance.model';
+import { SubstanceDetail, SubstanceSummary, SubstanceRelationship, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 
 import { Application } from '../application/model/application.model';
@@ -15,7 +15,8 @@ import { Application } from '../application/model/application.model';
 @Injectable()
 export class GeneralService extends BaseHttpService {
 
-  apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+  private apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+  private NO_CONFIG_FOUND_DEFAULT_SUBSTANCE_KEY = "UUID";
 
   constructor(
     public http: HttpClient,
@@ -37,7 +38,34 @@ export class GeneralService extends BaseHttpService {
     return this.getSubstanceByAnyId(substanceUuid);
   }
 
-  getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance: SubstanceRelated, substanceKeyType: string): string {
+  getSubstanceKeyBySubstanceResolver(substance: SubstanceDetail, substanceKeyType: string): string {
+    let substanceKey = '';
+
+    if (substanceKeyType === 'UUID') {
+      // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
+      // return substance.uuid;
+    } else if (substanceKeyType === 'APPROVAL_ID') {
+      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
+      //return substance.approvalID;
+    } else if (substanceKeyType === 'BDNUM') {
+      // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
+
+      // Get BDNUM from codes
+      if (substance.codes.length > 0) {
+        substance.codes.forEach((codeObj, index) => {
+          if (codeObj) {
+            if ((codeObj.codeSystem) && ((codeObj.codeSystem === 'BDNUM') && (codeObj.type === 'PRIMARY'))) {
+              substanceKey = codeObj.code;
+            }
+          }
+        });
+      }
+    } // else
+
+    return substanceKey;
+  }
+
+  getSubstanceKeyByRelatedSubstanceResolver(relatedSubstance: SubstanceRelated, substanceKeyType: string): string {
     let substanceKey = '';
 
     // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
@@ -47,107 +75,10 @@ export class GeneralService extends BaseHttpService {
       // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
     } else if (substanceKeyType === 'APPROVAL_ID') {
       substanceKey = relatedSubstance.approvalID;
+    }
 
-      // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
-    } /*else if (substanceKeyType === 'BDNUM') {
-      // Get the Bdnum/code from Substance by substance uuid
-      this.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
-        if (response) {
-          // substanceKey = response;
-         // subject.next(response);
-        }
-      });
-    } */
     return substanceKey;
   }
-
-  getBdnumBySubstanceKeyTypeResolver2(relatedSubstance: SubstanceRelated, substanceKeyType: string): Observable<string> {
-
-    return new Observable(observer => {
-       observer.next("TESTING");
-    });
-
-    /*
-    const url = this.apiBaseUrl + 'substances(' + relatedSubstance.uuid + ')';
-    this.http.get<any>(url).pipe(
-      map(results => {
-        const test = results;
-        test.forEach(sub => {
-          alert(sub.uuid);
-          return sub.uuid;
-        });
-        return "abd";
-      })
-    );
-    */
-
-    /*
-    //let substanceKey = '';
-    let subject1 = new Subject<string>();
-    //subject.next(substanceKey);
-
-    // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
-    if (substanceKeyType === 'UUID') {
-
-      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
-    } else if (substanceKeyType === 'APPROVAL_ID') {
-      //substanceKey = relatedSubstance.approvalID;
-      // subject.next(substanceKey);
-    //  alert(substanceKey);
-      // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
-    } else if (substanceKeyType === 'BDNUM') {
-      // Get the Bdnum/code from Substance by substance uuid
-      this.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
-        if (response) {
-          // substanceKey = response;
-         // subject.next(response);
-        }
-      });
-    }
-    return subject1.asObservable(); */
-  }
-
-  /*
-  getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance: SubstanceRelated, substanceKeyType: string): Observable<string> {
-    //let substanceKey = '';
-    //let substanceKey: Observable<string> = of("");
-    let subject1 = new Subject<string>();
-    //subject.next(substanceKey);
-
-    // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
-    if (substanceKeyType === 'UUID') {
-
-      const subject = new Subject();
-      subject.next('event 0');
-
-      subject.subscribe(event => console.log(event));
-
-      //subject.next(relatedSubstance.refuuid);
-
-      //substanceKey = relatedSubstance.refuuid;
-      //substanceKey = of(relatedSubstance.refuuid);
-      //Observable<string> = substanceKey;
-      //return Observable<number> = from([1, 2, 3, 4]);
-      //subject.next(substanceKey);
-
-      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
-    } else if (substanceKeyType === 'APPROVAL_ID') {
-      //substanceKey = relatedSubstance.approvalID;
-      // subject.next(substanceKey);
-    //  alert(substanceKey);
-      // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
-    } else if (substanceKeyType === 'BDNUM') {
-      // Get the Bdnum/code from Substance by substance uuid
-      this.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
-        if (response) {
-          // substanceKey = response;
-         // subject.next(response);
-        }
-      });
-    }
-    return subject1.asObservable();
-  }
-  */
 
   getCodeBdnumBySubstanceUuid(substanceUuid: string): Observable<string> {
     let substanceKey = null;
@@ -202,6 +133,7 @@ export class GeneralService extends BaseHttpService {
 
     if (searchTerm) {
       params = params.append('q', searchTerm);
+      params = params.append('view', 'full');
     }
 
     if (searchTerm != null || getFacets === true) {
@@ -375,6 +307,7 @@ export class GeneralService extends BaseHttpService {
   }
 
   getSubstanceKeyType(entity?: string): any {
+    // Get 'default' Substance Key Type
     let key = null;
     if (this.configService.configData && this.configService.configData.substance) {
       const substanceConfig = this.configService.configData && this.configService.configData.substance;
@@ -383,75 +316,93 @@ export class GeneralService extends BaseHttpService {
     return key;
   }
 
-  getSubstanceKeyTypeConfig(): any {
-    let key = null;
+  getSubstanceLinkingKeyTypeConfig(): any {
+    let linkingKeyType = null;
+
+    // In the frontend configuration file, this should exists, substance: {}
     if (this.configService.configData && this.configService.configData.substance) {
       const substanceConfig = this.configService.configData && this.configService.configData.substance;
-      key = substanceConfig.linking.keyType;
+
+      if (substanceConfig) {
+        //substance.linking.keyType
+        linkingKeyType = substanceConfig.linking.keyType;
+      }
     }
-    return key;
+
+    // if no configuration found in the config file, display message on console
+    if (!linkingKeyType) {
+      console.log('There is no Substance Key Type configuration found in the frontend config file: substance.linking.keyType. Setting default Substance key Type to UUID in the angular code');
+    }
+
+    return linkingKeyType;
+  }
+
+  getSubstanceKeyTypeForEntityConfig(entityType?: string): any {
+    let linkingKeyType = this.getSubstanceLinkingKeyTypeConfig();
+
+    // Get Substance Key Type for product, application, clinical trial, etc
+    let substanceKeyType = null;
+
+    // if linking.keyType exists, get the substance key type for the entity
+    if (linkingKeyType) {
+      if (entityType) {
+        if (entityType == 'product') {
+          substanceKeyType = linkingKeyType.productKeyType;
+        } else if (entityType == 'application') {
+          substanceKeyType = linkingKeyType.applicationKeyType;
+        } else if (entityType == 'impurities') {
+          substanceKeyType = linkingKeyType.impuritiesKeyType;
+        } else if (entityType == 'clinicalTrial') {
+          substanceKeyType = linkingKeyType.clinicalTrialKeyType;
+        } else if (entityType = 'invitroPharmacology') {
+          substanceKeyType = linkingKeyType.invitroPharmacologyKeyType;
+        } else if (entityType = 'organization') {
+          substanceKeyType = linkingKeyType.orgDisplayKeyType;
+        }
+      } else {
+        // not entity passed, get to 'default' substance key from the config file
+        substanceKeyType = linkingKeyType.default;
+      }
+
+      // if the substance key type for the entity is not found in the config file, look for 'default' config.
+      if (!substanceKeyType) {
+        if (linkingKeyType.default) {
+          substanceKeyType = linkingKeyType.default
+        } else {
+          // if 'default' config not found in the config file, set the key type to UUID
+          substanceKeyType = this.NO_CONFIG_FOUND_DEFAULT_SUBSTANCE_KEY;
+        }
+      }
+    } else {
+      // if the configuration is not found in the config file, set the default Substance Key Type to "UUID"
+      substanceKeyType = this.NO_CONFIG_FOUND_DEFAULT_SUBSTANCE_KEY;
+    }
+
+    return substanceKeyType;
   }
 
   getSubstanceKeyTypeForProductConfig(): any {
-    let keyType = this.getSubstanceKeyTypeConfig();
-
-    // Get Substance Key Type for Product from frontend config
-    let key = null;
-    key = keyType.productKeyType;
-    if (key) {
-      return key;
-    } else {
-      return keyType.default;
-    }
+    return this.getSubstanceKeyTypeForEntityConfig("product");
   }
 
   getSubstanceKeyTypeForApplicationConfig(): any {
-    let keyType = this.getSubstanceKeyTypeConfig();
-
-    // Get Substance Key Type for Application from frontend config
-    let key = null;
-    key = keyType.applicationKeyType;
-    if (key) {
-      return key;
-    } else {
-      return keyType.default;
-    }
+    return this.getSubstanceKeyTypeForEntityConfig("application");
   }
 
   getSubstanceKeyTypeForImpuritiesConfig(): any {
-    let keyType = this.getSubstanceKeyTypeConfig();
-
-    // Get Substance Key Type for Impurities from frontend config
-    const key = keyType.impuritiesKeyType;
-    if (key) {
-      return key;
-    } else {
-      return keyType.default;
-    }
+    return this.getSubstanceKeyTypeForEntityConfig("impurities");
   }
 
   getSubstanceKeyTypeForClinicalTrialConfig(): any {
-    let keyType = this.getSubstanceKeyTypeConfig();
+    return this.getSubstanceKeyTypeForEntityConfig("clinicalTrial");
+  }
 
-    // Get Substance Key Type for Clinical Trial from frontend config
-    const key = keyType.clinicalTrialKeyType;
-    if (key) {
-      return key;
-    } else {
-      return keyType.default;
-    }
+  getSubstanceKeyTypeForInvitroPharmacologyConfig(): any {
+    return this.getSubstanceKeyTypeForEntityConfig("invitroPharmacology");
   }
 
   getSubstanceKeyTypeForOrganizationDisplayConfig(): any {
-    let keyType = this.getSubstanceKeyTypeConfig();
-
-    // Get Substance Key Type for Organization Display from frontend config
-    const key = keyType.orgDisplayKeyType;
-    if (key) {
-      return key;
-    } else {
-      return keyType.default;
-    }
+    return this.getSubstanceKeyTypeForEntityConfig("organization");
   }
 
 }

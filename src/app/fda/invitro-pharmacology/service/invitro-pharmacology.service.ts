@@ -203,6 +203,16 @@ export class InvitroPharmacologyService extends BaseHttpService {
     }
   }
 
+  getAssayById(id: string): Observable<any> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + id;
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
+  }
+
   getAssayScreening(id: string): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + id;
     return this.http.get<any>(url)
@@ -387,7 +397,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     //  }
   }
 
-  saveBulkAssays(bulkAssays: any): Observable<InvitroAssayInformation> {
+  saveBulkAssays(bulkAssays: any): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + "saveBulkAssays";
     const params = new HttpParams();
     const options = {
@@ -398,7 +408,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       }
     };
     // Add or Update In-vitro Pharmacology ASSAY in Bulk
-    return this.http.put<InvitroAssayInformation>(url, bulkAssays, options);
+    return this.http.put<any>(url, bulkAssays, options);
   }
 
   saveScreening(screening: any, assayId: number): Observable<InvitroAssayScreening> {

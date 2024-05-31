@@ -121,6 +121,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   allAssayColumns: string[] = [
     'number',
     'viewDetails',
+    'assaySet',
     'assayId',
     'externalAssayId',
     'externalAssaySource',

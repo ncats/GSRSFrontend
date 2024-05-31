@@ -22,17 +22,24 @@ export interface InvitroAssayInformation {
   targetName?: string;
   targetNameApprovalId?: string;
   targetNameSubstanceUuid?: string;
+  targetNameSubstanceKey?: string;
+  targetNameSubstanceKeyType?: string;
   targetSpecies?: string;
   humanHomologTarget?: string;
   humanHomologTargetApprovalId?: string;
+  humanHomologTargetSubstanceKey?: string;
+  humanHomologTargetSubstanceKeyType?: string;
   ligandSubstrate?: string;
   ligandSubstrateApprovalId?: string;
+  ligandSubstrateSubstanceKey?: string;
+  ligandSubstrateSubstanceKeyType?: string;
   standardLigandSubstrateConcentration?: string;
   standardLigandSubstrateConcentrationUnits?: string;
   _assayTargetSubId?: string;
   _ligandSubstrateSubId?: string;
   _controlSubId?: string;
   _calculateIC50?: string;
+  _resultInformationList?: Array<any>;
   _assayTargetSummaries?: Array<any>;
   _existingAssayList?: Array<any>;
   _totalResultRecords?: number;
@@ -247,7 +254,7 @@ export interface InvitroSummary {
   resultValueHigh?: number;
   resultValueUnits?: string;
   comments?: string;
-  isFromResult?: string;
+  isFromResult?: boolean;
 }
 
 export interface ValidationResults {

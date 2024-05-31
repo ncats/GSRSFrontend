@@ -1161,7 +1161,7 @@
                                           <ng-container matColumnDef="isFromResult">
                                             <th mat-header-cell *matHeaderCellDef> From Result Data </th>
                                             <td class="width80px" mat-cell *matCellDef="let assaysum">
-                                              <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == '1'">
+                                              <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == true">
                                                 <mat-icon matTooltip="This Summary data is from Result data">
                                                   check_circle_outline
                                                 </mat-icon>
@@ -1532,7 +1532,7 @@
                             <ng-container matColumnDef="isFromResult">
                               <th mat-header-cell *matHeaderCellDef> From Result Data </th>
                               <td class="width80px" mat-cell *matCellDef="let assaysum">
-                                <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == '1'">
+                                <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == true">
                                   <mat-icon matTooltip="This Summary data is from Result data">check_circle_outline
                                   </mat-icon>
                                 </span>

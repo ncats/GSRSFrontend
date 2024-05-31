@@ -1524,7 +1524,8 @@
         "clinicalTrialKeyType": "UUID",
         "productKeyType": "UUID",
         "applicationKeyType": "UUID",
-        "impuritiesKeyType": "UUID"
+        "impuritiesKeyType": "UUID",
+        "invitroPharmacologyKeyType": "UUID"
       }
     }
   },
