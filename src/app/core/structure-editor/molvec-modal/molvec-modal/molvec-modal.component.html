@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>
+    Import Structure Image through Molvec
+  </h2>
+  <div mat-dialog-content>
+    <div appDragDropPaste (dropHandler)="onDropHandler($event)" class="z-index"  >
+    <div class="directions">Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file</div>
+    <div class="text-area-container">
+      <textarea  ></textarea>
+    </div>
+  </div>
+</div>
+  <div class = "message-container" *ngIf="message">
+    {{message}}
+  </div>
+  <div class="import-actions" mat-dialog-actions>
+
+    <span class="middle-fill"></span>
+    <button mat-button (click)="dismissDialog()">Cancel</button>
+  </div>
+   
