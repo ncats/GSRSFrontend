@@ -57,7 +57,7 @@ export class SsoRefreshService implements OnDestroy {
       this.refreshInterval = setInterval(() => {
         console.log("REFRESHING iFrame");
         this.updateIframe();
-      }, 6000);
+      }, 600000);
     });
   }
 
