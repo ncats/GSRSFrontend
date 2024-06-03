@@ -707,6 +707,7 @@ getDrafts() {
   } else {
     this.substanceService.isApprovable(this.id).pipe(take(1)).subscribe(response => {
       if (typeof response === 'boolean') { 
+        this.canApprove = response;
         return response;
       } else if (response.toLowerCase() === 'true'){
         return true;
