@@ -16,6 +16,7 @@ import {DragDropPasteDirective} from '@gsrs-core/substance-form/structure/drag-d
 import { StructureModule } from '@gsrs-core/structure/structure.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
+import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';
 
 @NgModule({
   imports: [
@@ -36,10 +37,12 @@ import { MatMenuModule } from '@angular/material/menu';
   ],
   declarations: [
     StructureEditorComponent,
-    DragDropPasteDirective
+    DragDropPasteDirective,
+    MolvecModalComponent
   ],
   exports: [
-    StructureEditorComponent
+    StructureEditorComponent,
+    MolvecModalComponent
   ]
 })
 export class StructureEditorModule { }

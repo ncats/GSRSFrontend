@@ -24,18 +24,31 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.safeKetcherFilePath = this.sanitizer.bypassSecurityTrustResourceUrl(this.ketcherFilePath);
-    this.ketcherFrame.nativeElement.onload = () => {
-     setTimeout(() => {
-        this.ketcherOnLoad.emit(this.ketcherFrame.nativeElement.contentWindow['ketcher']);
-      let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
-    }, 10);
-    };
   }
 
   ngAfterViewInit() {
     let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
+
+    this.ketcherFrame.nativeElement.onload = () => {
+      this.executeOnceNotNullOrUndefined(() => this.ketcherFrame.nativeElement.contentWindow['ketcher'], (obj) => {
+        this.ketcherOnLoad.emit(obj);
+    });
+        
+    //  let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
+    };
    // this.renderer.listen(window, 'blur', () => this.onWindowBlur());
   }
+
+
+  executeOnceNotNullOrUndefined<T>(objProvider: () => T | null | undefined, callback: (obj: T) => void, interval: number = 100): void {
+    const intervalId = setInterval(() => {
+        const obj = objProvider();
+        if (obj !== null && obj !== undefined) {
+            clearInterval(intervalId);
+            callback(obj);
+        }
+    }, interval);
+}
 
   
 /* Disabling molvec for ketcher for now to reduce headaches since JSdraw is still loaded

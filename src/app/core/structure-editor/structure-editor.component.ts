@@ -21,6 +21,9 @@ import { take } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { ConfigService } from '@gsrs-core/config';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-structure-editor',
@@ -33,6 +36,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   @Output() loadedMolfile = new EventEmitter<string>();
   private ketcher: Ketcher;
   private jsdraw: JSDraw;
+  ketcherLoaded = false;
+  jsdrawLoaded = false;
   structureEditor: string;
   anchorElement: HTMLAnchorElement;
   smiles: string;
@@ -43,6 +48,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   canvasMessage = '';
   tempClass = "";
   enableJSDraw = true;
+  private overlayContainer: HTMLElement;
+
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
@@ -61,8 +68,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     private structureService: StructureService,
     private loadingService: LoadingService,
     private configService: ConfigService,
-    private substanceFormService: SubstanceFormService,
-    private elementRef: ElementRef
+    private dialog: MatDialog,
+    private overlayContainerService: OverlayContainer,
   ) { }
 
   ngOnDestroy(): void {
@@ -82,11 +89,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  @HostListener('paste', ['$event']) private paster(event: any) {
+  /*@HostListener('paste', ['$event']) private paster(event: any) {
    // console.log('host paste');
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
+   // event.preventDefault();
+  //  event.stopPropagation();
+   // event.stopImmediatePropagation();
     this.catchPaste(event);
   }
 
@@ -102,7 +109,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-  }
+  }*/
 
 
   private preventDrag = (event: DragEvent) => {
@@ -112,15 +119,15 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
 // override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
-   // console.log('checkPaste');
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
+    
     if (this.jsdraw && this.jsdraw.activated) {
-      this.catchPaste(event);
+   //   event.preventDefault();
+  //  event.stopPropagation();
+  //  event.stopImmediatePropagation();
+    //  this.catchPaste(event);
     }
     else if (this.ketcher) {
-    //  this.catchPaste(event);
+   //   this.catchPaste(event);
     }
   }
 
@@ -135,6 +142,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
     if (this.configService && this.configService.configData && this.configService.configData.jsdrawLicense ) {
       this.enableJSDraw = this.configService.configData.jsdrawLicense;
       if (!this.enableJSDraw) {
@@ -145,8 +154,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
       
 
-      window.addEventListener('dragover', this.preventDrag);
-      window.addEventListener('drop', this.preventDrag);
+     // window.addEventListener('dragover', this.preventDrag);
+     // window.addEventListener('drop', this.preventDrag);
     //  window.addEventListener('paste', this.checkPaste);
 
       this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/index.html`;
@@ -190,10 +199,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ketcherOnLoad(ketcher: any): void {
        this.ketcher = ketcher;
+       this.ketcherLoaded = true;
   }
 
   toggleEditor() {
-    
     if (this.structureEditor === 'ketcher' ) {
       this.structureEditor = 'jsdraw';
       this.editor = new EditorImplementation(null, this.jsdraw);
@@ -201,15 +210,18 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
     } else {
       sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
-
+      let mol = this.jsdraw.getMolfile();
+     // console.log(mol);
       this.structureEditor = 'ketcher';
-      this.editor = new EditorImplementation(this.ketcher);
+    //  this.editor = new EditorImplementation(this.ketcher, undefined, mol);
+    this.editor = new EditorImplementation(this.ketcher);
        this.editorOnLoad.emit(this.editor);
     }
   }
 
   jsDrawOnLoad(jsdraw: JSDraw): void {
     this.jsdraw = jsdraw;
+    this.jsdrawLoaded = true;
       this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
       if (this.firstload && this.structureEditor === 'ketcher' ) {
@@ -373,6 +385,33 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.loadingService.setLoading(false);
     }, () => {this.loadingService.setLoading(false); });
   });
+}
+
+
+openMolvecImportDialog(): void {
+  const dialogRef = this.dialog.open(MolvecModalComponent, {
+    height: 'auto',
+    width: '650px',
+    data: {}
+  });
+  this.overlayContainer.style.zIndex = '1002';
+
+  dialogRef.afterClosed().subscribe((response?: any) => {
+    this.overlayContainer.style.zIndex = null;
+    if (response != null) {
+      console.log(response);
+      if (response.type = "img") {
+        this.createImage(response.file);
+      }
+      if (response.type = "text") {
+        this.structureService.interpretStructure(response.file).subscribe(response => {
+          if (response.structure && response.structure.molfile) {
+            this.loadedMolfile.emit(response.structure.molfile);
+          }
+        });
+      }
+    }
+  }, () => { });
 }
 
 }

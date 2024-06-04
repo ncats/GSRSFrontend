@@ -747,6 +747,11 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get(url);
   }
 
+  isApprovable(keyid: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${keyid})/@isApprovable`;
+    return this.http.get(url);
+  }
+
   oldSiteRedirect(page: string, uuid: string) {
     let url = this.baseUrl + 'substance/' + uuid;
     if (page === 'edit') {
