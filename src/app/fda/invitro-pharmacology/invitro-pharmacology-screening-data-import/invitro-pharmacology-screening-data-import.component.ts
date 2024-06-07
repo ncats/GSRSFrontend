@@ -703,6 +703,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     return newObject;
   }
 
+  /*
   importAssayJSONIntoDatabase2() {
 
     let savedResultInfo: any;
@@ -710,7 +711,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     if (this.invitroAssayScreenings.length > 0) {
 
       let firstScreeningToSave = this.invitroAssayScreenings[0];
-      let assayId = firstScreeningToSave._ownerId;
+     // let assayId = firstScreeningToSave._ownerId;
       let scrubScreening = this.scrub(firstScreeningToSave);
 
       firstScreeningToSave.invitroAssayResultInformation = {};
@@ -744,7 +745,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
                   screening.invitroAssayResultInformation.id = savedResultInfo.id;
                   //  screening.invitroAssayResultInformation.internalVersion = savedResultInfo.internalVersion;
 
-                  let remainingAssayId = screening._ownerId;
+                  //let remainingAssayId = screening._ownerId;
                   let remainingScrubScreening = this.scrub(screening);
 
                   const saveSubscribe = this.invitroPharmacologyService.saveScreening(remainingScrubScreening, remainingAssayId).subscribe(response => {
@@ -767,7 +768,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       this.subscriptions.push(saveFirstScreeningSubscribe);
     }
   }
-
+  */
+ 
   importAssayJSONIntoDatabase() {
 
     this.loadingService.setLoading(true);
@@ -883,7 +885,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   scrub(oldraw: any): any {
     const old = oldraw;
 
-    delete old['_ownerId'];
+    //delete old['_ownerId'];
 
     return old;
   }

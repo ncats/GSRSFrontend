@@ -140,7 +140,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     'viewDetails',
     'isFromResult',
     'referenceSource',
-    'testAgent',
     'assayTarget',
     'bioassayType',
     'studyType',
@@ -152,7 +151,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   referenceScreeningColumns: string[] = [
     'viewDetails',
-    'testAgent',
     'assayTargetName',
     'bioassayType',
     'studyType',
@@ -383,7 +381,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           const assayObj: any = {};
           assayObj.id = assay.id;
           assayObj.targetName = assay.targetName;
-          assayObj.targetNameSubstanceUuid = assay.targetNameSubstanceUuid;
+          assayObj.targetNameApprovalId = assay.targetNameApprovalId;
+          assayObj.targetNameSubstanceKey = assay.targetNameSubstanceKey;
           assayObj.bioassayType = assay.bioassayType;
           assayObj.studyType = assay.studyType;
 
@@ -418,7 +417,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             /* Invitro Test Agent Object exists */
             if (screening.invitroAssayResultInformation.invitroTestAgent) {
               assayObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-              assayObj.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+              assayObj.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
             }
 
           } // invitroAssayResultInformation exists
@@ -512,7 +511,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           /* Invitro Test Agent Object exists */
             if (screening.invitroAssayResultInformation.invitroTestAgent) {
               assayObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-              assayObj.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+              assayObj.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
             } // if invitroTestAgent exists
 
           } //  if invitroAssayResultInformation exists
@@ -521,7 +520,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             let targetName = '';
             targetName = assay.targetName;
             assayObj.targetName = targetName;
-            assayObj.targetNameSubstanceUuid = assay.targetNameSubstanceUuid;
+            assayObj.targetNameApprovalId = assay.targetNameApprovalId;
+            assayObj.targetNameSubstanceKey = assay.targetNameSubstanceKey;
 
             // Get the index if the value exists in the key 'targetName'
             const indexTargetName = this.browseByTargetNameList.findIndex(record => record.targetName === targetName);
@@ -560,7 +560,8 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           const assayObj: any = {};
           assayObj.id = assay.id;
           assayObj.targetName = assay.targetName;
-          assayObj.targetNameSubstanceUuid = assay.targetNameSubstanceUuid
+          assayObj.targetNameApprovalId = assay.targetNameApprovalId;
+          assayObj.targetNameSubstanceKey = assay.targetNameSubstanceKey;
           assayObj.bioassayType = assay.bioassayType;
           assayObj.studyType = assay.studyType;
 
@@ -635,13 +636,14 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
               if (screening.invitroAssayResultInformation.invitroTestAgent) {
                 summaryObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-                summaryObj.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                summaryObj.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
               }
             }
 
             summaryObj.id = assayObj.id;
             summaryObj.referenceSourceTypeNumber = assayObj.referenceSourceTypeNumber;
             summaryObj.targetName = assayObj.targetName;
+            summaryObj.targetNameApprovalId = assay.targetNameApprovalId;
             summaryObj.bioassayType = assayObj.bioassayType;
             summaryObj.studyType = assayObj.studyType;
 
@@ -668,11 +670,12 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           if (screening.invitroAssayResultInformation) {
             if (screening.invitroAssayResultInformation.invitroTestAgent) {
               let testAgent = '';
-              let testAgentSubstanceUuid = '';
+              let testAgentSubstanceKey = '';
 
               testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
               assayObj.testAgent = testAgent;
-              testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+              testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
+
               let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
 
               // Get the index if the value exists in the key 'testAgent'
@@ -691,7 +694,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
                 let assayList = [];
                 assayList.push(assayObj);
                 const appScreening = {
-                  'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentId': testAgentId,
+                  'testAgent': testAgent, 'testAgentSubstanceKey': testAgentSubstanceKey, 'testAgentId': testAgentId,
                   'testAgentScreeningList': assayList, 'testAgentSummaryList': summaryList
                 };
                 this.browseByTestAgentList.push(appScreening);
@@ -716,6 +719,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
           const assaySummary: any = {};
           assaySummary.id = assay.id;
           assaySummary.targetName = assay.targetName;
+          assaySummary.targetNameApprovalId = assay.targetNameApprovalId;
           assaySummary.bioassayType = assay.bioassayType;
           assaySummary.studyType = assay.studyType;
 
@@ -741,7 +745,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
             /* Invitro Test Agent Object exists */
             if (screening.invitroAssayResultInformation.invitroTestAgent) {
               assaySummary.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-              assaySummary.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+              assaySummary.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
             }
 
             let referenceSourceType = '';
@@ -884,6 +888,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               }
 
               assaySummary.testAgent = infoRefTestAgent.invitroTestAgent.testAgent;
+              assaySummary.testAgentSubstanceKey = infoRefTestAgent.invitroTestAgent.testAgentSubstanceKey;
 
               // Create row/object for All Assay Summary View
               let assaySum = this.createSummaryObject(assay, sourceTypeNumber, infoRefTestAgent.invitroTestAgent.testAgent, testAgentConcentration, testAgentConcentrationUnits, resultValue, resultValueUnits);
@@ -1204,7 +1209,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           // height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': 'BrowseInvitroPharmacology', 'entity': entity, 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': 'browseInvitroPharmacology', 'entity': 'invitropharmacology', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(response => {

@@ -121,12 +121,14 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   allAssayColumns: string[] = [
     'number',
     'viewDetails',
+    'assaySet',
     'assayId',
     'externalAssayId',
     'externalAssaySource',
     'targetName',
     'targetTitle',
     'bioassayType',
+    'analytes',
     'reference',
     'totalResult',
     'totalSummary',
@@ -282,7 +284,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             if (screening.invitroControls.length > 0) {
               screening.invitroControls.forEach(ctr => {
                 if (ctr) {
-                  if (ctr.resultType) {
+                  if (ctr.controlResultType) {
                     // assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
                   }
                 }
@@ -290,6 +292,9 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             }
 
             if (screening.invitroSummary) {
+
+              assaySummary.summaryTargetName = screening.invitroSummary.targetName;
+              assaySummary.summaryTargetNameSubstanceKey = screening.invitroSummary.targetNameSubstanceKey;
 
               assaySummary.summaryResultValueAvg = screening.invitroSummary.resultValueAverage;
               assaySummary.summaryResultValueLow = screening.invitroSummary.resultValueLow;
@@ -327,12 +332,14 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
               if (screening.invitroAssayResultInformation.invitroTestAgent) {
 
                 let testAgent = '';
-                let testAgentSubstanceUuid = '';
+                let testAgentSubstanceKey = '';
 
-                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-                assaySummary.testAgent = testAgent;
-                assaySummary.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
                 let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
+                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
+                testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
+
+                assaySummary.testAgent = testAgent;
+                assaySummary.testAgentSubstanceKey = testAgentSubstanceKey;
 
                 // Get the index if the value exists in the key 'testAgent'
                 const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
@@ -345,7 +352,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                   let assayList = [];
                   assayList.push(assaySummary);
                   const appScreening = {
-                    'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentId': testAgentId,
+                    'testAgent': testAgent, 'testAgentSubstanceKey': testAgentSubstanceKey, 'testAgentId': testAgentId,
                     'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList
                   };
                   this.allScreeningTestAgents.push(appScreening);

@@ -50,7 +50,7 @@ export class ProductIngredientFormComponent implements OnInit {
   ingredientNameMessage = '';
   basisOfStrengthMessage = '';
   newRecordMessage = '';
-  substanceKeyTypeConfig = '';
+  substanceKeyTypeForProductConfig = '';
 
   relationship: any;
   ingredientNameActiveMoiety = new Array<String>();
@@ -80,10 +80,7 @@ export class ProductIngredientFormComponent implements OnInit {
       // CONFIG: GET SUBSTANCE KEY TYPE,  (PRODUCT)
       //****************************************************************************
       // Get Substance Linking Key Type from Config for PRODUCT
-      this.substanceKeyTypeConfig = this.generalService.getSubstanceKeyTypeForProductConfig();
-      if (!this.substanceKeyTypeConfig) {
-        alert('There is no Substance configuration found in frontend config file: substance.linking.keyType.productKeyType. Unable to add Ingredient Name when saving this record.');
-      }
+      this.substanceKeyTypeForProductConfig = this.generalService.getSubstanceKeyTypeForProductConfig();
 
       this.username = this.authService.getUser();
 
@@ -227,14 +224,14 @@ export class ProductIngredientFormComponent implements OnInit {
           /**************************************************** */
           /* SUBSTANCE KEY RESOLVER BEGIN                       */
           /**************************************************** */
-          if (!this.substanceKeyTypeConfig) {
+          if (!this.substanceKeyTypeForProductConfig) {
             alert('There is no Substance Key Type configuration found in the frontend config file: substance.linking.keyType.productKeyType:"UUID". Unable to add Ingredient Name when saving this record.');
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
             // KEY RESOLVER
-            if (this.substanceKeyTypeConfig === 'UUID' || this.substanceKeyTypeConfig === 'APPROVAL_ID') {
-              this.ingredient.substanceKey = this.generalService.getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance, this.substanceKeyTypeConfig);
-            } else if (this.substanceKeyTypeConfig === 'BDNUM') {
+            if (this.substanceKeyTypeForProductConfig === 'UUID' || this.substanceKeyTypeForProductConfig === 'APPROVAL_ID') {
+              this.ingredient.substanceKey = this.generalService.getSubstanceKeyByRelatedSubstanceResolver(relatedSubstance, this.substanceKeyTypeForProductConfig);
+            } else if (this.substanceKeyTypeForProductConfig === 'BDNUM') {
               this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
                 this.ingredient.substanceKey = response;
 
@@ -244,7 +241,8 @@ export class ProductIngredientFormComponent implements OnInit {
                 }
               });
             }
-            this.ingredient.substanceKeyType = this.substanceKeyTypeConfig;
+            // Set Substance Key Type in the Ingredient Name
+            this.ingredient.substanceKeyType = this.substanceKeyTypeForProductConfig;
           }
           // ******** SUBSTANCE KEY RESOLVER END *************
 
@@ -255,7 +253,7 @@ export class ProductIngredientFormComponent implements OnInit {
             this.basisOfStrengthMessage = '';
             this.ingredient.$$basisOfStrengthValidation = '';
 
-            // set substance uuid for the basis of strength releated subtance structure
+            // set substance uuid for the basis of strength related subtance structure
             this.basisOfStrengthSubstanceUuid = this.ingredientNameSubstanceUuid;
 
             this.ingredient.basisOfStrengthSubstanceKey = this.ingredient.substanceKey;
@@ -312,19 +310,19 @@ export class ProductIngredientFormComponent implements OnInit {
           /**************************************************** */
           /* SUBSTANCE KEY RESOLVER BEGIN                       */
           /**************************************************** */
-          if (!this.substanceKeyTypeConfig) {
+          if (!this.substanceKeyTypeForProductConfig) {
             alert('There is no Substance configuration found in frontend config file: substance.linking.keyType.productKeyType:"UUID". Unable to add Ingredient Name when saving this record.');
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
             // KEY RESOLVER
-            if (this.substanceKeyTypeConfig === 'UUID' || this.substanceKeyTypeConfig === 'APPROVAL_ID') {
-              this.ingredient.basisOfStrengthSubstanceKey = this.generalService.getSubstanceKeyBySubstanceKeyTypeResolver(relatedSubstance, this.substanceKeyTypeConfig);
-            } else if (this.substanceKeyTypeConfig === 'BDNUM') {
+            if (this.substanceKeyTypeForProductConfig === 'UUID' || this.substanceKeyTypeForProductConfig === 'APPROVAL_ID') {
+              this.ingredient.basisOfStrengthSubstanceKey = this.generalService.getSubstanceKeyByRelatedSubstanceResolver(relatedSubstance, this.substanceKeyTypeForProductConfig);
+            } else if (this.substanceKeyTypeForProductConfig === 'BDNUM') {
               this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
                 this.ingredient.basisOfStrengthSubstanceKey = response;
               });
             }
-            this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
+            this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeForProductConfig;
           }
           // ******** SUBSTANCE KEY RESOLVER END *************
 
@@ -385,23 +383,23 @@ export class ProductIngredientFormComponent implements OnInit {
         const substanceCodes = response;
         for (let index = 0; index < substanceCodes.length; index++) {
           if (substanceCodes[index].codeSystem) {
-            if ((substanceCodes[index].codeSystem === this.substanceKeyTypeConfig) &&
+            if ((substanceCodes[index].codeSystem === this.substanceKeyTypeForProductConfig) &&
               (substanceCodes[index].type === 'PRIMARY')) {
 
               if (type) {
                 if (type === 'ingredientname') {
                   this.ingredient.substanceKey = substanceCodes[index].code;
-                  this.ingredient.substanceKeyType = this.substanceKeyTypeConfig;
+                  this.ingredient.substanceKeyType = this.substanceKeyTypeForProductConfig;
 
                   if (!this.ingredient.basisOfStrengthSubstanceKey) {
                     this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
-                    this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
+                    this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeForProductConfig;
                   }
                 }
 
                 if (type === 'basisofstrength') {
                   this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
-                  this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
+                  this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeForProductConfig;
                 }
               }
               break;

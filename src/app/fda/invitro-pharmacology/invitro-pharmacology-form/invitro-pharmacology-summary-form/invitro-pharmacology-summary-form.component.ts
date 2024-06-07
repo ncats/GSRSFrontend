@@ -47,7 +47,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   pageIndex = 0;
 
   // Need this variables
-  testAgentSubstanceUuid: string;
+  testAgentSubstanceKey: string;
   testAgent: string;
 
   assayResults: Array<InvitroAssayInformation> = [];
@@ -257,8 +257,8 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
           if (this.screeningList.length > 0) {
             if (this.screeningList[0].invitroAssayResultInformation) {
               if (this.screeningList[0].invitroAssayResultInformation.invitroTestAgent)
-                if (this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid) {
-                  this.testAgentSubstanceUuid = this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                if (this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey) {
+                  this.testAgentSubstanceKey = this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
                   this.testAgent = this.screeningList[0].invitroAssayResultInformation.invitroTestAgent.testAgent;
                 }
             }
@@ -278,7 +278,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
            //   delete screening.invitroReference;
 
               if (screening.invitroSummary) {
-                if (screening.invitroSummary.targetNameSubstanceUuid) {
+                if (screening.invitroSummary.targetNameSubstanceKey) {
 
                 }
               }
@@ -708,14 +708,11 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   testAgentUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
-      this.testAgentSubstanceUuid = substance.uuid
+      this.testAgentSubstanceKey = substance.uuid
       this.testAgent = substance._name;
 
       this.screeningList.forEach(screening => {
         if (screening) {
-         // screening.invitroTestAgent.testAgent = 'AAAAAAAAAAA';
-          // screening.invitroTestAgent.id = 1;
-          // screening.invitroTestAgent.internalVersion = 2;
         }
       });
     }
@@ -723,7 +720,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   targetNameUpdated(substance: SubstanceSummary, indexScreening: number): void {
     if (substance != null) {
-      this.screeningList[indexScreening].invitroSummary.targetNameSubstanceUuid = substance.uuid;
+      this.screeningList[indexScreening].invitroSummary.targetNameSubstanceKey = substance.uuid;
       this.screeningList[indexScreening].invitroSummary.targetName = substance._name;
     }
   }
@@ -783,6 +780,9 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
     // Select the assay
     this.screeningList[indexScreening]._selectedAssay = this.screeningList[indexScreening]._assayResults[indexAssayResult];
 
+    if (this.screeningList[indexScreening]._selectedAssay != null) {
+      this.screeningList[indexScreening].invitroSummary.targetNameSubstanceKey = this.screeningList[indexScreening]._selectedAssay.targetNameSubstanceKey;
+    }
     this.screeningList[indexScreening]._assayResults = [];
 
   }

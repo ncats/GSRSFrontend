@@ -28,8 +28,8 @@
       <table class="tableStyle margintop15px font12px" mat-table [dataSource]="allAssaysList">
 
         <ng-container matColumnDef="number">
-          <th mat-header-cell *matHeaderCellDef> Number </th>
-          <td class="width40px" mat-cell *matCellDef="let assaysum; let index = index;">
+          <th mat-header-cell *matHeaderCellDef> # </th>
+          <td class="width30px" mat-cell *matCellDef="let assaysum; let index = index;">
             {{(index+1)}}
           </td>
         </ng-container>
@@ -58,6 +58,16 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="assaySet">
+          <th mat-header-cell *matHeaderCellDef> Assay Set</th>
+          <td class="width100px" mat-cell *matCellDef="let assay">
+            <span *ngFor="let asySet of assay.invitroAssaySets; let indexAssaySet = index">
+              <span *ngIf="indexAssaySet > 0">, </span>
+              {{ asySet.assaySet }}
+            </span>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="assayId">
           <th mat-header-cell *matHeaderCellDef> Assay ID</th>
           <td class="width100px" mat-cell *matCellDef="let assay">
@@ -80,16 +90,24 @@
         </ng-container>
 
         <ng-container matColumnDef="targetName">
-          <th mat-header-cell *matHeaderCellDef> Target Name</th>
+          <th mat-header-cell *matHeaderCellDef> Assay Target Name </th>
           <td mat-cell *matCellDef="let assay">
-            <div *ngIf="assay.targetNameSubstanceUuid; else noAssayTargetNameSubUuid">
-              <a [routerLink]="['/substances', assay.targetNameSubstanceUuid]" target="_blank"
+            <div *ngIf="assay.targetNameSubstanceKey; else noTargetNameSubstanceKey">
+              <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank"
                 matTooltip="Go to Substance Details page">
-                <b>{{assay.targetName}}</b>
+                {{ assay.targetName }}
               </a>
             </div>
-            <ng-template #noAssayTargetNameSubUuid>
-              <b>{{assay.targetName}}</b>
+            <ng-template #noTargetNameSubstanceKey>
+              <div *ngIf="assay.targetNameApprovalId; else noTargetNameApprovalId">
+                <a [routerLink]="['/substances', assay.targetNameApprovalId]" target="_blank"
+                  matTooltip="Go to Substance Details page">
+                  {{ assay.targetName }}
+                </a>
+              </div>
+              <ng-template #noTargetNameApprovalId>
+                {{assay.targetName}}
+              </ng-template>
             </ng-template>
           </td>
         </ng-container>
@@ -108,6 +126,25 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="analytes">
+          <th mat-header-cell *matHeaderCellDef> Analytes</th>
+          <td mat-cell *matCellDef="let assay">
+            <div *ngFor="let analy of assay.invitroAssayAnalytes; let indexAnalyte = index">
+              <span *ngIf="indexAnalyte > 0"><br></span>
+              {{(indexAnalyte+1)}}.&nbsp;
+              <span *ngIf="analy.analyteSubstanceKey; else noAnalyteSubstanceKey">
+                <a [routerLink]="['/substances', analy.analyteSubstanceKey]" target="_blank"
+                  matTooltip="Go to Substance Details page">
+                  {{analy.analyte}}
+                </a>
+              </span>
+              <ng-template #noAnalyteSubstanceKey>
+                {{analy.analyte}}
+              </ng-template>
+            </div>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="reference">
           <th mat-header-cell *matHeaderCellDef> Reference-Test Agent</th>
           <td class="width170px" mat-cell *matCellDef="let assay">
@@ -116,13 +153,13 @@
 
               <div *ngIf="screening.invitroAssayResultInformation">
 
-                <div class="divflex">
-                  <span *ngIf="i > 0">
-                    <br>
-                  </span>
+                <div *ngIf="i > 0">
+                  <br>
+                </div>
 
+                <div class="divflex">
                   <div>
-                    {{(i+1)}}.
+                    {{(i+1)}}.&nbsp;
                   </div>
 
                   <!-- Reference -->
@@ -147,14 +184,15 @@
                 <div *ngIf="screening.invitroAssayResultInformation.invitroTestAgent">
                   <div *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgent">
                     <span
-                      *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid; else noReferenceTestAgentSubId">
+                      *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey; else noReferenceTestAgentSubKey">
                       &nbsp;-&nbsp;
-                      <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid]"
+                      <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey]"
                         target="_blank" matTooltip="Go to Substance Details page">
                         {{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}
                       </a>
                     </span>
-                    <ng-template #noReferenceTestAgentSubId>
+                    <ng-template #noReferenceTestAgentSubKey>
+                      &nbsp;-&nbsp;
                       {{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}
                     </ng-template>
 
@@ -229,13 +267,13 @@
       <div class="divflex">
         <div><b>{{(index+1)}}.&nbsp;&nbsp;Test Agent:
             <span class="colorblue font18px">
-              <span *ngIf="screen.testAgentSubstanceUuid; else noTestAgentTestAgentSubId">
-                <a [routerLink]="['/substances', screen.testAgentSubstanceUuid]" target="_blank"
+              <span *ngIf="screen.testAgentSubstanceKey; else noTestAgentTestAgentSubKey">
+                <a [routerLink]="['/substances', screen.testAgentSubstanceKey]" target="_blank"
                   matTooltip="Go to Substance Details page">
                   {{screen.testAgent}}
                 </a>
               </span>
-              <ng-template #noTestAgentTestAgentSubId>
+              <ng-template #noTestAgentTestAgentSubKey>
                 {{screen.testAgent}}
               </ng-template>
             </span>
@@ -293,7 +331,7 @@
         <ng-container matColumnDef="isFromResult">
           <th mat-header-cell *matHeaderCellDef> From Result Data </th>
           <td class="width120px" mat-cell *matCellDef="let assaysum">
-            <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == '1'">
+            <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == true">
               <mat-icon matTooltip="This Summary data is from Result data">check_circle_outline</mat-icon>
             </span>
           </td>
@@ -316,13 +354,13 @@
         <ng-container matColumnDef="targetName">
           <th mat-header-cell *matHeaderCellDef> Target Name </th>
           <td class="width170px" mat-cell *matCellDef="let assaysum">
-            <div *ngIf="assaysum.targetNameSubstanceUuid; else noAllTargetNameSubUuid">
-              <a [routerLink]="['/substances', assaysum.targetNameSubstanceUuid]" target="_blank"
+            <div *ngIf="assaysum.targetNameSubstanceKey; else noAllTargetNameSubKey">
+              <a [routerLink]="['/substances', assaysum.targetNameSubstanceKey]" target="_blank"
                 matTooltip="Go to Substance Details page">
                 <b>{{assaysum.targetName}}</b>
               </a>
             </div>
-            <ng-template #noAllTargetNameSubUuid>
+            <ng-template #noAllTargetNameSubKey>
               <b>{{assaysum.targetName}}</b>
             </ng-template>
           </td>
@@ -347,7 +385,7 @@
             </span>
             <span *ngIf="assaysum.summaryResultValueHigh">
               <br>
-              {{assaysum.summaryResultValueLow}}&nbsp;(High)
+              {{assaysum.summaryResultValueHigh}}&nbsp;(High)
             </span>
             <br>
             {{assaysum.summaryResultValueUnits}}

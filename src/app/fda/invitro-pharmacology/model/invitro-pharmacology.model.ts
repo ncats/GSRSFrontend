@@ -22,25 +22,45 @@ export interface InvitroAssayInformation {
   targetName?: string;
   targetNameApprovalId?: string;
   targetNameSubstanceUuid?: string;
+  targetNameSubstanceKey?: string;
+  targetNameSubstanceKeyType?: string;
   targetSpecies?: string;
   humanHomologTarget?: string;
   humanHomologTargetApprovalId?: string;
+  humanHomologTargetSubstanceKey?: string;
+  humanHomologTargetSubstanceKeyType?: string;
   ligandSubstrate?: string;
   ligandSubstrateApprovalId?: string;
+  ligandSubstrateSubstanceKey?: string;
+  ligandSubstrateSubstanceKeyType?: string;
   standardLigandSubstrateConcentration?: string;
   standardLigandSubstrateConcentrationUnits?: string;
   _assayTargetSubId?: string;
   _ligandSubstrateSubId?: string;
   _controlSubId?: string;
   _calculateIC50?: string;
+  _resultInformationList?: Array<any>;
   _assayTargetSummaries?: Array<any>;
   _existingAssayList?: Array<any>;
   _totalResultRecords?: number;
   _totalSummaryRecords?: number;
   _assaySet?: string;
+  invitroAssayAnalytes?: Array<InvitroAssayAnalyte>;
   invitroAssaySets?: Array<InvitroAssaySet>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;
   //invitroSummaries?: Array<InvitroSummary>;
+}
+
+export interface InvitroAssayAnalyte {
+  id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
+  analyte?: string;
+  analyteSubstanceKey?: string;
+  analyteSubstanceKeyType?: string;
 }
 
 export interface InvitroAssaySet {
@@ -66,7 +86,7 @@ export interface InvitroAssayScreening {
   invitroControls?: Array<InvitroControl>;
   invitroSummary?: InvitroSummary;
   screeningImportFileName?: string;
-  _ownerId?: number;
+  _calculateIC50Value?: string;
   _show?: boolean;
   _assayResults?: Array<any>;
   _selectedAssay?: any;
@@ -80,7 +100,6 @@ export interface InvitroAssayResultInformation {
   modifiedBy?: string;
   internalVersion?: number;
   batchNumber?: string;
-  testAgent?: string;
   invitroReferences?: Array<InvitroReference>;
   invitroLaboratory?: InvitroLaboratory;
   invitroSponsor?: InvitroSponsor;
@@ -177,15 +196,13 @@ export interface InvitroTestAgent {
   testAgentCompanyCode?: string;
   testAgent?: string;
   testAgentApprovalId?: string;
-  testAgentSubstanceUuid?: string;
+  testAgentSubstanceKey?: string;
+  testAgentSubstanceKeyType?: string;
   testAgentSmileString?: string;
   testAgentMolecularFormulaWeight?: string;
   activeMoiety?: string;
   activeMoietyApprovalId?: string;
   casRegistryNumber?: string;
-  batchNumber?: string;
-  purity?: string;
-  vehicleComposition?: string;
 }
 
 export interface InvitroAssayResult {
@@ -225,7 +242,7 @@ export interface InvitroControl {
   controlType?: string;
   controlReferenceValue?: string;
   controlReferenceValueUnits?: string;
-  resultType?: string;
+  controlResultType?: string;
 }
 
 export interface InvitroSummary {
@@ -238,7 +255,8 @@ export interface InvitroSummary {
   testAgent?: string;
   testAgentSubstanceUuid?: string;
   targetName?: string;
-  targetNameSubstanceUuid?: string;
+  targetNameSubstanceKey?: string;
+  targetNameSubstanceKeyType?: string;
   relationshipType?: string;
   interactionType?: string;
   resultType?: string;
@@ -247,7 +265,7 @@ export interface InvitroSummary {
   resultValueHigh?: number;
   resultValueUnits?: string;
   comments?: string;
-  isFromResult?: string;
+  isFromResult?: boolean;
 }
 
 export interface ValidationResults {
