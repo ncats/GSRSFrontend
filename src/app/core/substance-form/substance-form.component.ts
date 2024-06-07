@@ -102,6 +102,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     UNII: string;
     approvalType = 'lastEditedBy';
     previousState: number;
+    useApprovalAPI = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -285,6 +286,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     if (this.configService.configData && this.configService.configData.autoSaveWait) {
       this.autoSaveWait = this.configService.configData.autoSaveWait;
+    }
+    if (this.configService.configData && this.configService.configData.useApprovalAPI) {
+      this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
@@ -655,6 +659,8 @@ getDrafts() {
   }
 
   canBeApproved(): boolean {
+    if (!this.useApprovalAPI) {
+
     const action = this.activatedRoute.snapshot.queryParams['action'] || null;
     if (action && action === 'import') {
       return false;
@@ -698,6 +704,21 @@ getDrafts() {
       }
     }
 
+  } else {
+    this.substanceService.isApprovable(this.id).pipe(take(1)).subscribe(response => {
+      if (typeof response === 'boolean') { 
+        this.canApprove = response;
+        return response;
+      } else if (response.toLowerCase() === 'true'){
+        return true;
+      } else {
+        return false;
+      }
+
+    }, error => {
+      return false;
+    });
+    }
   }
 
   showJSON(): void {
@@ -889,7 +910,11 @@ getDrafts() {
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
-    this.substanceFormService.validateSubstance().pipe(take(1)).subscribe(results => {
+    let stagingID = null;
+    if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+      stagingID = this.activatedRoute.snapshot.queryParams['stagingID'];
+    }
+    this.substanceFormService.validateSubstance(stagingID).pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
       this.validationMessages = results.validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING'|| message.messageType.toUpperCase() === 'NOTICE');

@@ -6,18 +6,61 @@ import { Observable, from, pipe, take } from 'rxjs';
 export class EditorImplementation implements Editor {
     private ketcher?: Ketcher;
     private jsdraw?: JSDraw;
+    tempMol?: string;
 
-    constructor(ketcher?: Ketcher, jsdraw?: JSDraw) {
-        this.ketcher = ketcher;
-        this.jsdraw = jsdraw;
+    constructor(ketcher?: Ketcher, jsdraw?: JSDraw, toggledFrom?: string) {
+        
+        if (toggledFrom) {
+            console.log('toggled from');
+            this.ketcher = ketcher;
+            this.forceKetcherUpdate(toggledFrom);
+        } else {
+            this.jsdraw = jsdraw;
+            this.ketcher = ketcher;
+        }
+    }
+
+    forceKetcherUpdate(mfile: string): void {
+        console.log(mfile);
+                this.jsdraw = null;
+                setTimeout(() => {
+                    const chargeLine = this.getMCharge();
+                    mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
+
+            if (mfile.indexOf('M  CHG') < 0) {
+                if (chargeLine !== null) {
+                    const lines = mfile.split('\n');
+                    for (let i = lines.length - 1; i >= 3; i--) {
+                        if (lines[i] === 'M  END') {
+                            const old = lines[i];
+                            lines[i] = chargeLine;
+                            lines[i + 1] = old;
+                            mfile = lines.join('\n');
+                            break;
+                        }
+                    
+                    
+                    
+                    }
+                }
+            }
+            this.tempMol = this.clean(mfile);
+
+            this.ketcher.setMolecule(this.tempMol);
+                
+                }, 1);
+            
+               
     }
 
     
 
     getMolfile(): Observable<any> {
+        console.log('getting molfile');
         return new Observable<any>(observer => {
         if (this.ketcher != null) {
             from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
+                console.log(result);
                 let mfile = result;
                 mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
                 const chargeLine = this.getMCharge();
@@ -139,9 +182,17 @@ export class EditorImplementation implements Editor {
                 };
             } else if (this.ketcher != null) {
                 this.ketcher.editor.subscribe('change',  operations => { 
-                    from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
-                        observer.next(result);
-                    });
+                    console.log(operations)
+                    if(!(operations.length == 1 && operations[0].operation == 'Load canvas')){
+                        console.log('not a new load');
+                        from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
+                            observer.next(result);
+                        });
+                    } else {
+                        console.log(this.tempMol)
+                        observer.next(this.tempMol);
+                    }
+                    
                     
                  });
                 

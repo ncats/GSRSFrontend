@@ -74,6 +74,8 @@ export interface Config {
     structureEditor?: 'ketcher' | 'jsdraw';
     nameFormPageSizeOptions?: Array<number>;
     nameFormPageSizeDefault?: number;
+    jsdrawLicense?: boolean;
+    useApprovalAPI?: boolean;
 }
 
 export interface StagingAreaSettings {

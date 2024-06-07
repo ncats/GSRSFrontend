@@ -724,8 +724,11 @@ export class SubstanceService extends BaseHttpService {
     return this.http.request(method, url, options);
   }
 
-  validateSubstance(substance: SubstanceDetail): Observable<ValidationResults> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
+  validateSubstance(substance: SubstanceDetail, stagingID?: string): Observable<ValidationResults> {
+    let url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
+    if (stagingID) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/substances/stagingArea(${stagingID})/@validate`;
+    }
     return this.http.post(url, substance);
   }
 
@@ -741,6 +744,11 @@ export class SubstanceService extends BaseHttpService {
 
   approveSubstance(keyid: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${keyid})/@approve`;
+    return this.http.get(url);
+  }
+
+  isApprovable(keyid: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${keyid})/@isApprovable`;
     return this.http.get(url);
   }
 
