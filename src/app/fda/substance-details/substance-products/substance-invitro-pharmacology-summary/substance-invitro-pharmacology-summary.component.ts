@@ -148,7 +148,7 @@ export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetai
                     // if Test Agent Substance UUID matching with this substance, display screening data
                     if (screening.invitroAssayResultInformation.invitroTestAgent.testAgent) {
                       // testAgent Substance Uuid is same as this substance, display this data
-                      if (screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid == this.substanceUuid) {
+                      if (screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey == this.substanceUuid) {
                       //if (screening.invitroAssayResultInformation.invitroTestAgent.testAgent == this.substanceName) {
 
                         assayObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
@@ -187,7 +187,7 @@ export class SubstanceInvitroPharmacologySummaryComponent extends SubstanceDetai
                           if (screening.invitroAssayResultInformation) {
                             if (screening.invitroAssayResultInformation.invitroTestAgent) {
                               summaryObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-                              summaryObj.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                              summaryObj.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
                             }
                           }
 

@@ -100,7 +100,6 @@ export interface InvitroAssayResultInformation {
   modifiedBy?: string;
   internalVersion?: number;
   batchNumber?: string;
-  testAgent?: string;
   invitroReferences?: Array<InvitroReference>;
   invitroLaboratory?: InvitroLaboratory;
   invitroSponsor?: InvitroSponsor;
@@ -199,15 +198,11 @@ export interface InvitroTestAgent {
   testAgentApprovalId?: string;
   testAgentSubstanceKey?: string;
   testAgentSubstanceKeyType?: string;
-  testAgentSubstanceUuid?: string;
   testAgentSmileString?: string;
   testAgentMolecularFormulaWeight?: string;
   activeMoiety?: string;
   activeMoietyApprovalId?: string;
   casRegistryNumber?: string;
-  batchNumber?: string;
-  purity?: string;
-  vehicleComposition?: string;
 }
 
 export interface InvitroAssayResult {
@@ -260,7 +255,8 @@ export interface InvitroSummary {
   testAgent?: string;
   testAgentSubstanceUuid?: string;
   targetName?: string;
-  targetNameSubstanceUuid?: string;
+  targetNameSubstanceKey?: string;
+  targetNameSubstanceKeyType?: string;
   relationshipType?: string;
   interactionType?: string;
   resultType?: string;

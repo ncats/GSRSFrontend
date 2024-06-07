@@ -90,16 +90,24 @@
         </ng-container>
 
         <ng-container matColumnDef="targetName">
-          <th mat-header-cell *matHeaderCellDef> Target Name</th>
+          <th mat-header-cell *matHeaderCellDef> Assay Target Name </th>
           <td mat-cell *matCellDef="let assay">
             <div *ngIf="assay.targetNameSubstanceKey; else noTargetNameSubstanceKey">
               <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank"
                 matTooltip="Go to Substance Details page">
-                <b>{{assay.targetName}}</b>
+                {{ assay.targetName }}
               </a>
             </div>
             <ng-template #noTargetNameSubstanceKey>
-              <b>{{assay.targetName}}</b>
+              <div *ngIf="assay.targetNameApprovalId; else noTargetNameApprovalId">
+                <a [routerLink]="['/substances', assay.targetNameApprovalId]" target="_blank"
+                  matTooltip="Go to Substance Details page">
+                  {{ assay.targetName }}
+                </a>
+              </div>
+              <ng-template #noTargetNameApprovalId>
+                {{assay.targetName}}
+              </ng-template>
             </ng-template>
           </td>
         </ng-container>
@@ -145,11 +153,11 @@
 
               <div *ngIf="screening.invitroAssayResultInformation">
 
-                <div class="divflex">
-                  <div *ngIf="i > 0">
-                    <br>
-                  </div>
+                <div *ngIf="i > 0">
+                  <br>
+                </div>
 
+                <div class="divflex">
                   <div>
                     {{(i+1)}}.&nbsp;
                   </div>
@@ -176,14 +184,15 @@
                 <div *ngIf="screening.invitroAssayResultInformation.invitroTestAgent">
                   <div *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgent">
                     <span
-                      *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid; else noReferenceTestAgentSubId">
+                      *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey; else noReferenceTestAgentSubKey">
                       &nbsp;-&nbsp;
-                      <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid]"
+                      <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey]"
                         target="_blank" matTooltip="Go to Substance Details page">
                         {{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}
                       </a>
                     </span>
-                    <ng-template #noReferenceTestAgentSubId>
+                    <ng-template #noReferenceTestAgentSubKey>
+                      &nbsp;-&nbsp;
                       {{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}
                     </ng-template>
 
@@ -258,13 +267,13 @@
       <div class="divflex">
         <div><b>{{(index+1)}}.&nbsp;&nbsp;Test Agent:
             <span class="colorblue font18px">
-              <span *ngIf="screen.testAgentSubstanceUuid; else noTestAgentTestAgentSubId">
-                <a [routerLink]="['/substances', screen.testAgentSubstanceUuid]" target="_blank"
+              <span *ngIf="screen.testAgentSubstanceKey; else noTestAgentTestAgentSubKey">
+                <a [routerLink]="['/substances', screen.testAgentSubstanceKey]" target="_blank"
                   matTooltip="Go to Substance Details page">
                   {{screen.testAgent}}
                 </a>
               </span>
-              <ng-template #noTestAgentTestAgentSubId>
+              <ng-template #noTestAgentTestAgentSubKey>
                 {{screen.testAgent}}
               </ng-template>
             </span>
@@ -345,13 +354,13 @@
         <ng-container matColumnDef="targetName">
           <th mat-header-cell *matHeaderCellDef> Target Name </th>
           <td class="width170px" mat-cell *matCellDef="let assaysum">
-            <div *ngIf="assaysum.targetNameSubstanceUuid; else noAllTargetNameSubUuid">
-              <a [routerLink]="['/substances', assaysum.targetNameSubstanceUuid]" target="_blank"
+            <div *ngIf="assaysum.targetNameSubstanceKey; else noAllTargetNameSubKey">
+              <a [routerLink]="['/substances', assaysum.targetNameSubstanceKey]" target="_blank"
                 matTooltip="Go to Substance Details page">
                 <b>{{assaysum.targetName}}</b>
               </a>
             </div>
-            <ng-template #noAllTargetNameSubUuid>
+            <ng-template #noAllTargetNameSubKey>
               <b>{{assaysum.targetName}}</b>
             </ng-template>
           </td>

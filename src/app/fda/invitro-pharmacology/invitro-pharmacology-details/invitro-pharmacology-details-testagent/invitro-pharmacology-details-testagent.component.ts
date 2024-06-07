@@ -293,6 +293,9 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
             if (screening.invitroSummary) {
 
+              assaySummary.summaryTargetName = screening.invitroSummary.targetName;
+              assaySummary.summaryTargetNameSubstanceKey = screening.invitroSummary.targetNameSubstanceKey;
+
               assaySummary.summaryResultValueAvg = screening.invitroSummary.resultValueAverage;
               assaySummary.summaryResultValueLow = screening.invitroSummary.resultValueLow;
               assaySummary.summaryResultValueHigh = screening.invitroSummary.resultValueHigh;
@@ -329,14 +332,14 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
               if (screening.invitroAssayResultInformation.invitroTestAgent) {
 
                 let testAgent = '';
-                let testAgentSubstanceUuid = '';
+                let testAgentSubstanceKey = '';
 
                 let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
                 testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-                testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
 
                 assaySummary.testAgent = testAgent;
-                assaySummary.testAgentSubstanceUuid = testAgentSubstanceUuid;
+                assaySummary.testAgentSubstanceKey = testAgentSubstanceKey;
 
                 // Get the index if the value exists in the key 'testAgent'
                 const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
@@ -349,7 +352,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                   let assayList = [];
                   assayList.push(assaySummary);
                   const appScreening = {
-                    'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentId': testAgentId,
+                    'testAgent': testAgent, 'testAgentSubstanceKey': testAgentSubstanceKey, 'testAgentId': testAgentId,
                     'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList
                   };
                   this.allScreeningTestAgents.push(appScreening);

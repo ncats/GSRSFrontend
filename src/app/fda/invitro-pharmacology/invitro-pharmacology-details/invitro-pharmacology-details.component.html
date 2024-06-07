@@ -155,56 +155,10 @@
                 <td>{{ assay.targetSpecies }}</td>
               </tr>
 
-              <!--
-                <tr>
-                  <td class="fieldKey">Test Agent:</td>
-                  <td>
-                    <div *ngIf="assay">
-                      <span *ngIf="assay">
-                        <span class="colororange fontbold">{{ assay.testAgent }}</span>
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="fieldKey">Test Agent UNII:</td>
-                  <td>
-
-                    <div *ngIf="assay.testAgentUnii">
-                      {{assay.testAgentUnii}}
-                    </div>
-
-                    <!- -
-                    <div *ngIf="assay.invitroTestCompound._testCompoundSubId; else noTestCompoundSubId">
-                      <div class="divflex">
-                        <div>
-                          <a [routerLink]="['/substances', assay.invitroTestCompound._testCompoundSubId]"
-                            target="_blank">
-                            <span class="">{{ assay.invitroTestCompound.testCompoundUnii }}</span>
-                          </a>
-                        </div>
-                        <div class="marginleft30px margintopneg10px width30px">
-                          <a role="img" aria-label="substance image" class="zoom"
-                            (click)="openImageModal(assay.invitroTestCompound._testCompoundSubId)">
-                            <img class="image-icon" appSubstanceImage size="90"
-                              [entityId]="assay.invitroTestCompound._testCompoundSubId">
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <ng-template #noTestCompoundSubId>
-                      {{ assay.invitroTestCompound.testAgentUnii }}
-                    </ng-template>
-                    - ->
-                  </td>
-                </tr>
-              -->
-
               <tr>
                 <td class="fieldKey">Target Name:</td>
                 <td>
-                  <div *ngIf="assay.targetNameSubstanceKey; else noTargetNameSubstanceKey">
+                  <div *ngIf="assay.targetNameApprovalId; else noTargetNameApprovalId">
                     <!-- Go to Substance Details page -->
                     <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank"
                       matTooltip="Go to Substance Details page">
@@ -222,7 +176,7 @@
                     -->
 
                   </div>
-                  <ng-template #noTargetNameSubstanceKey>
+                  <ng-template #noTargetNameApprovalId>
                     <b>{{assay.targetName}}</b>
                   </ng-template>
                 </td>
@@ -236,14 +190,14 @@
               <tr>
                 <td class="fieldKey">Human Homolog Target:</td>
                 <td>
-                  <div *ngIf="assay.humanHomologTargetSubstanceKey; else noHumanHomologSubstanceKey">
+                  <div *ngIf="assay.humanHomologApprovalId; else noHumanHomologApprovalId">
                     <!-- Go to Substance Details page -->
-                    <a [routerLink]="['/substances', assay.humanHomologTargetSubstanceKey]" target="_blank"
+                    <a [routerLink]="['/substances', assay.humanHomologApprovalId]" target="_blank"
                       matTooltip="Go to Substance Details page">
                       <b>{{assay.humanHomologTarget}}</b>
                     </a>
                   </div>
-                  <ng-template #noHumanHomologSubstanceKey>
+                  <ng-template #noHumanHomologApprovalId>
                     <b>{{assay.humanHomologTarget}}</b>
                   </ng-template>
                 </td>
@@ -257,14 +211,14 @@
               <tr>
                 <td class="fieldKey">Ligand/Substrate:</td>
                 <td>
-                  <div *ngIf="assay.ligandSubstrateSubstanceKey; else noLigandSubstanceKey">
+                  <div *ngIf="assay.ligandSubstrateApprovalId; else noLigandApprovalId">
                     <!-- Go to Substance Details page -->
-                    <a [routerLink]="['/substances', assay.ligandSubstrateSubstanceKey]" target="_blank"
+                    <a [routerLink]="['/substances', assay.ligandSubstrateApprovalId]" target="_blank"
                       matTooltip="Go to Substance Details page">
                       <b> {{assay.ligandSubstrate}}</b>
                     </a>
                   </div>
-                  <ng-template #noLigandSubstanceKey>
+                  <ng-template #noLigandApprovalId>
                     <b> {{assay.ligandSubstrate}}</b>
                   </ng-template>
                 </td>
@@ -288,7 +242,7 @@
         <!-- Display Assay Details End -->
 
         <div *ngIf="assay._resultInformationList.length > 0; else noResults">
-          <div class="colorblue font20px"><b>Results ({{assay.invitroAssayScreenings.length}}) and Summaries</b></div>
+          <div class="colorblue font20px"><b>Screening Results ({{assay.invitroAssayScreenings.length}}), Controls, and Summaries</b></div>
         </div>
         <ng-template #noResults>
           <div class="colorblue font20px"><b>NO Results and Summaries</b></div>
@@ -383,15 +337,15 @@
                       Test Agent:
                       <span *ngIf="screening.invitroAssayResultInformation.invitroTestAgent" class="font14px">
                         <span
-                          *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid; else noTestAgentSubUuid">
+                          *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey; else noTestAgentSubKey">
                           <!-- Go to Substance Details page -->
-                          <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid]"
+                          <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey]"
                             target="_blank" matTooltip="Go to Substance Details page">
                             <span
                               class="colororange"><b>{{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}</b></span>
                           </a>
                         </span>
-                        <ng-template #noTestAgentSubUuid>
+                        <ng-template #noTestAgentSubKey>
                           <span
                             class="colororange"><b>{{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}</b></span>
                         </ng-template>
@@ -736,14 +690,14 @@
                             <td>
                               <span *ngIf="screening.invitroAssayResultInformation.invitroTestAgent" class="font14px">
                                 <span
-                                  *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid; else noTestAgentSubUuid">
+                                  *ngIf="screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey; else noTestAgentSubKey">
                                   <!-- Go to Substance Details page -->
-                                  <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid]"
+                                  <a [routerLink]="['/substances', screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey]"
                                     target="_blank" matTooltip="Go to Substance Details page">
                                     <b>{{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}</b>
                                   </a>
                                 </span>
-                                <ng-template #noTestAgentSubUuid>
+                                <ng-template #noTestAgentSubKey>
                                   <b>{{screening.invitroAssayResultInformation.invitroTestAgent.testAgent}}</b>
                                 </ng-template>
                               </span>

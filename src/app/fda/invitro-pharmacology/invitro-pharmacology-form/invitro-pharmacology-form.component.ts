@@ -87,7 +87,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   assayMessage = '';
   referenceMessage = '';
 
-  testAgentSubstanceUuid = "";
+  testAgentSubstanceKey = "";
   showMoreLessFields = true;
   screeningDetails = '';
 
@@ -315,7 +315,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
                        */
                       if (screening.invitroAssayResultInformation.invitroTestAgent) {
                         //   this.assayResultInfo.invitroTestAgent = screening.invitroAssayResultInformation.invitroTestAgent;
-                        this.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+                        this.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
                       }
 
 
@@ -888,7 +888,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         const saveSubscribe = this.invitroPharmacologyService.saveAssay().subscribe(response => {
 
           if (response) {
-    
+
             // Get the last screening from the returned/saved Assay
             //   let screening = response.invitroAssayScreenings[response.invitroAssayScreenings.length - 1];
 
@@ -925,15 +925,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         });
         this.subscriptions.push(saveSubscribe);
 
-
-        /*
-        screening.invitroAssayResultInformation = {};
-        screening.invitroAssayResultInformation.id = savedResultInfo.id;
-        //  screening.invitroAssayResultInformation.internalVersion = savedResultInfo.internalVersion;
-        */
-
-
-
       } // if assay
     });
   }
@@ -941,9 +932,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    // Set service assay
-    //this.invitroPharmacologyService.assay = this.assay;
-    //this.invitroPharmacologyService.saveMultipleAssays().subscribe(response => {
 
     // Copy this when registering
     // call copy, THIS LINE MUST be before this.scrubExtraFields() call
@@ -1120,14 +1108,14 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // get the Substance Uuid
       if (assay.targetNameSubstanceKeyType) {
         if (assay.targetNameSubstanceKeyType == 'UUID') {
-          assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.targetNameSubstanceUuid = assay.targetNameSubstanceKey;
+          assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.targetNameSubstanceKey = assay.targetNameSubstanceKey;
         } else {
           // Get Substance by any substance key
           if (assay.targetNameSubstanceKey) {
             const subSubscribe = this.generalService.getSubstanceByAnyId(assay.targetNameSubstanceKey).subscribe(substance => {
               if (substance) {
                 if (substance.uuid) {
-                  assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.targetNameSubstanceUuid = substance.uuid;
+                  assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.targetNameSubstanceKey = substance.uuid;
                 }
               } // if response
             });
@@ -1227,7 +1215,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
             // Assign Substance UUID
             if (fieldName && fieldName === 'testAgent') {
-              // this.assay.invitroAssayScreenings[screeningIndex].invitroTestAgent.testAgentSubstanceUuid = substance.uuid;
 
             }
 

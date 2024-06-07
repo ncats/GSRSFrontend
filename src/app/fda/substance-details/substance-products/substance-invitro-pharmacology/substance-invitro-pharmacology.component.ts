@@ -157,7 +157,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
 
                     // if Test Agent Substance UUID matching with this substance, display screening data
                     if (screening.invitroAssayResultInformation.invitroTestAgent.testAgent) {
-                      if (screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid == this.substanceUuid) {
+                      if (screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey == this.substanceUuid) {
 
                         assayObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
 

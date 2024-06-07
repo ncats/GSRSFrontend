@@ -162,7 +162,7 @@
                 <app-substance-selector (selectionUpdated)="testAgentUpdated($event)"
                   eventCategory="substanceRelationshipRelatedSub"
                   placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
-                  [subuuid]="testAgentSubstanceUuid" [showMorelinks]="true">
+                  [subuuid]="testAgentSubstanceKey" [showMorelinks]="true">
                 </app-substance-selector>
               </div>
 
@@ -197,7 +197,7 @@
                         <app-substance-selector (selectionUpdated)="targetNameUpdated($event, indexScreening)"
                           eventCategory="substanceRelationshipRelatedSub"
                           placeholder="Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
-                          [subuuid]="screening.invitroSummary.targetNameSubstanceUuid" [showMorelinks]="true">
+                          [subuuid]="screening.invitroSummary.targetNameSubstanceKey" [showMorelinks]="true">
                         </app-substance-selector>
                       </div>
 
