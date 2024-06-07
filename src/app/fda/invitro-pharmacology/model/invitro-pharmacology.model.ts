@@ -45,9 +45,22 @@ export interface InvitroAssayInformation {
   _totalResultRecords?: number;
   _totalSummaryRecords?: number;
   _assaySet?: string;
+  invitroAssayAnalytes?: Array<InvitroAssayAnalyte>;
   invitroAssaySets?: Array<InvitroAssaySet>;
   invitroAssayScreenings?: Array<InvitroAssayScreening>;
   //invitroSummaries?: Array<InvitroSummary>;
+}
+
+export interface InvitroAssayAnalyte {
+  id?: number;
+  createdDate?: number;
+  createdBy?: string;
+  modifiedDate?: number;
+  modifiedBy?: string;
+  internalVersion?: number;
+  analyte?: string;
+  analyteSubstanceKey?: string;
+  analyteSubstanceKeyType?: string;
 }
 
 export interface InvitroAssaySet {
@@ -73,7 +86,7 @@ export interface InvitroAssayScreening {
   invitroControls?: Array<InvitroControl>;
   invitroSummary?: InvitroSummary;
   screeningImportFileName?: string;
-  _ownerId?: number;
+  _calculateIC50Value?: string;
   _show?: boolean;
   _assayResults?: Array<any>;
   _selectedAssay?: any;
@@ -184,6 +197,8 @@ export interface InvitroTestAgent {
   testAgentCompanyCode?: string;
   testAgent?: string;
   testAgentApprovalId?: string;
+  testAgentSubstanceKey?: string;
+  testAgentSubstanceKeyType?: string;
   testAgentSubstanceUuid?: string;
   testAgentSmileString?: string;
   testAgentMolecularFormulaWeight?: string;
@@ -232,7 +247,7 @@ export interface InvitroControl {
   controlType?: string;
   controlReferenceValue?: string;
   controlReferenceValueUnits?: string;
-  resultType?: string;
+  controlResultType?: string;
 }
 
 export interface InvitroSummary {

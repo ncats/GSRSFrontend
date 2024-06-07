@@ -1204,7 +1204,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           // height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': 'BrowseInvitroPharmacology', 'entity': entity, 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': 'browseInvitroPharmacology', 'entity': 'invitropharmacology', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(response => {

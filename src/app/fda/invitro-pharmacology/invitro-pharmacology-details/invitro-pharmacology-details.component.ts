@@ -179,7 +179,6 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   }
 
   openImageModal(uuid: string) {
-    alert(uuid);
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '90%',
       width: '650px',

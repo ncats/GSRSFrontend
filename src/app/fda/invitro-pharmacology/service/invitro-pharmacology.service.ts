@@ -12,7 +12,7 @@ import { Facet, FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-co
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
 /* GSRS Invitro Pharmacology Imports */
-import { InvitroAssayInformation, InvitroAssayResult, InvitroAssayScreening, InvitroSummary, ValidationResults } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssayAnalyte, InvitroAssayResult, InvitroAssayScreening, InvitroSummary, ValidationResults } from '../model/invitro-pharmacology.model';
 import { identity } from 'lodash';
 
 @Injectable(
@@ -160,7 +160,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
       //Delete the Screening Data Object, show only Assay data/Object
       delete this.assay.invitroAssayScreenings;
     } else {
-      const newInvitroAssayInformation: InvitroAssayInformation = { invitroAssaySets: [] };
+      const newInvitroAssayInformation: InvitroAssayInformation = { invitroAssayAnalytes: [], invitroAssaySets: [] };
       this.assay = newInvitroAssayInformation;
     }
   }
@@ -173,6 +173,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     } else {
       const newInvitroAssayInformation: InvitroAssayInformation =
       {
+        invitroAssayAnalytes: [],
         invitroAssayScreenings: [{
           invitroAssayResultInformation: { invitroReferences: [], invitroLaboratory: {}, invitroSponsor: {}, invitroSponsorReport: { invitroSponsorSubmitters: [] }, invitroTestAgent: {} },
           invitroAssayResult: {},
@@ -192,6 +193,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     } else {
       const newInvitroAssayInformation: InvitroAssayInformation =
       {
+        invitroAssayAnalytes: [],
         invitroAssayScreenings: [{
           invitroAssayResultInformation: { invitroReferences: [], invitroLaboratory: {}, invitroSponsor: {}, invitroSponsorReport: { invitroSponsorSubmitters: [] }, invitroTestAgent: {} },
           invitroAssayResult: {},
@@ -414,7 +416,6 @@ export class InvitroPharmacologyService extends BaseHttpService {
   saveScreening(screening: any, assayId: number): Observable<InvitroAssayScreening> {
     //Remove last slash /
     // let entityUrl = this.apiBaseUrlWithInvitroPharmEntityUrl.replace(/\/+$/, '');
-    // alert(entityUrl);
     // const url = entityUrl + '(' + assayId + ')/screening';
     let url = this.apiBaseUrlWithInvitroPharmEntityUrl + assayId + '/screening';
     let params = new HttpParams();
@@ -463,6 +464,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
   validateAssayServer(): Observable<ValidationResults> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + '@validate';
     return this.http.post(url, this.assay);
+  }
+
+  addNewAssayAnalyte(): void {
+    const newInvitroAssayAnalyte: InvitroAssayAnalyte = {};
+    this.assay.invitroAssayAnalytes.push(newInvitroAssayAnalyte);
   }
 
   addNewScreening(): void {

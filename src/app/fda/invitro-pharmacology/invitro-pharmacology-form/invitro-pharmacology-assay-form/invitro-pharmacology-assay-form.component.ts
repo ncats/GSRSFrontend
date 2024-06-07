@@ -43,6 +43,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   private TARGET_NAME = "TARGET_NAME";
   private HUMAN_HOMOLOG_TARGET = "HUMAN_HOMOLOG_TARGET";
   private LIGAND_SUBSTRATE = "LIGAND_SUBSTRATE";
+  private ANALYTE = "ANALYTE";
 
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
@@ -71,7 +72,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   isLoading = true;
   username = null;
   title = null;
-  invitroSubstanceKeyTypeConfig = null;
+  substanceKeyTypeForInvitroPharmacologyConfig = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -103,7 +104,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       this.username = this.authService.getUser();
 
       // Get Invitro Pharmacology Substance Key Type from the configuration file
-      this.invitroSubstanceKeyTypeConfig = this.generalService.getSubstanceKeyTypeForInvitroPharmacologyConfig();
+      this.substanceKeyTypeForInvitroPharmacologyConfig = this.generalService.getSubstanceKeyTypeForInvitroPharmacologyConfig();
 
       const routeSubscription = this.activatedRoute
         .params
@@ -345,6 +346,10 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     });
   }
 
+  addNewAssayAnalyte() {
+    this.invitroPharmacologyService.addNewAssayAnalyte();
+  }
+
   addNewAssaySet() {
     this.newAssaySetObject = { assaySet: this.newAssaySet };
     this.existingAssaySetList.push(this.newAssaySetObject);
@@ -353,6 +358,22 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     this.checkBoxAssaySetList.push(setObj);
 
     // this.loadCheckBoxAssaySetList();
+  }
+
+  confirmDeleteAnalyte(indexAnalyte: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delete Analyte record ' + (indexAnalyte + 1) + ' ?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteAnalyte(indexAnalyte);
+      }
+    });
+  }
+
+  deleteAnalyte(indexAnalyte: number) {
+    this.assay.invitroAssayAnalytes.splice(indexAnalyte, 1);
   }
 
   validate(): void {
@@ -628,7 +649,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     return oldObj;
   }
 
-  nameSearch(event: any, fieldName: string): void {
+  nameSearch(event: any, fieldName: string, indexRow?: number): void {
     // Get Ingredient Name from the Substance Search Textbox (Type Ahead)
     const ingredientName = event;
 
@@ -637,18 +658,21 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       //clear existing values
       this.assay.targetNameApprovalId = '';
       this.assay.targetNameSubstanceKey = '';
-
       this.assay.targetName = ingredientName;
+
     } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
       this.assay.humanHomologTargetApprovalId = '';
       this.assay.humanHomologTargetSubstanceKey = '';
-
       this.assay.humanHomologTarget = ingredientName;
+
     } else if (fieldName === this.LIGAND_SUBSTRATE) {
       this.assay.ligandSubstrateApprovalId = '';
       this.assay.ligandSubstrateSubstanceKey = '';
-
       this.assay.ligandSubstrate = ingredientName;
+
+    } else if (fieldName === this.ANALYTE) {
+      this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKey = '';
+      this.assay.invitroAssayAnalytes[indexRow].analyte = ingredientName;
     }
 
     // Get Substance record by Ingredient/Substance Name, to get Substance UUID and Approval ID
@@ -669,21 +693,27 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                   /****************************************************************/
                   /* SUBSTANCE KEY RESOLVER BEGIN                                 */
                   /****************************************************************/
-                  let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.invitroSubstanceKeyTypeConfig);
+                  let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
 
                   // Set the Substance Key and Substance Key Type
                   if (fieldName && fieldName === this.TARGET_NAME) {
                     this.assay.targetNameApprovalId = substance.approvalID;
                     this.assay.targetNameSubstanceKey = substanceKey;
-                    this.assay.targetNameSubstanceKeyType = this.invitroSubstanceKeyTypeConfig;
+                    this.assay.targetNameSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+
                   } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
                     this.assay.humanHomologTargetApprovalId = substance.approvalID;
                     this.assay.humanHomologTargetSubstanceKey = substanceKey;
-                    this.assay.humanHomologTargetSubstanceKeyType = this.invitroSubstanceKeyTypeConfig;
+                    this.assay.humanHomologTargetSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+
                   } else if (fieldName === this.LIGAND_SUBSTRATE) {
                     this.assay.ligandSubstrateApprovalId = substance.approvalID;
                     this.assay.ligandSubstrateSubstanceKey = substanceKey;
-                    this.assay.ligandSubstrateSubstanceKeyType = this.invitroSubstanceKeyTypeConfig;
+                    this.assay.ligandSubstrateSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+
+                  } else if (fieldName === this.ANALYTE) {
+                    this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKey = substanceKey;
+                    this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
                   }
                   /* SUBSTANCE KEY RESOLVER END */
 

@@ -118,6 +118,25 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="analytes">
+          <th mat-header-cell *matHeaderCellDef> Analytes</th>
+          <td mat-cell *matCellDef="let assay">
+            <div *ngFor="let analy of assay.invitroAssayAnalytes; let indexAnalyte = index">
+              <span *ngIf="indexAnalyte > 0"><br></span>
+              {{(indexAnalyte+1)}}.&nbsp;
+              <span *ngIf="analy.analyteSubstanceKey; else noAnalyteSubstanceKey">
+                <a [routerLink]="['/substances', analy.analyteSubstanceKey]" target="_blank"
+                  matTooltip="Go to Substance Details page">
+                  {{analy.analyte}}
+                </a>
+              </span>
+              <ng-template #noAnalyteSubstanceKey>
+                {{analy.analyte}}
+              </ng-template>
+            </div>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="reference">
           <th mat-header-cell *matHeaderCellDef> Reference-Test Agent</th>
           <td class="width170px" mat-cell *matCellDef="let assay">
@@ -127,12 +146,12 @@
               <div *ngIf="screening.invitroAssayResultInformation">
 
                 <div class="divflex">
-                  <span *ngIf="i > 0">
+                  <div *ngIf="i > 0">
                     <br>
-                  </span>
+                  </div>
 
                   <div>
-                    {{(i+1)}}.
+                    {{(i+1)}}.&nbsp;
                   </div>
 
                   <!-- Reference -->
@@ -357,7 +376,7 @@
             </span>
             <span *ngIf="assaysum.summaryResultValueHigh">
               <br>
-              {{assaysum.summaryResultValueLow}}&nbsp;(High)
+              {{assaysum.summaryResultValueHigh}}&nbsp;(High)
             </span>
             <br>
             {{assaysum.summaryResultValueUnits}}

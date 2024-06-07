@@ -128,6 +128,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
     'targetName',
     'targetTitle',
     'bioassayType',
+    'analytes',
     'reference',
     'totalResult',
     'totalSummary',
@@ -283,7 +284,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             if (screening.invitroControls.length > 0) {
               screening.invitroControls.forEach(ctr => {
                 if (ctr) {
-                  if (ctr.resultType) {
+                  if (ctr.controlResultType) {
                     // assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
                   }
                 }
@@ -330,10 +331,12 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                 let testAgent = '';
                 let testAgentSubstanceUuid = '';
 
-                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-                assaySummary.testAgent = testAgent;
-                assaySummary.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
                 let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
+                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
+                testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
+
+                assaySummary.testAgent = testAgent;
+                assaySummary.testAgentSubstanceUuid = testAgentSubstanceUuid;
 
                 // Get the index if the value exists in the key 'testAgent'
                 const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);

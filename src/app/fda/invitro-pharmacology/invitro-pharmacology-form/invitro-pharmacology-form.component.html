@@ -7,6 +7,11 @@
       <span>Export JSON</span>
     </a>&nbsp;&nbsp;&nbsp;
 
+    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+    <span *ngIf="!id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -253,9 +258,8 @@
                                 <mat-label>Reference Source Type:&nbsp;<span class="colorred">*</span></mat-label>
                               </div>
 
-                              <app-cv-input class="fieldvalue" domain="DOCUMENT_TYPE" title=""
-                                name="sourceType" [model]="reference.sourceType"
-                                (valueChange)="reference.sourceType = $event">
+                              <app-cv-input class="fieldvalue" domain="DOCUMENT_TYPE" title="" name="sourceType"
+                                [model]="reference.sourceType" (valueChange)="reference.sourceType = $event">
                               </app-cv-input>
                             </div>
 
@@ -1443,9 +1447,9 @@
                                   &nbsp;
                                 </div>
 
-                                <app-cv-input class="col-3-1" domain="QUALIFICATION" title="Control Value Type"
-                                  name="controlValueType" [model]="ctrl.controlValueType"
-                                  (valueChange)="ctrl.controlValueType = $event">
+                                <app-cv-input class="col-3-1" domain="QUALIFICATION" title="Control Result Type"
+                                  name="controlResultType" [model]="ctrl.controlResultType"
+                                  (valueChange)="ctrl.controlResultType = $event">
                                 </app-cv-input>
 
                                 <mat-form-field class="col-3-1">
@@ -1454,8 +1458,8 @@
                                 </mat-form-field>
 
                                 <app-cv-input class="col-3-1" domain="AMOUNT_UNIT" title="Control Reference Value Units"
-                                  name="controlReferenceValueUnits" [model]="ctrl.controReferenceValueUnits"
-                                  (valueChange)="ctrl.controReferenceValueUnits = $event">
+                                  name="controlReferenceValueUnits" [model]="ctrl.controlReferenceValueUnits"
+                                  (valueChange)="ctrl.controlReferenceValueUnits = $event">
                                 </app-cv-input>
                               </div>
 

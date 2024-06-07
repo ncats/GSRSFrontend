@@ -43,10 +43,10 @@ export class GeneralService extends BaseHttpService {
 
     if (substanceKeyType === 'UUID') {
       // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
-      // return substance.uuid;
+       return substance.uuid;
     } else if (substanceKeyType === 'APPROVAL_ID') {
       // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
-      //return substance.approvalID;
+      return substance.approvalID;
     } else if (substanceKeyType === 'BDNUM') {
       // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
 

@@ -297,7 +297,7 @@
                 <mat-label>Target Name:&nbsp;<span class="colorred">*</span></mat-label>
               </div>
 
-              <div class="divflex width95percent widthbordergray">
+              <div class="divflex width95percent">
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.targetName"
                   placeholder="Search Substances" (searchPerformed)="nameSearch($event, TARGET_NAME)"
@@ -308,12 +308,12 @@
                   <!--
                   <span *ngIf="assay.targetName && assay.targetNameSubstanceKey; else noTargetNameSubKey">
                   -->
-                    <span *ngIf="assay.targetNameSubstanceKey">
-                      <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank">
-                        <span class="font12px">Substance Details</span>
-                      </a>
-                    </span>
-                    <!--
+                  <span *ngIf="assay.targetNameSubstanceKey">
+                    <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank">
+                      <span class="font12px">Substance Details</span>
+                    </a>
+                  </span>
+                  <!--
                   </span>
                   <ng-template #noTargetNameSubKey>
                     No Substance Found
@@ -338,7 +338,7 @@
                 <mat-label>Human Homolog Target:</mat-label>
               </div>
 
-              <div class="divflex width95percent widthbordergray">
+              <div class="divflex width95percent">
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.humanHomologTarget"
                   placeholder="Search Substances" (searchPerformed)="nameSearch($event, HUMAN_HOMOLOG_TARGET)"
@@ -346,8 +346,7 @@
                 </app-substance-text-search>
 
                 <div class="marginleft20px margintop10px">
-                  <span
-                    *ngIf="assay.humanHomologTargetSubstanceKeyType == 'UUID' || assay.humanHomologTargetSubstanceKeyType == 'APPROVAL_ID'
+                  <span *ngIf="assay.humanHomologTargetSubstanceKeyType == 'UUID' || assay.humanHomologTargetSubstanceKeyType == 'APPROVAL_ID'
                     || assay.humanHomologTargetSubstanceKeyType == 'BDNUM'">
                     <a [routerLink]="['/substances', assay.humanHomologTargetSubstanceKey]" target="_blank">
                       <span class="font12px">Substance Details</span>
@@ -373,7 +372,7 @@
                 <mat-label>Ligand/Substrate:</mat-label>
               </div>
 
-              <div class="divflex width95percent widthbordergray">
+              <div class="divflex width95percent">
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.ligandSubstrate"
                   placeholder="Search Substances" (searchPerformed)="nameSearch($event, LIGAND_SUBSTRATE)"
@@ -381,8 +380,7 @@
                 </app-substance-text-search>
 
                 <div class="marginleft20px margintop10px">
-                  <span
-                    *ngIf="assay.ligandSubstrateSubstanceKeyType == 'UUID' || assay.ligandSubstrateSubstanceKeyType == 'APPROVAL_ID'
+                  <span *ngIf="assay.ligandSubstrateSubstanceKeyType == 'UUID' || assay.ligandSubstrateSubstanceKeyType == 'APPROVAL_ID'
                     || assay.ligandSubstrateSubstanceKeyType == 'BDNUM'">
                     <a [routerLink]="['/substances', assay.ligandSubstrateSubstanceKey]" target="_blank">
                       <span class="font12px">Substance Details</span>
@@ -424,7 +422,55 @@
               </app-cv-input>
             </div>
 
-            <br>
+
+             <!-- Add Analyte Button -->
+            <div class="form-row">
+              <div class="fieldKey">
+                <span class="font16px colorblue"><b>Analytes
+                    ({{assay.invitroAssayAnalytes.length}})</b>
+                </span>&nbsp;&nbsp;&nbsp;
+              </div>
+              <button class="margintop15px marginleftneg70px" mat-flat-button color="primary" (click)="addNewAssayAnalyte()">
+                Add Analyte
+              </button>
+            </div>
+
+            <!-- FOR LOOP Invitro Analytes -->
+            <div *ngFor="let analy of assay.invitroAssayAnalytes; let indexAnalyte = index">
+
+              <div class="form-row">
+                <div class="fieldKey">
+                  <mat-label>Analyte:</mat-label>
+                </div>
+
+                <div class="divflex width95percent">
+                  <!-- Substance Text Search Suggestions/TypeAhead -->
+                  <app-substance-text-search class="fieldValueSubstance" [searchValue]="analy.analyte"
+                    placeholder="Search Substances" (searchPerformed)="nameSearch($event, 'ANALYTE', indexAnalyte)"
+                    eventCategory="selectorSearch">
+                  </app-substance-text-search>
+
+                  <!-- DELETE ANALYTE BUTTON -->
+                  <button mat-icon-button color="primary" (click)="confirmDeleteAnalyte(indexAnalyte)"
+                    matTooltip="Delete Analyte {{(indexAnalyte+1)}}">
+                    <mat-icon>delete_forever</mat-icon>
+                  </button>
+
+                  <div class="marginleft7px margintop10px">
+                    <span *ngIf="analy.analyteSubstanceKeyType == 'UUID' || analy.analyteSubstanceKeyType == 'APPROVAL_ID'
+                      || analy.analyteSubstanceKeyType == 'BDNUM'">
+                      <a [routerLink]="['/substances', analy.analyteSubstanceKey]" target="_blank">
+                        <span class="font12px">Substance Details</span>
+                      </a>
+                    </span>
+                  </div>
+                </div> <!-- divflex -->
+
+              </div> <!-- form-row -->
+
+            </div> <!-- LOOP: invitroAssayAnalytes -->
+
+            <br><br><br>
           </mat-card-content>
         </mat-card>
 
