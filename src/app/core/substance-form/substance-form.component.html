@@ -145,13 +145,11 @@ x
       </button>
 
     </div>
-  </div>
-
-  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
-    <div class="submission-message" *ngIf="submissionMessage">
-      {{ submissionMessage }}
-    </div>
-    <div *ngIf="validationMessages">
+    <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+      <div class="submission-message" *ngIf="submissionMessage">
+        {{ submissionMessage }}
+      </div>
+      <div *ngIf="validationMessages">
       <span *ngIf=" validationMessages.length > 0">
         <div class="submission-message" *ngIf='!serverError && !approving'>
           Please correct or dismiss the following errors and submit again:
@@ -174,20 +172,21 @@ x
         </span>
         </div>
       </span>
-      <div class="dismiss-container">
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
-                [disabled]="isLoading || (this.validationResult === false)">{{ validationMessages && validationMessages.length > 0 ? 'Dismiss All and ' : '' }}
-          Submit
-        </button>
-        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false"
-        >
-          Cancel
-        </button>
-        <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
-                [disabled]="isLoading || !canApprove"> Confirm Approval
-        </button>
+        <div class="dismiss-container">
+          <span class="middle-fill"></span>
+          <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
+                  [disabled]="isLoading || (this.validationResult === false)">{{ validationMessages && validationMessages.length > 0 ? 'Dismiss All and ' : '' }}
+            Submit
+          </button>
+          <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false"
+          >
+            Cancel
+          </button>
+          <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
+                  [disabled]="isLoading || !canApprove"> Confirm Approval
+          </button>
 
+        </div>
       </div>
     </div>
   </div>
