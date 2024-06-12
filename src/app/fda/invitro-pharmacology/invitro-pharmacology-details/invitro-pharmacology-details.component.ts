@@ -15,6 +15,7 @@ import { MainNotificationService } from '@gsrs-core/main-notification';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
+import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
@@ -33,6 +34,11 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   testCompoundSubId = '';
   ligandSubId = '';
   controlSubId = '';
+  showMoreLessFieldsArray: Array<boolean> = [];
+  showMoreLessResultFieldsArray: Array<boolean> = [];
+  showMoreLessFields = true;
+  showMoreLessResultFields = true;
+  resultInformationIndex = -1;
 
   downloadJsonHref: any;
   jsonFileName: string;
@@ -72,7 +78,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     } else {
       this.handleSubstanceRetrivalError();
     }
-    this.loadingService.setLoading(false);
+    //this.loadingService.setLoading(false);
   }
 
   ngOnDestroy(): void {
@@ -97,25 +103,18 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   }
 
   getInvitroPharmacology(): void {
-    const invitroSubscribe = this.invitroPharmacologyService.getAssayScreening(this.id).subscribe(response => {
-      this.assay = response;
-      if (Object.keys(this.assay).length > 0) {
+    const invitroSubscribe = this.invitroPharmacologyService.getAssayById(this.id).subscribe(response => {
+      if (response) {
+        this.assay = response;
 
-        this.titleService.setTitle(`Invitro Pharmacology Assay Details ` + this.id);
+        // Create Result Information List to display on the Details page
+        this.createResultInfomrationList();
 
-        /*
-        // Get Substance Id for Target Assay
-        if (this.assay.assayTargetSubId) {
-          const assayTargetSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.assayTargetUnii).subscribe
-            (substance => {
-              if (substance) {
-                this.assayTargetSubId = substance.uuid;
-              }
-            });
-          this.subscriptions.push(assayTargetSubIdSubscription);
+        if (Object.keys(this.assay).length > 0) {
+          this.titleService.setTitle(`Invitro Pharmacology Assay Details ` + this.id);
+
+          this.loadingService.setLoading(false);
         }
-        */
-
         /*
 
         // Get Substance Id for Test Compound
@@ -143,91 +142,9 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
         }
         */
 
-        /*
-        // Get Substance Id for control
-        if (this.assay.controlUnii) {
-          const controlSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.controlUnii).subscribe
-            (substance => {
-              if (substance) {
-                this.controlSubId = substance.uuid;
-              }
-            });
-          this.subscriptions.push(controlSubIdSubscription);
-        }
-        */
-
-        /*
-        // Get Substance Name for SubstanceUuid in SubstanceList
-        this.impurities.impuritiesSubstanceList.forEach((elementRel, indexRel) => {
-          if (elementRel.substanceUuid) {
-            const impSubNameSubscription = this.generalService.getSubstanceBySubstanceUuid(elementRel.substanceUuid).subscribe
-              (substance => {
-                if (substance) {
-                  elementRel.substanceName = substance._name;
-                  elementRel.approvalID = substance.approvalID;
-                }
-              });
-            this.subscriptions.push(impSubNameSubscription);
-          }
-        });
-
-        // Get Substance Name for SubstanceUuid in ImpuritiesDetailsList
-        this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
-          elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
-            elementRelTest.impuritiesDetailsList.forEach((elementRelImpuDet) => {
-              if (elementRelImpuDet.relatedSubstanceUuid) {
-                const impDetNameSubscription = this.generalService.getSubstanceBySubstanceUuid
-                  (elementRelImpuDet.relatedSubstanceUuid)
-                  .subscribe(substance => {
-                    if (substance) {
-                      elementRelImpuDet.substanceName = substance._name;
-                      elementRelImpuDet.relatedSubstanceUnii = substance.approvalID;
-                    }
-                  });
-                this.subscriptions.push(impDetNameSubscription);
-              }
-            });
-          });
-        });
-
-        // Get Substance Name for SubstanceUuid in ImpuritiesResidualSolventsList
-        this.impurities.impuritiesSubstanceList.forEach((elementSub) => {
-          elementSub.impuritiesResidualSolventsTestList.forEach((elementResidualSolTest) => {
-            elementResidualSolTest.impuritiesResidualSolventsList.forEach((elementResidual) => {
-              if (elementResidual.relatedSubstanceUuid) {
-                const impResidualNameSubscription = this.generalService.getSubstanceBySubstanceUuid
-                  (elementResidual.relatedSubstanceUuid).subscribe(substance => {
-                    if (substance) {
-                      elementResidual.substanceName = substance._name;
-                      elementResidual.relatedSubstanceUnii = substance.approvalID;
-                    }
-                  });
-                this.subscriptions.push(impResidualNameSubscription);
-              }
-            });
-          });
-        });
-
-        // Get Substance Name for SubstanceUuid in ImpuritiesInorganicList
-        this.impurities.impuritiesSubstanceList.forEach((elementSub) => {
-          elementSub.impuritiesInorganicTestList.forEach((elementInorganicTest) => {
-            elementInorganicTest.impuritiesInorganicList.forEach((elementInorganic) => {
-              if (elementInorganic.relatedSubstanceUuid) {
-                const impInorganicNameSubscription = this.generalService.getSubstanceBySubstanceUuid
-                  (elementInorganic.relatedSubstanceUuid).subscribe(substance => {
-                    if (substance) {
-                      elementInorganic.substanceName = substance._name;
-                      elementInorganic.relatedSubstanceUnii = substance.approvalID;
-                    }
-                  });
-                this.subscriptions.push(impInorganicNameSubscription);
-              }
-            });
-          });
-        });
-        */
-      }
+      } // response
     }, error => {
+      this.loadingService.setLoading(false);
       this.handleSubstanceRetrivalError();
     });
     this.subscriptions.push(invitroSubscribe);
@@ -249,8 +166,19 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     this.jsonFileName = 'invitro_pharm_screening_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
+  showJSON(): void {
+    const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
+      width: '90%',
+      height: '90%',
+      data: this.assay
+    });
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    });
+    this.subscriptions.push(dialogSubscription);
+  }
+
   openImageModal(uuid: string) {
-    alert(uuid);
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '90%',
       width: '650px',
@@ -267,6 +195,90 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
       this.overlayContainer.style.zIndex = null;
       subscription.unsubscribe();
     });
+  }
+
+  toggleShowMoreLessFields() {
+    this.showMoreLessFields = !this.showMoreLessFields;
+  }
+
+  toggleShowMoreLessResultFields() {
+    this.showMoreLessResultFields = !this.showMoreLessResultFields;
+  }
+
+  toggleShowMoreLessFieldsArray(indexScreening) {
+    this.showMoreLessFieldsArray[indexScreening] = !this.showMoreLessFieldsArray[indexScreening];
+  }
+
+  toggleShowMoreLessResultFieldsArray(indexScreening) {
+    this.showMoreLessResultFieldsArray[indexScreening] = !this.showMoreLessResultFieldsArray[indexScreening];
+  }
+
+  createResultInfomrationList() {
+    if (this.assay) {
+
+      this.assay._resultInformationList = [];
+
+      /* Assay Informtion Reference loop */
+      this.assay.invitroAssayScreenings.forEach(screening => {
+
+        /* Invitro Assay Control exists */
+        if (screening.invitroControls.length > 0) {
+          //  assaySummary.controls = screening.invitroControls;
+        }
+
+        if (screening.invitroAssayResultInformation) {
+
+          let resultInfoId = screening.invitroAssayResultInformation.id;
+          let resultInfo = screening.invitroAssayResultInformation;
+
+          // Get the index if the value exists in the key 'referenceSourceTypeNumber'
+          const foundIndex = this.assay._resultInformationList.findIndex(record => record.id === resultInfoId);
+
+          // If value found in the existing list, add the current list.
+          if (foundIndex > -1) {
+            if (screening.invitroAssayResult != null) {
+              this.assay._resultInformationList[foundIndex].invitroAssayResultList.push(screening.invitroAssayResult);
+            }
+
+            if (screening.invitroSummary != null) {
+              this.assay._resultInformationList[foundIndex].invitroSummaryList.push(screening.invitroSummary);
+            }
+
+            if (screening.invitroControls != null) {
+              this.assay._resultInformationList[foundIndex].invitroControlList = screening.invitroControls;
+            }
+          } else {
+            // New, Not found in the exising result information List
+            let invitroAssayResultList = [];
+            let invitroSummaryList = [];
+            let invitroControls = null;
+
+            if (screening.invitroAssayResult != null) {
+              invitroAssayResultList.push(screening.invitroAssayResult);
+            }
+
+            if (screening.invitroSummary != null) {
+              invitroSummaryList.push(screening.invitroSummary);
+            }
+
+            if (screening.invitroControls != null) {
+              invitroControls = screening.invitroControls;
+            }
+
+            const newResultInfo = { 'id': resultInfoId, 'invitroAssayResultInformation': resultInfo, 'invitroAssayResultList': invitroAssayResultList, 'invitroSummaryList': invitroSummaryList, 'invitroControlList': invitroControls };
+            this.assay._resultInformationList.push(newResultInfo);
+
+            // Set Show/Hide value to true. It means hide more fields initially
+            this.resultInformationIndex = this.resultInformationIndex + 1;
+            this.showMoreLessFieldsArray[this.resultInformationIndex] = true;
+            this.showMoreLessResultFieldsArray[this.resultInformationIndex] = true;
+
+          } // else
+        } // invitroAssayResultInformation
+
+      }); // LOOP: AssayScreenings
+
+    } // if assay exists
   }
 
 }

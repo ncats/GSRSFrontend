@@ -270,6 +270,10 @@
   flex: 1 1 auto;
 }
 
+.margintopneg5px {
+  margin-top: -5px;
+}
+
 .margintopneg10px {
   margin-top: -10px;
 }
@@ -312,6 +316,10 @@
 
 .marginbottom10px {
   margin-bottom: 10px;
+}
+
+.marginbottom15px {
+  margin-bottom: 15px;
 }
 
 .marginbottom20px {
@@ -490,6 +498,11 @@
   min-width: 220px;
 }
 
+.width230px {
+  width: 230px;
+  min-width: 230px;
+}
+
 .width290px {
   width: 290px;
 }
@@ -535,7 +548,7 @@
 }
 
 .colormaroon {
-  color: rgb(143, 12, 12);
+  color: var(--regular-maroon-color);
 }
 
 .colorblack {
@@ -548,6 +561,10 @@
 
 .colorblue {
   color: var(--regular-blue-color);
+}
+
+.colorbluelight {
+  color: var(--secondary-rgb-blue);
 }
 
 .font11px {

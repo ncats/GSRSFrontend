@@ -18,8 +18,12 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
   @Input() impuritiesTest: ImpuritiesTesting;
   @Input() impuritiesTestIndex: number;
   @Input() impuritiesSubstanceIndex: number;
-  searchValue: string;
+
   private subscriptions: Array<Subscription> = [];
+  searchValue: string;
+  elutionType = 'Isocratic';
+
+  letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K'];
 
   constructor(
     private impuritiesService: ImpuritiesService,
@@ -39,6 +43,46 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 
   addNewElutionSolvent($event) {
     this.impuritiesService.addNewImpuritiesElutionSolvent(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
+  }
+
+  addNewSolution() {
+     // Only allowed to add up to 10 Solutiions. Up to Solution K
+    if (this.impuritiesTest.impuritiesSolutionList.length < 10) {
+      this.impuritiesService.addNewSolution(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
+
+      let lastSolutionIndex = this.impuritiesService.impurities.impuritiesSubstanceList[this.impuritiesSubstanceIndex].impuritiesTestList[this.impuritiesTestIndex].impuritiesSolutionList.length - 1;
+
+      // Assign letter A, B,.. in the field based on the solution index
+      this.impuritiesService.impurities.impuritiesSubstanceList[this.impuritiesSubstanceIndex].impuritiesTestList[this.impuritiesTestIndex]
+        .impuritiesSolutionList[lastSolutionIndex].solutionLetter = this.getLetter(lastSolutionIndex);
+
+    } else {
+      // Only allowed to add up to 10 Solutiions, otherwise display message
+      alert("Only allowed to add up to Solution K");
+    }
+  }
+
+  confirmDeleteImpuritiesSolution(solutionIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Solution ' + this.getLetter(solutionIndex) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteImpuritiesSolution(solutionIndex);
+      }
+    });
+  }
+
+  deleteImpuritiesSolution(solutionIndex: number) {
+    this.impuritiesService.deleteImpuritiesSolution(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, solutionIndex);
+
+    // After Solution is deleted, reassign the solutionletter to A, B, ect by Solution index
+    this.impuritiesTest.impuritiesSolutionList.forEach((solution, index) => {
+      if (solution) {
+        solution.solutionLetter = this.getLetter(index);
+      }
+    });
   }
 
   addNewSolutionTableDetails() {
@@ -127,4 +171,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     this.subscriptions.push(substanceSubscribe);
   }
 
+  getLetter(index: number): string {
+    return this.letters[index];
+  }
 }

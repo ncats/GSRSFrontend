@@ -43,8 +43,12 @@
   display: none;
 }
 
+.middle-fill {
+  flex: 1 1 auto;
+}
+
 .title {
-  font-size: 25px;
+  font-size: 23px;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
   /*color: var(--primary-title-color);*/
@@ -67,7 +71,7 @@
 }
 
 .headerstyle {
-  border: 1px solid var(--blue-color);
+  /*border: 1px solid var(--blue-color);*/
   border-bottom: none;
   height: 35px;
   background-color: var(--regular-light-yellow-color);
@@ -85,13 +89,15 @@
 }
 
 .headerstyle3 {
-  background: #C7C7C7;
-  background: linear-gradient(270deg, #C7C7C7, #FFFFFF);
+  /*background: #C7C7C7;
+  background: linear-gradient(270deg, #C7C7C7, #FFFFFF);*/
+  background: var(--regular-offwhite-color);
   border: 1px solid var(--blue-color);
   border-bottom: none;
   height: 35px;
   border-radius: 15px 15px 0px 0px;
-  color: #2e19c9;
+  color: var(--blue-color);
+  /*color: #361fe7;*/
   font-size: 16px;
   font-weight: 700;
 }
@@ -188,8 +194,16 @@
   word-wrap: break-word;
 }
 
+.margintopneg5px {
+  margin-top: -5px;
+}
+
 .margintopneg10px {
   margin-top: -10px;
+}
+
+.margintopneg15px {
+  margin-top: -15px;
 }
 
 .margintop10px {
@@ -284,6 +298,10 @@
   font-size: 11px;
 }
 
+.font12px {
+  font-size: 12px;
+}
+
 .font13px {
   font-size: 13px;
 }
@@ -320,16 +338,20 @@
   color: var(--regular-blue-color);
 }
 
+.colorbluelight {
+  color: var(--blue-color);
+}
+
 .colororange {
   color: var(--orange-color);
+}
+
+.colormaroon {
+  color: var(--regular-maroon-color);
 }
 
 .colorgreen {
   color: var(--regular-green-color);
-}
-
-.colororange {
-  color: var(--orange-color);
 }
 
 .width30px {
@@ -351,9 +373,18 @@
   width: 100px;
 }
 
+.width150px {
+  width: 150px;
+}
+
 .width200px {
   width: 200px;
   max-width: 200px;
+}
+
+.width250px {
+  width: 250px;
+  max-width: 250px;
 }
 
 .width400px {
@@ -384,6 +415,11 @@
 .width50percent {
   width: 50%;
   max-width: 50%;
+}
+
+.width53percent {
+  width: 53%;
+  max-width: 53%;
 }
 
 .width57percent {
@@ -438,6 +474,7 @@ fieldset.border {
   border: solid 2px var(--fieldset-red-border-color)!important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
+  margin-bottom: 40px;
 }
 
 legend.border {
@@ -445,13 +482,16 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 14px;
-  color: var(--legend-red-border-color);
+  color: var(--regular-white-color);
   font-family: Verdana;
   font-weight: bold;
   padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
   margin-bottom: 0px;
-  border: 2px solid var(--regular-orangered-color);
-  background-color: var(--legend-bg-color);
+  border: 2px solid var(--regular-blue-color);
+  background-color: var(--legend-bg-blue-color);
+  border-radius: 15px 15px 15px 15px;
 }
 
 fieldset.border2 {
@@ -496,7 +536,7 @@ table.tableStyle td, table.tableStyle th {
 }
 
 table.tableStyle tbody td {
-  font-size: 14px;
+  font-size: 13px;
   vertical-align: top;
   padding: 8px 8px;
 }
@@ -511,7 +551,7 @@ table.tableStyle thead {
 }
 
 table.tableStyle thead th {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--table-th-color);
   border-left: 1px solid var(--table-th-border-color-2);

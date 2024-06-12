@@ -57,7 +57,7 @@
 }
 
 .divcenter {
-  max-width: 90%;
+  max-width: 95%;
   margin: 0 auto;
 }
 
@@ -73,6 +73,31 @@
   padding-left: 10px;
   height: 50px;
   color: #FFFFFF;
+}
+
+.headerstyle2 {
+  border-radius: 7px 7px 0px 0px;
+  background-color: #ede0b2;
+  height: 40px;
+  font-size: 15px;
+  font-weight: bold;
+  padding-top: 10px;
+  padding-left: 5px;
+  margin-right: 30px;
+}
+
+.fieldKey {
+  display: inline-block;
+  width: 250px;
+  max-width: 250px;
+  padding-right: 5px;
+}
+
+.fieldvalue {
+  width: 200px;
+  max-width: 200px;
+  color: #3b13da;
+  font-weight: 700;
 }
 
 .row {
@@ -297,10 +322,6 @@
   margin-top: 90px;
 }
 
-.margintop120px {
-  margin-top: 120px;
-}
-
 .margintop150px {
   margin-top: 150px;
 }
@@ -311,6 +332,10 @@
 
 .marginleft30px {
   margin-left: 30px;
+}
+
+.marginleft50px {
+  margin-left: 50px;
 }
 
 .padtop5px {
@@ -349,8 +374,32 @@
   width: 200px;
 }
 
+.width300px {
+  width: 300px;
+}
+
+.width400px {
+  width: 400px;
+}
+
+.width30percent {
+  width: 30%;
+}
+
 .width32percent {
   width: 32%;
+}
+
+.width80percent {
+  width: 80%;
+}
+
+.width95percent {
+  width: 95%;
+}
+
+.width100percent {
+  width: 100%;
 }
 
 .colorgray {
@@ -365,6 +414,10 @@
   color: var(--regular-green-color);
 }
 
+.colorwhite {
+  color: var(--regular-white-color);
+}
+
 .font11px {
   font-size: 11px;
 }
@@ -377,6 +430,10 @@
   font-size: 13px;
 }
 
+.font14px {
+  font-size: 14px;
+}
+
 .font15px {
   font-size: 15px;
 }
@@ -387,6 +444,22 @@
 
 .font18px {
   font-size: 18px;
+}
+
+.font20px {
+  font-size: 20px;
+}
+
+.backgroundgreen {
+  background-color: var(--regular-green-color);
+}
+
+.backgroundred {
+  background-color: var(--regular-red-color);
+}
+
+.backgroundyellow {
+  background-color: var(--regular-yellow-color);
 }
 
 .textalignright {
@@ -435,6 +508,10 @@ hr {
   height: 30px;
   border: 1px solid var(--regular-grey-color);
   background: var(--tabstyle-bg-img-end-color);
+}
+
+.mat-icon {
+  vertical-align: middle;
 }
 
 .mat-form-field-style > {
@@ -516,6 +593,7 @@ table.tableStyle {
   border: 1px solid var(--secondary-blue-color);
   background-color: var(--table-bg-color);
   width: 100%;
+  max-width: 100%;
   text-align: left;
   border-collapse: collapse;
 }

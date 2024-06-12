@@ -28,7 +28,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
-import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pharmacology.model';
+import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../model/invitro-pharmacology.model';
 
 @Component({
   selector: 'app-invitro-pharmacology-assay-data-import',
@@ -37,18 +37,43 @@ import { InvitroAssayInformation, ValidationMessage } from '../model/invitro-pha
 })
 export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
+  private TARGET_NAME = "TARGET_NAME";
+  private HUMAN_HOMOLOG_TARGET = "HUMAN_HOMOLOG_TARGET";
+  private LIGAND_SUBSTRATE = "LIGAND_SUBSTRATE";
+  private ANALYTE = "ANALYTE";
+
+  substanceKeyTypeForInvitroPharmacologyConfig = null;
+
   private subscriptions: Array<Subscription> = [];
 
   importDataList: Array<any> = [];
   importedBulkAssayJson: Array<InvitroAssayInformation> = [];
   importedAssayJson: any;
 
-  message = '';
-  submitMessage = '';
-  disabled = "true";
+  disableValidateButton = "true";
+  disableImportButton = "true";
+
+  importValidateMessageArray: Array<any> = [];
+  importSaveMessageArray: Array<any> = [];
+
   willDownload = false;
 
-  name = 'This is XLSX TO JSON CONVERTER';
+  isAllRecordValid: boolean;
+
+  isAllRecordValidated = false;
+  isAllRecordSaved = false;
+
+  isLoading = false;
+
+  errorMessage: string;
+  serverError: boolean;
+  submissionMessage: string;
+  showSubmissionMessages = false;
+  validationResult = false;
+  validationMessages: Array<ValidationMessage> = [];
+  message = '';
+  submitMessage = '';
+  isAdmin = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -66,6 +91,16 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle("IVP Import Assay Data");
+
+    // Check if user has either Admin or Updater role
+    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
+      this.isAdmin = response;
+    });
+
+    // Get Invitro Pharmacology Substance Key Type from the configuration file
+    this.substanceKeyTypeForInvitroPharmacologyConfig = this.generalService.getSubstanceKeyTypeForInvitroPharmacologyConfig();
+
   }
 
   ngOnDestroy(): void {
@@ -102,6 +137,11 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
       return;
     }
     else {
+      this.importValidateMessageArray = [];
+      this.disableImportButton = 'true';
+      this.isAllRecordValidated = false;
+      this.submitMessage = '';
+
       // Empty the list
       this.importDataList.length = 0;
 
@@ -110,8 +150,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
       // Read the Excel file
       reader.onload = (e: any) => {
-
-        let heading = [['FirstName', 'Last Name', 'Email']];
 
         const bstr: string = e.target.result;
         const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
@@ -154,8 +192,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             element["standardLigandSubstrateConcentrationUnits"] = this.replaceUndefinedValue(element["Standard Ligand/Substrate Concentration Units"]);
 
             // Assay Set
-            element["assaySet"] = this.replaceUndefinedValue(element["Assay Set"]);
-
+            let assaySet = this.replaceUndefinedValue(element["Assay Set"]);
+            this.createAssaySet(element);
 
             // Delete the key. 23 Fields
             delete element["External Assay Source"];
@@ -184,7 +222,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             delete element["Standard Ligand/Substrate Concentration"]
             delete element["Standard Ligand/Substrate Concentration Units"]
 
-            delete element["Assay Set"]
+            // delete element["Assay Set"]
 
             // Add to list
             this.importDataList.push(element);
@@ -192,55 +230,245 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
         }); // LOOP: importedAssayJson
 
-        // Un-disable the import button
-        this.disabled = "false";
+        this.disableValidateButton = 'false';
+        // this.disableImportButton = 'false';
 
       } // reader.onload
 
       reader.readAsBinaryString(target.files[0]);
 
-
     } // else
 
-    // let datafirstrow = (XLSX.utils.sheet_to_json(ws, {skipHeader: true, origin: "A2"}));
-    // console.log(datafirstrow);
   }
 
   replaceUndefinedValue(value): string {
-    return (value === undefined || value == null || value.length <= 0) ? "": value;
+    return (value === undefined || value == null || value.length <= 0) ? "" : value;
   }
 
-  /*
-  setDownload(data) {
-    this.willDownload = true;
-    setTimeout(() => {
-      const el = document.querySelector("#download");
-      el.setAttribute("href", `data:text/json;charset=utf-8,${encodeURIComponent(data)}`);
-      el.setAttribute("download", 'xlsxtojson.json');
-    }, 1000)
-  }
-  */
+  createAssaySet(element: any) {
+    const newAssaySet: InvitroAssaySet = {};
 
-  importAssayJSONIntoDatabase() {
+    let sets: Array<InvitroAssaySet> = [];
+    let assaySet = this.replaceUndefinedValue(element["Assay Set"]);
+    newAssaySet.assaySet = assaySet;
+    sets.push(newAssaySet);
+    element["invitroAssaySets"] = sets;
+  }
+
+  validate(): void {
+    this.isLoading = true;
+    this.serverError = false;
+    this.loadingService.setLoading(true);
+
+    this.submitMessage = "Validating Assay records, please wait .....";
+
+    this.importValidateMessageArray = [];
     // Loop through each Assay JSON Record, and save into the database
     this.importedAssayJson.forEach((element, index) => {
+
+      // NEED THIS, otherwise the index value is getting changed before validation comes back
+      const localIndex = index;
+      // setTimeout(() => {
       if (element) {
-        //  console.log("index: " + index + "     " + JSON.stringify(element));
-        this.message = this.message + "index: " + index + "     " + JSON.stringify(element) + "\n\n";
-        this.invitroPharmacologyService.assay = JSON.parse(JSON.stringify(element));
-        this.invitroPharmacologyService.saveAssay().subscribe(response => {
-          this.message = "";
-          this.submitMessage = "Import Successful";
+
+        const assay = JSON.parse(JSON.stringify(element));
+        this.invitroPharmacologyService.assay = assay;
+
+        // Validate Assay
+        this.invitroPharmacologyService.validateAssay().pipe(take(1)).subscribe(results => {
+          this.submissionMessage = null;
+
+          // NEED this two fields to check if valid or not
+          this.validationMessages = results.validationMessages.filter(
+            message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+          this.validationResult = results.valid;
+
+          const saved = { 'indexRecord': index, 'externalAssaySource': assay.externalAssaySource, 'externalAssayId': assay.externalAssayId, validationMessages: this.validationMessages, 'valid': results.valid }
+          this.importValidateMessageArray.push(saved);
+
+          if (this.importDataList.length == this.importValidateMessageArray.length) {
+
+            // Get the index if the value exists in the array
+            // if index returns -1, all records are Valid
+            const indexAllRecordValid = this.importValidateMessageArray.findIndex(record => record.valid === false);
+
+            // Not all records are valid, has ERROR
+            if (indexAllRecordValid >= 0) {
+              this.isAllRecordValid = false;
+            } else {
+              // ALL RECORDS VALID
+              this.isAllRecordValid = true;
+            }
+
+            // SORT the validation array by id
+            this.importValidateMessageArray.sort((a, b) => {
+              return a.indexRecord - b.indexRecord;
+            });
+
+            if (this.isAllRecordValid == true) {
+              this.disableImportButton = 'false';
+            }
+
+            this.isAllRecordValidated = true;
+            this.submitMessage = '';
+
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+          }
+
+        }, error => {
+          this.addServerError(error);
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
         });
       }
-    })
+
+    }); // for import data list
+  }
+
+  addServerError(error: any): void {
+    this.serverError = true;
+    this.validationResult = false;
+    this.validationMessages = null;
+
+    const message: ValidationMessage = {
+      actionType: 'server failure',
+      links: [],
+      appliedChange: false,
+      suggestedChange: false,
+      messageType: 'ERROR',
+      message: 'Unknown Server Error'
+    };
+    if (error && error.error && error.error.message) {
+      message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
+    } else if (error && error.error && (typeof error.error) === 'string') {
+      message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
+    } else if (error && error.message) {
+      message.message = 'Server Error ' + (error.status + ': ' || '') + error.message;
+    }
+    this.validationMessages = [message];
+    this.showSubmissionMessages = true;
+  }
+
+  importAssayJSONIntoDatabase() {
+    this.importValidateMessageArray = [];
+    this.importSaveMessageArray = [];
+    this.isAllRecordSaved = false;
+    this.submitMessage = '';
+
+    this.isLoading = true;
+    this.loadingService.setLoading(this.isLoading);
+
+    this.submitMessage = "Saving Assay records into the database, please wait .....";
+
+    // Loop through each Assay JSON Record, and save into the database
+    this.importedAssayJson.forEach((element, index) => {
+
+      setTimeout(() => {
+        if (element) {
+          this.invitroPharmacologyService.assay = JSON.parse(JSON.stringify(element));
+
+          // this.populateSubstanceKey(this.invitroPharmacologyService.assay.targetName, this.TARGET_NAME);
+          // this.populateSubstanceKey(this.invitroPharmacologyService.assay.targetName, this.TARGET_NAME);
+          // this.populateSubstanceKey(this.invitroPharmacologyService.assay.targetName, this.TARGET_NAME);
+
+          // Save Into the database
+          this.invitroPharmacologyService.saveAssay().subscribe(response => {
+            if (response) {
+              if (response.id) {
+
+                const saved = { 'indexRecord': index, 'externalAssaySource': response.externalAssaySource, 'externalAssayId': response.externalAssayId, 'saved': 'Yes', 'savedId': response.id }
+                this.importSaveMessageArray.push(saved);
+              }
+
+              // All records saved
+              if (index == this.importedAssayJson.length - 1) {
+                this.message = "";
+                this.submitMessage = "Import Successful";
+
+                // Clear Validation variables
+                this.importValidateMessageArray = [];
+                this.isAllRecordValid = false;
+                this.isAllRecordValidated = false;
+
+                this.disableValidateButton = 'true';
+                this.disableImportButton = 'true';
+
+                this.isAllRecordSaved = true;
+
+                // SORT the validation array by id
+                this.importSaveMessageArray.sort((a, b) => {
+                  return a.indexRecord - b.indexRecord;
+                });
+
+                this.isLoading = false;
+                this.loadingService.setLoading(this.isLoading);
+              }
+            }
+          }, error => {
+
+            this.submitMessage = "";
+
+            this.isLoading = false;
+            this.loadingService.setLoading(this.isLoading);
+          });
+        }
+      }, 10000);  // timeout
+    });
+  }
+
+  populateSubstanceKey(ingredientName: string, fieldName: string) {
+
+    /****************************************************************/
+    /* SUBSTANCE KEY RESOLVER BEGIN                                 */
+    /****************************************************************/
+    // Get Substance record by Ingredient/Substance Name, to get Substance UUID and Approval ID
+    const substanceSubscribe = this.generalService.getSubstanceByName(ingredientName).subscribe(response => {
+      if (response) {
+        if (response.content && response.content.length > 0) {
+
+          // Loop through the search results and if the Substance/Ingredient name is same as name in the search
+          // result, select that substance
+          response.content.forEach(substance => {
+
+            if (substance) {
+              if (substance._name) {
+
+                // If Substance Name is same as in the Search Result
+                if (substance._name === ingredientName) {
+
+                  /****************************************************************/
+                  /* SUBSTANCE KEY RESOLVER BEGIN                                 */
+                  /****************************************************************/
+                  let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
+
+                  // Set the Substance Key and Substance Key Type
+                  if (fieldName && fieldName === this.TARGET_NAME) {
+                    // this.assay.targetNameApprovalId = substance.approvalID;
+                    // this.assay.targetNameSubstanceKey = substanceKey;
+                    //this.assay.targetNameSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+                  }
+                  /* SUBSTANCE KEY RESOLVER END */
+
+                } // if substance._name === ingredientName
+
+              } // if substance._name is not null
+            } // if Substance exists
+
+          });  // LOOP Substance search result
+
+        } // if response content > 0
+      } // if response
+    });
+    this.subscriptions.push(substanceSubscribe);
+
+    /* SUBSTANCE KEY RESOLVER END */
+
   }
 
   showJSON(): void {
     let json: any = {};
-    alert(this.importedAssayJson);
     if (this.importedAssayJson !== undefined || this.importedAssayJson != null) {
-      alert("AAAAAAAAAAAAA");
       json = this.importedAssayJson;
     }
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {

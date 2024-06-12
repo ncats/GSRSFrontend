@@ -22,7 +22,7 @@
     "start:gsrs:pre-prod": "npm run build-libraries && npm run process-dojo && ng serve --aot=true --configuration=gsrs.pre-prod --sourceMap=true",
     "start:gsrs:prod": "npm run build-libraries && npm run process-dojo && ng serve --aot=true --configuration=gsrs.prod --sourceMap=true",
     "build:fda:pre-prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=fda.pre-prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
-    "build:fda:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --configuration=fda.prod && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
+    "build:fda:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/ui/ --configuration=fda.prod && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "build:gsrs:pre-prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.pre-prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "build:gsrs:prod": "npm run build-libraries && npm run clear-libs-src && ng build --base-href=/ginas/app/beta/ --aot=true --configuration=gsrs.prod --sourceMap=true && node process-index.js && cd lib && extract-zip dojo-custom-jsdraw.zip && cd .. && npm run copy-libs-dist && npm run build-server",
     "test": "ng test",
@@ -79,7 +79,7 @@
     "zone.js": "0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "13.2.1",
+    "@angular-devkit/build-angular": "13.3.11",
     "@angular-eslint/builder": "13.0.1",
     "@angular-eslint/eslint-plugin": "13.0.1",
     "@angular-eslint/eslint-plugin-template": "13.0.1",

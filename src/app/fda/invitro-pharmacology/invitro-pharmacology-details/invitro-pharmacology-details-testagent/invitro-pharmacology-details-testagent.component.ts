@@ -121,12 +121,14 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
   allAssayColumns: string[] = [
     'number',
     'viewDetails',
+    'assaySet',
     'assayId',
     'externalAssayId',
     'externalAssaySource',
     'targetName',
     'targetTitle',
     'bioassayType',
+    'analytes',
     'reference',
     'totalResult',
     'totalSummary',
@@ -208,7 +210,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
       this.allAssaysList.forEach(assay => {
         this.totalResultRecords = 0;
-         this.totalSummaryRecords = 0;
+        this.totalSummaryRecords = 0;
         assay.invitroAssayScreenings.forEach(screening => {
 
           /* Invitro Assay Result Object exists */
@@ -282,7 +284,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             if (screening.invitroControls.length > 0) {
               screening.invitroControls.forEach(ctr => {
                 if (ctr) {
-                  if (ctr.resultType) {
+                  if (ctr.controlResultType) {
                     // assaySummary.calculateIC50Value = this.calculate1C50(ctr.resultType, screening.invitroAssayResult.resultValue, screening.invitroAssayResult.testAgentConcentration);
                   }
                 }
@@ -290,6 +292,9 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             }
 
             if (screening.invitroSummary) {
+
+              assaySummary.summaryTargetName = screening.invitroSummary.targetName;
+              assaySummary.summaryTargetNameSubstanceKey = screening.invitroSummary.targetNameSubstanceKey;
 
               assaySummary.summaryResultValueAvg = screening.invitroSummary.resultValueAverage;
               assaySummary.summaryResultValueLow = screening.invitroSummary.resultValueLow;
@@ -307,8 +312,10 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
             /* Invitro Reference Object exists */
             if (screening.invitroAssayResultInformation) {
 
+              /*
               let referenceSourceTypeNumber = '';
               let referenceSourceNumber = '';
+
               if (screening.invitroAssayResultInformation.invitroReference) {
                 // Need this so it will not display undefined value
                 if (screening.invitroAssayResultInformation.invitroReference.referenceSource) {
@@ -317,18 +324,22 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                 referenceSourceTypeNumber = screening.invitroAssayResultInformation.invitroReference.referenceSourceType + ' ' + referenceSourceNumber;
                 assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
               } // if invitroReference exists
+              */
 
+              assaySummary.referenceSourceTypeNumber = this.getReferenceFields(screening);
 
               /* Invitro Test Agent Object exists */
               if (screening.invitroAssayResultInformation.invitroTestAgent) {
 
                 let testAgent = '';
-                let testAgentSubstanceUuid = '';
+                let testAgentSubstanceKey = '';
 
-                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-                assaySummary.testAgent = testAgent;
-                assaySummary.testAgentSubstanceUuid = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceUuid;
                 let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
+                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
+                testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
+
+                assaySummary.testAgent = testAgent;
+                assaySummary.testAgentSubstanceKey = testAgentSubstanceKey;
 
                 // Get the index if the value exists in the key 'testAgent'
                 const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
@@ -341,7 +352,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
                   let assayList = [];
                   assayList.push(assaySummary);
                   const appScreening = {
-                    'testAgent': testAgent, 'testAgentSubstanceUuid': testAgentSubstanceUuid, 'testAgentId': testAgentId,
+                    'testAgent': testAgent, 'testAgentSubstanceKey': testAgentSubstanceKey, 'testAgentId': testAgentId,
                     'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList
                   };
                   this.allScreeningTestAgents.push(appScreening);
@@ -366,6 +377,36 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
       this.loadingService.setLoading(false);
       this.showSpinner = false;  // Stop progress spinner
     });
+  }
+
+  getReferenceFields(screening: InvitroAssayScreening): any {
+    let referenceSourceType = '';
+    let referenceSourceId = '';
+    let referenceSourceTypeAndId = '';
+
+    if (screening.invitroAssayResultInformation) {
+
+      if (screening.invitroAssayResultInformation.invitroReferences.length > 0) {
+        screening.invitroAssayResultInformation.invitroReferences.forEach(reference => {
+          if (reference) {
+            if (reference.primaryReference) {
+              if (reference.primaryReference == true) {
+                if (reference.sourceType) {
+                  referenceSourceType = reference.sourceType;
+                }
+                if (reference.sourceId) {
+                  referenceSourceId = reference.sourceId;
+                }
+                referenceSourceTypeAndId = referenceSourceType + ' ' + referenceSourceId;
+              } // if primaryReference is true
+            } // if primaryRefernce is not null
+          }
+        });
+      } // screening.invitroAssayResultInformation.invitroReferences
+    } // screening.invitroAssayResultInformation
+
+    return referenceSourceTypeAndId;
+
   }
 
 }

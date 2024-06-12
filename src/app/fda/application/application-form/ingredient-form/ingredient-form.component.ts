@@ -295,7 +295,6 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
   /*
   getSubstanceId(bdnum: string, type: string) {
-    alert("SUBBBBBBBBB");
     if (bdnum != null) {
       this.applicationService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
         if (response) {

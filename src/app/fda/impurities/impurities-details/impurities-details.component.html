@@ -356,10 +356,10 @@
                         </div>
                         <div class="row-property">
                           <div class="row-property-key">
-                            Suitability Requirements Resolution:
+                            Comments:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.suitabilityReqResolution}}
+                            {{impTest.comments}}
                           </div>
                         </div>
                       </div>
@@ -367,18 +367,18 @@
                       <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
-                            Suitability Requirements Relative Standard Deviation:
+                            Suitability Requirements Resolution:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.suitabilityReqRelStandardDeviation}}
+                            {{impTest.suitabilityReqResolution}}
                           </div>
                         </div>
                         <div class="row-property">
                           <div class="row-property-key">
-                            Comments:
+                            Suitability Requirements Relative Standard Deviation:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.comments}}
+                            {{impTest.suitabilityReqRelStandardDeviation}}
                           </div>
                         </div>
                       </div>
@@ -394,15 +394,15 @@
                         </div>
                         <div class="width50percent">
 
+                          <!-- COMMENTING in release 3.1.1  WE DO NOT NEED THIS -->
+                          <!--
                           <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let m = index">
-                            <!-- ROW for Elution -->
-
                             <div class="row">
                               <div class="row-property-3">
                                 <div class="row-property-key-3">
                                   <div class="bordergraydotted">
                                     Elution Solvent {{(m+1)}}:
-                                    <!-- if the length of the string is more than 55, add a new line -->
+                                    <!- - if the length of the string is more than 55, add a new line - ->
                                     <span *ngIf="elu.elutionSolvent && elu.elutionSolvent.length > 55">
                                       <br><br>
                                     </span>
@@ -410,9 +410,6 @@
                                   <div>
                                     Elution Solvent Id {{(m+1)}}:
                                   </div>
-                                  <!--
-                                  </div>
-                                   -->
                                 </div>
                                 <div class="row-property-value-3">
                                   <div class="bordergraydotted">
@@ -425,13 +422,53 @@
                               </div>
                             </div>
                             <div class="divclear"></div>
-                          </div> <!-- loop Elution Solvent -->
+                          </div>
+                           COMMENTING OUT in 3.1.1 WE DO NOT NEED THIS -->
+                          <!-- loop Elution Solvent -->
 
                         </div>
                       </div>
 
                       <!-- Solution BEGIN -->
-                      <div class="font14px colorblue margintop20px"><b>SOLUTION</b></div>
+                      <div *ngFor="let impuritiesSolution of impTest.impuritiesSolutionList; let solutionIndex = index">
+                      <div class="row">
+                        <div class="row-property-2">
+                          <div class="row-property-key-2">
+                            Solution   {{impuritiesSolution.solutionLetter}}:
+                          </div>
+                          <div class="row-property-value-2">
+                            {{impuritiesSolution.solutionDescription}}
+                          </div>
+                        </div>
+                      </div>
+                      </div> <!-- Solution Loop -->
+
+                      <div class="margintop20px font13px"><b>Mobile Phase</b></div>
+
+                      <div class="row margintop20px">
+                        <table class="blueTable">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th class="width200px">Time (min)</th>
+                              <th>Solution A (%)</th>
+                              <th>Solution B (%)</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <tr *ngFor="let solTable of impTest.impuritiesSolutionTableList; let m = index">
+                              <td class="width40px">{{m + 1}}</td>
+                              <td class="width200px">{{solTable.solutionTime}}</td>
+                              <td class="width200px">{{solTable.solutionAPercent}}</td>
+                              <td class="width200px">{{solTable.solutionBPercent}}</td>
+                            </tr>
+                          </tbody>
+
+                        </table>
+                      </div>
+                      <!-- Solution END -->
+
 
                       <div class="row margintop20px">
                         <div class="row-property">
@@ -471,51 +508,6 @@
                         </div>
                       </div>
 
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Solution A:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.solutionADescription}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Solution B:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.solutionBDescription}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row margintop20px">
-                        <table class="blueTable">
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th class="width200px">Time (min)</th>
-                              <th>Solution A (%)</th>
-                              <th>Solution B (%)</th>
-                            </tr>
-                          </thead>
-
-                          <tbody>
-                            <tr *ngFor="let solTable of impTest.impuritiesSolutionTableList; let m = index">
-                              <td class="width40px">{{m + 1}}</td>
-                              <td class="width200px">{{solTable.solutionTime}}</td>
-                              <td class="width200px">{{solTable.solutionAPercent}}</td>
-                              <td class="width200px">{{solTable.solutionBPercent}}</td>
-                            </tr>
-                          </tbody>
-
-                        </table>
-                      </div>
-                      <!-- Solution END -->
-
-
-                      <!-- Test Fields End -->
 
                       <!-- Impurities Details List Begin -->
                       <div class="details-container margintop30px">

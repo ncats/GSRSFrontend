@@ -68,9 +68,14 @@ export interface Config {
     codeSystemMapping?: {
         [code: string]: string;
     };
+    citationMapping?: {
+        [code: string]: string;
+    };
     structureEditor?: 'ketcher' | 'jsdraw';
     nameFormPageSizeOptions?: Array<number>;
     nameFormPageSizeDefault?: number;
+    jsdrawLicense?: boolean;
+    useApprovalAPI?: boolean;
 }
 
 export interface StagingAreaSettings {

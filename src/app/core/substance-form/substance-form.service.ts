@@ -1242,10 +1242,10 @@ export class SubstanceFormService implements OnDestroy {
 
   // end change reason
 
-  validateSubstance(): Observable<ValidationResults> {
+  validateSubstance(stagingID?: string): Observable<ValidationResults> {
     return new Observable(observer => {
       const substanceCopy = this.cleanSubstance();
-      this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
+      this.substanceService.validateSubstance(substanceCopy, stagingID ? stagingID : null).subscribe(results => {
         // check for missing required reference fields and append a validationMessage
         if (results.validationMessages) {
           for (let i = 0; i < substanceCopy.references.length; i++) {
@@ -1302,7 +1302,7 @@ export class SubstanceFormService implements OnDestroy {
           if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
             for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
               const prop = substanceCopy.polymer.monomers[i];
-              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
+              if (!prop.monomerSubstance || prop.monomerSubstance == {}) {
                 const invalidPropertyMessage: ValidationMessage = {
                   actionType: 'frontEnd',
                   appliedChange: false,

@@ -79,6 +79,7 @@ export interface ImpuritiesTesting {
   modifiedBy?: string;
   modifyDate?: number;
   internalVersion?: number;
+  impuritiesSolutionList?: Array<ImpuritiesSolution>;
   impuritiesSolutionTableList?: Array<ImpuritiesSolutionTable>;
   impuritiesElutionSolventList?: Array<ImpuritiesElutionSolvent>;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
@@ -89,6 +90,18 @@ export interface ImpuritiesElutionSolvent {
   id?: number;
   elutionSolvent?: string;
   elutionSolventCode?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesSolution {
+  id?: number;
+  solutionTime?: string;
+  solutionDescription?: string;
+  solutionLetter?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

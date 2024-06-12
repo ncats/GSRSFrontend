@@ -1117,22 +1117,26 @@
     },
     "invitropharmacology": {
       "default": [
+        "Assay Set",
         "Assay ID",
-        "Reference Type and Source",
-        "Reference Source Type",
-        "Reference Source",
+        "External Assay Source",
+        "External Assay ID",
         "Target Name",
         "Test Agent",
+        "Assay Analyte",
         "Assay Title",
+        "Bioassay Type",
+        "Study Type",
+        "Presentation Type",
         "Control",
         "Control Type",
-        "Assay Type",
-        "Study Type",
+        "Summary Result Type",
         "Relationship Type",
-        "Presentation Type",
-        "External Assay ID",
-        "External Assay Source",
         "Report Number",
+        "Batch Number",
+        "Reference Source",
+        "Reference Source Type",
+        "Reference Source Id",
         "Laboratory Name",
         "Sponsor Contact Name",
         "Sponsor Report Submitter Name"
@@ -1247,6 +1251,12 @@
           "display": "Import In-vitro Pharm Assay",
           "path": "invitro-pharm/import/assay",
           "order": 270
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "Import In-vitro Pharm Screening",
+          "path": "invitro-pharm/import/screening",
+          "order": 280
         }
       ]
     },
@@ -1518,7 +1528,8 @@
         "clinicalTrialKeyType": "UUID",
         "productKeyType": "UUID",
         "applicationKeyType": "UUID",
-        "impuritiesKeyType": "UUID"
+        "impuritiesKeyType": "UUID",
+        "invitroPharmacologyKeyType": "UUID"
       }
     }
   },
@@ -1608,7 +1619,7 @@
         "amount": "advanced"
       },
       "stepView": {
-        "showAmountValues": "false"
+        "showAmountValues": "true"
       }
     }
   }

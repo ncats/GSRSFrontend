@@ -43,6 +43,23 @@
         <mat-progress-bar class="facet-search-loading" mode="indeterminate"
           *ngIf="searchText[facet.name] && searchText[facet.name].isLoading"></mat-progress-bar>
       </div>
+      <div class="facet-advanced-options-link" *ngIf="facet.$showAdvanced">
+        <mat-form-field class="sort">
+          <mat-label>Sort Results By</mat-label>
+          <mat-select [ngModel] = "facetSort[topIndex]" (selectionChange)="facetOrderChange(topIndex, facet, $event)">
+           <!--<mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>--> 
+            <mat-option  value="count" selected> count </mat-option>
+            <mat-option  value="inverse">inverse count </mat-option>
+
+            <mat-option  value="AZ"> Alphabetical AZ </mat-option>
+            <mat-option  value="ZA"> Alphabetical ZA </mat-option>
+
+
+          </mat-select>
+        </mat-form-field>
+      </div>
       <ng-container *ngFor="let value of facet.values; index as index">
         <div class="facet-value">
           <div class="facet-value-checkbox">
