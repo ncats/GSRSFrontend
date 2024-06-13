@@ -196,7 +196,19 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           if (!facet._self) {
             facet._self = this.facetManagerService.generateSelfUrl('stagingArea', facet.name);
           }
-          return this.facetsService.getFacetsHandler(facet, event.query, null, this.privateFacetParams, this.urlSearch).pipe(take(1)); 
+          let direction = 'true';
+          let sort = 'count';
+          if (this.facetSort[index]) {
+            if (this.facetSort[index] === 'inverse') {
+              direction = 'false';
+            } else if (this.facetSort[index] === 'AZ'){
+                sort = 'name';
+                direction = 'false';
+            }else if (this.facetSort[index] === 'ZA'){
+              sort = 'name';
+            }
+          }
+          return this.facetsService.getFacetsHandler(facet, event.query, null, this.privateFacetParams, this.urlSearch, sort, direction).pipe(take(1)); 
         })
       ).subscribe(response => {
         this.activeSearchedFaced.values = this.activeSearchedFaced.values.filter(value => {
