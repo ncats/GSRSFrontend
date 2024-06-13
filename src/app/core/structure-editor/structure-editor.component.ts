@@ -53,6 +53,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
   public canvasCopy: HTMLCanvasElement;
+  public substanceFormService: SubstanceFormService;
   private jsdrawScriptUrls = [
     `${environment.baseHref || ''}assets/dojo/dojo.js`,
     `${environment.baseHref || ''}assets/jsdraw/Scilligence.JSDraw2.Pro.js`,
@@ -60,7 +61,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     `${environment.baseHref || ''}assets/jsdraw/JSDraw.extensions.js`
 
   ];
-  ketcherFilePath: string;
+  private ketcherUrls = [
+    `${environment.baseHref || ''}assets/ketcher/static/js/main.963f80c2.js`,
+    `${environment.baseHref || ''}assets/ketcher/static/js/583.7fb8b79c.chunk.js`,
+  ];
   firstload = true;
 
   constructor(
@@ -89,28 +93,16 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  /*@HostListener('paste', ['$event']) private paster(event: any) {
-   // console.log('host paste');
-   // event.preventDefault();
-  //  event.stopPropagation();
-   // event.stopImmediatePropagation();
-    this.catchPaste(event);
+  listener = ()  => {
+    var elmR=document.getElementById("root");
+    if(this.structureEditor==="ketcher"){
+      if(elmR.querySelector(":focus-within")){
+        this.getSketcher().activated=true;
+      }else{
+        this.getSketcher().activated=false;
+      }
+    }
   }
-
-  @HostListener('drop', ['$event']) private dropper(event: any) {
-  //  console.log('drop');
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-  }
-
-  @HostListener('dragover', ['$event']) private dragger(event: DragEvent) {
-   // console.log('drag');
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-  }*/
-
 
   private preventDrag = (event: DragEvent) => {
    // console.log('prevent drag');
@@ -120,14 +112,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 // override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
     
-    if (this.jsdraw && this.jsdraw.activated) {
-   //   event.preventDefault();
-  //  event.stopPropagation();
-  //  event.stopImmediatePropagation();
-    //  this.catchPaste(event);
-    }
-    else if (this.ketcher) {
-   //   this.catchPaste(event);
+    if ((this.jsdraw || this.ketcher ) && this.getSketcher().activated) {
+     event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+      this.catchPaste(event);
     }
   }
 
@@ -142,6 +131,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngOnInit() {
+    window.addEventListener('keyup',this.listener);
+  window.addEventListener('click',this.listener);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     if (this.configService && this.configService.configData && this.configService.configData.jsdrawLicense ) {
@@ -154,11 +145,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
       
 
-     // window.addEventListener('dragover', this.preventDrag);
-     // window.addEventListener('drop', this.preventDrag);
-    //  window.addEventListener('paste', this.checkPaste);
+      window.addEventListener('dragover', this.preventDrag);
+      window.addEventListener('drop', this.preventDrag);
+      window.addEventListener('paste', this.checkPaste);
 
-      this.ketcherFilePath = `${environment.baseHref || ''}assets/ketcher/index.html`;
 
       this.structureEditor = environment.structureEditor;
       let pref = sessionStorage.getItem('gsrsStructureEditor');
@@ -194,6 +184,25 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           document.getElementsByTagName('head')[0].appendChild(node);
         }
       }
+  
+        
+        for (let i = 0; i < this.ketcherUrls.length; i++) {
+          const node = document.createElement('script');
+          node.src = this.ketcherUrls[i];
+          node.type = 'text/javascript';
+          node.async = false;
+          document.getElementsByTagName('head')[0].appendChild(node);
+        }
+
+        const node = document.createElement('link');
+        node.href = `${environment.baseHref || ''}assets/ketcherOld/ketcher.css`;
+        node.rel="stylesheet";
+        document.getElementsByTagName('head')[0].appendChild(node);
+
+        const node2 = document.createElement('link');
+        node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
+        node2.rel="stylesheet";
+        document.getElementsByTagName('head')[0].appendChild(node2);
     }
   }
 
@@ -202,20 +211,50 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
        this.ketcherLoaded = true;
   }
 
+  getSketcher(){
+    var skt;
+    for(var k in window['JSDraw2'].Editor._allitems){
+     skt= window['JSDraw2'].Editor._allitems[k];
+    }
+
+    return skt;
+ }
+
+
   toggleEditor() {
     if (this.structureEditor === 'ketcher' ) {
-      this.structureEditor = 'jsdraw';
-      this.editor = new EditorImplementation(null, this.jsdraw);
-      this.editorOnLoad.emit(this.editor);
-      sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
+      
+      this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
+        this.structureEditor = 'jsdraw';
+        this.editor = new EditorImplementation(null, this.jsdraw);
+        this.structureService.interpretStructure(Response).subscribe(resp => {
+        this.jsdraw.setMolfile(resp.structure.molfile);
+        sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
+      document.getElementById("root").style.display="none";
+        });
+      });
     } else {
       sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
-      let mol = this.jsdraw.getMolfile();
-     // console.log(mol);
+     if(!this.ketcherLoaded) {
+      this.ketcher = window['ketcher'];
+      this.ketcherLoaded = true;
+      
+     }
+
+     this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
       this.structureEditor = 'ketcher';
-    //  this.editor = new EditorImplementation(this.ketcher, undefined, mol);
-    this.editor = new EditorImplementation(this.ketcher);
-       this.editorOnLoad.emit(this.editor);
+      this.editor = new EditorImplementation(this.ketcher);
+      this.structureService.interpretStructure(Response).subscribe(resp => {
+        this.ketcher.setMolecule(resp.structure.molfile);
+      });
+      sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
+    document.getElementById("root").style.display="none";
+    });
+    // this.editor = new EditorImplementation(this.ketcher);
+    // this.ketcher.setMolecule(this.getSketcher().getMolfile());
+
+      this.structureEditor = 'ketcher';
+       document.getElementById("root").style.display="";
     }
   }
 
@@ -225,8 +264,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
       if (this.firstload && this.structureEditor === 'ketcher' ) {
-          this.firstload = false;
+        document.getElementById("root").style.display="";
           this.waitForKetcherFirstLoad();
+          this.firstload = false;
+
       } else if (this.firstload) {
         this.firstload = false;
       }
@@ -234,13 +275,84 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   async waitForKetcherFirstLoad(): Promise<void> {
-    await this.waitForNonNull(() => this.ketcher);
+    await this.executeOnceNotNullOrUndefined(() => window['ketcher'], (obj) => {
     setTimeout(() => {
+      this.ketcher = window['ketcher'];
+      this.ketcherLoaded = true;
+
+      console.log('ketcher loaded');
       this.editor = new EditorImplementation(this.ketcher);
       this.editorOnLoad.emit(this.editor);
     }, 150);
     
+  });
+}
+
+  executeOnceNotNullOrUndefined<T>(objProvider: () => T | null | undefined, callback: (obj: T) => void, interval: number = 100): void {
+    const intervalId = setInterval(() => {
+        const obj = objProvider();
+        if (obj !== null && obj !== undefined) {
+            clearInterval(intervalId);
+            callback(obj);
+        }
+    }, interval);
+}
+
+loadKetcher(){
+
+
+  let elmR=document.getElementById("root");
+
+  if(window["ketcher"]){ 
+      this.ketcher = window['ketcher'];
+      this.ketcherLoaded = true;
+    if(this.ketcher.setMolecule){
+      this.ketcher.setMolecule(this.getSketcher().getMolfile());
+      
+      let mfile = [null];
+      
+      
+      
+      let oldGetter = this.getSketcher().getMolfile;
+      let oldSetter = this.getSketcher().setMolfile;
+      
+      this.ketcher.editor.event.change.handlers.push({f:(c)=>{
+        mfile[0]=this.ketcher.getMolfile();
+        this.getSketcher().setFile(mfile[0], "mol");		
+      }	
+      });
+      
+      
+      //override old 
+      this.getSketcher().setMolfile=(mm)=>{
+        this.ketcher.setMolecule(mm);
+        this.getSketcher().setFile(mm,"mol");
+      };
+      
+      
+      let listener = ((ee)=>{
+        if(this.structureEditor==="ketcher"){
+          if(elmR.querySelector(":focus-within")){
+            this.getSketcher().activated=true;
+          }else{
+            this.getSketcher().activated=false;
+          }
+        }
+      });
+      window.addEventListener('keyup',listener);
+      window.addEventListener('click',listener);
+        
+      window["ketcherLoading"]=false;
+      return true;
+    }
   }
+  else {
+    console.log('no ketcher window');
+  }
+  setTimeout(()=>{
+    this.loadKetcher();
+  },500);
+}
 
   waitForNonNull(variable: () => any): Promise<void> {
     return new Promise((resolve) => {
@@ -272,6 +384,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.loadingService.setLoading(true);
     this.structureService.molvec(img).subscribe(response => {
       const mol = response.molfile;
+      this.ketcher.setMolecule(mol);
       this.loadedMolfile.emit(mol);
       this.loadingService.setLoading(false);
     }, error => {
@@ -338,6 +451,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           event.stopPropagation();
           this.structureService.interpretStructure(text).subscribe(response => {
             if (response.structure && response.structure.molfile) {
+              this.ketcher.setMolecule(response.structure.molfile);
               this.loadedMolfile.emit(response.structure.molfile);
             }
           });
@@ -399,13 +513,13 @@ openMolvecImportDialog(): void {
   dialogRef.afterClosed().subscribe((response?: any) => {
     this.overlayContainer.style.zIndex = null;
     if (response != null) {
-      console.log(response);
       if (response.type = "img") {
         this.createImage(response.file);
       }
       if (response.type = "text") {
         this.structureService.interpretStructure(response.file).subscribe(response => {
           if (response.structure && response.structure.molfile) {
+            this.ketcher.setMolecule(response.structure.molfile);
             this.loadedMolfile.emit(response.structure.molfile);
           }
         });

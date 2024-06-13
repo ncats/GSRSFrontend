@@ -1492,6 +1492,15 @@ export class SubstanceFormService implements OnDestroy {
     return this.method;
   }
 
+  getSubstanceStructure() {
+    if (this.privateSubstance.polymer && this.privateSubstance.polymer.displayStructure) {
+      return this.privateSubstance.polymer.displayStructure.molfile;
+    } else {
+      return (this.privateSubstance.structure && this.privateSubstance.structure.molfile )? this.privateSubstance.structure.molfile : null;
+    }
+    
+  }
+
   structureDuplicateCheck(): any {
     return new Observable(observer => {
       this.structureService.duplicateCheck(this.privateSubstance).subscribe(response => {
@@ -2081,6 +2090,8 @@ export class SubstanceFormService implements OnDestroy {
     this.privateSubstance = old;
     this.substanceEmitter.next(this.privateSubstance);
   }
+
+ 
 
 
   //by Tyler, convert smiles, single, and 3 letter amino acids. convert 3 to 1, 1 to 3, and 1 to SMILES
