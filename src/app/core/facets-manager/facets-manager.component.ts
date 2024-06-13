@@ -196,7 +196,19 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           if (!facet._self) {
             facet._self = this.facetManagerService.generateSelfUrl('stagingArea', facet.name);
           }
-          return this.facetsService.getFacetsHandler(facet, event.query, null, this.privateFacetParams, this.urlSearch).pipe(take(1)); 
+          let direction = 'true';
+          let sort = 'count';
+          if (this.facetSort[index]) {
+            if (this.facetSort[index] === 'inverse') {
+              direction = 'false';
+            } else if (this.facetSort[index] === 'AZ'){
+                sort = 'name';
+                direction = 'false';
+            }else if (this.facetSort[index] === 'ZA'){
+              sort = 'name';
+            }
+          }
+          return this.facetsService.getFacetsHandler(facet, event.query, null, this.privateFacetParams, this.urlSearch, sort, direction).pipe(take(1)); 
         })
       ).subscribe(response => {
         this.activeSearchedFaced.values = this.activeSearchedFaced.values.filter(value => {
@@ -741,10 +753,22 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   lessFacets(index: number) {
+    let direction = 'true';
+    let sort = 'count';
+    if (this.facetSort[index]) {
+      if (this.facetSort[index] === 'inverse') {
+        direction = 'false';
+      } else if (this.facetSort[index] === 'AZ'){
+          sort = 'name';
+          direction = 'false';
+      }else if (this.facetSort[index] === 'ZA'){
+        sort = 'name';
+      }
+    }
     this.facets[index].$isLoading = true;
     this.searchText[this.facets[index].name].isLoading = true;
     const nextUrl = this.facets[index].$next;
-    this.facetManagerService.getFacetsHandler(this.facets[index], null, null, this.privateFacetParams, this.urlSearch).pipe(take(1)).subscribe(response => {
+    this.facetManagerService.getFacetsHandler(this.facets[index], null, null, this.privateFacetParams, this.urlSearch, sort, direction).pipe(take(1)).subscribe(response => {
       this.facets[index].values = response.content;
       this.facets[index].$fetched = response.content;
       this.facets[index].$next = response.nextPageUri;
@@ -800,7 +824,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     if (event && event.value) {
       this.facetSort[index] = event.value;
      }
-      if (this.searchText[facet.name] || source && source == 'facetSearch') {
+      if ((this.searchText[facet.name] && this.searchText[facet.name].value !== '') || source && source == 'facetSearch') {
         
         this.sortFacets(index, 'facetSearch');
     } else {
@@ -815,7 +839,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         sort = 'name';
 
       }
-      this.facets[index]._self.replace('fskip=0', 'fskip=10');
+      this.facets[index]._self.replace(/fskip=\d+/g, 'fskip=0');
+      //console.log(this.facets[index]._self);
       this.facetManagerService.getFacetsHandler(this.facets[index], '', null, this.privateFacetParams, this.urlSearch, sort, order).pipe(take(1)).subscribe(resp => {
         this.facets[index].$next = resp.nextPageUri;
         this.facets[index].$previous = resp.previousPageUri;
