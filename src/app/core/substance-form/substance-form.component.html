@@ -1,4 +1,3 @@
-x
 <div (click)="showHidePopup()" id="overlay" [ngClass]="{'hide': !hidePopup}"></div>
 <div class="center-screen" [ngClass]="{'hide': !hidePopup}">
   <span class="close-out" (click)="showHidePopup()">x</span>
@@ -70,13 +69,13 @@ x
                             [disabled]="substanceClass != 'protein' && substanceClass != 'nucleicAcid' ">
                   Register a Fragment
                 </mat-option>
-              <mat-option value="regenRefs" >
-                Regenerate reference UUIDs
-              </mat-option>
-              <mat-option value="regenUUID" >
-                Regenerate substance UUID
-              </mat-option>
-            </ng-container>
+                <mat-option value="regenRefs" >
+                  Regenerate reference UUIDs
+                </mat-option>
+                <mat-option value="regenUUID" >
+                  Regenerate substance UUID
+                </mat-option>
+              </ng-container>
             </mat-select>
           </mat-form-field>
         </div>
@@ -145,50 +144,7 @@ x
       </button>
 
     </div>
-    <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
-      <div class="submission-message" *ngIf="submissionMessage">
-        {{ submissionMessage }}
-      </div>
-      <div *ngIf="validationMessages">
-      <span *ngIf=" validationMessages.length > 0">
-        <div class="submission-message" *ngIf='!serverError && !approving'>
-          Please correct or dismiss the following errors and submit again:
-        </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
-          <span class="validation-body">
-          <div class="message-type"
-               [ngClass]="{'error-message': message.messageType == 'ERROR', 'warning-message': message.messageType == 'WARNING', 'notice-message': message.messageType == 'NOTICE'}">
-            {{ message.messageType }}</div>
-          <div class="message">{{ message.message }}<span *ngFor="let link of message.links"><br/>
-              <a [href]="fixLink(link.href)" class="internal-link"
-                 target="_blank">{{ link.text }}</a></span>
-          </div>
-        </span>
-        <span class="validation-dismiss">
-          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-                  (click)="dismissValidationMessage(i)">
-            <mat-icon svgIcon="cancel"></mat-icon>
-          </button>
-        </span>
-        </div>
-      </span>
-        <div class="dismiss-container">
-          <span class="middle-fill"></span>
-          <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
-                  [disabled]="isLoading || (this.validationResult === false)">{{ validationMessages && validationMessages.length > 0 ? 'Dismiss All and ' : '' }}
-            Submit
-          </button>
-          <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false"
-          >
-            Cancel
-          </button>
-          <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
-                  [disabled]="isLoading || !canApprove"> Confirm Approval
-          </button>
-
-        </div>
-      </div>
-    </div>
+    <ng-container *ngTemplateOutlet=substanceSubmissionMessages></ng-container>
   </div>
 </div>
 
@@ -223,6 +179,53 @@ x
   </div>
 </div>
 
+<!-- Template for substance validation messages -->
+<ng-template #substanceSubmissionMessages>
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{ submissionMessage }}
+    </div>
+    <div *ngIf="validationMessages">
+      <span *ngIf=" validationMessages.length > 0">
+        <div class="submission-message" *ngIf='!serverError && !approving'>
+          Please correct or dismiss the following errors and submit again:
+        </div>
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+          <span class="validation-body">
+          <div class="message-type"
+               [ngClass]="{'error-message': message.messageType == 'ERROR', 'warning-message': message.messageType == 'WARNING', 'notice-message': message.messageType == 'NOTICE'}">
+            {{ message.messageType }}</div>
+          <div class="message">{{ message.message }}<span *ngFor="let link of message.links"><br/>
+              <a [href]="fixLink(link.href)" class="internal-link"
+                 target="_blank">{{ link.text }}</a></span>
+          </div>
+        </span>
+        <span class="validation-dismiss">
+          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+                  (click)="dismissValidationMessage(i)">
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </span>
+        </div>
+      </span>
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
+                [disabled]="isLoading || (this.validationResult === false)">{{ validationMessages && validationMessages.length > 0 ? 'Dismiss All and ' : '' }}
+          Submit
+        </button>
+        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false">
+          Cancel
+        </button>
+        <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
+                [disabled]="isLoading || !canApprove"> Confirm Approval
+        </button>
+
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 
 <!--Simplified actions-component-->
 <ng-template #simplifiedActionsComponent>
@@ -247,6 +250,6 @@ x
         Submit
       </button>
     </div>
+    <ng-container *ngTemplateOutlet=substanceSubmissionMessages></ng-container>
   </div>
 </ng-template>
-
