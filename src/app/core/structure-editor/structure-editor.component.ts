@@ -34,6 +34,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   editor: EditorImplementation;
   @Output() editorOnLoad = new EventEmitter<EditorImplementation>();
   @Output() loadedMolfile = new EventEmitter<string>();
+  @Output() editorSwitched = new EventEmitter<string>();
+
   private ketcher: Ketcher;
   private jsdraw: JSDraw;
   ketcherLoaded = false;
@@ -96,7 +98,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   listener = ()  => {
     var elmR=document.getElementById("root");
     if(this.structureEditor==="ketcher"){
-      if(elmR.querySelector(":focus-within")){
+      if( elmR && elmR.querySelector(":focus-within")){
         this.getSketcher().activated=true;
       }else{
         this.getSketcher().activated=false;
@@ -159,6 +161,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.structureEditor = 'jsdraw';
         }
       }
+      this.editorSwitched.emit(this.structureEditor);
 
       if ( !window['JSDraw']) {
 
@@ -228,6 +231,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         this.structureEditor = 'jsdraw';
         this.editor = new EditorImplementation(null, this.jsdraw);
         this.structureService.interpretStructure(Response).subscribe(resp => {
+          this.editorSwitched.emit(this.structureEditor);
+
         this.jsdraw.setMolfile(resp.structure.molfile);
         sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
       document.getElementById("root").style.display="none";
@@ -246,12 +251,12 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.editor = new EditorImplementation(this.ketcher);
       this.structureService.interpretStructure(Response).subscribe(resp => {
         this.ketcher.setMolecule(resp.structure.molfile);
+        this.editorSwitched.emit(this.structureEditor);
+
       });
-      sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
+      sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
     document.getElementById("root").style.display="none";
     });
-    // this.editor = new EditorImplementation(this.ketcher);
-    // this.ketcher.setMolecule(this.getSketcher().getMolfile());
 
       this.structureEditor = 'ketcher';
        document.getElementById("root").style.display="";
@@ -263,7 +268,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.jsdrawLoaded = true;
       this.editor = new EditorImplementation(null, this.jsdraw);
       this.editorOnLoad.emit(this.editor);
+      this.editorSwitched.emit(this.structureEditor);
+
       if (this.firstload && this.structureEditor === 'ketcher' ) {
+        console.log('loadking ketcher');
         document.getElementById("root").style.display="";
           this.waitForKetcherFirstLoad();
           this.firstload = false;
@@ -283,6 +291,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       console.log('ketcher loaded');
       this.editor = new EditorImplementation(this.ketcher);
       this.editorOnLoad.emit(this.editor);
+      this.editorSwitched.emit(this.structureEditor);
+
     }, 150);
     
   });
