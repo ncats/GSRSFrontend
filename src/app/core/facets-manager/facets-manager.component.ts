@@ -841,6 +841,7 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       }
       this.facets[index]._self.replace(/fskip=\d+/g, 'fskip=0');
       //console.log(this.facets[index]._self);
+      this.searchText[facet.name].isLoading = true;
       this.facetManagerService.getFacetsHandler(this.facets[index], '', null, this.privateFacetParams, this.urlSearch, sort, order).pipe(take(1)).subscribe(resp => {
         this.facets[index].$next = resp.nextPageUri;
         this.facets[index].$previous = resp.previousPageUri;
@@ -851,10 +852,10 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           this.sortFacets(index);
          } 
       //  this.facets[index].$isLoading = false;
-      //  this.searchText[facet.name].isLoading = false;
+      this.searchText[facet.name].isLoading = false;
       }, error => {
       //  this.facets[index].$isLoading = false;
-      // this.searchText[facet.name].isLoading = false;
+       this.searchText[facet.name].isLoading = false;
       });
     }
   
