@@ -14,7 +14,6 @@ export class PageNotFoundComponent implements OnInit {
 
   ngOnInit() {
     let url=window.location.href;
-    console.log("url: " + url);
     const regex1 = /\/ginas\/app\/beta\//;
     const regex2 = /\ginas\/app\/ui\//;
     if(url.match(regex1)) { 
