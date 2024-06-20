@@ -261,6 +261,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         })
       } else {
         this.showDeprecated = false;
+        this.isLoggedIn = false;
       }
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
       this.showAudit = this.authService.hasRoles('admin');
