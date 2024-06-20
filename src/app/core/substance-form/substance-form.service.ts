@@ -1880,9 +1880,10 @@ export class SubstanceFormService implements OnDestroy {
   disulfideLinks() {
 
     const KNOWN_DISULFIDE_PATTERNS = {};
-    ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' +
-      'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' +
-      'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
+    ('IGG4_32	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' +
+      'IGG2_36	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' +
+      'IGG2_32	0-1;11-12;13-31;14-15;18-19;2-26;20-21;22-23;24-25;27-28;29-30;3-4;5-16;6-17;7-8;9-10\n' +
+      'IGG1_32	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
         const tup = s.split('\t');
 
         const list = _.chain(tup[1].split(',')).map(function (t) {
@@ -1895,21 +1896,14 @@ export class SubstanceFormService implements OnDestroy {
       });
     const proteinSubstance = this.privateSubstance;
     const prot = proteinSubstance.protein;
-    const pattern = KNOWN_DISULFIDE_PATTERNS[prot.proteinSubType];
-
-    if (!pattern) {
-      alert('Unknown disulfide pattern for protein subtype:"' + prot.proteinSubType + '"');
-      return;
-    } else {
-      if (!confirm('Would you like to set the disulfide pattern for:"' + prot.proteinSubType + '"')) {
-        return;
-      }
-    }
+    const cst = [];
+    
     let ng = '';
     let og = '';
     let cg = '';
     const realList = [];
-    const cst = [];
+  
+    
 
     let cs = _.chain(prot.subunits).map(function (s) {
       const sid = s.subunitIndex;
@@ -1936,7 +1930,21 @@ export class SubstanceFormService implements OnDestroy {
 
       return v;
     }).value();
+    
     cs = cst;
+    
+    
+    const pattern = KNOWN_DISULFIDE_PATTERNS[prot.proteinSubType + "_" + cst.length];
+
+    if (!pattern) {
+      alert('Unknown disulfide pattern for protein subtype:"' + prot.proteinSubType + '" with ' + cst.length + " cysteine sites");
+      return;
+    } else {
+      if (!confirm('Would you like to set the disulfide pattern for:"' + prot.proteinSubType + '" with ' + cst.length + " cysteine sites?")) {
+        return;
+      }
+    }
+    
     for (let i = 0; i < cs.length; i++) {
       const c1 = cs[i];
       const real: any = {};
