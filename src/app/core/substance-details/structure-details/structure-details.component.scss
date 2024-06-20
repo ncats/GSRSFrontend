@@ -15,9 +15,13 @@
 
 .structure-img-big {
     width: 100%;
-    height: 500px !important;
+    height: 95% !important;
 }
 
+
+.structure-img:hover {
+    cursor: zoom-in !important;
+}
 
 .blue-font ::ng-deep sub {
     margin-bottom: -10px;
