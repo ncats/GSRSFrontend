@@ -1161,6 +1161,9 @@
                                   </div>
                                   <div class="row-property-value-2">
                                     {{ ingred.ingredientLocation }}
+                                    <span *ngIf="ingred.ingredientLocationText">
+                                      ({{ingred.ingredientLocationText}})
+                                    </span>
                                   </div>
                                 </div>
                               </div>

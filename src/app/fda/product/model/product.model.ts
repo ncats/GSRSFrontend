@@ -18,8 +18,6 @@ export interface Product {
   countryCode?: string;
   language?: string;
   provenance?: string;
-  /*provenanceProductId?: string;*/
-  /*provenanceDocumentId?: string;*/
   productUrl?: string;
   shelfLife ?: string;
   storageConditions?: string;
@@ -34,6 +32,8 @@ export interface Product {
   internalVersion?: number;
   productManufactureItems?: Array<ProductManufactureItem>;
   productProvenances?: Array<ProductProvenance>;  //new
+  _activeIngredients?: Array<any>;
+  _otherIngredients?: Array<any>;
 }
 
 export interface ProductProvenance {
@@ -96,6 +96,7 @@ export interface ProductCode {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  _dailyMedUrl?: string;
 }
 
 export interface ProductCompany {
@@ -239,6 +240,7 @@ export interface ProductIngredient {
   releaseCharacteristic?: string;
   notes?: string;
   ingredientLocation?: string;
+  ingredientLocationText?: string;
   confidentialityCode?: string;
   originalNumeratorNumber?: string;
   originalNumeratorUnit?: string;
@@ -255,13 +257,14 @@ export interface ProductIngredient {
   modifyDate?: number;
   _substanceUuid?: string;
   _ingredientName?: string;
+  _approvalId?: string;
   _ingredientNameActiveMoieties?: Array<String>;
   _basisOfStrengthSubstanceUuid?: string;
   _basisOfStrengthIngredientName?: string;
   _basisOfStrengthActiveMoieties?: Array<String>;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
-}-0
+}
 
 export interface ProductAll {
   id?: number;

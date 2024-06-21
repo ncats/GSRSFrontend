@@ -31,6 +31,7 @@ export interface Config {
     adverseEventShinyAdverseEventURL?: string;
     // eslint-disable-next-line member-delimiter-style
     FAERSDashboardAdverseEventUrl?: string;
+    dailyMedUrl?: string;
     advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;

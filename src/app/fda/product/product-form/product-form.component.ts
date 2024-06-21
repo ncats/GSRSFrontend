@@ -976,6 +976,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     delete old['modifiedBy'];
     delete old['lastModifiedDate'];
     delete old['internalVersion'];
+    delete old['_self'];
     delete old['$$update'];
 
     return old;

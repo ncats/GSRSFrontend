@@ -310,7 +310,7 @@
                                       target="_blank">{{prodIngred._ingredientName}}
                                     </a>
                                     <button mat-button class="structure-parameters"
-                                      (click)="openImageModal($event, prodIngred._substanceUuid)">
+                                      (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName)">
                                       <mat-icon style="padding:0px;margin:0px;">analytics</mat-icon>
                                     </button>
                                   </div>
@@ -693,6 +693,17 @@
                           <span *ngIf="i > 0"><br></span>
                           <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
 
+                          <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
+                          <span *ngIf="prodCode._dailyMedUrl">
+                            <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
+                              title="Go to DailyMed website">
+                              <img [src]="iconSrcPath">
+                            </a>
+                            <mat-icon class="small-icon" svgIcon="open_in_new"
+                              matTooltip="opens in new window">
+                            </mat-icon>
+                          </span>
+
                           <!-- COMMENTING THIS OUT RIGHT NOW DUE TO SECURITY ISSUE
                                 &nbsp;&nbsp;
                                 <span *ngIf="prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE'">
@@ -813,10 +824,8 @@
                     Dosage Form:
                   </div>
                   <div class="row-property-value">
-                    <!--
-                    <div *ngFor="let ing of product.productIngredientAllList; let indexIng = index">
-                    -->
-                    <div *ngFor="let prodManuItem of product.productManufactureItems">
+                    <div *ngFor="let prodManuItem of product.productManufactureItems; let indexManuItem = index">
+                      <span *ngIf="indexManuItem > 0">|</span>
                       {{prodManuItem.dosageForm}}
                     </div>
                   </div>
@@ -890,71 +899,84 @@
                 </div>
               </div>
 
+              <!-- Display Ingredients -->
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
-                    Substance Name (Active):
+                    Substance Name
+                    <br>(Active):&nbsp;
+                    <span class="colormaroon font16px"><b>({{product._activeIngredients.length}})</b></span>
                   </div>
+
                   <div class="row-property-value">
 
                     <!-- Display ACTIVE Substance -->
                     <ol class="olstyle">
-                      <div *ngFor="let prodManuItems of product.productManufactureItems">
-                        <div *ngFor="let prodLot of prodManuItems.productLots">
-                          <div *ngFor="let prodIngred of prodLot.productIngredients; let indexActiveIngred = index">
 
-                            <span *ngIf=" prodIngred.ingredientType; else noIngredientType">
-                              <span *ngIf="prodIngred.ingredientType === 'Active Ingredient'">
+                      <div *ngFor="let prodIngred of product._activeIngredients; let indexActiveIngred = index">
+                        <div *ngIf="prodIngred._ingredientName; else noActiveIngredientName">
 
-                                <span *ngIf="prodIngred._ingredientName">
-                                  <li>
+                          <!-- Show/Hide Link, if substance Name has more than 5 records -->
+                          <span *ngIf="indexActiveIngred == 5">
+                            <br>
+                            <a href="" (click)="toggleShowMoreLessActiveIngredArray(indexProd); false">
+                              <span *ngIf="showMoreLessActiveIngredArray[indexProd]"><b>Show More</b></span>
+                              <span *ngIf="!showMoreLessActiveIngredArray[indexProd]"><b>Show Less</b></span>
+                            </a>
+                            <br>
+                          </span>
 
-                                    <!-- Has Substance Uuid -->
-                                    <span *ngIf="prodIngred._substanceUuid; else noActiveSubUuid">
-                                      <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                        target="_blank">{{prodIngred._ingredientName}}
-                                      </a>
+                          <div
+                            *ngIf="(!showMoreLessActiveIngredArray[indexProd] && indexActiveIngred >= 5) || indexActiveIngred < 5">
+                            <br>
 
-                                      <!-- Display Ingredient Strength/Average and Unit -->
-                                      &nbsp;&nbsp;
-                                      <span *ngIf="prodIngred.average">
-                                        {{prodIngred.average}}
-                                        <span *ngIf="prodIngred.unit">
-                                          {{prodIngred.unit}}
-                                        </span>
-                                      </span>
+                            <li>
+                              <div class="divflex">
 
-                                      <button mat-button class="structure-parameters"
-                                        (click)="openImageModal($event, prodIngred._substanceUuid)">
-                                        <mat-icon style="padding:0px;margin:0px;"
-                                          mat-tooltip="Show Substance Name chemical structure">analytics
-                                        </mat-icon>
-                                      </button>
-                                    </span>
-                                    <ng-template #noActiveSubUuid>
-                                      {{prodIngred._ingredientName}}
-                                    </ng-template>
-
-                                  </li>
-                                </span>
-
-                              </span>
-                            </span>
-                            <!-- No Ingredient Type, Display Ingredient Name -->
-                            <ng-template #noIngredientType>
-                              <!-- if No Ingredient Type, but have Substance Name, display here. -->
-                              <div *ngIf="prodIngred._ingredientName">
-                                <li class="">
+                                <div *ngIf="prodIngred._substanceUuid; else noActiveSubUuid">
                                   <a [routerLink]="['/substances', prodIngred._substanceUuid]"
                                     target="_blank">{{prodIngred._ingredientName}}
                                   </a>
-                                </li>
-                              </div>
-                            </ng-template>
+                                </div>
+                                <ng-template #noActiveSubUuid>
+                                  {{prodIngred._ingredientName}}
+                                </ng-template>
 
-                          </div> <!-- loop Ingredient -->
-                        </div> <!-- loop Lot -->
-                      </div> <!-- loop ManufactureItems -->
+                                <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
+                                  <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
+                                    (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
+                                    <mat-icon matTooltip="Show Substance chemical structure">analytics
+                                    </mat-icon>
+                                  </button>
+                                </div>
+
+                                <!-- Show Average, Original Numerator, or Original Denominator -->
+                                <!--
+                              <div *ngIf="prodIngred.average" matTooltip="{{prodIngred.average}}"
+                                matTooltipPosition="above">
+                                <mat-icon style="padding:0px;margin:0px;">
+                                  analytics
+                                </mat-icon>
+                                Test
+                              </div>
+                              -->
+
+                              </div> <!-- class=divflex -->
+
+                              <!-- Display Ingredient Type -->
+                              <div class="colorgreen" *ngIf="prodIngred.ingredientType">
+                                ({{ prodIngred.ingredientType }})
+                              </div>
+                            </li>
+
+                          </div> <!-- Hide/Show link -->
+
+                        </div> <!-- if _ingredientName exists -->
+                        <ng-template #noActiveIngredientName>
+                          (No Substance Name)
+                        </ng-template>
+                      </div> <!-- For Loop: activeIngredients List -->
+
                     </ol>
 
                   </div>
@@ -964,73 +986,114 @@
                 <!-- Display Inactive Substance -->
                 <div class="row-property">
                   <div class="row-property-key">
-                    Substance Name (Inactive):
+                    Substance Name
+                    <br>(Inactive/Other):&nbsp;
+                    <span class="colormaroon font16px"><b>({{product._otherIngredients.length}})</b></span>
                   </div>
 
                   <div class="row-property-value">
                     <!-- Display Other Substance -->
                     <ol class="olstyle">
-                      <div *ngFor="let prodManuItems of product.productManufactureItems">
-                        <div *ngFor="let prodLot of prodManuItems.productLots">
-                          <div *ngFor="let prodIngred of prodLot.productIngredients; let indexInactIngred = index">
 
-                            <!-- If Inactive Ingredient, display Substance Name and Ingredient Type-->
-                            <div *ngIf=" prodIngred.ingredientType">
-                              <div
-                                *ngIf="prodIngred.ingredientType === 'Inactive Ingredient'; else otherIngredientType">
+                      <div *ngFor="let prodIngred of product._otherIngredients; let indexOtherIngred = index">
+                        <div *ngIf=" prodIngred._ingredientName; else noOtherIngredientName">
 
-                                <div *ngIf="prodIngred._ingredientName">
-                                  <li>
+                          <!-- Show/Hide Link, if substance Name has more than 5 records -->
+                          <span *ngIf="indexOtherIngred == 5">
+                            <br>
+                            <a href="" (click)="toggleShowMoreLessOtherIngredArray(indexProd); false">
+                              <span *ngIf="showMoreLessOtherIngredArray[indexProd]"><b>Show More</b></span>
+                              <span *ngIf="!showMoreLessOtherIngredArray[indexProd]"><b>Show Less</b></span>
+                            </a>
+                            <br>
+                          </span>
 
-                                    <div *ngIf="prodIngred._substanceUuid; else noInactiveSubUuid">
-                                      <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                        target="_blank">{{prodIngred._ingredientName}}
-                                      </a>
+                          <div
+                            *ngIf="(!showMoreLessOtherIngredArray[indexProd] && indexOtherIngred >= 5) || indexOtherIngred < 5">
+                            <br>
 
-                                      <!-- Display Ingredient Strength/Average and Unit -->
-                                      &nbsp;&nbsp;
-                                      <span *ngIf="prodIngred.average">
-                                        {{prodIngred.average}}
-                                        <span *ngIf="prodIngred.unit">
-                                          {{prodIngred.unit}}
-                                        </span>
-                                      </span>
+                            <li>
+                              <div class="divflex">
 
-                                      <button mat-button class="structure-parameters"
-                                        (click)="openImageModal($event, prodIngred._substanceUuid)">
-                                        <mat-icon style="padding:0px;margin:0px;"
-                                          mat-tooltip="Show Substance Name chemical structure">analytics
-                                        </mat-icon>
-                                      </button>
-                                    </div>
-                                    <ng-template #noInactiveSubUuid>
-                                      {{prodIngred._ingredientName}}
-                                    </ng-template>
+                                <div *ngIf="prodIngred._substanceUuid; else noInactiveSubUuid">
+                                  <a [routerLink]="['/substances', prodIngred._substanceUuid]"
+                                    target="_blank">{{prodIngred._ingredientName}}
+                                  </a>
+                                </div>
+                                <ng-template #noInactiveSubUuid>
+                                  {{prodIngred._ingredientName}}
+                                </ng-template>
 
-                                  </li>
-                                </div> <!-- if _ingredientName exits -->
+                                <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
+                                  <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
+                                    (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
+                                    <mat-icon matTooltip="Click to view Substance chemical structure">analytics
+                                    </mat-icon>
+                                  </button>
+                                </div>
 
+                                <!-- Show Average, Original Numerator, or Original Denominator -->
+                                <!--
+                              <div *ngIf="prodIngred.average || prodIngred.originalNumeratorNumber">
+                              <div *ngIf="prodIngred.average" title="Average: {{prodIngred.average}}&nbsp;{{prodIngred.unit}}">Amount2</div>
+                              -->
+                                <!--
+                              <div *ngIf="prodIngred.originalNumeratorNumber"
+                                matTooltip="Average: {{prodIngred.originalNumeratorNumber}}&nbsp;{{prodIngred.originalNumeratorUnit}}"
+                                matTooltipPosition="above">
                               </div>
-                              <ng-template #otherIngredientType>
-                                <span *ngIf="prodIngred.ingredientType !== 'Active Ingredient'">
-                                  {{prodIngred._ingredientName}}<br>
-                                  <span class="colorgreen">({{ prodIngred.ingredientType }})
-                                  </span>
-                                  <br><br>
-                                </span>
-                              </ng-template>
+                              </div>
+                              -->
 
-                            </div> <!-- if Ingredient Type exists -->
+                              </div> <!-- class=divflex -->
 
-                          </div> <!-- loop Ingredient -->
-                        </div> <!-- loop Lot -->
-                      </div> <!-- loop ManufactureItems -->
+                              <!-- Display Ingredient Type -->
+                              <div class="colorgreen" *ngIf="prodIngred.ingredientType">
+                                ({{ prodIngred.ingredientType }})
+                              </div>
+
+                              <!-- Display Ingredient Strength/Average and Unit -->
+                              <!--
+                            <span *ngIf="prodIngred.average">
+                              <br>
+                              Average: {{prodIngred.average}}
+                              <span *ngIf="prodIngred.unit">
+                                {{prodIngred.unit}}
+                              </span>
+                            </span>
+
+                            <span *ngIf="prodIngred.originalNumeratorNumber">
+                              <br>
+                              Original Numerator: {{prodIngred.originalNumeratorNumber}}
+                              <span *ngIf="prodIngred.originalNumeratorUnit">
+                                {{prodIngred.originalNumeratorUnit}}
+                              </span>
+                            </span>
+
+                            <span *ngIf="prodIngred.originalDenominatorNumber">
+                              <br>
+                              Original Denominator: {{prodIngred.originalDenominatorNumber}}
+                              <span *ngIf="prodIngred.originalDenominatorUnit">
+                                {{prodIngred.originalDenominatorUnit}}
+                              </span>
+                            </span>
+                            -->
+
+                            </li>
+
+                          </div> <!-- Hide/Show link -->
+
+                        </div> <!-- if _ingredientName exists -->
+                        <ng-template #noOtherIngredientName>
+                          (No Substance Name)
+                        </ng-template>
+                      </div> <!-- For Loop: otherIngredients List -->
+
 
                     </ol>
 
                   </div>
                 </div> <!-- Inactive Substance -->
-
 
               </div> <!-- row Substance Name-->
 
