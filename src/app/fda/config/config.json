@@ -6,6 +6,7 @@
   "adverseEventShinySubstanceNameDisplay": "true",
   "adverseEventShinyAdverseEventDisplay": "true",
   "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/95239e26-e0be-42d9-a960-9a5f7f1c25ee/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
+  "dailyMedUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
@@ -1020,9 +1021,9 @@
         "Product Type",
         "Product Code Type",
         "Application Number",
-        "Status",
+        "Product Status",
         "Marketing Category Name",
-        "Route of Admin",
+        "Route of Administration",
         "Is Listed",
         "Labeler Name",
         "Labeler DUNS Number",
@@ -1244,6 +1245,12 @@
           "component": "invitropharmacology",
           "display": "In-vitro Pharmacology Summary",
           "path": "invitro-pharm/summary/register",
+          "order": 250
+        },
+        {
+          "component": "invitropharmacology",
+          "display": "In-vitro Pharmacology Assay Set Builder",
+          "path": "invitro-pharm/assaySetBuilder",
           "order": 260
         },
         {

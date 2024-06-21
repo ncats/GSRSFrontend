@@ -32,7 +32,7 @@ import { StructureImageModalComponent, StructureService } from '@gsrs-core/struc
 /* GSRS Product Imports */
 import { GeneralService } from '../../service/general.service';
 import { ProductService } from '../service/product.service';
-import { Product } from '../model/product.model';
+import { Product, ProductIngredient } from '../model/product.model';
 import { productSearchSortValues } from './product-search-sort-values';
 
 @Component({
@@ -42,6 +42,10 @@ import { productSearchSortValues } from './product-search-sort-values';
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  private ACTIVE_INGREDIENT_UPPERCASE = 'ACTIVE INGREDIENT';
+  private ACTIVE_INGREDIENT_LOWERCASE = 'Active Ingredient';
+
   view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
@@ -78,10 +82,16 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   lastPage: number;
   invalidPage = false;
   iconSrcPath = '';
-  dailyMedUrl = '';
+  dailyMedUrlConfig = '';
   downloadJsonHref: any;
   jsonFileName: string;
   tabSelectedIndex = 0;
+
+  activeIngredients: Array<ProductIngredient> = [];
+  otherIngredients: Array<ProductIngredient> = [];
+
+  showMoreLessActiveIngredArray: Array<boolean> = [];
+  showMoreLessOtherIngredArray: Array<boolean> = [];
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
@@ -134,6 +144,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
 
+    // Get Daily Med Url from Configuration
+    this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
+
     this.titleService.setTitle(`P:Browse Products`);
 
     this.pageSize = 10;
@@ -153,7 +166,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -163,7 +178,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.subscriptions.push(authSubscription);
 
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
-    this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
+    //this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -237,6 +252,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
         // Get Substance Name for each substance Key
         this.getSubstanceBySubstanceKey();
+
+        // Get Daily Med Url if Product Code Type is NDC CODE
+        this.getDailyMedUrlforProductCode();
 
         // Get list of Export extension options such as .xlsx, .txt
         this.productService.getExportOptions(this.etag).subscribe(response => {
@@ -427,9 +445,38 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
+  getDailyMedUrlforProductCode(): void {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'NDC CODE', show Daily Med link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE') {
+                 prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
+              }
+            }
+          }
+
+        });
+      });
+    });
+  }
+
   getSubstanceBySubstanceKey(): void {
-    this.products.forEach((element, index) => {
-      element.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+    this.products.forEach((product, indexProd) => {
+
+      // Set to []
+      product._activeIngredients = [];
+      product._otherIngredients = [];
+
+      // Hide/Show
+      this.showMoreLessActiveIngredArray[indexProd] = true;
+      this.showMoreLessOtherIngredArray[indexProd] = true;
+
+      product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
 
         // Sort Product Name by create date descending
         // elementManuItem.applicationProductNameList.sort((a, b) => {
@@ -439,12 +486,34 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         elementManuItem.productLots.forEach((elementLot, indexLot) => {
           elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
 
+            // if Substance Key exists, get Substance UUID for the substance key
             if (elementIngred.substanceKey != null) {
 
               const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
                 if (response) {
                   elementIngred._substanceUuid = response.uuid;
                   elementIngred._ingredientName = response._name;
+                  elementIngred._approvalId = response.approvalID
+
+                  // if Ingredient Type exists
+                  if (elementIngred.ingredientType) {
+                    // Active Ingredient Count
+                    if (elementIngred.ingredientType == this.ACTIVE_INGREDIENT_UPPERCASE
+                      || elementIngred.ingredientType == this.ACTIVE_INGREDIENT_LOWERCASE) {
+
+                      // Store Active Ingredient in an Array
+                      product._activeIngredients.push(elementIngred);
+
+                    }
+                    // Inactive and Other Ingredient Count
+                    else if (elementIngred.ingredientType != this.ACTIVE_INGREDIENT_UPPERCASE
+                      && elementIngred.ingredientType != this.ACTIVE_INGREDIENT_LOWERCASE) {
+
+                      // Store Active Ingredient in an Array
+                      product._otherIngredients.push(elementIngred);
+
+                    }
+                  } // if Ingredient Type exists
 
                   /*
                   // Get Substance Details, uuid, approval_id, substance name
@@ -558,36 +627,30 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return false;
   }
 
-  openImageModal($event, subUuid: string): void {
-    // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
 
-    //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
-
+  openImageModal(subUuid: string, displayName?: string, approvalID?: string): void {
     let data: any;
-
-    // if (substance.substanceClass === 'chemical') {
     data = {
       structure: subUuid,
-      //   smiles: substance.structure.smiles,
       uuid: subUuid,
-      //    names: substance.names
+      approvalID: approvalID,
+      displayName: displayName
     };
-    // }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '90%',
-      width: '650px',
+      width: '680px',
       panelClass: 'structure-image-panel',
       data: data
     });
 
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = '1001';
 
     const subscription = dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1001';
       subscription.unsubscribe();
     }, () => {
-      this.overlayContainer.style.zIndex = null;
+      this.overlayContainer.style.zIndex = '1001';
       subscription.unsubscribe();
     });
   }
@@ -628,11 +691,18 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.overlayContainer.style.zIndex = null;
   }
 
-
   tabSelectedUpdated(event: MatTabChangeEvent) {
     if (event) {
       //this.tabSelectedIndex = event.index;
     }
+  }
+
+  toggleShowMoreLessActiveIngredArray(indexProd) {
+    this.showMoreLessActiveIngredArray[indexProd] = !this.showMoreLessActiveIngredArray[indexProd];
+  }
+
+  toggleShowMoreLessOtherIngredArray(indexProd) {
+    this.showMoreLessOtherIngredArray[indexProd] = !this.showMoreLessOtherIngredArray[indexProd];
   }
 
 }

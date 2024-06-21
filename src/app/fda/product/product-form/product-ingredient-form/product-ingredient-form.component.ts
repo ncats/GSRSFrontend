@@ -51,6 +51,7 @@ export class ProductIngredientFormComponent implements OnInit {
   basisOfStrengthMessage = '';
   newRecordMessage = '';
   substanceKeyTypeForProductConfig = '';
+  isIngredLocationOtherSelected = false;
 
   relationship: any;
   ingredientNameActiveMoiety = new Array<String>();
@@ -104,6 +105,14 @@ export class ProductIngredientFormComponent implements OnInit {
           }
         }
       }
+
+      // If 'Other' is selected in the checkbox, display text box on the form
+      if (this.ingredient.ingredientLocation.includes("Other") == true) {
+        this.isIngredLocationOtherSelected = true;
+      } else {
+        this.isIngredLocationOtherSelected = false;
+      }
+
     }
   }
 
@@ -114,10 +123,28 @@ export class ProductIngredientFormComponent implements OnInit {
     checked.forEach(data1 => {
       selected.push(data1.value);
     });
+
     if (selected.length > 0) {
       selStr = selected.join(',');
       this.ingredient.ingredientLocation = selStr;
+
+      // Find if "Other" has selected in the "Ingredient Location" checkbox
+      if (this.ingredient.ingredientLocation) {
+        // If 'Other' is selected in the checkbox, display text box on the form
+        if (this.ingredient.ingredientLocation.includes("Other") == true) {
+          this.isIngredLocationOtherSelected = true;
+        } else {
+          this.isIngredLocationOtherSelected = false;
+          this.ingredient.ingredientLocationText = '';
+        }
+      }
+    } else {
+      this.ingredient.ingredientLocation = '';
+
+      this.isIngredLocationOtherSelected = false;
+      this.ingredient.ingredientLocationText = '';
     }
+
   }
 
   confirmDeleteProductIngredient(prodComponentIndex: number, prodLotIndex: number, prodIngredientIndex: number) {
@@ -496,4 +523,5 @@ export class ProductIngredientFormComponent implements OnInit {
       this.ingredient.$$basisOfStrengthValidation = 'Basis of Strength: No substances found for ' + this.searchValue;
     }
   }
+
 }
