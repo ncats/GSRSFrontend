@@ -15,6 +15,7 @@ import { Title } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { pipeline } from 'stream';
 import { take } from 'rxjs';
+import { StructureEditorComponent } from '@gsrs-core/structure-editor';
 
 @Component({
   selector: 'app-structure-search',
@@ -29,6 +30,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   showSimilarityCutoff = false;
   searchTypeControl = new FormControl();
   @ViewChild('contentContainer', { static: true }) contentContainer;
+  @ViewChild(StructureEditorComponent) structureEditor!: StructureEditorComponent;
   private overlayContainer: HTMLElement;
 
   constructor(
@@ -187,7 +189,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       this.overlayContainer.style.zIndex = null;
 
       if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
-        this.editor.setMolecule(structurePostResponse.structure.molfile);
+        this.structureEditor.setMolecule(structurePostResponse.structure.molfile);
       }
     }, () => {
       this.overlayContainer.style.zIndex = null;
@@ -203,7 +205,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       height: 'auto',
       width: '650px',
       data: {
-        molfile: this.editor.getMolfile(),
+        molfile: mol,
         smiles: this.editor.getSmiles()
       }
     });

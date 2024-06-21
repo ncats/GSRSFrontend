@@ -140,10 +140,13 @@ export class SubstanceFormService implements OnDestroy {
             substanceClass: 'mixture',
             references: [],
             names: [],
-            mixture: {},
+            mixture: {
+              access: ['representative']
+            },
             codes: [],
             relationships: [],
-            properties: []
+            properties: [],
+            access: ['representative']
           };
         } else if (substanceClass === 'structurallyDiverse') {
           this.privateSubstance = {
@@ -224,11 +227,13 @@ export class SubstanceFormService implements OnDestroy {
             polymer: {
               idealizedStructure: {},
               monomers: [],
+              access: ['representative']
             },
             codes: [],
             moieties: [],
             relationships: [],
-            properties: []
+            properties: [],
+            access: ['representative']
           };
         } else {
           this.privateSubstance = {
@@ -242,7 +247,7 @@ export class SubstanceFormService implements OnDestroy {
 
         // TP: default to protected for root level record.
         // ***** AN: Adding this right now for SSG4m and G2 ******
-        if (substanceClass !== 'specifiedSubstanceG4m') {
+        if (substanceClass !== 'specifiedSubstanceG4m' && substanceClass !== 'mixture' && substanceClass !== 'polymer') {
           this.privateSubstance.access = ["protected"];
 
           if (substanceClass !== 'specifiedSubstanceG2') {

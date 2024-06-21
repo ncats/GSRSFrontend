@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { Editor } from '../../structure-editor/structure.editor.model';
 import { SubstanceStructure } from '@gsrs-core/substance/substance.model';
@@ -17,6 +17,7 @@ import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
 import { SubstanceFormStructureService } from './substance-form-structure.service';
 import { ActivatedRoute } from '@angular/router';
+import { StructureEditorComponent } from '@gsrs-core/structure-editor';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -35,6 +36,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   private overlayContainer: HTMLElement;
   structureErrorsArray: Array<StructureDuplicationMessage>;
   subscriptions: Array<Subscription> = [];
+  @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -197,7 +199,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.overlayContainer.style.zIndex = null;
       if (response != null) {
         if (response && response.structure && response.structure.molfile) {
-          this.structureEditor.setMolecule(response.structure.molfile);
+          this.structureEditorComponent.setMolecule(response.structure.molfile);
         }
         this.processStructurePostResponse(response);
       }
@@ -249,7 +251,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.overlayContainer.style.zIndex = null;
       if (molfile != null && molfile !== '') {
         this.updateStructureForm(molfile);
-        this.structureEditor.setMolecule(molfile);
+        this.structureEditorComponent.setMolecule(molfile);
       }
     }, () => { });
   }
