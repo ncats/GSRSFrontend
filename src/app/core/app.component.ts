@@ -16,6 +16,7 @@ export class AppComponent {
     private router: Router,
     private googleAnalyticsService: GoogleAnalyticsService
   ) {
+
     router.events.subscribe((event) => {
       title.setTitle('GSRS');
     });

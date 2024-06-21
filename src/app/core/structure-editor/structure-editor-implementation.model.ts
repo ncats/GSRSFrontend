@@ -7,11 +7,11 @@ export class EditorImplementation implements Editor {
     private ketcher?: Ketcher;
     private jsdraw?: JSDraw;
     tempMol?: string;
+    firstload?: boolean;
 
     constructor(ketcher?: Ketcher, jsdraw?: JSDraw, toggledFrom?: string) {
         
         if (toggledFrom) {
-            console.log('toggled from');
             this.ketcher = ketcher;
             this.forceKetcherUpdate(toggledFrom);
         } else {
@@ -21,7 +21,6 @@ export class EditorImplementation implements Editor {
     }
 
     forceKetcherUpdate(mfile: string): void {
-        console.log(mfile);
                 this.jsdraw = null;
                 setTimeout(() => {
                     const chargeLine = this.getMCharge();
@@ -58,7 +57,7 @@ export class EditorImplementation implements Editor {
     getMolfile(): Observable<any> {
         console.log('getting molfile');
         return new Observable<any>(observer => {
-        if (this.ketcher != null) {
+        if (this.ketcher && this.ketcher != null) {
             from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
                 console.log(result);
                 let mfile = result;
@@ -84,7 +83,7 @@ export class EditorImplementation implements Editor {
         });
             
            
-        } else if (this.jsdraw != null) {
+        } else if (this.jsdraw && this.jsdraw != null) {
             const chargeLine = this.getMCharge();
             let mfile = this.jsdraw.getMolfile();
             mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
@@ -161,9 +160,9 @@ export class EditorImplementation implements Editor {
     }
 
     setMolecule(molfile: string): void {
-        if (this.ketcher != null) {
+        if (this.ketcher && this.ketcher != null) {
             this.ketcher.setMolecule(molfile);
-        } else if (this.jsdraw != null) {
+        } else if (this.jsdraw && this.jsdraw != null) {
             // from simple tests, this should push the current molecule down
             // on the undo stack.
             this.jsdraw.pushundo();
@@ -181,7 +180,8 @@ export class EditorImplementation implements Editor {
                     });
                 };
             } else if (this.ketcher != null) {
-                this.ketcher.editor.subscribe('change',  operations => { 
+              /*  disabled - keeping ketcher changes processed in the editor component to prevent async structure issues when switching
+              this.ketcher.editor.subscribe('change',  operations => { 
                     console.log(operations)
                     if(!(operations.length == 1 && operations[0].operation == 'Load canvas')){
                         console.log('not a new load');
@@ -194,7 +194,7 @@ export class EditorImplementation implements Editor {
                     }
                     
                     
-                 });
+                 });*/
                 
             }
             else {

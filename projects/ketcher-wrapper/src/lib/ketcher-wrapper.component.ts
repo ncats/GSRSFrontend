@@ -9,8 +9,7 @@ import { Ketcher } from './ketcher.model';
 })
 export class KetcherWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('ketcherFrame', { static: true }) ketcherFrame: { nativeElement: HTMLIFrameElement };
-  @Input() ketcherFilePath: string;
-  @Output() ketcherOnLoad = new EventEmitter<Ketcher>();
+  @Output() ketcherOnLoad = new EventEmitter<any>();
   safeKetcherFilePath: SafeUrl;
   @ViewChild('ketcherBody') kBod: ElementRef;
   @ViewChild('ketcherFrame') iframe: ElementRef;
@@ -23,11 +22,12 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.safeKetcherFilePath = this.sanitizer.bypassSecurityTrustResourceUrl(this.ketcherFilePath);
+    
+  
   }
 
   ngAfterViewInit() {
-    let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
+  /*  let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
 
     this.ketcherFrame.nativeElement.onload = () => {
       this.executeOnceNotNullOrUndefined(() => this.ketcherFrame.nativeElement.contentWindow['ketcher'], (obj) => {
@@ -36,7 +36,7 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
         
     //  let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
     };
-   // this.renderer.listen(window, 'blur', () => this.onWindowBlur());
+   // this.renderer.listen(window, 'blur', () => this.onWindowBlur());*/
   }
 
 
@@ -49,47 +49,5 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
         }
     }, interval);
 }
-
-  
-/* Disabling molvec for ketcher for now to reduce headaches since JSdraw is still loaded
-  @HostListener('mouseover')
-  private onIframeMouseOver() {
-    this.iframeMouseOver = true;
-    this.resetFocusOnWindow();
-  }
-
-  @HostListener('mouseout')
-  private onIframeMouseOut() {
-    this.iframeMouseOver = false;
-    this.resetFocusOnWindow();
-  }
-
-  @HostListener('dragover', ['$event']) private dragger(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    this.resetFocusOnWindow();
-  }
-
-  @HostListener('drop', ['$event']) private dropper(event: any) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    this.resetFocusOnWindow();
-  }
-
-  private onWindowBlur() {
-    if (this.iframeMouseOver) {
-      this.resetFocusOnWindow();
-    }
-  }
-
-  private resetFocusOnWindow() {
-    setTimeout(() => {
-     
-      window.focus();
-    }, 100);
-  }*/
-
 
 }
