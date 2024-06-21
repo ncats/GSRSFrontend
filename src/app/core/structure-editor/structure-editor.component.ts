@@ -93,6 +93,16 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
+  @Input() setMolecule(structure: any){
+    if(this.structureEditor==="ketcher") {
+      this.structureService.interpretStructure(structure).subscribe(resp => {
+        this.ketcher.setMolecule(resp.structure.molfile);
+      });
+    } else {
+      this.editor.setMolecule(structure);
+    }
+  } 
+
   listener = ()  => {
     var elmR=document.getElementById("root");
     if(this.structureEditor==="ketcher"){
@@ -152,6 +162,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
       this.structureEditor = environment.structureEditor;
       let pref = sessionStorage.getItem('gsrsStructureEditor');
+      console.log(pref);
       if (pref && this.enableJSDraw) {
         if (pref === 'ketcher') {
           this.structureEditor = 'ketcher';
@@ -247,7 +258,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.structureService.interpretStructure(Response).subscribe(resp => {
         this.ketcher.setMolecule(resp.structure.molfile);
       });
-      sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
+      sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
     document.getElementById("root").style.display="none";
     });
     // this.editor = new EditorImplementation(this.ketcher);
