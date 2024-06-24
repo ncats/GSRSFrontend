@@ -141,12 +141,10 @@ export class SubstanceFormService implements OnDestroy {
             references: [],
             names: [],
             mixture: {
-              access: ['representative']
             },
             codes: [],
             relationships: [],
             properties: [],
-            access: ['representative']
           };
         } else if (substanceClass === 'structurallyDiverse') {
           this.privateSubstance = {
@@ -227,13 +225,11 @@ export class SubstanceFormService implements OnDestroy {
             polymer: {
               idealizedStructure: {},
               monomers: [],
-              access: ['representative']
             },
             codes: [],
             moieties: [],
             relationships: [],
             properties: [],
-            access: ['representative']
           };
         } else {
           this.privateSubstance = {
