@@ -60,6 +60,9 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <div *ngIf = "facet.values && facet.values.length === 0 && searchText[facet.name] && searchText[facet.name].value !== '' && !searchText[facet.name].isLoading ">
+          <i>No results found for '{{searchText[facet.name].value}}'</i>
+      </div>
       <ng-container *ngFor="let value of facet.values; index as index">
         <div class="facet-value">
           <div class="facet-value-checkbox">

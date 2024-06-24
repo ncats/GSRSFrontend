@@ -44,20 +44,6 @@ export class AccessManagerComponent implements OnInit, AfterViewInit {
   getVocabularies(): void {
     this.cvService.getDomainVocabulary('ACCESS_GROUP').subscribe(response => {
       const accessOptions = response['ACCESS_GROUP'].list;
-      console.log(accessOptions);
-      let hasRep = false;
-      accessOptions.forEach(option => {
-        if (option.value.toLowerCase() === 'representative') {
-          hasRep = true;
-        }
-      });
-      if (!hasRep) {
-        accessOptions.push(
-          {display: 'representative',
-            value: 'representative'
-          }
-        )
-      }
       this.createAccessFromGroup(accessOptions);
       this.accessOptions = accessOptions;
       this.crosscheckAccesses();
