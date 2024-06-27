@@ -1,3 +1,8 @@
+::ng-deep .mat-grid-tile-content {
+  align-items: normal !important;
+}
+
+
 .middle-content-container {
     display: flex;
     justify-content: center;
@@ -339,6 +344,11 @@ mat-list-item {
 
 }
 
+.useful-cards {
+  max-width: 1240px;
+  margin:auto;
+}
+
 
 @media (max-width: 700px) {
   .label {
@@ -408,6 +418,8 @@ mat-sidenav {
   width: 365px;
 
 }
+
+
 
 
 
