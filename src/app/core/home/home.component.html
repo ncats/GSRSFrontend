@@ -381,14 +381,13 @@
     </mat-grid-list>
 
 
-    <ng-template #helpfulResourceModal let-usefulLink>
-        <div mat-dialog-content class = "button-modal">
-            <a class = "modal-button" href = "{{usefulLink.href}}">{{usefulLink.templateDescription}}</a>
-        </div>
-        <div mat-dialog-actions>
-            <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" (click) = "dialogRef.close()" mat-dialog-close>Close</button>
-        </div>
+    <ng-template #helpfulResourceModal let-usefulLink let-dialogRef="dialogRef">
+      <div mat-dialog-content class = "button-modal">
+          <a class = "modal-button" href = "{{usefulLink.href}}">{{usefulLink.templateDescription}}</a>
+      </div>
+      <div mat-dialog-actions>
+          <span class="middle-fill"></span>
+          <button class="mat-raised-button mat-primary" style = "margin-top:30px" (click) = "dialogRef.close()">Close</button>        </div>
     </ng-template>
 
     </div>

@@ -210,7 +210,7 @@ private overlayContainer: HTMLElement;
 
 
   getPossibleSmiles(smi) {
-
+    console.log(smi);
     function getMarkers(smi) {
       let temp = smi.replace(/@H/g, '').replace(/[^A-Z*]/g, '');
       var alias: any = {
@@ -332,7 +332,9 @@ private overlayContainer: HTMLElement;
    let smiles = '';
    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
      smiles = response;
-    var tt = this.getPossibleSmiles(this.editor.getSmiles());
+     this.editor.getSmiles().pipe(take(1)).subscribe(resp => {
+
+    var tt = this.getPossibleSmiles(resp);
     let stars = 0;
     let dom = "";
     // this.vocab is only used when not editing in admin menu, otherwise full vocabulary is sent since it was fetched earlier
@@ -364,6 +366,7 @@ private overlayContainer: HTMLElement;
       this.forms.push(temp);
     });
 
+    });
   });
 
   }
