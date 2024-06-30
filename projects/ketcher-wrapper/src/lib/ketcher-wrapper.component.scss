@@ -3,3 +3,19 @@
     height: 100%;
     border: none;
 }
+
+button[title='3D Viewer'] {
+    display:none;
+  }
+  .LeftToolbar-module_group__0s41t.LeftToolbar-module_groupItem__OqQu0:has(button[data-testid=\'reaction-plus\']) {
+    display: none;
+  }
+  .LeftToolbar-module_group__0s41t.LeftToolbar-module_groupItem__OqQu0:has(button[data-testid=\'shape-ellipse\']) {
+    display: none;
+  }
+  div#root{
+     border: 0.001em solid white;
+  }
+  div#root:focus-within {
+    border: 0.001em solid blue !important;
+  }

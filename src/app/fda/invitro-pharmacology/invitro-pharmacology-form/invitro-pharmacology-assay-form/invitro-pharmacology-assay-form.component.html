@@ -423,52 +423,56 @@
             </div>
 
 
-             <!-- Add Analyte Button -->
-            <div class="form-row">
-              <div class="fieldKey">
-                <span class="font16px colorblue"><b>Analytes
-                    ({{assay.invitroAssayAnalytes.length}})</b>
-                </span>&nbsp;&nbsp;&nbsp;
-              </div>
-              <button class="margintop15px marginleftneg70px" mat-flat-button color="primary" (click)="addNewAssayAnalyte()">
-                Add Analyte
-              </button>
-            </div>
-
-            <!-- FOR LOOP Invitro Analytes -->
-            <div *ngFor="let analy of assay.invitroAssayAnalytes; let indexAnalyte = index">
-
+            <div *ngIf="assay.invitroAssayAnalytes">
+              
+              <!-- Add Analyte Button -->
               <div class="form-row">
                 <div class="fieldKey">
-                  <mat-label>Analyte:</mat-label>
+                  <span class="font16px colorblue"><b>Analytes
+                      ({{assay.invitroAssayAnalytes.length}})</b>
+                  </span>&nbsp;&nbsp;&nbsp;
                 </div>
+                <button class="margintop15px marginleftneg70px" mat-flat-button color="primary"
+                  (click)="addNewAssayAnalyte()">
+                  Add Analyte
+                </button>
+              </div>
 
-                <div class="divflex width95percent">
-                  <!-- Substance Text Search Suggestions/TypeAhead -->
-                  <app-substance-text-search class="fieldValueSubstance" [searchValue]="analy.analyte"
-                    placeholder="Search Substances" (searchPerformed)="nameSearch($event, 'ANALYTE', indexAnalyte)"
-                    eventCategory="selectorSearch">
-                  </app-substance-text-search>
+              <!-- FOR LOOP Invitro Analytes -->
+              <div *ngFor="let analy of assay.invitroAssayAnalytes; let indexAnalyte = index">
 
-                  <!-- DELETE ANALYTE BUTTON -->
-                  <button mat-icon-button color="primary" (click)="confirmDeleteAnalyte(indexAnalyte)"
-                    matTooltip="Delete Analyte {{(indexAnalyte+1)}}">
-                    <mat-icon>delete_forever</mat-icon>
-                  </button>
-
-                  <div class="marginleft7px margintop10px">
-                    <span *ngIf="analy.analyteSubstanceKeyType == 'UUID' || analy.analyteSubstanceKeyType == 'APPROVAL_ID'
-                      || analy.analyteSubstanceKeyType == 'BDNUM'">
-                      <a [routerLink]="['/substances', analy.analyteSubstanceKey]" target="_blank">
-                        <span class="font12px">Substance Details</span>
-                      </a>
-                    </span>
+                <div class="form-row">
+                  <div class="fieldKey">
+                    <mat-label>Analyte:</mat-label>
                   </div>
-                </div> <!-- divflex -->
 
-              </div> <!-- form-row -->
+                  <div class="divflex width95percent">
+                    <!-- Substance Text Search Suggestions/TypeAhead -->
+                    <app-substance-text-search class="fieldValueSubstance" [searchValue]="analy.analyte"
+                      placeholder="Search Substances" (searchPerformed)="nameSearch($event, 'ANALYTE', indexAnalyte)"
+                      eventCategory="selectorSearch">
+                    </app-substance-text-search>
 
-            </div> <!-- LOOP: invitroAssayAnalytes -->
+                    <!-- DELETE ANALYTE BUTTON -->
+                    <button mat-icon-button color="primary" (click)="confirmDeleteAnalyte(indexAnalyte)"
+                      matTooltip="Delete Analyte {{(indexAnalyte+1)}}">
+                      <mat-icon>delete_forever</mat-icon>
+                    </button>
+
+                    <div class="marginleft7px margintop10px">
+                      <span *ngIf="analy.analyteSubstanceKeyType == 'UUID' || analy.analyteSubstanceKeyType == 'APPROVAL_ID'
+                      || analy.analyteSubstanceKeyType == 'BDNUM'">
+                        <a [routerLink]="['/substances', analy.analyteSubstanceKey]" target="_blank">
+                          <span class="font12px">Substance Details</span>
+                        </a>
+                      </span>
+                    </div>
+                  </div> <!-- divflex -->
+
+                </div> <!-- form-row -->
+
+              </div> <!-- LOOP: invitroAssayAnalytes -->
+            </div> <!-- if invitroAssayAnalytes exists -->
 
             <br><br><br>
           </mat-card-content>

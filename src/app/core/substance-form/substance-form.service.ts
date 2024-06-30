@@ -142,10 +142,11 @@ export class SubstanceFormService implements OnDestroy {
             substanceClass: 'mixture',
             references: [],
             names: [],
-            mixture: {},
+            mixture: {
+            },
             codes: [],
             relationships: [],
-            properties: []
+            properties: [],
           };
         } else if (substanceClass === 'structurallyDiverse') {
           this.privateSubstance = {
@@ -231,7 +232,7 @@ export class SubstanceFormService implements OnDestroy {
             codes: [],
             moieties: [],
             relationships: [],
-            properties: []
+            properties: [],
           };
         } else {
           this.privateSubstance = {
@@ -245,7 +246,7 @@ export class SubstanceFormService implements OnDestroy {
 
         // TP: default to protected for root level record.
         // ***** AN: Adding this right now for SSG4m and G2 ******
-        if (substanceClass !== 'specifiedSubstanceG4m') {
+        if (substanceClass !== 'specifiedSubstanceG4m' && substanceClass !== 'mixture' && substanceClass !== 'polymer') {
           this.privateSubstance.access = ["protected"];
 
           if (substanceClass !== 'specifiedSubstanceG2') {
@@ -1506,6 +1507,15 @@ export class SubstanceFormService implements OnDestroy {
     return this.method;
   }
 
+  getSubstanceStructure() {
+    if (this.privateSubstance.polymer && this.privateSubstance.polymer.displayStructure) {
+      return this.privateSubstance.polymer.displayStructure.molfile;
+    } else {
+      return (this.privateSubstance.structure && this.privateSubstance.structure.molfile )? this.privateSubstance.structure.molfile : null;
+    }
+    
+  }
+
   structureDuplicateCheck(): any {
     return new Observable(observer => {
       this.structureService.duplicateCheck(this.privateSubstance).subscribe(response => {
@@ -2100,6 +2110,8 @@ export class SubstanceFormService implements OnDestroy {
     this.privateSubstance = old;
     this.substanceEmitter.next(this.privateSubstance);
   }
+
+ 
 
 
   //by Tyler, convert smiles, single, and 3 letter amino acids. convert 3 to 1, 1 to 3, and 1 to SMILES

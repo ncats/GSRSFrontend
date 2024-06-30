@@ -1,11 +1,11 @@
 <div appDragDropPaste (dropHandler)="onDropHandler($event)" class="z-index"  [ngClass]="tempClass">
-  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'ketcher' && enableJSDraw && jsdrawLoaded">Toggle Editor to JSDraw</button>
-  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'jsdraw' && enableJSDraw && ketcherLoaded">Toggle Editor to Ketcher</button>
+  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'ketcher' && enableJSDraw">Toggle Editor to JSDraw</button>
+  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'jsdraw' && enableJSDraw">Toggle Editor to Ketcher</button>
     <div style = "width: 100%">
-    <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="(structureEditor === 'ketcher' && !firstload) || !enableJSDraw" style = "width:990px"></ncats-jsdraw-wrapper>
+    <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="structureEditor === 'ketcher' && !firstload" style = "width:990px"></ncats-jsdraw-wrapper>
   </div>
   <div style = "width: 100%">
-    <ncats-ketcher-wrapper [ketcherFilePath]="ketcherFilePath" (ketcherOnLoad)="ketcherOnLoad($event)" [hidden]="structureEditor === 'jsdraw' && enableJSDraw">
+    <ncats-ketcher-wrapper (ketcherOnLoad)="ketcherOnLoad($event)" [hidden]="structureEditor === 'jsdraw'">
     </ncats-ketcher-wrapper>
   </div>
 
@@ -16,7 +16,7 @@
       
     
     <div class="molvec-message">
-      <button mat-button color = "primary" (click) = "openMolvecImportDialog()">Load a structure image</button>
+      Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
   </div>
    
     <div class = "options">

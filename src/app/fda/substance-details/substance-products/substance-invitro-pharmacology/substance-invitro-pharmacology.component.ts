@@ -52,7 +52,7 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
   disableExport = false;
 
   // Search variables
-  //public privateSearchBase = 'root_invitroAssayScreenings_invitroAssayResultInformation_invitroTestAgent_testAgentSubstanceUuid:';
+  //public privateSearchBase = 'root_invitroAssayScreenings_invitroAssayResultInformation_invitroTestAgent_testAgentSubstanceKey:';
   public privateSearchBase = 'entity_link_substances:';
 
   public privateSearch?: string;

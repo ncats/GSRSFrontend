@@ -55,7 +55,8 @@
       {{substance.definitionLevel}} DEFINITION
     </span>
   </div>
-  <div>
+  <div class = "full-col">
+  <div class = "left-col">
     <div class="name-value">
       <div class="name">Substance Class</div>
       <div class="value blue-font">{{substance.substanceClass | classDisplay}}</div>
@@ -87,6 +88,52 @@
         <span class = "deprecated" *ngIf ="substance.deprecated">RECORD IS DEPRECATED</span>
       </div>
     </div>
+    <div *ngIf="!isAdmin && !substance.$$source" class="name-value">
+      <div class="name">Record Version</div>
+      <div class="value blue-font">{{substance.version}}</div>
+    </div>
+    <div *ngIf="isAdmin && !substance.$$source" class="name-value">
+      <div class="name">Record Version</div>
+      <mat-form-field class="version-dropdown">
+        <mat-select [formControl]="versionControl" class="version-select">
+          <mat-option *ngFor="let version of versions" [value]="version" class="version-option">
+            {{version}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button *ngIf="substance.version != versionControl.value" mat-button
+        class="mat-raised-button mat-primary view-version" (click)='changeVersion()'>View</button>
+    </div>
+    <div *ngIf="substance.version != latestVersion  && !substance.$$source" class="indent">
+      This is an older version of this substance - Ver. {{this.substance.version}}
+      <button *ngIf="isAdmin" mat-button
+        class="mat-raised-button mat-primary view-version" (click)='restoreVersion()'>Restore this version</button>
+    </div>
+    
+    <div class="name-value">
+        <div class="name">Definitional Access</div>
+        <div class="value blue-font">
+            <span *ngIf="(defAccess && defAccess.length > 0) else defIndicator">
+              <span>Not a public definition</span>&nbsp;
+              <mat-icon svgIcon="lock"></mat-icon>
+            </span>
+            <ng-template #defIndicator>
+              <span>Public definition</span>&nbsp;
+              <mat-icon svgIcon="lock_open"></mat-icon>
+            </ng-template>
+          </div>
+      <!--  <div class="value">
+          <span *ngIf = "!defAccess || defAccess.length === 0">Public</span>
+          <span *ngIf = "defAccess && defAccess.length > 0">
+            <span class = "pre" *ngFor ="let access of defAccess;last as islast">
+              {{access}}{{!islast? ', ':''}}
+            </span>
+          </span>
+
+        </div>-->
+      </div>
+  </div>
+  <div class = "right-col">
     <div *ngIf="substance.protein" class="diverseWrapper">
       <div class="name-value" *ngIf="substance.protein.proteinType">
         <div class="name">Protein Type</div>
@@ -220,71 +267,32 @@
         </div>
       </div>
     </div>
-    <div *ngIf="!isAdmin && !substance.$$source" class="name-value">
-      <div class="name">Record Version</div>
-      <div class="value blue-font">{{substance.version}}</div>
-    </div>
-    <div *ngIf="isAdmin && !substance.$$source" class="name-value">
-      <div class="name">Record Version</div>
-      <mat-form-field class="version-dropdown">
-        <mat-select [formControl]="versionControl" class="version-select">
-          <mat-option *ngFor="let version of versions" [value]="version" class="version-option">
-            {{version}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button *ngIf="substance.version != versionControl.value" mat-button
-        class="mat-raised-button mat-primary view-version" (click)='changeVersion()'>View</button>
-    </div>
-    <div *ngIf="substance.version != latestVersion  && !substance.$$source" class="indent">
-      This is an older version of this substance - Ver. {{this.substance.version}}
-      <button *ngIf="isAdmin" mat-button
-        class="mat-raised-button mat-primary view-version" (click)='restoreVersion()'>Restore this version</button>
-    </div>
-    <div class="name-value">
-      <div class="name">Tags</div>
-      <div class="value">
-        <mat-chip-list #tagList aria-label="Tags" selectable="false">
-          <mat-chip
-            *ngFor="let tag of substance.tags"
-            removable="false">
-              {{tag}}
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-    </div>
-    <div class="name-value" *ngIf="references?.length > 0">
-      <div class="name">
-        <a tabindex="0" role="link" (click)="toggleReferences()" class='blue-font references-link'>
-          <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span>
-          <mat-icon svgIcon="{{defIcon}}"></mat-icon>
-        </a>
-      </div>
-    </div>
-    <div [hidden]="!showDef">
-      <app-references-manager [substance]="substance" [references]="references"></app-references-manager>
-    </div>
-    <div class="name-value">
-        <div class="name">Definitional Access</div>
-        <div class="value blue-font">
-            <span *ngIf="(defAccess && defAccess.length > 0) else defIndicator">
-              <span>Not a public definition</span>&nbsp;
-              <mat-icon svgIcon="lock"></mat-icon>
-            </span>
-            <ng-template #defIndicator>
-              <span>Public definition</span>&nbsp;
-              <mat-icon svgIcon="lock_open"></mat-icon>
-            </ng-template>
-          </div>
-      <!--  <div class="value">
-          <span *ngIf = "!defAccess || defAccess.length === 0">Public</span>
-          <span *ngIf = "defAccess && defAccess.length > 0">
-            <span class = "pre" *ngFor ="let access of defAccess;last as islast">
-              {{access}}{{!islast? ', ':''}}
-            </span>
-          </span>
-
-        </div>-->
-      </div>
   </div>
+</div>
+<div class="name-value">
+  <div class="name">Tags</div>
+  <div class="value">
+    <mat-chip-list #tagList aria-label="Tags" selectable="false">
+      <mat-chip
+        *ngFor="let tag of substance.tags"
+        removable="false">
+          {{tag}}
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+  <div *ngIf="substance.tags.length === 0">
+    <i>None</i>
+  </div>
+</div>
+<div class="name-value" *ngIf="references?.length > 0">
+  <div class="name">
+    <a tabindex="0" role="link" (click)="toggleReferences()" class='blue-font references-link'>
+      <span>{{showDef === false ? 'Show' : 'Hide'}} Definitional References</span>
+      <mat-icon svgIcon="{{defIcon}}"></mat-icon>
+    </a>
+  </div>
+</div>
+<div [hidden]="!showDef">
+  <app-references-manager [substance]="substance" [references]="references"></app-references-manager>
+</div>
 </div>

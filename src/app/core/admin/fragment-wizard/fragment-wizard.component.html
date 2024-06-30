@@ -44,8 +44,13 @@
 
 
   </div>
+  <div class = "form-row" style = "width:100%;margin-top:20px" *ngIf = "(!forms || forms.length <= 0) && adminPanel">
+    <div *ngIf = "editorType === 'ketcher'">Set Connection points using  "A" atoms in the periodic table element selector.</div>
+    <div *ngIf = "editorType === 'jsdraw'">Set Connection points using  "*" atoms in the periodic table element selector.</div>
+
+  </div>
 <div class="editor-container">
-    <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
+    <app-structure-editor (editorSwitched) = "changeEditor($event)" (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
     
   </div>
   <div class = "form-row"><div class = "middle-fill"></div><button mat-button (click) = "getFragmentCV()">Choose Connection Points</button></div>
@@ -64,9 +69,7 @@
 <div class = "form-row" style = "width:100%;margin-top:20px" *ngIf = "forms.length > 0 && adminPanel">
     <div >Click on a form to set the fragment term structure</div>
 </div>
-<div class = "form-row" style = "width:100%;margin-top:20px" *ngIf = "(!forms || forms.length <= 0) && adminPanel">
-  <div >Set Connection points using  "*" atoms in the periodic table element selector.</div>
-</div>
+
 
 
   </div>

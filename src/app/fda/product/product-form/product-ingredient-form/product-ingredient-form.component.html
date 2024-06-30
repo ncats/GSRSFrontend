@@ -167,6 +167,14 @@
         </mat-checkbox>
         &nbsp;
       </span>
+
+      <!-- Display Text Box if "Other" is selected from the textbox -->
+      <div class="marginleft60p margintop20px" *ngIf="isIngredLocationOtherSelected && isIngredLocationOtherSelected == true">
+        <mat-form-field class="width120px">
+          <input matInput placeholder="Other Ingredient Location" [(ngModel)]="ingredient.ingredientLocationText" name="ingredientLocationText" />
+        </mat-form-field>
+      </div>
+
     </div>
 
   </div> <!-- row-->

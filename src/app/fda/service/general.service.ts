@@ -43,7 +43,7 @@ export class GeneralService extends BaseHttpService {
 
     if (substanceKeyType === 'UUID') {
       // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
-       return substance.uuid;
+      return substance.uuid;
     } else if (substanceKeyType === 'APPROVAL_ID') {
       // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
       return substance.approvalID;
@@ -304,6 +304,13 @@ export class GeneralService extends BaseHttpService {
   getCurrentDate(): any {
     const currentDate = new Date();
     return currentDate;
+  }
+
+  getDailyMedUrlConfig(): any {
+    if (this.configService.configData && this.configService.configData.dailyMedUrl) {
+      return this.configService.configData.dailyMedUrl;
+    }
+    return null;
   }
 
   getSubstanceKeyType(entity?: string): any {

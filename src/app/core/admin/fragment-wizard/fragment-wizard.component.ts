@@ -30,6 +30,7 @@ export class FragmentWizardComponent implements OnInit {
   message: string;
   validationMessages =[];
   adminPanel?: boolean;
+  editorType = 'jsdraw';
 smiles?: any;
 private overlayContainer: HTMLElement;
 
@@ -145,6 +146,10 @@ private overlayContainer: HTMLElement;
 
   molvecUpdate(mol: any) {
     this.editor.setMolecule(mol);
+  }
+
+  changeEditor(event: any) {
+    this.editorType = event;
   }
 
   editorOnLoad(editor: Editor): void {
