@@ -1,7 +1,7 @@
 import { Ketcher } from 'ketcher-wrapper';
 import { JSDraw } from 'jsdraw-wrapper';
 import { Editor } from './structure.editor.model';
-import { Observable, from, pipe, take } from 'rxjs';
+import { Observable, from, pipe, switchMap, take } from 'rxjs';
 
 export class EditorImplementation implements Editor {
     private ketcher?: Ketcher;
@@ -55,7 +55,6 @@ export class EditorImplementation implements Editor {
     
 
     getMolfile(): Observable<any> {
-        console.log('getting molfile');
         return new Observable<any>(observer => {
         if (this.ketcher && this.ketcher != null) {
             from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
@@ -114,8 +113,9 @@ export class EditorImplementation implements Editor {
 
     getSmiles(): Observable<string> {
         if (this.ketcher != null) {
-            from(this.ketcher.getSmiles()).pipe(take(1)).subscribe(result => { console.log(result);
-                return result;});
+            return  from(this.ketcher.getSmiles()).pipe(switchMap(data => {
+                console.log(data);
+                return data;}));
         } else if (this.jsdraw != null) {
             return new Observable<string>(observer => {
                 observer.next(this.jsdraw.getSmiles());
