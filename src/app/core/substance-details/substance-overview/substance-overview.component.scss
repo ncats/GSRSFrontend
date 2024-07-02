@@ -2,6 +2,29 @@
   display: inline-flex;
   vertical-align: middle;
 }
+
+.left-col {
+  width:50%;
+  margin-top: 20px;
+
+}
+
+.right-col {
+  width: 50%;
+  margin-top: 20px;
+
+}
+
+.tags {
+  margin-top: 15px;
+}
+
+.full-col {
+  width: 100%;
+  display:flex;
+  flex-direction: row;
+}
+
 .version-dropdown{
   width:50px;
   border:0px;
