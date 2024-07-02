@@ -39,7 +39,7 @@ export class ProductService extends BaseHttpService {
     pageSize: number = 10,
     searchTerm?: string,
     facets?: FacetParam
-  ): Observable<PagingResponse<ProductAll>> {
+  ): Observable<PagingResponse<Product>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', pageSize.toString());
