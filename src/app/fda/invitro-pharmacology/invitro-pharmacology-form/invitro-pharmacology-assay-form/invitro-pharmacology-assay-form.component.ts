@@ -311,38 +311,14 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
           this.assay.invitroAssaySets.push(existingAssaySetObject);
         } else {  // New Assay/Register
           const newAssaySet: InvitroAssaySet = {};
-          // if New Assay, only assign AssaySet id if it exists
-          //  if (existingAssaySetObject.id) {
-          //    newAssaySet.id = existingAssaySetObject.id;
-          //  } else {
-          //    newAssaySet.assaySet = existingAssaySetObject.assaySet;
-          //  }
 
           // Push the new object to list
-          // this.assay.invitroAssaySets.push(newAssaySet);
-
           this.assay.invitroAssaySets.push(existingAssaySetObject);
         }
       } else {  // Not found in the Existing AsssaySets into the database
 
       }
 
-      /*
-      let found = false;
-      this.assay.invitroAssaySets.forEach(asySet => {
-        if (asySet.assaySet) {
-          // match in assay and checked in checkbox
-          if (asySet.assaySet === data) {
-          } else {
-
-          }
-        }
-      });  */
-
-      //const set: InvitroAssaySet = {};
-      //set.assaySet = data;
-      // const set = this.existingAssaySetList[indexCheckbox];
-      //this.assay.invitroAssaySets.push(set);
     });
   }
 
@@ -356,8 +332,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
     let setObj = { value: this.newAssaySet, checked: false };
     this.checkBoxAssaySetList.push(setObj);
-
-    // this.loadCheckBoxAssaySetList();
   }
 
   confirmDeleteAnalyte(indexAnalyte: number) {

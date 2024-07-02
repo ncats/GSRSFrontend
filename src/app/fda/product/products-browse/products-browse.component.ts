@@ -95,7 +95,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
-    'productNDC',
+    'productCode',
     'productName',
     'ingredientName',
     'labelerName',
@@ -350,6 +350,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     if (sort.active) {
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
+      alert("AAAAAAAAAAAAAA" + this.ascDescDir);
       this.sortValues.forEach(sortValue => {
         if (sortValue.displayedColumns && sortValue.direction) {
           if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {

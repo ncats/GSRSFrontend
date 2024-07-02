@@ -25,6 +25,8 @@ export interface Product {
   manufacturerName?: string;
   manufacturerCode?: string;
   manufacturerCodeType?: string;
+  effectiveDate?: string;
+  endDate?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

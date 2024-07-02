@@ -143,93 +143,8 @@
 
           <mat-card-content>
             <mat-accordion multi="true">
-              <!-- PRODUCT NAME LIST -->
-              <!--  DISABLE NOW, USING IN PROVENANCE
-              <mat-expansion-panel [expanded]="true">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    <span class="font17px"><b>Product Name</b></span>
-                    <span class="badge">
-                      {{(product.productNames.length)}}
-                    </span>
-                    <div class="middle-fill"></div>
-                    <button mat-button class="marginright30px bordergreen" color="primary"
-                      (click)="addNewProductName(); $event.stopPropagation()" matTooltip="Add New Product Name">
-                      <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">ADD NEW</span>
-                    </button>
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
 
-                <div class="marginbottom10px" *ngFor="let prodName of product.productNames; let prodNameIndex = index">
-
-                  <hr *ngIf="prodNameIndex > 0">
-
-                  <div class="divflex">
-                    <div class="form-row">
-                      <mat-form-field class="col-2">
-                        <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName"
-                          name="productName" />
-                      </mat-form-field>
-
-                      <app-cv-input class="col-1" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type"
-                        name="productNameType" [model]="prodName.productNameType"
-                        (valueChange)="prodName.productNameType = $event">
-                      </app-cv-input>
-
-                      <button mat-icon-button color="primary" (click)="confirmDeleteProductName(prodNameIndex)"
-                        matTooltip="Delete Product Name">
-                        <mat-icon>delete_forever</mat-icon>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="divflex">
-                    <div class="form-row">
-                      <app-cv-input class="col-2" domain="PROD_COUNTRY_CODE" title="Jurisdictions" name="jurisdiction"
-                        [model]="prodName.jurisdictions" (valueChange)="prodName.jurisdictions = $event">
-                      </app-cv-input>
-
-                      <app-cv-input class="col-1" domain="LANGUAGE" title="Language" name="language"
-                        [model]="prodName.language" (valueChange)="prodName.language = $event">
-                      </app-cv-input>
-                    </div>
-
-                    <div>
-                      <button mat-raised-button class="bordergray" (click)="addNewTermAndTermPart(prodNameIndex)">
-                        Add Term and Term Part
-                      </button>
-
-                    </div>
-                  </div>
-
-
-                  <div class="bkcolorlightblue"
-                    *ngFor="let prodNameTerm of prodName.productTermAndParts; let prodNameTermIndex = index">
-                    <div class="form-row">
-                      <mat-form-field class="col-2">
-                        <input matInput placeholder="Term" [(ngModel)]="prodNameTerm.productTerm" name="productTerm" />
-                      </mat-form-field>
-
-                      <app-cv-input class="col-2" domain="PROD_TERM_PART" title="Product Term Part"
-                        name="productTermPart" [model]="prodNameTerm.productTermPart"
-                        (valueChange)="prodNameTerm.productTermPart = $event">
-                      </app-cv-input>
-
-                      <button mat-icon-button color="primary"
-                        (click)="confirmDeleteTermAndTermPart(prodNameIndex, prodNameTermIndex)"
-                        matTooltip="Delete Product Term and Term Part">
-                        <mat-icon>delete_forever</mat-icon>
-                      </button>
-
-                    </div>
-                  </div>
-
-                </div>
-
-              </mat-expansion-panel>
-               -->
               <!-- Product Name List-->
-
 
               <!-- EXPANSION: PRODUCT OVERVIEW -->
               <mat-expansion-panel [expanded]="true">
@@ -247,15 +162,26 @@
                     (valueChange)="product.pharmacedicalDosageForm = $event">
                   </app-cv-input>
 
-                  <app-cv-input class="col-4-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
+                  <app-cv-input class="col-2-1" domain="PROD_ROUTE_OF_ADMIN" title="Route of Administration"
                     name="routeAdmin" [model]="product.routeAdmin" (valueChange)="product.routeAdmin = $event">
                   </app-cv-input>
 
-                  <app-cv-input class="col-4-1" domain="PROD_UNIT_PRESENTATION" title="Unit of Presentation"
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field class="col-4-1">
+                    <input matInput placeholder="Effective Date" [(ngModel)]="product.effectiveDate"
+                      name="effectiveDate" />
+                  </mat-form-field>
+
+                  <mat-form-field class="col-4-1">
+                    <input matInput placeholder="End Date" [(ngModel)]="product.endDate" name="storageConditions" />
+                  </mat-form-field>
+
+                  <app-cv-input class="col-2-1" domain="PROD_UNIT_PRESENTATION" title="Unit of Presentation"
                     name="unitPresentation" [model]="product.unitPresentation"
                     (valueChange)="product.unitPresentation = $event">
                   </app-cv-input>
-
                 </div>
 
                 <div class="form-row">

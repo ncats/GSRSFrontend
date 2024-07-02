@@ -43,11 +43,11 @@
             </div>
 
             <table mat-table [dataSource]="paged" class="font12px" matSort (matSortChange)="sortData($event)"
-              matSortActive="productNDC" matSortDirection="desc" matSortDisableClear>
+              matSortActive="productCode" matSortDirection="asc" matSortDisableClear>
 
-              <ng-container matColumnDef="productNDC">
+              <ng-container matColumnDef="productCode">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product ID </th>
-                <td mat-cell *matCellDef="let product">
+                <td class="width120px" mat-cell *matCellDef="let product">
 
                   <span *ngFor="let prodProv of product.productProvenances; let i = index">
                     <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
@@ -92,9 +92,14 @@
               <ng-container matColumnDef="productName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodProv of product.productProvenances">
+                  <div *ngFor="let prodProv of product.productProvenances; let indexProv = index">
                     <div *ngFor="let prodName of prodProv.productNames">
-                      {{prodName.productName}}
+                      <span *ngIf="indexProv > 0"><br></span>
+                      &#x2022;&nbsp;{{prodName.productName}}
+
+                      <span *ngIf="prodName.productNameType">
+                        <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
+                      </span>
                     </div>
                   </div>
                 </td>
@@ -148,12 +153,13 @@
                       <div *ngFor="let prodIngred of prodLot.productIngredients">
 
                         <div *ngIf="prodIngred.substanceKey">
-                          <div *ngIf="(bdnum === prodIngred.substanceKey)">
+                          <div *ngIf="(bdnum === prodIngred.substanceKey) || substanceUuid === prodIngred.substanceKey
+                          || approvalId === prodIngred.substanceKey">
                             {{prodIngred.ingredientType}}
                           </div>
                         </div>
 
-                      </div>
+                      </div> <!-- for loop -->
                     </div>
                   </div>
                 </td>

@@ -1012,28 +1012,28 @@
     },
     "products": {
       "default": [
+        "Provenance",
+        "Product ID",
         "Product Name",
-        "Nonproprietary Name",
-        "Product NDC",
         "Dosage Form Name",
+        "Ingredient Name (Preferred)",
         "Ingredient Name",
         "Ingredient Type",
         "Product Type",
         "Product Code Type",
-        "Application Number",
         "Product Status",
         "Marketing Category Name",
         "Route of Administration",
         "Is Listed",
+        "Indication",
+        "Application Type Number",
+        "Application Type",
+        "Application Number",
         "Labeler Name",
-        "Labeler DUNS Number",
-        "Registrant Name",
-        "Registrant DUNS",
-        "City",
-        "State",
         "Company Country",
-        "Country Code",
-        "Provenance"
+        "Company Role",
+        "Manufacturer Name",
+        "Manufacturer Role"
       ],
       "admin": [
         "Record Created By",
@@ -1249,7 +1249,7 @@
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology Assay Set Builder",
+          "display": "In-vitro Pharmacology AssaySet Builder",
           "path": "invitro-pharm/assaySetBuilder",
           "order": 260
         },

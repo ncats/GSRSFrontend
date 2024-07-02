@@ -533,6 +533,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     return false;
   }
+  
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
     this.pageIndex = 0;
