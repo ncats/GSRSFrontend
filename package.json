@@ -48,6 +48,7 @@
     "@angular/router": "13.2.1",
     "@nguniversal/express-engine": "13.0.2",
     "@types/hammerjs": "2.0.36",
+    "@types/ws": "^8.5.4",
     "classlist.js": "1.1.20150312",
     "compression": "1.7.3",
     "core-js": "2.5.4",
