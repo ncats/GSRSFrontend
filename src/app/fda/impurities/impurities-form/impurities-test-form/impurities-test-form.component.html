@@ -182,7 +182,7 @@
         </mat-form-field>
 
         <!-- Delete Solution Row -->
-        <button class="marginleft20px" mat-icon-button color="primary"
+        <button class="marginleft5px" mat-icon-button color="primary"
           (click)="confirmDeleteImpuritiesSolution(solutionIndex)"
           matTooltip="Delete Solution {{getLetter(solutionIndex)}}">
           <mat-icon>delete_forever</mat-icon>
@@ -190,15 +190,14 @@
       </div>
     </div>
 
-
     <!-- Mobile Phase Table -->
     <!-- Only Show Mobile Phase Table when Eution Type is 'Isocratic' and
          at least one Solution is added aboved -->
     <div
-      *ngIf="(impuritiesTest.elutionType && impuritiesTest.elutionType === 'Isocratic') && impuritiesTest.impuritiesSolutionList.length > 0">
+      *ngIf="(impuritiesTest.elutionType && impuritiesTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC) && impuritiesTest.impuritiesSolutionList.length > 0">
       <div class="divflex">
         <div class="margintop10px">
-          <span class="font14px"><b>Mobile Phase</b></span>
+          <span class="font16px"><b>Mobile Phase</b></span>
         </div>
 
         <div class="width40px">&nbsp;</div>
@@ -211,54 +210,88 @@
         </div>
       </div> <!-- divflex -->
 
-
       <!-- Mobile Phase TABLE BEGIN -->
 
       <!-- if Elution Type in the dropdown selection is 'Isocratic', show Mobile Phase Table.
        Add Solution Column as Solution A, Solution B, etc is getting added  -->
 
-      <div class="form-row margintop20px">
-        <table class="tableStyle bordergray">
-          <tr>
-            <th class="width5percent">#</th>
-            <th class="width15percent">Time (min)</th>
-            <span class="width80percent"
-              *ngFor="let impuritiesSolution of impuritiesTest.impuritiesSolutionList; let solutionIndex = index">
-              <th class="width80percent">Solution {{getLetter(solutionIndex)}} (%)</th>
-            </span>
-          </tr>
+      <br>
+      <table mat-table class="bordergray" [dataSource]="dataSource">
 
-          <tr *ngFor="let solutionTable of impuritiesTest.impuritiesSolutionTableList; let solutionTableIndex = index">
-            <td class="width5percent">
-              {{(solutionTableIndex+1)}}
+        <span *ngFor="let columnName of displayedColumns; let colIndex = index">
+          <ng-container matColumnDef="{{columnName}}">
+            <th mat-header-cell *matHeaderCellDef>{{columnName}}</th>
+            <td mat-cell *matCellDef="let row; let indexRow = index;">
 
               <!-- Delete Mobile Phase Row -->
-              <button class="marginleft20px" mat-icon-button color="primary"
-                (click)="confirmDeleteImpuritiesSolutionTable(solutionTableIndex)"
-                matTooltip="Delete Mobile Phase Row {{solutionTableIndex + 1}}">
-                <mat-icon>delete_forever</mat-icon>
-              </button>
-            </td>
+              <div class="divflex width40px" *ngIf="columnName == 'Number'">
 
-            <td class="width15percent">
-              <mat-form-field class="">
-                <input matInput placeholder="Time (min)" [(ngModel)]="solutionTable.solutionTime" name="solutionTime" />
+                <div class="margintop10px">
+                  {{(indexRow+1)}}
+                </div>
+
+                <div>
+                  <button class="marginleft10px" mat-icon-button color="primary"
+                    (click)="confirmDeleteImpuritiesSolutionTable(indexRow)"
+                    matTooltip="Delete Mobile Phase Row {{indexRow + 1}}">
+                    <mat-icon>delete_forever</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Time (min)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionTime" name="solutionTime" />
               </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution A (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionAPercent" name="solutionAPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution B (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionBPercent" name="solutionBPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution C (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionCPercent" name="solutionCPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution D (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionDPercent" name="solutionDPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution E (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionEPercent" name="solutionEPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution F (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionFPercent" name="solutionFPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution G (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionGPercent" name="solutionGPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution H (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionHPercent" name="solutionHPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution I (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionIPercent" name="solutionIPercent" />
+              </mat-form-field>
+
+              <mat-form-field class="width60px" *ngIf="columnName == 'Solution J (%)'">
+                <input matInput placeholder="" [(ngModel)]="row.solutionJPercent" name="solutionJPercent" />
+              </mat-form-field>
+
             </td>
+          </ng-container>
 
-            <span class="width100percent"
-              *ngFor="let impuritiesSolution of impuritiesTest.impuritiesSolutionList; let solutionIndex = index">
-              <td class="">
-                <mat-form-field>
-                  <input matInput placeholder="Solution {{impuritiesSolution.solutionLetter}} (%)"
-                    [(ngModel)]="solutionTable.solutionAPercent" name="solutionAPercent" />
-                </mat-form-field>
-              </td>
-            </span>
+        </span>
 
-          </tr>
-        </table>
-      </div> <!-- form-row -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
       <br>
 
     </div> <!-- if Elution Type == 'Isocratic' -->

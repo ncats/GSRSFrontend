@@ -389,7 +389,7 @@
                             Elution Type:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.elutionType}}
+                            <b>{{impTest.elutionType}}</b>
                           </div>
                         </div>
                         <div class="width50percent">
@@ -431,46 +431,101 @@
 
                       <!-- Solution BEGIN -->
                       <div *ngFor="let impuritiesSolution of impTest.impuritiesSolutionList; let solutionIndex = index">
-                      <div class="row">
-                        <div class="row-property-2">
-                          <div class="row-property-key-2">
-                            Solution   {{impuritiesSolution.solutionLetter}}:
-                          </div>
-                          <div class="row-property-value-2">
-                            {{impuritiesSolution.solutionDescription}}
+                        <div class="row">
+                          <div class="row-property-2">
+                            <div class="row-property-key-2">
+                              Solution {{impuritiesSolution.solutionLetter}}:
+                            </div>
+                            <div class="row-property-value-2">
+                              {{impuritiesSolution.solutionDescription}}
+                            </div>
                           </div>
                         </div>
-                      </div>
                       </div> <!-- Solution Loop -->
 
-                      <div class="margintop20px font13px"><b>Mobile Phase</b></div>
 
-                      <div class="row margintop20px">
-                        <table class="blueTable">
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th class="width200px">Time (min)</th>
-                              <th>Solution A (%)</th>
-                              <th>Solution B (%)</th>
-                            </tr>
-                          </thead>
+                      <!-- Mobile Phase BEGIN -->
+                      <div *ngIf="impTest.impuritiesSolutionTableList">
+                        <div class="marginbottom20px"
+                          *ngIf="(impTest.elutionType && impTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC) && impTest.impuritiesSolutionTableList.length > 0">
 
-                          <tbody>
-                            <tr *ngFor="let solTable of impTest.impuritiesSolutionTableList; let m = index">
-                              <td class="width40px">{{m + 1}}</td>
-                              <td class="width200px">{{solTable.solutionTime}}</td>
-                              <td class="width200px">{{solTable.solutionAPercent}}</td>
-                              <td class="width200px">{{solTable.solutionBPercent}}</td>
-                            </tr>
-                          </tbody>
+                          <div class="margintop20px font14px"><b>Mobile Phase</b></div>
 
-                        </table>
-                      </div>
-                      <!-- Solution END -->
+                          <table mat-table class="margintop20px bordergray"
+                            [dataSource]="impTest.impuritiesSolutionTableList">
+
+                            <span *ngFor="let columnName of displayedColumns; let colIndex = index">
+                              <ng-container matColumnDef="{{columnName}}">
+                                <th mat-header-cell *matHeaderCellDef>{{columnName}}</th>
+                                <td mat-cell *matCellDef="let row; let indexRow = index;">
+
+                                  <!-- Delete Mobile Phase Row -->
+                                  <div class="divflex width40px" *ngIf="columnName == 'Number'">
+                                    <div class="margintop10px">
+                                      {{(indexRow+1)}}
+                                    </div>
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Time (min)'">
+                                    {{row.solutionTime}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution A (%)'">
+                                    {{row.solutionAPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution B (%)'">
+                                    {{row.solutionBPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution C (%)'">
+                                    {{row.solutionCPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution D (%)'">
+                                    {{row.solutionDPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution E (%)'">
+                                    {{row.solutionEPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution F (%)'">
+                                    {{row.solutionFPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution G (%)'">
+                                    {{row.solutionGPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution H (%)'">
+                                    {{row.solutionHPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution I (%)'">
+                                    {{row.solutionIPercent}}
+                                  </div>
+
+                                  <div *ngIf="columnName == 'Solution J (%)'">
+                                    {{row.solutionJPercent}}
+                                  </div>
+
+                                </td>
+                              </ng-container>
+
+                            </span>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                          </table>
+                          <br>
+                        </div>
+                      </div> <!-- if impuritiesSolutionTableList-->
+                      <!-- Mobile Phase END -->
 
 
-                      <div class="row margintop20px">
+                      <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
                             Sample Solution:

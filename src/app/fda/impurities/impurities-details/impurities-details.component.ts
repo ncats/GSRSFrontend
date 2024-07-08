@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { MatTableDataSource } from '@angular/material/table';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '../../../core/utils/utils.service';
@@ -11,7 +12,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { ImpuritiesService } from '../service/impurities.service';
 import { GeneralService } from '../../service/general.service';
-import { Impurities } from '../model/impurities.model';
+import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
 
 @Component({
   selector: 'app-impurities-details',
@@ -19,6 +20,10 @@ import { Impurities } from '../model/impurities.model';
   styleUrls: ['./impurities-details.component.scss']
 })
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
+
+  public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+
+  dataSource: MatTableDataSource<ImpuritiesSolutionTable>;
 
   id: string;
   impurities: Impurities;
@@ -29,6 +34,12 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   message = '';
   subRelationship: any;
   private subscriptions: Array<Subscription> = [];
+
+
+  displayedColumns = [
+    'Number',
+    'Time (min)'
+  ]
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -92,6 +103,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
         // Get Substance Name for SubstanceUuid in ImpuritiesDetailsList
         this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
           elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
+
             elementRelTest.impuritiesDetailsList.forEach((elementRelImpuDet) => {
               if (elementRelImpuDet.relatedSubstanceUuid) {
                 const impDetNameSubscription = this.generalService.getSubstanceBySubstanceUuid
@@ -105,7 +117,26 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
                 this.subscriptions.push(impDetNameSubscription);
               }
             });
-          });
+
+            // assign Mobile Phase list to datasource to display on table
+            this.dataSource = new MatTableDataSource(elementRelTest.impuritiesSolutionTableList);
+
+            // Populate columns for Mobile Phase
+            // add letter in the Mobile Phase column
+            if (elementRelTest.impuritiesSolutionList) {
+              if (elementRelTest.impuritiesSolutionList.length > 0) {
+                elementRelTest.impuritiesSolutionList.forEach(solution => {
+                  if (solution) {
+                    if (solution.solutionLetter) {
+                      let columnName = 'Solution ' + solution.solutionLetter + ' (%)';
+                      this.displayedColumns.push(columnName);
+                    }
+                  }
+                });
+
+              } // impuritiesSolutionTableList length > 0
+            } // impuritiesSolutionTableList exists
+          }); // Loop: elementRelSub.impuritiesTestList
         });
 
         // Get Substance Name for SubstanceUuid in ImpuritiesResidualSolventsList
