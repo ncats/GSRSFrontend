@@ -86,6 +86,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /*
   generateHtmlToPdf() {
     var node = document.getElementById('divStepView');
 
@@ -107,7 +108,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
         console.error('oops, something went wrong!', error);
       });
 
-    /*
+
     let pdfName = "ssg4mPdf";
 
     const width = this.dataToExport.nativeElement.clientWidth;
@@ -130,14 +131,14 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
       pdf.addImage(result, 'PNG', 25, 185, width, height);
       pdf.save('C:\Users\Archana.Newatia\Downloads\file_name' + '.pdf');
     }).catch(error => { });
-    */
+
   }
 
   generateImage() {
     var node = document.getElementById('divStepView');
 
     // to Jpeg
-    /*
+
     htmlToImage.toJpeg(node, { quality: 0.95 })
     .then(function (dataUrl) {
       var img = new Image();
@@ -146,11 +147,11 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
     })
     .catch(function (error) {
       console.error('oops, something went wrong!', error);
-    });*/
+    });
 
 
     // to Png
-    /*
+
     htmlToImage.toPng(node)
       .then(function (dataUrl) {
         var img = new Image();
@@ -160,13 +161,14 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
       .catch(function (error) {
         console.error('oops, something went wrong!', error);
       });
-    */
+
 
     htmlToImage.toCanvas(node)
       .then(function (canvas) {
         document.body.appendChild(canvas);
       });
   }
+  */
 
   openImageModal(subUuid: string, approvalID: string, displayName: string): void {
     let data: any;

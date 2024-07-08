@@ -12,6 +12,7 @@
   </div>
 </div>
 
+<!--
 <br><br>
 <div class="divflex">
   <button mat-stroked-button color="primary" class="button-add" (click)="generateImage()" matTooltip="Generate Image">
@@ -25,7 +26,10 @@
 </div>
 <br>
 
+
 <div id="divStepView">
+-->
+
   <div class="margintop10px" *ngFor="let process of processList; let processIndex = index">
     <div *ngIf="((showProcessIndex === -1) || (showProcessIndex > -1 && showProcessIndex === processIndex))">
       <fieldset class="border">
@@ -266,7 +270,8 @@
       </fieldset>
     </div> <!-- processIndex === showProcessIndex -->
   </div> <!-- Process loop -->
-</div> <!-- id=divStepView -->
+  <!--
+</div> --> <!-- id=divStepView -->
 <br>
 <!--
 <div appScrollToTarget
