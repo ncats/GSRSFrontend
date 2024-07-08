@@ -135,22 +135,39 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
               this.titleService.setTitle(`Register New In-vitro Pharamcology Assay from Import`);
               this.title = 'Register In-vitro Pharamcology Assay from Import';
               const record = window.history.state.record;
-              const response = JSON.parse(record);
-              if (response) {
-                // Delete ids and audit details from imported Assay JSON
-                this.scrub(response);
+              if (record) {
+                const response = JSON.parse(record);
+                if (response) {
+                  // Delete ids and audit details from imported Assay JSON
+                  this.scrub(response);
 
-                // Load Assay JSON into Assay Objects if value in Assay Id exists
-                this.invitroPharmacologyService.loadAssayOnly(response);
-                this.assay = this.invitroPharmacologyService.assay;
+                  // Load Assay JSON into Assay Objects if value in Assay Id exists
+                  this.invitroPharmacologyService.loadAssayOnly(response);
+                  this.assay = this.invitroPharmacologyService.assay;
 
-                // Get All the Assay Sets for checkboxes on the form
-                this.getAllAssaySets();
+                  // Get All the Assay Sets for checkboxes on the form
+                  this.getAllAssaySets();
+
+                  // Stop the Loading/Spinner after the form data is loaded
+                  this.isLoading = false;
+                  this.loadingService.setLoading(this.isLoading);
+                } // if response
+              } // if record has JSON
+              else {
+                  // if No JSON file selected, show message to user
+                  // Initialized the Assay Objects
+                  this.invitroPharmacologyService.loadAssayOnly();
+                  this.assay = this.invitroPharmacologyService.assay;
+
+                  // Get All the Assay Sets for checkboxes on the form
+                  this.getAllAssaySets();
 
                 // Stop the Loading/Spinner after the form data is loaded
                 this.isLoading = false;
                 this.loadingService.setLoading(this.isLoading);
-              } // if response
+
+                alert("There was no JSON file selected to import the data. Please click the 'Import JSON' button");
+              }
             }
           }
           // Register New Assay
@@ -243,7 +260,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         // Create checboxes
         this.createAssaySetCheckBoxes();
 
-        if (this.id) {
+        if (this.id || this.assay.invitroAssaySets.length > 0) {
           // if Assay record exists, load the Assay set in the checkboxes
           this.loadCheckBoxAssaySetList();
         }
@@ -270,14 +287,18 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   loadCheckBoxAssaySetList() {
     // For existing Assay, when loading data, loop through the associated assay sets, and assign check in the checkbox
     if (this.assay) {
-      this.assay.invitroAssaySets.forEach(asySet => {
-        if (asySet.assaySet) {
-          // Get the index if the value exists in the key 'value'
-          const indexSet = this.checkBoxAssaySetList.findIndex(record => record.value === asySet.assaySet);
-          // check the box for the found assay set
-          this.checkBoxAssaySetList[indexSet].checked = true;
+      if (this.assay.invitroAssaySets) {
+        if (this.assay.invitroAssaySets.length > 0) {
+          this.assay.invitroAssaySets.forEach(asySet => {
+            if (asySet.assaySet) {
+              // Get the index if the value exists in the key 'value'
+              const indexSet = this.checkBoxAssaySetList.findIndex(record => record.value === asySet.assaySet);
+              // check the box for the found assay set
+              this.checkBoxAssaySetList[indexSet].checked = true;
+            }
+          });
         }
-      });
+      }
     }
   }
 
@@ -395,6 +416,12 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   validateClient(): void {
     this.validationMessages = [];
     this.validationResult = true;
+
+    if (this.assay.standardLigandSubstrateConcentration) {
+      if (this.isNumber(this.assay.standardLigandSubstrateConcentration) === false) {
+        this.setValidationMessage('Standard Ligand/Substrate Concentration must be a number');
+      }
+    }
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -704,8 +731,13 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     this.subscriptions.push(substanceSubscribe);
   }
 
-  getSubstnceKeyResolver() {
-
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
   }
 
   scrub(oldraw: any): any {
@@ -755,8 +787,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     delete old['modifiedBy'];
     delete old['lastModifiedDate'];
     delete old['internalVersion'];
-    delete old['externalAssaySource'];
-    delete old['externalAssayId'];
+    //delete old['externalAssaySource'];
+    //delete old['externalAssayId'];
     delete old['$$update'];
     delete old['_self'];
 

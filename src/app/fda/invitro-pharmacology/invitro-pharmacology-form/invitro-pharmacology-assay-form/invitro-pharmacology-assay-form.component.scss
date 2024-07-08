@@ -106,9 +106,18 @@
 
 .fieldvalue {
   width: 95%;
-  height: 40px;
   padding-left: 5px;
+  /*
   background-color: #fafafa;
+  border: 1px solid rgb(194, 193, 193);*/
+}
+
+.fieldValueSubstance {
+  width: 80%;
+  padding-left: 5px;
+  /*
+  background-color: #fafafa;
+  border: 1px solid rgb(194, 193, 193); */
 }
 
 .fieldValueCheckboxes {
@@ -118,14 +127,6 @@
   padding-left: 10px;
   display: inline-block;
   overflow: auto;
-}
-
-.fieldValueSubstance {
-  width: 80%;
-  height: 40px;
-  padding-left: 5px;
-  background-color: #fafafa;
-  text-align: left;
 }
 
 .divflexrow {
