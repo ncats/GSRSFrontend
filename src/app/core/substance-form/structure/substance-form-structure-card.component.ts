@@ -76,7 +76,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       } else {
         this.menuLabelUpdate.emit('Structure');
         const structSubscription = this.substanceFormStructureService.substanceStructure.subscribe(structure => {
-
           this.structure = structure;
           this.loadStructure();
         });
@@ -154,6 +153,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.structure.molfile = molfile;
       this.structureService.interpretStructure(molfile).subscribe(response => {
         this.processStructurePostResponse(response);
+        this.structure.molfile = molfile;
       });
     }
   }
@@ -166,7 +166,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer' ||
         this.structure['hash'] !== structurePostResponse.structure['hash'] ||
         this.structure['charge'] !== structurePostResponse.structure['charge']) {
-
         this.smiles = structurePostResponse.structure.smiles;
         this.mol = structurePostResponse.structure.molfile;
         // this is sometimes overly ambitious
