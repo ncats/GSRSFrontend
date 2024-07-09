@@ -1,6 +1,6 @@
 <div appDragDropPaste (dropHandler)="onDropHandler($event)" class="z-index"  [ngClass]="tempClass">
-  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'ketcher' && enableJSDraw">Toggle Editor to JSDraw</button>
-  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'jsdraw' && enableJSDraw">Toggle Editor to Ketcher</button>
+  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'ketcher' && enableJSDraw && enableKetcher">Toggle Editor to JSDraw</button>
+  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'jsdraw' && enableJSDraw && enableKetcher">Toggle Editor to Ketcher</button>
     <div style = "width: 100%">
     <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="structureEditor === 'ketcher' && !firstload" style = "width:990px"></ncats-jsdraw-wrapper>
   </div>
