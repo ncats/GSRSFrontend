@@ -50,6 +50,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   canvasMessage = '';
   tempClass = "";
   enableJSDraw = true;
+  enableKetcher = true;
   private overlayContainer: HTMLElement;
 
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
@@ -147,12 +148,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   window.addEventListener('click',this.listener);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
-    if (this.configService && this.configService.configData && this.configService.configData.jsdrawLicense ) {
-      this.enableJSDraw = this.configService.configData.jsdrawLicense;
-      if (!this.enableJSDraw) {
-        this.structureEditor = 'ketcher';
-      }
-    }
+    
     if (isPlatformBrowser(this.platformId)) {
 
       
@@ -164,7 +160,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
       this.structureEditor = environment.structureEditor;
       let pref = sessionStorage.getItem('gsrsStructureEditor');
-      console.log(pref);
       if (pref && this.enableJSDraw) {
         if (pref === 'ketcher') {
           this.structureEditor = 'ketcher';
@@ -172,6 +167,20 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.structureEditor = 'jsdraw';
         }
       }
+
+      if (this.configService && this.configService.configData && this.configService.configData.jsdrawLicense ) {
+        this.enableJSDraw = this.configService.configData.jsdrawLicense;
+        if (!this.enableJSDraw) {
+          this.structureEditor = 'ketcher';
+        }
+      } else if (this.configService && this.configService.configData && this.configService.configData.disableKetcher ) {
+        this.enableKetcher = !this.configService.configData.disableKetcher;
+
+        if (!this.enableKetcher) {
+          this.structureEditor = 'jsdraw';
+        }
+      }
+
       this.editorSwitched.emit(this.structureEditor);
 
       if ( !window['JSDraw']) {
@@ -211,7 +220,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         const node = document.createElement('link');
         node.href = `${environment.baseHref || ''}assets/ketcherOld/ketcher.css`;
         node.rel="stylesheet";
-        document.getElementsByTagName('head')[0].appendChild(node);
+     //   document.getElementsByTagName('head')[0].appendChild(node);
 
         const node2 = document.createElement('link');
         node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
@@ -223,6 +232,12 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ketcherOnLoad(ketcher: any): void {
        this.ketcher = ketcher;
        this.ketcherLoaded = true;
+       this.ketcher.editor.event.change.handlers.push({f:(c)=>{
+      let mfile = [null];
+       mfile[0]=this.ketcher.getMolfile();
+        this.getSketcher().setFile(mfile[0], "mol");		
+      }	
+      });
   }
 
   getSketcher(){
@@ -258,6 +273,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
      }
 
      this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
+
       this.structureEditor = 'ketcher';
       this.editor = new EditorImplementation(this.ketcher);
       this.structureService.interpretStructure(Response).subscribe(resp => {
@@ -282,7 +298,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.editorSwitched.emit(this.structureEditor);
 
       if (this.firstload && this.structureEditor === 'ketcher' ) {
-        console.log('loadking ketcher');
         document.getElementById("root").style.display="";
           this.waitForKetcherFirstLoad();
           this.firstload = false;
@@ -298,8 +313,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     setTimeout(() => {
       this.ketcher = window['ketcher'];
       this.ketcherLoaded = true;
-
-      console.log('ketcher loaded');
+      document.getElementById("root").style.display="";
       this.editor = new EditorImplementation(this.ketcher);
       this.editorOnLoad.emit(this.editor);
       this.editorSwitched.emit(this.structureEditor);

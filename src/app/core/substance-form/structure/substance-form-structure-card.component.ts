@@ -122,6 +122,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     this.isInitializing = false;
   }
 
+  changeEditor(event: any) {
+    if (this.structure && this.structureEditor && this.structure.molfile) {
+     // this.loadStructure();
+    }
+  }
+
   loadStructure(): void {
     if (this.structure && this.structureEditor && this.structure.molfile) {
       this.isInitializing = true;
@@ -131,7 +137,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
            // imported structures from search results require a second structure refresh to display stereochemistry and other calculated fields
      if ( this.activatedRoute && this.activatedRoute.snapshot.queryParams && this.activatedRoute.snapshot.queryParams['importStructure']) {
       setTimeout(()=>{
-        this.updateStructureForm(this.structure.molfile), 2000
+        this.updateStructureForm(this.structure.molfile), 1000
       });
      }
       this.isInitializing = false;
