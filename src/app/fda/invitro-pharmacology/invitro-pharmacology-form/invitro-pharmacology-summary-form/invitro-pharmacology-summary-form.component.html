@@ -162,7 +162,7 @@
                 <app-substance-selector (selectionUpdated)="testAgentUpdated($event)"
                   eventCategory="substanceRelationshipRelatedSub"
                   placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
-                  [subuuid]="testAgentSubstanceKey" [showMorelinks]="true">
+                  [subuuid]="testAgentSubstanceUuid" [showMorelinks]="true">
                 </app-substance-selector>
               </div>
 
@@ -173,6 +173,10 @@
             <div class="divradius divshadow margintop20px"
               *ngFor="let screening of screeningList; let indexScreening = index">
 
+              <!--
+              <div class="divradius divshadow margintop20px"
+              *ngFor="let screening of assay.invitroAssayScreenings; let indexScreening = index">
+              -->
               <div class="divflex" style="vertical-align:top;">
 
                 <div class="margintop10px width30px">
@@ -242,10 +246,18 @@
 
                           <!-- Selected Assay -->
                           <div class="margintop10px" *ngIf="screening._selectedAssay">
-                           Assay Target Name: <b>{{screening._selectedAssay.targetName}}</b>&nbsp;
-                           <br>
-                           External Source: <b>{{screening._selectedAssay.externalAssaySource}}&nbsp;
-                           {{screening._selectedAssay.externalAssayId}}</b>
+                            Assay Target Name: <b>{{screening._selectedAssay.targetName}}</b>&nbsp;
+                            <br>
+                            External Source: <b>{{screening._selectedAssay.externalAssaySource}}&nbsp;
+                              {{screening._selectedAssay.externalAssayId}}</b>
+                          </div>
+
+                          <div *ngIf="screening.invitroSummary.isFromResult">
+                            <span
+                              *ngIf="screening.invitroSummary.isFromResult && screening.invitroSummary.isFromResult == true">
+                              <mat-icon matTooltip="This Summary data is from Result data">check_circle_outline
+                              </mat-icon>
+                            </span>
                           </div>
 
                         </div> <!-- form-row -->
@@ -259,13 +271,15 @@
                               <th>External Assay ID</th>
                               <th>Assay Target Name</th>
                               <th>Assay Title</th>
+                              <th>Total Screening</th>
                             </tr>
-                            <tr class="font11px" *ngFor="let assayResult of screening._assayResults; let indexResult = index">
+                            <tr class="font11px"
+                              *ngFor="let assayResult of screening._assayResults; let indexResult = index">
                               <td>{{(indexResult+1)}}</td>
                               <td class="font11px">
                                 <mat-radio-group name="radioAssayResult">
                                   <mat-radio-button class="font11px" value="indexResult" [checked]='false'
-                                  (change)="changeSelectionRadioAssay($event, indexResult, indexScreening)">
+                                    (change)="changeSelectionRadioAssay($event, indexResult, indexScreening)">
                                   </mat-radio-button>
                                 </mat-radio-group>
                               </td>
@@ -273,6 +287,7 @@
                               <td class="font11px">{{assayResult.externalAssayId}}</td>
                               <td class="font11px">{{assayResult.targetName}}</td>
                               <td class="font11px">{{assayResult.assayTitle}}</td>
+                              <td class="font11px">{{assayResult.invitroAssayScreenings.length}}</td>
                             </tr> <!-- FOR LOOP: assay result -->
                           </table>
                         </div>
@@ -358,14 +373,21 @@
                   <!-- form-row -->
 
                 </div> <!-- class=marginleft20px -->
-              </div> <!-- class=divflex -->
 
-            </div> <!-- Loop Summaries -->
+
+              </div>
+              <!-- class=divflex -->
+
+              <!--
+      </div> -->
+              <!-- Loop Summaries -->
+
+            </div> <!-- Loop Assay List -->
 
             <!-- Add More Summary Button -->
             <div class="font18px margintop20px" *ngIf="screeningList.length > 1">
               <button mat-flat-button color="primary" class="marginright30px bordergreen" color="primary"
-                (click)="addNewSummary(); $event.stopPropagation()" matTooltip="Add New Summary">
+                (click)="addNewSummary(indexScreening); $event.stopPropagation()" matTooltip="Add New Summary">
                 <mat-icon>add_circle_outline</mat-icon><span class="colorgreen">Add More Summary</span>
               </button>&nbsp;&nbsp;
             </div>

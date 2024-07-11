@@ -196,6 +196,7 @@ export interface InvitroTestAgent {
   testAgentCompanyCode?: string;
   testAgent?: string;
   testAgentApprovalId?: string;
+  testAgentSubstanceUuid?: string;
   testAgentSubstanceKey?: string;
   testAgentSubstanceKeyType?: string;
   testAgentSmileString?: string;

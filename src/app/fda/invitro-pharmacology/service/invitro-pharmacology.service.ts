@@ -350,7 +350,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   }
 
   getTestAgentSummaries(
-    testAgentId: number
+    testAgentId: string
   ): Observable<any> {
     const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'testAgentSummaries/' + testAgentId;
     return this.http.get<any>(url)
@@ -411,6 +411,25 @@ export class InvitroPharmacologyService extends BaseHttpService {
     };
     // Add or Update In-vitro Pharmacology ASSAY in Bulk
     return this.http.put<any>(url, bulkAssays, options);
+  }
+
+  saveScreeningOnly(screening: any): Observable<InvitroAssayScreening> {
+    const url = this.apiBaseUrlWithInvitroPharmEntityUrl + 'screening';
+    const params = new HttpParams();
+    const options = {
+      params: params,
+      type: 'JSON',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    };
+    // Update In-vitro Pharmacology SCREENING
+    if ((screening != null) && (screening.id)) {
+      return this.http.put<InvitroAssayScreening>(url, screening, options);
+    } else {
+      // Save New In-vitro Pharmacology SCREENING
+      return this.http.post<InvitroAssayScreening>(url, screening, options);
+    }
   }
 
   saveScreening(screening: any, assayId: number): Observable<InvitroAssayScreening> {
