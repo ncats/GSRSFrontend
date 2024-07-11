@@ -1102,7 +1102,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       }
 
       assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.targetName = assay.targetName;
-
+     
       // Assign Summary Target Name from Assay Target Name
       // if Assay Target Name Substance Key Type is UUID, assign it to Summary Target Name Substance UUID, otherwise
       // get the Substance Uuid
@@ -1165,6 +1165,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
       // Assign Ingredient Name to Test Agent
       this.assayResultInfo.invitroTestAgent.testAgent = substance._name;
+      this.assayResultInfo.invitroTestAgent.testAgentSubstanceUuid = substance.uuid;
 
       /**************************************************** */
       /* SUBSTANCE KEY RESOLVER BEGIN                       */
