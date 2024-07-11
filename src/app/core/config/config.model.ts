@@ -76,6 +76,7 @@ export interface Config {
     nameFormPageSizeOptions?: Array<number>;
     nameFormPageSizeDefault?: number;
     jsdrawLicense?: boolean;
+    disableKetcher?: boolean;
     useApprovalAPI?: boolean;
 }
 

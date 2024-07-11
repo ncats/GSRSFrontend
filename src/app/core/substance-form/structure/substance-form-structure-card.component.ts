@@ -76,7 +76,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       } else {
         this.menuLabelUpdate.emit('Structure');
         const structSubscription = this.substanceFormStructureService.substanceStructure.subscribe(structure => {
-
           this.structure = structure;
           this.loadStructure();
         });
@@ -122,6 +121,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     this.isInitializing = false;
   }
 
+  changeEditor(event: any) {
+    if (this.structure && this.structureEditor && this.structure.molfile) {
+     // this.loadStructure();
+    }
+  }
+
   loadStructure(): void {
     if (this.structure && this.structureEditor && this.structure.molfile) {
       this.isInitializing = true;
@@ -131,7 +136,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
            // imported structures from search results require a second structure refresh to display stereochemistry and other calculated fields
      if ( this.activatedRoute && this.activatedRoute.snapshot.queryParams && this.activatedRoute.snapshot.queryParams['importStructure']) {
       setTimeout(()=>{
-        this.updateStructureForm(this.structure.molfile), 2000
+        this.updateStructureForm(this.structure.molfile), 1000
       });
      }
       this.isInitializing = false;
@@ -148,6 +153,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.structure.molfile = molfile;
       this.structureService.interpretStructure(molfile).subscribe(response => {
         this.processStructurePostResponse(response);
+        this.structure.molfile = molfile;
       });
     }
   }
@@ -160,7 +166,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer' ||
         this.structure['hash'] !== structurePostResponse.structure['hash'] ||
         this.structure['charge'] !== structurePostResponse.structure['charge']) {
-
         this.smiles = structurePostResponse.structure.smiles;
         this.mol = structurePostResponse.structure.molfile;
         // this is sometimes overly ambitious
