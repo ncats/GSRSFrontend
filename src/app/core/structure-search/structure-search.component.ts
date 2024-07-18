@@ -199,6 +199,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   openStructureExportDialog(): void {
     let mol = ''
      this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      this.editor.getSmiles().pipe(take(1)).subscribe(resp => {
       mol = response;
     this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
     const dialogRef = this.dialog.open(StructureExportComponent, {
@@ -206,7 +207,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       width: '650px',
       data: {
         molfile: mol,
-        smiles: this.editor.getSmiles()
+        smiles: resp
       }
     });
     this.overlayContainer.style.zIndex = '1002';
@@ -217,6 +218,7 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
       this.overlayContainer.style.zIndex = null;
     });
     });
+  });
   }
 
   searchCutoffChanged(event): void {
