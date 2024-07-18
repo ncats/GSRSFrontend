@@ -5,7 +5,7 @@
     <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="structureEditor === 'ketcher' && !firstload" style = "width:990px"></ncats-jsdraw-wrapper>
   </div>
   <div style = "width: 100%">
-    <ncats-ketcher-wrapper (ketcherOnLoad)="ketcherOnLoad($event)" [hidden]="structureEditor === 'jsdraw'">
+    <ncats-ketcher-wrapper id="ketcherwrapper" (ketcherOnLoad)="ketcherOnLoad($event)" [hidden]="structureEditor === 'jsdraw'">
     </ncats-ketcher-wrapper>
   </div>
 

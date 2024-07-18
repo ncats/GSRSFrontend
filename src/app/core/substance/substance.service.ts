@@ -822,8 +822,6 @@ export class SubstanceService extends BaseHttpService {
 
   getSubstanceFacets(facet: Facet, searchTerm?: string, nextUrl?: string, otherFacets?: string, pageQuery?: string, sort?: string, order?: string): Observable<FacetQueryResponse> {
     let url: string;
-    console.log('this one');
-    //console.log(nextUrl);
     if (searchTerm) {
       url = `${this.configService.configData.apiBaseUrl}api/v1/substances/search/@facets?skip=0&fdim=200&field=${facet.name.replace(' ', '+')}&ffilter=${searchTerm}`;
       if(pageQuery) {
