@@ -32,7 +32,14 @@
         <mat-icon svgIcon="search"></mat-icon>
         Check for duplicates
       </button>
+      <button (click)="structureSearch()" matTooltip="open structure search in new tab" mat-button
+        color="primary" class="dupe-check">
+        <mat-icon svgIcon="search"></mat-icon>
+        Structure Search
+        <mat-icon svgIcon="open_in_new" class = "superscript-icon"></mat-icon>
+      </button>
     </span>
+    
     <span class="middle-fill"></span>
     <span class="right-buttons">
       <button mat-button color="primary" matTooltip="Import options" [matMenuTriggerFor]="importMenu">
