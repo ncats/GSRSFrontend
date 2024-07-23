@@ -1442,7 +1442,10 @@ export class SubstanceFormService implements OnDestroy {
       substanceString = JSON.stringify(substanceCopy);
 
       deletedUuids.forEach(uuid => {
-        substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
+        const pattern = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+        if(pattern.test(uuid)) {
+          substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
+        }
       });
       substanceString = substanceString.replace(/,[,]+/g, ',');
       substanceString = substanceString.replace(/\[,/g, '[');

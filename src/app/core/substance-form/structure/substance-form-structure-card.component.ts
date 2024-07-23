@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
 import { SubstanceFormStructureService } from './substance-form-structure.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StructureEditorComponent } from '@gsrs-core/structure-editor';
 
 @Component({
@@ -48,7 +48,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     private gaService: GoogleAnalyticsService,
     private substanceService: SubstanceService,
     private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {
     super();
   }
@@ -289,6 +290,31 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
           this.structureErrorsArray.push(resp);
         }
       });
+    });
+  }
+
+  structureSearch() {
+    this.loadingService.setLoading(true);
+
+    this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
+
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          structure: response.structure.id
+        }
+      };
+
+     const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/structure-search/'], {
+          queryParams: navigationExtras.queryParams})
+      );
+
+    this.loadingService.setLoading(false);
+    window.open(url, '_blank');
+
+
+    }, error => {
+      this.loadingService.setLoading(false);
     });
   }
 
