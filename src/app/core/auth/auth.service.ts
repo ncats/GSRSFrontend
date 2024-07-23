@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Auth, Role, UserGroup } from './auth.model';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { map, take, catchError } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
@@ -57,7 +57,11 @@ export class AuthService {
 
   public checkAuth(): Observable<Auth> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
-    return this.http.get<any>(`${url}whoami`);
+    if (this.configService.configData && this.configService.configData.dummyWhoami) {
+      return of(this.configService.configData.dummyWhoami);
+    } else {
+      return this.http.get<any>(`${url}whoami`);
+    }
   }
 
   login(username: string, password: string): Observable<Auth> {
@@ -70,7 +74,12 @@ export class AuthService {
     };
 
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
-    return this.http.get<Auth>(`${url}whoami`, options).pipe(
+
+    let obs = this.http.get<Auth>(`${url}whoami`, options);
+    if (this.configService.configData && this.configService.configData.dummyWhoami) {
+      obs = of(this.configService.configData.dummyWhoami);
+    }
+    return obs.pipe(
       map(auth => {
         if (auth && auth.computedToken) {
           this._auth = auth;
@@ -295,6 +304,9 @@ export class AuthService {
     return new Observable(observer => {
       this.configService.afterLoad().then(cd => {
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+        if (this.configService.configData && this.configService.configData.dummyWhoami) {
+          observer.next(this.configService.configData.dummyWhoami);
+        } else {
         this.http.get<Auth>(`${url}whoami`)
           .subscribe(
             auth => {
@@ -309,6 +321,7 @@ export class AuthService {
             },
             () => observer.complete()
           );
+        }
       });
     });
   }
