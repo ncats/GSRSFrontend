@@ -83,7 +83,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     window.removeEventListener('drop', this.preventDrag);
     window.removeEventListener('dragover', this.preventDrag);
     window.removeEventListener('paste', this.checkPaste);
-    (<HTMLCanvasElement>this.myCanvas.nativeElement).removeEventListener('click', this.click);
+    (<HTMLCanvasElement>this.myCanvas.nativeElement).removeEventListener('click', this.listener);
     delete this.ketcher;
     let parentElement = document.getElementById('ketcherwrapper');
     let childElement = document.getElementById('root');
@@ -118,14 +118,14 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   } 
 
   listener = ()  => {
-   /* var elmR=document.getElementById("root");
+    var elmR=document.getElementById("root");
     if(this.structureEditor==="ketcher"){
       if( elmR && elmR.querySelector(":focus-within")){
         this.getSketcher().activated=true;
       }else{
         this.getSketcher().activated=false;
       }
-    }*/
+    }
   }
 
   private preventDrag = (event: DragEvent) => {
@@ -135,8 +135,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
 // override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
-    
-    if ((this.jsdraw || this.ketcher ) && this.getSketcher().activated) {
+    console.log('check paste');
+    if ((this.jsdraw || this.ketcher )&& this.getSketcher().activated) {
      event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
@@ -156,7 +156,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
   ngOnInit() {
    // window.addEventListener('keyup',this.listener);
- // window.addEventListener('click',this.listener);
+  window.addEventListener('click',this.listener);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     
@@ -346,7 +346,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.ketcher.getMolfile().then(result => {
         let mfile = [null];
        mfile[0]= result;
-       // this.getSketcher().setFile(mfile[0], "mol");
         this.getSketcher().setFile(mfile[0], "mol");	
       })
       }	
@@ -398,13 +397,38 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   sendToMolvec(img: string) {
     this.canvasMessage = '';
     this.loadingService.setLoading(true);
+    console.log('sending to molvec');
+    console.log(img);
     this.structureService.molvec(img).subscribe(response => {
       const mol = response.molfile;
-      if (this.ketcher) {
-    //    this.ketcher.setMolecule(mol);
+      console.log(response);
+      if (this.ketcher && this.structureEditor === 'ketcher') {
+        this.ketcher.setMolecule(mol);
+          setTimeout(() => {
+            this.editor.setMolecule(mol);
+          }, 100);
+          this.loadedMolfile.emit(mol);
+
+          this.loadingService.setLoading(false);
+          this.structureService.molvec(img).subscribe(resp => {
+            setTimeout(() => {
+              this.editor.setMolecule(resp.molfile);
+              this.ketcher.setMolecule(mol);
+            }, 100);
+          }, error => {
+            this.canvasMessage = 'Structure not detectable';
+            this.loadingService.setLoading(false);
+          });
+
       }
-      this.loadedMolfile.emit(mol);
-      this.loadingService.setLoading(false);
+      else {
+        console.log('not ketcher');
+        this.jsdraw.setMolfile(mol);
+        this.loadingService.setLoading(false);
+        this.loadedMolfile.emit(mol);
+
+      }
+      
     }, error => {
       this.canvasMessage = 'Structure not detectable';
       this.loadingService.setLoading(false);
@@ -450,6 +474,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       if (items[i].type.indexOf('image') !== -1) {
         event.preventDefault();
         event.stopPropagation();
+        this.canvasMessage = '';
         valid = true;
         send.type = 'image';
         const reader = new FileReader();
@@ -465,13 +490,30 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       } else if (items[i].type === 'text/plain') {
         const text = event.clipboardData.getData('text/plain');
         if (text.indexOf('<div') === -1) {
+          console.log('plaintext'); 
           event.preventDefault();
           event.stopPropagation();
+          this.canvasMessage = '';
+          this.loadingService.setLoading(true);
           this.structureService.interpretStructure(text).subscribe(response => {
+            
             if (response.structure && response.structure.molfile) {
-              this.ketcher.setMolecule(response.structure.molfile);
+             
+                this.editor.setMolecule(response.structure.molfile);
+              
               this.loadedMolfile.emit(response.structure.molfile);
+
+              if(response.structure.smiles === '') {
+                this.canvasMessage = 'empty or invalid structure pasted';
+              }
+            } else {
+              this.canvasMessage = 'Structure text not recognized';
             }
+            this.loadingService.setLoading(false);
+
+          },error =>{
+            this.loadingService.setLoading(false);
+            this.canvasMessage = 'empty or invalid structure pasted';
           });
         }
       }

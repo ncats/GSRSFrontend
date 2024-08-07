@@ -18,6 +18,8 @@ import { SubstanceFormStructuralUnitsService } from '../structural-units/substan
 import { SubstanceFormStructureService } from './substance-form-structure.service';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StructureEditorComponent } from '@gsrs-core/structure-editor';
+import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -49,7 +51,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     private substanceService: SubstanceService,
     private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService
   ) {
     super();
   }
@@ -155,6 +158,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.structureService.interpretStructure(molfile).subscribe(response => {
         this.processStructurePostResponse(response);
         this.structure.molfile = molfile;
+        this.smiles = response.structure.smiles;
       });
     }
   }
@@ -225,13 +229,13 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   openStructureExportDialog(): void {
-
+    this.structureEditor.getSmiles().pipe(take(1)).subscribe(resp => {
     const dialogRef = this.dialog.open(StructureExportComponent, {
       height: 'auto',
       width: '650px',
       data: {
         molfile: this.mol,
-        smiles: this.smiles,
+        smiles: resp,
         type: this.substanceType
       }
     });
@@ -242,6 +246,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     }, () => {
       this.overlayContainer.style.zIndex = null;
     });
+  });
   }
 
   openNameResolverDialog(): void {
@@ -303,16 +308,20 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
           structure: response.structure.id
         }
       };
+      if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+        console.log(this.configService.configData.gsrsHomeBaseUrl);
+        let url = this.configService.configData.gsrsHomeBaseUrl + '/structure-search?structure=' + response.structure.id;
+        window.open(url, '_blank');
+      } else {
 
-     const url = this.router.serializeUrl(
-        this.router.createUrlTree(['/structure-search/'], {
-          queryParams: navigationExtras.queryParams})
-      );
-
-    this.loadingService.setLoading(false);
-    window.open(url, '_blank');
-
-
+      }
+      const urlTree = this.router.createUrlTree(['/structure-search/'], {
+        queryParams: navigationExtras.queryParams,
+        queryParamsHandling: 'merge',
+        preserveFragment: true
+      });
+      console.log(urlTree);
+      window.open(urlTree.toString(), '_blank');
     }, error => {
       this.loadingService.setLoading(false);
     });
