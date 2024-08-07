@@ -1422,11 +1422,31 @@ export class SubstanceFormService implements OnDestroy {
     if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
       && this.privateSubstance.protein.disulfideLinks.length > 0) {
       for (let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0; i--) {
+        if (this.privateSubstance.protein.disulfideLinks[i].sitesShorthand) {
+          delete this.privateSubstance.protein.disulfideLinks[i].sitesShorthand;
+        }
         if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
           this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
           Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
           Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0) {
           this.privateSubstance.protein.disulfideLinks.splice(i, 1);
+        }
+      }
+
+      if (this.privateSubstance.nucleicAcid) {
+        if (this.privateSubstance.nucleicAcid.linkages && this.privateSubstance.nucleicAcid.linkages.length > 0) {
+          for (let i = this.privateSubstance.nucleicAcid.linkages.length; i >= 0; i--) {
+            if (this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand) {
+              delete this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand;
+            }
+          }
+        }
+        if (this.privateSubstance.nucleicAcid.sugars && this.privateSubstance.nucleicAcid.sugars.length > 0) {
+          for (let i = this.privateSubstance.nucleicAcid.sugars.length; i >= 0; i--) {
+            if (this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand) {
+              delete this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand;
+            }
+          }
         }
       }
     }
