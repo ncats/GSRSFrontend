@@ -142,7 +142,6 @@ export class EditorImplementation implements Editor {
 
     setMolecule(molfile: string): void {
         if (this.ketcher && this.ketcher != null) {
-            console.log('setting ketcher');
             this.ketcher.setMolecule(molfile);
             this.ketcher.setMolecule(molfile);
         } else if (this.jsdraw && this.jsdraw != null) {
