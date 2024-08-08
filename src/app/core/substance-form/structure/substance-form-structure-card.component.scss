@@ -43,6 +43,25 @@
     }
   }
 
+  .feature-table {
+    display:block;
+    margin: auto;
+    width: 85%;
+  }
+
+  .feature-expansion {
+    width:100%; 
+    justify-content: center;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+  
+  tr.mat-row, tr.mat-footer-row {
+    height: 32px;
+}
+
   .SUCCESS {
     color: var(--success-green-color);
     background-color: var(--success-green-bg-color);

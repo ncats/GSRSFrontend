@@ -96,8 +96,7 @@ export class EditorImplementation implements Editor {
 
     getSmiles(): Observable<string> {
         if (this.ketcher != null) {
-            return  from(this.ketcher.getSmiles()).pipe(switchMap(data => {
-                return data;}));
+        return from(this.ketcher.getSmiles());
         } else if (this.jsdraw != null) {
             return new Observable<string>(observer => {
                 observer.next(this.jsdraw.getSmiles());
@@ -143,6 +142,7 @@ export class EditorImplementation implements Editor {
 
     setMolecule(molfile: string): void {
         if (this.ketcher && this.ketcher != null) {
+            this.ketcher.setMolecule(molfile);
             this.ketcher.setMolecule(molfile);
         } else if (this.jsdraw && this.jsdraw != null) {
             // from simple tests, this should push the current molecule down

@@ -81,6 +81,7 @@ export interface Config {
     disableKetcher?: boolean;
     useApprovalAPI?: boolean;
     dummyWhoami?: Auth;
+    enableStructureFeatures?: boolean;
 }
 
 export interface StagingAreaSettings {

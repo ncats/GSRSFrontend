@@ -18,6 +18,9 @@ import { SubstanceFormStructuralUnitsService } from '../structural-units/substan
 import { SubstanceFormStructureService } from './substance-form-structure.service';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StructureEditorComponent } from '@gsrs-core/structure-editor';
+import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -32,10 +35,15 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   substanceType: string;
   smiles: string;
   mol: string;
+  features: Array<any>;
   isInitializing = true;
   private overlayContainer: HTMLElement;
   structureErrorsArray: Array<StructureDuplicationMessage>;
   subscriptions: Array<Subscription> = [];
+  privateFeatures: any;
+  enableStructureFeatures = true;
+  sortedFeatures = new MatTableDataSource();
+  displayedColumns = ['key', 'value'];
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
@@ -49,7 +57,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     private substanceService: SubstanceService,
     private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService
   ) {
     super();
   }
@@ -155,12 +164,37 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.structureService.interpretStructure(molfile).subscribe(response => {
         this.processStructurePostResponse(response);
         this.structure.molfile = molfile;
+        this.smiles = response.structure.smiles;
       });
     }
   }
 
   processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
+      if (structurePostResponse.featureList && structurePostResponse.featureList.length > 0) {
+        let temp = [];
+        Object.keys(structurePostResponse.featureList[0]).forEach(key => {
+          let label = key;
+          if(key === 'categoryScore'){
+            label = 'Category Score';
+          }
+          if(key === 'sumOfScores'){
+            label = 'Sum Of Scores';
+          }
+          temp.push({'key': label,'value': structurePostResponse.featureList[0][key] });
+        });
+        let customSort = (array: any[]): any[] => {
+          return array.sort((a, b) => {
+            if (a.key === 'Category Score') return -1;
+            if (b.key === 'Category Score') return 1;
+            if (a.key === 'Sum Of Scores') return a.key === 'Category Score' ? 1 : -1;
+            if (b.key === 'Sum Of Scores') return b.key === 'Category Score' ? -1 : 1;
+            return a.key.localeCompare(b.key);
+          });
+        };
+        this.features = customSort(temp);
+        this.sortedFeatures = new MatTableDataSource(this.features);
+      } 
 
       // we should only be dealing with this stuff if the total hash changes
       // or if the charge changes, or if it's a polymer
@@ -225,13 +259,13 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   openStructureExportDialog(): void {
-
+    this.structureEditor.getSmiles().pipe(take(1)).subscribe(resp => {
     const dialogRef = this.dialog.open(StructureExportComponent, {
       height: 'auto',
       width: '650px',
       data: {
         molfile: this.mol,
-        smiles: this.smiles,
+        smiles: resp,
         type: this.substanceType
       }
     });
@@ -242,6 +276,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     }, () => {
       this.overlayContainer.style.zIndex = null;
     });
+  });
   }
 
   openNameResolverDialog(): void {
@@ -303,16 +338,20 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
           structure: response.structure.id
         }
       };
+      if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+        console.log(this.configService.configData.gsrsHomeBaseUrl);
+        let url = this.configService.configData.gsrsHomeBaseUrl + '/structure-search?structure=' + response.structure.id;
+        window.open(url, '_blank');
+      } else {
 
-     const url = this.router.serializeUrl(
-        this.router.createUrlTree(['/structure-search/'], {
-          queryParams: navigationExtras.queryParams})
-      );
-
-    this.loadingService.setLoading(false);
-    window.open(url, '_blank');
-
-
+      }
+      const urlTree = this.router.createUrlTree(['/structure-search/'], {
+        queryParams: navigationExtras.queryParams,
+        queryParamsHandling: 'merge',
+        preserveFragment: true
+      });
+      console.log(urlTree);
+      window.open(urlTree.toString(), '_blank');
     }, error => {
       this.loadingService.setLoading(false);
     });
