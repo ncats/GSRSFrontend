@@ -13,6 +13,8 @@ import { DragDropPasteDirective } from '@gsrs-core/substance-form/structure/drag
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   imports: [
@@ -28,7 +30,9 @@ import {MatButtonModule} from '@angular/material/button';
     NameResolverModule,
     MatMenuModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule,
+    MatExpansionModule
   ],
   declarations: [
     SubstanceFormStructureCardComponent,

@@ -20,6 +20,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StructureEditorComponent } from '@gsrs-core/structure-editor';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -34,10 +35,15 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   substanceType: string;
   smiles: string;
   mol: string;
+  features: Array<any>;
   isInitializing = true;
   private overlayContainer: HTMLElement;
   structureErrorsArray: Array<StructureDuplicationMessage>;
   subscriptions: Array<Subscription> = [];
+  privateFeatures: any;
+  enableStructureFeatures = true;
+  sortedFeatures = new MatTableDataSource();
+  displayedColumns = ['key', 'value'];
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
@@ -165,6 +171,30 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
   processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
+      if (structurePostResponse.featureList && structurePostResponse.featureList.length > 0) {
+        let temp = [];
+        Object.keys(structurePostResponse.featureList[0]).forEach(key => {
+          let label = key;
+          if(key === 'categoryScore'){
+            label = 'Category Score';
+          }
+          if(key === 'sumOfScores'){
+            label = 'Sum Of Scores';
+          }
+          temp.push({'key': label,'value': structurePostResponse.featureList[0][key] });
+        });
+        let customSort = (array: any[]): any[] => {
+          return array.sort((a, b) => {
+            if (a.key === 'Category Score') return -1;
+            if (b.key === 'Category Score') return 1;
+            if (a.key === 'Sum Of Scores') return a.key === 'Category Score' ? 1 : -1;
+            if (b.key === 'Sum Of Scores') return b.key === 'Category Score' ? -1 : 1;
+            return a.key.localeCompare(b.key);
+          });
+        };
+        this.features = customSort(temp);
+        this.sortedFeatures = new MatTableDataSource(this.features);
+      } 
 
       // we should only be dealing with this stuff if the total hash changes
       // or if the charge changes, or if it's a polymer
