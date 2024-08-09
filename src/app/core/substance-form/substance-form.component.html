@@ -3,7 +3,8 @@
   <span class="close-out" (click)="showHidePopup()">x</span>
   <img (click)="showHidePopup()" class = "image-popped-up" appSubstanceImage [entityId]="unit && (unit.uuid || (unit._structure && unit._structure.id))">
 </div>
-<div class="top-fixed">
+
+<div class="top-fixed" *ngIf = "!featuresOnly">
   <div class="actions-container">
       <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
       <button mat-flat-button color="primary" class="draft-button" (click)="showDrafts()">Show Drafts <span class="chip">{{draftCount}}</span></button>

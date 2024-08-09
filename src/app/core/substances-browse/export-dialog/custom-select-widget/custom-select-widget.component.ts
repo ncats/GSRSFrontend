@@ -24,7 +24,6 @@ export class CustomSelectWidgetComponent extends SelectWidget implements OnInit 
 
    
     this.cvService.fetchFullVocabulary(this.schema.CVDomain).subscribe(response => {
-      console.log(response);
       if (response.content && response.content.length > 0) {
         this.options = response.content[0].terms;
       }

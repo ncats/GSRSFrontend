@@ -1,5 +1,8 @@
 <div>
   <div>
+    <div *ngIf = "featuresOnly">
+      <h4>Draw or import a structure using Ketcher. Then, if any features are detected a table will be automatically displayed under the editor.</h4>
+    </div>
     <div>
       <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)" (editorSwitched) = "changeEditor($event)" style="z-index: 9999">
       </app-structure-editor>
@@ -8,13 +11,13 @@
       {{userMessage}}
     </div>
   </div>
-  <div class="button-row feature-table" *ngIf = "enableStructureFeatures && features && features.length > 0" >
-   <div class = "feature-expansion">
+  <div class="button-row feature-table" *ngIf = "enableStructureFeatures && !hideFeaturesTable" >
+   <div class = "feature-expansion" *ngFor = "let feats of features">
     <mat-expansion-panel expanded="true" >
       <mat-expansion-panel-header>
-        <mat-panel-title> Structure Features </mat-panel-title>
+        <mat-panel-title> {{feats.label}} </mat-panel-title>
       </mat-expansion-panel-header>
-      <table class = "full-width" mat-table [dataSource]="sortedFeatures">
+      <table class = "full-width" mat-table [dataSource] = "feats.features">
         <ng-container matColumnDef="key">
           <th mat-header-cell  *matHeaderCellDef>Feature</th>
           <td mat-cell *matCellDef="let element" >{{element.key}}</td>

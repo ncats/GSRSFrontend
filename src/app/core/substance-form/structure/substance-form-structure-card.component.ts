@@ -44,6 +44,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   enableStructureFeatures = true;
   sortedFeatures = new MatTableDataSource();
   displayedColumns = ['key', 'value'];
+  featuresOnly = false;
+  hideFeaturesTable = false;
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
@@ -64,6 +66,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   ngOnInit() {
+    if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
+      this.featuresOnly = true;
+    }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const definitionSubscription = this.substanceFormService.definition.subscribe(def => {
       this.substanceType = def.substanceClass;
@@ -165,35 +170,58 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
         this.processStructurePostResponse(response);
         this.structure.molfile = molfile;
         this.smiles = response.structure.smiles;
+
       });
     }
   }
 
   processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
-      if (structurePostResponse.featureList && structurePostResponse.featureList.length > 0) {
-        let temp = [];
-        Object.keys(structurePostResponse.featureList[0]).forEach(key => {
-          let label = key;
-          if(key === 'categoryScore'){
-            label = 'Category Score';
-          }
-          if(key === 'sumOfScores'){
-            label = 'Sum Of Scores';
-          }
-          temp.push({'key': label,'value': structurePostResponse.featureList[0][key] });
+      let customSort = (array: any[]): any[] => {
+        return array.sort((a, b) => {
+          if (a.key === 'Category Score') return -1;
+          if (b.key === 'Category Score') return 1;
+          if (a.key === 'Sum Of Scores') return a.key === 'Category Score' ? 1 : -1;
+          if (b.key === 'Sum Of Scores') return b.key === 'Category Score' ? -1 : 1;
+          return a.key.localeCompare(b.key);
         });
-        let customSort = (array: any[]): any[] => {
-          return array.sort((a, b) => {
-            if (a.key === 'Category Score') return -1;
-            if (b.key === 'Category Score') return 1;
-            if (a.key === 'Sum Of Scores') return a.key === 'Category Score' ? 1 : -1;
-            if (b.key === 'Sum Of Scores') return b.key === 'Category Score' ? -1 : 1;
-            return a.key.localeCompare(b.key);
-          });
-        };
-        this.features = customSort(temp);
-        this.sortedFeatures = new MatTableDataSource(this.features);
+      };
+
+      if (structurePostResponse.featureList) {
+        this.hideFeaturesTable = false;
+        let tempArr = [];
+        let emptyFeatures = true;
+        if (JSON. stringify(structurePostResponse.featureList) !== '{}'){
+
+        Object.keys(structurePostResponse.featureList).forEach(type => {
+          let tempObj = {'label':null, 'features': null};
+
+          tempObj.label = (type.charAt(0).toUpperCase() + type.slice(1)).replace(/([A-Z])/g, ' $1').trim();
+          let temp = [];
+
+          if(structurePostResponse.featureList[type].length > 0) {
+            emptyFeatures = false;
+            Object.keys(structurePostResponse.featureList[type][0]).forEach(key => {
+              let label = key;
+              if(key === 'categoryScore'){
+                label = 'Category Score';
+              }
+              if(key === 'sumOfScores'){
+                label = 'Sum Of Scores';
+              }
+              temp.push({'key': label,'value': structurePostResponse.featureList[type][0][key] });
+            });
+          }
+          tempObj.features = new MatTableDataSource(customSort(temp));
+          tempArr.push(tempObj);
+        });
+        this.features = tempArr;
+        if (emptyFeatures) {
+          this.hideFeaturesTable = true;
+        }
+      } else {
+        this.hideFeaturesTable = true;
+      }
       } 
 
       // we should only be dealing with this stuff if the total hash changes
@@ -332,14 +360,13 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     this.loadingService.setLoading(true);
 
     this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
-
+      this.loadingService.setLoading(false);
       const navigationExtras: NavigationExtras = {
         queryParams: {
           structure: response.structure.id
         }
       };
       if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
-        console.log(this.configService.configData.gsrsHomeBaseUrl);
         let url = this.configService.configData.gsrsHomeBaseUrl + '/structure-search?structure=' + response.structure.id;
         window.open(url, '_blank');
       } else {
@@ -350,7 +377,6 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
         queryParamsHandling: 'merge',
         preserveFragment: true
       });
-      console.log(urlTree);
       window.open(urlTree.toString(), '_blank');
     }, error => {
       this.loadingService.setLoading(false);

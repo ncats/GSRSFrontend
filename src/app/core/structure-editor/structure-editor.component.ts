@@ -135,7 +135,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
 // override JSDraw for Molvec paste event. Using the JSDraw menu copy function seems to ignore this at first
   checkPaste = (event: ClipboardEvent ) => {
-    console.log('check paste');
     if ((this.jsdraw || this.ketcher )&& this.getSketcher().activated) {
      event.preventDefault();
     event.stopPropagation();
@@ -385,6 +384,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   onDropHandler(object: any): void {
+    //rule out tiny icons / images accidentally being dragged from jsdraw UI
+    if(object.backup.size < 700) {
+      this.canvasMessage = 'The selected file is too small to be read (<700 bytes)';
+    }
     if (object.invalidFlag) {
       this.canvasMessage = 'The selected file could not be read';
     } else {
@@ -397,11 +400,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   sendToMolvec(img: string) {
     this.canvasMessage = '';
     this.loadingService.setLoading(true);
-    console.log('sending to molvec');
-    console.log(img);
     this.structureService.molvec(img).subscribe(response => {
       const mol = response.molfile;
-      console.log(response);
       if (this.ketcher && this.structureEditor === 'ketcher') {
         this.ketcher.setMolecule(mol);
           setTimeout(() => {
@@ -422,7 +422,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
       }
       else {
-        console.log('not ketcher');
         this.jsdraw.setMolfile(mol);
         this.loadingService.setLoading(false);
         this.loadedMolfile.emit(mol);
@@ -490,7 +489,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       } else if (items[i].type === 'text/plain') {
         const text = event.clipboardData.getData('text/plain');
         if (text.indexOf('<div') === -1) {
-          console.log('plaintext'); 
           event.preventDefault();
           event.stopPropagation();
           this.canvasMessage = '';
