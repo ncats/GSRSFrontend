@@ -1617,7 +1617,6 @@ export class SubstanceFormService implements OnDestroy {
     return new Observable(observer => {
 
     this.adminService.updateStagingArea(id, substanceCopy).subscribe(response => {
-      console.log(response);
         observer.next(response);
           observer.complete();
       }, error => {

@@ -8,7 +8,7 @@ export interface InterpretStructureResponse {
     structure: SubstanceStructure;
     moieties: Array<SubstanceMoiety>;
     structuralUnits: Array<StructuralUnit>;
-    featureList?: Array<any>;
+    featureList?: any;
 }
 
 export interface ResolverResponse {
