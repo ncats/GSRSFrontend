@@ -2,7 +2,7 @@ dist: trusty
 
 language: node_js
 node_js:
-  - 16.20
+  - 20.16.0
 
 
 install:
@@ -21,8 +21,8 @@ install:
   - npm install webpack
   - npm i --save webpack-sources --legacy-peer-deps
   - npm install -f @types/ws@8.5.4
-  - export NODE_OPTIONS="--max-old-space-size=8192"
   - npm install -g yarn
+  - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
 after_success:
