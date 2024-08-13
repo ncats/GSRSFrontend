@@ -41,7 +41,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   structureErrorsArray: Array<StructureDuplicationMessage>;
   subscriptions: Array<Subscription> = [];
   privateFeatures: any;
-  enableStructureFeatures = true;
+  enableStructureFeatures = false;
   sortedFeatures = new MatTableDataSource();
   displayedColumns = ['key', 'value'];
   featuresOnly = false;
@@ -66,6 +66,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   ngOnInit() {
+    if (this.configService.configData && this.configService.configData.enableStructureFeatures) {
+      this.enableStructureFeatures = this.configService.configData.enableStructureFeatures;
+    }
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
     }
