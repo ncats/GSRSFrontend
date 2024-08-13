@@ -23,7 +23,7 @@ install:
   - npm install -f @types/ws@8.5.4
   - npm install -g yarn
   - npm uninstall undici
-  - npm install undici@5.28.4
+  - npm install undici@5.5.1
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
