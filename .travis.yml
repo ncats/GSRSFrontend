@@ -2,7 +2,7 @@ dist: trusty
 
 language: node_js
 node_js:
-  - 17.9.1
+  - 18.20.4
 
 
 install:
