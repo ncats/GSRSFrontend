@@ -2,7 +2,7 @@ dist: trusty
 
 language: node_js
 node_js:
-  - 21.7.3
+  - 22.6.0
 
 
 install:
