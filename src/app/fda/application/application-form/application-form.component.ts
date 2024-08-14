@@ -11,6 +11,7 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { VocabularyTerm } from '../../../core/controlled-vocabulary/vocabulary.model';
 import { Application, ValidationMessage } from '../model/application.model';
 import { Subscription } from 'rxjs';
+import * as moment from 'moment';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
@@ -455,11 +456,17 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'application_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
     let cleanApplication = this.cleanApplication();
+
+    let data = {jsonData: cleanApplication, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: cleanApplication
+      data: data
     });
 
     //   this.overlayContainer.style.zIndex = '1002';

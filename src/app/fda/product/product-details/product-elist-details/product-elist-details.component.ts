@@ -1,7 +1,9 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { LoadingService } from '@gsrs-core/loading';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Title } from '@angular/platform-browser';
@@ -39,10 +41,12 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
     public cvService: ControlledVocabularyService,
     public configService: ConfigService,
     titleService: Title,
+    public overlayContainerService: OverlayContainer,
+    dialog: MatDialog,
     public sanitizer: DomSanitizer
   ) {
     super(producService, generalService, activatedRoute, loadingService, mainNotificationService,
-      router, gaService, utilsService, cvService, titleService, sanitizer);
+      router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
   }
 
   ngOnInit() {

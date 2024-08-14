@@ -1,9 +1,9 @@
 {
-    "Administravail Pharmacedical Dosage Form":{
-        "lucenePath":"root_pharmacedicalDosageForm",
-        "description":"Pharmaceutical Form of the product",
+    "Administered Pharmaceutical Dosage Form":{
+        "lucenePath":"root_pharmaceuticalDosageForm",
+        "description":"Administered Pharmaceutical Dosage Form of the product",
         "type":"string",
-        "cvDomain":"PROD_PHARMACEDICAL_DOSAGE_FORM",
+        "cvDomain":"DOSAGE_FORM",
         "priority":null,
         "suggest":null
     },

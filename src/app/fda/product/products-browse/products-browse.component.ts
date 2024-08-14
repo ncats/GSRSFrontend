@@ -498,13 +498,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
                   // if Ingredient Type exists
                   if (elementIngred.ingredientType) {
+
                     // Active Ingredient Count
                     if (elementIngred.ingredientType == this.ACTIVE_INGREDIENT_UPPERCASE
                       || elementIngred.ingredientType == this.ACTIVE_INGREDIENT_LOWERCASE) {
 
                       // Store Active Ingredient in an Array
                       product._activeIngredients.push(elementIngred);
-
                     }
                     // Inactive and Other Ingredient Count
                     else if (elementIngred.ingredientType != this.ACTIVE_INGREDIENT_UPPERCASE
@@ -512,9 +512,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
                       // Store Active Ingredient in an Array
                       product._otherIngredients.push(elementIngred);
-
                     }
                   } // if Ingredient Type exists
+
 
                   /*
                   // Get Substance Details, uuid, approval_id, substance name
@@ -540,6 +540,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                     });
                   });
                   */
+                 
                 } // response
               });
               this.subscriptions.push(substanceSubscription);

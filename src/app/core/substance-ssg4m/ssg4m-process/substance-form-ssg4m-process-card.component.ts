@@ -62,6 +62,12 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         //TODO: make more configurable and standardized
         console.log("About to configure the scheme view");
         window['schemeUtil'].debug = false;
+
+        window['schemeUtil'].maxContinuousSteps = 1;
+        window['schemeUtil'].maxTextLen = 19;
+        window['schemeUtil'].BREAK_GAP = 300;
+        window['schemeUtil'].maxTitleTextLen = 100;
+
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
         const httpp = this.http;
         window['schemeUtil'].apiBaseURL = url;

@@ -41,19 +41,6 @@ export class InvitroPharmacologyComponent implements OnInit {
 
 
   showJSON(): void {
-    /*
-    let cleanApplication = this.cleanApplication();
-    const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
-      width: '90%',
-      height: '90%',
-      data: cleanApplication
-    });
-
-    //   this.overlayContainer.style.zIndex = '1002';
-    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
-    });
-    this.subscriptions.push(dialogSubscription);
-    */
   }
 
 }

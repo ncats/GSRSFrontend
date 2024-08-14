@@ -6,11 +6,9 @@ import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { SubstanceDetail, SubstanceName, SubstanceCode } from '@gsrs-core/substance/substance.model';
-import { ProductAll } from '../../product/model/product.model';
-import { ClinicalTrial } from '../../clinical-trials/clinical-trial/clinical-trial.model';
-// import { map, switchMap, tap } from 'rxjs/operators';
-// import { Facet } from '@gsrs-core/facets-manager';
+import { Product } from '../../product/model/product.model'
 import { Application, ApplicationIngredient } from '../../application/model/application.model';
+import { ClinicalTrial } from '../../clinical-trials/clinical-trial/clinical-trial.model';
 
 @Injectable(
   { providedIn: 'root' }
@@ -119,7 +117,7 @@ export class AdvancedSearchService extends BaseHttpService {
     pageSize: number = 10,
     searchTerm?: string,
     facets?: FacetParam
-  ): Observable<PagingResponse<ProductAll>> {
+  ): Observable<PagingResponse<Product>> {
     let params = new FacetHttpParams();
     params = params.append('skip', skip.toString());
     params = params.append('top', '1');  // setting top=1, faster result, no content
@@ -134,7 +132,7 @@ export class AdvancedSearchService extends BaseHttpService {
       params: params
     };
 
-    return this.http.get<PagingResponse<ProductAll>>(url, options);
+    return this.http.get<PagingResponse<Product>>(url, options);
   }
 
   getClinicalTrials(

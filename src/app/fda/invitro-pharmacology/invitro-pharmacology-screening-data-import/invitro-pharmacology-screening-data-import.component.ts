@@ -769,7 +769,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     }
   }
   */
- 
+
   importAssayJSONIntoDatabase() {
 
     this.loadingService.setLoading(true);
@@ -865,18 +865,22 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'invitro_pharm_bulk_assay_screenings_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
     let json: any = {};
     if (this.assayToSave.length > 0) {
-      //  if (this.importedAssayJson !== undefined || this.importedAssayJson != null) {
       json = this.assayToSave;
     }
+
+    let data = {jsonData: json, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: json
+      data: data
     });
 
-    // this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);

@@ -14,6 +14,8 @@ export class JsonDialogFdaComponent implements OnInit {
 
   public dialogRef: MatDialogRef<JsonDialogFdaComponent>;
   public json: any;
+  jsonFilename: null;
+
   expand = true;
   raw = false;
   downloadJsonHref: any;
@@ -26,7 +28,16 @@ export class JsonDialogFdaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.json = this.data;
+    // if json data exists
+    if (this.data.jsonData) {
+    this.json = this.data.jsonData;
+    }
+
+    // if filename exists, save the json in this filename
+    if (this.data.jsonFilename) {
+      this.jsonFilename = this.data.jsonFilename;
+    }
+
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.json)));
     this.downloadJsonHref = uri;
   }

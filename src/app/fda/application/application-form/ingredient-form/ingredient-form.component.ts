@@ -11,6 +11,7 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { GsrsModule } from '@gsrs-core/gsrs.module';
 import { GeneralService } from 'src/app/fda/service/general.service';
+import { A } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-ingredient-form',
@@ -32,6 +33,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   basisOfStrengthIngredientName: string;
   basisOfStrengthSubstanceUuid: string;
   basisOfStrengthMessage = '';
+  bdnumNotPrimaryMessage = '';
   relationship: any;
   ingredientNameActiveMoiety = new Array<String>();
   basisOfStrengthActiveMoiety = new Array<String>();
@@ -141,6 +143,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
   deleteIngredientName() {
     this.ingredientNameMessage = '';
+    this.ingredient.$$ingredientNameValidation = '';
+
     if (this.ingredient.id != null) {
       // Display this message if deleting existing Ingredient Name which is in database.
       if (this.ingredientNameBdnumOld != null) {
@@ -168,6 +172,8 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
   deleteBasisOfStrength() {
     this.basisOfStrengthMessage = '';
+    this.ingredient.$$basisOfStrengthValidation = '';
+
     if (this.ingredient.id != null) {
       // Display this message if deleting existing Basis of Strength which is in database.
       if (this.basisofStrengthBdnumOld != null) {
@@ -186,26 +192,40 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
         const substanceCodes = response;
         for (let index = 0; index < substanceCodes.length; index++) {
           if (substanceCodes[index].codeSystem) {
-            if ((substanceCodes[index].codeSystem === this.substanceKeyTypeConfig) &&
-              (substanceCodes[index].type === 'PRIMARY')) {
+            if (substanceCodes[index].codeSystem === this.substanceKeyTypeConfig) {
+              if (substanceCodes[index].type === 'PRIMARY') {
+                if (type) {
+                  if (type === 'ingredientname') {
+                    this.ingredient.substanceKey = substanceCodes[index].code;
+                    this.ingredient.substanceKeyType = this.substanceKeyTypeConfig;
 
-              if (type) {
-                if (type === 'ingredientname') {
-                  this.ingredient.substanceKey = substanceCodes[index].code;
-                  this.ingredient.substanceKeyType = this.substanceKeyTypeConfig;
-
-                  if (!this.ingredient.basisOfStrengthSubstanceKey) {
+                    if (!this.ingredient.basisOfStrengthSubstanceKey) {
+                      this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
+                      this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
+                    }
+                  }
+                  if (type === 'basisofstrength') {
                     this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
                     this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
                   }
                 }
+              } else {
+                if (type === 'ingredientname') {
+                  this.ingredientNameMessage = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
+                  this.ingredient.$$ingredientNameValidation = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
+
+                  if (!this.ingredient.basisOfStrengthSubstanceKey) {
+                    this.basisOfStrengthMessage = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
+                    this.ingredient.$$basisOfStrengthValidation = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
+                  }
+                }
                 if (type === 'basisofstrength') {
-                  this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
-                  this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
+                  this.basisOfStrengthMessage = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
+                  this.ingredient.$$basisOfStrengthValidation = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
                 }
               }
               break;
-            }
+            } // codeSystem is same as substance key type config
           }
         }
       }
@@ -249,90 +269,6 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*
-  if (response.bdnum) {
-
-    if (type === 'ingredientname') {
-      this.ingredientNameMessage = '';
-      this.ingredient.bdnum = response.bdnum;
-      this.ingredientName = response.name;
-      this.ingredientNameSubstanceUuid = response.substanceId;
-
-      // Get Active Moiety
-      this.getActiveMoiety(response.substanceId, 'ingredientname');
-
-      // If Basis of Strenght is empty/null, copy the Ingredient Name to Basis of Strength
-      if (this.ingredient.basisOfStrengthBdnum == null) {
-        this.basisOfStrengthMessage = '';
-        this.ingredient.basisOfStrengthBdnum = response.bdnum;
-        this.basisOfStrengthName = response.name;
-        this.basisofStrengthSubstanceUuid = response.substanceId;
-
-        // Get Active Moiety
-        this.getActiveMoiety(response.substanceId, 'basisofstrength');
-      }
-      // Basis is strength
-    } else {
-      this.basisOfStrengthMessage = '';
-      this.ingredient.basisOfStrengthBdnum = response.bdnum;
-      this.basisOfStrengthName = response.name;
-      this.basisofStrengthSubstanceUuid = response.substanceId;
-
-      // Get Active Moiety
-      this.getActiveMoiety(response.substanceId, 'basisofstrength');
-    }
-
-  }
-  }
-  else {
-  if (type === 'ingredientname') {
-    this.ingredientNameMessage = 'There is no Ingredient Name found for this Substance Code';
-  } else {
-    this.basisOfStrengthMessage = 'There is no Basis of Strength found for this Substance Code';
-  }
-  }
-  */
-
-  /*
-  getSubstanceId(bdnum: string, type: string) {
-    if (bdnum != null) {
-      this.applicationService.getSubstanceDetailsByBdnum(bdnum).subscribe(response => {
-        if (response) {
-          if (response.substanceId) {
-            if (type === 'ingredientname') {
-              this.ingredientNameMessage = '';
-              this.ingredient.bdnum = response.bdnum;
-              this.ingredientName = response.name;
-              this.ingredientNameSubstanceUuid = response.substanceId;
-
-              // Get Active Moiety
-              this.getActiveMoiety(response.substanceId, 'ingredientname');
-
-            } else {    // Basis is strength
-              this.basisOfStrengthMessage = '';
-              this.ingredient.basisOfStrengthBdnum = response.bdnum;
-              this.basisOfStrengthName = response.name;
-              this.basisofStrengthSubstanceUuid = response.substanceId;
-
-              // Get Active Moiety
-              this.getActiveMoiety(response.substanceId, 'basisofstrength');
-            }
-          } else {
-            this.basisOfStrengthMessage = '';
-            this.basisOfStrengthMessage = 'No Ingredient Name found for this bdnum';
-          }
-        } else {
-          if (type === 'ingredientname') {
-            this.ingredientNameMessage = 'There is no Ingredient Name found for this bdnum';
-          } else {
-            this.basisOfStrengthMessage = 'There is no Basis of Strength found for this bdnum';
-          }
-        }
-      });
-    }
-  }
-  */
-
   getActiveMoiety(substanceUuid: string, type: string) {
     if (substanceUuid != null) {
       // Get Active Moiety - Relationship
@@ -360,7 +296,13 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   }
 
   ingredientNameUpdated(substance: SubstanceSummary): void {
+    // Clear the Validation Message
     this.ingredientNameMessage = '';
+    this.ingredient.$$ingredientNameValidation = '';
+
+    // Clear Ingredient Name substance key
+    this.ingredient.substanceKey = '';
+
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {
         refPname: substance._name,
@@ -372,21 +314,19 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
-          this.ingredientNameMessage = '';
+
+          // Clear Array
           this.ingredientNameActiveMoiety.length = 0;
 
           if (!this.substanceKeyTypeConfig) {
             alert('There is no Substance configuration found in config file: substance.linking.keyType.default. Unable to add Ingredient Name');
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
+
             this.getSubstanceCode(relatedSubstance.refuuid, 'ingredientname');
 
             this.substanceUuid = relatedSubstance.refuuid;
             this.ingredientName = relatedSubstance.name;
-
-            // Clear the Validation Message
-            this.ingredientNameMessage = '';
-            this.ingredient.$$ingredientNameValidation = '';
 
             // Populate Basis of Strength if it is empty/null
             if (!this.ingredient.basisOfStrengthSubstanceKey) {
@@ -397,11 +337,12 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
               this.basisOfStrengthIngredientName = relatedSubstance.name;
               this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
-              // Get Active Moiety
+              // Get Active Moiety for Basis of Strength
+              this.basisOfStrengthActiveMoiety.length = 0;  //Clear Array
               this.getActiveMoiety(this.substanceUuid, 'basisofstrength');
             }
 
-            // Get Active Moiety
+            // Get Active Moiety for Ingredient Name
             this.getActiveMoiety(this.substanceUuid, 'ingredientname');
           }
         }
@@ -412,6 +353,13 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
   }
 
   basisOfStrengthUpdated(substance: SubstanceSummary): void {
+    // Clear the Validation Message
+    this.basisOfStrengthMessage = '';
+    this.ingredient.$$basisOfStrengthValidation = '';
+
+    // Clear Basis of Strength Name substance key
+    this.ingredient.basisOfStrengthSubstanceKey = '';
+
     if (substance != null) {
       const relatedSubstance: SubstanceRelated = {
         refPname: substance._name,
@@ -423,7 +371,7 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
       if (relatedSubstance != null) {
         if (relatedSubstance.refuuid != null) {
-          this.basisOfStrengthMessage = '';
+
           this.basisOfStrengthActiveMoiety.length = 0;  //Clear Array
 
           if (!this.substanceKeyTypeConfig) {
@@ -434,10 +382,6 @@ export class IngredientFormComponent implements OnInit, OnDestroy {
 
             this.basisOfStrengthSubstanceUuid = relatedSubstance.refuuid;
             this.basisOfStrengthIngredientName = relatedSubstance.name;
-
-            // Clear the Validation Message
-            this.basisOfStrengthMessage = '';
-            this.ingredient.$$basisOfStrengthValidation = '';
 
             // Get Active Moiety
             this.getActiveMoiety(this.basisOfStrengthSubstanceUuid, 'basisofstrength');
