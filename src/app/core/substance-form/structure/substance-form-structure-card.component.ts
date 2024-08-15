@@ -46,6 +46,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   displayedColumns = ['key', 'value'];
   featuresOnly = false;
   hideFeaturesTable = false;
+  structureEditSearch = true;
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
@@ -68,6 +69,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   ngOnInit() {
     if (this.configService.configData && this.configService.configData.enableStructureFeatures) {
       this.enableStructureFeatures = this.configService.configData.enableStructureFeatures;
+    }
+
+    if (this.configService.configData && 
+      (this.configService.configData.structureEditSearch !== undefined && 
+        this.configService.configData.structureEditSearch !== null)) {
+      this.structureEditSearch = this.configService.configData.structureEditSearch;
     }
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
@@ -373,14 +380,11 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
         let url = this.configService.configData.gsrsHomeBaseUrl + '/structure-search?structure=' + response.structure.id;
         window.open(url, '_blank');
       } else {
-
+        const baseUrl = window.location.href.replace(this.router.url, '');
+        const url = baseUrl + this.router.serializeUrl(this.router.createUrlTree(['/structure-search'],
+        { queryParams: navigationExtras.queryParams}));
+        window.open( url, '_blank');
       }
-      const urlTree = this.router.createUrlTree(['/structure-search/'], {
-        queryParams: navigationExtras.queryParams,
-        queryParamsHandling: 'merge',
-        preserveFragment: true
-      });
-      window.open(urlTree.toString(), '_blank');
     }, error => {
       this.loadingService.setLoading(false);
     });

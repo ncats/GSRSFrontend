@@ -56,7 +56,7 @@
         <mat-icon svgIcon="search"></mat-icon>
         Check for duplicates
       </button>
-      <button (click)="structureSearch()" matTooltip="open structure search in new tab" mat-button
+      <button (click)="structureSearch()" matTooltip="open structure search in new tab" mat-button *ngIf = "structureEditSearch"
         color="primary" class="dupe-check">
         <mat-icon svgIcon="search"></mat-icon>
         Structure Search
