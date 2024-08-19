@@ -83,10 +83,6 @@ export class SubstanceFormDefinitionComponent extends SubstanceFormBase implemen
   const subscription =  this.substanceFormService.definition.subscribe(definition => {
     this.defAccess = this.substanceFormService.getDefinitionForDefRef();
       this.definition = definition || {};
-      if (definition && definition.substanceClass && (definition.substanceClass === 'polymer' || definition.substanceClass === 'mixture') && !definition.uuid) {
-        this.definition.definitionLevel = 'REPRESENTATIVE';
-        this.updateDefinition();
-      }
       this.crossCheckTags();
       if (this.definition.substanceClass === 'structure') {
         this.substanceClass = 'chemical';

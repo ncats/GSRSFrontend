@@ -145,6 +145,8 @@ export class SubstanceFormService implements OnDestroy {
             codes: [],
             relationships: [],
             properties: [],
+            definitionLevel: 'REPRESENTATIVE',
+            access: ['protected']
           };
         } else if (substanceClass === 'structurallyDiverse') {
           this.privateSubstance = {
@@ -230,6 +232,8 @@ export class SubstanceFormService implements OnDestroy {
             moieties: [],
             relationships: [],
             properties: [],
+            definitionLevel: 'REPRESENTATIVE',
+            access: ['protected']
           };
         } else {
           this.privateSubstance = {
@@ -537,7 +541,7 @@ export class SubstanceFormService implements OnDestroy {
   updateDefinition(definition: SubstanceFormDefinition): void {
     this.privateSubstance.definitionLevel = definition.definitionLevel;
     this.privateSubstance.deprecated = definition.deprecated;
-    this.privateSubstance.access = definition.access;
+    this.privateSubstance.access = definition.access
     this.privateSubstance.created = definition.created;
     this.privateSubstance.createdBy = definition.createdBy;
     this.privateSubstance.lastEdited = definition.lastEdited;
