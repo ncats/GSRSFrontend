@@ -16,8 +16,11 @@ import { Subscription } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { SubstanceFormStructuralUnitsService } from '../structural-units/substance-form-structural-units.service';
 import { SubstanceFormStructureService } from './substance-form-structure.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { StructureEditorComponent } from '@gsrs-core/structure-editor';
+import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -32,10 +35,18 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   substanceType: string;
   smiles: string;
   mol: string;
+  features: Array<any>;
   isInitializing = true;
   private overlayContainer: HTMLElement;
   structureErrorsArray: Array<StructureDuplicationMessage>;
   subscriptions: Array<Subscription> = [];
+  privateFeatures: any;
+  enableStructureFeatures = false;
+  sortedFeatures = new MatTableDataSource();
+  displayedColumns = ['key', 'value'];
+  featuresOnly = false;
+  hideFeaturesTable = false;
+  structureEditSearch = true;
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
@@ -48,12 +59,26 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     private gaService: GoogleAnalyticsService,
     private substanceService: SubstanceService,
     private substanceFormStructuralUnitsService: SubstanceFormStructuralUnitsService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private configService: ConfigService
   ) {
     super();
   }
 
   ngOnInit() {
+    if (this.configService.configData && this.configService.configData.enableStructureFeatures) {
+      this.enableStructureFeatures = this.configService.configData.enableStructureFeatures;
+    }
+
+    if (this.configService.configData && 
+      (this.configService.configData.structureEditSearch !== undefined && 
+        this.configService.configData.structureEditSearch !== null)) {
+      this.structureEditSearch = this.configService.configData.structureEditSearch;
+    }
+    if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
+      this.featuresOnly = true;
+    }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const definitionSubscription = this.substanceFormService.definition.subscribe(def => {
       this.substanceType = def.substanceClass;
@@ -154,12 +179,60 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.structureService.interpretStructure(molfile).subscribe(response => {
         this.processStructurePostResponse(response);
         this.structure.molfile = molfile;
+        this.smiles = response.structure.smiles;
+
       });
     }
   }
 
   processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
+      let customSort = (array: any[]): any[] => {
+        return array.sort((a, b) => {
+          if (a.key === 'Category Score') return -1;
+          if (b.key === 'Category Score') return 1;
+          if (a.key === 'Sum Of Scores') return a.key === 'Category Score' ? 1 : -1;
+          if (b.key === 'Sum Of Scores') return b.key === 'Category Score' ? -1 : 1;
+          return a.key.localeCompare(b.key);
+        });
+      };
+
+      if (structurePostResponse.featureList) {
+        this.hideFeaturesTable = false;
+        let tempArr = [];
+        let emptyFeatures = true;
+        if (JSON. stringify(structurePostResponse.featureList) !== '{}'){
+
+        Object.keys(structurePostResponse.featureList).forEach(type => {
+          let tempObj = {'label':null, 'features': null};
+
+          tempObj.label = (type.charAt(0).toUpperCase() + type.slice(1)).replace(/([A-Z])/g, ' $1').trim();
+          let temp = [];
+
+          if(structurePostResponse.featureList[type].length > 0) {
+            emptyFeatures = false;
+            Object.keys(structurePostResponse.featureList[type][0]).forEach(key => {
+              let label = key;
+              if(key === 'categoryScore'){
+                label = 'Category Score';
+              }
+              if(key === 'sumOfScores'){
+                label = 'Sum Of Scores';
+              }
+              temp.push({'key': label,'value': structurePostResponse.featureList[type][0][key] });
+            });
+          }
+          tempObj.features = new MatTableDataSource(customSort(temp));
+          tempArr.push(tempObj);
+        });
+        this.features = tempArr;
+        if (emptyFeatures) {
+          this.hideFeaturesTable = true;
+        }
+      } else {
+        this.hideFeaturesTable = true;
+      }
+      } 
 
       // we should only be dealing with this stuff if the total hash changes
       // or if the charge changes, or if it's a polymer
@@ -224,13 +297,13 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   openStructureExportDialog(): void {
-
+    this.structureEditor.getSmiles().pipe(take(1)).subscribe(resp => {
     const dialogRef = this.dialog.open(StructureExportComponent, {
       height: 'auto',
       width: '650px',
       data: {
         molfile: this.mol,
-        smiles: this.smiles,
+        smiles: resp,
         type: this.substanceType
       }
     });
@@ -241,6 +314,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     }, () => {
       this.overlayContainer.style.zIndex = null;
     });
+  });
   }
 
   openNameResolverDialog(): void {
@@ -289,6 +363,30 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
           this.structureErrorsArray.push(resp);
         }
       });
+    });
+  }
+
+  structureSearch() {
+    this.loadingService.setLoading(true);
+
+    this.structureService.interpretStructure(this.structure.molfile).subscribe(response => {
+      this.loadingService.setLoading(false);
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          structure: response.structure.id
+        }
+      };
+      if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+        let url = this.configService.configData.gsrsHomeBaseUrl + '/structure-search?structure=' + response.structure.id;
+        window.open(url, '_blank');
+      } else {
+        const baseUrl = window.location.href.replace(this.router.url, '');
+        const url = baseUrl + this.router.serializeUrl(this.router.createUrlTree(['/structure-search'],
+        { queryParams: navigationExtras.queryParams}));
+        window.open( url, '_blank');
+      }
+    }, error => {
+      this.loadingService.setLoading(false);
     });
   }
 

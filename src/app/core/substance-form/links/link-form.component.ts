@@ -45,6 +45,7 @@ export class LinkFormComponent implements OnInit, OnDestroy {
   }
 
   getStructure() {
+    if (this.privateLink && this.privateLink.linkage){
     this.smiles = this.vocabulary[this.privateLink.linkage];
     if (this.smiles && this.smiles.fragmentStructure) {
       this.structure = this.cvService.getStructureUrlFragment(this.smiles.fragmentStructure);
@@ -66,7 +67,10 @@ export class LinkFormComponent implements OnInit, OnDestroy {
     }
   //  this.structure = this.cvService.getStructureUrlFragment(term.fragmentStructure);
     
+  } else {
+    this.structure = null;
   }
+}
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {

@@ -215,7 +215,6 @@ private overlayContainer: HTMLElement;
 
 
   getPossibleSmiles(smi) {
-    console.log(smi);
     function getMarkers(smi) {
       let temp = smi.replace(/@H/g, '').replace(/[^A-Z*]/g, '');
       var alias: any = {

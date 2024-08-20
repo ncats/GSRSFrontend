@@ -57,7 +57,7 @@ export class EditorImplementation implements Editor {
     getMolfile(): Observable<any> {
         return new Observable<any>(observer => {
         if (this.ketcher && this.ketcher != null) {
-            from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
+            this.ketcher.getMolfile().then(result => { 
                 let mfile = result;
                 
                 observer.next(mfile);
@@ -96,8 +96,7 @@ export class EditorImplementation implements Editor {
 
     getSmiles(): Observable<string> {
         if (this.ketcher != null) {
-            return  from(this.ketcher.getSmiles()).pipe(switchMap(data => {
-                return data;}));
+        return from(this.ketcher.getSmiles());
         } else if (this.jsdraw != null) {
             return new Observable<string>(observer => {
                 observer.next(this.jsdraw.getSmiles());
@@ -144,6 +143,7 @@ export class EditorImplementation implements Editor {
     setMolecule(molfile: string): void {
         if (this.ketcher && this.ketcher != null) {
             this.ketcher.setMolecule(molfile);
+            this.ketcher.setMolecule(molfile);
         } else if (this.jsdraw && this.jsdraw != null) {
             // from simple tests, this should push the current molecule down
             // on the undo stack.
@@ -164,18 +164,17 @@ export class EditorImplementation implements Editor {
             } else if (this.ketcher != null) {
               this.ketcher.editor.subscribe('change',  operations => { 
                     if(!(operations.length == 1 && operations[0].operation == 'Load canvas')){
-                        from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
+                        this.ketcher.getMolfile().then(result => { 
                             observer.next(result);
                         });
                     } else {
                         this.getMolfile().pipe(take(1)).subscribe(result => { 
                             observer.next(result);
                         });
-                    //    observer.next(this.tempMol);
                     }
                     
                     
-                 });//*/
+                 });
                 
             }
             else {

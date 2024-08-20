@@ -1,3 +1,5 @@
+import { Auth } from "@gsrs-core/auth";
+
 export interface Config {
     apiBaseUrl?: string;
     gsrsHomeBaseUrl?: string;
@@ -78,6 +80,9 @@ export interface Config {
     jsdrawLicense?: boolean;
     disableKetcher?: boolean;
     useApprovalAPI?: boolean;
+    dummyWhoami?: Auth;
+    enableStructureFeatures?: boolean;
+    structureEditSearch?: boolean;
 }
 
 export interface StagingAreaSettings {

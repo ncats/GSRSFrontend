@@ -99,7 +99,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         window['schemeUtil'].onClickMaterial = (d) => {
           this.openImageModal(d.refuuid, d.name, d.bottomText);
         };
-        
+
         if (window['schemeUtil'].executeWhenLoaded) {
           window['schemeUtil'].executeWhenLoaded();
         }

@@ -91,7 +91,7 @@ export class StructureService {
   }
 
   interpretStructure(mol: string, mode?: string, standardize?: string ): Observable<InterpretStructureResponse> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/interpretStructure?mode=${mode ? mode:''}&standardize=${(standardize ? standardize:'')}`;
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/interpretStructure?mode=${mode ? mode:''}&standardize=${(standardize ? standardize:'')}&appendNNOFeatures=true`;
     return this.http.post<InterpretStructureResponse>(url, mol);
   }
 

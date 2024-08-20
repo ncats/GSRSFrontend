@@ -145,6 +145,8 @@ export class SubstanceFormService implements OnDestroy {
             codes: [],
             relationships: [],
             properties: [],
+            definitionLevel: 'REPRESENTATIVE',
+            access: ['protected']
           };
         } else if (substanceClass === 'structurallyDiverse') {
           this.privateSubstance = {
@@ -230,6 +232,8 @@ export class SubstanceFormService implements OnDestroy {
             moieties: [],
             relationships: [],
             properties: [],
+            definitionLevel: 'REPRESENTATIVE',
+            access: ['protected']
           };
         } else {
           this.privateSubstance = {
@@ -537,7 +541,7 @@ export class SubstanceFormService implements OnDestroy {
   updateDefinition(definition: SubstanceFormDefinition): void {
     this.privateSubstance.definitionLevel = definition.definitionLevel;
     this.privateSubstance.deprecated = definition.deprecated;
-    this.privateSubstance.access = definition.access;
+    this.privateSubstance.access = definition.access
     this.privateSubstance.created = definition.created;
     this.privateSubstance.createdBy = definition.createdBy;
     this.privateSubstance.lastEdited = definition.lastEdited;
@@ -1421,12 +1425,32 @@ export class SubstanceFormService implements OnDestroy {
 
     if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
       && this.privateSubstance.protein.disulfideLinks.length > 0) {
-      for (let i = this.privateSubstance.protein.disulfideLinks.length; i >= 0; i--) {
+      for (let i = this.privateSubstance.protein.disulfideLinks.length -1; i >= 0; i--) {
+        if (this.privateSubstance.protein.disulfideLinks[i].sitesShorthand) {
+           delete this.privateSubstance.protein.disulfideLinks[i].sitesShorthand;
+        }
         if (this.privateSubstance.protein.disulfideLinks[i] && this.privateSubstance.protein.disulfideLinks[i].sites &&
           this.privateSubstance.protein.disulfideLinks[i].sites[0] && this.privateSubstance.protein.disulfideLinks[i].sites[1] &&
           Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[0]).length === 0 &&
           Object.keys(this.privateSubstance.protein.disulfideLinks[i].sites[1]).length === 0) {
           this.privateSubstance.protein.disulfideLinks.splice(i, 1);
+        }
+      }
+
+      if (this.privateSubstance.nucleicAcid) {
+        if (this.privateSubstance.nucleicAcid.linkages && this.privateSubstance.nucleicAcid.linkages.length > 0) {
+          for (let i = this.privateSubstance.nucleicAcid.linkages.length-1; i >= 0; i--) {
+            if (this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand) {
+               delete this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand;
+            }
+          }
+        }
+        if (this.privateSubstance.nucleicAcid.sugars && this.privateSubstance.nucleicAcid.sugars.length > 0) {
+          for (let i = this.privateSubstance.nucleicAcid.sugars.length-1; i >= 0; i--) {
+            if (this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand) {
+               delete this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand;
+            }
+          }
         }
       }
     }
@@ -1442,7 +1466,10 @@ export class SubstanceFormService implements OnDestroy {
       substanceString = JSON.stringify(substanceCopy);
 
       deletedUuids.forEach(uuid => {
-        substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
+        const pattern = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/;
+        if(pattern.test(uuid)) {
+          substanceString = substanceString.replace(new RegExp(`"${uuid}"`, 'g'), '');
+        }
       });
       substanceString = substanceString.replace(/,[,]+/g, ',');
       substanceString = substanceString.replace(/\[,/g, '[');
@@ -1594,7 +1621,6 @@ export class SubstanceFormService implements OnDestroy {
     return new Observable(observer => {
 
     this.adminService.updateStagingArea(id, substanceCopy).subscribe(response => {
-      console.log(response);
         observer.next(response);
           observer.complete();
       }, error => {

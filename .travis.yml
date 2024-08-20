@@ -2,7 +2,7 @@ dist: trusty
 
 language: node_js
 node_js:
-  - 14.17.0
+  - 17.9.1
 
 
 install:
@@ -21,6 +21,9 @@ install:
   - npm install webpack
   - npm i --save webpack-sources --legacy-peer-deps
   - npm install -f @types/ws@8.5.4
+  - npm install -g yarn
+  - npm uninstall undici
+  - npm install undici@5.5.1
   - export NODE_OPTIONS="--max-old-space-size=8192"
 script:
   - npm run build:fda:prod
