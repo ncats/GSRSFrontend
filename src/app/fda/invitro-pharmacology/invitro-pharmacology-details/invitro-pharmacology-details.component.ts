@@ -167,10 +167,15 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'invitro_pharm_assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    let data = {jsonData: this.assay, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.assay
+      data: data
     });
 
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {

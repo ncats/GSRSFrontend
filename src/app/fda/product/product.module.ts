@@ -35,7 +35,6 @@ import { SubstanceSearchSelectorModule } from '../substance-search-select/substa
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
-import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
 
 /* GSRS Product Imports */
 import { ProductTextSearchModule } from './product-text-search/product-text-search.module';

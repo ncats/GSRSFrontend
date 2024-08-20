@@ -44,6 +44,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   username = null;
   title = null;
   isAdmin = false;
+  disableMarketingCategoryCode = true;
   expiryDateMessage = '';
   manufactureDateMessage = '';
   viewProductUrl = '';
@@ -491,11 +492,17 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
     let cleanProduct = this.cleanProduct();
+
+    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: cleanProduct
+      data: data
     });
 
     // this.overlayContainer.style.zIndex = '1002';
@@ -792,6 +799,26 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getViewProductUrl(): string {
     return this.productService.getViewProductUrl(this.id);
+  }
+
+  updateMarketingCategoryName(event: any, prodProvIndex: number) {
+
+    this.product.productProvenances[prodProvIndex].marketingCategoryName = event;
+
+    const cvSubscription = this.cvService.getDomainVocabulary('PROD_MARKETING_CATEGORY_NAME').subscribe(response => {
+      const marketingCatNameVocabulary = response['PROD_MARKETING_CATEGORY_NAME'].dictionary;
+
+      if (marketingCatNameVocabulary) {
+        if (event) {
+          if (marketingCatNameVocabulary[event]) {
+            if (marketingCatNameVocabulary[event].description) {
+              this.product.productProvenances[prodProvIndex].marketingCategoryCode = marketingCatNameVocabulary[event].description;
+            }
+          }
+        }
+      }
+    });
+    this.subscriptions.push(cvSubscription);
   }
 
   scrub(oldraw: any): any {

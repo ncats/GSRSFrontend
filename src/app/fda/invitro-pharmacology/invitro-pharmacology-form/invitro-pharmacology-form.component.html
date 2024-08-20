@@ -72,7 +72,7 @@
 
       <div class="dismiss-container">
         <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" (click)="saveFirstNewAssay()"
+        <button mat-flat-button color="primary" (click)="saveAssays()"
           [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
           validationMessages.length > 0?'Dismiss All and ':''}}
           Submit</button>
@@ -138,51 +138,42 @@
             <!-- **** MAT-ACCORDIAN BEGIN *** -->
             <mat-accordion multi="true">
 
+              <!-- POPUP SAVING ASSAY/SCREENIG BEGIN -->
+              <ng-template #saveTemplate>
+
+                <br>
+                <div class="font20px fontbold" mat-dialog-title>
+                  Saving Screening Records ...
+                </div>
+
+                <div mat-dialog-content>
+                  <div class="font17px">
+                    <br>
+                    Record <b><span class="colormaroon">{{totalRecordSavedInDatabase}}</span> of
+                      {{assaysToSave.length}}</b> saved successfully
+                  </div>
+                </div> <!-- mat-dialog-content -->
+
+                <!-- CLOSE BUTTON -->
+                <!--
+                <div mat-dialog-actions>
+                  <span class="middle-fill"></span>
+                  <button class="mat-raised-button mat-primary" (click)="close()" mat-dialog-close>Close</button>
+                </div>
+                -->
+
+              </ng-template>
+              <!-- POPUP SAVING ASSAY/SCREENIG END -->
+
+
               <!-- ################################################################# -->
               <!-- ################################################################# -->
               <!-- SCREENING DETAILS BEGIN -->
-
-              <!-- Screening Loop -->
-              <!--
-              <div class="marginbottom15px"
-                *ngFor="let screening of assay.invitroAssayScreenings; let screeningIndex = index">
-              -->
-
-              <!-- Add divider if more than one screening -->
-              <!--
-                      <span *ngIf="screeningIndex > 0">
-                        <br>
-                        <hr><br>
-                      </span>
-
-
-                      <div class="margintop10px font20px fontbold">Screening {{(screeningIndex+1)}} of
-                        {{assay.invitroAssayScreenings.length}}
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-
-                        <!- - DELETE SCREENING BUTTON - ->
-                        <button mat-icon-button color="primary" (click)="confirmDeleteScreening(screeningIndex)"
-                          matTooltip="Delete Screening {{(screeningIndex+1)}}">
-                          <mat-icon>delete_forever</mat-icon>
-                        </button>
-                      </div>
-
-                      <br>
-                      -->
 
               <!-- ************************************************************ -->
               <!-- ************************************************************ -->
               <!-- MAT-STEPPER BEGIN -->
               <mat-stepper orientation="horizontal" [linear]="isLinear" #stepper>
-
-                <!-- SET ICONS -->
-                <ng-template matStepperIcon="phone">
-                  <mat-icon>call_end</mat-icon>
-                </ng-template>
-                <ng-template matStepperIcon="chat">
-                  <mat-icon>forum</mat-icon>
-                </ng-template>
-
 
                 <!-- ################### REFERENCE AND LABORATORY STEP ################# -->
                 <mat-step [stepControl]="firstFormGroup">
@@ -926,7 +917,7 @@
                           <app-substance-selector (selectionUpdated)="testAgentUpdated($event)"
                             eventCategory="substanceRelationshipRelatedSub"
                             placeholder="*Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
-                            [subuuid]="testAgentSubstanceUuid" [showMorelinks]="true">
+                            [subuuid]="assayResultInfo.invitroTestAgent.testAgentSubstanceUuid" [showMorelinks]="true">
                           </app-substance-selector>
                         </div>
 
@@ -1165,7 +1156,6 @@
                     <div class="" *ngFor="let screening of assay.invitroAssayScreenings; let indexScreening = index">
 
                       <!-- IF SHOW IS TRUE -->
-
                       <div *ngIf="screening._show == true">
 
                         <!-- Result - FIRST ROW  -->
@@ -1205,7 +1195,7 @@
                           <div class="divflex margintopneg5px width100px alignright">
                             <!-- COPY BUTTON -->
                             <div class="margintop10px">
-                              <a href="" (click)="copyAssaySummaryRow(indexAssay); false"
+                              <a href="" (click)="copyAssayResultRow(indexAssay); false"
                                 matTooltip='copy this screening row to new row'>
                                 <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
                               </a>
@@ -1311,12 +1301,11 @@
                             </app-cv-input>
                           </div>
 
-
                           <!-- Result - FOURTH ROW  -->
                           <div class="form-row margintop10px">
                             <mat-checkbox class="col-4-1 margintop15px textalignleft"
-                              [checked]="screening.invitroAssayResult.plasmaProteinAdded"
-                              (change)="setPlasmaProteinCheckBox($event.checked, screeningIndex)">Plasma Protein
+                              [(ngModel)]="screening.invitroAssayResult.plasmaProteinAdded"
+                              (change)="setPlasmaProteinCheckBox($event, screeningIndex)">Plasma Protein
                               Added?
                             </mat-checkbox>
 

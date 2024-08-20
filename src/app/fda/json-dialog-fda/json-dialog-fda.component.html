@@ -5,7 +5,7 @@
     <button mat-flat-button *ngIf="!raw" (click)="expand = !expand">{{expand? 'collapse':'expand'}}</button>
     <span class="middle-fill"></span>
     <a mat-flat-button color="primary" [href]="downloadJsonHref"
-      download="{{json.appType}}.json">
+      download="{{jsonFilename}}.json">
       <span>Export JSON</span>
     </a>
   </div>

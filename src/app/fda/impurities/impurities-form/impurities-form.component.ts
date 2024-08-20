@@ -494,10 +494,15 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    let data = {jsonData: this.impurities, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.impurities
+      data: data
     });
 
     //   this.overlayContainer.style.zIndex = '1002';
@@ -509,7 +514,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
     let json = this.impurities;
+
     // this.json = this.cleanObject(substanceCopy);
+
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
     this.downloadJsonHref = uri;
 

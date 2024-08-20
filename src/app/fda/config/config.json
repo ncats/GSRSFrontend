@@ -969,7 +969,6 @@
       ]
     },
     "applications": {
-
       "default": [
         "Application Type",
         "Center",
@@ -1018,6 +1017,7 @@
         "Dosage Form Name",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
+        "Number of Ingredients",
         "Ingredient Type",
         "Product Type",
         "Product Code Type",
@@ -1038,8 +1038,8 @@
       "admin": [
         "Record Created By",
         "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited"
+        "root_creationDate",
+        "root_lastModifiedDate"
       ]
     },
     "ctclinicaltrial": {

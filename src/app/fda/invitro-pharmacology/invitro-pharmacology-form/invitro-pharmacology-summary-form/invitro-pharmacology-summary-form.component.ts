@@ -699,18 +699,17 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'invitro_pharm_assay_summary_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    let data = {jsonData: this.assayToSave, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      // data: this.scrub(this.newAssayList)
-      // data: this.assayList
-
-      data: this.assayToSave
-      //data: this.cleanData(this.assayToSave)
-      // data: this.invitroPharmacologyService.assay
+      data: data
     });
 
-    //   this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
@@ -825,8 +824,6 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   testAgentUpdated(substance: SubstanceSummary): void {
     if (substance != null) {
       this.testAgentSubstanceKey = substance.uuid
-      this.testAgent = substance._name;
-
       this.testAgent = substance._name;
 
       this.resultInfo.invitroTestAgent = {};

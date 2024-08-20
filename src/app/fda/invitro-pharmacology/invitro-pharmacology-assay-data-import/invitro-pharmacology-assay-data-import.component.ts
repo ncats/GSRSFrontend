@@ -467,14 +467,20 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'invitro_pharm_bulk_assays_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
     let json: any = {};
     if (this.importedAssayJson !== undefined || this.importedAssayJson != null) {
       json = this.importedAssayJson;
     }
+
+    let data = {jsonData: json, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: json
+      data: data
     });
 
     // this.overlayContainer.style.zIndex = '1002';

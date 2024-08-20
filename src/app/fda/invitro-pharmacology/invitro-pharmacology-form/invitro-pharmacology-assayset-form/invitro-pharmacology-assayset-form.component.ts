@@ -25,7 +25,6 @@ import { GeneralService } from '../../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 /* Invitro Pharmacology Imports */

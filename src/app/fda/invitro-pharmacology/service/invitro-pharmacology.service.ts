@@ -493,7 +493,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   addNewScreening(): void {
     const newInvitroAssayScreening: InvitroAssayScreening =
     {
-      invitroAssayResultInformation: { invitroReferences: [], invitroLaboratory: {}, invitroSponsor: {}, invitroSponsorReport: {invitroSponsorSubmitters: []}, invitroTestAgent: {}},
+      invitroAssayResultInformation: { invitroReferences: [], invitroLaboratory: {}, invitroSponsor: {}, invitroSponsorReport: { invitroSponsorSubmitters: [] }, invitroTestAgent: {} },
       invitroAssayResult: {},
       invitroControls: [{}],
       invitroSummary: {}
@@ -555,4 +555,5 @@ export class InvitroPharmacologyService extends BaseHttpService {
 
     return referenceSourceTypeAndId;
   }
+
 }

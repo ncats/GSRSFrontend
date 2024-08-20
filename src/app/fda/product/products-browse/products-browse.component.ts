@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Sort } from '@angular/material/sort';
@@ -28,6 +29,7 @@ import { Facet, FacetParam, FacetsManagerService, FacetUpdateEvent } from '@gsrs
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 
 /* GSRS Product Imports */
 import { GeneralService } from '../../service/general.service';
@@ -95,10 +97,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
+    'viewDetails',
     'productCode',
     'productName',
     'ingredientName',
     'labelerName',
+    'provenance',
     'country',
     'status',
     'productNameType',
@@ -350,7 +354,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     if (sort.active) {
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
-      alert("AAAAAAAAAAAAAA" + this.ascDescDir);
       this.sortValues.forEach(sortValue => {
         if (sortValue.displayedColumns && sortValue.direction) {
           if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
@@ -498,13 +501,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
                   // if Ingredient Type exists
                   if (elementIngred.ingredientType) {
+
                     // Active Ingredient Count
                     if (elementIngred.ingredientType == this.ACTIVE_INGREDIENT_UPPERCASE
                       || elementIngred.ingredientType == this.ACTIVE_INGREDIENT_LOWERCASE) {
 
                       // Store Active Ingredient in an Array
                       product._activeIngredients.push(elementIngred);
-
                     }
                     // Inactive and Other Ingredient Count
                     else if (elementIngred.ingredientType != this.ACTIVE_INGREDIENT_UPPERCASE
@@ -512,9 +515,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
                       // Store Active Ingredient in an Array
                       product._otherIngredients.push(elementIngred);
-
                     }
                   } // if Ingredient Type exists
+
 
                   /*
                   // Get Substance Details, uuid, approval_id, substance name
@@ -540,6 +543,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                     });
                   });
                   */
+
                 } // response
               });
               this.subscriptions.push(substanceSubscription);
@@ -640,18 +644,18 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '90%',
-      width: '680px',
+      width: '650px',
       panelClass: 'structure-image-panel',
       data: data
     });
 
-    this.overlayContainer.style.zIndex = '1001';
+    this.overlayContainer.style.zIndex = '1002';
 
     const subscription = dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = '1001';
+      this.overlayContainer.style.zIndex = null;
       subscription.unsubscribe();
     }, () => {
-      this.overlayContainer.style.zIndex = '1001';
+      this.overlayContainer.style.zIndex = null;
       subscription.unsubscribe();
     });
   }
@@ -675,9 +679,31 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  saveJSON(productId: number): void {
-    let json = this.products[productId];
-    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+  showJSON(productIndex: number): void {
+    const date = new Date();
+    let jsonFilename = 'product_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    const copyProd = _.cloneDeep(this.products[productIndex]);
+    let cleanProduct = this.scrub(copyProd);
+
+    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
+
+    const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
+      width: '90%',
+      height: '90%',
+      data: data
+    });
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  saveJSON(productIndex: number): void {
+    const copyProd = _.cloneDeep(this.products[productIndex]);
+    let cleanProduct  = this.scrub(copyProd);
+
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));
     this.downloadJsonHref = uri;
 
     const date = new Date();
@@ -706,4 +732,61 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.showMoreLessOtherIngredArray[indexProd] = !this.showMoreLessOtherIngredArray[indexProd];
   }
 
+  scrub(oldraw: any): any {
+    const old = oldraw;
+
+    const activeMoietyHolders = defiant.json.search(old, '//*[_ingredientNameActiveMoieties]');
+    for (let i = 0; i < activeMoietyHolders.length; i++) {
+      if (activeMoietyHolders[i]._ingredientNameActiveMoieties) {
+        delete activeMoietyHolders[i]._ingredientNameActiveMoieties;
+      }
+    }
+
+    const basisOfStrenghActiveMoietyHolders = defiant.json.search(old, '//*[_basisOfStrengthActiveMoieties]');
+    for (let i = 0; i < basisOfStrenghActiveMoietyHolders.length; i++) {
+      if (basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties) {
+        delete basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties;
+      }
+    }
+
+    const basisOfStrengthSubUuidHolders = defiant.json.search(old, '//*[_basisOfStrengthSubstanceUuid]');
+    for (let i = 0; i < basisOfStrengthSubUuidHolders.length; i++) {
+      if (basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid) {
+        delete basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid;
+      }
+    }
+
+    const basisOfStrengthIngNameHolders = defiant.json.search(old, '//*[_basisOfStrengthIngredientName]');
+    for (let i = 0; i < basisOfStrengthIngNameHolders.length; i++) {
+      if (basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName) {
+        delete basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName;
+      }
+    }
+
+    const substanceUuidHolders = defiant.json.search(old, '//*[_substanceUuid]');
+    for (let i = 0; i < substanceUuidHolders.length; i++) {
+      if (substanceUuidHolders[i]._substanceUuid) {
+        delete substanceUuidHolders[i]._substanceUuid;
+      }
+    }
+
+    const ingredientNameHolders = defiant.json.search(old, '//*[_ingredientName]');
+    for (let i = 0; i < ingredientNameHolders.length; i++) {
+      if (ingredientNameHolders[i]._ingredientName) {
+        delete ingredientNameHolders[i]._ingredientName;
+      }
+    }
+
+    const approvalIdHolders = defiant.json.search(old, '//*[_approvalId]');
+    for (let i = 0; i < approvalIdHolders.length; i++) {
+      if (approvalIdHolders[i]._approvalId) {
+        delete approvalIdHolders[i]._approvalId;
+      }
+    }
+
+    delete old['_activeIngredients'];
+    delete old['_otherIngredients'];
+
+    return old;
+  }
 }

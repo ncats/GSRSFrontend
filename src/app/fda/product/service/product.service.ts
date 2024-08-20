@@ -8,7 +8,7 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
-import { Product, ProductProvenance, ProductName, ProductTermAndPart, ProductCode, ProductAll, ProductDocumentation } from '../model/product.model';
+import { Product, ProductProvenance, ProductName, ProductTermAndPart, ProductCode, ProductDocumentation } from '../model/product.model';
 import { ProductCompany, ProductCompanyCode, ProductIndication, ProductManufactureItem, ProductManufacturer, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
