@@ -26,7 +26,7 @@
         <!-- Download Json -->
         <span *ngIf="product && product.id">
           <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
-            download="{{jsonFileName}}.json" matTooltip='Download JSON'>
+            download="{{jsonFilename}}.json" matTooltip='Download JSON'>
             <mat-icon svgIcon="get_app"></mat-icon>
           </a>&nbsp;
         </span>
@@ -329,7 +329,7 @@
                           <!-- Original Denominator -->
                           <div class="marginleft5px">
                             <span *ngIf="prodIngred.originalDenominatorNumber">
-                              <span class="font11px">Denominator:
+                              <span class="font11px">&nbsp;Denominator:
                                 <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
                                   prodIngred.originalDenominatorUnit
                                   }}
@@ -408,7 +408,7 @@
                             </button>
                           </div>
 
-                        </div>
+                        </div> <!-- class=divflex -->
 
                         <!-- Show Average -->
                         <div *ngIf="prodIngred.average">
@@ -433,7 +433,7 @@
                           <!-- Original Denominator -->
                           <div class="marginleft5px">
                             <span *ngIf="prodIngred.originalDenominatorNumber">
-                              <span class="font11px">Denominator:
+                              <span class="font11px">&nbsp;Denominator:
                                 <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
                                   prodIngred.originalDenominatorUnit
                                   }}

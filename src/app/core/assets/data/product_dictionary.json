@@ -1,9 +1,9 @@
 {
-    "Administered Pharmaceutical Dosage Form":{
-        "lucenePath":"root_pharmaceuticalDosageForm",
-        "description":"Administered Pharmaceutical Dosage Form of the product",
+    "Product Container":{
+        "lucenePath":"root_productContainer",
+        "description":"Product Container of the product",
         "type":"string",
-        "cvDomain":"DOSAGE_FORM",
+        "cvDomain":"PROD_CONTAINER",
         "priority":null,
         "suggest":null
     },

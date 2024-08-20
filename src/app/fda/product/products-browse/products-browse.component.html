@@ -130,15 +130,6 @@
         </mat-form-field>
 
         <!-- Export Product Button -->
-        <!---
-        <div class="export" *ngIf="isAdmin">
-          <button matTooltip="Export Search Results" mat-button (click)="export()"
-            class="mat-button export-button mat-raised-button">
-            <mat-icon svgIcon="get_app"></mat-icon> Export
-          </button>
-        </div>
-        -->
-
         <div class="export" *ngIf="isAdmin">
           <mat-menu #exportMenu="matMenu">
             <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.extension)">
@@ -198,26 +189,39 @@
             <table mat-table [dataSource]="products" class="font12px" matSort (matSortChange)="sortData($event)"
               matSortDisableClear>
 
+              <ng-container matColumnDef="viewDetails">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Code</th>
+                <td class="width100px" mat-cell *matCellDef="let product">
+
+                  <!-- View GSRS record button -->
+                  <a [routerLink]="['/product', product.id]" target="_blank" *ngIf="isAdmin"
+                    matTooltip='View GSRS Product Record'>
+                    View
+                  </a>
+
+                  <!-- Edit GSRS record button -->
+                  &nbsp;
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                    matTooltip='Edit GSRS Product Record'>
+                    <mat-icon svgIcon="edit"></mat-icon>
+                  </a>
+
+                </td>
+              </ng-container>
+
               <ng-container matColumnDef="productCode">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Code</th>
                 <td class="width120px" mat-cell *matCellDef="let product">
 
                   <span *ngFor="let prodProv of product.productProvenances; let i = index">
 
-                    <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+                    <span *ngFor="let prodCode of prodProv.productCodes; let indexCode = index">
 
-                      <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
-                        <span *ngIf="prodCode.productCode; else noProdCode">
-                          {{prodCode.productCode}}
-                        </span>
-                        <ng-template #noProdCode>(NO ID)</ng-template>
-                      </a>
-
-                      <!-- Edit GSRS record button -->
-                      <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                        matTooltip='Edit GSRS Product Record'>
-                        <mat-icon svgIcon="edit"></mat-icon>
-                      </a>
+                      <span *ngIf="prodCode.productCode; else noProdCode">
+                        <span *ngIf="indexCode > 0"><br><br></span>
+                        {{prodCode.productCode}}
+                      </span>
+                      <ng-template #noProdCode>(NO ID)</ng-template>
 
                     </span> <!-- loop productCode -->
                   </span> <!-- loop productProvenance-->
@@ -228,11 +232,15 @@
               <ng-container matColumnDef="productName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodProv of product.productProvenances; let i = index">
-                    <div *ngFor="let prodName of prodProv.productNames; let i = index">
-                      {{prodName.productName}}
+                  <ol class="olstyle">
+                    <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                      <div *ngFor="let prodName of prodProv.productNames; let i = index">
+                        <li>
+                          {{prodName.productName}}
+                        </li>
+                      </div>
                     </div>
-                  </div>
+                  </ol>
                 </td>
               </ng-container>
 
@@ -294,11 +302,6 @@
               <ng-container matColumnDef="labelerName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Labeler Name </th>
                 <td mat-cell *matCellDef="let product"> {{product.labelerName}}
-                  <!--
-                  <div *ngFor="let prodComp of product.productCompanyAllList; let i = index">
-                    {{prodComp.labelerName}}
-                  </div>
-                  -->
                   <div *ngFor="let prodProv of product.productProvenances">
                     <div *ngFor="let prodComp of prodProv.productCompanies">
                       {{prodComp.companyName}}
@@ -310,6 +313,19 @@
                       </div>
                     </div>
                   </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="provenance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Provenance </th>
+                <td mat-cell *matCellDef="let product">
+                  <ol class="olstyle">
+                    <div *ngFor="let prodProv of product.productProvenances; let i = index">
+                      <li>
+                        {{prodProv.provenance}}
+                      </li>
+                    </div>
+                  </ol>
                 </td>
               </ng-container>
 
@@ -411,10 +427,19 @@
                   </a>
                 </div>
 
+                <div class="margintopneg10" *ngIf="isAdmin">
+                  <!-- Show Json -->
+                  <span *ngIf="product && product.id">
+                    <a button mat-icon-button color="primary" (click)="showJSON(indexProd)" matTooltip='Show JSON'>
+                      <mat-icon>article</mat-icon>
+                    </a>&nbsp;
+                  </span>
+                </div>
+
                 <!-- Download Json For this record -->
                 <div class="margintopneg10" *ngIf="isAdmin">
                   <span *ngIf="product && product.id">
-                    <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON(product.id)"
+                    <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON(indexProd)"
                       download="{{jsonFileName}}.json" matTooltip='Download JSON'>
                       <mat-icon class="" svgIcon="get_app"></mat-icon>
                     </a>
@@ -435,7 +460,8 @@
                   </span>
                 </div>
                 <!-- ***** BUTTONS END ***** -->
-              </div>
+
+              </div> <!-- class=divflex-->
 
               <!-- GROUP BY PROVENANCE BEGIN -->
               <mat-tab-group class="margintop15px" (selectedTabChange)="tabSelectedUpdated($event)">
@@ -605,7 +631,7 @@
 
                 <div class="row-property">
                   <div class="row-property-key">
-                    Route of Admin:
+                    Route of Administration:
                   </div>
                   <div class="row-property-value">
                     {{product.routeAdmin}}
@@ -722,18 +748,41 @@
                                   </button>
                                 </div>
 
-                                <!-- Show Average, Original Numerator, or Original Denominator -->
-                                <!--
-                              <div *ngIf="prodIngred.average" matTooltip="{{prodIngred.average}}"
-                                matTooltipPosition="above">
-                                <mat-icon style="padding:0px;margin:0px;">
-                                  analytics
-                                </mat-icon>
-                                Test
-                              </div>
-                              -->
-
                               </div> <!-- class=divflex -->
+
+                              <!-- Show Average -->
+                              <div *ngIf="prodIngred.average">
+                                <span class="font11px">Average:
+                                  <b>{{prodIngred.average}}&nbsp;{{prodIngred.unit}}
+                                  </b>
+                                </span>
+                              </div>
+
+                              <div class="divflex">
+                                <!-- Original Numerator -->
+                                <div>
+                                  <span *ngIf="prodIngred.originalNumeratorNumber">
+                                    <span class="font11px">Numerator:
+                                      <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                        prodIngred.originalNumeratorUnit
+                                        }}
+                                      </b>
+                                    </span>
+                                  </span>
+                                </div>
+
+                                <!-- Original Denominator -->
+                                <div class="marginleft5px">
+                                  <span *ngIf="prodIngred.originalDenominatorNumber">
+                                    <span class="font11px">&nbsp;&nbsp;Denominator:
+                                      <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
+                                        prodIngred.originalDenominatorUnit
+                                        }}
+                                      </b>
+                                    </span>
+                                  </span>
+                                </div>
+                              </div> <!-- divflex -->
 
                               <!-- Display Ingredient Type -->
                               <div class="colorgreen" *ngIf="prodIngred.ingredientType">
@@ -804,52 +853,47 @@
                                   </button>
                                 </div>
 
-                                <!-- Show Average, Original Numerator, or Original Denominator -->
-                                <!--
-                              <div *ngIf="prodIngred.average || prodIngred.originalNumeratorNumber">
-                              <div *ngIf="prodIngred.average" title="Average: {{prodIngred.average}}&nbsp;{{prodIngred.unit}}">Amount2</div>
-                              -->
-                                <!--
-                              <div *ngIf="prodIngred.originalNumeratorNumber"
-                                matTooltip="Average: {{prodIngred.originalNumeratorNumber}}&nbsp;{{prodIngred.originalNumeratorUnit}}"
-                                matTooltipPosition="above">
-                              </div>
-                              </div>
-                              -->
-
                               </div> <!-- class=divflex -->
+
+                              <!-- Show Average -->
+                              <div *ngIf="prodIngred.average">
+                                <span class="font11px">Average:
+                                  <b>{{prodIngred.average}}&nbsp;{{prodIngred.unit}}
+                                  </b>
+                                </span>
+                              </div>
+
+                              <div class="divflex">
+                                <!-- Original Numerator -->
+                                <div>
+                                  <span *ngIf="prodIngred.originalNumeratorNumber">
+                                    <span class="font11px">Numerator:
+                                      <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                        prodIngred.originalNumeratorUnit
+                                        }}
+                                      </b>
+                                    </span>
+                                  </span>
+                                </div>
+
+                                <!-- Original Denominator -->
+                                <div class="marginleft5px">
+                                  <span *ngIf="prodIngred.originalDenominatorNumber">
+                                    <span class="font11px">&nbsp;&nbsp;Denominator:
+                                      <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
+                                        prodIngred.originalDenominatorUnit
+                                        }}
+                                      </b>
+                                    </span>
+                                  </span>
+                                </div>
+
+                              </div> <!-- divflex -->
 
                               <!-- Display Ingredient Type -->
                               <div class="colorgreen" *ngIf="prodIngred.ingredientType">
                                 ({{ prodIngred.ingredientType }})
                               </div>
-
-                              <!-- Display Ingredient Strength/Average and Unit -->
-                              <!--
-                            <span *ngIf="prodIngred.average">
-                              <br>
-                              Average: {{prodIngred.average}}
-                              <span *ngIf="prodIngred.unit">
-                                {{prodIngred.unit}}
-                              </span>
-                            </span>
-
-                            <span *ngIf="prodIngred.originalNumeratorNumber">
-                              <br>
-                              Original Numerator: {{prodIngred.originalNumeratorNumber}}
-                              <span *ngIf="prodIngred.originalNumeratorUnit">
-                                {{prodIngred.originalNumeratorUnit}}
-                              </span>
-                            </span>
-
-                            <span *ngIf="prodIngred.originalDenominatorNumber">
-                              <br>
-                              Original Denominator: {{prodIngred.originalDenominatorNumber}}
-                              <span *ngIf="prodIngred.originalDenominatorUnit">
-                                {{prodIngred.originalDenominatorUnit}}
-                              </span>
-                            </span>
-                            -->
 
                             </li>
 
@@ -860,7 +904,6 @@
                           (No Substance Name)
                         </ng-template>
                       </div> <!-- For Loop: otherIngredients List -->
-
 
                     </ol>
 

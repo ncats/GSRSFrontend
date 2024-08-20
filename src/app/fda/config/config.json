@@ -969,7 +969,6 @@
       ]
     },
     "applications": {
-
       "default": [
         "Application Type",
         "Center",
@@ -1039,8 +1038,8 @@
       "admin": [
         "Record Created By",
         "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited"
+        "root_creationDate",
+        "root_lastModifiedDate"
       ]
     },
     "ctclinicaltrial": {

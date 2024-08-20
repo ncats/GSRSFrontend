@@ -88,9 +88,10 @@ export class GeneralService extends BaseHttpService {
         if (results) {
           results.forEach((codeObj, index) => {
             if (codeObj) {
-
-              if ((codeObj.codeSystem) && ((codeObj.codeSystem === 'BDNUM') && (codeObj.type === 'PRIMARY'))) {
-                substanceKey = codeObj.code;
+              if ((codeObj.codeSystem) && (codeObj.codeSystem === 'BDNUM')) {
+                if (codeObj.type === 'PRIMARY') {
+                  substanceKey = codeObj.code;
+                }
               }
             }
           });

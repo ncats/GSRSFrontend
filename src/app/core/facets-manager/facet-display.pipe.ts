@@ -16,8 +16,6 @@ export class FacetDisplayPipe implements PipeTransform {
 	     codeTerm = this.configService.configData.approvalCodeName;
 	  }
 
-
-
     if (args) {
       if (args === 'userList') {
         if (name.includes(':')){
@@ -97,6 +95,12 @@ export class FacetDisplayPipe implements PipeTransform {
     }
     if (name === 'root_submitDate') {
       return 'Submit Date';
+    }
+    if (name === 'root_creationDate') {
+      return 'Record Create Date';
+    }
+    if (name === 'root_lastModifiedDate') {
+      return 'Record Last Edited';
     }
 
     return name.trim();

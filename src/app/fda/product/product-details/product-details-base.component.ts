@@ -353,7 +353,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '90%',
-      width: '680px',
+      width: '650px',
       panelClass: 'structure-image-panel',
       data: data
     });
@@ -361,10 +361,10 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     this.overlayContainer.style.zIndex = '1002';
 
     const subscription = dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = '1002';
+      this.overlayContainer.style.zIndex = null;
       subscription.unsubscribe();
     }, () => {
-      this.overlayContainer.style.zIndex = '1002';
+      this.overlayContainer.style.zIndex = null;
       subscription.unsubscribe();
     });
   }
