@@ -64,7 +64,7 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
         window['schemeUtil'].debug = false;
 
         window['schemeUtil'].maxContinuousSteps = 1;
-        window['schemeUtil'].maxTextLen = 19;
+        window['schemeUtil'].maxTextLen = 30;
         window['schemeUtil'].BREAK_GAP = 300;
         window['schemeUtil'].maxTitleTextLen = 100;
 
