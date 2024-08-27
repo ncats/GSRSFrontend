@@ -1423,6 +1423,7 @@ export class SubstanceFormService implements OnDestroy {
       });
     }
 
+    //TODO - recalculate sitesShorthand instead of deleting / determine when backend uses sitesShorthand over sites array
     if (this.privateSubstance.protein && this.privateSubstance.protein.disulfideLinks
       && this.privateSubstance.protein.disulfideLinks.length > 0) {
       for (let i = this.privateSubstance.protein.disulfideLinks.length -1; i >= 0; i--) {
