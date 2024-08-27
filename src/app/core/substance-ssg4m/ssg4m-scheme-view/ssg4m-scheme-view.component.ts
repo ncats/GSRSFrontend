@@ -3,17 +3,12 @@ import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { Environment } from 'src/environments/environment.model';
-import { ConfigService, LoadedComponents } from '@gsrs-core/config';
+import { ConfigService } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';
-import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
-import { SubstanceFormService } from '../../substance-form/substance-form.service';
+import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceFormSsg4mProcessService } from '../ssg4m-process/substance-form-ssg4m-process.service';
 import { SubstanceDetail, SpecifiedSubstanceG4mProcess, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { SubstanceSsg4mService } from '../substance-ssg4m-form.service';
-import * as htmlToImage from 'html-to-image';
-import domToImage from 'dom-to-image';
-import jsPDF from 'jspdf';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-ssg4m-scheme-view',
