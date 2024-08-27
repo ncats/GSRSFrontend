@@ -1436,20 +1436,20 @@ export class SubstanceFormService implements OnDestroy {
           this.privateSubstance.protein.disulfideLinks.splice(i, 1);
         }
       }
+    }
 
-      if (this.privateSubstance.nucleicAcid) {
-        if (this.privateSubstance.nucleicAcid.linkages && this.privateSubstance.nucleicAcid.linkages.length > 0) {
-          for (let i = this.privateSubstance.nucleicAcid.linkages.length-1; i >= 0; i--) {
-            if (this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand) {
-               delete this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand;
-            }
+    if (this.privateSubstance.nucleicAcid) {
+      if (this.privateSubstance.nucleicAcid.linkages && this.privateSubstance.nucleicAcid.linkages.length > 0) {
+        for (let i = this.privateSubstance.nucleicAcid.linkages.length -1; i >= 0; i--) {
+          if (this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand) {
+             delete this.privateSubstance.nucleicAcid.linkages[i].sitesShorthand;
           }
         }
-        if (this.privateSubstance.nucleicAcid.sugars && this.privateSubstance.nucleicAcid.sugars.length > 0) {
-          for (let i = this.privateSubstance.nucleicAcid.sugars.length-1; i >= 0; i--) {
-            if (this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand) {
-               delete this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand;
-            }
+      }
+      if (this.privateSubstance.nucleicAcid.sugars && this.privateSubstance.nucleicAcid.sugars.length > 0) {
+        for (let i = this.privateSubstance.nucleicAcid.sugars.length -1; i >= 0; i--) {
+          if (this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand) {
+             delete this.privateSubstance.nucleicAcid.sugars[i].sitesShorthand;
           }
         }
       }
