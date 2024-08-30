@@ -77,14 +77,14 @@
     "ts-loader": "4.5.0",
     "util": "0.12.4",
     "web-animations-js": "2.3.2",
-    "webpack": "^5.74.0",
+    "webpack": "^5.94.0",
     "webpack-sources": "^3.2.3",
     "xlsx": "^0.18.5",
     "z-schema": "4.2.2",
     "zone.js": "0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "13.3.11",
+    "@angular-devkit/build-angular": "18.2.2",
     "@angular-eslint/builder": "13.0.1",
     "@angular-eslint/eslint-plugin": "13.0.1",
     "@angular-eslint/eslint-plugin-template": "13.0.1",
