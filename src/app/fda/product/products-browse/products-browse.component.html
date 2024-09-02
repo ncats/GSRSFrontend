@@ -279,8 +279,9 @@
                             </span>
                           </span>
                           <!-- No Ingredient Type, Display Ingredient Name -->
+                          <!--
                           <ng-template #noIngredientType>
-                            <!-- if No Ingredient Type, but have Substance Name, display here. -->
+                            <!- - if No Ingredient Type, but have Substance Name, display here. - ->
                             <div *ngIf="prodIngred._ingredientName">
                               <li class="">
                                 <a [routerLink]="['/substances', prodIngred._substanceUuid]"
@@ -289,8 +290,7 @@
                               </li>
                             </div>
                           </ng-template>
-
-
+                          -->
                         </div> <!-- loop Ingredient -->
                       </div> <!-- loop Lot -->
                     </div> <!-- loop ManufactureItems -->

@@ -517,6 +517,11 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                       product._otherIngredients.push(elementIngred);
                     }
                   } // if Ingredient Type exists
+                  else {
+                    // if there is no Ingredient Type, add in Other
+                     // Store Ingredient in an Array
+                     product._otherIngredients.push(elementIngred);
+                  }
 
 
                   /*
