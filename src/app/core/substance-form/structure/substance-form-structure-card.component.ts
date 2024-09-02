@@ -47,6 +47,16 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   featuresOnly = false;
   hideFeaturesTable = false;
   structureEditSearch = true;
+  StructureFeaturePriority = [
+    'Category Score',
+    'Sum Of Scores',
+    'AI Limit (US)',
+    'Potency Category',
+    'Potency Score',
+    'type',
+    'Type',
+    'TYPE'
+  ];
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
@@ -76,6 +86,13 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
         this.configService.configData.structureEditSearch !== null)) {
       this.structureEditSearch = this.configService.configData.structureEditSearch;
     }
+
+    if (this.configService.configData && 
+      (this.configService.configData.StructureFeaturePriority !== undefined && 
+        this.configService.configData.StructureFeaturePriority !== null)) {
+      this.StructureFeaturePriority = this.configService.configData.StructureFeaturePriority;
+    }
+    
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
     }
@@ -185,15 +202,27 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     }
   }
 
+   featureSort(a: any, b: any): number {
+    const indexA = this.StructureFeaturePriority.indexOf(a.key);
+    const indexB =  this.StructureFeaturePriority.indexOf(b.key);
+  
+
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    } else if (indexA !== -1) {
+      return -1; // a comes first
+    } else if (indexB !== -1) {
+      return 1; // b comes first
+    } else {
+      return a.key.localeCompare(b.key);
+    }
+  }
+
   processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
       let customSort = (array: any[]): any[] => {
         return array.sort((a, b) => {
-          if (a.key === 'Category Score') return -1;
-          if (b.key === 'Category Score') return 1;
-          if (a.key === 'Sum Of Scores') return a.key === 'Category Score' ? 1 : -1;
-          if (b.key === 'Sum Of Scores') return b.key === 'Category Score' ? -1 : 1;
-          return a.key.localeCompare(b.key);
+          return this.featureSort(a, b);
         });
       };
 
@@ -218,6 +247,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
               }
               if(key === 'sumOfScores'){
                 label = 'Sum Of Scores';
+              }
+              if (key.toLowerCase() === 'type') {
+                label = 'Type';
               }
               temp.push({'key': label,'value': structurePostResponse.featureList[type][0][key] });
             });

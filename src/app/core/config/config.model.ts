@@ -82,6 +82,7 @@ export interface Config {
     useApprovalAPI?: boolean;
     dummyWhoami?: Auth;
     enableStructureFeatures?: boolean;
+    StructureFeaturePriority?: Array<string>;
     structureEditSearch?: boolean;
 }
 

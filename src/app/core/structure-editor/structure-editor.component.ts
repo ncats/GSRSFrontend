@@ -282,14 +282,13 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
      }
 
      this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
-
       this.structureEditor = 'ketcher';
      // this.editor = new EditorImplementation(this.ketcher, this.jsdraw, 'ketcher');
       this.editor = new EditorImplementation(this.ketcher);
       this.structureService.interpretStructure(Response).subscribe(resp => {
-        this.ketcher.setMolecule(resp.structure.molfile);
-        this.editorSwitched.emit(this.structureEditor);
         this.editorOnLoad.emit(this.editor);
+       this.editorSwitched.emit(this.structureEditor);
+       this.ketcher.setMolecule(resp.structure.molfile);
 
       });
       sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
