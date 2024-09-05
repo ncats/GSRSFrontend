@@ -6,7 +6,6 @@ import { Environment } from 'src/environments/environment.model';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
-import { SubstanceFormService } from '../../substance-form/substance-form.service';
 import { SubstanceFormSsg4mProcessService } from '../ssg4m-process/substance-form-ssg4m-process.service';
 import { SubstanceDetail, SpecifiedSubstanceG4mProcess, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { SubstanceSsg4mService } from '../substance-ssg4m-form.service';
