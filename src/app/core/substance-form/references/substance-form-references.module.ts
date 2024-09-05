@@ -12,6 +12,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import {ReferenceFormComponent} from "./reference-form.component";
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import {ReferenceFormComponent} from "./reference-form.component";
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    MatCheckboxModule
   ],
   exports:[
     ReferenceFormComponent,

@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SubstanceReference } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl, Validators } from '@angular/forms';
 import { ConfigService } from '../../config/config.service'
 import { UtilsService } from '../../utils/utils.service';
 import { SubstanceFormService } from '../substance-form.service';
@@ -153,6 +151,14 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.reference.citation = this.citationMapping[this.reference.docType];
     }
 
+  }
+
+  updatePublicDomain() {
+    if(this.reference && this.reference.publicDomain) {
+      this.reference.publicDomain = !this.reference.publicDomain;
+    } else {
+      this.reference.publicDomain = true;
+    }
   }
 
 }

@@ -47,6 +47,9 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('References');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.substanceFormReferencesService.domainsWithReferences.pipe(take(1)).subscribe(domainsWithReferences => {
+      this.domainsWithReferences = domainsWithReferences;
+    });
   }
 
   ngAfterViewInit() {

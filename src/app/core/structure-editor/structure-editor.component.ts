@@ -282,7 +282,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.editorSwitched.emit(this.structureEditor);
 
       if (this.firstload && this.structureEditor === 'ketcher' ) {
-        console.log('loadking ketcher');
         document.getElementById("root").style.display="";
           this.waitForKetcherFirstLoad();
           this.firstload = false;
@@ -299,7 +298,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.ketcher = window['ketcher'];
       this.ketcherLoaded = true;
 
-      console.log('ketcher loaded');
       this.editor = new EditorImplementation(this.ketcher);
       this.editorOnLoad.emit(this.editor);
       this.editorSwitched.emit(this.structureEditor);
