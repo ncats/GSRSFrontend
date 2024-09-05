@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { Environment } from 'src/environments/environment.model';
-import { ConfigService, LoadedComponents } from '@gsrs-core/config';
+import { ConfigService } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';
-import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceFormSsg4mProcessService } from '../ssg4m-process/substance-form-ssg4m-process.service';
 import { SubstanceDetail, SpecifiedSubstanceG4mProcess, SubstanceAmount } from '@gsrs-core/substance/substance.model';
 import { SubstanceSsg4mService } from '../substance-ssg4m-form.service';
@@ -31,6 +31,9 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
 
+  // For HTML TO PDF
+  @ViewChild('dataToExport', { static: false }) public dataToExport: ElementRef;
+
   constructor(
     private configService: ConfigService,
     private substanceFormSsg4mProcessService: SubstanceFormSsg4mProcessService,
@@ -55,6 +58,7 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
 
     // Get GSRS Frontend URL fron config
     this.getHomepageUrl();
+
   }
 
   ngOnDestroy(): void {
@@ -76,6 +80,90 @@ export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  /*
+  generateHtmlToPdf() {
+    var node = document.getElementById('divStepView');
+
+    htmlToImage.toPng(node)
+      .then(function (dataUrl) {
+        var img = new Image();
+        img.src = dataUrl;
+
+        var doc = new jsPDF('p', 'mm', 'a4');
+        const bufferX = 5;
+        const bufferY = 5;
+        const imgProps = (<any>doc).getImageProperties(img);
+        const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
+        doc.save('ssg4m_Print_' + new Date().toDateString());
+      })
+      .catch(function (error) {
+        console.error('oops, something went wrong!', error);
+      });
+
+
+    let pdfName = "ssg4mPdf";
+
+    const width = this.dataToExport.nativeElement.clientWidth;
+    const height = this.dataToExport.nativeElement.clientHeight + 40;
+    let orientation = '';
+    let imageUnit = 'pt';
+    if (width > height) {
+      orientation = 'l';
+    } else {
+      orientation = "p";
+    }
+    domToImage.toPng(this.dataToExport.nativeElement, { width: width, height: height }).then(result => {
+      //let jsPdfOptions = {'p', 'mm',  format: [width + 50, height + 220] };
+      const pdf = new jsPDF('p', 'pt', [width + 50, height + 220] );
+      pdf.setFontSize(48);
+      pdf.setTextColor('#2585fe');
+      pdf.text(pdfName ? pdfName.toUpperCase() : 'Untitled dashboard'.toUpperCase(), 25, 75);
+      pdf.setFontSize(24); pdf.setTextColor('#131523');
+      pdf.text('Report date: ' + moment().format('ll'), 25, 115);
+      pdf.addImage(result, 'PNG', 25, 185, width, height);
+      pdf.save('C:\Users\Archana.Newatia\Downloads\file_name' + '.pdf');
+    }).catch(error => { });
+
+  }
+
+  generateImage() {
+    var node = document.getElementById('divStepView');
+
+    // to Jpeg
+
+    htmlToImage.toJpeg(node, { quality: 0.95 })
+    .then(function (dataUrl) {
+      var img = new Image();
+      img.src = dataUrl;
+      document.body.appendChild(img);
+    })
+    .catch(function (error) {
+      console.error('oops, something went wrong!', error);
+    });
+
+
+    // to Png
+
+    htmlToImage.toPng(node)
+      .then(function (dataUrl) {
+        var img = new Image();
+        img.src = dataUrl;
+        document.body.appendChild(img);
+      })
+      .catch(function (error) {
+        console.error('oops, something went wrong!', error);
+      });
+
+
+    htmlToImage.toCanvas(node)
+      .then(function (canvas) {
+        document.body.appendChild(canvas);
+      });
+  }
+  */
 
   openImageModal(subUuid: string, approvalID: string, displayName: string): void {
     let data: any;

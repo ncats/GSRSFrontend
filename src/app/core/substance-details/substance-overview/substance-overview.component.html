@@ -1,55 +1,5 @@
 <div *ngIf="substance">
-  <div class='options-area'>
-    <a mat-icon-button [href]="oldUrl" target="_blank" *ngIf = "showlinks" matTooltip="view in old application"><span hidden>open in old
-        application in new tab</span>
-      <mat-icon svgIcon="open_in_new"></mat-icon>
-    </a>
-    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
-        <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
-        name="edit_record" aria-label="edit record">
-        <mat-icon svgIcon="edit"></mat-icon>
-      </a>
-</span>
-<span *ngIf="canEdit && (substance.$$source && substance.$$source == 'staging') ">
-    <a mat-icon-button [routerLink]="['/substances/register']"
-    [queryParams]="{stagingID : substance._metadata.recordId}"  matTooltip='edit record'
-    name="edit_record" aria-label="edit record">
-    <mat-icon svgIcon="edit"></mat-icon>
-  </a>
-</span>
-    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
-      <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"
-        *ngIf="isEditable; else editClassic" aria-label="copy file">
-        <mat-icon svgIcon="file_copy"></mat-icon>
-      </button>
-      <ng-template #editClassic *ngIf = "showlinks && (!substance.$$source || substance.$$source !== 'staging') ">
-        <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name="edit"
-          target="_blank">
-          <mat-icon svgIcon="edit"></mat-icon>
-        </a>
-      </ng-template>
-    </span>
-    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" aria-label="download file" matTooltip="download options" name="download">
-      <mat-icon svgIcon="get_app"></mat-icon>
-    </button>
-    <mat-menu #downloadMenu="matMenu" xPosition="before">
-      <a *ngIf="substance.uuid" name="download_json" mat-menu-item [href]="downloadJsonHref"
-        download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
-        <span>Download JSON</span>
-      </a>
-    </mat-menu>
-    <mat-menu #editMenu="matMenu" xPosition="before">
-      <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
-        [queryParams]="{copy:substance.uuid}" matTooltip='copy substance to new registration form'>
-        <mat-icon svgIcon="file_copy"></mat-icon>
-      </a>
-      <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
-        [queryParams]="{copy:substance.uuid,copyType:'definition'}"
-        matTooltip='copy definition to new registration form'>
-        <mat-icon svgIcon="outline-file_copy"></mat-icon>
-      </a>
-    </mat-menu>
-  </div>
+  
   <div class="extra-area" *ngIf="substance.definitionLevel &&  substance.definitionLevel !== 'COMPLETE'">
     <span class="definition-level">
       {{substance.definitionLevel}} DEFINITION
@@ -268,8 +218,59 @@
       </div>
     </div>
   </div>
+  <div class='options-area'>
+    <a mat-icon-button [href]="oldUrl" target="_blank" *ngIf = "showlinks" matTooltip="view in old application"><span hidden>open in old
+        application in new tab</span>
+      <mat-icon svgIcon="open_in_new"></mat-icon>
+    </a>
+    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
+        <a mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" matTooltip='edit record'
+        name="edit_record" aria-label="edit record">
+        <mat-icon svgIcon="edit"></mat-icon>
+      </a>
+</span>
+<span *ngIf="canEdit && (substance.$$source && substance.$$source == 'staging') ">
+    <a mat-icon-button [routerLink]="['/substances/register']"
+    [queryParams]="{stagingID : substance._metadata.recordId}"  matTooltip='edit record'
+    name="edit_record" aria-label="edit record">
+    <mat-icon svgIcon="edit"></mat-icon>
+  </a>
+</span>
+    <span *ngIf="canEdit && !(substance.$$source && substance.$$source == 'staging') ">
+      <button mat-icon-button [matMenuTriggerFor]="editMenu" name="edit_substance" matTooltip="copy to edit form options"
+        *ngIf="isEditable; else editClassic" aria-label="copy file">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+      <ng-template #editClassic *ngIf = "showlinks && (!substance.$$source || substance.$$source !== 'staging') ">
+        <a mat-icon-button [href]="baseDomain + clasicBaseHref + 'substance/' + substance.uuid + '/edit'" name="edit"
+          target="_blank">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+      </ng-template>
+    </span>
+    <button mat-icon-button [matMenuTriggerFor]="downloadMenu" aria-label="download file" matTooltip="download options" name="download">
+      <mat-icon svgIcon="get_app"></mat-icon>
+    </button>
+    <mat-menu #downloadMenu="matMenu" xPosition="before">
+      <a *ngIf="substance.uuid" name="download_json" mat-menu-item [href]="downloadJsonHref"
+        download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
+        <span>Download JSON</span>
+      </a>
+    </mat-menu>
+    <mat-menu #editMenu="matMenu" xPosition="before">
+      <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
+        [queryParams]="{copy:substance.uuid}" matTooltip='copy substance to new registration form'>
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </a>
+      <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
+        [queryParams]="{copy:substance.uuid,copyType:'definition'}"
+        matTooltip='copy definition to new registration form'>
+        <mat-icon svgIcon="outline-file_copy"></mat-icon>
+      </a>
+    </mat-menu>
+  </div>
 </div>
-<div class="name-value">
+<div class="name-value tags">
   <div class="name">Tags</div>
   <div class="value">
     <mat-chip-list #tagList aria-label="Tags" selectable="false">

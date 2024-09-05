@@ -85,7 +85,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
   }
 
   //sort dropdown based on config settings
-  //for example "CVDisplayOrder": {  "DOCUMENT_TYPE": ["IND", "NDA"], 
+  //for example "CVDisplayOrder": {  "DOCUMENT_TYPE": ["IND", "NDA"],
   sortFromConfig(vocab?: any) {
     if (!vocab) {
       vocab = this.vocabulary;

@@ -263,3 +263,7 @@ mat-select-panel {
   color: var(--link-color);
   height: 33px;
 }
+
+.mat-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button {
+  min-width: auto;
+}

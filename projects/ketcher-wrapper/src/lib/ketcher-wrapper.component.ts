@@ -10,6 +10,7 @@ import { Ketcher } from './ketcher.model';
 export class KetcherWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('ketcherFrame', { static: true }) ketcherFrame: { nativeElement: HTMLIFrameElement };
   @Output() ketcherOnLoad = new EventEmitter<any>();
+  randomId: string;
   safeKetcherFilePath: SafeUrl;
   @ViewChild('ketcherBody') kBod: ElementRef;
   @ViewChild('ketcherFrame') iframe: ElementRef;
@@ -18,11 +19,10 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private renderer: Renderer2
   ) {
-
+    this.randomId = Math.random().toString(36).replace('0.', '');
   }
 
   ngOnInit() {
-    
   
   }
 
@@ -35,8 +35,8 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
     });
         
     //  let doc = this.iframe.nativeElement.contentDocument || this.iframe.nativeElement.contentWindow;
-    };
-   // this.renderer.listen(window, 'blur', () => this.onWindowBlur());*/
+    };*/
+    this.renderer.listen(window, 'blur', () => this.onWindowBlur());
   }
 
 
@@ -49,5 +49,36 @@ export class KetcherWrapperComponent implements OnInit, AfterViewInit {
         }
     }, interval);
 }
+@HostListener('mouseover')
+private onIframeMouseOver() {
+  this.iframeMouseOver = true;
+  this.resetFocusOnWindow();
+}
 
+@HostListener('mouseout')
+private onIframeMouseOut() {
+  this.iframeMouseOver = false;
+  this.resetFocusOnWindow();
+}
+
+@HostListener('click')
+private onClick() {
+ // this.iframeMouseOver = false;
+ setTimeout(() => {
+  this.resetFocusOnWindow();
+ }, 100);
+}
+
+private onWindowBlur() {
+  if (this.iframeMouseOver) {
+    this.resetFocusOnWindow();
+  }
+}
+
+private resetFocusOnWindow() {
+  setTimeout(() => {
+   
+    window.focus();
+  }, 100);
+}
 }

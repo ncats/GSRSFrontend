@@ -1031,25 +1031,11 @@
                         <mat-icon svgIcon="edit"></mat-icon>
                       </div>
                       <div>
-                        <a [routerLink]="['/invitro-pharm/summary', testAgt.testAgentId, 'edit']" target="_blank"
+                        <a [routerLink]="['/invitro-pharm/summary', testAgt.testAgent, 'edit']" target="_blank"
                           *ngIf="isAdmin" matTooltip='Edit Assay Summary Record'>
                           <span class="font12px">Edit Summary Record</span>
                         </a>
                       </div>
-
-
-                      <!-- Edit SUMMARY Record -->
-                      <!--
-                      <div class="marginleft40px">
-                        <mat-icon svgIcon="edit"></mat-icon>
-                      </div>
-                      <div>
-                        <a [routerLink]="['/invitro-pharm/summary', testAgt.testAgentId, 'edit']" target="_blank"
-                          *ngIf="isAdmin" matTooltip='Edit Assay Summary Record'>
-                          <span class="font13px">Edit Summary Record</span>
-                        </a>
-                      </div>
-                      -->
 
                     </div>
                   </div>

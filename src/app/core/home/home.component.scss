@@ -1,3 +1,8 @@
+::ng-deep .mat-grid-tile-content {
+  align-items: normal !important;
+}
+
+
 .middle-content-container {
     display: flex;
     justify-content: center;
@@ -130,8 +135,7 @@
 .button-modal {
   justify-content: center;
   align-content: center;
-  height: 115px;
-  padding-top: 50px;
+  margin-top: 50px;
 }
 
 .modal-button {
@@ -339,6 +343,11 @@ mat-list-item {
 
 }
 
+.useful-cards {
+  max-width: 1240px;
+  margin:auto;
+}
+
 
 @media (max-width: 700px) {
   .label {
@@ -408,6 +417,8 @@ mat-sidenav {
   width: 365px;
 
 }
+
+
 
 
 

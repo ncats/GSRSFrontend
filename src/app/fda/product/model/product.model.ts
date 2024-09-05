@@ -11,7 +11,7 @@ export interface Product {
   status?: string;
   nonProprietaryName?: string;
   proprietaryName?: string;
-  pharmacedicalDosageForm?: string;
+  productContainer?: string;
   composeProductName?: string;
   releaseCharacteristic?: string;
   strengthCharacteristic?: string;
@@ -25,6 +25,8 @@ export interface Product {
   manufacturerName?: string;
   manufacturerCode?: string;
   manufacturerCodeType?: string;
+  effectiveDate?: string;
+  endDate?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;
@@ -264,39 +266,6 @@ export interface ProductIngredient {
   _basisOfStrengthActiveMoieties?: Array<String>;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
-}
-
-export interface ProductAll {
-  id?: number;
-  appTypeNumber?: string;
-  appType?: string;
-  appNumber?: string;
-  /*
-  source?: string;
-  publicDomain?: number;
-  productType?: string;
-  sourceType?: string;
-  unitPresentation?: string;
-  routeAdmin?: string;
-  status?: string;
-  nonProprietaryName?: string;
-  proprietaryName?: string;
-  pharmacedicalDosageForm?: string;
-  composeProductName?: string;
-  releaseCharacteristic?: string;
-  strengthCharacteristic?: string;
-  countryCode?: string;
-  language?: string;
-  createdBy?: string;
-  createDate?: number;
-  modifiedBy?: string;
-  modifyDate?: number;
-  internalVersion?: number;
-  productNameList?: Array<ProductName>;
-  productCodeList?: Array<ProductCode>;
-  productCompanyList?: Array<ProductCompany>;
-  productManufactureItems?: Array<ProductComponent>;
-  */
 }
 
 export interface ValidationResults {

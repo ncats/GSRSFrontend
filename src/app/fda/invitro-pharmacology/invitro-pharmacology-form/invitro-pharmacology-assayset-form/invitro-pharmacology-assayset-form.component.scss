@@ -316,8 +316,16 @@
   margin-top: -10px;
 }
 
+.margintop3px {
+  margin-top: 3px;
+}
+
 .margintop10px {
   margin-top: 10px;
+}
+
+.margintop20px {
+  margin-top: 20px;
 }
 
 .margintop12px {
@@ -362,6 +370,10 @@
 
 .marginleft30px {
   margin-left: 30px;
+}
+
+.marginleft50px {
+  margin-left: 50px;
 }
 
 .marginleft80px {
@@ -416,8 +428,16 @@
   width: 50px;
 }
 
+.width70px {
+  width: 70px;
+}
+
 .width100px {
   width: 100px;
+}
+
+.width120px {
+  width: 120px;
 }
 
 .width150px {
@@ -474,6 +494,10 @@
 
 .colorblue {
   color: var(--regular-blue-color);
+}
+
+.colormaroon {
+  color: var(--regular-maroon-color);
 }
 
 .font11px {

@@ -37,8 +37,30 @@
 
       align-content: flex-start;
       display: flex;
+      button {
+        margin-right:20px;
+      }
     }
   }
+
+  .feature-table {
+    display:block;
+    margin: auto;
+    width: 95%;
+  }
+
+  .feature-expansion {
+    width:100%; 
+    justify-content: center;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+  
+  tr.mat-row, tr.mat-footer-row {
+    height: 32px;
+}
 
   .SUCCESS {
     color: var(--success-green-color);
@@ -103,4 +125,10 @@
 
 .z-index {
   z-index: 9999 !important;
+}
+
+.superscript-icon {
+  height: 18px;
+  width: 18px;
+  vertical-align: top;
 }

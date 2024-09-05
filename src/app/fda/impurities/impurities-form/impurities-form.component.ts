@@ -31,6 +31,8 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 })
 export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
+  public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+
   isLoading = true;
   showSubmissionMessages = false;
   submissionMessage: string;
@@ -240,8 +242,116 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
             this.setValidationMessage('Substance Name (' + (index + 1) + ') is required');
           }
         }
-      });
-    }
+
+        elementSub.impuritiesTestList.forEach(elementTest => {
+
+          // if the elutionType value is not 'Isocratic' and there is data in Mobile Phase table,
+          // empty the list
+          if (elementTest.elutionType) {
+            if (elementTest.elutionType.toUpperCase() !== this.ELUTION_TYPE_ISOCRATIC) {
+              if (elementTest.impuritiesSolutionTableList) {
+                if (elementTest.impuritiesSolutionTableList.length > 0) {
+                  elementTest.impuritiesSolutionTableList = [];
+                }
+              }
+            }
+          }
+
+          elementTest.impuritiesSolutionTableList.forEach((solTable, indexSolTable) => {
+            if (solTable) {
+
+              // Each row should total to 100 %
+              let totalCount100percent: number = 0;
+
+              if (solTable.solutionTime) {
+                if (this.isNumber(solTable.solutionTime) === false) {
+                  this.setValidationMessage('Time (min) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                }
+              }
+              if (solTable.solutionAPercent) {
+                if (this.isNumber(solTable.solutionAPercent) === false) {
+                  this.setValidationMessage('Solution A (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionAPercent);
+                }
+              }
+              if (solTable.solutionBPercent) {
+                if (this.isNumber(solTable.solutionBPercent) === false) {
+                  this.setValidationMessage('Solution B (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionBPercent);
+                }
+              }
+              if (solTable.solutionCPercent) {
+                if (this.isNumber(solTable.solutionCPercent) === false) {
+                  this.setValidationMessage('Solution C (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionCPercent);
+                }
+              }
+              if (solTable.solutionDPercent) {
+                if (this.isNumber(solTable.solutionDPercent) === false) {
+                  this.setValidationMessage('Solution D (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionDPercent);
+                }
+              }
+              if (solTable.solutionEPercent) {
+                if (this.isNumber(solTable.solutionEPercent) === false) {
+                  this.setValidationMessage('Solution E (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionEPercent);
+                }
+              }
+              if (solTable.solutionFPercent) {
+                if (this.isNumber(solTable.solutionFPercent) === false) {
+                  this.setValidationMessage('Solution F (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                }
+                else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionFPercent);
+                }
+              }
+              if (solTable.solutionGPercent) {
+                if (this.isNumber(solTable.solutionGPercent) === false) {
+                  this.setValidationMessage('Solution G (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionGPercent);
+                }
+              }
+              if (solTable.solutionHPercent) {
+                if (this.isNumber(solTable.solutionHPercent) === false) {
+                  this.setValidationMessage('Solution H (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionHPercent);
+                }
+              }
+              if (solTable.solutionIPercent) {
+                if (this.isNumber(solTable.solutionIPercent) === false) {
+                  this.setValidationMessage('Solution I (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionIPercent);
+                }
+              }
+              if (solTable.solutionJPercent) {
+                if (this.isNumber(solTable.solutionJPercent) === false) {
+                  this.setValidationMessage('Solution J (%) should be number in Mobile Phase for row ' + (indexSolTable + 1));
+                } else {
+                  totalCount100percent = totalCount100percent + Number(solTable.solutionJPercent);
+                }
+              }
+
+              /*
+              if (totalCount100percent != 100) {
+                this.setValidationMessage('The sum of the % columns should be 100% in Mobile Phase for row ' + (indexSolTable + 1));
+              } */
+            }
+          }); // For Loop impuritiesSolutionTableList
+
+        }); // For Loop impuritiesTestList
+
+      }); // For Loop impuritiesSubstanceList
+    } // if impurities exists
+
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -384,10 +494,15 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   showJSON(): void {
+    const date = new Date();
+    let jsonFilename = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    let data = {jsonData: this.impurities, jsonFilename: jsonFilename};
+
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
       height: '90%',
-      data: this.impurities
+      data: data
     });
 
     //   this.overlayContainer.style.zIndex = '1002';
@@ -399,7 +514,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
     let json = this.impurities;
+
     // this.json = this.cleanObject(substanceCopy);
+
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
     this.downloadJsonHref = uri;
 
@@ -458,6 +575,15 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       // }
       // }
     });
+  }
+
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
   }
 
   scrub(oldraw: any): any {

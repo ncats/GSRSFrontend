@@ -126,7 +126,11 @@ const childRoutes: Routes = [
   {
     path: 'user-downloads/:id',
     component: UserDownloadsComponent
-  }
+  },
+  {
+    path: 'structure-features',
+    component: SubstanceFormComponent
+  },
 ];
 
 const routes: Routes = [

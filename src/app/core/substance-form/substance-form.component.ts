@@ -117,6 +117,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   approvalType = 'lastEditedBy';
   previousState: number;
   useApprovalAPI = false;
+    featuresOnly = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -292,6 +293,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
 
   ngOnInit() {
+    if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
+      this.featuresOnly = true;
+    }
     this.loadingService.setLoading(true);
     if (this.configService.configData && this.configService.configData.approvalType) {
       this.approvalType = this.configService.configData.approvalType;
@@ -539,7 +543,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                     }
                   }
                 }
-                setTimeout(() => {
+                  if (this.featuresOnly && this.formSections[index].dynamicComponentName !== 'substance-form-structure') {
+                this.formSections[index].isHidden = true;
+              }
+            setTimeout(() => {
                   this.loadingService.setLoading(false);
                   this.UNII = this.substanceFormService.getUNII();
                 }, 5);
@@ -1244,6 +1251,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.substanceFormService.bypassUpdateCheck();
       if (response === 'continue') {
         this.router.navigate(['/substances', this.id, 'edit']);
+        setTimeout(()=>{window.location.reload();},50);
       } else if (response === 'browse') {
         this.router.navigate(['/browse-substance']);
       } else if (response === 'staging') {

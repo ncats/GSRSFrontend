@@ -90,7 +90,7 @@ export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnI
 
   private addSequenceSectionsGroup(subunitSequence: SubunitSequence, squenceString: string = '', indexStart: number = 0) {
     const sequenceSectionLength = 50;
-    if (squenceString.length > (indexStart + 1)) {
+    if (squenceString.length >= (indexStart + 1)) {
       const sequenceSectionGroup: SequenceSectionGroup = {
         sequenceSections: []
       };

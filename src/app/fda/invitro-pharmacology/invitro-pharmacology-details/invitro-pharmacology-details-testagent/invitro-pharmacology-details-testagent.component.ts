@@ -293,6 +293,7 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
 
             if (screening.invitroSummary) {
 
+              assaySummary.summaryId = screening.invitroSummary.id;
               assaySummary.summaryTargetName = screening.invitroSummary.targetName;
               assaySummary.summaryTargetNameSubstanceKey = screening.invitroSummary.targetNameSubstanceKey;
 
@@ -331,32 +332,38 @@ export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {
               /* Invitro Test Agent Object exists */
               if (screening.invitroAssayResultInformation.invitroTestAgent) {
 
-                let testAgent = '';
-                let testAgentSubstanceKey = '';
+                if (screening.invitroAssayResultInformation.invitroTestAgent.testAgent) {
 
-                let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
-                testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
-                testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
+                  if (assaySummary.summaryId) {
 
-                assaySummary.testAgent = testAgent;
-                assaySummary.testAgentSubstanceKey = testAgentSubstanceKey;
+                    let testAgent = '';
+                    let testAgentSubstanceKey = '';
 
-                // Get the index if the value exists in the key 'testAgent'
-                const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
+                    let testAgentId = screening.invitroAssayResultInformation.invitroTestAgent.id;
+                    testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
+                    testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
 
-                if (indexTestAgent > -1) {
-                  // Add in the exsting card record
-                  this.allScreeningTestAgents[indexTestAgent].testAgentSummaryList.push(assaySummary);
-                } else {
-                  // Create new card record
-                  let assayList = [];
-                  assayList.push(assaySummary);
-                  const appScreening = {
-                    'testAgent': testAgent, 'testAgentSubstanceKey': testAgentSubstanceKey, 'testAgentId': testAgentId,
-                    'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList
-                  };
-                  this.allScreeningTestAgents.push(appScreening);
-                } // else
+                    assaySummary.testAgent = testAgent;
+                    assaySummary.testAgentSubstanceKey = testAgentSubstanceKey;
+
+                    // Get the index if the value exists in the key 'testAgent'
+                    const indexTestAgent = this.allScreeningTestAgents.findIndex(record => record.testAgent === testAgent);
+
+                    if (indexTestAgent > -1) {
+                      // Add in the exsting card record
+                      this.allScreeningTestAgents[indexTestAgent].testAgentSummaryList.push(assaySummary);
+                    } else {
+                      // Create new card record
+                      let assayList = [];
+                      assayList.push(assaySummary);
+                      const appScreening = {
+                        'testAgent': testAgent, 'testAgentSubstanceKey': testAgentSubstanceKey, 'testAgentId': testAgentId,
+                        'testAgentSummaryList': assayList, 'testAgentScreeningList': assayList
+                      };
+                      this.allScreeningTestAgents.push(appScreening);
+                    } // else
+                  } // if SummaryId exists
+                } // if testAgent exists
               } // if invitroTestAgent exists
 
             } //  if invitroAssayResultInformation exists

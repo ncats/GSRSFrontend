@@ -1,13 +1,37 @@
 <div>
   <div>
+    <div *ngIf = "featuresOnly">
+      <h4>Draw or import a structure using Ketcher. Then, if any features are detected a table will be automatically displayed under the editor.</h4>
+    </div>
     <div>
-      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)"   style="z-index: 9999">
+      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)" (editorSwitched) = "changeEditor($event)" style="z-index: 9999">
       </app-structure-editor>
     </div>
     <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">
       {{userMessage}}
     </div>
   </div>
+  <div class="button-row feature-table" *ngIf = "enableStructureFeatures && !hideFeaturesTable" >
+   <div class = "feature-expansion" *ngFor = "let feats of features">
+    <mat-expansion-panel expanded="true" >
+      <mat-expansion-panel-header>
+        <mat-panel-title> {{feats.label}} </mat-panel-title>
+      </mat-expansion-panel-header>
+      <table class = "full-width" mat-table [dataSource] = "feats.features">
+        <ng-container matColumnDef="key">
+          <th mat-header-cell  *matHeaderCellDef>Feature</th>
+          <td mat-cell *matCellDef="let element" >{{element.key}}</td>
+        </ng-container>
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>Value</th>
+          <td mat-cell *matCellDef="let element">{{element.value}}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-expansion-panel>
+    </div>
+   </div> 
   <div class="button-row" *ngIf="structure && substanceType === 'polymer'">
     <span class="middle-fill"></span>
     <span class="right-buttons">
@@ -32,7 +56,14 @@
         <mat-icon svgIcon="search"></mat-icon>
         Check for duplicates
       </button>
+      <button (click)="structureSearch()" matTooltip="open structure search in new tab" mat-button *ngIf = "structureEditSearch"
+        color="primary" class="dupe-check">
+        <mat-icon svgIcon="search"></mat-icon>
+        Structure Search
+        <mat-icon svgIcon="open_in_new" class = "superscript-icon"></mat-icon>
+      </button>
     </span>
+    
     <span class="middle-fill"></span>
     <span class="right-buttons">
       <button mat-button color="primary" matTooltip="Import options" [matMenuTriggerFor]="importMenu">

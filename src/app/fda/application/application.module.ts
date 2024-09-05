@@ -36,8 +36,6 @@ import { ApplicationDetailsBaseComponent } from './application-details/applicati
 import { ApplicationFormComponent } from './application-form/application-form.component';
 import { ApplicationProductFormComponent } from '../application/application-form/application-product-form/application-product-form.component';
 import { IngredientFormComponent } from './application-form/ingredient-form/ingredient-form.component';
-// import { JsonDialogFdaComponent } from '../json-dialog-fda/json-dialog-fda.component';
-// import { ConfirmDialogComponent } from './application-form/confirm-dialog/confirm-dialog.component';
 import { ApplicationService } from './service/application.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
@@ -45,7 +43,6 @@ import { SubstanceSearchSelectorModule } from '../substance-search-select/substa
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { JsonDialogFdaModule } from '../json-dialog-fda/json-dialog-fda.module';
 import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
-// import { CvInputComponent } from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { ApplicationTextSearchModule } from './application-text-search/application-text-search.module';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
@@ -53,8 +50,6 @@ import { CanActivateRegisterApplicationFormComponent } from './application-form/
 import { CanActivateUpdateApplicationFormComponent } from './application-form/can-activate-update-application-form.component';
 import { CanDeactivateApplicationFormComponent } from './application-form/can-deactivate-application-form.component';
 import { ApplicationLoadedComponent } from './application-loaded.component';
-
-// import { AppDateAdapter } from '../format-datepicker/format-datepicker';
 
 const applicationRoutes: Routes = [
   {

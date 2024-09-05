@@ -111,9 +111,17 @@ export interface ImpuritiesSolution {
 
 export interface ImpuritiesSolutionTable {
   id?: number;
-  solutionTime?: string;
-  solutionAPercent?: string;
-  solutionBPercent?: string;
+  solutionTime?: number;
+  solutionAPercent?: number;
+  solutionBPercent?: number;
+  solutionCPercent?: number;
+  solutionDPercent?: number;
+  solutionEPercent?: number;
+  solutionFPercent?: number;
+  solutionGPercent?: number;
+  solutionHPercent?: number;
+  solutionIPercent?: number;
+  solutionJPercent?: number;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

@@ -18,6 +18,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { productSearchSortValues } from '../../product/products-browse/product-search-sort-values';
+import { StringDecoder } from 'string_decoder';
 
 @Component({
   selector: 'app-substance-products',
@@ -40,7 +41,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   invitroPharmScreeningCount = 0;
   invitroPharmSummaryCount = 0;
   provenance = '';
-  provenanceList = '';
+  provenanceList: Array<string> = [];
   datasourceList = '';
   loadingStatus = '';
   showSpinner = false;
@@ -48,16 +49,22 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   foundProvenanceList = false;
   loadingComplete = false;
   substanceName = '';
+  substanceUuid = '';
+  approvalId = '';
   loadedComponents: LoadedComponents;
+  products: any;
 
   // Search variables
-  public privateSearchBase = 'root_productManufactureItems_productLots_productIngredients_substanceKey:';
+  ascDescDir = 'asc';
+  //order = '$root_productProvenances_productCodes_productCode';
+  order = '^Product Code';
+  public provenanceSearchBase = 'root_productProvenances_provenance:';
+  public privateSearchBase = 'entity_link_substances:';
+  //public privateSearchBase = 'root_productManufactureItems_productLots_productIngredients_substanceKey:';
   public privateSearch?: string;
   public privateSearchTerm?: string;
   private privateFacetParams: FacetParam;
   public sortValues = productSearchSortValues;
-  order = '$root_productNDC';
-  ascDescDir = 'desc';
 
   // Export variables
   privateExport = false;
@@ -66,7 +73,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   etagAllExport = '';
 
   public displayedColumns: string[] = [
-    'productNDC',
+    'productCode',
     'productName',
     'labelerName',
     'country',
@@ -95,16 +102,21 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     });
 
     if (this.substance && this.substance.uuid) {
+
+      // Get Substance UUID and Approval ID
+      this.substanceUuid = this.substance.uuid;
+      this.approvalId = this.substance.approvalID;
+
+      // Get Bdnum for this substance
       this.getSubstanceKey();
 
-      // Get Provenance List to Display in Tab
-      this.getProductProvenanceList();
+      // Use Substance UUID
+      this.privateSearch = this.privateSearchBase + '\"' + this.substanceUuid + '\"';
 
-      // Commenting out after removing productsall
-      //this.privateSearch = 'root_productIngredientAllList_substanceUuid:\"' + this.substance.uuid + '"';
-      this.privateSearch = this.privateSearchBase + '\"' + this.bdnum + '\"';
+      // Search Product
       this.getSubstanceProducts(null, 'initial');
-    }
+
+    } // if substance exists
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
   }
@@ -157,6 +169,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
 
   getSubstanceKey() {
+    // Get Bdnum for this substance
     if (this.substance) {
       // Get Substance Name
       this.substanceName = this.substance._name;
@@ -173,6 +186,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   }
 
   getProductProvenanceList(): void {
+
     this.productService.getProductProvenanceList(this.bdnum).subscribe(results => {
       this.provenanceList = results;
       if (this.provenanceList && this.provenanceList.length > 0) {
@@ -195,10 +209,31 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
       this.privateFacetParams
     ).subscribe(pagingResponse => {
       if (searchType && searchType === 'initial') {
+        // Need this to export all the Products, and not by provenance tab
         this.etagAllExport = pagingResponse.etag;
-      } else {
+
+        // Get the provenance lists from the "Provenance" facet
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          let facets = pagingResponse.facets;
+
+          facets.forEach(facet => {
+            if (facet) {
+              if (facet.name === 'Provenance') {
+                let values = facet.values;
+                values.forEach(value => {
+                  if (value && value.label) {
+                    this.provenanceList.push(value.label);
+                  }
+                })
+              }
+            }
+          });
+        } // if facets exists
+
+      } else { // search product by Provenance for the tab selected on the page
         this.productService.totalRecords = pagingResponse.total;
         this.setResultData(pagingResponse.content);
+        this.products = pagingResponse.content;
         this.productCount = pagingResponse.total;
         this.etag = pagingResponse.etag;
       }
@@ -266,7 +301,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
         this.paged = [];
 
         // Set criterial and search Product based on Substance Key and Provenance
-        this.privateSearch = this.privateSearchBase + '\"' + this.bdnum + '\" AND root_productProvenances_provenance:' + this.provenance;
+        this.privateSearch = this.privateSearchBase + '\"' + this.substance.uuid + '\" AND ' + this.provenanceSearchBase + this.provenance;
 
         // Search Product
         this.getSubstanceProducts();
@@ -279,14 +314,15 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     if (sort.active) {
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
-      this.sortValues.forEach(sortValue => {
-        if (sortValue.displayedColumns && sortValue.direction) {
-          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
-            this.order = sortValue.value;
+        this.sortValues.forEach(sortValue => {
+          if (sortValue.displayedColumns && sortValue.direction) {
+            if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+              this.order = sortValue.value;
+            }
           }
-        }
-      });
-      this.getSubstanceProducts();
+        });
+
+        this.getSubstanceProducts();
     }
     return;
   }

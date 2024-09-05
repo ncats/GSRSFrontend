@@ -1,7 +1,7 @@
 import { Ketcher } from 'ketcher-wrapper';
 import { JSDraw } from 'jsdraw-wrapper';
 import { Editor } from './structure.editor.model';
-import { Observable, from, pipe, take } from 'rxjs';
+import { Observable, from, pipe, switchMap, take } from 'rxjs';
 
 export class EditorImplementation implements Editor {
     private ketcher?: Ketcher;
@@ -55,31 +55,13 @@ export class EditorImplementation implements Editor {
     
 
     getMolfile(): Observable<any> {
-        console.log('getting molfile');
         return new Observable<any>(observer => {
         if (this.ketcher && this.ketcher != null) {
-            from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { 
-                console.log(result);
+            this.ketcher.getMolfile().then(result => { 
                 let mfile = result;
-                mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
-                const chargeLine = this.getMCharge();
-
-            if (mfile.indexOf('M  CHG') < 0) {
-                if (chargeLine !== null) {
-                    const lines = mfile.split('\n');
-                    for (let i = lines.length - 1; i >= 3; i--) {
-                        if (lines[i] === 'M  END') {
-                            const old = lines[i];
-                            lines[i] = chargeLine;
-                            lines[i + 1] = old;
-                            mfile = lines.join('\n');
-                            break;
-                        }
-                    }
-                }
                 
                 observer.next(mfile);
-            }
+            
         });
             
            
@@ -114,8 +96,7 @@ export class EditorImplementation implements Editor {
 
     getSmiles(): Observable<string> {
         if (this.ketcher != null) {
-            from(this.ketcher.getSmiles()).pipe(take(1)).subscribe(result => { console.log(result);
-                return result;});
+        return from(this.ketcher.getSmiles());
         } else if (this.jsdraw != null) {
             return new Observable<string>(observer => {
                 observer.next(this.jsdraw.getSmiles());
@@ -162,6 +143,7 @@ export class EditorImplementation implements Editor {
     setMolecule(molfile: string): void {
         if (this.ketcher && this.ketcher != null) {
             this.ketcher.setMolecule(molfile);
+            this.ketcher.setMolecule(molfile);
         } else if (this.jsdraw && this.jsdraw != null) {
             // from simple tests, this should push the current molecule down
             // on the undo stack.
@@ -180,21 +162,19 @@ export class EditorImplementation implements Editor {
                     });
                 };
             } else if (this.ketcher != null) {
-              /*  disabled - keeping ketcher changes processed in the editor component to prevent async structure issues when switching
               this.ketcher.editor.subscribe('change',  operations => { 
-                    console.log(operations)
                     if(!(operations.length == 1 && operations[0].operation == 'Load canvas')){
-                        console.log('not a new load');
-                        from(this.ketcher.getMolfile()).pipe(take(1)).subscribe(result => { console.log(result);
+                        this.ketcher.getMolfile().then(result => { 
                             observer.next(result);
                         });
                     } else {
-                        console.log(this.tempMol)
-                        observer.next(this.tempMol);
+                        this.getMolfile().pipe(take(1)).subscribe(result => { 
+                            observer.next(result);
+                        });
                     }
                     
                     
-                 });*/
+                 });
                 
             }
             else {

@@ -196,6 +196,7 @@ export interface InvitroTestAgent {
   testAgentCompanyCode?: string;
   testAgent?: string;
   testAgentApprovalId?: string;
+  testAgentSubstanceUuid?: string;
   testAgentSubstanceKey?: string;
   testAgentSubstanceKeyType?: string;
   testAgentSmileString?: string;
@@ -218,8 +219,8 @@ export interface InvitroAssayResult {
   resultValueUnits?: string;
   ligandSubstrateConcentration?: number;
   ligandSubstrateConcentrationUnits?: string;
-  plasmaProteinAdded?: string;
-  plasmaProtein?: string;
+  plasmaProteinAdded?: boolean;
+  protein?: string;
   plasmaProteinConcentration?: number;
   plasmaProteinConcentrationUnits?: string;
   batchNumber?: string;

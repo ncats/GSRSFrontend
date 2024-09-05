@@ -1,3 +1,5 @@
+import { Auth } from "@gsrs-core/auth";
+
 export interface Config {
     apiBaseUrl?: string;
     gsrsHomeBaseUrl?: string;
@@ -77,7 +79,12 @@ export interface Config {
     nameFormPageSizeOptions?: Array<number>;
     nameFormPageSizeDefault?: number;
     jsdrawLicense?: boolean;
+    disableKetcher?: boolean;
     useApprovalAPI?: boolean;
+    dummyWhoami?: Auth;
+    enableStructureFeatures?: boolean;
+    StructureFeaturePriority?: Array<string>;
+    structureEditSearch?: boolean;
 }
 
 export interface StagingAreaSettings {

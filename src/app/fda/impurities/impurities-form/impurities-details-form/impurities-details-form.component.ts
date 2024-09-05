@@ -13,6 +13,8 @@ import { Impurities, ImpuritiesDetails, IdentityCriteria, SubRelationship } from
 })
 export class ImpuritiesDetailsFormComponent implements OnInit {
 
+  public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+
   @Input() impuritiesDetails: ImpuritiesDetails;
   @Input() impuritiesDetailsIndex: number;
   @Input() impuritiesTestIndex: number;

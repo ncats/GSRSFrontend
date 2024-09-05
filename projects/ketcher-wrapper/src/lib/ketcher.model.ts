@@ -6,7 +6,7 @@ export interface Ketcher {
     editor?: any;
     getSmiles: () => string;
     saveSmiles: () => Promise<any>;
-    getMolfile: () => string;
+    getMolfile: () => any;
     setMolecule: (molString: any) => void;
     addFragment: (molString: any) => void;
     showMolfile: (clientArea: any, molString: any, options: any) => any;
