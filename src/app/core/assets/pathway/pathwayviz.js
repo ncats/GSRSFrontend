@@ -53,7 +53,7 @@ schemeUtil.showReagents=true;
 schemeUtil.showReagentsRoles=false;
 schemeUtil.approvalCode="UNII";
 schemeUtil.width=1100;
-schemeUtil.height=2000;
+schemeUtil.height=600;
 schemeUtil.maxTextLen=19;
 schemeUtil.maxTitleTextLen=50;
 schemeUtil.showProcessNames=true;
@@ -138,6 +138,7 @@ schemeUtil.makeMaterialNode = function(smat, pidArr){
    }
    return nn;
 };
+var totalSteps = 0; // this is to get the total number of steps from each process
 schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
   if(!maxSteps)maxSteps = schemeUtil.maxContinuousSteps;
   if(!showReagents)showReagents = schemeUtil.showReagents;
@@ -160,7 +161,7 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
   
   var lax=schemeUtil.getGapAxis();
   var oax=schemeUtil.getOtherGapAxis();
-  
+  totalSteps = 0;// reinitializing the steps
   for (var i = 0; i < g4.specifiedSubstanceG4m.process.length; i++) {
     var p = g4.specifiedSubstanceG4m.process[i];
     var processName = p.processName.trim();
@@ -174,6 +175,7 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
 	var maxReagents=0;
     var addedNodes=[];
 	var arrows=[];
+    totalSteps = totalSteps + stg.length;
     for (ii = 0; ii < stg.length; ii++) {
 	  maxReagents=Math.max(stg[ii].startingMaterials.length,maxReagents);
 	  maxReagents=Math.max(stg[ii].resultingMaterials.length,maxReagents);
@@ -599,7 +601,7 @@ schemeUtil.renderScheme=function(nn2, selector, iter, ddx, ddy) {
     return n.y - hh / 2  + pad + dy;
   };
   d3.select(selector).select('svg').remove();
-
+  height=schemeUtil.height * totalSteps;
   var d3cola = cola.d3adaptor(d3)
                    .avoidOverlaps(true)
                    .size([width, height]);
