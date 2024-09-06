@@ -55,8 +55,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
       }
     });
     this.substanceFormReferencesService.emitReferencesUpdate();
-
-
   }
 
   applyToAllWithoutRef(): void {
@@ -108,7 +106,6 @@ export class ApplyReferenceComponent implements OnInit, OnDestroy {
         }
       }
     });
-
     }
 
   applyToAllDomainWithoutRef(domainKey: string): void {

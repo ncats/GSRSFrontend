@@ -1,41 +1,38 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubstanceFormReferencesCardComponent } from './substance-form-references-card.component';
+import { SubstanceFormSimplifiedCodesCardComponent } from './substance-form-simplified-codes-card.component';
 import { DynamicComponentLoaderModule } from '@gsrs-core/dynamic-component-loader';
 import { SubstanceFormModule } from '../substance-form.module';
 import { MatDividerModule } from '@angular/material/divider';
-import { ScrollToModule } from '@gsrs-core/scroll-to';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { ScrollToModule } from '@gsrs-core/scroll-to';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import {ReferenceFormComponent} from "./reference-form.component";
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CodeFormComponent } from './code-form.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
     CommonModule,
-    DynamicComponentLoaderModule.forChild(SubstanceFormReferencesCardComponent),
+    DynamicComponentLoaderModule.forChild(SubstanceFormSimplifiedCodesCardComponent),
     SubstanceFormModule,
     MatDividerModule,
-    ScrollToModule,
     MatIconModule,
     MatButtonModule,
+    ScrollToModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     FormsModule,
     MatPaginatorModule,
     MatInputModule,
-    MatCheckboxModule
-  ],
-  exports:[
-    ReferenceFormComponent,
+    MatTooltipModule
   ],
   declarations: [
-    SubstanceFormReferencesCardComponent,
-    ReferenceFormComponent
+    SubstanceFormSimplifiedCodesCardComponent,
+    CodeFormComponent
   ]
 })
-export class SubstanceFormReferencesModule { }
+export class SubstanceFormSimplifiedCodesModule { }

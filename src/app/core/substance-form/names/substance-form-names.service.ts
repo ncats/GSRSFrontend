@@ -57,12 +57,15 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
     return this.propertyEmitter.asObservable();
   }
 
-  addSubstanceName(): void {
-    const newName: SubstanceName = {
-      references: [],
-      access: []
-    };
-    this.substance.names.unshift(newName);
+  addSubstanceName(name?:SubstanceName): void {
+    if (name == undefined) {
+      name = {
+        references: [],
+        access: [],
+      };
+    }
+
+    this.substance.names.unshift(name);
     this.propertyEmitter.next(this.substance.names);
   }
 
