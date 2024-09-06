@@ -60,7 +60,7 @@ schemeUtil.showProcessNames=true;
 schemeUtil.reactionWidth=96;
 schemeUtil.reactionHeight=64;
 schemeUtil.nodeSpacing=250;
-schemeUtil.BREAK_GAP=100; //TODO MAKE DYNAMIC
+schemeUtil.BREAK_GAP=50; //TODO MAKE DYNAMIC
 schemeUtil.PLUS_GAP=30; //TODO MAKE DYNAMIC
 schemeUtil.titleFontSize="1.6em";
 schemeUtil.highlightColor="#429ecc";
@@ -355,7 +355,7 @@ schemeUtil.makeDisplayGraph = function(g4, maxSteps, showReagents) {
 		var gapPer= schemeUtil.defaultImgSize+schemeUtil.expectedImgPadding;
 		
 
-		var gapDist = gapPer*mR1*0.5 +  gapPer*mR2*0.5 +schemeUtil.BREAK_GAP ;
+		var gapDist = gapPer*mR1*0.3 +  gapPer*mR2*0.3 +schemeUtil.BREAK_GAP ;
         for(var ll=0;ll<nlist1.length;ll++){
             for(var mm=0;mm<nlist2.length;mm++){
                 var con={"axis":lax, "left":nlist1[ll], "right":nlist2[mm], "gap":gapDist};
