@@ -13,6 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import {ReferenceFormComponent} from "./reference-form.component";
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { RefernceFormDialogComponent } from './references-dialogs/refernce-form-dialog.component';
 
 @NgModule({
   imports: [
@@ -28,14 +29,18 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FormsModule,
     MatPaginatorModule,
     MatInputModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    
   ],
   exports:[
     ReferenceFormComponent,
+    RefernceFormDialogComponent,
+
   ],
   declarations: [
     SubstanceFormReferencesCardComponent,
-    ReferenceFormComponent
+    ReferenceFormComponent,
+    RefernceFormDialogComponent
   ]
 })
 export class SubstanceFormReferencesModule { }
