@@ -85,6 +85,7 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
 import { MatSortModule } from '@angular/material/sort';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ReferenceFormComponent } from './references/reference-form.component';
 
 @NgModule({
   imports: [
@@ -128,7 +129,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     AccessManagerComponent,
     TagSelectorComponent,
     DomainReferencesComponent,
-    RefernceFormDialogComponent,
     PreviousReferencesComponent,
     ReuseReferencesDialogComponent,
     StructureFormComponent,
@@ -153,14 +153,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent,
+    SubstanceDraftsComponent
   ],
   exports: [
     SubstanceFormComponent,
     AccessManagerComponent,
     DomainReferencesComponent,
     PreviousReferencesComponent,
-    RefernceFormDialogComponent,
     ReuseReferencesDialogComponent,
     StructureFormComponent,
     AmountFormComponent,
