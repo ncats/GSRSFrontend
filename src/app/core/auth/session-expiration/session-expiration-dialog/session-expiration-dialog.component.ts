@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
 import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
 import { AuthService } from '@gsrs-core/auth';
-import {concatMap} from "rxjs";
+import { concatMap } from "rxjs"
 
 @Component({
   selector: 'app-session-expiration-dialog',
