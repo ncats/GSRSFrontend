@@ -1,9 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
-import { AnyNsRecord } from 'dns';
+import { SessionExpirationWarning } from '@gsrs-core/config';
+import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-session-expiration-dialog',
@@ -49,11 +48,10 @@ export class SessionExpirationDialogComponent implements OnInit {
 
     if (this.timeRemainingSeconds > 0) {
       const remainingMinutes = Math.floor(this.timeRemainingSeconds / 60);
-      const reminaingSeconds = String(this.timeRemainingSeconds % 60).padStart(2, '0');
+      const remainingSeconds = String(this.timeRemainingSeconds % 60).padStart(2, '0');
       this.dialogTitle = "Session Ending Soon"
-      this.dialogMessage = `You will be logged out in ${remainingMinutes}:${reminaingSeconds}`
-    }
-    else {
+      this.dialogMessage = `You will be logged out in ${remainingMinutes}:${remainingSeconds}`
+    } else {
       this.dialogTitle = "Session Ended"
       this.dialogMessage = "Your session has expired, please login again."
     }

@@ -1,12 +1,12 @@
-import { Router, Event as NavigationEvent, NavigationStart } from '@angular/router';
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
 import { AuthService } from '../auth.service';
 import { SessionExpirationDialogComponent } from './session-expiration-dialog/session-expiration-dialog.component'
-import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from "@gsrs-core/utils";
 
 @Component({
   selector: 'app-session-expiration',
@@ -16,8 +16,13 @@ export class SessionExpirationComponent implements OnInit {
   sessionExpirationWarning: SessionExpirationWarning = null;
   sessionExpiringAt: number;
   private overlayContainer: HTMLElement;
-  private subscriptions: Array<Subscription> = [];
-  private expirationTimer: any;
+  private refreshInterval: any;
+  private activityRefreshInterval: any;
+  private userActive: boolean = false;
+  private baseHref: string = '/ginas/app/';
+
+  private static instance?: SessionExpirationComponent = undefined;
+  private static sessionExpirationCheckInterval = null;
 
   constructor(
     private router: Router,
@@ -25,72 +30,118 @@ export class SessionExpirationComponent implements OnInit {
     private authService: AuthService,
     private http: HttpClient,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private utilsService: UtilsService
   ) {
+    if (SessionExpirationComponent.instance !== undefined) {
+      return SessionExpirationComponent.instance;
+    }
     this.sessionExpirationWarning = configService.configData.sessionExpirationWarning;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngOnInit() {
-    // If SessionExpirationWarning is not found in configData, the intervals are never set
-    // and this component is inert
-    const authSubscription = this.authService.getAuth().subscribe(auth => {
-      if (this.sessionExpirationWarning) {
-        if (auth) {
-          this.resetExpirationTimer();
-        }
-        else {
-          // User has logged out while timeout is active
-          this.clearExpirationTimer();
-        }
-      }
-    });
-    this.subscriptions.push(authSubscription);
+    if (SessionExpirationComponent.instance !== undefined) {
+      return;
+    }
+    SessionExpirationComponent.instance = this;
 
-    // This component seems to be destroyed and recreated on route change, so maybe
-    // the following isn't necessary:
-    // const routerSubscription = this.router.events.subscribe((event: NavigationEvent) => {
-    //   if (event instanceof NavigationStart && this.expirationTimer) {
-    //     this.extendSession();
-    //   }
-    // });
-    // this.subscriptions.push(routerSubscription);
+    const homeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || null;
+    if (homeBaseUrl) {
+      this.baseHref = homeBaseUrl;
+    }
+
+    this.startSessionTimeoutInterval();
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
+  setup() {
+    this.configService.afterLoad().then(cd => {
+      // If enabled in config file, this functionality periodically checks whether there was a user activity (mouse or keyboard) or not
+      // In case there was some activity, the session is refreshed (otherwise the session is not refreshed and may eventually expire)
+      if (this.configService.configData.sessionRefreshOnActiveUser) {
+        const page = document.getElementsByTagName('body')[0];
+        page.addEventListener('mousemove', (e) => {
+          if (e instanceof MouseEvent) {
+            this.userActive = true;
+          }
+        });
+        page.addEventListener('keydown', (e) => {
+          if (e instanceof KeyboardEvent) {
+            this.userActive = true;
+          }
+        });
+        clearInterval(this.activityRefreshInterval);
+        this.activityRefreshInterval = setInterval(() => {
+          if (this.userActive) {
+            this.refreshSession();
+            this.userActive = false;
+          }
+        }, 10000);
+      }
+
+      if (!this.configService.configData.disableSessionAutoRefresh) {
+        clearInterval(this.refreshInterval);
+        this.refreshInterval = setInterval(() => {
+          this.refreshSession();
+        }, 600000);
+      }
     });
-    this.clearExpirationTimer();
+  }
+
+  refreshSession(): any {
+    fetch(`${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}`)
+  }
+
+  startSessionTimeoutInterval() {
+    this.authService.getAuth().subscribe(auth => {
+      if (auth != null && this.refreshInterval == null) {
+        this.setup();
+      } else if (auth === null) {
+        clearInterval(this.refreshInterval);
+        this.refreshInterval = null;
+      }
+    });
+
+    clearInterval(SessionExpirationComponent.sessionExpirationCheckInterval);
+    SessionExpirationComponent.sessionExpirationCheckInterval = setInterval(() => {
+      this.sessionExpiringAt = this.getSessionExpiredAt();
+      const currentTime = this.getCurrentTime();
+      const sessionTtl = this.sessionExpiringAt - currentTime;
+      // If session is about to expire in less than 60 seconds, show dialog window
+      if (sessionTtl > 0 && sessionTtl < 60) {
+        if (!this.isDialogOpened()) {
+          this.openDialog();
+        }
+        // Do not automatically (mouse/keyboard event) extend session when the dialog is opened
+        clearInterval(this.activityRefreshInterval);
+      } else if (this.sessionExpiringAt !== null && sessionTtl > 0) {
+        // The session was externally extended (eg. in pfda) -> close the session dialog
+        if (this.isDialogOpened()) {
+          this.dialog.closeAll();
+        }
+      }
+    }, 5000)
+  }
+
+  private getCookie(name: string) {
+    const cookieArr = document.cookie.split(';')
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookiePair = cookieArr[i].split('=')
+      if (name === cookiePair[0].trim()) {
+        return decodeURIComponent(cookiePair[1])
+      }
+    }
+    return null
+  }
+
+  private getSessionExpiredAt() {
+    const cookie = this.getCookie('sessionExpiredAt')
+    if (!cookie) return null
+    return parseInt(cookie)
   }
 
   getCurrentTime() {
     return Math.floor((new Date()).getTime() / 1000);
-  }
-
-  clearExpirationTimer() {
-    if (this.expirationTimer) {
-      clearTimeout(this.expirationTimer);
-      this.expirationTimer = null;
-    }
-  }
-
-  resetExpirationTimer() {
-    this.clearExpirationTimer();
-
-    const currentTime = this.getCurrentTime()
-    this.sessionExpiringAt = currentTime + this.sessionExpirationWarning.maxSessionDurationMinutes * 60;
-
-    const timeRemainingSeconds = this.sessionExpiringAt - currentTime;
-    const timeBeforeDisplayingDialogMs = (timeRemainingSeconds - 61) * 1000;
-    if (timeBeforeDisplayingDialogMs > 0) {
-      this.expirationTimer = setTimeout( () => {
-        this.openDialog();
-      }, timeBeforeDisplayingDialogMs);
-    }
-    else {
-      this.login();
-    }
   }
 
   openDialog() {
@@ -104,27 +155,17 @@ export class SessionExpirationComponent implements OnInit {
       disableClose: true
     });
     this.overlayContainer.style.zIndex = '1501';
-    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    dialogRef.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
-      if (response) {
-        // Session was extended
-        this.resetExpirationTimer();
-      }
+      this.startSessionTimeoutInterval();
     });
-  }
-
-  extendSession() {
-    const url = this.sessionExpirationWarning.extendSessionApiUrl;
-    this.http.get(url).subscribe(
-      data => {
-        this.resetExpirationTimer();
-      },
-      err => { console.log("Error extending session: ", err) },
-      () => { }
-    );
   }
 
   login() {
     window.location.assign('/login');
+  }
+
+  isDialogOpened(): boolean {
+    return this.dialog.openDialogs.length > 0;
   }
 }

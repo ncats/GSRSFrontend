@@ -27,7 +27,6 @@ import { SubstanceApplicationMatchListComponent} from './substance-browse/substa
 import { ApplicationsBrowseComponent } from './application/applications-browse/applications-browse.component';
 import { ClinicalTrialsBrowseComponent } from './clinical-trials/clinical-trials-browse/clinical-trials-browse.component';
 import { fdaSubstanceCardsFilters } from './substance-details/fda-substance-cards-filters.constant';
-import { SsoRefreshService } from './service/sso-refresh.service';
 import { ProductService } from './product/service/product.service';
 import { GeneralService} from './service/general.service';
 import { ShowApplicationToggleComponent } from './substance-browse/show-application-toggle/show-application-toggle.component';
@@ -56,12 +55,6 @@ const fdaRoutes: Routes = [
     component: JiraSubmitTicketComponent
   }
 ];
-
-export function init_sso_refresh_service(ssoService: SsoRefreshService) {
-  return() => {
-    ssoService.init();
-  };
-}
 
 @NgModule({
   imports: [
@@ -100,15 +93,6 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     SubstanceCountsComponent,
     ShowApplicationToggleComponent
 
-  ],
-  providers: [
-    SsoRefreshService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: init_sso_refresh_service,
-      deps: [SsoRefreshService],
-      multi: true
-    }
   ]
 })
 export class FdaModule {
