@@ -58,7 +58,7 @@ export class SessionExpirationComponent implements OnInit {
     this.configService.afterLoad().then(cd => {
       // If enabled in config file, this functionality periodically checks whether there was a user activity (mouse or keyboard) or not
       // In case there was some activity, the session is refreshed (otherwise the session is not refreshed and may eventually expire)
-      if (this.configService.configData.sessionRefreshOnActiveUser) {
+      if (this.configService.configData.sessionRefreshOnActiveUserOnly) {
         const page = document.getElementsByTagName('body')[0];
         page.addEventListener('mousemove', (e) => {
           if (e instanceof MouseEvent) {
@@ -77,9 +77,7 @@ export class SessionExpirationComponent implements OnInit {
             this.userActive = false;
           }
         }, 10000);
-      }
-
-      if (!this.configService.configData.disableSessionAutoRefresh) {
+      } else {
         clearInterval(this.refreshInterval);
         this.refreshInterval = setInterval(() => {
           this.refreshSession();
