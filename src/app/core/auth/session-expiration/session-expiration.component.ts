@@ -1,11 +1,9 @@
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { HttpClient } from '@angular/common/http';
 import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
 import { AuthService } from '../auth.service';
 import { SessionExpirationDialogComponent } from './session-expiration-dialog/session-expiration-dialog.component'
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogState } from '@angular/material/dialog';
 import { UtilsService } from "@gsrs-core/utils";
 
 @Component({
@@ -20,16 +18,15 @@ export class SessionExpirationComponent implements OnInit {
   private activityRefreshInterval: any;
   private userActive: boolean = false;
   private baseHref: string = '/ginas/app/';
+  private extendSessionDialog: MatDialogRef<SessionExpirationDialogComponent>;
 
   private static instance?: SessionExpirationComponent = undefined;
   private static sessionExpirationCheckInterval = null;
 
   constructor(
-    private router: Router,
     private configService: ConfigService,
     private authService: AuthService,
-    private http: HttpClient,
-    private dialog: MatDialog,
+    private matDialog: MatDialog,
     private overlayContainerService: OverlayContainer,
     private utilsService: UtilsService
   ) {
@@ -115,7 +112,7 @@ export class SessionExpirationComponent implements OnInit {
       } else if (this.sessionExpiringAt !== null && sessionTtl > 0) {
         // The session was externally extended (eg. in pfda) -> close the session dialog
         if (this.isDialogOpened()) {
-          this.dialog.closeAll();
+          this.extendSessionDialog.close();
         }
       }
     }, 5000)
@@ -143,7 +140,7 @@ export class SessionExpirationComponent implements OnInit {
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open(SessionExpirationDialogComponent, {
+    this.extendSessionDialog = this.matDialog.open(SessionExpirationDialogComponent, {
       data: {
         'sessionExpirationWarning': this.sessionExpirationWarning,
         'sessionExpiringAt': this.sessionExpiringAt
@@ -153,7 +150,7 @@ export class SessionExpirationComponent implements OnInit {
       disableClose: true
     });
     this.overlayContainer.style.zIndex = '1501';
-    dialogRef.afterClosed().subscribe(response => {
+    this.extendSessionDialog.afterClosed().subscribe(response => {
       this.overlayContainer.style.zIndex = null;
       this.startSessionTimeoutInterval();
     });
@@ -164,6 +161,6 @@ export class SessionExpirationComponent implements OnInit {
   }
 
   isDialogOpened(): boolean {
-    return this.dialog.openDialogs.length > 0;
+    return this.extendSessionDialog && this.extendSessionDialog.getState() === MatDialogState.OPEN;
   }
 }
