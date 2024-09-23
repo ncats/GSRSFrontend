@@ -550,8 +550,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   this.loadingService.setLoading(false);
                   this.UNII = this.substanceFormService.getUNII();
                 }, 5);
-
-                this.updateHiddenFormSections()
+                if (!this.featuresOnly){
+                  this.updateHiddenFormSections();
+                }
               });
           });
           // this.loadingService.setLoading(false);
@@ -847,7 +848,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   });
                   this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
 
-                  this.updateHiddenFormSections()
+                  if (!this.featuresOnly){
+                    this.updateHiddenFormSections();
+                  }
                 });
             });
 
