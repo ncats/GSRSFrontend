@@ -1004,9 +1004,34 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         // this.ssg4mSyntheticPathway.synthPathwayId = '2ead5343-6471-88ae-b0b0-88370d44786e';
         // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
       }
+
+
       // Existing Record
       // get the JSON from the SSG4m Form and store as a Clob into the database
       this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
+
+      /*********** BEGIN SCHEME VIEW CODE  ****************/
+      // Added this scheme view block here. If we do not click on the "Scheme View" tab before saving, it adds
+      // extra space on the top during printing.
+
+      //document.querySelector("#scheme-viz-view").className = "";
+
+      console.log("About to load the scheme view in submit() function during saving");
+
+      if (window['schemeUtil']) {
+        if (window['schemeUtil'].debug) {
+          window['schemeUtil'].executeWhenLoaded = (() => {
+            console.log("About to render the scheme view in submit() after executeWhenLoaded");
+            window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+            window['schemeUtil'].executeWhenLoaded = null;
+          });
+        } else {
+          console.log("About to render the scheme view in submit() in else block");
+          window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+        }
+      }
+
+      /************ END SCHEME VIEW *********************/
 
       // Save SVG as blob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
