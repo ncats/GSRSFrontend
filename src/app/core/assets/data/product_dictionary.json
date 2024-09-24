@@ -313,7 +313,7 @@
     },
     "Product Code Adress":{
         "lucenePath":"root_productProvenances_productCompanies_companyAddress",
-        "description":"Product Code Adress",
+        "description":"Product Company Adress",
         "type":"string",
         "cvDomain":null,
         "priority":null,
@@ -321,7 +321,7 @@
     },
     "Product Code City":{
         "lucenePath":"root_productProvenances_productCompanies_companyCity",
-        "description":"Product Code City",
+        "description":"Product Company City",
         "type":"string",
         "cvDomain":null,
         "priority":"x",
@@ -337,7 +337,7 @@
     },
     "Product Code Zipcode":{
         "lucenePath":"root_productProvenances_productCompanies_companyZip",
-        "description":"Product Code zipcode",
+        "description":"Product Company Zipcode",
         "type":"string",
         "cvDomain":null,
         "priority":null,
