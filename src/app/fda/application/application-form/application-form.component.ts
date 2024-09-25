@@ -461,7 +461,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
     let cleanApplication = this.cleanApplication();
 
-    let data = {jsonData: cleanApplication, jsonFilename: jsonFilename };
+    let data = {jsonData: cleanApplication, jsonFilename: jsonFilename};
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
