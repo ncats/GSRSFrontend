@@ -71,8 +71,8 @@
         <mat-icon svgIcon="search"></mat-icon>
       </a>
     </div>
-    <img class="structure-img" *ngIf = "!substance.$$source || substance.$$source !== 'staging'" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
-    <img class="structure-img" *ngIf = "substance.$$source && substance.$$source == 'staging'"   appSubstanceImage  size = "250" [entityId]="substance.uuid" [stereo]="showStereo">
+    <img class="structure-img" (click) = "openModal(structureTemplate)" *ngIf = "!substance.$$source || substance.$$source !== 'staging'" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
+    <img class="structure-img" (click) = "openModal(structureTemplate)" *ngIf = "substance.$$source && substance.$$source == 'staging'"   appSubstanceImage  size = "250" [entityId]="substance.uuid" [stereo]="showStereo">
 
     <br/>
       <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
@@ -111,8 +111,8 @@
 
 <ng-template #structureTemplate>
   <div mat-dialog-content>
-    <img class="structure-img-big" *ngIf = "!substance.$$source || substance.$$source !== 'staging'" appSubstanceImage  size = "250" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
-    <img class="structure-img-big" *ngIf = "substance.$$source && substance.$$source == 'staging'"   appSubstanceImage  size = "250" [entityId]="substance.uuid" [stereo]="showStereo">
+    <img class="structure-img-big" *ngIf = "!substance.$$source || substance.$$source !== 'staging'" appSubstanceImage  size = "850" [entityId]="structure.id" [stereo]="showStereo" [version] ="substance.version">
+    <img class="structure-img-big" *ngIf = "substance.$$source && substance.$$source == 'staging'"   appSubstanceImage  size = "850" [entityId]="substance.uuid" [stereo]="showStereo">
 
   </div>
 </ng-template>

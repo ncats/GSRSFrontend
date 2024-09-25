@@ -38,6 +38,7 @@ export interface Config {
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
     customToolbarComponent?: string;
+    disableSessionRefresh?: boolean;
     sessionExpirationWarning?: SessionExpirationWarning;
     disableReferenceDocumentUpload?: boolean;
     externalSiteWarning?: ExternalSiteWarning;
@@ -77,7 +78,7 @@ export interface Config {
     structureEditor?: 'ketcher' | 'jsdraw';
     nameFormPageSizeOptions?: Array<number>;
     nameFormPageSizeDefault?: number;
-    jsdrawLicense?: boolean;
+    disableJSDraw?: boolean;
     disableKetcher?: boolean;
     useApprovalAPI?: boolean;
     dummyWhoami?: Auth;

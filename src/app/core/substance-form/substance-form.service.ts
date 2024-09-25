@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {
   SubstanceDetail,
   SubstanceName,
@@ -20,15 +20,15 @@ import {
   SubstanceFormDefinition,
   SubstanceFormResults, SubunitSequence, ValidationResults, ValidationMessage
 } from './substance-form.model';
-import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
-import { SubstanceService } from '../substance/substance.service';
-import { UtilsService } from '../utils/utils.service';
-import { StructureService } from '@gsrs-core/structure';
+import {Observable, Subject, ReplaySubject, Subscription} from 'rxjs';
+import {SubstanceService} from '../substance/substance.service';
+import {UtilsService} from '../utils/utils.service';
+import {StructureService} from '@gsrs-core/structure';
 import * as _ from 'lodash';
 import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 
-import { take } from 'rxjs/operators';
-import { AdminService } from '@gsrs-core/admin/admin.service';
+import {take} from 'rxjs/operators';
+import {AdminService} from '@gsrs-core/admin/admin.service';
 
 @Injectable()
 export class SubstanceFormService implements OnDestroy {
@@ -43,6 +43,7 @@ export class SubstanceFormService implements OnDestroy {
   private substanceStructuralModificationsEmitter = new ReplaySubject<Array<StructuralModification>>();
   private substanceCysteineEmitter = new ReplaySubject<Array<Site>>();
   private substanceFormActionEmitter = new ReplaySubject<'load' | 'unload'>();
+  private simplifiedFormEmitter = new ReplaySubject<boolean>();
 
   private definitionEmitter = new Subject<SubstanceFormDefinition>();
   private subClass: string;
@@ -81,9 +82,9 @@ export class SubstanceFormService implements OnDestroy {
   setStoredRelated(substance: SubstanceSummary, header: string) {
     this.storedRelated[header] = substance;
 
-    }
+  }
 
-  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean): Observable<void> {
+  loadSubstance(substanceClass: string = 'chemical', substance?: SubstanceDetail, method?: string, mergeConcept?: boolean, simplified?: boolean): Observable<void> {
     if (method) {
       this.method = method;
     } else {
@@ -104,23 +105,24 @@ export class SubstanceFormService implements OnDestroy {
       } else {
         // the second case happens in the forms sometimes but really shouldn't
         if (substanceClass === 'chemical' || substanceClass === 'structure') {
-          this.privateSubstance = {
-            substanceClass: 'chemical',
-            references: [],
-            names: [],
-            structure: {
-              molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
-            },
-            codes: [],
-            relationships: [],
-            properties: []
-          };
+          this.privateSubstance =
+            {
+              substanceClass: 'chemical',
+              references: [],
+              names: [],
+              structure: {
+                molfile: '\n\n\n  0  0  0  0  0  0            999 V2000\nM  END'
+              },
+              codes: [],
+              relationships: [],
+              properties: []
+            };
         } else if (substanceClass === 'protein') {
           this.privateSubstance = {
             substanceClass: 'protein',
             references: [],
             names: [],
-            protein: { proteinType: '' },
+            protein: {proteinType: ''},
             codes: [],
             relationships: [],
             properties: []
@@ -192,8 +194,8 @@ export class SubstanceFormService implements OnDestroy {
             names: [],
             specifiedSubstanceG3: {
               parentSubstance: {},
-              definition: { references: [] },
-              grade: { references: [] }
+              definition: {references: []},
+              grade: {references: []}
             },
             codes: [],
             properties: []
@@ -204,7 +206,8 @@ export class SubstanceFormService implements OnDestroy {
             // references: [],
             specifiedSubstanceG4m: {
               parentSubstance: {},
-              process: [{"processName": "Process 1",
+              process: [{
+                "processName": "Process 1",
                 sites: [{
                   stages: [{
                     "stageNumber": "1",
@@ -260,7 +263,7 @@ export class SubstanceFormService implements OnDestroy {
       this.subClass = this.privateSubstance.substanceClass;
 
       // Only these two substance classes differ from
-      // the name of their JSON defintional element
+      // the name of their JSON definitional element
       // That's why they are used as exceptions
 
       if (this.subClass === 'chemical') {
@@ -273,6 +276,7 @@ export class SubstanceFormService implements OnDestroy {
         this.privateSubstance[this.subClass] = {};
       }
       this.initForm();
+      this.simplifiedFormEmitter.next(simplified === true)
       this.substanceEmitter.next(this.privateSubstance);
       observer.next();
       observer.complete();
@@ -281,6 +285,14 @@ export class SubstanceFormService implements OnDestroy {
 
   get substanceFormAction(): Observable<'load' | 'unload'> {
     return this.substanceFormActionEmitter.asObservable();
+  }
+
+  get simplifiedForm(): Observable<boolean> {
+    return this.simplifiedFormEmitter.asObservable();
+  }
+
+  setSimplifiedForm(value: boolean) {
+    this.simplifiedFormEmitter.next(value)
   }
 
   initForm(): void {
@@ -402,7 +414,7 @@ export class SubstanceFormService implements OnDestroy {
     if (newClass === 'chemical') {
       substance.structure = {};
     } else if (newClass === 'protein') {
-      substance.protein = { proteinType: '' };
+      substance.protein = {proteinType: ''};
 
     } else if (newClass === 'nucleicAcid') {
       substance.nucleicAcid = {};
@@ -414,8 +426,7 @@ export class SubstanceFormService implements OnDestroy {
         $$diverseType: 'whole'
       };
     } else if (newClass === 'specifiedSubstanceG1') {
-      substance.specifiedSubstance = {
-      };
+      substance.specifiedSubstance = {};
     } else if (newClass === 'polymer') {
       substance.polymer = {
         idealizedStructure: {},
@@ -444,6 +455,7 @@ export class SubstanceFormService implements OnDestroy {
     } else {
     }
   }
+
   setPrivate(e) {
     e.access = ['protected'];
     alert('Substance definition now set to protected, please submit to save change');
@@ -685,7 +697,7 @@ export class SubstanceFormService implements OnDestroy {
           if (link.sites) {
             link.sites.forEach(site => {
               if (site.subunitIndex && site.residueIndex) {
-                const newLink: DisplaySite = { residue: site.residueIndex, subunit: site.subunitIndex, type: 'other' };
+                const newLink: DisplaySite = {residue: site.residueIndex, subunit: site.subunitIndex, type: 'other'};
                 allSitesArr.push(newLink);
               }
             });
@@ -753,7 +765,7 @@ export class SubstanceFormService implements OnDestroy {
             const sites = f.split('-');
             const subunitIndex = Number(sites[0].split('_')[0]);
             for (let i = Number(sites[0].split('_')[1]); i <= Number(sites[1].split('_')[1]); i++) {
-              const newLink: DisplaySite = { residue: Number(i), subunit: subunitIndex, type: 'feature' };
+              const newLink: DisplaySite = {residue: Number(i), subunit: subunitIndex, type: 'feature'};
               allSitesArr.push(newLink);
             }
           });
@@ -787,7 +799,7 @@ export class SubstanceFormService implements OnDestroy {
     return new Observable(observer => {
       this.ready().subscribe(substance => {
         if (this.privateSubstance.nucleicAcid == null) {
-          this.privateSubstance.nucleicAcid = { nucleicAcidType: '' };
+          this.privateSubstance.nucleicAcid = {nucleicAcidType: ''};
 
         }
         observer.next(this.privateSubstance.nucleicAcid);
@@ -1142,7 +1154,7 @@ export class SubstanceFormService implements OnDestroy {
           for (let j = 0; j < sequence.length; j++) {
             const site = sequence[j];
             if (site.toUpperCase() === 'C') {
-              available.push({ 'residueIndex': (j + 1), 'subunitIndex': (i + 1) });
+              available.push({'residueIndex': (j + 1), 'subunitIndex': (i + 1)});
             }
           }
         }
@@ -1233,7 +1245,6 @@ export class SubstanceFormService implements OnDestroy {
   }
 
 
-
   // end change reason
 
   validateSubstance(stagingID?: string): Observable<ValidationResults> {
@@ -1314,7 +1325,7 @@ export class SubstanceFormService implements OnDestroy {
             for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
               const prop = substanceCopy.modifications.physicalModifications[i];
               let present = false;
-              if (prop && prop.parameters){
+              if (prop && prop.parameters) {
                 prop.parameters.forEach(param => {
                   if (param.parameterName) {
                     present = true;
@@ -1481,7 +1492,10 @@ export class SubstanceFormService implements OnDestroy {
     return substanceCopy;
   }
 
-  private cleanObject(substanceProperty: any, deletedUuids: Array<string> = []): { deletedUuids: Array<string>, isDeleted: boolean } {
+  private cleanObject(substanceProperty: any, deletedUuids: Array<string> = []): {
+    deletedUuids: Array<string>,
+    isDeleted: boolean
+  } {
     if (Object.prototype.toString.call(substanceProperty) === '[object Object]') {
 
       const hasDeleletedCode = substanceProperty.$$deletedCode != null;
@@ -1545,7 +1559,7 @@ export class SubstanceFormService implements OnDestroy {
 
   importStructure(structure, type) {
     // import a structure from mol or smiles
-    if(this.privateSubstance) {
+    if (this.privateSubstance) {
       if (type === 'molfile') {
         this.privateSubstance.structure.molfile = structure;
         this.substanceEmitter.next(this.privateSubstance);
@@ -1554,15 +1568,15 @@ export class SubstanceFormService implements OnDestroy {
 
         this.structureService.interpretStructure(structure).pipe(take(1)).subscribe(response => {
           if (response && response.structure && response.structure.molfile) {
-          this.privateSubstance.structure.molfile = response.structure.molfile;
-          this.substanceEmitter.next(this.privateSubstance);
+            this.privateSubstance.structure.molfile = response.structure.molfile;
+            this.substanceEmitter.next(this.privateSubstance);
           }
         });
       }
     } else {
       // service substance loaded improperly
     }
-    
+
   }
 
   regenUUID(): void {
@@ -1623,7 +1637,7 @@ export class SubstanceFormService implements OnDestroy {
 
     this.adminService.updateStagingArea(id, substanceCopy).subscribe(response => {
         observer.next(response);
-          observer.complete();
+        observer.complete();
       }, error => {
         console.log(error);
         observer.error(error);
@@ -1779,7 +1793,7 @@ export class SubstanceFormService implements OnDestroy {
         this.privateSubstance.protein.glycosylation.OGlycosylationSites.concat(data.links);
       this.emitGlycosylationUpdate();
     } else if (data.siteType === 'disulfide') {
-      const newLink: Link = { sites: data.links };
+      const newLink: Link = {sites: data.links};
       this.privateSubstance.protein.disulfideLinks.unshift(newLink);
       this.emitDisulfideLinkUpdate();
 
@@ -1911,16 +1925,16 @@ export class SubstanceFormService implements OnDestroy {
     ('IGG4	0-1,11-12,13-31,14-15,18-19,2-26,20-21,22-23,24-25,27-28,29-30,3-4,5-16,6-17,7-8,9-10\n' +
       'IGG2	0-1,11-12,13-14,15-35,16-17,2-30,22-23,24-25,26-27,28-29,3-4,31-32,33-34,5-18,6-19,7-20,8-21,9-10\n' +
       'IGG1	0-1,11-12,13-14,15-31,18-19,2-3,20-21,22-23,24-25,27-28,29-30,4-26,5-16,6-17,7-8,9-10').split('\n').map(function (s) {
-        const tup = s.split('\t');
+      const tup = s.split('\t');
 
-        const list = _.chain(tup[1].split(',')).map(function (t) {
-          return _.map(t.split('-'), function (temp) {
-            return +temp - 0;
-          });
-        }).value();
+      const list = _.chain(tup[1].split(',')).map(function (t) {
+        return _.map(t.split('-'), function (temp) {
+          return +temp - 0;
+        });
+      }).value();
 
-        KNOWN_DISULFIDE_PATTERNS[tup[0]] = list;
-      });
+      KNOWN_DISULFIDE_PATTERNS[tup[0]] = list;
+    });
     const proteinSubstance = this.privateSubstance;
     const prot = proteinSubstance.protein;
     const pattern = KNOWN_DISULFIDE_PATTERNS[prot.proteinSubType];
@@ -2055,6 +2069,11 @@ export class SubstanceFormService implements OnDestroy {
 
   }
 
+  validationMutations() {
+    this.privateSubstance.names = this.privateSubstance.names.filter(x => x.name)
+    this.privateSubstance.codes = this.privateSubstance.codes.filter(x => x.code)
+    this.substanceEmitter.next(this.privateSubstance);
+  }
   guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -2074,8 +2093,8 @@ export class SubstanceFormService implements OnDestroy {
         ref.uuid = nid;
     });
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');    
-    
+    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+
     const refHolders = defiant.json.search(old, '//*[references]');
 
     for (let i = 0; i < refHolders.length; i++) {
@@ -2220,9 +2239,6 @@ export class SubstanceFormService implements OnDestroy {
 
 
 }
-
-
-
 
 
 interface DisplaySite {

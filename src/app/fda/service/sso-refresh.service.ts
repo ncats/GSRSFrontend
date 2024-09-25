@@ -44,6 +44,10 @@ export class SsoRefreshService implements OnDestroy {
 
   setup() {
     this.configService.afterLoad().then(cd => {
+      // Session auto refresh can be explicitly disabled in config file
+      if (this.configService.configData.disableSessionRefresh) {
+        return;
+      }
       const homeBaseUrl = this.configService.configData && this.configService.configData.gsrsHomeBaseUrl || null;
       if (homeBaseUrl) {
         this.baseHref = homeBaseUrl;

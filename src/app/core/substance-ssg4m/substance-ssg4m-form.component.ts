@@ -999,16 +999,13 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // if New Record, initialize object
       if (this.ssg4mSyntheticPathway == null) {
         this.ssg4mSyntheticPathway = {};
-
-        // Generate GUID SynthPathwayId
-        // this.ssg4mSyntheticPathway.synthPathwayId = '2ead5343-6471-88ae-b0b0-88370d44786e';
-        // this.ssg4mSyntheticPathway = { "appType": "IND", "synthPathwayId": "2ead5343-6471-88ae-b0b0-88370d44574e", "sbmsnDataText": jsonValue };
       }
+
       // Existing Record
       // get the JSON from the SSG4m Form and store as a Clob into the database
       this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
 
-      // Save SVG as blob
+      // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
       // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
@@ -1080,7 +1077,15 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
     };  //window
 
+    let tempCallback = window["schemeUtil"].onFinishedLayout;
+    window["schemeUtil"].onFinishedLayout = (s)=>{
+      window["schemeUtil"].onFinishedLayout =(ss)=>{};
+
+      setTimeout(tempCallback(s),3000);
+    };
+    
     window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+
   }
 
   cancelSubmit() {
