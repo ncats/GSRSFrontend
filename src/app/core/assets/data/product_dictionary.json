@@ -311,15 +311,15 @@
         "priority":"x",
         "suggest":null
     },
-    "Product Code Adress":{
+    "Product Company Address":{
         "lucenePath":"root_productProvenances_productCompanies_companyAddress",
-        "description":"Product Company Adress",
+        "description":"Product Company Address",
         "type":"string",
         "cvDomain":null,
         "priority":null,
         "suggest":null
     },
-    "Product Code City":{
+    "Product Company City":{
         "lucenePath":"root_productProvenances_productCompanies_companyCity",
         "description":"Product Company City",
         "type":"string",
@@ -335,7 +335,7 @@
         "priority":"x",
         "suggest":null
     },
-    "Product Code Zipcode":{
+    "Product Company Zipcode":{
         "lucenePath":"root_productProvenances_productCompanies_companyZip",
         "description":"Product Company Zipcode",
         "type":"string",

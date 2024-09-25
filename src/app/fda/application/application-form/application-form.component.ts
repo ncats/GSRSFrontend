@@ -161,7 +161,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     this.loadingService.setLoading(true);
 
     this.validateClient();
-
     // If there is no error on client side, check validation on server side
     if (this.validationMessages.length === 0) {
       this.applicationService.validateApplication().pipe(take(1)).subscribe(results => {
@@ -187,7 +186,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     const validate: ValidationMessage = {};
     validate.message = message;
     validate.messageType = 'ERROR';
-   // validate.messageType = 'WARNING';
     this.validationMessages.push(validate);
     this.validationResult = false;
   }
@@ -388,63 +386,6 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     }, 5000);
   }
 
-  getSubstanceCode(substanceKey: string, type: string) {
-    if (substanceKey) {
-
-      const subCodesSubscription = this.generalService.getCodeBdnumBySubstanceUuid(substanceKey).subscribe(response => {
-        if (response) {
-          /*
-          const substanceCodes = response;
-          for (let index = 0; index < substanceCodes.length; index++) {
-            if (substanceCodes[index].codeSystem) {
-              if (substanceCodes[index].codeSystem === this.substanceKeyTypeConfig) {
-                if (substanceCodes[index].type === 'PRIMARY') {
-                  if (type) {
-                    if (type === 'ingredientname') {
-                      this.ingredient.substanceKey = substanceCodes[index].code;
-                      this.ingredient.substanceKeyType = this.substanceKeyTypeConfig;
-
-                      if (!this.ingredient.basisOfStrengthSubstanceKey) {
-                        this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
-                        this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
-                      }
-                    }
-                    if (type === 'basisofstrength') {
-                      this.ingredient.basisOfStrengthSubstanceKey = substanceCodes[index].code;
-                      this.ingredient.basisOfStrengthSubstanceKeyType = this.substanceKeyTypeConfig;
-                    }
-                  }
-                } else {
-                  if (type === 'ingredientname') {
-                    this.ingredientNameMessage = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
-                    this.ingredient.$$ingredientNameValidation = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
-
-                    if (!this.ingredient.basisOfStrengthSubstanceKey) {
-                      this.basisOfStrengthMessage = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
-                      this.ingredient.$$basisOfStrengthValidation = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
-                    }
-                  }
-                  if (type === 'basisofstrength') {
-                    this.basisOfStrengthMessage = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
-                    this.ingredient.$$basisOfStrengthValidation = 'This BDNUM ' + substanceCodes[index].code + ' is not primary';
-                  }
-                }
-                break;
-              } // codeSystem is same as substance key type config
-            }
-          } */
-
-        }  // if reponse
-        else {
-          // if BDNUM is not primary and return nothing display warning
-
-        }
-      });
-
-      this.subscriptions.push(subCodesSubscription);
-    } // if substanceKey Exists
-  }
-
   getVocabularies(): void {
     /*  this.cvService.getDomainVocabulary('CENTER', 'APPLICATION_TYPE',
         'APPLICATION_STATUS', 'PUBLIC_DOMAIN', 'APPLICATION_SUB_TYPE').subscribe(response => {
@@ -520,7 +461,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
     let cleanApplication = this.cleanApplication();
 
-    let data = { jsonData: cleanApplication, jsonFilename: jsonFilename };
+    let data = {jsonData: cleanApplication, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
