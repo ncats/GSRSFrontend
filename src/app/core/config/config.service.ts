@@ -47,6 +47,9 @@ export class ConfigService {
                 if (config.apiBaseUrl == null && environment.apiBaseUrl != null) {
                     config.apiBaseUrl = environment.apiBaseUrl;
                 }
+                if (config.pfdaApiBaseUrl == null && environment.pfdaApiBaseUrl != null) {
+                    config.pfdaApiBaseUrl = environment.pfdaApiBaseUrl;
+                }
                 if (config.apiBaseUrl.indexOf('//') > -1) {
                     const parts = config.apiBaseUrl.split('/');
                     config.apiUrlDomain = `${parts[0]}//${parts[2]}`;

@@ -84,7 +84,11 @@ export class SessionExpirationComponent implements OnInit {
   }
 
   refreshSession(): any {
-    fetch(`${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}`)
+    if (this.configService.configData.isPfdaVersion) {
+      fetch(`${this.configService.configData.pfdaApiBaseUrl}user`)
+    } else {
+      fetch(`${this.baseHref || ''}api/v1/whoami?key=${this.utilsService.newUUID()}`)
+    }
   }
 
   startSessionTimeoutInterval() {

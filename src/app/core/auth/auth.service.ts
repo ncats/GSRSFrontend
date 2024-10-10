@@ -303,16 +303,55 @@ export class AuthService {
   private fetchAuth(): Observable<Auth> {
     return new Observable(observer => {
       this.configService.afterLoad().then(cd => {
-        const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+        const isPfdaVersion = this.configService.configData.isPfdaVersion === true;
+        const url = isPfdaVersion ? '/api/user' :
+          `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/whoami`;
         if (this.configService.configData && this.configService.configData.dummyWhoami) {
           observer.next(this.configService.configData.dummyWhoami);
         } else {
-        this.http.get<Auth>(`${url}whoami`)
+          this.http.get<Auth>(url)
           .subscribe(
             auth => {
-            //  console.log("Authorized as");
-            //  console.log(auth);
-              observer.next(auth);
+             if (isPfdaVersion) {
+               // @ts-ignore
+               const dxuser = auth.user.dxuser;
+               const pfdaAuth: Auth = {
+                 id: 0,
+                 version: 0,
+                 created: 0,
+                 modified: 0,
+                 deprecated: false,
+                 user: {
+                   id: 0,
+                   version: 0,
+                   created: 0,
+                   modified: 0,
+                   deprecated: false,
+                   username: dxuser,
+                   email: auth.user.email,
+                   admin: auth.user.admin
+                 },
+                 active: true,
+                 systemAuth: false,
+                 key: 'unused',
+                 identifier: dxuser,
+                 groups: [],
+                 roles: [
+                   "Query",
+                   "Updater",
+                   "SuperUpdate",
+                   "DataEntry",
+                   "SuperDataEntry"
+                 ],
+                 computedToken: 'unused',
+                 tokenTimeToExpireMS: 9999999999999,
+                 roleQueryOnly: false,
+                 permissions: []
+               }
+               observer.next(pfdaAuth);
+             } else {
+               observer.next(auth);
+             }
             },
             err => {
               console.log("Authorized error");
