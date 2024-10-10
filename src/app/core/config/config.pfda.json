@@ -544,5 +544,5 @@
     "dialogMessage" : "You will be making an API call outside of the precisionFDA boundary. Do you want to continue?"
   },
   "googleAnalyticsId": "",
-  "customToolbarComponent": "precisionFDA"
+  "isPfdaVersion": true
 }
