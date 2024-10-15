@@ -38,7 +38,7 @@ export interface Config {
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
     customToolbarComponent?: string;
-    disableSessionRefresh?: boolean;
+    sessionRefreshOnActiveUserOnly?: boolean;
     sessionExpirationWarning?: SessionExpirationWarning;
     disableReferenceDocumentUpload?: boolean;
     externalSiteWarning?: ExternalSiteWarning;
