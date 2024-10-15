@@ -10,11 +10,11 @@ import { Subscription } from 'rxjs';
 import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/references/substance-form-references.service";
 
 @Component({
-  selector: 'app-reference-form',
-  templateUrl: './reference-form.component.html',
-  styleUrls: ['./reference-form.component.scss']
+  selector: 'app-simplified-reference-form',
+  templateUrl: './simplified-reference-form.component.html',
+  styleUrls: ['./simplified-reference-form.component.scss']
 })
-export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;
   @Output() referenceDeleted = new EventEmitter<SubstanceReference>();
   @Input() hideDelete = false;
@@ -40,6 +40,8 @@ export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     // Protected access by default.
     this.reference.access = ["protected"]
+    console.log('this is simplified ref form');
+
   }
 
   ngAfterViewInit() {

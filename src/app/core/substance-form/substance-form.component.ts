@@ -48,6 +48,7 @@ import {Buffer} from 'buffer';
 import {AdminService} from '@gsrs-core/admin/admin.service';
 import {MatButtonToggleChange} from "@angular/material/button-toggle";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -133,7 +134,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private dialog: MatDialog,
     private authService: AuthService,
     private titleService: Title,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private location: Location
   ) {
     this.substanceService.showImagePopup.subscribe(data => {
       this.hidePopup = data;
@@ -310,6 +312,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
+    if(this.location.path().includes('chemical-simplified')) {
+      this.simplifiedForm = true;
+    }
+    const simplifiedFormSubscription = this.substanceFormService.simplifiedForm.subscribe(value=>{
+      this.simplifiedForm = value
+    })
+    this.subscriptions.push(simplifiedFormSubscription);
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
@@ -363,7 +372,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.substanceClass = response.substanceClass;
                 this.status = response.status;
                 this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
-                  this.setFormSections(formSections[response.substanceClass]);
+                  if(this.simplifiedForm) {
+                    this.setFormSections(formSections['chemicalSimplified']);
+                  } else {
+                    this.setFormSections(formSections[response.substanceClass]);
+                  }
                   this.isLoading = false;
                   this.loadingService.setLoading(false);
                 });
@@ -393,7 +406,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.titleService.setTitle('Register - ' + this.subClass);
 
                 this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined, simplified).pipe(take(1)).subscribe(() => {
-                  this.setFormSections(formSections[this.subClass]);
+                  if(this.simplifiedForm) {
+                    this.setFormSections(formSections['chemicalSimplified']);
+                  } else {
+                    this.setFormSections(formSections[this.subClass]);
+                  }
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
                 });
@@ -426,10 +443,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       });
     });
-    const simplifiedFormSubscription = this.substanceFormService.simplifiedForm.subscribe(value=>{
-      this.simplifiedForm = value
-    })
-    this.subscriptions.push(simplifiedFormSubscription);
   }
 
   isBase64(str) {
@@ -781,7 +794,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.substanceClass = response.substanceClass;
         this.status = response.status;
         this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
-          this.setFormSections(formSections[response.substanceClass]);
+          if(this.simplifiedForm) {
+            this.setFormSections(formSections['chemicalSimplified']);
+          } else {
+            this.setFormSections(formSections[response.substanceClass]);
+          }
         });
       } else {
         this.handleSubstanceRetrivalError();
@@ -816,7 +833,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.substanceClass = response.substanceClass;
       this.status = response.status;
       this.substanceFormService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
-        this.setFormSections(formSections[response.substanceClass]);
+        if(this.simplifiedForm) {
+          this.setFormSections(formSections['chemicalSimplified']);
+        } else {
+          this.setFormSections(formSections[response.substanceClass]);
+        }
         if (!same) {
           setTimeout(() => {
             this.forceChange = true;
@@ -888,7 +909,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
         this.scrub(response, type);
         this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
-          this.setFormSections(formSections[response.substanceClass]);
+          if(this.simplifiedForm) {
+            this.setFormSections(formSections['chemicalSimplified']);
+          } else {
+            this.setFormSections(formSections[response.substanceClass]);
+          }
           this.loadingService.setLoading(false);
           this.isLoading = false;
         });

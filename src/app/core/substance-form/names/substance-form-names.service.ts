@@ -15,6 +15,9 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
   }
 
   ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
 }
 
   initSubtanceForm(): void {
