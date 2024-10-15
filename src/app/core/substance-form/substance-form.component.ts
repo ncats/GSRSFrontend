@@ -515,9 +515,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   this.formSections[index].menuLabel = label;
                 });
                 const hiddenStateSubscription =
-                  this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+                  if ((!this.simplifiedForm) && !(['substance-form-simplified-names','substance-form-simplified-codes-card','substance-form-simplified-references'].includes(this.formSections[index].dynamicComponentName))) {
                     this.formSections[index].isHidden = isHidden;
-                  });
+                  } else if (this.simplifiedForm) {
+                    this.formSections[index].isHidden = isHidden;
+                  }
+                });
                 this.subscriptions.push(hiddenStateSubscription);
                 this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
                   this.formSections[index].canAddItem = isList;
@@ -550,8 +554,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   this.loadingService.setLoading(false);
                   this.UNII = this.substanceFormService.getUNII();
                 }, 5);
-
-                this.updateHiddenFormSections()
+                if (!this.featuresOnly){
+                  this.updateHiddenFormSections();
+                }
               });
           });
           // this.loadingService.setLoading(false);
@@ -847,7 +852,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                   });
                   this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
 
-                  this.updateHiddenFormSections()
+                  if (!this.featuresOnly){
+                    this.updateHiddenFormSections();
+                  }
                 });
             });
 

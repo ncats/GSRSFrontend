@@ -367,6 +367,19 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     }, () => { });
   }
 
+  loadForm():void {
+    this.structureEditor.getSmiles().pipe(take(1)).subscribe(smiles => {
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        importStructure: encodeURIComponent(smiles)
+      }
+    };
+    this.router.navigate(['/substances/register/chemical'], navigationExtras);
+  });
+
+  }
+
   openStructureImageModal(): void {
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {

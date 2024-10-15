@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class SubstanceMixtureComponentsComponent extends SubstanceCardBase implements OnInit {
   components: Array<MixtureComponents>;
   required: Array<MixtureComponents>;
+  requiredMinor: Array<MixtureComponents>;
   presentInAny: Array<MixtureComponents>;
   presentInOne: Array<MixtureComponents>;
   substanceUpdated = new Subject<SubstanceDetail>();
@@ -32,6 +33,8 @@ export class SubstanceMixtureComponentsComponent extends SubstanceCardBase imple
         this.components = this.substance.mixture.components;
         this.required = this.components.filter(
           component => component.type === 'MUST_BE_PRESENT');
+          this.requiredMinor = this.components.filter(
+            component => component.type === 'MUST_BE_PRESENT_MINOR');
         this.presentInAny = this.components.filter(
           component => component.type === 'MAY_BE_PRESENT_ANY_OF');
         this.presentInOne = this.components.filter(
