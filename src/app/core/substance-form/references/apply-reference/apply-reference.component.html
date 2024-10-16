@@ -29,7 +29,7 @@
             <span>All {{domainKey}} without references</span>
           </button>
           <div *ngFor="let domain of domainsWithReferences[domainKey].domains" mat-menu-item (click)="$event.stopPropagation()">
-            <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey !== "relationships" && domainKey !== "constituents"'
+            <mat-checkbox (change)="updateAppliedOtion($event, domain)" *ngIf = 'domainKey !== "relationships" && domainKey !== "constituents" && domain[domainsWithReferences[domainKey].displayKey]'
             [checked]="domain.checked">
             {{(domain[domainsWithReferences[domainKey].displayKey].length>50)? (domain[domainsWithReferences[domainKey].displayKey] | slice:0:50)+'...':(domain[domainsWithReferences[domainKey].displayKey])}}
             </mat-checkbox>
