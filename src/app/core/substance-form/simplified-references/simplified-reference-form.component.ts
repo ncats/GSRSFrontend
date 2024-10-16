@@ -40,8 +40,6 @@ export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, 
 
     // Protected access by default.
     this.reference.access = ["protected"]
-    console.log('this is simplified ref form');
-
   }
 
   ngAfterViewInit() {

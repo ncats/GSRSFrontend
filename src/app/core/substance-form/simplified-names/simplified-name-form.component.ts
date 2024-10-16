@@ -48,7 +48,6 @@ export class SimplifiedNameFormComponent implements OnInit, OnDestroy {
 
     // Protected access by default.
     this.privateName.access = ["protected"]
-    console.log('this is simplified name form');
   }
 
   ngOnDestroy() {
