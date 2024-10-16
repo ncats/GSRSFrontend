@@ -158,26 +158,28 @@ import { ReferenceFormComponent } from './references/reference-form.component';
   exports: [
     SubstanceFormComponent,
     AccessManagerComponent,
+    TagSelectorComponent,
     DomainReferencesComponent,
     PreviousReferencesComponent,
     ReuseReferencesDialogComponent,
     StructureFormComponent,
     AmountFormComponent,
+    ApplyReferenceComponent,
     PropertyParameterFormComponent,
     PropertyParameterDialogComponent,
     SubunitFormComponent,
     SubunitDisplayPipe,
+    SugarFormComponent,
     SubunitSelectorComponent,
     SubunitSelectorDialogComponent,
     AmountFormDialogComponent,
     PhysicalParameterFormDialogComponent,
     PhysicalParameterFormComponent,
-    TagSelectorComponent,
-    SugarFormComponent,
     CvInputComponent,
     CvDialogComponent,
     JsonDialogComponent,
     AuditInfoComponent,
+    SubmitSuccessDialogComponent,
     MergeConceptDialogComponent,
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
@@ -202,7 +204,9 @@ import { ReferenceFormComponent } from './references/reference-form.component';
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent
+    SubstanceDraftsComponent,
+    DomainReferencesComponent,
+
   ]
 })
 export class SubstanceFormModule {

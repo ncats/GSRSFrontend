@@ -5,11 +5,11 @@ import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { UtilsService } from '@gsrs-core/utils';
 
 @Component({
-  selector: 'app-code-form',
-  templateUrl: './code-form.component.html',
-  styleUrls: ['./code-form.component.scss']
+  selector: 'app-simplified-code-form',
+  templateUrl: './simplified-code-form.component.html',
+  styleUrls: ['./simplified-code-form.component.scss']
 })
-export class CodeFormComponent implements OnInit {
+export class SimplifiedCodeFormComponent implements OnInit {
   private privateCode: SubstanceCode;
   @Output() codeDeleted = new EventEmitter<SubstanceCode>();
   codeSystemList: Array<VocabularyTerm> = [];

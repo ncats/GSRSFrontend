@@ -8,7 +8,7 @@ import {combineLatest, first, Subscription} from 'rxjs';
 import { SubstanceFormCodesService } from '../codes/substance-form-codes.service';
 
 @Component({
-  selector: 'app-substance-form-codes-card',
+  selector: 'app-simplified-substance-form-codes-card',
   templateUrl: './substance-form-simplified-codes-card.component.html',
   styleUrls: ['./substance-form-simplified-codes-card.component.scss']
 })

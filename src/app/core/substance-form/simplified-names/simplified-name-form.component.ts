@@ -12,11 +12,11 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {SubstanceFormNamesService} from '@gsrs-core/substance-form/names/substance-form-names.service';
 
 @Component({
-  selector: 'app-name-form',
-  templateUrl: './name-form.component.html',
-  styleUrls: ['./name-form.component.scss']
+  selector: 'app-simplified-name-form',
+  templateUrl: './simplified-name-form.component.html',
+  styleUrls: ['./simplified-name-form.component.scss']
 })
-export class NameFormComponent implements OnInit, OnDestroy {
+export class SimplifiedNameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
   @Output() nameDeleted = new EventEmitter<SubstanceName>();
