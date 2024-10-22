@@ -1,35 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient} from '@angular/common/http';
+import {from, Observable, switchMap} from 'rxjs';
+import {ConfigService} from "@gsrs-core/config";
 
 @Injectable()
 export class CsrfTokenInterceptor implements HttpInterceptor {
-
-  constructor() {}
+  constructor(private http: HttpClient, private configService: ConfigService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     // CSRF token for GET and HEAD is not needed
-    if (['GET', 'HEAD'].includes(request.method)) {
+    if (['GET', 'HEAD'].includes(request.method) || !(this.configService.configData?.isPfdaVersion)) {
       return next.handle(request);
     }
 
-    // Parse CSRF token from HTML meta tag
-    const metaTag: HTMLMetaElement | null = document.querySelector('meta[name=csrf-token]');
-    let csrfToken = metaTag?.content;
-    if (csrfToken === undefined) {
-      csrfToken = 'CSRF-TOKEN-NOT-PARSED';
-    }
+    return from(this.fetchCsrfToken()).pipe(
+      switchMap((token: string) => {
+        const modifiedRequest = this.addCsrfToken(request, token);
+        return next.handle(modifiedRequest);
+      })
+    );
+  }
 
-    // Clone the request and add the CSRF token to the headers
-    const modifiedRequest = request.clone({
+  private fetchCsrfToken(): Promise<string> {
+    return this.http.get(`${this.configService.configData.apiBaseUrl}csrf-token`, { responseType: 'text' }).toPromise();
+  }
+
+  private addCsrfToken(request: HttpRequest<any>, token: string): HttpRequest<any> {
+    return request.clone({
       setHeaders: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        'X-CSRF-Token': csrfToken
+        'X-CSRF-Token': token
       }
     });
-
-    // Pass the modified request to the next handler
-    return next.handle(modifiedRequest);
   }
 }
