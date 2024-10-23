@@ -23,7 +23,7 @@ export class CsrfTokenInterceptor implements HttpInterceptor {
   }
 
   private fetchCsrfToken(): Promise<string> {
-    return this.http.get(`${this.configService.configData.apiBaseUrl}csrf-token`, { responseType: 'text' }).toPromise();
+    return this.http.get(`/csrf-token`, { responseType: 'text' }).toPromise();
   }
 
   private addCsrfToken(request: HttpRequest<any>, token: string): HttpRequest<any> {
