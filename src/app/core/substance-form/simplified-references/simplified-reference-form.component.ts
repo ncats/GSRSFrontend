@@ -52,7 +52,16 @@ export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, 
   }
 
   updateAccess(access: Array<string>): void {
+
     this.reference.access = access;
+    if(access && access.length == 0) {
+      this.reference.tags = ["PUBLIC_DOMAIN_RELEASE"];
+      this.reference.publicDomain = true;
+    } else {
+      delete this.reference.tags;
+      this.reference.publicDomain = false;
+
+    }
   }
 
   setSourceType(event?: any): void {
