@@ -2,17 +2,20 @@ export const formSections: { [substanceType: string]: Array<string> } = {
     chemical: [
         'substance-form-definition',
         'substance-form-names',
-        'substance-form-simplified-names',
         'substance-form-structure',
         'substance-form-moieties',
         'substance-form-codes-card',
-        'substance-form-simplified-codes-card',
         'substance-form-relationships',
         'substance-form-notes',
         'substance-form-properties',
         'substance-form-references',
-        'substance-form-simplified-references',
         'substance-form-change-reason'
+    ],
+    chemicalSimplified: [
+        'substance-form-simplified-names',
+        'substance-form-structure',
+        'substance-form-simplified-codes-card',
+        'substance-form-simplified-references',
     ],
   protein: [
     'substance-form-definition',

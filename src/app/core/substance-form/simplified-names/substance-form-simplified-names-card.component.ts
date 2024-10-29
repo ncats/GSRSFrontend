@@ -10,7 +10,7 @@ import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substan
 import {tr} from "cronstrue/dist/i18n/locales/tr";
 
 @Component({
-  selector: 'app-substance-form-names-card',
+  selector: 'app-simplified-substance-form-names-card',
   templateUrl: './substance-form-simplified-names-card.component.html',
   styleUrls: ['./substance-form-simplified-names-card.component.scss']
 })

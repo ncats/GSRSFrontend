@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import { CodeFormComponent } from './code-form.component';
+import { SimplifiedCodeFormComponent } from './simplified-code-form.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
@@ -32,7 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   declarations: [
     SubstanceFormSimplifiedCodesCardComponent,
-    CodeFormComponent
+    SimplifiedCodeFormComponent
   ]
 })
 export class SubstanceFormSimplifiedCodesModule { }

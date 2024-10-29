@@ -16,7 +16,7 @@ import {SubstanceFormCodesService} from "@gsrs-core/substance-form/codes/substan
 import {SubstanceFormStructureService} from "@gsrs-core/substance-form/structure/substance-form-structure.service";
 
 @Component({
-  selector: 'app-substance-form-references-card',
+  selector: 'app-simplified-substance-form-references-card',
   templateUrl: './substance-form-simplified-references-card.component.html',
   styleUrls: ['./substance-form-simplified-references-card.component.scss']
 })
@@ -123,16 +123,31 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
   }
 
   applyAllReferencesToAll(): void {
-    for(const ref of this.references){
-      this.applyToAll(ref.uuid)
-    }
+    if (this.references && this.references.length > 0) {
+      for(let ref of this.references){
+        this.applyToAll(ref.uuid)
+      }
+    } 
   }
 
   deleteReference(reference: SubstanceReference): void {
     this.substanceFormReferencesService.deleteSubstanceReference(reference);
   }
 
+  executeOnceNotUndefined<T>(getter: () => T | undefined, interval = 100): Promise<T> {
+    return new Promise((resolve) => {
+        const checkInterval = setInterval(() => {
+            const result = getter();
+            if (result !== undefined) {
+                clearInterval(checkInterval);
+                resolve(result);
+            }
+        }, interval);
+    });
+}
+
   applyToAll(uuid: string): void {
+    this.executeOnceNotUndefined(() => this.domainsWithReferences).then((value) => {
     this.applyReference(this.domainsWithReferences.definition.domain, uuid);
     this.domainKeys.map(key => this.domainsWithReferences[key]?.domains).forEach(domains => {
       if (domains) {
@@ -143,6 +158,7 @@ export class SubstanceFormSimplifiedReferencesCardComponent extends SubstanceCar
     });
 
     this.substanceFormReferencesService.emitReferencesUpdate();
+  });
   }
 
   applyReference(domain: any, uuid: string): void {

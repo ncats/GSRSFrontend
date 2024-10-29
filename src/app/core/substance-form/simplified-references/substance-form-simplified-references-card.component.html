@@ -8,7 +8,7 @@
     [pageSizeOptions]="[5, 10, 25, 100]">
   </mat-paginator>
 <div class="reference" *ngFor="let reference of paged; last as isLast" [id]="reference.uuid" appScrollToTarget>
-  <app-reference-form [reference]="reference" (referenceDeleted)="deleteReference($event)"></app-reference-form>
+  <app-simplified-reference-form [reference]="reference" (referenceDeleted)="deleteReference($event)"></app-simplified-reference-form>
   <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 </div>
 <mat-paginator *ngIf="references && references.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true" (page)="pageChange($event, analyticsEventCategory)"
