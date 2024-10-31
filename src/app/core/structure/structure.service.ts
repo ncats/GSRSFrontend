@@ -36,6 +36,7 @@ export class StructureService {
   //TODO: this is the inchikey, should be renamed
   getInchi(id: string): Observable<string> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/$structure!$inchikey()`;
+    console.log(`getInch url: ${url}`);
     return this.http.get(url, {responseType: 'text'});
   }
 
@@ -105,4 +106,11 @@ export class StructureService {
     const url = `${this.configService.configData.apiBaseUrl}register/duplicateCheck`;
     return this.http.post<any>(url, sub);
   }
+
+  getImagesList(id: string): Observable<any> {
+    const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/listImages(${id})`;
+    console.log(`getImagesList url: ${url}`);
+    return this.http.get(url, {responseType: 'blob' as 'json'});
+  }
+
 }

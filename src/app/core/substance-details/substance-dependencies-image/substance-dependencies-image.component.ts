@@ -9,6 +9,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { AuthService } from '@gsrs-core/auth';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
+import { StructureService } from '@gsrs-core/structure';
 
 @Component({
   selector: 'app-substance-dependencies-image',
@@ -23,13 +24,15 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   displayImagetag: string;
   dependencies: Array<SubstanceDependenciesImageNode>;
   uuid: string;
+  imageSet: any;
 
   constructor(
     private substanceService: SubstanceService,
     private authService: AuthService,
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private structureService: StructureService
   ) { super(gaService); }
 
   ngOnInit() {
@@ -37,6 +40,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
 
     this.uuid = this.substance.uuid;
 
+    this.getImageSet(this.uuid);
     /*
     this.substanceService.getDependencies(this.uuid).subscribe(response => {
       if (response) {
@@ -91,6 +95,22 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
     }, () => {
       this.overlayContainer.style.zIndex = null;
       subscription.unsubscribe();
+    });
+  }
+
+  getImageSet(uuid: string) {
+    this.structureService.getImagesList(uuid).subscribe(response => {
+      console.log(`getImageSet raw response: ${response}`);
+      for(var p in response) {
+        console.log(`  p: ${p}`);
+        console.log(`  value: ${response[p]}`);
+      }
+      const dataType = response.type;
+      const binaryData = [];
+      binaryData.push(response.bytes);
+      var data=new Blob(binaryData, { type: dataType });
+      console.log(`   data: ${data}`);
+      console.log(`   image set: ${JSON.stringify(data)}`);
     });
   }
 
