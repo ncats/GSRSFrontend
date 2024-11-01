@@ -29,7 +29,6 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   uuid: string;
   imageUrlSet: string[];
   currImage: number = 0;
-  totalImages: number = 0;
 
   constructor(
     private substanceService: SubstanceService,
@@ -48,6 +47,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
     this.uuid = this.substance.uuid;
 
     this.getImageSet(this.uuid);
+    this.currImage=0;1
     /*
     this.substanceService.getDependencies(this.uuid).subscribe(response => {
       if (response) {
@@ -115,8 +115,6 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
         let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}`;
         this.imageUrlSet.push(imageUrl);
       }
-      this.totalImages = this.imageUrlSet.length;
-      this.currImage = this.totalImages > 0 ? 1 : 0;
     });
   }
 

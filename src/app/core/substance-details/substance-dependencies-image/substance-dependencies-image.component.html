@@ -71,6 +71,6 @@
       src={{imageUrlSet[currImage]}} alt="alternate image">
   </div>
   <div class="centering emph">{{currImage+1}} of {{imageUrlSet.length}}</div>
-  <span *ngIf="currImage>1" (click)="currImage=currImage-1" class="imageLink">Previous</span> &nbsp;
+  <span *ngIf="currImage>0" (click)="currImage=currImage-1" class="imageLink">Previous</span> &nbsp;
   <span *ngIf="currImage<imageUrlSet.length-1" (click)="currImage=currImage+1" class="imageLink">Next</span>
 </ng-container> 
