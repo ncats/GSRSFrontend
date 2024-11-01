@@ -43,6 +43,17 @@
   }
 }
 
+.centering {
+  margin: auto;
+  width: 80%;
+  text-align: center;
+}
+
+.emph {
+  font-weight: bold;
+}
+
 .imageLink {
-  color: green($color: #000000);
+  color: green;
+  font-weight: bold;
 }

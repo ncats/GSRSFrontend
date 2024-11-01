@@ -42,6 +42,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   ) { super(gaService); }
 
   ngOnInit() {
+    console.log("ngOnInit");
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.uuid = this.substance.uuid;
@@ -113,16 +114,13 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
       for(var imageNumber = 0; imageNumber < list.imagesFound.length; imageNumber++){
         let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}`;
         this.imageUrlSet.push(imageUrl);
-        console.log(`adding image with URL ${imageUrl}`);
       }
       this.totalImages = this.imageUrlSet.length;
       this.currImage = this.totalImages > 0 ? 1 : 0;
-      console.log(`   image set size: ${this.imageUrlSet.length}`);
     });
   }
 
   showImage() : boolean {
-    console.log(`in showImage UUID: ${this.substance.uuid} image set size: ${this.imageUrlSet.length}`);
     return this.imageUrlSet != null && this.imageUrlSet.length > 0;
   }
 }

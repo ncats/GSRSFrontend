@@ -36,7 +36,6 @@ export class StructureService {
   //TODO: this is the inchikey, should be renamed
   getInchi(id: string): Observable<string> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances(${id})/$structure!$inchikey()`;
-    console.log(`getInch url: ${url}`);
     return this.http.get(url, {responseType: 'text'});
   }
 

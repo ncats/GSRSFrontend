@@ -60,16 +60,17 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<ng-container *ngIf="showImage()">
-  <div > Alternative Image </div>
-  <div>
-    <img class="image-icon" appSubstanceAltImage size="400" [entityId]="uuid" width="300px"  height="300px" 
-      src={{imageUrlSet[currImage]}} alt="alternate image">
-  </div>
-  <span *ngIf="currImage>1" (click)="currImage=currImage-1" class="imageLink">Previous</span> &nbsp;
-  <span *ngIf="currImage<imageUrlSet.length-1" (click)="currImage=currImage+1" class="imageLink">Next</span>
-</ng-container>  
-
 <mat-paginator [length]="filtered && filtered.length || 0" [pageSize]="5" showFirstLastButtons="true"
   (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
+
+<ng-container *ngIf="showImage()">
+  <div class="centering emph"> Alternative Image </div>
+  <div class="centering">
+    <img class="image-icon" appSubstanceAltImage size="400" [entityId]="uuid" width="300px"  height="300px" 
+      src={{imageUrlSet[currImage]}} alt="alternate image">
+  </div>
+  <div class="centering emph">{{currImage+1}} of {{imageUrlSet.length}}</div>
+  <span *ngIf="currImage>1" (click)="currImage=currImage-1" class="imageLink">Previous</span> &nbsp;
+  <span *ngIf="currImage<imageUrlSet.length-1" (click)="currImage=currImage+1" class="imageLink">Next</span>
+</ng-container> 
