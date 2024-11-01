@@ -10,6 +10,9 @@ import { AuthService } from '@gsrs-core/auth';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { StructureService } from '@gsrs-core/structure';
+import { ImageFound, ImageFoundSet } from '../../structure/structure-post-response.model';
+import { List } from 'lodash';
+import { ConfigService } from '@gsrs-core/config/config.service';
 
 @Component({
   selector: 'app-substance-dependencies-image',
@@ -24,7 +27,9 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   displayImagetag: string;
   dependencies: Array<SubstanceDependenciesImageNode>;
   uuid: string;
-  imageSet: any;
+  imageUrlSet: string[];
+  currImage: number = 0;
+  totalImages: number = 0;
 
   constructor(
     private substanceService: SubstanceService,
@@ -32,7 +37,8 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
-    private structureService: StructureService
+    private structureService: StructureService,
+    public configService: ConfigService,
   ) { super(gaService); }
 
   ngOnInit() {
@@ -99,19 +105,24 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   }
 
   getImageSet(uuid: string) {
+    this.imageUrlSet = [];
     this.structureService.getImagesList(uuid).subscribe(response => {
-      console.log(`getImageSet raw response: ${response}`);
-      for(var p in response) {
-        console.log(`  p: ${p}`);
-        console.log(`  value: ${response[p]}`);
+      var list: ImageFoundSet = <ImageFoundSet> response;
+      console.log(`size of list: ${list.imagesFound.length}`);
+
+      for(var imageNumber = 0; imageNumber < list.imagesFound.length; imageNumber++){
+        let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}`;
+        this.imageUrlSet.push(imageUrl);
+        console.log(`adding image with URL ${imageUrl}`);
       }
-      const dataType = response.type;
-      const binaryData = [];
-      binaryData.push(response.bytes);
-      var data=new Blob(binaryData, { type: dataType });
-      console.log(`   data: ${data}`);
-      console.log(`   image set: ${JSON.stringify(data)}`);
+      this.totalImages = this.imageUrlSet.length;
+      this.currImage = this.totalImages > 0 ? 1 : 0;
+      console.log(`   image set size: ${this.imageUrlSet.length}`);
     });
   }
 
+  showImage() : boolean {
+    console.log(`in showImage UUID: ${this.substance.uuid} image set size: ${this.imageUrlSet.length}`);
+    return this.imageUrlSet != null && this.imageUrlSet.length > 0;
+  }
 }

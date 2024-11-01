@@ -4,7 +4,7 @@ import { ConfigService } from '../config/config.service';
 import { Observable, timeout } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
-import { ResolverResponse } from './structure-post-response.model';
+import { ImageFound, ImageFoundSet, ResolverResponse } from './structure-post-response.model';
 import { InterpretStructureResponse } from './structure-post-response.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 @Injectable({
@@ -107,10 +107,10 @@ export class StructureService {
     return this.http.post<any>(url, sub);
   }
 
-  getImagesList(id: string): Observable<any> {
+  getImagesList(id: string): Observable<ImageFoundSet> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/listImages(${id})`;
     console.log(`getImagesList url: ${url}`);
-    return this.http.get(url, {responseType: 'blob' as 'json'});
+    return this.http.get<ImageFoundSet>(url);
   }
 
 }

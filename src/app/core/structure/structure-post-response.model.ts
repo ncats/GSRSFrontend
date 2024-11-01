@@ -17,3 +17,12 @@ export interface ResolverResponse {
   name?: string;
   uuid?: string;
 }
+
+export interface ImageFound {
+  url: string;
+  outputType: string;
+}
+
+export interface ImageFoundSet {
+  imagesFound: ImageFound[];
+}
