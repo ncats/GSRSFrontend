@@ -25,10 +25,12 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   displayedColumns: string[] = ['relatedSubstance', 'structure', 'relationshipType', 'interactionType', 'mediatorSubtance', 'comments'];
   private overlayContainer: HTMLElement;
   displayImagetag: string;
-  dependencies: Array<SubstanceDependenciesImageNode>;
+  dependencies: Array<SubstanceDependenciesImageNode> =[];
   uuid: string;
   imageUrlSet: string[];
   currImage: number = 0;
+  substanceClass: string;
+  imageType: string;
 
   constructor(
     private substanceService: SubstanceService,
@@ -45,6 +47,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.uuid = this.substance.uuid;
+    this.substanceClass= this.substance.substanceClass;
 
     this.getImageSet(this.uuid);
     this.currImage=0;1
@@ -114,6 +117,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
       for(var imageNumber = 0; imageNumber < list.imagesFound.length; imageNumber++){
         let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}`;
         this.imageUrlSet.push(imageUrl);
+        this.imageType = list.imagesFound[imageNumber].outputType;
       }
     });
   }

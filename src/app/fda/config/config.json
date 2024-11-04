@@ -1,5 +1,6 @@
 {
-  "version": "3.1.1",
+  "version": "3.1.1 MM",
+  "apiBaseUrl": "http://localhost:8080/",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -209,6 +210,21 @@
           "filterName": "equals",
           "propertyToCheck": "substanceClass",
           "value": "chemical|polymer"
+        },
+        {
+          "filterName": "exists",
+          "propertyToCheck": "structure"
+        }
+      ]
+    },
+    {
+      "card": "substance-dependencies-image",
+      "title": "Substance Dependencies",
+      "filters": [
+        {
+          "filterName": "equals",
+          "propertyToCheck": "substanceClass",
+          "value": "chemical"
         },
         {
           "filterName": "exists",
