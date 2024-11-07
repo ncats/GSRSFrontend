@@ -45,6 +45,11 @@ export class AdminService extends BaseHttpService {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
     return this.http.get< any >(`${url}scheduledjobs`);
   }
+  public fetchAdditionalJobs(): Observable<any> {
+    const url = this.configService.configData.additionalJobUrls[0];
+    console.log(`fetchAdditionalJobs using url ${url}`);
+    return this.http.get< any >(url);
+  }
 
   public fetchJob(id: number): Observable< ScheduledJob > {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
