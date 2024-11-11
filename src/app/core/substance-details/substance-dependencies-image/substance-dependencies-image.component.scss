@@ -57,3 +57,26 @@
   color: green;
   font-weight: bold;
 }
+
+.nonImageBox {
+  color: blue;
+  background-color: aqua;
+  width: 25%; 
+  height: 100px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+.something {
+  max-width: 1240px;
+  margin:auto;
+  border: 30; 
+}
+
+.something_else {
+  width: 100px;
+  height: 100px;
+  border-color: chocolate;
+}

@@ -12,7 +12,7 @@
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
   "approvalCodeName": "UNII",
-  "primaryCode": "BDNUM",
+  "primaryCode": "Code",
   "useDataUrl": false,
   "authenticateAs": {
     "apiUsername": null,

@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceCardBase } from '../substance-card-base';
 import { SubstanceDetail, SubstanceReference } from '../../substance/substance.model';
@@ -13,6 +14,7 @@ import { StructureService } from '@gsrs-core/structure';
 import { ImageFound, ImageFoundSet } from '../../structure/structure-post-response.model';
 import { List } from 'lodash';
 import { ConfigService } from '@gsrs-core/config/config.service';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-substance-dependencies-image',
@@ -31,7 +33,10 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   currImage: number = 0;
   substanceClass: string;
   imageType: string;
-
+  showTautomerInfo: boolean = false;
+  somethingSet: string[];
+  showDataAlways: boolean = true;
+  
   constructor(
     private substanceService: SubstanceService,
     private authService: AuthService,
@@ -44,13 +49,19 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
 
   ngOnInit() {
     console.log("ngOnInit");
+    this.somethingSet = [];
+    for(var i = 0; i< 20;i++) {
+      let value = `Value A ${i+1}`;
+      console.log(`adding values ${value}`);
+      this.somethingSet.push(value);
+    }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.uuid = this.substance.uuid;
     this.substanceClass= this.substance.substanceClass;
 
     this.getImageSet(this.uuid);
-    this.currImage=0;1
+    this.currImage=0;
     /*
     this.substanceService.getDependencies(this.uuid).subscribe(response => {
       if (response) {
@@ -110,16 +121,22 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
 
   getImageSet(uuid: string) {
     this.imageUrlSet = [];
+    this.showTautomerInfo = false;
     this.structureService.getImagesList(uuid).subscribe(response => {
       var list: ImageFoundSet = <ImageFoundSet> response;
       console.log(`size of list: ${list.imagesFound.length}`);
 
       for(var imageNumber = 0; imageNumber < list.imagesFound.length; imageNumber++){
-        let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}`;
+        let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}?size=100`;
         this.imageUrlSet.push(imageUrl);
         this.imageType = list.imagesFound[imageNumber].outputType;
+        console.log(`this.imageType: ${this.imageType}`);
+        if(this.imageType != null && this.imageType.toLowerCase().indexOf("tautomer") > 0){
+          this.showTautomerInfo = true;
+        }
       }
     });
+    console.log(`showTautomerInfo: ${this.showTautomerInfo} this.imageType: ${this.imageType}`);
   }
 
   showImage() : boolean {
