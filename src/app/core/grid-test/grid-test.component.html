@@ -1,0 +1,7 @@
+<h2>Simple Grid</h2>
+
+<mat-grid-list cols="2" rowHeight="2:1" class = "useful-cards">
+    <mat-grid-tile *ngFor="let thing of somethingSet; index as imgNum">
+        {{thing}}
+    </mat-grid-tile>
+</mat-grid-list>
