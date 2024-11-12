@@ -21,7 +21,7 @@
   },
   "apiBaseUrl": "http://localhost:8080/",
   "additionalJobUrls" :[
-    "http://localhost:8084/api/v1/scheduledjobs"
+    "http://localhost:8081/ginas/app/api/v1/products0/scheduledjobs"
   ],
   "stagingArea": {
     "mergeAction": false

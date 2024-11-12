@@ -114,6 +114,7 @@ enable(job: any) {
 }
 
 execute(job: any) {
+  console.log(`execute for job ${JSON.stringify(job)}`);
   this.quickLoad = true;
   this.adminService.runJob(job['@execute']).pipe(take(1)).subscribe( response => {
     this.refresh(true);

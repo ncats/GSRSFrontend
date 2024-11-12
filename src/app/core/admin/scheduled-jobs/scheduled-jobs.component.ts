@@ -31,10 +31,10 @@ export class ScheduledJobsComponent implements OnInit {
       this.adminService.fetchAdditionalJobs().pipe(take(1)).subscribe( resp => {
         console.log(`received additional jobs`);
         this.loading = false;
-        let addtionalJobs:any = resp.content;
-        if( addtionalJobs && addtionalJobs.length >0) {
-          console.log(`adding ${addtionalJobs.length} jobs`);
-          this.jobs = [...this.jobs, ...addtionalJobs];
+        let additionalJobs:any = resp.content;
+        if( additionalJobs && additionalJobs.length >0) {
+          console.log(`adding ${additionalJobs.length} jobs`);
+          this.jobs = [...this.jobs, ...additionalJobs];
         }
       });
     }, 1000);
