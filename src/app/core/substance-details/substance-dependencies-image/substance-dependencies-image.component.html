@@ -66,8 +66,8 @@
   (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]" *ngIf="dependencies.length > 0">
 </mat-paginator>
 
-<!--ng-container *ngIf="showImage()">
-  <div class="centering emph"> {{imageType}} </div>
+<ng-container *ngIf="showImage()">
+  <!--div class="centering emph"> {{imageType}} </div>
   <div class="centering">
     <img class="image-icon" appSubstanceAltImage size="300" [entityId]="uuid" width="200px"  height="200px" 
       src={{imageUrlSet[currImage]}} alt="alternate image">
@@ -76,16 +76,23 @@
   <span *ngIf="currImage>0" (click)="currImage=currImage-1" class="imageLink">Previous</span> &nbsp;
   <span *ngIf="currImage<imageUrlSet.length-1" (click)="currImage=currImage+1" class="imageLink">Next</span>
 
-  <br/>
+  <br/-->
   <mat-grid-list cols="3" class = "useful-cards">
     <mat-grid-tile *ngFor="let imageUrl of imageUrlSet; index as imgNum">
-        <mat-card class="temprow right-link left-link" style="width: 100px; height: 100px;">
+        <mat-card class="temprow right-link left-link" >
+          <div class="">
             <h3 class = "resource-link">
-                {{imgNum+1}}
+              {{imageType}}
             </h3>
+          </div>
             <div class = "img-container">
-              <img class="image-icon" appSubstanceAltImage size="100" [entityId]="uuid" width="100px"  height="100px" 
+              <img class="image-icon" appSubstanceAltImage size="200" [entityId]="uuid" width="200px"  height="200px" 
               src={{imageUrl}} alt="alternate image"/>
+            </div>
+            <div class="centering">
+              <h3 class = "resource-link">
+                {{imgNum+1}} of {{imageUrlSet.length}}
+            </h3>
             </div>
         </mat-card>
     </mat-grid-tile>
@@ -94,10 +101,10 @@
   <div *ngIf="showTautomerInfo">
     <span>See <a href="https://en.wikipedia.org/wiki/Tautomer" target="_">https://en.wikipedia.org/wiki/Tautomer</a> for an explanation of 'tautomer'</span>
   </div>
-</ng-container--> 
+</ng-container> 
 
 <br>
-<ng-container *ngIf="showDataAlways" class="something">
+<!-- simple example ng-container *ngIf="showDataAlways" class="something">
   <mat-grid-list cols="4" rowHeight="100px">
     <mat-grid-tile *ngFor="let thing of somethingSet; index as imgNum" >
         <mat-card class="nonImageBox" >
@@ -107,12 +114,4 @@
         </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
-  </ng-container>
-
-<div *ngIf="true">
-    <mat-grid-list cols="2" rowHeight="2:1" class = "useful-cards">
-    <mat-grid-tile *ngFor="let thing of somethingSet; index as imgNum">
-      {{thing}}
-    </mat-grid-tile>
-  </mat-grid-list>
-</div>
+  </ng-container-->
