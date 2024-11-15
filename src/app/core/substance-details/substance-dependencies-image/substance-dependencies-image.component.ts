@@ -34,8 +34,7 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
   substanceClass: string;
   imageType: string;
   showTautomerInfo: boolean = false;
-  somethingSet: string[];
-  showDataAlways: boolean = true;
+  imageSize = 400;
   
   constructor(
     private substanceService: SubstanceService,
@@ -49,12 +48,6 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
 
   ngOnInit() {
     console.log("ngOnInit");
-    this.somethingSet = [];
-    for(var i = 0; i< 20;i++) {
-      let value = `Value A ${i+1}`;
-      console.log(`adding values ${value}`);
-      this.somethingSet.push(value);
-    }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.uuid = this.substance.uuid;
@@ -127,7 +120,9 @@ export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilter
       console.log(`size of list: ${list.imagesFound.length}`);
 
       for(var imageNumber = 0; imageNumber < list.imagesFound.length; imageNumber++){
-        let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}?size=100`;
+        let imageUrl = `${this.configService.configData.apiBaseUrl}api/v1/substances/${list.imagesFound[imageNumber].url}`;
+        imageUrl = imageUrl + (imageUrl.indexOf("?") > -1 ? "&" : "?") + "size=" + this.imageSize;
+        console.log(`imageUrl: ${imageUrl}`);
         this.imageUrlSet.push(imageUrl);
         this.imageType = list.imagesFound[imageNumber].outputType;
         console.log(`this.imageType: ${this.imageType}`);
