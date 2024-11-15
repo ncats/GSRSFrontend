@@ -17,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MatDialogModule,
     MatSortModule,
     CodeDisplayModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatGridListModule
   ],
   declarations: [
     SubstanceDependenciesImageComponent
