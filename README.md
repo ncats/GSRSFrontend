@@ -110,7 +110,7 @@ npm audit fix // this step not needed after angular upgrade
 
 You'll also need to to make adjustments to the API base urls and Gateway.  See [here](https://github.com/ncats/gsrs3-main-deployment#optionally-use-development-mode-for-the-frontend-in-the-local-embedded-deployment) details.
 
-If you have a need for different environment, you can create a new one based on the existing pattern.
+If you have a need for a different environment, you can create a new one based on the existing pattern.
 
 
 ## Troubleshooting
