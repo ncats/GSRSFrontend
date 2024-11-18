@@ -108,12 +108,8 @@ npm audit fix // this step not needed after angular upgrade
 - After a few seconds of compiling the application, you're ready to view your application
 - Open your browser and navigate to http://localhost:4200
 
-In this case, your config.json should have the following values, with the SSG4m being relevant
+You'll also need to to make adjustments to the API base urls and Gateway.  See [here](https://github.com/ncats/gsrs3-main-deployment#optionally-use-development-mode-for-the-frontend-in-the-local-embedded-deployment) details.
 
-```
-  "apiBaseUrl": "http://localhost:8081/",
-  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
-```
 
 ## Troubleshooting
 
