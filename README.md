@@ -104,7 +104,7 @@ npm audit fix // this step not needed after angular upgrade
 - Go the the package.json file and look at the scripts property to see what availabe commands exist
 - The commands to run during development begin with "start"
 - Identify the environment you want to run, open your favorite command line tool and run the script starting with "npm run"
- - So to run the public local environment, you would run `npm run start:gsrs:local`
+ - So to run the public local environment, you would run `npm run start:fda:local`
 - After a few seconds of compiling the application, you're ready to view your application
 - Open your browser and navigate to http://localhost:4200
 
