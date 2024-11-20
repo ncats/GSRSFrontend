@@ -1056,6 +1056,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
         this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
       }, (error: SubstanceFormResults) => {
+        console.log('error: ', error);
         this.showSubmissionMessages = true;
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -1099,7 +1100,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       messageType: 'ERROR',
       message: 'Unknown Server Error'
     };
-    if (error && error.error && error.error.message) {
+    if (error && error.type === 'AUTH') {
+      message.message = `Authentication Error: ${error.message}`;
+    } else if (error && error.error && error.error.message) {
       message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error && error.error && (typeof error.error) === 'string') {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;

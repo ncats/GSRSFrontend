@@ -61,12 +61,12 @@
   </a>
 
   <div>
-    <a class="pfda-user-button" [href]="pfdaBaseUrl + 'login'" *ngIf="!auth">
+    <span class="pfda-user-button" (click)="login()" *ngIf="!auth">
       <div class="pfda-toolbar-button">
         <mat-icon class="pfda-toolbar-button-icon" svgIcon="account_circle"></mat-icon>
         <div class="pfda-toolbar-button-title">Login</div>
       </div>
-    </a>
+    </span>
 
     <a class="pfda-user-button" [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" matTooltip="user menu" *ngIf="auth">
       <div class="pfda-toolbar-button">
@@ -98,9 +98,9 @@
         <span>Guidelines</span>
       </a>
       <mat-divider></mat-divider>
-      <a mat-menu-item [href]="pfdaBaseUrl + 'ginas/app/logout'">
+      <span mat-menu-item (click)="logout()">
         <span>Log Out</span>
-      </a>
+      </span>
     </mat-menu>
   </div>
 </mat-toolbar>
