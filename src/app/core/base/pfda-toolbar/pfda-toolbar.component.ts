@@ -87,4 +87,13 @@ export class PfdaToolbarComponent implements OnInit {
   removeZindex(): void {
     this.overlayContainer.style.zIndex = null;
   }
+
+  login(): void {
+    const locationEncoded = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
+    window.location.assign(`${this.pfdaBaseUrl}login?user_return_to=${locationEncoded}`);
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
 }

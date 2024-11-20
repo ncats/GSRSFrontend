@@ -763,51 +763,49 @@ export class SubstanceService extends BaseHttpService {
 
 
   saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
-    let method = substance.uuid ? 'PUT' : 'POST';
-    if (type && type === 'import') {
-      method = 'POST';
-    }
-    const options = {
-      body: substance
-    };
+    const method = type === 'import' || !substance.uuid ? 'POST' : 'PUT';
+    const options = { body: substance };
+
+    const url = this.configService.configData.isPfdaVersion
+      ? `${this.pfdaApiBaseUrl}substances?view=internal`
+      : `${this.apiBaseUrl}substances?view=internal`;
 
     if (!this.configService.configData.isPfdaVersion) {
-      const url = `${this.apiBaseUrl}substances?view=internal`;
       return this.http.request(method, url, options);
     } else {
       return this.authService.getAuth().pipe(
-        concatMap(auth => {
-          if (auth) {
-            // If authenticated, make the HTTP request
-            const url = `${this.pfdaApiBaseUrl}substances?view=internal`;
-            return this.http.request(method, url, options);
-          } else {
-            // If not authenticated, open the login window and wait for it to close
-            const height = 700;
-            const width = 700;
-            const left = (screen.width / 2) - (width / 2);
-            const top = (screen.height / 2) - (height / 2);
-            const loginWindow = window.open(
-              '/login?user_return_to=%2Fgsrs-auth%2Fclose-login-window',
-              'pFda Login',
-              `height=${height},width=${width},top=${top},left=${left}`
-            );
-
-            // Use an observable to wait for the popup window to close
-            return this.waitForPopupToClose(loginWindow).pipe(
-              concatMap(() => {
-                // Retry saving the substance after the window closes
-                return this.saveSubstance(substance, type);
-              })
-            );
-          }
-        }),
-        catchError(error => {
-          return throwError(() => new Error('Failed to save substance.'));
-        })
+        concatMap(auth => auth
+          ? this.http.request(method, url, options)
+          : this.handlePfdaLoginAndRetry(method, url, options)
+        )
       );
     }
   }
+
+  private handlePfdaLoginAndRetry(method: string, url: string, options: any): Observable<any> {
+    const height = 700;
+    const width = 700;
+    const left = (screen.width / 2) - (width / 2);
+    const top = (screen.height / 2) - (height / 2);
+    const loginWindow = window.open(
+      '/login?user_return_to=%2Fgsrs-auth%2Fclose-login-window',
+      'pFDA Login',
+      `height=${height},width=${width},top=${top},left=${left}`
+    );
+
+    return this.waitForPopupToClose(loginWindow).pipe(
+      concatMap(() =>
+        this.authService.getAuth().pipe(
+          concatMap(authAfterLogin =>
+            authAfterLogin
+              ? this.http.request(method, url, options)
+              : throwError(() => ({ type: 'AUTH', message: 'Authentication failed' }))
+          )
+        )
+      )
+    );
+  }
+
 
   validateSubstance(substance: SubstanceDetail, stagingID?: string): Observable<ValidationResults> {
     let url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
