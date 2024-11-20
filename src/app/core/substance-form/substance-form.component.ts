@@ -1071,6 +1071,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
         this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
       }, (error: SubstanceFormResults) => {
+        console.log('error: ', error);
         this.showSubmissionMessages = true;
         this.loadingService.setLoading(false);
         this.isLoading = false;

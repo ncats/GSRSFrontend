@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient } from '@angular/common/http';
 import { from, Observable, switchMap } from 'rxjs';
 import { ConfigService } from "@gsrs-core/config";
-=======
-import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient} from '@angular/common/http';
-import {from, Observable, switchMap} from 'rxjs';
-import {ConfigService} from "@gsrs-core/config";
->>>>>>> 5bfb89a9 (Request CSRF token before every POST request)
 
 @Injectable()
 export class CsrfTokenInterceptor implements HttpInterceptor {
