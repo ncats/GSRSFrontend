@@ -161,8 +161,15 @@ export class AuthService {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
     }
-    const url = `${this.configService.configData.apiBaseUrl}logout`;
-    this.http.get(url).subscribe(() => {
+    let url = `${this.configService.configData.apiBaseUrl}logout`;
+    let method = 'GET';
+
+    if (this.configService.configData.isPfdaVersion) {
+      url = '/logout';
+      method = 'DELETE';
+    }
+
+    this.http.request(method, url).subscribe(() => {
       this._auth = null;
       this._authUpdate.next(null);
     }, error => {
