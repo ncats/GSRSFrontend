@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { SessionExpirationWarning } from '@gsrs-core/config';
 import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
+import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-session-expiration-dialog',
@@ -22,7 +23,8 @@ export class SessionExpirationDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     // N.B. injected services has to come after data
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) {
     this.sessionExpirationWarning = data.sessionExpirationWarning;
     this.sessionExpiringAt = data.sessionExpiringAt;
@@ -74,5 +76,13 @@ export class SessionExpirationDialogComponent implements OnInit {
 
   login() {
     window.location.assign('/login');
+  }
+
+  proceedAsGuest() {
+    clearInterval(this.updateDialogInterval);
+    if (this.timeRemainingSeconds > 0) {
+      this.authService.logout();
+    }
+    this.closeDialog();
   }
 }
