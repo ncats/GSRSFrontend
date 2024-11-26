@@ -754,15 +754,6 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
-  // Helper function to create an Observable that emits when the popup login window closes
-  waitForPopupToClose(popupWindow) {
-    return interval(1000).pipe(
-      takeWhile(() => !popupWindow.closed, true),
-      filter(() => popupWindow.closed)
-    );
-  }
-
-
   saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
     const method = type === 'import' || !substance.uuid ? 'POST' : 'PUT';
     const options = { body: substance };
@@ -775,38 +766,23 @@ export class SubstanceService extends BaseHttpService {
       return this.http.request(method, url, options);
     } else {
       return this.authService.getAuth().pipe(
-        concatMap(auth => auth
-          ? this.http.request(method, url, options)
-          : this.handlePfdaLoginAndRetry(method, url, options)
+        concatMap(auth =>
+          auth
+            ? this.http.request(method, url, options)
+            : this.authService.pfdaLogin().pipe(
+              concatMap(success =>
+                success
+                  ? this.http.request(method, url, options)
+                  : throwError(() => ({
+                    type: 'AUTH',
+                    message: 'Authentication failed',
+                  }))
+              )
+            )
         )
       );
     }
   }
-
-  private handlePfdaLoginAndRetry(method: string, url: string, options: any): Observable<any> {
-    const height = 700;
-    const width = 700;
-    const left = (screen.width / 2) - (width / 2);
-    const top = (screen.height / 2) - (height / 2);
-    const loginWindow = window.open(
-      '/login?user_return_to=%2Fgsrs-auth%2Fclose-login-window',
-      'pFDA Login',
-      `height=${height},width=${width},top=${top},left=${left}`
-    );
-
-    return this.waitForPopupToClose(loginWindow).pipe(
-      concatMap(() =>
-        this.authService.getAuth().pipe(
-          concatMap(authAfterLogin =>
-            authAfterLogin
-              ? this.http.request(method, url, options)
-              : throwError(() => ({ type: 'AUTH', message: 'Authentication failed' }))
-          )
-        )
-      )
-    );
-  }
-
 
   validateSubstance(substance: SubstanceDetail, stagingID?: string): Observable<ValidationResults> {
     let url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
