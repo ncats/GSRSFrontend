@@ -5,7 +5,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { AuthService } from '../../auth/auth.service';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { Auth } from '../../auth/auth.model';
-import { Subscription } from 'rxjs';
+import { concatMap, Subscription } from 'rxjs';
 import { NavItem } from '@gsrs-core/config';
 
 @Component({
@@ -40,7 +40,7 @@ export class PfdaToolbarComponent implements OnInit {
   ngOnInit() {
     this.pfdaBaseUrl = this.configService.configData.pfdaBaseUrl || '/';
 
-    const baseHref = this.configService.environment.baseHref || '/'
+    const baseHref = this.configService.environment.baseHref || '/ginas/app/beta/';
     this.logoSrcPath = `${baseHref}assets/images/pfda/pfda-logo.png`;
     this.homeIconPath = `${baseHref}assets/images/pfda/home.svg`;
 
@@ -89,8 +89,10 @@ export class PfdaToolbarComponent implements OnInit {
   }
 
   login(): void {
-    const locationEncoded = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
-    window.location.assign(`${this.pfdaBaseUrl}login?user_return_to=${locationEncoded}`);
+    this.authService.pfdaLogin().pipe(
+      concatMap(success => {
+        return this.authService.getAuth();
+      })).subscribe();
   }
 
   logout(): void {
