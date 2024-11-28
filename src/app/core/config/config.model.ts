@@ -2,7 +2,6 @@ import { Auth } from "@gsrs-core/auth";
 
 export interface Config {
     apiBaseUrl?: string;
-    pfdaApiBaseUrl?: string;
     gsrsHomeBaseUrl?: string;
     apiSSG4mBaseUrl?: string;
     apiUrlDomain?: string;

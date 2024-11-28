@@ -758,10 +758,7 @@ export class SubstanceService extends BaseHttpService {
     const method = type === 'import' || !substance.uuid ? 'POST' : 'PUT';
     const options = { body: substance };
 
-    const url = this.configService.configData.isPfdaVersion
-      ? `${this.pfdaApiBaseUrl}substances?view=internal`
-      : `${this.apiBaseUrl}substances?view=internal`;
-
+    const url = `${this.apiBaseUrl}substances?view=internal`;
     if (!this.configService.configData.isPfdaVersion) {
       return this.http.request(method, url, options);
     } else {
