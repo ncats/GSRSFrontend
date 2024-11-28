@@ -1,6 +1,5 @@
 export interface Environment {
     apiBaseUrl: string;
-    pfdaApiBaseUrl?: string | undefined;
     configFileLocation?: string;
     baseHref: string;
     clasicBaseHref: string;

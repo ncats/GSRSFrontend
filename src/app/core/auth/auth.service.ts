@@ -111,7 +111,7 @@ export class AuthService {
     const left = (screen.width / 2) - (width / 2);
     const top = (screen.height / 2) - (height / 2);
     const loginWindow = window.open(
-      '/login?user_return_to=%2Fgsrs-auth%2Fclose-login-window',
+      '/login?user_return_to=%2Fginas%2Fclose-pfda-login-window',
       'pFDA Login',
       `height=${height},width=${width},top=${top},left=${left}`
     );
@@ -346,55 +346,16 @@ export class AuthService {
   private fetchAuth(): Observable<Auth> {
     return new Observable(observer => {
       this.configService.afterLoad().then(cd => {
-        const isPfdaVersion = this.configService.configData.isPfdaVersion === true;
-        const url = isPfdaVersion ? '/api/user' :
-          `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/whoami`;
+        const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
         if (this.configService.configData && this.configService.configData.dummyWhoami) {
           observer.next(this.configService.configData.dummyWhoami);
         } else {
-          this.http.get<Auth>(url)
+          this.http.get<Auth>(`${url}whoami`)
           .subscribe(
             auth => {
-             if (isPfdaVersion) {
-               // @ts-ignore
-               const dxuser = auth.user.dxuser;
-               const pfdaAuth: Auth = {
-                 id: 0,
-                 version: 0,
-                 created: 0,
-                 modified: 0,
-                 deprecated: false,
-                 user: {
-                   id: 0,
-                   version: 0,
-                   created: 0,
-                   modified: 0,
-                   deprecated: false,
-                   username: dxuser,
-                   email: auth.user.email,
-                   admin: auth.user.admin
-                 },
-                 active: true,
-                 systemAuth: false,
-                 key: 'unused',
-                 identifier: dxuser,
-                 groups: [],
-                 roles: [
-                   "Query",
-                   "Updater",
-                   "SuperUpdate",
-                   "DataEntry",
-                   "SuperDataEntry"
-                 ],
-                 computedToken: 'unused',
-                 tokenTimeToExpireMS: 9999999999999,
-                 roleQueryOnly: false,
-                 permissions: []
-               }
-               observer.next(pfdaAuth);
-             } else {
-               observer.next(auth);
-             }
+              //  console.log("Authorized as");
+              //  console.log(auth);
+              observer.next(auth);
             },
             err => {
               console.log("Authorized error");
