@@ -1038,6 +1038,21 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     })
   }
 
+  getSubmitButtonText(): string {
+    const parts = [];
+    if (this.validationMessages && this.validationMessages.length > 0) {
+      parts.push('Dismiss all');
+    }
+    if (!this.authService.getUser()) {
+      parts.push('Login');
+    }
+    parts.push('Submit');
+
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0];
+    return parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+  }
+
   submit(): void {
     this.isLoading = true;
     this.approving = false;
@@ -1056,7 +1071,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
         this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
       }, (error: SubstanceFormResults) => {
-        console.log('error: ', error);
         this.showSubmissionMessages = true;
         this.loadingService.setLoading(false);
         this.isLoading = false;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient} from '@angular/common/http';
-import {from, Observable, switchMap} from 'rxjs';
-import {ConfigService} from "@gsrs-core/config";
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpClient } from '@angular/common/http';
+import { from, Observable, switchMap } from 'rxjs';
+import { ConfigService } from "@gsrs-core/config";
 
 @Injectable()
 export class CsrfTokenInterceptor implements HttpInterceptor {
@@ -9,9 +9,8 @@ export class CsrfTokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // CSRF token request needed in pFDA version only, for POST and DELETE requests made on /gsrs-auth/* and /logout endpoints
+    // CSRF token request needed in pFDA version only
     if (['GET', 'HEAD'].includes(request.method)
-      || (!request.url.toLowerCase().includes('/gsrs-auth/') && !request.url.toLowerCase().includes('/logout'))
       || !(this.configService.configData?.isPfdaVersion)) {
       return next.handle(request);
     }

@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { SessionExpirationWarning } from '@gsrs-core/config';
+import {ConfigService, SessionExpirationWarning} from '@gsrs-core/config';
 import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
 import { AuthService } from '@gsrs-core/auth';
+import {concatMap} from "rxjs";
 
 @Component({
   selector: 'app-session-expiration-dialog',
@@ -24,7 +25,8 @@ export class SessionExpirationDialogComponent implements OnInit {
     // N.B. injected services has to come after data
     private router: Router,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    public configService: ConfigService
   ) {
     this.sessionExpirationWarning = data.sessionExpirationWarning;
     this.sessionExpiringAt = data.sessionExpiringAt;
@@ -75,7 +77,18 @@ export class SessionExpirationDialogComponent implements OnInit {
   }
 
   login() {
-    window.location.assign('/login');
+    if (this.configService.configData.isPfdaVersion) {
+      this.authService.pfdaLogin().pipe(
+        concatMap(success => {
+          console.log('success: ', success);
+          if (success) {
+            this.closeDialog();
+            return this.authService.getAuth();
+          }
+        })).subscribe();
+    } else {
+      window.location.assign('/login');
+    }
   }
 
   proceedAsGuest() {
