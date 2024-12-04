@@ -42,12 +42,25 @@ export class SubstanceFormNamesCardComponent
     this.menuLabelUpdate.emit('Names');
     this.appId = this.configService.environment.appId;
     this.standardizeButton = this.configService.configData.showNameStandardizeButton || false;
+    //temp while switching to newer config system
     if (this.configService && this.configService.configData && this.configService.configData.nameFormPageSizeOptions) {
         this.pageSizeOptions = this.configService.configData.nameFormPageSizeOptions;
     }
     if (this.configService && this.configService.configData && this.configService.configData.nameFormPageSizeDefault) {
       this.pageSize = this.configService.configData.nameFormPageSizeDefault;
     }
+
+
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.names ){
+          let pagingSettings = this.configService.configData.editPagingOptionSettings.names;
+          if(pagingSettings.pageSizeDefault) {
+            this.pageSize = pagingSettings.pageSizeDefault
+          }
+          if(pagingSettings.pageSizeOptions) {
+            this.pageSizeOptions = pagingSettings.pageSizeOptions;
+          }
+    }
+  
     const definitionSubscription = this.substanceFormService.definition.subscribe( level => {
       if (level.definitionType && level.definitionType === 'ALTERNATIVE') {
       //  this.canAddItemUpdate.emit(false);

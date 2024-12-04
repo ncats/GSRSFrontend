@@ -9,6 +9,7 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormReferencesService } from './substance-form-references.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-form-references-card',
@@ -20,13 +21,17 @@ export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilte
   references: Array<SubstanceReference>;
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
+  pageSizeOptions = [5, 10, 25, 100];
+  pageSize = 10;
+
 
   constructor(
     private substanceFormReferencesService: SubstanceFormReferencesService,
     private dialog: MatDialog,
     private scrollToService: ScrollToService,
     public gaService: GoogleAnalyticsService,
-    private overlayContainerService: OverlayContainer
+    private overlayContainerService: OverlayContainer,
+    private configService: ConfigService,
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form references';
@@ -36,6 +41,15 @@ export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilte
     this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('References');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.references ){
+      let pagingSettings = this.configService.configData.editPagingOptionSettings.references;
+      if(pagingSettings.pageSizeDefault) {
+        this.pageSize = pagingSettings.pageSizeDefault
+      }
+      if(pagingSettings.pageSizeOptions) {
+        this.pageSizeOptions = pagingSettings.pageSizeOptions;
+      }
+}
   }
 
   ngAfterViewInit() {

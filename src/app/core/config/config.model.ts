@@ -85,6 +85,7 @@ export interface Config {
     enableStructureFeatures?: boolean;
     StructureFeaturePriority?: Array<string>;
     structureEditSearch?: boolean;
+    editPagingOptionSettings?: PagingOptionSettings;
 }
 
 export interface StagingAreaSettings {
@@ -158,4 +159,16 @@ export interface ExternalSiteWarning {
     enabled: boolean;
     dialogTitle: string;
     dialogMessage: string;
+}
+
+export interface PagingOptionSettings {
+    names?: PagingOptions;
+    codes?: PagingOptions;
+    relationships?: PagingOptions;
+    references?: PagingOptions;
+}
+
+export interface PagingOptions {
+    pageSizeOptions?: Array<number>;
+    pageSizeDefault?: number;
 }

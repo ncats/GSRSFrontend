@@ -9,8 +9,8 @@
     Add relationship <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button> -->
 </div>
-<mat-paginator *ngIf="relationships && relationships.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true"
-    (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator *ngIf="relationships && relationships.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="pageSize" showFirstLastButtons="true"
+    (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="pageSizeOptions">
   </mat-paginator>
 <div class="relationship" *ngFor="let relationship of paged; last as isLast; index as index" appScrollToTarget
   [id]="'substance-relationship-' + index">
@@ -18,8 +18,8 @@
   </app-relationship-form>
   <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
 </div>
-<mat-paginator *ngIf="relationships && relationships.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="5" showFirstLastButtons="true"
-  (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator *ngIf="relationships && relationships.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page" [pageSize]="pageSize" showFirstLastButtons="true"
+  (page)="pageChange($event, analyticsEventCategory)" [pageSizeOptions]="pageSizeOptions">
 </mat-paginator>
 
 
