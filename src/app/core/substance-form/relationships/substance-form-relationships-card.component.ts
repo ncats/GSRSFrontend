@@ -5,6 +5,7 @@ import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
 import { SubstanceFormRelationshipsService } from './substance-form-relationships.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-form-relationships-card',
@@ -16,11 +17,16 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
   relationships: Array<SubstanceRelationship>;
   private subscriptions: Array<Subscription> = [];
   expanded = true;
+  pageSize = 10;
+  pageSizeOptions = [5, 10, 25, 100];
+
 
   constructor(
     private substanceFormRelationshipsService: SubstanceFormRelationshipsService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private configService: ConfigService,
+
   ) {
     super(gaService);
   }
@@ -29,6 +35,16 @@ export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFi
     this.canAddItemUpdate.emit(true);
     this.menuLabelUpdate.emit('Relationships');
     this.analyticsEventCategory = 'substance form relationships';
+
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.relationships ){
+          let pagingSettings = this.configService.configData.editPagingOptionSettings.relationships;
+          if(pagingSettings.pageSizeDefault) {
+            this.pageSize = pagingSettings.pageSizeDefault
+          }
+          if(pagingSettings.pageSizeOptions) {
+            this.pageSizeOptions = pagingSettings.pageSizeOptions;
+          }
+    }
   }
 
   ngAfterViewInit() {
