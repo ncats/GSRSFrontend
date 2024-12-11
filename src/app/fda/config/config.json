@@ -10,6 +10,7 @@
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
+  "apiBaseUrl": "https://gsrs.ncats.nih.gov/ginas/app/",
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
   "useDataUrl": false,

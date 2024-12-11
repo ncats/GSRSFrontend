@@ -219,7 +219,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       });
 
     });
-    
+
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
@@ -248,7 +248,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
     // the sort order should be set to default (similarity) for structure searches, last edited for all others
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 
+    this.order = this.activatedRoute.snapshot.queryParams['order'] ||
     (this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '' ? 'default':'$root_lastEdited');
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
@@ -516,7 +516,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         id:'structure-dialog'
       });
       this.overlayContainer.style.zIndex = '1002';
-  
+
       this.structureSearchDialog.afterClosed().subscribe(result => {
         this.overlayContainer.style.zIndex = null;
         this.loadingService.setLoading(false);
@@ -525,7 +525,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       });
       this.structureDialogOpened = true;
     }
-    
+
   }
 
   searchSubstances() {
@@ -580,7 +580,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         // this.pauseStructureSearch = true;
            iterations++;
          }
-         
+
 
           this.privateBulkSearchStatusKey = pagingResponse.statusKey;
           this.isError = false;
@@ -620,7 +620,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.etag = pagingResponse.etag;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
-            
+
           }
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
@@ -760,7 +760,7 @@ searchTermOkforBeginsWithSearch(): boolean {
         maxHeight: '85%',
 
         width: '60%',
-        
+
         data: { 'extension': extension }
       });
 
@@ -1287,21 +1287,21 @@ searchTermOkforBeginsWithSearch(): boolean {
   addToList(): void {
       let data = {view: 'add', etag: this.etag, lists: this.userLists};
 
-      
+
       const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
         width: '800px',
         autoFocus: false,
               data: data
-  
+
       });
       this.overlayContainer.style.zIndex = '1002';
-  
+
       const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
         if (response) {
           this.overlayContainer.style.zIndex = null;
         }
       });
     }
-  
+
 
 }

@@ -267,6 +267,7 @@ export class SubstanceService extends BaseHttpService {
         sync = true;
       }
       if (!sync && this.searchKeys[structureFacetsKey]) {
+        console.log('not sync');
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
         if(querySearchTerm.length > 0) {
@@ -284,8 +285,12 @@ export class SubstanceService extends BaseHttpService {
         if (order != null && order !== '') {
           params = params.append('order', order);
         }
+        console.log(url);
+        console.log(params);
 
       } else {
+        console.log(sync);
+        console.log(type);
         params = params.append('q', (searchTerm));
         if (type) {
           params = params.append('type', type);
@@ -310,6 +315,7 @@ export class SubstanceService extends BaseHttpService {
           }
         }
         url += 'substances/structureSearch';
+        console.log(url);
       }
 
       const options = {
@@ -318,8 +324,10 @@ export class SubstanceService extends BaseHttpService {
 
       this.http.get<any>(url, options).subscribe(
         response => {
+          console.log(response);
           // call async
           if (response.results) {
+            console.log('call async');
             const resultKey = response.key;
             this.searchKeys[structureFacetsKey] = resultKey;
             this.processAsyncSearchResults(
@@ -334,6 +342,7 @@ export class SubstanceService extends BaseHttpService {
               skip
             );
           } else {
+            console.log('complete');
             observer.next(response);
             observer.complete();
           }
@@ -479,6 +488,8 @@ export class SubstanceService extends BaseHttpService {
         response => {
           // call async
           if (response.results) {
+            console.log('has results');
+            console.log(response);
             const resultKey = response.key;
             this.searchKeys[bulkFacetsKey] = resultKey;
             this.processAsyncSearchResults(
@@ -494,6 +505,7 @@ export class SubstanceService extends BaseHttpService {
             );
           } else {
             // consider making API backend provide statusKey in JSON
+            console.log('not results)');
             if(this.searchKeys && this.searchKeys[bulkFacetsKey]) {
               response.statusKey = this.searchKeys[bulkFacetsKey];
             }
