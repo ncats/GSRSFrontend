@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import {ConfigService, SessionExpirationWarning} from '@gsrs-core/config';
+import { ConfigService, SessionExpirationWarning } from '@gsrs-core/config';
 import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
 import { AuthService } from '@gsrs-core/auth';
 import {concatMap} from "rxjs";
@@ -93,9 +93,7 @@ export class SessionExpirationDialogComponent implements OnInit {
 
   proceedAsGuest() {
     clearInterval(this.updateDialogInterval);
-    if (this.timeRemainingSeconds > 0) {
-      this.authService.logout();
-    }
+    this.authService.logout();
     this.closeDialog();
   }
 }
