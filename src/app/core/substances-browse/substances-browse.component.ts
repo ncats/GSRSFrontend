@@ -138,7 +138,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetViewControl = new FormControl();
   private wildCardText: string;
   bulkSearchPanelOpen = false;
-
+  pauseStructureSearch = false;
+  asyncFinished = false;
 
 
   constructor(
@@ -472,6 +473,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  pause() {}
+
   searchSubstances() {
       // There should be a better way to do this.
       this.bulkSearchPanelOpen =
@@ -516,6 +519,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         deprecated: this.showDeprecated
       })
         .subscribe(pagingResponse => {
+          //remove later
+          this.loadingService.setLoading(false);
+
+          console.log('BROWSE PAGING RESPONSE');
+          console.log(pagingResponse);
+
           this.privateBulkSearchStatusKey = pagingResponse.statusKey;
           this.isError = false;
           this.totalSubstances = pagingResponse.total;
@@ -540,7 +549,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.privateBulkSearchSummary = pagingResponse.summary;
           }
 
-          this.substances = pagingResponse.content;
+          if(!this.pauseStructureSearch){
+            this.substances = pagingResponse.content;
+          }
+          
           this.totalSubstances = pagingResponse.total;
           this.etag = pagingResponse.etag;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -620,6 +632,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               return true;
             });
           });
+          if(pagingResponse.finished){
+            this.asyncFinished = true;
+            console.log(pagingResponse.finished);
+            console.log('BROWSE setting result');
+          }
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
           this.gaService.sendException('getSubstancesDetails: error from API call');

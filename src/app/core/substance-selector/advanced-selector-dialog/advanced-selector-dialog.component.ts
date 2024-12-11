@@ -111,7 +111,9 @@ private privateSequenceSearchKey?: string;
     if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
       url = this.configService.configData.gsrsHomeBaseUrl + '/substances/register/chemical' + '?importStructure=' + encodeURIComponent(smiles);
     } else {
-      url = this.router.serializeUrl(
+      
+      const baseUrl = window.location.href.replace(this.router.url, '');
+      url = baseUrl + this.router.serializeUrl(
         this.router.createUrlTree(['/substances/register/chemical'], {
           queryParams: navigationExtras.queryParams})
       );

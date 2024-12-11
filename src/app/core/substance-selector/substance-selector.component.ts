@@ -221,8 +221,8 @@ export class SubstanceSelectorComponent implements OnInit {
       url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + uuid;
       
     } else {
-      url = this.router.serializeUrl(
-        this.router.createUrlTree(['/substances/' + uuid])
+      const baseUrl = window.location.href.replace(this.router.url, '');
+      url = baseUrl + this.router.serializeUrl(this.router.createUrlTree(['/substances/' + uuid])
       );
     }
     window.open(url, '_blank');
