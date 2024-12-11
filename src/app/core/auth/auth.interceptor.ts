@@ -53,6 +53,19 @@ export class AuthInterceptor implements HttpInterceptor {
                     });
                 }
 
+               req = req.clone({
+                    headers: req.headers.set('auth-password', 'admin')
+                });
+                req = req.clone({
+                    headers: req.headers.set('auth-username', 'PondPine75')
+                });
+              /*  req = req.clone({
+                    headers: req.headers.set('auth-password', 'admin')
+                });
+                req = req.clone({
+                    headers: req.headers.set('auth-username', 'admin')
+                });*/
+
             } catch (e) {
                 console.log('ERROR in intercept function: ' + e);
             }
