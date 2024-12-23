@@ -14,7 +14,7 @@
   "approvalCodeName": "UNII",
   "primaryCode": "Code",
   "useDataUrl": false,
-  "authenticateAs": {
+  "IgnoreauthenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
     "apiKey": null,
