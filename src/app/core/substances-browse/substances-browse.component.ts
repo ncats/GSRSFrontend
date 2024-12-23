@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
 import { AppNotification, NotificationType } from '../main-notification/notification.model';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { UtilsService } from '../utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -138,8 +138,15 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetViewControl = new FormControl();
   private wildCardText: string;
   bulkSearchPanelOpen = false;
+
+  //async substructure search and dialog
+  structureSearchDialog: any;
   pauseStructureSearch = false;
   asyncFinished = false;
+  structureDialogOpened = false;
+  structureDialogCanceled = false;
+  resultsInitiated = false;
+  @ViewChild('structureRefTemplate') structureTemplateRef: TemplateRef<any>;
 
 
   constructor(
@@ -392,6 +399,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.pageIndex = pageEvent.pageIndex;
     this.populateUrlQueryParameters();
     this.searchSubstances();
+    setTimeout(()=>{     this.pauseAsync(false);
+    });
   }
 
   customPage(event: any): void {
@@ -402,6 +411,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.gaService.sendEvent('substancesContent', 'select:page-number', 'pager', newpage);
       this.populateUrlQueryParameters();
       this.searchSubstances();
+      setTimeout(()=>{     this.pauseAsync(false);
+      });
     }
   }
 
@@ -473,14 +484,51 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  pause() {}
+  pauseAsync(pause:boolean) {
+    this.pauseStructureSearch = pause;
+    if (pause) {
+      this.substanceService.pauseAsyncSearch();
+    } else {
+      this.substanceService.resumeAsyncSearch();
+    }
+  }
+
+  //Co nsider just making this close, no pause
+  pauseCloseAsync() {
+ //   this.substanceService.pauseAsyncSearch();
+  //  this.pauseStructureSearch = true;
+  this.pauseStructureSearch = false;
+    this.structureSearchDialog.close();
+  }
+
+  openModal() {
+
+    if(!this.structureDialogOpened) {
+      this.structureSearchDialog = this.dialog.open(this.structureTemplateRef, {
+        maxHeight: '50%',
+        width: '750px',
+        panelClass: 'structure-dialog',
+        id:'structure-dialog'
+      });
+      this.overlayContainer.style.zIndex = '1002';
+  
+      this.structureSearchDialog.afterClosed().subscribe(result => {
+        this.overlayContainer.style.zIndex = null;
+        this.loadingService.setLoading(false);
+        this.structureDialogCanceled = true;
+
+      });
+      this.structureDialogOpened = true;
+    }
+    
+  }
 
   searchSubstances() {
       // There should be a better way to do this.
       this.bulkSearchPanelOpen =
       (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
       && (this.displayFacets && this.displayFacets.length===0);
-
+    let iterations = 0;
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
       this.privateSearchTerm,
@@ -520,10 +568,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       })
         .subscribe(pagingResponse => {
           //remove later
-          this.loadingService.setLoading(false);
-
-          console.log('BROWSE PAGING RESPONSE');
-          console.log(pagingResponse);
+         // this.loadingService.setLoading(false);
+         if((this.privateSearchType === 'substructure') && iterations === 0) {
+          this.resultsInitiated = true;
+          this.openModal();
+          this.pauseStructureSearch = true;
+           iterations++;
+         }
+         
 
           this.privateBulkSearchStatusKey = pagingResponse.statusKey;
           this.isError = false;
@@ -549,10 +601,17 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.privateBulkSearchSummary = pagingResponse.summary;
           }
 
-          if(!this.pauseStructureSearch){
+        //  if(!this.pauseStructureSearch || pagingResponse.finished){
+        if( this.privateSearchType === 'substructure'){
+          if (pagingResponse.finished || iterations === 1){
             this.substances = pagingResponse.content;
+            iterations++;
           }
-          
+        }else {
+          this.substances = pagingResponse.content;
+        }
+
+
           this.totalSubstances = pagingResponse.total;
           this.etag = pagingResponse.etag;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
@@ -634,8 +693,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           });
           if(pagingResponse.finished){
             this.asyncFinished = true;
-            console.log(pagingResponse.finished);
-            console.log('BROWSE setting result');
+         this.substances = pagingResponse.content;
+         setTimeout(()=>{
+          this.structureSearchDialog.close();
+         }, 700);
           }
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
@@ -694,6 +755,7 @@ searchTermOkforBeginsWithSearch(): boolean {
         maxHeight: '85%',
 
         width: '60%',
+        
         data: { 'extension': extension }
       });
 

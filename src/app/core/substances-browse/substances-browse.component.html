@@ -118,15 +118,6 @@
 
 
     </div>
-    <div class="mat-elevation-z2 smiles-structure-result" style = "">
-      <div style = "width:100%;margin:20px">
-        <button (click) = "pauseStructureSearch = !pauseStructureSearch">PAUSE</button>{{pauseStructureSearch}}
-      </div>
-      <br/>
-    <div style = "width:100%; margin-bottom:5px;">
-      {{asyncFinished}}
-    </div>
-    </div>
 
     <div *ngIf="bulkSearchQueryId">
       <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true" (closed)="bulkSearchPanelOpen = false"
@@ -160,6 +151,22 @@
 
     <div class="break"></div>
     <div class="side-nav-content" *ngIf="(substances && substances.length) || (matchTypes && matchTypes.length > 0)">
+      <div class = "narrow-search-suggestions-container"  *ngIf = "resultsInitiated  && this.structureDialogCanceled && !asyncFinished">
+      <div class="mat-elevation-z2 structure-search-status">
+        <div style = "margin:20px">
+          <span class = "structure-search-header">Structure Search is <b>{{pauseStructureSearch ? "PAUSED":"Processing.."}}</b></span>
+          <button mat-button  mat-raised-button class = "primary mat-primary structure-dialog-button" (click) = "pauseAsync(true)" *ngIf="!pauseStructureSearch">Pause Search</button>
+          <button mat-button mat-raised-button class = "primary mat-primary structure-dialog-button" (click) = "pauseAsync(false)" *ngIf="pauseStructureSearch">Resume Search</button>
+        </div>
+        <div><mat-progress-spinner *ngIf = "!pauseStructureSearch"
+          class="spinner"
+          [color]="primary"
+          [diameter]="30"
+          mode = "indeterminate">
+      </mat-progress-spinner></div>
+      </div>
+    </div>
+
       <div class="narrow-search-suggestions-container"
         *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
         <div class = "flex-row">
@@ -699,3 +706,19 @@
 
   </div>
 </div>
+
+
+<ng-template #structureRefTemplate class = "structure-template">
+<mat-dialog>
+
+
+    <div style = "width:90%;" *ngIf = "resultsInitiated">
+      <h3>SubStructure Search is Processing...</h3><br/>
+      Returning all results may take some time depending on the query. <br/><br/>You may pause the search to view the current results and resume the search afterwards.<br/><br/>
+      <!--<button mat-button class = "primary" (click) = "pauseStructureSearch = !pauseStructureSearch">{{pauseStructureSearch ? 'RESUME':'PAUSE'}}</button>-->
+    </div>
+    <mat-dialog-actions><span class = "middle-fill"></span><button mat-button class = "primary mat-raised-button mat-primary structure-dialog-button" (click) = "pauseCloseAsync()" >close dialog</button></mat-dialog-actions>
+  </mat-dialog>
+</ng-template>
+
+
