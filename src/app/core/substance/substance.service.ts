@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { interval, Observable, Observer, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Observer, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -53,6 +53,8 @@ export class SubstanceService extends BaseHttpService {
   showImagePopup = new Subject<boolean>();
   imagePopupUnit = new Subject<StructuralUnit>();
   private searchResult: any;
+  private pauseSubject = new BehaviorSubject<boolean>(false);
+  tempObject: any;
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
@@ -73,6 +75,26 @@ export class SubstanceService extends BaseHttpService {
       });
     });
   }
+
+  pauseAsyncSearch() {
+    this.pauseSubject.next(true);
+  }
+
+  resumeAsyncSearch() {
+    this.pauseSubject.next(false);
+    this.processAsyncSearchResults(
+      this.tempObject.querySearchTerm,
+      this.tempObject.url,
+      this.tempObject.asyncCallResponse,
+      this.tempObject.observer,
+      this.tempObject.searchKey,
+      this.tempObject.httpCallOptions,
+      this.tempObject.pageSize,
+      this.tempObject.facets,
+      this.tempObject.skip,
+      this.tempObject.view);
+  }
+
 
   setResult(result: string, content: Array<any>, total: number) {
     const uuid = [];
@@ -239,7 +261,6 @@ export class SubstanceService extends BaseHttpService {
         sync = true;
       }
       if (!sync && this.searchKeys[structureFacetsKey]) {
-        console.log('not sync');
         url += `status(${this.searchKeys[structureFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
         if(querySearchTerm.length > 0) {
@@ -257,12 +278,8 @@ export class SubstanceService extends BaseHttpService {
         if (order != null && order !== '') {
           params = params.append('order', order);
         }
-        console.log(url);
-        console.log(params);
 
       } else {
-        console.log(sync);
-        console.log(type);
         params = params.append('q', (searchTerm));
         if (type) {
           params = params.append('type', type);
@@ -287,7 +304,6 @@ export class SubstanceService extends BaseHttpService {
           }
         }
         url += 'substances/structureSearch';
-        console.log(url);
       }
 
       const options = {
@@ -296,10 +312,8 @@ export class SubstanceService extends BaseHttpService {
 
       this.http.get<any>(url, options).subscribe(
         response => {
-          console.log(response);
           // call async
           if (response.results) {
-            console.log('call async');
             const resultKey = response.key;
             this.searchKeys[structureFacetsKey] = resultKey;
             this.processAsyncSearchResults(
@@ -314,7 +328,6 @@ export class SubstanceService extends BaseHttpService {
               skip
             );
           } else {
-            console.log('complete');
             observer.next(response);
             observer.complete();
           }
@@ -460,8 +473,6 @@ export class SubstanceService extends BaseHttpService {
         response => {
           // call async
           if (response.results) {
-            console.log('has results');
-            console.log(response);
             const resultKey = response.key;
             this.searchKeys[bulkFacetsKey] = resultKey;
             this.processAsyncSearchResults(
@@ -477,7 +488,6 @@ export class SubstanceService extends BaseHttpService {
             );
           } else {
             // consider making API backend provide statusKey in JSON
-            console.log('not results)');
             if(this.searchKeys && this.searchKeys[bulkFacetsKey]) {
               response.statusKey = this.searchKeys[bulkFacetsKey];
             }
@@ -504,51 +514,58 @@ export class SubstanceService extends BaseHttpService {
     skip?: number,
     view?: string
   ): void {
-    console.log(asyncCallResponse);
-    this.getAsyncSearchResults(
-      querySearchTerm,
-      searchKey,
-      pageSize,
-      facets,
-      skip,
-      view
-    )
-      .subscribe(response => {
-        // consider making API backend provide statusKey in JSON
-        response.statusKey=searchKey;
-        response.finished = asyncCallResponse.finished;
-        observer.next(response);
-        if (!asyncCallResponse.finished) {
-          console.log('not finished');
-          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+    this.tempObject = {
+      querySearchTerm: querySearchTerm,
+      url: url,
+      asyncCallResponse: asyncCallResponse,
+      observer: observer,
+      searchKey: searchKey,
+      httpCallOptions: httpCallOptions,
+      pageSize: pageSize ? pageSize : 0,
+      facets: facets ? facets : null,
+      skip: skip ? skip : 0,
+      view: view ? view : null
+    }
+    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view)
+      .pipe(
+        switchMap(response => {
+          let temp:any = response;
+          temp.statusKey = searchKey;
+          temp.finished = asyncCallResponse.finished;
+          observer.next(temp);
 
-            setTimeout(() => {
-
-              this.processAsyncSearchResults(
-                querySearchTerm,
-                url,
-                searchResponse,
-                observer,
-                searchKey,
-                httpCallOptions,
-                pageSize,
-                facets,
-                skip,
-                view
-              );
-            });
-          }, error => {
-            observer.error(error);
+          if (asyncCallResponse.finished) {
             observer.complete();
+            return [];
+          }
+
+          return this.http.get<any>(url, httpCallOptions).pipe(
+            takeWhile(() => !this.pauseSubject.getValue()) // Pause search in browse
+          );
+        })
+      )
+      .subscribe(
+        searchResponse => {
+          setTimeout(() => {
+            this.processAsyncSearchResults(
+              querySearchTerm,
+              url,
+              searchResponse,
+              observer,
+              searchKey,
+              httpCallOptions,
+              pageSize,
+              facets,
+              skip,
+              view
+            );
           });
-        } else {
+        },
+        error => {
+          observer.error(error);
           observer.complete();
         }
-      }, error => {
-        observer.error(error);
-        observer.complete();
-      });
-
+      );
   }
 
 
