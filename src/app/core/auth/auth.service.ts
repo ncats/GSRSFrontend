@@ -111,7 +111,7 @@ export class AuthService {
     const left = (screen.width / 2) - (width / 2);
     const top = (screen.height / 2) - (height / 2);
     const loginWindow = window.open(
-      '/login?user_return_to=%2Fginas%2Fclose-pfda-login-window',
+      '/login?force_fda_sso_login=true&user_return_to=%2Fginas%2Fclose-pfda-login-window',
       'pFDA Login',
       `height=${height},width=${width},top=${top},left=${left}`
     );
