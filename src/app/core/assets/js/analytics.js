@@ -32,14 +32,11 @@ var ga4JsLoaderRef=(function ()
     }
     return o;
   });
-  // var args = {
-  //   'GTAG_ID':'',
-  //   'GTAG_MGR_ID': ''
-  // }
-var args = {
-  'GTAG_ID':'G-X1SV8VR8HF',
-  'GTAG_MGR_ID': 'GTM-PH5W9VQ8'
-}
+
+// var args = {
+//   'GTAG_ID':'',
+//   'GTAG_MGR_ID': ''
+// }
 if(typeof args !== 'undefined') { 
   var _ga4JsLoaderRef = ga4JsLoaderRef();
  _ga4JsLoaderRef.ga4LoadJs(args);
