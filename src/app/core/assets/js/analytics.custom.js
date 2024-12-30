@@ -5,13 +5,11 @@ var ga4JsLoaderRef=(function ()
       if(!(typeof args !== 'undefined' && args && args.GTAG_ID && args.GTAG_MGR_ID)) { 
         return o;
       }
-      var async = true; 
-      var gtagUrl = 'https://www.googletagmanager.com/gtag/js?id=__GTAG_ID__';
-      gtagUrl = gtagUrl.replace('__GTAG_ID__', args.GTAG_ID);
+      var gtagUrl = 'https://www.googletagmanager.com/gtag/js?id=' + args.GTAG_ID;
       let scriptElement = document.createElement('script');
       scriptElement.setAttribute('src', gtagUrl);
       scriptElement.setAttribute('type', 'text/javascript');
-      scriptElement.setAttribute('async', async);
+      scriptElement.setAttribute('async', true);
       document.head.appendChild(scriptElement);
       // success event 
       scriptElement.addEventListener('load', () => {
