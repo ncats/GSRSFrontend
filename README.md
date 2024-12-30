@@ -108,6 +108,11 @@ npm audit fix // this step not needed after angular upgrade
 - After a few seconds of compiling the application, you're ready to view your application
 - Open your browser and navigate to http://localhost:4200
 
+You'll also need to to make adjustments to the API base urls and Gateway.  See [here](https://github.com/ncats/gsrs3-main-deployment#optionally-use-development-mode-for-the-frontend-in-the-local-embedded-deployment) details.
+
+If you have a need for a different environment, you can create a new one based on the existing pattern.
+
+
 ## Troubleshooting
 
 GSRSFrontend uses node-sass, which has varying compatibilities based on the version of node.js being used. See https://www.npmjs.com/package/node-sass to check which version is compatable with your node version. The value of node-sass being used can be changed in the root 'package.json' file, where the default value is set as `"node-sass": "4.13.1",`

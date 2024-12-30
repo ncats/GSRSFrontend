@@ -6,6 +6,7 @@ import { ScrollToService } from '../../scroll-to/scroll-to.service';
 import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
 import { Subscription } from 'rxjs';
 import { SubstanceFormCodesService } from './substance-form-codes.service';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-form-codes-card',
@@ -20,12 +21,16 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
   pageSize = 10;
   expanded = true;
   validate = false;
+  pageSizeOptions = [5, 10, 25, 100];
+
 
   constructor(
     private substanceFormCodesService: SubstanceFormCodesService,
     private substanceFormService: SubstanceFormService,
     private scrollToService: ScrollToService,
-    public gaService: GoogleAnalyticsService
+    public gaService: GoogleAnalyticsService,
+    private configService: ConfigService,
+
   ) {
     super(gaService);
     this.analyticsEventCategory = 'substance form codes';
@@ -33,6 +38,16 @@ export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredLi
 
   ngOnInit() {
     this.menuLabelUpdate.emit('Codes');
+
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.codes ){
+          let pagingSettings = this.configService.configData.editPagingOptionSettings.codes;
+          if(pagingSettings.pageSizeDefault) {
+            this.pageSize = pagingSettings.pageSizeDefault
+          }
+          if(pagingSettings.pageSizeOptions) {
+            this.pageSizeOptions = pagingSettings.pageSizeOptions;
+          }
+    }
   }
 
   collapse() {

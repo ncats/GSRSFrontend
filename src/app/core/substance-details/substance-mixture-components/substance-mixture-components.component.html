@@ -1,4 +1,4 @@
-<div *ngIf="required && required.length > 0">
+<div *ngIf="required && required.length > 0" class = "type-row">
   <h3>All of the following components
     <i>must</i> be present:</h3>
   <div class="flex-row wrap">
@@ -15,7 +15,24 @@
     </div>
   </div>
 </div>
-<div *ngIf="presentInAny && presentInAny.length > 0">
+<div *ngIf="requiredMinor && requiredMinor.length > 0" class = "type-row">
+  <h3>All of the following Minor components
+    <i>must</i> be present:</h3>
+  <div class="flex-row wrap">
+    <div *ngFor="let component of requiredMinor" class="thumb-col">
+      <div *ngIf="component.substance.linkingID" class="code">{{component.substance.linkingID}}</div>
+      <a tabindex="0" role="img" aria-label="substance image" class="zoom" (click)="openImageModal(structureTemplate, component)">
+      <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
+
+      <div>
+        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
+          {{component.substance.name}}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="presentInAny && presentInAny.length > 0" class = "type-row">
   <h3>Any of these components may be present:</h3>
   <div class="flex-row wrap">
     <div *ngFor="let component of presentInAny" class="thumb-col">
