@@ -33,12 +33,12 @@ var ga4JsLoaderRef=(function ()
     return o;
   });
 
-// var args = {
-//   'GTAG_ID':'',
+// var gsrs_ga4LoadJs_args = {
+//   'GTAG_ID': '',
 //   'GTAG_MGR_ID': ''
 // }
 
-if(typeof args !== 'undefined') { 
-    _gsrsga4 = ga4JsLoaderRef();
-    _gsrsga4.ga4LoadJs(args); 
+if(typeof gsrs_ga4LoadJs_args !== 'undefined') { 
+  gsrs_ga4LoadJs = ga4JsLoaderRef();
+  gsrs_ga4LoadJs.ga4LoadJs(gsrs_ga4LoadJs_args); 
 }
