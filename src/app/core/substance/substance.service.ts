@@ -95,6 +95,9 @@ export class SubstanceService extends BaseHttpService {
       this.tempObject.view);
   }
 
+  unpauseAsyncSubject() {
+    this.pauseSubject.next(false);
+  }
 
   setResult(result: string, content: Array<any>, total: number) {
     const uuid = [];
@@ -568,7 +571,11 @@ export class SubstanceService extends BaseHttpService {
       );
   }
 
-
+  clearSearchKey() {
+    Object.keys(this.searchKeys).forEach(key => {
+      this.searchKeys[key] = undefined;
+    });
+  }
 
   private getAsyncSearchResults(
     querySearchTerm: string,
