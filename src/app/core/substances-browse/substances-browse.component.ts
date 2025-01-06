@@ -227,6 +227,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.setUpPrivateSearchTerm();
 
     this.privateStructureSearchTerm = this.activatedRoute.snapshot.queryParams['structure_search'] || '';
+    this.substanceService.unpauseAsyncSubject();
     this.privateSequenceSearchTerm = this.activatedRoute.snapshot.queryParams['sequence_search'] || '';
     this.privateSequenceSearchKey = this.activatedRoute.snapshot.queryParams['sequence_key'] || '';
     this.privateBulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
@@ -350,6 +351,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+    this.substanceService.pauseAsyncSearch();
+    this.substanceService.clearSearchKey();
     this.facetManagerService.unregisterFacetSearchHandler();
   }
 
@@ -572,7 +575,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
          if((this.privateSearchType === 'substructure') && iterations === 0) {
           this.resultsInitiated = true;
           this.openModal();
-          this.pauseStructureSearch = true;
+        // this.pauseStructureSearch = true;
            iterations++;
          }
          
@@ -602,7 +605,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
 
         //  if(!this.pauseStructureSearch || pagingResponse.finished){
-        if( this.privateSearchType === 'substructure'){
+       if( this.privateSearchType === 'substructure'){
           if (pagingResponse.finished || iterations === 1){
             this.substances = pagingResponse.content;
             iterations++;
@@ -610,7 +613,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         }else {
           this.substances = pagingResponse.content;
         }
-
 
           this.totalSubstances = pagingResponse.total;
           this.etag = pagingResponse.etag;
@@ -695,7 +697,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.asyncFinished = true;
          this.substances = pagingResponse.content;
          setTimeout(()=>{
-          this.structureSearchDialog.close();
+          this.structureSearchDialog ? this.structureSearchDialog.close() : null;
          }, 700);
           }
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
@@ -726,6 +728,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
         });
+        this.subscriptions.push(subscription);
     }
 
   }
