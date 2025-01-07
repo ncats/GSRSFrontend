@@ -740,3 +740,38 @@ margin-left: 20px;
     flex-direction:column;
     max-width: 650px;
 }
+
+.structure-search-status {
+    display:flex;
+    flex-direction:row;
+    margin:20px;
+    width:425px;
+}
+
+.structure-dialog-button {
+    font-size: 16px;
+}
+
+.structure-search-header {
+    margin: 25px;
+    font-size:18px;
+}
+
+.spinner {
+    height: 30px;
+    width: 30px;
+    margin-left: 15px;
+    margin-right: 10px;
+    margin-top: 18px;
+}
+
+::ng-deep #structure-dialog {
+    margin-bottom: 300px !important;
+}
+
+
+.structure-dialog-content {
+ line-height: 28px;
+ margin-left: 20px;
+}
+

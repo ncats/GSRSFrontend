@@ -26,6 +26,8 @@ export interface PagingResponse<T> {
     facets?: Array<Facet>;
     filter?: string;
     summary?: any; // added for bulk search
+    status?: string;
+    finished?: boolean;
 }
 
 export interface NarrowSearchSuggestion {

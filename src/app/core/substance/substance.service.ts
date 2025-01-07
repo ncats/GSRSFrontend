@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { interval, Observable, Observer, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Observer, Subject } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -53,6 +53,8 @@ export class SubstanceService extends BaseHttpService {
   showImagePopup = new Subject<boolean>();
   imagePopupUnit = new Subject<StructuralUnit>();
   private searchResult: any;
+  private pauseSubject = new BehaviorSubject<boolean>(false);
+  tempObject: any;
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
@@ -72,6 +74,29 @@ export class SubstanceService extends BaseHttpService {
         observer.next(this.searchResult);
       });
     });
+  }
+
+  pauseAsyncSearch() {
+    this.pauseSubject.next(true);
+  }
+
+  resumeAsyncSearch() {
+    this.pauseSubject.next(false);
+    this.processAsyncSearchResults(
+      this.tempObject.querySearchTerm,
+      this.tempObject.url,
+      this.tempObject.asyncCallResponse,
+      this.tempObject.observer,
+      this.tempObject.searchKey,
+      this.tempObject.httpCallOptions,
+      this.tempObject.pageSize,
+      this.tempObject.facets,
+      this.tempObject.skip,
+      this.tempObject.view);
+  }
+
+  unpauseAsyncSubject() {
+    this.pauseSubject.next(false);
   }
 
   setResult(result: string, content: Array<any>, total: number) {
@@ -492,51 +517,65 @@ export class SubstanceService extends BaseHttpService {
     skip?: number,
     view?: string
   ): void {
-    this.getAsyncSearchResults(
-      querySearchTerm,
-      searchKey,
-      pageSize,
-      facets,
-      skip,
-      view
-    )
-      .subscribe(response => {
-        // consider making API backend provide statusKey in JSON
-        response.statusKey=searchKey;
-        observer.next(response);
-        if (!asyncCallResponse.finished) {
-          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+    this.tempObject = {
+      querySearchTerm: querySearchTerm,
+      url: url,
+      asyncCallResponse: asyncCallResponse,
+      observer: observer,
+      searchKey: searchKey,
+      httpCallOptions: httpCallOptions,
+      pageSize: pageSize ? pageSize : 0,
+      facets: facets ? facets : null,
+      skip: skip ? skip : 0,
+      view: view ? view : null
+    }
+    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view)
+      .pipe(
+        switchMap(response => {
+          let temp:any = response;
+          temp.statusKey = searchKey;
+          temp.finished = asyncCallResponse.finished;
+          observer.next(temp);
 
-            setTimeout(() => {
-
-              this.processAsyncSearchResults(
-                querySearchTerm,
-                url,
-                searchResponse,
-                observer,
-                searchKey,
-                httpCallOptions,
-                pageSize,
-                facets,
-                skip,
-                view
-              );
-            });
-          }, error => {
-            observer.error(error);
+          if (asyncCallResponse.finished) {
             observer.complete();
+            return [];
+          }
+
+          return this.http.get<any>(url, httpCallOptions).pipe(
+            takeWhile(() => !this.pauseSubject.getValue()) // Pause search in browse
+          );
+        })
+      )
+      .subscribe(
+        searchResponse => {
+          setTimeout(() => {
+            this.processAsyncSearchResults(
+              querySearchTerm,
+              url,
+              searchResponse,
+              observer,
+              searchKey,
+              httpCallOptions,
+              pageSize,
+              facets,
+              skip,
+              view
+            );
           });
-        } else {
+        },
+        error => {
+          observer.error(error);
           observer.complete();
         }
-      }, error => {
-        observer.error(error);
-        observer.complete();
-      });
-
+      );
   }
 
-
+  clearSearchKey() {
+    Object.keys(this.searchKeys).forEach(key => {
+      this.searchKeys[key] = undefined;
+    });
+  }
 
   private getAsyncSearchResults(
     querySearchTerm: string,
