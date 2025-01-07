@@ -572,7 +572,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         .subscribe(pagingResponse => {
           //remove later
          // this.loadingService.setLoading(false);
-         if((this.privateSearchType === 'substructure') && iterations === 0) {
+         if((this.privateSearchType === 'substructure' || this.privateSearchType === 'similarity') && iterations === 0) {
           this.resultsInitiated = true;
           this.openModal();
         // this.pauseStructureSearch = true;
@@ -605,7 +605,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           }
 
         //  if(!this.pauseStructureSearch || pagingResponse.finished){
-       if( this.privateSearchType === 'substructure'){
+       if( this.privateSearchType === 'substructure' || this.privateSearchType === 'similarity'){
           if (pagingResponse.finished || iterations === 1){
             this.substances = pagingResponse.content;
             iterations++;
@@ -698,7 +698,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
          this.substances = pagingResponse.content;
          setTimeout(()=>{
           this.structureSearchDialog ? this.structureSearchDialog.close() : null;
-         }, 700);
+         });
           }
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {

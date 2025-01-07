@@ -694,8 +694,8 @@
 
 
     <div style = "width:90%;" *ngIf = "resultsInitiated">
-      <h3>Substructure Search is Processing...</h3><br/>
-      Returning all results may take some time depending on the query. <br/><br/>The results will refresh once the search is complete. <br/>You may close this dialog to browse the incomplete results.<br/><br/>
+      <h3>{{privateSearchType | titlecase }} Search is Processing...</h3><br/>
+     <div class = "structure-dialog-content"> Returning all results may take some time depending on the query. <br/>The results will refresh once the search is complete. <br/>You may close this dialog to browse the incomplete results.</div><br/><br/>
       <!--<button mat-button class = "primary" (click) = "pauseStructureSearch = !pauseStructureSearch">{{pauseStructureSearch ? 'RESUME':'PAUSE'}}</button>-->
     </div>
     <mat-dialog-actions><span class = "middle-fill"></span><button mat-button class = "primary mat-raised-button mat-primary structure-dialog-button" (click) = "pauseCloseAsync()" >Close dialog</button></mat-dialog-actions>
