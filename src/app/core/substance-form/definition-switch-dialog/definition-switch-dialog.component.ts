@@ -134,8 +134,8 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           'createdBy': 'definitionSwitcher',
           'lastEdited': 1567806115158,
           'lastEditedBy': 'definitionSwitcher',
-          'sourceMaterialClass': 'Temporary class for definition switch',
-          'sourceMaterialType': 'Temporary class for definition switch',
+          'sourceMaterialClass': 'Temporary class for definition switch ' + this.utilsService.newUUID(),
+          'sourceMaterialType': 'Temporary class for definition switch ' + this.utilsService.newUUID(),
           'part': ['WHOLE'],
           'references': [this.uuidNew]
         };
@@ -229,8 +229,8 @@ export class DefinitionSwitchDialogComponent implements OnInit {
                 'lastEdited': 1567806115158,
                 'lastEditedBy': 'definitionSwitcher',
                 'deprecated': false,
-                'sourceMaterialClass': 'Temporary class for definition switch',
-                'sourceMaterialType': 'Temporary class for definition switch',
+                'sourceMaterialClass': 'Temporary class for definition switch ' + this.utilsService.newUUID(),
+                'sourceMaterialType': 'Temporary class for definition switch ' + this.utilsService.newUUID(),
                 'part': ['WHOLE'],
                 'references': [this.structureuuid]
               };
