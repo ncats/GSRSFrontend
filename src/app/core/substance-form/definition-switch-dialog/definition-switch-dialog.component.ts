@@ -161,7 +161,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
           'mwt': 24.015612,
           'count': 1,
           'hash': '3ZYHCH786T4L',
-          'stereochemistry': 'ACHIRAL',
+          'stereochemistry': 'ACHIRAL ' + this.utilsService.newUUID(),
           'id': this.newstructureid,
           'references': [this.uuidNew]
         };
@@ -217,7 +217,8 @@ export class DefinitionSwitchDialogComponent implements OnInit {
                 '  -6.9160    0.0000 He  0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  ' +
                 '0  0  0\n  1  5  1  0  0  0  0\n  5  6  1  0  0  0  0\n  4  6  1  0  0  0  0\nM  END',
                                 'id': this.structureid,
-                'references': [this.structureuuid]
+                'references': [this.structureuuid],
+                'stereochemistry': 'ACHIRAL ' + this.utilsService.newUUID()
               };
             } else {
               console.log('deleting ' + altSwitch.substanceClass + ' adding temporary structurallyDiverse');
