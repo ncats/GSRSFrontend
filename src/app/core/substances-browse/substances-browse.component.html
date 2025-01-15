@@ -350,7 +350,7 @@
             mat-button class="mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
-          <button *ngIf = "isLoggedIn" mat-raised-button style = "margin-left:30px;" color="primary" class="reset-facets-button" (click)="addToList()">
+          <button *ngIf = "showUserLists" mat-raised-button style = "margin-left:30px;" color="primary" class="reset-facets-button" (click)="addToList()">
               <span>Add to List</span>
             </button>
         </div>
