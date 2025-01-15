@@ -138,6 +138,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   facetViewControl = new FormControl();
   private wildCardText: string;
   bulkSearchPanelOpen = false;
+  showUserLists = false;
 
   //async substructure search and dialog
   structureSearchDialog: any;
@@ -273,6 +274,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
       this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
       this.showAudit = this.authService.hasRoles('admin');
+      this.showUserLists = this.authService.hasAnyRoles('Updater', 'SuperUpdater', 'DataEntry');
 
     });
     if (deprecated && deprecated === 'true' && this.showAudit) {

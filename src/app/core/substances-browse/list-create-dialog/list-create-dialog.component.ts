@@ -34,6 +34,9 @@ export class ListCreateDialogComponent implements OnInit {
         });
     }, error => {
       console.log(error);
+      if(error.error) {
+        this.message = 'Error:  ' + error.error;
+      }
     });
   }
 
