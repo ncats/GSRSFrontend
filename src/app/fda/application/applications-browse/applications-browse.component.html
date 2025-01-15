@@ -2,6 +2,11 @@
 <mat-sidenav-container>
 
   <mat-sidenav mode="side" opened>
+
+    <!-- Cross Entity Search to search between Substance, Product, Application, etc -->
+    <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists">
+    </app-cross-entity-search>
+
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" configName="applications" includeFacetSearch="true">
     </app-facets-manager>

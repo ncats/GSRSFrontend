@@ -1,0 +1,36 @@
+<!-- Dropdown to select Entity (SUBSTANCE, PRODUCT, APPLICATION, CLINICAL TRIAL, etc) -->
+<mat-form-field class="entitydropdown">
+  <mat-label>Show Facets for:</mat-label> <!-- DO not display the option if the entity is same as option value -->
+  <mat-select (selectionChange)="entitySelectedChange($event)">
+    <mat-option *ngFor="let entity of filteredEntity; index as index" [value]="entity.entityValue"
+      [hidden]="thisEntity && thisEntity == entity.entityValue">
+      {{entity.entityDisplay}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- ********************************************************************************** -->
+<!-- POPUP DIALOG for CONTROLS BEGIN                                                    -->
+<!-- ********************************************************************************** -->
+<ng-template #crossEntitySearchTemplate>
+  <div mat-dialog-content>
+    <span *ngIf="rawFacets && rawFacets.length > 0">
+      <span class="fontbold"><b>{{entityDisplaySelectedForSearch}}</b> Facets for Cross Entity Search</span>
+      <br><br>
+      Search Query:<br><br>
+
+      <app-facets-manager (facetsParamsUpdated)="facetsParamsCrossEntityUpdated($event)" [rawFacets]="rawFacets"
+        [facetViewCategorySelected]="facetViewCategorySelected" [configName]="entitySelectedForSearch"
+        includeFacetSearch="true">
+      </app-facets-manager>
+    </span>
+  </div>
+
+  <div mat-dialog-actions>
+    <span class="middle-fill"></span>
+    <button class="mat-raised-button mat-primary" (click)="closePopup()" mat-dialog-close>Close</button>
+  </div>
+</ng-template>
+<!-- POPUP DIALOG for CONTROLS END -->
+
+<!-- END: CROSS-ENTITY Search -->

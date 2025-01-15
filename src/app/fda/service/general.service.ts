@@ -10,13 +10,16 @@ import { PagingResponse } from '@gsrs-core/utils';
 import { SubstanceDetail, SubstanceSummary, SubstanceRelationship, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 
+import { Product } from '../product/model/product.model';
 import { Application } from '../application/model/application.model';
 
 @Injectable()
 export class GeneralService extends BaseHttpService {
 
-  private apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
   private NO_CONFIG_FOUND_DEFAULT_SUBSTANCE_KEY = "UUID";
+
+  private apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+  private apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
 
   constructor(
     public http: HttpClient,
@@ -162,6 +165,89 @@ export class GeneralService extends BaseHttpService {
         })
       );
   }
+
+
+  getProductFacets(): Observable<FacetQueryResponse> {
+    let url: string;
+   // url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse`;
+    alert("URL" + url);
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+  getProducts(
+    order: string,
+    skip: number = 0,
+    pageSize: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam
+  ): Observable<PagingResponse<Product>> {
+    let params = new FacetHttpParams();
+    params = params.append('skip', skip.toString());
+    params = params.append('top', pageSize.toString());
+    if (searchTerm !== null && searchTerm !== '') {
+      params = params.append('q', searchTerm);
+    }
+
+    params = params.appendFacetParams(facets);
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
+    }
+
+    // Commenting out, this function calls productsall
+    // const url = this.apiBaseUrlWithProductBrowseEntityUrl + 'search';
+    const url = this.apiBaseUrlWithProductEntityUrl + 'search';
+    const options = {
+      params: params
+    };
+
+    // Commenting out, this function calls productsall
+    // return this.http.get<PagingResponse<ProductAll>>(url, options);
+    return this.http.get<PagingResponse<Product>>(url, options);
+  }
+
+  /*
+  getProductFacets2() {
+    let privateFacetParamsProduct: FacetParam;
+    const subscription = this.productService.getProducts(
+      'asc',
+      10,
+      10,
+      null,
+      privateFacetParamsProduct
+    )
+      .subscribe(pagingResponse => {
+        // Set Facets from paging response
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.rawFacetsProduct = pagingResponse.facets;
+        }
+
+      }, error => {
+      }, () => {
+      });
+  }
+
+  searchApplications() {
+    const skip = this.pageIndex * this.pageSize;
+    let privateFacetParamsProduct: FacetParam;
+    const subscription = this.productService.getProducts(
+      'asc',
+      10,
+      10,
+      null,
+      privateFacetParamsProduct
+    )
+      .subscribe(pagingResponse => {
+        // Set Facets from paging response
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.rawFacetsProduct = pagingResponse.facets;
+        }
+
+      }, error => {
+      }, () => {
+      });
+  }
+  */
 
   searchApplicationByAppTypeNumber(
     appType: string, appNumber: number

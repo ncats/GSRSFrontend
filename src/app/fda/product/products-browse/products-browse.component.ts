@@ -48,6 +48,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   private ACTIVE_INGREDIENT_UPPERCASE = 'ACTIVE INGREDIENT';
   private ACTIVE_INGREDIENT_LOWERCASE = 'Active Ingredient';
 
+  thisEntity: string = "products";
+  idLists: Array<string> = [];
+
   view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
@@ -147,7 +150,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
-
     // Get Daily Med Url from Configuration
     this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
 
@@ -264,6 +266,21 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.productService.getExportOptions(this.etag).subscribe(response => {
           this.exportOptions = response;
         });
+
+        // For Cross Entity Search get lists of Substance UUID
+        let ids : Array<string> = [];
+        let facetSubUuid = pagingResponse.facets.find(facet => facet.name === "Substance UUID");
+        if (facetSubUuid) {
+          facetSubUuid.values.forEach(value => {
+            if (value) {
+              if (value.label) {
+                ids.push(value.label);
+              }
+            }
+          });
+
+          this.idLists = ids;
+        }
 
       }, error => {
         console.log('error');

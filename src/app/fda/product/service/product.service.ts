@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, } from 'rxjs';
+import { HttpClient, HttpParameterCodec, HttpParams } from '@angular/common/http';
+import { Observable, Observer, } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
@@ -13,6 +13,23 @@ import { ProductCompany, ProductCompanyCode, ProductIndication, ProductManufactu
 import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
 
+class CustomEncoder implements HttpParameterCodec {
+  encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
+
+  encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
+}
 @Injectable()
 export class ProductService extends BaseHttpService {
 
@@ -20,6 +37,8 @@ export class ProductService extends BaseHttpService {
   private productStateHash?: number;
   totalRecords = 0;
   product: Product;
+  public showDeprecated = false;
+  private searchKeys: { [structureSearchTerm: string]: string } = {};
 
   apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
   //apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
@@ -65,6 +84,194 @@ export class ProductService extends BaseHttpService {
     return this.http.get<PagingResponse<Product>>(url, options);
   }
 
+  productBulkSearch(
+    querySearchTerm?: string,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
+    cutoff?: number,
+    type: string = 'bulk',
+    pageSize: number = 10,
+    facets?: FacetParam,
+    order?: string,
+    skip: number = 0,
+  ): Observable<PagingResponse<Product>> {
+    return new Observable(observer => {
+      let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+      let url = this.configService.configData.apiBaseUrl+'/api/v1/';
+      let bulkFacetsKey: number;
+      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
+      if (this.searchKeys[bulkFacetsKey]) {
+        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
+        params = params.appendFacetParams(facets, this.showDeprecated);
+        if (querySearchTerm.length > 0) {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString(),
+            q: querySearchTerm.toString()
+          });
+        } else {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+        }
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
+      } else {
+
+        params = params.append('bulkQID', bulkQID.toString());
+        let v = "false";
+        if (searchOnIdentifiers === true) { v = "true"; }
+        params = params.append('searchOnIdentifiers', v);
+        params = params.append('searchEntity', searchEntity);
+        url += `products/bulkSearch`;
+      }
+
+      const options = {
+        params: params
+      };
+
+      this.http.get<any>(url, options).subscribe(
+        response => {
+          // call async
+          if (response.results) {
+            const resultKey = response.key;
+            this.searchKeys[bulkFacetsKey] = resultKey;
+            this.processAsyncSearchResults(
+              querySearchTerm,
+              url,
+              response,
+              observer,
+              resultKey,
+              options,
+              pageSize,
+              facets,
+              skip
+            );
+          } else {
+            // consider making API backend provide statusKey in JSON
+            if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
+              response.statusKey = this.searchKeys[bulkFacetsKey];
+            }
+            observer.next(response);
+            observer.complete();
+          }
+        }, error => {
+          observer.error(error);
+          observer.complete();
+        }
+      );
+    });
+  }
+
+  private processAsyncSearchResults(
+    querySearchTerm: string,
+    url: string,
+    asyncCallResponse: any,
+    observer: Observer<PagingResponse<Product>>,
+    searchKey: string,
+    httpCallOptions: any,
+    pageSize?: number,
+    facets?: FacetParam,
+    skip?: number,
+    view?: string
+  ): void {
+    this.getAsyncSearchResults(
+      querySearchTerm,
+      searchKey,
+      pageSize,
+      facets,
+      skip,
+      view
+    )
+      .subscribe(response => {
+        // consider making API backend provide statusKey in JSON
+        response.statusKey = searchKey;
+        observer.next(response);
+        if (!asyncCallResponse.finished) {
+          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+
+            setTimeout(() => {
+
+              this.processAsyncSearchResults(
+                querySearchTerm,
+                url,
+                searchResponse,
+                observer,
+                searchKey,
+                httpCallOptions,
+                pageSize,
+                facets,
+                skip,
+                view
+              );
+            });
+          }, error => {
+            observer.error(error);
+            observer.complete();
+          });
+        } else {
+          observer.complete();
+        }
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      });
+
+  }
+
+  private getAsyncSearchResults(
+    querySearchTerm: string,
+    // this is a status
+    structureSearchKey: string,
+    pageSize?: number,
+    facets?: FacetParam,
+    skip?: number,
+    view?: string
+  ): any {
+
+   // const url = `${this.configService.configData.apiBaseUrl}api/v1/status(${structureSearchKey})/results`;
+    const url = `http://localhost:8084/api/v1/status(${structureSearchKey})/results`;
+    let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+
+    params = params.appendFacetParams(facets, this.showDeprecated);
+
+    // remove this when async backend issue is fixed
+    const random_key = Math.random().toString(36).replace('0.', '');
+    params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
+
+    params = params.appendDictionary({
+      top: pageSize.toString(),
+      skip: skip.toString(),
+      view: view || ''
+    });
+
+    // Added for 3.0.2, Advanced Search:Combine structure Search with query search.
+    if (querySearchTerm != null && querySearchTerm !== '') {
+      params = params.append('q', querySearchTerm);
+    }
+
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<Product>>(url, options);
+  }
+
+  getBulkSearchStatus(
+    key: string,
+  ): Observable<any> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key;
+    // let params = new HttpParams();
+    const options = {
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<any>(url, options);
+  }
+  
   // This function is called when doing text search on the facet
   getProductFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;

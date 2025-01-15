@@ -9,23 +9,25 @@ import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import * as _ from 'lodash';
 import { Sort } from '@angular/material/sort';
-import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+
+// GSRS Imports
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
-import { FacetParam } from '@gsrs-core/facets-manager';
-import { NarrowSearchSuggestion } from '@gsrs-core/utils';
-import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { environment } from '../../../../environments/environment';
-import { applicationSearchSortValues } from './application-search-sort-values';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
-import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
 import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
+import { environment } from '../../../../environments/environment';
+import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
+import { FacetParam, Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
+import { applicationSearchSortValues } from './application-search-sort-values';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+
 import { Application } from '../model/application.model';
 
 @Component({
@@ -35,6 +37,9 @@ import { Application } from '../model/application.model';
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
  // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+  thisEntity: string = "applications";
+  idLists: Array<string> = [];
+
   view = 'cards';
   public privateSearchTerm?: string;
   public applications: Array<Application>;
