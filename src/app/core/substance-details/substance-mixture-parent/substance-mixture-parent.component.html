@@ -5,8 +5,7 @@
         <div *ngIf="!component.approvalID" class="code">{{component.uuid}}</div>
         <img class="image-icon" appSubstanceImage [entityId]="component.uuid">
         <div>
-          <a class="substance-name" [routerLink]="['/substances', component.uuid]">
-            {{component._name}}
+          <a class="substance-name" [routerLink]="['/substances', component.uuid]" [innerHTML]="component._name">
           </a>
         </div>
       </div>
