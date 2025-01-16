@@ -86,6 +86,7 @@ export interface Config {
     StructureFeaturePriority?: Array<string>;
     structureEditSearch?: boolean;
     editPagingOptionSettings?: PagingOptionSettings;
+    expandedComponents?: Array<string>;
 }
 
 export interface StagingAreaSettings {
