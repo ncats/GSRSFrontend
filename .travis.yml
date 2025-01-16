@@ -4,28 +4,44 @@ language: node_js
 node_js:
   - 17.9.1
 
-
 install:
-
+  # Set up the development package JSON for the initial install
   - cp package.dev.json package.json
-  - rm -rf node_modules
-  - rm -rf package-lock.json
-  - rm -rf package.json
-  - cp package.dev.json package.json
-  - npm install
+  
+  # Clean up previous node_modules and package-lock files
+  - rm -rf node_modules package-lock.json
+  
+  # Install dependencies (first time, using legacy-peer-deps if necessary)
+  - npm install --legacy-peer-deps
+  
+  # Run build scripts
   - npm run build-file-select
   - npm run build-jsdraw-wrapper
   - npm run build-ketcher-wrapper
+  
+  # Switch to the real package JSON and reinstall
   - cp package.real.json package.json
   - npm install --legacy-peer-deps
+  
+  # Install specific webpack version and sources package
   - npm install webpack
-  - npm i --save webpack-sources --legacy-peer-deps
+  - npm install --save webpack-sources --legacy-peer-deps
+  
+  # Install @types/ws and undici@5.5.1 (specific versions)
   - npm install -f @types/ws@8.5.4
-  - npm install -g yarn
   - npm uninstall undici
   - npm install undici@5.5.1
+  
+  # Install Yarn globally
+  - npm install -g yarn
+
+  # Set memory limit for Node.js to avoid crashes during builds
   - export NODE_OPTIONS="--max-old-space-size=8192"
+
 script:
+  # Run the production build
   - npm run build:fda:prod
+
 after_success:
+  # Run this script only for the 'development_3.0' branch
   - if [ $TRAVIS_BRANCH = 'development_3.0' ]; then bash travisScript.sh; else echo "Not a branch set to push"; fi
