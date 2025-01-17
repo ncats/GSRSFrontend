@@ -143,7 +143,6 @@ export class LoginComponent implements OnInit, OnDestroy {
             text = text.replace(/\n/g, linefeed);
             const subject = sprintf(c.registrationAccessEmailSubjectTemplate, c.instanceApplicationSubjectTag);  
             this.document.location = "mailto:"+recipients +"?subject=" + (subject) + "&body=" + (text);
-            console.log('Generating mailto email ...');
         } else { 
           console.log('Request registration form closed without data submission.');
         }

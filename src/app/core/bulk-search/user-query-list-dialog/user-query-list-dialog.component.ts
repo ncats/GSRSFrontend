@@ -9,6 +9,7 @@ import { AuthService } from '@gsrs-core/auth';
 import { PageEvent } from '@angular/material/paginator';
 import { SubstanceService } from '@gsrs-core/substance';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ConfigService } from '@gsrs-core/config';
 @Component({
   selector: 'app-user-query-list-dialog',
   templateUrl: './user-query-list-dialog.component.html',
@@ -58,6 +59,7 @@ export class UserQueryListDialogComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private sanitizer: DomSanitizer,
+    private configService: ConfigService,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -231,9 +233,12 @@ export class UserQueryListDialogComponent implements OnInit {
 
   browseView() {
     let navigationExtras: NavigationExtras = {queryParams: {}};
- 
+    let user = this.identifier;
       const newtest = this.activeName;
-      navigationExtras.queryParams = {'facets': 'User List*' + this.identifier.replace(/[.]/g, '!.') + ':' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
+      if(this.setUser && this.setUser != this.identifier){
+        user = this.setUser;
+      }
+      navigationExtras.queryParams = {'facets': 'User List*' + user.replace(/[.]/g, '!.') + ':' + newtest.replace(/^.*[\\\/]/, '') + '.true'};
   
     this.router.navigate(['/browse-substance'], navigationExtras);
     this.dialogRef.close();
@@ -244,7 +249,6 @@ export class UserQueryListDialogComponent implements OnInit {
 
     this.status = response.status;
     this.refreshing = true;
-    console.log(response);
         this.message = "Status: " + this.status;
         if (this.status === 'Completed.') {
           this.loading = false;
@@ -276,9 +280,21 @@ export class UserQueryListDialogComponent implements OnInit {
       
     });
   }
-  deleteList(list: string) {
+  deleteList(list: string, active?: string) {
     this.message = '';
     if (confirm("Are you sure you want to delete this list?")){
+      if(this.setUser != this.identifier){
+        this.bulkSearchService.deleteUserBulkSearchList(list, this.setUser).subscribe(result => {
+          this.bulkSearchService.getUserBulkSearchLists(this.setUser).subscribe(response => {
+            this.view = "all";
+            this.lists = response.lists;
+          });
+        }, error => {
+          console.log(error);
+          this.message = "Error: Delete list failed. See browser console";
+          
+        });
+      } else {
       this.bulkSearchService.deleteBulkSearchList(list).subscribe(result => {
         this.getUserLists();
       }, error => {
@@ -286,6 +302,7 @@ export class UserQueryListDialogComponent implements OnInit {
         this.message = "Error: Delete list failed. See browser console";
         
       });
+    }
     }
   }
 
@@ -451,6 +468,22 @@ export class UserQueryListDialogComponent implements OnInit {
 
   close(){
     this.dialogRef.close();
+  }
+
+  openNewTab(id: string): void {
+    let url = '';
+    // this.dialogRef.close();
+     if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
+       url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + id;
+       
+     } else {
+       const baseUrl = window.location.href.replace(this.router.url, '');
+      url = baseUrl + this.router.serializeUrl(
+         this.router.createUrlTree(['/substances/' + id])
+       );
+     }
+     window.open(url, '_blank');
+ 
   }
 
 

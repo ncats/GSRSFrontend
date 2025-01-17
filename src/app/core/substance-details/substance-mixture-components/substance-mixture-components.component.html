@@ -8,8 +8,7 @@
       <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
 
       <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
-          {{component.substance.name}}
+        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]" [innerHTML]="component.substance.name">
         </a>
       </div>
     </div>
@@ -25,8 +24,7 @@
       <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid"></a>
 
       <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
-          {{component.substance.name}}
+        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]"  [innerHTML]="component.substance.name">
         </a>
       </div>
     </div>
@@ -43,8 +41,7 @@
       <img class="image-icon" appSubstanceImage [entityId]="component.substance.refuuid">
       </a>
       <div>
-        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]">
-          {{component.substance.name}}
+        <a class="substance-name" [routerLink]="['/substances', component.substance.refuuid]"  [innerHTML]="component.substance.name">
         </a>
       </div>
     </div>

@@ -302,6 +302,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.configService.configData && this.configService.configData.approvalType) {
       this.approvalType = this.configService.configData.approvalType;
     }
+    if (this.configService.configData && this.configService.configData.expandedComponents) {
+      this.expandedComponents = this.configService.configData.expandedComponents;
+    }
     if (this.configService.configData && this.configService.configData.autoSaveWait) {
       this.autoSaveWait = this.configService.configData.autoSaveWait;
     }

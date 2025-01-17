@@ -9,7 +9,7 @@
     <span class="middle-fill"></span>
     <div style = "min-width:260px;">
 
-        <div style = "font-size:16px; margin-top: -15px; margin-right: -15px;">
+        <div style = "font-size:16px; margin-top: -15px; margin-right: -15px;" *ngIf = "canCreate || isAdmin">
             <mat-form-field *ngIf = 'userLists' class = "select-list">
               <mat-label>Add to List</mat-label>
               <mat-select [(ngModel)]="selectedList" name="Add to List" >
@@ -19,7 +19,7 @@
               </mat-select>
             </mat-form-field>
             <span >
-              <button class = "mat-button" *ngIf = "selectedList" (click) = "addToList()" color = "primary">Add</button>
+              <button class = "mat-button" *ngIf = "selectedList " (click) = "addToList()" color = "primary" [disabled] = "!selectedList || selectedList === ''" >Add</button>
 
             </span>
             <span style = "margin-right:50px;" >
