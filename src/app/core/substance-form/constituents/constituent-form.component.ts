@@ -15,6 +15,7 @@ import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-d
 export class ConstituentFormComponent implements OnInit {
    privateConstituent: Constituent;
   @Output() constituentDeleted = new EventEmitter<Constituent>();
+  @Output() amountUpdated = new EventEmitter<any>();
   deleteTimer: any;
   relatedSubstanceUuid: string;
   private subscriptions: Array<Subscription> = [];
@@ -72,6 +73,7 @@ export class ConstituentFormComponent implements OnInit {
       this.overlayContainer.style.zIndex = null;
       if (newAmount) {
         this.privateConstituent.amount = newAmount;
+        this.amountUpdated.emit(this.privateConstituent.amount);
       }
     });
     this.subscriptions.push(dialogSubscription);

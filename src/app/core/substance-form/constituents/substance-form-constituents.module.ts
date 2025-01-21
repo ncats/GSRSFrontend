@@ -14,6 +14,8 @@ import {ScrollToModule} from '@gsrs-core/scroll-to';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { ConstituentFormComponent } from './constituent-form.component';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -29,7 +31,9 @@ import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance
     FormsModule,
     MatPaginatorModule,
     MatInputModule,
-    SubstanceSelectorModule
+    MatCheckboxModule,
+    SubstanceSelectorModule,
+    MatTooltipModule
   ],
   declarations: [
     SubstanceFormConstituentsCardComponent,
