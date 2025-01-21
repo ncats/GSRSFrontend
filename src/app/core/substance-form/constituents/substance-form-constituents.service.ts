@@ -52,9 +52,17 @@ export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<A
     return this.propertyEmitter.asObservable();
   }
 
-  addSubstanceConstituent(): void {
+  addSubstanceConstituent(formulation?:boolean): void {
     // for G1 and G2
-    const constituent: Constituent = { references: [], access: ['protected'] };
+    let constituent: Constituent = { references: [], access: ['protected'] };
+    if (formulation) {
+      constituent.role = "COMPONENT";
+      constituent.amount = {
+        type: "WEIGHT PERCENTAGE",
+        units: "%",
+        access: ["protected"]
+      };
+    }
     if (this.substance.substanceClass === 'specifiedSubstanceG1') {
       this.substance.specifiedSubstance.constituents.unshift(constituent);
       this.propertyEmitter.next(this.substance.specifiedSubstance.constituents);
