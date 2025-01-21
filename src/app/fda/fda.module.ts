@@ -37,6 +37,7 @@ import { ImpuritiesModule } from '../fda/impurities/impurities.module';
 import { AdvancedSearchModule } from '../fda/advanced-search/advanced-search.module';
 import { AdverseEventsBrowseModule } from '../fda/adverse-event/adverse-events-browse.module';
 import { InvitroPharmaModule } from './invitro-pharmacology/invitro-pharmacology.module';
+import { CrossEntitySearchModule } from './cross-entity-search/cross-entity-search.module';
 
 const fdaRoutes: Routes = [
   {
@@ -78,6 +79,7 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     AdvancedSearchModule,
     AdverseEventsBrowseModule,
     SubstanceApplicationMatchListModule,
+    CrossEntitySearchModule,
     UserManualModule,
     JiraSubmitTicketModule,
     MatCardModule,

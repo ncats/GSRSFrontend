@@ -45,6 +45,8 @@ import { JsonDialogFdaModule } from '../json-dialog-fda/json-dialog-fda.module';
 import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { ApplicationTextSearchModule } from './application-text-search/application-text-search.module';
+import { CrossEntitySearchModule } from '../cross-entity-search/cross-entity-search.module';
+
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { CanActivateRegisterApplicationFormComponent } from './application-form/can-activate-register-application-form.component';
 import { CanActivateUpdateApplicationFormComponent } from './application-form/can-activate-update-application-form.component';
@@ -127,7 +129,8 @@ const applicationRoutes: Routes = [
     JsonDialogFdaModule,
     ConfirmDialogModule,
     SubstanceFormModule,
-    ApplicationTextSearchModule
+    ApplicationTextSearchModule,
+    CrossEntitySearchModule
   ],
   declarations: [
     ApplicationsBrowseComponent,
