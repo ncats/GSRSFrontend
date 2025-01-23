@@ -34,6 +34,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   ngOnInit() {
+    this.pageSize = 5;
     this.substanceUpdated.subscribe(substance => {
       this.relationships = [];
       this.substance = substance;
