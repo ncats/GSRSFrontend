@@ -18,7 +18,8 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
   constituents: Array<Constituent>;
   private subscriptions: Array<Subscription> = [];
   formulation = false;
-  formulationPercent = 0;
+  formulationPercent: number = 0;
+  components = 0;
 
 
   constructor(
@@ -74,9 +75,13 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
   }
 
   calcFormulation(event: any) {
+    this.formulationPercent = 0;
+    this.components = 0;
     this.constituents.forEach(constituent => {
         if(constituent && constituent.amount && constituent.amount.type === "WEIGHT PERCENTAGE" 
           && constituent.amount.units === "%" && constituent.amount.average) {
+            this.formulationPercent = parseFloat(this.formulationPercent.toString()) + parseFloat(constituent.amount.average.toString());
+            this.components++;
           }
 
 

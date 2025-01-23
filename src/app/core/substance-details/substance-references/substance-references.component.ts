@@ -6,6 +6,7 @@ import {Subject} from 'rxjs';
 import {Sort} from '@angular/material/sort';
 import {UtilsService} from '@gsrs-core/utils';
 import { FormControl } from '@angular/forms';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-references',
@@ -25,10 +26,12 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
   tagsFilter = new FormControl();
   typeFilterOptions: Array<TableFilterDDModel> = [];
   tagsFilterOptions: Array<TableFilterDDModel> = [];
+  pageSizeOptions = [5, 10, 25, 100];
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private configService: ConfigService
   ) {
     super(
       gaService
@@ -62,6 +65,16 @@ export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<
     this.tagsFilter.valueChanges.subscribe((tagsFilterValue) => {
       this.filterTable();
     });
+
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.references ){
+      let pagingSettings = this.configService.configData.editPagingOptionSettings.references;
+      if(pagingSettings.pageSizeDefault) {
+        this.pageSize = pagingSettings.pageSizeDefault
+      }
+      if(pagingSettings.pageSizeOptions) {
+        this.pageSizeOptions = pagingSettings.pageSizeOptions;
+      }
+}
   }
 
   filterTable(type?:string) {
