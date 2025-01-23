@@ -21,6 +21,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   private excludedRelationships: Array<string>;
   substanceUpdated = new Subject<SubstanceDetail>();
   private overlayContainer: HTMLElement;
+  pageSizeOptions = [5, 10, 25, 100];
 
   constructor(
     private utilService: UtilsService,
@@ -33,6 +34,7 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
   }
 
   ngOnInit() {
+    this.pageSize = 5;
     this.substanceUpdated.subscribe(substance => {
       this.relationships = [];
       this.substance = substance;
@@ -62,7 +64,18 @@ export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredLi
       }
     });
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.relationships ){
+      let pagingSettings = this.configService.configData.editPagingOptionSettings.relationships;
+      if(pagingSettings.pageSizeDefault) {
+        this.pageSize = pagingSettings.pageSizeDefault
+      }
+      if(pagingSettings.pageSizeOptions) {
+        this.pageSizeOptions = pagingSettings.pageSizeOptions;
+      }
+}
   }
+
+  
   sortData(sort: Sort) {
     const data = this.relationships.slice();
     if (!sort.active || sort.direction === '') {

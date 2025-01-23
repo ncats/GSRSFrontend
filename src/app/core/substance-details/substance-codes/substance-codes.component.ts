@@ -8,6 +8,7 @@ import {Sort} from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
 import { FormControl } from '@angular/forms';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-codes',
@@ -27,17 +28,21 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   codeFilter = new FormControl();
   typeFilterOptions: Array<TableFilterDDModel> = [];
   private overlayContainer: HTMLElement;
+  pageSizeOptions = [5, 10, 25, 100];
 
   constructor(
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private configService: ConfigService,
+
   ) {
     super(gaService);
   }
 
   ngOnInit() {
+    this.pageSize = 10;
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       this.codes = [];
@@ -72,10 +77,6 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
         }
       }
     });
-
-  //  if (this.type === 'identifiers') {
-      this.pageSize = 10;
-  //  }
     
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.codeSystemFilter.valueChanges.subscribe((codeSystemFilterValue) => {
@@ -87,6 +88,17 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     this.typeFilter.valueChanges.subscribe((typeFilterValue) => {
       this.filterTable();
     });
+
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.codes ){
+      let pagingSettings = this.configService.configData.editPagingOptionSettings.codes;
+      console.log('setting codes');
+      if(pagingSettings.pageSizeDefault) {
+        this.pageSize = pagingSettings.pageSizeDefault
+      }
+      if(pagingSettings.pageSizeOptions) {
+        this.pageSizeOptions = pagingSettings.pageSizeOptions;
+      }
+}
   }
 
   filterTable(type?:string) {

@@ -12,6 +12,7 @@ import {UtilsService} from '@gsrs-core/utils';
 import { FormControl } from '@angular/forms';
 import { throws } from 'assert';
 import { I } from '@angular/cdk/keycodes';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-substance-names',
@@ -41,19 +42,22 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   nameType = 'name';
   hideFilters = true;
   showHideFilterText = 'Show Filter';
+  pageSizeOptions = [5, 10, 25, 100];
+
 
   constructor(
     private dialog: MatDialog,
     public gaService: GoogleAnalyticsService,
     private cvService: ControlledVocabularyService,
     private overlayContainerService: OverlayContainer,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private configService:ConfigService
   ) {
     super(gaService);
   }
 
   ngOnInit() {
-
+    this.pageSize = 10;
     this.filterSelectObj = [
       {
         name: 'Name Type',
@@ -61,6 +65,16 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
         options: []
       }
     ];
+
+    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.names ){
+      let pagingSettings = this.configService.configData.editPagingOptionSettings.names;
+      if(pagingSettings.pageSizeDefault) {
+        this.pageSize = pagingSettings.pageSizeDefault
+      }
+      if(pagingSettings.pageSizeOptions) {
+        this.pageSizeOptions = pagingSettings.pageSizeOptions;
+      }
+}
 
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;

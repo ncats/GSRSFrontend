@@ -5,6 +5,8 @@ import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormConstituentsService } from './substance-form-constituents.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { EventEmitter } from 'stream';
 
 @Component({
   selector: 'app-substance-form-constituents-card',
@@ -15,6 +17,10 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {
   constituents: Array<Constituent>;
   private subscriptions: Array<Subscription> = [];
+  formulation = false;
+  formulationPercent: number = 0;
+  components = 0;
+
 
   constructor(
     private substanceFormConstituentsService: SubstanceFormConstituentsService,
@@ -45,11 +51,11 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
   }
 
   addItem(): void {
-    this.addConstituent();
+    this.addConstituent(this.formulation);
   }
 
-  addConstituent(): void {
-    this.substanceFormConstituentsService.addSubstanceConstituent();
+  addConstituent(formulation: boolean): void {
+    this.substanceFormConstituentsService.addSubstanceConstituent(formulation);
     setTimeout(() => {
       this.scrollToService.scrollToElement(`substance-constituent-0`, 'center');
     });
@@ -57,6 +63,29 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
 
   deleteConstituent(constituent: Constituent): void {
     this.substanceFormConstituentsService.deleteSubstanceConstituent(constituent);
+  }
+
+  toggleFormulation(event: MatCheckboxChange): void {
+    this.formulation = event.checked;
+    if (event.checked) {
+
+    } else {
+
+    }
+  }
+
+  calcFormulation(event: any) {
+    this.formulationPercent = 0;
+    this.components = 0;
+    this.constituents.forEach(constituent => {
+        if(constituent && constituent.amount && constituent.amount.type === "WEIGHT PERCENTAGE" 
+          && constituent.amount.units === "%" && constituent.amount.average) {
+            this.formulationPercent = parseFloat(this.formulationPercent.toString()) + parseFloat(constituent.amount.average.toString());
+            this.components++;
+          }
+
+
+    });
   }
 
 }

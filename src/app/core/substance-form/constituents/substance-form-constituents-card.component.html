@@ -4,15 +4,24 @@
     Add Constituent <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button> -->
 </div>
+
+<div class = "flex-row space-between">
+    <mat-checkbox [checked] = "formulation" (change) = "toggleFormulation($event)"
+         matTooltip = "Automatically fills in values for formulations where the amounts should be percentages totalling 100%">Formulation Autofill</mat-checkbox>
+  <div class = "percentage-display" *ngIf = "formulation">Total Amount: <span class = "percentage">{{formulationPercent}} %</span></div>
+  <div *ngIf = "constituents && constituents.length > 0 && formulation" class = "component-count" >Constituents in Calculation: {{components}} / {{constituents.length}}</div>
+  <div *ngIf = "(!constituents || constituents.length == 0) && formulation" class = "component-count" >Constituents in Calculation: 0</div>
+
+</div>
   <div class = "alternate-backgrounds" *ngFor = "let constituent of constituents; last as isLast; index as index"  appScrollToTarget [id]="'substance-constituent-' + index" >
-    <app-constituent-form [constituent]="constituent" (constituentDeleted)="deleteConstituent($event)"></app-constituent-form>
+    <app-constituent-form [constituent]="constituent" (constituentDeleted)="deleteConstituent($event)" [formulation] = "formulation" (amountUpdated) = "calcFormulation($event)"></app-constituent-form>
     <mat-divider class="form-divider" [inset]="true" *ngIf="!isLast"></mat-divider>
   </div>
 
 
   <div class="flex-row">
       <span class = "middle-fill"></span>
-         <button mat-button (click)="addConstituent()">
+         <button mat-button (click)="addConstituent(formulation)">
           Add Constituent <mat-icon svgIcon="add_circle_outline"></mat-icon>
         </button>
 </div>
