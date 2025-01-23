@@ -57,7 +57,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   ngOnInit() {
-
+    this.pageSize = 10;
     this.filterSelectObj = [
       {
         name: 'Name Type',

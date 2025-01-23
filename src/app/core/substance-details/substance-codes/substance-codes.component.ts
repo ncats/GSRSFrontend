@@ -42,6 +42,7 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   ngOnInit() {
+    this.pageSize = 10;
     this.substanceUpdated.subscribe(substance => {
       this.substance = substance;
       this.codes = [];
@@ -76,10 +77,6 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
         }
       }
     });
-
-  //  if (this.type === 'identifiers') {
-      this.pageSize = 10;
-  //  }
     
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.codeSystemFilter.valueChanges.subscribe((codeSystemFilterValue) => {
