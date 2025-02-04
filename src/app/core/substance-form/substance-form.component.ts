@@ -236,6 +236,45 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
+  processImportedSubstance(response?: string): void {
+    if (response) {
+      //   this.overlayContainer.style.zIndex = null;
+      this.loadingService.setLoading(true);
+
+      // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+      // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+      const read = JSON.parse(response);
+      if (this.id && read.uuid && this.id === read.uuid) {
+        this.substanceFormService.importSubstance(read, 'update');
+        this.submissionMessage = null;
+        this.validationMessages = [];
+        this.showSubmissionMessages = false;
+        setTimeout(() => {
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          this.overlayContainer.style.zIndex = null;
+        }, 1000);
+        /*   } else {
+          if ( read.substanceClass === this.substanceClass) {
+            this.imported = true;
+            this.substanceFormService.importSubstance(read);
+            this.submissionMessage = null;
+            this.validationMessages = [];
+            this.showSubmissionMessages = false;
+            this.loadingService.setLoading(false);
+            this.isLoading = false;*/
+      } else {
+        setTimeout(() => {
+          this.overlayContainer.style.zIndex = null;
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          this.router.navigateByUrl('/substances/register?action=import', {state: {record: response}});
+
+        }, 1000);
+      }
+    }
+  }
 
   importDialog(): void {
     const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
@@ -245,46 +284,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
-      if (response) {
-        //   this.overlayContainer.style.zIndex = null;
-        this.loadingService.setLoading(true);
-
-        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
-        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
-
-        const read = JSON.parse(response);
-        if (this.id && read.uuid && this.id === read.uuid) {
-          this.substanceFormService.importSubstance(read, 'update');
-          this.submissionMessage = null;
-          this.validationMessages = [];
-          this.showSubmissionMessages = false;
-          setTimeout(() => {
-            this.loadingService.setLoading(false);
-            this.isLoading = false;
-            this.overlayContainer.style.zIndex = null;
-          }, 1000);
-          /*   } else {
-            if ( read.substanceClass === this.substanceClass) {
-              this.imported = true;
-              this.substanceFormService.importSubstance(read);
-              this.submissionMessage = null;
-              this.validationMessages = [];
-              this.showSubmissionMessages = false;
-              this.loadingService.setLoading(false);
-              this.isLoading = false;*/
-        } else {
-          setTimeout(() => {
-            this.overlayContainer.style.zIndex = null;
-            this.router.onSameUrlNavigation = 'reload';
-            this.loadingService.setLoading(false);
-            this.router.navigateByUrl('/substances/register?action=import', {state: {record: response}});
-
-          }, 1000);
-        }
-      }
-      // }
-    });
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => this.processImportedSubstance(response));
 
   }
 
@@ -327,6 +327,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       .subscribe(params => {
 
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+
+        if (action && action === 'pfda-file-import') {
+          console.log('pfda-file-import')
+          const fileUri = this.activatedRoute.snapshot.queryParams['file-uri'] || null;
+          fetch(fileUri).then((response) => {
+            response.text().then(responseText => this.processImportedSubstance(responseText))
+          })
+        }
+
 
         if (params['id']) {
 
