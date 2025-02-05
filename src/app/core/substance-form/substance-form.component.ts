@@ -319,9 +319,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
         if (action && action === 'pfda-file-import') {
-          return this.importFromUriParam();
+          this.importFromUriParam();
         }
-
 
         if (params['id']) {
 
