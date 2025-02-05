@@ -255,15 +255,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
           this.isLoading = false;
           this.overlayContainer.style.zIndex = null;
         }, 1000);
-        /*   } else {
-          if ( read.substanceClass === this.substanceClass) {
-            this.imported = true;
-            this.substanceFormService.importSubstance(read);
-            this.submissionMessage = null;
-            this.validationMessages = [];
-            this.showSubmissionMessages = false;
-            this.loadingService.setLoading(false);
-            this.isLoading = false;*/
       } else {
         setTimeout(() => {
           this.overlayContainer.style.zIndex = null;
@@ -327,13 +318,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       .subscribe(params => {
 
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-
         if (action && action === 'pfda-file-import') {
-          console.log('pfda-file-import')
-          const fileUri = this.activatedRoute.snapshot.queryParams['file-uri'] || null;
-          fetch(fileUri).then((response) => {
-            response.text().then(responseText => this.processImportedSubstance(responseText))
-          })
+          return this.importFromUriParam();
         }
 
 
@@ -455,6 +441,35 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       });
     });
+  }
+
+  // Load file from URI (as passed in file-uri URL parameter) and try to import it into a submission form
+  private importFromUriParam() {
+    const fileUri = this.activatedRoute.snapshot.queryParams['file-uri'] || null;
+    if (!fileUri) {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      return this.mainNotificationService.setErrorNotification('File URI was not specified');
+    }
+    this.mainNotificationService.setSuccessNotification('Loading file...', 0);
+    fetch(fileUri).then((response) => {
+      if (response.status === 200) {
+        response.json().then(responseJson => {
+          this.mainNotificationService.setSuccessNotification('Processing imported substance...');
+          this.processImportedSubstance(JSON.stringify(responseJson));
+        }).catch(reason => {
+          this.mainNotificationService.setErrorNotification(`Error while parsing imported file: ${reason.message}`);
+        })
+      } else {
+        const errMsg = response.status === 401 ? `Your session expired. Please login and try again.` : `Error while loading file: ${response.status}`;
+        this.mainNotificationService.setErrorNotification(errMsg);
+      }
+    }).catch(reason => {
+      this.mainNotificationService.setErrorNotification(`Error while importing file: ${reason.message}`);
+    })
+    this.isLoading = false;
+    this.loadingService.setLoading(false);
+    return;
   }
 
   isBase64(str) {
