@@ -3,14 +3,21 @@
 
   <mat-sidenav mode="side" opened>
 
-    <!-- Cross Entity Search to search between Substance, Product, Application, etc -->
-    <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists">
-    </app-cross-entity-search>
+    <!-- CROSS ENTITY SEARCH -->
+    <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
 
+    <span *ngIf="isFacetsParamsInit === true">
+      <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [searchTerm]="searchTerm"
+        [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
+        [entityTotalRecords]="totalProducts" (getSearchIdsOnly)="getSearchIdsOnly($event)">
+      </app-cross-entity-search>
+    </span>
 
+    <!-- DISPLAY FACETS -->
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" configName="products" includeFacetSearch="true">
     </app-facets-manager>
+
   </mat-sidenav>
 
   <!-- Browse Product Content -->

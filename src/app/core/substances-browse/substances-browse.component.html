@@ -9,9 +9,13 @@
       </mat-select>
     </mat-form-field>
 
-    <!-- Cross Entity Search to search between Substance, Product, Application, etc -->
-    <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists">
-    </app-cross-entity-search>
+    <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
+    <span *ngIf="isFacetsParamsInitialized === true">
+      <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [searchTerm]="searchTerm" 
+      [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets" 
+      [entityTotalRecords]="totalSubstances" (getSearchIdsOnly)="getSearchIdsOnly($event)">
+      </app-cross-entity-search>
+    </span>
 
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"

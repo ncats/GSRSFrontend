@@ -1,11 +1,31 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpParameterCodec} from '@angular/common/http';
 import { Observable, } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { BulkQuery } from '../bulk-query.model';
 import { BulkSearch } from '../bulk-search.model';
+import { FacetParam } from '@gsrs-core/facets-manager/facet.model';
+import { FacetHttpParams } from '@gsrs-core/facets-manager/facet-http-params';
 import { Subject } from 'rxjs';
+
+class CustomEncoder implements HttpParameterCodec {
+  encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
+
+  encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
+}
 
 @Injectable(
   { providedIn: 'root' }
@@ -74,14 +94,21 @@ export class BulkSearchService extends BaseHttpService {
   getBulkSearch(
     context: string,
     id: number,
+    facets?: FacetParam,
+    showDeprecated: boolean = false,
     searchOnIdentifiers: boolean = false
   ): Observable<BulkSearch> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/'+context+'/bulkSearch';
-    let params = new HttpParams();
-    params = params.append('bulkQID', id);
-    params = params.append('searchOnIdentifiers', searchOnIdentifiers);
+    
+    //let params = new HttpParams();
+    let params = new FacetHttpParams({encoder: new CustomEncoder()});
+    params = params.append('bulkQID', id.toString());
+    params = params.append('searchOnIdentifiers', searchOnIdentifiers.toString());
 
     params.append('simpleSearchOnly', null);
+
+    params = params.appendFacetParams(facets, showDeprecated);
+
     const options = {
       // eslint-disable-next-line object-shorthand
       params: params,
@@ -110,13 +137,22 @@ export class BulkSearchService extends BaseHttpService {
     qTop?: number,
     qSkip?: number,
     qSort: string='',
-    qFilter: string=''
+    qFilter: string='',
+    newUrl?: string,
+    fdim: number = 10,
+    view: string = 'full'
   ): Observable<any> {
-    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';
+    let url = this.configService.configData.apiBaseUrl + 'api/v1/status/'+key+'/results';
+
+    // if URL is passed in the parameter, use this url
+    if (newUrl) {
+      url = newUrl + '/results';
+    }
+
     // let params = new HttpParams();
     const options = {
       // eslint-disable-next-line object-shorthand
-      params: {top: top, skip: skip, qTop: qTop, qSkip: qSkip, qSort: qSort, qFilter: qFilter},
+      params: {top: top, skip: skip, qTop: qTop, qSkip: qSkip, qSort: qSort, qFilter: qFilter, fdim: fdim, view: view},
       type: 'JSON',
       headers: {}
     };

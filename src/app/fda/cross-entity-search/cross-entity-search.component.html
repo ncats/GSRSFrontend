@@ -1,10 +1,9 @@
 <!-- Dropdown to select Entity (SUBSTANCE, PRODUCT, APPLICATION, CLINICAL TRIAL, etc) -->
 <mat-form-field class="entitydropdown">
   <mat-label>Show Facets for:</mat-label> <!-- DO not display the option if the entity is same as option value -->
-  <mat-select (selectionChange)="entitySelectedChange($event)">
-    <mat-option *ngFor="let entity of filteredEntity; index as index" [value]="entity.entityValue"
-      [hidden]="thisEntity && thisEntity == entity.entityValue">
-      {{entity.entityDisplay}}
+  <mat-select (selectionChange)="subEntitySelectedChange($event)">
+    <mat-option *ngFor="let subEntity of filteredSubEntity; index as index" [value]="subEntity.entity">
+      {{subEntity.entityDisplay}}
     </mat-option>
   </mat-select>
 </mat-form-field>
@@ -14,22 +13,107 @@
 <!-- ********************************************************************************** -->
 <ng-template #crossEntitySearchTemplate>
   <div mat-dialog-content>
-    <span *ngIf="rawFacets && rawFacets.length > 0">
-      <span class="fontbold"><b>{{entityDisplaySelectedForSearch}}</b> Facets for Cross Entity Search</span>
-      <br><br>
-      Search Query:<br><br>
 
-      <app-facets-manager (facetsParamsUpdated)="facetsParamsCrossEntityUpdated($event)" [rawFacets]="rawFacets"
-        [facetViewCategorySelected]="facetViewCategorySelected" [configName]="entitySelectedForSearch"
-        includeFacetSearch="true">
-      </app-facets-manager>
-    </span>
-  </div>
+    <!-- ENTITY DETAILS BEGIN -->
+    <div class="divflex">
+
+      <div class="margintopneg5">
+        <span class="main-title"><b>Cross Entity Search</b></span>
+      </div>
+
+      <div class="divflex marginleft40px width200px">
+        <div class=""><b>{{thisEntityDisplay}}</b></div>&nbsp;
+        <div><mat-icon>arrow_right_alt</mat-icon></div>
+        <div class=""><b>{{subEntityDisplay}}</b></div>
+      </div>
+
+      <div class="marginleft40px">
+        Total {{thisEntityDisplay}} Records: <span><b>{{thisEntityTotalRecords}}</b></span>
+      </div>
+
+    </div> <!-- divflex -->
+
+    <div class="margintop10px marginbottom10px">
+      <!-- display search term for current entity -->
+      <div class="search-parameters">
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="entitySearchTerm">
+          <div>
+            <span class="capitalized font-medium-bold">Search Query:</span>&nbsp;
+            <span>{{entitySearchTerm}}</span>
+          </div>
+        </div>
+
+        <!-- display Facets for current entity -->
+
+        <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of thisEntityDisplayFacets">
+          <div class='selected-container'>
+            <span class="selected-label">
+              <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+              {{facet.type}}:
+            </span>
+            <span class="no-break selected-value">
+              {{facet.val}}
+            </span>
+          </div>
+
+          <div class="actions-container">
+          </div>
+
+        </div>
+
+      </div> <!-- search-parameters -->
+
+    </div> <!-- ENTITY DETAILS END -->
+
+
+    <hr>
+    
+    <!-- ****************************************************** -->
+    <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
+
+    <div class="divflex margintop15px">
+      <div>
+        <span class="font20px colorlightblue fontbold"><b>{{subEntityDisplay}}</b> Facets</span>
+      </div>
+
+      <div class="marginleft40px">
+        Total {{subEntityDisplay}} Records: <span><b>{{subEntityTotalRecords}}</b></span>
+      </div>
+    </div> <!-- divflex -->
+
+    <!-- Display Status Message -->
+    <div *ngIf="statusMessage" class="margintop30px marginbottom10px colorred">
+      {{statusMessage}}
+    </div>
+
+    <div *ngIf="rawFacets && rawFacets.length > 0">
+
+      <!-- SHOW SUB ENTITY FACETS -->
+      <div class="divflex margintop10px">
+
+        <div class="width400px">
+          <app-facets-manager (facetsParamsUpdated)="subEntityfacetsParamsUpdated($event)"
+            (facetsLoaded)="facetsLoaded($event)" [rawFacets]="rawFacets"
+            [facetViewCategorySelected]="facetViewCategorySelected" [configName]="subEntityEndpoint"
+            [calledFrom]="crossEntitySearch" includeFacetSearch="true">
+          </app-facets-manager>
+        </div>
+
+        <div>
+          &nbsp;
+        </div>
+      </div> <!-- divflex -->
+
+    </div> <!-- rowFacets.length > 0 -->
+
+    <br><br>
+  </div> <!-- mat-dialog-conten -->
 
   <div mat-dialog-actions>
     <span class="middle-fill"></span>
     <button class="mat-raised-button mat-primary" (click)="closePopup()" mat-dialog-close>Close</button>
   </div>
+
 </ng-template>
 <!-- POPUP DIALOG for CONTROLS END -->
 

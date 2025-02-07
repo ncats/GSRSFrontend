@@ -16,6 +16,7 @@ import { LoadingService } from '@gsrs-core/loading';
 import { AuthService } from '../../core/auth/auth.service';
 import { BulkSearchService } from './service/bulk-search.service';
 import { BulkSearch } from './bulk-search.model';
+import { FacetParam } from '@gsrs-core/facets-manager';
 
   @Component({
     selector: 'app-bulk-search',
@@ -42,6 +43,7 @@ import { BulkSearch } from './bulk-search.model';
     isLoading = false;
     anchorElement: HTMLAnchorElement;
     showSpinner = false;
+    private privateFacetParams: FacetParam;
     navigationExtrasFacet: NavigationExtras = {
       queryParams: {}
     };
@@ -94,6 +96,7 @@ import { BulkSearch } from './bulk-search.model';
         this.bulkSearchService.getBulkSearch(
           this.context,
           this.bulkQID,
+          this.privateFacetParams,
           this.searchOnIdentifiers
         ).subscribe(bulkSearch => {
             this._bulkSearch = bulkSearch;

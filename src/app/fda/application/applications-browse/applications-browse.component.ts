@@ -37,6 +37,8 @@ import { Application } from '../model/application.model';
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
  // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+
+  // For Cross Entity Search
   thisEntity: string = "applications";
   idLists: Array<string> = [];
 
@@ -234,8 +236,25 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
         // Narrow Suggest Search End
 
         this.getSubstanceBySubstanceKey();
+
         // Get Application Clinical Trial Record
         this.getClinicalTrialApplication();
+
+        // For Cross Entity Search get lists of Substance UUID
+        let ids : Array<string> = [];
+        let facetSubUuid = pagingResponse.facets.find(facet => facet.name === "Substance UUID");
+        if (facetSubUuid) {
+          facetSubUuid.values.forEach(value => {
+            if (value) {
+              if (value.label) {
+                ids.push(value.label);
+              }
+            }
+          });
+
+          this.idLists = ids;
+        } /* Cross Entity Search END */
+
       }, error => {
         console.log('error');
         const notification: AppNotification = {

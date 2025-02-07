@@ -1,5 +1,5 @@
 {
-  "version": "3.1.1",
+  "version": "3.1.2", 
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -1015,6 +1015,7 @@
         "Product ID",
         "Product Name",
         "Dosage Form Name",
+        "Substance UUID",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
         "Number of Ingredients",

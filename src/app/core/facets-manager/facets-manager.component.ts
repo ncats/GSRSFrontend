@@ -517,7 +517,11 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     facetString = catArr.join(',');
     if (facetString !== '') {
-      navigationExtras.queryParams['facets'] = facetString;
+
+      // Do not post the facet values on the current url if calling from crossEntitySearch component
+      if (this.calledFrom && this.calledFrom !== 'crossEntitySearch') {
+        navigationExtras.queryParams['facets'] = facetString;
+      }
     }
     if (this.showDeprecated) {
       navigationExtras.queryParams['showDeprecated'] = 'true';

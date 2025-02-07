@@ -115,7 +115,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
-  private isFacetsParamsInit = false;
+  isFacetsParamsInit = false;
   exportOptions: Array<any>;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
@@ -267,7 +267,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           this.exportOptions = response;
         });
 
-        // For Cross Entity Search get lists of Substance UUID
+        // *** For Cross Entity Search get lists of Substance UUID ***
         let ids : Array<string> = [];
         let facetSubUuid = pagingResponse.facets.find(facet => facet.name === "Substance UUID");
         if (facetSubUuid) {
@@ -281,6 +281,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
           this.idLists = ids;
         }
+        // *** Cross Entity END ***
 
       }, error => {
         console.log('error');
@@ -299,7 +300,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.loadingService.setLoading(this.isLoading);
       });
   }
-
+ 
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;

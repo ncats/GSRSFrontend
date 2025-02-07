@@ -149,6 +149,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   resultsInitiated = false;
   @ViewChild('structureRefTemplate') structureTemplateRef: TemplateRef<any>;
 
+  //Cross Entity Search
+  thisEntity = "substances";
+  idLists : Array<String> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -1128,6 +1131,10 @@ searchTermOkforBeginsWithSearch(): boolean {
     return this.privateSearchSeqType;
   }
 
+  get isFacetsParamsInitialized(): boolean {
+    return this.isFacetsParamsInit;
+  }
+
   private processResponsiveness = () => {
     setTimeout(() => {
       if (window) {
@@ -1303,5 +1310,53 @@ searchTermOkforBeginsWithSearch(): boolean {
       });
     }
   
+  // Need this for Cross Entity Search. Return all the IDs only for the current search
+  getSearchIdsOnly(doPerformSearch: boolean) {
+
+    let idListsTemp: Array<String> = [];
+    this.idLists = [];
+
+    let iterations = 0;
+    const skip = 0;
+    const subscription = this.substanceService.getSubstancesSummaries({
+    searchTerm: this.privateSearchTerm,
+    structureSearchTerm: this.privateStructureSearchTerm,
+    sequenceSearchTerm: this.privateSequenceSearchTerm,
+    bulkQID: this.bulkSearchQueryId,
+    searchOnIdentifiers: this.searchOnIdentifiers,
+    searchEntity: this.searchEntity,
+    cutoff: this.privateSearchCutoff,
+    type: this.privateSearchType,
+    seqType: this.privateSearchSeqType,
+    order: this.order,
+    pageSize: 1000000,    //get all the records
+    facets: this.privateFacetParams,
+    skip: skip,
+    sequenceSearchKey: this.privateSequenceSearchKey,
+    deprecated: this.showDeprecated,
+    view: "key",
+    simpleSearchOnly: true
+  }).subscribe(pagingResponse => {
+
+      let results: any =  pagingResponse.content;
+
+      // Get Substance UUID
+      results.forEach(substance => {
+ 
+        // for Cross Entity Search, add Substance UUID in the temporary list
+        idListsTemp.push(substance.idString);
+      });
+
+      // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+      this.idLists = idListsTemp;
+
+   //, () => {
+   // subscription.unsubscribe();
+  //});
+  //this.subscriptions.push(subscription);
+    
+    }); // pagingResponse
+
+  }  
 
 }
