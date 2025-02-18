@@ -6,6 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { InchiLinebreakPipe } from './inchi-linebreak.pipe';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MatListModule
   ],
   declarations: [
-    StructureDetailsComponent
+    StructureDetailsComponent,
+    InchiLinebreakPipe
   ]
 })
 export class StructureDetailsModule { }

@@ -159,9 +159,8 @@ private overlayContainer: HTMLElement;
       const pos = this.privateTerm.value.fragmentStructure.substring(0, this.privateTerm.value.fragmentStructure.indexOf(' '));
       this.structureService.interpretStructure(pos).subscribe(response => {
         if (response.structure && response.structure.molfile) {
-
-          let test = response.structure.molfile;
-          test = test.replace(/ A  /g, ' *  ');
+         let test = response.structure.molfile;
+         // test = test.replace(/ A  /g, ' *  ');
           this.editor.setMolecule(test);
         }
       });
@@ -336,9 +335,8 @@ private overlayContainer: HTMLElement;
    let smiles = '';
    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
      smiles = response;
-     this.editor.getSmiles().pipe(take(1)).subscribe(resp => {
-
-    var tt = this.getPossibleSmiles(resp);
+     this.structureService.interpretStructure(response).pipe(take(1)).subscribe(resp => {
+    var tt = this.getPossibleSmiles(resp.structure.smiles);
     let stars = 0;
     let dom = "";
     // this.vocab is only used when not editing in admin menu, otherwise full vocabulary is sent since it was fetched earlier

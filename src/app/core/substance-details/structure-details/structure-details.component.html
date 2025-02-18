@@ -96,7 +96,7 @@
     <h3>InChiKey:</h3>
     <p class = "indent">{{inchi}}</p>
     <h3>InChi:</h3>
-    <p class = "indent">{{otherInchi}}</p>
+    <p class = "indent" [innerHTML]="otherInchi | inchiLinebreak"></p>
   </div>
   
   <div [hidden]="!showNames" style="width:100%">
