@@ -192,7 +192,17 @@ export class ImportSummaryComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     const skip = event.pageSize * event.pageIndex;
-      this.privateMatches = JSON.parse(JSON.stringify(this.substance.matchedRecords)).slice(skip, (this.pageSize + skip));
+      let matches = JSON.parse(JSON.stringify(this.substance.matchedRecords));
+
+      this.privateMatches = [];
+        const startIndex = this.pageIndex * this.pageSize;
+        for (let i = startIndex; i < (startIndex + this.pageSize); i++) {
+            if (matches[i] != null) {
+                this.privateMatches.push(matches[i]);
+            } else {
+                break;
+            }
+        }
       this.matchFieldsToCount(this.privateMatches);
 
       this.getMatchSummary();

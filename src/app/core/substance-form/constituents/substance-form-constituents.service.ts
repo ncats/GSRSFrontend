@@ -58,7 +58,7 @@ export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<A
     if (formulation) {
       constituent.role = "COMPONENT";
       constituent.amount = {
-        type: "WEIGHT PERCENTAGE",
+        type: "WEIGHT PERCENT",
         units: "%",
         access: ["protected"]
       };
