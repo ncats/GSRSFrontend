@@ -1,5 +1,5 @@
 {
-  "version": "3.1.2", 
+  "version": "3.1.2",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -1628,6 +1628,122 @@
       },
       "stepView": {
         "showAmountValues": "true"
+      }
+    }
+  },
+  "impuritiesForm": {
+    "settingsDisplay": {
+      "overview": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "type": "simple",
+        "productId": "simple",
+        "specType": "simple",
+        "submitterName": "advanced",
+        "productSubstanceName": "advanced",
+        "dateType": "advanced",
+        "dateTypeDate": "advanced"
+      },
+      "substance": {
+        "substanceUuid": "simple",
+        "low": "advanced",
+        "high": "advanced",
+        "unit": "advanced",
+        "comments": "advanced"
+      },
+      "test": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "test": "simple",
+        "testType": "simple",
+        "flowRate": "simple",
+        "columnPackingType": "advanced",
+        "columnPackingSize": "advanced",
+        "columnSize": "advanced",
+        "columnTemperature": "advanced",
+        "injectionVolumeAmount": "advanced",
+        "diluent": "advanced",
+        "system": "advanced",
+        "mode": "advanced",
+        "detectionType": "advanced",
+        "detectionDetails": "advanced",
+        "suitabilityReqResolution": "advanced",
+        "suitabilityReqRelStandardDeviation": "advanced",
+        "testDescription": "advanced",
+        "comments": "advanced",
+        "sampleSolution": "advanced",
+        "systemSuitabilitySolution": "advanced",
+        "standardSolution": "advanced",
+        "otherSolution": "advanced",
+        "elutionType": "advanced",
+        "solutionDescription": "advanced"
+      },
+      "impurities": {
+        "relatedSubstanceUnii": "simple",
+        "sourceImpurityName": "simple",
+        "impurityType": "simple",
+        "comments": "simple",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "identityCriteriaType": "simple",
+        "amountValue": "advanced",
+        "criteriaUnit": "advanced"
+      },
+      "unspecifiedImpurities": {
+        "impurityType": "simple",
+        "testType": "advanced",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "comments": "advanced",
+        "identityCriteriaType": "advanced",
+        "amountValue": "advanced",
+        "criteriaUnit": "advanced"
+      },
+      "residualSolventsTest": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "test": "advanced",
+        "testType": "advanced",
+        "testDescription": "advanced",
+        "comments": "advanced"
+      },
+      "residualSolvents": {
+        "relatedSubstanceUuid": "simple",
+        "pharmaceuticalLimit": "advanced",
+        "testType": "advanced",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "comments": "advanced"
+      },
+      "inorganicImpuritiesTest": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "test": "advanced",
+        "testType": "advanced",
+        "testDescription": "advanced",
+        "comments": "advanced"
+      },
+      "inorganicImpurities": {
+        "relatedSubstanceUnii": "simple",
+        "testType": "advanced",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "comments": "advanced"
+      },
+      "impuritiesTotal": {
+        "testType": "simple",
+        "limitType": "simple",
+        "limitValue": "simple",
+        "amountValue": "simple",
+        "comments": "simple"
       }
     }
   }

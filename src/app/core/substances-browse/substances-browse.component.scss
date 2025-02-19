@@ -775,3 +775,35 @@ margin-left: 20px;
  margin-left: 20px;
 }
 
+.width100percent {
+  width: 100%;
+  min-width: 100%;
+}
+
+.fieldset-sub-search {
+  border: 1px solid --var(--regular-lightgray-color);  
+  display: inline-block;
+  width: 100%;
+}
+
+.legend-sub-search {
+  font-size: 12px;
+}
+
+.selected-parameter-subsearch {
+  height: 45px;
+  font-size: 14px;
+}
+
+selected-container-subsearch {
+  padding-top: 5px;
+  border: 1px solid red;
+}
+
+.margintop20px {
+  margin-top: 20px;
+}
+
+.marginleftneg10 {
+  margin-left: -10px;
+}

@@ -1,7 +1,7 @@
 <!-- Dropdown to select Entity (SUBSTANCE, PRODUCT, APPLICATION, CLINICAL TRIAL, etc) -->
-<mat-form-field class="entitydropdown">
+<mat-form-field class="entitydropdown dropdownoverlap">
   <mat-label>Show Facets for:</mat-label> <!-- DO not display the option if the entity is same as option value -->
-  <mat-select (selectionChange)="subEntitySelectedChange($event)">
+  <mat-select [formControl]="showFacetForFormControl" (selectionChange)="subEntitySelectedChange($event)">
     <mat-option *ngFor="let subEntity of filteredSubEntity; index as index" [value]="subEntity.entity">
       {{subEntity.entityDisplay}}
     </mat-option>
@@ -36,10 +36,10 @@
     <div class="margintop10px marginbottom10px">
       <!-- display search term for current entity -->
       <div class="search-parameters">
-        <div class="mat-elevation-z2 selected-parameter" *ngIf="entitySearchTerm">
+        <div class="mat-elevation-z2 selected-parameter" *ngIf="thisEntitySearchTerm">
           <div>
             <span class="capitalized font-medium-bold">Search Query:</span>&nbsp;
-            <span>{{entitySearchTerm}}</span>
+            <span>{{thisEntitySearchTerm}}</span>
           </div>
         </div>
 

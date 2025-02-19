@@ -20,6 +20,8 @@ import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defia
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { FormBuilder } from '@angular/forms';
+
+import { ConfigService } from '@gsrs-core/config';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
@@ -61,8 +63,12 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   downloadJsonHref: any;
   jsonFileName: string;
 
+  showAdvancedSettings = false;
+  configSettingsDisplay = {};
+
   constructor(
     private impuritiesService: ImpuritiesService,
+    private configService: ConfigService,
     private substanceService: SubstanceService,
     private authService: AuthService,
     private loadingService: LoadingService,
@@ -79,6 +85,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
+    // Get form field configuration to show on either simple or advanced form
+    this.getConfigSettings();
+
     const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
     });
@@ -148,6 +157,41 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  getConfigSettings(): void {
+    // Get Impurities Config Settings from config.json file to show and hide fields in the form
+    let configImpuritiesForm: any;
+    configImpuritiesForm = this.configService.configData && this.configService.configData.impuritiesForm || null;
+    
+    // Get 'overview' json values from config
+    const confSettings = configImpuritiesForm.settingsDisplay.overview;
+
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.showAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        } else if (confSettings[key] === 'removed') {
+          this.configSettingsDisplay[key] = false;
+        }
+      } else {
+        // if either value (simple,advanced,removed) missing in config, show field on the form
+        this.configSettingsDisplay[key] = true;
+      }
+    });
+  }
+
+  updateAdvancedSettings(event): void {
+    this.showAdvancedSettings = event.checked;
+
+    //Get config settings
+    this.getConfigSettings();
   }
 
   getImpurities(newType?: string): void {
@@ -497,7 +541,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     const date = new Date();
     let jsonFilename = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    let data = {jsonData: this.impurities, jsonFilename: jsonFilename};
+    let data = { jsonData: this.impurities, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',

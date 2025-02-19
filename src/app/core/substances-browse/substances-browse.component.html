@@ -10,10 +10,10 @@
     </mat-form-field>
 
     <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
-    <span *ngIf="isFacetsParamsInitialized === true">
-      <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [searchTerm]="searchTerm" 
+    <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && isAdmin)">
+      <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm" 
       [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets" 
-      [entityTotalRecords]="totalSubstances" (getSearchIdsOnly)="getSearchIdsOnly($event)">
+      [entityTotalRecords]="totalSubstances" [editSubEntitySearchHash]="editSubEntitySearchHash" (getSearchIdsOnly)="getSearchIdsOnly($event)">
       </app-cross-entity-search>
     </span>
 
@@ -297,8 +297,33 @@
             </div>
           </div>
           <span class = "middle-fill"></span>
+    
+        </div>
 
-
+        <div class="search-parameters">
+          <!-- Cross Entity/Sub-Entity Search selected Facets -->
+          <div class="margintop20px" *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0">
+            <fieldset class="fieldset-sub-search">
+              <legend class="legend-sub-search">Sub Entity Search : <b>{{subEntity}}</b></legend>    
+              
+              <div class="mat-elevation-z2 selected-parameter-subsearch" *ngFor="let facet of subEntityDisplayFacets">
+                <div class='selected-container-subsearch'>
+                  <span class="capitalized font-medium-bold selected-label">
+                    <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                      {{facet.type}}:
+                  </span>
+                  <span class="no-break selected-value">
+                      {{facet.val}}
+                  </span>
+                </div>
+                <div class="actions-container">
+                  <button mat-icon-button color="primary" (click)="editSubEntitySearch()">
+                    <mat-icon svgIcon="edit" tooltip="Go to Sub Entity Search"></mat-icon>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </div>
         </div>
 
 

@@ -195,6 +195,9 @@
 .entitydropdown {
   width: 180px;
   margin-left: 30px;
+}
+
+::ng-deep .dropdownoverlap > * {
   z-index: 1002 !important;
 }
 
@@ -232,4 +235,5 @@
     font-size:14px;
     height: 45px;
   }
+
 }

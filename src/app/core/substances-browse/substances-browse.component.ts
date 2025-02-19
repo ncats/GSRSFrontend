@@ -149,9 +149,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   resultsInitiated = false;
   @ViewChild('structureRefTemplate') structureTemplateRef: TemplateRef<any>;
 
-  //Cross Entity Search
-  thisEntity = "substances";
-  idLists : Array<String> = [];
+  //Cross Entity/Sub-Entity Search
+  entity = "substances";
+  subEntity = null;
+  subEntitySearchHash: string;
+  editSubEntitySearchHash: any;
+  subEntityDisplayFacets: Array<DisplayFacet> = [];
+  idLists: Array<String> = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -222,7 +226,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       });
 
     });
-    
+
     this.title.setTitle('Browse Substances');
 
     this.pageSize = 10;
@@ -251,7 +255,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchSeqType = this.activatedRoute.snapshot.queryParams['seq_type'] || '';
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
     // the sort order should be set to default (similarity) for structure searches, last edited for all others
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 
+    this.order = this.activatedRoute.snapshot.queryParams['order'] ||
     (this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '' ? 'default':'$root_lastEdited');
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
@@ -261,12 +265,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.pageSize = 500;
     }
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    
+    // For Cross Entity/Sub Entity Search
+    this.subEntitySearchHash = this.activatedRoute.snapshot.queryParams['subentity-hash'];
+    
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
     this.bulkSearchService.getBulkSearchLists().subscribe( result => {
-      this.userLists = result.lists;
+          this.userLists = result.lists;
 
         }, error => {
           console.log(error);
@@ -290,6 +298,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.loadComponent();
 
     this.loadFacetViewFromConfig();
+
+    // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
+    this.subEntityfacetDisplay();
 
   }
 
@@ -374,8 +385,8 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
       // There should be a better way to do this.
       this.bulkSearchPanelOpen =
-      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
-      && (this.displayFacets && this.displayFacets.length===0);
+        (this.privateSearchTerm === undefined || this.privateSearchTerm === '')
+        && (this.displayFacets && this.displayFacets.length === 0);
     }
   }
 
@@ -492,7 +503,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  pauseAsync(pause:boolean) {
+  pauseAsync(pause: boolean) {
     this.pauseStructureSearch = pause;
     if (pause) {
       this.substanceService.pauseAsyncSearch();
@@ -503,9 +514,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   //Co nsider just making this close, no pause
   pauseCloseAsync() {
- //   this.substanceService.pauseAsyncSearch();
-  //  this.pauseStructureSearch = true;
-  this.pauseStructureSearch = false;
+    //   this.substanceService.pauseAsyncSearch();
+    //  this.pauseStructureSearch = true;
+    this.pauseStructureSearch = false;
     this.structureSearchDialog.close();
   }
 
@@ -519,7 +530,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         id:'structure-dialog'
       });
       this.overlayContainer.style.zIndex = '1002';
-  
+
       this.structureSearchDialog.afterClosed().subscribe(result => {
         this.overlayContainer.style.zIndex = null;
         this.loadingService.setLoading(false);
@@ -528,14 +539,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       });
       this.structureDialogOpened = true;
     }
-    
+
   }
 
   searchSubstances() {
-      // There should be a better way to do this.
-      this.bulkSearchPanelOpen =
-      (this.privateSearchTerm ===undefined || this.privateSearchTerm ==='')
-      && (this.displayFacets && this.displayFacets.length===0);
+    // There should be a better way to do this.
+    this.bulkSearchPanelOpen =
+      (this.privateSearchTerm === undefined || this.privateSearchTerm === '')
+      && (this.displayFacets && this.displayFacets.length === 0);
     let iterations = 0;
     this.disableExport = false;
     const newArgsHash = this.utilsService.hashCode(
@@ -576,14 +587,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       })
         .subscribe(pagingResponse => {
           //remove later
-         // this.loadingService.setLoading(false);
+          // this.loadingService.setLoading(false);
          if((this.privateSearchType === 'substructure' || this.privateSearchType === 'similarity') && iterations === 0) {
-          this.resultsInitiated = true;
-          this.openModal();
-        // this.pauseStructureSearch = true;
-           iterations++;
-         }
-         
+            this.resultsInitiated = true;
+            this.openModal();
+            // this.pauseStructureSearch = true;
+            iterations++;
+          }
+
 
           this.privateBulkSearchStatusKey = pagingResponse.statusKey;
           this.isError = false;
@@ -609,21 +620,21 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
             this.privateBulkSearchSummary = pagingResponse.summary;
           }
 
-        //  if(!this.pauseStructureSearch || pagingResponse.finished){
+          //  if(!this.pauseStructureSearch || pagingResponse.finished){
        if( this.privateSearchType === 'substructure' || this.privateSearchType === 'similarity'){
           if (pagingResponse.finished || iterations === 1){
-            this.substances = pagingResponse.content;
-            iterations++;
-          }
+              this.substances = pagingResponse.content;
+              iterations++;
+            }
         }else {
-          this.substances = pagingResponse.content;
-        }
+            this.substances = pagingResponse.content;
+          }
 
           this.totalSubstances = pagingResponse.total;
           this.etag = pagingResponse.etag;
           if (pagingResponse.facets && pagingResponse.facets.length > 0) {
             this.rawFacets = pagingResponse.facets;
-            
+
           }
           this.narrowSearchSuggestions = {};
           this.matchTypes = [];
@@ -648,7 +659,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               this.narrowSearchSuggestionsCount++;
             });
 
-            if(this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
+            if (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm)) {
 
               const lq: string = this.utilsService.makeBeginsWithSearchTerm('root_names_name', this.privateSearchTerm.toString());
 
@@ -666,7 +677,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
                 luceneQuery: lq
               };
               this.substanceService.searchSubstances(lq).subscribe(response => {
-                if(response?.total && response.total>0) {
+                if (response?.total && response.total > 0) {
                   suggestion.count = response.total;
                   if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
                     this.narrowSearchSuggestions[suggestion.matchType] = [];
@@ -700,10 +711,10 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           });
           if(pagingResponse.finished){
             this.asyncFinished = true;
-         this.substances = pagingResponse.content;
+            this.substances = pagingResponse.content;
          setTimeout(()=>{
-          this.structureSearchDialog ? this.structureSearchDialog.close() : null;
-         });
+              this.structureSearchDialog ? this.structureSearchDialog.close() : null;
+            });
           }
           this.substanceService.setResult(pagingResponse.etag, pagingResponse.content, pagingResponse.total);
         }, error => {
@@ -733,18 +744,18 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.isLoading = false;
           this.loadingService.setLoading(this.isLoading);
         });
-        this.subscriptions.push(subscription);
+      this.subscriptions.push(subscription);
     }
 
   }
 
-sortMatchTypes(a:Array<string>) {
+  sortMatchTypes(a: Array<string>) {
     return _.sortBy(a);
-}
+  }
 
-searchTermOkforBeginsWithSearch(): boolean {
-  return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
-}
+  searchTermOkforBeginsWithSearch(): boolean {
+    return (this.privateSearchTerm && !this.utilsService.looksLikeComplexSearchTerm(this.privateSearchTerm));
+  }
 
 
 
@@ -763,7 +774,7 @@ searchTermOkforBeginsWithSearch(): boolean {
         maxHeight: '85%',
 
         width: '60%',
-        
+
         data: { 'extension': extension }
       });
 
@@ -777,8 +788,8 @@ searchTermOkforBeginsWithSearch(): boolean {
           this.loadingService.setLoading(true);
           const fullname = name + '.' + extension;
           this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-           // this.substanceService.getConfigByID(id).subscribe(resp =>{
-          //  });
+            // this.substanceService.getConfigByID(id).subscribe(resp =>{
+            //  });
             this.loadingService.setLoading(false);
             this.loadingService.setLoading(false);
             const navigationExtras: NavigationExtras = {
@@ -879,9 +890,9 @@ searchTermOkforBeginsWithSearch(): boolean {
       `${this.privateSearchTerm}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-advanced-search', eventLabel);
     // Structure Search
-   // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
-   // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
-   // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
+    // const eventLabel = environment.isAnalyticsPrivate ? 'structure search term' :
+    // `${this.privateStructureSearchTerm}-${this.privateSearchType}-${this.privateSearchCutoff}`;
+    // this.gaService.sendEvent('substancesFiltering', 'icon-button:edit-structure-search', eventLabel);
 
     // ** BEGIN: Store in Local Storage for Advanced Search
     // storage searchterm in local storage when going from Browse Substance to Advanced Search (NOT COMING FROM ADVANCED SEARCH)
@@ -915,7 +926,7 @@ searchTermOkforBeginsWithSearch(): boolean {
       const queryStatementHashesString = JSON.stringify(queryStatementHashes);
 
       localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
-     }
+    }
     // ** END: Store in Local Storage for Advanced Search
 
     const navigationExtras: NavigationExtras = {
@@ -1031,7 +1042,7 @@ searchTermOkforBeginsWithSearch(): boolean {
   clearBulkSearch(): void {
 
     const eventLabel = environment.isAnalyticsPrivate ? 'bulk search term' :
-    `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
+      `${this.searchEntity}-bulk-search-${this.privateBulkSearchQueryId}`;
     this.gaService.sendEvent('substancesFiltering', 'icon-button:clear-bulk-search', eventLabel);
 
     this.privateBulkSearchQueryId = null;
@@ -1075,7 +1086,7 @@ searchTermOkforBeginsWithSearch(): boolean {
       (this.privateSequenceSearchKey != null && this.privateSequenceSearchKey !== '')) {
       this.clearSequenceSearch();
     } else if (this.privateBulkSearchQueryId != null && this.privateBulkSearchQueryId !== undefined) {
-        this.clearBulkSearch();
+      this.clearBulkSearch();
     } else {
       this.clearSearch();
     }
@@ -1175,7 +1186,7 @@ searchTermOkforBeginsWithSearch(): boolean {
 
   openImageModal(substance: SubstanceDetail): void {
     const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
-        this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+    this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;
 
@@ -1292,71 +1303,165 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   addToList(): void {
-      let data = {view: 'add', etag: this.etag, lists: this.userLists};
+    let data = { view: 'add', etag: this.etag, lists: this.userLists };
 
-      
-      const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
-        width: '800px',
-        autoFocus: false,
-              data: data
-  
-      });
-      this.overlayContainer.style.zIndex = '1002';
-  
-      const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
-        if (response) {
-          this.overlayContainer.style.zIndex = null;
-        }
-      });
-    }
-  
+
+    const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
+      width: '800px',
+      autoFocus: false,
+      data: data
+
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
+      }
+    });
+  }
+
   // Need this for Cross Entity Search. Return all the IDs only for the current search
   getSearchIdsOnly(doPerformSearch: boolean) {
 
-    let idListsTemp: Array<String> = [];
-    this.idLists = [];
+    if (doPerformSearch) {
+      let idListsTemp: Array<String> = [];
+      this.idLists = [];
 
-    let iterations = 0;
-    const skip = 0;
-    const subscription = this.substanceService.getSubstancesSummaries({
-    searchTerm: this.privateSearchTerm,
-    structureSearchTerm: this.privateStructureSearchTerm,
-    sequenceSearchTerm: this.privateSequenceSearchTerm,
-    bulkQID: this.bulkSearchQueryId,
-    searchOnIdentifiers: this.searchOnIdentifiers,
-    searchEntity: this.searchEntity,
-    cutoff: this.privateSearchCutoff,
-    type: this.privateSearchType,
-    seqType: this.privateSearchSeqType,
-    order: this.order,
-    pageSize: 1000000,    //get all the records
-    facets: this.privateFacetParams,
-    skip: skip,
-    sequenceSearchKey: this.privateSequenceSearchKey,
-    deprecated: this.showDeprecated,
-    view: "key",
-    simpleSearchOnly: true
-  }).subscribe(pagingResponse => {
-
-      let results: any =  pagingResponse.content;
-
-      // Get Substance UUID
-      results.forEach(substance => {
- 
-        // for Cross Entity Search, add Substance UUID in the temporary list
-        idListsTemp.push(substance.idString);
-      });
-
-      // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
-      this.idLists = idListsTemp;
-
-   //, () => {
-   // subscription.unsubscribe();
-  //});
-  //this.subscriptions.push(subscription);
+      let iterations = 0;
+      const skip = 0;
     
-    }); // pagingResponse
+      const SubstanceSubscription = this.substanceService.getSubstancesSummaries({
+        searchTerm: this.privateSearchTerm,
+        structureSearchTerm: this.privateStructureSearchTerm,
+        sequenceSearchTerm: this.privateSequenceSearchTerm,
+        bulkQID: this.bulkSearchQueryId,
+        searchOnIdentifiers: this.searchOnIdentifiers,
+        searchEntity: this.searchEntity,
+        cutoff: this.privateSearchCutoff,
+        type: this.privateSearchType,
+        seqType: this.privateSearchSeqType,
+        order: this.order,
+        pageSize: 1000000,    //get all the records
+        facets: this.privateFacetParams,
+        skip: skip,
+        sequenceSearchKey: this.privateSequenceSearchKey,
+        deprecated: this.showDeprecated,
+        simpleSearchOnly: true,
+        view: "key",
+        viewfield: "id"
+        }).subscribe(pagingResponse => {
 
-  }  
+        if (pagingResponse.content && pagingResponse.content.length > 0) {
+          let results: any = pagingResponse.content;
+
+          // Loop through each substance and get Substance UUID
+          results.forEach(substanceUuid => {
+            // for Cross Entity Search, add Substance UUID in the temporary list
+            idListsTemp.push(substanceUuid);
+          });
+
+          // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once,
+          // and pass the idLists to cross entity search component
+          this.idLists = idListsTemp;
+
+        }
+      
+      }, error => {
+        console.log('Error during search substance');
+      }, () => {
+        this.subscriptions.push(SubstanceSubscription);
+      }
+
+      ); // pagingResponse
+
+    }
+  }
+
+  editSubEntitySearch(): void {
+    if (this.subEntitySearchHash) {
+      const searchParam: Array<String> = [];
+
+      const searchParams = localStorage.getItem(this.subEntitySearchHash);
+        
+      if (searchParams) {
+        const searchParamItems = JSON.parse(searchParams);
+        if (searchParamItems) {
+          this.subEntity = searchParamItems['subEntity'];
+          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+        }
+      }
+
+      this.editSubEntitySearchHash = this.subEntitySearchHash;
+    
+    }  
+
+
+      /*
+      const queryStatementHashes = [];
+      const queryStatement = {
+        condition: '',
+        queryableProperty: 'Manual Query Entry',
+        command: 'Manual Query Entry',
+        commandInputValues: advSearchTerm,
+        query: this.privateSearchTerm
+      };
+
+      // Store in cookies, Category tab (Substance, Application, etc)
+      const categoryHash = this.utilsService.hashCode('Substance');
+      localStorage.setItem(categoryHash.toString(), 'Substance');
+      queryStatementHashes.push(categoryHash);
+
+      const queryStatementString = JSON.stringify(queryStatement);
+      const hash = this.utilsService.hashCode(queryStatementString);
+
+      // Store in cookies, Each Query Statement is stored in separate hash
+      localStorage.setItem(hash.toString(), queryStatementString);
+
+      // Push Query Statements Hashes in Array
+      queryStatementHashes.push(hash);
+
+      // Store in cookies,  store in Query Hash - Query Statement Hashes Array
+      const queryStatementHashesString = JSON.stringify(queryStatementHashes);
+
+      localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
+    }
+    
+    // ** END: Store in Local Storage
+    */
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        'subentity-hash': this.searchTermHash
+      }
+    };
+   
+    /*
+    navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
+    navigationExtras.queryParams['type'] = this.privateSearchType || null;
+
+    if (this.privateSearchType === 'similarity') {
+      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
+    }
+    */
+
+   // this.router.navigate(['/advanced-search'], navigationExtras);
+  } 
+  
+  subEntityfacetDisplay() {
+    if (this.subEntitySearchHash) {
+      const searchParams = localStorage.getItem(this.subEntitySearchHash);
+      
+      if (searchParams) {
+        const searchParamItems = JSON.parse(searchParams);
+        if (searchParamItems) {
+          this.subEntity = searchParamItems['subEntity'];
+          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+
+          console.log("VVVVVVVVVVVVVVVVVVVVVV " + JSON.stringify(searchParamItems['idListForSearch']));
+        }
+      }
+    }
+  }
 
 }

@@ -267,22 +267,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           this.exportOptions = response;
         });
 
-        // *** For Cross Entity Search get lists of Substance UUID ***
-        let ids : Array<string> = [];
-        let facetSubUuid = pagingResponse.facets.find(facet => facet.name === "Substance UUID");
-        if (facetSubUuid) {
-          facetSubUuid.values.forEach(value => {
-            if (value) {
-              if (value.label) {
-                ids.push(value.label);
-              }
-            }
-          });
-
-          this.idLists = ids;
-        }
-        // *** Cross Entity END ***
-
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -300,7 +284,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.loadingService.setLoading(this.isLoading);
       });
   }
- 
+
   setSearchTermValue() {
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -476,7 +460,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           if (prodCode) {
             if (prodCode.productCode) {
               if (prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE') {
-                 prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
+                prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
               }
             }
           }
@@ -704,7 +688,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     const copyProd = _.cloneDeep(this.products[productIndex]);
     let cleanProduct = this.scrub(copyProd);
 
-    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
+    let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -719,7 +703,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   saveJSON(productIndex: number): void {
     const copyProd = _.cloneDeep(this.products[productIndex]);
-    let cleanProduct  = this.scrub(copyProd);
+    let cleanProduct = this.scrub(copyProd);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));
     this.downloadJsonHref = uri;
@@ -807,4 +791,53 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     return old;
   }
+
+  // Need this for Cross Entity Search. Return all the IDs only for the current search
+  getSearchIdsOnly(doPerformSearch: boolean) {
+
+    if (doPerformSearch) {
+      let idListsTemp: Array<String> = [];
+      this.idLists = [];
+
+      const subscription = this.productService.getProducts(
+        null,
+        0,
+        10,
+        this.privateSearchTerm,
+        this.privateFacetParams
+      )
+        .subscribe(pagingResponse => {
+          // Get Facets from paging response
+          if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+            const facets = pagingResponse.facets;
+
+            // *** For Cross Entity Search get lists of Substance UUID ***
+            let idListsTemp: Array<string> = [];
+            let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
+            
+            if (facetSubUuid) {
+              facetSubUuid.values.forEach(value => {
+                if (value) {
+                  if (value.label) {
+                    idListsTemp.push(value.label);
+                  }
+                }
+              }); // forEach
+
+              // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+              this.idLists = idListsTemp;
+            }
+
+          }
+
+        }, error => {
+          console.log('Error during search substance');
+        }, () => {
+          this.subscriptions.push(subscription);
+        }
+        ); // pagingResponse
+
+    } // if doPerformSearch == true
+  }
+
 }
