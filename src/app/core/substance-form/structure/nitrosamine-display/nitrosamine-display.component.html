@@ -1,1 +1,146 @@
-<p>nitrosamine-display works!</p>
+<div class="container">
+    <h1>CPCA Calculator</h1>
+    
+    <!-- Add SMILES input form -->
+    <div class="input-form">
+        <div id="smilesForm" >
+            <div class="form-group">
+                <label for="smiles">Enter SMILES Formula:</label>
+                <input type="text" id="smiles" name="smiles" [ngModel] = "smilesInput"
+                       placeholder="e.g., CN(N=O)C1=CC=NC=C1" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" [disabled] = "buttonPressed" (click) = "dummyEvaluateSmiles()">{{buttonPressed ? "Evaluating...":"Evaluate Structure"}}</button>
+            </div>
+            <div class="results-panel" id="resultsPanel">
+                <div id="structureDetails" *ngIf = "structureDetails && structureDetails !== ''">
+                    <strong>Structure Details:</strong><br>{{details}}
+                </div>
+                <div id="potencyScore" *ngIf = "potencyScore">
+                    <strong>Potency Score:</strong> {{potencyScore}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flowchart">
+        <!-- Left Column -->
+        <div class="column left-column">
+            <!-- First Question -->
+            <div class="box-with-arrow">
+                <div class="box" id="q1">
+                    Does N-nitrosamine have any hydrogens on its α-carbons?
+                    <div class="arrow-right"></div>
+                    <span class="yes-no-label yes-no-down-label">Yes</span>
+                    <span class="yes-no-label yes-no-right-label">No</span>
+                </div>
+            </div>
+            <div class="arrow-down"></div>
+
+            <!-- Second Question -->
+            <div class="box-with-arrow">
+                <div class="box" id="q2">
+                    Does N-nitrosamine have more than one α-hydrogen on one or both sides of the N-nitroso group?
+                    <div class="arrow-right"></div>
+                    <span class="yes-no-label yes-no-down-label">Yes</span>
+                    <span class="yes-no-label yes-no-right-label">No</span>
+                </div>
+            </div>
+            <div class="arrow-down"></div>
+
+            <!-- Third Question -->
+            <div class="box-with-arrow">
+                <div class="box" id="q3">
+                    Does N-nitrosamine have a tertiary α-carbon?
+                    <div class="arrow-right"></div>
+                    <span class="yes-no-label yes-no-down-label">No</span>
+                    <span class="yes-no-label yes-no-right-label">Yes</span>
+                </div>
+            </div>
+            <div class="arrow-down"></div>
+
+            <!-- Calculate Score Box -->
+            <div class="box" id="calc">
+                Calculate Potency Score
+            </div>
+            <div class="arrow-down"></div>
+
+            <!-- Score Questions -->
+            <div class="box-with-arrow">
+                <div class="box" id="score4">
+                    Is score ≥4?
+                    <div class="arrow-right"></div>
+                    <span class="yes-no-label yes-no-down-label">No</span>
+                    <span class="yes-no-label yes-no-right-label">Yes</span>
+                </div>
+            </div>
+            <div class="arrow-down"></div>
+
+            <div class="box-with-arrow">
+                <div class="box" id="score3">
+                    Is Potency Score =3?
+                    <div class="arrow-right"></div>
+                    <span class="yes-no-label yes-no-down-label">No</span>
+                    <span class="yes-no-label yes-no-right-label">Yes</span>
+                </div>
+            </div>
+            <div class="arrow-down"></div>
+
+            <div class="box-with-arrow">
+                <div class="box" id="score2">
+                    Is Potency Score =2?
+                    <div class="arrow-right"></div>
+                    <span class="yes-no-label yes-no-down-label">No</span>
+                    <span class="yes-no-label yes-no-right-label">Yes</span>
+                </div>
+            </div>
+            <div class="arrow-down"></div>
+
+            <div class="box" id="score1">
+                Is Potency Score ≤1?
+                <div class="arrow-right"></div>
+                <span class="yes-no-label yes-no-right-label">Yes</span>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="column right-column">
+            <div class="result-box" id="cat5-1">
+                Potency Category 5<br>
+                AI = 1500 ng/day
+            </div>
+
+            <div class="result-box" id="cat5-2">
+                Potency Category 5<br>
+                AI = 1500 ng/day
+            </div>
+
+            <div class="result-box" id="cat5-3">
+                Potency Category 5<br>
+                AI = 1500 ng/day
+            </div>
+            
+            <div class="spacer"></div>  <!-- Add extra space here -->
+
+            <div class="result-box" id="cat4">
+                Potency Category 4<br>
+                AI = 1500 ng/day
+            </div>
+
+            <div class="result-box" id="cat3">
+                Potency Category 3<br>
+                AI = 400 ng/day
+            </div>
+
+            <div class="result-box" id="cat2">
+                Potency Category 2<br>
+                AI = 100 ng/day
+            </div>
+
+            <div class="result-box" id="cat1">
+                Potency Category 1<br>
+                AI = 18 or 26.5* ng/day
+            </div>
+        </div>
+    </div>
+</div>

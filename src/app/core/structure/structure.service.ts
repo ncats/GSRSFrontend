@@ -105,4 +105,17 @@ export class StructureService {
     const url = `${this.configService.configData.apiBaseUrl}register/duplicateCheck`;
     return this.http.post<any>(url, sub);
   }
+
+  evaluateSmiles(smiles: string): Observable<any> {
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/evaluate-smiles`;
+    const params = new HttpParams();
+        const options = {
+          params: params,
+          type: 'JSON',
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded'
+          }
+        };
+    return this.http.post(url, smiles, options);
+  }
 }
