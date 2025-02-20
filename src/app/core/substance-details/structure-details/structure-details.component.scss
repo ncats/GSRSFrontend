@@ -105,3 +105,10 @@
 .stereo-comments {
     max-width:175px;
 }
+
+
+.hover-note {
+    text-decoration: underline;
+    color: var(--link-primary-color);
+    cursor: pointer;
+}
