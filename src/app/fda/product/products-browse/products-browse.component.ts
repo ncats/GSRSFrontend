@@ -48,9 +48,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   private ACTIVE_INGREDIENT_UPPERCASE = 'ACTIVE INGREDIENT';
   private ACTIVE_INGREDIENT_LOWERCASE = 'Active Ingredient';
 
-  thisEntity: string = "products";
-  idLists: Array<string> = [];
-
   view = 'cards';
   public privateSearchTerm?: string;
   public _searchTerm?: string;
@@ -97,6 +94,16 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   showMoreLessActiveIngredArray: Array<boolean> = [];
   showMoreLessOtherIngredArray: Array<boolean> = [];
+
+  // Cross Entity Search
+  thisEntity: string = "products";
+  showCrossEntitySearch = false;
+  searchOnIdentifiers = false;
+  bulkSearchPanelOpen = false;
+  bulkSearchStatusKey: string;
+  searchStatusUrl: string;
+  bulkSearchQueryId?: number;
+  idLists: Array<string> = [];
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
@@ -150,8 +157,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
+
     // Get Daily Med Url from Configuration
     this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
+
+    // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
+    this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
 
     this.titleService.setTitle(`P:Browse Products`);
 
@@ -172,6 +183,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
@@ -184,7 +196,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.subscriptions.push(authSubscription);
 
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
-    //this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -216,11 +227,19 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       skip,
       this.pageSize,
       this.privateSearchTerm,
-      this.privateFacetParams
+      this.privateFacetParams,
+      this.bulkSearchQueryId,
+      this.searchOnIdentifiers
     )
       .subscribe(pagingResponse => {
         this.isError = false;
+        this.isError = false;
+        // Get Bulk Search Status Key and url. The hostname for bulk search result can be different for non-substance entity
+        this.bulkSearchStatusKey = pagingResponse.statusKey;
+        this.searchStatusUrl = pagingResponse.searchStatusUrl;
+
         this.products = pagingResponse.content;
+
         this.dataSource = this.products;
         this.totalProducts = pagingResponse.total;
         this.etag = pagingResponse.etag;
@@ -416,6 +435,20 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.facetManagerService.clearSelections();
   }
 
+  clearBulkSearch(): void {
+    this.order = '$root_lastModifiedDate';
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = null;
+    this.bulkSearchQueryId = null;
+    // this.subentity-hash = null;
+
+    this.populateUrlQueryParameters();
+
+    // Reset bulk search and do regular search
+    this.searchProducts();
+  }
+
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
@@ -424,6 +457,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+    navigationExtras.queryParams['bulkQID'] = null;
+    navigationExtras.queryParams['subentity-hash'] = null;
 
     this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
@@ -814,7 +849,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
             // *** For Cross Entity Search get lists of Substance UUID ***
             let idListsTemp: Array<string> = [];
             let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
-            
+
             if (facetSubUuid) {
               facetSubUuid.values.forEach(value => {
                 if (value) {

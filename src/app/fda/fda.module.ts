@@ -38,6 +38,7 @@ import { AdvancedSearchModule } from '../fda/advanced-search/advanced-search.mod
 import { AdverseEventsBrowseModule } from '../fda/adverse-event/adverse-events-browse.module';
 import { InvitroPharmaModule } from './invitro-pharmacology/invitro-pharmacology.module';
 import { CrossEntitySearchModule } from './cross-entity-search/cross-entity-search.module';
+import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 
 const fdaRoutes: Routes = [
   {
@@ -80,6 +81,7 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     AdverseEventsBrowseModule,
     SubstanceApplicationMatchListModule,
     CrossEntitySearchModule,
+    BulkSearchModule,
     UserManualModule,
     JiraSubmitTicketModule,
     MatCardModule,

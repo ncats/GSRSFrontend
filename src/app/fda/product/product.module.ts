@@ -35,6 +35,7 @@ import { SubstanceSearchSelectorModule } from '../substance-search-select/substa
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { FacetsManagerModule } from '@gsrs-core/facets-manager';
+import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 import { CrossEntitySearchModule } from '../cross-entity-search/cross-entity-search.module';
 
 /* GSRS Product Imports */
@@ -122,6 +123,7 @@ const productRoutes: Routes = [
     SubstanceImageModule,
     SubstanceFormModule,
     FacetsManagerModule,
+    BulkSearchModule,
     ProductTextSearchModule,
     CrossEntitySearchModule
   ],

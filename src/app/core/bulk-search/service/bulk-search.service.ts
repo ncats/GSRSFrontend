@@ -120,8 +120,12 @@ export class BulkSearchService extends BaseHttpService {
 
   getBulkSearchStatus(
     key: string,
+    url?: string
   ): Observable<any> {
-    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/' + key;
+    // the host in url can be different for non-substance, so need to pass the correct url
+    if (!url) {
+      url = this.configService.configData.apiBaseUrl + 'api/v1/status/' + key;
+    }
     // let params = new HttpParams();
     const options = {
       type: 'JSON',
@@ -137,9 +141,16 @@ export class BulkSearchService extends BaseHttpService {
     qTop?: number,
     qSkip?: number,
     qSort: string = '',
-    qFilter: string = ''
+    qFilter: string = '',
+    url: string = null
   ): Observable<any> {
-    const url = this.configService.configData.apiBaseUrl + 'api/v1/status/' + key + '/results';
+    // the host in url can be different for non-substance, so need to pass the correct url
+    //if (url === null || url === undefined || url === '') {
+    if (!url) {
+      url = this.configService.configData.apiBaseUrl + 'api/v1/status/' + key + '/results';
+    } else {
+      url = url + '/results';
+    }
     // let params = new HttpParams();
     const options = {
       // eslint-disable-next-line object-shorthand

@@ -152,6 +152,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   //Cross Entity/Sub-Entity Search
   entity = "substances";
   subEntity = null;
+  showCrossEntitySearch = false;
   subEntitySearchHash: string;
   editSubEntitySearchHash: any;
   subEntityDisplayFacets: Array<DisplayFacet> = [];
@@ -298,6 +299,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.loadComponent();
 
     this.loadFacetViewFromConfig();
+
+    // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
+    this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
 
     // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
     this.subEntityfacetDisplay();

@@ -27,6 +27,7 @@ import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { applicationSearchSortValues } from './application-search-sort-values';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-search-results-summary/substances/bulk-search-results-summary.component';
 
 import { Application } from '../model/application.model';
 
@@ -36,11 +37,7 @@ import { Application } from '../model/application.model';
   styleUrls: ['./applications-browse.component.scss']
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
- // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
-
-  // For Cross Entity Search
-  thisEntity: string = "applications";
-  idLists: Array<string> = [];
+  // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
 
   view = 'cards';
   public privateSearchTerm?: string;
@@ -76,6 +73,17 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   searchValue: string;
   lastPage: number;
   invalidPage = false;
+
+  // Cross Entity Search
+  thisEntity: string = "applications";
+  showCrossEntitySearch = false;
+  searchOnIdentifiers = false;
+  bulkSearchPanelOpen = false;
+  bulkSearchStatusKey: string;
+  searchStatusUrl: string;
+  bulkSearchQueryId?: number;
+  idLists: Array<string> = [];
+
   ascDescDir = 'desc';
   displayedColumns: string[] = [
     'appType',
@@ -131,6 +139,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     this.titleService.setTitle(`A:Browse Applications`);
 
+    // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
+    this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
+
     this.pageSize = 10;
     this.pageIndex = 0;
 
@@ -145,10 +156,14 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_created';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    // Get Admin privilege
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -159,8 +174,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
       this.searchValue = params.get('search');
-     // this.setClassicLinkQueryParams(params);
     });
+
     this.subscriptions.push(paramsSubscription);
 
     this.isComponentInit = true;
@@ -188,89 +203,84 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   searchApplications() {
     this.loadingService.setLoading(true);
+
     const skip = this.pageIndex * this.pageSize;
+
     const subscription = this.applicationService.getApplications(
       this.order,
       skip,
       this.pageSize,
       this.privateSearchTerm,
       this.privateFacetParams,
-    )
-      .subscribe(pagingResponse => {
-        this.isError = false;
-        this.applications = pagingResponse.content;
-        // didn't work unless I did it like this instead of
-        // below export statement
-        this.dataSource = this.applications;
-        this.totalApplications = pagingResponse.total;
-        this.etag = pagingResponse.etag;
+      this.bulkSearchQueryId
+    ).subscribe(pagingResponse => {
+      this.isError = false;
+      // Get Bulk Search Status Key and url. The hostname for bulk search result can be different for non-substance entity
+      this.bulkSearchStatusKey = pagingResponse.statusKey;
+      this.searchStatusUrl = pagingResponse.searchStatusUrl;
 
-        if (pagingResponse.total % this.pageSize === 0) {
-          this.lastPage = (pagingResponse.total / this.pageSize);
-        } else {
-          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
-        }
-        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-          this.rawFacets = pagingResponse.facets;
-        }
+      this.applications = pagingResponse.content;
 
-        // Narrow Suggest Search Begin
-        this.narrowSearchSuggestions = {};
-        this.matchTypes = [];
-        this.narrowSearchSuggestionsCount = 0;
-        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
-          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
-            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
-              this.narrowSearchSuggestions[suggestion.matchType] = [];
-              if (suggestion.matchType === 'WORD') {
-                this.matchTypes.unshift(suggestion.matchType);
-              } else {
-                this.matchTypes.push(suggestion.matchType);
-              }
+      // didn't work unless I did it like this instead of
+      // below export statement
+      this.dataSource = this.applications;
+      this.totalApplications = pagingResponse.total;
+      this.etag = pagingResponse.etag;
+
+      if (pagingResponse.total % this.pageSize === 0) {
+        this.lastPage = (pagingResponse.total / this.pageSize);
+      } else {
+        this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+      }
+
+      if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+        this.rawFacets = pagingResponse.facets;
+      }
+
+      // Narrow Suggest Search Begin
+      this.narrowSearchSuggestions = {};
+      this.matchTypes = [];
+      this.narrowSearchSuggestionsCount = 0;
+
+      if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+        pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+          if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+            this.narrowSearchSuggestions[suggestion.matchType] = [];
+            if (suggestion.matchType === 'WORD') {
+              this.matchTypes.unshift(suggestion.matchType);
+            } else {
+              this.matchTypes.push(suggestion.matchType);
             }
-            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
-            this.narrowSearchSuggestionsCount++;
-          });
-        }
-        this.matchTypes.sort();
-        // Narrow Suggest Search End
+          }
+          this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+          this.narrowSearchSuggestionsCount++;
+        });
+      }
 
-        this.getSubstanceBySubstanceKey();
+      this.matchTypes.sort();
+      // Narrow Suggest Search End
 
-        // Get Application Clinical Trial Record
-        this.getClinicalTrialApplication();
+      this.getSubstanceBySubstanceKey();
 
-        // For Cross Entity Search get lists of Substance UUID
-        let ids : Array<string> = [];
-        let facetSubUuid = pagingResponse.facets.find(facet => facet.name === "Substance UUID");
-        if (facetSubUuid) {
-          facetSubUuid.values.forEach(value => {
-            if (value) {
-              if (value.label) {
-                ids.push(value.label);
-              }
-            }
-          });
+      // Get Application Clinical Trial Record
+      this.getClinicalTrialApplication();
 
-          this.idLists = ids;
-        } /* Cross Entity Search END */
-
-      }, error => {
-        console.log('error');
-        const notification: AppNotification = {
-          message: 'There was an error trying to retrieve Applications. Please refresh and try again.',
-          type: NotificationType.error,
-          milisecondsToShow: 6000
-        };
-        this.isError = true;
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-        this.notificationService.setNotification(notification);
-      }, () => {
-        subscription.unsubscribe();
-        this.isLoading = false;
-        this.loadingService.setLoading(this.isLoading);
-      });
+    }, error => {
+      console.log('error');
+      const notification: AppNotification = {
+        message: 'There was an error trying to retrieve Applications. Please refresh and try again.',
+        type: NotificationType.error,
+        milisecondsToShow: 6000
+      };
+      this.isError = true;
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+      this.notificationService.setNotification(notification);
+    }, () => {
+      subscription.unsubscribe();
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
+    });
   }
 
   setSearchTermValue() {
@@ -301,14 +311,31 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.facetManagerService.clearSelections();
   }
 
+  clearBulkSearch(): void {
+    this.order = '$root_lastModifiedDate';
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = null;
+    this.bulkSearchQueryId = null;
+    // this.subentity-hash = null;
+
+    this.populateUrlQueryParameters();
+
+    // Reset bulk search and do regular search
+    this.searchApplications();
+  }
+
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
+
     navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+    navigationExtras.queryParams['bulkQID'] = null;
+    navigationExtras.queryParams['subentity-hash'] = null;
 
     this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
@@ -346,7 +373,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   openSideNav() {
     this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
-   // this.matSideNav.open();
+    // this.matSideNav.open();
   }
 
   updateView(event): void {
@@ -496,7 +523,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       const url = this.getApiExportUrl(this.etag, extension);
       //  if (this.authService.getUser() !== '') {
       const dialogReference = this.dialog.open(ExportDialogComponent, {
-      //  height: '215x',
+        //  height: '215x',
         width: '700px',
         data: { 'extension': extension, 'type': 'BrowseApplications', 'entity': 'applications', 'hideOptionButtons': true }
       });
@@ -544,20 +571,20 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   }
 
   openImageModal($event, subUuid: string): void {
-   // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
+    // const eventLabel = environment.isAnalyticsPrivate ? 'substance' : substance._name;
 
-  //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
+    //  this.gaService.sendEvent('substancesContent', 'link:structure-zoom', eventLabel);
 
     let data: any;
 
-   // if (substance.substanceClass === 'chemical') {
-      data = {
-        structure: subUuid,
-     //   smiles: substance.structure.smiles,
-        uuid: subUuid,
-    //    names: substance.names
-      };
-   // }
+    // if (substance.substanceClass === 'chemical') {
+    data = {
+      structure: subUuid,
+      //   smiles: substance.structure.smiles,
+      uuid: subUuid,
+      //    names: substance.names
+    };
+    // }
 
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       height: '90%',
@@ -588,6 +615,54 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   decreaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+  // Need this for Cross Entity Search. Return all the IDs only for the current search
+  getSearchIdsOnly(doPerformSearch: boolean) {
+
+    if (doPerformSearch) {
+      let idListsTemp: Array<String> = [];
+      this.idLists = [];
+
+      const subscription = this.applicationService.getApplications(
+        null,
+        0,
+        10,
+        this.privateSearchTerm,
+        this.privateFacetParams
+      )
+        .subscribe(pagingResponse => {
+          // Get Facets from paging response
+          if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+            const facets = pagingResponse.facets;
+
+            // *** For Cross Entity Search get lists of Substance UUID ***
+            let idListsTemp: Array<string> = [];
+            let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
+
+            if (facetSubUuid) {
+              facetSubUuid.values.forEach(value => {
+                if (value) {
+                  if (value.label) {
+                    idListsTemp.push(value.label);
+                  }
+                }
+              }); // forEach
+
+              // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+              this.idLists = idListsTemp;
+            }
+
+          }
+
+        }, error => {
+          console.log('Error during search substance');
+        }, () => {
+          this.subscriptions.push(subscription);
+        }
+        ); // pagingResponse
+
+    } // if doPerformSearch == true
   }
 
 }

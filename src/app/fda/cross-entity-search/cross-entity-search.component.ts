@@ -136,12 +136,6 @@ export class CrossEntitySearchComponent implements OnInit {
     this.thisEntityDisplayFacets = entDisplayFacets;
   }
 
-  /*
-  @Input()
-  set entity(ent: any) {
-    this.entity = ent;
-  } */
-
   @Input()
   set idLists(list: Array<string>) {
     this.idListForSearch = list || [];

@@ -11,10 +11,12 @@
 
     <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
     <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && isAdmin)">
-      <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm" 
-      [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets" 
-      [entityTotalRecords]="totalSubstances" [editSubEntitySearchHash]="editSubEntitySearchHash" (getSearchIdsOnly)="getSearchIdsOnly($event)">
-      </app-cross-entity-search>
+      <span *ngIf="showCrossEntitySearch == true">
+        <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm" 
+          [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets" 
+          [entityTotalRecords]="totalSubstances" [editSubEntitySearchHash]="editSubEntitySearchHash" (getSearchIdsOnly)="getSearchIdsOnly($event)">
+        </app-cross-entity-search>
+      </span>
     </span>
 
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
@@ -110,7 +112,7 @@
 
     <div *ngIf="bulkSearchQueryId">
       <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true" (closed)="bulkSearchPanelOpen = false"
-        style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
+        style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: lef;">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <div>Bulk Search Summary (Full Results)</div>

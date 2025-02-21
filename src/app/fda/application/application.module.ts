@@ -44,6 +44,7 @@ import { FacetsManagerModule } from '@gsrs-core/facets-manager';
 import { JsonDialogFdaModule } from '../json-dialog-fda/json-dialog-fda.module';
 import { ConfirmDialogModule } from '../confirm-dialog/confirm-dialog.module';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
+import { BulkSearchModule } from '@gsrs-core/bulk-search/bulk-search.module';
 import { ApplicationTextSearchModule } from './application-text-search/application-text-search.module';
 import { CrossEntitySearchModule } from '../cross-entity-search/cross-entity-search.module';
 
@@ -129,6 +130,7 @@ const applicationRoutes: Routes = [
     JsonDialogFdaModule,
     ConfirmDialogModule,
     SubstanceFormModule,
+    BulkSearchModule,
     ApplicationTextSearchModule,
     CrossEntitySearchModule
   ],

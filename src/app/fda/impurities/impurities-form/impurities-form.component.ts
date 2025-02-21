@@ -64,6 +64,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   jsonFileName: string;
 
   showAdvancedSettings = false;
+  showTotalImpurities = false;
   configSettingsDisplay = {};
 
   constructor(
@@ -87,6 +88,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Get form field configuration to show on either simple or advanced form
     this.getConfigSettings();
+    
+    // Show Impurities Total Section only if at least one field is either simple or advanced
+    this.showHideTotalImpuritiesSection();
 
     const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
       this.isAdmin = response;
@@ -163,7 +167,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     // Get Impurities Config Settings from config.json file to show and hide fields in the form
     let configImpuritiesForm: any;
     configImpuritiesForm = this.configService.configData && this.configService.configData.impuritiesForm || null;
-    
+
     // Get 'overview' json values from config
     const confSettings = configImpuritiesForm.settingsDisplay.overview;
 
@@ -187,11 +191,41 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  showHideTotalImpuritiesSection() {
+    // Get Impurities Config Settings from config.json file to show and hide fields in the form
+    let configImpuritiesForm: any;
+    configImpuritiesForm = this.configService.configData && this.configService.configData.impuritiesForm || null;
+
+    // Total Impurities Config
+    // Get 'impuritiesTotal' json values from config
+    const confSettingsTotal = configImpuritiesForm.settingsDisplay.impuritiesTotal || null;
+
+    if (confSettingsTotal) {
+      const keys = Object.keys(confSettingsTotal);
+
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if (key != null) {
+          if (!this.showAdvancedSettings && confSettingsTotal[key] === 'simple') {
+            this.showTotalImpurities = true;
+            break;
+          } else if (this.showAdvancedSettings && confSettingsTotal[key] === 'advanced') {
+            this.showTotalImpurities = true;
+          }
+        }
+      } // for loop
+    } else {
+      this.showTotalImpurities = true;
+    }
+  }
+
   updateAdvancedSettings(event): void {
     this.showAdvancedSettings = event.checked;
 
     //Get config settings
     this.getConfigSettings();
+
+    this.showHideTotalImpuritiesSection();
   }
 
   getImpurities(newType?: string): void {

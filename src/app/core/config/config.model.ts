@@ -88,6 +88,7 @@ export interface Config {
     structureEditSearch?: boolean;
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
+    showCrossEntitySearchDropdown?: boolean;
 }
 
 export interface StagingAreaSettings {

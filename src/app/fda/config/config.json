@@ -13,6 +13,7 @@
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
   "useDataUrl": false,
+  "showCrossEntitySearchDropdown": true,
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -1677,8 +1678,9 @@
         "systemSuitabilitySolution": "advanced",
         "standardSolution": "advanced",
         "otherSolution": "advanced",
-        "elutionType": "advanced",
-        "solutionDescription": "advanced"
+        "elutionType": "simple",
+        "solutionDescription": "simple",
+        "mobilePhase": "simple"
       },
       "impurities": {
         "relatedSubstanceUnii": "simple",
@@ -1694,11 +1696,11 @@
       },
       "unspecifiedImpurities": {
         "impurityType": "simple",
-        "testType": "advanced",
-        "limitType": "advanced",
-        "limitValue": "advanced",
-        "unit": "advanced",
-        "comments": "advanced",
+        "testType": "simple",
+        "limitType": "simple",
+        "limitValue": "simple",
+        "unit": "simple",
+        "comments": "simple",
         "identityCriteriaType": "advanced",
         "amountValue": "advanced",
         "criteriaUnit": "advanced"
