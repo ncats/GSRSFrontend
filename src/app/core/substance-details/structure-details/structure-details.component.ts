@@ -24,8 +24,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   defIcon = 'drop_down';
   smilesIcon = 'drop_down';
   nameIcon = 'drop_down';
+  inchiKey: string;
   inchi: string;
-  otherInchi: string;
   showStereo = false;
   molfileHref: any;
   systematic: Array<string>;
@@ -34,6 +34,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
   searchHref: string;
   private overlayContainer: HTMLElement;
   rounding = '1.0-2';
+  inchiNote = false;
 
   constructor(
     private utilService: UtilsService,
@@ -58,10 +59,16 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         }
         if (this.structure.smiles) {
           this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.inchi = inchi.replace(/\"/g, '');
+            this.inchiKey = inchi.replace(/\"/g, '');
           });
           const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.otherInchi = inchi.replace(/\"/g, '');
+            this.inchi = inchi.replace(/\"/g, '');
+            if(this.inchi.indexOf('|') > -1){
+              this.inchi = this.inchi.replace(/\|/g, "<br style = 'height:5px;'/>");
+              this.inchiNote = true;
+            } else {
+              this.inchiNote = false;
+            }
           });
         }
         this.structure.formula = this.structureService.formatFormula(this.structure);
@@ -113,10 +120,18 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
         this.getSysNames();
         if (this.structure.smiles) {
           const inchiSub = this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.inchi = inchi.replace(/\"/g, '');
+            this.inchiKey = inchi.replace(/\"/g, '');
           });
           const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.otherInchi = inchi.replace(/\"/g, '');
+            this.inchi = inchi.replace(/\"/g, '');
+            this.inchi = "asdlkfjsoidfjeiungedddddughsdkjfjnsdklfjnnsdlkfbsdkjf|shdkfjhb ssdfiuhdu jfsd;; sdhkjfshadflhadf| sdjkfhasdofhauisdhfoashudf";
+
+            if(this.inchi.indexOf('|') > -1){
+              this.inchi = this.inchi.replace(/\|/g, "<br style = 'height:5px;'/>");
+              this.inchiNote = true;
+            } else {
+              this.inchiNote = false;
+            }
           });
         }
         this.structure = this.substance.structure;

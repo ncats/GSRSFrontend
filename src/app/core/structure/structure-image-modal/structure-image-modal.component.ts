@@ -23,6 +23,7 @@ export class StructureImageModalComponent implements OnInit {
   showSelector =false;
   showSubstanceSelector = false;
   gsrsHomeBaseUrl = '';
+  inchiNote = false;
 
   constructor(
     private configService: ConfigService,
@@ -42,6 +43,12 @@ export class StructureImageModalComponent implements OnInit {
       this.smiles = this.data.smiles;
       this.structureService.getOtherInchi(this.data.uuid).subscribe(inchi => {
         this.inchi = inchi;
+        if(this.inchi.indexOf('|') > -1){
+          this.inchi = this.inchi.replace(/\|/g, "\r\n");
+          this.inchiNote = true;
+        } else {
+          this.inchiNote = false;
+        }
       });
       this.structureService.getInchi(this.data.uuid).subscribe(inchiKey=> {
         this.inchiKey = inchiKey;
