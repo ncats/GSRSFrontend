@@ -87,6 +87,7 @@ export interface Config {
     structureEditSearch?: boolean;
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
+    enablePDFDownload ?: DownloadAsPDF;
 }
 
 export interface StagingAreaSettings {
@@ -172,4 +173,11 @@ export interface PagingOptionSettings {
 export interface PagingOptions {
     pageSizeOptions?: Array<number>;
     pageSizeDefault?: number;
+}
+
+export interface DownloadAsPDF {
+    enablePDFDownload?: boolean;
+    buttonName?:string;
+    companyName?:string;
+    proprietaryNote?:string;
 }

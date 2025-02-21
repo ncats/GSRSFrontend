@@ -14,7 +14,7 @@
     <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
       <mat-icon svgIcon="chevron_right"></mat-icon>
     </button>
-    <div class="side-nav-content">
+    <div class="side-nav-content" #substancePdfContent id='substancePdfContent'>
       <div class="substance-details" *ngIf="substance">
         <div class="title-container">
           <h1 *ngIf = "source !== 'staging'" class = "substance-title" [innerHTML] = "substance._nameHTML ? substance._nameHTML : substance._name"></h1>

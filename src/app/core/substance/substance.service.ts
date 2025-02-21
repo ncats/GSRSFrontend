@@ -11,7 +11,8 @@ import {
   SubstanceCode,
   SubstanceRelationship,
   SubstanceRelated,
-  SubstanceReference
+  SubstanceReference,
+  SubstanceDiff
 } from './substance.model';
 import { PagingResponse, ShortResult } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -1019,7 +1020,16 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
+  public GetSubstanceDiff(url:string) {
+    return this.http.get<Array<SubstanceDiff>>(url);
+  }
+
+  public GetSubstanceOldValue(url:string) {
+    return this.http.get<SubstanceDetail>(url);
+  }
 }
+
+
 
 
 
