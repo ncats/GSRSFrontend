@@ -40,8 +40,53 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="showDiff">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let version"> 
+          <button class = "mat-raised-button mat-primary" (click)="openModal(diffTemplate,version)">Show Diff</button> 
+          <ng-template #diffTemplate>
+            <h2 mat-dialog-title>{{showdiffTitle}}</h2>
+            <div mat-dialog-content>
+              
+              <table mat-table [dataSource]="subsatnacedifference">
+      
+                <ng-container matColumnDef="op">
+                  <th mat-header-cell *matHeaderCellDef> Operation </th>
+                  <td mat-cell *matCellDef="let diff">{{diff.op}} 
+                  </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="path">
+                  <th mat-header-cell *matHeaderCellDef> Field </th>
+                  <td mat-cell *matCellDef="let diff">{{getPathDisplayName(diff.path)}} 
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="oldValue">
+                  <th mat-header-cell *matHeaderCellDef> Old Value </th>
+                  <td mat-cell *matCellDef="let diff"> 
+                  <div [innerHTML]="getOldValue(diff)"></div> 
+                 </td> 
+                </ng-container>
+                <ng-container matColumnDef="value">
+                  <th mat-header-cell *matHeaderCellDef> New Value </th>
+                  <td mat-cell *matCellDef="let diff"> 
+                  <div [innerHTML]="getDisplayValue(diff,'')"></div> 
+                 </td> 
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="diffDisplayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: diffDisplayedColumns;"></tr>
+              </table>
+      
+            </div>
+              <div mat-dialog-actions>
+                <span class="middle-fill"></span>
+                <button class="mat-raised-button mat-primary" (click) = "close()">Close</button>
+              </div>
+          </ng-template>
+        </td>
+      </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-

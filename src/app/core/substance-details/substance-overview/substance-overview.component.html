@@ -256,6 +256,10 @@
         download="{{substance.approvalID? substance.approvalID.toString() : substance.uuid.toString()}}.json">
         <span>Download JSON</span>
       </a>
+      <!--If  enablePDFDownloadOption is true then display option to download pdf-->
+      <a *ngIf="substance.uuid && enablePDFDownloadOption" name="download_pdf" mat-menu-item (click)="downloadPDFSummary()">
+        <span>{{pdfDownloadBtnName}}</span>
+      </a>
     </mat-menu>
     <mat-menu #editMenu="matMenu" xPosition="before">
       <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
