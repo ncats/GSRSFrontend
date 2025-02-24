@@ -17,6 +17,7 @@ export interface Ssg4mSyntheticPathway {
   printSbstncPrfrdNm?: string;
   sbmsnImage?: string;
   ssg4mSyntheticPathwayDetailsList?: Array<Ssg4mSyntheticPathwayDetail>;
+  fileUrl?: string;
 }
 
 export interface Ssg4mSyntheticPathwayDetail {

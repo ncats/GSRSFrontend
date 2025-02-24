@@ -1027,7 +1027,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.validationResult = false;
 
         // if Saved Successfully
-        if (response && response.synthPathwaySkey) {
+        if (response && (response.synthPathwaySkey || this.configService.configData.isPfdaVersion)) {
           if (response.synthPathwaySkey) {
             this.id = response.synthPathwaySkey.toString();
           }
@@ -1043,7 +1043,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             this.saveDelayedMessage = "";
             this.isCancelBtnClicked = false;
             // Only show successful dialog and refresh page, if user does not click on the cancel button.
-            this.openSuccessDialog();
+            this.openSuccessDialog(undefined, this.configService.configData.isPfdaVersion ? response.fileUrl : null);
           }
           // Refresh the current page, this will not cause record locking issue
           /* this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -1083,7 +1083,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       setTimeout(tempCallback(s),3000);
     };
-    
+
     window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
 
   }
@@ -1284,10 +1284,21 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return old;
   }
 
-  openSuccessDialog(type?: string): void {
+  openSuccessDialog(type?: string, fileUrl?: string): void {
     let data = {
-      isCoreSubstance: 'false'
+      isCoreSubstance: 'false',
+      type: null,
+      fileUrl: null
     };
+
+    if (this.configService.configData.isPfdaVersion) {
+      data = {
+        isCoreSubstance: 'true',
+        type: 'submit',
+        fileUrl: fileUrl
+      }
+    }
+
     const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
       data: data
     });
@@ -1323,6 +1334,11 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
           this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         }, 3000);
         */
+      } else if (response === 'browse') {
+        this.router.navigate(['/browse-substance']);
+      } else if (response === 'viewInPfda') {
+        // View the submitted substance file in the user's precisionFDA home
+        window.location.assign(fileUrl);
       }
     });
     this.subscriptions.push(dialogSubscription);
