@@ -205,14 +205,17 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.loadingService.setLoading(true);
 
     const skip = this.pageIndex * this.pageSize;
+    let fdim = 10;
 
     const subscription = this.applicationService.getApplications(
       this.order,
       skip,
       this.pageSize,
+      fdim,
       this.privateSearchTerm,
       this.privateFacetParams,
-      this.bulkSearchQueryId
+      this.bulkSearchQueryId,
+      'key'
     ).subscribe(pagingResponse => {
       this.isError = false;
       // Get Bulk Search Status Key and url. The hostname for bulk search result can be different for non-substance entity
@@ -624,10 +627,13 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       let idListsTemp: Array<String> = [];
       this.idLists = [];
 
+      let fdim = 1000000;
+
       const subscription = this.applicationService.getApplications(
         null,
         0,
         10,
+        fdim,
         this.privateSearchTerm,
         this.privateFacetParams
       )

@@ -33,7 +33,7 @@
 
     </div> <!-- divflex -->
 
-    <div class="margintop10px marginbottom10px">
+    <div class="margintop10px marginbottom10px padbottom10px borderbottomgray">
       <!-- display search term for current entity -->
       <div class="search-parameters">
         <div class="mat-elevation-z2 selected-parameter" *ngIf="thisEntitySearchTerm">
@@ -65,28 +65,39 @@
 
     </div> <!-- ENTITY DETAILS END -->
 
-
-    <hr>
-    
     <!-- ****************************************************** -->
     <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
 
-    <div class="divflex margintop15px">
-      <div>
-        <span class="font20px colorlightblue fontbold"><b>{{subEntityDisplay}}</b> Facets</span>
+    <!-- Display Status Message -->
+    <div class="margintop10px font12px" *ngIf="statusMessageSecond">
+      <span [innerHTML]="statusMessageSecond"></span>
+    </div>
+
+    <div class="divflex margintop30px" *ngIf="statusMessage">
+      <!-- Display More Status Message -->
+      <div class="marginbottom10px colorred">
+        <span [innerHTML]="statusMessage"></span>
       </div>
 
-      <div class="marginleft40px">
-        Total {{subEntityDisplay}} Records: <span><b>{{subEntityTotalRecords}}</b></span>
+      <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == false">
+        <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()" mat-dialog-close>Show
+          {{subEntityDisplay}} Facets</button>
       </div>
     </div> <!-- divflex -->
 
-    <!-- Display Status Message -->
-    <div *ngIf="statusMessage" class="margintop30px marginbottom10px colorred">
-      {{statusMessage}}
-    </div>
 
+    <!-- SHOW FACETS HERE -->
     <div *ngIf="rawFacets && rawFacets.length > 0">
+
+      <div class="divflex margintop15px">
+        <div>
+          <span class="font20px colorlightblue fontbold"><b>{{subEntityDisplay}}</b> Facets</span>
+        </div>
+
+        <div class="marginleft40px">
+          Total {{subEntityDisplay}} Records: <span><b>{{subEntityTotalRecords}}</b></span>
+        </div>
+      </div> <!-- divflex -->
 
       <!-- SHOW SUB ENTITY FACETS -->
       <div class="divflex margintop10px">

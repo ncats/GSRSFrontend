@@ -79,7 +79,11 @@
 }
 
 .borderlightgray {
-  border:1px solid var(--regular-lightgray-color);
+  border: 1px solid var(--regular-lightgray-color);
+}
+
+.borderbottomgray {
+  border-bottom :1px solid var(--regular-grey-color);
 }
 
 .margintopneg5 {
@@ -130,6 +134,10 @@
   margin-left: 20px;
 }
 
+.marginleft30px {
+  margin-left: 30px;
+}
+
 .marginleft40px {
   margin-left: 40px;
 }
@@ -160,6 +168,14 @@
 
 .padbottom7px {
   padding-bottom: 7px;
+}
+
+.padbottom10px {
+  padding-bottom: 10px;
+}
+
+.padbottom20px {
+  padding-bottom: 20px;
 }
 
 .width100px {

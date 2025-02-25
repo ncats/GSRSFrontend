@@ -161,10 +161,11 @@ export class BulkSearchService extends BaseHttpService {
     return this.http.get<any>(url, options);
   }
 
-  /************************************************************************** */
+  // Using this for Cross Entity Search
   getBulkSearchWithFacets(
     searchEntity?: string,
     bulkQID?: number,
+    url?: string,
     searchOnIdentifiers?: boolean,
     facets?: FacetParam,
     view?: string,
@@ -177,7 +178,9 @@ export class BulkSearchService extends BaseHttpService {
 
       console.log("INSIDE getAsynBUlkSearch **** " + JSON.stringify(facets));
 
-      let url = this.apiBaseUrl;
+      if (!url) {
+        url = this.apiBaseUrl + searchEntity + `/bulkSearch`;
+      }
 
       let params = new FacetHttpParams({ encoder: new CustomEncoder() });
       
@@ -192,8 +195,7 @@ export class BulkSearchService extends BaseHttpService {
       params = params.append('searchOnIdentifiers', v);
       params = params.append('searchEntity', searchEntity);
       
-      url += searchEntity + `/bulkSearch`;
-
+ 
       const options = {
         params: params
       };
@@ -433,6 +435,8 @@ export class BulkSearchService extends BaseHttpService {
 
     params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
 
+    //params = params.appendFacetParams(facets);
+
     params = params.appendDictionary({
       top: pageSize.toString(),
       skip: skip.toString(),
@@ -451,7 +455,7 @@ export class BulkSearchService extends BaseHttpService {
       params = params.append('viewfield', viewfield); // setting viewfield=id or facet, faster result
     }
 
-    if (viewfield && viewfield !== '') {
+    if (facetlabel && facetlabel !== '') {
       params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
     }
 

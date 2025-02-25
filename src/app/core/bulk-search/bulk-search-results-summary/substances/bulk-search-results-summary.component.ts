@@ -154,7 +154,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   }
 
   ngOnInit(): void {
-    alert("AAAAAAAAA");
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;

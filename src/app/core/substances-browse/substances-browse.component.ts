@@ -1461,8 +1461,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         if (searchParamItems) {
           this.subEntity = searchParamItems['subEntity'];
           this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
-
-          console.log("VVVVVVVVVVVVVVVVVVVVVV " + JSON.stringify(searchParamItems['idListForSearch']));
         }
       }
     }

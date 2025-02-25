@@ -81,8 +81,10 @@ export class CrossEntitySearchComponent implements OnInit {
   subEntityDisplay = null;
 
   bulkQID = null;
+  bulkSearchUrl = null;
   queryText = '';
   statusMessage = '';
+  statusMessageSecond = '';
 
   idListForSearch: Array<string>;
   idListForSearchOld: Array<string>;
@@ -94,6 +96,7 @@ export class CrossEntitySearchComponent implements OnInit {
   searchOnIdentifiers = false;
   showDeprecated = false;
 
+  isSearchRunning = false;
   isLoading = false;
   isError = false;
 
@@ -195,20 +198,34 @@ export class CrossEntitySearchComponent implements OnInit {
     this.subEntityEndpoint = subEntity.entity;
     this.subEntityDisplay = subEntity.entityDisplay;
 
-    // Show message on popup that loading facets
-    this.statusMessage = 'Loading ' + this.subEntityDisplay + ' facets for ' + this.thisEntityTotalRecords + ' ' + this.thisEntityDisplay + ' records';
-
+    // Initialize 
     this.facetsParamsUpdateCount = 0;
+    this.isSearchRunning = false;
+
+    // Show message
+    this.statusMessageSecond = 'Narrow down ' + this.entity + ' search results by applying related ' + this.subEntityDisplay + ' facets.';
+
+    this.statusMessage = "It may take some time to display " + this.subEntityDisplay + " facets here."
+    this.statusMessage += "<br><br>Click 'Show " + this.subEntityDisplay + " Facets' button to continue."
 
     if (this.editSubEntitySearchHashCode) {
+      // Do something here
     } else {
-      // Trigger Emit to call entity/parent to get Search Ids only
-      this.getSearchIdsOnly.emit(true);
+
     }
 
     // Show sub-entity facets on popup dialog
     this.openModal();
 
+  }
+
+  showSubEntityFacets() {
+    this.isSearchRunning = true;
+
+    this.statusMessage = 'Searching related ' + this.subEntityDisplay + ' records for ' + this.thisEntityTotalRecords + ' ' + this.thisEntityDisplay + ' records ...';
+
+    // Trigger Emit to call entity/parent to get Search Ids only
+    this.getSearchIdsOnly.emit(true);
   }
 
   // for facets. This function is called during facets loading and facets selection/Apply
@@ -252,7 +269,9 @@ export class CrossEntitySearchComponent implements OnInit {
       // if facet popup dialog is open, close it
       if (this.dialog) {
         // Close the popup dialog that has facets
-        this.closePopup();
+        //   this.closePopup();
+
+        this.statusMessage = "Applying " + this.subEntityDisplay + " facets and reload " + this.entity + " search results.";
 
         // ******** Perform bulk search on sub-entity after FACET SELECTION on sub-entity ********
         this.getBulkSearch(this.subEntityEndpoint, this.bulkQID, 'key', this.MAX_RECORD);
@@ -314,6 +333,20 @@ export class CrossEntitySearchComponent implements OnInit {
       if (result) {
         if (result.id) {
 
+          // Do not get field value _self if the entity is not substances
+          alert(entity + "   " + this.ENTITY_SUBSTANCE);
+          if (entity && entity !== this.ENTITY_SUBSTANCE) {
+            alert("INSIDE INSIDE")
+            // Get ._self field after executing @bulkQuery
+            let selfUrl = result._self;
+            if (selfUrl) {
+              const urlIndex: number = selfUrl.indexOf('@');
+              if (urlIndex > 0) {
+                this.bulkSearchUrl = selfUrl.substring(0, urlIndex);
+              }
+            }
+          }
+
           this.bulkQID = result.id;
 
           if (performBulkSearch) {
@@ -322,6 +355,16 @@ export class CrossEntitySearchComponent implements OnInit {
           }
 
           if (reloadBrowser) {
+
+            // Reset message
+            this.statusMessage = '';
+
+            // Close popup if it is open
+            if (this.dialog) {
+              this.closePopup();
+            }
+
+            // Reload browser with new bulk search results
             this.reloadBrowser();
           }
         }
@@ -332,7 +375,7 @@ export class CrossEntitySearchComponent implements OnInit {
   getBulkSearch(entity: string, bulkQID: number, view?: string, fdim: number = 10) {
     // ** Perform BULK SEARCH **
     // this.bulkSearchService.getBulkSearchOrStatusResults(entity, bulkQID, this.searchOnIdentifiers, this.privateFacetParams, view).subscribe(searchResult => {
-    this.bulkSearchService.getBulkSearchWithFacets(entity, bulkQID, this.searchOnIdentifiers, this.privateFacetParams, view).subscribe(response => {
+    this.bulkSearchService.getBulkSearchWithFacets(entity, bulkQID, this.bulkSearchUrl, this.searchOnIdentifiers, this.privateFacetParams, view).subscribe(response => {
 
       const searchResults: any = response;
 
@@ -377,7 +420,7 @@ export class CrossEntitySearchComponent implements OnInit {
     // ** Perform BULK SEARCH STATUS RESULTS **
     this.bulkSearchService.getBulkSearchResults(key, url, fdim, view, viewField, viewLabel).subscribe(response => {
 
-      // Only display facets on Popup if facetsParamsUpdateCount() function is called FIRST time
+      // Only display facets on Popup, if facetsParamsUpdateCount() function is called FIRST time
       if (this.facetsParamsUpdateCount == 0) {
 
         this.subEntityTotalRecords = response.total;
@@ -385,6 +428,8 @@ export class CrossEntitySearchComponent implements OnInit {
         if (response.total > 0) {
           // Set sub-entity facets, and display on Popup
           this.rawFacets = response.facets;
+        } else {
+          this.statusMessage = 'No ' + this.subEntityDisplay + ' found.';
         }
       }
 
@@ -432,9 +477,9 @@ export class CrossEntitySearchComponent implements OnInit {
     let arrayStorage: Array<any> = [];
     let item: any = {}
 
-    item = { 
-      'subEntity': this.subEntityDisplay, 
-      'subEntityDisplayFacets': this.subEntityDisplayFacets, 
+    item = {
+      'subEntity': this.subEntityDisplay,
+      'subEntityDisplayFacets': this.subEntityDisplayFacets,
       'idListForSearch': this.idListForSearchOld
     };
 

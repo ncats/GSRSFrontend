@@ -41,6 +41,7 @@ export class ProductService extends BaseHttpService {
   public showDeprecated = false;
   private searchKeys: { [structureSearchTerm: string]: string } = {};
 
+  //apiBaseUrlWithProductEntityUrl = 'http://localhost:8084/api/v1/products' + '/';
   apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
   //apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
   apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
@@ -56,11 +57,15 @@ export class ProductService extends BaseHttpService {
   getProducts(
     order: string,
     skip: number = 0,
-    pageSize: number = 10,
+    top: number = 10,
     searchTerm?: string,
     facets?: FacetParam,
+    fdim: number = 10,
     bulkQID?: number,
-    searchOnIdentifiers?: boolean
+    searchOnIdentifiers?: boolean,
+    view?: string,
+    viewfield?: string,
+    facetlabel?: string
   ): Observable<PagingResponse<Product>> {
     return new Observable(observer => {
 
@@ -71,7 +76,7 @@ export class ProductService extends BaseHttpService {
           bulkQID,
           searchOnIdentifiers,
           this.entity,
-          pageSize,
+          top,
           facets,
           order,
           skip
@@ -84,12 +89,30 @@ export class ProductService extends BaseHttpService {
         });
 
       } else {
+        //const url = 'http://localhost:8084/api/v1/products/search';
         const url = this.apiBaseUrlWithProductEntityUrl + 'search';
 
         let params = new FacetHttpParams();
 
+        params = params.append('top', top.toString());
         params = params.append('skip', skip.toString());
-        params = params.append('top', pageSize.toString());
+
+        /*
+        params = params.append('fdim', fdim.toString());
+        
+        
+        if (view && view !== '') {
+          params = params.append('view', view); // setting view=key or full, faster result
+        }
+
+        if (viewfield && viewfield !== '') {
+          params = params.append('viewfield', viewfield); // setting viewfield=id or facet, faster result
+        }
+
+        if (facetlabel && facetlabel !== '') {
+          params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
+        }
+        */
 
         if (searchTerm !== null && searchTerm !== '') {
           params = params.append('q', searchTerm);
@@ -134,7 +157,9 @@ export class ProductService extends BaseHttpService {
     return new Observable(observer => {
       let params = new FacetHttpParams({ encoder: new CustomEncoder() });
 
-      let url = this.configService.configData.apiBaseUrl + '/api/v1/';
+      // let url = this.configService.configData.apiBaseUrl + '/api/v1/';
+
+      let url = this.apiBaseUrlWithProductEntityUrl;
 
       let bulkFacetsKey: number;
       bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
@@ -164,7 +189,7 @@ export class ProductService extends BaseHttpService {
         if (searchOnIdentifiers === true) { v = "true"; }
         params = params.append('searchOnIdentifiers', v);
         params = params.append('searchEntity', searchEntity);
-        url += searchEntity + `/bulkSearch`;
+        url += `bulkSearch`;
       }
 
       const options = {
@@ -280,7 +305,9 @@ export class ProductService extends BaseHttpService {
 
     let params = new FacetHttpParams({ encoder: new CustomEncoder() });
 
-    params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
+    params = params.appendFacetParams(facets);
+
+    // params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
 
     params = params.appendDictionary({
       top: pageSize.toString(),

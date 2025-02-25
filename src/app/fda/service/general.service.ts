@@ -170,7 +170,6 @@ export class GeneralService extends BaseHttpService {
   getProductFacets(): Observable<FacetQueryResponse> {
     let url: string;
    // url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse`;
-    alert("URL" + url);
     return this.http.get<FacetQueryResponse>(url);
   }
 

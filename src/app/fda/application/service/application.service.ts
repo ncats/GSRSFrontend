@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParameterCodec, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, of, Observer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { Location } from '@angular/common';
+//import { URL } from 'url';
+
 import { BaseHttpService } from '@gsrs-core/base';
 import { ConfigService } from '@gsrs-core/config';
 import { PagingResponse } from '@gsrs-core/utils';
@@ -12,6 +15,7 @@ import { Application, Product, ProductName, ApplicationIngredient, ApplicationIn
 import { ApplicationAll } from '../model/application.model';
 import { ValidationResults } from '../model/application.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
+import { BulkSearch } from '@gsrs-core/bulk-search/bulk-search.model';
 
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
@@ -53,6 +57,7 @@ export class ApplicationService extends BaseHttpService {
   //apiBaseUrlWithApplicationAllEntityUrl = this.apiBaseUrl + 'applicationsall' + '/';
   // apiBaseUrlWithApplicationDarrtsEntityUrl = this.apiBaseUrl + 'applicationsdarrts' + '/';
 
+  //apiBaseUrlWithApplicationEntityUrl = 'http://localhost:8083/' + 'api/v1/applications' + '/';
   apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
   apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
   //TODO: remove explicit references like this if at all possible
@@ -72,29 +77,58 @@ export class ApplicationService extends BaseHttpService {
     order: string,
     skip: number = 0,
     pageSize: number = 10,
+    fdim: number = 10,
     searchTerm?: string,
     facets?: FacetParam,
-    bulkQID?: number
+    bulkQID?: number,
+    view?: string
   ): Observable<PagingResponse<Application>> {
     return new Observable(observer => {
 
       if (bulkQID != null && bulkQID.toString() != '') {
-        this.applicationBulkSearch(
-          searchTerm,
-          bulkQID,
-          false,
-          'applications',
-          pageSize,
-          facets,
-          order,
-          skip,
-        ).subscribe(response => {
-          observer.next(response);
-        }, error => {
-          observer.error(error);
-        }, () => {
-          observer.complete();
-        });
+
+        // Need this due to hostname issue. The Bulk Search MUST execute using 8083 locally for 
+        // bulk Search Result Status to work.
+        let url = this.apiBaseUrlWithApplicationEntityUrl + `bulkSearch`;
+
+        let generatingUrl = null;
+        let isHostDifferent: boolean = false;
+
+        let genUrl = null;
+        this.getBulkSearch('applications', bulkQID, false).subscribe(response => {
+          if (response) {
+            if (response.generatingUrl) {
+              generatingUrl = response.generatingUrl;
+              let genUrl = new URL(generatingUrl);
+              let origUrl = new URL(url);
+
+              if (origUrl.host !== genUrl.host) {
+                isHostDifferent = true;
+              }
+            }
+          }
+
+         // if (isHostDifferent) {
+            this.applicationBulkSearch(
+              searchTerm,
+              bulkQID,
+              false,
+              'applications',
+              pageSize,
+              facets,
+              order,
+              skip,
+              generatingUrl
+            ).subscribe(response => {
+              observer.next(response);
+            }, error => {
+              observer.error(error);
+            }, () => {
+              observer.complete();
+            });
+          //}
+
+        }); // subscribe
 
       } else {
         const url = this.apiBaseUrlWithApplicationEntityUrl + 'search';
@@ -103,9 +137,14 @@ export class ApplicationService extends BaseHttpService {
 
         params = params.append('skip', skip.toString());
         params = params.append('top', pageSize.toString());
+        params = params.append('fdim', fdim.toString());
 
         if (searchTerm !== null && searchTerm !== '') {
           params = params.append('q', searchTerm);
+        }
+
+        if (view !== null && view !== '') {
+          params = params.append('view', view);
         }
 
         params = params.appendFacetParams(facets);
@@ -142,13 +181,31 @@ export class ApplicationService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
+    url?: string
   ): Observable<PagingResponse<Application>> {
+    
     return new Observable(observer => {
+
       let params = new FacetHttpParams({ encoder: new CustomEncoder() });
       let bulkFacetsKey: number;
 
-      let url = this.configService.configData.apiBaseUrl + 'api/v1/';
+      //let url = this.configService.configData.apiBaseUrl + 'api/v1/';
 
+      if (!url) {
+        url = this.apiBaseUrlWithApplicationEntityUrl + `bulkSearch`;
+
+        params = params.append('bulkQID', bulkQID.toString());
+        let v = "false";
+        if (searchOnIdentifiers === true) { v = "true"; }
+        params = params.append('searchOnIdentifiers', v);
+        params = params.append('searchEntity', searchEntity);
+      }
+
+      const options = {
+        params: params
+      };
+
+      /*
       bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
 
       if (this.searchKeys[bulkFacetsKey]) {
@@ -172,19 +229,10 @@ export class ApplicationService extends BaseHttpService {
         if (order != null && order !== '') {
           params = params.append('order', order);
         }
-      } else {
-        params = params.append('bulkQID', bulkQID.toString());
-        let v = "false";
-        if (searchOnIdentifiers === true) { v = "true"; }
-        params = params.append('searchOnIdentifiers', v);
-        params = params.append('searchEntity', searchEntity);
-        url += `applications/bulkSearch`;
-      }
+      } else { */
 
-      const options = {
-        params: params
-      };
 
+      // Get Results
       this.http.get<any>(url, options).subscribe(
         response => {
           // call async
@@ -216,6 +264,7 @@ export class ApplicationService extends BaseHttpService {
           observer.complete();
         }
       );
+
     });
   }
 
@@ -250,6 +299,7 @@ export class ApplicationService extends BaseHttpService {
 
         // if Bulk Search is not finished, call bulk search API again
         if (!asyncCallResponse.finished) {
+        
           this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
 
             setTimeout(() => {
@@ -315,6 +365,45 @@ export class ApplicationService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<Application>>(url, options);
+  }
+
+
+  getBulkSearch(
+    context: string,
+    id: number,
+    searchOnIdentifiers: boolean = false
+  ): Observable<BulkSearch> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/' + context + '/bulkSearch';
+
+    let params = new HttpParams();
+    params = params.append('bulkQID', id);
+    params = params.append('searchOnIdentifiers', searchOnIdentifiers);
+    params = params.append('searchEntity', context);
+
+    params.append('simpleSearchOnly', null);
+    const options = {
+      // eslint-disable-next-line object-shorthand
+      params: params,
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<BulkSearch>(url, options);
+  }
+
+  getBulkSearchStatus(
+    key: string,
+    url?: string
+  ): Observable<any> {
+    // the host in url can be different for non-substance, so need to pass the correct url
+    if (!url) {
+      url = this.configService.configData.apiBaseUrl + 'api/v1/status/' + key;
+    }
+    // let params = new HttpParams();
+    const options = {
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<any>(url, options);
   }
 
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {

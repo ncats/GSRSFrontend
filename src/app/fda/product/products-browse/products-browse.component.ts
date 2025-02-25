@@ -88,6 +88,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   downloadJsonHref: any;
   jsonFileName: string;
   tabSelectedIndex = 0;
+  fdim = 10;
 
   activeIngredients: Array<ProductIngredient> = [];
   otherIngredients: Array<ProductIngredient> = [];
@@ -222,12 +223,14 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   searchProducts() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
+    
     const subscription = this.productService.getProducts(
       this.order,
       skip,
       this.pageSize,
       this.privateSearchTerm,
       this.privateFacetParams,
+      this.fdim,
       this.bulkSearchQueryId,
       this.searchOnIdentifiers
     )
@@ -829,17 +832,32 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // Need this for Cross Entity Search. Return all the IDs only for the current search
   getSearchIdsOnly(doPerformSearch: boolean) {
+    let order = null;
+    let top = 10;
+    let skip = 0;
+    let fdim = 1000000;
+    let bulkQID = null;
+    let searchOnIdentifiers = false;
+    let view = 'key';
+    let viewfield = 'facet';
+    let facetlabel = 'Substance UUID';
 
     if (doPerformSearch) {
-      let idListsTemp: Array<String> = [];
+      let idListsTemp: Array<string> = [];
       this.idLists = [];
-
+      
       const subscription = this.productService.getProducts(
-        null,
-        0,
-        10,
+        order,
+        skip,
+        top,
         this.privateSearchTerm,
-        this.privateFacetParams
+        this.privateFacetParams,
+        fdim,
+        bulkQID,
+        searchOnIdentifiers,
+        view,
+        viewfield,
+        facetlabel
       )
         .subscribe(pagingResponse => {
           // Get Facets from paging response
@@ -847,7 +865,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
             const facets = pagingResponse.facets;
 
             // *** For Cross Entity Search get lists of Substance UUID ***
-            let idListsTemp: Array<string> = [];
             let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
 
             if (facetSubUuid) {
