@@ -445,9 +445,13 @@ export interface SubstanceEdit {
   editor: string;
   version: string;
   oldValue: string;
+  newValue?: string;
   refid: string;
   created: number;
   comments?: string;
+  diff?: string;
+  kind?: string;
+  _self?:string;
 }
 
 export interface ProteinFeatures {
@@ -644,4 +648,11 @@ export interface TableFilterDDModel {
 export interface TableFilterBoolDDModel {
   value: boolean;
   display: boolean;
+}
+
+export interface SubstanceDiff {
+  op?: string;
+  path?: string;
+  value?: string;
+  oldValue?: string;
 }

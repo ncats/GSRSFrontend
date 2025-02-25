@@ -24,6 +24,11 @@
       <a class = "button-link " matTooltip ="search for sequence in a new tab" (click) = "search()">sequence search</a>
       <button class = "mat-button action-button mat-primary" matTooltip = "copy disulfides from another subunit"  (click) = copyDisulfides() *ngIf = "substanceType === 'protein'">
           copy disulfide links</button>
+<span class = "middle-fill"></span>
+        <button class = "mat-button action-button mat-primary"  color="primary" (click)="copySequence()">
+          Copy to Clipboard
+          <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Sequence to clipboard"></mat-icon>
+        </button>
     </div>
   </div>
 
