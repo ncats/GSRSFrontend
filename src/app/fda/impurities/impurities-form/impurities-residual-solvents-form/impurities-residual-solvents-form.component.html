@@ -16,7 +16,7 @@
     <div class="flex-container marginleftneg7px padbottom10px">
 
       <!-- Left Side -->
-      <div class="width25percent textaligncenter">
+      <div class="width25percent textaligncenter" *ngIf="configSettingsDisplay['relatedSubstanceUuid'] || (configSettingsDisplay['relatedSubstanceUuid'] === undefined && true)">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
           eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesResidualSolvents.relatedSubstanceUuid" [showMorelinks]=true>
@@ -24,19 +24,6 @@
         <div class="textaligncenter font11px" *ngIf="impuritiesResidualSolvents.relatedSubstanceUnii">
           {{impuritiesResidualSolvents.relatedSubstanceUnii}}
         </div>
-        <!--
-        <div class="divflex">
-          <div class="col marginleft50px">
-            <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
-              <span class="font11px">Register New</span>
-            </a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
-              <span class="font11px">Search By Structure</span>
-            </a>
-          </div>
-        </div>
-        -->
       </div>
 
       <!-- Right Side -->
@@ -44,32 +31,40 @@
 
         <div class="form-row">
 
-          <mat-form-field class="col-3-1">
+          <mat-form-field class="col-3-1"
+          *ngIf="configSettingsDisplay['pharmaceuticalLimit'] || (configSettingsDisplay['pharmaceuticalLimit'] === undefined && true)">
             <input matInput placeholder="Pharmaceutical Limit"
               [(ngModel)]="impuritiesResidualSolvents.pharmaceuticalLimit" name="pharmaceuticalLimit" />
           </mat-form-field>
 
-          <mat-form-field class="col-3-1">
+          <mat-form-field class="col-3-1"
+          *ngIf="configSettingsDisplay['testType'] || (configSettingsDisplay['testType'] === undefined && true)">
             <input matInput placeholder="Test Type" [(ngModel)]="impuritiesResidualSolvents.testType" name="testType" />
           </mat-form-field>
 
-          <app-cv-input class="col-3-1" domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
+          <app-cv-input class="col-3-1" 
+          *ngIf="configSettingsDisplay['limitType'] || (configSettingsDisplay['limitType'] === undefined && true)"
+          domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
             [model]="impuritiesResidualSolvents.limitType"
             (valueChange)="impuritiesResidualSolvents.limitType = $event">
           </app-cv-input>
         </div>
 
         <div class="form-row">
-          <mat-form-field class="col-3-1">
+          <mat-form-field class="col-3-1"
+          *ngIf="configSettingsDisplay['limitValue'] || (configSettingsDisplay['limitValue'] === undefined && true)">
             <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesResidualSolvents.limitValue"
               name="limitValue" />
           </mat-form-field>
 
-          <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit"
+          <app-cv-input class="col-3-1" 
+          *ngIf="configSettingsDisplay['unit'] || (configSettingsDisplay['unit'] === undefined && true)"
+          domain="PROD_UNIT" title="Unit" name="unit"
             [model]="impuritiesResidualSolvents.unit" (valueChange)="impuritiesResidualSolvents.unit = $event">
           </app-cv-input>
 
-          <mat-form-field class="col-3-1">
+          <mat-form-field class="col-3-1"
+          *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
             <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesResidualSolvents.comments" name="comments"
               rows="1"></textarea>
           </mat-form-field>

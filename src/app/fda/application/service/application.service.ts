@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
+import { HttpClient, HttpParameterCodec, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError, of, Observer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { Location } from '@angular/common';
+//import { URL } from 'url';
+
 import { BaseHttpService } from '@gsrs-core/base';
 import { ConfigService } from '@gsrs-core/config';
 import { PagingResponse } from '@gsrs-core/utils';
@@ -12,9 +15,28 @@ import { Application, Product, ProductName, ApplicationIngredient, ApplicationIn
 import { ApplicationAll } from '../model/application.model';
 import { ValidationResults } from '../model/application.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
+import { BulkSearch } from '@gsrs-core/bulk-search/bulk-search.model';
 
 // import { SubstanceFacetParam } from '../../../core/substance/substance-facet-param.model';
 // import { SubstanceHttpParams } from '../../../core/substance/substance-http-params';
+
+class CustomEncoder implements HttpParameterCodec {
+  encodeKey(key: string): string {
+    return encodeURIComponent(key);
+  }
+
+  encodeValue(value: string): string {
+    return encodeURIComponent(value);
+  }
+
+  decodeKey(key: string): string {
+    return decodeURIComponent(key);
+  }
+
+  decodeValue(value: string): string {
+    return decodeURIComponent(value);
+  }
+}
 
 @Injectable(
   {
@@ -28,11 +50,14 @@ export class ApplicationService extends BaseHttpService {
   private applicationStateHash?: number;
   totalRecords = 0;
   application: Application;
+  public showDeprecated = false;
+  private searchKeys: { [structureSearchTerm: string]: string } = {};
 
   //apiBaseUrlWithApplicationEntityUrl = this.apiBaseUrl + 'applications' + '/';
   //apiBaseUrlWithApplicationAllEntityUrl = this.apiBaseUrl + 'applicationsall' + '/';
   // apiBaseUrlWithApplicationDarrtsEntityUrl = this.apiBaseUrl + 'applicationsdarrts' + '/';
 
+  //apiBaseUrlWithApplicationEntityUrl = 'http://localhost:8083/' + 'api/v1/applications' + '/';
   apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
   apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
   //TODO: remove explicit references like this if at all possible
@@ -52,28 +77,341 @@ export class ApplicationService extends BaseHttpService {
     order: string,
     skip: number = 0,
     pageSize: number = 10,
+    fdim: number = 10,
     searchTerm?: string,
-    facets?: FacetParam
+    facets?: FacetParam,
+    bulkQID?: number,
+    view?: string,
+    viewfield?: string,
+    facetlabel?: string
   ): Observable<PagingResponse<Application>> {
-    let params = new FacetHttpParams();
-    params = params.append('skip', skip.toString());
-    params = params.append('top', pageSize.toString());
-    if (searchTerm !== null && searchTerm !== '') {
-      params = params.append('q', searchTerm);
+    return new Observable(observer => {
+
+      if (bulkQID != null && bulkQID.toString() != '') {
+
+        // Need this due to hostname issue. The Bulk Search MUST execute using 8083 locally for 
+        // bulk Search Result Status to work.
+        let url = this.apiBaseUrlWithApplicationEntityUrl + `bulkSearch`;
+
+        let generatingUrl = null;
+        let isHostDifferent: boolean = false;
+
+        let genUrl = null;
+        this.getBulkSearch('applications', bulkQID, false).subscribe(response => {
+          if (response) {
+            if (response.generatingUrl) {
+              generatingUrl = response.generatingUrl;
+              let genUrl = new URL(generatingUrl);
+              let origUrl = new URL(url);
+
+              if (origUrl.host !== genUrl.host) {
+                isHostDifferent = true;
+              }
+            }
+          }
+
+         // if (isHostDifferent) {
+            this.applicationBulkSearch(
+              searchTerm,
+              bulkQID,
+              false,
+              'applications',
+              pageSize,
+              facets,
+              order,
+              skip,
+              generatingUrl
+            ).subscribe(response => {
+              observer.next(response);
+            }, error => {
+              observer.error(error);
+            }, () => {
+              observer.complete();
+            });
+
+        }); // subscribe
+
+      } else {
+        const url = this.apiBaseUrlWithApplicationEntityUrl + 'search';
+
+        let params = new FacetHttpParams();
+
+        params = params.append('skip', skip.toString());
+        params = params.append('top', pageSize.toString());
+        params = params.append('fdim', fdim.toString());
+
+        if (view) {
+          params = params.append('view', view); // setting view=key or full, faster result
+        }
+
+        if (viewfield) {
+          params = params.append('viewfield', viewfield); // setting viewfield=id or facet, faster result
+        }
+
+        if (facetlabel) {
+          params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
+        }
+
+        if (searchTerm) {
+          params = params.append('q', searchTerm);
+        }
+
+        params = params.appendFacetParams(facets);
+
+        if (order) {
+          params = params.append('order', order);
+        }
+
+        const options = {
+          params: params
+        };
+
+        return this.http.get<PagingResponse<Application>>(url, options).subscribe(
+          response => {
+            if (response) {
+              observer.next(response);
+              observer.complete();
+            }
+          }, error => {
+            observer.error(error);
+            observer.complete();
+          });
+      } // else search
+
+    });  // Observable(observer) 
+  }
+
+  applicationBulkSearch(
+    querySearchTerm,
+    bulkQID?: number,
+    searchOnIdentifiers?: boolean,
+    searchEntity?: string,
+    pageSize: number = 10,
+    facets?: FacetParam,
+    order?: string,
+    skip: number = 0,
+    url?: string
+  ): Observable<PagingResponse<Application>> {
+    
+    return new Observable(observer => {
+
+      let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+      let bulkFacetsKey: number;
+
+      //let url = this.configService.configData.apiBaseUrl + 'api/v1/';
+
+      if (!url) {
+        url = this.apiBaseUrlWithApplicationEntityUrl + `bulkSearch`;
+
+        params = params.append('bulkQID', bulkQID.toString());
+        let v = "false";
+        if (searchOnIdentifiers === true) { v = "true"; }
+        params = params.append('searchOnIdentifiers', v);
+        params = params.append('searchEntity', searchEntity);
+      }
+
+      const options = {
+        params: params
+      };
+
+      /*
+      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
+
+      if (this.searchKeys[bulkFacetsKey]) {
+        // Set bulk status result url
+        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
+
+        params = params.appendFacetParams(facets, this.showDeprecated);
+        
+        if (querySearchTerm.length > 0) {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString(),
+            q: querySearchTerm.toString()
+          });
+        } else {
+          params = params.appendDictionary({
+            top: pageSize.toString(),
+            skip: skip.toString()
+          });
+        }
+        if (order != null && order !== '') {
+          params = params.append('order', order);
+        }
+      } else { */
+
+
+      // Get Results
+      this.http.get<any>(url, options).subscribe(
+        response => {
+          // call async
+          if (response.results) {
+            const resultKey = response.key;
+            this.searchKeys[bulkFacetsKey] = resultKey;
+
+            this.processAsyncSearchResults(
+              querySearchTerm,
+              url,
+              response,
+              observer,
+              resultKey,
+              options,
+              pageSize,
+              facets,
+              skip
+            );
+          } else {
+            // consider making API backend provide statusKey in JSON
+          //  if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
+           //   response.statusKey = this.searchKeys[bulkFacetsKey];
+           // }
+            observer.next(response);
+            observer.complete();
+          }
+        }, error => {
+          observer.error(error);
+          observer.complete();
+        }
+      );
+
+    });
+  }
+
+  private processAsyncSearchResults(
+    querySearchTerm: string,
+    url: string,
+    asyncCallResponse: any,
+    observer: Observer<PagingResponse<Application>>,
+    searchKey: string,
+    httpCallOptions: any,
+    pageSize?: number,
+    facets?: FacetParam,
+    skip?: number,
+    view?: string
+  ): void {
+    // Call Bulk Search Result
+    this.getAsyncSearchResults(
+      querySearchTerm,
+      searchKey,
+      pageSize,
+      facets,
+      skip,
+      view,
+      asyncCallResponse.results
+    )
+      .subscribe(response => {
+        // consider making API backend provide statusKey in JSON
+        response.statusKey = searchKey;
+        response.searchStatusUrl = asyncCallResponse.url
+
+        observer.next(response);
+
+        // if Bulk Search is not finished, call bulk search API again
+        if (!asyncCallResponse.finished) {
+        
+          this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
+
+            setTimeout(() => {
+              this.processAsyncSearchResults(
+                querySearchTerm,
+                url,
+                searchResponse,
+                observer,
+                searchKey,
+                httpCallOptions,
+                pageSize,
+                facets,
+                skip,
+                view
+              );
+            });
+
+          }, error => {
+            observer.error(error);
+            observer.complete();
+          });
+        } else {
+          observer.complete();
+        }
+      }, error => {
+        observer.error(error);
+        observer.complete();
+      });
+
+  }
+
+  private getAsyncSearchResults(
+    querySearchTerm: string,
+    // this is a status
+    searchKey: string,
+    pageSize?: number,
+    facets?: FacetParam,
+    skip?: number,
+    view?: string,
+    url?: string
+  ): any {
+
+    if (!url) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/status(${searchKey})/results`;
     }
 
-    params = params.appendFacetParams(facets);
+    let params = new FacetHttpParams({ encoder: new CustomEncoder() });
 
-    if (order != null && order !== '') {
-      params = params.append('order', order);
+    params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
+
+    params = params.appendDictionary({
+      top: pageSize.toString(),
+      skip: skip.toString(),
+      view: view || ''
+    });
+
+    if (querySearchTerm != null && querySearchTerm !== '') {
+      params = params.append('q', querySearchTerm);
     }
 
-    const url = this.apiBaseUrlWithApplicationEntityUrl + 'search';
     const options = {
       params: params
     };
 
     return this.http.get<PagingResponse<Application>>(url, options);
+  }
+
+  getBulkSearch(
+    context: string,
+    id: number,
+    searchOnIdentifiers: boolean = false
+  ): Observable<BulkSearch> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/' + context + '/bulkSearch';
+
+    let params = new HttpParams();
+    params = params.append('bulkQID', id);
+    params = params.append('searchOnIdentifiers', searchOnIdentifiers);
+    params = params.append('searchEntity', context);
+
+    params.append('simpleSearchOnly', null);
+    const options = {
+      // eslint-disable-next-line object-shorthand
+      params: params,
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<BulkSearch>(url, options);
+  }
+
+  getBulkSearchStatus(
+    key: string,
+    url?: string
+  ): Observable<any> {
+    // the host in url can be different for non-substance, so need to pass the correct url
+    if (!url) {
+      url = this.configService.configData.apiBaseUrl + 'api/v1/status/' + key;
+    }
+    // let params = new HttpParams();
+    const options = {
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<any>(url, options);
   }
 
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
@@ -100,6 +438,7 @@ export class ApplicationService extends BaseHttpService {
 
   retrieveNextFacetValues(facet: Facet): Observable<any> {
     const url = facet._self;
+
     if (!facet.$next) {
       return this.http.get<any>(url).pipe(
         switchMap(response => {

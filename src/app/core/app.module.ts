@@ -121,6 +121,8 @@ import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-cre
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
+import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -231,7 +233,8 @@ import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
     SchemaFormModule.forRoot(),
     BulkSearchModule,
     ElementLabelDisplayModule,
-    PrivacyStatementModule
+    PrivacyStatementModule,
+    CrossEntitySearchModule
   ],
   providers: [
     {

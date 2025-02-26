@@ -88,12 +88,23 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   downloadJsonHref: any;
   jsonFileName: string;
   tabSelectedIndex = 0;
+  fdim = 10;
 
   activeIngredients: Array<ProductIngredient> = [];
   otherIngredients: Array<ProductIngredient> = [];
 
   showMoreLessActiveIngredArray: Array<boolean> = [];
   showMoreLessOtherIngredArray: Array<boolean> = [];
+
+  // Cross Entity Search
+  thisEntity: string = "products";
+  showCrossEntitySearch = false;
+  searchOnIdentifiers = false;
+  bulkSearchPanelOpen = false;
+  bulkSearchStatusKey: string;
+  searchStatusUrl: string;
+  bulkSearchQueryId?: number;
+  idLists: Array<string> = [];
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
@@ -112,7 +123,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
-  private isFacetsParamsInit = false;
+  isFacetsParamsInit = false;
   exportOptions: Array<any>;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
@@ -151,6 +162,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     // Get Daily Med Url from Configuration
     this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
 
+    // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
+    this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
+
     this.titleService.setTitle(`P:Browse Products`);
 
     this.pageSize = 10;
@@ -170,6 +184,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
@@ -182,7 +197,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.subscriptions.push(authSubscription);
 
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
-    //this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -209,16 +223,26 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   searchProducts() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
+
     const subscription = this.productService.getProducts(
       this.order,
       skip,
       this.pageSize,
       this.privateSearchTerm,
-      this.privateFacetParams
+      this.privateFacetParams,
+      this.fdim,
+      this.bulkSearchQueryId,
+      this.searchOnIdentifiers
     )
       .subscribe(pagingResponse => {
         this.isError = false;
+        this.isError = false;
+        // Get Bulk Search Status Key and url. The hostname for bulk search result can be different for non-substance entity
+        this.bulkSearchStatusKey = pagingResponse.statusKey;
+        this.searchStatusUrl = pagingResponse.searchStatusUrl;
+
         this.products = pagingResponse.content;
+
         this.dataSource = this.products;
         this.totalProducts = pagingResponse.total;
         this.etag = pagingResponse.etag;
@@ -414,6 +438,20 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.facetManagerService.clearSelections();
   }
 
+  clearBulkSearch(): void {
+    this.order = '$root_lastModifiedDate';
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = null;
+    this.bulkSearchQueryId = null;
+    // this.subentity-hash = null;
+
+    this.populateUrlQueryParameters();
+
+    // Reset bulk search and do regular search
+    this.searchProducts();
+  }
+
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
@@ -422,6 +460,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+    navigationExtras.queryParams['bulkQID'] = null;
+    navigationExtras.queryParams['subentity-hash'] = null;
 
     this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
@@ -458,7 +498,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           if (prodCode) {
             if (prodCode.productCode) {
               if (prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE') {
-                 prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
+                prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
               }
             }
           }
@@ -686,7 +726,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     const copyProd = _.cloneDeep(this.products[productIndex]);
     let cleanProduct = this.scrub(copyProd);
 
-    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
+    let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -701,7 +741,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   saveJSON(productIndex: number): void {
     const copyProd = _.cloneDeep(this.products[productIndex]);
-    let cleanProduct  = this.scrub(copyProd);
+    let cleanProduct = this.scrub(copyProd);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));
     this.downloadJsonHref = uri;
@@ -789,4 +829,72 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     return old;
   }
+
+  // Need this for Cross Entity Search. Return all the IDs only for the current search
+  getSearchIdsOnly(doPerformSearch: boolean) {
+
+    if (doPerformSearch) {
+      let idListsTemp: Array<string> = [];
+
+      let order = null;
+      let top = 10;
+      let skip = 0;
+      let fdim = 1000000;
+      let bulkQID = null;
+      let searchOnIdentifiers = false;
+      let view = 'key';
+      let viewfield = 'facet';
+      let facetlabel = 'Substance UUID';
+
+      const subscription = this.productService.getProducts(
+        order,
+        skip,
+        top,
+        this.privateSearchTerm,
+        this.privateFacetParams,
+        fdim,
+        bulkQID,
+        searchOnIdentifiers,
+        view,
+        viewfield,
+        facetlabel
+      )
+        .subscribe(pagingResponse => {
+          // Get Facets from paging response
+          if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+            const facets = pagingResponse.facets;
+
+            // *** For Cross Entity Search get lists of Substance UUID ***
+            let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
+
+            if (facetSubUuid) {
+              facetSubUuid.values.forEach((value, index) => {
+                if (value) {
+                  if (value.label) {
+                    idListsTemp.push(value.label);
+                  }
+                }
+
+                // Copy after the last record
+                if (facetSubUuid.values.length == index+1) {
+                  // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                  this.idLists = idListsTemp;
+                }
+              }); // forEach
+            } else {
+              this.idLists = [];
+            }
+
+          } // pagingResponse
+
+        }, error => {
+          console.log('Error during search substance');
+        }, () => {
+          this.subscriptions.push(subscription);
+        }
+        ); // pagingResponse
+
+    } // if doPerformSearch == true
+  }
+
 }

@@ -2,6 +2,15 @@
 <mat-sidenav-container>
 
   <mat-sidenav mode="side" opened>
+
+    <!-- Cross Entity Search to search between Application and Substance -->
+    <span *ngIf="showCrossEntitySearch == true">
+      <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [searchTerm]="searchTerm"
+        [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
+        [entityTotalRecords]="totalApplications" (getSearchIdsOnly)="getSearchIdsOnly($event)">
+      </app-cross-entity-search>
+    </span>
+
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" configName="applications" includeFacetSearch="true">
     </app-facets-manager>
@@ -13,6 +22,45 @@
       <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
         <mat-icon svgIcon="chevron_right"></mat-icon>
       </button>
+
+      <!-- BULK SEARCH RESULTS BEGIN -->
+      <div *ngIf="bulkSearchQueryId && bulkSearchStatusKey">
+        <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true"
+          (closed)="bulkSearchPanelOpen = false"
+          style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
+          
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div>Bulk Search Summary (Full Results)</div>
+              <div>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
+
+            <div>
+              <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
+              <span *ngIf="bulkSearchQueryId">
+                | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
+              </span>
+              Bulk Search
+            </div>
+
+            <app-bulk-search-results-summary 
+              showTitle=false 
+              loadSummaries=true 
+              context="applications"
+              [key]="bulkSearchStatusKey" 
+              [isCollapsed]="isBulkSearchCollapsed"
+              [searchStatusUrl]="searchStatusUrl">
+            </app-bulk-search-results-summary>
+
+          </div>
+        </mat-expansion-panel>
+      </div>
+      <!-- Bulk Search END -->
+
 
       <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
       <div class="narrow-search-suggestions-container"
