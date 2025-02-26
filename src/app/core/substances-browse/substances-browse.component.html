@@ -310,7 +310,7 @@
               <legend class="legend-crosssearch">Cross Entity Search : <b>{{subEntity}}</b></legend>
 
               <div class="controls-container">
-                <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of subEntityDisplayFacets">
+                <div class="mat-elevation-z2 selected-parameter marginright10px" *ngFor="let facet of subEntityDisplayFacets">
                   <div class='selected-parameter-crosssearch'>
                     <span class="selected-label">
                       <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
@@ -323,9 +323,11 @@
                 </div>
                 <!-- Edit button -->
                 <div class="">
+                  <!--
                   <button mat-icon-button color="primary" (click)="editSubEntitySearch()">
                     <mat-icon svgIcon="edit" tooltip="Go to Sub Entity Search"></mat-icon>
                   </button>
+                  -->
                 </div>
               </div>
             </fieldset>

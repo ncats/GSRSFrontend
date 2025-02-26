@@ -223,7 +223,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   searchProducts() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
-    
+
     const subscription = this.productService.getProducts(
       this.order,
       skip,
@@ -832,20 +832,20 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // Need this for Cross Entity Search. Return all the IDs only for the current search
   getSearchIdsOnly(doPerformSearch: boolean) {
-    let order = null;
-    let top = 10;
-    let skip = 0;
-    let fdim = 1000000;
-    let bulkQID = null;
-    let searchOnIdentifiers = false;
-    let view = 'key';
-    let viewfield = 'facet';
-    let facetlabel = 'Substance UUID';
 
     if (doPerformSearch) {
       let idListsTemp: Array<string> = [];
-      this.idLists = [];
-      
+
+      let order = null;
+      let top = 10;
+      let skip = 0;
+      let fdim = 1000000;
+      let bulkQID = null;
+      let searchOnIdentifiers = false;
+      let view = 'key';
+      let viewfield = 'facet';
+      let facetlabel = 'Substance UUID';
+
       const subscription = this.productService.getProducts(
         order,
         skip,
@@ -868,19 +868,24 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
             let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
 
             if (facetSubUuid) {
-              facetSubUuid.values.forEach(value => {
+              facetSubUuid.values.forEach((value, index) => {
                 if (value) {
                   if (value.label) {
                     idListsTemp.push(value.label);
                   }
                 }
-              }); // forEach
 
-              // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
-              this.idLists = idListsTemp;
+                // Copy after the last record
+                if (facetSubUuid.values.length == index+1) {
+                  // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                  this.idLists = idListsTemp;
+                }
+              }); // forEach
+            } else {
+              this.idLists = [];
             }
 
-          }
+          } // pagingResponse
 
         }, error => {
           console.log('Error during search substance');

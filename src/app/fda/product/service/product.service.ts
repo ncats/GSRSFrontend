@@ -12,6 +12,7 @@ import { Product, ProductProvenance, ProductName, ProductTermAndPart, ProductCod
 import { ProductCompany, ProductCompanyCode, ProductIndication, ProductManufactureItem, ProductManufacturer, ProductLot, ProductIngredient } from '../model/product.model';
 import { ValidationResults } from '../model/product.model';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
+import { BulkSearch } from '@gsrs-core/bulk-search/bulk-search.model';
 
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
@@ -70,24 +71,49 @@ export class ProductService extends BaseHttpService {
     return new Observable(observer => {
 
       if (bulkQID != null && bulkQID.toString() != '') {
-        // Perform bulk search
-        this.productBulkSearch(
-          searchTerm,
-          bulkQID,
-          searchOnIdentifiers,
-          this.entity,
-          top,
-          facets,
-          order,
-          skip
-        ).subscribe(response => {
-          observer.next(response);
-        }, error => {
-          observer.error(error);
-        }, () => {
-          observer.complete();
-        });
 
+        // Need this due to hostname issue. The Bulk Search MUST execute using 8083 locally for 
+        // bulk Search Result Status to work.
+        let url = this.apiBaseUrlWithProductEntityUrl + `bulkSearch`;
+
+        let generatingUrl = null;
+        let isHostDifferent: boolean = false;
+
+        let genUrl = null;
+        this.getBulkSearch('products', bulkQID, false).subscribe(response => {
+
+          if (response) {
+            if (response.generatingUrl) {
+              generatingUrl = response.generatingUrl;
+              let genUrl = new URL(generatingUrl);
+              let origUrl = new URL(url);
+
+              if (origUrl.host !== genUrl.host) {
+                isHostDifferent = true;
+              }
+            }
+          }
+
+          // Perform bulk search
+          this.productBulkSearch(
+            searchTerm,
+            bulkQID,
+            searchOnIdentifiers,
+            this.entity,
+            top,
+            facets,
+            order,
+            skip,
+            generatingUrl
+          ).subscribe(response => {
+            observer.next(response);
+          }, error => {
+            observer.error(error);
+          }, () => {
+            observer.complete();
+          });
+
+        }); // subscribe
       } else {
         //const url = 'http://localhost:8084/api/v1/products/search';
         const url = this.apiBaseUrlWithProductEntityUrl + 'search';
@@ -96,31 +122,27 @@ export class ProductService extends BaseHttpService {
 
         params = params.append('top', top.toString());
         params = params.append('skip', skip.toString());
-
-        /*
         params = params.append('fdim', fdim.toString());
-        
-        
-        if (view && view !== '') {
+
+        if (view) {
           params = params.append('view', view); // setting view=key or full, faster result
         }
 
-        if (viewfield && viewfield !== '') {
+        if (viewfield) {
           params = params.append('viewfield', viewfield); // setting viewfield=id or facet, faster result
         }
 
-        if (facetlabel && facetlabel !== '') {
+        if (facetlabel) {
           params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
         }
-        */
 
-        if (searchTerm !== null && searchTerm !== '') {
+        if (searchTerm) {
           params = params.append('q', searchTerm);
         }
 
         params = params.appendFacetParams(facets);
 
-        if (order != null && order !== '') {
+        if (order) {
           params = params.append('order', order);
         }
 
@@ -153,14 +175,28 @@ export class ProductService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
+    url?: string
   ): Observable<PagingResponse<Product>> {
     return new Observable(observer => {
       let params = new FacetHttpParams({ encoder: new CustomEncoder() });
 
       // let url = this.configService.configData.apiBaseUrl + '/api/v1/';
 
-      let url = this.apiBaseUrlWithProductEntityUrl;
+      if (!url) {
+        url = this.apiBaseUrlWithProductEntityUrl + `bulkSearch`;
 
+        params = params.append('bulkQID', bulkQID.toString());
+        let v = "false";
+        if (searchOnIdentifiers === true) { v = "true"; }
+        params = params.append('searchOnIdentifiers', v);
+        params = params.append('searchEntity', searchEntity);
+      }
+
+      const options = {
+        params: params
+      };
+
+      /*
       let bulkFacetsKey: number;
       bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
 
@@ -191,10 +227,7 @@ export class ProductService extends BaseHttpService {
         params = params.append('searchEntity', searchEntity);
         url += `bulkSearch`;
       }
-
-      const options = {
-        params: params
-      };
+      */
 
       this.http.get<any>(url, options).subscribe(
         response => {
@@ -215,9 +248,9 @@ export class ProductService extends BaseHttpService {
             );
           } else {
             // consider making API backend provide statusKey in JSON
-            if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
-              response.statusKey = this.searchKeys[bulkFacetsKey];
-            }
+          //  if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
+          //    response.statusKey = this.searchKeys[bulkFacetsKey];
+           // }
             observer.next(response);
             observer.complete();
           }
@@ -324,6 +357,28 @@ export class ProductService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<Product>>(url, options);
+  }
+
+  getBulkSearch(
+    context: string,
+    id: number,
+    searchOnIdentifiers: boolean = false
+  ): Observable<BulkSearch> {
+    const url = this.configService.configData.apiBaseUrl + 'api/v1/' + context + '/bulkSearch';
+
+    let params = new HttpParams();
+    params = params.append('bulkQID', id);
+    params = params.append('searchOnIdentifiers', searchOnIdentifiers);
+    params = params.append('searchEntity', context);
+
+    params.append('simpleSearchOnly', null);
+    const options = {
+      // eslint-disable-next-line object-shorthand
+      params: params,
+      type: 'JSON',
+      headers: {}
+    };
+    return this.http.get<BulkSearch>(url, options);
   }
 
   // This function is called when doing text search on the facet

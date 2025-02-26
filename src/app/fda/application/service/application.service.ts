@@ -81,7 +81,9 @@ export class ApplicationService extends BaseHttpService {
     searchTerm?: string,
     facets?: FacetParam,
     bulkQID?: number,
-    view?: string
+    view?: string,
+    viewfield?: string,
+    facetlabel?: string
   ): Observable<PagingResponse<Application>> {
     return new Observable(observer => {
 
@@ -126,7 +128,6 @@ export class ApplicationService extends BaseHttpService {
             }, () => {
               observer.complete();
             });
-          //}
 
         }); // subscribe
 
@@ -139,17 +140,25 @@ export class ApplicationService extends BaseHttpService {
         params = params.append('top', pageSize.toString());
         params = params.append('fdim', fdim.toString());
 
-        if (searchTerm !== null && searchTerm !== '') {
-          params = params.append('q', searchTerm);
+        if (view) {
+          params = params.append('view', view); // setting view=key or full, faster result
         }
 
-        if (view !== null && view !== '') {
-          params = params.append('view', view);
+        if (viewfield) {
+          params = params.append('viewfield', viewfield); // setting viewfield=id or facet, faster result
+        }
+
+        if (facetlabel) {
+          params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
+        }
+
+        if (searchTerm) {
+          params = params.append('q', searchTerm);
         }
 
         params = params.appendFacetParams(facets);
 
-        if (order != null && order !== '') {
+        if (order) {
           params = params.append('order', order);
         }
 
@@ -253,9 +262,9 @@ export class ApplicationService extends BaseHttpService {
             );
           } else {
             // consider making API backend provide statusKey in JSON
-            if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
-              response.statusKey = this.searchKeys[bulkFacetsKey];
-            }
+          //  if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
+           //   response.statusKey = this.searchKeys[bulkFacetsKey];
+           // }
             observer.next(response);
             observer.complete();
           }
@@ -366,7 +375,6 @@ export class ApplicationService extends BaseHttpService {
 
     return this.http.get<PagingResponse<Application>>(url, options);
   }
-
 
   getBulkSearch(
     context: string,

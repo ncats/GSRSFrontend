@@ -80,8 +80,11 @@
       </div>
 
       <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == false">
-        <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()" mat-dialog-close>Show
-          {{subEntityDisplay}} Facets</button>
+        <!-- TEMPORARY ONLY ALLOWING LESS THEN 500 records -->
+        <div *ngIf="thisEntityTotalRecords <= 500">
+          <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()" mat-dialog-close>Show
+            {{subEntityDisplay}} Facets</button>
+        </div>
       </div>
     </div> <!-- divflex -->
 

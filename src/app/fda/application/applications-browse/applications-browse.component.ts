@@ -214,8 +214,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       fdim,
       this.privateSearchTerm,
       this.privateFacetParams,
-      this.bulkSearchQueryId,
-      'key'
+      this.bulkSearchQueryId
     ).subscribe(pagingResponse => {
       this.isError = false;
       // Get Bulk Search Status Key and url. The hostname for bulk search result can be different for non-substance entity
@@ -465,48 +464,51 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     // let substanceId: string;
 
     this.applications.forEach((element, index) => {
-      element.applicationProductList.forEach((elementProd, indexProd) => {
 
-        // Sort Product Name by create date descending
-        elementProd.applicationProductNameList.sort((a, b) => {
-          return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
-        });
+      if (element.applicationProductList && element.applicationProductList.length > 0) {
+        element.applicationProductList.forEach((elementProd, indexProd) => {
 
-        elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
-          if (elementIngred.substanceKey != null) {
+          // Sort Product Name by create date descending
+          elementProd.applicationProductNameList.sort((a, b) => {
+            return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
+          });
 
-            const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
-              if (response) {
-                // Get Substance Details, uuid, approval_id, substance name
-                if (elementIngred.substanceKey) {
-                  this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
-                    if (responseInactive) {
-                      elementIngred._substanceUuid = responseInactive.uuid;
-                      elementIngred._ingredientName = responseInactive._name;
-                    }
+          elementProd.applicationIngredientList.forEach((elementIngred, indexIngred) => {
+            if (elementIngred.substanceKey != null) {
+
+              const substanceSubscription = this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(response => {
+                if (response) {
+                  // Get Substance Details, uuid, approval_id, substance name
+                  if (elementIngred.substanceKey) {
+                    this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
+                      if (responseInactive) {
+                        elementIngred._substanceUuid = responseInactive.uuid;
+                        elementIngred._ingredientName = responseInactive._name;
+                      }
+                    });
+                  }
+
+                  // Get Active Moiety - Relationship
+                  /*
+                  this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
+                    relationship = responseRel;
+                    relationship.forEach((elementRel, indexRel) => {
+                      if (elementRel.relationshipName != null) {
+                        elementIngred.activeMoietyName = elementRel.relationshipName;
+                        elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
+                      }
+                    });
                   });
+                  */
                 }
+              });
+              this.subscriptions.push(substanceSubscription);
+            }
+          }); // Ingredient forEach
 
-                // Get Active Moiety - Relationship
-                /*
-                this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
-                  relationship = responseRel;
-                  relationship.forEach((elementRel, indexRel) => {
-                    if (elementRel.relationshipName != null) {
-                      elementIngred.activeMoietyName = elementRel.relationshipName;
-                      elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
-                    }
-                  });
-                });
-                */
-              }
-            });
-            this.subscriptions.push(substanceSubscription);
-          }
-        }); // Ingredient forEach
+        }); // Product forEach
 
-      }); // Product forEach
-
+      }
     }); // Application forEach
 
   }
@@ -624,18 +626,30 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   getSearchIdsOnly(doPerformSearch: boolean) {
 
     if (doPerformSearch) {
-      let idListsTemp: Array<String> = [];
-      this.idLists = [];
 
+      let idListsTemp: Array<string> = [];
+
+      let order = null;
+      let top = 10;
+      let skip = 0;
       let fdim = 1000000;
+      let bulkQID = null;
+      let searchOnIdentifiers = false;
+      let view = 'key';
+      let viewfield = 'facet';
+      let facetlabel = 'Substance UUID';
 
       const subscription = this.applicationService.getApplications(
-        null,
-        0,
-        10,
+        order,
+        skip,
+        top,
         fdim,
         this.privateSearchTerm,
-        this.privateFacetParams
+        this.privateFacetParams,
+        bulkQID,
+        view,
+        viewfield,
+        facetlabel
       )
         .subscribe(pagingResponse => {
           // Get Facets from paging response
@@ -643,23 +657,27 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
             const facets = pagingResponse.facets;
 
             // *** For Cross Entity Search get lists of Substance UUID ***
-            let idListsTemp: Array<string> = [];
             let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
 
             if (facetSubUuid) {
-              facetSubUuid.values.forEach(value => {
+              facetSubUuid.values.forEach((value, index) => {
                 if (value) {
                   if (value.label) {
                     idListsTemp.push(value.label);
                   }
                 }
+
+                // Copy after the last record
+                if (facetSubUuid.values.length == index + 1) {
+                  // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                  this.idLists = idListsTemp;
+                }
               }); // forEach
 
-              // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
-              this.idLists = idListsTemp;
+            } else {
+              this.idLists = [];
             }
-
-          }
+          } // pagingResponse.facets
 
         }, error => {
           console.log('Error during search substance');

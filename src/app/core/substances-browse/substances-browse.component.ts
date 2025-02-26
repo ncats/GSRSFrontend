@@ -1330,7 +1330,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     if (doPerformSearch) {
       let idListsTemp: Array<String> = [];
-      this.idLists = [];
 
       let iterations = 0;
       const skip = 0;
@@ -1356,21 +1355,25 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         viewfield: "id"
         }).subscribe(pagingResponse => {
 
-        if (pagingResponse.content && pagingResponse.content.length > 0) {
+        if (pagingResponse.content) {
           let results: any = pagingResponse.content;
 
           // Loop through each substance and get Substance UUID
-          results.forEach(substanceUuid => {
-            // for Cross Entity Search, add Substance UUID in the temporary list
-            idListsTemp.push(substanceUuid);
-          });
+          if (results.length > 0) {
+            results.forEach((substanceUuid, index) => {
+              // for Cross Entity Search, add Substance UUID in the temporary list
+              idListsTemp.push(substanceUuid);
 
-          // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once,
-          // and pass the idLists to cross entity search component
-          this.idLists = idListsTemp;
-
-        }
-      
+              // Copy after the last record
+              if (results.length == index+1) {
+                // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                this.idLists = idListsTemp;
+              }
+            }); // forEach
+          } else {
+            this.idLists = [];
+          }
+        }  // pagingResponse   
       }, error => {
         console.log('Error during search substance');
       }, () => {
