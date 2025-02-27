@@ -7,10 +7,11 @@ import { Ssg4mSyntheticPathway, Ssg4mSyntheticPathwayDetail } from './model/subs
 import { SubstanceDetail } from '../substance/substance.model';
 import { SubstanceName } from '../substance/substance.model';
 import { SubstanceFormDefinition, SubunitSequence, ValidationResults, ValidationMessage } from '../substance-form/substance-form.model';
-import { Observable, Subject, ReplaySubject, Subscription } from 'rxjs';
+import { Observable, Subject, ReplaySubject, Subscription, concatMap, throwError } from 'rxjs';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { StructureService } from '@gsrs-core/structure';
+import { AuthService } from '@gsrs-core/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,7 @@ export class SubstanceSsg4mService implements OnDestroy {
     public utilsService: UtilsService,
     private structureService: StructureService,
     public http: HttpClient,
+    private authService: AuthService,
     public configService: ConfigService
   ) {
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
@@ -310,7 +312,27 @@ export class SubstanceSsg4mService implements OnDestroy {
     const options = {
       body: ssg4m
     };
-    return this.http.request(method, url, options);
+
+    if (!this.configService.configData.isPfdaVersion) {
+      return this.http.request(method, url, options);
+    } else {
+      return this.authService.getAuth().pipe(
+        concatMap(auth =>
+          auth
+            ? this.http.request(method, url, options)
+            : this.authService.pfdaLogin().pipe(
+              concatMap(success =>
+                success
+                  ? this.http.request(method, url, options)
+                  : throwError(() => ({
+                    type: 'AUTH',
+                    message: 'Authentication failed',
+                  }))
+              )
+            )
+        )
+      );
+    }
   }
 
   validateSsg4m(ssg4m: Ssg4mSyntheticPathway): Observable<ValidationResults> {
