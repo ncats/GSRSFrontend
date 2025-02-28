@@ -24,6 +24,7 @@ import { CvTermDialogComponent } from '@gsrs-core/admin/cv-management/cv-term-di
 import { ScheduledJobsComponent } from '@gsrs-core/admin/scheduled-jobs/scheduled-jobs.component';
 import { ScheduledJobComponent } from '@gsrs-core/admin/scheduled-jobs/scheduled-job/scheduled-job.component';
 import { MomentModule } from 'ngx-moment';
+import { ServiceInformationComponent } from '@gsrs-core/admin/service-information/service-information.component';
 import { UserManagementComponent } from '@gsrs-core/admin/user-management/user-management.component';
 import { UserEditDialogComponent } from '@gsrs-core/admin/user-management/user-edit-dialog/user-edit-dialog.component';
 import { CacheSummaryComponent } from '@gsrs-core/admin/cache-summary/cache-summary.component';
@@ -94,6 +95,7 @@ import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe'
     AdminComponent,
     CvTermDialogComponent,
     ScheduledJobComponent,
+    ServiceInformationComponent,
     UserManagementComponent,
     UserEditDialogComponent,
     CacheSummaryComponent,
