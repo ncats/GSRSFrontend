@@ -47,6 +47,10 @@ export class ControlledVocabularyService extends BaseHttpService {
     return this.http.get<PagingResponse<Vocabulary>>(url, options);
   }
 
+  clearVocabDictionary(): void {
+    this.vocabularyDictionary = {};
+  }
+
   getDomainVocabulary(...domainArgs: Array<string>): Observable<VocabularyDictionary> {
 
     const domains = [...domainArgs];
@@ -55,12 +59,24 @@ export class ControlledVocabularyService extends BaseHttpService {
     const tasks$ = [];
 
     domains.forEach(domain => {
-
+      if (domain === 'CODE_SYSTEM'){
+        console.log(this.vocabularyDictionary[domain] );
+        console.log(this.vocabularySubject[domain]);
+        console.log(this.vocabularyLoadingIndicators[domain]);
+      }
       if (this.vocabularyDictionary[domain] != null) {
+        
         vocabularyDictionary[domain] = this.vocabularyDictionary[domain];
       } else if (this.vocabularyLoadingIndicators[domain] === true) {
+        if (domain === 'CODE_SYSTEM'){
+          console.log('indicator true');
+        }
         tasks$.push(this.vocabularySubject[domain]);
       } else {
+        if (domain === 'CODE_SYSTEM'){
+          console.log('else');
+          
+        }
         this.vocabularyLoadingIndicators[domain] = true;
         if (this.vocabularySubject[domain] == null) {
           this.vocabularySubject[domain] = new Subject();
@@ -77,7 +93,12 @@ export class ControlledVocabularyService extends BaseHttpService {
       if (tasks$.length > 0) {
         const subscription = forkJoin(tasks$).subscribe(responses => {
           responses.forEach(response => {
+            console.log(response);
+            
             vocabularyDictionary = Object.assign(vocabularyDictionary, response);
+            if(response['CODE_SYSTEM']) {
+              console.log(vocabularyDictionary);
+            }
           });
           observer.next(vocabularyDictionary);
           observer.complete();
