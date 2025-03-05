@@ -59,18 +59,15 @@ export class ControlledVocabularyService extends BaseHttpService {
     const tasks$ = [];
 
     domains.forEach(domain => {
-      if (domain === 'CODE_SYSTEM'){
+      console.log(domain);
         console.log(this.vocabularyDictionary[domain] );
         console.log(this.vocabularySubject[domain]);
         console.log(this.vocabularyLoadingIndicators[domain]);
-      }
+      
       if (this.vocabularyDictionary[domain] != null) {
         
         vocabularyDictionary[domain] = this.vocabularyDictionary[domain];
-      } else if (this.vocabularyLoadingIndicators[domain] === true) {
-        if (domain === 'CODE_SYSTEM'){
-          console.log('indicator true');
-        }
+      } else if (this.vocabularyLoadingIndicators[domain] === true && domain !== "CODE_SYSTEM") {
         tasks$.push(this.vocabularySubject[domain]);
       } else {
         if (domain === 'CODE_SYSTEM'){
@@ -86,24 +83,26 @@ export class ControlledVocabularyService extends BaseHttpService {
     });
 
     return new Observable(observer => {
+      console.log(missingDomains);
       if (missingDomains.length > 0) {
         tasks$.push(this.fetchVocabulariesFromServer(...missingDomains));
       }
-
+      console.log(tasks$.length);
       if (tasks$.length > 0) {
         const subscription = forkJoin(tasks$).subscribe(responses => {
           responses.forEach(response => {
             console.log(response);
             
             vocabularyDictionary = Object.assign(vocabularyDictionary, response);
-            if(response['CODE_SYSTEM']) {
+           
               console.log(vocabularyDictionary);
-            }
+            
           });
           observer.next(vocabularyDictionary);
           observer.complete();
           subscription.unsubscribe();
         }, error => {
+          console.log(error);
           observer.error(error);
           observer.complete();
           subscription.unsubscribe();
