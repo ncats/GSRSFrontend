@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationExtras, RouterModule } from '@angular/router';
 import { FileSelectModule } from 'file-select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { NitrosamineDisplayModule } from '@gsrs-core/nitrosamine-standalone/nitrosamine-display/nitrosamine-display.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatProgressBarModule,
     MatButtonModule,
     RouterModule,
-    FileSelectModule
+    FileSelectModule,
+    NitrosamineDisplayModule
   ],
   exports: [
     StructureExportComponent,

@@ -15,9 +15,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NitrosamineDisplayComponent } from './nitrosamine-display/nitrosamine-display.component';
+import { NitrosamineDisplayComponent } from '../../nitrosamine-standalone/nitrosamine-display/nitrosamine-display.component';
 import { NitrosamineDisplayDialogComponent } from './nitrosamine-display-dialog/nitrosamine-display-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { NitrosamineDisplayModule } from '@gsrs-core/nitrosamine-standalone/nitrosamine-display/nitrosamine-display.module';
 
 @NgModule({
   imports: [
@@ -36,11 +37,11 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatButtonModule,
     MatTableModule,
     MatExpansionModule,
-    MatDialogModule
+    MatDialogModule,
+    NitrosamineDisplayModule
   ],
   declarations: [
     SubstanceFormStructureCardComponent,
-    NitrosamineDisplayComponent,
     NitrosamineDisplayDialogComponent,
   ]
 })

@@ -1,6 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
-import { SubstanceFormStructureService } from '../substance-form-structure.service';
+import { SubstanceFormStructureService } from '../../substance-form/structure/substance-form-structure.service';
 import { StructureService } from '@gsrs-core/structure';
 
 @Component({

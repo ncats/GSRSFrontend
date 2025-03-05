@@ -8,15 +8,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class NitrosamineDisplayDialogComponent implements OnInit {
 structure: any;
-    @Inject(MAT_DIALOG_DATA) public data: any
 
   constructor(
         public dialogRef: MatDialogRef<NitrosamineDisplayDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    this.structure = (this.data && this.data.structure) ? this.data.structure : null;
-    console.log(this.structure);
+    this.structure = (this.data && this.data.structure && this.data.structure.smiles) ? this.data.structure.smiles : null;
   }
 
   dismissDialog(): void {

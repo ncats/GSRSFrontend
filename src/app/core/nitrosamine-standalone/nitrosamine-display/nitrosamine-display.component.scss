@@ -164,3 +164,24 @@ body {
 .spacer {
     height: 12px;  /* Adjustable height for extra spacing */
 }
+
+.label {
+    width: 160px;
+    padding: 5px;
+    min-width: 160px !important;
+}
+
+.value {
+    padding: 5px;
+}
+
+#potency {
+    font-weight: bold;
+}
+
+.result-row {
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+}

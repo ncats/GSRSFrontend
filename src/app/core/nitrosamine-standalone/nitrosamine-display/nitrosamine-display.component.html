@@ -11,11 +11,13 @@
                 <button type="submit" [disabled] = "buttonPressed" (click) = "dummyEvaluateSmiles()">{{buttonPressed ? "Evaluating...":"Evaluate Structure"}}</button>
             </div>
             <div class="results-panel" id="resultsPanel">
-                <div id="structureDetails" *ngIf = "structureDetails && structureDetails !== ''">
-                    <strong>Structure Details:</strong><br>{{details}}
+                <div class = "result-row" *ngIf = "potencyScore">
+                    <div class = "label">Potency Score:</div>
+                    <div class = "value" id = "potency">{{potencyScore}}</div>
                 </div>
-                <div id="potencyScore" *ngIf = "potencyScore">
-                    <strong>Potency Score:</strong> {{potencyScore}}
+                <div class = "result-row" *ngIf = "structureDetails && structureDetails !== ''">
+                    <div class = "label">Structure Details:</div>
+                    <div class = "value">{{structureDetails}}</div>
                 </div>
             </div>
         </div>
