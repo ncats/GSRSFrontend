@@ -21,6 +21,7 @@ import { StructureEditorComponent } from '@gsrs-core/structure-editor';
 import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { MatTableDataSource } from '@angular/material/table';
+import { NitrosamineDisplayDialogComponent } from './nitrosamine-display-dialog/nitrosamine-display-dialog.component';
 
 @Component({
   selector: 'app-substance-form-structure-card',
@@ -441,5 +442,24 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
   fixLink(link: string) {
     return this.substanceService.oldLinkFix(link);
+  }
+
+  openNitrosamineModal(): void {
+
+    const dialogRef = this.dialog.open(NitrosamineDisplayDialogComponent, {
+      maxHeight: '80%',
+      width: 'auto',
+      data: {
+        structure: this.structure.id
+      }
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 }

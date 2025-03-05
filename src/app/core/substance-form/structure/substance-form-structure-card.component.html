@@ -102,8 +102,15 @@
       </button>
     </div>
   </div>
+  <div class="button-row">
+    <span class = "middle-fill"></span>
+    <button mat-button color="primary" matTooltip="CPCA Calculator"
+    (click)="openNitrosamineModal()">
+   <!--<mat-icon svgIcon="zoom_in"></mat-icon> --> 
+    View CPCA Calculator
+  </button>
+  </div>
   
-<app-nitrosamine-display [structure]="structure"></app-nitrosamine-display>
 
 
   <app-structure-form [structure]="structure" showSettings="true" [type]="substanceType">

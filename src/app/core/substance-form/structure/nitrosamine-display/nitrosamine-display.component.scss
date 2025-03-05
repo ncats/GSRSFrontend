@@ -43,8 +43,8 @@ body {
     justify-content: center; 
 }
 .result-box {
-    border: 2px solid #4CAF50;
-    background-color: #f1f8e9;
+    border: 2px solid  var(--primary-color);
+    background-color: var(--body-bg-color);
     padding: 15px;
     width: 250px;
     text-align: center;
@@ -138,7 +138,7 @@ body {
     font-family: monospace;
 }
 .form-group button {
-    background-color: #4CAF50;
+    background-color:  var(--primary-color);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -147,7 +147,8 @@ body {
     font-size: 16px;
 }
 .form-group button:hover {
-    background-color: #45a049;
+    background-color: var(--primary-color);
+
 }
 .results-panel {
     margin-top: 15px;
@@ -161,5 +162,5 @@ body {
     margin-bottom: 40px;  /* Adds extra space after the third box */
 }
 .spacer {
-    height: 40px;  /* Adjustable height for extra spacing */
+    height: 12px;  /* Adjustable height for extra spacing */
 }

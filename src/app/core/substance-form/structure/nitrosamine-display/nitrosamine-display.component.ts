@@ -42,6 +42,9 @@ export class NitrosamineDisplayComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    if (this.privateSmiles) {
+      this.smilesInput = this.privateSmiles;
+    }
   }
 
   // Function to highlight a box
