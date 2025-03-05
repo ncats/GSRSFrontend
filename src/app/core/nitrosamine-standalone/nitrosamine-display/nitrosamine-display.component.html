@@ -8,7 +8,7 @@
                        placeholder="e.g., CN(N=O)C1=CC=NC=C1" required>
             </div>
             <div class="form-group">
-                <button type="submit" [disabled] = "buttonPressed" (click) = "dummyEvaluateSmiles()">{{buttonPressed ? "Evaluating...":"Evaluate Structure"}}</button>
+                <button type="submit" [disabled] = "buttonPressed" (click) = "evaluateSmiles()">{{buttonPressed ? "Evaluating...":"Evaluate Structure"}}</button>
             </div>
             <div class="results-panel" id="resultsPanel">
                 <div class = "result-row" *ngIf = "potencyScore">
