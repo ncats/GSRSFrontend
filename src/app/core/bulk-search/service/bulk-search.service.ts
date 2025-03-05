@@ -515,9 +515,16 @@ export class BulkSearchService extends BaseHttpService {
     return this.http.get<any>(url);
   }
 
-  editKeysBulkSearchLists(name: string, list: string, operation: string) {
+  editKeysBulkSearchLists(name: string, list: string, operation: string, userName?: string) {
     // Add or remove keys from a list
-    const url = this.apiBaseUrl + `substances/@userList/currentUser?keys=${list}&listName=${name}&operation=${operation}`;
+    let type = "currentUser";
+    if (userName) {
+      type = "otherUser";
+    }
+    let url = this.apiBaseUrl + `substances/@userList/${type}?keys=${list}&listName=${name}&operation=${operation}`;
+    if (userName) {
+      url +=  "&userName=" + userName;
+    }
     return this.http.put<any>(url, list);
   }
 
