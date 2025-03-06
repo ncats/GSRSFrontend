@@ -87,6 +87,7 @@ export interface Config {
     structureEditSearch?: boolean;
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
+    nitrosamineDisplay?: boolean;
 }
 
 export interface StagingAreaSettings {

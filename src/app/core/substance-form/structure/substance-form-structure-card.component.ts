@@ -58,6 +58,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     'Type',
     'TYPE'
   ];
+  showNitrosamineButton = false;
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
 
   constructor(
@@ -86,6 +87,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       (this.configService.configData.structureEditSearch !== undefined && 
         this.configService.configData.structureEditSearch !== null)) {
       this.structureEditSearch = this.configService.configData.structureEditSearch;
+    }
+
+    if (this.configService.configData && 
+      (this.configService.configData.nitrosamineDisplay !== undefined && 
+        this.configService.configData.nitrosamineDisplay !== null)) {
+      this.showNitrosamineButton = this.configService.configData.nitrosamineDisplay;
     }
 
     if (this.configService.configData && 

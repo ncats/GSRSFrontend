@@ -102,7 +102,7 @@
       </button>
     </div>
   </div>
-  <div class="button-row">
+  <div class="button-row" *ngIf = "showNitrosamineButton">
     <span class = "middle-fill"></span>
     <button mat-button color="primary" matTooltip="CPCA Calculator"
     (click)="openNitrosamineModal()">
