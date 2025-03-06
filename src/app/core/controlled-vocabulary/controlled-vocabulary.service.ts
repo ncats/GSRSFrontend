@@ -67,7 +67,7 @@ export class ControlledVocabularyService extends BaseHttpService {
       if (this.vocabularyDictionary[domain] != null) {
         
         vocabularyDictionary[domain] = this.vocabularyDictionary[domain];
-      } else if (this.vocabularyLoadingIndicators[domain] === true && domain !== "CODE_SYSTEM") {
+      } else if (this.vocabularyLoadingIndicators[domain] === true) {
         tasks$.push(this.vocabularySubject[domain]);
       } else {
         if (domain === 'CODE_SYSTEM'){
