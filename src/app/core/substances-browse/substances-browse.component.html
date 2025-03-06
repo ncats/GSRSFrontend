@@ -303,14 +303,14 @@
 
         </div>
 
-        <div class="search-parameters">
-          <!-- Cross Entity/Sub-Entity Search selected Facets -->
-          <div class="margintop20px" *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0">
-            <fieldset class="fieldset-crosssearch">
-              <legend class="legend-crosssearch">Cross Entity Search : <b>{{subEntity}}</b></legend>
+        <!-- Cross Entity/Sub-Entity Search selected Facets BEGIN -->
+        <div class="margintop10px" *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0">
+          <fieldset class="fieldset-crosssearch">
+            <legend class="legend-crosssearch">Cross Entity Search : <b>{{subEntity}}</b></legend>
 
-              <div class="controls-container">
-                <div class="mat-elevation-z2 selected-parameter marginright10px" *ngFor="let facet of subEntityDisplayFacets">
+            <div class="search-parameters">
+              <div class="marginleftneg10">
+                <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of subEntityDisplayFacets">
                   <div class='selected-parameter-crosssearch'>
                     <span class="selected-label">
                       <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
@@ -321,20 +321,16 @@
                     </span>
                   </div>
                 </div>
+
                 <!-- Edit button -->
-                <div class="">
-                  <!--
-                  <button mat-icon-button color="primary" (click)="editSubEntitySearch()">
-                    <mat-icon svgIcon="edit" tooltip="Go to Sub Entity Search"></mat-icon>
-                  </button>
-                  -->
-                </div>
+                <button mat-icon-button color="primary" (click)="editSubEntitySearch()">
+                  <mat-icon svgIcon="edit" tooltip="Edit Cross Entity Search"></mat-icon>
+                </button>
               </div>
-            </fieldset>
-          </div>
+            </div> <!-- class=search-parameters -->
+          </fieldset>
         </div>
         <!-- CROSS ENTITY SEARCH - FACET SELECTED DISPLAY END -->
-
 
       </ng-template>
 

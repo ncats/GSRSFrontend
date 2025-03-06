@@ -19,10 +19,10 @@ import { FacetParam } from '@gsrs-core/facets-manager/facet.model';
 import { FacetHttpParams } from '@gsrs-core/facets-manager/facet-http-params';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { switchMap, map, catchError, takeWhile } from 'rxjs/operators';
-import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model';
-import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
+import { ValidationResults } from '@gsrs-core/substance-form/substance-form.model';
+import { Facet, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
-import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
+import { HierarchyNode } from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
 
 import { stringify } from 'querystring';
@@ -58,203 +58,149 @@ export class CrossEntitySearchService extends BaseHttpService {
   private pauseSubject = new BehaviorSubject<boolean>(false);
   tempObject: any;
 
-  constructor(  
+  constructor(
     public http: HttpClient,
     public configService: ConfigService,
-    private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
   ) {
     super(configService);
   }
 
-  searchSubstanceBulk(
-    //    bulkSearchTerm?: string,
-    querySearchTerm?: string,
-    bulkQID?: number,
-    searchOnIdentifiers?: boolean,
-    searchEntity?: string,
-    cutoff?: number,
-    type: string = 'bulk',
-    pageSize: number = 10,
-    facets?: FacetParam,
-    order?: string,
-    skip: number = 0,
-  ): Observable<PagingResponse<SubstanceSummary>> {
-    return new Observable(observer => {
-      let params = new FacetHttpParams({ encoder: new CustomEncoder() });
-      let url = this.apiBaseUrl;
-      let bulkFacetsKey: number;
-      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
-      if (this.searchKeys[bulkFacetsKey]) {
-        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
-        params = params.appendFacetParams(facets, this.showDeprecated);
-        if (querySearchTerm.length > 0) {
-          params = params.appendDictionary({
-            top: pageSize.toString(),
-            skip: skip.toString(),
-            q: querySearchTerm.toString()
-          });
-        } else {
-          params = params.appendDictionary({
-            top: pageSize.toString(),
-            skip: skip.toString()
-          });
+  getBulkSearchUrl(searchEntity: string, useServiceInUrl: boolean = false): string {
+
+    let url = this.apiBaseUrl;
+
+    if (searchEntity !== 'substances') {
+      if (useServiceInUrl == true) {
+        let apiAddUrlPrefixToBackendUrls = '/ginas/app';
+        if (url.indexOf(apiAddUrlPrefixToBackendUrls) > 0) {
+          apiAddUrlPrefixToBackendUrls = '';
         }
-        if (order != null && order !== '') {
-          params = params.append('order', order);
-        }
-      } else {
-        params = params.append('bulkQID', bulkQID.toString());
-        let v = "false";
-        if (searchOnIdentifiers === true) { v = "true"; }
-        params = params.append('searchOnIdentifiers', v);
-        params = params.append('searchEntity', searchEntity);
-        url += `substances/bulkSearch`;
+        url = url.replace('/api/v1/', apiAddUrlPrefixToBackendUrls + '/service/' + searchEntity + '/api/v1/');
       }
+    }
+    return url;
+  }
+
+  // Using this for Cross Entity Search
+  getBulkSearchWithFacets(
+    searchEntity?: string,
+    bulkQID?: number,
+    url = null,
+    searchOnIdentifiers?: boolean,
+    facets?: FacetParam,
+    view?: string,
+    useServiceInUrl: boolean = false,
+    querySearchTerm?: string,
+    pageSize: number = 10,
+    skip: number = 0,
+    order?: string
+  ): Observable<PagingResponse<any>> {
+    return new Observable(observer => {
+
+      url = this.getBulkSearchUrl(searchEntity, useServiceInUrl);
+      if (url) {
+        url += searchEntity + `/bulkSearch`;
+      }
+
+      let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+
+      // Append Facets if exists
+      params = params.appendFacetParams(facets, this.showDeprecated);
+
+      // call entity/bulkSearch
+      params = params.append('bulkQID', bulkQID.toString());
+      let v = "false";
+      if (searchOnIdentifiers === true) { v = "true"; }
+      params = params.append('searchOnIdentifiers', v);
+      params = params.append('searchEntity', searchEntity);
+
 
       const options = {
         params: params
       };
 
+      // RETURN RESULTS for either API call bulkSearch or status(<key>)/results
       this.http.get<any>(url, options).subscribe(
         response => {
-          // call async
+          // call async until finished is not equal to true
           if (response.results) {
             const resultKey = response.key;
-            this.searchKeys[bulkFacetsKey] = resultKey;
-            this.processAsyncSearchResults(
-              querySearchTerm,
-              url,
-              response,
-              observer,
-              resultKey,
-              options,
-              pageSize,
-              facets,
-              skip
-            );
-          } else {
-            // consider making API backend provide statusKey in JSON
-            if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
-              response.statusKey = this.searchKeys[bulkFacetsKey];
+            const resultUrl = response.results;
+            const resultFinished = response.finished;
+
+            if (resultFinished == false) {
+            } // if search not finished
+
+            else if (resultFinished) {
             }
+
             observer.next(response);
             observer.complete();
+
           }
         }, error => {
           observer.error(error);
           observer.complete();
         }
-      );
+      );  // subscribe 
     });
   }
 
-  private processAsyncSearchResults(
-    querySearchTerm: string,
-    url: string,
-    asyncCallResponse: any,
-    observer: Observer<PagingResponse<SubstanceDetail>>,
-    searchKey: string,
-    httpCallOptions: any,
-    pageSize?: number,
-    facets?: FacetParam,
-    skip?: number,
-    view?: string
-  ): void {
-    this.tempObject = {
-      querySearchTerm: querySearchTerm,
-      url: url,
-      asyncCallResponse: asyncCallResponse,
-      observer: observer,
-      searchKey: searchKey,
-      httpCallOptions: httpCallOptions,
-      pageSize: pageSize ? pageSize : 0,
-      facets: facets ? facets : null,
-      skip: skip ? skip : 0,
-      view: view ? view : null
-    }
-    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view)
-      .pipe(
-        switchMap(response => {
-          let temp: any = response;
-          temp.statusKey = searchKey;
-          temp.finished = asyncCallResponse.finished;
-          observer.next(temp);
-
-          if (asyncCallResponse.finished) {
-            observer.complete();
-            return [];
-          }
-
-          return this.http.get<any>(url, httpCallOptions).pipe(
-            takeWhile(() => !this.pauseSubject.getValue()) // Pause search in browse
-          );
-        })
-      )
-      .subscribe(
-        searchResponse => {
-          setTimeout(() => {
-            this.processAsyncSearchResults(
-              querySearchTerm,
-              url,
-              searchResponse,
-              observer,
-              searchKey,
-              httpCallOptions,
-              pageSize,
-              facets,
-              skip,
-              view
-            );
-          });
-        },
-        error => {
-          observer.error(error);
-          observer.complete();
-        }
-      );
-  }
-
-  private getAsyncSearchResults(
-    querySearchTerm: string,
-    // this is a status
-    structureSearchKey: string,
-    pageSize?: number,
-    facets?: FacetParam,
-    skip?: number,
-    view?: string
+  public getBulkSearchResults(
+    searchEntity?: string,
+    key?: number,
+    url?: string,
+    fdim: number = 10,
+    view?: string,
+    viewfield?: string,
+    facetlabel?: string,
+    useServiceInUrl: boolean = false,
+    simpleSearchOnly?: string,
+    pageSize: number = 10,
+    skip: number = 0
   ): any {
-    const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
-    let params = new FacetHttpParams({encoder: new CustomEncoder()});
 
-    params = params.appendFacetParams(facets, this.showDeprecated);
+    url = this.getBulkSearchUrl(searchEntity, useServiceInUrl);
 
-    // remove this when async backend issue is fixed
-    const random_key = Math.random().toString(36).replace('0.', '');
+    if (url) {
+      url = `${url}status(${key})/results`;
+    }
+
+    let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+
     params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
+
+    //params = params.appendFacetParams(facets);
 
     params = params.appendDictionary({
       top: pageSize.toString(),
       skip: skip.toString(),
-      view: view || ''
+      fdim: fdim.toString(),
     });
 
-    // Added for 3.0.2, Advanced Search:Combine structure Search with query search.
-    if (querySearchTerm != null && querySearchTerm !== '') {
-      params = params.append('q', querySearchTerm);
+    if (simpleSearchOnly) {
+      params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+    }
+
+    if (view && view !== '') {
+      params = params.append('view', view); // setting view=key or full, faster result
+    }
+
+    if (viewfield && viewfield !== '') {
+      params = params.append('viewfield', viewfield); // setting viewfield=id or facet, faster result
+    }
+
+    if (facetlabel && facetlabel !== '') {
+      params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
     }
 
     const options = {
       params: params
     };
 
-    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
-  }
-
-  clearSearchKey() {
-    Object.keys(this.searchKeys).forEach(key => {
-      this.searchKeys[key] = undefined;
-    });
+    return this.http.get<PagingResponse<any>>(url, options);
   }
 
 }
+

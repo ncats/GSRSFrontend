@@ -55,6 +55,22 @@ export class ProductService extends BaseHttpService {
     super(configService);
   }
 
+  getBulkSearchUrl(searchEntity: string, useServiceInUrl: boolean = false): string {
+
+    let url = this.apiBaseUrl;
+
+    if (searchEntity !== 'substances') {
+      if (useServiceInUrl == true) {
+        let apiAddUrlPrefixToBackendUrls = '/ginas/app';
+        if (url.indexOf(apiAddUrlPrefixToBackendUrls) > 0) {
+          apiAddUrlPrefixToBackendUrls = '';
+        }
+        url = url.replace('/api/v1/', apiAddUrlPrefixToBackendUrls + '/service/' + searchEntity + '/api/v1/');
+      }
+    }
+    return url;
+  }
+
   getProducts(
     order: string,
     skip: number = 0,
@@ -66,33 +82,12 @@ export class ProductService extends BaseHttpService {
     searchOnIdentifiers?: boolean,
     view?: string,
     viewfield?: string,
-    facetlabel?: string
+    facetlabel?: string,
+    simpleSearchOnly?: boolean
   ): Observable<PagingResponse<Product>> {
     return new Observable(observer => {
 
       if (bulkQID != null && bulkQID.toString() != '') {
-
-        // Need this due to hostname issue. The Bulk Search MUST execute using 8083 locally for 
-        // bulk Search Result Status to work.
-        let url = this.apiBaseUrlWithProductEntityUrl + `bulkSearch`;
-
-        let generatingUrl = null;
-        let isHostDifferent: boolean = false;
-
-        let genUrl = null;
-        this.getBulkSearch('products', bulkQID, false).subscribe(response => {
-
-          if (response) {
-            if (response.generatingUrl) {
-              generatingUrl = response.generatingUrl;
-              let genUrl = new URL(generatingUrl);
-              let origUrl = new URL(url);
-
-              if (origUrl.host !== genUrl.host) {
-                isHostDifferent = true;
-              }
-            }
-          }
 
           // Perform bulk search
           this.productBulkSearch(
@@ -103,8 +98,7 @@ export class ProductService extends BaseHttpService {
             top,
             facets,
             order,
-            skip,
-            generatingUrl
+            skip
           ).subscribe(response => {
             observer.next(response);
           }, error => {
@@ -113,9 +107,9 @@ export class ProductService extends BaseHttpService {
             observer.complete();
           });
 
-        }); // subscribe
+        //}); // subscribe
+
       } else {
-        //const url = 'http://localhost:8084/api/v1/products/search';
         const url = this.apiBaseUrlWithProductEntityUrl + 'search';
 
         let params = new FacetHttpParams();
@@ -134,6 +128,10 @@ export class ProductService extends BaseHttpService {
 
         if (facetlabel) {
           params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
+        }
+
+        if (simpleSearchOnly) {
+          params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // if setting simpleSearchOnly=true, do not return facets
         }
 
         if (searchTerm) {
@@ -175,59 +173,27 @@ export class ProductService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
-    url?: string
   ): Observable<PagingResponse<Product>> {
     return new Observable(observer => {
       let params = new FacetHttpParams({ encoder: new CustomEncoder() });
 
-      // let url = this.configService.configData.apiBaseUrl + '/api/v1/';
+      let url = this.getBulkSearchUrl(searchEntity, true);
 
-      if (!url) {
-        url = this.apiBaseUrlWithProductEntityUrl + `bulkSearch`;
-
-        params = params.append('bulkQID', bulkQID.toString());
-        let v = "false";
-        if (searchOnIdentifiers === true) { v = "true"; }
-        params = params.append('searchOnIdentifiers', v);
-        params = params.append('searchEntity', searchEntity);
+      if (url) {
+        url = url + `${this.entity}/bulkSearch`;
+      } else {
+        url = this.configService.configData.apiBaseUrl + 'api/v1/' + this.entity + '/bulkSearch';
       }
+
+      params = params.append('bulkQID', bulkQID.toString());
+      let v = "false";
+      if (searchOnIdentifiers === true) { v = "true"; }
+      params = params.append('searchOnIdentifiers', v);
+      params = params.append('searchEntity', searchEntity);
 
       const options = {
         params: params
       };
-
-      /*
-      let bulkFacetsKey: number;
-      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
-
-      if (this.searchKeys[bulkFacetsKey]) {
-        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
-        params = params.appendFacetParams(facets, this.showDeprecated);
-        if (querySearchTerm.length > 0) {
-          params = params.appendDictionary({
-            top: pageSize.toString(),
-            skip: skip.toString(),
-            q: querySearchTerm.toString()
-          });
-        } else {
-          params = params.appendDictionary({
-            top: pageSize.toString(),
-            skip: skip.toString()
-          });
-        }
-        if (order != null && order !== '') {
-          params = params.append('order', order);
-        }
-      } else {
-
-        params = params.append('bulkQID', bulkQID.toString());
-        let v = "false";
-        if (searchOnIdentifiers === true) { v = "true"; }
-        params = params.append('searchOnIdentifiers', v);
-        params = params.append('searchEntity', searchEntity);
-        url += `bulkSearch`;
-      }
-      */
 
       this.http.get<any>(url, options).subscribe(
         response => {
@@ -236,6 +202,7 @@ export class ProductService extends BaseHttpService {
             const resultKey = response.key;
 
             this.processAsyncSearchResults(
+              searchEntity,
               querySearchTerm,
               url,
               response,
@@ -247,10 +214,6 @@ export class ProductService extends BaseHttpService {
               skip
             );
           } else {
-            // consider making API backend provide statusKey in JSON
-          //  if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
-          //    response.statusKey = this.searchKeys[bulkFacetsKey];
-           // }
             observer.next(response);
             observer.complete();
           }
@@ -263,6 +226,7 @@ export class ProductService extends BaseHttpService {
   }
 
   private processAsyncSearchResults(
+    searchEntity: string,
     querySearchTerm: string,
     url: string,
     asyncCallResponse: any,
@@ -276,6 +240,7 @@ export class ProductService extends BaseHttpService {
   ): void {
     // Get Buk Search Results
     this.getAsyncSearchResults(
+      searchEntity,
       querySearchTerm,
       searchKey,
       pageSize,
@@ -296,6 +261,7 @@ export class ProductService extends BaseHttpService {
             setTimeout(() => {
 
               this.processAsyncSearchResults(
+                searchEntity,
                 querySearchTerm,
                 url,
                 searchResponse,
@@ -323,6 +289,7 @@ export class ProductService extends BaseHttpService {
   }
 
   private getAsyncSearchResults(
+    searchEntity: string,
     querySearchTerm: string,
     searchKey: string,
     pageSize?: number,
@@ -332,7 +299,11 @@ export class ProductService extends BaseHttpService {
     url?: string
   ): any {
 
-    if (!url) {
+    url = this.getBulkSearchUrl(searchEntity, true);
+
+    if (url) {
+      url = `${url}status(${searchKey})/results`;
+    } else {
       url = `${this.configService.configData.apiBaseUrl}api/v1/status(${searchKey})/results`;
     }
 
@@ -359,26 +330,53 @@ export class ProductService extends BaseHttpService {
     return this.http.get<PagingResponse<Product>>(url, options);
   }
 
+  /*
   getBulkSearch(
     context: string,
     id: number,
-    searchOnIdentifiers: boolean = false
+    searchOnIdentifiers: boolean = false,
+    facets?: FacetParam
   ): Observable<BulkSearch> {
     const url = this.configService.configData.apiBaseUrl + 'api/v1/' + context + '/bulkSearch';
 
-    let params = new HttpParams();
-    params = params.append('bulkQID', id);
-    params = params.append('searchOnIdentifiers', searchOnIdentifiers);
+    //let params = new HttpParams();
+    let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+
+    params = params.append('bulkQID', id.toString());
+    params = params.append('searchOnIdentifiers', searchOnIdentifiers.toString());
     params = params.append('searchEntity', context);
 
     params.append('simpleSearchOnly', null);
+
+    params = params.appendFacetParams(facets);
+
     const options = {
-      // eslint-disable-next-line object-shorthand
       params: params,
       type: 'JSON',
       headers: {}
     };
+
     return this.http.get<BulkSearch>(url, options);
+  }
+  */
+
+  getProductFacetWithSearchCriteria(facetName?: string, facets?: FacetParam, querySearchTerm?: string, fdim?: number): Observable<FacetQueryResponse> {
+    let url: string;
+
+    let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+    params = params.appendFacetParams(facets);
+
+    if (querySearchTerm != null && querySearchTerm !== '') {
+      params = params.append('q', querySearchTerm);
+    }
+
+    url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=${fdim}&field=${facetName.replace(' ', '+')}&top=10&fskip=0&fetch=1000000`;
+
+    const options = {
+      params: params
+    };
+
+    return this.http.get<FacetQueryResponse>(url, options);
   }
 
   // This function is called when doing text search on the facet

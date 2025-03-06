@@ -5,9 +5,10 @@
 
     <!-- Cross Entity Search to search between Application and Substance -->
     <span *ngIf="showCrossEntitySearch == true">
-      <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [searchTerm]="searchTerm"
-        [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
-        [entityTotalRecords]="totalApplications" (getSearchIdsOnly)="getSearchIdsOnly($event)">
+      <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [secondIdLists]="secondIdLists"
+        [searchTerm]="searchTerm" [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
+        [entityTotalRecords]="totalApplications" [editSubEntitySearchHash]="editSubEntitySearchHash"
+        (getSearchIdsOnly)="getSearchIdsOnly($event)">
       </app-cross-entity-search>
     </span>
 
@@ -24,11 +25,11 @@
       </button>
 
       <!-- BULK SEARCH RESULTS BEGIN -->
-      <div *ngIf="bulkSearchQueryId && bulkSearchStatusKey">
+      <div class="marginbottom20px" *ngIf="bulkSearchQueryId && bulkSearchStatusKey">
         <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true"
           (closed)="bulkSearchPanelOpen = false"
           style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
-          
+
           <mat-expansion-panel-header>
             <mat-panel-title>
               <div>Bulk Search Summary (Full Results)</div>
@@ -47,20 +48,14 @@
               Bulk Search
             </div>
 
-            <app-bulk-search-results-summary 
-              showTitle=false 
-              loadSummaries=true 
-              context="applications"
-              [key]="bulkSearchStatusKey" 
-              [isCollapsed]="isBulkSearchCollapsed"
-              [searchStatusUrl]="searchStatusUrl">
+            <app-bulk-search-results-summary showTitle=false loadSummaries=true context="applications"
+              [key]="bulkSearchStatusKey" [isCollapsed]="isBulkSearchCollapsed" [searchStatusUrl]="searchStatusUrl">
             </app-bulk-search-results-summary>
 
           </div>
         </mat-expansion-panel>
       </div>
       <!-- Bulk Search END -->
-
 
       <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
       <div class="narrow-search-suggestions-container"
@@ -153,6 +148,37 @@
             <span>RESET</span>
           </button>
         </div>
+
+        <!-- Cross Entity/Sub-Entity Search selected Facets BEGIN -->
+        <div class="margintop10px" *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0">
+          <fieldset class="fieldset-crosssearch">
+            <legend class="legend-crosssearch">Cross Entity Search : <b>{{subEntity}}</b></legend>
+
+            <div class="search-parameters">
+              <div class="marginleftneg10">
+                <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of subEntityDisplayFacets">
+                  <div class='selected-parameter-crosssearch'>
+                    <span class="selected-label">
+                      <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                      {{facet.type}}:
+                    </span>
+                    <span class="no-break selected-value">
+                      {{facet.val}}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Edit button -->
+                <button mat-icon-button color="primary" matTooltip="Edit Cross Entity Search"
+                  (click)="editSubEntitySearch()">
+                  <mat-icon svgIcon="edit"></mat-icon>
+                </button>
+              </div>
+            </div> <!-- class=search-parameters -->
+          </fieldset>
+        </div>
+        <!-- CROSS ENTITY SEARCH - FACET SELECTED DISPLAY END -->
+
       </ng-template>
 
       <!-- Title, Export, Pagination -->
