@@ -98,13 +98,19 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // Cross Entity Search
   thisEntity: string = "products";
+  subEntity = null;
+  subEntitySearchTerm = null;
   showCrossEntitySearch = false;
   searchOnIdentifiers = false;
   bulkSearchPanelOpen = false;
   bulkSearchStatusKey: string;
   searchStatusUrl: string;
+  subEntitySearchHash: string;
+  editSubEntitySearchHash: any;
   bulkSearchQueryId?: number;
   idLists: Array<string> = [];
+  secondIdLists: Array<string> = [];
+  subEntityDisplayFacets: Array<DisplayFacet> = [];
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
@@ -186,6 +192,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
 
+    // For Cross Entity/Sub Entity Search
+    this.subEntitySearchHash = this.activatedRoute.snapshot.queryParams['subentity-hash'];
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     const authSubscription = this.authService.getAuth().subscribe(auth => {
@@ -198,8 +207,14 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
 
+    // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
+    if (this.subEntitySearchHash) {
+      this.subEntityfacetDisplay();
+    }
+
     this.isComponentInit = true;
     this.loadComponent();
+
   }
 
   ngAfterViewInit() {
@@ -359,6 +374,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
+
     this.pageIndex = 0;
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
@@ -456,7 +472,8 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
-    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    //navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
@@ -832,7 +849,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // Need this for Cross Entity Search. Return all the IDs only for the current search
   getSearchIdsOnly(doPerformSearch: boolean) {
-
     if (doPerformSearch) {
       let idListsTemp: Array<string> = [];
 
@@ -843,58 +859,139 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       let bulkQID = null;
       let searchOnIdentifiers = false;
       let view = 'key';
-      let viewfield = 'facet';
+      // let viewfield = 'facet';
       let facetlabel = 'Substance UUID';
+      let viewfield = null;
 
-      const subscription = this.productService.getProducts(
-        order,
-        skip,
-        top,
-        this.privateSearchTerm,
+      const subscription = this.productService.getProductFacetWithSearchCriteria(
+        facetlabel,
         this.privateFacetParams,
-        fdim,
-        bulkQID,
-        searchOnIdentifiers,
-        view,
-        viewfield,
-        facetlabel
-      )
-        .subscribe(pagingResponse => {
-          // Get Facets from paging response
-          if (pagingResponse.facets && pagingResponse.facets.length > 0) {
-            const facets = pagingResponse.facets;
-
+        this.privateSearchTerm,
+        fdim
+      ).subscribe(response => {
+        if (response) {
+          if (response.content && response.content.length > 0) {
             // *** For Cross Entity Search get lists of Substance UUID ***
-            let facetSubUuid = facets.find(facet => facet.name === "Substance UUID");
-
-            if (facetSubUuid) {
-              facetSubUuid.values.forEach((value, index) => {
-                if (value) {
-                  if (value.label) {
-                    idListsTemp.push(value.label);
-                  }
+            response.content.forEach((facet, index) => {
+              if (facet) {
+                if (facet.label) {
+                  idListsTemp.push(facet.label);
                 }
+              }
+              // Copy after the last record
+              if (response.content.length == index + 1) {
 
-                // Copy after the last record
-                if (facetSubUuid.values.length == index+1) {
-                  // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
-                  this.idLists = idListsTemp;
-                }
-              }); // forEach
-            } else {
-              this.idLists = [];
-            }
+                // Get Search Product Ids
+                this.getSearchProductIds(idListsTemp);
 
-          } // pagingResponse
+                // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                // this.idLists = idListsTemp;
+              }
+            }); // forEach    
 
-        }, error => {
-          console.log('Error during search substance');
-        }, () => {
-          this.subscriptions.push(subscription);
+          } // if content 
+          else {
+            this.idLists = [];
+          }
+        } // response
+        else {
+          this.idLists = [];
         }
-        ); // pagingResponse
 
+      }, error => {
+        console.log('Error during search product');
+      }, () => {
+        this.subscriptions.push(subscription);
+      }
+      ); // response
+      
     } // if doPerformSearch == true
+  }
+
+  getSearchProductIds(substanceUuids?: any) {
+    let idListsTemp: Array<string> = [];
+
+    let order = null;
+    let top = 1000000;
+    let skip = 0;
+    let fdim = 10;
+    let bulkQID = null;
+    let searchOnIdentifiers = false;
+    let view = 'key';
+    // let viewfield = 'facet';
+    //let facetlabel = 'Substance UUID';
+    let facetlabel = null;
+    let viewfield = 'id';
+    let simpleSearchOnly: boolean = true;
+
+    const prodSubscription = this.productService.getProducts(
+      order,
+      skip,
+      top,
+      this.privateSearchTerm,
+      this.privateFacetParams,
+      fdim,
+      bulkQID,
+      searchOnIdentifiers,
+      view,
+      viewfield,
+      facetlabel,
+      simpleSearchOnly
+    ).subscribe(pagingResponse => {
+      if (pagingResponse.content) {
+        let results: any = pagingResponse.content;
+
+        // Loop through each product record and get product id
+        if (results.length > 0) {
+          results.forEach((productId, index) => {
+            // for Cross Entity Search, add Product Ids in the temporary list
+            idListsTemp.push(productId);
+
+            // Copy after the last record
+            if (results.length == index + 1) {
+
+              this.idLists = substanceUuids;
+              this.secondIdLists = idListsTemp;
+              // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+              //  this.idLists = idListsTemp;
+            }
+          }); // forEach
+        } else {
+          //this.idLists = [];
+        }
+      }  // pagingResponse   
+    }, error => {
+      console.log('Error during search substance');
+    }, () => {
+      this.subscriptions.push(prodSubscription);
+    }
+
+    ); // pagingResponse
+  }
+
+  subEntityfacetDisplay() {
+    // if (hashcode is found on the url)
+    if (this.subEntitySearchHash) {
+      // Get Sub-entity facet values from local Storage to display on Browse Substance page
+      const searchParams = localStorage.getItem(this.subEntitySearchHash);
+
+      if (searchParams) {
+        const searchParamItems = JSON.parse(searchParams);
+        if (searchParamItems) {
+          this.subEntity = searchParamItems['subEntityDisplay'];
+          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+        }
+      }
+    }
+  }
+
+  editSubEntitySearch(): void {
+    if (this.subEntitySearchHash) {
+      let randomInteger = Math.floor(Math.random() * 100000000);
+
+      // Using random number to create different value, so it will trigger change Detection for Input
+      this.editSubEntitySearchHash = this.subEntitySearchHash + '_' + randomInteger;
+    }
   }
 
 }

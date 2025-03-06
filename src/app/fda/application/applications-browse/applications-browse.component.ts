@@ -76,13 +76,19 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
   // Cross Entity Search
   thisEntity: string = "applications";
+  subEntity = null;
+  subEntitySearchTerm = null;
   showCrossEntitySearch = false;
   searchOnIdentifiers = false;
   bulkSearchPanelOpen = false;
   bulkSearchStatusKey: string;
   searchStatusUrl: string;
+  subEntitySearchHash: string;
+  editSubEntitySearchHash: any;
   bulkSearchQueryId?: number;
   idLists: Array<string> = [];
+  secondIdLists: Array<string> = [];
+  subEntityDisplayFacets: Array<DisplayFacet> = [];
 
   ascDescDir = 'desc';
   displayedColumns: string[] = [
@@ -161,6 +167,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
 
+    // For Cross Entity/Sub Entity Search
+    this.subEntitySearchHash = this.activatedRoute.snapshot.queryParams['subentity-hash'];
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     // Get Admin privilege
@@ -177,6 +186,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     });
 
     this.subscriptions.push(paramsSubscription);
+
+    if (this.subEntitySearchHash) {
+      // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
+      this.subEntityfacetDisplay();
+    }
 
     this.isComponentInit = true;
     this.loadComponent();
@@ -332,7 +346,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       queryParams: {}
     };
 
-    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    //navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
@@ -626,7 +641,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   getSearchIdsOnly(doPerformSearch: boolean) {
 
     if (doPerformSearch) {
-
       let idListsTemp: Array<string> = [];
 
       let order = null;
@@ -636,9 +650,52 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       let bulkQID = null;
       let searchOnIdentifiers = false;
       let view = 'key';
-      let viewfield = 'facet';
+      let viewfield = null;
       let facetlabel = 'Substance UUID';
 
+      const subscription = this.applicationService.getApplicationFacetWithSearchCriteria(
+        facetlabel,
+        this.privateFacetParams,
+        this.privateSearchTerm,
+        fdim
+      ).subscribe(response => {
+        if (response) {
+          if (response.content && response.content.length > 0) {
+            // *** For Cross Entity Search get lists of Substance UUID ***
+            response.content.forEach((facet, index) => {
+              if (facet) {
+                if (facet.label) {
+                  idListsTemp.push(facet.label);
+                }
+              }
+              // Copy after the last record
+              if (response.content.length == index + 1) {
+
+                // Get Search Product Ids
+                this.getSearchApplicationIds(idListsTemp);
+
+                // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                // this.idLists = idListsTemp;
+              }
+            }); // forEach    
+
+          } // if content 
+          else {
+            this.idLists = [];
+          }
+        } // response
+        else {
+          this.idLists = [];
+        }
+
+      }, error => {
+        console.log('Error during search application');
+      }, () => {
+        this.subscriptions.push(subscription);
+      }
+      ); // response
+
+      /*
       const subscription = this.applicationService.getApplications(
         order,
         skip,
@@ -685,8 +742,103 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
           this.subscriptions.push(subscription);
         }
         ); // pagingResponse
+      */
 
     } // if doPerformSearch == true
+  }
+
+  getSearchApplicationIds(substanceUuids?: any) {
+    let idListsTemp: Array<string> = [];
+
+    let order = null;
+    let top = 1000000;
+    let skip = 0;
+    let fdim = 10;
+    let bulkQID = null;
+    let searchOnIdentifiers = false;
+    let view = 'key';
+    // let viewfield = 'facet';
+    //let facetlabel = 'Substance UUID';
+    let facetlabel = null;
+    let viewfield = 'id';
+    let simpleSearchOnly: boolean = true;
+
+    const subscription = this.applicationService.getApplications(
+      order,
+      skip,
+      top,
+      fdim,
+      this.privateSearchTerm,
+      this.privateFacetParams,
+      bulkQID,
+      view,
+      viewfield,
+      facetlabel
+    ).subscribe(pagingResponse => {
+      if (pagingResponse.content) {
+        let results: any = pagingResponse.content;
+
+        // Loop through each product record and get product id
+        if (results.length > 0) {
+          results.forEach((applicationId, index) => {
+            // for Cross Entity Search, add Application Ids in the temporary list
+            idListsTemp.push(applicationId);
+
+            // Copy after the last record
+            if (results.length == index + 1) {
+
+              this.idLists = substanceUuids;
+              this.secondIdLists = idListsTemp;
+            }
+          }); // forEach
+        } else {
+          //this.idLists = [];
+        }
+      }  // pagingResponse   
+    }, error => {
+      console.log('Error during search application');
+    }, () => {
+      this.subscriptions.push(subscription);
+    }
+
+    ); // pagingResponse
+  }
+
+  subEntityfacetDisplay() {
+    // if (hashcode is found on the url)
+    if (this.subEntitySearchHash) {
+      // Get Sub-entity facet values from local Storage to display on Browse Substance page
+      const searchParams = localStorage.getItem(this.subEntitySearchHash);
+
+      if (searchParams) {
+        const searchParamItems = JSON.parse(searchParams);
+        if (searchParamItems) {
+          this.subEntity = searchParamItems['subEntityDisplay'];
+          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+        }
+      }
+    }
+  }
+
+  editSubEntitySearch(): void {
+    if (this.subEntitySearchHash) {
+      /*
+      const searchParam: Array<String> = [];
+
+      const searchParams = localStorage.getItem(this.subEntitySearchHash);
+
+      if (searchParams) {
+        const searchParamItems = JSON.parse(searchParams);
+        if (searchParamItems) {
+          this.subEntity = searchParamItems['subEntity'];
+          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+        }
+      } 
+      */
+      let randomInteger = Math.floor(Math.random() * 100000000);
+      // Using random number to create different value, so it will trigger change Detection for Input
+      this.editSubEntitySearchHash = this.subEntitySearchHash + '_' + randomInteger;
+    }
   }
 
 }

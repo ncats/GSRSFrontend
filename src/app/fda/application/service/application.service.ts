@@ -46,6 +46,7 @@ class CustomEncoder implements HttpParameterCodec {
 
 export class ApplicationService extends BaseHttpService {
 
+  entity = 'applications';
   private _bypassUpdateCheck = false;
   private applicationStateHash?: number;
   totalRecords = 0;
@@ -73,6 +74,22 @@ export class ApplicationService extends BaseHttpService {
     super(configService);
   }
 
+  getBulkSearchUrl(searchEntity: string, useServiceInUrl: boolean = false): string {
+
+    let url = this.apiBaseUrl;
+
+    if (searchEntity !== 'substances') {
+      if (useServiceInUrl == true) {
+        let apiAddUrlPrefixToBackendUrls = '/ginas/app';
+        if (url.indexOf(apiAddUrlPrefixToBackendUrls) > 0) {
+          apiAddUrlPrefixToBackendUrls = '';
+        }
+        url = url.replace('/api/v1/', apiAddUrlPrefixToBackendUrls + '/service/' + searchEntity + '/api/v1/');
+      }
+    }
+    return url;
+  }
+
   getApplications(
     order: string,
     skip: number = 0,
@@ -89,6 +106,7 @@ export class ApplicationService extends BaseHttpService {
 
       if (bulkQID != null && bulkQID.toString() != '') {
 
+        /*
         // Need this due to hostname issue. The Bulk Search MUST execute using 8083 locally for 
         // bulk Search Result Status to work.
         let url = this.apiBaseUrlWithApplicationEntityUrl + `bulkSearch`;
@@ -109,27 +127,27 @@ export class ApplicationService extends BaseHttpService {
               }
             }
           }
+        */
 
-         // if (isHostDifferent) {
-            this.applicationBulkSearch(
-              searchTerm,
-              bulkQID,
-              false,
-              'applications',
-              pageSize,
-              facets,
-              order,
-              skip,
-              generatingUrl
-            ).subscribe(response => {
-              observer.next(response);
-            }, error => {
-              observer.error(error);
-            }, () => {
-              observer.complete();
-            });
+        // if (isHostDifferent) {
+        this.applicationBulkSearch(
+          searchTerm,
+          bulkQID,
+          false,
+          this.entity,
+          pageSize,
+          facets,
+          order,
+          skip
+        ).subscribe(response => {
+          observer.next(response);
+        }, error => {
+          observer.error(error);
+        }, () => {
+          observer.complete();
+        });
 
-        }); // subscribe
+        // }); // subscribe
 
       } else {
         const url = this.apiBaseUrlWithApplicationEntityUrl + 'search';
@@ -189,57 +207,32 @@ export class ApplicationService extends BaseHttpService {
     pageSize: number = 10,
     facets?: FacetParam,
     order?: string,
-    skip: number = 0,
-    url?: string
+    skip: number = 0
   ): Observable<PagingResponse<Application>> {
-    
+
     return new Observable(observer => {
 
       let params = new FacetHttpParams({ encoder: new CustomEncoder() });
       let bulkFacetsKey: number;
 
-      //let url = this.configService.configData.apiBaseUrl + 'api/v1/';
+      let url = this.getBulkSearchUrl(searchEntity, true);
 
-      if (!url) {
-        url = this.apiBaseUrlWithApplicationEntityUrl + `bulkSearch`;
-
-        params = params.append('bulkQID', bulkQID.toString());
-        let v = "false";
-        if (searchOnIdentifiers === true) { v = "true"; }
-        params = params.append('searchOnIdentifiers', v);
-        params = params.append('searchEntity', searchEntity);
+      if (url) {
+        url = url + `${this.entity}/bulkSearch`;
+      } else {
+        url = this.configService.configData.apiBaseUrl + 'api/v1/' + this.entity + '/bulkSearch';
       }
+
+      params = params.append('bulkQID', bulkQID.toString());
+      let v = "false";
+      if (searchOnIdentifiers === true) { v = "true"; }
+      params = params.append('searchOnIdentifiers', v);
+      params = params.append('searchEntity', searchEntity);
+
 
       const options = {
         params: params
       };
-
-      /*
-      bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
-
-      if (this.searchKeys[bulkFacetsKey]) {
-        // Set bulk status result url
-        url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
-
-        params = params.appendFacetParams(facets, this.showDeprecated);
-        
-        if (querySearchTerm.length > 0) {
-          params = params.appendDictionary({
-            top: pageSize.toString(),
-            skip: skip.toString(),
-            q: querySearchTerm.toString()
-          });
-        } else {
-          params = params.appendDictionary({
-            top: pageSize.toString(),
-            skip: skip.toString()
-          });
-        }
-        if (order != null && order !== '') {
-          params = params.append('order', order);
-        }
-      } else { */
-
 
       // Get Results
       this.http.get<any>(url, options).subscribe(
@@ -250,6 +243,7 @@ export class ApplicationService extends BaseHttpService {
             this.searchKeys[bulkFacetsKey] = resultKey;
 
             this.processAsyncSearchResults(
+              searchEntity,
               querySearchTerm,
               url,
               response,
@@ -261,10 +255,6 @@ export class ApplicationService extends BaseHttpService {
               skip
             );
           } else {
-            // consider making API backend provide statusKey in JSON
-          //  if (this.searchKeys && this.searchKeys[bulkFacetsKey]) {
-           //   response.statusKey = this.searchKeys[bulkFacetsKey];
-           // }
             observer.next(response);
             observer.complete();
           }
@@ -278,6 +268,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   private processAsyncSearchResults(
+    searchEntity,
     querySearchTerm: string,
     url: string,
     asyncCallResponse: any,
@@ -291,6 +282,7 @@ export class ApplicationService extends BaseHttpService {
   ): void {
     // Call Bulk Search Result
     this.getAsyncSearchResults(
+      searchEntity,
       querySearchTerm,
       searchKey,
       pageSize,
@@ -308,11 +300,12 @@ export class ApplicationService extends BaseHttpService {
 
         // if Bulk Search is not finished, call bulk search API again
         if (!asyncCallResponse.finished) {
-        
+
           this.http.get<any>(url, httpCallOptions).subscribe(searchResponse => {
 
             setTimeout(() => {
               this.processAsyncSearchResults(
+                searchEntity,
                 querySearchTerm,
                 url,
                 searchResponse,
@@ -341,6 +334,7 @@ export class ApplicationService extends BaseHttpService {
   }
 
   private getAsyncSearchResults(
+    searchEntity: string,
     querySearchTerm: string,
     // this is a status
     searchKey: string,
@@ -351,7 +345,11 @@ export class ApplicationService extends BaseHttpService {
     url?: string
   ): any {
 
-    if (!url) {
+    url = this.getBulkSearchUrl(searchEntity, true);
+
+    if (url) {
+      url = `${url}status(${searchKey})/results`;
+    } else {
       url = `${this.configService.configData.apiBaseUrl}api/v1/status(${searchKey})/results`;
     }
 
@@ -376,6 +374,7 @@ export class ApplicationService extends BaseHttpService {
     return this.http.get<PagingResponse<Application>>(url, options);
   }
 
+  /*
   getBulkSearch(
     context: string,
     id: number,
@@ -397,6 +396,7 @@ export class ApplicationService extends BaseHttpService {
     };
     return this.http.get<BulkSearch>(url, options);
   }
+  */
 
   getBulkSearchStatus(
     key: string,
@@ -412,6 +412,25 @@ export class ApplicationService extends BaseHttpService {
       headers: {}
     };
     return this.http.get<any>(url, options);
+  }
+
+  getApplicationFacetWithSearchCriteria(facetName?: string, facets?: FacetParam, querySearchTerm?: string, fdim?: number): Observable<FacetQueryResponse> {
+    let url: string;
+
+    let params = new FacetHttpParams({ encoder: new CustomEncoder() });
+    params = params.appendFacetParams(facets);
+
+    if (querySearchTerm != null && querySearchTerm !== '') {
+      params = params.append('q', querySearchTerm);
+    }
+
+    url = `${this.configService.configData.apiBaseUrl}api/v1/applications/search/@facets?wait=false&kind=gov.hhs.gsrs.application.application.models.Application&skip=0&fdim=${fdim}&field=${facetName.replace(' ', '+')}&top=10&fskip=0&fetch=1000000`;
+
+    const options = {
+      params: params
+    };
+
+    return this.http.get<FacetQueryResponse>(url, options);
   }
 
   getApplicationFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
@@ -526,10 +545,10 @@ export class ApplicationService extends BaseHttpService {
   getClinicalTrialApplication(
     applications: Array<ApplicationSrs>
   ): Observable<Array<any>> {
-
+  
     //appType: string, appNumber: string
     let clinicalTrial: Array<any> = [];
-
+  
   //: Observable<Array<any>> {
     //console.log("clinical2 " + application.appType + "  " + application.appNumber);
     applications.forEach((element, index) => {
@@ -537,15 +556,15 @@ export class ApplicationService extends BaseHttpService {
       const url = this.baseUrl + 'getClinicalTrialApplication2?appType=' + element.appType + '&appNumber=' + element.appNumber;
     //  clinicalTrial = this.http.get<Array<any>>(url)
     });
-
+  
     return this.http.get<Array<any>>(url).pipe(
       map(results => {
         return results;
       })
     );
-
+  
   }
-*/
+  */
 
   getApplicationCenterList(
     substanceKey: string
@@ -695,17 +714,17 @@ export class ApplicationService extends BaseHttpService {
       })
     );
   }
-
+  
   // Changed, work Spring Boot and Play
   getSubstanceDetailsBySubstanceId(
     substanceId: string
   ): Observable<any> {
     // const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes'
     // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
-
+  
     // TESTING TESTING
     this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
-
+  
     const url = this.apiBaseUrl + 'substances(' + substanceId + ')';
     return this.http.get<any>(url).pipe(
       map(results => {
@@ -713,17 +732,17 @@ export class ApplicationService extends BaseHttpService {
       })
     );
   }
-
+  
   // Changed, work Spring Boot and Play
   getSubstanceCodesBySubstanceUuid(
     substanceId: string
   ): Observable<any> {
     // const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes'
     // const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
-
+  
     // TESTING TESTING
     this.apiBaseUrl = 'http://localhost:9000/ginas/app/api/v1/';
-
+  
     const url = this.apiBaseUrl + 'substances(' + substanceId + ')/codes';
     return this.http.get<any>(url).pipe(
       map(results => {

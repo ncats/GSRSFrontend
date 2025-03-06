@@ -23,6 +23,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification/
 import { Facet, FacetUpdateEvent } from '../../core/facets-manager/facet.model';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+import { exitCode } from 'process';
 
 @Component({
   selector: 'app-cross-entity-search',
@@ -73,14 +74,16 @@ export class CrossEntitySearchComponent implements OnInit {
 
   // Needed for cross/sub entity search
   thisEntitySearchTerm = null;
+  thisEntityFacetString = '';
   thisEntityFacetParams: FacetParam;
-  thisEntityDisplayFacets = null;
+  thisEntityDisplayFacets: Array<DisplayFacet> = [];
   editSubEntitySearchHashCode = null;
 
   subEntityEndpoint = null;
   subEntityDisplay = null;
 
   bulkQID = null;
+  facetBulkQID = null;
   bulkSearchUrl = null;
   queryText = '';
   statusMessage = '';
@@ -88,6 +91,7 @@ export class CrossEntitySearchComponent implements OnInit {
 
   idListForSearch: Array<string>;
   idListForSearchOld: Array<string>;
+  secondIdListForSearch: Array<string>;
 
   thisEntityTotalRecords = 0;
   subEntityTotalRecords = 0;
@@ -95,8 +99,10 @@ export class CrossEntitySearchComponent implements OnInit {
   facetsParamsUpdateCount = 0;
 
   searchOnIdentifiers = false;
+  useServiceInUrl: boolean = false;
   showDeprecated = false;
 
+  showFacets: boolean = true;
   isSearchRunning = false;
   isLoading = false;
   isError = false;
@@ -149,30 +155,35 @@ export class CrossEntitySearchComponent implements OnInit {
   set editSubEntitySearchHash(editSubEntitySearchHashCd: any) {
     this.editSubEntitySearchHashCode = editSubEntitySearchHashCd;
 
+    // Call function to restore parameters from local storage
     this.editSubEntitySearch();
+  }
+
+  @Input()
+  set secondIdLists(list: Array<string>) {
+    this.secondIdListForSearch = list || [];
   }
 
   @Input()
   set idLists(list: Array<string>) {
     this.idListForSearch = list || [];
 
-    // copy the lists in the temporary array to use later for comparision
+    // copy the lists in the temporary array to use later for comparison
     this.idListForSearchOld = _.cloneDeep(this.idListForSearch);
 
     if (this.idListForSearch) {
       if (this.idListForSearch.length > 0) {
-        // Perform Bulk Query
+        // Perform Bulk Query, pass sub-entity endpoint
         this.performBulkQuery(this.subEntityEndpoint, 'key');
       } else {
         // No record found
-        this.statusMessage = "No related record Found. Please redine your search criteria.";
+        this.statusMessage = "No related " + this.subEntityDisplay + " record Found. Please redefine your search criteria.";
       }
     }
   }
 
   ngOnInit(): void {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-
   }
 
   ngOnDestroy() {
@@ -182,6 +193,16 @@ export class CrossEntitySearchComponent implements OnInit {
   }
 
   facetsLoaded($event) {
+  }
+
+  showMessageTwo() {
+    // Show message
+    this.statusMessageSecond = 'Narrow down ' + this.thisEntityDisplay + ' search results by applying related '
+      + this.subEntityDisplay + ' facets.';
+
+    if (!this.thisEntityDisplayFacets || !this.thisEntitySearchTerm) {
+      this.statusMessageSecond += ' It is preferable to select any search criteria in Browse ' + this.thisEntityDisplay + ' before getting ' + this.subEntityDisplay + ' facets.';
+    }
   }
 
   get filteredSubEntity() {
@@ -195,8 +216,33 @@ export class CrossEntitySearchComponent implements OnInit {
 
   }
 
-  subEntitySelectedChange(event: any): void {
+  getEntityUrlParameters() {
+    if (this.thisEntityDisplayFacets && this.thisEntityDisplayFacets.length > 0) {
+      this.thisEntityDisplayFacets.forEach((facet, index) => {
+        if (facet) {
+          if (index > 0) {
+            this.thisEntityFacetString += ',';
+          }
+          this.thisEntityFacetString += facet.type + '*' + facet.val + '.' + facet.bool;
+        }
+      });
+    }
+  }
 
+  showSubEntityFacets() {
+    this.isSearchRunning = true;
+
+    this.statusMessage = 'Getting related ' + this.subEntityDisplay + ' facets for ' + this.thisEntityTotalRecords + ' ' + this.thisEntityDisplay + ' records ...';
+
+    // Trigger Emit to call entity/parent to get Search Ids only
+    this.getSearchIdsOnly.emit(true);
+  }
+
+  getCommonStrings(arr1: string[], arr2: string[]): string[] {
+    return arr1.filter(str => arr2.includes(str));
+  }
+
+  subEntitySelectedChange(event: any): void {
     // Get Object that is selected in the dropdown
     let subEntity = this.entityLists.find(ent => ent.entity === event.value);
 
@@ -207,37 +253,20 @@ export class CrossEntitySearchComponent implements OnInit {
     // Initialize 
     this.facetsParamsUpdateCount = 0;
     this.isSearchRunning = false;
+    this.showFacets = true;
     this.rawFacets = [];
 
-    // Show message
-    this.statusMessageSecond = 'Narrow down ' + this.thisEntityDisplay + ' search results by applying related '
-      + this.subEntityDisplay + ' facets.';
-
-    if (!this.thisEntityDisplayFacets || !this.thisEntitySearchTerm) {
-      this.statusMessageSecond += ' Please select any search criteria in ' + this.thisEntityDisplay + ' before doing search.';
-    }
+    this.showMessageTwo();
 
     this.statusMessage = "It may take some time to display " + this.subEntityDisplay + " facets here."
     this.statusMessage += "<br><br>Click 'Show " + this.subEntityDisplay + " Facets' button to continue."
 
-    if (this.editSubEntitySearchHashCode) {
-      // Do something here
-    } else {
-
-    }
+    // Get parameter values from URL, such as facets, q
+    this.getEntityUrlParameters();
 
     // Show sub-entity facets on popup dialog
     this.openModal();
 
-  }
-
-  showSubEntityFacets() {
-    this.isSearchRunning = true;
-
-    this.statusMessage = 'Searching related ' + this.subEntityDisplay + ' records for ' + this.thisEntityTotalRecords + ' ' + this.thisEntityDisplay + ' records ...';
-
-    // Trigger Emit to call entity/parent to get Search Ids only
-    this.getSearchIdsOnly.emit(true);
   }
 
   // for facets. This function is called during facets loading and facets selection/Apply
@@ -245,7 +274,8 @@ export class CrossEntitySearchComponent implements OnInit {
     // clear message
     this.statusMessage = '';
 
-    // count the number of times this function has been called
+    // count the number of times this function has been called. This function is called during
+    // facets initialization or facets apply
     this.facetsParamsUpdateCount = this.facetsParamsUpdateCount + 1;
 
     // Get Facet selected parameters
@@ -266,7 +296,7 @@ export class CrossEntitySearchComponent implements OnInit {
       }
     }
 
-    // If this function is called the second time, and after facets selected and clicke 'Apply',
+    // FACET APPLY CLICKED: If this function is called the second time, and after facets selected and clicked 'Apply',
     // close the facet popup and call bulk search on sub-entity with facet values
     if (this.facetsParamsUpdateCount == 2) {
 
@@ -278,12 +308,14 @@ export class CrossEntitySearchComponent implements OnInit {
         });
       }
 
-      // if facet popup dialog is open, close it
+      // if facet popup dialog is open
       if (this.dialog) {
-        // Close the popup dialog that has facets
-        //   this.closePopup();
 
-        this.statusMessage = "Applying " + this.subEntityDisplay + " facets and reload " + this.entity + " search results.";
+        // Do not show facets on popup
+        this.showFacets = false;
+        this.facetBulkQID = this.bulkQID;
+
+        this.statusMessage = "Applying " + this.subEntityDisplay + " facets and will reload " + this.thisEntityDisplay + " search results.";
 
         // ******** Perform bulk search on sub-entity after FACET SELECTION on sub-entity ********
         this.getBulkSearch(this.subEntityEndpoint, this.bulkQID, 'key', this.MAX_RECORD);
@@ -292,11 +324,7 @@ export class CrossEntitySearchComponent implements OnInit {
 
   }
 
-  getCommonStrings(arr1: string[], arr2: string[]): string[] {
-    return arr1.filter(str => arr2.includes(str));
-  }
-
-  createQueryTextWithIds(entity: string) {
+  createQueryTextWithIds(entity: string, rootId: boolean = false) {
     this.queryText = '';
 
     // *** Get lists of Substance uuid from facet 'Substance UUID' ***
@@ -316,9 +344,18 @@ export class CrossEntitySearchComponent implements OnInit {
       }
     }
 
-    if (this.facetsParamsUpdateCount == 3) { // && (entity === 'substances')) {
+    // Sub-Entity facets have been applied
+    if ((this.facetsParamsUpdateCount == 3) && (entity === 'substances')) {
       // Filter the Ids
+      // For Browse Substance page, after Product/Application facets are selected and applied, need to find 
+      // the common Substance Uuid from the original substance browser to Product facets, since each product can have many substances
       const commonIdLists = this.getCommonStrings(this.idListForSearchOld, this.idListForSearch);
+      this.idListForSearch = commonIdLists;
+    }
+
+    // if entity is product, application
+    if (rootId) {
+      const commonIdLists = this.getCommonStrings(this.secondIdListForSearch, this.idListForSearch);
       this.idListForSearch = commonIdLists;
     }
 
@@ -330,16 +367,20 @@ export class CrossEntitySearchComponent implements OnInit {
         if (entity && entity === 'substances') {
           this.queryText = this.queryText + 'root_uuid:"' + id + '"';
         } else {
-          this.queryText = this.queryText + 'entity_link_substances:"' + id + '"';
+          if (rootId) {
+            this.queryText = this.queryText + 'root_id:"' + id + '"';
+          } else {
+            this.queryText = this.queryText + 'entity_link_substances:"' + id + '"';
+          }
         }
       }
     });
   }
 
-  performBulkQuery(entity: string, view?: string, performBulkSearch: boolean = true, reloadBrowser: boolean = false) {
+  performBulkQuery(entity: string, view?: string, reloadBrowser: boolean = false, rootId: boolean = false) {
 
     // Create queries for bulk search
-    this.createQueryTextWithIds(entity);
+    this.createQueryTextWithIds(entity, rootId);
 
     // ** Perform BULK QUERY **
     this.bulkSearchService.postOrPutBulkQuery(entity, this.queryText).subscribe(result => {
@@ -347,7 +388,7 @@ export class CrossEntitySearchComponent implements OnInit {
         if (result.id) {
 
           // Do not get field value _self if the entity is not substances
-          if (entity && entity !== this.ENTITY_SUBSTANCE) {
+          /*if (entity && entity !== this.ENTITY_SUBSTANCE) {
             // Get ._self field after executing @bulkQuery
             let selfUrl = result._self;
             if (selfUrl) {
@@ -356,14 +397,9 @@ export class CrossEntitySearchComponent implements OnInit {
                 this.bulkSearchUrl = selfUrl.substring(0, urlIndex) + 'bulkSearch';
               }
             }
-          }
+          } */
 
           this.bulkQID = result.id;
-
-          if (performBulkSearch) {
-            // Call bulkSearch API
-            this.getBulkSearch(entity, result.id, view);
-          }
 
           if (reloadBrowser) {
 
@@ -377,6 +413,9 @@ export class CrossEntitySearchComponent implements OnInit {
 
             // Reload browser with new bulk search results
             this.reloadBrowser();
+          } else {
+            // Call bulkSearch API
+            this.getBulkSearch(entity, result.id, view);
           }
         }
       }
@@ -385,8 +424,11 @@ export class CrossEntitySearchComponent implements OnInit {
 
   getBulkSearch(entity: string, bulkQID: number, view?: string, fdim: number = 10) {
     // ** Perform BULK SEARCH **
-    // this.bulkSearchService.getBulkSearchOrStatusResults(entity, bulkQID, this.searchOnIdentifiers, this.privateFacetParams, view).subscribe(searchResult => {
-    this.bulkSearchService.getBulkSearchWithFacets(entity, bulkQID, this.bulkSearchUrl, this.searchOnIdentifiers, this.privateFacetParams, view).subscribe(response => {
+    if (entity !== this.ENTITY_SUBSTANCE) {
+      this.useServiceInUrl = true;     
+    }
+
+    this.crossEntitySearchService.getBulkSearchWithFacets(entity, bulkQID, this.bulkSearchUrl, this.searchOnIdentifiers, this.privateFacetParams, view, this.useServiceInUrl).subscribe(response => {
 
       const searchResults: any = response;
 
@@ -409,15 +451,12 @@ export class CrossEntitySearchComponent implements OnInit {
 
             if (searchResults.total > 0) {
               // Call Search Status Results after bulk Search field 'finished = true'
-              this.getSearchStatusResults(searchResults.key, searchResults.results, view, fdim);
+              this.getSearchStatusResults(entity, searchResults.key, searchResults.results, view, fdim);
             } else {
               this.statusMessage = 'No ' + this.subEntityDisplay + ' records were found.';
             }
           }
         }
-
-        // if (response.statusKey) {
-
       }
     }, error => {
       this.statusMessage = 'Something went wrong while getting the facets. Close this dialog and perform search again';
@@ -426,7 +465,7 @@ export class CrossEntitySearchComponent implements OnInit {
     );
   }
 
-  getSearchStatusResults(key: number, url: string, view = 'key', fdim: number) {
+  getSearchStatusResults(entity:string, key: number, url: string, view = 'key', fdim: number) {
     let viewField = null;
     let viewLabel = null;
     let simpleSearchOnly = 'false';
@@ -440,12 +479,23 @@ export class CrossEntitySearchComponent implements OnInit {
       } else {
         // if entity is products, applications, etc
         top = 1000000;
+        fdim = 10;
+        simpleSearchOnly = 'true';
       }
+    }
+    if (this.facetsParamsUpdateCount == 3) {
+      // if entity is products, applications
+      top = 1000000;
+      view = 'key';
+      viewField = 'id';
+    }
 
+    if (entity !== this.ENTITY_SUBSTANCE) {
+      this.useServiceInUrl = true;     
     }
 
     // ** Perform BULK SEARCH STATUS RESULTS **
-    this.bulkSearchService.getBulkSearchResults(key, url, fdim, view, viewField, viewLabel, simpleSearchOnly, top).subscribe(response => {
+    this.crossEntitySearchService.getBulkSearchResults(entity, key, url, fdim, view, viewField, viewLabel, this.useServiceInUrl, simpleSearchOnly, top).subscribe(response => {
 
       // Only display facets on Popup, if facetsParamsUpdateCount() function is called FIRST time
       if (this.facetsParamsUpdateCount == 0) {
@@ -460,6 +510,26 @@ export class CrossEntitySearchComponent implements OnInit {
         }
       }
 
+      // Keep this code in this order
+      if (this.facetsParamsUpdateCount == 3) {
+        this.facetsParamsUpdateCount = 4;
+
+        this.privateFacetParams = this.entityFacetParams;
+
+        if (response.total > 0) {
+          let ids: Array<string> = [];
+          if (response.content && response.content.length > 0) {
+            response.content.forEach(productId => {
+              if (productId) {
+                ids.push(productId);
+              }
+            });
+
+            this.idListForSearch = ids;
+          }
+        }
+      }
+
       // Perform Bulk Query Search on this entity to display final results
       if (this.facetsParamsUpdateCount == 2) {
 
@@ -468,6 +538,8 @@ export class CrossEntitySearchComponent implements OnInit {
         this.privateFacetParams = this.entityFacetParams;
 
         if (response.total > 0) {
+
+          // if entity is substances
           if (this.entity && this.entity === 'substances') {
             // *** get lists of Substance UUID ***
             let ids: Array<string> = [];
@@ -483,9 +555,13 @@ export class CrossEntitySearchComponent implements OnInit {
               });
 
               this.idListForSearch = ids;
+
+              // Perform FINAL search on Entity
+              this.performBulkQuery(this.entity, 'full', true);
             }
           } else {
-            // else if this.entity is either products or applications, etc (non-substance)
+            // else if entity is either products or applications, etc (non-substance)
+            // get Substance uuids from content[]
             let ids: Array<string> = [];
             if (response.content && response.content.length > 0) {
               response.content.forEach(substance => {
@@ -495,18 +571,21 @@ export class CrossEntitySearchComponent implements OnInit {
                   }
                 }
               });
+
               this.idListForSearch = ids;
+
+              // Perform search on Entity
+              this.performBulkQuery(this.entity, 'full', false);
             }
           }
-
-          // Perform FINAL search on Entity
-          this.performBulkQuery(this.entity, 'full', false, true);
         }
 
-      }
+      } // facetsParamsUpdateCount == 2
 
       // RELOAD ORIGINAL/ENTITY URL with updated results
-      if (this.facetsParamsUpdateCount == 3) {
+      if (this.facetsParamsUpdateCount == 4) {
+        // Perform FINAL search on Entity
+        this.performBulkQuery(this.entity, 'full', true, true);
       }
 
     });
@@ -514,47 +593,52 @@ export class CrossEntitySearchComponent implements OnInit {
 
   reloadBrowser() {
     // store values in array to retreive later from localStorage
-    let arrayStorage: Array<any> = [];
-    let item: any = {}
-
-    item = {
-      'subEntity': this.subEntityDisplay,
+    let item = {
+      'entity': this.entity,
+      'subEntityDisplay': this.subEntityDisplay,
+      'thisEntityFacetParams': this.thisEntityFacetParams,
       'subEntityDisplayFacets': this.subEntityDisplayFacets,
-      'idListForSearch': this.idListForSearchOld
+      'idListForSearch': this.idListForSearchOld,
+      'thisEntityTotalRecords': this.thisEntityTotalRecords,
+      'subEntityTotalRecords': this.subEntityTotalRecords,
+      'rawFacets': this.rawFacets,
+      'facetBulkQID': this.facetBulkQID
     };
 
     // Store in cookies,  store sub-entity facets selected
     const searchItemHash = this.utilsService.hashCode(item);
 
+    // Store parameters in local storage
     localStorage.setItem(searchItemHash.toString(), JSON.stringify(item));
 
     const navigationExtras: NavigationExtras = {
       queryParams: {}
-      // queryParams: this.privateFacetParams ? { 'facets': this.privateFacetParams } : null
     };
 
-    if (this.thisEntitySearchTerm) {
+    if (this.bulkQID > 0) {
+      navigationExtras.queryParams['bulkQID'] = this.bulkQID;
+    }
 
-      //  navigationExtras.queryParams['q'] = this.entitySearchTerm || null;
+    if (this.bulkQID > 0) {
+      navigationExtras.queryParams['searchEntity'] = this.entity;
     }
 
     if (searchItemHash) {
       navigationExtras.queryParams['subentity-hash'] = searchItemHash;
     }
 
-    if (this.bulkQID > 0) {
-      navigationExtras.queryParams['bulkQID'] = this.bulkQID;
+    if (this.thisEntitySearchTerm) {
+      navigationExtras.queryParams['search'] = this.thisEntitySearchTerm || null;
+    }
+
+    if (this.thisEntityFacetString) {
+      navigationExtras.queryParams['facets'] = this.thisEntityFacetString;
     }
 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
 
     if (this.entity === this.ENTITY_SUBSTANCE) {
-      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-      this.router.onSameUrlNavigation = 'reload';
-      this.router.navigate(['/browse-substance'], navigationExtras);
-      //this.router.navigate(['/product', id, 'edit']);
-
       this.router.navigate(['/browse-substance'], navigationExtras);
     } else if (this.entity === this.ENTITY_PRODUCT) {
       this.router.navigate(['/browse-products'], navigationExtras);
@@ -577,22 +661,59 @@ export class CrossEntitySearchComponent implements OnInit {
 
   editSubEntitySearch() {
     if (this.editSubEntitySearchHashCode) {
-      let searchParams = localStorage.getItem(this.editSubEntitySearchHashCode);
 
-      if (searchParams) {
-        const searchParamItems = JSON.parse(searchParams);
-        if (searchParamItems) {
-          this.idListForSearch = searchParamItems['idListForSearch'];
+      // remove digits after '_' from the Hash code
+      let hashCodeIndex: number = this.editSubEntitySearchHashCode.indexOf('_');
 
-          //this.subEntity = searchParamItems['subEntity'];
-          // this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+      // Found character '_'
+      if (hashCodeIndex > 0) {
+        let truncatedHashCode = this.editSubEntitySearchHashCode.substring(0, hashCodeIndex);
+
+        let searchParams = localStorage.getItem(truncatedHashCode);
+
+        if (searchParams) {
+          const searchParamItems = JSON.parse(searchParams);
+
+          if (searchParamItems) {
+            this.entity = searchParamItems['entity'];
+            this.subEntityDisplay = searchParamItems['subEntityDisplay'];
+
+            this.thisEntityFacetParams = searchParamItems['thisEntityFacetParams'];
+            this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+
+            this.thisEntityTotalRecords = searchParamItems['thisEntityTotalRecords'];
+            this.subEntityTotalRecords = searchParamItems['subEntityTotalRecords'];
+
+            //this.idListForSearchOld = searchParamItems['idListForSearch'];
+            // this.idListForSearch = searchParamItems['idListForSearch'];
+            this.bulkQID = searchParamItems['facetBulkQID'];
+            this.rawFacets = searchParamItems['rawFacets'];
+
+            // Get Object that is selected in the dropdown
+            let subEntity = this.entityLists.find(ent => ent.entityDisplay === this.subEntityDisplay);
+
+            // Get sub-entity endpoint
+            if (subEntity) {
+              this.subEntityEndpoint = subEntity.entity;
+            }
+
+            // Show Message
+            this.showMessageTwo();
+
+            // Initialize values
+            this.statusMessage = '';
+            this.showFacets = true;
+            this.isSearchRunning = true;
+            // this.facetsParamsUpdateCount = 1;
+          }
+
+          //this.idLists = this.idListForSearch;
+
+          // Open Facets Popup
+          this.openModal();
+
         }
-
-        this.idLists = this.idListForSearch;
-
-        this.subEntitySelectedChange(this.entity);
       }
-
     }
   }
 
@@ -615,6 +736,7 @@ export class CrossEntitySearchComponent implements OnInit {
   closePopup() {
     // Deselect value in dropdown before closing the popup dialog
     this.showFacetForFormControl.setValue(null);
+
     this.dialog.closeAll();
   }
 
