@@ -107,6 +107,7 @@ export class ControlledVocabularyService extends BaseHttpService {
           observer.complete();
           subscription.unsubscribe();
         }, error => {
+          console.log(error);
           // if there is an unauthorized error, clear indicators that it is still loading so it retries after login.
           if (error.status === 403) {
             console.log('clearing indicators');
