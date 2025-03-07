@@ -47,8 +47,10 @@ export class ControlledVocabularyService extends BaseHttpService {
     return this.http.get<PagingResponse<Vocabulary>>(url, options);
   }
 
-  clearVocabDictionary(): void {
-    this.vocabularyDictionary = {};
+  clearVocabLoadingIndicators(): void {
+    Object.keys(this.vocabularyLoadingIndicators).forEach(item => {
+      this.vocabularyLoadingIndicators[item] = false;
+    });
   }
 
   getDomainVocabulary(...domainArgs: Array<string>): Observable<VocabularyDictionary> {
@@ -57,6 +59,7 @@ export class ControlledVocabularyService extends BaseHttpService {
     let vocabularyDictionary = {};
     const missingDomains = [];
     const tasks$ = [];
+    const tasksNames = [];
 
     domains.forEach(domain => {
       console.log(domain);
@@ -69,6 +72,8 @@ export class ControlledVocabularyService extends BaseHttpService {
         vocabularyDictionary[domain] = this.vocabularyDictionary[domain];
       } else if (this.vocabularyLoadingIndicators[domain] === true) {
         tasks$.push(this.vocabularySubject[domain]);
+        console.log(tasks$);
+        tasksNames.push(domain);
       } else {
         if (domain === 'CODE_SYSTEM'){
           console.log('else');
@@ -102,7 +107,12 @@ export class ControlledVocabularyService extends BaseHttpService {
           observer.complete();
           subscription.unsubscribe();
         }, error => {
-          console.log(error);
+          // if there is an unauthorized error, clear indicators that it is still loading so it retries after login.
+          if (error.status === 403) {
+            console.log('clearing indicators');
+              this.clearVocabLoadingIndicators();
+            console.log(this.vocabularyLoadingIndicators);
+          }
           observer.error(error);
           observer.complete();
           subscription.unsubscribe();
