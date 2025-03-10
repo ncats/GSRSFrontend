@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse, HttpParameterCodec, HttpHeaders } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
-import { Observable, Subject, forkJoin, throwError } from 'rxjs';
+import { Observable, Subject, forkJoin, throwError, of } from 'rxjs';
+
 import { ConfigService } from '../config/config.service';
 import { PagingResponse } from '../utils/paging-response.model';
 import { map, catchError, retry } from 'rxjs/operators';
@@ -39,30 +40,30 @@ export class AdminService extends BaseHttpService {
     super(configService);
   }
   public fetchServiceInfoEndpointPaths(serviceContext: string): Observable< any > {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }service-info/api/v1/`+ serviceContext + '/';
+    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }service-info/api/v1/` + serviceContext + `/`;
     return this.http.get< any >(`${url}@extensionConfigsInfoPaths`);
   }
-  public fetchServiceInfoByEndpoint(endpoint: string): Observable< any > {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }`;
-    return this.http.get< any >(`${url}` + endpoint);
-  }
 
-  public fetchServiceInfoByEndpoint2(endpoint: string, responseType: any): Observable< any > {
+  public fetchServiceInfoByEndpoint(endpoint: string, responseType: any): Observable< any > {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }`;
-    return this.http.get< any >(`${url}`+ endpoint, { responseType: responseType, observe: 'response' });
+    const result = this.http.get< any >(`${url}`+ endpoint, { responseType: responseType, observe: 'response' }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('An error occurred:', error.message);
+      return of("error");
+    }));
+    return result;
   }
 
   public fetchJobs(serviceContext: string): Observable< any > {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    const url2 = url.replace('/api/v1/', `/service/`+ serviceContext + `/api/v1/`);
-    return this.http.get< any >(`${url2}scheduledjobs`);
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    url = url.replace('/api/v1/', `/service/`+ serviceContext + `/api/v1/`);
+    return this.http.get< any >(`${url}scheduledjobs`);
   }
 
   public fetchJob(serviceContext: string, id: number): Observable< ScheduledJob > {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-    const url2 = url.replace('/api/v1/', `/service/`+ serviceContext + `/api/v1/`);
-    return this.http.get< any >(`${url2}scheduledjobs(${id})`);
-
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    url = url.replace('/api/v1/', `/service/`+ serviceContext + `/api/v1/`);
+    return this.http.get< any >(`${url}scheduledjobs(${id})`);
   }
 
   public runJob(job: string): Observable< ScheduledJob > {

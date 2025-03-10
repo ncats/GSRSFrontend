@@ -1,13 +1,5 @@
 <div *ngIf = "loading === false">
-    <!-- mat-card *ngFor = "let job of jobs" class = "form-row">
-        <app-scheduled-job [job] = "job" pollIn = "true" ></app-scheduled-job>
-        </mat-card>
-    <mat-card *ngIf="!jobs.length" class ="no-jobs">
-            <h3>No scheduled tasks</h3>
-        </mat-card -->
-</div>
-       
-<div class = "options-row">
+
     <div>
         <mat-form-field>
           <mat-label style="width: 100%;">Service</mat-label>
@@ -21,26 +13,40 @@
     <div>
         <mat-form-field style="width: 800px;">
           <mat-label style="width: 100%;">API Endpoint</mat-label>
-            <mat-select [(ngModel)]="currentEndpoint" (selectionChange)="onEndpointSelectionChange2($event)" style="width: 800px;">
+            <mat-select [(ngModel)]="currentEndpoint" (selectionChange)="onEndpointSelectionChange($event)" style="width: 800px;">
                 <mat-option *ngFor="let option of endpoints" [value]="option.path" style="width: 800px;">
                   {{option.path}}
                 </mat-option>
               </mat-select>
-          </mat-form-field>
+          </mat-form-field><span *ngIf="currentEndpointUrl">
+             <a class = 'ext-link endpoint-link' [attr.href]="currentEndpointUrl" target="_blank" title="Open endpoint as new raw browser tab"><mat-icon class="icon small-icon" svgIcon="open_in_new"></mat-icon></a>
+          </span>
     </div>
-    <div>
-      <mat-form-field appearance="fill" class="test" style="width: 800px;">
-      <mat-label style="width: 100%;">API Response</mat-label>
-      <textarea style="width: 100%; height: 300px" matInput readonly>{{text}}</textarea>
-      </mat-form-field>
-      </div>
-</div>
 
-<div class = "loading-container" *ngIf = "loading === true">
+    <div class="scrollable-container" cdkScrollable>
+      <div *ngIf = "content">
+        <div *ngIf = "displayAsJson">
+          <div style="margin-bottom: 10px;">
+            <mat-checkbox (change)="onRawCheckboxChange($event)">Raw?</mat-checkbox>
+          </div>
+          <div *ngIf = "!rawContent">
+            <ngx-json-viewer [json]="content" [raw]="true"></ngx-json-viewer>
+          </div>
+          <div *ngIf = "rawContent">
+            <pre style="white-space: pre-wrap;">{{ content | json }}</pre>
+          </div>
+        </div>
+        <div *ngIf = "!displayAsJson">
+          <pre style="white-space: pre-wrap;">{{ content }}</pre>
+        </div>
+    </div>
+
+    </div>
+
+    <div class = "loading-container" *ngIf = "loading === true">
     <mat-progress-spinner
       class="progress-spinner"
       [color]="primary"
       mode = "indeterminate">
-  </mat-progress-spinner>
-  </div>
-    
+    </mat-progress-spinner>
+</div>

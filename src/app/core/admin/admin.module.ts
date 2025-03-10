@@ -51,7 +51,7 @@ import { BulkActionDialogComponent } from '@gsrs-core/admin/import-browse/bulk-a
 import { NamesDisplayStagingPipe } from '@gsrs-core/admin/import-browse/name-display.pipe';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe';
-
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 
 @NgModule({
@@ -88,6 +88,7 @@ import { TakeImportPipe } from '@gsrs-core/admin/import-browse/take-import.pipe'
   FacetsManagerModule,
   SubstanceImageModule,
   ElementLabelDisplayModule,
+  NgxJsonViewerModule
 ],
   declarations: [
     CvManagementComponent,

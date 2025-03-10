@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import cronstrue from 'cronstrue';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-scheduled-job',
@@ -20,14 +21,17 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     quickLoad = false;
     mess: any;
 
+    occasionalApiBasePath = '';
+
   constructor(
     private adminService: AdminService,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
     this.monitor = this.pollIn;
      this.refresh(true);
-
+     this.occasionalApiBasePath =  `${(this.configService.configData && this.configService.configData.occasionalApiBasePath)}` || '';
   }
 
   ngOnDestroy() {
@@ -91,8 +95,6 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
       this.monitor = false;
       console.log(error);
     });
-
-
   }
 
   untilNextRun() {
@@ -106,7 +108,7 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
 
 disable(serviceContext: string, job: any) {
   const url =job['@disable'];
-  const url2 = url.replace('/api/v1/', `/ginas/app/service/`+ serviceContext + `/api/v1/`);
+  const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
   this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
     this.refresh();
   });
@@ -114,7 +116,7 @@ disable(serviceContext: string, job: any) {
 
 enable(serviceContext: string, job: any) {
       const url =job['@enable'];
-      const url2 = url.replace('/api/v1/', `/ginas/app/service/`+ serviceContext + `/api/v1/`);
+      const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
       this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
         this.refresh();
       });
@@ -123,7 +125,14 @@ enable(serviceContext: string, job: any) {
 execute(serviceContext: string, job: any) {
   this.quickLoad = true;
   const url =job['@execute'];
-  const url2 = url.replace('/api/v1/', `/ginas/app/service/`+ serviceContext + `/api/v1/`);
+  console.log(url );
+  console.log(serviceContext );
+
+  const replace = this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/';
+  console.log(replace );
+
+  const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
+  console.log(url2);
   this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
     this.refresh(true);
   }, error => {
@@ -132,9 +141,10 @@ execute(serviceContext: string, job: any) {
     } );
   });
 }
+
 cancel(serviceContext: string, job: any) {
   const url =job['@cancel'];
-  const url2 = url.replace('/api/v1/', `/ginas/app/service/`+ serviceContext + `/api/v1/`);
+  const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
   this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
     this.refresh();
   });
