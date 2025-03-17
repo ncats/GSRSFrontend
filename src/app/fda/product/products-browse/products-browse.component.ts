@@ -103,11 +103,14 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   showCrossEntitySearch = false;
   searchOnIdentifiers = false;
   bulkSearchPanelOpen = false;
+  isSearchFinished = false;
+  iterations = 0;
   bulkSearchStatusKey: string;
   searchStatusUrl: string;
   subEntitySearchHash: string;
   editSubEntitySearchHash: any;
-  bulkSearchQueryId?: number;
+  bulkSearchQueryId?: string;
+  searchEntity?: string;
   idLists: Array<string> = [];
   secondIdLists: Array<string> = [];
   subEntityDisplayFacets: Array<DisplayFacet> = [];
@@ -191,6 +194,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
     this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
 
     // For Cross Entity/Sub Entity Search
     this.subEntitySearchHash = this.activatedRoute.snapshot.queryParams['subentity-hash'];
@@ -238,6 +242,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   searchProducts() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
+    this.iterations = 0;
 
     const subscription = this.productService.getProducts(
       this.order,
@@ -256,9 +261,22 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.bulkSearchStatusKey = pagingResponse.statusKey;
         this.searchStatusUrl = pagingResponse.searchStatusUrl;
 
-        this.products = pagingResponse.content;
+        // if Bulk Search is not finished
+        if (pagingResponse.finished) {
+          this.isSearchFinished = true;
+        }
 
-        this.dataSource = this.products;
+        // if it is Bulk Search
+        if (this.bulkSearchQueryId && this.iterations === 0) {
+          this.iterations++;
+
+          this.products = pagingResponse.content;
+          this.dataSource = this.products;
+        } else {
+          this.products = pagingResponse.content;
+          this.dataSource = this.products;
+        }
+
         this.totalProducts = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
@@ -304,6 +322,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           this.exportOptions = response;
         });
 
+        // Stop the spinner
+        if (this.bulkSearchQueryId && this.iterations === 1) {
+          this.isLoading = false;
+          this.loadingService.setLoading(this.isLoading);
+        }
+
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -332,6 +356,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.pageSize = 10;
     this.pageIndex = 0;
     this.privateSearchTerm = '';
+    this.bulkSearchQueryId = null;
+    this.subEntitySearchHash = '';
+    this.isSearchFinished = false;
+
     this.searchProducts();
   }
 
@@ -431,41 +459,59 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.searchProducts();
   }
 
-  clearSearch(): void {
-
-    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
-    this.gaService.sendEvent('productFiltering', 'icon-button:clear-search', eventLabel);
-
-    this.privateSearchTerm = '';
-    this.pageIndex = 0;
-    this.pageSize = 10;
-
-    this.populateUrlQueryParameters();
-    this.searchProducts();
-  }
-
   clearFilters(): void {
     // for facets
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
-    this.clearSearch();
+
+    if (this.bulkSearchQueryId) {
+      this.clearBulkSearch();
+    } else {
+      this.clearSearch();
+    }
 
     this.facetManagerService.clearSelections();
+  }
+
+  clearSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    this.gaService.sendEvent('productFiltering', 'icon-button:clear-search', eventLabel);
+
+    this.pageIndex = 0;
+    this.pageSize = 10;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+    this.isSearchFinished = false;
+
+    this.populateUrlQueryParameters();
+
+    this.searchProducts();
   }
 
   clearBulkSearch(): void {
     this.order = '$root_lastModifiedDate';
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.privateSearchTerm = null;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+
     this.bulkSearchQueryId = null;
-    // this.subentity-hash = null;
+    this.bulkSearchStatusKey = '';
+    this.searchEntity = '';
+    this.subEntitySearchHash = '';
+    this.isSearchFinished = false;
+    this.subEntityDisplayFacets = [];
 
     this.populateUrlQueryParameters();
 
     // Reset bulk search and do regular search
     this.searchProducts();
+  }
+
+  refreshBulkSearch() {
+    this.searchProducts();
+
   }
 
   populateUrlQueryParameters(): void {
@@ -477,12 +523,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
-    navigationExtras.queryParams['bulkQID'] = null;
-    navigationExtras.queryParams['subentity-hash'] = null;
+
+    navigationExtras.queryParams['bulkQID'] = this.bulkSearchQueryId;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
+    navigationExtras.queryParams['subentity-hash'] = this.subEntitySearchHash;
 
     this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
-      queryParams: navigationExtras.queryParams,
+      // queryParams: navigationExtras.queryParams,
+      queryParams: {},
       queryParamsHandling: 'merge',
       preserveFragment: true
     });
@@ -574,7 +623,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                       product._otherIngredients.push(elementIngred);
                     }
                   } // if Ingredient Type exists
-
+                  else {
+                    // if there is no Ingredient Type
+                    product._otherIngredients.push(elementIngred);
+                  }
 
                   /*
                   // Get Substance Details, uuid, approval_id, substance name
@@ -904,7 +956,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         this.subscriptions.push(subscription);
       }
       ); // response
-      
+
     } // if doPerformSearch == true
   }
 
@@ -923,6 +975,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     let facetlabel = null;
     let viewfield = 'id';
     let simpleSearchOnly: boolean = true;
+
+    // Get Product records that have Ingredients
+    this.privateFacetParams['Has Ingredients'] = { 'params': { 'Has Ingredients': true }, 'isAllMatch': false };
 
     const prodSubscription = this.productService.getProducts(
       order,

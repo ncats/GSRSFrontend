@@ -9,8 +9,7 @@
     <span *ngIf="isFacetsParamsInit === true">
       <span *ngIf="showCrossEntitySearch == true">
         <app-cross-entity-search [entity]='thisEntity' [idLists]="idLists" [secondIdLists]="secondIdLists"
-          [searchTerm]="searchTerm"
-          [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
+          [searchTerm]="searchTerm" [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
           [entityTotalRecords]="totalProducts" [editSubEntitySearchHash]="editSubEntitySearchHash"
           (getSearchIdsOnly)="getSearchIdsOnly($event)">
         </app-cross-entity-search>
@@ -36,31 +35,32 @@
 
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <div>Bulk Search Summary (Full Results)</div>
-              <div>
+              <div *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0; else noCrossEntitySearch">
+                Cross Entity Bulk Search Summary&nbsp;(Full Results)
               </div>
+              <ng-template #noCrossEntitySearch>
+                <div>Bulk Search Summary (Full Results)</div>
+              </ng-template>
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
-
-            <div>
-              <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
-              <span *ngIf="bulkSearchQueryId">
-                | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
-              </span>
-              Bulk Search
-            </div>
-
             <app-bulk-search-results-summary showTitle=false loadSummaries=true context="products"
-              [key]="bulkSearchStatusKey" [isCollapsed]="isBulkSearchCollapsed" 
-              [searchStatusUrl]="searchStatusUrl">
+              [key]="bulkSearchStatusKey" [isCollapsed]="isBulkSearchCollapsed" [searchStatusUrl]="searchStatusUrl">
             </app-bulk-search-results-summary>
-
           </div>
         </mat-expansion-panel>
       </div>
       <!-- Bulk Search END -->
+
+      <!-- Display this message if Bulk Search is not finished -->
+      <div class="marginbottom20px" *ngIf="((bulkSearchQueryId && iterations > 0) && !isSearchFinished)">
+        <div><b>Getting more Product records ... This page will refresh automatically once complete.</b>
+          &nbsp;&nbsp;
+          <button class="sub-search-ref-btn" color="primary" (click)="refreshBulkSearch()">Refresh Search</button>
+        </div>
+      </div>
+      <!-- BULK SEARCH STATUS Message END -->
 
 
       <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
@@ -147,8 +147,9 @@
               </button>
             </div>
           </div>
+
           <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
-            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
             <span>RESET</span>
           </button>
         </div>
@@ -174,7 +175,8 @@
 
                 <!-- Edit button -->
 
-                <button mat-icon-button color="primary" matTooltip="Edit Cross Entity Search" (click)="editSubEntitySearch()">
+                <button mat-icon-button color="primary" matTooltip="Edit Cross Entity Search"
+                  (click)="editSubEntitySearch()">
                   <mat-icon svgIcon="edit"></mat-icon>
                 </button>
               </div>
@@ -335,8 +337,7 @@
                     <div *ngFor="let prodManuItems of product.productManufactureItems">
                       <div *ngFor="let prodLot of prodManuItems.productLots">
                         <div *ngFor="let prodIngred of prodLot.productIngredients; let indexActiveIngred = index">
-
-                          <span *ngIf=" prodIngred.ingredientType; else noIngredientType">
+                          <span *ngIf="prodIngred.ingredientType; else noIngredientType">
                             <span
                               *ngIf="prodIngred.ingredientType === 'Active Ingredient' || prodIngred.ingredientType === 'ACTIVE INGREDIENT'">
 
@@ -363,6 +364,7 @@
                           </span>
                           <!-- No Ingredient Type, Display Ingredient Name -->
                           <ng-template #noIngredientType>
+                            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                             <!-- if No Ingredient Type, but have Substance Name, display here. -->
                             <div *ngIf="prodIngred._ingredientName">
                               <li class="">
@@ -823,12 +825,19 @@
                                   {{prodIngred._ingredientName}}
                                 </ng-template>
 
+                                <!-- Show Structures-->
                                 <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
                                   <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                                     (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
                                     <mat-icon matTooltip="Show Substance chemical structure">analytics
                                     </mat-icon>
                                   </button>
+
+                                  <!-- Show Approval ID-->
+                                  <!--
+                                  <mat-icon class="margintop5px font16px"
+                                    matTooltip="Approval ID: {{prodIngred._approvalId}}">verified</mat-icon>
+                                  -->                                
                                 </div>
 
                               </div> <!-- class=divflex -->
