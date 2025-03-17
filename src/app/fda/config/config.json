@@ -80,7 +80,6 @@
     "userRegistration": false
   },
   "services": [
-<<<<<<< Updated upstream
     { "name": "adverse-events", "active": true, "hasEntities": true },
     { "name": "applications", "active": true, "hasEntities": true },
     { "name": "clinical-trials", "active": true, "hasEntities": true },
@@ -93,20 +92,6 @@
     { "name": "ssg4m", "active": true, "hasEntities": true },
     { "name": "substances", "active": true, "hasEntities": true }
    ],
-=======
-   { "name": "adverse-events", "active": true, "hasEntities": true }, 
-   { "name": "applications", "active": true, "hasEntities": true }, 
-   { "name": "clinical-trials", "active": true, "hasEntities": true }, 
-   { "name": "discovery", "active": false, "hasEntities": false }, 
-   { "name": "frontend", "active": true, "hasEntities": false }, 
-   { "name": "gateway", "active": true, "hasEntities": false }, 
-   { "name": "impurities", "active": true, "hasEntities": true }, 
-   { "name": "invitro-pharmacology", "active": true, "hasEntities": true }, 
-   { "name": "products", "active": true, "hasEntities": true }, 
-   { "name": "ssg4m", "active": true, "hasEntities": true }, 
-   { "name": "substances", "active": true, "hasEntities": true }
-  ],
->>>>>>> Stashed changes
   "usefulLinks": [
     {
       "title": "GSRSFind Excel tools",
