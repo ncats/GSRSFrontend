@@ -6,6 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MatIconModule,
     ReferencesManagerModule,
     SubstanceImageModule,
-    MatListModule
+    MatListModule,
+    MatTooltipModule
   ],
   declarations: [
     StructureDetailsComponent

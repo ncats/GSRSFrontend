@@ -15,56 +15,49 @@
   <mat-card-content>
 
     <div class="form-row">
-      <app-cv-input class="col-2-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
+      <app-cv-input class="col-2-1" 
+      *ngIf="configSettingsDisplay['sourceType'] || (configSettingsDisplay['sourceType'] === undefined && true)"
+      domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
         [model]="impuritiesResidualSolventsTest.sourceType" (valueChange)="impuritiesResidualSolventsTest.sourceType = $event">
       </app-cv-input>
 
-      <app-cv-input class="col-2-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
+      <app-cv-input class="col-2-1" 
+      *ngIf="configSettingsDisplay['source'] || (configSettingsDisplay['source'] === undefined && true)"
+      domain="IMPURITIES_SOURCE" title="Source" name="source"
         [model]="impuritiesResidualSolventsTest.source" (valueChange)="impuritiesResidualSolventsTest.source = $event">
       </app-cv-input>
 
-      <mat-form-field class="col-2-1">
+      <mat-form-field class="col-2-1"
+      *ngIf="configSettingsDisplay['sourceId'] || (configSettingsDisplay['sourceId'] === undefined && true)">
         <input matInput placeholder="Source ID" [(ngModel)]="impuritiesResidualSolventsTest.sourceId" name="sourceId" />
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field class="col-2-1">
+      <mat-form-field class="col-2-1"
+      *ngIf="configSettingsDisplay['test'] || (configSettingsDisplay['test'] === undefined && true)">
         <input matInput placeholder="Test" [(ngModel)]="impuritiesResidualSolventsTest.test" name="test" />
       </mat-form-field>
 
-      <app-cv-input class="col-2-1" domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
+      <app-cv-input class="col-2-1" 
+      *ngIf="configSettingsDisplay['testType'] || (configSettingsDisplay['testType'] === undefined && true)"
+      domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
         [model]="impuritiesResidualSolventsTest.testType" (valueChange)="impuritiesResidualSolventsTest.testType = $event">
       </app-cv-input>
     </div>
 
-    <!--
-      <div class="col-4-1">
-        <div class="textarea-label">Test Description</div>
-        <textarea placeholder="" [(ngModel)]="impuritiesTest.testDescription" name="testDescription"></textarea>
-      </div>
-      -->
     <div class="form-row">
-      <mat-form-field class="col-2-1">
+      <mat-form-field class="col-2-1"
+      *ngIf="configSettingsDisplay['testDescription'] || (configSettingsDisplay['testDescription'] === undefined && true)">
         <textarea matInput placeholder="Test Description" [(ngModel)]="impuritiesResidualSolventsTest.testDescription"
           name="testDescription"></textarea>
       </mat-form-field>
-      <!--
-          <mat-form-field class="col-4-1">
-           <input matInput placeholder="Test Description" [(ngModel)]="impuritiesTest.testDescription"
-            name="testDescription" />
-          </mat-form-field>
-          -->
 
-      <mat-form-field class="col-2-1">
+      <mat-form-field class="col-2-1"
+      *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
         <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesResidualSolventsTest.comments"
           name="comments"></textarea>
       </mat-form-field>
-      <!--
-        <mat-form-field class="col-2-1">
-           <input matInput placeholder="Comments" [(ngModel)]="impuritiesTest.comments" name="comments" />
-        </mat-form-field>
-        -->
     </div>
 
     <!-- IMPURITIES RESIDUAL SOLVENTS LIST BEGIN -->
@@ -86,7 +79,7 @@
       *ngFor="let impuritiesResidualSolvents of impuritiesResidualSolventsTest.impuritiesResidualSolventsList; let impuritiesResidualIndex = index">
       <app-impurities-residual-solvents-form [impuritiesResidualSolvents]="impuritiesResidualSolvents"
         [impuritiesResidualIndex]="impuritiesResidualIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-        [residualSolventsTestIndex]="residualSolventsTestIndex">
+        [residualSolventsTestIndex]="residualSolventsTestIndex" [showAdvancedSettings]="showAdvancedSettings">
       </app-impurities-residual-solvents-form>
     </div>
 

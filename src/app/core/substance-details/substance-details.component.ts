@@ -25,6 +25,10 @@ import { environment } from '../../../environments/environment';
 import {Subject, Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
 import { AdminService } from '@gsrs-core/admin/admin.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { ConfigService } from '@gsrs-core/config';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-substance-details',
@@ -43,6 +47,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   substanceUpdated = new Subject<SubstanceDetail>();
+  companyName_pdf='';
+  proprietaryNote_pdf='';
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
@@ -56,7 +62,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private gaService: GoogleAnalyticsService,
     private activeRoute: ActivatedRoute,
     private titleService: Title,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private configService: ConfigService,
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -92,7 +99,10 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     } else {
       this.getSubstanceDetails(this.id);
     }
-     
+    if(this.configService.configData && this.configService.configData.enablePDFDownload ){
+      this.companyName_pdf = this.configService.configData.enablePDFDownload.companyName;
+      this.proprietaryNote_pdf = this.configService.configData.enablePDFDownload.proprietaryNote;
+    }
 
 
   }
@@ -115,6 +125,11 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
                   this.substance.uuid =  this.id;
                 }
                 const ref = cRef.createComponent(componentFactory);
+                if(substanceProperty.dynamicComponentId === "substance-overview"){
+                  ref.instance.downloadPDF.subscribe(()=>{
+                   this.generatePDF();
+                  })
+                }
                 ref.instance.countUpdate.subscribe(count => {
                   substanceProperty.updateCount(count);
                 });
@@ -308,5 +323,85 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.matSideNav.close();
       this.hasBackdrop = true;
     }
+  }
+
+  generatePDF() {
+    const datepipe = new DatePipe('en-US');
+    const date = new Date();
+    const formattedDate = datepipe.transform(date, 'dd-MMM-YYYY');
+    const data = document.getElementById('substancePdfContent');
+    var pageNum = 1;
+    html2canvas(data, { useCORS: true, logging : true, scrollY: 0,allowTaint : false }).then((canvas) => {
+      const image = { type: 'png', quality: 0.5 };
+      const margin = [0.5, 0.75];
+      var imgWidth = 8.5;
+      var pageHeight = 11;
+  
+      var innerPageWidth = imgWidth - margin[0] * 2;
+      var innerPageHeight = pageHeight - margin[1] * 2;
+  
+      // Calculate the number of pages.
+      var pxFullHeight = canvas.height;
+      var pxPageHeight = Math.floor(canvas.width * (pageHeight / imgWidth));
+      var nPages = Math.ceil(pxFullHeight / pxPageHeight);
+  
+      // Define pageHeight separately so it can be trimmed on the final page.
+      var pageHeight = innerPageHeight;
+  
+      // Create a one-page canvas to split up the full image.
+      var pageCanvas = document.createElement('canvas');
+      var pageCtx = pageCanvas.getContext('2d');
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = pxPageHeight;
+  
+      // Initialize the PDF.
+      var pdf = new jsPDF('p', 'in', [8.5, 11],true);
+  
+      for (var page = 0; page < nPages; page++) {
+        // Trim the final page to reduce file size.
+        if (page === nPages - 1 && pxFullHeight % pxPageHeight !== 0) {
+          pageCanvas.height = pxFullHeight % pxPageHeight;
+          pageHeight = (pageCanvas.height * innerPageWidth) / pageCanvas.width;
+        }
+  
+        // Display the page.
+        var w = pageCanvas.width;
+        var h = pageCanvas.height;
+        pageCtx.fillStyle = 'white';
+        pageCtx.fillRect(0, 0, w, h);
+        pageCtx.drawImage(canvas, 0, page * pxPageHeight, w, h, 0, 0, w, h);
+  
+        // Add the page to the PDF.
+        if (page > 0) {
+          pdf.addPage();
+          pageNum++;
+        }
+  
+        var imgData = pageCanvas.toDataURL('image/' + image.type, image.quality);
+        pdf.addImage(imgData, image.type, margin[0], margin[1], innerPageWidth, pageHeight);
+        pdf.setFontSize(8);
+        if (this.companyName_pdf != ' '&&this.companyName_pdf !=undefined) {
+          pdf.text(this.companyName_pdf, margin[0], margin[1] - 0.5);
+          var substanceName = pdf.splitTextToSize(this.substance._name, 3.5);
+          pdf.text(substanceName, 3.5, margin[1] - 0.5);
+          pdf.text(formattedDate, 7.5, margin[1] - 0.5).setFont(undefined, 'bold');
+        } else {
+          var substanceName = pdf.splitTextToSize(this.substance._name, 6);
+          pdf.text(substanceName, margin[0], margin[1] - 0.5);
+          pdf.text(formattedDate, 7.5, margin[1] - 0.5).setFont(undefined, 'bold');
+        }
+        
+  
+        if (pageNum < nPages) {
+          pdf.text(this.proprietaryNote_pdf, margin[0], pageHeight + 1.2).setFont(undefined, 'normal');
+          pdf.text(pageNum + " of " + nPages, 8, pageHeight + 1.2);
+        } else {
+          pdf.text(this.proprietaryNote_pdf, margin[0], 10.8).setFont(undefined, 'normal');
+          pdf.text(pageNum + " of " + nPages, 8, 10.8);
+        }
+      }
+  
+      pdf.save(this.substance._name+'.pdf');
+  });
   }
 }

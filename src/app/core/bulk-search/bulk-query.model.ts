@@ -5,4 +5,5 @@ export interface BulkQuery {
     top: number;
     skip: number;
     queries: Array<string>;
+    _self: string;
 }

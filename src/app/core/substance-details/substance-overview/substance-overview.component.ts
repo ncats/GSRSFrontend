@@ -1,5 +1,5 @@
 
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { SubstanceCardBase } from '../substance-card-base';
 import {SubstanceDetail} from '../../substance/substance.model';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
@@ -48,6 +48,9 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   showlinks = false;
+  @Output("downloadPDF") downloadPDF: EventEmitter<any> = new EventEmitter();
+  enablePDFDownloadOption = false;
+  pdfDownloadBtnName = "Download PDF";
 
 
   constructor(
@@ -121,6 +124,10 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.defaultCodes = defaultCodes.join(', ');
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    if(this.configService.configData && this.configService.configData.enablePDFDownload ){
+      this.enablePDFDownloadOption = this.configService.configData.enablePDFDownload.enablePDFDownload;
+      this.pdfDownloadBtnName = this.configService.configData.enablePDFDownload.buttonName
+    }
   }
 
     ngOnDestroy() {
@@ -238,8 +245,10 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       }
     });
 
-}
+  }
 
-
+  downloadPDFSummary(){
+    this.downloadPDF.emit();
+  }
 
 }

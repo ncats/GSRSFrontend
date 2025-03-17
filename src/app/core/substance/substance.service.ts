@@ -11,7 +11,8 @@ import {
   SubstanceCode,
   SubstanceRelationship,
   SubstanceRelated,
-  SubstanceReference
+  SubstanceReference,
+  SubstanceDiff
 } from './substance.model';
 import { PagingResponse, ShortResult } from '../utils/paging-response.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -126,7 +127,10 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam,
     skip?: number,
     sequenceSearchKey?: string,
-    deprecated?: boolean
+    deprecated?: boolean,
+    simpleSearchOnly?: boolean,
+    view?: string,
+    viewfield?: string
   } = {}): Observable<PagingResponse<SubstanceSummary>> {
     if (args.deprecated) {
       this.showDeprecated = true;
@@ -197,7 +201,10 @@ export class SubstanceService extends BaseHttpService {
           args.pageSize,
           args.facets,
           args.order,
-          args.skip
+          args.skip,
+          args.simpleSearchOnly,
+          args.view,
+          args.viewfield
         ).subscribe(response => {
           observer.next(response);
         }, error => {
@@ -215,7 +222,10 @@ export class SubstanceService extends BaseHttpService {
     pageSize: number = 10,
     facets?: FacetParam,
     order?: string,
-    skip: number = 0
+    skip: number = 0,
+    simpleSearchOnly?: boolean,
+    view?: string,
+    viewfield?: string
   ): Observable<PagingResponse<SubstanceSummary>> {
 
     let params = new FacetHttpParams({encoder: new CustomEncoder()});
@@ -235,7 +245,20 @@ export class SubstanceService extends BaseHttpService {
     if (order != null && order !== '') {
       params = params.append('order', order);
     }
+
     params = params.append('fdim', '10');
+
+    if (simpleSearchOnly) {
+      params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+    }
+
+    if (view && view !== '') {
+      params = params.append('view', view); // setting view=key, faster result, no content
+    }
+
+    if (viewfield && viewfield !== '') {
+      params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
+    }
 
     const options = {
       params: params
@@ -1019,7 +1042,16 @@ export class SubstanceService extends BaseHttpService {
 
   }
 
+  public GetSubstanceDiff(url:string) {
+    return this.http.get<Array<SubstanceDiff>>(url);
+  }
+
+  public GetSubstanceOldValue(url:string) {
+    return this.http.get<SubstanceDetail>(url);
+  }
 }
+
+
 
 
 

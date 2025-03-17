@@ -47,20 +47,38 @@ export class ControlledVocabularyService extends BaseHttpService {
     return this.http.get<PagingResponse<Vocabulary>>(url, options);
   }
 
+  clearVocabLoadingIndicators(): void {
+    Object.keys(this.vocabularyLoadingIndicators).forEach(item => {
+      this.vocabularyLoadingIndicators[item] = false;
+    });
+  }
+
   getDomainVocabulary(...domainArgs: Array<string>): Observable<VocabularyDictionary> {
 
     const domains = [...domainArgs];
     let vocabularyDictionary = {};
     const missingDomains = [];
     const tasks$ = [];
+    const tasksNames = [];
 
     domains.forEach(domain => {
-
+      console.log(domain);
+        console.log(this.vocabularyDictionary[domain] );
+        console.log(this.vocabularySubject[domain]);
+        console.log(this.vocabularyLoadingIndicators[domain]);
+      
       if (this.vocabularyDictionary[domain] != null) {
+        
         vocabularyDictionary[domain] = this.vocabularyDictionary[domain];
       } else if (this.vocabularyLoadingIndicators[domain] === true) {
         tasks$.push(this.vocabularySubject[domain]);
+        console.log(tasks$);
+        tasksNames.push(domain);
       } else {
+        if (domain === 'CODE_SYSTEM'){
+          console.log('else');
+          
+        }
         this.vocabularyLoadingIndicators[domain] = true;
         if (this.vocabularySubject[domain] == null) {
           this.vocabularySubject[domain] = new Subject();
@@ -70,19 +88,32 @@ export class ControlledVocabularyService extends BaseHttpService {
     });
 
     return new Observable(observer => {
+      console.log(missingDomains);
       if (missingDomains.length > 0) {
         tasks$.push(this.fetchVocabulariesFromServer(...missingDomains));
       }
-
+      console.log(tasks$.length);
       if (tasks$.length > 0) {
         const subscription = forkJoin(tasks$).subscribe(responses => {
           responses.forEach(response => {
+            console.log(response);
+            
             vocabularyDictionary = Object.assign(vocabularyDictionary, response);
+           
+              console.log(vocabularyDictionary);
+            
           });
           observer.next(vocabularyDictionary);
           observer.complete();
           subscription.unsubscribe();
         }, error => {
+          console.log(error);
+          // if there is an unauthorized error, clear indicators that it is still loading so it retries after login.
+          if (error.status === 403) {
+            console.log('clearing indicators');
+              this.clearVocabLoadingIndicators();
+            console.log(this.vocabularyLoadingIndicators);
+          }
           observer.error(error);
           observer.complete();
           subscription.unsubscribe();

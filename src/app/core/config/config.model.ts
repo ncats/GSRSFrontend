@@ -58,6 +58,7 @@ export interface Config {
     approvalCodeName?: string;
     approvalType?: string;
     ssg4Form?: string;
+    impuritiesForm?: string;
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
     authenticateAs?: AuthenticateAs;
@@ -89,6 +90,8 @@ export interface Config {
     structureEditSearch?: boolean;
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
+    enablePDFDownload ?: DownloadAsPDF;
+    showCrossEntitySearchDropdown?: boolean;
 }
 
 export interface StagingAreaSettings {
@@ -174,4 +177,11 @@ export interface PagingOptionSettings {
 export interface PagingOptions {
     pageSizeOptions?: Array<number>;
     pageSizeDefault?: number;
+}
+
+export interface DownloadAsPDF {
+    enablePDFDownload?: boolean;
+    buttonName?:string;
+    companyName?:string;
+    proprietaryNote?:string;
 }
