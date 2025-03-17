@@ -215,11 +215,11 @@
                 [disabled]="isLoading || (this.validationResult === false)">{{ validationMessages && validationMessages.length > 0 ? 'Dismiss All and ' : '' }}
           Submit
         </button>
-        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false">
+        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false; this.validationResult = true;">
           Cancel
         </button>
         <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
-        [disabled]="isLoading || !canApprove"> Confirm Approval
+        [disabled]="isLoading || !canApprove  || (this.validationResult === false)"> Confirm Approval
               </button>
 
       </div>
