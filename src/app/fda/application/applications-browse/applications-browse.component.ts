@@ -81,8 +81,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   showCrossEntitySearch = false;
   searchOnIdentifiers = false;
   bulkSearchPanelOpen = false;
+  isSearchFinished = false;
+  iterations: number = 0;
   bulkSearchStatusKey: string;
   searchStatusUrl: string;
+  searchEntity: string;
   subEntitySearchHash: string;
   editSubEntitySearchHash: any;
   bulkSearchQueryId?: number;
@@ -165,7 +168,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+
     this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
 
     // For Cross Entity/Sub Entity Search
     this.subEntitySearchHash = this.activatedRoute.snapshot.queryParams['subentity-hash'];
@@ -220,7 +225,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     const skip = this.pageIndex * this.pageSize;
     let fdim = 10;
+    this.iterations = 0;
 
+    console.log("PRIVATE PARAM " + JSON.stringify(this.privateFacetParams));
+    
     const subscription = this.applicationService.getApplications(
       this.order,
       skip,
@@ -235,11 +243,28 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       this.bulkSearchStatusKey = pagingResponse.statusKey;
       this.searchStatusUrl = pagingResponse.searchStatusUrl;
 
-      this.applications = pagingResponse.content;
+      //this.applications = pagingResponse.content;
 
       // didn't work unless I did it like this instead of
       // below export statement
-      this.dataSource = this.applications;
+      //this.dataSource = this.applications;
+
+       // if Bulk Search is not finished
+       if (pagingResponse.finished) {
+        this.isSearchFinished = true;
+      }
+
+      // if it is Bulk Search
+      if (this.bulkSearchQueryId && this.iterations === 0) {
+        this.iterations++;
+
+        this.applications = pagingResponse.content;
+        this.dataSource = this.applications;
+      } else {
+        this.applications = pagingResponse.content;
+        this.dataSource = this.applications;
+      }
+
       this.totalApplications = pagingResponse.total;
       this.etag = pagingResponse.etag;
 
@@ -281,6 +306,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       // Get Application Clinical Trial Record
       this.getClinicalTrialApplication();
 
+      // Stop the spinner
+      if (this.bulkSearchQueryId && this.iterations === 1) {
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+      }
+
     }, error => {
       console.log('error');
       const notification: AppNotification = {
@@ -305,35 +336,47 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.searchApplications();
   }
 
-  clearSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
-    this.gaService.sendEvent('applicationFiltering', 'icon-button:clear-search', eventLabel);
-
-    this.privateSearchTerm = '';
-    this.pageIndex = 0;
-    this.pageSize = 10;
-
-    this.populateUrlQueryParameters();
-    this.searchApplications();
-  }
-
   clearFilters(): void {
     // for facets
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
-    this.clearSearch();
+
+    if (this.bulkSearchQueryId) {
+      this.clearBulkSearch();
+    } else {
+      this.clearSearch();
+    }
 
     this.facetManagerService.clearSelections();
+  }
+
+  clearSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    this.gaService.sendEvent('applicationFiltering', 'icon-button:clear-search', eventLabel);
+
+    this.pageIndex = 0;
+    this.pageSize = 10;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+
+    this.populateUrlQueryParameters();
+
+    this.searchApplications();
   }
 
   clearBulkSearch(): void {
     this.order = '$root_lastModifiedDate';
     this.pageSize = 10;
     this.pageIndex = 0;
-    this.privateSearchTerm = null;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+
     this.bulkSearchQueryId = null;
-    // this.subentity-hash = null;
+    this.bulkSearchStatusKey = '';
+    this.searchEntity = '';
+    this.subEntitySearchHash = '';
+    this.subEntityDisplayFacets = [];
 
     this.populateUrlQueryParameters();
 
@@ -351,8 +394,10 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
-    navigationExtras.queryParams['bulkQID'] = null;
-    navigationExtras.queryParams['subentity-hash'] = null;
+
+    navigationExtras.queryParams['bulkQID'] = this.bulkSearchQueryId;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
+    navigationExtras.queryParams['subentity-hash'] = this.subEntitySearchHash;
 
     this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
@@ -763,6 +808,9 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     let viewfield = 'id';
     let simpleSearchOnly: boolean = true;
 
+    // Get Product records that have Ingredients
+    this.privateFacetParams['Has Ingredients'] = { 'params': { 'Has Ingredients': true }, 'isAllMatch': false };
+  
     const subscription = this.applicationService.getApplications(
       order,
       skip,

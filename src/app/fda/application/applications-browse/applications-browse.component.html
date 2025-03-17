@@ -24,7 +24,7 @@
         <mat-icon svgIcon="chevron_right"></mat-icon>
       </button>
 
-      <!-- BULK SEARCH RESULTS BEGIN -->
+      <!-- BULK SEARCH RESULTS SUMMARY BEGIN -->
       <div class="marginbottom20px" *ngIf="bulkSearchQueryId && bulkSearchStatusKey">
         <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true"
           (closed)="bulkSearchPanelOpen = false"
@@ -32,30 +32,24 @@
 
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <div>Bulk Search Summary (Full Results)</div>
-              <div>
+              <div *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0; else noCrossEntitySearch">
+                Cross Entity Bulk Search Summary&nbsp;(Full Results)
               </div>
+              <ng-template #noCrossEntitySearch>
+                <div>Bulk Search Summary (Full Results)</div>
+              </ng-template>
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
-
-            <div>
-              <a class="ext-link" (click)="clearBulkSearch()">Clear</a>
-              <span *ngIf="bulkSearchQueryId">
-                | <a class="ext-link" (click)="editBulkSearch()">Edit </a>
-              </span>
-              Bulk Search
-            </div>
-
             <app-bulk-search-results-summary showTitle=false loadSummaries=true context="applications"
               [key]="bulkSearchStatusKey" [isCollapsed]="isBulkSearchCollapsed" [searchStatusUrl]="searchStatusUrl">
             </app-bulk-search-results-summary>
-
           </div>
+
         </mat-expansion-panel>
       </div>
-      <!-- Bulk Search END -->
+      <!-- BULK SEARCH RESULTS SUMMARY END -->
 
       <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
       <div class="narrow-search-suggestions-container"
@@ -144,7 +138,7 @@
             </div>
           </div>
           <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
-            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm">
+            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
             <span>RESET</span>
           </button>
         </div>
@@ -178,6 +172,14 @@
           </fieldset>
         </div>
         <!-- CROSS ENTITY SEARCH - FACET SELECTED DISPLAY END -->
+
+        <!-- Display this message if Bulk Search is not finished -->
+        <div class="marginbottom20px" *ngIf="((bulkSearchQueryId && iterations > 0) && !isSearchFinished)">
+          <div><b>Getting more Application records ... This page will refresh automatically once complete.</b>
+            <button class="sub-search-ref-btn" (click)="refreshBulkSearch()">Refresh Search</button>
+          </div>
+        </div>
+        <!-- BULK SEARCH STATUS Message END -->
 
       </ng-template>
 

@@ -90,6 +90,7 @@ export interface Config {
     expandedComponents?: Array<string>;
     enablePDFDownload ?: DownloadAsPDF;
     showCrossEntitySearchDropdown?: boolean;
+    restApiPrefix?: string;
 }
 
 export interface StagingAreaSettings {

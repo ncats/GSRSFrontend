@@ -147,7 +147,7 @@ export class CrossEntitySearchService extends BaseHttpService {
     });
   }
 
-  public getBulkSearchResults(
+  public getBulkSearchStatusResults(
     searchEntity?: string,
     key?: number,
     url?: string,
@@ -158,7 +158,8 @@ export class CrossEntitySearchService extends BaseHttpService {
     useServiceInUrl: boolean = false,
     simpleSearchOnly?: string,
     pageSize: number = 10,
-    skip: number = 0
+    skip: number = 0,
+    qTop: number = 100
   ): any {
 
     url = this.getBulkSearchUrl(searchEntity, useServiceInUrl);
@@ -177,6 +178,7 @@ export class CrossEntitySearchService extends BaseHttpService {
       top: pageSize.toString(),
       skip: skip.toString(),
       fdim: fdim.toString(),
+      qTop: qTop.toString()
     });
 
     if (simpleSearchOnly) {

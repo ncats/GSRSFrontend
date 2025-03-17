@@ -68,9 +68,6 @@
 
       </div> <!-- ENTITY DETAILS END -->
 
-      <!-- ****************************************************** -->
-      <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
-
       <!-- Display Status Message -->
       <div class="margintop10px font12px" *ngIf="statusMessageSecond">
         <span [innerHTML]="statusMessageSecond"></span>
@@ -82,20 +79,43 @@
           <span [innerHTML]="statusMessage"></span>
         </div>
 
-        <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == false">
-          <!-- TEMPORARY ONLY ALLOWING LESS THEN 500 records -->
+        <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == false && facetsParamsUpdateCount == 0">
           <div>
-            <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()" mat-dialog-close>Show
-              {{subEntityDisplay}} Facets</button>
+            <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()" mat-dialog-close>
+              Show {{subEntityDisplay}} Facets
+            </button>
           </div>
         </div>
+
+        <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == true">
+          <div>
+            <button class="mat-raised-button mat-primary" (click)="cancelBulkSearch()" mat-dialog-close>
+              Cancel Search
+            </button>
+          </div>
+        </div>
+
       </div> <!-- divflex -->
 
+
+      <!-- SHOW PROGRESS BAR -->
+      <div class="progress-bar-container margintop20px" *ngIf="(isSearchRunning == true && facetsParamsUpdateCount == 0) && bulkSearchTotal > 0">
+          <div class="progress-bar" [style.width.%]="bulkSearchTotalPercent"></div>
+          <div class="progress-text">
+            {{bulkSearchCurrentCount}} of {{bulkSearchTotal}}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {{ bulkSearchTotalPercent }}%
+          </div>
+      </div>
+
+
+      <!-- ****************************************************** -->
+      <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
 
       <!-- SHOW FACETS HERE -->
       <div *ngIf="((rawFacets && rawFacets.length > 0) && (showFacets == true))">
 
-        <div class="divflex margintop15px">
+        <div class="divflex">
           <div>
             <span class="font20px colorlightblue fontbold"><b>{{subEntityDisplay}}</b> Facets</span>
           </div>
@@ -124,7 +144,7 @@
       </div> <!-- rowFacets.length > 0 -->
 
       <br><br>
-    </div> <!-- mat-dialog-conten -->
+    </div> <!-- mat-dialog-content -->
 
     <div mat-dialog-actions>
       <span class="middle-fill"></span>
