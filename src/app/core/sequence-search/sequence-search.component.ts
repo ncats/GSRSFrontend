@@ -15,7 +15,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class SequenceSearchComponent implements OnInit, OnDestroy {
   sequenceSearchForm = new FormGroup({
-    cutoff: new FormControl(0.9, [Validators.min(0), Validators.max(1), Validators.required]),
+    cutoff: new FormControl(0.95, [Validators.min(0), Validators.max(1), Validators.required]),
     type: new FormControl('GLOBAL', Validators.required),
     sequenceType: new FormControl('protein', Validators.required),
     sequence: new FormControl('', Validators.required)
