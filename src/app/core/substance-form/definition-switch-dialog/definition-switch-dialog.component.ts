@@ -390,7 +390,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
       updateRecord(nsub, cb, step) {
         console.log('SENDING THE FOLLOWING DATA FOR STEP ' + step);
         console.log(nsub);
-        this.substanceService.saveSubstance(nsub).subscribe( data => {
+        this.substanceService.saveSubstanceWithoutValidation(nsub).subscribe( data => {
             console.log('SUCCESS ON STEP ' + step + '. Response data:');
             console.log(data);
 
