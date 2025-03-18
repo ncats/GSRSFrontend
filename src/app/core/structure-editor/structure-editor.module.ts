@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KetcherWrapperModule } from 'ketcher-wrapper';
-import { JsdrawWrapperModule } from 'jsdraw-wrapper';
 import { FileSelectModule } from 'file-select';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +15,8 @@ import { StructureModule } from '@gsrs-core/structure/structure.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';
+import { KetcherWrapperModule } from './ketcher-wrapper/ketcher-wrapper.module';
+import { JsdrawWrapperModule } from './jsdraw-wrapper/jsdraw-wrapper.module';
 
 @NgModule({
   imports: [

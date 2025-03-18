@@ -2,5 +2,5 @@
  * Public API Surface of file-select
  */
 
-export * from './lib/file-select.directive';
-export * from './lib/file-select.module';
+export * from '../../../src/app/core/file-select/file-select.directive';
+export * from '../../../src/app/core/file-select/file-select.module';

@@ -1,5 +1,4 @@
-import { JSDraw } from 'jsdraw-wrapper';
-import { Editor, Ketcher } from './structure.editor.model';
+import { Editor, JSDraw, Ketcher } from './structure.editor.model';
 import { Observable, from, pipe, switchMap, take } from 'rxjs';
 
 export class EditorImplementation implements Editor {
