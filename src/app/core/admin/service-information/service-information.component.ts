@@ -47,9 +47,16 @@ export class ServiceInformationComponent implements OnInit {
         responseType="text";
       }
       this.adminService.fetchServiceInfoByEndpoint(this.currentEndpoint, responseType).subscribe( resp => {
-        if (resp=='error') {
+        const ok = resp?.ok
+        if (ok===false || resp?.error) {
           this.displayAsJson = false;
-          this.content = "There was an error when getting this endpoint.";
+          if(resp.error?.message) {
+            this.content = resp.error.message;
+          } else if(resp?.error && (typeof resp.error === 'string' || resp.error instanceof String)) {
+            this.content = resp.error;
+          } else {
+            this.content = "There was an error getting a response.";
+          }
         } else {
           const ct = resp.headers.get('content-type');
           if(ct.toLowerCase().indexOf('text/plain')>-1) {

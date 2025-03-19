@@ -48,8 +48,8 @@ export class AdminService extends BaseHttpService {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }`;
     const result = this.http.get< any >(`${url}`+ endpoint, { responseType: responseType, observe: 'response' }).pipe(
     catchError((error: HttpErrorResponse) => {
-      console.error('An error occurred:', error.message);
-      return of("error");
+      console.error('An error occurred:', error);
+      return of(error);
     }));
     return result;
   }
