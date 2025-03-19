@@ -1,6 +1,5 @@
-import { Ketcher } from 'ketcher-wrapper';
 import { JSDraw } from 'jsdraw-wrapper';
-import { Editor } from './structure.editor.model';
+import { Editor, Ketcher } from './structure.editor.model';
 import { Observable, from, pipe, switchMap, take } from 'rxjs';
 
 export class EditorImplementation implements Editor {
@@ -57,7 +56,7 @@ export class EditorImplementation implements Editor {
     getMolfile(): Observable<any> {
         return new Observable<any>(observer => {
         if (this.ketcher && this.ketcher != null) {
-            this.ketcher.getMolfile().then(result => { 
+            this.ketcher.getMolfile('v2000').then(result => { 
                 let mfile = result;
                 
                 observer.next(mfile);
@@ -164,7 +163,7 @@ export class EditorImplementation implements Editor {
             } else if (this.ketcher != null) {
               this.ketcher.editor.subscribe('change',  operations => { 
                     if(!(operations.length == 1 && operations[0].operation == 'Load canvas')){
-                        this.ketcher.getMolfile().then(result => { 
+                        this.ketcher.getMolfile('v2000').then(result => { 
                             observer.next(result);
                         });
                     } else {

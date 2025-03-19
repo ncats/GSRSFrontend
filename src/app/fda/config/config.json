@@ -14,6 +14,7 @@
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
+  "restApiPrefix": "/ginas/app",
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -1032,6 +1033,7 @@
         "Substance UUID",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
+        "Has Ingredients",
         "Number of Ingredients",
         "Ingredient Type",
         "Product Type",
