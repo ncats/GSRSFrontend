@@ -121,7 +121,7 @@ close() {
   this.dialog.closeAll();
 }
 
-getDisplayValue(diff: SubstanceDiff, val: any, old: string) {
+getDisplayValue(diff: SubstanceDiff, val: any, old?: string) {
   if (old === '' || old === undefined) {
     if (diff.value != undefined) {
       val = diff.value;
@@ -173,7 +173,7 @@ getOldValue(diff: SubstanceDiff) {
     path = path.replace(/\.(\d+)(?=[^0-9])/g, '[$1]')
     result = jsonpath.query(this.substanceOldValue, '$' + path);
     if (result.length > 0) {
-      result = this.getDisplayValue(diff, result[0]);
+      result = this.getDisplayValue(diff, result[0],'old');
     }
   } else {
     result = 'Not Applicable'
