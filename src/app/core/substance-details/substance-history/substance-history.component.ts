@@ -121,7 +121,7 @@ close() {
   this.dialog.closeAll();
 }
 
-getDisplayValue(diff: SubstanceDiff, val: any, old: string) {
+getDisplayValue(diff: SubstanceDiff, val: any, old?: string) {
   if (old === '' || old === undefined) {
     if (diff.value != undefined) {
       val = diff.value;
