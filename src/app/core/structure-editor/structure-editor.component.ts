@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { EditorImplementation } from './structure-editor-implementation.model';
-import { JSDraw } from 'jsdraw-wrapper';
 import { environment } from '../../../environments/environment';
 import { StructureService } from '@gsrs-core/structure';
 import { LoadingService } from '@gsrs-core/loading';
@@ -23,7 +22,7 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Ketcher } from './structure.editor.model';
+import { JSDraw, Ketcher } from './structure.editor.model';
 
 @Component({
   selector: 'app-structure-editor',
