@@ -786,6 +786,19 @@ export class SubstanceService extends BaseHttpService {
     return this.http.request(method, url, options);
   }
 
+  saveSubstanceWithoutValidation(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
+    console.log("in saveSubstanceWithoutValidation");
+    const url = `${this.apiBaseUrl}substances/novalid?view=internal`;
+    let method = 'PUT';
+    if (type && type === 'import') {
+      method = 'POST';
+    }
+    const options = {
+      body: substance
+    };
+    return this.http.request(method, url, options);
+  }
+
   validateSubstance(substance: SubstanceDetail, stagingID?: string): Observable<ValidationResults> {
     let url = `${this.configService.configData.apiBaseUrl}api/v1/substances/@validate`;
     if (stagingID) {
