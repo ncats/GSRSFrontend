@@ -24,7 +24,6 @@ import { ExpandDetailsModule } from '../expand-details/expand-details.module';
 // import { AccessManagerComponent } from './access-manager/access-manager.component';
 import { SubstanceSelectorModule } from '../substance-selector/substance-selector.module';
 import { MatListModule } from '@angular/material/list';
-import { FileSelectModule } from 'file-select';
 import { CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.component';
 import { CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import { MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -49,6 +48,7 @@ import { SubstanceSsg4mProcessModule } from './ssg4m-process/substance-form-ssg4
 import { Ssg4mSitesModule } from './ssg4m-sites/ssg4m-sites.module';
 import { Ssg4mStepViewDialogModule } from './ssg4m-step-view-dialog/ssg4m-step-view-dialog.module';
 import { SsgParentSubstanceFormModule } from '../substance-form/ssg-parent-substance-form/ssg-parent-substance-form.module';
+import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
 
 const ssg4mRoutes: Routes = [
   {

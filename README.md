@@ -45,7 +45,6 @@ This step isn't always necessary, but can be useful when attempting to force a d
 ```
 package-lock.json
 node_modules
-package.json
 ```
 
 ## Step 3 [Optional]: Prepare Custom Dojo Dependency
@@ -53,53 +52,16 @@ package.json
 This step isn't typically necessary. The purpose of this step is to prepare a slimmed down version of dojo for the jsdraw structure editor component, but the default build already has a form of this prepackaged. To perform a more custom dojo build, read the `lib/README.md` file and follow its instructions.
 
 
-## Step 4: Install Fundamental Dependencies
-
-This step acquires the "base" dependencies needed to do further builds. The full _real_ `package.json` file would have a cyclic dependency issue if we attempted to install using it directly, so we first build only the bare minimum pieces needed to build the other dependencies. This is accomplished by using a trimmed down version of the package.json file named `package.dev.json`. The following commands will make this happen:
-
-bash:
-```
-cp package.dev.json package.json
-npm install
-```
-
-windows CMD:
-```
-copy package.dev.json package.json
-npm install
-```
-
-## Step 5: Perform a One-Time Build of Dependencies
+## Step 4: Install Dependencies
 
 You'll have to run the following commands the first time you work on the application to make sure a few libraries are built and ready to be used by the application:
 
-```
-npm run build-file-select
-npm run build-jsdraw-wrapper
-npm run build-ketcher-wrapper
-```
-
-This MUST be done while the `package.dev.json` file is being used as `package.json`, as in step 4. Once this is done, you then replace the package.json file with package.real.json to complete the preperation. This can be accomplished with the following commands:
-
 bash:
 ```
-cp package.real.json package.json
 npm install
 ```
 
-windows CMD:
-```
-copy package.real.json package.json
-npm install
-```
-
-Doing the install at this time may reveal some elements that suggest an audit fix. While this can be done, newer versions of the angular build tool are not compatible with the current build process, so the specific <=0.803.25 version must be forced. To both do a basic audit fix and force this version, you can run the following commands (either windows CMD or bash):
-
-```
-npm audit fix // this step not needed after angular upgrade
-```
-
-## Step 6: Run Application for Specific Environment
+## Step 5: Run Application for Specific Environment
 
 - Go the the package.json file and look at the scripts property to see what availabe commands exist
 - The commands to run during development begin with "start"
