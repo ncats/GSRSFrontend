@@ -94,9 +94,9 @@
     <h3>SMILES:</h3>
     <p class = "indent">{{structure.smiles}}</p>
     <h3>InChiKey:</h3>
-    <p class = "indent">{{inchi}}</p>
-    <h3>InChi:</h3>
-    <p class = "indent" [innerHTML]="otherInchi | inchiLinebreak"></p>
+    <p class = "indent" [innerHTML]="inchiKey"></p>
+    <h3 >InChi: <sup class = "hover-note" *ngIf = "inchiNote" [matTooltip] = "inchiNote ? 'This molecule requires more than one Inchi': null" >  ?</sup></h3>
+    <p class = "indent" [innerHTML]="inchi"></p>
   </div>
   
   <div [hidden]="!showNames" style="width:100%">

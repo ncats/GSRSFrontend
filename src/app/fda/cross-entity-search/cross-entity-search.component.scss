@@ -1,0 +1,284 @@
+
+.testing {
+  border: 1px solid green;
+}
+
+.divflex {
+  display: flex;
+}
+
+.font9px{
+  font-size: 9px;
+}
+
+.font10px{
+  font-size: 10px;
+}
+
+.font11px{
+  font-size: 11px;
+}
+
+.font12px{
+  font-size: 12px;
+}
+
+.font13px{
+  font-size: 13px;
+}
+
+.font14px{
+  font-size: 14px;
+}
+
+.font15px{
+  font-size: 15px;
+}
+
+.font16px{
+  font-size: 16px;
+}
+
+.font17px {
+  font-size: 17px;
+}
+
+.font18px {
+  font-size: 18px;
+}
+
+.font20px {
+  font-size: 20px;
+}
+
+.font22px {
+  font-size: 22px;
+}
+
+.colorgray {
+  color: var(--regular-grey-color);
+}
+
+.colorred {
+  color: var(--regular-red-color);
+}
+
+.colorgreen {
+  color: var(--green-color);
+}
+
+.colororange {
+  color: var(--regular-orange-color);
+}
+
+.colorlightblue {
+  color: var(--blue-color);
+}
+
+.colormaroon {
+  color: var(--regular-maroon-color);
+}
+
+.bordergray {
+  border:1px solid var(--regular-grey-color);
+}
+
+.borderlightgray {
+  border: 1px solid var(--regular-lightgray-color);
+}
+
+.borderbottomgray {
+  border-bottom :1px solid var(--regular-grey-color);
+}
+
+.margintopneg5 {
+  margin-top: -5px;
+}
+
+.margintopneg10 {
+  margin-top: -10px;
+}
+
+.margintopneg15 {
+  margin-top: -15px;
+}
+
+.margintop10px {
+  margin-top: 10px;
+}
+
+.margintop15px {
+  margin-top: 15px;
+}
+
+.margintop20px {
+  margin-top: 20px;
+}
+
+.margintop25px {
+  margin-top: 25px;
+}
+
+.margintop30px {
+  margin-top: 30px;
+}
+
+.marginleftneg10px {
+  margin-left: -10px;
+}
+
+.marginleftneg15px {
+  margin-left: -15px;
+}
+
+.marginleft10px {
+  margin-left: 10px;
+}
+
+.marginleft20px {
+  margin-left: 20px;
+}
+
+.marginleft30px {
+  margin-left: 30px;
+}
+
+.marginleft40px {
+  margin-left: 40px;
+}
+
+.marginright40px {
+  margin-right: 40px;
+}
+
+.marginbottom10px {
+  margin-bottom: 10px;
+}
+
+.marginbottom20px {
+  margin-bottom: 20px;
+}
+
+.padtop7px {
+  padding-top: 7px;
+}
+
+.padtop15px {
+  padding-top: 15px;
+}
+
+.padleft10px {
+  padding-left: 10px;
+}
+
+.padbottom7px {
+  padding-bottom: 7px;
+}
+
+.padbottom10px {
+  padding-bottom: 10px;
+}
+
+.padbottom20px {
+  padding-bottom: 20px;
+}
+
+.width100px {
+  width: 100px;
+}
+
+.width120px {
+  width: 120px;
+}
+
+.width150px {
+  width: 150px;
+}
+
+.width200px {
+  width: 200px;
+}
+
+.width400px {
+  width: 400px;
+}
+
+.main-title {
+  font-size: 24px;
+  padding-left: 0px;
+  padding-right: 25px;
+  font-weight: 550;
+  padding-top: 10px;
+  color: var(--primary-color);
+  width: 285px;
+}
+
+.entitydropdown {
+  width: 180px;
+  margin-left: 30px;
+}
+
+::ng-deep .dropdownoverlap > * {
+  z-index: 1002 !important;
+}
+
+.selected-label {
+  padding-right:5px;
+}
+
+.search-parameters {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+
+  &.center {
+    margin-top: 10px;
+    justify-content: center;
+  }
+
+  & > div {
+    padding-left:10px;
+    padding-right: 2px;
+    margin-left:5px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+  }
+
+  .actions-container {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .selected-parameter {
+    padding-right:5px;
+    background-color: var(--regular-white-color);
+    font-size:14px;
+    height: 45px;
+  }
+}
+
+// Progress bar
+.progress-bar-container {
+  width: 100%;
+  height: 13px;
+  background-color: #eee;
+  border-radius: 10px;
+}
+
+.progress-bar {
+  background-color: #4CAF50;
+  height: 100%;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-text {
+  color: blue;
+  font-weight: bold;
+  margin-top: 5px;
+}

@@ -46,11 +46,14 @@
         </ul>
       </mat-tab>
       <mat-tab label="SMILES" *ngIf="smiles">
-        <textarea cdkTextareaAutosize id="smiles" readonly style="height:45px;">{{smiles}}</textarea>
+        <textarea cdkTextareaAutosize id="smiles" readonly style="height:65px;">{{smiles}}</textarea>
       </mat-tab>
-      <mat-tab label="InChi" *ngIf="inchi || inchiKey">
-        <textarea cdkTextareaAutosize id="inchi" readonly style="height:45px;">{{inchi}}</textarea>
-        <textarea cdkTextareaAutosize id="inchiKey" readonly style="height:45px;">{{inchiKey}}</textarea>
+        <mat-tab *ngIf="inchi || inchiKey">
+        <ng-template mat-tab-label>
+          <label  *ngIf="inchi || inchiKey" [matTooltip]= "inchiNote ? 'This molecule requires more than one Inchi': null">Inchi <sup *ngIf = "inchiNote">?</sup></label>
+        </ng-template>
+        <textarea cdkTextareaAutosize id="inchi" readonly style="height:65px;">{{inchi}}</textarea>
+        <textarea cdkTextareaAutosize id="inchiKey" readonly style="height:65px;">{{inchiKey}}</textarea>
       </mat-tab>
     </mat-tab-group>
   </div>

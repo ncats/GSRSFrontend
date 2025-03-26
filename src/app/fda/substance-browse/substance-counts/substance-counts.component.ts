@@ -118,6 +118,7 @@ export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamic
       null,
       0,
       200,
+      10,
       this.fullFacetField,
       facetParam
     )
