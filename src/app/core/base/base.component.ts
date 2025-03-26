@@ -61,6 +61,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   private wildCardText: string;
   private classicLinkQueryParams = {};
   showHeaderBar = 'true';
+  bannerText: string = "This repository is under review for potential modification in compliance with Administration directives.";
 
   constructor(
     private router: Router,
@@ -142,6 +143,9 @@ export class BaseComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+
+    this.bannerText = this.configService.configData.bannerText || null;
+
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
