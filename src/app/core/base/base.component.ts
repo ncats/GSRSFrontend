@@ -144,8 +144,9 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 
-    this.bannerText = this.configService.configData.bannerText || null;
-
+    if(this.configService.configData.bannerText) {
+      this.bannerText = this.configService.configData.bannerText;
+    }
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
