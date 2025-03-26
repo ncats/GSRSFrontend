@@ -1,4 +1,4 @@
-<div *ngIf = "bannerText && bannerText != ''" class = "top-banner">{{bannerText}}</div>
+<div *ngIf = "showTopBanner" class = "top-banner">{{bannerText}}</div>
 <mat-toolbar class="mat-elevation-z3" color="primary" *ngIf="showHeaderBar === 'true' && (!customToolbarComponent || customToolbarComponent.length == 0)">
   <div class="logo-container">
     <span class="logo">

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
@@ -30,7 +30,7 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
   styleUrls: ['./base.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class BaseComponent implements OnInit, OnDestroy {
+export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   mainPathSegment = '';
   logoSrcPath: string;
   auth?: Auth;
@@ -62,6 +62,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   private classicLinkQueryParams = {};
   showHeaderBar = 'true';
   bannerText: string = "This repository is under review for potential modification in compliance with Administration directives.";
+  showTopBanner = true;
 
   constructor(
     private router: Router,
@@ -140,13 +141,13 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
   }
 
+
+
+
   ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-
-    if(this.configService.configData.bannerText) {
-      this.bannerText = this.configService.configData.bannerText;
-    }
+    
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -302,6 +303,17 @@ export class BaseComponent implements OnInit, OnDestroy {
     };
 
     this.router.navigate(['/login'], navigationExtras);
+  }
+
+  ngAfterViewInit() {
+    
+    if(this.configService.configData.bannerText) {
+      this.bannerText = this.configService.configData.bannerText;
+    }
+
+    if(this.configService.configData.showTopBanner !== undefined) {
+      this.showTopBanner = this.configService.configData.showTopBanner;
+    }
   }
 
   processSubstanceSearch(searchValue: string) {

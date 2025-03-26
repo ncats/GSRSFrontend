@@ -86,6 +86,7 @@ export interface Config {
     StructureFeaturePriority?: Array<string>;
     structureEditSearch?: boolean;
     bannerText?: string;
+    showTopBanner?: boolean;
 }
 
 export interface StagingAreaSettings {
