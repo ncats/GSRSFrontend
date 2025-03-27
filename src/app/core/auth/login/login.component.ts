@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private newuserinfo = {};
   private emailFormUserRegConf: any = undefined;
   public emailFormUserRegActive: boolean = false;
+  showLogin = false;
 
   constructor(
     private authService: AuthService,
@@ -53,7 +54,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadingService.setLoading(true);
     // As we develop more types of userRegistration, make a utility service to provide configuration information.  
+    this.showLogin = this.configService.configData.showLogin || false;
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+
     if(typeof this.configService.configData.userRegistration !== "undefined" ) {
       this.emailFormUserRegConf =
         this.configService.configData.userRegistration.configurations?.emailForm;

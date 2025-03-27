@@ -63,6 +63,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   showHeaderBar = 'true';
   bannerText: string = "This repository is under review for potential modification in compliance with Administration directives.";
   showTopBanner = true;
+  showLogin = false;
 
   constructor(
     private router: Router,
@@ -313,6 +314,10 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if(this.configService.configData.showTopBanner !== undefined) {
       this.showTopBanner = this.configService.configData.showTopBanner;
+    }
+
+    if(this.configService.configData.showLogin) {
+      this.showLogin = this.configService.configData.showLogin;
     }
   }
 

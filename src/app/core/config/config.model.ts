@@ -87,6 +87,7 @@ export interface Config {
     structureEditSearch?: boolean;
     bannerText?: string;
     showTopBanner?: boolean;
+    showLogin?: boolean;
 }
 
 export interface StagingAreaSettings {
