@@ -10,8 +10,8 @@ import {MatButtonModule} from '@angular/material/button';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationExtras, RouterModule } from '@angular/router';
-import { FileSelectModule } from 'file-select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
 
 @NgModule({
   declarations: [
