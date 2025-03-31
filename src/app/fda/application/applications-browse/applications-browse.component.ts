@@ -227,8 +227,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     let fdim = 10;
     this.iterations = 0;
 
-    console.log("PRIVATE PARAM " + JSON.stringify(this.privateFacetParams));
-    
     const subscription = this.applicationService.getApplications(
       this.order,
       skip,
