@@ -107,8 +107,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
     let found = true;
     check.forEach( field => {
       if (this.structurallyDiverse[field] && this.structurallyDiverse[field] !== null &&
-        this.structurallyDiverse[field] !== '' &&
-        this.structurallyDiverse[field] !== {} ) {
+        this.structurallyDiverse[field] !== '' && Object.keys(this.structurallyDiverse[field]).length > 0 ) {
          found = false;
         }
     });
