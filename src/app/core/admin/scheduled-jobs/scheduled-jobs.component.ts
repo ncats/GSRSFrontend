@@ -30,7 +30,7 @@ export class ScheduledJobsComponent implements OnInit {
 
   reloadJobs() { 
     this.loading = true;
-    this.adminService.fetchJobs((this.currentService)).pipe(take(1)).subscribe( resp => {
+    this.adminService.fetchJobs(this.currentService).pipe(take(1)).subscribe( resp => {
       this.jobs = [];
       this.loading = false;
       this.jobs = resp.content;
@@ -42,7 +42,7 @@ export class ScheduledJobsComponent implements OnInit {
     this.services = _.map(activeAndHasEntitiesServices, "name", ).sort();
     this.loading = true;
     setTimeout(() => {
-      this.adminService.fetchJobs((this.currentService)).pipe(take(1)).subscribe( resp => {
+      this.adminService.fetchJobs(this.currentService).pipe(take(1)).subscribe( resp => {
         this.loading = false;
         this.jobs = resp.content;
       });

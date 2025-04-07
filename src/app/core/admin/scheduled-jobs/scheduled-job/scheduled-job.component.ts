@@ -125,14 +125,8 @@ enable(serviceContext: string, job: any) {
 execute(serviceContext: string, job: any) {
   this.quickLoad = true;
   const url =job['@execute'];
-  console.log(url );
-  console.log(serviceContext );
-
   const replace = this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/';
-  console.log(replace );
-
   const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
-  console.log(url2);
   this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
     this.refresh(true);
   }, error => {
