@@ -4,6 +4,7 @@ export interface Config {
     apiBaseUrl?: string;
     gsrsHomeBaseUrl?: string;
     apiSSG4mBaseUrl?: string;
+    occasionalApiBasePath?: string;
     apiUrlDomain?: string;
     logoutRedirectUrl?: string;
     googleAnalyticsId?: string;
@@ -50,6 +51,7 @@ export interface Config {
     substance?: any;
     showOldLinks?: boolean;
     loadedComponents?: LoadedComponents;
+    services: Array<any>;
     showNameStandardizeButton?: boolean;
     molWeightRounding?: number;
     usefulLinks?: Array<UsefulLink>;

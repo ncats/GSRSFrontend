@@ -30,10 +30,10 @@
                 </div>
             </div>
             <div class = "bottom-button">
-                <button class = "mat-flat-button mat-primary" *ngIf="!job.running && !quickLoad" color = "primary"  mat-button (click)="execute(job)">
+                <button class = "mat-flat-button mat-primary" *ngIf="!job.running && !quickLoad" color = "primary"  mat-button (click)="execute(currentService, job)">
                     (execute now)
                 </button>
-                <button *ngIf="job.running || quickLoad" mat-button  class = "mat-flat-button mat-primary" color = "primary" (click)="cancel(job)">
+                <button *ngIf="job.running || quickLoad" mat-button  class = "mat-flat-button mat-primary" color = "primary" (click)="cancel(currentService, job)">
                         (click to cancel)
                     </button>
             </div>
@@ -91,12 +91,12 @@
         </div>
     </div>  
     <div *ngIf="!job.enabled" class = "bottom-button">
-                    <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="enable(job)">
+                    <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="enable(currentService, job)">
                         (click to enable task)
                     </button>
     </div>
     <div *ngIf="job.enabled" class = "bottom-button">
-                    <button mat-button class = "mat-flat-button mat-primary" color = "primary" (click)="disable(job)">
+                    <button mat-button class = "mat-flat-button mat-primary" color = "primary" (click)="disable(currentService, job)">
                         (click to disable task)
                     </button>
     </div>
