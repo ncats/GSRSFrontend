@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NitrosamineDisplayComponent } from './nitrosamine-display.component';
 import { MatInputModule } from '@angular/material/input';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -11,8 +12,8 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     FormsModule,
-    MatInputModule
-
+    MatInputModule,
+    HttpClientModule
   ],
   exports: [
     NitrosamineDisplayComponent

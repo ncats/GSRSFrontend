@@ -1,24 +1,92 @@
 <div class="container">    
     <!-- Add SMILES input form -->
     <div class="input-form">
-        <div id="smilesForm" >
+        <form (ngSubmit)="evaluateSmiles($event)" #smilesForm="ngForm">
             <div class="form-group">
-                <label for="smiles">Enter SMILES Formula:</label>
-                <input type="text" id="smiles" name="smiles" [ngModel] = "smilesInput"
+                <label for="smilesInput">Enter SMILES Formula:</label>
+                <input type="text" id="smilesInput" name="smilesInput" [(ngModel)]="smilesInput"
                        placeholder="e.g., CN(N=O)C1=CC=NC=C1" required>
             </div>
             <div class="form-group">
-                <button type="submit" [disabled] = "buttonPressed" (click) = "evaluateSmiles()">{{buttonPressed ? "Evaluating...":"Evaluate Structure"}}</button>
+                <button type="submit" [disabled]="buttonPressed || !smilesInput">
+                    {{buttonPressed ? "Evaluating..." : "Evaluate Structure"}}
+                </button>
             </div>
-            <div class="results-panel" id="resultsPanel">
-                <div class = "result-row" *ngIf = "potencyScore">
-                    <div class = "label">Potency Score:</div>
-                    <div class = "value" id = "potency">{{potencyScore}}</div>
+        </form>
+
+        <!-- Loading indicator -->
+        <div *ngIf="isLoading" class="loading">Processing...</div>
+        
+        <!-- Error message -->
+        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+        
+        <!-- Results panel -->
+        <div class="results-panel" id="resultsPanel" [style.display]="showResults ? 'block' : 'none'">
+            <!-- Warning for multiple nitrosamines -->
+            <div *ngIf="responseData?.multipleNitrosamines" class="multiple-nitrosamine-banner" style="display: block;">
+                <strong>Warning:</strong> {{ responseData.nitrosamineCount }} N-nitroso groups found in the structure. 
+                The flowchart shows the calculation for the most potent category.
+                <span *ngIf="responseData.nitrosamineCount >= 3">
+                    Please contact the health authority at fda-toxicology-Consulting@fda.hhs.gov.
+                </span>
+            </div>
+            
+            <!-- Warning for potent groups -->
+            <div *ngIf="structureDetails?.includes('Most potent of multiple N-nitroso groups')" class="warning-banner" style="display: block;">
+                <strong>Note:</strong> This structure contains multiple N-nitroso groups. The analysis <u>only</u> shows the most potent category.
+            </div>
+            
+            <!-- No nitrosamine found warning -->
+            <div *ngIf="responseData?.error?.includes('No valid nitrosamine structure found')" class="multiple-nitrosamine-banner" style="display: block;">
+                <strong>Warning:</strong> No N-nitroso group found in the structure. Please check the SMILES formula and try again.
+            </div>
+            
+            <!-- Structure Details -->
+            <div *ngIf="structureDetails && structureDetails !== ''" class="structure-details">
+                <h3>Structure Analysis Results</h3>
+                <table class="details-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Essential properties -->
+                        <ng-container *ngFor="let key of ['AI Limit (US)', 'Potency Category', 'Potency Score', 'Type', 'Alpha-hydrogen score', 'Alpha-Hydrogens']">
+                            <tr *ngIf="summaryData[key]">
+                                <td>{{ key }}</td>
+                                <td [ngClass]="{'value-yes': summaryData[key] === 'YES', 'value-no': summaryData[key] === 'NO'}">
+                                    {{ summaryData[key] }}
+                                </td>
+                            </tr>
+                        </ng-container>
+                        
+                        <!-- Potency category row -->
+                        <tr *ngIf="potencyScore">
+                            <td>Potency Category</td>
+                            <td class="value-yes">{{ potencyScore }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Potency score display -->
+            <div *ngIf="potencyScore" class="potency-score">
+                <h3>Final Assessment</h3>
+                <div class="score-value" [attr.data-category]="potencyScore">
+                    <div style="font-size: 24px; font-weight: bold;">
+                        Category {{ potencyScore }}
+                    </div>
+                    <div style="margin-top: 5px;">
+                        Acceptable Intake: {{ summaryData['AI Limit (US)'] || 'Not specified' }}
+                    </div>
                 </div>
-                <div class = "result-row" *ngIf = "structureDetails && structureDetails !== ''">
-                    <div class = "label">Structure Details:</div>
-                    <div class = "value">{{structureDetails}}</div>
-                </div>
+            </div>
+            
+            <!-- Error message -->
+            <div *ngIf="responseData?.error && !responseData?.error.includes('No valid nitrosamine structure found')" class="error-message">
+                {{ responseData.error }}
             </div>
         </div>
     </div>

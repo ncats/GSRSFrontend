@@ -107,15 +107,23 @@ export class StructureService {
   }
 
   evaluateSmiles(smiles: string): Observable<any> {
-    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/evaluate-smiles`;
-    const params = new HttpParams();
-        const options = {
-          params: params,
-          type: 'JSON',
-          headers: {
-            'Content-type': 'application/x-www-form-urlencoded'
-          }
-        };
-    return this.http.post(url, smiles, options);
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/evaluateSmiles?smiles=${encodeURIComponent(smiles)}`;
+    console.log('API URL:', url);
+    
+    // Create form data for the request
+    // const formData = new FormData();
+    // formData.append('smiles', smiles);
+    
+    // Alternatively, for url-encoded format:
+    // const body = `smiles=${encodeURIComponent(smiles)}`;
+    
+    // const options = {
+    //   headers: {
+    //     // Using FormData, let the browser set the content type
+    //     // 'Content-type': 'application/x-www-form-urlencoded'
+    //   }
+    // };
+    
+    return this.http.get(url, {responseType: 'json'});
   }
 }

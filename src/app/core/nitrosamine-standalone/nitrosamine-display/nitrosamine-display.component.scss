@@ -43,8 +43,8 @@ body {
     justify-content: center; 
 }
 .result-box {
-    border: 2px solid  var(--primary-color);
-    background-color: var(--body-bg-color);
+    border: 2px solid #1a237e;
+    background-color: #e8eaf6;
     padding: 15px;
     width: 250px;
     text-align: center;
@@ -89,8 +89,25 @@ body {
 }
 .highlight {
     background-color: #fff3cd;
-    border-color: #ffeeba;
+    border-color: #0cc20c91;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+// .highlight-path {  //alternative style to highlight path on the flowchart
+//     background-color: #e6f7ff !important;
+//     border-color: #1890ff !important;
+//     box-shadow: 0 0 8px rgba(24, 144, 255, 0.5) !important;
+//     transition: all 0.3s ease;
+// }
+.highlight-path {
+    background-color:  #005293; //#1a237e;
+    color: white;
+    border-color: #FECC00; //#0d47a1;
+    border-width: 0.5cap;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    //font-weight: bold;
+}
+.highlight-path .yes-no-label {
+    color: #000000;
 }
 .box-with-arrow {
     position: relative;
@@ -101,8 +118,9 @@ body {
 .yes-no-label {
     position: absolute;
     font-size: 14px;
-    color: #666;
+    color: #000000;
     z-index: 2;
+    font-weight: bold;
 }
 .yes-no-down-label {
     bottom: -18px;
@@ -138,7 +156,7 @@ body {
     font-family: monospace;
 }
 .form-group button {
-    background-color:  var(--primary-color);
+    background-color: #1a237e;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -147,8 +165,7 @@ body {
     font-size: 16px;
 }
 .form-group button:hover {
-    background-color: var(--primary-color);
-
+    background-color: #0d47a1;
 }
 .results-panel {
     margin-top: 15px;
@@ -162,26 +179,93 @@ body {
     margin-bottom: 40px;  /* Adds extra space after the third box */
 }
 .spacer {
-    height: 12px;  /* Adjustable height for extra spacing */
+    height: 10px;  /* Adjustable height for extra spacing */
+}
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.label {
-    width: 160px;
-    padding: 5px;
-    min-width: 160px !important;
+.details-table th,
+.details-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-.value {
-    padding: 5px;
+.details-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #495057;
 }
 
-#potency {
+.details-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.details-table tr:last-child td {
+    border-bottom: none;
+}
+
+.value-yes {
+    color: #1a237e;
     font-weight: bold;
 }
 
-.result-row {
-    display:flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    width: 100%;
+.value-no {
+    color: #dc3545;
+}
+
+.warning-banner {
+    background-color: #1a237e;
+    color: white;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    display: none;
+}
+
+.multiple-nitrosamine-banner {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    display: none;
+}
+
+.warning-banner strong,
+.multiple-nitrosamine-banner strong {
+    margin-right: 5px;
+}
+
+.most-potent-note {
+    font-style: italic;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Add this to match the potency score color with the category colors */
+#potencyScoreValue[data-category="1"] {
+    color: #d32f2f !important;
+}
+#potencyScoreValue[data-category="2"] {
+    color: #f44336 !important;
+}
+#potencyScoreValue[data-category="3"] {
+    color: #ff9800 !important;
+}
+#potencyScoreValue[data-category="4"] {
+    color: #ffd54f !important;
+}
+#potencyScoreValue[data-category="5"] {
+    color: #4caf50 !important;
+}
+.box:hover, .result-box:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
 }
