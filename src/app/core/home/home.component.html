@@ -313,8 +313,7 @@
 
       <div class = "row">
         <h1 class = "home">{{homeHeader}}</h1>
-        <div style = "padding-left:15px;">{{homeContents}}</div>
-
+          <div style = "padding-left:15px;" [innerHTML] = homeContents></div>
       </div>
       <div class = "flex-row" style = "padding:5px;">
           <app-substance-text-search class="main-search" placeholder = "Search Substances" styling = "homePage" [searchValue]="searchValue"
