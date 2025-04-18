@@ -315,6 +315,8 @@
         <h1 class = "home">{{homeHeader}}</h1>
           <div style = "padding-left:15px;" [innerHTML] = homeContents></div>
       </div>
+      <mat-divider class = "divide-test"></mat-divider>
+
       <div class = "flex-row" style = "padding:5px;">
           <app-substance-text-search class="main-search" placeholder = "Search Substances" styling = "homePage" [searchValue]="searchValue"
           (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
