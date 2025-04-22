@@ -150,19 +150,19 @@ export class CrossEntitySearchService extends BaseHttpService {
   public getBulkSearchStatusResults(
     searchEntity?: string,
     key?: number,
-    url?: string,
     fdim: number = 10,
     view?: string,
     viewfield?: string,
     facetlabel?: string,
     useServiceInUrl: boolean = false,
     simpleSearchOnly?: string,
+    facets?: FacetParam,
     pageSize: number = 10,
     skip: number = 0,
     qTop: number = 100
   ): any {
 
-    url = this.getBulkSearchUrl(searchEntity, useServiceInUrl);
+    let url = this.getBulkSearchUrl(searchEntity, useServiceInUrl);
 
     if (url) {
       url = `${url}status(${key})/results`;
@@ -170,16 +170,17 @@ export class CrossEntitySearchService extends BaseHttpService {
 
     let params = new FacetHttpParams({ encoder: new CustomEncoder() });
 
-    params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
-
-    //params = params.appendFacetParams(facets);
-
     params = params.appendDictionary({
       top: pageSize.toString(),
       skip: skip.toString(),
       fdim: fdim.toString(),
       qTop: qTop.toString()
     });
+
+    //params = params.appendFacetParams({ facet: { isAllMatch: false, params: { cache: false } } }, this.showDeprecated);
+
+    // Append Facets if exists
+    params = params.appendFacetParams(facets, this.showDeprecated);
 
     if (simpleSearchOnly) {
       params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
@@ -202,6 +203,21 @@ export class CrossEntitySearchService extends BaseHttpService {
     };
 
     return this.http.get<PagingResponse<any>>(url, options);
+  }
+
+  cancelBulkSearch(searchEntity: string, key: string, useServiceInUrl: boolean = false) {
+    let params = new HttpParams();
+    let url = this.getBulkSearchUrl(searchEntity, useServiceInUrl);
+
+    if (url) {
+      url = url + "substances/bulkSearchTask/cancel?key=" + key;
+    }
+
+    const options = {
+      params: params
+    };
+
+    return this.http.delete<any>(url, options);
   }
 
 }

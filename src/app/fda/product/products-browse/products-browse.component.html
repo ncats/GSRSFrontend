@@ -148,7 +148,7 @@
             </div>
           </div>
 
-          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()" matTooltip="Clear All Search Criteria"
             *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
             <span>RESET</span>
           </button>
@@ -157,11 +157,11 @@
         <!-- Cross Entity/Sub-Entity Search selected Facets BEGIN -->
         <div class="margintop10px" *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0">
           <fieldset class="fieldset-crosssearch">
-            <legend class="legend-crosssearch">Cross Entity Search : <b>{{subEntity}}</b></legend>
+            <legend class="legend-crosssearch">Cross Entity Criteria : <b>{{subEntity}}</b></legend>
 
             <div class="search-parameters">
-              <div class="marginleftneg10">
-                <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of subEntityDisplayFacets">
+              <div class="marginleftneg10px">
+                <div class="mat-elevation-z2 selected-parameter marginright10px" *ngFor="let facet of subEntityDisplayFacets">
                   <div class='selected-parameter-crosssearch'>
                     <span class="selected-label">
                       <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>

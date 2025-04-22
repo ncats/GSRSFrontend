@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import cronstrue from 'cronstrue';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { take } from 'rxjs/operators';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-scheduled-job',
@@ -13,18 +14,24 @@ import { take } from 'rxjs/operators';
 export class ScheduledJobComponent implements OnInit, OnDestroy {
 
     @Input() job: ScheduledJob;
+    @Input() currentService: string;
+
     @Input() pollIn: any;
     monitor: boolean;
     quickLoad = false;
     mess: any;
+
+    occasionalApiBasePath = '';
+
   constructor(
     private adminService: AdminService,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
     this.monitor = this.pollIn;
      this.refresh(true);
-
+     this.occasionalApiBasePath =  `${(this.configService.configData && this.configService.configData.occasionalApiBasePath)}` || '';
   }
 
   ngOnDestroy() {
@@ -42,7 +49,7 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   }
 
   refresh(spawn?: boolean) {
-    this.adminService.fetchJob(this.job.id).pipe(take(1)).subscribe( response => {
+    this.adminService.fetchJob(this.currentService, this.job.id).pipe(take(1)).subscribe( response => {
       this.job = response;
       if (!this.job.running && this.job.lastFinished) {
         const duration = moment.duration((this.job.lastFinished - this.job.lastStarted));
@@ -88,8 +95,6 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
       this.monitor = false;
       console.log(error);
     });
-
-
   }
 
   untilNextRun() {
@@ -101,21 +106,28 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     this.monitor = false;
 }
 
-disable(job: any) {
-  this.adminService.runJob(job['@disable']).pipe(take(1)).subscribe( response => {
+disable(serviceContext: string, job: any) {
+  const url =job['@disable'];
+  const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
+  this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
     this.refresh();
   });
 }
 
-enable(job: any) {
-      this.adminService.runJob(job['@enable']).pipe(take(1)).subscribe( response => {
+enable(serviceContext: string, job: any) {
+      const url =job['@enable'];
+      const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
+      this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
         this.refresh();
       });
 }
 
-execute(job: any) {
+execute(serviceContext: string, job: any) {
   this.quickLoad = true;
-  this.adminService.runJob(job['@execute']).pipe(take(1)).subscribe( response => {
+  const url =job['@execute'];
+  const replace = this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/';
+  const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
+  this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
     this.refresh(true);
   }, error => {
     setTimeout(() => {
@@ -123,8 +135,11 @@ execute(job: any) {
     } );
   });
 }
-cancel(job: any) {
-  this.adminService.runJob(job['@cancel']).pipe(take(1)).subscribe( response => {
+
+cancel(serviceContext: string, job: any) {
+  const url =job['@cancel'];
+  const url2 = url.replace('/api/v1/', this.occasionalApiBasePath + '/service/' + serviceContext + '/api/v1/');
+  this.adminService.runJob(url2).pipe(take(1)).subscribe( response => {
     this.refresh();
   });
 }

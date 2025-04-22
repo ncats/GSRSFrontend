@@ -73,7 +73,7 @@
         <span [innerHTML]="statusMessageSecond"></span>
       </div>
 
-      <div class="divflex margintop30px" *ngIf="statusMessage">
+      <div class="divflex margintop25px" *ngIf="statusMessage">
         <!-- Display More Status Message -->
         <div class="marginbottom10px colorred">
           <span [innerHTML]="statusMessage"></span>
@@ -81,7 +81,7 @@
 
         <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == false && facetsParamsUpdateCount == 0">
           <div>
-            <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()" mat-dialog-close>
+            <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()">
               Show {{subEntityDisplay}} Facets
             </button>
           </div>
@@ -89,9 +89,12 @@
 
         <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == true">
           <div>
-            <button class="mat-raised-button mat-primary" (click)="cancelBulkSearch()" mat-dialog-close>
+            <button class="mat-raised-button mat-primary" (click)="cancelBulkSearch()">
               Cancel Search
             </button>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a mat-raised-button color="primary" [routerLink]="['/home']" matTooltip='Open GSRS in new tab' target="_blank">Open GSRS in new tab</a>
           </div>
         </div>
 
@@ -113,7 +116,7 @@
       <!-- ***** DISPLAY FACETS FOR SUB ENTITY  ***************** -->
 
       <!-- SHOW FACETS HERE -->
-      <div *ngIf="((rawFacets && rawFacets.length > 0) && (showFacets == true))">
+      <div class="margintop10px" *ngIf="((rawFacets && rawFacets.length > 0) && (showFacets == true))">
 
         <div class="divflex">
           <div>
@@ -148,7 +151,7 @@
 
     <div mat-dialog-actions>
       <span class="middle-fill"></span>
-      <button class="mat-raised-button mat-primary" (click)="closePopup()" mat-dialog-close>Close</button>
+      <button *ngIf="!isSearchRunning" class="mat-raised-button mat-primary" (click)="closePopup()" mat-dialog-close>Close</button>
     </div>
 
   </ng-template>
