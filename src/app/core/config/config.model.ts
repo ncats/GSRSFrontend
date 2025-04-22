@@ -88,6 +88,9 @@ export interface Config {
     enableStructureFeatures?: boolean;
     StructureFeaturePriority?: Array<string>;
     structureEditSearch?: boolean;
+    bannerText?: string;
+    showTopBanner?: boolean;
+    showLogin?: boolean;
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
     enablePDFDownload ?: DownloadAsPDF;

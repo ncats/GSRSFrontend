@@ -1,4 +1,15 @@
-<mat-toolbar class="mat-elevation-z3" color="primary" *ngIf="showHeaderBar === 'true' && (!customToolbarComponent || customToolbarComponent.length == 0)">
+<div style="position: relative; height: 100px; border: 1px solid red;">
+
+<div> hello there 2</div>
+
+<div style="clear: both;"></div>
+
+<div style="position: relative; top: 100px;">
+
+<div *ngIf = "showTopBanner"> 
+  <div class = "top-banner">{{bannerText}}</div>
+</div>
+<mat-toolbar [ngClass]="['mat-elevation-z3', showTopBanner ? 'with-top-banner': '']" color="primary" *ngIf="showHeaderBar === 'true' && (!customToolbarComponent || customToolbarComponent.length == 0)">
   <div class="logo-container">
     <span class="logo">
       <a routerLink="/home" aria-label="home">
@@ -174,7 +185,7 @@
     (closed)="removeZindex()">
   </app-substance-text-search>
   <div>
-    <button mat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment !== 'login'">
+    <button mat-button class="login-link" (click)="routeToLogin()" *ngIf=" showLogin && !auth && mainPathSegment !== 'login'">
       Login
     </button>
     <div class="logged-in" *ngIf="auth">
@@ -225,3 +236,6 @@
 <app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
 <router-outlet></router-outlet>
+</div>
+
+</div>
