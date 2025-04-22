@@ -11,6 +11,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationExtras, RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { NitrosamineDisplayModule } from '@gsrs-core/nitrosamine-standalone/nitrosamine-display/nitrosamine-display.module';
 import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
 
 @NgModule({
@@ -30,7 +31,8 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     MatProgressBarModule,
     MatButtonModule,
     RouterModule,
-    FileSelectModule
+    FileSelectModule,
+    NitrosamineDisplayModule
   ],
   exports: [
     StructureExportComponent,

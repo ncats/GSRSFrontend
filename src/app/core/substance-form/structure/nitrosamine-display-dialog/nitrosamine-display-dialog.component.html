@@ -1,0 +1,12 @@
+<div mat-dialog-container>
+    <div class = "full-row">
+        <span class = "title">CPCA Calculator</span>
+   <span class = "middle-fill"></span>
+    <button mat-mini-fab (click)="dismissDialog()">
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+    </div>
+    <div mat-dialog-content>
+       <app-nitrosamine-display [smiles]="structure"></app-nitrosamine-display>
+    </div>
+</div>

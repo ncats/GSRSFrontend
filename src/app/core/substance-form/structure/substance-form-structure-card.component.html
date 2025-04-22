@@ -102,6 +102,17 @@
       </button>
     </div>
   </div>
+  <div class="button-row" *ngIf = "showNitrosamineButton">
+    <span class = "middle-fill"></span>
+    <button mat-button color="primary" matTooltip="CPCA Calculator"
+    (click)="openNitrosamineModal()">
+   <!--<mat-icon svgIcon="zoom_in"></mat-icon> --> 
+    View CPCA Calculator
+  </button>
+  </div>
+  
+
+
   <app-structure-form [structure]="structure" showSettings="true" [type]="substanceType">
   </app-structure-form>
   <div class="button-container" *ngIf="substanceType === 'polymer'">
