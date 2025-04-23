@@ -1,6 +1,6 @@
 {
   "version": "3.1.1",
-  "contactEmail": "GSRSSupport@fda.hhs.gov",
+  "contactEmail": "fda-srs@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
   "adverseEventShinySubstanceNameDisplay": "true",
