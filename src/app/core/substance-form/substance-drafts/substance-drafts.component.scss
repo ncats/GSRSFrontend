@@ -26,3 +26,102 @@
     display: flex;
     flex-direction: row;
 }
+
+/* Drafts validation */
+.message {
+  display: flex;
+  align-items: center;
+}
+
+.validation-body {
+  max-width: 95%;
+  display: flex;
+  max-width: 960px;
+  word-break: break-word;
+}
+
+.validation-message {
+  display: flex;
+  padding: 5px 0;
+
+  .message-type {
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-right: 20px;
+    padding: 2px;
+    border-radius: 3px;
+    min-width: 80px;
+  }
+}
+
+.warning-message {
+  color: var(--warning-dialog-color);
+  background-color: var(--warning-dialog-bg-color);
+
+}
+
+.error-message {
+  color: var(--error-dialog-color);
+  background-color: var(--error-dialog-bg-color);
+}
+
+.notice-message {
+  color: var(--notice-dialog-color);
+  background-color: var(--notice-dialog-bg-color);
+
+}
+
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6); /* Light dim background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Make sure it's above other content */
+}
+
+.draft-block {
+  margin-bottom: 20px;
+  padding-left: 8px;
+  border-left: 4px solid #ccc;
+}
+
+.draft-block strong {
+  font-weight: bold;
+}
+.draft-block em {
+  color: #888;
+  font-style: italic;
+}
+
+.message-row {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  padding-left: 12px;
+  gap: 8px;
+}
+
+.label {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.label-error {
+  background-color: #fce4e4;
+  color: #c62828;
+}
+.label-warning {
+  background-color: #fff8e1;
+  color: #f9a825;
+}
+.label-success {
+  background-color: #f3ffe1;
+  color: #13970a;
+}
