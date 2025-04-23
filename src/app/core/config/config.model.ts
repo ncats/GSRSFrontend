@@ -59,7 +59,6 @@ export interface Config {
     approvalType?: string;
     ssg4Form?: string;
     impuritiesForm?: string;
-    impuritiesForm?: string;
     filteredDuplicationCodes?: Array<string>;
     autoSaveWait?: number;
     authenticateAs?: AuthenticateAs;
