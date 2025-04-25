@@ -96,6 +96,7 @@ export interface Config {
     enablePDFDownload ?: DownloadAsPDF;
     showCrossEntitySearchDropdown?: boolean;
     restApiPrefix?: string;
+    nitrosamineDisplay?: boolean;
 }
 
 export interface StagingAreaSettings {

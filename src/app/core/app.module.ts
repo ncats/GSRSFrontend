@@ -122,7 +122,7 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
 import { FileSelectModule } from './file-select/file-select.module';
-
+import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamine-standalone.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -234,7 +234,8 @@ import { FileSelectModule } from './file-select/file-select.module';
     BulkSearchModule,
     ElementLabelDisplayModule,
     PrivacyStatementModule,
-    CrossEntitySearchModule
+    CrossEntitySearchModule,
+    NitrosamineStandaloneModule
   ],
   providers: [
     {
