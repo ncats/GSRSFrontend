@@ -197,7 +197,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   ngOnInit(): void {
     this.facetManagerService.registerGetFacetsHandler(this.invitroPharmacologyService.getInvitroPharmacologyFacets);
 
-    this.titleService.setTitle(`IP:Browse In-vitro Pharmacology`);
+    this.titleService.setTitle(`In-vitro Pharmacology Browser`);
 
     this.pageSize = 10;
     this.pageIndex = 0;

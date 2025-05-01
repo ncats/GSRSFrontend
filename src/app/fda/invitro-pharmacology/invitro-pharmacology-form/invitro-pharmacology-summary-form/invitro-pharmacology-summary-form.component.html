@@ -144,7 +144,8 @@
           <mat-card-content class="marginright10px">
 
             <div class="divflex">
-              <div class="font18px fontbold">
+
+              <div class="width300px font18px fontbold">
                 Total Summaries: {{screeningList.length}}
 
                 <br><br>
@@ -161,11 +162,14 @@
               <div class="marginleft100px padtop10px related-substance">
                 <app-substance-selector (selectionUpdated)="testAgentUpdated($event)"
                   eventCategory="substanceRelationshipRelatedSub"
-                  placeholder="Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
+                  placeholder="* Test Agent - Search by Name/CAS RN/UNII/BDNUM" header="Test Agent"
                   [subuuid]="testAgentSubstanceUuid" [showMorelinks]="true">
                 </app-substance-selector>
               </div>
 
+              <div class="marginleft200px">
+                <div class="font11px">* = Required Field</div>
+              </div>
             </div> <!-- class=divflex -->
 
 
@@ -196,48 +200,21 @@
 
                     <div class="divflex">
 
-                      <!-- TARGET NAME - Select Substance -->
+                      <!-- TARGET NAME - Select Substance , LEFT SIDE -->
                       <div class="padtop10px related-substance">
                         <app-substance-selector (selectionUpdated)="targetNameUpdated($event, indexScreening)"
                           eventCategory="substanceRelationshipRelatedSub"
-                          placeholder="Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
+                          placeholder="* Target Name - Search by Name/CAS RN/UNII/BDNUM" header="Target Name"
                           [subuuid]="screening.invitroSummary.targetNameSubstanceKey" [showMorelinks]="true">
                         </app-substance-selector>
                       </div>
 
-                      <!-- TARGET NAME - Select from Existing Assay Target Name -->
-                      <!--
-                      <mat-form-field class="col-3-1">
-                        <mat-label>Select Existing Assay Target Name</mat-label>
-                        <mat-select [formControl]="existingAssayControl"
-                          (selectionChange)="selectionChangeExistingAssay($event, indexAssay)">
-                          <mat-option *ngFor="let asy of assay._existingAssayList; let index = index" [value]="index">
-                            ID:{{asy.id}}&nbsp;&nbsp;
-                            External Assay Source:{{asy.externalAssaySource}}&nbsp;&nbsp;
-                            External Assay ID:{{asy.externalAssayId}}&nbsp;&nbsp;
-                            Target Name:{{asy.targetName}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                      -->
-
-                      <!-- Search Existing Assay -->
-
-                      <!--
-
-                      <div class="col-3-1">
-                        <span *ngIf="assay.targetName">
-                          <span class="font11px"><b>Selected Target Name:</b></span><br>
-                          {{assay.targetName}}
-                        </span>
-                      </div>
-                    -->
-
+                      <!-- RIght SIDE -->
                       <div class="width800px marginleft10px">
 
                         <div class="form-row">
                           <div class="width300px margintop10px">
-                            <app-invitro-pharmacology-text-search placeholder="Search for Existing Assay"
+                            <app-invitro-pharmacology-text-search placeholder="* Assay - Type any text to Search Assay"
                               styling="homePage" [searchValue]="searchValue"
                               (searchPerformed)="processSubstanceSearch($event, indexScreening)"
                               eventCategory="invitroPharmacologySearch">
@@ -245,14 +222,39 @@
                           </div>
 
                           <!-- Selected Assay -->
-                          <div class="margintop10px" *ngIf="screening._selectedAssay">
-                            Assay Target Name: <b>{{screening._selectedAssay.targetName}}</b>&nbsp;
-                            <br>
-                            External Source: <b>{{screening._selectedAssay.externalAssaySource}}&nbsp;
-                              {{screening._selectedAssay.externalAssayId}}</b>
-                          </div>
+                          <div class="margintop10px marginleft20px" *ngIf="screening._selectedAssay">
+                            <div class="textalignleft"><b>&nbsp;Selected Assay</b></div>
 
-                          <div *ngIf="screening.invitroSummary.isFromResult">
+                            <table width="400px">
+                              <tr align="left">
+                                <td width="128px">
+                                  <span class="font11px">Assay Target Name:</span>
+                                </td>
+                                <td class="font11px">
+                                  <span *ngIf="screening._selectedAssay.targetName">
+                                    <a class="" [routerLink]="['/invitro-pharm', screening._selectedAssay.id]"
+                                      target="_blank" matTooltip='View Assay Record'>
+                                      <b>{{screening._selectedAssay.targetName}}</b>
+                                    </a>
+                                  </span>
+                                </td>
+                              </tr>
+
+                              <tr align="left" class="font11px">
+                                <td>
+                                  External Source and Id:
+                                </td>
+                                <td>
+                                  <b>{{screening._selectedAssay.externalAssaySource}}
+                                    {{screening._selectedAssay.externalAssayId}}
+                                  </b>
+                                </td>
+                              </tr>
+                            </table>
+                          </div> <!-- selected Assay -->
+
+                          <!-- if data is from Screening results - show icon -->
+                          <div class="margintop30px marginleft10px" *ngIf="screening.invitroSummary.isFromResult">
                             <span
                               *ngIf="screening.invitroSummary.isFromResult && screening.invitroSummary.isFromResult == true">
                               <mat-icon matTooltip="This Summary data is from Result data">check_circle_outline
@@ -283,7 +285,12 @@
                                   </mat-radio-button>
                                 </mat-radio-group>
                               </td>
-                              <td class="font11px">{{assayResult.externalAssaySource}}</td>
+                              <td class="font11px">
+                                <a class="" [routerLink]="['/invitro-pharm', assayResult.id]" target="_blank"
+                                  matTooltip='View Assay Record'>
+                                  {{assayResult.externalAssaySource}}
+                                </a>
+                              </td>
                               <td class="font11px">{{assayResult.externalAssayId}}</td>
                               <td class="font11px">{{assayResult.targetName}}</td>
                               <td class="font11px">{{assayResult.assayTitle}}</td>
@@ -291,7 +298,6 @@
                             </tr> <!-- FOR LOOP: assay result -->
                           </table>
                         </div>
-                        <br>
 
                         <div class="form-row">
                           <app-cv-input class="col-2" domain="RELATIONSHIP_TYPE" title="Relationship Type"
@@ -332,7 +338,7 @@
                         [(ngModel)]="screening.invitroSummary.resultValueHigh" name="resultValueHigh" />
                     </mat-form-field>
 
-                    <app-cv-input class="col-5-1" domain="AMOUNT_UNIT" title="Result Value Units"
+                    <app-cv-input class="col-5-1 marginright50px" domain="AMOUNT_UNIT" title="Result Value Units"
                       name="resultValueUnits" [model]="screening.invitroSummary.resultValueUnits"
                       (valueChange)="screening.invitroSummary.resultValueUnits = $event">
                     </app-cv-input>
@@ -340,11 +346,24 @@
 
 
                   <div class="form-row">
-                    <mat-form-field class="col-1">
+                    <mat-form-field class="col-1 marginright30px">
                       <textarea matInput placeholder="Comments" [(ngModel)]="screening.invitroSummary.comments"
                         name="comments" rows="1"></textarea>
                     </mat-form-field>
                   </div> <!-- form-row -->
+
+
+                  <div class="form-row font11px">
+                    <span class="colorgray">Created
+                      By:</span>&nbsp;{{screening.invitroSummary.createdBy}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="colorgray">Create Date:</span>&nbsp;{{screening.invitroSummary.createdDate|date:
+                    'MM/dd/yyyy hh:mm:ss
+                    a'}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="colorgray">Modified
+                      By:</span>&nbsp;{{screening.invitroSummary.modifiedBy}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="colorgray">Modify Date:</span>&nbsp;{{screening.invitroSummary.modifiedDate|date:
+                    'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
 
                   <!-- Reference -->
                   <!--
@@ -379,10 +398,10 @@
               <!-- class=divflex -->
 
               <!--
-      </div> -->
+              </div> -->
               <!-- Loop Summaries -->
 
-            </div> <!-- Loop Assay List -->
+            </div> <!-- Loop Screening List -->
 
             <!-- Add More Summary Button -->
             <div class="font18px margintop20px" *ngIf="screeningList.length > 1">

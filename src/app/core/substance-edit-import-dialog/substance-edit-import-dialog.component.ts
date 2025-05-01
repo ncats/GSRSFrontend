@@ -36,7 +36,7 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   uploadFile(event) {
     if (event.target.files.length !== 1) {
       this.message = 'No file selected';
-          this.loaded = false;
+      this.loaded = false;
     } else {
       const file = event.target.files[0];
       this.filename = file.name;
@@ -65,15 +65,23 @@ export class SubstanceEditImportDialogComponent implements OnInit {
 
   useFile() {
     if (!this.uploaded && this.pastedJSON) {
-        const read = JSON.parse(this.pastedJSON);
-        if (!read['substanceClass']) {
-          this.message = 'Error: Invalid JSON format';
-          this.loaded = false;
-        } else {
+      const read = JSON.parse(this.pastedJSON);
+      // If there is no substanceClass field in Substance JSON data
+      if (!read['substanceClass']) {
+        // if JSON data is from non-substance entity, read the json from the textbox
+        if (read['id']) {
           this.loaded = true;
           this.record = this.pastedJSON;
           this.message = '';
+        } else {
+          this.message = 'Error: Invalid JSON format';
+          this.loaded = false;
         }
+      } else {
+        this.loaded = true;
+        this.record = this.pastedJSON;
+        this.message = '';
+      }
     }
     this.dialogRef.close(this.record);
   }
@@ -84,11 +92,11 @@ export class SubstanceEditImportDialogComponent implements OnInit {
     try {
       JSON.parse(this.pastedJSON);
       this.message = '';
-  } catch (e) {
-    this.message = 'Error: Invalid JSON format in pasted string';
-    this.loaded = false;
+    } catch (e) {
+      this.message = 'Error: Invalid JSON format in pasted string';
+      this.loaded = false;
+    }
   }
-}
 
 
   openInput(): void {
