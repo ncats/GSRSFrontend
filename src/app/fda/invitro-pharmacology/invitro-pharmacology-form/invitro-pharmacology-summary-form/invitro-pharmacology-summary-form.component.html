@@ -107,14 +107,6 @@
           </a>&nbsp;&nbsp;&nbsp;
         </div>
 
-        <!--
-        <div class="width50percent font11px margintop10px" *ngIf="assay && assay.id">
-          <span class="colorgray">Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss
-          a'}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-          <span class="colorgray">Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-        </div> -->
       </div> <!-- class=divflex -->
 
       <!-- Link to All Test Agent page -->
@@ -353,7 +345,7 @@
                   </div> <!-- form-row -->
 
 
-                  <div class="form-row font11px">
+                  <div class="form-row font11px" *ngIf="screening.invitroSummary.createdBy">
                     <span class="colorgray">Created
                       By:</span>&nbsp;{{screening.invitroSummary.createdBy}}&nbsp;&nbsp;&nbsp;&nbsp;
                     <span class="colorgray">Create Date:</span>&nbsp;{{screening.invitroSummary.createdDate|date:

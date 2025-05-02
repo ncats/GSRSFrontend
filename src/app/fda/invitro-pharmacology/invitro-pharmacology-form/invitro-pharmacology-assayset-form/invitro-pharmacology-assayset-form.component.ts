@@ -396,10 +396,11 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
           // Get the index if the value exists in the key 'value'
           const indexAssaySet = this.existingAssaySetList.findIndex(record => record.assaySet === this.selectedAssaySet);
 
-          // if Found
+          // if Found Assay Set
           if (indexAssaySet > -1) {
             const existingAssaySetObject = this.existingAssaySetList[indexAssaySet];
 
+            // Add the existing Assay Set object that is in DB
             assaySave.invitroAssaySets.push(existingAssaySetObject);
           } // indexSet > -1
           else {
@@ -515,6 +516,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     // Get the index to delete the Assay Set in the Assay
     const indexAssaySetInDatabase = this.existingAssaySetDatabaseList.findIndex(record => record.assaySet === this.selectedAssaySet);
 
+    // Assay Set NOT IN THE database
     if (indexAssaySetInDatabase == -1) {
       // it is a new Assay Set which is not in the database. Need to save the first Assay,
       // and get the Assay Set id.
@@ -522,7 +524,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
       // Set service assay for the first record
       this.invitroPharmacologyService.assay = this.assaysToSave[0];
 
-      // Save first Assay
+      // Save FIRST Assay
       this.invitroPharmacologyService.saveAssay().subscribe(response => {
         if (response) {
           let assay = response;
@@ -536,7 +538,8 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
                 // SAVED FIRST NEW ASSAY SET
                 this.newSavedAssaySet = assay.invitroAssaySets[indexAssaySetFirstSaved];
 
-                if (this.assaysToSave.length == 0) {
+                // If there is only one Assay, Reload the page
+                if (this.assaysToSave.length == 1) {
                   this.reloadPageAfterSave();
                 } else {
                   // more than one assays
@@ -562,11 +565,14 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
             }
           }
         } // if first Assay save response
-      });
+      },
+      error => {
+         alert("ERROR: Something went wrong during saving Assay Set");
+      });  
     } else {
+      // If Assay Set is already in DB
       this.saveBulkAssays(false);
     }
-
   }
 
   saveBulkAssays(skipFirstRecord?: boolean) {
@@ -619,8 +625,11 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
       },
       error => {
         this.errorMessage = 'there was a problem saving Assay Set';
+        this.toggleValidation();
         this.isLoading = false;
         this.loadingService.setLoading(false);
+        alert("ERROR: Something went wrong during saving Assay Set");
+
       }
     );
   }
