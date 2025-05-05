@@ -119,7 +119,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   previousState: number;
   useApprovalAPI = false;
     featuresOnly = false;
-  showTopBanner = false;
+  showTopBanner: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -313,8 +313,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
 
-    if(this.configService.configData.showTopBanner !== undefined) {
-      this.showTopBanner = this.configService.configData.showTopBanner;
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
     }
 
 

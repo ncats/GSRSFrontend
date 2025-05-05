@@ -99,6 +99,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   UNII: string;
   approvalType = 'lastEditedBy';
   previousState: number;
+  showTopBanner: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -282,6 +283,17 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     if (this.configService.configData && this.configService.configData.autoSaveWait) {
       this.autoSaveWait = this.configService.configData.autoSaveWait;
     }
+
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();

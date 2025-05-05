@@ -1,5 +1,45 @@
 @import '../../../styles/variables';
 
+.base-page-wrapper {
+  width: 100%;
+  display: inline;
+  position: fixed;
+  top: 0px;
+}
+
+.base-menu-wrapper {
+  width: 100%;
+  display: inline;
+
+  position: fixed;
+  top: 0px;
+}
+
+.base-menu-wrapper-with-top-banner {
+  top: 32px !important; 
+}
+
+.base-main-wrapper {
+  border: 1px solid purple;
+  overflow: scroll;
+  height:100%;
+  width: 100%;
+  display: inline;
+  position: fixed;
+  top: 64px;
+}
+
+.base-main-wrapper-with-top-banner {
+  top: 102px !important; 
+}
+
+.base-main-notification-wrapper {
+  width: 100%;
+  display: inline;
+  position: fixed;
+
+}
+
 .version {
   color: var(--version-text-color);
   font-size: 10pt;
@@ -110,14 +150,8 @@
 
 .mat-toolbar {
   position: fixed;
-  top: 0;
   z-index: 1001;
 }
-
-.with-top-banner {
-  top: 28px;
-}
-
 
 .logo {
   height: 35px;
@@ -268,10 +302,10 @@
     font-family:Arial, Helvetica, sans-serif;
     text-align: center;
     align-content: center;
-    color:#b71c1c;
+    color: #4793d1;
     background-color: white;
     position: fixed;
-    top: 0;
+    top: 0px;
     z-index: 1001;
     font-weight: 600;
   }

@@ -6,7 +6,7 @@
 </div>
 
 <div *ngIf="!simplifiedForm; else simplifiedActionsComponent">
-  <div [ngClass]="['top-fixed', showTopBanner ? 'with-top-banner': '']" *ngIf = "!featuresOnly">
+  <div [ngClass]="['top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']" *ngIf = "!featuresOnly">
     <div class="actions-container">
       <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
       <button mat-flat-button color="primary" class="draft-button" (click)="showDrafts()">Show Drafts <span

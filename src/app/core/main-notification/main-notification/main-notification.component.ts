@@ -15,7 +15,7 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
   private notifcationType: NotificationType;
   public notificationMessage: string;
   private subscriptions: Array<Subscription> = [];
-  public showTopBanner = false;
+  public showTopBanner:boolean;
 
   constructor(
     private notificationService: MainNotificationService,
@@ -23,10 +23,17 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if(this.configService.configData.showTopBanner !== undefined) {
-      this.showTopBanner = this.configService.configData.showTopBanner;
-    }
 
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+    
 
     this.appNotification.nativeElement.classList.add('hidden');
     const subscription = this.notificationService.notificationEvent.subscribe(notification => {
