@@ -88,12 +88,32 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   downloadJsonHref: any;
   jsonFileName: string;
   tabSelectedIndex = 0;
+  fdim = 10;
 
   activeIngredients: Array<ProductIngredient> = [];
   otherIngredients: Array<ProductIngredient> = [];
 
   showMoreLessActiveIngredArray: Array<boolean> = [];
   showMoreLessOtherIngredArray: Array<boolean> = [];
+
+  // Cross Entity Search
+  thisEntity: string = "products";
+  subEntity = null;
+  subEntitySearchTerm = null;
+  showCrossEntitySearch = false;
+  searchOnIdentifiers = false;
+  bulkSearchPanelOpen = false;
+  isSearchFinished = false;
+  iterations = 0;
+  bulkSearchStatusKey: string;
+  searchStatusUrl: string;
+  subEntitySearchHash: string;
+  editSubEntitySearchHash: any;
+  bulkSearchQueryId?: string;
+  searchEntity?: string;
+  idLists: Array<string> = [];
+  secondIdLists: Array<string> = [];
+  subEntityDisplayFacets: Array<DisplayFacet> = [];
 
   ascDescDir = 'desc';
   public displayedColumns: string[] = [
@@ -112,7 +132,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   // needed for facets
   private privateFacetParams: FacetParam;
   rawFacets: Array<Facet>;
-  private isFacetsParamsInit = false;
+  isFacetsParamsInit = false;
   exportOptions: Array<any>;
   public displayFacets: Array<DisplayFacet> = [];
   private subscriptions: Array<Subscription> = [];
@@ -151,7 +171,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     // Get Daily Med Url from Configuration
     this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
 
-    this.titleService.setTitle(`P:Browse Products`);
+    // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
+    this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
+
+    this.titleService.setTitle(`Product Browser`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -170,6 +193,11 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
+
+    // For Cross Entity/Sub Entity Search
+    this.subEntitySearchHash = this.activatedRoute.snapshot.queryParams['subentity-hash'];
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
@@ -182,10 +210,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.subscriptions.push(authSubscription);
 
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
-    //this.dailyMedUrl = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=';
+
+    // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
+    if (this.subEntitySearchHash) {
+      this.subEntityfacetDisplay();
+    }
 
     this.isComponentInit = true;
     this.loadComponent();
+
   }
 
   ngAfterViewInit() {
@@ -209,17 +242,41 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   searchProducts() {
     this.loadingService.setLoading(true);
     const skip = this.pageIndex * this.pageSize;
+    this.iterations = 0;
+
     const subscription = this.productService.getProducts(
       this.order,
       skip,
       this.pageSize,
       this.privateSearchTerm,
-      this.privateFacetParams
+      this.privateFacetParams,
+      this.fdim,
+      this.bulkSearchQueryId,
+      this.searchOnIdentifiers
     )
       .subscribe(pagingResponse => {
         this.isError = false;
-        this.products = pagingResponse.content;
-        this.dataSource = this.products;
+        this.isError = false;
+        // Get Bulk Search Status Key and url. The hostname for bulk search result can be different for non-substance entity
+        this.bulkSearchStatusKey = pagingResponse.statusKey;
+        this.searchStatusUrl = pagingResponse.searchStatusUrl;
+
+        // if Bulk Search is not finished
+        if (pagingResponse.finished) {
+          this.isSearchFinished = true;
+        }
+
+        // if it is Bulk Search
+        if (this.bulkSearchQueryId && this.iterations === 0) {
+          this.iterations++;
+
+          this.products = pagingResponse.content;
+          this.dataSource = this.products;
+        } else {
+          this.products = pagingResponse.content;
+          this.dataSource = this.products;
+        }
+
         this.totalProducts = pagingResponse.total;
         this.etag = pagingResponse.etag;
 
@@ -265,6 +322,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           this.exportOptions = response;
         });
 
+        // Stop the spinner
+        if (this.bulkSearchQueryId && this.iterations === 1) {
+          this.isLoading = false;
+          this.loadingService.setLoading(this.isLoading);
+        }
+
       }, error => {
         console.log('error');
         const notification: AppNotification = {
@@ -293,6 +356,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.pageSize = 10;
     this.pageIndex = 0;
     this.privateSearchTerm = '';
+    this.bulkSearchQueryId = null;
+    this.subEntitySearchHash = '';
+    this.isSearchFinished = false;
+
     this.searchProducts();
   }
 
@@ -335,6 +402,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   // for facets
   facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
+
     this.pageIndex = 0;
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
@@ -391,41 +459,79 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.searchProducts();
   }
 
-  clearSearch(): void {
-
-    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
-    this.gaService.sendEvent('productFiltering', 'icon-button:clear-search', eventLabel);
-
-    this.privateSearchTerm = '';
-    this.pageIndex = 0;
-    this.pageSize = 10;
-
-    this.populateUrlQueryParameters();
-    this.searchProducts();
-  }
-
   clearFilters(): void {
     // for facets
     this.displayFacets.forEach(displayFacet => {
       displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
     });
-    this.clearSearch();
+
+    if (this.bulkSearchQueryId) {
+      this.clearBulkSearch();
+    } else {
+      this.clearSearch();
+    }
 
     this.facetManagerService.clearSelections();
+  }
+
+  clearSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    this.gaService.sendEvent('productFiltering', 'icon-button:clear-search', eventLabel);
+
+    this.pageIndex = 0;
+    this.pageSize = 10;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+    this.isSearchFinished = false;
+
+    this.populateUrlQueryParameters();
+
+    this.searchProducts();
+  }
+
+  clearBulkSearch(): void {
+    this.order = '$root_lastModifiedDate';
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+
+    this.bulkSearchQueryId = null;
+    this.bulkSearchStatusKey = '';
+    this.searchEntity = '';
+    this.subEntitySearchHash = '';
+    this.isSearchFinished = false;
+    this.subEntityDisplayFacets = [];
+
+    this.populateUrlQueryParameters();
+
+    // Reset bulk search and do regular search
+    this.searchProducts();
+  }
+
+  refreshBulkSearch() {
+    this.searchProducts();
+
   }
 
   populateUrlQueryParameters(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
-    navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    //navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['search'] = this.privateSearchTerm;
     navigationExtras.queryParams['pageSize'] = this.pageSize;
     navigationExtras.queryParams['pageIndex'] = this.pageIndex;
     navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
 
+    navigationExtras.queryParams['bulkQID'] = this.bulkSearchQueryId;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
+    navigationExtras.queryParams['subentity-hash'] = this.subEntitySearchHash;
+
     this.previousState.push(this.router.url);
     const urlTree = this.router.createUrlTree([], {
-      queryParams: navigationExtras.queryParams,
+      // queryParams: navigationExtras.queryParams,
+      queryParams: {},
       queryParamsHandling: 'merge',
       preserveFragment: true
     });
@@ -458,7 +564,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           if (prodCode) {
             if (prodCode.productCode) {
               if (prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE') {
-                 prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
+                prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
               }
             }
           }
@@ -517,7 +623,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                       product._otherIngredients.push(elementIngred);
                     }
                   } // if Ingredient Type exists
-
+                  else {
+                    // if there is no Ingredient Type
+                    product._otherIngredients.push(elementIngred);
+                  }
 
                   /*
                   // Get Substance Details, uuid, approval_id, substance name
@@ -686,7 +795,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     const copyProd = _.cloneDeep(this.products[productIndex]);
     let cleanProduct = this.scrub(copyProd);
 
-    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
+    let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -701,7 +810,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
   saveJSON(productIndex: number): void {
     const copyProd = _.cloneDeep(this.products[productIndex]);
-    let cleanProduct  = this.scrub(copyProd);
+    let cleanProduct = this.scrub(copyProd);
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanProduct)));
     this.downloadJsonHref = uri;
@@ -789,4 +898,155 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     return old;
   }
+
+  // Need this for Cross Entity Search. Return all the IDs only for the current search
+  getSearchIdsOnly(doPerformSearch: boolean) {
+    if (doPerformSearch) {
+      let idListsTemp: Array<string> = [];
+
+      let order = null;
+      let top = 10;
+      let skip = 0;
+      let fdim = 1000000;
+      let bulkQID = null;
+      let searchOnIdentifiers = false;
+      let view = 'key';
+      // let viewfield = 'facet';
+      let facetlabel = 'Substance UUID';
+      let viewfield = null;
+
+      const subscription = this.productService.getProductFacetWithSearchCriteria(
+        facetlabel,
+        this.privateFacetParams,
+        this.privateSearchTerm,
+        fdim
+      ).subscribe(response => {
+        if (response) {
+          if (response.content && response.content.length > 0) {
+            // *** For Cross Entity Search get lists of Substance UUID ***
+            response.content.forEach((facet, index) => {
+              if (facet) {
+                if (facet.label) {
+                  idListsTemp.push(facet.label);
+                }
+              }
+              // Copy after the last record
+              if (response.content.length == index + 1) {
+
+                // Get Search Product Ids
+                this.getSearchProductIds(idListsTemp);
+
+                // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                // this.idLists = idListsTemp;
+              }
+            }); // forEach    
+
+          } // if content 
+          else {
+            this.idLists = [];
+          }
+        } // response
+        else {
+          this.idLists = [];
+        }
+
+      }, error => {
+        console.log('Error during search product');
+      }, () => {
+        this.subscriptions.push(subscription);
+      }
+      ); // response
+
+    } // if doPerformSearch == true
+  }
+
+  getSearchProductIds(substanceUuids?: any) {
+    let idListsTemp: Array<string> = [];
+
+    let order = null;
+    let top = 1000000;
+    let skip = 0;
+    let fdim = 10;
+    let bulkQID = null;
+    let searchOnIdentifiers = false;
+    let view = 'key';
+    // let viewfield = 'facet';
+    //let facetlabel = 'Substance UUID';
+    let facetlabel = null;
+    let viewfield = 'id';
+    let simpleSearchOnly: boolean = true;
+
+    // Get Product records that have Ingredients
+    this.privateFacetParams['Has Ingredients'] = { 'params': { 'Has Ingredients': true }, 'isAllMatch': false };
+
+    const prodSubscription = this.productService.getProducts(
+      order,
+      skip,
+      top,
+      this.privateSearchTerm,
+      this.privateFacetParams,
+      fdim,
+      bulkQID,
+      searchOnIdentifiers,
+      view,
+      viewfield,
+      facetlabel,
+      simpleSearchOnly
+    ).subscribe(pagingResponse => {
+      if (pagingResponse.content) {
+        let results: any = pagingResponse.content;
+
+        // Loop through each product record and get product id
+        if (results.length > 0) {
+          results.forEach((productId, index) => {
+            // for Cross Entity Search, add Product Ids in the temporary list
+            idListsTemp.push(productId);
+
+            // Copy after the last record
+            if (results.length == index + 1) {
+
+              this.idLists = substanceUuids;
+              this.secondIdLists = idListsTemp;
+              // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+              //  this.idLists = idListsTemp;
+            }
+          }); // forEach
+        } else {
+          //this.idLists = [];
+        }
+      }  // pagingResponse   
+    }, error => {
+      console.log('Error during search substance');
+    }, () => {
+      this.subscriptions.push(prodSubscription);
+    }
+
+    ); // pagingResponse
+  }
+
+  subEntityfacetDisplay() {
+    // if (hashcode is found on the url)
+    if (this.subEntitySearchHash) {
+      // Get Sub-entity facet values from local Storage to display on Browse Substance page
+      const searchParams = localStorage.getItem(this.subEntitySearchHash);
+
+      if (searchParams) {
+        const searchParamItems = JSON.parse(searchParams);
+        if (searchParamItems) {
+          this.subEntity = searchParamItems['subEntityDisplay'];
+          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+        }
+      }
+    }
+  }
+
+  editSubEntitySearch(): void {
+    if (this.subEntitySearchHash) {
+      let randomInteger = Math.floor(Math.random() * 100000000);
+
+      // Using random number to create different value, so it will trigger change Detection for Input
+      this.editSubEntitySearchHash = this.subEntitySearchHash + '_' + randomInteger;
+    }
+  }
+
 }

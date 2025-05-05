@@ -233,6 +233,8 @@ export class ProductTextSearchComponent implements OnInit, AfterViewInit, OnDest
 
   topSearchClean(searchTerm): string {
     if (searchTerm && searchTerm.length > 0) {
+      //escape literal forward slashes in a search first
+      searchTerm = searchTerm.replace(/(?<!\\)\//g, '\\/');
       searchTerm = searchTerm.trim();
       if (searchTerm.indexOf('"') < 0 && searchTerm.indexOf('*') < 0 && searchTerm.indexOf(':') < 0
         && searchTerm.indexOf(' AND ') < 0 && searchTerm.indexOf(' OR ') < 0) {

@@ -32,7 +32,6 @@ import { ApplyReferenceComponent } from './references/apply-reference/apply-refe
 import { PropertyParameterFormComponent } from './property-parameter-form/property-parameter-form.component';
 import { PropertyParameterDialogComponent } from './property-parameter-dialog/property-parameter-dialog.component';
 import { MatListModule } from '@angular/material/list';
-import { FileSelectModule } from 'file-select';
 import { SubunitFormComponent } from './subunit-form/subunit-form.component';
 import {SubunitDisplayPipe} from '@gsrs-core/utils/subunit-display.pipe';
 import {SubunitSelectorComponent} from '@gsrs-core/substance-form/subunit-selector/subunit-selector.component';
@@ -86,6 +85,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReferenceFormComponent } from './references/reference-form.component';
+import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
 
 @NgModule({
   imports: [

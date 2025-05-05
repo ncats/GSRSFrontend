@@ -23,9 +23,9 @@ export class UtilsService {
   ) {}
 
   getStructureSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-
-    return this.http.get<SubstanceSuggestionsGroup>(url + 'suggest?q=' + searchTerm);
+    let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+    url = url + 'suggest?q=' + encodeURIComponent(searchTerm);
+    return this.http.get<SubstanceSuggestionsGroup>(url);
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150, stereo?: boolean): SafeUrl {

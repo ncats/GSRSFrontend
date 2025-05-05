@@ -80,6 +80,7 @@ export class UserQueryListDialogComponent implements OnInit {
 
     });
     this.authService.checkAuth().subscribe(response => {
+      this.setUser = response.identifier;
       this.identifier = response.identifier;
       response.roles.forEach(role => {
         if (role === 'Admin') {
@@ -132,6 +133,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   checkList(): void {
+    this.message ="";
     this.bulkSearchService.getSingleBulkSearchList(this.listName2).subscribe(result => {
       let tosend = [];
       result.lists.forEach(list => {
@@ -145,6 +147,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   compareLists(list: any) {
+    this.message ="";
     this.uniqueRecords = this.etagIDs.filter(obj => { return list.indexOf(obj) == -1; });
     if (this.uniqueRecords.length == 0) {
       this.message = "NOTICE: All records already exist in selected list";
@@ -245,6 +248,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   refresh(type: string) {
+    this.message ="";
     this.bulkSearchService.getSaveBulkListStatus(this.loadID).pipe(take(1)).subscribe(response => {
 
     this.status = response.status;
@@ -268,11 +272,12 @@ export class UserQueryListDialogComponent implements OnInit {
   }
   
   getUserLists(): void {
+    this.message ="";
     this.refreshing = false;
     this.bulkSearchService.getBulkSearchLists().subscribe(result => {
       this.bulkSearchService.listEmitter.next(result.lists);
       this.lists = result.lists;
-      this.setUser = null;
+     // this.setUser = null;
     }, error => {
       console.log(error);
 
@@ -320,7 +325,12 @@ export class UserQueryListDialogComponent implements OnInit {
       }
     }
     this.message = "";
-    this.bulkSearchService.editKeysBulkSearchLists(this.activeName, entry.key, 'remove').subscribe(response => {
+    let user = null;
+    if(this.setUser !== this.identifier){
+      user = this.setUser;
+    }
+
+    this.bulkSearchService.editKeysBulkSearchLists(this.activeName, entry.key, 'remove', user).subscribe(response => {
       this.active = copy;
       this.filtered = JSON.parse(JSON.stringify(copy.lists)).slice(0, 10);
       this.pagesize = 10;
@@ -337,6 +347,7 @@ export class UserQueryListDialogComponent implements OnInit {
   }
 
   getUsers() {
+    this.message ="";
     this.refreshing = false;
     this.viewCreated = false;
     this.loaded = false;
