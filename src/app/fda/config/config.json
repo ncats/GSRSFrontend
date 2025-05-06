@@ -1,9 +1,5 @@
 {
-  "customToolbarComponent": "precisionFDA",
-  "apiBaseUrl": "http://localhost:9081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:9081/ginas/app/",
-  "apiSSG4mBaseUrl": "http://localhost:9081/ginas/app/",
-  "occasionalApiBasePath": "/ginas/app",  "version": "3.1.2",
+  "version": "3.1.2",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -19,7 +15,6 @@
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
   "restApiPrefix": "/ginas/app",
-  "showTopBanner": true, 
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
