@@ -146,7 +146,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
-    this.titleService.setTitle(`A:Browse Applications`);
+    this.titleService.setTitle(`Application Browser`);
 
     // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
     this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;

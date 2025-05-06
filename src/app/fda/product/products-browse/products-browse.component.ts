@@ -174,7 +174,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
     this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
 
-    this.titleService.setTitle(`P:Browse Products`);
+    this.titleService.setTitle(`Product Browser`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
