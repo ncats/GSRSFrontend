@@ -197,7 +197,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   ngOnInit(): void {
     this.facetManagerService.registerGetFacetsHandler(this.invitroPharmacologyService.getInvitroPharmacologyFacets);
 
-    this.titleService.setTitle(`In-vitro Pharmacology Browser`);
+    this.titleService.setTitle(`In Vitro Pharmacology Browser`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -352,7 +352,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       }, error => {
         console.log('error');
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve in-vitro pharmacology data. Please refresh and try again.',
+          message: 'There was an error trying to retrieve In Vitro pharmacology data. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };
@@ -1091,7 +1091,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   }
 
   editAdvancedSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'Browse In-vitro Pharmacology search term' :
+    const eventLabel = environment.isAnalyticsPrivate ? 'Browse In Vitro Pharmacology search term' :
       `${this.privateSearchTerm}`;
 
     const navigationExtras: NavigationExtras = {

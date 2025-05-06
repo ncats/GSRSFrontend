@@ -122,7 +122,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In-vitro Pharmacology",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In Vitro Pharmacology",
       "filters": [
         {}
       ]
@@ -1196,7 +1196,7 @@
     },
     {
       "component": "invitropharmacology",
-      "display": "Browse In-vitro Pharmacology",
+      "display": "Browse In Vitro Pharmacology",
       "path": "browse-invitro-pharm",
       "order": 15
     },
@@ -1235,37 +1235,37 @@
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology Assay",
+          "display": "In Vitro Pharmacology Assay",
           "path": "invitro-pharm/assay/register",
           "order": 230
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology Screening",
+          "display": "In Vitro Pharmacology Screening",
           "path": "invitro-pharm/register",
           "order": 240
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology Summary",
+          "display": "In Vitro Pharmacology Summary",
           "path": "invitro-pharm/summary/register",
           "order": 250
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology AssaySet Builder",
+          "display": "In Vitro Pharmacology AssaySet Builder",
           "path": "invitro-pharm/assaySetBuilder",
           "order": 260
         },
         {
           "component": "invitropharmacology",
-          "display": "Import In-vitro Pharm Assay",
+          "display": "Import In Vitro Pharm Assay",
           "path": "invitro-pharm/import/assay",
           "order": 270
         },
         {
           "component": "invitropharmacology",
-          "display": "Import In-vitro Pharm Screening",
+          "display": "Import In Vitro Pharm Screening",
           "path": "invitro-pharm/import/screening",
           "order": 280
         }

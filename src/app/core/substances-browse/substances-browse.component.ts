@@ -1356,7 +1356,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
         deprecated: this.showDeprecated,
         simpleSearchOnly: true,
         view: "key",
-        viewfield: "id"
+       // viewfield: "id"
       }).subscribe(pagingResponse => {
 
         if (pagingResponse.content) {
@@ -1364,11 +1364,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
           // Loop through each substance and get Substance UUID
           if (results.length > 0) {
-            results.forEach((substanceUuid, index) => {
+            results.forEach((substance, index) => {
               // for Cross Entity Search, add Substance UUID in the temporary list
-              idListsTemp.push(substanceUuid);
-
-              // Copy after the last record
+              if (substance) {
+                if (substance.idString) {
+                  idListsTemp.push(substance.idString);
+                }
+              }
+                // Copy after the last record
               if (results.length == index + 1) {
                 // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
                 this.idLists = idListsTemp;

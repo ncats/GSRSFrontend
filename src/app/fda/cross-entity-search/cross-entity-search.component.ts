@@ -186,6 +186,7 @@ export class CrossEntitySearchComponent implements OnInit {
         } else {
           // No record found
           this.statusMessage = "No related " + this.subEntityDisplay + " record Found. Please redefine your search criteria.";
+         // this.isSearchRunning = false;
         }
       }
     }

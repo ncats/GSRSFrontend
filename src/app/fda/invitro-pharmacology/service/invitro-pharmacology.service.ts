@@ -151,7 +151,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithInvitroPharmEntityUrl + 'suggest?q=' + searchTerm);
   }
 
-  // Initialize or load data in In-vitro Pharmacology ASSAY ONLY
+  // Initialize or load data in In Vitro Pharmacology ASSAY ONLY
   loadAssayOnly(assay?: InvitroAssayInformation): void {
     // if Update/Exist Assay
     if (assay != null) {
@@ -165,7 +165,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     }
   }
 
-  // Initialize or load data in In-vitro Pharmacology ASSAY
+  // Initialize or load data in In Vitro Pharmacology ASSAY
   loadAssay(assay?: InvitroAssayInformation): void {
     // if Update/Exist Assay
     if (assay != null) {
@@ -185,7 +185,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
     }
   }
 
-  // Initialize or load data in In-vitro Pharmacology ASSAY
+  // Initialize or load data in In Vitro Pharmacology ASSAY
   loadAssaySummaries(assay?: InvitroAssayInformation): void {
     // if Update/Exist Assay
     if (assay != null) {
@@ -371,11 +371,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    // Update In-vitro Pharmacology ASSAY
+    // Update In Vitro Pharmacology ASSAY
     if ((this.assay != null) && (this.assay.id)) {
       return this.http.put<InvitroAssayInformation>(url, this.assay, options);
     } else {
-      // Save New In-vitro Pharmacology ASSAY
+      // Save New In Vitro Pharmacology ASSAY
       return this.http.post<InvitroAssayInformation>(url, this.assay, options);
     }
   }
@@ -390,11 +390,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    // Update In-vitro Pharmacology ASSAY
+    // Update In Vitro Pharmacology ASSAY
     //if ((this.assay != null) && (this.assay.id)) {
     return this.http.put<InvitroAssayInformation>(url, this.assay, options);
     //  } else {
-    //    // Save New In-vitro Pharmacology ASSAY
+    //    // Save New In Vitro Pharmacology ASSAY
     //    return this.http.post<InvitroAssayInformation>(url, this.assay, options);
     //  }
   }
@@ -409,7 +409,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    // Add or Update In-vitro Pharmacology ASSAY in Bulk
+    // Add or Update In Vitro Pharmacology ASSAY in Bulk
     return this.http.put<any>(url, bulkAssays, options);
   }
 
@@ -423,11 +423,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    // Update In-vitro Pharmacology SCREENING
+    // Update In Vitro Pharmacology SCREENING
     if ((screening != null) && (screening.id)) {
       return this.http.put<InvitroAssayScreening>(url, screening, options);
     } else {
-      // Save New In-vitro Pharmacology SCREENING
+      // Save New In Vitro Pharmacology SCREENING
       return this.http.post<InvitroAssayScreening>(url, screening, options);
     }
   }
@@ -445,11 +445,11 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    // Update In-vitro Pharmacology Screening
+    // Update In Vitro Pharmacology Screening
     //    if ((this.assay != null) && (this.assay.id)) {
     return this.http.post<InvitroAssayScreening>(url, screening, options);
     //   } else {
-    // Save New In-vitro Pharmacology Screening
+    // Save New In Vitro Pharmacology Screening
     //     return this.http.post<InvitroAssayScreening>(url, this.assay, options);
     //  }
   }
@@ -464,7 +464,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
         'Content-type': 'application/json'
       }
     };
-    // Add or Update In-vitro Pharmacology ASSAY Screening in Bulk
+    // Add or Update In Vitro Pharmacology ASSAY Screening in Bulk
     return this.http.put<InvitroAssayInformation>(url, bulkScreenings, options);
   }
 
