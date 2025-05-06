@@ -1384,6 +1384,16 @@
       "display": "Concepts",
       "facetName": "Substance Class",
       "facetValue": "concept"
+    },
+    {
+      "display": "Mixtures",
+      "facetName": "Substance Class",
+      "facetValue": "mixture"
+    },
+    {
+      "display": "SSG1",
+      "facetName": "Substance Class",
+      "facetValue": "specifiedSubstanceG1"
     }
   ],
   "registrarDynamicLinks": [
