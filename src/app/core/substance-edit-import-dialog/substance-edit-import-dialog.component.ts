@@ -110,28 +110,29 @@ export class SubstanceEditImportDialogComponent implements OnInit {
     }
   }
 
-  useFile() {
-    if (!this.uploaded && this.pastedJSON) {
-      const read = JSON.parse(this.pastedJSON);
-      // If there is no substanceClass field in Substance JSON data
-      if (!read['substanceClass']) {
-        // if JSON data is from non-substance entity, read the json from the textbox
-        if (read['id']) {
-          this.loaded = true;
-          this.record = this.pastedJSON;
-          this.message = '';
-        } else {
-          this.message = 'Error: Invalid JSON format';
-          this.loaded = false;
-        }
-      } else {
-        this.loaded = true;
-        this.record = this.pastedJSON;
-        this.message = '';
-      }
-
-    }
-  }
+  // Is this method still used anywhere?
+  // useFile() {
+  //   if (!this.uploaded && this.pastedJSON) {
+  //     const read = JSON.parse(this.pastedJSON);
+  //     // If there is no substanceClass field in Substance JSON data
+  //     if (!read['substanceClass']) {
+  //       // if JSON data is from non-substance entity, read the json from the textbox
+  //       if (read['id']) {
+  //         this.loaded = true;
+  //         this.record = this.pastedJSON;
+  //         this.message = '';
+  //       } else {
+  //         this.message = 'Error: Invalid JSON format';
+  //         this.loaded = false;
+  //       }
+  //     } else {
+  //       this.loaded = true;
+  //       this.record = this.pastedJSON;
+  //       this.message = '';
+  //     }
+  //
+  //   }
+  // }
 
   checkLoaded() {
     this.loaded = true;
