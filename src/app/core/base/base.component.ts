@@ -63,6 +63,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   showHeaderBar = 'true';
   bannerText: string = "This repository is under review for potential modification in compliance with Administration directives.";
   showTopBanner: boolean;
+  showFooter: boolean;
   showLogin: boolean;
 
   constructor(
@@ -331,6 +332,18 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showLogin = true;
       }
     }
+
+    if(this.configService.configData.showFooter === undefined) {
+      this.showFooter = false;
+    } else {
+      if(this.configService.configData.showFooter === false) { 
+        this.showFooter = false;
+      } else {
+        this.showFooter = true;
+      }
+    }
+
+
   }
 
 
