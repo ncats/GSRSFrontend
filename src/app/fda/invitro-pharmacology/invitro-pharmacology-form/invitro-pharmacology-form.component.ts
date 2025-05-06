@@ -178,10 +178,10 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           // Get existing Assay record
           if (params['id']) {
             const id = params['id'];
-            this.title = 'Update In-vitro Pharmacology Screening';
+            this.title = 'Update In Vitro Pharmacology Screening';
             if (id !== this.id) {
               this.id = id;
-              this.titleService.setTitle(`Edit In-vitro Pharmacology Screening ` + this.id);
+              this.titleService.setTitle(`Edit In Vitro Pharmacology Screening ` + this.id);
               this.invitroPharmacologyService.loadAssay();
               this.assay = this.invitroPharmacologyService.assay;
 
@@ -192,7 +192,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           else if (this.activatedRoute.snapshot.queryParams['copyId']) {
             this.id = this.activatedRoute.snapshot.queryParams['copyId'];
             if (this.id) {  //copy from existing Product
-              this.titleService.setTitle(`Register In-vitro Pharmacology from Copy ` + this.id);
+              this.titleService.setTitle(`Register In Vitro Pharmacology from Copy ` + this.id);
               this.title = 'Register New Invitro-Pharmacology Assay from Copy Assay Id ' + this.id;
             }
           }
@@ -200,8 +200,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           else if (this.activatedRoute.snapshot.queryParams['action']) {
             let actionParam = this.activatedRoute.snapshot.queryParams['action'];
             if (actionParam && actionParam === 'import' && window.history.state) {
-              this.titleService.setTitle(`Register New In-vitro Pharmacology from Import`);
-              this.title = 'Register New In-vitro Pharmacology from Import';
+              this.titleService.setTitle(`Register New In Vitro Pharmacology from Import`);
+              this.title = 'Register New In Vitro Pharmacology from Import';
               const record = window.history.state.record;
               const response = JSON.parse(record);
               if (response) {
@@ -222,13 +222,13 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
             }
           }
-          // Register New In-vitro Pharamcology Screening Assay
+          // Register New In Vitro Pharamcology Screening Assay
           else {
-            this.title = 'Register New In-vitro Pharmacology Screening';
+            this.title = 'Register New In Vitro Pharmacology Screening';
             setTimeout(() => {
               // Create new Result Information Object to store Laboratory, Sponsor, Test Agents, Batch Number, Reference
               this.createResultInfoObject();
-              this.titleService.setTitle(`Register In-vitro Pharmacology Screening`);
+              this.titleService.setTitle(`Register In Vitro Pharmacology Screening`);
 
               this.invitroPharmacologyService.loadAssay();
 
@@ -504,7 +504,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       this.loadingService.setLoading(this.isLoading);
 
       if (this.validationMessages.length === 0) { //&& results.valid === true) {
-        this.submissionMessage = 'Invitro Pharmacology Assay Screening is Valid. Would you like to submit?';
+        this.submissionMessage = 'In Vitro Pharmacology Assay Screening is Valid. Would you like to submit?';
       }
       //   }, error => {
       ////     this.addServerError(error);
@@ -636,7 +636,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   private handleRecordRetrivalError() {
     const notification: AppNotification = {
-      message: 'The in-vitro pharmacology record you\'re trying to edit doesn\'t exist.',
+      message: 'The In Vitro pharmacology record you\'re trying to edit doesn\'t exist.',
       type: NotificationType.error,
       milisecondsToShow: 4000
     };
@@ -966,7 +966,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   reloadPageAfterSave() {
     this.validationMessages = null;
-    this.submissionMessage = 'In-vitro Pharmacology Assay Screening data was saved successfully!';
+    this.submissionMessage = 'In Vitro Pharmacology Assay Screening data was saved successfully!';
     this.showSubmissionMessages = true;
     this.validationResult = false;
 
@@ -988,7 +988,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         this.router.onSameUrlNavigation = 'reload';
         this.router.navigate(['/invitro-pharm/', forwardId, 'edit']);
       } else {
-        alert("Something went wrong while retrieving the In-vitro Pharmacology Screening data");
+        alert("Something went wrong while retrieving the In Vitro Pharmacology Screening data");
       }
 
       this.isLoading = false;

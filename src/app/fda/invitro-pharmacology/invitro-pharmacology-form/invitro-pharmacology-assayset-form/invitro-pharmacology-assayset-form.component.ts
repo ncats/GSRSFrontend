@@ -456,7 +456,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
       this.isLoading = false;
 
       if (this.validationMessages.length === 0 && this.validationResult === true) {
-        this.submissionMessage = 'Invitro Pharmacology Assay Set is Valid. Would you like to submit?';
+        this.submissionMessage = 'In Vitro Pharmacology Assay Set is Valid. Would you like to submit?';
       }
       /* }, error => {
          this.addServerError(error);
@@ -639,7 +639,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     this.isLoading = false;
   
     this.validationMessages = null;
-    this.submissionMessage = 'In-vitro Pharmacology Assay Set was saved successfully!';
+    this.submissionMessage = 'In Vitro Pharmacology Assay Set was saved successfully!';
     this.showSubmissionMessages = true;
     this.validationResult = false;
 
