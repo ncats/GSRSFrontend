@@ -25,6 +25,7 @@ import { ConfigService } from '@gsrs-core/config';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
 
 @Component({
   selector: 'app-impurities-form',
@@ -502,9 +503,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           this.router.navigate(['/impurities', id]);
         }
       }, 4000);
-    }
-      /*
-      , (error: SubstanceFormResults) => {
+    }, (error: SubstanceFormResults) => {
         this.showSubmissionMessages = true;
         this.loadingService.setLoading(false);
         this.isLoading = false;
@@ -522,7 +521,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
             this.submissionMessage = null;
           }, 8000);
         }
-      }*/
+      }
     );
   }
 
