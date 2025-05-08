@@ -379,8 +379,11 @@ private privateSequenceSearchKey?: string;
             this.loading = false;
             });
 
+        }, error => {
+          this.loading = false;
+          this.loadingService.setLoading(false);
+          console.log("error getting name in function searchSubstances()");
         });
-
       }
 
       openStructureImportDialog(): void {
