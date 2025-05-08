@@ -29,19 +29,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
   imageLoc: any;
   appId: string;
   customLinks: Array<any>;
-  total: string;
+  total: number;
   isCollapsed = true;
   hasBackdrop = false;
   bannerMessage?: string;
   usefulLinks?: Array<UsefulLink>;
-  
-  
+
+
   // these may be necessary due to a strange quirk
   // of angular and ngif
   searchValue: string;
   loadedComponents: LoadedComponents;
-  
-  
+
+
   private overlayContainer: HTMLElement;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
 
@@ -133,7 +133,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       });
     });
     this.substanceService.getRecordCount().subscribe( response => {
-      this.total = response;
+      this.total = parseInt(response);
     });
    // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
    this.isClosedWelcomeMessage = false;

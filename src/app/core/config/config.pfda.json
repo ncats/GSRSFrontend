@@ -532,7 +532,7 @@
     "root_codes_CAS",
     "root_codes_ECHA\\ \\(EC\/EINECS\\)"
   ],
-  "contactEmail": "precisionfda-support@dnanexus.com",
+  "contactEmail": "fda-srs@fda.hhs.gov",
   "sessionExpirationWarning": {
     "extendSessionApiUrl": "/api/update_active",
     "maxSessionDurationMinutes": 15
@@ -544,5 +544,5 @@
     "dialogMessage" : "You will be making an API call outside of the precisionFDA boundary. Do you want to continue?"
   },
   "googleAnalyticsId": "",
-  "customToolbarComponent": "precisionFDA"
+  "isPfdaVersion": true
 }

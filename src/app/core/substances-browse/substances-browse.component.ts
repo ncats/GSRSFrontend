@@ -257,7 +257,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
     // the sort order should be set to default (similarity) for structure searches, last edited for all others
     this.order = this.activatedRoute.snapshot.queryParams['order'] ||
-      (this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '' ? 'default' : '$root_lastEdited');
+    (this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '' ? 'default' : '$root_lastEdited');
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
@@ -1380,7 +1380,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           } else {
             this.idLists = [];
           }
-        }  // pagingResponse   
+        }  // pagingResponse
       }, error => {
         console.log('Error during search substance');
       }, () => {
@@ -1421,7 +1421,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           this.subEntity = searchParamItems['subEntity'];
           this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
         }
-      } 
+      }
       */
       let randomInteger =  Math.floor(Math.random() * 100000000);
       // Using random number to create different value, so it will trigger change Detection for Input
@@ -1458,7 +1458,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
   }
-  
+
   // ** END: Store in Local Storage
   */
 

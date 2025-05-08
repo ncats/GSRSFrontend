@@ -38,8 +38,8 @@ export interface Config {
     advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
-    customToolbarComponent?: string;
-    disableSessionRefresh?: boolean;
+    isPfdaVersion?: boolean;
+    sessionRefreshOnActiveUserOnly?: boolean;
     sessionExpirationWarning?: SessionExpirationWarning;
     disableReferenceDocumentUpload?: boolean;
     externalSiteWarning?: ExternalSiteWarning;

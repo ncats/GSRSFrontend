@@ -236,6 +236,36 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
+  processImportedSubstance(response?: string): void {
+    if (response) {
+      //   this.overlayContainer.style.zIndex = null;
+      this.loadingService.setLoading(true);
+
+      // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+      // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+
+      const read = JSON.parse(response);
+      if (this.id && read.uuid && this.id === read.uuid) {
+        this.substanceFormService.importSubstance(read, 'update');
+        this.submissionMessage = null;
+        this.validationMessages = [];
+        this.showSubmissionMessages = false;
+        setTimeout(() => {
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          this.overlayContainer.style.zIndex = null;
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          this.overlayContainer.style.zIndex = null;
+          this.router.onSameUrlNavigation = 'reload';
+          this.loadingService.setLoading(false);
+          this.router.navigateByUrl('/substances/register?action=import', {state: {record: response}});
+
+        }, 1000);
+      }
+    }
+  }
 
   importDialog(): void {
     const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
@@ -245,46 +275,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     });
     this.overlayContainer.style.zIndex = '1002';
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
-      if (response) {
-        //   this.overlayContainer.style.zIndex = null;
-        this.loadingService.setLoading(true);
-
-        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
-        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
-
-        const read = JSON.parse(response);
-        if (this.id && read.uuid && this.id === read.uuid) {
-          this.substanceFormService.importSubstance(read, 'update');
-          this.submissionMessage = null;
-          this.validationMessages = [];
-          this.showSubmissionMessages = false;
-          setTimeout(() => {
-            this.loadingService.setLoading(false);
-            this.isLoading = false;
-            this.overlayContainer.style.zIndex = null;
-          }, 1000);
-          /*   } else {
-            if ( read.substanceClass === this.substanceClass) {
-              this.imported = true;
-              this.substanceFormService.importSubstance(read);
-              this.submissionMessage = null;
-              this.validationMessages = [];
-              this.showSubmissionMessages = false;
-              this.loadingService.setLoading(false);
-              this.isLoading = false;*/
-        } else {
-          setTimeout(() => {
-            this.overlayContainer.style.zIndex = null;
-            this.router.onSameUrlNavigation = 'reload';
-            this.loadingService.setLoading(false);
-            this.router.navigateByUrl('/substances/register?action=import', {state: {record: response}});
-
-          }, 1000);
-        }
-      }
-      // }
-    });
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => this.processImportedSubstance(response));
 
   }
 
@@ -327,6 +318,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       .subscribe(params => {
 
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+        if (action && action === 'pfda-file-import') {
+          this.importFromUriParam();
+        }
 
         if (params['id']) {
 
@@ -446,6 +440,35 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       });
     });
+  }
+
+  // Load file from URI (as passed in file-uri URL parameter) and try to import it into a submission form
+  private importFromUriParam() {
+    const fileUri = this.activatedRoute.snapshot.queryParams['file-uri'] || null;
+    if (!fileUri) {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      return this.mainNotificationService.setErrorNotification('File URI was not specified');
+    }
+    this.mainNotificationService.setSuccessNotification('Loading file...', 0);
+    fetch(fileUri).then((response) => {
+      if (response.status === 200) {
+        response.json().then(responseJson => {
+          this.mainNotificationService.setSuccessNotification('Processing imported substance...');
+          this.processImportedSubstance(JSON.stringify(responseJson));
+        }).catch(reason => {
+          this.mainNotificationService.setErrorNotification(`Error while parsing imported file: ${reason.message}`);
+        })
+      } else {
+        const errMsg = response.status === 401 ? `Your session expired. Please login and try again.` : `Error while loading file: ${response.status}`;
+        this.mainNotificationService.setErrorNotification(errMsg);
+      }
+    }).catch(reason => {
+      this.mainNotificationService.setErrorNotification(`Error while importing file: ${reason.message}`);
+    })
+    this.isLoading = false;
+    this.loadingService.setLoading(false);
+    return;
   }
 
   isBase64(str) {
@@ -1039,6 +1062,21 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     })
   }
 
+  getSubmitButtonText(): string {
+    const parts = [];
+    if (this.validationMessages && this.validationMessages.length > 0) {
+      parts.push('Dismiss all');
+    }
+    if (!this.authService.getUser()) {
+      parts.push('Login');
+    }
+    parts.push('Submit');
+
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0];
+    return parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+  }
+
   submit(): void {
     this.isLoading = true;
     this.approving = false;
@@ -1100,7 +1138,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       messageType: 'ERROR',
       message: 'Unknown Server Error'
     };
-    if (error && error.error && error.error.message) {
+    if (error && error.type === 'AUTH') {
+      message.message = `Authentication Error: ${error.message}`;
+    } else if (error && error.error && error.error.message) {
       message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error && error.error && (typeof error.error) === 'string') {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;

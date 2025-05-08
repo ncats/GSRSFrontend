@@ -347,7 +347,7 @@ display: flex;
     font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
     color: var(--pink-span-color);
 }
-  
+
 .similarity-label {
     font-style: italic;
 }
@@ -627,7 +627,7 @@ display: flex;
     ::ng-deep .mat-select-value {
         max-width: 100%;
         width: auto;
-    }  
+    }
 }
 
 .page-label {
@@ -776,14 +776,14 @@ margin-left: 20px;
     font-size: 14px;
     height: 35px;
   }
-  
+
 .structure-dialog-content {
  line-height: 28px;
  margin-left: 20px;
 }
 
 .fieldset-crosssearch {
-  border: 1px solid --var(--regular-lightgray-color);  
+  border: 1px solid --var(--regular-lightgray-color);
   display: inline-block;
   padding-left: 0px;
   margin-left: 2px;
@@ -797,7 +797,7 @@ margin-left: 20px;
   width: 100%;
   min-width: 100%;
 }
-  
+
 .margintop10px {
   margin-top: 10px;
 }

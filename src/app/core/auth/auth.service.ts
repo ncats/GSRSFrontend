@@ -1,8 +1,8 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Auth, Role, UserGroup } from './auth.model';
-import { Observable, Subject, of } from 'rxjs';
-import { map, take, catchError } from 'rxjs/operators';
+import { interval, Observable, Subject, of } from 'rxjs';
+import { catchError, concatMap, filter, map, take, takeWhile } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/download.model';
@@ -96,6 +96,36 @@ export class AuthService {
     );
   }
 
+  // Helper function to create an Observable that emits when the popup login window closes
+  private waitForPopupToClose(popupWindow: Window): Observable<number> {
+    return interval(1000).pipe(
+      takeWhile(() => !popupWindow.closed, true),
+      filter(() => popupWindow.closed)
+    );
+  }
+
+  // Method to handle pFDA login (using popup window) and return success/unsuccess flag
+  pfdaLogin(): Observable<boolean> {
+    const height = 700;
+    const width = 700;
+    const left = (screen.width / 2) - (width / 2);
+    const top = (screen.height / 2) - (height / 2);
+    const loginWindow = window.open(
+      '/login?force_fda_sso_login=true&user_return_to=%2Fginas%2Fclose-pfda-login-window',
+      'pFDA Login',
+      `height=${height},width=${width},top=${top},left=${left}`
+    );
+
+    return this.waitForPopupToClose(loginWindow).pipe(
+      concatMap(() =>
+        this.getAuth().pipe(
+          map(authAfterLogin => !!authAfterLogin), // Convert to boolean (true = success)
+          catchError(() => of(false)) // Return false if there's an error
+        )
+      )
+    );
+  }
+
   getAuth(): Observable<Auth> {
     return new Observable(observer => {
 
@@ -143,6 +173,10 @@ export class AuthService {
     });
   }
 
+  private deleteCookie(name: string) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+  }
+
   logout(): void {
     // if (
     //   !this.configService.configData
@@ -161,13 +195,22 @@ export class AuthService {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
     }
-    const url = `${this.configService.configData.apiBaseUrl}logout`;
-    this.http.get(url).subscribe(() => {
+    let url = `${this.configService.configData.apiBaseUrl}logout`;
+    let method = 'GET';
+
+    if (this.configService.configData.isPfdaVersion) {
+      url = '/logout';
+      method = 'DELETE';
+    }
+
+    this.http.request(method, url).subscribe(() => {
       this._auth = null;
       this._authUpdate.next(null);
+      this.deleteCookie('sessionExpiredAt');
     }, error => {
       this._auth = null;
       this._authUpdate.next(null);
+      this.deleteCookie('sessionExpiredAt');
     });
   }
 
@@ -307,11 +350,11 @@ export class AuthService {
         if (this.configService.configData && this.configService.configData.dummyWhoami) {
           observer.next(this.configService.configData.dummyWhoami);
         } else {
-        this.http.get<Auth>(`${url}whoami`)
+          this.http.get<Auth>(`${url}whoami`)
           .subscribe(
             auth => {
-            //  console.log("Authorized as");
-            //  console.log(auth);
+              //  console.log("Authorized as");
+              //  console.log(auth);
               observer.next(auth);
             },
             err => {

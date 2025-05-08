@@ -342,25 +342,30 @@
       </div>
       <mat-divider class = "divide-test"></mat-divider>
 
-    <div class = "flex-row" style = "padding-bottom: 10px;">
-      <div class = "data">
-          Total substances: {{total | number:'1.0':'en-US'}}
-      </div>
+      <div class = "flex-row" style = "padding-bottom: 10px;">
+        <div class = "data">
+          Total substances:
+          <div style="float: right; margin-left: 10px;">
+            <mat-spinner *ngIf="!total" color="warn" [diameter]="22"></mat-spinner>
+            <span *ngIf="total">{{total | number:'1.0':'en-US'}}</span>
+          </div>
+        </div>
       </div>
       <div class = "flex-row test" style = "padding-bottom: 10px;">
         <div *ngFor = "let link of customLinks" class = "custom-wrap" (click) = "routeToCustom(link)">
           <span class = "entry">
-              <div class = "label">
-                  {{link.display}}
-                </div>
-                <div class = "value">
-                  {{link.total  | number:'1.0':'en-US'}}
-                </div>
-              </span>
+            <div class = "label">
+              {{link.display}}
+            </div>
+            <mat-spinner [diameter]="15" *ngIf="!link.total"></mat-spinner>
+            <div class = "value" *ngIf="link.total">
+              {{link.total  | number:'1.0':'en-US'}}
+            </div>
+          </span>
         </div>
-    </div>
-    <div style = "padding-left:15px; padding-top: 10px;">
-    </div>
+      </div>
+      <div style = "padding-left:15px; padding-top: 10px;">
+      </div>
     </mat-card>
 
     <mat-card *ngIf = "usefulLinks?.length" class = "home-card" >

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { BehaviorSubject, interval, Observable, Observer, Subject } from 'rxjs';
+import { BehaviorSubject, concatMap, filter, interval, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -27,6 +27,7 @@ import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hi
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
 
 import { stringify } from 'querystring';
+import { AuthService } from "@gsrs-core/auth";
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
     return encodeURIComponent(key);
@@ -58,6 +59,7 @@ export class SubstanceService extends BaseHttpService {
   tempObject: any;
   constructor(
     public http: HttpClient,
+    private authService: AuthService,
     public configService: ConfigService,
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -832,15 +834,30 @@ export class SubstanceService extends BaseHttpService {
   }
 
   saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
+    const method = type === 'import' || !substance.uuid ? 'POST' : 'PUT';
+    const options = { body: substance };
+
     const url = `${this.apiBaseUrl}substances?view=internal`;
-    let method = substance.uuid ? 'PUT' : 'POST';
-    if (type && type === 'import') {
-      method = 'POST';
+    if (!this.configService.configData.isPfdaVersion) {
+      return this.http.request(method, url, options);
+    } else {
+      return this.authService.getAuth().pipe(
+        concatMap(auth =>
+          auth
+            ? this.http.request(method, url, options)
+            : this.authService.pfdaLogin().pipe(
+              concatMap(success =>
+                success
+                  ? this.http.request(method, url, options)
+                  : throwError(() => ({
+                    type: 'AUTH',
+                    message: 'Authentication failed',
+                  }))
+              )
+            )
+        )
+      );
     }
-    const options = {
-      body: substance
-    };
-    return this.http.request(method, url, options);
   }
 
   saveSubstanceWithoutValidation(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
