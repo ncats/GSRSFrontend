@@ -296,7 +296,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
     // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
     if (this.subEntitySearchHash) {
-      this.subEntityfacetDisplay();
+      this.getCrossEntityParameters();
     }
 
     this.subscriptions.push(authSubscription);
@@ -961,6 +961,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       queryParams: {}
     };
 
+    // If performing cross entity search for Structure Search, call this to return to Structure editor
+    // with populated structure
+    if (this.subEntitySearchHash) {
+      this.getCrossEntityParameters('structureSearch');
+    }
+
     navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
     navigationExtras.queryParams['type'] = this.privateSearchType || null;
 
@@ -983,6 +989,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.smiles = '';
     this.pageIndex = 0;
 
+    // Clear Cross Entity Search Criteria display
+    if (this.subEntityDisplayFacets) {
+      this.subEntityDisplayFacets = null;
+    }
+
     this.populateUrlQueryParameters();
     this.searchSubstances();
   }
@@ -1004,6 +1015,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
+
+    // If performing cross entity search for Structure Search, call this to return to Structure editor
+    // with populated structure
+    if (this.subEntitySearchHash) {
+      this.getCrossEntityParameters('sequenceSearch');
+    }
 
     navigationExtras.queryParams['type'] = this.privateSearchType || null;
     navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
@@ -1028,6 +1045,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateSearchSeqType = '';
     this.pageIndex = 0;
 
+    // Clear Cross Entity Search Criteria display
+    if (this.subEntityDisplayFacets) {
+      this.subEntityDisplayFacets = null;
+    }
+    
     this.populateUrlQueryParameters();
     this.searchSubstances();
   }
@@ -1099,6 +1121,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       this.clearSearch();
     }
     this.facetManagerService.clearSelections();
+
+    // Clear Cross Entity Search Criteria display
+    if (this.subEntityDisplayFacets) {
+      this.subEntityDisplayFacets = null;
+    }
   }
 
   clickToRefreshPreview() {
@@ -1331,7 +1358,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   // Need this for Cross Entity Search. Return all the IDs only for the current search
   getSearchIdsOnly(doPerformSearch: boolean) {
-
     if (doPerformSearch) {
       let idListsTemp: Array<String> = [];
 
@@ -1392,7 +1418,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  subEntityfacetDisplay() {
+  getCrossEntityStorageItem(): any {
+    let searchParamItems: any;
+
     // if (hashcode is found on the url)
     if (this.subEntitySearchHash) {
       // Get Sub-entity facet values from local Storage to display on Browse Substance page
@@ -1400,84 +1428,48 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
       if (searchParams) {
         const searchParamItems = JSON.parse(searchParams);
-        if (searchParamItems) {
-          this.subEntity = searchParamItems['subEntityDisplay'];
-          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+         return searchParamItems;
+      }
+    }
+  }
+
+  getCrossEntityParameters(displayParam?: string) {
+    let searchParamItems = this.getCrossEntityStorageItem();
+
+    if (searchParamItems) {
+      this.subEntity = searchParamItems['subEntityDisplay'];
+      this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+    }
+
+    // Get the Structure Search Term from Storage
+    if (displayParam) {
+      if (displayParam == 'structureSearch') {
+        this.privateStructureSearchTerm = searchParamItems['thisEntityStructureSearchTerm'];
+
+        if (searchParamItems['thisEntityCutoff']) {
+          this.privateSearchCutoff = searchParamItems['thisEntityCutoff'];
         }
+      }
+      if (displayParam == 'sequenceSearch') {
+        this.privateSequenceSearchTerm = searchParamItems['thisEntitySequenceSearchTerm'];
       }
     }
   }
 
   editSubEntitySearch(): void {
     if (this.subEntitySearchHash) {
-      /*
-      const searchParam: Array<String> = [];
-
-      const searchParams = localStorage.getItem(this.subEntitySearchHash);
-
-      if (searchParams) {
-        const searchParamItems = JSON.parse(searchParams);
-        if (searchParamItems) {
-          this.subEntity = searchParamItems['subEntity'];
-          this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
-        }
-      } 
-      */
       let randomInteger =  Math.floor(Math.random() * 100000000);
       // Using random number to create different value, so it will trigger change Detection for Input
+
+      //OUTPUT - EMIT, trigger to display the sub entity facets again
       this.editSubEntitySearchHash = this.subEntitySearchHash + '_' + randomInteger;
     }
-
-
-    /*
-    const queryStatementHashes = [];
-    const queryStatement = {
-      condition: '',
-      queryableProperty: 'Manual Query Entry',
-      command: 'Manual Query Entry',
-      commandInputValues: advSearchTerm,
-      query: this.privateSearchTerm
-    };
-
-    // Store in cookies, Category tab (Substance, Application, etc)
-    const categoryHash = this.utilsService.hashCode('Substance');
-    localStorage.setItem(categoryHash.toString(), 'Substance');
-    queryStatementHashes.push(categoryHash);
-
-    const queryStatementString = JSON.stringify(queryStatement);
-    const hash = this.utilsService.hashCode(queryStatementString);
-
-    // Store in cookies, Each Query Statement is stored in separate hash
-    localStorage.setItem(hash.toString(), queryStatementString);
-
-    // Push Query Statements Hashes in Array
-    queryStatementHashes.push(hash);
-
-    // Store in cookies,  store in Query Hash - Query Statement Hashes Array
-    const queryStatementHashesString = JSON.stringify(queryStatementHashes);
-
-    localStorage.setItem(this.searchTermHash.toString(), queryStatementHashesString);
-  }
-  
-  // ** END: Store in Local Storage
-  */
 
     const navigationExtras: NavigationExtras = {
       queryParams: {
         'subentity-hash': this.searchTermHash
       }
     };
-
-    /*
-    navigationExtras.queryParams['structure'] = this.privateStructureSearchTerm || null;
-    navigationExtras.queryParams['type'] = this.privateSearchType || null;
-
-    if (this.privateSearchType === 'similarity') {
-      navigationExtras.queryParams['cutoff'] = this.privateSearchCutoff || 0;
-    }
-    */
-
-    // this.router.navigate(['/advanced-search'], navigationExtras);
   }
 
 }

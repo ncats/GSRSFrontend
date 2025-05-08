@@ -195,7 +195,10 @@ export class SubstanceService extends BaseHttpService {
           args.pageSize,
           args.facets,
           args.order,
-          args.skip
+          args.skip,
+          args.simpleSearchOnly,
+          args.view,
+          args.viewfield
         ).subscribe(response => {
           observer.next(response);
         }, error => {
@@ -354,6 +357,7 @@ export class SubstanceService extends BaseHttpService {
       if (viewfield && viewfield !== '') {
         params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
       }
+     
 
       const options = {
         params: params
@@ -374,7 +378,10 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              view,
+              simpleSearchOnly,
+              viewfield
             );
           } else {
             observer.next(response);
@@ -434,22 +441,22 @@ export class SubstanceService extends BaseHttpService {
           seqType: seqType
         });
 
-        if (simpleSearchOnly) {
-          params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
-        }
-
-        if (view && view !== '') {
-          params = params.append('view', view); // setting view=key, faster result, no content
-        }
-
-        if (viewfield && viewfield !== '') {
-          params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
-        }
-
         if (sync) {
           params = params.append('sync', sync.toString());
         }
         url += 'substances/sequenceSearch';
+      }
+
+      if (simpleSearchOnly) {
+        params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+      }
+
+      if (view && view !== '') {
+        params = params.append('view', view); // setting view=key, faster result, no content
+      }
+
+      if (viewfield && viewfield !== '') {
+        params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
       }
 
       const options = {
@@ -470,7 +477,10 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              view,
+              simpleSearchOnly,
+              viewfield
             );
           } else {
             observer.next(response);
@@ -520,6 +530,7 @@ export class SubstanceService extends BaseHttpService {
             skip: skip.toString()
           });
         }
+
         if (order != null && order !== '') {
           params = params.append('order', order);
         }
@@ -530,6 +541,18 @@ export class SubstanceService extends BaseHttpService {
         params = params.append('searchOnIdentifiers', v);
         params = params.append('searchEntity', searchEntity);
         url += `substances/bulkSearch`;
+      }
+
+      if (simpleSearchOnly) {
+        params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+      }
+
+      if (view && view !== '') {
+        params = params.append('view', view); // setting view=key, faster result, no content
+      }
+
+      if (viewfield && viewfield !== '') {
+        params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
       }
 
       const options = {
@@ -551,7 +574,10 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              view,
+              simpleSearchOnly,
+              viewfield
             );
           } else {
             // consider making API backend provide statusKey in JSON
