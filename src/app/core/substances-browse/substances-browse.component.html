@@ -13,6 +13,10 @@
     <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && isAdmin)">
       <span *ngIf="showCrossEntitySearch == true">
         <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm"
+          [entitySmiles]="smiles" [entityType]="privateSearchType"
+          [entityCutoff]="privateSearchCutoff"
+          [entityStructureSearchTerm]="privateStructureSearchTerm"
+          [entitySequenceSearchTerm]="privateSequenceSearchTerm"
           [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
           [entityTotalRecords]="totalSubstances" [editSubEntitySearchHash]="editSubEntitySearchHash"
           (getSearchIdsOnly)="getSearchIdsOnly($event)">
