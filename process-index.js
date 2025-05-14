@@ -24,6 +24,15 @@ fs.readFile(indexFilePath, 'utf8', function (err, data) {
       }
     });
 
+    const scriptAnalyticsCustom = $('script#analytics-custom');
+    scriptAnalyticsCustom.each((index, _element) => {
+      const element = $(_element);
+      if (element.attr('src') && element.attr('src').match(/^\/assets\//) || element.attr('src').match(/^assets\//)) {
+        const currentHref = element.attr('src').replace(/^\//, '');
+        element.attr('src', baseHref + currentHref);
+      }
+    });
+
     const metas = $('meta');
     links.each((index, _element) => {
       const element = $(_element);
