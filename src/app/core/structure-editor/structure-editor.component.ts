@@ -138,7 +138,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   @Input() setMolecule(structure: any) {
     if (this.structureEditor === "ketcher") {
       this.structureService.interpretStructure(structure).subscribe(resp => {
-        this.ketcher.setMolecule(resp.structure.molfile);
+        this.ketcher.setMolecule(resp.structure.molfile);        
       });
     } else {
       this.editor.setMolecule(structure);
@@ -625,10 +625,56 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   catchPaste(event: ClipboardEvent): void {
-    let canPaste = true;
-    if (this.calledFromComponent && this.pageKetcherIsOpen) {
-      if (this.calledFromComponent !== this.pageKetcherIsOpen) {
-        canPaste = false;
+    const send: any = {};
+    let valid = false;
+    const items = event.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const blob = items[i].getAsFile();
+      if (items[i].type.indexOf('image') !== -1) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.canvasMessage = '';
+        valid = true;
+        send.type = 'image';
+        const reader = new FileReader();
+        send.file = blob;
+        reader.readAsDataURL(blob);
+        const that = this;
+        reader.onloadend = () => {
+          setTimeout(() => {
+            const img = reader.result.toString();
+            that.createImage(img);
+          });
+        };
+      } else if (items[i].type === 'text/plain') {
+        const text = event.clipboardData.getData('text/plain');
+        if (text.indexOf('<div') === -1) {
+          event.preventDefault();
+          event.stopPropagation();
+          this.canvasMessage = '';
+          this.loadingService.setLoading(true);
+          this.structureService.interpretStructure(text).subscribe(response => {
+            
+            if (response.structure && response.structure.molfile) {
+             
+                this.editor.setMolecule(response.structure.molfile);
+                
+                this.structureService.getSmilesFormula(response.structure.smiles)
+                this.loadedMolfile.emit(response.structure.molfile);
+
+              if(response.structure.smiles === '') {
+                this.canvasMessage = 'empty or invalid structure pasted';
+              }
+            } else {
+              this.canvasMessage = 'Structure text not recognized';
+            }
+            this.loadingService.setLoading(false);
+
+          },error =>{
+            this.loadingService.setLoading(false);
+            this.canvasMessage = 'empty or invalid structure pasted';
+          });
+        }
       }
     }
 
