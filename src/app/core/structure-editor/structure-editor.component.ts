@@ -110,7 +110,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   @Input() setMolecule(structure: any){
     if(this.structureEditor==="ketcher") {
       this.structureService.interpretStructure(structure).subscribe(resp => {
-        this.ketcher.setMolecule(resp.structure.molfile);
+        this.ketcher.setMolecule(resp.structure.molfile);        
       });
     } else {
       this.editor.setMolecule(structure);
@@ -501,8 +501,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
             if (response.structure && response.structure.molfile) {
              
                 this.editor.setMolecule(response.structure.molfile);
-              
-              this.loadedMolfile.emit(response.structure.molfile);
+                
+                this.structureService.getSmilesFormula(response.structure.smiles)
+                this.loadedMolfile.emit(response.structure.molfile);
 
               if(response.structure.smiles === '') {
                 this.canvasMessage = 'empty or invalid structure pasted';

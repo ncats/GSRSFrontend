@@ -1,4 +1,8 @@
 {
+  "apiBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
+  "gsrsHomeBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/ui/",
+  "apiSSG4mBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
+  "occasionalApiBasePath": "/ginas/app",
   "version": "3.1.2",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
