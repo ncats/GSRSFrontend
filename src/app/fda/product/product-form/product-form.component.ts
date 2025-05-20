@@ -20,6 +20,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
   selector: 'app-product-form',
@@ -53,6 +54,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   jsonFileName: string;
   provenanceFieldMessage: Array<String> = [];
   effectiveTimeMessage: any[][] = [];
+  showTopBanner: boolean;
 
   constructor(
     private productService: ProductService,
@@ -67,13 +69,26 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
     private titleService: Title,
-    private sanitizer: DomSanitizer) { }
+    private sanitizer: DomSanitizer,
+    private configService: ConfigService) { }
 
   ngOnInit() {
     this.isAdmin = this.authService.hasRoles('admin');
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
+
+
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
