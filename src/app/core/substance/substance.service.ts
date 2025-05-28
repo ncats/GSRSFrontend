@@ -104,7 +104,7 @@ export class SubstanceService extends BaseHttpService {
     const uuid = [];
     if (content && content.length > 0) {
       content.forEach(substance => {
-          uuid.push(substance.uuid);
+        uuid.push(substance.uuid);
       });
     }
     this.searchResult = {etag: result, uuids: uuid, total: total };
@@ -147,7 +147,11 @@ export class SubstanceService extends BaseHttpService {
           args.pageSize,
           args.facets,
           args.order,
-          args.skip
+          args.skip,
+          false,
+          args.simpleSearchOnly,
+          args.view,
+          args.viewfield
         ).subscribe(response => {
           observer.next(response);
         }, error => {
@@ -156,7 +160,7 @@ export class SubstanceService extends BaseHttpService {
           observer.complete();
         });
       } else if ((args.sequenceSearchKey != null && args.sequenceSearchKey !== '') ||
-      (args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '')) {
+        (args.sequenceSearchTerm != null && args.sequenceSearchTerm !== '')) {
         this.searchSubstanceSequences(
           args.sequenceSearchTerm,
           args.sequenceSearchKey,
@@ -167,7 +171,11 @@ export class SubstanceService extends BaseHttpService {
           args.pageSize,
           args.facets,
           args.order,
-          args.skip
+          args.skip,
+          true,
+          args.simpleSearchOnly,
+          args.view,
+          args.viewfield
         ).subscribe(response => {
           observer.next(response);
         }, error => {
@@ -177,7 +185,7 @@ export class SubstanceService extends BaseHttpService {
         });
       } else if ((args.bulkQID != null &&  args.bulkQID.toString() != '')) {
         this.searchSubstanceBulk(
-//          args.bulkSearchTerm,
+          //          args.bulkSearchTerm,
           args.searchTerm,
           args.bulkQID,
           args.searchOnIdentifiers,
@@ -187,7 +195,10 @@ export class SubstanceService extends BaseHttpService {
           args.pageSize,
           args.facets,
           args.order,
-          args.skip
+          args.skip,
+          args.simpleSearchOnly,
+          args.view,
+          args.viewfield
         ).subscribe(response => {
           observer.next(response);
         }, error => {
@@ -275,10 +286,13 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
-    sync: boolean = false
+    sync: boolean = false,
+    simpleSearchOnly?: boolean,
+    view?: string,
+    viewfield?: string
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
-      let params = new FacetHttpParams({encoder: new CustomEncoder()});
+      let params = new FacetHttpParams({ encoder: new CustomEncoder() });
       let url = this.apiBaseUrl;
       let structureFacetsKey: number;
       structureFacetsKey = this.utilsService.hashCode(searchTerm, type, cutoff);
@@ -332,6 +346,19 @@ export class SubstanceService extends BaseHttpService {
         url += 'substances/structureSearch';
       }
 
+      if (simpleSearchOnly) {
+        params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+      }
+
+      if (view && view !== '') {
+        params = params.append('view', view); // setting view=key, faster result, no content
+      }
+
+      if (viewfield && viewfield !== '') {
+        params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
+      }
+     
+
       const options = {
         params: params
       };
@@ -351,7 +378,10 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              view,
+              simpleSearchOnly,
+              viewfield
             );
           } else {
             observer.next(response);
@@ -376,10 +406,13 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
-    sync: boolean = true
+    sync: boolean = true,
+    simpleSearchOnly?: boolean,
+    view?: string,
+    viewfield?: string
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
-      let params = new FacetHttpParams({encoder: new CustomEncoder()});
+      let params = new FacetHttpParams({ encoder: new CustomEncoder() });
       let url = this.apiBaseUrl;
       let structureFacetsKey;
 
@@ -414,6 +447,18 @@ export class SubstanceService extends BaseHttpService {
         url += 'substances/sequenceSearch';
       }
 
+      if (simpleSearchOnly) {
+        params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+      }
+
+      if (view && view !== '') {
+        params = params.append('view', view); // setting view=key, faster result, no content
+      }
+
+      if (viewfield && viewfield !== '') {
+        params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
+      }
+
       const options = {
         params: params
       };
@@ -432,7 +477,10 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              view,
+              simpleSearchOnly,
+              viewfield
             );
           } else {
             observer.next(response);
@@ -447,7 +495,7 @@ export class SubstanceService extends BaseHttpService {
   }
 
   searchSubstanceBulk(
-//    bulkSearchTerm?: string,
+    //    bulkSearchTerm?: string,
     querySearchTerm?: string,
     bulkQID?: number,
     searchOnIdentifiers?: boolean,
@@ -458,16 +506,19 @@ export class SubstanceService extends BaseHttpService {
     facets?: FacetParam,
     order?: string,
     skip: number = 0,
+    simpleSearchOnly?: boolean,
+    view?: string,
+    viewfield?: string
   ): Observable<PagingResponse<SubstanceSummary>> {
     return new Observable(observer => {
-      let params = new FacetHttpParams({encoder: new CustomEncoder()});
+      let params = new FacetHttpParams({ encoder: new CustomEncoder() });
       let url = this.apiBaseUrl;
       let bulkFacetsKey: number;
       bulkFacetsKey = this.utilsService.hashCode(bulkQID, searchOnIdentifiers, searchEntity);
       if (this.searchKeys[bulkFacetsKey]) {
         url += `status(${this.searchKeys[bulkFacetsKey]})/results`;
         params = params.appendFacetParams(facets, this.showDeprecated);
-        if(querySearchTerm.length > 0) {
+        if (querySearchTerm.length > 0) {
           params = params.appendDictionary({
             top: pageSize.toString(),
             skip: skip.toString(),
@@ -479,6 +530,7 @@ export class SubstanceService extends BaseHttpService {
             skip: skip.toString()
           });
         }
+
         if (order != null && order !== '') {
           params = params.append('order', order);
         }
@@ -489,6 +541,18 @@ export class SubstanceService extends BaseHttpService {
         params = params.append('searchOnIdentifiers', v);
         params = params.append('searchEntity', searchEntity);
         url += `substances/bulkSearch`;
+      }
+
+      if (simpleSearchOnly) {
+        params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+      }
+
+      if (view && view !== '') {
+        params = params.append('view', view); // setting view=key, faster result, no content
+      }
+
+      if (viewfield && viewfield !== '') {
+        params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
       }
 
       const options = {
@@ -510,7 +574,10 @@ export class SubstanceService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              view,
+              simpleSearchOnly,
+              viewfield
             );
           } else {
             // consider making API backend provide statusKey in JSON
@@ -538,7 +605,9 @@ export class SubstanceService extends BaseHttpService {
     pageSize?: number,
     facets?: FacetParam,
     skip?: number,
-    view?: string
+    view?: string,
+    simpleSearchOnly?: boolean,
+    viewfield?: string
   ): void {
     this.tempObject = {
       querySearchTerm: querySearchTerm,
@@ -550,12 +619,14 @@ export class SubstanceService extends BaseHttpService {
       pageSize: pageSize ? pageSize : 0,
       facets: facets ? facets : null,
       skip: skip ? skip : 0,
-      view: view ? view : null
+      view: view ? view : null,
+      simpleSearchOnly: simpleSearchOnly ? simpleSearchOnly : null,
+      viewfield: viewfield ? viewfield : null
     }
-    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view)
+    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view, simpleSearchOnly, viewfield)
       .pipe(
         switchMap(response => {
-          let temp:any = response;
+          let temp: any = response;
           temp.statusKey = searchKey;
           temp.finished = asyncCallResponse.finished;
           observer.next(temp);
@@ -583,7 +654,9 @@ export class SubstanceService extends BaseHttpService {
               pageSize,
               facets,
               skip,
-              view
+              view,
+              simpleSearchOnly,
+              viewfield
             );
           });
         },
@@ -607,10 +680,12 @@ export class SubstanceService extends BaseHttpService {
     pageSize?: number,
     facets?: FacetParam,
     skip?: number,
-    view?: string
+    view?: string,
+    simpleSearchOnly?: boolean,
+    viewfield?: string
   ): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
-    let params = new FacetHttpParams({encoder: new CustomEncoder()});
+    let params = new FacetHttpParams({ encoder: new CustomEncoder() });
 
     params = params.appendFacetParams(facets, this.showDeprecated);
 
@@ -623,6 +698,14 @@ export class SubstanceService extends BaseHttpService {
       skip: skip.toString(),
       view: view || ''
     });
+
+    if (simpleSearchOnly) {
+      params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // setting simpleSearchOnly=true, faster result, no facets
+    }
+
+    if (viewfield && viewfield !== '') {
+      params = params.append('viewfield', viewfield); // setting view=key, faster result, no content
+    }
 
     // Added for 3.0.2, Advanced Search:Combine structure Search with query search.
     if (querySearchTerm != null && querySearchTerm !== '') {
@@ -832,7 +915,7 @@ export class SubstanceService extends BaseHttpService {
     if (page === 'edit') {
       url = url +  '/edit';
     }
-  return url;
+    return url;
   }
 
   getSequenceByID(substance: string, unit: string, type: string): Observable<any> {
@@ -846,17 +929,17 @@ export class SubstanceService extends BaseHttpService {
     type?: string,
     seqType?: string,
   ): Observable<any> {
-      let params = new FacetHttpParams();
-      const url = this.apiBaseUrl + 'substances/sequenceSearch';
+    let params = new FacetHttpParams();
+    const url = this.apiBaseUrl + 'substances/sequenceSearch';
 
-        params = params.appendDictionary({
-          q: searchTerm,
-          type: type,
-          cutoff: cutoff.toString(),
-          seqType: seqType
-        });
+    params = params.appendDictionary({
+      q: searchTerm,
+      type: type,
+      cutoff: cutoff.toString(),
+      seqType: seqType
+    });
 
-     return this.http.post(url, params);
+    return this.http.post(url, params);
   }
 
   oldLinkFix(link: string): string {
@@ -873,9 +956,9 @@ export class SubstanceService extends BaseHttpService {
     //TODO: may need to url-encode some codeSystems for spaces/hyphens
     const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
     const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:` + codeSystem + `)(type:PRIMARY)($0)/code`;
-        return this.http.get<any>(refuuid).pipe(
-          catchError(error => this.http.get(refPname))
-        );
+    return this.http.get<any>(refuuid).pipe(
+      catchError(error => this.http.get(refPname))
+    );
   }
   getPrimaryConfigCode(reference: SubstanceRelated): Observable<string> {
     let cs: string;
@@ -888,9 +971,9 @@ export class SubstanceService extends BaseHttpService {
   getBDNUM(reference: SubstanceRelated ): Observable<string> {
     const refuuid = `${this.apiBaseUrl}substances(${reference.refuuid })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
     const refPname = `${this.apiBaseUrl}substances(${ reference.refPname  })/codes(codeSystem:BDNUM)(type:PRIMARY)($0)/code`;
-        return this.http.get<any>(refuuid).pipe(
-          catchError(error => this.http.get(refPname))
-        );
+    return this.http.get<any>(refuuid).pipe(
+      catchError(error => this.http.get(refPname))
+    );
   }
 
 
@@ -1050,7 +1133,7 @@ export class SubstanceService extends BaseHttpService {
 
   public GetStagedRecord(id:string) {
     let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/stagingArea/${id}`;
-    
+
     return this.http.get< any >(`${url}`);
 
   }

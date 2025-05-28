@@ -75,6 +75,11 @@ export class CrossEntitySearchComponent implements OnInit {
   // Needed for cross/sub entity search
   thisEntitySearchTerm = null;
   thisEntityFacetString = '';
+  thisEntitySmiles = null;
+  thisEntityType = null;
+  thisEntityCutoff: number;
+  thisEntityStructureSearchTerm = null;
+  thisEntitySequenceSearchTerm = null;
   thisEntityFacetParams: FacetParam;
   thisEntityDisplayFacets: Array<DisplayFacet> = [];
   editSubEntitySearchHashCode = null;
@@ -143,6 +148,31 @@ export class CrossEntitySearchComponent implements OnInit {
   }
 
   @Input()
+  set entitySmiles(entSmiles) {
+    this.thisEntitySmiles = entSmiles;
+  }
+
+  @Input()
+  set entityType(entType) {
+    this.thisEntityType = entType;
+  }
+
+  @Input()
+  set entityCutoff(entCutoff) {
+    this.thisEntityCutoff = entCutoff;
+  }
+
+  @Input()
+  set entityStructureSearchTerm(entStructureSearchTerm) {
+    this.thisEntityStructureSearchTerm = entStructureSearchTerm;
+  }
+
+  @Input()
+  set entitySequenceSearchTerm(entSequenceSearchTerm) {
+    this.thisEntitySequenceSearchTerm = entSequenceSearchTerm;
+  }
+
+  @Input()
   set entityFacetParams(entFacetParams) {
     this.thisEntityFacetParams = entFacetParams;
   }
@@ -186,6 +216,7 @@ export class CrossEntitySearchComponent implements OnInit {
         } else {
           // No record found
           this.statusMessage = "No related " + this.subEntityDisplay + " record Found. Please redefine your search criteria.";
+          this.isSearchRunning = false;
         }
       }
     }
@@ -348,7 +379,7 @@ export class CrossEntitySearchComponent implements OnInit {
         const facetKeysToRemove = Object.keys(this.removePrivateFacetParams);
         facetKeysToRemove.forEach(key => {
           delete this.privateFacetParams[key];
-        });  
+        });
       }
 
       // if facet popup dialog is open
@@ -707,12 +738,10 @@ export class CrossEntitySearchComponent implements OnInit {
   getBulkSearchTotal(entity: string, key: number, useServiceInUrl: boolean) {
     let qTop = 1000000;
     let count = 0;
-    console.log("GET TOTAL ");
     if (entity === this.ENTITY_SUBSTANCE) {
       this.bulkSearchTotal = this.idListForSearch.length;
     } else {
 
-      console.log("GET TOTAL IN ELSE IN ELSE");
       // ** Perform BULK SEARCH STATUS RESULTS **       
       this.crossEntitySearchService.getBulkSearchStatusResults(entity, key, 10, null, null, null, useServiceInUrl, null, this.privateFacetParams, 10, 0, 1000000).subscribe(response => {
         if (response) {
@@ -796,7 +825,13 @@ export class CrossEntitySearchComponent implements OnInit {
     let item = {
       'entity': this.entity,
       'subEntityDisplay': this.subEntityDisplay,
+      'thisEntitySmile': this.thisEntitySmiles,
+      'thisEntityType': this.thisEntityType,
+      'thisEntityCutoff': this.thisEntityCutoff,
+      'thisEntityStructureSearchTerm': this.thisEntityStructureSearchTerm,
+      'thisEntitySequenceSearchTerm': this.thisEntitySequenceSearchTerm,
       'thisEntityFacetParams': this.thisEntityFacetParams,
+      'thisEntityDisplayFacets': this.thisEntityDisplayFacets,
       'subEntityDisplayFacets': this.subEntityDisplayFacets,
       'idListForSearch': this.idListForSearchOld,
       'thisEntityTotalRecords': this.thisEntityTotalRecords,
@@ -830,6 +865,18 @@ export class CrossEntitySearchComponent implements OnInit {
 
     if (this.thisEntitySearchTerm) {
       navigationExtras.queryParams['search'] = this.thisEntitySearchTerm || null;
+    }
+
+    if (this.thisEntityType) {
+      navigationExtras.queryParams['type'] = this.thisEntityType || null;
+    }
+
+    if (this.thisEntityCutoff) {
+      navigationExtras.queryParams['cutoff'] = this.thisEntityCutoff || null;
+    }
+
+    if (this.thisEntitySmiles) {
+      navigationExtras.queryParams['smiles'] = this.thisEntitySmiles || null;
     }
 
     if (this.thisEntityFacetString) {
@@ -887,6 +934,11 @@ export class CrossEntitySearchComponent implements OnInit {
 
             this.secondIdListForSearch = searchParamItems['secondIdListForSearch'];
 
+            this.thisEntityFacetParams =  searchParamItems['thisEntityFacetParams'];
+            this.thisEntityDisplayFacets =  searchParamItems['thisEntityDisplayFacets'];
+
+            this.privateFacetParams = null;
+
             // Get Object that is selected in the dropdown
             let subEntity = this.entityLists.find(ent => ent.entityDisplay === this.subEntityDisplay);
 
@@ -906,11 +958,23 @@ export class CrossEntitySearchComponent implements OnInit {
             //this.idListForSearchOld = searchParamItems['idListForSearch'];
             // this.idListForSearch = searchParamItems['idListForSearch'];
             this.bulkQID = searchParamItems['facetBulkQID'];
-            this.rawFacets = searchParamItems['rawFacets'];
+
+            // Get Bulk Substance Key for bulkQID
+            if (this.bulkQID) {
+              this.crossEntitySearchService.getBulkSearchWithFacets(this.subEntityEndpoint, this.bulkQID, this.bulkSearchUrl, this.searchOnIdentifiers, this.privateFacetParams, 'key', this.useServiceInUrl).subscribe(response => {
+                const searchResults: any = response;
+
+                if (searchResults) {
+                  this.bulkSearchKey = searchResults.key;
+    
+                  // Set Facets
+                  this.rawFacets = searchParamItems['rawFacets'];
+
+                }
+              });
+            }
 
           }
-
-          //this.idLists = this.idListForSearch;
 
           // Open Facets Popup
           this.openModal();
