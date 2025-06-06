@@ -109,21 +109,26 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
       const url = this.getApiExportUrl(this.etag, extension, source);
       if (this.isAdmin === true) {
         let type = '';
+        let entity = '';
         if (source != null) {
           if (source === 'app') {
             type = 'browseSubstanceApplication';
+            entity = 'applications';
           } else if (source === 'prod') {
             type = 'browseSubstanceProduct';
+            entity = 'products';
           } else if (source === 'clinicaltrialsus') {
             type = 'browseSubstanceClinicalTrial-US';
+            entity = 'clinicaltrialsus';
           } else if (source === 'clinicaltrialseurope') {
             type = 'browseSubstanceClinicalTrial-EU';
+            entity = 'clinicaltrialseurope';
           }
         }
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           // height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': type, 'entity': 'applications', 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': type, 'entity': entity, 'hideOptionButtons': true }
         });
         dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
