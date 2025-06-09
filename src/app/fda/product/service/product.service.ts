@@ -121,8 +121,8 @@ export class ProductService extends BaseHttpService {
 
         let params = new FacetHttpParams();
 
-        params = params.append('top', top.toString());
         params = params.append('skip', skip.toString());
+        params = params.append('top', top.toString());
         params = params.append('fdim', fdim.toString());
 
         if (view) {

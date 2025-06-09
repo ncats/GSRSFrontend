@@ -211,6 +211,16 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.setValidationMessage('Application Number is required');
     }
 
+    // Validate Center and do not allow CDER and CBER data to register new record
+    if (this.application.center) {
+      // if registering a new record
+      if (!this.id) {
+        if (this.application.center === 'CDER' || this.application.center === 'CBER') {
+          this.setValidationMessage(this.application.center + ' center is not allowed to register a new record');
+        }
+      }
+    }
+
     // Validate Submit Date in application
     if ((this.submitDateMessage !== null) && (this.submitDateMessage.length > 0)) {
       this.setValidationMessage(this.submitDateMessage);
@@ -461,7 +471,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
 
     let cleanApplication = this.cleanApplication();
 
-    let data = {jsonData: cleanApplication, jsonFilename: jsonFilename};
+    let data = { jsonData: cleanApplication, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
