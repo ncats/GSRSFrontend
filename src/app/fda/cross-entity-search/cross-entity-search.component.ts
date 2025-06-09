@@ -392,7 +392,6 @@ export class CrossEntitySearchComponent implements OnInit {
         this.statusMessage = "Applying " + this.subEntityDisplay + " facets and will reload " + this.thisEntityDisplay + " search results.";
 
         // ******** Perform bulk search on sub-entity after FACET SELECTION on sub-entity ********
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         this.getSearchStatusResults(this.subEntityEndpoint, this.bulkSearchKey, 'key', 10);
 
         // this.performBulkSearch(this.subEntityEndpoint, this.bulkQID, 'key', this.MAX_RECORD);

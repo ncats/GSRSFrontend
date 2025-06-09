@@ -245,16 +245,12 @@
           eventCategory="applicationSearch">
         </app-application-text-search>
 
-        <!-- Search Any Text Text Box -->
-        <!--
-        <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
-            size="50" />
-        </mat-form-field>
-        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-        -->
+        <div>
+          <button class="margintop10px marginleft20px" mat-raised-button color="primary" (click)="showAllSubstances()"
+            matTooltip="Show All Substances associated with these Application records">
+            <span>Show All Substances</span>
+          </button>
+        </div>
       </div>
 
       <!--********** Display Content Details ******* -->
