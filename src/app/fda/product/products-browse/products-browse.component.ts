@@ -1124,6 +1124,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   forwardToSubstance(bulkQID: number) {
 
     let currentUrl = this.location.path();
+    alert('Current URL:' + currentUrl);
 
     // store values in array to retreive later from localStorage
     let item = {
