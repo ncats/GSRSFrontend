@@ -1,10 +1,3 @@
-// .scrollable-container {
-//   height: 1800px;
-//   overflow: scroll;
-//   border: 1px solid blue;
-//  }
-
-
 #overlay {
   position: fixed; /* Sit on top of the page content */
   display: block; /* Hidden by default */
@@ -61,13 +54,11 @@
   cursor: pointer;
 }
 
-
 .top-fixed {
-  /* keep this relative to prevent having to set top at component level. 0 is top of component window. */
   position: fixed;
-  top: 64px; 
   display: flex;
   flex-direction: column;
+  top: 64px;
   width: 100%;
   background-color: var(--regular-white-color);
   align-items: center;
