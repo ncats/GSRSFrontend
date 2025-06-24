@@ -41,6 +41,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   classicLinkQueryParamsString: string;
   isAdmin = false;
   contactEmail: string;
+  contactEmailAlt: string;
   version?: string;
   versionTooltipMessage = '';
   appId: string;
@@ -155,6 +156,8 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
     this.contactEmail = this.configService.configData.contactEmail || null;
+    this.contactEmailAlt = this.configService.configData.contactEmailAlt || null;
+    
     this.navItems = this.configService.configData.navItems || null;
 
   let notempty = false;
@@ -418,6 +421,10 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
       if(item.kind==='contact-us') {
         email = this.contactEmail;
       }
+      if(item.kind==='contact-us-alt') {
+        email = this.contactEmailAlt;
+      }
+
       if(item?.queryParams) {
         if(item?.queryParams?.subject) {
           subject = item.queryParams.subject;

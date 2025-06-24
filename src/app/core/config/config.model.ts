@@ -20,6 +20,7 @@ export interface Config {
     homeHeader?: string;
     homeContents?: string;
     contactEmail?: string;
+    contactEmailAlt?: string;    
     defaultCodeSystem?: string;
     primaryCode?: string;
     typeaheadFields?: Array<string>;
