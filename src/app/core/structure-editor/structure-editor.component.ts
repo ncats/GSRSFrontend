@@ -23,6 +23,7 @@ import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.c
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JSDraw, Ketcher } from './structure.editor.model';
+import { Environment } from '@environment/environment.model';
 
 @Component({
   selector: 'app-structure-editor',
@@ -39,7 +40,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   private jsdraw: JSDraw;
   ketcherLoaded = false;
   jsdrawLoaded = false;
-  structureEditor: string;
+  structureEditor: string = 'ketcher';
   anchorElement: HTMLAnchorElement;
   smiles: string;
   mol: string;
@@ -52,6 +53,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   enableKetcher = true;
   ketcherWindowActive = false;
   private overlayContainer: HTMLElement;
+  private defaultStructureEditor : string = "ketcher";
 
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
@@ -77,7 +79,9 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     private configService: ConfigService,
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
-  ) { }
+  ) { 
+    this.structureEditor = this.defaultStructureEditor;
+  }
 
   ngOnDestroy(): void {
     window.removeEventListener('drop', this.preventDrag);
@@ -167,8 +171,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       window.addEventListener('dragover', this.preventDrag);
       window.addEventListener('drop', this.preventDrag);
       window.addEventListener('paste', this.checkPaste);
-
-      this.structureEditor = environment.structureEditor;
+      //commenting out the next line because it was consistently setting the value to 'jsdraw'
+      //this.structureEditor = environment.structureEditor;
       let pref = sessionStorage.getItem('gsrsStructureEditor');
       if (pref && this.enableJSDraw) {
         if (pref === 'ketcher') {
