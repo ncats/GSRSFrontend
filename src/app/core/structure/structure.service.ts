@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable, timeout } from 'rxjs';
+import { Observable, Subject, tap, timeout } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';
@@ -11,6 +11,8 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
   providedIn: 'root'
 })
 export class StructureService {
+  private smileSubject = new Subject<string>();
+  smileObservable$ = this.smileSubject.asObservable();
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -125,5 +127,9 @@ export class StructureService {
     // };
     
     return this.http.get(url, {responseType: 'json'});
+  }
+
+  getSmilesFormula(smiles: string) {
+    this.smileSubject.next(smiles);
   }
 }
