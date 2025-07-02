@@ -22,8 +22,6 @@ demo: any;
 uploadForm: FormGroup;
 filename: string;
 fileType: string;
-fileDelim: string = "\t";
-removeQuotes:boolean = false;
 audit = false;
 processing = false;
 message: string;
@@ -53,11 +51,6 @@ executeLoading = false;
 scrubberSchema: any;
 scrubberModel: any;
 uuidInt = 1;
-showingTextFile: boolean = false;
-firstNLines: string;
-linesToPreview: number = 8;
-dataPreviewSize: number = 10240;
-
 constructor(
   public formBuilder: FormBuilder,
   public adminService: AdminService,
@@ -67,6 +60,9 @@ constructor(
   private overlayContainerService: OverlayContainer,
   private dialog: MatDialog,
   private structureService: StructureService
+
+  
+
 
 ) { }
 
@@ -103,7 +99,7 @@ this.fieldList = [];
 openScrubber(templateRef:any, index: number): void  {
   this.save = false;
     this.settingsActive = this.postResp.adapterSettings.actions[index];
-    console.log(`in openScrubber, this.settingsActive: ${this.settingsActive}`);
+
 
 
     const dialogref = this.dialog.open(ImportScrubberComponent, {
@@ -128,28 +124,28 @@ openScrubber(templateRef:any, index: number): void  {
 
 openAction(templateRef:any, index: number): void  {
   this.save = false;
-  this.settingsActive = this.postResp.adapterSettings.actions[index];
-  console.log(`in openAction, this.settingsActive: ${JSON.stringify(this.settingsActive)}`);
+    this.settingsActive = this.postResp.adapterSettings.actions[index];
 
 
-  const dialogref = this.dialog.open(ImportDialogComponent, {
-    minHeight: '500px',
-    width: '800px',
-    data: {
-      settingsActive: JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions[index])),
-      fieldList: this.fieldList
-    }
-  });
-  this.overlayContainer.style.zIndex = '1002';
 
-  dialogref.afterClosed().subscribe(result => {
-    this.overlayContainer.style.zIndex = null;
+    const dialogref = this.dialog.open(ImportDialogComponent, {
+      minHeight: '500px',
+      width: '800px',
+      data: {
+        settingsActive: JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions[index])),
+        fieldList: this.fieldList
+      }
+    });
+    this.overlayContainer.style.zIndex = '1002';
 
-    if(result) {
-      this.postResp.adapterSettings.actions[index] = result;
-    }
+    dialogref.afterClosed().subscribe(result => {
+      this.overlayContainer.style.zIndex = null;
+
+      if(result) {
+        this.postResp.adapterSettings.actions[index] = result;
+      }
       
-  });
+    });
 }
 
 changePreview(direction: string) {
@@ -170,16 +166,16 @@ changePreview(direction: string) {
 ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
+
   this.uploadForm = this.formBuilder.group({
     file: [''],
     fileType: ['SDF']  });
-  //this.fileType = 'SDF';
+  this.fileType = 'SDF';
 
   this.adminService.getAdapters().subscribe(result => {
       if(result) {
      //   this.setDemo();
      this.demo = result;
-     //console.log(`in getadapters, result: ${ JSON.stringify(result)}`);
       } else {
         alert('adapters set but invalid response');
       }
@@ -209,7 +205,6 @@ ngOnInit() {
 
     this.demo.forEach(entry => {
       entry.fileExtensions.forEach(ext => {
-        console.log(`looking at ext ${ext}`);
         if (!extArr.includes(ext)) {
           extArr.push(ext);
         }
@@ -238,9 +233,6 @@ ngOnInit() {
   
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
-     formData.append('lineValueDelimiter', this.fileDelim);
-     formData.append('removeQuotes', this.removeQuotes.toString());
-     console.log(`in onSubmit,  this.removeQuotes: ${this.removeQuotes}`);
     this.adminService.postAdapterFile(formData, this.adapterKey).pipe(take(1)).subscribe(response => {
       console.log(response);
       this.loadingService.setLoading(false);
@@ -334,20 +326,12 @@ onFileSelect(event): void {
     let extension = file.name.split('.');
     extension = extension[extension.length - 1];
 
-    this.fileType = extension;
     if(this.demo) {
       this.demo.forEach(val => {
         val.fileExtensions.forEach(ext => {
           if (ext.toUpperCase() == extension.toUpperCase()) {
             this.adapterSettings = val.parameters;
             this.adapterKey = val.adapterKey;
-            console.log(`val.adapterKey: ${val.adapterKey}`);
-            if(val.adapterKey.toUpperCase().indexOf('TEXT') >-1) {
-              this.showingTextFile = true;
-              this.showFirstLines(file);
-            } else {
-              this.showingTextFile = false;
-            }
         }
         });
         
@@ -357,20 +341,6 @@ onFileSelect(event): void {
     this.uploadForm.get('file').setValue(file);
 
   }
-}
-
-onDelimiterChange(event):void {
-  if(event.target.value != null) {
-    this.fileDelim = event.target.value;
-    console.log(`set lineValueDelimiter to ${event.target.value} `);
-  } else {
-    console.log(`onDelimiterChange, event: ${JSON.stringify(event)}`);
-  }
-}
-
-onQuotesChange(event): void {
-  this.removeQuotes = event.target.checked;
-  console.log(`setting removeQuotes to ${this.removeQuotes}`);
 }
 
 openInput(): void {
@@ -405,9 +375,6 @@ callPreview(): void {
   
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
-     formData.append('lineValueDelimiter', this.fileDelim);
-     formData.append('removeQuotes', this.removeQuotes.toString());
-     console.log(`in callPreview,  this.removeQuotes: ${this.removeQuotes}`);
      this.preview = [];
      let tosend = JSON.parse(JSON.stringify(this.postResp));
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey, this.previewLimit ).pipe(take(1)).subscribe(response => {
@@ -479,29 +446,5 @@ openImageModal(preview: any): void {
   });
 }
 
-showFirstLines(file: File): void {
-  console.log('starting showFirstLines');
-  //from perplexity:
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    // Read the file content as text
-    const text = reader.result as string;
-      // Split into lines (handle both \n and \r\n)
-    const lines = text.split(/\r?\n/).slice(0, this.linesToPreview); // Get first 5 lines
-    this.firstNLines = lines.join('\n');
-    let displayedLines = [];
- /*   for(var line of lines ) {
-      let cleanLine: string = line + '\n';
-      displayedLines.push(cleanLine);
-      console.log(`appending line "${cleanLine}"`);
-    }
-    this.firstNLines = displayedLines;*/
-
-  };
-  // Only read the first few KB for very large files
-  const blob = file.slice(0, this.dataPreviewSize); // 10KB should be enough for a few lines
-  reader.readAsText(blob);
-}
 
 }
