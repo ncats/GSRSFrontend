@@ -30,9 +30,9 @@
                                     {{adapter.adapterName}}</mat-radio-button>
                          </div>
                 </mat-radio-group>
-            
-        </div>
-           <div class = "half-row">
+            </div>
+
+        <div class = "half-row">
                 <label> </label>
             <div style = "height:32px;" *ngFor = "let adapter of demo">{{adapter.description}}. Supported extensions: 
                 <span *ngFor = "let ext of adapter.fileExtensions last as last">{{ext}}{{!last? ',':''}} </span><br/>

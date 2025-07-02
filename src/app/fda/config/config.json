@@ -28,6 +28,10 @@
   "stagingArea": {
     "mergeAction": false
   },
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
+  "occasionalApiBasePath": "/ginas/app",
+    
 "userRegistration": {
     "configurations": {
       "emailForm": {
