@@ -179,7 +179,7 @@ ngOnInit() {
       if(result) {
      //   this.setDemo();
      this.demo = result;
-     //console.log(`in getadapters, result: ${ JSON.stringify(result)}`);
+     console.log(`in getadapters, result: ${ JSON.stringify(result)}`);
       } else {
         alert('adapters set but invalid response');
       }
