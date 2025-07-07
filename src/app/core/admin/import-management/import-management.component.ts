@@ -22,6 +22,7 @@ demo: any;
 uploadForm: FormGroup;
 filename: string;
 fileType: string;
+fileDelim: string;
 audit = false;
 processing = false;
 message: string;
@@ -60,9 +61,6 @@ constructor(
   private overlayContainerService: OverlayContainer,
   private dialog: MatDialog,
   private structureService: StructureService
-
-  
-
 
 ) { }
 
@@ -235,6 +233,7 @@ ngOnInit() {
   
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
+     formData.append('lineValueDelimiter', this.fileDelim);
     this.adminService.postAdapterFile(formData, this.adapterKey).pipe(take(1)).subscribe(response => {
       console.log(response);
       this.loadingService.setLoading(false);
@@ -345,6 +344,16 @@ onFileSelect(event): void {
   }
 }
 
+onDelimiterChange(event):void {
+  if(event.target.value != null) {
+    this.fileDelim = event.target.value;
+    this.adapterSettings.lineValueDelimiter = event.target.value;
+    console.log(`set lineValueDelimiter to ${event.target.value} `);
+  } else {
+    console.log(`onDelimiterChange, event: ${JSON.stringify(event)}`);
+  }
+}
+
 openInput(): void {
   document.getElementById('fileInput').click();
 }
@@ -377,6 +386,7 @@ callPreview(): void {
   
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
+     formData.append('lineValueDelimiter', this.fileDelim);
      this.preview = [];
      let tosend = JSON.parse(JSON.stringify(this.postResp));
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey, this.previewLimit ).pipe(take(1)).subscribe(response => {
