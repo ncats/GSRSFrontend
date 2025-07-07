@@ -18,6 +18,10 @@
         
         </div>
 
+        <div class = "full-row">
+                <label for="fileDelimiter">Delimiter (for text files)</label>
+                <input id="fileDelimiter" name="lineValueDelimiter" value="\t" type="text" (change)="onDelimiterChange($event)"/>
+        </div>
 
 
         <div class = "full-row bottom" style = "min-width:950px" *ngIf = "filename && filename !== ''">
