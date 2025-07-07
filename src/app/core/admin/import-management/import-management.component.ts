@@ -22,8 +22,7 @@ demo: any;
 uploadForm: FormGroup;
 filename: string;
 fileType: string;
-fileDelim: string = "\t";
-removeQuotes:boolean = false;
+fileDelim: string;
 audit = false;
 processing = false;
 message: string;
@@ -239,8 +238,6 @@ ngOnInit() {
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
      formData.append('lineValueDelimiter', this.fileDelim);
-     formData.append('removeQuotes', this.removeQuotes.toString());
-     console.log(`in onSubmit,  this.removeQuotes: ${this.removeQuotes}`);
     this.adminService.postAdapterFile(formData, this.adapterKey).pipe(take(1)).subscribe(response => {
       console.log(response);
       this.loadingService.setLoading(false);
@@ -362,15 +359,11 @@ onFileSelect(event): void {
 onDelimiterChange(event):void {
   if(event.target.value != null) {
     this.fileDelim = event.target.value;
+    this.adapterSettings.lineValueDelimiter = event.target.value;
     console.log(`set lineValueDelimiter to ${event.target.value} `);
   } else {
     console.log(`onDelimiterChange, event: ${JSON.stringify(event)}`);
   }
-}
-
-onQuotesChange(event): void {
-  this.removeQuotes = event.target.checked;
-  console.log(`setting removeQuotes to ${this.removeQuotes}`);
 }
 
 openInput(): void {
@@ -406,8 +399,6 @@ callPreview(): void {
     formData.append('file', this.uploadForm.get('file').value);
      formData.append('file-type', this.fileType);
      formData.append('lineValueDelimiter', this.fileDelim);
-     formData.append('removeQuotes', this.removeQuotes.toString());
-     console.log(`in callPreview,  this.removeQuotes: ${this.removeQuotes}`);
      this.preview = [];
      let tosend = JSON.parse(JSON.stringify(this.postResp));
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey, this.previewLimit ).pipe(take(1)).subscribe(response => {
