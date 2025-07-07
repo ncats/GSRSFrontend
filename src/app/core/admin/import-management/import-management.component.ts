@@ -22,7 +22,7 @@ demo: any;
 uploadForm: FormGroup;
 filename: string;
 fileType: string;
-fileDelim: string = "\t";
+fileDelim: string;
 removeQuotes:boolean = false;
 audit = false;
 processing = false;
@@ -362,6 +362,7 @@ onFileSelect(event): void {
 onDelimiterChange(event):void {
   if(event.target.value != null) {
     this.fileDelim = event.target.value;
+    this.adapterSettings.lineValueDelimiter = event.target.value;
     console.log(`set lineValueDelimiter to ${event.target.value} `);
   } else {
     console.log(`onDelimiterChange, event: ${JSON.stringify(event)}`);
