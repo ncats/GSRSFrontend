@@ -138,7 +138,9 @@
             <div *ngIf = "settingsActive.actionName == 'structure_and_moieties'">
                     <div class = "label-value"  style = "margin-bottom: 10px;">
                             <div class = "label">Molfile</div>
-                            <div class = "value-container"><input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.molfile" /></div>
+                            <div class = "value-container">
+                                <input class = "set-width label-padding" mat-input [(ngModel)] = "settingsActive.actionParameters.molfile" />
+                        </div>
                     </div>
                     <div class = "field-note">
                                This value will be pulled from molefile field of your file. Please do not change without a specific reason.
@@ -153,6 +155,16 @@
 
                     </div>
                 </div>-->
+            </div>
+            <div *ngIf = "settingsActive.actionName == 'structure_and_moieties_from_text'">
+                <div class = "label-value"  style = "margin-bottom: 10px;">
+                        <div class = "label">SMILES</div>
+                        <div class = "value-container"  class = "set-width">
+                                <app-cv-import [vocabulary] = "fieldList"  title = "Code" [model] = "settingsActive.actionParameters.code" 
+                                        (valueChange)="updateType($event, 'smiles')" >
+                                </app-cv-import>
+                        </div>
+                </div>
             </div>
             <div *ngIf = "settingsActive.actionName == 'note_import'">
                         <div class = "label-value"  style = "margin-bottom: 10px;">
