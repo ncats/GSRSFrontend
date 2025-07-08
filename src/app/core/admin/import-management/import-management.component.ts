@@ -97,7 +97,7 @@ this.fieldList = [];
 openScrubber(templateRef:any, index: number): void  {
   this.save = false;
     this.settingsActive = this.postResp.adapterSettings.actions[index];
-
+    console.log(`in openScrubber, this.settingsActive: ${this.settingsActive}`);
 
 
     const dialogref = this.dialog.open(ImportScrubberComponent, {
@@ -122,28 +122,28 @@ openScrubber(templateRef:any, index: number): void  {
 
 openAction(templateRef:any, index: number): void  {
   this.save = false;
-    this.settingsActive = this.postResp.adapterSettings.actions[index];
+  this.settingsActive = this.postResp.adapterSettings.actions[index];
+  console.log(`in openAction, this.settingsActive: ${JSON.stringify(this.settingsActive)}`);
 
 
+  const dialogref = this.dialog.open(ImportDialogComponent, {
+    minHeight: '500px',
+    width: '800px',
+    data: {
+      settingsActive: JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions[index])),
+      fieldList: this.fieldList
+    }
+  });
+  this.overlayContainer.style.zIndex = '1002';
 
-    const dialogref = this.dialog.open(ImportDialogComponent, {
-      minHeight: '500px',
-      width: '800px',
-      data: {
-        settingsActive: JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions[index])),
-        fieldList: this.fieldList
-      }
-    });
-    this.overlayContainer.style.zIndex = '1002';
+  dialogref.afterClosed().subscribe(result => {
+    this.overlayContainer.style.zIndex = null;
 
-    dialogref.afterClosed().subscribe(result => {
-      this.overlayContainer.style.zIndex = null;
-
-      if(result) {
-        this.postResp.adapterSettings.actions[index] = result;
-      }
+    if(result) {
+      this.postResp.adapterSettings.actions[index] = result;
+    }
       
-    });
+  });
 }
 
 changePreview(direction: string) {
@@ -174,6 +174,7 @@ ngOnInit() {
       if(result) {
      //   this.setDemo();
      this.demo = result;
+     console.log(`in getadapters, result: ${ JSON.stringify(result)}`);
       } else {
         alert('adapters set but invalid response');
       }
@@ -203,6 +204,7 @@ ngOnInit() {
 
     this.demo.forEach(entry => {
       entry.fileExtensions.forEach(ext => {
+        console.log(`looking at ext ${ext}`);
         if (!extArr.includes(ext)) {
           extArr.push(ext);
         }
