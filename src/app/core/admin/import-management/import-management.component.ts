@@ -22,7 +22,7 @@ demo: any;
 uploadForm: FormGroup;
 filename: string;
 fileType: string;
-fileDelim: string;
+fileDelim: string = "\t";
 removeQuotes:boolean = false;
 audit = false;
 processing = false;
@@ -491,14 +491,6 @@ showFirstLines(file: File): void {
       // Split into lines (handle both \n and \r\n)
     const lines = text.split(/\r?\n/).slice(0, this.linesToPreview); // Get first 5 lines
     this.firstNLines = lines.join('\n');
-    let displayedLines = [];
- /*   for(var line of lines ) {
-      let cleanLine: string = line + '\n';
-      displayedLines.push(cleanLine);
-      console.log(`appending line "${cleanLine}"`);
-    }
-    this.firstNLines = displayedLines;*/
-
   };
   // Only read the first few KB for very large files
   const blob = file.slice(0, this.dataPreviewSize); // 10KB should be enough for a few lines
