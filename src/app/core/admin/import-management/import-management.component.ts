@@ -492,6 +492,7 @@ showFirstLines(file: File): void {
     let displayedLines = [];
     for(var line of lines ) {
       displayedLines.push(line+'\n');
+      console.log(`appending line ${line}`);
     }
     this.firstNLines = displayedLines;
   };
