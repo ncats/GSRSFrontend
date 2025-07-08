@@ -34,18 +34,6 @@
                 </pre>
         </div>
 
-        <div class = "full-row" *ngIf="showingTextFile==true">
-                <label for="removeQuotes">Remove quotes? (for text files)</label> &nbsp;&nbsp;
-                <input id="removeQuotes" name="removeQuotes" [checked]="removeQuotes" type="checkbox" (change)="onQuotesChange($event)"/>
-        </div>
-
-        <div class = "full-row" *ngIf="showingTextFile==true" >
-                <label for="previewLines">First few lines:</label>
-                <pre id="previewLines">
-                        {{firstNLines}}
-                </pre>
-        </div>
-
         <div class = "full-row bottom" style = "min-width:950px" *ngIf = "filename && filename !== ''">
                 <div style = "width:100%; margin-bottom: 15px;"><label>Select Importer </label><br/></div>
 
