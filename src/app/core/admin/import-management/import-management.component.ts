@@ -54,7 +54,7 @@ scrubberSchema: any;
 scrubberModel: any;
 uuidInt = 1;
 showingTextFile: boolean = false;
-firstNLines: string;
+firstNLines: string[];
 linesToPreview: number = 8;
 dataPreviewSize: number = 10240;
 
@@ -490,7 +490,12 @@ showFirstLines(file: File): void {
     const text = reader.result as string;
       // Split into lines (handle both \n and \r\n)
     const lines = text.split(/\r?\n/).slice(0, this.linesToPreview); // Get first 5 lines
-    this.firstNLines = lines.join('\n');
+    let displayedLines = [];
+    for(var line of lines ) {
+      displayedLines.push(line+'\n');
+      console.log(`appending line ${line}`);
+    }
+    this.firstNLines = displayedLines;
   };
   // Only read the first few KB for very large files
   const blob = file.slice(0, this.dataPreviewSize); // 10KB should be enough for a few lines
