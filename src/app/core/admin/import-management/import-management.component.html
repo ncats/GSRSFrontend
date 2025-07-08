@@ -17,9 +17,21 @@
         
         </div>
 
-        <div class = "full-row">
-                <label for="fileDelimiter">Delimiter (for text files)</label>
-                <input id="fileDelimiter" name="lineValueDelimiter" value="\t" type="text" (change)="onDelimiterChange($event)"/>
+        <div class = "full-row" *ngIf = "showingTextFile==true">
+                <label for="fileDelimiter">Delimiter (for text files)</label>&nbsp;&nbsp;
+                <input id="fileDelimiter" name="lineValueDelimiter" value="{{fileDelim}}" type="text" (change)="onDelimiterChange($event)"/>
+        </div>
+
+        <div class = "full-row" *ngIf="showingTextFile==true">
+                <label for="removeQuotes">Remove quotes? (for text files)</label> &nbsp;&nbsp;
+                <input id="removeQuotes" name="removeQuotes" [checked]="removeQuotes" type="checkbox" (change)="onQuotesChange($event)"/>
+        </div>
+
+        <div class = "full-row" *ngIf="showingTextFile==true" >
+                <label for="previewLines">First few lines:</label>
+                <pre id="previewLines">
+                        {{firstNLines}}
+                </pre>
         </div>
 
         <div class = "full-row" *ngIf="showingTextFile==true">
