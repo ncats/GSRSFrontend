@@ -21,6 +21,7 @@
   "disableJSDraw": false,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "restApiPrefix": "/ginas/app",
+  "disableJSDraw": true,
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,

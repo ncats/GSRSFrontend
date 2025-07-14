@@ -272,12 +272,12 @@
                       <div>
                         <a class="view-detail-link" [routerLink]="['/invitro-pharm', assay.id]" target="_blank"
                           matTooltip='View Assay Record'>
-                          View Assay Details
+                          <span class="font18px">View Assay Details</span>
                         </a>
                       </div>
 
                       <!-- Edit/Update ASSAY record -->
-                      <div>
+                      <div class="margintop5px">
                         &nbsp;
                         <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
                           matTooltip='Edit Assay Record ONLY'>
@@ -285,8 +285,18 @@
                         </a>
                       </div>
 
+                      <div class="margintopneg5px" *ngIf="isAdmin">
+                        <!-- Show Json -->
+                        <span *ngIf="assay && assay.id">
+                          <a button mat-icon-button color="primary" (click)="showJSON(indexAllAssay)"
+                            matTooltip='Show JSON'>
+                            <mat-icon>article</mat-icon>
+                          </a>&nbsp;
+                        </span>
+                      </div>
+
                       <!-- Download Json For this record -->
-                      <div class="margintopneg5px">
+                      <div class="margintopneg5px marginleftneg10px">
                         <span *ngIf="isAdmin">
                           <span *ngIf="assay.id">
                             <a button mat-icon-button color="primary" [href]="downloadJsonHref"
