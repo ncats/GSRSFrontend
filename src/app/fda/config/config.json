@@ -15,6 +15,7 @@
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
   "restApiPrefix": "/ginas/app",
+  "disableJSDraw": true,
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,

@@ -8,6 +8,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 import * as moment from 'moment';
 
 /* GSRS Core Imports */
@@ -25,6 +26,7 @@ import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { environment } from '../../../../environments/environment';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
@@ -1190,6 +1192,26 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   close() {
     this.dialog.closeAll();
+  }
+
+  showJSON(index: number): void {
+    const date = new Date();
+    let jsonFilename = 'Invitro_Pharmacology_Assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    const copyAssay = _.cloneDeep(this.assays[index]);
+    //let cleanProduct = this.scrub(copyProd);
+
+    let data = { jsonData: copyAssay, jsonFilename: jsonFilename };
+
+    const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
+      width: '90%',
+      height: '90%',
+      data: data
+    });
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
   saveJSON(id: number): void {
