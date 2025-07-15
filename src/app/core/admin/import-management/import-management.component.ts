@@ -57,6 +57,7 @@ showingTextFile: boolean = false;
 firstNLines: string;
 linesToPreview: number = 8;
 dataPreviewSize: number = 10240;
+maxLineLength: number = 120;
 
 constructor(
   public formBuilder: FormBuilder,
@@ -489,15 +490,17 @@ showFirstLines(file: File): void {
     const text = reader.result as string;
       // Split into lines (handle both \n and \r\n)
     const lines = text.split(/\r?\n/).slice(0, this.linesToPreview); // Get first 5 lines
-    this.firstNLines = lines.join('\n');
-    let displayedLines = [];
- /*   for(var line of lines ) {
-      let cleanLine: string = line + '\n';
-      displayedLines.push(cleanLine);
+    //this.firstNLines = lines.join('\n');
+    let cleanedLines = [];
+    for(var line of lines ) {
+      let cleanLine: string = line;
+      if(cleanLine.length > this.maxLineLength) {
+        cleanLine = cleanLine.substring(0, this.maxLineLength-1) + '...';
+      }
+      cleanedLines.push(cleanLine);
       console.log(`appending line "${cleanLine}"`);
     }
-    this.firstNLines = displayedLines;*/
-
+    this.firstNLines = cleanedLines.join('\n');
   };
   // Only read the first few KB for very large files
   const blob = file.slice(0, this.dataPreviewSize); // 10KB should be enough for a few lines
