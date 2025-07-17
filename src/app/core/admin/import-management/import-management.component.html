@@ -27,6 +27,11 @@
                 <input id="removeQuotes" name="removeQuotes" [checked]="removeQuotes" type="checkbox" (change)="onQuotesChange($event)"/>
         </div>
 
+        <div class = "full-row" *ngIf="showingExcelFile==true">
+                <label for="substanceClassName">Substance Type</label> &nbsp;&nbsp;
+                <input id="substanceClassName" name="substanceClassName"  type="text" value="Chemical"/>
+        </div>
+
         <div class = "full-row" *ngIf="showingTextFile==true" >
                 <label for="previewLines">First few lines:</label>
                 <pre id="previewLines">

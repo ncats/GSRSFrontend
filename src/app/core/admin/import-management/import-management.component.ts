@@ -54,9 +54,11 @@ scrubberSchema: any;
 scrubberModel: any;
 uuidInt = 1;
 showingTextFile: boolean = false;
+showingExcelFile: boolean = false;
 firstNLines: string;
 linesToPreview: number = 8;
 dataPreviewSize: number = 10240;
+substanceClassName: string = "Chemical";
 
 constructor(
   public formBuilder: FormBuilder,
@@ -237,14 +239,16 @@ ngOnInit() {
     this.loadingService.setLoading(true);
   
     formData.append('file', this.uploadForm.get('file').value);
-     formData.append('file-type', this.fileType);
-     formData.append('lineValueDelimiter', this.fileDelim);
-     formData.append('removeQuotes', this.removeQuotes.toString());
-     console.log(`in onSubmit,  this.removeQuotes: ${this.removeQuotes}`);
+    formData.append('file-type', this.fileType);
+    formData.append('lineValueDelimiter', this.fileDelim);
+    formData.append('removeQuotes', this.removeQuotes.toString());
+    console.log(`in onSubmit, this.removeQuotes: ${this.removeQuotes}`);
+    formData.append('substanceClassName', this.substanceClassName);
+    console.log(`in onSubmit, substanceClassName: ${this.substanceClassName}`);
     this.adminService.postAdapterFile(formData, this.adapterKey).pipe(take(1)).subscribe(response => {
       console.log(response);
       this.loadingService.setLoading(false);
-     this.step = 3;
+      this.step = 3;
       this.postResp = response;
       this.fileID = response.id;
       this.toIgnore = this.postResp.adapterSettings && this.postResp.adapterSettings.actions? JSON.parse(JSON.stringify(this.postResp.adapterSettings.actions)) : null;
@@ -345,6 +349,9 @@ onFileSelect(event): void {
             if(val.adapterKey.toUpperCase().indexOf('TEXT') >-1) {
               this.showingTextFile = true;
               this.showFirstLines(file);
+            } else if (val.adapterKey.toUpperCase().indexOf("EXCEL") > -1){
+              this.showingExcelFile = true;
+              //todo: preview first few lines with Excel
             } else {
               this.showingTextFile = false;
             }
@@ -371,6 +378,11 @@ onDelimiterChange(event):void {
 onQuotesChange(event): void {
   this.removeQuotes = event.target.checked;
   console.log(`setting removeQuotes to ${this.removeQuotes}`);
+}
+
+onSubstanceClassChange(event): void {
+  this.substanceClassName = event.target.text;
+  console.log(`setting substanceClassName to ${this.substanceClassName}`);
 }
 
 openInput(): void {
@@ -404,12 +416,14 @@ callPreview(): void {
     this.previewIndex = 0;
   
     formData.append('file', this.uploadForm.get('file').value);
-     formData.append('file-type', this.fileType);
-     formData.append('lineValueDelimiter', this.fileDelim);
-     formData.append('removeQuotes', this.removeQuotes.toString());
-     console.log(`in callPreview,  this.removeQuotes: ${this.removeQuotes}`);
-     this.preview = [];
-     let tosend = JSON.parse(JSON.stringify(this.postResp));
+    formData.append('file-type', this.fileType);
+    formData.append('lineValueDelimiter', this.fileDelim);
+    formData.append('removeQuotes', this.removeQuotes.toString());
+    console.log(`in callPreview, this.removeQuotes: ${this.removeQuotes}`);
+    formData.append('substanceClassName', this.substanceClassName);
+    console.log(`in callPreview, this.substanceClassName: ${this.substanceClassName}`);
+    this.preview = [];
+    let tosend = JSON.parse(JSON.stringify(this.postResp));
     this.adminService.previewAdapter(this.fileID, tosend, this.adapterKey, this.previewLimit ).pipe(take(1)).subscribe(response => {
       this.preview = [];
       this.previewLoading = false;
