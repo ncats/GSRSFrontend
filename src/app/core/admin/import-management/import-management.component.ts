@@ -59,6 +59,7 @@ firstNLines: string;
 linesToPreview: number = 8;
 dataPreviewSize: number = 10240;
 substanceClassName: string = "Chemical";
+availableSubstanceClasses: string[] = ["Chemical", "Concept", "Protein"];
 
 constructor(
   public formBuilder: FormBuilder,
@@ -381,7 +382,7 @@ onQuotesChange(event): void {
 }
 
 onSubstanceClassChange(event): void {
-  this.substanceClassName = event.target.text;
+  this.substanceClassName = event.value;
   console.log(`setting substanceClassName to ${this.substanceClassName}`);
 }
 

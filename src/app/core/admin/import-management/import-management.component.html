@@ -28,8 +28,15 @@
         </div>
 
         <div class = "full-row" *ngIf="showingExcelFile==true">
-                <label for="substanceClassName">Substance Type</label> &nbsp;&nbsp;
-                <input id="substanceClassName" name="substanceClassName"  type="text" value="Chemical"/>
+            <label for="substanceClassName">Substance Type</label> &nbsp;&nbsp;
+            <mat-form-field class="substance-type-select">
+
+               <mat-select placeholder="Substance class" (selectionChange)="onSubstanceClassChange($event)"  value="Chemical">
+                <mat-option *ngFor="let subType of availableSubstanceClasses" [value]="subType">
+                    {{subType}}
+                </mat-option>
+               </mat-select>
+            </mat-form-field>
         </div>
 
         <div class = "full-row" *ngIf="showingTextFile==true" >
