@@ -39,7 +39,7 @@
             </mat-form-field>
         </div>
 
-        <div class = "full-row" *ngIf="showingTextFile==true" >
+        <div class = "full-row" *ngIf="showingTextFile==true || showingExcelFile==true" >
                 <label for="previewLines">First few lines:</label>
                 <pre id="previewLines">
                         {{firstNLines}}

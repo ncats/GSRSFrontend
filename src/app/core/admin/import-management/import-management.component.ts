@@ -10,6 +10,7 @@ import { StructureService, StructureImageModalComponent } from '@gsrs-core/struc
 import { ImportDialogComponent } from '@gsrs-core/admin/import-management/import-dialog/import-dialog.component';
 import { isString } from 'util';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
+import * as XLSX from 'xlsx';
 
 
 @Component({
@@ -352,6 +353,7 @@ onFileSelect(event): void {
               this.showFirstLines(file);
             } else if (val.adapterKey.toUpperCase().indexOf("EXCEL") > -1){
               this.showingExcelFile = true;
+              this.showFirstLinesExcel(file)
               //todo: preview first few lines with Excel
             } else {
               this.showingTextFile = false;
@@ -519,4 +521,27 @@ showFirstLines(file: File): void {
   reader.readAsText(blob);
 }
 
+showFirstLinesExcel(file: File): void {
+
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target?.result as ArrayBuffer);
+    const workbook = XLSX.read(data, { type: 'array' });
+
+    const firstSheetName = workbook.SheetNames[0];
+    console.log(`firstSheetName: ${firstSheetName} total ${workbook.SheetNames.length}`);
+    const worksheet = workbook.Sheets[firstSheetName];
+
+    // Convert sheet to JSON (row arrays)
+    const allRows: any[][] = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1, // output as an array of arrays (raw row values)
+        blankrows: false,
+    });  console.log('starting showFirstLinesExcel');
+    // Split into lines (handle both \n and \r\n)
+    const lines = allRows.slice(0, this.linesToPreview); // Get first 5 lines
+    this.firstNLines = lines.join('\n');
+  }
+  reader.readAsArrayBuffer(file);
+}
 }

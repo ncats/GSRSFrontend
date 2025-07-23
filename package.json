@@ -70,6 +70,7 @@
     "ngx-moment": "3.5.0",
     "ngx-schema-form": "2.7.0",
     "primeng": "^13.2.0",
+    "read-excel-file": "^5.8.8",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.5.4",
     "ts-loader": "4.5.0",
