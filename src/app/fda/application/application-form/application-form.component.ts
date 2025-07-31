@@ -28,7 +28,6 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
 import { Application, ValidationMessage } from '../model/application.model';
-import { forEach } from 'lodash';
 
 @Component({
   selector: 'app-application-form',
@@ -213,7 +212,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       // if registering a new record
       if (!this.id) {
         if (this.application.center === 'CDER' || this.application.center === 'CBER') {
-          this.setValidationMessage(this.application.center + ' center is not allowed to register a new record');
+          this.setValidationMessage('Application registration not allowed for ' + this.application.center);
         }
       }
     }

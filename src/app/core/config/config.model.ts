@@ -96,8 +96,6 @@ export interface Config {
     restApiPrefix?: string;
     nitrosamineDisplay?: boolean;
     registerApplicationCenterNotAllowed?: Array<string>;
-    phpIdUrl?: string;
-    rxNormUrl?: string;
 }
 
 export interface StagingAreaSettings {
