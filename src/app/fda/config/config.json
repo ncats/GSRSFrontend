@@ -16,6 +16,7 @@
   "showCrossEntitySearchDropdown": true,
   "restApiPrefix": "/ginas/app",
   "disableJSDraw": true,
+  "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,

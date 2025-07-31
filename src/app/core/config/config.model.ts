@@ -94,6 +94,7 @@ export interface Config {
     showCrossEntitySearchDropdown?: boolean;
     restApiPrefix?: string;
     nitrosamineDisplay?: boolean;
+    registerApplicationCenterNotAllowed?: Array<string>;
 }
 
 export interface StagingAreaSettings {
