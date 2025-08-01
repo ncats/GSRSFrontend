@@ -53,8 +53,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ketcherWindowActive = false;
   firstload = true;
   calledFromComponent: string;
-  disclaimerMessage: string;
-  pageKetcherIsOpen: string;
   private overlayContainer: HTMLElement;
 
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
@@ -90,16 +88,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
     this.destroyExistingKetcherInstance();
 
-    this.structureService.updatePageKetcherIsOpen('');
     this.structureService.updateReloadKetcher(true);
   }
 
   destroyExistingKetcherInstance(): boolean {
-    this.structureService.updatePageKetcherIsOpen('');
-
-    window.removeEventListener('drop', this.preventDrag);
-    window.removeEventListener('dragover', this.preventDrag);
-    window.removeEventListener('paste', this.checkPaste);
     // Delete existing Ketcher instance
     delete this.ketcher;
     delete window['ketcher'];
@@ -150,11 +142,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.calledFromComponent = calledFromComp;
   }
 
-  @Input()
-  set disclaimer(disclaimerMess: any) {
-    this.disclaimerMessage = disclaimerMess;
-  }
-
   listener = () => {
     var elmR = document.getElementById("root");
     if (this.structureEditor === "ketcher") {
@@ -197,15 +184,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   ngOnInit() {
-    this.structureService.pageKetcherIsOpen$.subscribe((pageKetcherIsOpen) => {
-      if (pageKetcherIsOpen) {
-        this.pageKetcherIsOpen = pageKetcherIsOpen;
-      }
-    });
-
     this.structureService.reloadKetcher$.subscribe((reloadKetcher) => {
       if (reloadKetcher === true) {
         if (this.calledFromComponent && this.calledFromComponent === 'registerSubstance') {
+          console.log(this.calledFromComponent + ' reload ketcher:', reloadKetcher);
           this.createDivRootElement();
         }
       }
@@ -310,21 +292,22 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         if (!childElement) {
           const divElement = document.createElement("div");
           divElement.setAttribute("id", "root");
-
+ 
           divElement.style.height = '618px';
+         
           divElement.style.clear = 'both';
           divElement.style.display = 'none';
-          divElement.style.padding = '10px';
-
+          divElement.style.padding = '10px'; 
+          
           // append child to parent
           parentElement.appendChild(divElement);
 
           window.addEventListener('click', this.listener);
           this.overlayContainer = this.overlayContainerService.getContainerElement();
           this.editorSwitched.emit(this.structureEditor);
-
+          
           this.ketcherReload();
-
+         
         }
       }
     }
@@ -333,9 +316,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ketcherReload() {
     this.firstload = true;
 
-    window.addEventListener('dragover', this.preventDrag);
-    window.addEventListener('drop', this.preventDrag);
-    window.addEventListener('paste', this.checkPaste);
+    window.addEventListener('click', this.listener);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     if (isPlatformBrowser(this.platformId)) {
 
@@ -390,7 +371,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         document.getElementById("root").style.display = "";
         this.waitForKetcherFirstLoad();
         this.firstload = false;
-
+  
       } else if (this.firstload) {
         this.firstload = false;
       }
@@ -479,16 +460,12 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   async waitForKetcherFirstLoad(): Promise<void> {
-    // Update global variable to let other instance know
-    if (this.pageKetcherIsOpen !== this.calledFromComponent) {
-      this.structureService.updatePageKetcherIsOpen(this.calledFromComponent);
-    }
-
     await this.executeOnceNotNullOrUndefined(() => window['ketcher'], (obj) => {
       setTimeout(() => {
         this.ketcher = window['ketcher'];
         this.ketcherLoaded = true;
         document.getElementById("root").style.display = "";
+        // this.editor = new EditorImplementation(this.ketcher, this.jsdraw, 'ketcher');
         this.editor = new EditorImplementation(this.ketcher);
         this.editorOnLoad.emit(this.editor);
         this.editorSwitched.emit(this.structureEditor);
@@ -654,15 +631,14 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           this.canvasMessage = '';
           this.loadingService.setLoading(true);
           this.structureService.interpretStructure(text).subscribe(response => {
-            
-            if (response.structure && response.structure.molfile) {
-             
-                this.editor.setMolecule(response.structure.molfile);
-                
-                this.structureService.getSmilesFormula(response.structure.smiles)
-                this.loadedMolfile.emit(response.structure.molfile);
 
-              if(response.structure.smiles === '') {
+            if (response.structure && response.structure.molfile) {
+
+              this.editor.setMolecule(response.structure.molfile);
+
+              this.loadedMolfile.emit(response.structure.molfile);
+
+              if (response.structure.smiles === '') {
                 this.canvasMessage = 'empty or invalid structure pasted';
               }
             } else {
@@ -670,67 +646,13 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
             }
             this.loadingService.setLoading(false);
 
-          },error =>{
+          }, error => {
             this.loadingService.setLoading(false);
             this.canvasMessage = 'empty or invalid structure pasted';
           });
         }
       }
     }
-
-    if (canPaste) {
-      const send: any = {};
-      let valid = false;
-      const items = event.clipboardData.items;
-      for (let i = 0; i < items.length; i++) {
-        const blob = items[i].getAsFile();
-        if (items[i].type.indexOf('image') !== -1) {
-          event.preventDefault();
-          event.stopPropagation();
-          this.canvasMessage = '';
-          valid = true;
-          send.type = 'image';
-          const reader = new FileReader();
-          send.file = blob;
-          reader.readAsDataURL(blob);
-          const that = this;
-          reader.onloadend = () => {
-            setTimeout(() => {
-              const img = reader.result.toString();
-              that.createImage(img);
-            });
-          };
-        } else if (items[i].type === 'text/plain') {
-          const text = event.clipboardData.getData('text/plain');
-          if (text.indexOf('<div') === -1) {
-            event.preventDefault();
-            event.stopPropagation();
-            this.canvasMessage = '';
-            this.loadingService.setLoading(true);
-            this.structureService.interpretStructure(text).subscribe(response => {
-
-              if (response.structure && response.structure.molfile) {
-
-                this.editor.setMolecule(response.structure.molfile);
-
-                this.loadedMolfile.emit(response.structure.molfile);
-
-                if (response.structure.smiles === '') {
-                  this.canvasMessage = 'empty or invalid structure pasted';
-                }
-              } else {
-                this.canvasMessage = 'Structure text not recognized';
-              }
-              this.loadingService.setLoading(false);
-
-            }, error => {
-              this.loadingService.setLoading(false);
-              this.canvasMessage = 'empty or invalid structure pasted';
-            });
-          }
-        }
-      }
-    } // if canPaste
   }
 
   cleanStructure() {
