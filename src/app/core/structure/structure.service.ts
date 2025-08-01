@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable, Subject, tap, timeout } from 'rxjs';
+import { Observable, timeout, BehaviorSubject, Subject, tap} from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';
 import { InterpretStructureResponse } from './structure-post-response.model';
 import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,6 +20,22 @@ export class StructureService {
     public configService: ConfigService,
     private http: HttpClient
   ) {
+  }
+
+  private _isCalledFromRegisterSubstance = new BehaviorSubject<boolean>(false); // Initial value
+  readonly isCalledFromRegisterSubstance$ = this._isCalledFromRegisterSubstance.asObservable(); // Expose as an Observable
+
+  private _reloadKetcher = new BehaviorSubject<boolean>(false); // Initial value
+  readonly reloadKetcher$ = this._reloadKetcher.asObservable(); // Expose as an Observable
+
+  isCalledFromRegisterSubstance(newValue: boolean) {
+    this._isCalledFromRegisterSubstance.next(newValue); // Update the value and notify subscribers
+  }
+
+  updateReloadKetcher(uploadKetcher: boolean) {
+    if (uploadKetcher == true) {
+       this._reloadKetcher.next(uploadKetcher);
+    }
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
