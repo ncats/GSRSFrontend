@@ -48,6 +48,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   featuresOnly = false;
   hideFeaturesTable = false;
   structureEditSearch = true;
+  calledFrom = 'registerSubstance';
   StructureFeaturePriority = [
     'Category Score',
     'Sum Of Scores',
