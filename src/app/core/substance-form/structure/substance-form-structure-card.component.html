@@ -6,7 +6,7 @@
     </div>
         <div>
       <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)" (editorSwitched) = "changeEditor($event)" 
-      [calledFrom]="calledFrom" style="z-index: 9999">
+      [calledFrom]="calledFrom" [disclaimer]="disclaimer" style="z-index: 9999">
       </app-structure-editor>
     </div>
     <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">

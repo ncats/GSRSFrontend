@@ -13,10 +13,13 @@
 
 <div id ="canvas-container">
     <div class="below-editor-container">
-      
+
 
       <div class="molvec-message">
         <div class="marginright15px" *ngIf="structureEditor == 'ketcher'">
+          <div *ngIf="disclaimerMessage">
+            <span><b>DISCLAIMER: {{disclaimerMessage}}</b></span>
+          </div>
           Use copy dropdown menu on Ketcher editor and NOT ctrl + c to copy structure.
         </div>
         <div>

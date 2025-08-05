@@ -49,6 +49,7 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   hideFeaturesTable = false;
   structureEditSearch = true;
   calledFrom = 'registerSubstance';
+  disclaimer: string;
   StructureFeaturePriority = [
     'Category Score',
     'Sum Of Scores',
@@ -111,13 +112,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
 
-        // Display this message under JSDraw/ketcher Editor when Registering/Updating Polymer
-        // if polymerDisclaimer has string in the config.json file, display the disclaimer under the Structure Editor
-        if (this.configService && this.configService.configData && this.configService.configData.polymerDisclaimer) {
-          if (this.configService.configData.polymerDisclaimer) {
-            this.disclaimer = this.configService.configData.polymerDisclaimer;
-          }
-        }
+        // Display this message under the Ketcher Editor when Registering/Updating Polymer
+        this.disclaimer = "This is disclaimer";
 
         const idealStructSubscription = this.substanceFormStructureService.substanceIdealizedStructure.subscribe(structure => {
           if (structure) {
