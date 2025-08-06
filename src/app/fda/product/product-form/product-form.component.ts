@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -12,19 +12,19 @@ import * as moment from 'moment';
 import { LoadingService } from '@gsrs-core/loading';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { Product, ValidationMessage } from '../model/product.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
-import * as moment from 'moment';
-import { Title } from '@angular/platform-browser';
-import { take } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import jp from 'jsonpath';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
+
+/* GSRS Product Imports */
+import { ProductService } from '../service/product.service';
+import { Product, ValidationMessage } from '../model/product.model';
 
 @Component({
   selector: 'app-product-form',
@@ -36,7 +36,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /* Array data type */
   private subscriptions: Array<Subscription> = [];
-  
   validationMessages: Array<ValidationMessage> = [];
   provenanceFieldMessage: Array<String> = [];
   effectiveTimeMessage: any[][] = [];
@@ -56,13 +55,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   copy: string;
   submissionMessage: string;
   jsonFileName: string;
-
+ 
   /* number data type */
   id?: number;
-
-  /* Date data type */
-  effectiveDate: Date;
-  endDate: Date;
 
   /* boolean data type */
   isAdmin = false;
@@ -944,39 +939,20 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(cvSubscription);
   }
 
-  changeEffectiveDate(event: MatDatepickerInputEvent<Date>): void {
-    const inputElement: HTMLElement = event.targetElement;
-    const inputValue: string = (inputElement as HTMLInputElement).value;
-
-    this.product.effectiveDate = inputValue;
+  dateChangeEffectiveDate(event: MatDatepickerInputEvent<Date>): void {
+    if (event.value) {
+      this.product.effectiveDate = moment(event.value).format('MM/DD/YYYY');
+    }
   }
 
-  changeEndDate(event: MatDatepickerInputEvent<Date>): void {
-    const inputElement: HTMLElement = event.targetElement;
-    const inputValue: string = (inputElement as HTMLInputElement).value;
+  onDateChange
 
-    this.product.endDate = inputValue;
-  }
-
-  changestartMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
-    const inputElement: HTMLElement = event.targetElement;
-    const inputValue: string = (inputElement as HTMLInputElement).value;
-
-    this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = inputValue;
-  }
-
-  changeEndMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
-    const inputElement: HTMLElement = event.targetElement;
-    const inputValue: string = (inputElement as HTMLInputElement).value;
-
-    this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = inputValue;
-  }
-
-  changeEffectiveTime(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodDocIndex: number): void {
-    const inputElement: HTMLElement = event.targetElement;
-    const inputValue: string = (inputElement as HTMLInputElement).value;
-
-    this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = inputValue;
+  openedChange(opened: boolean): void {
+    if (opened) {
+      this.increaseOverlayZindex();
+    } else {
+      this.decreaseOverlayZindex();
+    }
   }
 
   increaseOverlayZindex(): void {
