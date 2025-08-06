@@ -27,6 +27,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 /* GSRS Core Imports */
@@ -41,7 +43,6 @@ import { CrossEntitySearchModule } from '../cross-entity-search/cross-entity-sea
 /* GSRS Product Imports */
 import { ProductTextSearchModule } from './product-text-search/product-text-search.module';
 import { ProductService } from './service/product.service';
-
 import { ProductsBrowseComponent } from './products-browse/products-browse.component';
 import { ProductDetailsBaseComponent } from './product-details/product-details-base.component';
 import { ProductDetailsComponent } from './product-details/product-details/product-details.component';
@@ -115,6 +116,8 @@ const productRoutes: Routes = [
     MatTabsModule,
     MatBottomSheetModule,
     MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
@@ -146,8 +149,7 @@ const productRoutes: Routes = [
   providers: [
     CanActivateRegisterProductFormComponent,
     CanActivateUpdateProductFormComponent,
-    CanDeactivateProductFormComponent,
-    ActivateProductsComponent
+    CanDeactivateProductFormComponent
   ]
 })
 
