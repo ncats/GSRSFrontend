@@ -168,7 +168,15 @@
 
                 </div>
 
+                <!-- [(ngModel)]="product.effectiveDate" -->
                 <div class="form-row">
+                  <mat-form-field appearance="fill" class="col-4-1">
+                    <mat-label>Effective Date (mm/dd/yyyy)</mat-label>
+                    <input matInput [matDatepicker]="picker" placeholder="Effective Date (mm/dd/yyyy)" (dateChange)="dateChangeEffectiveDate($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
+                  </mat-form-field>
+
                   <mat-form-field class="col-4-1">
                     <input matInput placeholder="Effective Date (mm/dd/yyyy)" [(ngModel)]="product.effectiveDate"
                       name="effectiveDate" />
