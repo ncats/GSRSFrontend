@@ -83,7 +83,7 @@ export interface Config {
     structureEditor?: 'ketcher' | 'jsdraw';
     disableJSDraw?: boolean;
     disableKetcher?: boolean;
-    polymerDisclaimer?: string;
+    ketcherDisclaimer?: string;
     useApprovalAPI?: boolean;
     dummyWhoami?: Auth;
     enableStructureFeatures?: boolean;

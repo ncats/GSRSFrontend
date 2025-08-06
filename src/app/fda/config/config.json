@@ -21,6 +21,7 @@
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
   "disableJSDraw": false,
+  "ketcherDisclaimer": "",
   "restApiPrefix": "/ginas/app",
   "authenticateAs": {
     "apiUsername": null,

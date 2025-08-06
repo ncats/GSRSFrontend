@@ -113,7 +113,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
         this.menuLabelUpdate.emit('Idealized Structure');
 
         // Display this message under the Ketcher Editor when Registering/Updating Polymer
-        this.disclaimer = "This is disclaimer";
+        // if ketcherDisclaimer has string in the config.json file, display the disclaimer under the Ketcher Editor
+        if (this.configService && this.configService.configData && this.configService.configData.ketcherDisclaimer) {
+          if (this.configService.configData.ketcherDisclaimer) {
+            this.disclaimer = this.configService.configData.ketcherDisclaimer;
+          }
+        }
 
         const idealStructSubscription = this.substanceFormStructureService.substanceIdealizedStructure.subscribe(structure => {
           if (structure) {
