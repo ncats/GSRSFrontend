@@ -53,6 +53,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   ketcherWindowActive = false;
   firstload = true;
   calledFromComponent: string;
+  disclaimerMessage: string;
   private overlayContainer: HTMLElement;
 
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
@@ -142,6 +143,11 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.calledFromComponent = calledFromComp;
   }
 
+  @Input()
+  set disclaimer(disclaimerMess: any) {
+    this.disclaimerMessage = disclaimerMess;
+  }
+
   listener = () => {
     var elmR = document.getElementById("root");
     if (this.structureEditor === "ketcher") {
@@ -187,7 +193,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.structureService.reloadKetcher$.subscribe((reloadKetcher) => {
       if (reloadKetcher === true) {
         if (this.calledFromComponent && this.calledFromComponent === 'registerSubstance') {
-          console.log(this.calledFromComponent + ' reload ketcher:', reloadKetcher);
           this.createDivRootElement();
         }
       }
@@ -294,7 +299,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
           divElement.setAttribute("id", "root");
  
           divElement.style.height = '618px';
-         
           divElement.style.clear = 'both';
           divElement.style.display = 'none';
           divElement.style.padding = '10px'; 
