@@ -4,8 +4,9 @@
       <h4>Draw or import a structure using Ketcher. Then, if any features are detected a table will be automatically displayed under the editor.</h4>
       <button mat-button class = "registration-button" color="primary" (click) = "loadForm()">Load Structure in Registration Form</button>
     </div>
-    <div>
-      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)" (editorSwitched) = "changeEditor($event)" style="z-index: 9999">
+        <div>
+      <app-structure-editor (loadedMolfile)="molvecUpdate($event)" (editorOnLoad)="editorOnLoad($event)" (editorSwitched) = "changeEditor($event)" 
+      [calledFrom]="calledFrom" [disclaimer]="disclaimer" style="z-index: 9999">
       </app-structure-editor>
     </div>
     <div [ngClass]="{'messages-container': true, collapsed: !userMessage, expanded: userMessage}">

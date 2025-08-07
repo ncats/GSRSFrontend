@@ -79,11 +79,12 @@ export interface Config {
     citationMapping?: {
         [code: string]: string;
     };
-    structureEditor?: 'ketcher' | 'jsdraw';
     nameFormPageSizeOptions?: Array<number>;
     nameFormPageSizeDefault?: number;
+    structureEditor?: 'ketcher' | 'jsdraw';
     disableJSDraw?: boolean;
     disableKetcher?: boolean;
+    ketcherDisclaimer?: string;
     useApprovalAPI?: boolean;
     dummyWhoami?: Auth;
     enableStructureFeatures?: boolean;

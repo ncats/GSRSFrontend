@@ -49,7 +49,7 @@ import {AdminService} from '@gsrs-core/admin/admin.service';
 import {MatButtonToggleChange} from "@angular/material/button-toggle";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
 import { Location } from '@angular/common';
-
+import jp from 'jsonpath';
 
 @Component({
   selector: 'app-substance-form',
@@ -1162,7 +1162,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const old = oldraw;
 
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     const idMap = {};
     for (let i = 0; i < idHolders.length; i++) {
       const oid = idHolders[i].id;
@@ -1175,7 +1175,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -1193,7 +1193,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       }
     }
-    const refHolders = defiant.json.search(old, '//*[references]');
+    const refHolders = jp.query(old, '$..[?(@.references)]');
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -1204,7 +1204,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         refs[j] = _map[or];
       }
     }
-    defiant.json.search(old, '//*[uuid]');
+    //removed redundant search 4 August 2025 MAM
+    //defiant.json.search(old, '//*[uuid]');
     let remove = ['BDNUM'];
     if (this.configService.configData && this.configService.configData.filteredDuplicationCodes) {
       remove = this.configService.configData.filteredDuplicationCodes;
@@ -1214,7 +1215,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         codeSystem: code
       });
     })
-    const createHolders = defiant.json.search(old, '//*[created]');
+    const createHolders = jp.query(old, '$..[?(@.created)]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -1223,7 +1224,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       delete rec['lastEditedBy'];
     }
 
-    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    const originHolders = jp.query(old, '$..[?(@.originatorUuid)]');
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
       delete rec['originatorUuid'];
@@ -1248,35 +1249,31 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     delete old['$$update'];
     delete old['changeReason'];
 
+    const refSet = {};
 
-    if (true) {
-      const refSet = {};
-
-      const refHolders2 = defiant.json.search(old, '//*[references]');
-      for (let i = 0; i < refHolders2.length; i++) {
-        const refs = refHolders2[i].references;
-        for (let j = 0; j < refs.length; j++) {
-          const or = refs[j];
-          if (typeof or === 'object') {
-            continue;
-          }
-          refSet[or] = true;
+    const refHolders2 =  jp.query(old, '$..[?(@.references)]');
+    for (let i = 0; i < refHolders2.length; i++) {
+      const refs = refHolders2[i].references;
+      for (let j = 0; j < refs.length; j++) {
+        const or = refs[j];
+        if (typeof or === 'object') {
+          continue;
         }
+        refSet[or] = true;
       }
-
-      const nrefs = _.chain(old.references)
-        .filter(function (ref) {
-          if (refSet[ref.uuid]) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .value();
-
-      old.references = nrefs;
-
     }
+
+    const nrefs = _.chain(old.references)
+      .filter(function (ref) {
+        if (refSet[ref.uuid]) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .value();
+
+    old.references = nrefs;
 
     return old;
   }

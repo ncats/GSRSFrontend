@@ -24,6 +24,8 @@
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
+  "disableJSDraw": false,
+  "ketcherDisclaimer": "",
   "restApiPrefix": "/ginas/app",
   "showTopBanner": true, 
   "authenticateAs": {
@@ -35,6 +37,10 @@
   "stagingArea": {
     "mergeAction": false
   },
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
+  "occasionalApiBasePath": "/ginas/app",
+    
 "userRegistration": {
     "configurations": {
       "emailForm": {
@@ -46,6 +52,12 @@
         "registrationAccessEmailBodyTemplate": "Please register this new user OR resolve login access issue in %s\n\nUsername: %s\nUser email: %s\n\nTo the USER making the request, please provide below any details that will help the Admin facilitate your request:\n\n"
       }
     }
+  },
+  "enablePDFDownload":{
+    "enablePDFDownload" : true,
+    "buttonName":"Print to PDF",
+    "companyName" : "",
+    "proprietaryNote":""
   },
   "elementLabelDisplay": {
     "labels": {
