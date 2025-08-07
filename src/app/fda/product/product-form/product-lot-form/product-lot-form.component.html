@@ -47,10 +47,18 @@
 
     <mat-form-field class="col-5">
       <mat-label>Expiry Date (mm/dd/yyyy)</mat-label>
-      <input matInput [matDatepicker]="pickerExpiryDate" [(ngModel)]="productLot._expiryDate" placeholder="Expiry Date (mm/dd/yyyy)" (dateChange)="changeExpiryDate($event)">
+      <input matInput [matDatepicker]="pickerExpiryDate" placeholder="Expiry Date (mm/dd/yyyy)" (dateChange)="changeExpiryDate($event)">
       <mat-datepicker-toggle matSuffix [for]="pickerExpiryDate"></mat-datepicker-toggle>
       <mat-datepicker #pickerExpiryDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
     </mat-form-field>
+
+    <!--
+    <mat-form-field class="col-5">
+      <input matInput placeholder="Expiry Date (mm/dd/yyyy)" (change)="validateExpiryDate()"
+        [(ngModel)]="productLot.expiryDate" name="expiryDate" />
+      <mat-hint *ngIf="expiryDateMessage">{{expiryDateMessage}}</mat-hint>
+    </mat-form-field>
+    -->
 
     <mat-form-field class="col-5">
       <mat-label>Manufacture Date (mm/dd/yyyy)</mat-label>

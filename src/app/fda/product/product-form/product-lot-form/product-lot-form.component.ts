@@ -56,8 +56,7 @@ export class ProductLotFormComponent implements OnInit {
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
-
-    this.getLotDetails();
+    //  this.getVocabularies();
   }
 
   getLotDetails() {
@@ -147,22 +146,13 @@ export class ProductLotFormComponent implements OnInit {
   }
 
   changeExpiryDate(event: MatDatepickerInputEvent<Date>): void {
-    const inputElement: HTMLElement = event.targetElement;
-    const inputValue: any = (inputElement as HTMLInputElement).value;
+    const selectedDate: Date | null = event.value;
 
-    this.productLot.expiryDate = inputValue;
-
-    this.validateExpiryDate();
-  }
-
-  changeManufactureDate(event: MatDatepickerInputEvent<Date>): void {
-    const inputElement: HTMLElement = event.targetElement;
-    const inputValue: any = (inputElement as HTMLInputElement).value;
-
-    this.productLot.manufactureDate = inputValue;
-
-    this.validateManufactureDate();
-
+    if (selectedDate) {
+      let dateFormattedStr = selectedDate.getMonth()+1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
+      let dateObject: Date = new Date(dateFormattedStr);
+      this.productLot.expiryDate = dateObject;
+    }
   }
 
   increaseOverlayZindex(): void {
