@@ -112,11 +112,11 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer') {
         this.menuLabelUpdate.emit('Idealized Structure');
 
-        // Display this message under the Ketcher Editor when Registering/Updating Polymer
-        // if ketcherDisclaimer has string in the config.json file, display the disclaimer under the Ketcher Editor
-        if (this.configService && this.configService.configData && this.configService.configData.ketcherDisclaimer) {
-          if (this.configService.configData.ketcherDisclaimer) {
-            this.disclaimer = this.configService.configData.ketcherDisclaimer;
+        // Display this message under JSDraw/ketcher Editor when Registering/Updating Polymer
+        // if polymerDisclaimer has string in the config.json file, display the disclaimer under the Structure Editor
+        if (this.configService && this.configService.configData && this.configService.configData.polymerDisclaimer) {
+          if (this.configService.configData.polymerDisclaimer) {
+            this.disclaimer = this.configService.configData.polymerDisclaimer;
           }
         }
 

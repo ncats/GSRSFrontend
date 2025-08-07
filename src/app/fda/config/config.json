@@ -15,7 +15,7 @@
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
   "disableJSDraw": false,
-  "ketcherDisclaimer": "",
+  "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "restApiPrefix": "/ginas/app",
   "authenticateAs": {
     "apiUsername": null,
