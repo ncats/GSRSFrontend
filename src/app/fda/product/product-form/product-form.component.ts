@@ -835,19 +835,33 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(cvSubscription);
   }
 
-  dateChangeEffectiveDate(event: MatDatepickerInputEvent<Date>): void {
+  changeEffectiveDate(event: MatDatepickerInputEvent<Date>): void {
     if (event.value) {
       this.product.effectiveDate = moment(event.value).format('MM/DD/YYYY');
     }
   }
 
-  onDateChange
+  changeEndDate(event: MatDatepickerInputEvent<Date>): void {
+    if (event.value) {
+      this.product.endDate = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
 
-  openedChange(opened: boolean): void {
-    if (opened) {
-      this.increaseOverlayZindex();
-    } else {
-      this.decreaseOverlayZindex();
+  changestartMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
+    if (event.value) {
+      this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
+
+  changeEndMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
+    if (event.value) {
+      this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
+
+  changeEffectiveTime(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodDocIndex: number): void {
+    if (event.value) {
+      this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = moment(event.value).format('MM/DD/YYYY');
     }
   }
 

@@ -1,20 +1,23 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
-import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { UtilsService } from '@gsrs-core/utils/utils.service';
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
-import { ProductLot, ValidationMessage } from '../../model/product.model';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import * as moment from 'moment';
+
+/* GSRS Core Imports */
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { LoadingService } from '@gsrs-core/loading';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+
+/* GSRS Product Imports */
+import { ProductService } from '../../service/product.service';
+import { ProductLot, ValidationMessage } from '../../model/product.model';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-product-lot-form',
@@ -40,16 +43,19 @@ export class ProductLotFormComponent implements OnInit {
   username = null;
   expiryDateMessage = '';
   manufactureDateMessage = '';
+  overlayContainer: HTMLElement;
 
   constructor(
     private productService: ProductService,
     public cvService: ControlledVocabularyService,
     private authService: AuthService,
+    private overlayContainerService: OverlayContainer,
     private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
-  //  this.getVocabularies();
+    //  this.getVocabularies();
   }
 
   /*
@@ -66,7 +72,7 @@ export class ProductLotFormComponent implements OnInit {
 */
   confirmDeleteProductLot(prodComponentIndex: number, prodLotIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Product Lot Details ' + (prodLotIndex + 1) + ' data?'}
+      data: { message: 'Are you sure you want to delete Product Lot Details ' + (prodLotIndex + 1) + ' data?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -129,6 +135,24 @@ export class ProductLotFormComponent implements OnInit {
       }
     }
     return isValid;
+  }
+
+  changeExpiryDate(event: MatDatepickerInputEvent<Date>): void {
+    const selectedDate: Date | null = event.value;
+
+    if (selectedDate) {
+      let dateFormattedStr = selectedDate.getMonth()+1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
+      let dateObject: Date = new Date(dateFormattedStr);
+      this.productLot.expiryDate = dateObject;
+    }
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 
   isNumber(str: string): boolean {
