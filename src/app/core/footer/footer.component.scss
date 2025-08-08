@@ -17,11 +17,32 @@
     justify-content: center;
 }
 
+
 .footer-row a {
     color: WhiteSmoke;
     text-decoration: none;
-    padding-left: 3px;
-    padding-right: 3px;
 }
 
+@media (max-width:800px) {
+.parent-nf { 
+    flex: none;
+    display: block;
+    width: 100%;
+}
+.separator {
+    display: none;
+}
+.link {
+    flex: none;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+.fragment {
+    flex: none;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
 
+}
