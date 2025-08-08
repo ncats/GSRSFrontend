@@ -93,6 +93,7 @@ export interface Config {
     bannerText?: string;
     showTopBanner?: boolean;
     showLogin?: boolean;
+    showLoginButton?: boolean;
     showFooter?: boolean; 
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;

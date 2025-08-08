@@ -180,9 +180,11 @@
     (closed)="removeZindex()">
   </app-substance-text-search>
   <div>
-    <button mat-button class="login-link" (click)="routeToLogin()" *ngIf=" showLogin && !auth && mainPathSegment !== 'login'">
+   <div *ngIf="showLoginButton">
+     <button mat-button class="login-link" (click)="routeToLogin()" *ngIf=" showLogin && !auth && mainPathSegment !== 'login'">
       Login
-    </button>
+     </button>
+   </div>
     <div class="logged-in" *ngIf="auth">
       <button aria-label="User Account" class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
         <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>

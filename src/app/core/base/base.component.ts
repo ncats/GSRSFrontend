@@ -66,6 +66,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   showTopBanner: boolean;
   showFooter: boolean;
   showLogin: boolean;
+  showLoginButton: boolean;
 
   constructor(
     private router: Router,
@@ -323,6 +324,16 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showTopBanner = false;
       } else {
         this.showTopBanner = true;
+      }
+    }
+
+    if(this.configService.configData.showLoginButton === undefined) {
+      this.showLoginButton = true;
+    } else {
+      if(this.configService.configData.showLoginButton === false) { 
+        this.showLoginButton = false;
+      } else {
+        this.showLoginButton = true;
       }
     }
 
