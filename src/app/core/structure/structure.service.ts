@@ -20,14 +20,16 @@ export class StructureService {
   ) {
   }
 
-  private _isCalledFromRegisterSubstance = new BehaviorSubject<boolean>(false); // Initial value
-  readonly isCalledFromRegisterSubstance$ = this._isCalledFromRegisterSubstance.asObservable(); // Expose as an Observable
+  private _pageKetcherIsOpen = new BehaviorSubject<string>(''); // Initial value
+  readonly pageKetcherIsOpen$ = this._pageKetcherIsOpen.asObservable(); // Expose as an Observable
 
   private _reloadKetcher = new BehaviorSubject<boolean>(false); // Initial value
   readonly reloadKetcher$ = this._reloadKetcher.asObservable(); // Expose as an Observable
 
-  isCalledFromRegisterSubstance(newValue: boolean) {
-    this._isCalledFromRegisterSubstance.next(newValue); // Update the value and notify subscribers
+  updatePageKetcherIsOpen(pageKetcherIsOpen: string) {
+    if (pageKetcherIsOpen) {
+      this._pageKetcherIsOpen.next(pageKetcherIsOpen);
+    }
   }
 
   updateReloadKetcher(uploadKetcher: boolean) {
