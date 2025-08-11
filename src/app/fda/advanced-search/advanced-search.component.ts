@@ -803,10 +803,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         let mol = '';
         this.editor.getMolfile().pipe(take(1)).subscribe(response => {
           mol = response;
-          if (mol && mol.length > 72) {
-            this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-              const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
-              //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+        if (this.isPossibleMol(mol)) {
+          this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+            const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+            //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
 
               const navigationExtrasStructure: NavigationExtras = {
                 queryParams: {}
@@ -843,12 +843,13 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           }
           /********* STRUCTURE QUERY **********/
 
-          // If no structure search, do this
-          else {
-            this.router.navigate(['/browse-substance'], navigationExtras);
-            //    }
-          }
-        });
+        // If no structure search, do this
+        else {
+          console.log('no molecule found');
+          this.router.navigate(['/browse-substance'], navigationExtras);
+          //    }
+        }
+      });
       }
       else if (this.category === 'Application') {
         this.router.navigate(['/browse-applications'], navigationExtras);
@@ -897,6 +898,21 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           this.searchTypeControl.setValue(this.searchType);
         });
     });
+  }
+
+  isPossibleMol(testMol: string) : boolean {
+    const blankCountsLine = "  0  0  0  0  0  0  0  0  0  0999 V2000";
+    if( !testMol || testMol === null || !testMol.length || testMol.length < 100){
+      return false;
+    }
+    let lines = testMol.split('\n');
+    if( lines === null || lines.length < 4){
+      return false;
+    }
+    if(lines[3] === blankCountsLine) {
+      return false;
+    }
+    return true;
   }
 
   searchTypeSelected(event): void {

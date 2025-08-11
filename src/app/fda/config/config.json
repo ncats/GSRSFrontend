@@ -42,6 +42,12 @@
       }
     }
   },
+  "enablePDFDownload":{
+    "enablePDFDownload" : true,
+    "buttonName":"Print to PDF",
+    "companyName" : "",
+    "proprietaryNote":""
+  },
   "elementLabelDisplay": {
     "labels": {
       "substance_names_name": {
