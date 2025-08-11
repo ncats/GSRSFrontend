@@ -799,10 +799,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         let mol = '';
         this.editor.getMolfile().pipe(take(1)).subscribe(response => {
           mol = response;
-        if (this.isPossibleMol(mol)) {
-          this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-            const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
-            //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+          if (mol && mol.length > 72) {
+            this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+              const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+              //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
 
               const navigationExtrasStructure: NavigationExtras = {
                 queryParams: {}
@@ -839,13 +839,12 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           }
           /********* STRUCTURE QUERY **********/
 
-        // If no structure search, do this
-        else {
-          console.log('no molecule found');
-          this.router.navigate(['/browse-substance'], navigationExtras);
-          //    }
-        }
-      });
+          // If no structure search, do this
+          else {
+            this.router.navigate(['/browse-substance'], navigationExtras);
+            //    }
+          }
+        });
       }
       else if (this.category === 'Application') {
         this.router.navigate(['/browse-applications'], navigationExtras);
