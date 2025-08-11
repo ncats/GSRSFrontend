@@ -11,7 +11,7 @@
       (closed)="panelOpenState = false" [expanded]="panelOpenState">
   <div class = "form-row upper-padding">
     <div class="editor-container">
-        <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)"></app-structure-editor>
+        <app-structure-editor (editorOnLoad)="editorOnLoad($event)" (loadedMolfile)="molvecUpdate($event)" [calledFrom]="calledFrom"></app-structure-editor>
         
       </div>
 

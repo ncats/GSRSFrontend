@@ -803,52 +803,52 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         let mol = '';
         this.editor.getMolfile().pipe(take(1)).subscribe(response => {
           mol = response;
-        if (mol && mol.length > 72) {
-          this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-            const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
-            //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+          if (mol && mol.length > 72) {
+            this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+              const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+              //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
 
-            const navigationExtrasStructure: NavigationExtras = {
-              queryParams: {}
-            };
+              const navigationExtrasStructure: NavigationExtras = {
+                queryParams: {}
+              };
 
-            const structureSearchTerm = response.structure.id;
-            const smiles = response.structure.smiles;
+              const structureSearchTerm = response.structure.id;
+              const smiles = response.structure.smiles;
 
-            navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
-            navigationExtras.queryParams['type'] = this.searchType || null;
+              navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
+              navigationExtras.queryParams['type'] = this.searchType || null;
 
-            navigationExtras2.queryParams['structure'] = structureSearchTerm;
-            navigationExtras2.queryParams['type'] = this.searchType || null;
+              navigationExtras2.queryParams['structure'] = structureSearchTerm;
+              navigationExtras2.queryParams['type'] = this.searchType || null;
 
-            if (this.searchType === 'similarity') {
-              navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
-              navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
-            }
+              if (this.searchType === 'similarity') {
+                navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
+                navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
+              }
 
-            if (smiles != null) {
-              navigationExtras.queryParams['smiles'] = smiles;
-            }
+              if (smiles != null) {
+                navigationExtras.queryParams['smiles'] = smiles;
+              }
 
-            // this is a test of the push state needed
-            // to keep the back button working as desired
-            window.history.pushState({}, 'Structure Search', '/structure-search'
-              + '?structure=' + navigationExtras2.queryParams['structure']
-              + '&type=' + navigationExtras2.queryParams['type']
-              + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
+              // this is a test of the push state needed
+              // to keep the back button working as desired
+              window.history.pushState({}, 'Structure Search', '/structure-search'
+                + '?structure=' + navigationExtras2.queryParams['structure']
+                + '&type=' + navigationExtras2.queryParams['type']
+                + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
 
+              this.router.navigate(['/browse-substance'], navigationExtras);
+            }, () => { });
+
+          }
+          /********* STRUCTURE QUERY **********/
+
+          // If no structure search, do this
+          else {
             this.router.navigate(['/browse-substance'], navigationExtras);
-          }, () => { });
-
-        }
-        /********* STRUCTURE QUERY **********/
-
-        // If no structure search, do this
-        else {
-          this.router.navigate(['/browse-substance'], navigationExtras);
-          //    }
-        }
-      });
+            //    }
+          }
+        });
       }
       else if (this.category === 'Application') {
         this.router.navigate(['/browse-applications'], navigationExtras);
@@ -937,24 +937,32 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
   openStructureExportDialog(): void {
     let mol = '';
+    let smiles = '';
+
     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
       mol = response;
-    this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
-    const dialogRef = this.dialog.open(StructureExportComponent, {
-      height: 'auto',
-      width: '650px',
-      data: {
-        molfile: mol,
-        smiles: '' //this.editor.getSmiles()
-      }
-    });
-    this.overlayContainer.style.zIndex = '1002';
-    dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = null;
-    }, () => {
-      this.overlayContainer.style.zIndex = null;
-    });
-  });
+
+      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+        smiles = response.structure.smiles;
+
+        this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
+        const dialogRef = this.dialog.open(StructureExportComponent, {
+          height: 'auto',
+          width: '650px',
+          data: {
+            molfile: mol,
+            smiles: smiles
+          }
+        });
+        this.overlayContainer.style.zIndex = '1002';
+        dialogRef.afterClosed().subscribe(() => {
+          this.overlayContainer.style.zIndex = null;
+        }, () => {
+          this.overlayContainer.style.zIndex = null;
+        });
+
+      }); // getSmiles
+    }); // getMolFile
   }
 
   searchCutoffChanged(event): void {

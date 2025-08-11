@@ -46,7 +46,7 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   searchValue: string;
   nameSearched = false;
   structureSearched = false;
-
+  calledFrom = 'substanceSelector';
   loading = false;
   order = "default";
   public sortValues = searchSortValues;
@@ -55,27 +55,27 @@ export class AdvancedSelectorDialogComponent implements OnInit {
   current: string;
   lastTab: number;
 
-smiles?: any;
-searchType = 'substructure';
-_searchtype: string;
-similarityCutoff?: number;
-showSimilarityCutoff = false;
-substances?: Array<any>;
-nameSubstances?: Array<any>;
-nameResponse: any;
-response: any;
+  smiles?: any;
+  searchType = 'substructure';
+  _searchtype: string;
+  similarityCutoff?: number;
+  showSimilarityCutoff = false;
+  substances?: Array<any>;
+  nameSubstances?: Array<any>;
+  nameResponse: any;
+  response: any;
 
 
-panelOpenState = true;
-private overlayContainer: HTMLElement;
+  panelOpenState = true;
+  private overlayContainer: HTMLElement;
 
-private privateSearchTerm = '';
-private privateStructureSearchTerm?: string;
-private privateSequenceSearchTerm?: string;
-private privateSearchType?: string;
-private privateSearchCutoff?: number;
-private privateSearchSeqType?: string;
-private privateSequenceSearchKey?: string;
+  private privateSearchTerm = '';
+  private privateStructureSearchTerm?: string;
+  private privateSequenceSearchTerm?: string;
+  private privateSearchType?: string;
+  private privateSearchCutoff?: number;
+  private privateSearchSeqType?: string;
+  private privateSequenceSearchKey?: string;
 
 
   constructor(
@@ -92,9 +92,9 @@ private privateSequenceSearchKey?: string;
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.dat = data;
-    
+
   }
-  
+
 
 
   get standardized(): boolean {
@@ -111,29 +111,29 @@ private privateSequenceSearchKey?: string;
     if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
       url = this.configService.configData.gsrsHomeBaseUrl + '/substances/register/chemical' + '?importStructure=' + encodeURIComponent(smiles);
     } else {
-      
+
       const baseUrl = window.location.href.replace(this.router.url, '');
       url = baseUrl + this.router.serializeUrl(
         this.router.createUrlTree(['/substances/register/chemical'], {
           queryParams: navigationExtras.queryParams})
       );
     }
-  
+
     window.open(url, '_blank');
   }
 
   close() {
-     this.dialogRef.close();
+    this.dialogRef.close();
   }
 
   standardize(standard: string): void {
     let mol = ''
-     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
       mol = response;
-    this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
-      if (response && response.structure && response.structure.molfile) {
-        this.editor.setMolecule(response.structure.molfile);
-      }
+      this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
+        if (response && response.structure && response.structure.molfile) {
+          this.editor.setMolecule(response.structure.molfile);
+        }
     }, () => {});
     });
   }
@@ -159,28 +159,28 @@ private privateSequenceSearchKey?: string;
     this.searchSubstances(null, null, 'name');
   }
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-  
+
     if (this.privateTerm.simplifiedStructure) {
       this.privateTerm.simpleSrc = this.CVService.getStructureUrl(this.privateTerm.simplifiedStructure);
-  }
-  if (this.privateTerm.fragmentStructure) {
-    this.privateTerm.fragmentSrc = this.CVService.getStructureUrl(this.privateTerm.fragmentStructure);
-  }
-  this.overlayContainer = this.overlayContainerService.getContainerElement();
+    }
+    if (this.privateTerm.fragmentStructure) {
+      this.privateTerm.fragmentSrc = this.CVService.getStructureUrl(this.privateTerm.fragmentStructure);
+    }
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
 
   if(this.dat && this.dat.uuid && this.data.tab !== 1) {
-    this.structureService.getMolfile(this.dat.uuid);
-  }
+      this.structureService.getMolfile(this.dat.uuid);
+    }
 
   if(this.dat && this.dat.name) {
-    this.searchValue = this.dat.name;
-  }
-  this.activeTab = this.data.tab;
-  setTimeout(() => {
+      this.searchValue = this.dat.name;
+    }
     this.activeTab = this.data.tab;
-  }, 10);
+    setTimeout(() => {
+      this.activeTab = this.data.tab;
+    }, 10);
 
   }
 
@@ -190,44 +190,44 @@ private privateSequenceSearchKey?: string;
 
   editorOnLoad(editor: Editor): void {
     this.overlayContainer.style.zIndex = '1003';
-  
-      this.overlayContainer.style.zIndex = '10003';
+
+    this.overlayContainer.style.zIndex = '10003';
     this.loadingService.setLoading(false);
     this.editor = editor;
     if(this.dat && this.dat.uuid) {
       this.structureService.getMolfile(this.data.uuid).subscribe( response => {
-          this.editor.setMolecule(response);
-          this.overlayContainer.style.zIndex = '1003';
-  
-      this.overlayContainer.style.zIndex = '10003';
-          
-        });
-      } else if (
-        this.dat && this.dat.molfile
-      ) {
-        this.editor.setMolecule(this.dat.molfile);
+        this.editor.setMolecule(response);
+        this.overlayContainer.style.zIndex = '1003';
+
         this.overlayContainer.style.zIndex = '10003';
-      }
-    
+
+      });
+    } else if (
+      this.dat && this.dat.molfile
+    ) {
+      this.editor.setMolecule(this.dat.molfile);
+      this.overlayContainer.style.zIndex = '10003';
+    }
+
     setTimeout(() => {
       // re-adjust z-index after editor messes it up (to adjust relative index for periodic table, right click)
       this.overlayContainer.style.zIndex = '1003';
-  
+
       this.overlayContainer.style.zIndex = '10003';
-      }, 100);
+    }, 100);
   }
 
   search(): void {
     let mol = '';
     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
       mol = response;
-    this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
-      this.smiles = response.structure.smiles;
+      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+        this.smiles = response.structure.smiles;
         this.response = response.structure.id;
         this.searchSubstances(response.structure.id, response.structure.smiles);
     }, () => {});
-  });
-}
+    });
+  }
 
 
   nameResolved(molfile: string): void {
@@ -236,7 +236,7 @@ private privateSequenceSearchKey?: string;
 
   updateType(event: any) {
     this.searchType = event.value;
-    
+
     this.privateSearchType = event.value;
 
     if (this.searchType === 'similarity') {
@@ -255,32 +255,32 @@ private privateSequenceSearchKey?: string;
     const navigationExtras: NavigationExtras = {
       queryParams: {}
     };
-  const navigationExtras2: NavigationExtras = {
+    const navigationExtras2: NavigationExtras = {
       queryParams: {}
     };
 
     if (type === 'structure') {
       navigationExtras.queryParams['structure_search'] = this.privateStructureSearchTerm || null;
       navigationExtras.queryParams['type'] = this.searchType || null;
-  
+
       navigationExtras2.queryParams['structure'] = this.privateStructureSearchTerm || null;
       navigationExtras2.queryParams['type'] = this.searchType || null;
 
       navString += '?structure_search=' + navigationExtras.queryParams['structure_search']
         + '&type=' + navigationExtras.queryParams['type'];
-  
+
       if (this.searchType === 'similarity') {
         navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
         navString  += '&cutoff=' + navigationExtras.queryParams['cutoff'] ;
       }
-  
+
       if (smiles != null) {
         navigationExtras.queryParams['smiles'] = smiles;
       }
-   
-       
-       
-  
+
+
+
+
     } else {
       navigationExtras.queryParams['search'] = this.searchValue;
       navString += '?search=' + navigationExtras.queryParams['search'];
@@ -300,7 +300,7 @@ private privateSequenceSearchKey?: string;
           queryParams: navigationExtras.queryParams})
       );
     }
-  
+
     window.open(url, '_blank');
 
   }
@@ -312,7 +312,7 @@ private privateSequenceSearchKey?: string;
     if (structureSearchTerm){
       this.privateStructureSearchTerm = structureSearchTerm || null;
       this.privateSearchType = this.searchType || 'substructure';
-  
+
       if (this.searchType === 'similarity') {
         this.privateSearchCutoff = this.similarityCutoff || 0;
       }
@@ -326,122 +326,133 @@ private privateSequenceSearchKey?: string;
     let sort = null;
     if(type && type === 'name') {
       sort = this.order;
-   
-          }
-      this.loadingService.setLoading(true);
-      this.loading = true;
-      const subscription = this.substanceService.getSubstancesSummaries({
-        searchTerm: this.privateSearchTerm,
-        structureSearchTerm: this.privateStructureSearchTerm,
-        sequenceSearchTerm: this.privateSequenceSearchTerm,
-        cutoff: this.privateSearchCutoff,
-        type: this.privateSearchType,
-        seqType: this.privateSearchSeqType,
-        order: sort,
-        pageSize: size,
-        facets: this.privateFacetParams,
-        skip: index,
-        sequenceSearchKey: this.privateSequenceSearchKey,
-        deprecated: false
-      })
-        .subscribe(pagingResponse => {
- 
+
+    }
+    this.loadingService.setLoading(true);
+    this.loading = true;
+    const subscription = this.substanceService.getSubstancesSummaries({
+      searchTerm: this.privateSearchTerm,
+      structureSearchTerm: this.privateStructureSearchTerm,
+      sequenceSearchTerm: this.privateSequenceSearchTerm,
+      cutoff: this.privateSearchCutoff,
+      type: this.privateSearchType,
+      seqType: this.privateSearchSeqType,
+      order: sort,
+      pageSize: size,
+      facets: this.privateFacetParams,
+      skip: index,
+      sequenceSearchKey: this.privateSequenceSearchKey,
+      deprecated: false
+    })
+      .subscribe(pagingResponse => {
+
           if(type && type === 'name') {
-            this.nameSubstances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
-            this.nameTotalSubstances = pagingResponse.total;
-          } else {
-            this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
-            this.totalSubstances = pagingResponse.total;
-            if (this.totalSubstances > 0) {
-              this.panelOpenState = false;
-            }
+          this.nameSubstances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+          this.nameTotalSubstances = pagingResponse.total;
+        } else {
+          this.substances = (pagingResponse && pagingResponse.content) ? pagingResponse.content : [];
+          this.totalSubstances = pagingResponse.total;
+          if (this.totalSubstances > 0) {
+            this.panelOpenState = false;
           }
+        }
 
-          if (pagingResponse.total % this.pageSize === 0) {
-            this.lastPage = (pagingResponse.total / this.pageSize);
-          } else {
-            this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
-          }
+        if (pagingResponse.total % this.pageSize === 0) {
+          this.lastPage = (pagingResponse.total / this.pageSize);
+        } else {
+          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+        }
 
-          
+
+        this.overlayContainer.style.zIndex = '1003';
+
+        this.overlayContainer.style.zIndex = '10003';
+        this.loadingService.setLoading(false);
+
+        this.overlayContainer.style.zIndex = '10003';
+        setTimeout(() => {
+          // re-adjust z-index after editor messes it up
           this.overlayContainer.style.zIndex = '1003';
-        
-            this.overlayContainer.style.zIndex = '10003';
-          this.loadingService.setLoading(false);
-        
-            this.overlayContainer.style.zIndex = '10003';
-          setTimeout(() => {
-            // re-adjust z-index after editor messes it up
-            this.overlayContainer.style.zIndex = '1003';
-        
-            this.overlayContainer.style.zIndex = '10003';
 
-            this.loading = false;
-            });
+          this.overlayContainer.style.zIndex = '10003';
 
-        }, error => {
           this.loading = false;
-          this.loadingService.setLoading(false);
-          console.log("error getting name in function searchSubstances()");
         });
-      }
 
-      openStructureImportDialog(): void {
-        const dialogRef = this.dialog.open(StructureImportComponent, {
-          height: 'auto',
-          width: '650px',
-          data: {}
-        });
-      //  this.overlayContainer.style.zIndex = '1002';
-    
-        dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
-          setTimeout(() => {
-            this.overlayContainer.style.zIndex = '1003';
-            this.overlayContainer.style.zIndex = '10003';
-            });
-          if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
+      }, error => {
+        this.loading = false;
+        this.loadingService.setLoading(false);
+        console.log("error getting name in function searchSubstances()");
+      });
+  }
+
+  openStructureImportDialog(): void {
+    const dialogRef = this.dialog.open(StructureImportComponent, {
+      height: 'auto',
+      width: '650px',
+      data: {}
+    });
+    //  this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
+      setTimeout(() => {
+        this.overlayContainer.style.zIndex = '1003';
+        this.overlayContainer.style.zIndex = '10003';
+      });
+      if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
             setTimeout(()=>{
-              this.editor.setMolecule(structurePostResponse.structure.molfile);
-            })
-          }
-        }, () => {
-          setTimeout(() => {
-            this.overlayContainer.style.zIndex = '1003';
-            this.overlayContainer.style.zIndex = '10003';
-            });
-        });
+          this.editor.setMolecule(structurePostResponse.structure.molfile);
+        })
       }
-    
-      openStructureExportDialog(): void {
+    }, () => {
+      setTimeout(() => {
+        this.overlayContainer.style.zIndex = '1003';
+        this.overlayContainer.style.zIndex = '10003';
+      });
+    });
+  }
+
+  openStructureExportDialog(): void {
+    let mol = '';
+    let smiles = '';
+    this.editor.getMolfile().pipe(take(1)).subscribe(response => {
+      mol = response;
+
+      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+        smiles = response.structure.smiles;
+
         const dialogRef = this.dialog.open(StructureExportComponent, {
           height: 'auto',
           width: '650px',
           data: {
-            molfile:'',// this.editor.getMolfile(),
-            smiles: ''// this.editor.getSmiles()
+            molfile: mol, // '' or this.editor.getMolfile(),
+            smiles: smiles // '' or this.editor.getSmiles()
           }
         });
-      //  this.overlayContainer.style.zIndex = '1002';
-    
+
         dialogRef.afterClosed().subscribe(() => {
           setTimeout(() => {
             this.overlayContainer.style.zIndex = '1003';
             this.overlayContainer.style.zIndex = '10003';
-            });
+          });
         }, () => {
           setTimeout(() => {
             this.overlayContainer.style.zIndex = '1003';
             this.overlayContainer.style.zIndex = '10003';
-            });
+          });
         });
-      }
 
+      }); // getSmiles()
+
+    }); // getMolfile()
+
+  }
 
   checkImg(term: any) {
     term.fragmentSrc = this.CVService.getStructureUrlFragment(term.fragmentStructure);
     term.simpleSrc = this.CVService.getStructureUrlFragment(term.simplifiedStructure);
-
   }
+
   openImageModal(substance: SubstanceDetail): void {
 
     let data: any;
@@ -470,7 +481,7 @@ private privateSequenceSearchKey?: string;
     }
 
 
-    
+
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
       width: '650px',
       panelClass: 'structure-image-panel',
@@ -492,7 +503,7 @@ private privateSequenceSearchKey?: string;
             }
           }, 150);
         }
-       
+
       }
       if (response && response === 'select') {
         this.selectSubstance(substance);
@@ -516,15 +527,15 @@ private privateSequenceSearchKey?: string;
     if (type && type === 'name') {
       this.namePageSize = pageEvent.pageSize;
       this.namePageIndex = pageEvent.pageIndex;
-        this.searchSubstances(null, null, 'name');
-  
+      this.searchSubstances(null, null, 'name');
+
     } else {
       this.pageSize = pageEvent.pageSize;
       this.pageIndex = pageEvent.pageIndex;
-        this.searchSubstances(this.response);
-   
+      this.searchSubstances(this.response);
+
     }
-    
+
   }
 }
 
