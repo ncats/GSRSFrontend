@@ -767,7 +767,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       queryParams: {}
     };
 
-    if ((this.query) || (Object.keys(this.privateFacetParams).length > 0)) {
+    if ((this.query) || ( this.privateFacetParams && (Object.keys(this.privateFacetParams).length > 0))) {
 
       if (this.query) {
         if (this.category === 'Clinical Trial') {
