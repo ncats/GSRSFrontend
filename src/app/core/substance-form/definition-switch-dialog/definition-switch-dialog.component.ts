@@ -4,9 +4,9 @@ import { SubstanceDetail, SubstanceService } from '@gsrs-core/substance';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _ from 'lodash';
-import * as defiant from '../../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { LoadingService } from '@gsrs-core/loading/index';
 import { UtilsService } from '@gsrs-core/utils/index';
+import jp from 'jsonpath';
 
 @Component( {
   selector: 'app-definition-switch-dialog',
@@ -168,10 +168,10 @@ export class DefinitionSwitchDialogComponent implements OnInit {
       }
 
       this.oldPrime.references.push(depRef);
-      this.test1 =  defiant.json.search(this.oldPrime, '//*[references]');
+      this.test1 =  jp.query(this.oldPrime, '$..[?(@.references)]');
       this.substanceService.getSubstanceDetails(uuid).subscribe(d => {
-        this.test2 =  defiant.json.search(d, '//*[references]');
-
+        this.test2 = jp.query(d, '$..[?(@.references)]');
+         
         this.oldAlt = _.cloneDeep(d);
         if (!this.fieldGetter[this.oldAlt.substanceClass]) {
          this.text = 'The selected alternative is incompatible with the definition switch function';
@@ -275,7 +275,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
             }
           });
           alt.substanceClass = this.sub.substanceClass;
-          const altReferences = defiant.json.search(alt, '//*[references]');
+          const altReferences = jp.query(alt, '$..[?(@.references)]');
           altReferences.forEach(e => {
           });
           const objectsA = altReferences.filter(e => {
@@ -344,7 +344,7 @@ export class DefinitionSwitchDialogComponent implements OnInit {
                 newSub[x] = this.oldAlt[x];
               }
             });
-            const subReferences = defiant.json.search(newSub, '//*[references]');
+            const subReferences = jp.query(newSub, '$..[?(@.references)]');
             const objectsA = subReferences.filter(h => {
 
               if (this.isObject(h)) {
