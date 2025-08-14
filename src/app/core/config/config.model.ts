@@ -20,6 +20,7 @@ export interface Config {
     homeHeader?: string;
     homeContents?: string;
     contactEmail?: string;
+    contactEmailAlt?: string;    
     defaultCodeSystem?: string;
     primaryCode?: string;
     typeaheadFields?: Array<string>;
@@ -89,6 +90,11 @@ export interface Config {
     enableStructureFeatures?: boolean;
     StructureFeaturePriority?: Array<string>;
     structureEditSearch?: boolean;
+    bannerText?: string;
+    showTopBanner?: boolean;
+    showLogin?: boolean;
+    showLoginButton?: boolean;
+    showFooter?: boolean; 
     editPagingOptionSettings?: PagingOptionSettings;
     expandedComponents?: Array<string>;
     enablePDFDownload ?: DownloadAsPDF;

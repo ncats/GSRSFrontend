@@ -119,6 +119,8 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
+import { FooterComponent } from './footer/footer.component';
+
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
 import { FileSelectModule } from './file-select/file-select.module';
@@ -162,8 +164,8 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
     MergeActionDialogComponent,
     UserQueryListDialogComponent,
     ListCreateDialogComponent,
-    ImportScrubberComponent
-
+    ImportScrubberComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),

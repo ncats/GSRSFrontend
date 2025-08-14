@@ -1,5 +1,13 @@
-<div class="main-container">
-  <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', zindex2000 : saveDelayedMessage}">
+<div class="main-container" [ngClass]="['top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']">
+
+  <!--keep <div [ngClass]="['top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']"  style="width: 100%"> -->
+
+    <div class="top-fixed" [ngClass]="{'top-fixed-with-top-banner': showTopBanner , zindex2000 : saveDelayedMessage}">
+
+
+      <!--__aw__ original was like this -->
+
+  <!-- <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', zindex2000 : saveDelayedMessage}"> -->
     <div class="actions-container">
 
       <!-- SAVING DELAY: Display Cancel button if it is taking too long to save -->
@@ -11,7 +19,7 @@
         <button mat-flat-button *ngIf="isCancelBtnClicked === false" color="primary" class="validate-button"
           (click)="cancelSubmit()" [disabled]="showFormReadOnly === 'true'">Cancel
         </button>
-        <button mat-flat-button *ngIf="isCancelBtnClicked === true && isSavedSuccessful === true" color="primary"
+        <button mat-flat-button *ngIf="isCancelBtnClicked === true && isSavedSuccessful === true" color="	primary"
           class="validate-button" (click)="refreshPage()" [disabled]="showFormReadOnly === 'true'">Refresh
         </button>
       </div> <!-- SAVING DELAY -->
@@ -100,7 +108,7 @@
     </div> <!-- Validation Message -->
   </div>
 
-  <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}">
+  <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}" style="width: 100%; scroll: auto;">
     <!--
   <div class="form-header"
     [ngClass]="{'form-header-no-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'false'), 'form-header-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'true')}">
@@ -147,5 +155,6 @@
           </mat-accordion>
         </div>
       </div>
+    </div>
     </div>
   </div>

@@ -1,4 +1,10 @@
+<div class="base-page-wrapper">
+  <div *ngIf = "showTopBanner"> 
+    <div class = "top-banner">{{bannerText}}</div>
+</div>
+  <div [ngClass]="['base-menu-wrapper', (showTopBanner) ? 'base-menu-wrapper-with-top-banner': '']">
 <mat-toolbar class="mat-elevation-z3" color="primary" *ngIf="showHeaderBar === 'true' && (!customToolbarComponent || customToolbarComponent.length == 0)">
+
   <div class="logo-container">
     <span class="logo">
       <a routerLink="/home" aria-label="home">
@@ -174,9 +180,11 @@
     (closed)="removeZindex()">
   </app-substance-text-search>
   <div>
-    <button mat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment !== 'login'">
+   <div *ngIf="showLoginButton">
+     <button mat-button class="login-link" (click)="routeToLogin()" *ngIf=" showLogin && !auth && mainPathSegment !== 'login'">
       Login
-    </button>
+     </button>
+   </div>
     <div class="logged-in" *ngIf="auth">
       <button aria-label="User Account" class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
         <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
@@ -221,7 +229,15 @@
 <div *ngIf="customToolbarComponent == 'precisionFDA'">
   <app-pfda-toolbar></app-pfda-toolbar>
 </div>
+  </div>
+  <div [ngClass]="['base-main-wrapper', (showTopBanner) ? 'base-main-wrapper-with-top-banner': '']">
 <app-main-notification></app-main-notification>
 <app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
 <router-outlet></router-outlet>
+    </div>
+  </div>
+
+<div *ngIf="showFooter" class="footer-wrapper">
+  <app-footer></app-footer>
+</div>

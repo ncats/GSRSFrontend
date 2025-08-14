@@ -1,9 +1,10 @@
 .mat-drawer-container.mat-sidenav-container {
-    position: fixed;
-    top: 64px;
+    /* let .base-main-container set top */
     left: 0;
     right: 0;
-    bottom: 0;
+    /* why? */
+    // bottom: 0;
+    margin-bottom: 200px;
     background-color: var(--regular-transparent-color);
 }
 

@@ -119,6 +119,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   previousState: number;
   useApprovalAPI = false;
     featuresOnly = false;
+  showTopBanner: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -311,6 +312,18 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
+
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+
+
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();

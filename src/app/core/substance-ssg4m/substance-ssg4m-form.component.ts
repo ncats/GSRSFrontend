@@ -115,6 +115,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     `${environment.baseHref || ''}assets/pathway/d3v4.js`,
     `${environment.baseHref || ''}assets/pathway/pathwayviz.js`
   ];
+  showTopBanner: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -149,6 +150,17 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Get 'showRegisterEditTitle' value from config
       this.showRegisterEditTitle = this.configSsg4Form.showRegisterEditTitle;
     }
+
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+
 
     this.substanceClass = 'specifiedSubstanceG4m';
 

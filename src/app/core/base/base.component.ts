@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
@@ -30,7 +30,7 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
   styleUrls: ['./base.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class BaseComponent implements OnInit, OnDestroy {
+export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   mainPathSegment = '';
   logoSrcPath: string;
   auth?: Auth;
@@ -41,6 +41,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   classicLinkQueryParamsString: string;
   isAdmin = false;
   contactEmail: string;
+  contactEmailAlt: string;
   version?: string;
   versionTooltipMessage = '';
   appId: string;
@@ -61,6 +62,11 @@ export class BaseComponent implements OnInit, OnDestroy {
   private wildCardText: string;
   private classicLinkQueryParams = {};
   showHeaderBar = 'true';
+  bannerText: string = "This repository is under review for potential modification in compliance with Administration directives.";
+  showTopBanner: boolean;
+  showFooter: boolean;
+  showLogin: boolean;
+  showLoginButton: boolean;
 
   constructor(
     private router: Router,
@@ -139,14 +145,20 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
   }
 
+
+
+
   ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
+
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = '';
     this.contactEmail = this.configService.configData.contactEmail || null;
+    this.contactEmailAlt = this.configService.configData.contactEmailAlt || null;
+    
     this.navItems = this.configService.configData.navItems || null;
 
   let notempty = false;
@@ -299,6 +311,56 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login'], navigationExtras);
   }
 
+  ngAfterViewInit() {
+ 
+    if(this.configService.configData.bannerText) {
+      this.bannerText = this.configService.configData.bannerText;
+    }
+
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+
+    if(this.configService.configData.showLoginButton === undefined) {
+      this.showLoginButton = true;
+    } else {
+      if(this.configService.configData.showLoginButton === false) { 
+        this.showLoginButton = false;
+      } else {
+        this.showLoginButton = true;
+      }
+    }
+
+    if(this.configService.configData.showLogin === undefined) {
+      this.showLogin = true;
+    } else {
+      if(this.configService.configData.showLogin === false) { 
+        this.showLogin = false;
+      } else {
+        this.showLogin = true;
+      }
+    }
+
+    if(this.configService.configData.showFooter === undefined) {
+      this.showFooter = false;
+    } else {
+      if(this.configService.configData.showFooter === false) { 
+        this.showFooter = false;
+      } else {
+        this.showFooter = true;
+      }
+    }
+
+
+  }
+
+
   processSubstanceSearch(searchValue: string) {
     this.wildCardService.getTopSearchBoxText(searchValue);
     this.navigateToSearchResults(searchValue);
@@ -370,6 +432,10 @@ export class BaseComponent implements OnInit, OnDestroy {
       if(item.kind==='contact-us') {
         email = this.contactEmail;
       }
+      if(item.kind==='contact-us-alt') {
+        email = this.contactEmailAlt;
+      }
+
       if(item?.queryParams) {
         if(item?.queryParams?.subject) {
           subject = item.queryParams.subject;

@@ -1,5 +1,11 @@
 @import '~@angular/material/theming';
 
+
+.with-top-banner {
+    top: 92px !important;
+  }
+  
+
 .main-notification {
     width: 100%;
     text-align: center;

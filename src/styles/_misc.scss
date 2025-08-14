@@ -304,6 +304,12 @@ textarea {
 
 .collapsed {
   width: 0;
+  /* 
+  __aw__ added height 0 so while doing footer stuff. Without it 
+  things appeared at bottom of screen when doing substance search and exact 
+  match found.
+  */
+  height: 0;
   overflow: hidden;
 }
 
