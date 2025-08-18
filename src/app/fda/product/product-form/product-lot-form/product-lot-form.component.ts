@@ -151,10 +151,22 @@ export class ProductLotFormComponent implements OnInit {
     if (selectedDate) {
       let dateFormattedStr = selectedDate.getMonth()+1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
       let dateObject: Date = new Date(dateFormattedStr);
+      
       this.productLot.expiryDate = dateObject;
     }
   }
 
+  changeManufactureDate(event: MatDatepickerInputEvent<Date>): void {
+    const selectedDate: Date | null = event.value;
+
+    if (selectedDate) {
+      let dateFormattedStr = selectedDate.getMonth()+1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
+      let dateObject: Date = new Date(dateFormattedStr);
+
+      this.productLot.manufactureDate = dateObject;
+    }
+  }
+  
   increaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = '1002';
   }
