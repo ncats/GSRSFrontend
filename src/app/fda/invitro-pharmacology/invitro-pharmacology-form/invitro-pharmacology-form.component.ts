@@ -23,13 +23,13 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SubstanceRelationship, SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
+import jp from 'jsonpath';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
@@ -1615,39 +1615,54 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   scrub(oldraw: any): any {
     const old = oldraw;
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idMatchesRoot = jp.query(old, '$[?(@.id)]');
+    const idMatchesDescendant = jp.query(old, '$..[?(@.id)]');
+    const idHolders = [...idMatchesRoot, ...idMatchesDescendant];
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
       }
     }
 
-    const showHolders = defiant.json.search(old, '//*[_show]');
+    const showMatchesRoot = jp.query(old, '$[?(@._show)]');
+    const showMatchesDescendant = jp.query(old, '$..[?(@._show)]');
+    const showHolders = [...showMatchesRoot, ...showMatchesDescendant];
     for (let i = 0; i < showHolders.length; i++) {
       delete showHolders[i]._show;
     }
 
-    const createHolders = defiant.json.search(old, '//*[createdDate]');
+    const createdMatchesRoot = jp.query(old, '$[?(@.createdDate)]');
+    const createMatchesDescendant = jp.query(old, '$..[?(@.createdDate)]');
+    const createHolders = [...createdMatchesRoot, ...createMatchesDescendant];
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    const createdByMatchesRoot = jp.query(old, '$[?(@.createdBy)]');
+    const createdByMatchesDescendant = jp.query(old, '$..[?(@.createdBy)]');
+    const createdByHolders = [...createdByMatchesRoot, ...createdByMatchesDescendant];
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = defiant.json.search(old, '//*[modifiedDate]');
+    const lastModifiedMatchesRoot = jp.query(old, '$[?(@.modifiedDate)]');
+    const lastModifiedMatchesDescendant = jp.query(old, '$..[?(@.modifiedDate)]');
+    const modifyHolders = [...lastModifiedMatchesRoot, ... lastModifiedMatchesDescendant];
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    const modifiedByMatchesRoot = jp.query(old, '$[?(@.modifiedBy)]');
+    const modifiedByMatchesDescendant = jp.query(old, '$..[?(@.modifiedBy)]');
+    const modifiedByHolders = [...modifiedByMatchesRoot, ...modifiedByMatchesDescendant];
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    const internalVersionMatchesRoot = jp.query(old, '$[?(@.internalVersion)]');
+    const internalVersionMatchesDescendant = jp.query(old, '$..[?(@.internalVersion)]');
+    const intVersionHolders = [...internalVersionMatchesRoot, ...internalVersionMatchesDescendant];
+
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
     }

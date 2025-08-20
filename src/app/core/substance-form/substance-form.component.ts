@@ -23,7 +23,6 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import {Title} from '@angular/platform-browser';
 import {AuthService} from '@gsrs-core/auth';
 import {take, map} from 'rxjs/operators';

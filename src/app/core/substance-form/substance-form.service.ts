@@ -25,7 +25,7 @@ import {SubstanceService} from '../substance/substance.service';
 import {UtilsService} from '../utils/utils.service';
 import {StructureService} from '@gsrs-core/structure';
 import * as _ from 'lodash';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
+import jp from 'jsonpath';
 
 import {take} from 'rxjs/operators';
 import {AdminService} from '@gsrs-core/admin/admin.service';
@@ -2093,9 +2093,7 @@ export class SubstanceFormService implements OnDestroy {
         ref.uuid = nid;
     });
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
-
-    const refHolders = defiant.json.search(old, '//*[references]');
+    const refHolders = jp.query(old, '$..[?(@.references)]');
 
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
@@ -2110,7 +2108,7 @@ export class SubstanceFormService implements OnDestroy {
     if (true) {
       const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, '//*[references]');
+      const refHolders2 = jp.query(old, '$..[?(@.references)]');
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
