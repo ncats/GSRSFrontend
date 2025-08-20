@@ -1188,7 +1188,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       }
     }
 
-    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
+    const uuidMatchesRoot = jp.query(old, '$[?(@.uuid)]');
+    const uuidMatchesDescendant = jp.query(old, '$..[?(@.uuid)]');
+    const uuidHolders = [...uuidMatchesRoot, ...uuidMatchesDescendant];
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -1206,7 +1208,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         }
       }
     }
-    const refHolders = jp.query(old, '$..[?(@.references)]');
+    const referenceMatchesRoot = jp.query(old, '$[?(@.references)]');
+    const referenceMatchesDescendant = jp.query(old, '$..[?(@.references)]');
+    const refHolders = [...referenceMatchesRoot, ...referenceMatchesDescendant];
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -1218,7 +1222,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     _.remove(old.codes, {
       codeSystem: 'BDNUM'
     });
-    const createHolders = jp.query(old, '$..[?(@.created)]');
+    const createdMatchesRoot = jp.query(old, '$[?(@.created)]');
+    const createMatchesDescendant = jp.query(old, '$..[?(@.created)]');
+    const createHolders = [...createdMatchesRoot, ...createMatchesDescendant];
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -1256,7 +1262,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     if (true) {
       const refSet = {};
 
-      const refHolders2 = jp.query(old, '$..[?(@.references)]');
+      const refMatchesRoot2= jp.query(old, '$[?(@.references)]');
+      const refMatchesDescendant2 = jp.query(old, '$..[?(@.references)]');
+      const refHolders2 = [...refMatchesRoot2, ...refMatchesDescendant2]
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {

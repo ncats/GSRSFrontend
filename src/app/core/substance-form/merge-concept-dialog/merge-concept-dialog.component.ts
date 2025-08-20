@@ -226,7 +226,9 @@ export class MergeConceptDialogComponent implements OnInit {
         s4() + '-' + s4() + s4() + s4();
     }
     const old = JSON.parse(JSON.stringify(oldraw)); 
-    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
+    const rootMatches = jp.query(old, '$[?(@.uuid)]');
+    const descendantMatches = jp.query(old, '$..[?(@.uuid)]');
+    const uuidHolders = [...rootMatches, ...descendantMatches];
     const map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -246,7 +248,9 @@ export class MergeConceptDialogComponent implements OnInit {
       }
     }
 
-    const refHolders = jp.query(old, '$..[?(@.references)]');
+    const refMatchesRoot = jp.query(old, '$[?(@.references)]');
+    const refMatchesDescendant = jp.query(old, '$..[?(@.references)]');
+    const refHolders = [...refMatchesRoot, ...refMatchesDescendant];
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -258,7 +262,9 @@ export class MergeConceptDialogComponent implements OnInit {
     _.remove(old.codes, {
       codeSystem: 'BDNUM'
     });
-    const createHolders = jp.query(old, '$..[?(@.created)]');
+    const createdMatchesRoot = jp.query(old, '$[?(@.created)]');
+    const createMatchesDescendant = jp.query(old, '$..[?(@.created)]');
+    const createHolders = [...createdMatchesRoot, ...createMatchesDescendant];
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -295,7 +301,9 @@ export class MergeConceptDialogComponent implements OnInit {
     if (true) {
       const refSet = {};
 
-      const refHolders2 = jp.query(old, '$..[?(@.references)]');
+      const refMatchesRoot2= jp.query(old, '$[?(@.references)]');
+      const refMatchesDescendant2 = jp.query(old, '$..[?(@.references)]');
+      const refHolders2 = [...refMatchesRoot2, ...refMatchesDescendant2]
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
