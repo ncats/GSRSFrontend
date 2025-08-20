@@ -20,7 +20,6 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
@@ -29,6 +28,7 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service'
 import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../../model/invitro-pharmacology.model';
+import jp from 'jsonpath';
 
 @Component({
   selector: 'app-invitro-pharmacology-assay-form',
@@ -749,41 +749,55 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   scrub(oldraw: any): any {
     const old = oldraw;
 
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idMatchesRoot = jp.query(old, '$[?(@.id)]');
+    const idMatchesDescendant = jp.query(old, '$..[?(@.id)]');
+    const idHolders = [...idMatchesRoot, ...idMatchesDescendant];
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
       }
     }
 
-    const assayIdHolders = defiant.json.search(old, '//*[assayId]');
+    const assayIdMatchesRoot = jp.query(old, '$[?(@.assayId)]');
+    const assayIdMatchesDescendant = jp.query(old, '$..[?(@.assayId)]');
+    const assayIdHolders = [...assayIdMatchesRoot, ...assayIdMatchesDescendant];
     for (let i = 0; i < assayIdHolders.length; i++) {
       if (assayIdHolders[i].assayId) {
         delete assayIdHolders[i].assayId;
       }
     }
 
-    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    const createdMatchesRoot = jp.query(old, '$[?(@.creationDate)]');
+    const createMatchesDescendant = jp.query(old, '$..[?(@.creationDate)]');
+    const createHolders = [...createdMatchesRoot, ...createMatchesDescendant];
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    const createdByMatchesRoot = jp.query(old, '$[?(@.createdBy)]');
+    const createdByMatchesDescendant = jp.query(old, '$..[?(@.createdBy)]');
+    const createdByHolders = [...createdByMatchesRoot, ...createdByMatchesDescendant];
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    const lastModifiedMatchesRoot = jp.query(old, '$[?(@.lastModifiedDate)]');
+    const lastModifiedMatchesDescendant = jp.query(old, '$..[?(@.lastModifiedDate)]');
+    const modifyHolders = [...lastModifiedMatchesRoot, ... lastModifiedMatchesDescendant];
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    const modifiedByMatchesRoot = jp.query(old, '$[?(@.modifiedBy)]');
+    const modifiedByMatchesDescendant = jp.query(old, '$..[?(@.modifiedBy)]');
+    const modifiedByHolders = [...modifiedByMatchesRoot, ...modifiedByMatchesDescendant];
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    const internalVersionMatchesRoot = jp.query(old, '$[?(@.internalVersion)]');
+    const internalVersionMatchesDescendant = jp.query(old, '$..[?(@.internalVersion)]');
+    const intVersionHolders = [...internalVersionMatchesRoot, ...internalVersionMatchesDescendant];
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
     }
