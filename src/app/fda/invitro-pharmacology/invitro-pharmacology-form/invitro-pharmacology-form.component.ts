@@ -1615,53 +1615,39 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   scrub(oldraw: any): any {
     const old = oldraw;
-    const idMatchesRoot = jp.query(old, '$[?(@.id)]');
-    const idMatchesDescendant = jp.query(old, '$..[?(@.id)]');
-    const idHolders = [...idMatchesRoot, ...idMatchesDescendant];
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
       }
     }
 
-    const showMatchesRoot = jp.query(old, '$[?(@._show)]');
-    const showMatchesDescendant = jp.query(old, '$..[?(@._show)]');
-    const showHolders = [...showMatchesRoot, ...showMatchesDescendant];
+    const showHolders = jp.query(old, '$..[?(@._show)]');
     for (let i = 0; i < showHolders.length; i++) {
       delete showHolders[i]._show;
     }
 
-    const createdMatchesRoot = jp.query(old, '$[?(@.createdDate)]');
-    const createMatchesDescendant = jp.query(old, '$..[?(@.createdDate)]');
-    const createHolders = [...createdMatchesRoot, ...createMatchesDescendant];
+    const createHolders = jp.query(old, '$..[?(@.createdDate)]');
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByMatchesRoot = jp.query(old, '$[?(@.createdBy)]');
-    const createdByMatchesDescendant = jp.query(old, '$..[?(@.createdBy)]');
-    const createdByHolders = [...createdByMatchesRoot, ...createdByMatchesDescendant];
+    const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const lastModifiedMatchesRoot = jp.query(old, '$[?(@.modifiedDate)]');
-    const lastModifiedMatchesDescendant = jp.query(old, '$..[?(@.modifiedDate)]');
-    const modifyHolders = [...lastModifiedMatchesRoot, ... lastModifiedMatchesDescendant];
+    const modifyHolders = jp.query(old, '$..[?(@.modifiedDate)]');
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByMatchesRoot = jp.query(old, '$[?(@.modifiedBy)]');
-    const modifiedByMatchesDescendant = jp.query(old, '$..[?(@.modifiedBy)]');
-    const modifiedByHolders = [...modifiedByMatchesRoot, ...modifiedByMatchesDescendant];
+    const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const internalVersionMatchesRoot = jp.query(old, '$[?(@.internalVersion)]');
-    const internalVersionMatchesDescendant = jp.query(old, '$..[?(@.internalVersion)]');
-    const intVersionHolders = [...internalVersionMatchesRoot, ...internalVersionMatchesDescendant];
+    const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
 
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
