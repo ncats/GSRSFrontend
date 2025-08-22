@@ -12,17 +12,19 @@ import * as moment from 'moment';
 import { LoadingService } from '@gsrs-core/loading';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
-import { MainNotificationService } from '@gsrs-core/main-notification';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
+import { Product, ValidationMessage } from '../model/product.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import * as moment from 'moment';
+import { Title } from '@angular/platform-browser';
+import { take } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import jp from 'jsonpath';
-/* GSRS Product Imports */
-import { ProductService } from '../service/product.service';
-import { Product, ValidationMessage } from '../model/product.model';
 
 @Component({
   selector: 'app-product-form',

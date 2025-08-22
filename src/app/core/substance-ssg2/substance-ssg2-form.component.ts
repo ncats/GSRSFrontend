@@ -939,9 +939,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       }
     }
 
-    const uuidMatchesRoot = jp.query(old, '$[?(@.uuid)]');
-    const uuidMatchesDescendant = jp.query(old, '$..[?(@.uuid)]');
-    const uuidHolders =  [...uuidMatchesRoot, ...uuidMatchesDescendant];
+    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -959,9 +957,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         }
       }
     }
-    const referenceMatchesRoot = jp.query(old, '$[?(@.references)]');
-    const referenceMatchesDescendant = jp.query(old, '$..[?(@.references)]');
-    const refHolders = [...referenceMatchesRoot, ...referenceMatchesDescendant];
+    const refHolders = jp.query(old, '$..[?(@.references)]');
 
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
@@ -981,9 +977,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       });
     })
 
-    const createdMatchesRoot = jp.query(old, '$[?(@.created)]');
-    const createMatchesDescendant = jp.query(old, '$..[?(@.created)]');
-    const createHolders = [...createdMatchesRoot, ...createMatchesDescendant];
+    const createHolders = jp.query(old, '$..[?(@.created)]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -1020,9 +1014,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
 
     const refSet = {};
 
-    const refMatchesRoot2= jp.query(old, '$[?(@.references)]');
-    const refMatchesDescendant2 = jp.query(old, '$..[?(@.references)]');
-    const refHolders2 = [...refMatchesRoot2, ...refMatchesDescendant2]
+    const refHolders2 = jp.query(old, '$..[?(@.references)]');
     for (let i = 0; i < refHolders2.length; i++) {
       const refs = refHolders2[i].references;
       for (let j = 0; j < refs.length; j++) {
