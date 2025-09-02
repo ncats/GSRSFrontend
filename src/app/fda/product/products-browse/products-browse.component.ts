@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Sort } from '@angular/material/sort';
@@ -37,6 +36,7 @@ import { GeneralService } from '../../service/general.service';
 import { ProductService } from '../service/product.service';
 import { Product, ProductIngredient } from '../model/product.model';
 import { productSearchSortValues } from './product-search-sort-values';
+import jp from 'jsonpath';
 
 @Component({
   selector: 'app-products-browse',
@@ -846,49 +846,49 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   scrub(oldraw: any): any {
     const old = oldraw;
 
-    const activeMoietyHolders = defiant.json.search(old, '//*[_ingredientNameActiveMoieties]');
+    const activeMoietyHolders = jp.query(old, '$..[?(@._ingredientNameActiveMoieties)]');
     for (let i = 0; i < activeMoietyHolders.length; i++) {
       if (activeMoietyHolders[i]._ingredientNameActiveMoieties) {
         delete activeMoietyHolders[i]._ingredientNameActiveMoieties;
       }
     }
 
-    const basisOfStrenghActiveMoietyHolders = defiant.json.search(old, '//*[_basisOfStrengthActiveMoieties]');
+    const basisOfStrenghActiveMoietyHolders = jp.query(old, '$..[?(@._basisOfStrengthActiveMoieties)]');
     for (let i = 0; i < basisOfStrenghActiveMoietyHolders.length; i++) {
       if (basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties) {
         delete basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties;
       }
     }
 
-    const basisOfStrengthSubUuidHolders = defiant.json.search(old, '//*[_basisOfStrengthSubstanceUuid]');
+    const basisOfStrengthSubUuidHolders = jp.query(old, '$..[?(@._basisOfStrengthSubstanceUuid)]');
     for (let i = 0; i < basisOfStrengthSubUuidHolders.length; i++) {
       if (basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid) {
         delete basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid;
       }
     }
 
-    const basisOfStrengthIngNameHolders = defiant.json.search(old, '//*[_basisOfStrengthIngredientName]');
+    const basisOfStrengthIngNameHolders = jp.query(old, '$..[?(@._basisOfStrengthIngredientName)]');
     for (let i = 0; i < basisOfStrengthIngNameHolders.length; i++) {
       if (basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName) {
         delete basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName;
       }
     }
 
-    const substanceUuidHolders = defiant.json.search(old, '//*[_substanceUuid]');
+    const substanceUuidHolders = jp.query(old, '$..[?(@._substanceUuid)]');
     for (let i = 0; i < substanceUuidHolders.length; i++) {
       if (substanceUuidHolders[i]._substanceUuid) {
         delete substanceUuidHolders[i]._substanceUuid;
       }
     }
 
-    const ingredientNameHolders = defiant.json.search(old, '//*[_ingredientName]');
+    const ingredientNameHolders = jp.query(old, '$..[?(@._ingredientName)]');
     for (let i = 0; i < ingredientNameHolders.length; i++) {
       if (ingredientNameHolders[i]._ingredientName) {
         delete ingredientNameHolders[i]._ingredientName;
       }
     }
 
-    const approvalIdHolders = defiant.json.search(old, '//*[_approvalId]');
+    const approvalIdHolders = jp.query(old, '$..[?(@._approvalId)]');
     for (let i = 0; i < approvalIdHolders.length; i++) {
       if (approvalIdHolders[i]._approvalId) {
         delete approvalIdHolders[i]._approvalId;

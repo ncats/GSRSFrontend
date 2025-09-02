@@ -22,7 +22,6 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
@@ -34,6 +33,7 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service';
 import { InvitroAssayInformation, InvitroAssayScreening, InvitroSummary, InvitroReference, InvitroTestAgent, ValidationMessage, InvitroAssayResultInformation } from '../../model/invitro-pharmacology.model';
 import * as _ from 'lodash';
+import jp from 'jsonpath';
 
 @Component({
   selector: 'app-invitro-pharmacology-summary-form',
@@ -935,12 +935,12 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   cleanData(oldraw: any): any {
     const old = oldraw;
 
-    const assayResults = defiant.json.search(old, '//*[_assayResults]');
+    const assayResults = jp.query(old, '$..[?(@._assayResults)]');
     for (let i = 0; i < assayResults.length; i++) {
       delete assayResults[i]._assayResults;
     }
 
-    const selectedAssay = defiant.json.search(old, '//*[_selectedAssay]');
+    const selectedAssay = jp.query(old, '$..[?(@._selectedAssay)]');
     for (let i = 0; i < selectedAssay.length; i++) {
       delete selectedAssay[i]._selectedAssay;
     }
@@ -959,43 +959,42 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   scrub(oldraw: any): any {
     const old = oldraw;
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
       }
     }
 
-    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    const createHolders = jp.query(old, '$..[?(@.creationDate)]');
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    const modifyHolders = jp.query(old, '$..[?(@.lastModifiedDate)]');
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
     }
 
-    const assayResults = defiant.json.search(old, '//*[_assayResults]');
+    const assayResults = jp.query(old, '$..[?(@._assayResults)]');
     for (let i = 0; i < assayResults.length; i++) {
       delete assayResults[i]._assayResults;
     }
-
 
     delete old['creationDate'];
     delete old['createdBy'];

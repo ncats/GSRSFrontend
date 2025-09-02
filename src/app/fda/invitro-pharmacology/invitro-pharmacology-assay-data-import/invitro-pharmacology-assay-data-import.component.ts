@@ -21,7 +21,6 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';

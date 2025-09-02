@@ -23,7 +23,6 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import {Title} from '@angular/platform-browser';
 import {AuthService} from '@gsrs-core/auth';
 import {take, map} from 'rxjs/operators';
@@ -1191,8 +1190,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         refs[j] = _map[or];
       }
     }
-    //removed redundant search 4 August 2025 MAM
-    //defiant.json.search(old, '//*[uuid]');
     let remove = ['BDNUM'];
     if (this.configService.configData && this.configService.configData.filteredDuplicationCodes) {
       remove = this.configService.configData.filteredDuplicationCodes;
@@ -1211,6 +1208,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       delete rec['lastEditedBy'];
     }
 
+    //originatorUuid occurs in relationships, down the object model, so we don't need to 
+    //  search the root
     const originHolders = jp.query(old, '$..[?(@.originatorUuid)]');
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
@@ -1238,7 +1237,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const refSet = {};
 
-    const refHolders2 =  jp.query(old, '$..[?(@.references)]');
+    const refHolders2 = jp.query(old, '$..[?(@.references)]');
     for (let i = 0; i < refHolders2.length; i++) {
       const refs = refHolders2[i].references;
       for (let j = 0; j < refs.length; j++) {

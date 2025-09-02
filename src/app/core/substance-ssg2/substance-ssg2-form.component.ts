@@ -23,7 +23,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
 import { take, map } from 'rxjs/operators';
@@ -38,6 +37,7 @@ import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragme
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
+import jp from 'jsonpath';
 
 @Component({
   selector: 'app-substance-ssg2-form',
@@ -926,7 +926,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     }
     const old = oldraw;
 
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     const idMap = {};
     for (let i = 0; i < idHolders.length; i++) {
       const oid = idHolders[i].id;
@@ -939,7 +939,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       }
     }
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -957,7 +957,8 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         }
       }
     }
-    const refHolders = defiant.json.search(old, '//*[references]');
+    const refHolders = jp.query(old, '$..[?(@.references)]');
+
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -966,7 +967,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         refs[j] = _map[or];
       }
     }
-    defiant.json.search(old, '//*[uuid]');
     let remove = ['BDNUM'];
     if (this.configService.configData && this.configService.configData.filteredDuplicationCodes) {
       remove = this.configService.configData.filteredDuplicationCodes;
@@ -977,7 +977,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       });
     })
 
-    const createHolders = defiant.json.search(old, '//*[created]');
+    const createHolders = jp.query(old, '$..[?(@.created)]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -986,7 +986,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       delete rec['lastEditedBy'];
     }
 
-    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    const originHolders = jp.query(old, '$..[?(@.originatorUuid)]');
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
       delete rec['originatorUuid'];
@@ -1012,32 +1012,29 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     delete old['changeReason'];
 
 
-    if (true) {
-      const refSet = {};
+    const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, '//*[references]');
-      for (let i = 0; i < refHolders2.length; i++) {
-        const refs = refHolders2[i].references;
-        for (let j = 0; j < refs.length; j++) {
-          const or = refs[j];
-          if (typeof or === 'object') { continue; }
-          refSet[or] = true;
-        }
+    const refHolders2 = jp.query(old, '$..[?(@.references)]');
+    for (let i = 0; i < refHolders2.length; i++) {
+      const refs = refHolders2[i].references;
+      for (let j = 0; j < refs.length; j++) {
+        const or = refs[j];
+        if (typeof or === 'object') { continue; }
+        refSet[or] = true;
       }
-
-      const nrefs = _.chain(old.references)
-        .filter(function (ref) {
-          if (refSet[ref.uuid]) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .value();
-
-      old.references = nrefs;
-
     }
+
+    const nrefs = _.chain(old.references)
+      .filter(function (ref) {
+        if (refSet[ref.uuid]) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .value();
+
+    old.references = nrefs;
 
     return old;
   }

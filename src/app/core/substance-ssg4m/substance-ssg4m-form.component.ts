@@ -15,7 +15,6 @@ import { take, map } from 'rxjs/operators';
 import { Subscription, Observable } from 'rxjs';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 // GSRS Import
@@ -41,6 +40,7 @@ import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-
 import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
 import { environment } from '@gsrs-core/../../environments/environment';
 import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
+import jp from 'jsonpath';
 
 @Component({
   selector: 'app-substance-ssg4m-form',
@@ -1175,7 +1175,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }
     const old = oldraw;
 
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     const idMap = {};
     for (let i = 0; i < idHolders.length; i++) {
       const oid = idHolders[i].id;
@@ -1188,7 +1188,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       }
     }
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -1206,7 +1206,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         }
       }
     }
-    const refHolders = defiant.json.search(old, '//*[references]');
+    const refHolders = jp.query(old, '$..[?(@.references)]');
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -1215,11 +1215,10 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         refs[j] = _map[or];
       }
     }
-    defiant.json.search(old, '//*[uuid]');
     _.remove(old.codes, {
       codeSystem: 'BDNUM'
     });
-    const createHolders = defiant.json.search(old, '//*[created]');
+    const createHolders = jp.query(old, '$..[?(@.created)]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -1228,7 +1227,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       delete rec['lastEditedBy'];
     }
 
-    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    const originHolders = jp.query(old, '$..[?(@.originatorUuid)]');
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
       delete rec['originatorUuid'];
@@ -1257,7 +1256,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     if (true) {
       const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, '//*[references]');
+      const refHolders2 = jp.query(old, '$..[?(@.references)]');
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
