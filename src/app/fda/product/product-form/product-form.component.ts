@@ -1,25 +1,29 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { ProductService } from '../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { UtilsService } from '@gsrs-core/utils/utils.service';
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { Product, ValidationMessage } from '../model/product.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Title, DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import * as moment from 'moment';
 import { Title } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import * as moment from 'moment';
+
+/* GSRS Core Imports */
+import { LoadingService } from '@gsrs-core/loading';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import jp from 'jsonpath';
+/* GSRS Product Imports */
+import { ProductService } from '../service/product.service';
+import { Product, ValidationMessage } from '../model/product.model';
 
 @Component({
   selector: 'app-product-form',
@@ -29,30 +33,39 @@ import jp from 'jsonpath';
 
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  product: Product;
-  id?: number;
-  isLoading = true;
-  showSubmissionMessages = false;
-  submissionMessage: string;
-  validationMessages: Array<ValidationMessage> = [];
-  validationResult = false;
+  /* Array data type */
   private subscriptions: Array<Subscription> = [];
-  copy: string;
-  private overlayContainer: HTMLElement;
-  serverError: boolean;
-  isDisableData = false;
+  validationMessages: Array<ValidationMessage> = [];
+  provenanceFieldMessage: Array<String> = [];
+  effectiveTimeMessage: any[][] = [];
+
+  /* object data type */
+  product: Product;
+  overlayContainer: HTMLElement;
+  downloadJsonHref: any;
+
+  /* string data type */
   username = null;
   title = null;
-  isAdmin = false;
-  disableMarketingCategoryCode = true;
   expiryDateMessage = '';
   manufactureDateMessage = '';
   viewProductUrl = '';
   message = '';
-  downloadJsonHref: any;
+  copy: string;
+  submissionMessage: string;
   jsonFileName: string;
-  provenanceFieldMessage: Array<String> = [];
-  effectiveTimeMessage: any[][] = [];
+ 
+  /* number data type */
+  id?: number;
+
+  /* boolean data type */
+  isAdmin = false;
+  isLoading = true;
+  isDisableData = false;
+  showSubmissionMessages = false;
+  validationResult = false;
+  disableMarketingCategoryCode = true;
+  serverError: boolean;
 
   constructor(
     private productService: ProductService,
@@ -505,7 +518,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       data: data
     });
 
-    // this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
@@ -819,6 +832,44 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.subscriptions.push(cvSubscription);
+  }
+
+  changeEffectiveDate(event: MatDatepickerInputEvent<Date>): void {
+    if (event.value) {
+      this.product.effectiveDate = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
+
+  changeEndDate(event: MatDatepickerInputEvent<Date>): void {
+    if (event.value) {
+      this.product.endDate = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
+
+  changestartMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
+    if (event.value) {
+      this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
+
+  changeEndMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
+    if (event.value) {
+      this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
+
+  changeEffectiveTime(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodDocIndex: number): void {
+    if (event.value) {
+      this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = moment(event.value).format('MM/DD/YYYY');
+    }
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 
   scrub(oldraw: any): any {

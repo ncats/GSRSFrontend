@@ -31,6 +31,7 @@ import { StructureImageModalComponent, StructureService } from '@gsrs-core/struc
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 
 /* GSRS Product Imports */
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { GeneralService } from '../../service/general.service';
 import { ProductService } from '../service/product.service';
 import { Product, ProductIngredient } from '../model/product.model';
@@ -138,6 +139,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   private subscriptions: Array<Subscription> = [];
 
   constructor(
+    public bulkSearchService: BulkSearchService,
     public productService: ProductService,
     private authService: AuthService,
     private facetManagerService: FacetsManagerService,
@@ -899,8 +901,80 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return old;
   }
 
+  createQueryTextWithIds(idListForSearch: Array<string>, entity: string, rootId: boolean = false): string {
+    let queryText = '';
+
+    idListForSearch.forEach((id, index) => {
+      if (id) {
+        if (index > 0) {
+          queryText = queryText + '\n';
+        }
+        if (entity && entity === 'substances') {
+          queryText = queryText + 'root_uuid:"' + id + '"';
+        } else {
+          if (rootId) {
+            queryText = queryText + 'root_id:"' + id + '"';
+          } else {
+            queryText = queryText + 'entity_link_substances:"' + id + '"';
+          }
+        }
+      }
+    });
+
+    return queryText;
+  }
+
+  getBulkQuery(substanceIdLists: Array<string>, entity: string) {
+    let queryText = this.createQueryTextWithIds(substanceIdLists, entity);
+
+    if (queryText) {
+      this.bulkSearchService.postOrPutBulkQuery(entity, queryText).subscribe(result => {
+        if (result) {
+          if (result.id) {
+            this.forwardToSubstance(result.id);
+          }
+        }
+      });
+    }
+  }
+
+  showAllSubstances() {
+    this.getSearchIdsOnly(true, "all substances");
+  }
+
+  forwardToSubstance(bulkQID: number) {
+
+    let currentUrl = this.location.path();
+    alert('Current URL:' + currentUrl);
+
+    // store values in array to retreive later from localStorage
+    let item = {
+      'allSubFromProductUrl': currentUrl
+    };
+
+    // Store current url in cookies
+    const searchItemHash = this.utilsService.hashCode();
+
+    // Store parameters in local storage
+    localStorage.setItem(searchItemHash.toString(), JSON.stringify(item));
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    if (bulkQID > 0) {
+      navigationExtras.queryParams['bulkQID'] = bulkQID;
+    }
+
+    if (searchItemHash) {
+      navigationExtras.queryParams['allSubFromProd-hash'] = searchItemHash;
+    }
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
   // Need this for Cross Entity Search. Return all the IDs only for the current search
-  getSearchIdsOnly(doPerformSearch: boolean) {
+  getSearchIdsOnly(doPerformSearch: boolean = true, searchType?: string) {
     if (doPerformSearch) {
       let idListsTemp: Array<string> = [];
 
@@ -933,8 +1007,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
               // Copy after the last record
               if (response.content.length == index + 1) {
 
-                // Get Search Product Ids
-                this.getSearchProductIds(idListsTemp);
+                if (searchType && searchType === 'all substances') {
+                  this.getBulkQuery(idListsTemp, 'substances',);
+                } else {
+                  // Get Search Product Ids for Cross Entity Search
+                  this.getSearchProductIds(idListsTemp);
+                }
 
                 // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
                 // this.idLists = idListsTemp;

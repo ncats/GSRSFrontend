@@ -15,6 +15,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding-top: 110px;
+  padding-right: 70px;
 }
 
 .scrollable-container {
@@ -46,10 +47,6 @@
   color: var(--regular-blue-color);
 
   /*padding-left: 70px; */
-}
-
-.divflex {
-  display: flex;
 }
 
 .divflex {
@@ -313,6 +310,14 @@
   margin-left: 30px;
 }
 
+.marginleft180px {
+  margin-left: 180px;
+}
+
+.marginright20px {
+  margin-right: 20px;
+}
+
 .padtop5px {
   padding-top: 5px;
 }
@@ -327,6 +332,18 @@
 
 .padtop17px {
   padding-top: 17px;
+}
+
+.padright40px {
+  padding-right: 40px;
+}
+
+.backgroundcolorgreen {
+  background-color: rgb(87, 205, 87);
+}
+
+.backgroundcolorred {
+  background-color: rgb(255, 63, 63);
 }
 
 .bordergray {
@@ -353,6 +370,10 @@
   width: 32%;
 }
 
+.widthmax100percent {
+  max-width: 100%;
+}
+
 .colorgray {
   color: var(--regular-grey-color);
 }
@@ -363,6 +384,11 @@
 
 .colorgreen {
   color: var(--regular-green-color);
+}
+
+.colorblue {
+  /* BLUE CODE Hex: #007CBA */
+  color: #007CBA;
 }
 
 .font11px {
@@ -387,6 +413,10 @@
 
 .font18px {
   font-size: 18px;
+}
+
+.font20px {
+  font-size: 20px;
 }
 
 .textalignright {
@@ -516,8 +546,11 @@ table.tableStyle {
   border: 1px solid var(--secondary-blue-color);
   background-color: var(--table-bg-color);
   width: 100%;
+  max-width: 100%;
   text-align: left;
   border-collapse: collapse;
+  margin: 0 auto;
+  padding-right: 60px;
 }
 
 table.tableStyle td, table.tableStyle th {
@@ -526,7 +559,7 @@ table.tableStyle td, table.tableStyle th {
 }
 
 table.tableStyle tbody td {
-  font-size: 16px;
+  font-size: 12px;
   vertical-align: top;
   padding: 10px 10px;
 }

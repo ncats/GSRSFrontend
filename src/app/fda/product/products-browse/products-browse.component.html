@@ -258,6 +258,12 @@
           [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="productSearch">
         </app-product-text-search>
 
+        <div>
+          <button class="margintop10px marginleft20px" mat-raised-button color="primary" (click)="showAllSubstances()"
+            matTooltip="Show All Substances associated with these Product records">
+            <span>Show All Substances</span>
+          </button>
+        </div>
       </div>
 
       <!-- ******** Display Content Details ******** -->
@@ -364,7 +370,6 @@
                           </span>
                           <!-- No Ingredient Type, Display Ingredient Name -->
                           <ng-template #noIngredientType>
-                            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                             <!-- if No Ingredient Type, but have Substance Name, display here. -->
                             <div *ngIf="prodIngred._ingredientName">
                               <li class="">
@@ -837,7 +842,7 @@
                                   <!--
                                   <mat-icon class="margintop5px font16px"
                                     matTooltip="Approval ID: {{prodIngred._approvalId}}">verified</mat-icon>
-                                  -->                                
+                                  -->
                                 </div>
 
                               </div> <!-- class=divflex -->

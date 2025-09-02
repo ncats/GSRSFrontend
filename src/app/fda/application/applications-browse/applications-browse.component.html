@@ -137,7 +137,8 @@
               </button>
             </div>
           </div>
-          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()" matTooltip="Clear All Search Criteria"
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+            matTooltip="Clear All Search Criteria"
             *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
             <span>RESET</span>
           </button>
@@ -150,7 +151,8 @@
 
             <div class="search-parameters">
               <div class="marginleftneg10">
-                <div class="mat-elevation-z2 selected-parameter marginright10px" *ngFor="let facet of subEntityDisplayFacets">
+                <div class="mat-elevation-z2 selected-parameter marginright10px"
+                  *ngFor="let facet of subEntityDisplayFacets">
                   <div class='selected-parameter-crosssearch'>
                     <span class="selected-label">
                       <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
@@ -245,16 +247,12 @@
           eventCategory="applicationSearch">
         </app-application-text-search>
 
-        <!-- Search Any Text Text Box -->
-        <!--
-        <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
-            size="50" />
-        </mat-form-field>
-        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-        -->
+        <div>
+          <button class="margintop10px marginleft20px" mat-raised-button color="primary" (click)="showAllSubstances()"
+            matTooltip="Show All Substances associated with these Application records">
+            <span>Show All Substances</span>
+          </button>
+        </div>
       </div>
 
       <!--********** Display Content Details ******* -->

@@ -179,7 +179,7 @@ export interface InvitroSponsorSubmitter {
   modifiedBy?: string;
   internalVersion?: number;
   sponsorReportSubmitterName?: string;
-  sponsorRepoortSubmitterTitle?: string;
+  sponsorReportSubmitterTitle?: string;
   sponsorReportSubmitterAffiliation?: string;
   sponsorReportSubmitterEmail?: string;
   sponsorReportSubmitterPhoneNumber?: string;
