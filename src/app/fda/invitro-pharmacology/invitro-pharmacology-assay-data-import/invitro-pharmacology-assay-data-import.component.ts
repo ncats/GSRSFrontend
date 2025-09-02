@@ -313,18 +313,19 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     // Loop through each Assay JSON Record, and save into the database
     this.importedAssayJson.forEach((element, index) => {
 
-      this.submitMessage = 'Validating Assay records in Excel file ' + (index + 1) + ' of ' + this.importedAssayJson.length + ', please wait .....';
-
       if (element) {
         let validationMessages: Array<ValidationMessage> = [];
 
         const assay = JSON.parse(JSON.stringify(element));
         this.invitroPharmacologyService.assay = assay;
 
+        this.submitMessage = 'Validating Assay records in Excel file ' + (index + 1) + ' of ' + this.importedAssayJson.length + ', please wait .....';
+
+
         // Validate Assay
         const validateSubscription = this.invitroPharmacologyService.validateAssay().subscribe(response => {
 
-          // Populated 'Substance Key' and 'Substance Key Type' for Target Name, Homolog, Substrate
+          // Populated Substance Key and Substance Key Type for Target Name, Homolog, Substrate
           if (element['targetName']) {
             this.getSubstanceNameDetails(element, element['targetName'], this.TARGET_NAME, validationMessages, index);
           }
@@ -341,25 +342,10 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
           if (validationMessagesResponse && validationMessagesResponse.length > 0) {
             validationMessagesResponse.forEach(validation => {
-              let isPush = true;
               if (validation) {
-                if (validation.message && validation.message === 'Target Name is required.') {
-                  if (!element['targetName'] && element['targetNameApprovalId']) {
-                    isPush = false;
-                    response.valid = true;
-                  }
-                }
-
-                if (isPush == true) {
-                  validationMessages.push(validation);
-                }
+                validationMessages.push(validation);
               }
             });
-          }
-
-          // Populate 'Target Name' if 'Target Name Approval Id' is available, and 'Target Name' is empty 
-          if (!element['targetName'] && element['targetNameApprovalId']) {
-            this.getTargetNameByApprovalId(element, element['targetNameApprovalId'], this.TARGET_NAME, validationMessages, index);
           }
 
           const saved = { 'indexRecord': index, 'invitroAssaySets': assay.invitroAssaySets, 'externalAssaySource': assay.externalAssaySource, 'externalAssayId': assay.externalAssayId, 'targetName': assay.targetName, 'validationMessages': validationMessages, 'valid': response.valid }
@@ -413,7 +399,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     validate.message = message;
     validate.messageType = 'ERROR';
     validationMessages.push(validate);
-
+   
     this.importValidateMessageArray[index].valid = false;
 
     // Disable Import to Database button
@@ -525,114 +511,88 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
     let found = false;
 
-    if (ingredientName) {
-      const substanceSubscribe = this.generalService.getSubstanceByNameExactMatch(ingredientName).subscribe(response => {
-        if (response) {
-          if (response.content && response.content.length > 0) {
+    const substanceSubscribe = this.generalService.getSubstanceByNameExactMatch(ingredientName).subscribe(response => {
+      if (response) {
+        if (response.content && response.content.length > 0) {
 
-            // Loop through the search results and if the Substance/Ingredient name is same as name in the search
-            // result, select that substance
-            let substances = response.content;
-            for (let i = 0; i < substances.length; i++) {
-              let substance = substances[i];
-              if (substance) {
-                if (substance.names && substance.names.length > 0) {
+          // Loop through the search results and if the Substance/Ingredient name is same as name in the search
+          // result, select that substance
+          let substances = response.content;
+          for (let i = 0; i < substances.length; i++) {
+            let substance = substances[i];
+            if (substance) {
+              if (substance.names && substance.names.length > 0) {
 
-                  substance.names.forEach(nameObj => {
-                    if (nameObj && nameObj.name === ingredientName.toUpperCase()) {
+                substance.names.forEach(nameObj => {
+                  if (nameObj && nameObj.name === ingredientName) {
 
-                      found = true;
+                    found = true;
 
-                      let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
+                    let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
 
-                      if (fieldName == this.TARGET_NAME) {
-                        element["targetNameSubstanceUuid"] = substance.uuid;
-                        element["targetNameSubstanceKey"] = substanceKey;
-                        element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
-
-                        if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"] !== substance.approvalID)) {
-                          this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
-                        }
+                    if (fieldName == this.TARGET_NAME) {
+                      element["targetNameSubstanceUuid"] = substance.uuid;
+                      element["targetNameSubstanceKey"] = substanceKey;
+                      element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
+                    
+                      if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"] !== substance.approvalID)) {
+                        this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"]  + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                       }
-                      else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
-                        element["humanHomologTargetSubstanceKey"] = substanceKey;
-                        element["humanHomologTargetSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
-
-                        if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"] !== substance.approvalID)) {
-                          this.setValidationMessage(this.HUMAN_HOMOLOG_TARGET + ' Approval ID "' + element["humanHomologTargetApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
-                        }
+                    } 
+                    else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
+                      element["humanHomologTargetSubstanceKey"] = substanceKey;
+                      element["humanHomologTargetSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
+                    
+                      if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"] !== substance.approvalID)) {
+                        this.setValidationMessage(this.HUMAN_HOMOLOG_TARGET + ' Approval ID "' + element["humanHomologTargetApprovalId"]  + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                       }
-                      else if (fieldName == this.LIGAND_SUBSTRATE) {
-                        element["ligandSubstrateSubstanceKey"] = substanceKey;
-                        element["ligandSubstrateSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
-
-                        if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"] !== substance.approvalID)) {
-                          this.setValidationMessage(this.LIGAND_SUBSTRATE + ' Approval ID "' + element["ligandSubstrateApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
-                        }
+                    } 
+                    else if (fieldName == this.LIGAND_SUBSTRATE) {
+                      element["ligandSubstrateSubstanceKey"] = substanceKey;
+                      element["ligandSubstrateSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
+                    
+                      if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"] !== substance.approvalID)) {
+                        this.setValidationMessage(this.LIGAND_SUBSTRATE + ' Approval ID "' + element["ligandSubstrateApprovalId"]  + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                       }
                     }
-                  }); // substance names for loop
-                } // if names exist
-              } // if substance exists
-            } // substances for loop
+                  }
+                }); // substance names for loop
+              } // if names exist
+            } // if substance exists
+          } // substances for loop
 
-            if (found == false) {
-              this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
-            }
-
-            if (fieldName == this.TARGET_NAME) {
-              this.targetNameCheckCompleted = true;
-            } else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
-              this.humanHomologCheckCompleted = true;
-            } else if (fieldName == this.LIGAND_SUBSTRATE) {
-              this.ligandCheckCompleted = true;
-            }
-
-            // Enable Database Import button
-            if (this.targetNameCheckCompleted && this.targetNameCheckCompleted && this.targetNameCheckCompleted) {
-              //  this.disableImportButton = "false";
-            }
-
-          } // if content > 0
-          else {
+          if (found == false) {
             this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
           }
-        } // if response 
+
+          if (fieldName == this.TARGET_NAME) {
+            this.targetNameCheckCompleted = true;
+          } else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
+            this.humanHomologCheckCompleted = true;
+          } else if (fieldName == this.LIGAND_SUBSTRATE) {
+            this.ligandCheckCompleted = true;
+          }
+
+          // Enable Database Import button
+          if ( this.targetNameCheckCompleted &&  this.targetNameCheckCompleted &&  this.targetNameCheckCompleted) {
+          //  this.disableImportButton = "false";
+          }
+
+        } // if content > 0
         else {
           this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
         }
-      }, error => {
+      } // if response 
+      else {
         this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
-      }, () => {
+      }
+    }, error => {
+      this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
+    }, () => {
+     
 
-
-      });
-      this.subscriptions.push(substanceSubscribe);
-    }
-  }
-
-  getTargetNameByApprovalId(element: any, approvalId: string, fieldName: string, validationMessages: Array<ValidationMessage>, index: number) {
-    if (approvalId) {
-      this.generalService.getSubstanceByAnyIdFullView(approvalId).subscribe(substance => {
-        if (substance) {
-          if (substance._name) {
-            let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
-
-            if (fieldName == this.TARGET_NAME) {
-              element["targetName"] = substance._name;
-              element["targetNameSubstanceUuid"] = substance.uuid;
-              element["targetNameSubstanceKey"] = substanceKey;
-              element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
-
-              // Set the Target Name if found into the database by Target Name Approval ID
-              this.importValidateMessageArray[index].targetName = substance._name;
-            }
-          }
-        }
-      }, error => {
-        this.setValidationMessage('Target Name is required.', validationMessages, index);
-      });
-    }
+    });
+    this.subscriptions.push(substanceSubscribe);
   }
 
   showJSON(): void {

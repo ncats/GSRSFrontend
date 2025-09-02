@@ -23,6 +23,84 @@
       </div>
     </div> <!-- class=divflex -->
 
+    <!--
+    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
+      <span>Export JSON</span>
+    </a>&nbsp;&nbsp;&nbsp;
+    -->
+
+    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
+    <!--
+    <span *ngIf="assay && !assay.id">
+      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
+    </span>
+    -->
+
+    <!--
+    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0">
+      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
+      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    </button>
+    <span class="middle-fill"></span>
+
+    <!- - Assay Details Link - ->
+    <a mat-flat-button color="primary" routerLink="/invitro-pharm/{{assay.id}}" target="_blank"
+      matTooltip='Opens in a new window' *ngIf="assay && assay.id">
+      View Assay Details
+      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+    <!- - Validate and Submit Button - ->
+    &nbsp;
+    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
+  </div> <!- - div class=actions-container- ->
+
+
+  <!- - Validation Message Display - ->
+  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+    <div class="submission-message" *ngIf="submissionMessage">
+      {{submissionMessage}}
+    </div>
+
+
+    <!- - Validation Message Display and Submit Button - ->
+    <div *ngIf="validationMessages">
+      <span *ngIf=" validationMessages.length > 0">
+        <div class="submission-message" *ngIf='!serverError && !approving'>
+          Please correct or dismiss the following errors and submit again:
+        </div>
+        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
+            {{message.messageType}}</div>
+          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
+                target="_blank">{{link.text}}</a></span></div>
+          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+            (click)="dismissValidationMessage(i)">
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </div>
+      </span>
+
+      <div class="dismiss-container">
+        <span class="middle-fill"></span>
+        <button mat-flat-button color="primary" (click)="submit()"
+          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
+          validationMessages.length > 0?'Dismiss All and ':''}}
+          Submit</button>
+      </div>
+      -->
+      <div>
+        <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
+          [disabled]="disableImportButton">
+          Import Data into Database
+        </button>
+      </div>
+    </div> <!-- class=divflex -->
+
   </div> <!-- div class=actions-container -->
 </div> <!-- div class=top-fixed -->
 
@@ -73,7 +151,7 @@
             <span class="font14px"><b>1. Reference Information</b></span><br><br>
 
             <span class="fieldKey">Reference Source Type <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">
+            <span class="fieldValue">
               {{invitroReference.sourceType}}
 
               <!-- Required Field message -->
@@ -316,6 +394,7 @@
             <table class="tableStyle">
               <tr>
                 <td>Number</td>
+                <td>Assay Found In Database</td>
                 <td>External Assay Source <span class="colorred">*</span></td>
                 <td>External Assay ID <span class="colorred">*</span></td>
                 <td>Assay ID</td>
@@ -328,6 +407,26 @@
 
               <tr valing="top" class="font11px" *ngFor="let ctrl of invitroControlsTemp; let indexControl = index">
                 <td>{{(indexControl+1)}}</td>
+
+                <td>
+                  <span *ngIf="ctrl.assayFoundInDb && ctrl.assayFoundInDb == 'true'">
+                    <div class="backgroundgreen"><span class="colorwhite">YES</span></div>
+                  </span>
+                  <span *ngIf="ctrl.assayFoundInDb && ctrl.assayFoundInDb == 'false'">
+                    <div class="backgroundred"><span class="colorwhite">NO
+                      </span>
+                    </div>
+                    <br>
+
+                    <!-- Register Assay Link -->
+                    <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank" *ngIf="isAdmin"
+                      matTooltip='Register In Vitro Pharmacology Assay'> Register Assay
+                    </a>
+                  </span>
+                  <span *ngIf="ctrl.assayFoundInDb && ctrl.assayFoundInDb == 'Error getting Assay'">
+                    <div class="backgroundred"><span class="colorwhite">ERROR</span></div>
+                  </span>
+                </td>
 
                 <td>{{ctrl.externalAssaySource}}
 

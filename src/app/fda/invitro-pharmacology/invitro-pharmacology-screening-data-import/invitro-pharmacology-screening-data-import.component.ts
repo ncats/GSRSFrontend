@@ -115,9 +115,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     else {
       // Empty the list
       this.importDataList.length = 0;
-      //requiredFieldMissingArray = [{}];
-      
-      this.initializeRequiredFieldArray();
+      this.requiredFieldMissingArray = [{}];
 
       // Assign FileReader
       const reader: FileReader = new FileReader();
@@ -162,13 +160,6 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   }
 
-  initializeRequiredFieldArray() {
-    this.requiredFieldMissingArray = [{}];
-
-    this.requiredFieldMissingArray[0].sourceType = false;
-    this.requiredFieldMissingArray[0].controlExternalAssaySource = false;
-
-  }
   getInvitroReference(workbook: XLSX.WorkBook) {
     // Read the Second Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "1. Reference and Laboratory"

@@ -28,6 +28,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
 import { Application, ValidationMessage } from '../model/application.model';
+import { forEach } from 'lodash';
 
 @Component({
   selector: 'app-application-form',
@@ -207,15 +208,24 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       this.setValidationMessage('Application Number is required');
     }
 
-    // Validate Center and do not allow CDER and CBER data to register new record
+    // Validate Center. DO NOT ALLOW to register Application if the center on the form is same as the center lists in the config.json file.
     if (this.application.center) {
       // if registering a new record
       if (!this.id) {
-        if (this.application.center === 'CDER' || this.application.center === 'CBER') {
-          this.setValidationMessage('Application registration not allowed for ' + this.application.center);
-        }
-      }
-    }
+        // get list of centers that are not allowed to register Application from config.json file.
+        if (this.regAppCenterNotAllowedConfig) {
+          if (Array.isArray(this.regAppCenterNotAllowedConfig)) {
+            this.regAppCenterNotAllowedConfig.forEach(center => {
+              if (center) {
+                if (this.application.center === center) {
+                  this.setValidationMessage('Application registration not allowed for ' + this.application.center);
+                }
+              }
+            }); // forEach loop
+          } // if config values is an Array
+        } // if configuration value found in the config file
+      } // if id exists
+    } // if application.center is not null
 
     // Validate Submit Date in application
     if ((this.submitDateMessage !== null) && (this.submitDateMessage.length > 0)) {

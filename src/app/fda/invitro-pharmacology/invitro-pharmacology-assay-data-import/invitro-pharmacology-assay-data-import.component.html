@@ -55,7 +55,7 @@
           </div>
 
           <!-- Link to All Assay page -->
-          <div class="marginleft20px">
+          <div class="marginleft20px" *ngIf="importSaveMessageArray.length > 0">
             <div class="marginleft50px">
               <a mat-flat-button color="primary" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
                 target="_blank" alt="View All Assay Lists" matTooltip='View All Assay Lists, Opens in a new window'>
