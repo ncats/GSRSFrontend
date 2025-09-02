@@ -145,7 +145,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                   this.invitroPharmacologyService.loadAssayOnly(response);
                   this.assay = this.invitroPharmacologyService.assay;
 
-                  console.log("AAAAAAAAAAAAAAAA " + JSON.stringify(this.assay));
                   // Get All the Assay Sets for checkboxes on the form
                   this.getAllAssaySets();
 

@@ -1356,10 +1356,80 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
+  createQueryTextWithIds(idListForSearch: Array<string>, entity: string, rootId: boolean = false): string {
+    let queryText = '';
+
+    idListForSearch.forEach((id, index) => {
+      if (id) {
+        if (index > 0) {
+          queryText = queryText + '\n';
+        }
+        if (entity && entity === 'substances') {
+          queryText = queryText + 'root_uuid:"' + id + '"';
+        } else {
+          if (rootId) {
+            queryText = queryText + 'root_id:"' + id + '"';
+          } else {
+            queryText = queryText + 'entity_link_substances:"' + id + '"';
+          }
+        }
+      }
+    });
+
+    return queryText;
+  }
+
+  getBulkQuery(substanceIdLists: Array<string>, entity: string) {
+    let queryText = this.createQueryTextWithIds(substanceIdLists, entity);
+
+    if (queryText) {
+      this.bulkSearchService.postOrPutBulkQuery(entity, queryText).subscribe(result => {
+        if (result) {
+          if (result.id) {
+            this.forwardToSubstance(result.id, entity);
+          }
+        }
+      });
+    }
+  }
+
+  showAllApplications() {
+    this.getSearchIdsOnly(true, "all applications");
+  }
+
+  showAllProducts() {
+    this.getSearchIdsOnly(true, "all products");
+  }
+
+  forwardToSubstance(bulkQID: number, entity: string) {
+    // Store current url in cookies
+
+    const searchItemHash = this.utilsService.hashCode();
+
+    // Store parameters in local storage
+    // localStorage.setItem(searchItemHash.toString(), JSON.stringify(item));
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    if (bulkQID > 0) {
+      navigationExtras.queryParams['bulkQID'] = bulkQID;
+    }
+
+    if (entity && entity === 'applications') {
+      this.router.navigate(['/browse-applications'], navigationExtras);
+    } else if (entity && entity === 'products') {
+      this.router.navigate(['/browse-products'], navigationExtras);
+    } else {
+      this.router.navigate(['/browse-substance'], navigationExtras);
+    }
+  }
+
   // Need this for Cross Entity Search. Return all the IDs only for the current search
-  getSearchIdsOnly(doPerformSearch: boolean) {
+  getSearchIdsOnly(doPerformSearch: boolean, searchType?: string) {
     if (doPerformSearch) {
-      let idListsTemp: Array<String> = [];
+      let idListsTemp: Array<string> = [];
 
       let iterations = 0;
       const skip = 0;
@@ -1399,8 +1469,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               }
                 // Copy after the last record
               if (results.length == index + 1) {
-                // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
-                this.idLists = idListsTemp;
+                if (searchType && searchType === 'all applications') {
+                  this.getBulkQuery(idListsTemp, 'applications',);
+                } else if (searchType && searchType === 'all products') {
+                  this.getBulkQuery(idListsTemp, 'products',);  
+                } else {
+                  // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                  this.idLists = idListsTemp;
+                }
               }
             }); // forEach
           } else {

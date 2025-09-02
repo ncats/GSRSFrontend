@@ -14,6 +14,7 @@ import { Sort } from '@angular/material/sort';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
@@ -113,6 +114,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   private subscriptions: Array<Subscription> = [];
 
   constructor(
+    public bulkSearchService: BulkSearchService,
     public applicationService: ApplicationService,
     public generalService: GeneralService,
     private activatedRoute: ActivatedRoute,
@@ -247,8 +249,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       // below export statement
       //this.dataSource = this.applications;
 
-       // if Bulk Search is not finished
-       if (pagingResponse.finished) {
+      // if Bulk Search is not finished
+      if (pagingResponse.finished) {
         this.isSearchFinished = true;
       }
 
@@ -680,8 +682,68 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.overlayContainer.style.zIndex = null;
   }
 
+  createQueryTextWithIds(idListForSearch: Array<string>, entity: string, rootId: boolean = false): string {
+    let queryText = '';
+
+    idListForSearch.forEach((id, index) => {
+      if (id) {
+        if (index > 0) {
+          queryText = queryText + '\n';
+        }
+        if (entity && entity === 'substances') {
+          queryText = queryText + 'root_uuid:"' + id + '"';
+        } else {
+          if (rootId) {
+            queryText = queryText + 'root_id:"' + id + '"';
+          } else {
+            queryText = queryText + 'entity_link_substances:"' + id + '"';
+          }
+        }
+      }
+    });
+
+    return queryText;
+  }
+
+  getBulkQuery(substanceIdLists: Array<string>, entity: string) {
+    let queryText = this.createQueryTextWithIds(substanceIdLists, entity);
+
+    if (queryText) {
+      this.bulkSearchService.postOrPutBulkQuery(entity, queryText).subscribe(result => {
+        if (result) {
+          if (result.id) {
+            this.forwardToSubstance(result.id);
+          }
+        }
+      });
+    }
+  }
+
+  showAllSubstances() {
+    this.getSearchIdsOnly(true, "all substances");
+  }
+
+  forwardToSubstance(bulkQID: number) {
+    // Store current url in cookies
+
+    const searchItemHash = this.utilsService.hashCode();
+
+    // Store parameters in local storage
+    // localStorage.setItem(searchItemHash.toString(), JSON.stringify(item));
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    if (bulkQID > 0) {
+      navigationExtras.queryParams['bulkQID'] = bulkQID;
+    }
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
   // Need this for Cross Entity Search. Return all the IDs only for the current search
-  getSearchIdsOnly(doPerformSearch: boolean) {
+  getSearchIdsOnly(doPerformSearch: boolean = true, searchType?: string) {
 
     if (doPerformSearch) {
       let idListsTemp: Array<string> = [];
@@ -714,8 +776,12 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
               // Copy after the last record
               if (response.content.length == index + 1) {
 
-                // Get Search Product Ids
-                this.getSearchApplicationIds(idListsTemp);
+                if (searchType && searchType === 'all substances') {
+                  this.getBulkQuery(idListsTemp, 'substances',);
+                } else {
+                  // Get Search Product Ids for Cross Entity Search
+                  this.getSearchApplicationIds(idListsTemp);
+                }
 
                 // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
                 // this.idLists = idListsTemp;
@@ -808,7 +874,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     // Get Product records that have Ingredients
     this.privateFacetParams['Has Ingredients'] = { 'params': { 'Has Ingredients': true }, 'isAllMatch': false };
-  
+
     const subscription = this.applicationService.getApplications(
       order,
       skip,

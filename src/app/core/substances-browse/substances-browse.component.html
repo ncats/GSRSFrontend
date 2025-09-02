@@ -411,7 +411,8 @@
             </button>
             <!-- <input type="submit"> -->
           </div>
-        <span class = "middle-fill"></span>
+        
+          <span class = "middle-fill"></span>
           <mat-paginator #paginator [length]="totalSubstances" [pageIndex]="pageIndex" [pageSize]="pageSize"
             [pageSizeOptions]="[5, 10, 50, 100]" (page)="changePage($event)" [showFirstLastButtons]="true">
           </mat-paginator>
@@ -428,7 +429,28 @@
             <span class="page-label"> of {{lastPage}}</span>
           </div>
         </div>
+        
+        <div class="divflex">
+        <!-- Button: Show All Applications -->
+        <div>
+          <button class="marginleft20px" mat-raised-button color="primary" (click)="showAllApplications()"
+            matTooltip="Show All Applications associated with these Substance records">
+            <span>Show All Applications</span>
+          </button>
+        </div>
+        
+        <!-- Button: Show All Products -->
+        <div>
+          <button class="marginleft20px" mat-raised-button color="primary" (click)="showAllProducts()"
+            matTooltip="Show All Products associated with these Substance records">
+            <span>Show All Products</span>
+          </button>
+        </div>
+      </div> <!-- class=divflex -->
+
+        <!-- Display Application Matching List, Application, Product, Clinical Trials Export buttons -->          
         <ng-template appBrowseHeaderDynamicSection></ng-template>
+        
         <div class="dynamic container">
         </div>
         <div [ngClass]="view">

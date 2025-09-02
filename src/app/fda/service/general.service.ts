@@ -156,6 +156,38 @@ export class GeneralService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
+  getSubstanceByNameExactMatch(
+    searchTerm?: string,
+    getFacets?: boolean,
+    facets?: FacetParam
+  ): Observable<PagingResponse<any>> {
+    let params = new FacetHttpParams();
+
+    let url = this.apiBaseUrl + 'substances/';
+
+    let nameSearchTerm = 'root_names_name:"^' + searchTerm + '$"';
+
+    if (searchTerm) {
+      params = params.append('q', nameSearchTerm);
+      params = params.append('view', 'full');
+    }
+
+    if (searchTerm != null || getFacets === true) {
+      url += 'search';
+    }
+
+    if (facets != null) {
+      let showDeprecated = false;
+      params = params.appendFacetParams(facets, showDeprecated);
+    }
+
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
+  }
+
   getSearchCount(substanceUuid: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/searchcounts/` + substanceUuid;
     return this.http.get<any>(url)
@@ -165,7 +197,6 @@ export class GeneralService extends BaseHttpService {
         })
       );
   }
-
 
   getProductFacets(): Observable<FacetQueryResponse> {
     let url: string;
