@@ -25,25 +25,26 @@
         </div> <!--  -->
 
         <br><br>
-        <b>Select a file to Import Assays Only:</b>&nbsp;&nbsp;
+        <b>Select an Excel file to Import Assays Only into Database:</b>&nbsp;&nbsp;
 
         <!-- Import EXCEL DATA and convert to JSON -->
         <input type="file" (change)="onFileChange($event)" />
 
-        <!-- -->
+        <!-- Download JSON -->
+        <!-- 
         <div id="output"></div>
         <br>
         <div *ngIf="willDownload">
           <a id="download"> Download JSON File </a>
         </div>
-        <br>
+        -->
 
         <!-- BUTTONS -->
-        <div class="divflex">
+        <div class="divflex margintop30px">
 
           <div>
-            <button mat-flat-button color="primary" (click)="validate()" [disabled]="disableValidateButton">Validate
-              Data</button>
+            <button mat-flat-button color="primary" (click)="validate()" [disabled]="disableValidateButton">
+              Validate Assays</button>
           </div>
 
           <!-- Import Assay JSON into the Database -->
@@ -53,8 +54,8 @@
               into Database</button>
           </div>
 
+          <!-- Link to All Assay page -->
           <div class="marginleft20px" *ngIf="importSaveMessageArray.length > 0">
-            <!-- Link to All Assay page -->
             <div class="marginleft50px">
               <a mat-flat-button color="primary" [routerLink]="['/invitro-pharm']" [queryParams]="{view : 'all-assays'}"
                 target="_blank" alt="View All Assay Lists" matTooltip='View All Assay Lists, Opens in a new window'>
@@ -66,12 +67,13 @@
 
         </div> <!-- class=divflex -->
 
+        <!-- Display Message -->
         <div class="margintop20px font18px colorgreen" *ngIf="submitMessage">
           <b>{{submitMessage}}</b>
           <br><br>
         </div>
 
-        <!-- VALIDATION MESSAGE BEGIN -->
+        <!-- AFTER VALIDATION, DISPLAY VALIDATION RESULTS WITH MESSAGE BEGIN -->
         <div class="margintop30px" *ngIf="importValidateMessageArray.length > 0">
           <div class="font18px"><b>Validation Results</b></div>
 
@@ -94,38 +96,52 @@
 
 
           <!-- Show Validation Message -->
-          <div class="">
-            <table border="1">
+          <div>
+            <table class="tableStyle widthmax100percent">
               <tr>
-                <th>Record Row</th>
-                <th>External Assay Source</th>
-                <th>External Assay ID</th>
+                <th>#</th>
+                <th>Assay Set <span class=colorred>*</span></th>
+                <th>External Assay Source <span class=colorred>*</span></th>
+                <th>External Assay ID <span class=colorred>*</span></th>
+                <th>Assay Target Name <span class=colorred>*</span></th>
                 <th>Validation Error Message</th>
-                <th>Is Valid</th>
+                <th>Validation Pass/Fail</th>
               </tr>
 
               <tr *ngFor="let msg of importValidateMessageArray; let indexMessage = index">
                 <td>{{(msg.indexRecord+1)}}</td>
+                <td>
+                  <div *ngFor="let set of msg.invitroAssaySets; let indexAssaySet = index">
+                    <span *ngIf="indexAssaySet > 0"><br></span>
+                    {{(indexAssaySet+1)}}.&nbsp;{{set.assaySet}}
+                  </div>
+                </td>
                 <td>{{msg.externalAssaySource}}</td>
                 <td>{{msg.externalAssayId}}</td>
+                <td>{{msg.targetName}}</td>
                 <td>
                   <!-- VALIDATION MESSAGE -->
                   <div *ngIf="msg.validationMessages.length > 0">
 
-                    <div class="validation-message" *ngFor="let message of msg.validationMessages; index as i">
-                      <div class="message-type"
-                        [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
-                        {{message.messageType}}</div>
-                      <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a
-                            [href]="link.href" target="_blank">{{link.text}}</a></span></div>
-                      <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-                        (click)="dismissValidationMessage(i)">
-                        <mat-icon svgIcon="cancel"></mat-icon>
-                      </button>
+                    <div class="validation-message" *ngFor="let message of msg.validationMessages; let indexValMsg = index">
+                      <span *ngIf="indexValMsg > 0"><br></span>
+                      &#x2022;&nbsp;{{message.message}}
                     </div>
                   </div>
                 </td>
-                <td>{{msg.valid}}</td>
+                <td [ngClass]="msg.validationMessages && msg.validationMessages.length == 0? 'backgroundcolorgreen' : 'backgroundcolorred'">
+                  <!-- if validation passed -->
+                  <div class="divflex" *ngIf="(msg.validationMessages && msg.validationMessages.length == 0) || (valid === true)">
+                    <div><mat-icon>check</mat-icon></div>
+                    <div><b>Passed</b></div>
+                  </div>
+
+                  <!-- if validation failed -->
+                  <div class="divflex" *ngIf="(msg.validationMessages && msg.validationMessages.length > 0) || (valid === false)">
+                    <div><mat-icon>clear</mat-icon></div>
+                    <div><b>Failed</b></div>
+                  </div>
+                </td>
               </tr>
 
             </table>
@@ -135,22 +151,27 @@
         <!-- VALIDATION MESSAGES END -->
 
 
+        <!-- ****************************************************** -->
         <!-- Records saved into the database -->
         <div class="margintop20px" *ngIf="importSaveMessageArray.length > 0">
 
+
           <!-- SAVED RECORD INTO DATABASE RESULT -->
-          <div class="font18px"><b>Records Saved ({{importSaveMessageArray.length}})</b></div>
+          <div class="font18px"><b>Assay records from Excel file saved into the database (<span
+                class="fontblue">{{importSaveMessageArray.length}}</span>)</b></div>
           <br>
-          <table border="1">
-            <tr>
-              <th>Record Row</th>
+          <table class="tableStyle font12px">
+            <tr class="font12px">
+              <th>Excel File Record Row</th>
+              <th>Assay ID</th>
               <th>External Assay Source</th>
               <th>External Assay ID</th>
               <th>Saved Into The Database</th>
-              <th>Saved Assay Id</th>
+              <th>Saved Assay Details</th>
             </tr>
-            <tr *ngFor="let msg of importSaveMessageArray; let indexMessage = index">
+            <tr class="font12px" *ngFor="let msg of importSaveMessageArray; let indexMessage = index">
               <td>{{(msg.indexRecord+1)}}</td>
+              <td>{{msg.assayId}}</td>
               <td>{{msg.externalAssaySource}}</td>
               <td>{{msg.externalAssayId}}</td>
               <td>{{msg.saved}}</td>
@@ -170,22 +191,27 @@
 
         <!-- DISPLAY JSON -->
         <!-- Display this table if not imported yet -->
-        <div *ngIf="importSaveMessageArray.length == 0">
+        <div class="margintop20px" *ngIf="importSaveMessageArray.length == 0">
           <div *ngIf="importDataList.length > 0">
 
-            <br><br>
-            <span *ngIf="isAllRecordSaved == false">
-              <b>Total Records ready for import into the database:&nbsp;
-                <span class="colorgreen font18px">{{importDataList.length}}</span></b>
-            </span>
+            <div class="divflex" *ngIf="isAllRecordSaved == false">
+              <div class="colorblue"><b>Total Assay Records ready for import into the database from Excel
+                  file:</b>&nbsp;
+                <span class="colorgreen font20px"><b>{{importDataList.length}}</b></span>
+              </div>
+              <div class="marginleft180px font11px">
+                <span class=colorred>*</span> = Required Field
+              </div>
+            </div>
 
-            <br><br>
-            <table class="tableStyle bordergray">
+            <br>
+            <table class="tableStyle margintop30px">
               <tr class="font11px">
                 <th>#</th>
-                <th>Assay Set</th>
-                <th>External Assay Source</th>
-                <th>External Assay ID</th>
+                <th>Assay Set <span class=colorred>*</span></th>
+                <th>Assay ID</th>
+                <th>External Assay Source <span class=colorred>*</span></th>
+                <th>External Assay ID <span class=colorred>*</span></th>
                 <th>External Assay Reference URL</th>
                 <th>Assay Title</th>
                 <th>Assay Format</th>
@@ -197,7 +223,7 @@
                 <th>Presention Type</th>
                 <th>Presentation</th>
                 <th>Public Domain</th>
-                <th>Assay Target Name</th>
+                <th>Assay Target Name <span class=colorred>*</span></th>
                 <th>Assay Target Name Approval ID</th>
                 <th>Target Species</th>
                 <th>Human Homolog Target Name</th>
@@ -206,15 +232,18 @@
                 <th>Ligand/Substrate Approval ID</th>
                 <th>Standard Ligand/Substrate Concentration</th>
                 <th>Standard Ligand/Substrate Concentration Units</th>
+                <th>Analytes</th>
               </tr>
 
               <tr valing="top" class="font11px" *ngFor="let assay of importDataList; let index = index">
                 <td>{{(index+1)}}</td>
-                <td>
-                  <div *ngFor="let set of assay.invitroAssaySets">
-                    {{set.assaySet}}
+                <td width="300px">
+                  <div *ngFor="let set of assay.invitroAssaySets; let indexAssaySet = index">
+                    <span *ngIf="indexAssaySet > 0"><br></span>
+                    {{(indexAssaySet+1)}}.&nbsp;{{set.assaySet}}
                   </div>
                 </td>
+                <td>{{assay.assayId}}</td>
                 <td>{{assay.externalAssaySource}}</td>
                 <td>{{assay.externalAssayId}}</td>
                 <td>{{assay.externalAssayReferenceUrl}}</td>
@@ -237,6 +266,12 @@
                 <td>{{assay.ligandSubstrateApprovalId}}</td>
                 <td>{{assay.standardLigandSubstrateConcentration}}</td>
                 <td>{{assay.standardLigandSubstrateConcentrationUnits}}</td>
+                <td>
+                  <div *ngFor="let a of assay.invitroAssayAnalytes; let indexAnalytes = index">
+                    <span *ngIf="indexAnalytes > 0"><br></span>
+                    {{(indexAnalytes+1)}}.&nbsp;{{a.analyte}}
+                  </div>
+                </td>
               </tr>
             </table>
           </div>
@@ -246,18 +281,18 @@
       </div> <!-- divcenter marginto90px-->
       <br>
 
-      <div class="marginleft30px" *ngIf="importDataList.length > 0">
-        <!-- Import Assay JSON into the Database -->
-        <span>
-          <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
-            [disabled]="disableImportButton">Import Data
-            into Database</button>
-        </span>
-      </div>
-      <br><br>
-
     </div> <!-- scrollable-container -->
   </div> <!-- form-content-container -->
+
+
+  <div class="marginleft30px margintop10px" *ngIf="importDataList.length > 0">
+    <!-- Import Assay JSON into the Database -->
+    <span>
+      <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
+        [disabled]="disableImportButton">Import Data into Database</button>
+    </span>
+  </div>
+  <br><br>
 
 </div> <!-- isAdmin -->
 <ng-template #noLogin>

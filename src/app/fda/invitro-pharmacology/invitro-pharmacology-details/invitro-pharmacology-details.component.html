@@ -158,7 +158,7 @@
               <tr>
                 <td class="fieldKey">Target Name:</td>
                 <td>
-                  <div *ngIf="assay.targetNameApprovalId; else noTargetNameApprovalId">
+                  <div *ngIf="assay.targetNameSubstanceKey; else noTargetNameSubstanceKey">
                     <!-- Go to Substance Details page -->
                     <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank"
                       matTooltip="Go to Substance Details page">
@@ -176,7 +176,7 @@
                     -->
 
                   </div>
-                  <ng-template #noTargetNameApprovalId>
+                  <ng-template #noTargetNameSubstanceKey>
                     <b>{{assay.targetName}}</b>
                   </ng-template>
                 </td>
