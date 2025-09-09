@@ -1,4 +1,3 @@
-
 export interface Ssg4mSyntheticPathway {
   createdBy?: string;
   modifiedBy?: string;
@@ -16,6 +15,7 @@ export interface Ssg4mSyntheticPathway {
   printSbstncUuid?: string;
   printSbstncPrfrdNm?: string;
   sbmsnImage?: string;
+  stepViewImage?: string;
   ssg4mSyntheticPathwayDetailsList?: Array<Ssg4mSyntheticPathwayDetail>;
   fileUrl?: string;
 }
@@ -31,4 +31,3 @@ export interface Ssg4mSyntheticPathwayDetail {
   sbstncReactnSectNm?: string;
   sbstncRoleNm?: string;
 }
-

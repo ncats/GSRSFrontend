@@ -41,6 +41,7 @@ import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-
 import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
 import { environment } from '@gsrs-core/../../environments/environment';
 import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
+import { toSvg } from 'html-to-image';
 
 @Component({
   selector: 'app-substance-ssg4m-form',
@@ -993,7 +994,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     //This is a hacky placeholder way to force viz
     //TODO finish this
     const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-    window["schemeUtil"].onFinishedLayout = (svg) => {
+    window["schemeUtil"].onFinishedLayout = async (svg) => {
       window["schemeUtil"].onFinishedLayout = (svg) => { };
 
       // if New Record, initialize object
@@ -1007,6 +1008,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
+
+      this.ssg4mSyntheticPathway.stepViewImage= await toSvg(document.querySelector('app-ssg4m-scheme-view') as HTMLElement);
 
       // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
       // after 5 seconds it displays a warning on the top of the UI form.
