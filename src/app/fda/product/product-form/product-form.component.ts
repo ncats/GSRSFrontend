@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -36,6 +36,10 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /* Array data type */
   private subscriptions: Array<Subscription> = [];
+  startMarketingDate: any[][] = [];
+  endMarketingDate: any[][] = [];
+  effectiveTime: any[][] = [];
+
   validationMessages: Array<ValidationMessage> = [];
   provenanceFieldMessage: Array<String> = [];
   effectiveTimeMessage: any[][] = [];
@@ -55,9 +59,13 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   copy: string;
   submissionMessage: string;
   jsonFileName: string;
- 
+
   /* number data type */
   id?: number;
+
+  /* Date data type */
+  effectiveDate: Date;
+  endDate: Date;
 
   /* boolean data type */
   isAdmin = false;
@@ -88,6 +96,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
+    
+    this.initializeDateFieldArray();
 
     const routeSubscription = this.activatedRoute
       .params
@@ -158,6 +168,15 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     expanded = !expanded;
   }
 
+  initializeDateFieldArray() {
+    // Assign date field arrays to empty object
+    for (let i = 0; i < 10; i++) {
+      this.effectiveTime[i] = [];
+      this.startMarketingDate[i] = [];
+      this.endMarketingDate[i] = [];
+    }
+  }
+
   getProductDetails(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
@@ -175,7 +194,53 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.product.productProvenances = [{ productNames: [], productCodes: [], productDocumentations: [] }];
           }
 
-          this.loadDateFields();
+          // Load 'Effective Date' value to on the DatePicker Input textbox
+          if (this.product.effectiveDate) {
+            this.effectiveDate = new Date(this.product.effectiveDate);
+          }
+
+          // Load/Assign 'endDate' value on the DatePicker Input textbox
+          if (this.product.endDate) {
+            this.endDate = new Date(this.product.endDate);
+          }
+
+          // Load/Assign 'Start Marketing Date' and 'End Marketing Date' values on the DatePicker Input textbox
+          if (this.product.productProvenances.length > 0) {
+            this.product.productProvenances.forEach((elementProv, indexProv) => {
+              if (elementProv != null) {
+
+                // Loop Companies
+                elementProv.productCompanies.forEach((elementComp, indexComp) => {
+                  if (elementComp.startMarketingDate) {
+                    if (this.startMarketingDate[indexProv] == null) {
+                      this.startMarketingDate[indexProv] = [];
+                    }
+                    this.startMarketingDate[indexProv][indexComp] = new Date(elementComp.startMarketingDate);
+                  }
+
+                  // Load/Assign End Marketing Date in Datepicker Input Textbox
+                  if (elementComp.endMarketingDate) {
+                    if (this.endMarketingDate[indexProv] == null) {
+                      this.endMarketingDate[indexProv] = [];
+                    }
+                    this.endMarketingDate[indexProv][indexComp] = new Date(elementComp.endMarketingDate);
+                  }
+                }); // loop companies
+
+                // Loop Document IDs
+                elementProv.productDocumentations.forEach((elementDoc, indexDoc) => {
+                  // Load/Assign 'Effective Time' value on the DatePicker Input textbox
+                  if (elementDoc.effectiveTime) {
+                    if (this.effectiveTime[indexProv] == null) {
+                      this.effectiveTime[indexProv] = [];
+                    }
+                    this.effectiveTime[indexProv][indexDoc] = new Date(elementDoc.effectiveTime);
+                  }
+                }); // loop document Ids.
+
+              } // provenances object exists
+            }); // loop provenances
+          } // if provenances length > 0
 
         } else {
           this.message = 'No Product Record found for Id ' + this.id;
@@ -940,33 +1005,55 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   changeEffectiveDate(event: MatDatepickerInputEvent<Date>): void {
-    if (event.value) {
-      this.product.effectiveDate = moment(event.value).format('MM/DD/YYYY');
-    }
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.effectiveDate = inputValue;
   }
 
   changeEndDate(event: MatDatepickerInputEvent<Date>): void {
-    if (event.value) {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.endDate = inputValue;
+
+    /*if (event.value) {
       this.product.endDate = moment(event.value).format('MM/DD/YYYY');
-    }
+    }*/
   }
 
   changestartMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = inputValue;
+
+    /*
     if (event.value) {
       this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = moment(event.value).format('MM/DD/YYYY');
-    }
+    } */
   }
 
   changeEndMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
-    if (event.value) {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = inputValue;
+
+    /*if (event.value) {
       this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = moment(event.value).format('MM/DD/YYYY');
-    }
+    }*/
   }
 
   changeEffectiveTime(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodDocIndex: number): void {
-    if (event.value) {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = inputValue;
+
+    /*if (event.value) {
       this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = moment(event.value).format('MM/DD/YYYY');
-    }
+    }*/
   }
 
   increaseOverlayZindex(): void {

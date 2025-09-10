@@ -40,6 +40,9 @@ export class ProductLotFormComponent implements OnInit {
   scoringList: Array<VocabularyTerm> = [];
   reviewProductMessage: Array<any> = [];
 
+  expiryDate: any[][] = [];
+  manufactureDate: any[][] = [];
+
   productMessage = '';
   username = null;
   expiryDateMessage = '';
@@ -56,7 +59,18 @@ export class ProductLotFormComponent implements OnInit {
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
-    //  this.getVocabularies();
+
+    this.initializeDateFieldArray();
+
+    this.getLotDetails();
+  }
+
+  initializeDateFieldArray() {
+    // Assign date field arrays to empty object
+    for (let i = 0; i < 10; i++) {
+      this.expiryDate[i] = [];
+      this.manufactureDate[i] = [];
+    }
   }
 
   getLotDetails() {
@@ -74,6 +88,31 @@ export class ProductLotFormComponent implements OnInit {
           this.productLot._manufactureDate = new Date(this.productLot.manufactureDate);
         }
 
+      }
+    }
+  }
+*/
+  getLotDetails() {
+    // If updating record, load date fields in the Datepicker Input Textbox
+    if (this.productLot != null) {
+      if (this.productLot.id != null) {
+        
+        if (this.productLot.expiryDate) {
+          if (this.expiryDate[this.prodComponentIndex] == null) {
+            this.expiryDate[this.prodComponentIndex] = [];
+          }
+          // Load/Assign 'Expiry Date' value on the DatePicker Input textbox
+          this.expiryDate[this.prodComponentIndex][this.prodLotIndex] = new Date(this.productLot.expiryDate);
+        }
+
+        if (this.productLot.manufactureDate) {
+          if (this.manufactureDate[this.prodComponentIndex] == null) {
+            this.manufactureDate[this.prodComponentIndex] = [];
+          }
+          // Load/Assign 'Manufacture Date' value on the DatePicker Input textbox
+          this.manufactureDate[this.prodComponentIndex][this.prodLotIndex] = new Date(this.productLot.manufactureDate);
+        }
+      
       }
     }
   }
@@ -146,27 +185,33 @@ export class ProductLotFormComponent implements OnInit {
   }
 
   changeExpiryDate(event: MatDatepickerInputEvent<Date>): void {
-    const selectedDate: Date | null = event.value;
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: any = (inputElement as HTMLInputElement).value;
 
-    if (selectedDate) {
-      let dateFormattedStr = selectedDate.getMonth()+1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
-      let dateObject: Date = new Date(dateFormattedStr);
-      
-      this.productLot.expiryDate = dateObject;
-    }
+    this.productLot.expiryDate = inputValue;
+
+    this.validateExpiryDate();
   }
 
   changeManufactureDate(event: MatDatepickerInputEvent<Date>): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: any = (inputElement as HTMLInputElement).value;
+
+    this.productLot.manufactureDate = inputValue;
+
+    this.validateManufactureDate();
+
+    /*
     const selectedDate: Date | null = event.value;
 
     if (selectedDate) {
-      let dateFormattedStr = selectedDate.getMonth()+1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
+      let dateFormattedStr = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
       let dateObject: Date = new Date(dateFormattedStr);
 
       this.productLot.manufactureDate = dateObject;
-    }
+    } */
   }
-  
+
   increaseOverlayZindex(): void {
     this.overlayContainer.style.zIndex = '1002';
   }
