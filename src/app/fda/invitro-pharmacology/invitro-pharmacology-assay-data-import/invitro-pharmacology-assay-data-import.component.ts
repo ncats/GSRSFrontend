@@ -118,32 +118,13 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
   onFileChange(evt) {
     // Get Data from Excel File
-    /*
-    let workBook = null;
-    let jsonData = null;
-    const reader = new FileReader();
-    const file = ev.target.files[0];
-    reader.onload = (event) => {
-      const data = reader.result;
-      workBook = XLSX.read(data, { type: 'binary' });
-      jsonData = workBook.SheetNames.reduce((initial, name) => {
-        const sheet = workBook.Sheets[name];
-        initial[name] = XLSX.utils.sheet_to_json(sheet);
-        return initial;
-      }, {});
-      const dataString = JSON.stringify(jsonData);
-      document.getElementById('output').innerHTML = dataString.slice(0, 300).concat("...");
-      this.setDownload(dataString);
-    }
-    reader.readAsBinaryString(file);
-    */
-
     const target: DataTransfer = <DataTransfer>(evt.target);
     if (target.files.length > 1) {
       alert('Multiple files are not allowed');
       return;
     }
     else {
+      this.importSaveMessageArray = [];
       this.importValidateMessageArray = [];
       this.disableImportButton = 'true';
       this.isAllRecordValidated = false;
