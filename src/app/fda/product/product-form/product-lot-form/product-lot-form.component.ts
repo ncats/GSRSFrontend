@@ -73,18 +73,6 @@ export class ProductLotFormComponent implements OnInit {
     }
   }
 
-  /*
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOSAGE_FORM', 'PROD_CHARACTER_COLOR', 'PROD_CHARACTER_FLAVOR',
-      'PROD_CHARACTER_SHAPE', 'PROD_CHARACTER_FRAGMENTS').subscribe(response => {
-        this.dosageFormList = response['DOSAGE_FORM'].list;
-        this.colorList = response['PROD_CHARACTER_COLOR'].list;
-        this.flavorList = response['PROD_CHARACTER_FLAVOR'].list;
-        this.shapeList = response['PROD_CHARACTER_SHAPE'].list;
-        this.scoringList = response['PROD_CHARACTER_FRAGMENTS'].list;
-      });
-  }
-*/
   getLotDetails() {
     // If updating record, load date fields in the Datepicker Input Textbox
     if (this.productLot != null) {
@@ -194,15 +182,6 @@ export class ProductLotFormComponent implements OnInit {
 
     this.validateManufactureDate();
 
-    /*
-    const selectedDate: Date | null = event.value;
-
-    if (selectedDate) {
-      let dateFormattedStr = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
-      let dateObject: Date = new Date(dateFormattedStr);
-
-      this.productLot.manufactureDate = dateObject;
-    } */
   }
 
   increaseOverlayZindex(): void {

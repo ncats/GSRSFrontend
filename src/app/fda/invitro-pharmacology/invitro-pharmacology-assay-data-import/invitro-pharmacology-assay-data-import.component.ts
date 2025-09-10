@@ -556,10 +556,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         element["targetNameSubstanceKey"] = substanceKey;
                         element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                        if (substance.approvalID) {
-
-                        }
-                        
                         if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"] !== substance.approvalID)) {
                           this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
