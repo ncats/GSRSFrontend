@@ -172,14 +172,14 @@
                 <div class="form-row">
                   <mat-form-field class="col-4-1">
                     <mat-label>Effective Date (mm/dd/yyyy)</mat-label>
-                    <input matInput [matDatepicker]="pickerEffectiveDate" placeholder="Effective Date (mm/dd/yyyy)" (dateChange)="changeEffectiveDate($event)">
+                    <input matInput [matDatepicker]="pickerEffectiveDate" [(ngModel)]="effectiveDate" placeholder="Effective Date (mm/dd/yyyy)" (dateChange)="changeEffectiveDate($event)">
                     <mat-datepicker-toggle matSuffix [for]="pickerEffectiveDate"></mat-datepicker-toggle>
                     <mat-datepicker #pickerEffectiveDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                   </mat-form-field>
 
                   <mat-form-field class="col-4-1">
                     <mat-label>End Date (mm/dd/yyyy)</mat-label>
-                    <input matInput [matDatepicker]="pickerEndDate" placeholder="End Date (mm/dd/yyyy)" (dateChange)="changeEndDate($event)">
+                    <input matInput [matDatepicker]="pickerEndDate" [(ngModel)]="endDate" placeholder="End Date (mm/dd/yyyy)" (dateChange)="changeEndDate($event)">
                     <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
                     <mat-datepicker #pickerEndDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                   </mat-form-field>
@@ -577,14 +577,14 @@
 
                             <mat-form-field class="col-4-1">
                               <mat-label>Start Marketing Date (mm/dd/yyyy)</mat-label>
-                              <input matInput [matDatepicker]="pickerStartMarketingDate" placeholder="Start Marketing Date (mm/dd/yyyy)" (dateChange)="changestartMarketingDate($event, prodProvIndex, prodCompanyIndex)">
+                              <input matInput [matDatepicker]="pickerStartMarketingDate" [(ngModel)]="startMarketingDate[prodProvIndex][prodCompanyIndex]" placeholder="Start Marketing Date (mm/dd/yyyy)" (dateChange)="changestartMarketingDate($event, prodProvIndex, prodCompanyIndex)">
                               <mat-datepicker-toggle matSuffix [for]="pickerStartMarketingDate"></mat-datepicker-toggle>
                               <mat-datepicker #pickerStartMarketingDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                             </mat-form-field>
 
                             <mat-form-field class="col-4-1">
                               <mat-label>End Marketing Date (mm/dd/yyyy)</mat-label>
-                              <input matInput [matDatepicker]="pickerEndMarketingDate" placeholder="End Marketing Date (mm/dd/yyyy)" (dateChange)="changeEndMarketingDate($event, prodProvIndex, prodCompanyIndex)">
+                              <input matInput [matDatepicker]="pickerEndMarketingDate" [(ngModel)]="endMarketingDate[prodProvIndex][prodCompanyIndex]" placeholder="End Marketing Date (mm/dd/yyyy)" (dateChange)="changeEndMarketingDate($event, prodProvIndex, prodCompanyIndex)">
                               <mat-datepicker-toggle matSuffix [for]="pickerEndMarketingDate"></mat-datepicker-toggle>
                               <mat-datepicker #pickerEndMarketingDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                             </mat-form-field>
@@ -775,7 +775,7 @@
 
                             <mat-form-field class="col-3-1">
                               <mat-label>Effective Time (mm/dd/yyyy)</mat-label>
-                              <input matInput [matDatepicker]="pickerEffectiveTime" placeholder="Effective Time (mm/dd/yyyy)" (dateChange)="changeEffectiveTime($event, prodProvIndex, prodDocIndex)">
+                              <input matInput [matDatepicker]="pickerEffectiveTime" [(ngModel)]="effectiveTime[prodProvIndex][prodDocIndex]" placeholder="Effective Time (mm/dd/yyyy)" (dateChange)="changeEffectiveTime($event, prodProvIndex, prodDocIndex)">
                               <mat-datepicker-toggle matSuffix [for]="pickerEffectiveTime"></mat-datepicker-toggle>
                               <mat-datepicker #pickerEffectiveTime (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                             </mat-form-field>
