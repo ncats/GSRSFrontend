@@ -92,12 +92,13 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle("IVP Import Screening Data");
 
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
       this.isAdmin = response;
     });
-
-    this.titleService.setTitle("IVP Import Screening Data");
+    
+    this.initializeRequiredFieldArray();
   }
 
   ngOnDestroy(): void {
@@ -115,7 +116,9 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     else {
       // Empty the list
       this.importDataList.length = 0;
-      this.requiredFieldMissingArray = [{}];
+      //requiredFieldMissingArray = [{}];
+      
+      this.initializeRequiredFieldArray();
 
       // Assign FileReader
       const reader: FileReader = new FileReader();
@@ -160,6 +163,13 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   }
 
+  initializeRequiredFieldArray() {
+    this.requiredFieldMissingArray = [{}];
+
+    this.requiredFieldMissingArray[0].sourceType = false;
+    this.requiredFieldMissingArray[0].controlExternalAssaySource = false;
+
+  }
   getInvitroReference(workbook: XLSX.WorkBook) {
     // Read the Second Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "1. Reference and Laboratory"
