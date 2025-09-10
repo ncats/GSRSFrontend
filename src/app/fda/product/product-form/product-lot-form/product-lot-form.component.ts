@@ -77,25 +77,6 @@ export class ProductLotFormComponent implements OnInit {
     // If updating record, load date fields in the Datepicker Input Textbox
     if (this.productLot != null) {
       if (this.productLot.id != null) {
-
-        if (this.productLot.expiryDate) {
-          // Load/Assign 'Expiry Date' value on the DatePicker Input textbox
-          this.productLot._expiryDate = new Date(this.productLot.expiryDate);
-        }
-
-        if (this.productLot.manufactureDate) {
-          // Load/Assign 'Manufacture Date' value on the DatePicker Input textbox
-          this.productLot._manufactureDate = new Date(this.productLot.manufactureDate);
-        }
-
-      }
-    }
-  }
-*/
-  getLotDetails() {
-    // If updating record, load date fields in the Datepicker Input Textbox
-    if (this.productLot != null) {
-      if (this.productLot.id != null) {
         
         if (this.productLot.expiryDate) {
           if (this.expiryDate[this.prodComponentIndex] == null) {
@@ -201,15 +182,6 @@ export class ProductLotFormComponent implements OnInit {
 
     this.validateManufactureDate();
 
-    /*
-    const selectedDate: Date | null = event.value;
-
-    if (selectedDate) {
-      let dateFormattedStr = selectedDate.getMonth() + 1 + '/' + selectedDate.getDate() + '/' + selectedDate.getFullYear();
-      let dateObject: Date = new Date(dateFormattedStr);
-
-      this.productLot.manufactureDate = dateObject;
-    } */
   }
 
   increaseOverlayZindex(): void {

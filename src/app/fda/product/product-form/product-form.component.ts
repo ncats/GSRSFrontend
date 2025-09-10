@@ -1016,10 +1016,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     const inputValue: string = (inputElement as HTMLInputElement).value;
 
     this.product.endDate = inputValue;
-
-    /*if (event.value) {
-      this.product.endDate = moment(event.value).format('MM/DD/YYYY');
-    }*/
   }
 
   changestartMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
@@ -1027,11 +1023,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     const inputValue: string = (inputElement as HTMLInputElement).value;
 
     this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = inputValue;
-
-    /*
-    if (event.value) {
-      this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = moment(event.value).format('MM/DD/YYYY');
-    } */
   }
 
   changeEndMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
@@ -1039,10 +1030,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     const inputValue: string = (inputElement as HTMLInputElement).value;
 
     this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = inputValue;
-
-    /*if (event.value) {
-      this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = moment(event.value).format('MM/DD/YYYY');
-    }*/
   }
 
   changeEffectiveTime(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodDocIndex: number): void {
@@ -1050,10 +1037,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     const inputValue: string = (inputElement as HTMLInputElement).value;
 
     this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = inputValue;
-
-    /*if (event.value) {
-      this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = moment(event.value).format('MM/DD/YYYY');
-    }*/
   }
 
   increaseOverlayZindex(): void {
