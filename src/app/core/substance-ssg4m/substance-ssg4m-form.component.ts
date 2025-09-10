@@ -1009,7 +1009,27 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
-      this.ssg4mSyntheticPathway.stepViewImage= await toSvg(document.querySelector('app-ssg4m-scheme-view') as HTMLElement);
+      const dataUrl = await toSvg(document.querySelector('app-ssg4m-scheme-view') as HTMLElement);
+      const commaIndex = dataUrl.indexOf(',');
+      const encodedSvg = dataUrl.slice(commaIndex + 1);
+      const downloadLink = document.createElement('a');
+
+      // 2. Set the href attribute to the data URL
+      downloadLink.href = dataUrl;
+
+      // 3. Set the download attribute to the desired file name
+      downloadLink.download = 'img.svg';
+
+      // 4. Append the link to the document. This is required for Firefox.
+      document.body.appendChild(downloadLink);
+
+      // 5. Programmatically click the link to initiate the download
+      downloadLink.click();
+
+      // 6. Remove the link from the document
+      document.body.removeChild(downloadLink);
+      
+      this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
       // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
       // after 5 seconds it displays a warning on the top of the UI form.
