@@ -126,6 +126,8 @@ export interface ProductCompany {
   modifiedBy?: string;
   modifyDate?: number;
   productCompanyCodes?: Array<ProductCompanyCode>;
+  _startMarketingDate?: Date;
+  _endMarketingDate?: Date;
 }
 
 export interface ProductCompanyCode {
@@ -163,6 +165,7 @@ export interface ProductDocumentation {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  _effectiveTime?: Date;
 }
 
 export interface ProductIndication {
@@ -218,6 +221,8 @@ export interface ProductLot {
   modifiedBy?: string;
   modifyDate?: number;
   productIngredients?: Array<ProductIngredient>;
+  _expiryDate?: Date;
+  _manufactureDate?: Date;
 }
 
 export interface ProductIngredient {
