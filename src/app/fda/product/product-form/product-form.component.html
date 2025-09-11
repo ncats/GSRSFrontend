@@ -577,14 +577,14 @@
 
                             <mat-form-field class="col-4-1">
                               <mat-label>Start Marketing Date (mm/dd/yyyy)</mat-label>
-                              <input matInput [matDatepicker]="pickerStartMarketingDate" [(ngModel)]="startMarketingDate[prodProvIndex][prodCompanyIndex]" placeholder="Start Marketing Date (mm/dd/yyyy)" (dateChange)="changestartMarketingDate($event, prodProvIndex, prodCompanyIndex)">
+                              <input matInput [matDatepicker]="pickerStartMarketingDate" [(ngModel)]="prodCompany._startMarketingDate" placeholder="Start Marketing Date (mm/dd/yyyy)" (dateChange)="changestartMarketingDate($event, prodProvIndex, prodCompanyIndex)">
                               <mat-datepicker-toggle matSuffix [for]="pickerStartMarketingDate"></mat-datepicker-toggle>
                               <mat-datepicker #pickerStartMarketingDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                             </mat-form-field>
 
                             <mat-form-field class="col-4-1">
                               <mat-label>End Marketing Date (mm/dd/yyyy)</mat-label>
-                              <input matInput [matDatepicker]="pickerEndMarketingDate" [(ngModel)]="endMarketingDate[prodProvIndex][prodCompanyIndex]" placeholder="End Marketing Date (mm/dd/yyyy)" (dateChange)="changeEndMarketingDate($event, prodProvIndex, prodCompanyIndex)">
+                              <input matInput [matDatepicker]="pickerEndMarketingDate" [(ngModel)]="prodCompany._endMarketingDate" placeholder="End Marketing Date (mm/dd/yyyy)" (dateChange)="changeEndMarketingDate($event, prodProvIndex, prodCompanyIndex)">
                               <mat-datepicker-toggle matSuffix [for]="pickerEndMarketingDate"></mat-datepicker-toggle>
                               <mat-datepicker #pickerEndMarketingDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                             </mat-form-field>
