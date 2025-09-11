@@ -1009,7 +1009,16 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
-      const dataUrl = await toSvg(document.querySelector('app-ssg4m-scheme-view') as HTMLElement);
+      const options = {
+        fetchRequestInit: {
+          headers: new Headers(),
+          mode: 'cors' as RequestMode, // Important for fetching from other domains like Google Fonts
+          cache: 'default' as RequestCache
+        },
+        // We can explicitly tell it to include all fonts.
+        fontEmbedCSS: '@font-face' 
+      }
+      const dataUrl = await toSvg(document.querySelector('app-ssg4m-scheme-view') as HTMLElement, options);
       const commaIndex = dataUrl.indexOf(',');
       const encodedSvg = dataUrl.slice(commaIndex + 1);
       const downloadLink = document.createElement('a');
