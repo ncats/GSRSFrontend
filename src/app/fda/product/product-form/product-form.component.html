@@ -775,7 +775,7 @@
 
                             <mat-form-field class="col-3-1">
                               <mat-label>Effective Time (mm/dd/yyyy)</mat-label>
-                              <input matInput [matDatepicker]="pickerEffectiveTime" [(ngModel)]="effectiveTime[prodProvIndex][prodDocIndex]" placeholder="Effective Time (mm/dd/yyyy)" (dateChange)="changeEffectiveTime($event, prodProvIndex, prodDocIndex)">
+                              <input matInput [matDatepicker]="pickerEffectiveTime" [(ngModel)]="prodDoc._effectiveTime" placeholder="Effective Time (mm/dd/yyyy)" (dateChange)="changeEffectiveTime($event, prodProvIndex, prodDocIndex)">
                               <mat-datepicker-toggle matSuffix [for]="pickerEffectiveTime"></mat-datepicker-toggle>
                               <mat-datepicker #pickerEffectiveTime (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                             </mat-form-field>
