@@ -982,6 +982,23 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
   }
 
+  getPageStyles(): string {
+    let css = '';
+    // Gather all style rules from the document
+    for (const sheet of Array.from(document.styleSheets)) {
+      try {
+        if (sheet.cssRules) {
+          css += Array.from(sheet.cssRules)
+            .map(rule => rule.cssText)
+            .join('\n');
+        }
+      } catch (e) {
+        console.warn('Cannot read styles from cross-origin stylesheet', e);
+      }
+    }
+    return `<style>${css}</style>`;
+  }
+
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
@@ -1009,16 +1026,37 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
+      // const options = {
+      //   fetchRequestInit: {
+      //     headers: new Headers(),
+      //     mode: 'cors' as RequestMode, // Important for fetching from other domains like Google Fonts
+      //     cache: 'default' as RequestCache
+      //   },
+      //   // We can explicitly tell it to include all fonts.
+      //   fontEmbedCSS: '@font-face' 
+      // }
+      const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
+      const clone = elementToConvert.cloneNode(true) as HTMLElement;
+      const container = document.createElement('div');
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      const styles = this.getPageStyles();
+      container.innerHTML = styles;
+      container.appendChild(clone);
+      document.body.appendChild(container);
+
       const options = {
+        width: elementToConvert.offsetWidth,
+        height: elementToConvert.offsetHeight,
+        // You may still need the fetch options for external images/fonts
         fetchRequestInit: {
           headers: new Headers(),
-          mode: 'cors' as RequestMode, // Important for fetching from other domains like Google Fonts
+          mode: 'cors' as RequestMode,
           cache: 'default' as RequestCache
-        },
-        // We can explicitly tell it to include all fonts.
-        fontEmbedCSS: '@font-face' 
-      }
-      const dataUrl = await toSvg(document.querySelector('app-ssg4m-scheme-view') as HTMLElement, options);
+        }
+      };
+
+      const dataUrl = await toSvg(clone, options);
       const commaIndex = dataUrl.indexOf(',');
       const encodedSvg = dataUrl.slice(commaIndex + 1);
       const downloadLink = document.createElement('a');
@@ -1037,6 +1075,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       // 6. Remove the link from the document
       document.body.removeChild(downloadLink);
+      document.body.removeChild(container);
       
       this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
