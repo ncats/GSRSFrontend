@@ -999,6 +999,10 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return `<style>${css}</style>`;
   }
 
+  delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
@@ -1044,6 +1048,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       container.innerHTML = styles;
       container.appendChild(clone);
       document.body.appendChild(container);
+      await this.delay(5000)
 
       const options = {
         width: elementToConvert.offsetWidth,
