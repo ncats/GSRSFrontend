@@ -1003,6 +1003,37 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  async exportStepView(document: Document): Promise<string> {
+    const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
+    const clone = elementToConvert.cloneNode(true) as HTMLElement;
+
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    const styles = this.getPageStyles();
+    container.innerHTML = styles;
+    container.appendChild(clone);
+    document.body.appendChild(container);
+
+    await this.delay(5000)
+
+    const options = {
+      width: elementToConvert.offsetWidth,
+      height: elementToConvert.offsetHeight,
+      // You may still need the fetch options for external images/fonts
+      fetchRequestInit: {
+        headers: new Headers(),
+        mode: 'cors' as RequestMode,
+        cache: 'default' as RequestCache
+      }
+    };
+
+    const dataUrl = await toSvg(clone, options);
+    const commaIndex = dataUrl.indexOf(',');
+    document.body.removeChild(container);
+    return dataUrl.slice(commaIndex + 1);
+  }
+
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
@@ -1029,59 +1060,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
-
-      // const options = {
-      //   fetchRequestInit: {
-      //     headers: new Headers(),
-      //     mode: 'cors' as RequestMode, // Important for fetching from other domains like Google Fonts
-      //     cache: 'default' as RequestCache
-      //   },
-      //   // We can explicitly tell it to include all fonts.
-      //   fontEmbedCSS: '@font-face' 
-      // }
-      const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
-      const clone = elementToConvert.cloneNode(true) as HTMLElement;
-      const container = document.createElement('div');
-      container.style.position = 'absolute';
-      container.style.left = '-9999px';
-      const styles = this.getPageStyles();
-      container.innerHTML = styles;
-      container.appendChild(clone);
-      document.body.appendChild(container);
-      await this.delay(5000)
-
-      const options = {
-        width: elementToConvert.offsetWidth,
-        height: elementToConvert.offsetHeight,
-        // You may still need the fetch options for external images/fonts
-        fetchRequestInit: {
-          headers: new Headers(),
-          mode: 'cors' as RequestMode,
-          cache: 'default' as RequestCache
-        }
-      };
-
-      const dataUrl = await toSvg(clone, options);
-      const commaIndex = dataUrl.indexOf(',');
-      const encodedSvg = dataUrl.slice(commaIndex + 1);
-      const downloadLink = document.createElement('a');
-
-      // 2. Set the href attribute to the data URL
-      downloadLink.href = dataUrl;
-
-      // 3. Set the download attribute to the desired file name
-      downloadLink.download = 'img.svg';
-
-      // 4. Append the link to the document. This is required for Firefox.
-      document.body.appendChild(downloadLink);
-
-      // 5. Programmatically click the link to initiate the download
-      downloadLink.click();
-
-      // 6. Remove the link from the document
-      document.body.removeChild(downloadLink);
-      document.body.removeChild(container);
       
+      const encodedSvg = await this.exportStepView(document)
       this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
       // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
