@@ -1033,6 +1033,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       tabStepView.click();
       await this.delay(200)
     }
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
 
     const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
     const clone = elementToConvert.cloneNode(true) as HTMLElement;
@@ -1085,8 +1087,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.ssg4mSyntheticPathway = {};
       }
       const encodedSvg = await this.exportStepView(document);
-      this.isLoading = true;
-      this.loadingService.setLoading(true);
 
       // Existing Record
       // get the JSON from the SSG4m Form and store as a Clob into the database
