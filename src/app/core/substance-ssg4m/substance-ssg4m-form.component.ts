@@ -1003,7 +1003,37 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  // waitForElement(selector: string, timeout = 2000): Promise<HTMLElement> {
+  //   return new Promise((resolve, reject) => {
+  //     const interval = setInterval(() => {
+  //       const element = document.querySelector(selector) as HTMLElement;
+  //       if (element) {
+  //         clearInterval(interval);
+  //         resolve(element);
+  //       }
+  //     }, 100);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       reject(new Error(`Element "${selector}" not found within ${timeout}ms.`));
+  //     }, timeout);
+  //   });
+  // }
+
   async exportStepView(document: Document): Promise<string> {
+    const tabProcesses = document.querySelector("#mat-expansion-panel-header-2") as HTMLElement;
+    if (tabProcesses.getAttribute('aria-expanded') !== 'true') {
+      console.log('Tab Processes not selected. Clicking it...');
+      tabProcesses.click();
+      await this.delay(200)
+    }
+
+    const tabStepView = document.querySelector("#mat-tab-label-0-1") as HTMLElement;
+    if (tabStepView.getAttribute('aria-selected') !== 'true') {
+      console.log('Tab Step View not selected. Clicking it...');
+      tabStepView.click();
+      await this.delay(200)
+    }
+
     const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
     const clone = elementToConvert.cloneNode(true) as HTMLElement;
 
@@ -1017,10 +1047,13 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
     await this.delay(5000)
 
+    function filter (node) {
+      return (node.tagName !== 'button');
+    }
     const options = {
+      filter: filter,
       width: elementToConvert.offsetWidth,
       height: elementToConvert.offsetHeight,
-      // You may still need the fetch options for external images/fonts
       fetchRequestInit: {
         headers: new Headers(),
         mode: 'cors' as RequestMode,
