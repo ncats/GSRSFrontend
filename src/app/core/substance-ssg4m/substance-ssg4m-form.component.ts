@@ -1047,7 +1047,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     container.appendChild(clone);
     document.body.appendChild(container);
 
-    await this.delay(5000)
+    await this.delay(2500)
 
     function filter (node) {
       return (node.tagName !== 'button');
@@ -1070,7 +1070,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   async submit(): Promise<void> {
-    await this.expandStepView()
+    // await this.expandStepView()
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -1097,8 +1097,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
       
-      const encodedSvg = await this.exportStepView(document)
-      this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
+      // const encodedSvg = await this.exportStepView(document)
+      // this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
       // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
       // after 5 seconds it displays a warning on the top of the UI form.
