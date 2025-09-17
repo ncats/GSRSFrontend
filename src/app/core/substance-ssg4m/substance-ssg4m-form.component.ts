@@ -806,7 +806,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }, 5000);
   }
 
-  validate(validationType?: string): void {
+  async validate(validationType?: string): Promise<void> {
     if (validationType && validationType === 'approval') {
       this.approving = true;
     } else {
@@ -826,7 +826,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isLoading = false;
     // If there is no validation error, submit/save the records without displaying the warning/validation message.
     if (this.validationMessages.length === 0 && true === true) {
-      this.submit();
+      await this.submit();
     }
     /*
     if (this.validationMessages.length === 0 && true === true) {
@@ -1019,8 +1019,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   //   });
   // }
 
-  async exportStepView(document: Document): Promise<string> {
-    const tabProcesses = document.querySelector("#mat-expansion-panel-header-2") as HTMLElement;
+  async expandStepView(): Promise<void> {
+    const tabProcesses = document.querySelector("#substance-form-ssg4m-process") as HTMLElement;
     if (tabProcesses.getAttribute('aria-expanded') !== 'true') {
       console.log('Tab Processes not selected. Clicking it...');
       tabProcesses.click();
@@ -1033,9 +1033,9 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       tabStepView.click();
       await this.delay(200)
     }
-    this.isLoading = true;
-    this.loadingService.setLoading(true);
+  }
 
+  async exportStepView(document: Document): Promise<string> {
     const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
     const clone = elementToConvert.cloneNode(true) as HTMLElement;
 
@@ -1069,7 +1069,10 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return dataUrl.slice(commaIndex + 1);
   }
 
-  submit(): void {
+  async submit(): Promise<void> {
+    await this.expandStepView()
+    this.isLoading = true;
+    this.loadingService.setLoading(true);
     this.approving = false;
 
     this.json = this.substanceFormService.cleanSubstance();
@@ -1086,7 +1089,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       if (this.ssg4mSyntheticPathway == null) {
         this.ssg4mSyntheticPathway = {};
       }
-      const encodedSvg = await this.exportStepView(document);
 
       // Existing Record
       // get the JSON from the SSG4m Form and store as a Clob into the database
@@ -1095,6 +1097,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
       
+      const encodedSvg = await this.exportStepView(document)
       this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
       // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
