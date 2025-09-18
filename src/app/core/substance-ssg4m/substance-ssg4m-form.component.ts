@@ -806,7 +806,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }, 5000);
   }
 
-  async validate(validationType?: string): Promise<void> {
+  validate(validationType?: string): void {
     if (validationType && validationType === 'approval') {
       this.approving = true;
     } else {
@@ -826,7 +826,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isLoading = false;
     // If there is no validation error, submit/save the records without displaying the warning/validation message.
     if (this.validationMessages.length === 0 && true === true) {
-      await this.submit();
+      this.submit();
     }
     /*
     if (this.validationMessages.length === 0 && true === true) {
@@ -1069,7 +1069,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return dataUrl.slice(commaIndex + 1);
   }
 
-  async submit(): Promise<void> {
+  submit(): void {
     // await this.expandStepView()
     this.isLoading = true;
     this.loadingService.setLoading(true);
