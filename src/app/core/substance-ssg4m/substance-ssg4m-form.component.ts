@@ -806,7 +806,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }, 5000);
   }
 
-  validate(validationType?: string): void {
+  async validate(validationType?: string): Promise<void> {
     if (validationType && validationType === 'approval') {
       this.approving = true;
     } else {
@@ -826,7 +826,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isLoading = false;
     // If there is no validation error, submit/save the records without displaying the warning/validation message.
     if (this.validationMessages.length === 0 && true === true) {
-      this.submit();
+      await this.submit();
     }
     /*
     if (this.validationMessages.length === 0 && true === true) {
@@ -1069,8 +1069,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return dataUrl.slice(commaIndex + 1);
   }
 
-  submit(): void {
-    // await this.expandStepView()
+  async submit(): Promise<void> {
+    await this.expandStepView()
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -1097,8 +1097,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
       
-      // const encodedSvg = await this.exportStepView(document)
-      // this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
+      const encodedSvg = await this.exportStepView(document)
+      this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
       // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
       // after 5 seconds it displays a warning on the top of the UI form.
