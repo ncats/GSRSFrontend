@@ -1049,8 +1049,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
     await this.delay(2500)
 
-    function filter (node) {
-      return (node.tagName !== 'button');
+    function filter (node: HTMLElement) {
+      return (node.tagName.toLowerCase() !== 'button');
     }
     const options = {
       filter: filter,
@@ -1100,13 +1100,13 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       const encodedSvg = await this.exportStepView(document)
       this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
-      // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
+      // After submitting Save button, the UI waits for 8 seconds to see if it gets a response.
       // after 5 seconds it displays a warning on the top of the UI form.
       setTimeout(() => {
         if (this.isSavedSuccessful === false) {
           this.saveDelayedMessage = "Hmm ... this seems to be taking longer than normal, there may be network issues. <br>Click here to cancel and continue working on the form. We suggest you save a local copy of the JSON.";
         }
-      }, 5000);
+      }, 8000);
 
       this.submitSubscription = this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
         // Stop the spinner
