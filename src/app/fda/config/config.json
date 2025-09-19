@@ -1,5 +1,5 @@
 {
-  "version": "3.1.1",
+  "version": "3.1.2",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -13,6 +13,8 @@
   "approvalCodeName": "UNII",
   "primaryCode": "BDNUM",
   "useDataUrl": false,
+  "showCrossEntitySearchDropdown": true,
+  "restApiPrefix": "/ginas/app",
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -74,6 +76,19 @@
     "invitropharmacology": true,
     "userRegistration": false
   },
+  "services": [
+    { "name": "adverse-events", "active": true, "hasEntities": true },
+    { "name": "applications", "active": true, "hasEntities": true },
+    { "name": "clinical-trials", "active": true, "hasEntities": true },
+    { "name": "discovery", "active": false, "hasEntities": false },
+    { "name": "frontend", "active": true, "hasEntities": false },
+    { "name": "gateway", "active": true, "hasEntities": false },
+    { "name": "impurities", "active": true, "hasEntities": true },
+    { "name": "invitro-pharmacology", "active": true, "hasEntities": true },
+    { "name": "products", "active": true, "hasEntities": true },
+    { "name": "ssg4m", "active": true, "hasEntities": true },
+    { "name": "substances", "active": true, "hasEntities": true }
+   ],
   "usefulLinks": [
     {
       "title": "GSRSFind Excel tools",
@@ -1015,8 +1030,10 @@
         "Product ID",
         "Product Name",
         "Dosage Form Name",
+        "Substance UUID",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
+        "Has Ingredients",
         "Number of Ingredients",
         "Ingredient Type",
         "Product Type",
@@ -1158,7 +1175,7 @@
     "NCI"
   ],
   "homeHeader": "Global Substance Registration System - GSRS",
-  "homeContents": "The main goal of ginas is the production of software, called G-SRS, to assist agencies in registering and documenting information about substances found in medicines. The Global Ingredient Archival System provides a common identifier for all of the substances used in medicinal products, utilizing a consistent definition of substances globally, including active substances under clinical investigation, consistent with the ISO 11238 standard.",
+  "homeContents": "<p>The primary goal of the Global Substance Registration System (GSRS) program is the production of software to assist agencies in registering and documenting information about substances found in medicines and other regulated products. GSRS provides common identifiers including FDA UNIIs for all substances used in regulated products. It utilizes definitions of substances  globally-consistent with ISO 11238 and DTS 19844 including active substances under clinical investigation.\n\n</p><p>\n\n<img src='assets/icons/home/fda.logo.h77px.png' alt='' title='Food and Drug Administration' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n\n<img src='assets/icons/home/ncats.logo.h77px.png' alt='' title='National Center for Advancing Translational Science' />\n\n</p><p>Many organizations contribute to the GSRS project including the Food and Drug Administration (FDA) and the National Center for Advancing Translational Science (NCATS). For more information about GSRS, code and public data, please consult <a href='https://gsrs.ncats.nih.gov/'>https://gsrs.ncats.nih.gov/</a>.</p>\n\n<p>",
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
   "navItems": [
     {
@@ -1627,6 +1644,123 @@
       },
       "stepView": {
         "showAmountValues": "true"
+      }
+    }
+  },
+  "impuritiesForm": {
+    "settingsDisplay": {
+      "overview": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "type": "simple",
+        "productId": "simple",
+        "specType": "simple",
+        "submitterName": "advanced",
+        "productSubstanceName": "advanced",
+        "dateType": "advanced",
+        "dateTypeDate": "advanced"
+      },
+      "substance": {
+        "substanceUuid": "simple",
+        "low": "advanced",
+        "high": "advanced",
+        "unit": "advanced",
+        "comments": "advanced"
+      },
+      "test": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "test": "simple",
+        "testType": "simple",
+        "flowRate": "simple",
+        "columnPackingType": "advanced",
+        "columnPackingSize": "advanced",
+        "columnSize": "advanced",
+        "columnTemperature": "advanced",
+        "injectionVolumeAmount": "advanced",
+        "diluent": "advanced",
+        "system": "advanced",
+        "mode": "advanced",
+        "detectionType": "advanced",
+        "detectionDetails": "advanced",
+        "suitabilityReqResolution": "advanced",
+        "suitabilityReqRelStandardDeviation": "advanced",
+        "testDescription": "advanced",
+        "comments": "advanced",
+        "sampleSolution": "advanced",
+        "systemSuitabilitySolution": "advanced",
+        "standardSolution": "advanced",
+        "otherSolution": "advanced",
+        "elutionType": "simple",
+        "solutionDescription": "simple",
+        "mobilePhase": "simple"
+      },
+      "impurities": {
+        "relatedSubstanceUnii": "simple",
+        "sourceImpurityName": "simple",
+        "impurityType": "simple",
+        "comments": "simple",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "identityCriteriaType": "simple",
+        "amountValue": "advanced",
+        "criteriaUnit": "advanced"
+      },
+      "unspecifiedImpurities": {
+        "impurityType": "simple",
+        "testType": "simple",
+        "limitType": "simple",
+        "limitValue": "simple",
+        "unit": "simple",
+        "comments": "simple",
+        "identityCriteriaType": "advanced",
+        "amountValue": "advanced",
+        "criteriaUnit": "advanced"
+      },
+      "residualSolventsTest": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "test": "advanced",
+        "testType": "advanced",
+        "testDescription": "advanced",
+        "comments": "advanced"
+      },
+      "residualSolvents": {
+        "relatedSubstanceUuid": "simple",
+        "pharmaceuticalLimit": "advanced",
+        "testType": "advanced",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "comments": "advanced"
+      },
+      "inorganicImpuritiesTest": {
+        "sourceType": "simple",
+        "source": "simple",
+        "sourceId": "simple",
+        "test": "advanced",
+        "testType": "advanced",
+        "testDescription": "advanced",
+        "comments": "advanced"
+      },
+      "inorganicImpurities": {
+        "relatedSubstanceUnii": "simple",
+        "testType": "advanced",
+        "limitType": "advanced",
+        "limitValue": "advanced",
+        "unit": "advanced",
+        "comments": "advanced"
+      },
+      "impuritiesTotal": {
+        "testType": "simple",
+        "limitType": "simple",
+        "limitValue": "simple",
+        "amountValue": "simple",
+        "comments": "simple"
       }
     }
   }

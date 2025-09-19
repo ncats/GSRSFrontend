@@ -34,6 +34,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   @Input() loadSummary = true;
   @Input() showTitle = true;
   @Input() isCollapsed = false;
+  @Input() searchStatusUrl = null;
   @ViewChild(MatTable, {static: false}) table: MatTable<RecordOverview>; // initialize
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort = new MatSort();
@@ -153,8 +154,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   }
 
   ngOnInit(): void {
-    
-
     const authSubscription = this.authService.getAuth().subscribe(auth => {
       if (auth) {
         this.isLoggedIn = true;
@@ -229,7 +228,7 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   pollUntillCompleted() {
     interval(this.pollingInterval)
       .pipe(
-        switchMap(() =>this.bulkSearchService.getBulkSearchStatus(this.key)),
+        switchMap(() =>this.bulkSearchService.getBulkSearchStatus(this.key, this.searchStatusUrl)),
         takeWhile(( response ) => {
           if (response?.finished === true) {
             return false;
@@ -279,7 +278,8 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       this.qPageSize,
       qSkip,
       this.qSort,
-      this.qFilter
+      this.qFilter,
+      this.searchStatusUrl
     )
     .subscribe(bulkSearchResults => {
       if (!this.key) {
@@ -421,9 +421,11 @@ summaryToRecordOverviews() {
     let finished = false;
     const qTop = 20000;
     const qSkip = 0;
+    let qSort  = '';
+    let qFilter = '';
 
     let s2: Subscription;
-     const s1 = this.bulkSearchService.getBulkSearchStatus(this.key).subscribe(response1 => {
+     const s1 = this.bulkSearchService.getBulkSearchStatus(this.key, this.searchStatusUrl).subscribe(response1 => {
       context = response1.context;
       finished = response1.finished;
       if (context === undefined) {
@@ -432,7 +434,7 @@ summaryToRecordOverviews() {
         alert('The seach is not yet finshed. Please try clicking again after a time.');
       } else {
         // top and skip are zero because we don't need the content array for the download.
-        s2 = this.bulkSearchService.getBulkSearchStatusResults(this.key, 0, 0, qTop, qSkip)
+        s2 = this.bulkSearchService.getBulkSearchStatusResults(this.key, 0, 0, qTop, qSkip, qSort, qFilter, this.searchStatusUrl)
         .subscribe(response2 => {
           this._summaryForDownload = response2.summary;
           filename =  context + '-bulk-search-summary-' + this.key + '.txt';

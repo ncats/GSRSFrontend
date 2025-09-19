@@ -26,7 +26,6 @@ import { MatProgressBarModule} from '@angular/material/progress-bar';
 import { NgxJsonViewerModule} from 'ngx-json-viewer';
 // GSRS Imports
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
-import { FileSelectModule } from 'file-select';
 import { ScrollToModule } from '@gsrs-core/scroll-to/scroll-to.module';
 import { ExpandDetailsModule } from '@gsrs-core/expand-details/expand-details.module';
 import { SubstanceFormModule } from '../../substance-form/substance-form.module';
@@ -38,6 +37,7 @@ import { CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.com
 import { CvDialogComponent} from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 import { JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import { AuditInfoComponent} from '@gsrs-core/substance-form/audit-info/audit-info.component';
+import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
 
 // import { SubmitSuccessDialogComponent } from './submit-success-dialog/submit-success-dialog.component';
 // import { MergeConceptDialogComponent} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';

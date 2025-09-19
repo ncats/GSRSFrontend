@@ -1,14 +1,15 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria, SubRelationship, ImpuritiesSubstance } from '../../model/impurities.model';
-import { ImpuritiesService } from '../../service/impurities.service';
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { LoadingService } from '@gsrs-core/loading';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
-import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+
+import { ConfigService } from '@gsrs-core/config';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { LoadingService } from '@gsrs-core/loading';
 import { GeneralService } from '../../../service/general.service';
-import { ImpuritiesSolutionTable } from '../../model/impurities.model';
+import { ImpuritiesService } from '../../service/impurities.service';
+import { ImpuritiesTesting, ImpuritiesDetails, ImpuritiesSolutionTable } from '../../model/impurities.model';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-impurities-test-form',
@@ -36,8 +37,12 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 
   letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
+  private privateShowAdvancedSettings = false;
+  configSettingsDisplay = {};
+
   constructor(
     private impuritiesService: ImpuritiesService,
+    private configService: ConfigService,
     private generalService: GeneralService,
     private loadingService: LoadingService,
     private authService: AuthService,
@@ -51,6 +56,46 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
+    });
+  }
+
+  @Input()
+  set showAdvancedSettings(showAdvancedSettings: boolean) {
+    this.privateShowAdvancedSettings = showAdvancedSettings;
+
+    // Get Config Settins from config file
+    this.getConfigSettings();
+  }
+
+  get showAdvancedSettings(): boolean {
+    return this.privateShowAdvancedSettings;
+  }
+  
+  getConfigSettings(): void {
+    // Get Impurities Config Settings from config.json file to show and hide fields in the form
+    let configImpuritiesForm: any;
+    configImpuritiesForm = this.configService.configData && this.configService.configData.impuritiesForm || null;
+    
+    // Get 'test' json values from config
+    const confSettings = configImpuritiesForm.settingsDisplay.test
+
+    Object.keys(confSettings).forEach(key => {
+      if (confSettings[key] != null) {
+        if (confSettings[key] === 'simple') {
+          this.configSettingsDisplay[key] = true;
+        } else if (confSettings[key] === 'advanced') {
+          if (this.privateShowAdvancedSettings === true) {
+            this.configSettingsDisplay[key] = true;
+          } else {
+            this.configSettingsDisplay[key] = false;
+          }
+        } else if (confSettings[key] === 'removed') {
+          this.configSettingsDisplay[key] = false;
+        }
+      } else {
+        // if either value (simple,advanced,removed) missing in config, show field on the form
+        this.configSettingsDisplay[key] = true;
+      }
     });
   }
 

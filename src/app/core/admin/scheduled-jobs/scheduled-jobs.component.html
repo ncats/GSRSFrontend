@@ -1,8 +1,19 @@
 <div *ngIf = "loading === false">
+    <div>
+        <mat-form-field>
+          <mat-label style="width: 100%;">Service</mat-label>
+          <mat-select [(ngModel)]="currentService" (selectionChange)="onServiceSelectionChange($event)">
+                <mat-option *ngFor="let option of services" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-select>
+          </mat-form-field>
+    </div>
+
     
     <mat-card *ngFor = "let job of jobs" class = "form-row">
-        <app-scheduled-job [job] = "job" pollIn = "true" ></app-scheduled-job>
-        </mat-card>
+        <app-scheduled-job [currentService] = "this.currentService" [job] = "job" pollIn = "true" ></app-scheduled-job>
+    </mat-card>
     <mat-card *ngIf="!jobs.length" class ="no-jobs">
             <h3>No scheduled tasks</h3>
         </mat-card>

@@ -396,10 +396,11 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
           // Get the index if the value exists in the key 'value'
           const indexAssaySet = this.existingAssaySetList.findIndex(record => record.assaySet === this.selectedAssaySet);
 
-          // if Found
+          // if Found Assay Set
           if (indexAssaySet > -1) {
             const existingAssaySetObject = this.existingAssaySetList[indexAssaySet];
 
+            // Add the existing Assay Set object that is in DB
             assaySave.invitroAssaySets.push(existingAssaySetObject);
           } // indexSet > -1
           else {
@@ -433,7 +434,79 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     }
   }
 
+  validate(): void {
+    this.isLoading = true;
+    this.serverError = false;
+    this.loadingService.setLoading(true);
+
+    // Check validation on Client side.
+    this.validateClient();
+
+    // If there is no error on client side, check validation on server side
+    if (this.validationMessages.length === 0) {
+      this.submissionMessage = null;
+
+      //   this.validationMessages = results.validationMessages.filter(
+      //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
+      //   this.validationResult = results.valid;
+
+      this.validationResult = true;
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+
+      if (this.validationMessages.length === 0 && this.validationResult === true) {
+        this.submissionMessage = 'Invitro Pharmacology Assay Set is Valid. Would you like to submit?';
+      }
+      /* }, error => {
+         this.addServerError(error);
+         this.loadingService.setLoading(false);
+         this.isLoading = false;
+       });
+       */
+    }
+    //  }
+  }
+
+  // Validate data in client side first
+  validateClient(): void {
+    this.submissionMessage = null;
+    this.validationMessages = [];
+    this.validationResult = true;
+
+    // Validate Assay
+    if (!this.selectedAssaySet) {
+      this.setValidationMessage('Assay Set is required');
+    }
+
+    if (this.assaysToSave.length == 0) {
+      this.setValidationMessage('At leaset one Assay should be selected');
+    }
+
+    if (this.validationMessages.length > 0) {
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+    }
+
+  }
+
+  setValidationMessage(message: string) {
+    const validate: ValidationMessage = {};
+    validate.message = message;
+    validate.messageType = 'ERROR';
+    this.validationMessages.push(validate);
+    this.validationResult = false;
+  }
+
+  toggleValidation(): void {
+    this.showSubmissionMessages = !this.showSubmissionMessages;
+  }
+
   submit(): void {
+    // Validate on client side
+    this.validateClient()
+
     this.isLoading = true;
     this.loadingService.setLoading(true);
 
@@ -443,6 +516,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     // Get the index to delete the Assay Set in the Assay
     const indexAssaySetInDatabase = this.existingAssaySetDatabaseList.findIndex(record => record.assaySet === this.selectedAssaySet);
 
+    // Assay Set NOT IN THE database
     if (indexAssaySetInDatabase == -1) {
       // it is a new Assay Set which is not in the database. Need to save the first Assay,
       // and get the Assay Set id.
@@ -450,42 +524,55 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
       // Set service assay for the first record
       this.invitroPharmacologyService.assay = this.assaysToSave[0];
 
+      // Save FIRST Assay
       this.invitroPharmacologyService.saveAssay().subscribe(response => {
         if (response) {
           let assay = response;
           if (assay.id) {
             if (assay.invitroAssaySets && assay.invitroAssaySets.length > 0) {
 
+              // get Saved Assay Set
               const indexAssaySetFirstSaved = assay.invitroAssaySets.findIndex(record => record.assaySet === this.selectedAssaySet);
 
               if (indexAssaySetFirstSaved > -1) {
                 // SAVED FIRST NEW ASSAY SET
                 this.newSavedAssaySet = assay.invitroAssaySets[indexAssaySetFirstSaved];
 
-                this.assaysToSave.forEach((assay, indexAssay) => {
-                  if (indexAssay > 0) {
-                    if (assay) {
-                      const indexAssaySetRemaining = assay.invitroAssaySets.findIndex(record => record.assaySet === this.selectedAssaySet);
+                // If there is only one Assay, Reload the page
+                if (this.assaysToSave.length == 1) {
+                  this.reloadPageAfterSave();
+                } else {
+                  // more than one assays
+                  this.assaysToSave.forEach((assay, indexAssay) => {
+                    // if assaysToSave list has more than 1 record, set the new Assay Set from 2nd index
+                    if (indexAssay > 0) {
+                      if (assay) {
+                        const indexAssaySetRemaining = assay.invitroAssaySets.findIndex(record => record.assaySet === this.selectedAssaySet);
 
-                      if (indexAssaySetRemaining > -1) {
+                        // assign the new AssaySet that was saved into the database.
+                        if (indexAssaySetRemaining > -1) {
 
-                        assay.invitroAssaySets[indexAssaySetRemaining] = this.newSavedAssaySet;
+                          assay.invitroAssaySets[indexAssaySetRemaining] = this.newSavedAssaySet;
 
+                        }
                       }
                     }
-                  }
-                });
+                  });
 
-                this.saveBulkAssays(true);
+                  this.saveBulkAssays(true);
+                } // else 
               }
             }
           }
-        }
-      });
+        } // if first Assay save response
+      },
+      error => {
+         alert("ERROR: Something went wrong during saving Assay Set");
+      });  
     } else {
+      // If Assay Set is already in DB
       this.saveBulkAssays(false);
     }
-
   }
 
   saveBulkAssays(skipFirstRecord?: boolean) {
@@ -518,7 +605,9 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     forkJoin(assayApiUrlList).subscribe(
       results => {
         let resultList: any = [];
+
         resultList = results;
+
         // return list of array of the result
         resultList.forEach(result => {
           if (result.id) {
@@ -528,25 +617,40 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
 
         // if all the records are saved, refresh the page
         if (savedCount == assayApiUrlList.length) {
-          this.validationMessages = null;
-          this.submissionMessage = 'In-vitro Pharmacology Assay data was saved successfully!';
-          this.showSubmissionMessages = true;
-          this.validationResult = false;
-
-          setTimeout(() => {
-            this.showSubmissionMessages = false;
-            this.submissionMessage = '';
-            this.invitroPharmacologyService.bypassUpdateCheck();
-            this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-            this.router.onSameUrlNavigation = 'reload';
-            this.router.navigateByUrl('/invitro-pharm/assaySetBuilder?assaySet=' + this.selectedAssaySet);
-          }, 4000);
+          this.reloadPageAfterSave();
         }
 
         this.isLoading = false;
         this.loadingService.setLoading(false);
       },
-    )
+      error => {
+        this.errorMessage = 'there was a problem saving Assay Set';
+        this.toggleValidation();
+        this.isLoading = false;
+        this.loadingService.setLoading(false);
+        alert("ERROR: Something went wrong during saving Assay Set");
+
+      }
+    );
+  }
+
+  reloadPageAfterSave() {
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
+  
+    this.validationMessages = null;
+    this.submissionMessage = 'In-vitro Pharmacology Assay Set was saved successfully!';
+    this.showSubmissionMessages = true;
+    this.validationResult = false;
+
+    setTimeout(() => {
+      this.showSubmissionMessages = false;
+      this.submissionMessage = '';
+      this.invitroPharmacologyService.bypassUpdateCheck();
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.router.navigateByUrl('/invitro-pharm/assaySetBuilder?assaySet=' + this.selectedAssaySet);
+    }, 4000);
   }
 
   scrubExtraFields() {

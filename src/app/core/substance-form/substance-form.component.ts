@@ -79,7 +79,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   showSubmissionMessages = false;
   submissionMessage: string;
   validationMessages: Array<ValidationMessage>;
-  validationResult = false;
+  validationResult = true;
   private subscriptions: Array<Subscription> = [];
   copy: string;
   private overlayContainer: HTMLElement;
@@ -1044,6 +1044,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.loadingService.setLoading(false);
         this.isLoading = false;
         this.submissionMessage = 'Substance Could not be approved';
+        this.validationResult = false;
         this.addServerError(error.serverError);
         setTimeout(() => {
           this.showSubmissionMessages = false;

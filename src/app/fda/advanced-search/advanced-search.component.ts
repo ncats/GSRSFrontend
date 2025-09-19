@@ -23,8 +23,6 @@ import { transform } from 'lodash';
 import { environment } from '../../../environments/environment';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { UtilsService } from '@gsrs-core/utils';
-import { Ketcher } from 'ketcher-wrapper';
-import { JSDraw } from 'jsdraw-wrapper';
 
 import { InterpretStructureResponse } from '@gsrs-core/structure/structure-post-response.model';
 import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
@@ -37,7 +35,7 @@ import { Facet, FacetParam, FacetValue, FacetUpdateEvent, FacetsManagerService }
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { SubstanceDetail } from '@gsrs-core/substance/substance.model';
 import { QueryableSubstanceDictionary } from '@gsrs-core/guided-search/queryable-substance-dictionary.model';
-import { Editor } from '@gsrs-core/structure-editor/structure.editor.model';
+import { Editor, JSDraw, Ketcher } from '@gsrs-core/structure-editor/structure.editor.model';
 import { AdvancedQueryStatement } from './advanced-query-statement/advanced-query-statement.model';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analytics.service';
 import { LoadingService } from '@gsrs-core/loading';

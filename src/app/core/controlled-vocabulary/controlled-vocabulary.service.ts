@@ -47,19 +47,27 @@ export class ControlledVocabularyService extends BaseHttpService {
     return this.http.get<PagingResponse<Vocabulary>>(url, options);
   }
 
+  clearVocabLoadingIndicators(): void {
+    Object.keys(this.vocabularyLoadingIndicators).forEach(item => {
+      this.vocabularyLoadingIndicators[item] = false;
+    });
+  }
+
   getDomainVocabulary(...domainArgs: Array<string>): Observable<VocabularyDictionary> {
 
     const domains = [...domainArgs];
     let vocabularyDictionary = {};
     const missingDomains = [];
     const tasks$ = [];
+    const tasksNames = [];
 
     domains.forEach(domain => {
-
+      
       if (this.vocabularyDictionary[domain] != null) {
         vocabularyDictionary[domain] = this.vocabularyDictionary[domain];
       } else if (this.vocabularyLoadingIndicators[domain] === true) {
         tasks$.push(this.vocabularySubject[domain]);
+        tasksNames.push(domain);
       } else {
         this.vocabularyLoadingIndicators[domain] = true;
         if (this.vocabularySubject[domain] == null) {
@@ -73,16 +81,20 @@ export class ControlledVocabularyService extends BaseHttpService {
       if (missingDomains.length > 0) {
         tasks$.push(this.fetchVocabulariesFromServer(...missingDomains));
       }
-
       if (tasks$.length > 0) {
         const subscription = forkJoin(tasks$).subscribe(responses => {
           responses.forEach(response => {
-            vocabularyDictionary = Object.assign(vocabularyDictionary, response);
+            vocabularyDictionary = Object.assign(vocabularyDictionary, response);            
           });
           observer.next(vocabularyDictionary);
           observer.complete();
           subscription.unsubscribe();
         }, error => {
+          console.log(error);
+          // if there is an unauthorized error, clear indicators that it is still loading so it retries after login.
+          if (error.status === 403) {
+              this.clearVocabLoadingIndicators();
+          }
           observer.error(error);
           observer.complete();
           subscription.unsubscribe();

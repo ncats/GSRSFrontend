@@ -15,7 +15,8 @@
     <div class="flex-container marginleftneg7px padbottom10px">
 
       <!-- Left Side -->
-      <div class="width25percent textaligncenter marginright30px">
+      <div class="width25percent textaligncenter marginright30px"
+        *ngIf="configSettingsDisplay['substanceUuid'] || (configSettingsDisplay['substanceUuid'] === undefined && true)">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
           eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
           header="Substance Name" [subuuid]="impuritiesSubstance.substanceUuid" [showMorelinks]=true>
@@ -23,39 +24,31 @@
         <div class="textaligncenter font11px" *ngIf="impuritiesSubstance.approvalID">
           {{impuritiesSubstance.approvalID}}
         </div>
-        <!--
-        <div class="divflex">
-          <div class="col marginleft50px">
-            <a [routerLink]="['/substances/register/chemical']" target="_blank" matTooltip='Register New Substance'>
-              <span class="font11px">Register New</span>
-            </a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a [routerLink]="['/structure-search']" target="_blank" matTooltip='Structure Search'>
-              <span class="font11px">Search By Structure</span>
-            </a>
-          </div>
-        </div>
-        -->
       </div>
 
       <!-- Right Side -->
       <div class="flex-item width75percent padleft20px padright20px">
         <div class="form-row">
-          <mat-form-field class="col-3-1">
+          <mat-form-field class="col-3-1"
+            *ngIf="configSettingsDisplay['low'] || (configSettingsDisplay['low'] === undefined && true)">
             <input matInput placeholder="Assay Low" [(ngModel)]="impuritiesSubstance.low" name="low" />
           </mat-form-field>
 
-          <mat-form-field class="col-3-1">
+          <mat-form-field class="col-3-1"
+            *ngIf="configSettingsDisplay['high'] || (configSettingsDisplay['high'] === undefined && true)">
             <input matInput placeholder="Assay High" [(ngModel)]="impuritiesSubstance.high" name="high" />
           </mat-form-field>
 
-          <app-cv-input class="col-3-1" domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesSubstance.unit"
+          <app-cv-input class="col-3-1"
+            *ngIf="configSettingsDisplay['unit'] || (configSettingsDisplay['unit'] === undefined && true)"
+            domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesSubstance.unit"
             (valueChange)="impuritiesSubstance.unit = $event">
           </app-cv-input>
         </div>
 
         <div class="form-row">
-          <mat-form-field class="col-6-6" style="width:100%;">
+          <mat-form-field class="col-6-6" style="width:100%;"
+            *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
             <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesSubstance.comments"
               name="comments"></textarea>
           </mat-form-field>
@@ -100,7 +93,7 @@
       <div class="marginbottom10px"
         *ngFor="let impuritiesTest of impuritiesSubstance.impuritiesTestList; let impuritiesTestIndex = index">
         <app-impurities-test-form [impuritiesTest]="impuritiesTest" [impuritiesTestIndex]="impuritiesTestIndex"
-          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+          [impuritiesSubstanceIndex]="impuritiesSubstanceIndex" [showAdvancedSettings]="showAdvancedSettings">
         </app-impurities-test-form>
       </div>
     </mat-expansion-panel>
@@ -179,7 +172,8 @@
       <div class="marginbottom10px"
         *ngFor="let impuritiesResidualSolventsTest of impuritiesSubstance.impuritiesResidualSolventsTestList; let residualSolventsTestIndex = index">
         <app-impurities-residual-solvents-test [impuritiesResidualSolventsTest]="impuritiesResidualSolventsTest"
-          [residualSolventsTestIndex]="residualSolventsTestIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+          [residualSolventsTestIndex]="residualSolventsTestIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
+          [showAdvancedSettings]="showAdvancedSettings">
         </app-impurities-residual-solvents-test>
       </div>
 
@@ -241,8 +235,9 @@
             <div class="margintop5px">
               <span class="titleblue"><b>Inorganic Impurities Test</b></span>&nbsp;
             </div>
-            <div class="margintop15px custom-badge" matBadge="{{impuritiesSubstance.impuritiesInorganicTestList.length}}"
-              matBadgeColor="warn" matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top">
+            <div class="margintop15px custom-badge"
+              matBadge="{{impuritiesSubstance.impuritiesInorganicTestList.length}}" matBadgeColor="warn"
+              matBadgeSize="medium" matBadgeOverlap="false" matBadgePosition="top">
             </div>
           </div>
         </mat-panel-title>
@@ -255,7 +250,8 @@
         </mat-panel-description>
         -->
         <mat-panel-description>
-          <button mat-raised-button color="primary" (click)="addNewInorganicTest($event)" matTooltip="Add New Inorganic Test">
+          <button mat-raised-button color="primary" (click)="addNewInorganicTest($event)"
+            matTooltip="Add New Inorganic Test">
             <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Inorganic Impurities Test
           </button>
         </mat-panel-description>
@@ -264,7 +260,8 @@
       <div class="marginbottom10px"
         *ngFor="let impuritiesInorganicTest of impuritiesSubstance.impuritiesInorganicTestList; let inorganicTestIndex = index">
         <app-impurities-inorganic-form-test [impuritiesInorganicTest]="impuritiesInorganicTest"
-          [inorganicTestIndex]="inorganicTestIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+          [inorganicTestIndex]="inorganicTestIndex" [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
+          [showAdvancedSettings]="showAdvancedSettings">
         </app-impurities-inorganic-form-test>
       </div>
 

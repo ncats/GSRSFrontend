@@ -10,6 +10,7 @@ export interface PagingResponse<T> {
     etag: string;
     path: string;
     statusKey: string;
+    searchStatusUrl: string;
     uri: string;
     nextPageUri: string;
     method: string;

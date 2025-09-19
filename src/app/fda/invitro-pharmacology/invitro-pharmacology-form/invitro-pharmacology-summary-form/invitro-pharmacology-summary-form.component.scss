@@ -216,7 +216,7 @@
 }
 
 .col-2 {  /* 2 columns in one row */
-  width: calc((100% - 30px * 1) / 2);
+  width: calc((100% - 40px * 1) / 2);
   margin-right: 25px;
 }
 
@@ -257,7 +257,7 @@
 }
 
 .col-5-1:last-child {
-  margin-right: 0px;
+  margin-right: 30px;
 }
 
 .col-6-1 {  /* 6 columns in one row  */
@@ -276,6 +276,10 @@
 
 .col-7-1:last-child {
   margin-right: 0px;
+}
+
+.marginleftneg80px {
+  margin-top: -80px;
 }
 
 .margintopneg10px {
@@ -350,12 +354,24 @@ marginbottom40px {
   margin-left: 100px;
 }
 
+.marginleft200px {
+  margin-left: 200px;
+}
+
+.marginright10px {
+  margin-right: 10px;
+}
+
 .marginright20px {
   margin-right: 20px;
 }
 
 .marginright30px {
   margin-right: 30px;
+}
+
+.marginright50px {
+  margin-right: 50px;
 }
 
 .padtop5px {
@@ -376,11 +392,6 @@ marginbottom40px {
 
 .bordergreen {
   border: 1px solid var(--regular-green-color);
-}
-
-.width20px {
-  width: 20px;
-  min-width: 20px;
 }
 
 .width20px {
@@ -622,8 +633,8 @@ hr {
 }
 
 .related-substance {
-  min-width: 250px;
-  max-width: 250px;
+  min-width: 270px;
+  max-width: 270px;
 }
 
 .mat-card {

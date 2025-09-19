@@ -15,6 +15,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { Facet, FacetUpdateEvent } from '@gsrs-core/facets-manager/facet.model';
@@ -88,6 +89,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private location: Location,
     private facetManagerService: FacetsManagerService,
     public gaService: GoogleAnalyticsService,
+    private titleService: Title
   ) {}
 
   ngOnInit() {
@@ -100,6 +102,9 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.order = this.activatedRoute.snapshot.queryParams['order'] || '$trialNumber';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+
+    // Set title on Browser
+    this.titleService.setTitle(`Clinical Trial Browser`);
 
     // Need this to go back to Advanced Search
     if (this.privateSearchTerm) {
