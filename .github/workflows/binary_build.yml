@@ -51,7 +51,7 @@ jobs:
       #${{ inputs.npm_build_string }}
 
       - name: Zip dist into deployable_binaries.zip
-        working-directory: ${{ inputs.frontend_dir }}
+        working-directory: . #${{ inputs.frontend_dir }}
         run: |
           test -d dist || { echo "dist/ not found after build"; exit 1; }
           rm -f deployable_binaries.zip
@@ -64,8 +64,9 @@ jobs:
           name: buildRelease2 #${{ inputs.release_tag }}
           draft: false
           prerelease: false
+          #${{ inputs.frontend_dir }}/
           files: |
-            ${{ inputs.frontend_dir }}/deployable_binaries.zip
+            deployable_binaries.zip
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
