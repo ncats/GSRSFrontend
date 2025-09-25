@@ -1,76 +1,81 @@
-name: Build & Release (deployable_binaries.zip)
+name: Build & Publish Frontend Binaries
 
 on:
-  # push:
-  #   branches:
-  #     - "feature/deployable_binary_build"
   workflow_dispatch:
     inputs:
-      version:
-        description: "Version tag"
+      npm_build_string:
+        description: "NPM build script to run (e.g. build:fda:prod)"
         required: true
-        type: string
-      target_env:
-        description: "Which environment to build?"
+        default: "build:fda:prod"
+      release_tag:
+        description: "Release tag to publish to (e.g. buildRelease)"
         required: true
-        default: "prod"
-        type: choice
-        options:
-          - dev
-          - pre-prod
-          - prod
+        default: "buildRelease2"
+      frontend_dir:
+        description: "Path to GSRSFrontend (relative to repo root)"
+        required: true
+        default: "."
+      node_version:
+        description: "Node.js version"
+        required: true
+        default: "18.x"
 
 permissions:
-  contents: write
+  contents: write  # needed to create/update releases
 
 jobs:
   build-and-release:
-    strategy:
-      matrix:
-        language: [node]
     runs-on:
       group: ncats-onprem-internal-runners
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
 
-    env:
-      NODE_OPTIONS: --max_old_space_size=8192
-
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: feature/deployable_binary_build
 
-      - name: Use Node.js 16.x (Angular 13-compatible)
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '16.x'
-          cache: 'npm'
+          node-version: ${{ inputs.node_version }}
 
-      - name: Clean install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build:gsrs:${{ github.event.inputs.target_env }}
-
-      - name: Create release zip
+      - name: Install dependencies
+        working-directory: ${{ inputs.frontend_dir }}
         run: |
-          rm -f deployable_binaries.zip
-          if [ -d dist ]; then
-            zip -r deployable_binaries.zip dist
+          if [ -f package-lock.json ]; then
+            npm ci
           else
-            echo "dist/ not found"; exit 1
+            npm install
           fi
 
-      - name: Create GitHub Release
-        id: create_release
+      - name: Run build.sh
+        working-directory: ${{ inputs.frontend_dir }}
+        run: bash build.sh
+
+      - name: Run NPM build
+        working-directory: ${{ inputs.frontend_dir }}
+        run: npm run ${{ inputs.npm_build_string }}
+
+      - name: Zip dist into deployable_binaries.zip
+        working-directory: ${{ inputs.frontend_dir }}
+        run: |
+          test -d dist || { echo "dist/ not found after build"; exit 1; }
+          rm -f deployable_binaries.zip
+          zip -r deployable_binaries.zip dist
+
+      - name: Create/Update GitHub Release and upload asset
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ github.event.inputs.version }}        # prepend "v" if you want tags like v1.2.3
-          name: Release v${{ github.event.inputs.version }}
-          files: deployable_binaries.zip
+          tag_name: ${{ inputs.release_tag }}
+          name: ${{ inputs.release_tag }}
           draft: false
           prerelease: false
+          files: |
+            ${{ inputs.frontend_dir }}/deployable_binaries.zip
+          fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Print download URL
+        run: |
+          echo "Download:"
+          echo "https://github.com/${{ github.repository }}/releases/download/${{ inputs.release_tag }}/deployable_binaries.zip"
