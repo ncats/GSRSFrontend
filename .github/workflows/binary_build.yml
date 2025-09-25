@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: feature/deployable_binary_build
 
       - name: Use Node.js 16.x (Angular 13-compatible)
         uses: actions/setup-node@v4
