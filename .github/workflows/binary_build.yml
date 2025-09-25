@@ -19,6 +19,9 @@ on:
         description: "Node.js version"
         required: true
         default: "18.x"
+  push:
+    branches:
+      - feature/deployable_binary_build
 
 permissions:
   contents: write  # needed to create/update releases
