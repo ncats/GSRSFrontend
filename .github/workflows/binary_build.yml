@@ -22,7 +22,6 @@ on:
   push:
     branches:
       - feature/deployable_binary_build
-      #test run
 
 permissions:
   contents: write  # needed to create/update releases
@@ -40,16 +39,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ inputs.node_version }}
-
-      - name: Install dependencies
-        working-directory: ${{ inputs.frontend_dir }}
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+          node-version: 18.x #${{ inputs.node_version }}
 
       - name: Run build.sh
         working-directory: ${{ inputs.frontend_dir }}
@@ -57,7 +47,8 @@ jobs:
 
       - name: Run NPM build
         working-directory: ${{ inputs.frontend_dir }}
-        run: npm run ${{ inputs.npm_build_string }}
+        run: npm run build:fda:prod
+      #${{ inputs.npm_build_string }}
 
       - name: Zip dist into deployable_binaries.zip
         working-directory: ${{ inputs.frontend_dir }}
@@ -69,8 +60,8 @@ jobs:
       - name: Create/Update GitHub Release and upload asset
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.release_tag }}
-          name: ${{ inputs.release_tag }}
+          tag_name: buildRelease2 #${{ inputs.release_tag }}
+          name: buildRelease2 #${{ inputs.release_tag }}
           draft: false
           prerelease: false
           files: |
@@ -82,4 +73,6 @@ jobs:
       - name: Print download URL
         run: |
           echo "Download:"
-          echo "https://github.com/${{ github.repository }}/releases/download/${{ inputs.release_tag }}/deployable_binaries.zip"
+          echo "https://github.com/${{ github.repository }}/releases/download/buildRelease2/deployable_binaries.zip" 
+          
+        #  ${{ inputs.release_tag }}/deployable_binaries.zip"
