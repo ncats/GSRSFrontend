@@ -22,6 +22,7 @@ on:
   push:
     branches:
       - feature/deployable_binary_build
+      #test run
 
 permissions:
   contents: write  # needed to create/update releases
