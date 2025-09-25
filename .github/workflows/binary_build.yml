@@ -1,0 +1,74 @@
+name: Build & Release (deployable_binaries.zip)
+
+on:
+  # push:
+  #   branches:
+  #     - "feature/deployable_binary_build"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version tag"
+        required: true
+        type: string
+      target_env:
+        description: "Which environment to build?"
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - dev
+          - pre-prod
+          - prod
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    strategy:
+      matrix:
+        language: [node]
+    runs-on:
+      group: ncats-onprem-internal-runners
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+
+    env:
+      NODE_OPTIONS: --max_old_space_size=8192
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 16.x (Angular 13-compatible)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
+          cache: 'npm'
+
+      - name: Clean install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build:gsrs:${{ github.event.inputs.target_env }}
+
+      - name: Create release zip
+        run: |
+          rm -f deployable_binaries.zip
+          if [ -d dist ]; then
+            zip -r deployable_binaries.zip dist
+          else
+            echo "dist/ not found"; exit 1
+          fi
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}        # prepend "v" if you want tags like v1.2.3
+          name: Release v${{ github.event.inputs.version }}
+          files: deployable_binaries.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
