@@ -1,8 +1,7 @@
 name: Build & Publish Frontend Binaries
-
-    on:
-      release:
-        types: [published] # Triggers when a release is published
+on:
+  release:
+    types: [published] # Triggers when a release is published
     inputs:
       npm_build_string:
         description: "NPM build script to run (e.g. build:fda:prod)"
