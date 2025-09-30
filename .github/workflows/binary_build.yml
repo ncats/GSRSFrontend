@@ -1,16 +1,17 @@
 name: Build & Publish Frontend Binaries
-on:
-  release:
-    types: [published] # Triggers when a release is published
+
+    on:
+      release:
+        types: [published] # Triggers when a release is published
     inputs:
       npm_build_string:
         description: "NPM build script to run (e.g. build:fda:prod)"
         required: true
         default: "build:fda:prod"
-#      release_tag:
-#        description: "Release tag to publish"
-#        required: true
-#        default: ${{ github.ref_name }}
+      release_tag:
+        description: "Release tag to publish"
+        required: true
+        default: ${{ github.ref_name }}
       frontend_dir:
         description: "Path to GSRSFrontend (relative to repo root)"
         required: true
@@ -19,9 +20,9 @@ on:
         description: "Node.js version"
         required: true
         default: "18.x"
-#  push:
-#    branches:
-#      - feature/deployable_binary_build
+  push:
+    branches:
+      - feature/deployable_binary_build
 
 permissions:
   contents: write  # needed to create/update releases
@@ -60,8 +61,8 @@ jobs:
       - name: Create/Update GitHub Release and upload asset
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
+          tag_name: ${{ inputs.release_tag }}
+          name: ${{ inputs.release_tag }}
           draft: false
           prerelease: false
           #${{ inputs.frontend_dir }}/
