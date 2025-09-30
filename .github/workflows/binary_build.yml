@@ -7,10 +7,10 @@ on:
         description: "NPM build script to run (e.g. build:fda:prod)"
         required: true
         default: "build:fda:prod"
-      release_tag:
-        description: "Release tag to publish"
-        required: true
-        default: ${{ github.ref_name }}
+#      release_tag:
+#        description: "Release tag to publish"
+#        required: true
+#        default: ${{ github.ref_name }}
       frontend_dir:
         description: "Path to GSRSFrontend (relative to repo root)"
         required: true
@@ -60,8 +60,8 @@ jobs:
       - name: Create/Update GitHub Release and upload asset
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.release_tag }}
-          name: ${{ inputs.release_tag }}
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           draft: false
           prerelease: false
           #${{ inputs.frontend_dir }}/
