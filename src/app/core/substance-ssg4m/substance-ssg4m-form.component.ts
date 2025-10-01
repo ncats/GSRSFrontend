@@ -1050,6 +1050,10 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     await this.delay(2500)
 
     function filter (node: HTMLElement) {
+      if (!node.tagName) {
+        return true;
+      }
+
       return (node.tagName.toLowerCase() !== 'button');
     }
     const options = {
