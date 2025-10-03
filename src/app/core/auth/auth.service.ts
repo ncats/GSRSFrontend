@@ -1,8 +1,8 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
-import { Auth, Role, UserGroup } from './auth.model';
-import { Observable, Subject, of } from 'rxjs';
-import { map, take, catchError } from 'rxjs/operators';
+import { Auth, Privilege, Role, UserGroup } from './auth.model';
+import { from, Observable, Subject, throwError, of, firstValueFrom } from 'rxjs';
+import { map, take, catchError, concat, switchMap, tap } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/download.model';
@@ -14,46 +14,48 @@ export class AuthService {
   private _auth: Auth;
   private _authUpdate: Subject<Auth> = new Subject();
   private isLoading: boolean;
+  private _privileges: Array<Privilege> = [];
 
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
-    this.isLoading = true;
-    /*
-    this.fetchAuth().pipe(take(1)).subscribe(auth => {
-      if (auth && auth.computedToken != null) {
-        this._auth = auth;
-      } else {
-        this._auth = null;
-      }
-      this._authUpdate.next(this._auth);
-      this.isLoading = false;
-    }, error => {
-      this._authUpdate.next(null);
-      this.isLoading = false;
-    });
-    */
-    configService.afterLoad().then(cs => {
-      this.fetchAuth().pipe(take(1)).subscribe(auth => {
-        if (auth && auth.computedToken != null) {
-          this._auth = auth;
-        } else {
-          this._auth = null;
-        }
-        this._authUpdate.next(this._auth);
-        this.isLoading = false;
-      }, error => {
-        this._authUpdate.next(null);
-        this.isLoading = false;
+      console.log(`starting AuthService constructor`);
+      this.isLoading = true;
+      configService.afterLoad().then(cs => {
+        this.fetchAuth().pipe(take(1)).subscribe(auth => {
+          if (auth && auth.computedToken != null) {
+            this._auth = auth;
+          } else {
+            this._auth = null;
+          }
+          this._authUpdate.next(this._auth);
+          this.isLoading = false;
+        }, error => {
+          this._authUpdate.next(null);
+          this.isLoading = false;
+        });
+        console.log('going to call fetchPrivs');
       });
-    });
+      this.fetchPrivs().subscribe({
+          next: privs => {
+            this._privileges = privs;
+          },
+          error: err=>{
+            console.error('Error fetching privileges:', err);
+          },
+          complete: () => {
+            console.log('Privilege fetch complete');
+            return this._privileges;
+          }
+		  });
   }
 
-  get auth(): Auth {
+
+get auth(): Auth {
     return this._auth;
-  }
+ }
 
   public checkAuth(): Observable<Auth> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
@@ -246,6 +248,15 @@ export class AuthService {
     return false;
   }
 
+  async canEditData( ):Promise<boolean> {
+    if( this._privileges == null || this._privileges.length === 0) {
+      const privs = await firstValueFrom(this.fetchPrivs());
+      return privs.some(p => p.privilege === 'Edit');
+    }
+    console.log(`starting canEditData.  size of privs ${this._privileges.length}`);
+    return this._privileges != null && this._privileges.some(p=>p.privilege=="Edit");
+  }
+
   hasAnyRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {
@@ -325,6 +336,28 @@ export class AuthService {
       });
     });
   }
+  
+private fetchPrivs(): Observable<Array<Privilege>> {
+  console.log('starting fetchPrivs');
+  return from(this.configService.afterLoad()).pipe(
+    
+    switchMap(() => {
+      const baseUrl = this.configService.configData?.apiBaseUrl || '/';
+      const url = `${baseUrl}api/v1/allmyprivs`;
+      console.log(`in switchMap, got url: ${url}`);
+      return this.http.get<Privilege[]>(url);
+    }),
+    tap(privs => {
+      this._privileges =privs;
+      console.log(`received privs ${JSON.stringify(privs)}`);
+    }),
+    catchError(err => {
+      console.error("Authorized error", err);
+      return throwError(() => err);
+    })
+  );
+}
+
 
   /*
   private fetchAuth(): Observable<Auth> {

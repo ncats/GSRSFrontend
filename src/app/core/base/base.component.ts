@@ -139,7 +139,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 
@@ -174,9 +174,11 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(roleSubscription);
 
+    this.canRegister=await this.authService.canEditData();
+    console.log(`in BaseComponent, canRegister: ${this.canRegister}`);
     const regSubscription =
     this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
-      this.canRegister = response;
+      //this.canRegister = response;
     });
     this.subscriptions.push(regSubscription);
     this.baseDomain = this.configService.configData.apiUrlDomain;
