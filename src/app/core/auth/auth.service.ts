@@ -250,7 +250,9 @@ get auth(): Auth {
 
   async canEditData( ):Promise<boolean> {
     if( this._privileges == null || this._privileges.length === 0) {
+      console.log(`in canEditData, privilege array is empty/null`);
       const privs = await firstValueFrom(this.fetchPrivs());
+      console.log(`in canEditData, receives privs: ${JSON.stringify(privs)}`); 
       return privs.some(p => p.privilege === 'Edit');
     }
     console.log(`starting canEditData.  size of privs ${this._privileges.length}`);
@@ -337,19 +339,19 @@ get auth(): Auth {
     });
   }
   
-private fetchPrivs(): Observable<Array<Privilege>> {
+private fetchPrivs(): Observable<Privilege[]> {
   console.log('starting fetchPrivs');
   return from(this.configService.afterLoad()).pipe(
-    
     switchMap(() => {
       const baseUrl = this.configService.configData?.apiBaseUrl || '/';
       const url = `${baseUrl}api/v1/allmyprivs`;
       console.log(`in switchMap, got url: ${url}`);
-      return this.http.get<Privilege[]>(url);
+      return this.http.get<any>(url);
     }),
-    tap(privs => {
-      this._privileges =privs;
-      console.log(`received privs ${JSON.stringify(privs)}`);
+    map(response => {
+      const privs: Privilege[] = response.privileges.map(p => ({ privilege: p }));
+      this._privileges = privs;
+      return privs;
     }),
     catchError(err => {
       console.error("Authorized error", err);

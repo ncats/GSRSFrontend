@@ -71,14 +71,18 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
 
-   const rolesSubscription =  this.authService.hasAnyRolesAsync('updater', 'superUpdater').subscribe(canEdit => {
+    this.canEdit=await this.authService.canEditData();
+    this.isEditable =this.canEdit
+        && this.substance.substanceClass != null
+        && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
+   /*const rolesSubscription =  this.authService.hasAnyRolesAsync('updater', 'superUpdater').subscribe(canEdit => {
       this.canEdit = canEdit;
       this.isEditable = canEdit
         && this.substance.substanceClass != null
         && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
-    });
+    });*/
     const rolesSubscription2 =  this.authService.hasAnyRolesAsync('admin').subscribe(canEdit => {
       this.isAdmin = canEdit;
     });
