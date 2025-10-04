@@ -20,7 +20,7 @@
         {{ showSubmissionMessages ? 'Hide' : 'Show' }} messages
         <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
       </button>
-      <div *ngIf="isAdmin === true || isUpdater === true" class="advanced-features">
+      <div *ngIf="canMakeAdvancedEdits === true || canUpdate === true" class="advanced-features">
         <div class="admin-functions">
           <mat-form-field>
             <mat-label>Advanced Features</mat-label>
@@ -59,7 +59,7 @@
                   Switch primary and alt definitions
                 </mat-option>
               </ng-container>
-              <ng-container *ngIf="isAdmin === true || isUpdater === true">
+              <ng-container *ngIf="canUpdate === true">
                 <mat-option value="glyco" [disabled]="substanceClass !== 'protein'">
                   Predict N-Glycosylation Sites
                 </mat-option>

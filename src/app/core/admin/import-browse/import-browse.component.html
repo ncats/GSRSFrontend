@@ -556,12 +556,12 @@
                         <mat-icon class = "button-link-img" svgIcon="search"></mat-icon>
                       </button>
   
-                      <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
-                        matTooltip='edit record'>
+                      <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" 
+                        *ngIf="canImportData" matTooltip='edit record'>
                         <mat-icon svgIcon="edit"></mat-icon>
                       </a>
   
-                      <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                      <button *ngIf="canImportData" mat-icon-button [matMenuTriggerFor]="editMenu">
                         <mat-icon svgIcon="file_copy"></mat-icon>
                       </button>
                       </span>
@@ -603,12 +603,12 @@
   
                       <mat-menu #editMenu="matMenu">
                         <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                          [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
+                          [queryParams]="{copy:substance.uuid}" *ngIf="canImportData"
                           matTooltip='copy substance to new registration form'>
                           <span>Copy Substance to New Form</span>
                         </a>
                         <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                          [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin"
+                          [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="canImportData"
                           matTooltip='copy definition to new registration form'>
                           <span>Copy Definition to New Form</span>
                         </a>

@@ -102,6 +102,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
   isAdmin = false;
+  canImportData = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -310,7 +311,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.substances = [];
     this.records = [];
 
@@ -368,6 +369,8 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showAudit = this.authService.hasRoles('admin');
 
     });
+    this.canImportData = await this.authService.hasSpecificPrivilege('Import Data');
+
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getStagingFacets );
 
     this.environment = this.configService.environment;

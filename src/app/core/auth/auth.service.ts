@@ -259,6 +259,18 @@ get auth(): Auth {
     return this._privileges != null && this._privileges.some(p=>p.privilege=="Edit");
   }
 
+  
+  async hasSpecificPrivilege(requestedPrivilege: string ):Promise<boolean> {
+    if( this._privileges == null || this._privileges.length === 0) {
+      console.log(`in hasSpecificPrivilege, privilege array is empty/null`);
+      const privs = await firstValueFrom(this.fetchPrivs());
+      console.log(`in hasSpecificPrivilege, receives privs: ${JSON.stringify(privs)}`); 
+      return privs.some(p => p.privilege === requestedPrivilege);
+    }
+    console.log(`starting hasSpecificPrivilege with existing privs.  size of privs ${this._privileges.length}`);
+    return this._privileges != null && this._privileges.some(p=>p.privilege==requestedPrivilege);
+  }
+
   hasAnyRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {

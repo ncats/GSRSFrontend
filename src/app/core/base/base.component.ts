@@ -39,7 +39,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  isAdmin = false;
+  canConfigureSystem = false;
   contactEmail: string;
   version?: string;
   versionTooltipMessage = '';
@@ -169,11 +169,7 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.loadedComponents = null;
       }
     }
-    const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(roleSubscription);
-
+    this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
     this.canRegister=await this.authService.canEditData();
     console.log(`in BaseComponent, canRegister: ${this.canRegister}`);
     const regSubscription =

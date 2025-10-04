@@ -1,6 +1,6 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
-    <mat-form-field style = "margin-left: 30px;" *ngIf="isAdmin" id = "facetView" class = "facetView">
+    <mat-form-field style = "margin-left: 30px;" *ngIf="canUpdate" id = "facetView" class = "facetView">
       <mat-label>Facet View:</mat-label>
       <mat-select [formControl]="facetViewControl" (openedChange)="openedFacetViewChange($event)" (selectionChange)="facetViewChange($event)">
         <mat-option *ngFor="let option of facetViewCategory" [value]="option">
@@ -10,7 +10,7 @@
     </mat-form-field>
 
     <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
-    <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && isAdmin)">
+    <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && canUpdate)">
       <span *ngIf="showCrossEntitySearch == true">
         <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm"
           [entitySmiles]="smiles" [entityType]="privateSearchType"
@@ -529,12 +529,12 @@
                       <mat-icon svgIcon="search"></mat-icon>
                     </button>
 
-                    <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
+                    <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="canUpdate"
                       matTooltip='edit record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
 
-                    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                    <button *ngIf="canUpdate" mat-icon-button [matMenuTriggerFor]="editMenu">
                       <mat-icon svgIcon="file_copy"></mat-icon>
                     </button>
 
@@ -571,12 +571,12 @@
 
                     <mat-menu #editMenu="matMenu">
                       <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                        [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
+                        [queryParams]="{copy:substance.uuid}" *ngIf="canUpdate"
                         matTooltip='copy substance to new registration form'>
                         <span>Copy Substance to New Form</span>
                       </a>
                       <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                        [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin"
+                        [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="canUpdate"
                         matTooltip='copy definition to new registration form'>
                         <span>Copy Definition to New Form</span>
                       </a>
@@ -649,12 +649,12 @@
                       <mat-icon class = "button-link-img" svgIcon="search"></mat-icon>
                         </button>
 
-                    <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
+                    <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="canUpdate"
                           matTooltip='edit record'>
                           <mat-icon svgIcon="edit"></mat-icon>
                         </a>
 
-                        <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                        <button *ngIf="canUpdate" mat-icon-button [matMenuTriggerFor]="editMenu">
                           <mat-icon svgIcon="file_copy"></mat-icon>
                         </button>
                       </span>
@@ -696,12 +696,12 @@
 
                   <mat-menu #editMenu="matMenu">
                     <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                      [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
+                      [queryParams]="{copy:substance.uuid}" *ngIf="canUpdate"
                       matTooltip='copy substance to new registration form'>
                       <span>Copy Substance to New Form</span>
                     </a>
                     <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                      [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin"
+                      [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="canUpdate"
                       matTooltip='copy definition to new registration form'>
                       <span>Copy Definition to New Form</span>
                     </a>

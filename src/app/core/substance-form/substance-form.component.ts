@@ -88,8 +88,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
-  isAdmin: boolean;
-  isUpdater: boolean;
+  canUpdate: boolean;
+  canMakeAdvancedEdits: boolean;
+
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -293,7 +294,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
     }
@@ -309,9 +310,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
-    }
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    }    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
+    this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     if(this.location.path().includes('chemical-simplified')) {

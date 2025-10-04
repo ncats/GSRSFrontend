@@ -9,14 +9,6 @@
       matTooltipPosition="below">Ver. {{version}}</span>
   </div>
 
-  <!-- <span class="nav-big">
-    <span class="nav-item" *ngFor="let navItem of navItems">
-      <a [routerLink]="['/' + navItem.path]" [ngClass]="{active: mainPathSegment == navItem.path}">
-        {{navItem.display}}
-      </a>
-    </span>
-  </span> -->
-  <!-- <span class="middle-fill"></span> -->
   <span class="nav-small">
     <button class = "top-button" mat-button mat-primary-button  style = "color:white;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()" aria-label="main menu">
      <span style = "font-size:16px;">Menu &nbsp;</span><mat-icon svgIcon="menu"></mat-icon>
@@ -60,7 +52,7 @@
           </mat-menu>
         </ng-container>
       </div>
-      <a mat-menu-item *ngIf="isAdmin" routerLink="/admin">
+      <a mat-menu-item *ngIf="canConfigureSystem" routerLink="/admin">
         Admin Panel
       </a>
     </mat-menu>
@@ -200,7 +192,7 @@
       <a mat-menu-item (click)="viewDrafts()">
         <span>Saved Edit Drafts</span>
       </a>
-      <a routerLink="/admin" mat-menu-item *ngIf="isAdmin">
+      <a routerLink="/admin" mat-menu-item *ngIf="canConfigureSystem">
         <span>Admin Panel</span>
       </a>
       <a [routerLink]="['/registrars']" class = "add-at-low-res" *ngIf = "canRegister" mat-menu-item >

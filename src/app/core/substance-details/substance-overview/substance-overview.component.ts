@@ -37,6 +37,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   versions: string[] = [];
   isEditable = false;
   isAdmin = false;
+  canRestoreVersions = false;
+
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
   baseDomain: string;
@@ -74,6 +76,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   async ngOnInit() {
 
     this.canEdit=await this.authService.canEditData();
+    this.canRestoreVersions = await this.authService.hasSpecificPrivilege("Restore Previous Versions");
     this.isEditable =this.canEdit
         && this.substance.substanceClass != null
         && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
