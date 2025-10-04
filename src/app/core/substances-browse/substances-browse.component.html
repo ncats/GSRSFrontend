@@ -151,9 +151,6 @@
       <div class="mat-elevation-z2 structure-search-status"  *ngIf = "resultsInitiated  && this.structureDialogCanceled && !asyncFinished">
         <div style = "margin:20px">
           <span class = "structure-search-header">Structure Search is Processing...</span>
-            <!--   <span class = "structure-search-header">Structure Search is <b>{{pauseStructureSearch ? "PAUSED":"Processing.."}}</b></span>
-          <button mat-button  mat-raised-button class = "primary mat-primary structure-dialog-button" (click) = "pauseAsync(true)" *ngIf="!pauseStructureSearch">Pause Search</button>
-          <button mat-button mat-raised-button class = "primary mat-primary structure-dialog-button" (click) = "pauseAsync(false)" *ngIf="pauseStructureSearch">Resume Search</button>-->
           </div>
         <div><mat-progress-spinner *ngIf = "!pauseStructureSearch"
           class="spinner"
@@ -265,10 +262,6 @@
                 </span>
               </span>
 
-              <!--  <button mat-icon-button color="primary" (click)="clipboard(this.smiles)">
-                    <mat-icon  color="primary" svgIcon="paste"></mat-icon>
-                  </button>-->
-              <!-- if search is coming from Advanced Search -->
               <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
                   <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Smiles to clipboard"></mat-icon>
               </button>
@@ -762,7 +755,6 @@
     <div style = "width:90%;" *ngIf = "resultsInitiated">
       <h3>{{privateSearchType | titlecase }} Search is Processing...</h3><br/>
      <div class = "structure-dialog-content"> Returning all results may take some time depending on the query. <br/>The results will refresh once the search is complete. <br/>You may close this dialog to browse the incomplete results.</div><br/><br/>
-      <!--<button mat-button class = "primary" (click) = "pauseStructureSearch = !pauseStructureSearch">{{pauseStructureSearch ? 'RESUME':'PAUSE'}}</button>-->
     </div>
     <mat-dialog-actions><span class = "middle-fill"></span><button mat-button class = "primary mat-raised-button mat-primary structure-dialog-button" (click) = "pauseCloseAsync()" >Close dialog</button></mat-dialog-actions>
   </mat-dialog>

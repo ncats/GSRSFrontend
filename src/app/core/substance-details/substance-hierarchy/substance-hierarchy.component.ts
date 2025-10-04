@@ -28,10 +28,10 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode: HierarchyNode;
   activeNode: any;
-  isAdmin: boolean;
+  canEdit: boolean = false;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.uuid = this.substance.uuid;
     this.name = this.substance._nameHTML;
     this.selfNode = {
@@ -51,7 +51,7 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
       }, error => {
        this.loadHierarchy([this.selfNode]);
       });
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+      this.canEdit = await this.authService.hasSpecificPrivilege('Edit')
   }
 
   loadHierarchy(orig: any): void {
