@@ -261,13 +261,14 @@ get auth(): Auth {
 
   
   async hasSpecificPrivilege(requestedPrivilege: string ):Promise<boolean> {
+    console.log(`starting hasSpecificPrivilege requestedPrivilege ${requestedPrivilege} with type ${typeof requestedPrivilege}`);
     if( this._privileges == null || this._privileges.length === 0) {
       console.log(`in hasSpecificPrivilege, privilege array is empty/null`);
       const privs = await firstValueFrom(this.fetchPrivs());
       console.log(`in hasSpecificPrivilege, receives privs: ${JSON.stringify(privs)}`); 
       return privs.some(p => p.privilege === requestedPrivilege);
     }
-    console.log(`starting hasSpecificPrivilege with existing privs.  size of privs ${this._privileges.length}`);
+    console.log(`in hasSpecificPrivilege size of privs ${this._privileges.length}`);
     return this._privileges != null && this._privileges.some(p=>p.privilege==requestedPrivilege);
   }
 

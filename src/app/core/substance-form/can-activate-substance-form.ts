@@ -18,7 +18,15 @@ export class CanActivateSubstanceForm implements CanActivate {
         return new Observable(observer => {
             this.authService.getAuth().subscribe(auth => {
                 if (auth) {
-                    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').subscribe(response => {
+                    console.log('in canActivate, going to check for Edit priv');
+                    if(this.authService.hasSpecificPrivilege('Edit')){
+                        observer.next(true);
+                        observer.complete();
+                    } else {
+                        observer.next(this.router.parseUrl('/browse-substance'));
+                        observer.complete();
+                   }
+                    /*this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').subscribe(response => {
                         if (response) {
                             observer.next(true);
                             observer.complete();
@@ -26,7 +34,7 @@ export class CanActivateSubstanceForm implements CanActivate {
                             observer.next(this.router.parseUrl('/browse-substance'));
                             observer.complete();
                         }
-                    });
+                    });*/
                 } else {
                     const navigationExtras: NavigationExtras = {
                         queryParams: {
