@@ -36,7 +36,7 @@
             View Impurities
           </a>&nbsp;&nbsp;&nbsp;
 
-          <span *ngIf="isAdmin">
+          <span *ngIf="canEdit">
             <button mat-flat-button color="primary" (click)="confirmDeleteImpurities()"
               matTooltip='Delete this Impurity'>
               Delete

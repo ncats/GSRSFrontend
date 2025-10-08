@@ -26,15 +26,6 @@ export class CanActivateSubstanceForm implements CanActivate {
                         observer.next(this.router.parseUrl('/browse-substance'));
                         observer.complete();
                    }
-                    /*this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').subscribe(response => {
-                        if (response) {
-                            observer.next(true);
-                            observer.complete();
-                        } else {
-                            observer.next(this.router.parseUrl('/browse-substance'));
-                            observer.complete();
-                        }
-                    });*/
                 } else {
                     const navigationExtras: NavigationExtras = {
                         queryParams: {

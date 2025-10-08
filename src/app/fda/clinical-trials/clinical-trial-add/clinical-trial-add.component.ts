@@ -32,10 +32,8 @@ export class ClinicalTrialAddComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-    this.canEdit = response;
-      });
+  async ngOnInit() {
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
   }
 
  addClinicalTrial() {

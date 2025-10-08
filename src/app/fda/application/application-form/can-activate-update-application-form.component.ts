@@ -24,15 +24,13 @@ export class CanActivateUpdateApplicationFormComponent implements CanActivate {
             if (loadedComponents && loadedComponents.applications) {
             this.authService.getAuth().pipe(take(1)).subscribe(auth => {
                 if (auth) {
-                    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-                        if (response) {
-                            observer.next(true);
-                            observer.complete();
-                        } else {
-                            observer.next(this.router.parseUrl('/browse-applications'));
-                            observer.complete();
-                        }
-                    });
+                    if(this.authService.hasSpecificPrivilege('Edit')) {
+                        observer.next(true);
+                        observer.complete();
+                    } else {
+                        observer.next(this.router.parseUrl('/browse-applications'));
+                        observer.complete();
+                    }
                 } else {
                     const navigationExtras: NavigationExtras = {
                         queryParams: {

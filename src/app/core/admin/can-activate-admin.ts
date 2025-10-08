@@ -18,15 +18,13 @@ export class CanActivateAdmin implements CanActivate {
         return new Observable(observer => {
             this.authService.getAuth().subscribe(auth => {
                 if (auth) {
-                    this.authService.hasAnyRolesAsync('Admin').subscribe(response => {
-                        if (response) {
-                            observer.next(true);
-                            observer.complete();
-                        } else {
-                            observer.next(this.router.parseUrl('/home'));
-                            observer.complete();
-                        }
-                    });
+                    if(this.authService.hasSpecificPrivilege("Configure System")) {
+                        observer.next(true);
+                        observer.complete();
+                    } else {
+                        observer.next(this.router.parseUrl('/home'));
+                        observer.complete();
+                    }
                 } else {
                     const navigationExtras: NavigationExtras = {
                         queryParams: {

@@ -34,7 +34,7 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   defaultSubstanceKeyType = 'UUID';
   agencySubstanceKeyType = 'UUID';
 
-  isAdmin: boolean;
+  canEdit: boolean = false;
   isTesting  = false;
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
@@ -66,15 +66,13 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   ) {
   }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-      if (this.isAdmin) {
-        this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
-       } else {
-         this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
-       }
-    });
+  async ngOnInit() {
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
+    if (this.canEdit) {
+      this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
+    } else {
+      this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
+    }
     this.pageSize = 10;
     this.pageIndex = 0;
     this.activatedRoute.paramMap.subscribe(params => {

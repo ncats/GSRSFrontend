@@ -19,15 +19,9 @@ export class CanActivateRegisterApplicationFormComponent implements CanActivate 
     return new Observable(observer => {
       this.authService.getAuth().pipe(take(1)).subscribe(auth => {
         if (auth) {
-          this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry').pipe(take(1)).subscribe(response => {
-            if (response) {
-              observer.next(true);
-              observer.complete();
-            } else {
-              observer.next(this.router.parseUrl('/browse-applications'));
-              observer.complete();
-            }
-          });
+          if(this.authService.hasSpecificPrivilege('Create')) {
+            
+          }
         } else {
           const navigationExtras: NavigationExtras = {
             queryParams: {

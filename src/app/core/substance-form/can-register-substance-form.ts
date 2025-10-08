@@ -19,15 +19,13 @@ export class CanRegisterSubstanceForm implements CanActivate {
     return new Observable(observer => {
       this.authService.getAuth().subscribe(auth => {
         if (auth) {
-          this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry').subscribe(response => {
-            if (response) {
+          if( this.authService.hasSpecificPrivilege('Create')) {
               observer.next(true);
               observer.complete();
             } else {
               observer.next(this.router.parseUrl('/browse-substance'));
-              observer.complete();
-            }
-          });
+             observer.complete();
+          }
         } else {
           const navigationExtras: NavigationExtras = {
             queryParams: {

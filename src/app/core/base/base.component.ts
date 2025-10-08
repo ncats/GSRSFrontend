@@ -172,11 +172,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
     this.canRegister=await this.authService.canEditData();
     console.log(`in BaseComponent, canRegister: ${this.canRegister}`);
-    const regSubscription =
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
-      //this.canRegister = response;
-    });
-    this.subscriptions.push(regSubscription);
+    //not sure if we need this.
+    //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
 
     this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {

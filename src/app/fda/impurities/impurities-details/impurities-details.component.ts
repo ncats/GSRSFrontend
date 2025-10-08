@@ -29,7 +29,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   impurities: Impurities;
   substanceName = '';
   flagIconSrcPath: string;
-  isAdmin = false;
+  canEdit: boolean = false;
   updateApplicationUrl: string;
   message = '';
   subRelationship: any;
@@ -54,14 +54,10 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
     private titleService: Title
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadingService.setLoading(true);
 
-    const rolesSubscription = this.authService.hasAnyRolesAsync('admin', 'updater', 'superUpdater').subscribe(canEdit => {
-      this.isAdmin = canEdit;
-    });
-    this.subscriptions.push(rolesSubscription);
-
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getImpurities();
