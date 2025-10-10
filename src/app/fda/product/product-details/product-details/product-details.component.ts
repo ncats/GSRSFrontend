@@ -44,11 +44,7 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
       router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
   }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', ', Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-
+  async ngOnInit() {
     super.ngOnInit();
   }
 

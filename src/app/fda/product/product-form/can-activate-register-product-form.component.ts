@@ -20,15 +20,13 @@ export class CanActivateRegisterProductFormComponent implements CanActivate {
     return new Observable(observer => {
       this.authService.getAuth().pipe(take(1)).subscribe(auth => {
         if (auth) {
-          this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry').pipe(take(1)).subscribe(response => {
-            if (response) {
+          if( this.authService.hasSpecificPrivilege('Edit')){
               observer.next(true);
               observer.complete();
             } else {
               observer.next(this.router.parseUrl('/browse-products'));
               observer.complete();
-            }
-          });
+          }
         } else {
           const navigationExtras: NavigationExtras = {
             queryParams: {

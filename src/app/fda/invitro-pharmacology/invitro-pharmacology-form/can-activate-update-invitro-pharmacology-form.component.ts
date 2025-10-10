@@ -19,15 +19,13 @@ export class CanActivateUpdateInvitroPharmacologyFormComponent implements CanAct
         return new Observable(observer => {
             this.authService.getAuth().pipe(take(1)).subscribe(auth => {
                 if (auth) {
-                    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-                        if (response) {
-                            observer.next(true);
-                            observer.complete();
-                        } else {
-                            observer.next(this.router.parseUrl('/browse-invitro-pharm'));
-                            observer.complete();
-                        }
-                    });
+                    if( this.authService.hasSpecificPrivilege('Edit')){
+                        observer.next(true);
+                        observer.complete();
+                    } else {
+                        observer.next(this.router.parseUrl('/browse-invitro-pharm'));
+                        observer.complete();
+                    }
                 } else {
                     const navigationExtras: NavigationExtras = {
                         queryParams: {
