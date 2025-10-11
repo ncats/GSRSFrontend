@@ -32,8 +32,7 @@ export class InvitroPharmacologyComponent implements OnInit {
   submitDateMessage = '';
   statusDateMessage = '';
   // appForm: FormGroup;
-  isAdmin = false;
-
+  
   constructor() { }
 
   ngOnInit(): void {

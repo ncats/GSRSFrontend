@@ -55,7 +55,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
   submitDateMessage = '';
   statusDateMessage = '';
   appForm: FormGroup;
-  isAdmin = false;
+  canDelete:boolean = false;
   regAppCenterNotAllowedConfig: Array<string>;
 
   constructor(
@@ -72,8 +72,8 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private generalService: GeneralService,
     private dialog: MatDialog) { }
 
-  ngOnInit() {
-    this.isAdmin = this.authService.hasRoles('admin');
+  async ngOnInit() {
+    this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();

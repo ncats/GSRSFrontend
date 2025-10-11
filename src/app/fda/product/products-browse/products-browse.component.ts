@@ -72,7 +72,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   disableExport = false;
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
-  isAdmin = false;
+  canUpdate: boolean = false;
+  canExport: boolean = false;
+  canCreate: boolean = false;
   etag = '';
   environment: any;
   narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
@@ -167,7 +169,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
 
     // Get Daily Med Url from Configuration
@@ -207,7 +209,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
@@ -220,7 +221,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.isComponentInit = true;
     this.loadComponent();
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
   }
 
   ngAfterViewInit() {

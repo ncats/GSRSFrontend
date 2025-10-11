@@ -28,10 +28,10 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    public authService: AuthService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    authService: AuthService
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
-    router, gaService, utilsService);
+    router, gaService, utilsService, authService);
   }
 
   async ngOnInit() {

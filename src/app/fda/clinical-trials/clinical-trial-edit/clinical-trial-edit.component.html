@@ -15,13 +15,13 @@
 
 	<div *ngIf="clinicalTrial">
 		<span>
-			<mat-checkbox class='match-complete-checkbox' [disabled]="!isAdmin" [value]="clinicalTrial.gsrsMatchingComplete" [(ngModel)]="clinicalTrial.gsrsMatchingComplete">
+			<mat-checkbox class='match-complete-checkbox' [disabled]="!canUpdate" [value]="clinicalTrial.gsrsMatchingComplete" [(ngModel)]="clinicalTrial.gsrsMatchingComplete">
 				<label>Matching Complete</label>
 			</mat-checkbox>
 		</span>
 	</div>
 
-	<div *ngIf="isAdmin" class="full-width button-align-two">
+	<div *ngIf="canUpdate" class="full-width button-align-two">
 		<button mat-flat-button color="primary" matSuffix aria-label="Update Clinical Trial" (click)="updateClinicalTrial();">Update CT</button>
 	</div>
 
@@ -32,7 +32,7 @@
 			</mat-panel-title>
 		</mat-expansion-panel-header>
 	
-		<div *ngIf="isAdmin" class="full-width button-align-two">
+		<div *ngIf="canUpdate" class="full-width button-align-two">
 			<button mat-flat-button color="primary" matSuffix aria-label="Add" (click)="addRow();">Add Substance <mat-icon svgIcon="add_circle_outline"></mat-icon></button>
 		</div>
 
@@ -51,10 +51,10 @@
 			<ng-container matColumnDef="name">
 				<mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
 				<mat-cell *matCellDef="let element; let i = index;" title="{{element.name}}">
-					<span *ngIf="!isAdmin">
+					<span *ngIf="!canUpdate">
 						{{element.name}}
 					</span>
-					<span *ngIf="isAdmin">
+					<span *ngIf="canUpdate">
 						<app-mini-search [myIndex]="i" [myInitialSearch]="element && element.name" (miniSearchOutput)="reportMiniSearchOutput($event)"></app-mini-search>
 					</span>
 				</mat-cell>
@@ -63,10 +63,10 @@
 			<ng-container matColumnDef="substanceKey">
 				<mat-header-cell *matHeaderCellDef>Substance Key</mat-header-cell>
 				<mat-cell *matCellDef="let element">
-					<span *ngIf="!isAdmin">
+					<span *ngIf="!canUpdate">
 						{{element.substanceKey}}
 					</span>
-					<span *ngIf="isAdmin">
+					<span *ngIf="canUpdate">
 						<mat-form-field floatLabel="never">
 							<input matInput placeholder="substanceKey" [value]="element.substanceKey" [(ngModel)]="element.substanceKey">
 						</mat-form-field>
@@ -77,11 +77,11 @@
 			<ng-container matColumnDef="protectedMatch">
 				<mat-header-cell *matHeaderCellDef> Protected Match </mat-header-cell>
 				<mat-cell *matCellDef="let element">
-					<span *ngIf="!isAdmin">
+					<span *ngIf="!canUpdate">
 						{{element.protectedMatch}}
 					</span>
 					<span>
-						<mat-checkbox class="protected-match-checkbox" [disabled]="!isAdmin" [value]="element.protectedMatch" [(ngModel)]="element.protectedMatch">
+						<mat-checkbox class="protected-match-checkbox" [disabled]="!canUpdate" [value]="element.protectedMatch" [(ngModel)]="element.protectedMatch">
 							<label><mat-icon class="mat-icon material-icons protected-match-icon" role="img" aria-hidden="true">lock</mat-icon></label>
 						</mat-checkbox>
 					</span>
@@ -91,7 +91,7 @@
 			<ng-container matColumnDef="substanceRoles">
 				<mat-header-cell *matHeaderCellDef> Roles </mat-header-cell>
 				<mat-cell *matCellDef="let element, let i = index">
-					<app-clinical-trial-edit-substance-roles [tableRowIndex]="i" [disabled]="!isAdmin" [initialSubstanceRoles]="element.substanceRoles"
+					<app-clinical-trial-edit-substance-roles [tableRowIndex]="i" [disabled]="!canUpdate" [initialSubstanceRoles]="element.substanceRoles"
 					(substanceRolesEventOutput)="reportSubstanceRolesOutput($event)"
 					></app-clinical-trial-edit-substance-roles>
 				</mat-cell>
@@ -137,17 +137,17 @@
 		  </mat-panel-title>
 		</mat-expansion-panel-header>
 		<div class="button-align-two">
-			<button *ngIf="isAdmin" mat-flat-button color="primary" aria-label="Add Note"
+			<button *ngIf="canUpdate" mat-flat-button color="primary" aria-label="Add Note"
 			(click)="addOutcomeResultNote();">Add Note <mat-icon svgIcon="add_circle_outline"></mat-icon></button>
 		</div>
 		<div *ngIf="clinicalTrial.outcomeResultNotes">
 			<div>&nbsp;</div>
 			<div class="outcome-result-note" *ngFor="let outcomeResultNote of clinicalTrial.outcomeResultNotes, let i = index">
 				<div class="note-index">Note: {{i+1}}</div>
-				<div *ngIf="isAdmin" class="button-align-two">
+				<div *ngIf="canUpdate" class="button-align-two">
 					<button mat-flat-button color="primary" matSuffix aria-label="Remove Note" (click)="removeOutcomeResultNote(i);">Del</button>	
 				</div>
-				<app-clinical-trial-edit-outcome-result-note [disabled]="!isAdmin" [index]=i [outcomeResultNote]="outcomeResultNote"></app-clinical-trial-edit-outcome-result-note>
+				<app-clinical-trial-edit-outcome-result-note [disabled]="!canUpdate" [index]=i [outcomeResultNote]="outcomeResultNote"></app-clinical-trial-edit-outcome-result-note>
 			</div>
 			<div class="full-width">&nbsp;</div>
 
@@ -248,7 +248,7 @@
   	<div><p>Go to <a title="Go to browse" [routerLink]="['/browse-clinical-trials']">browse</a></p></div>
 
 	<div *ngIf="isTesting">
-		<div class="top-spacer">isAdmin: {{isAdmin}}</div>
+		<div class="top-spacer">canUpdate: {{canUpdate}}</div>
 
 		<div *ngIf="clinicalTrial">
 			<div>&nbsp;</div>

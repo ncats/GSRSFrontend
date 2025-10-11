@@ -41,7 +41,7 @@
           <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
         </a>&nbsp;&nbsp;&nbsp;
 
-        <span *ngIf="isAdmin">
+        <span *ngIf="canDelete">
           <button mat-flat-button color="primary" (click)="confirmDeleteProduct(product.id)"
             matTooltip='Delete this Product'>
             Delete
@@ -117,7 +117,7 @@
             <!-- Copy Product to New Register -->
             <span *ngIf="product.id > 0">
               <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
-                matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin" target="_blank">
+                matTooltip='copy this Product to new Product registration form' *ngIf="canCreate" target="_blank">
                 <mat-icon svgIcon="file_copy"></mat-icon>
               </a>
             </span>
@@ -780,18 +780,6 @@
                               <mat-datepicker #pickerEffectiveTime (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                             </mat-form-field>
 
-                            <!--
-                            <mat-form-field class="col-3-1">
-                              <input matInput placeholder="Effective Time (mm/dd/yyyy)"
-                                [(ngModel)]="prodDoc.effectiveTime" name="effectiveTime"
-                                (change)="validateEffectiveTime()" />
-                              <mat-hint
-                                *ngIf="effectiveTimeMessage.length > 0 && this.effectiveTimeMessage[prodProvIndex][prodDocIndex]">
-                                {{this.effectiveTimeMessage[prodProvIndex][prodDocIndex]}}
-                              </mat-hint>
-                            </mat-form-field>
-                            --> 
-                            
                             <app-cv-input class="col-3-2" domain="PROD_COUNTRY_CODE" title="Jurisdictions"
                               name="jurisdictions" [model]="prodDoc.jurisdictions"
                               (valueChange)="prodDoc.jurisdictions = $event">

@@ -28,8 +28,6 @@ import * as lodash from 'lodash';
 export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   _ = lodash;
   loadedComponents: LoadedComponents;
-  showAudit: boolean;
-  isAdmin = false;
   isLoggedIn = false;
   showDeprecated = false;
   queryText: string;
@@ -104,8 +102,6 @@ export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.showDeprecated = false;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
     });
     this.setSearchEntity('substances');
     this.checkBulkQueryIdParameterOnLoad();

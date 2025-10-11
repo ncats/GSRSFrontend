@@ -24,7 +24,6 @@ export class ApplicationDetailsBaseComponent implements OnInit {
   appNumber: string;
   application: any;
   flagIconSrcPath: string;
-  isAdmin = false;
   updateApplicationUrl: string;
   message = '';
   subscriptions: Array<Subscription> = [];

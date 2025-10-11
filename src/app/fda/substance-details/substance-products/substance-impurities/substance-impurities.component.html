@@ -3,7 +3,7 @@
   &nbsp;&nbsp;&nbsp;
 
   <!-- Export Button -->
-  <span class="export" *ngIf="isAdmin && totalRecords > 0">
+  <span class="export" *ngIf="canExport && totalRecords > 0">
     <button matTooltip="Export Search Results" mat-button (click)="export()"
       class="mat-button export-button mat-raised-button">
       <mat-icon svgIcon="get_app"></mat-icon> Export
@@ -32,7 +32,7 @@
             </ng-template>
           </a>
           &nbsp;&nbsp;
-          <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="isAdmin"
+          <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="canUpdate"
             matTooltip='Edit Impurities Record'>
             <mat-icon svgIcon="edit"></mat-icon>
           </a>

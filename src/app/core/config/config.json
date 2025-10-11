@@ -543,7 +543,7 @@
         "filters": [
           {
             "filterName": "hasCredentials",
-            "propertyToCheck": "admin"
+            "propertyToCheck": "Restore Previous Versions"
           }
         ]
       }

@@ -51,7 +51,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
   totalApplications: number;
   isLoading = true;
   isError = false;
-  isAdmin: boolean;
+  canUpdate: boolean = false;
+  canExport: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   hasBackdrop = false;
@@ -144,7 +145,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.applicationService.getApplicationFacets);
     this.gaService.sendPageView('Browse Applications');
 
@@ -184,7 +185,6 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
@@ -201,7 +201,8 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
 
     this.isComponentInit = true;
     this.loadComponent();
-
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
   }
 
   ngAfterViewInit() {

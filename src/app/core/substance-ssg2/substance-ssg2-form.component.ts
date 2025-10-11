@@ -71,8 +71,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
-  isAdmin: boolean;
-  isUpdater: boolean;
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -282,8 +280,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     if (this.configService.configData && this.configService.configData.autoSaveWait) {
       this.autoSaveWait = this.configService.configData.autoSaveWait;
     }
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     const routeSubscription = this.activatedRoute

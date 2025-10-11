@@ -38,7 +38,6 @@ export class ImportSummaryComponent implements OnInit {
   @Output() bulkSelect = new EventEmitter < any > ();
   privateDummyID: string;
   showAudit = false;
-  //isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
   canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;

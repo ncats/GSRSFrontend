@@ -49,6 +49,8 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     'conditionsEU'
   ];
 
+  canExport: boolean = false;
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private clinicalTrialService: ClinicalTrialService,
@@ -61,11 +63,9 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     super(gaService, clinicalTrialService);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     if (this.substanceUuid) {
      this.getSubstanceClinicalTrialsEurope(null, 'initial');
     }

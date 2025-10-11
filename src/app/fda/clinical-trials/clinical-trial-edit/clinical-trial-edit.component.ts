@@ -34,8 +34,8 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   defaultSubstanceKeyType = 'UUID';
   agencySubstanceKeyType = 'UUID';
 
-  canEdit: boolean = false;
-  isTesting  = false;
+  canUpdate: boolean = false;
+  isTesting  = true;
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   public  _trialNumber: string;
@@ -67,8 +67,8 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   }
 
   async ngOnInit() {
-    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
-    if (this.canEdit) {
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    if (this.canUpdate) {
       this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
     } else {
       this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];

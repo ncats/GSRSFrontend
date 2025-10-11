@@ -101,7 +101,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin = false;
   canUpdate = false;
   isLoggedIn = false;
   showExactMatches = false;

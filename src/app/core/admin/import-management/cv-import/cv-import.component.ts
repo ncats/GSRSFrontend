@@ -33,7 +33,6 @@ export class CvImportComponent implements OnInit, OnDestroy {
   dictionary: any;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin: boolean;
 
   constructor(
     public cvService: ControlledVocabularyService,
@@ -67,7 +66,6 @@ export class CvImportComponent implements OnInit, OnDestroy {
 
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.isAdmin = this.authService.hasRoles('admin');
   }
 
   ngOnDestroy() {

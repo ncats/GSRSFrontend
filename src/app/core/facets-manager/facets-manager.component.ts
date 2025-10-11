@@ -35,7 +35,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
   public displayFacets: Array<DisplayFacet> = [];
   public facetBuilder: FacetParam;
   searchText: { [faceName: string]: { value: string; isLoading: boolean; } } = {};
-  showAudit: boolean;
   toggle: Array<boolean> = [];
   showDeprecated = false;
   loggedIn = false;
@@ -78,16 +77,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     this.facets = [];
     this.environment = configService.environment;
   }
-
-  /*@HostListener('window:popstate', ['$event'])
-  onPopState(event) {
-    setTimeout(() => {
-      if(this.router.url === '/browse-substance') {
-        this.privateFacetParams = {};
-        this.ngOnInit();
-      }
-    }, 50);
-  }*/
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
@@ -307,7 +296,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
       this.facetsAuthSubscription = this.authService.getAuth().subscribe(auth => {
         const facetsCopy = this.privateRawFacets.slice();
         const newFacets = [];
-        this.showAudit = this.authService.hasRoles('admin');
         let facetKeys = Object.keys(this.facetsConfig) || [];
         if (this._facetDisplayType) {
           if (this._facetDisplayType === 'default' || this.calledFrom === 'staging') {
