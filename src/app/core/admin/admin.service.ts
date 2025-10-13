@@ -90,6 +90,11 @@ export class AdminService extends BaseHttpService {
       return this.http.get< any >(`${url}users`);
     }
 
+    public getAllAvailableRoles(): Observable< string[] > {
+      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/allavailableroles`;
+      return this.http.get< string[] >(`${url}`);
+    }
+
     public editUser(user: UserEditObject, name: string): Observable< Auth > {
       const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
       return this.http.put< Auth >(`${url}users(${name})`, user);

@@ -29,6 +29,9 @@ export class UserEditDialogComponent implements OnInit {
   submitted = false;
   response: any;
   isError: boolean = false;
+  availableRoleNames: string[];
+  assignableRoles: any[];
+
   roles = [
     {name: 'Query', hasRole: false},
     {name: 'DataEntry', hasRole: false},
@@ -56,6 +59,7 @@ export class UserEditDialogComponent implements OnInit {
         this.loading = false;
         this.newUser = false;
         this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
+        this.authService.hasSpecificPrivilege('Manage Users')
           this.adminService.getGroups().pipe(take(1)).subscribe( response => {
             this.groups = [];
             response.forEach( grp => {
@@ -103,6 +107,15 @@ export class UserEditDialogComponent implements OnInit {
           });
         });
       }
+
+      this.assignableRoles = [];
+      this.adminService.getAllAvailableRoles().subscribe(rollNames => {
+        this.availableRoleNames = rollNames;
+        this.availableRoleNames.forEach(r=>{
+          let newRole = {roleName: r, assigned: this.userHasRole(r) };
+          this.assignableRoles.push(newRole);
+        })
+      });
     }
 
   checkRoles(): void {
@@ -316,5 +329,15 @@ export class UserEditDialogComponent implements OnInit {
         });
       }
     }
+  }
+
+  private userHasRole(roleTest: string): boolean {
+    let roleToCompare =roleTest.toLocaleLowerCase();
+    for(var role in this.user.roles) {
+      if( roleToCompare === role.toLocaleLowerCase()) {
+        return true;
+      }
+    }
+    return false;
   }
 }
