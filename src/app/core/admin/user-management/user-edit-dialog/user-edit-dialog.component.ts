@@ -112,6 +112,7 @@ export class UserEditDialogComponent implements OnInit {
       this.adminService.getAllAvailableRoles().subscribe(rollNames => {
         this.availableRoleNames = rollNames;
         this.availableRoleNames.forEach(r=>{
+          console.log(`adding role ${r} to assignableRoles`);
           let newRole = {roleName: r, assigned: this.userHasRole(r) };
           this.assignableRoles.push(newRole);
         })
@@ -150,14 +151,17 @@ export class UserEditDialogComponent implements OnInit {
 
   saveChanges(): void {
     if (this.changePassword && this.newPassword !== '' ) {
+      console.log(`saveChanges `);
       this.isError = true;
       this.message = 'Cancel or submit new password to save other changes';
     } else {
       this.isError = false;
       const rolesArr = [];
-      this.roles.forEach(role => {
-        if (role.hasRole) {
-          rolesArr.push(role.name);
+      this.assignableRoles.forEach(role => {
+        console.log(`saveChanges evaluating role ${role.roleName}`);
+        if (role.userHasRole) {
+          console.log(`user has role`);
+          rolesArr.push(role.roleName);
         }
       });
       const groups = [];
@@ -332,6 +336,7 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   private userHasRole(roleTest: string): boolean {
+    if( this.user == null) return true;
     let roleToCompare =roleTest.toLocaleLowerCase();
     for(var role in this.user.roles) {
       if( roleToCompare === role.toLocaleLowerCase()) {
