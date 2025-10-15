@@ -46,6 +46,7 @@ export class UserEditDialogComponent implements OnInit {
     private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    console.log(`in UserEditDialogComponent ctor, data: ${JSON.stringify(data)}`);
     this.user = data.user;
     this.userID = data.userID;
     this.submitted = data.submission;
@@ -54,6 +55,7 @@ export class UserEditDialogComponent implements OnInit {
 
     ngOnInit() {
       if (this.user) {
+        console.log(`UserEditDialogComponent ngOnInit have user`);
         this.checkRoles();
         this.originalName = this.user.username;
         this.loading = false;
@@ -73,6 +75,7 @@ export class UserEditDialogComponent implements OnInit {
             });
           });
       } else if (this.userID) {
+        console.log(`UserEditDialogComponent ngOnInit have userID will fetch user`);
           this.adminService.getUserByID(this.userID).pipe(take(1)).subscribe( resp => {
             this.user = resp;
             this.checkRoles();
@@ -80,6 +83,19 @@ export class UserEditDialogComponent implements OnInit {
             this.loading = false;
             this.newUser = false;
             this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
+            this.assignableRoles = [];
+            this.adminService.getAllAvailableRoles().subscribe(roleNames => {
+              console.log(`retrieved available roles`)
+              this.availableRoleNames = roleNames;
+              this.availableRoleNames.forEach(r=>{
+                console.log(`looking at role ${r}`);
+                let hasRole:boolean = this.userHasRole(r);
+                console.log(`adding role ${r} to assignableRoles hasRole: ${hasRole}`);
+                let newRole = {roleName: r, assigned: hasRole };
+                this.assignableRoles.push(newRole);
+              })
+            });
+
             this.adminService.getGroups().pipe(take(1)).subscribe( response => {
               this.groups = [];
               response.forEach( grp => {
@@ -94,6 +110,7 @@ export class UserEditDialogComponent implements OnInit {
             });
           });
       } else {
+        console.log(`UserEditDialogComponent ngOnInit new user`);
         this.newUser = true;
         this.userHasAdminRole = false;
         this.user = {groups: [], roles: [],  user: {}};
@@ -108,15 +125,6 @@ export class UserEditDialogComponent implements OnInit {
         });
       }
 
-      this.assignableRoles = [];
-      this.adminService.getAllAvailableRoles().subscribe(rollNames => {
-        this.availableRoleNames = rollNames;
-        this.availableRoleNames.forEach(r=>{
-          console.log(`adding role ${r} to assignableRoles`);
-          let newRole = {roleName: r, assigned: this.userHasRole(r) };
-          this.assignableRoles.push(newRole);
-        })
-      });
     }
 
   checkRoles(): void {
@@ -132,7 +140,7 @@ export class UserEditDialogComponent implements OnInit {
   checkIfUserHasAdminRole(roles): boolean {
     let toReturn = false;
     roles.forEach(role => {
-      if(role.toLowerCase() === 'admin') {
+      if(role.role.toLowerCase() === 'admin') {
         toReturn = true;
       }
     });
@@ -159,8 +167,8 @@ export class UserEditDialogComponent implements OnInit {
       const rolesArr = [];
       this.assignableRoles.forEach(role => {
         console.log(`saveChanges evaluating role ${role.roleName}`);
-        if (role.userHasRole) {
-          console.log(`user has role`);
+        if (role.assigned) {
+          console.log(`user has role ${role.roleName}`);
           rolesArr.push(role.roleName);
         }
       });
@@ -336,9 +344,12 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   private userHasRole(roleTest: string): boolean {
+    console.log(`in userHasRole, this.user: ${JSON.stringify(this.user)} roleTest: ${roleTest}`);
     if( this.user == null) return true;
     let roleToCompare =roleTest.toLocaleLowerCase();
-    for(var role in this.user.roles) {
+    for(var r in this.user.roles) {
+      let role = this.user.roles[r].role;
+      console.log(` user role: ${role}`);
       if( roleToCompare === role.toLocaleLowerCase()) {
         return true;
       }

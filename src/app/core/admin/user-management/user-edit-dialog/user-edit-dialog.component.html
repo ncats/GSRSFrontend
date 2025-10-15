@@ -88,7 +88,7 @@
 </div>
 <div class = "roles-group box-label"><span class = "mat-header-cell">Roles</span>
         <div *ngFor = "let role of assignableRoles">
-                <mat-checkbox [(ngModel)] = 'role.userHasRole'> 
+                <mat-checkbox [(ngModel)] = 'role.assigned'> 
                  {{role.roleName}}
                 </mat-checkbox>
         </div>
