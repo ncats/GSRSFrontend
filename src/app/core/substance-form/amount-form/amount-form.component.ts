@@ -48,7 +48,7 @@ export class AmountFormComponent implements OnInit {
     this.typeControl.valueChanges.subscribe(value => {
       this.privateSubstanceAmount.type = value;
     });
-    this.averageControl.setValue(this.privateSubstanceAmount.average);
+    this.averageControl.setValue(this.privateSubstanceAmount.average.toString());
     this.averageControl.valueChanges.subscribe(value => {
       if(value === null) {
         this.averageControl.setValue('');
@@ -58,9 +58,9 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.averageControl.setValue('');
       }
-      this.privateSubstanceAmount.average = value;
+      this.privateSubstanceAmount.average = parseInt(value);
     });
-    this.lowControl.setValue(this.privateSubstanceAmount.low);
+    this.lowControl.setValue(this.privateSubstanceAmount.low.toString());
     this.lowControl.valueChanges.subscribe(value => {
 
       if(value === null) {
@@ -71,9 +71,9 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.lowControl.setValue('');
       }
-      this.privateSubstanceAmount.low = value;
+      this.privateSubstanceAmount.low = parseInt(value);
     });
-    this.highControl.setValue(this.privateSubstanceAmount.high);
+    this.highControl.setValue(this.privateSubstanceAmount.high.toString());
     this.highControl.valueChanges.subscribe(value => {
 
       if(value === null) {
@@ -84,9 +84,9 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.highControl.setValue('');
       }
-      this.privateSubstanceAmount.high = value;
+      this.privateSubstanceAmount.high = parseInt(value);
     });
-    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit);
+    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit.toString());
     this.lowLimitControl.valueChanges.subscribe(value => {
       if(value === null) {
         this.lowLimitControl.setValue('');
@@ -96,9 +96,9 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.lowLimitControl.setValue('');
       }
-      this.privateSubstanceAmount.lowLimit = value;
+      this.privateSubstanceAmount.lowLimit = parseInt(value);
     });
-    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit);
+    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit.toString());
     this.highLimitControl.valueChanges.subscribe(value => {
       if(value === null) {
         this.highLimitControl.setValue('');
@@ -108,7 +108,7 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.highLimitControl.setValue('');
       }
-      this.privateSubstanceAmount.highLimit = value;
+      this.privateSubstanceAmount.highLimit = parseInt(value);
     });
     this.unitsControl.setValue(this.privateSubstanceAmount.units);
     this.unitsControl.valueChanges.subscribe(value => {
