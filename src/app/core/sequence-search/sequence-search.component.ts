@@ -50,7 +50,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
           this.sequenceSearchForm.controls.type.setValue(params.get('type'));
         }
         if (params.has('cutoff')) {
-          this.sequenceSearchForm.controls.cutoff.setValue(params.get('cutoff'));
+          this.sequenceSearchForm.controls.cutoff.setValue(parseInt(params.get('cutoff')));
         }
         if (params.has('seq_type')) {
           const type = params.get('seq_type');
@@ -173,7 +173,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
       }
     }, error => {
       console.log(error);
-      if (this.sequenceSearchForm.value.sequence > 50000 ) {
+      if (parseInt(this.sequenceSearchForm.value.sequence) > 50000 ) {
         this.errorMessage = 'Cannot process searches for sequences with more than 50,000 sites';
       } else {
         this.errorMessage = 'There was a problem processing your sequence search request';
