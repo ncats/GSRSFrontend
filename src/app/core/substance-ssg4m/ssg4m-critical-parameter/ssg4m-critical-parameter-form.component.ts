@@ -221,50 +221,50 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
     this.typeControl.valueChanges.subscribe(value => {
       this.privateSubstanceAmount.type = value;
     });
-    this.averageControl.setValue(this.privateSubstanceAmount.average);
+    this.averageControl.setValue(this.privateSubstanceAmount.average.toString());
     this.averageControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.averageControl.setValue('');
       } else if (value.length === 1 && value.match(/[a-z]/i)) {
         this.averageControl.setValue('');
       }
-      this.privateSubstanceAmount.average = value;
+      this.privateSubstanceAmount.average = parseInt(value);
     });
-    this.lowControl.setValue(this.privateSubstanceAmount.low);
+    this.lowControl.setValue(this.privateSubstanceAmount.low.toString());
     this.lowControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.lowControl.setValue('');
       } else if (value.length === 1 && value.match(/[a-z]/i)) {
         this.lowControl.setValue('');
       }
-      this.privateSubstanceAmount.low = value;
+      this.privateSubstanceAmount.low = parseInt(value);
     });
-    this.highControl.setValue(this.privateSubstanceAmount.high);
+    this.highControl.setValue(this.privateSubstanceAmount.high.toString());
     this.highControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.highControl.setValue('');
       } else if (value.length === 1 && value.match(/[a-z]/i)) {
         this.highControl.setValue('');
       }
-      this.privateSubstanceAmount.high = value;
+      this.privateSubstanceAmount.high = parseInt(value);
     });
-    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit);
+    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit.toString());
     this.lowLimitControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.lowLimitControl.setValue('');
       } else if (value.length === 1 && value.match(/[a-z]/i)) {
         this.lowLimitControl.setValue('');
       }
-      this.privateSubstanceAmount.lowLimit = value;
+      this.privateSubstanceAmount.lowLimit = parseInt(value);
     });
-    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit);
+    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit.toString());
     this.highLimitControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.highLimitControl.setValue('');
       } else if (value.length === 1 && value.match(/[a-z]/i)) {
         this.highLimitControl.setValue('');
       }
-      this.privateSubstanceAmount.highLimit = value;
+      this.privateSubstanceAmount.highLimit = parseInt(value);
     });
     this.unitsControl.setValue(this.privateSubstanceAmount.units);
     this.unitsControl.valueChanges.subscribe(value => {
