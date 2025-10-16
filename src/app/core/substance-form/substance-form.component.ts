@@ -79,7 +79,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   showSubmissionMessages = false;
   submissionMessage: string;
   validationMessages: Array<ValidationMessage>;
-  validationResult = false;
+  validationResult = true;
   private subscriptions: Array<Subscription> = [];
   copy: string;
   private overlayContainer: HTMLElement;
@@ -91,6 +91,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   feature: string;
   isAdmin: boolean;
   isUpdater: boolean;
+  isPfdaVersion: boolean = false;
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -245,6 +246,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
 
       const read = JSON.parse(response);
+
+      if (read.substanceClass === 'specifiedSubstanceG4m') {
+        this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + true, { state: { record: response } });
+        return;
+      }
+
       if (this.id && read.uuid && this.id === read.uuid) {
         this.substanceFormService.importSubstance(read, 'update');
         this.submissionMessage = null;
@@ -304,6 +311,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     if(this.location.path().includes('chemical-simplified')) {
@@ -1038,6 +1046,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         this.loadingService.setLoading(false);
         this.isLoading = false;
         this.submissionMessage = 'Substance Could not be approved';
+        this.validationResult = false;
         this.addServerError(error.serverError);
         setTimeout(() => {
           this.showSubmissionMessages = false;

@@ -89,6 +89,7 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
       null,
       0,
       200,
+      10,
       this.fullFacetField,
       facetParam
     )

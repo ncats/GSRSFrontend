@@ -1,0 +1,50 @@
+.form-row {
+    width: 100%;
+    margin-top:20px;
+}
+
+
+.small-icon {
+    height:20px;
+    width: 20px;
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
+.ext-link{
+    color: var(--link-primary-color);
+    text-decoration-style: unset;
+}
+
+.endpoint-link {
+    padding-left: 20px;
+}
+
+.scrollable-container {
+    height: 300px;
+    max-width: 1200px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.job-container {
+    padding:10px;
+    margin: 20px;
+    border: 1px solid var(--border-color);
+}
+
+
+.spinner {
+    height: 40px;
+    width: 40px;
+}
+
+.loading-container {
+    height: 90%;
+    width: 100%;
+    align-content: center;
+    padding:50px;
+}
+
+.progress-spinner {
+    margin: auto;
+}

@@ -223,8 +223,11 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                             this.product._otherIngredients.push(elementIngred);
                           }
                         } // if Ingredient Type exists
-
-
+                        else {
+                          // if there is no Ingredient Type
+                          this.product._otherIngredients.push(elementIngred);
+                        }
+      
                       } // if reponse
                     });
                     this.subscriptions.push(subSubscription);

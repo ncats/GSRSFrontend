@@ -118,7 +118,7 @@ export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestro
               }
             });
           }
-          this.siteTotal > 5000 ? this.showStyle = false : this.showStyle = true;
+          this.siteTotal > 11000 ? this.showStyle = false : this.showStyle = true;
         });
 
         if (this.feature) {

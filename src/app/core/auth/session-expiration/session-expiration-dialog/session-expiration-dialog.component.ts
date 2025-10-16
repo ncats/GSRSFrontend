@@ -80,7 +80,6 @@ export class SessionExpirationDialogComponent implements OnInit {
     if (this.configService.configData.isPfdaVersion) {
       this.authService.pfdaLogin().pipe(
         concatMap(success => {
-          console.log('success: ', success);
           if (success) {
             this.closeDialog();
             return this.authService.getAuth();

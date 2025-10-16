@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
@@ -74,6 +75,7 @@ const impurityRoutes: Routes = [
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatCheckboxModule,
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,

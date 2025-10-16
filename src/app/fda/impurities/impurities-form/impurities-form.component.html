@@ -114,6 +114,13 @@
                 {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
               </div>
             </div>
+
+            <div class="font12px">
+              <mat-checkbox [checked]="showAdvancedSettings" (change)="updateAdvancedSettings($event)">
+                Show Advanced Fields
+              </mat-checkbox>
+            </div>
+
           </div> <!-- title_box-->
 
           <mat-card class="bordergray" *ngIf="impurities">
@@ -121,52 +128,63 @@
               <!-- Impurities Form -->
 
               <div class="form-row">
-                <app-cv-input class="col-6-1" domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
-                  [model]="impurities.sourceType" (valueChange)="impurities.sourceType = $event">
+                <app-cv-input class="col-6-1"
+                  *ngIf="configSettingsDisplay['sourceType'] || (configSettingsDisplay['sourceType'] === undefined && true)"
+                  domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType" [model]="impurities.sourceType"
+                  (valueChange)="impurities.sourceType = $event">
                 </app-cv-input>
 
-                <app-cv-input class="col-6-1" domain="IMPURITIES_SOURCE" title="Source" name="source"
-                  [model]="impurities.source" (valueChange)="impurities.source = $event">
+                <app-cv-input class="col-6-1"
+                  *ngIf="configSettingsDisplay['source'] || (configSettingsDisplay['source'] === undefined && true)"
+                  domain="IMPURITIES_SOURCE" title="Source" name="source" [model]="impurities.source"
+                  (valueChange)="impurities.source = $event">
                 </app-cv-input>
 
-                <mat-form-field class="col-6-1">
+                <mat-form-field class="col-6-1"
+                  *ngIf="configSettingsDisplay['sourceId'] || (configSettingsDisplay['sourceId'] === undefined && true)">
                   <input matInput placeholder="Source ID" [(ngModel)]="impurities.sourceId" name="sourceId" />
                 </mat-form-field>
 
-                <app-cv-input class="col-6-1" domain="IMPURITIES_TYPE" title="Type" name="type"
-                  [model]="impurities.type" (valueChange)="impurities.type = $event">
+                <app-cv-input class="col-6-1"
+                  *ngIf="configSettingsDisplay['type'] || (configSettingsDisplay['type'] === undefined && true)"
+                  domain="IMPURITIES_TYPE" title="Type" name="type" [model]="impurities.type"
+                  (valueChange)="impurities.type = $event">
                 </app-cv-input>
 
-                <mat-form-field class="col-6-1">
+                <mat-form-field class="col-6-1"
+                  *ngIf="configSettingsDisplay['productId'] || (configSettingsDisplay['productId'] === undefined && true)">
                   <input matInput placeholder="Product ID" [(ngModel)]="impurities.productId" name="productId" />
                 </mat-form-field>
 
-                <app-cv-input class="col-6-1" domain="IMPURITIES_SPEC_TYPE" title="Spec Type" name="specType"
-                  [model]="impurities.specType" (valueChange)="impurities.specType = $event">
+                <app-cv-input class="col-6-1"
+                  *ngIf="configSettingsDisplay['specType'] || (configSettingsDisplay['specType'] === undefined && true)"
+                  domain="IMPURITIES_SPEC_TYPE" title="Spec Type" name="specType" [model]="impurities.specType"
+                  (valueChange)="impurities.specType = $event">
                 </app-cv-input>
               </div>
 
               <!-- Second Row -->
               <div class="form-row">
-                <mat-form-field class="col-6-2">
+                <mat-form-field class="col-6-2"
+                  *ngIf="configSettingsDisplay['submitterName'] || (configSettingsDisplay['submitterName'] === undefined && true)">
                   <input matInput placeholder="Submitter Name" [(ngModel)]="impurities.submitterName"
                     name="submitterName" />
                 </mat-form-field>
 
-                <mat-form-field class="col-6-2">
+                <mat-form-field class="col-6-2"
+                  *ngIf="configSettingsDisplay['productSubstanceName'] || (configSettingsDisplay['productSubstanceName'] === undefined && true)">
                   <input matInput placeholder="Product/Substance Name" [(ngModel)]="impurities.productSubstanceName"
                     name="companyProductName" />
                 </mat-form-field>
 
-                <app-cv-input class="col-6-1" domain="IMPURITIES_DATE_TYPE" title="Date Type" name="dateType"
-                  [model]="impurities.dateType" (valueChange)="impurities.dateType = $event">
+                <app-cv-input class="col-6-1"
+                  *ngIf="configSettingsDisplay['dateType'] || (configSettingsDisplay['dateType'] === undefined && true)"
+                  domain="IMPURITIES_DATE_TYPE" title="Date Type" name="dateType" [model]="impurities.dateType"
+                  (valueChange)="impurities.dateType = $event">
                 </app-cv-input>
 
-                <mat-form-field class="col-6-1">
-                  <!--
-                  <input matInput placeholder="Date Type Date" [(ngModel)]="impurities.dateTypeDate"
-                    name="dateTypeDate" />
-                  -->
+                <mat-form-field class="col-6-1"
+                  *ngIf="configSettingsDisplay['dateTypeDate'] || (configSettingsDisplay['dateTypeDate'] === undefined && true)">
                   <input matInput placeholder="Date Type Date" name="dateTypeDate"
                     (ngModelChange)="updateDateTypeDate($event)" [ngModel]="impurities.dateTypeDate |date:'yyyy-MM-dd'"
                     #dateT="ngModel" type="date" />
@@ -202,46 +220,17 @@
                 <div class="marginbottom10px"
                   *ngFor="let impuritiesSubstance of impurities.impuritiesSubstanceList; let impuritiesSubstanceIndex = index">
                   <app-impurities-substance-form [impuritiesSubstance]="impuritiesSubstance"
-                    [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
+                    [impuritiesSubstanceIndex]="impuritiesSubstanceIndex" [showAdvancedSettings]="showAdvancedSettings">
                   </app-impurities-substance-form>
                 </div>
               </mat-expansion-panel>
 
-
-              <!--
-              <div class="margintop20px">
-                <div class="titleblue">
-                  <div class="divflex titleblue">
-                    <div matBadge="{{impurities.impuritiesSubstanceList.length}}" matBadgeColor="accent"
-                      matBadgeSize="medium" matBadgeOverlap="false">
-                      <span class="titleblue"><b>Substance</b></span>
-                    </div>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <div>
-                      <button mat-raised-button color="primary" (click)="addNewImpuritiesSubstance()"
-                        matTooltip="Add New Test">
-                        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Substance
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div class="marginbottom10px"
-                    *ngFor="let impuritiesSubstance of impurities.impuritiesSubstanceList; let impuritiesSubstanceIndex = index">
-                    <app-impurities-substance-form [impuritiesSubstance]="impuritiesSubstance"
-                      [impuritiesSubstanceIndex]="impuritiesSubstanceIndex">
-                    </app-impurities-substance-form>
-                  </div>
-                </div>
-              </div>
-              -->
               <!-- IMPURITIES SUBSTANCE LIST END -->
 
 
               <!-- IMPURITIES TOTAL BEGIN -->
-
               <br>
-              <mat-expansion-panel [expanded]="true" class="panel-style bordergray">
+              <mat-expansion-panel [expanded]="true" class="panel-style bordergray" *ngIf="showTotalImpurities">
                 <mat-expansion-panel-header class="">
                   <mat-panel-title>
                     <div class="titleblue">
@@ -251,21 +240,10 @@
                   <mat-panel-description class="marginleft25px">
                   </mat-panel-description>
                 </mat-expansion-panel-header>
-                <app-impurities-total-form [impuritiesTotal]="impurities.impuritiesTotal">
+                <app-impurities-total-form [impuritiesTotal]="impurities.impuritiesTotal"
+                [showAdvancedSettings]="showAdvancedSettings">
                 </app-impurities-total-form>
               </mat-expansion-panel>
-
-              <!--
-              <mat-card class="margintop20px bordergray">
-                <mat-card-title class="titleblue">
-                  <b>Total Impurities</b>
-                </mat-card-title>
-                <mat-card-content>
-                  <app-impurities-total-form [impuritiesTotal]="impurities.impuritiesTotal">
-                  </app-impurities-total-form>
-                </mat-card-content>
-              </mat-card>
-               -->
               <!-- IMPURITIES TOTAL END -->
 
             </mat-card-content>

@@ -46,7 +46,6 @@ import { LoadingModule } from './loading/loading.module';
 import { MainNotificationModule } from './main-notification/main-notification.module';
 import { StructureSearchComponent } from './structure-search/structure-search.component';
 import { StructureEditorModule } from './structure-editor/structure-editor.module';
-import { FileSelectModule } from 'file-select';
 import { SubstanceDetailsComponent } from './substance-details/substance-details.component';
 import { DynamicComponentLoaderModule } from './dynamic-component-loader/dynamic-component-loader.module';
 import { dynamicComponentManifests } from './app-dynamic-component-manifests';
@@ -121,6 +120,9 @@ import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-cre
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
+import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
+import { FileSelectModule } from './file-select/file-select.module';
+import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamine-standalone.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -231,7 +233,9 @@ import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
     SchemaFormModule.forRoot(),
     BulkSearchModule,
     ElementLabelDisplayModule,
-    PrivacyStatementModule
+    PrivacyStatementModule,
+    CrossEntitySearchModule,
+    NitrosamineStandaloneModule
   ],
   providers: [
     {

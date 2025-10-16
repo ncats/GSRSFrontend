@@ -25,7 +25,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule} from '@angular/material/progress-bar';
 import { NgxJsonViewerModule} from 'ngx-json-viewer';
 // GSRS Imports
-import { FileSelectModule } from 'file-select';
 import { ScrollToModule } from '@gsrs-core/scroll-to/scroll-to.module';
 import { ExpandDetailsModule } from '@gsrs-core/expand-details/expand-details.module';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
@@ -33,6 +32,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
 import { SubstanceFormModule } from '@gsrs-core/substance-form/substance-form.module';
 import { Ssg4mStagesModule } from '../ssg4m-stages/substance-form-ssg4m-stages.module';
 import { Ssg4mResultingMaterialsFormComponent } from './ssg4m-resulting-materials-form.component';
+import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
 
 @NgModule({
   imports: [

@@ -20,7 +20,7 @@
         {{ showSubmissionMessages ? 'Hide' : 'Show' }} messages
         <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
       </button>
-      <div *ngIf="isAdmin === true || isUpdater === true" class="advanced-features">
+      <div *ngIf="isPfdaVersion === true || isAdmin === true || isUpdater === true" class="advanced-features">
         <div class="admin-functions">
           <mat-form-field>
             <mat-label>Advanced Features</mat-label>
@@ -59,7 +59,7 @@
                   Switch primary and alt definitions
                 </mat-option>
               </ng-container>
-              <ng-container *ngIf="isAdmin === true || isUpdater === true">
+              <ng-container *ngIf="isPfdaVersion === true || isAdmin === true || isUpdater === true">
                 <mat-option value="glyco" [disabled]="substanceClass !== 'protein'">
                   Predict N-Glycosylation Sites
                 </mat-option>
@@ -214,11 +214,11 @@
         <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
                 [disabled]="isLoading || (this.validationResult === false)">{{ getSubmitButtonText() }}
         </button>
-        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false">
+        <button mat-flat-button *ngIf="!approving" (click)="showSubmissionMessages = false; this.validationResult = true;">
           Cancel
         </button>
         <button mat-flat-button color="primary" *ngIf="approving" (click)="approve()"
-        [disabled]="isLoading || !canApprove"> Confirm Approval
+        [disabled]="isLoading || !canApprove  || (this.validationResult === false)"> Confirm Approval
               </button>
 
       </div>

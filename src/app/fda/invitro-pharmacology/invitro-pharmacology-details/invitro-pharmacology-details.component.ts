@@ -163,7 +163,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     this.downloadJsonHref = uri;
 
     const date = new Date();
-    this.jsonFileName = 'invitro_pharm_screening_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+    this.jsonFileName = 'invitro_pharm_assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
   }
 
   showJSON(): void {

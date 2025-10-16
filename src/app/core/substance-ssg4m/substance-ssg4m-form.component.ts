@@ -41,6 +41,7 @@ import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-
 import { SubstanceSsg4mService } from './substance-ssg4m-form.service';
 import { environment } from '@gsrs-core/../../environments/environment';
 import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
+import { toSvg } from 'html-to-image';
 
 @Component({
   selector: 'app-substance-ssg4m-form',
@@ -73,6 +74,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   feature: string;
   isAdmin: boolean;
   isUpdater: boolean;
+  isAuthenticated: boolean;
   messageField: string;
   errorMessage: string;
   microserviceStatusUp = false;
@@ -141,6 +143,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.loadingService.setLoading(true);
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isAuthenticated = this.authService.getUser() !== '';
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
 
@@ -805,7 +808,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }, 5000);
   }
 
-  validate(validationType?: string): void {
+  async validate(validationType?: string): Promise<void> {
     if (validationType && validationType === 'approval') {
       this.approving = true;
     } else {
@@ -825,7 +828,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.isLoading = false;
     // If there is no validation error, submit/save the records without displaying the warning/validation message.
     if (this.validationMessages.length === 0 && true === true) {
-      this.submit();
+      await this.submit();
     }
     /*
     if (this.validationMessages.length === 0 && true === true) {
@@ -981,7 +984,99 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
   }
 
-  submit(): void {
+  getPageStyles(): string {
+    let css = '';
+    // Gather all style rules from the document
+    for (const sheet of Array.from(document.styleSheets)) {
+      try {
+        if (sheet.cssRules) {
+          css += Array.from(sheet.cssRules)
+            .map(rule => rule.cssText)
+            .join('\n');
+        }
+      } catch (e) {
+        console.warn('Cannot read styles from cross-origin stylesheet', e);
+      }
+    }
+    return `<style>${css}</style>`;
+  }
+
+  delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // waitForElement(selector: string, timeout = 2000): Promise<HTMLElement> {
+  //   return new Promise((resolve, reject) => {
+  //     const interval = setInterval(() => {
+  //       const element = document.querySelector(selector) as HTMLElement;
+  //       if (element) {
+  //         clearInterval(interval);
+  //         resolve(element);
+  //       }
+  //     }, 100);
+  //     setTimeout(() => {
+  //       clearInterval(interval);
+  //       reject(new Error(`Element "${selector}" not found within ${timeout}ms.`));
+  //     }, timeout);
+  //   });
+  // }
+
+  async expandStepView(): Promise<void> {
+    const tabProcesses = document.querySelector("#substance-form-ssg4m-process") as HTMLElement;
+    if (tabProcesses.getAttribute('aria-expanded') !== 'true') {
+      console.log('Tab Processes not selected. Clicking it...');
+      tabProcesses.click();
+      await this.delay(200)
+    }
+
+    const tabStepView = document.querySelector("#mat-tab-label-0-1") as HTMLElement;
+    if (tabStepView.getAttribute('aria-selected') !== 'true') {
+      console.log('Tab Step View not selected. Clicking it...');
+      tabStepView.click();
+      await this.delay(200)
+    }
+  }
+
+  async exportStepView(document: Document): Promise<string> {
+    const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
+    const clone = elementToConvert.cloneNode(true) as HTMLElement;
+
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    const styles = this.getPageStyles();
+    container.innerHTML = styles;
+    container.appendChild(clone);
+    document.body.appendChild(container);
+
+    await this.delay(2500)
+
+    function filter (node: HTMLElement) {
+      if (!node.tagName) {
+        return true;
+      }
+
+      return (node.tagName.toLowerCase() !== 'button');
+    }
+    const options = {
+      filter: filter,
+      width: elementToConvert.offsetWidth,
+      height: elementToConvert.offsetHeight,
+      fetchRequestInit: {
+        headers: new Headers(),
+        mode: 'cors' as RequestMode,
+        cache: 'default' as RequestCache
+      }
+    };
+
+    const dataUrl = await toSvg(clone, options);
+    const commaIndex = dataUrl.indexOf(',');
+    document.body.removeChild(container);
+    return dataUrl.slice(commaIndex + 1);
+  }
+
+  async submit(): Promise<void> {
+    await this.expandStepView()
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -993,7 +1088,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     //This is a hacky placeholder way to force viz
     //TODO finish this
     const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-    window["schemeUtil"].onFinishedLayout = (svg) => {
+    window["schemeUtil"].onFinishedLayout = async (svg) => {
       window["schemeUtil"].onFinishedLayout = (svg) => { };
 
       // if New Record, initialize object
@@ -1007,14 +1102,17 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       // Save SVG as Clob
       this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
+      
+      const encodedSvg = await this.exportStepView(document)
+      this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
-      // After submitting Save button, the UI waits for 5 seconds to see if it gets a response.
+      // After submitting Save button, the UI waits for 8 seconds to see if it gets a response.
       // after 5 seconds it displays a warning on the top of the UI form.
       setTimeout(() => {
         if (this.isSavedSuccessful === false) {
           this.saveDelayedMessage = "Hmm ... this seems to be taking longer than normal, there may be network issues. <br>Click here to cancel and continue working on the form. We suggest you save a local copy of the JSON.";
         }
-      }, 5000);
+      }, 8000);
 
       this.submitSubscription = this.substanceSsg4mService.saveSsg4m(this.ssg4mSyntheticPathway).pipe(take(1)).subscribe(response => {
         // Stop the spinner
@@ -1027,7 +1125,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.validationResult = false;
 
         // if Saved Successfully
-        if (response && response.synthPathwaySkey) {
+        if (response && (response.synthPathwaySkey || this.configService.configData.isPfdaVersion)) {
           if (response.synthPathwaySkey) {
             this.id = response.synthPathwaySkey.toString();
           }
@@ -1043,7 +1141,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
             this.saveDelayedMessage = "";
             this.isCancelBtnClicked = false;
             // Only show successful dialog and refresh page, if user does not click on the cancel button.
-            this.openSuccessDialog();
+            this.openSuccessDialog(undefined, this.configService.configData.isPfdaVersion ? response.fileUrl : null);
           }
           // Refresh the current page, this will not cause record locking issue
           /* this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -1083,7 +1181,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
       setTimeout(tempCallback(s),3000);
     };
-    
+
     window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
 
   }
@@ -1284,10 +1382,21 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return old;
   }
 
-  openSuccessDialog(type?: string): void {
+  openSuccessDialog(type?: string, fileUrl?: string): void {
     let data = {
-      isCoreSubstance: 'false'
+      isCoreSubstance: 'false',
+      type: null,
+      fileUrl: null
     };
+
+    if (this.configService.configData.isPfdaVersion) {
+      data = {
+        isCoreSubstance: 'true',
+        type: 'submit',
+        fileUrl: fileUrl
+      }
+    }
+
     const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
       data: data
     });
@@ -1323,6 +1432,11 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
           this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
         }, 3000);
         */
+      } else if (response === 'browse') {
+        this.router.navigate(['/browse-substance']);
+      } else if (response === 'viewInPfda') {
+        // View the submitted substance file in the user's precisionFDA home
+        window.location.assign(fileUrl);
       }
     });
     this.subscriptions.push(dialogSubscription);

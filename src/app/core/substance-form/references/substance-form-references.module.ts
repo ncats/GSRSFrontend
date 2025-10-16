@@ -14,8 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import {ReferenceFormComponent} from "./reference-form.component";
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RefernceFormDialogComponent } from './references-dialogs/refernce-form-dialog.component';
-import { FileSelectModule } from 'file-select';
 import { MatMenuModule } from '@angular/material/menu';
+import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
 
 @NgModule({
   imports: [
