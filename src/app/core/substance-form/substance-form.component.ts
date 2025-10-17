@@ -84,13 +84,14 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   private overlayContainer: HTMLElement;
   serverError: boolean;
   canApprove: boolean;
+  userCanApprove: boolean;
   approving: boolean;
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
   canUpdate: boolean;
   canMakeAdvancedEdits: boolean;
-
+  
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -312,6 +313,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
+    this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     if(this.location.path().includes('chemical-simplified')) {

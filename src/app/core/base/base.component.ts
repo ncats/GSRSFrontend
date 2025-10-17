@@ -39,7 +39,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  canConfigureSystem = false;
+  canConfigureSystem: boolean = false;
+  canImportData: boolean = false;
   contactEmail: string;
   version?: string;
   versionTooltipMessage = '';
@@ -170,6 +171,7 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     }
     this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
+    this.canImportData = await this.authService.hasSpecificPrivilege('Import Data');
     this.canRegister=await this.authService.canEditData();
     console.log(`in BaseComponent, canRegister: ${this.canRegister}`);
     //not sure if we need this.

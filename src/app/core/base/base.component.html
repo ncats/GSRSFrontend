@@ -195,6 +195,9 @@
       <a routerLink="/admin" mat-menu-item *ngIf="canConfigureSystem">
         <span>Admin Panel</span>
       </a>
+      <a routerLink="/admin/import" mat-menu-item *ngIf="canImportData">
+        <span>Import Data</span>
+      </a>
       <a [routerLink]="['/registrars']" class = "add-at-low-res" *ngIf = "canRegister" mat-menu-item >
         <span>Registrars</span>
       </a>

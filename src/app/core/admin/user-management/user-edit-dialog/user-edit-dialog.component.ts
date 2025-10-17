@@ -63,6 +63,7 @@ export class UserEditDialogComponent implements OnInit {
         this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
         this.authService.hasSpecificPrivilege('Manage Users')
           this.adminService.getGroups().pipe(take(1)).subscribe( response => {
+            this.setupAssignableRoles();
             this.groups = [];
             response.forEach( grp => {
               const temp = {name: grp, hasGroup: false};
@@ -83,18 +84,8 @@ export class UserEditDialogComponent implements OnInit {
             this.loading = false;
             this.newUser = false;
             this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
-            this.assignableRoles = [];
-            this.adminService.getAllAvailableRoles().subscribe(roleNames => {
-              console.log(`retrieved available roles`)
-              this.availableRoleNames = roleNames;
-              this.availableRoleNames.forEach(r=>{
-                console.log(`looking at role ${r}`);
-                let hasRole:boolean = this.userHasRole(r);
-                console.log(`adding role ${r} to assignableRoles hasRole: ${hasRole}`);
-                let newRole = {roleName: r, assigned: hasRole };
-                this.assignableRoles.push(newRole);
-              })
-            });
+            
+            this.setupAssignableRoles();
 
             this.adminService.getGroups().pipe(take(1)).subscribe( response => {
               this.groups = [];
@@ -116,6 +107,16 @@ export class UserEditDialogComponent implements OnInit {
         this.user = {groups: [], roles: [],  user: {}};
         this.user.active = true;
         this.loading = false;
+        this.assignableRoles = [];
+        this.adminService.getAllAvailableRoles().subscribe(roleNames => {
+          console.log(`retrieved available roles`);
+          this.availableRoleNames = roleNames;
+           this.availableRoleNames.forEach(r=>{
+            let newRole = {roleName: r, assigned: false };
+            this.assignableRoles.push(newRole);
+           })
+        });
+
         this.adminService.getGroups().pipe(take(1)).subscribe( response => {
           this.groups = [];
           response.forEach( grp => {
@@ -124,7 +125,6 @@ export class UserEditDialogComponent implements OnInit {
           });
         });
       }
-
     }
 
   checkRoles(): void {
@@ -356,4 +356,21 @@ export class UserEditDialogComponent implements OnInit {
     }
     return false;
   }
+
+  private setupAssignableRoles() {
+    this.assignableRoles = [];
+    this.adminService.getAllAvailableRoles().subscribe(roleNames => {
+    console.log(`retrieved available roles`)
+    this.availableRoleNames = roleNames;
+    this.availableRoleNames.forEach(r=>{
+      console.log(`looking at role ${r}`);
+      let hasRole:boolean = this.userHasRole(r);
+      console.log(`adding role ${r} to assignableRoles hasRole: ${hasRole}`);
+      let newRole = {roleName: r, assigned: hasRole };
+      this.assignableRoles.push(newRole);
+     })
+   });
+  }
+
 }
+
