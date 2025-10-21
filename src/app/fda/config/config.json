@@ -14,7 +14,6 @@
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
-  "disableJSDraw": false,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "restApiPrefix": "/ginas/app",
   "disableJSDraw": true,
