@@ -1029,7 +1029,10 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       await this.delay(200)
     }
 
-    const tabStepView = document.querySelector("#mat-tab-label-0-1") as HTMLElement;
+    const allTabs = document.querySelectorAll('.mat-tab-label');
+    const tabStepView = Array.from(allTabs).find(
+      tab => tab.textContent.trim() === "Step View"
+    ) as HTMLElement;
     if (tabStepView.getAttribute('aria-selected') !== 'true') {
       console.log('Tab Step View not selected. Clicking it...');
       tabStepView.click();
