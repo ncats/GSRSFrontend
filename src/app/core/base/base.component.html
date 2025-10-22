@@ -192,11 +192,17 @@
       <a mat-menu-item (click)="viewDrafts()">
         <span>Saved Edit Drafts</span>
       </a>
+      <a routerLink="/admin/import" mat-menu-item *ngIf="canImportData && !canConfigureSystem">
+        <span>Import Data</span>
+      </a>
+      <a routerLink="/admin/data" mat-menu-item *ngIf="canImportData && !canConfigureSystem">
+        <span>Legacy Data Import</span>
+      </a>
+      <a routerLink="/admin/cv" mat-menu-item *ngIf="canImportData && !canConfigureSystem">
+        <span>CV Management</span>
+      </a>
       <a routerLink="/admin" mat-menu-item *ngIf="canConfigureSystem">
         <span>Admin Panel</span>
-      </a>
-      <a routerLink="/admin/import" mat-menu-item *ngIf="canImportData">
-        <span>Import Data</span>
       </a>
       <a [routerLink]="['/registrars']" class = "add-at-low-res" *ngIf = "canRegister" mat-menu-item >
         <span>Registrars</span>

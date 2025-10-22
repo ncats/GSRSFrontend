@@ -23,6 +23,7 @@ import { CanActivateAdminPage } from './admin/can-activate-admin-page';
 import { UnauthorizedComponent } from '@gsrs-core/unauthorized/unauthorized.component';
 import { SubstanceSsg4ManufactureFormComponent } from './substance-ssg4m/substance-ssg4m-form.component';
 import { ImportBrowseComponent } from '@gsrs-core/admin/import-browse/import-browse.component';
+import { CanImportData } from './admin/can-import-data';
 
 const childRoutes: Routes = [
   {
@@ -100,7 +101,8 @@ const childRoutes: Routes = [
   {
     path: 'admin/staging-area',
     component: ImportBrowseComponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
+    canActivate: [CanImportData]
 
   },
   {

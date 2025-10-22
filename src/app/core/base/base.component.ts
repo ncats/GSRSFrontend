@@ -41,6 +41,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   classicLinkQueryParamsString: string;
   canConfigureSystem: boolean = false;
   canImportData: boolean = false;
+  canManageCVs: boolean = false;
   contactEmail: string;
   version?: string;
   versionTooltipMessage = '';
@@ -116,26 +117,6 @@ export class BaseComponent implements OnInit, OnDestroy {
 
       if (text && text !== this.selectedText) {
         this.selectedText = text;
-       /* this.bottomSheetOpenTimer = setTimeout(() => {
-          const subscription = this.openSearchBottomSheet(text).subscribe(() => {
-            setTimeout(() => {
-              if (selection != null && range != null) {
-                selection.removeAllRanges();
-                selection.addRange(range);
-              } else if (selectionStart != null) {
-                activeEl.focus();
-                activeEl.selectionStart = selectionStart;
-                activeEl.selectionEnd = selectionEnd;
-              }
-            });
-            subscription.unsubscribe();
-          }, () => {
-            subscription.unsubscribe();
-          }, () => {
-            this.selectedText = '';
-            subscription.unsubscribe();
-          });
-        }, 600);*/
       }
     }
   }
@@ -171,9 +152,12 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     }
     this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
+    console.log(`canConfigureSystem ${this.canConfigureSystem}`);
     this.canImportData = await this.authService.hasSpecificPrivilege('Import Data');
+    console.log(`this.canImportData: ${this.canImportData}`);
     this.canRegister=await this.authService.canEditData();
     console.log(`in BaseComponent, canRegister: ${this.canRegister}`);
+    this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");
     //not sure if we need this.
     //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
