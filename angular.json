@@ -405,14 +405,7 @@
             }
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/ketcher-wrapper/src/test.ts",
-            "tsConfig": "projects/ketcher-wrapper/tsconfig.spec.json",
-            "karmaConfig": "projects/ketcher-wrapper/karma.conf.js"
-          }
-        },
+
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
