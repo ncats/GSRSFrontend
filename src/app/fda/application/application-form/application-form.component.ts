@@ -73,7 +73,9 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     private dialog: MatDialog) { }
 
   async ngOnInit() {
+    console.log(`applications form component ngOnInit`);
     this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
+    console.log(`canDelete: ${this.canDelete}`);
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();

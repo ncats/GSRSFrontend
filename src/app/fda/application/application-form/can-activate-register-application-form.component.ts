@@ -20,7 +20,8 @@ export class CanActivateRegisterApplicationFormComponent implements CanActivate 
       this.authService.getAuth().pipe(take(1)).subscribe(auth => {
         if (auth) {
           if(this.authService.hasSpecificPrivilege('Create')) {
-            
+            observer.next(true);
+            observer.complete();
           }
         } else {
           const navigationExtras: NavigationExtras = {
@@ -28,6 +29,7 @@ export class CanActivateRegisterApplicationFormComponent implements CanActivate 
               path: state.url
             }
           };
+          console.log('no auth ');
           observer.next(this.router.createUrlTree(['/login'], navigationExtras));
           observer.complete();
         }
