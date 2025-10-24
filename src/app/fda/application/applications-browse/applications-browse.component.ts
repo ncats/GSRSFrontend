@@ -313,7 +313,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       }
 
     }, error => {
-      console.log('error');
+      console.log('Applications fetch failed:', error);
       const notification: AppNotification = {
         message: 'There was an error trying to retrieve Applications. Please refresh and try again.',
         type: NotificationType.error,
@@ -493,8 +493,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchApplications();
     }
