@@ -134,17 +134,6 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     BulkActionDialogComponent
 
   ],
-  entryComponents: [
-    CvTermDialogComponent,
-    UserEditDialogComponent,
-    ImportDialogComponent,
-    CvImportComponent,
-    BulkActionDialogComponent,
-    NamesDisplayStagingPipe,
-    TakeImportPipe
-
-
-  ],
   providers: [
     CanActivateAdmin,
     {

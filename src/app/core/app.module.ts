@@ -256,24 +256,6 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
     {provide: WidgetRegistry, useClass: MyWidgetRegistry}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [
-    HighlightedSearchActionComponent,
-    ExportDialogComponent,
-    SubstanceEditImportDialogComponent,
-    SubstanceHistoryDialogComponent,
-    ShowMolfileDialogComponent,
-    CustomCheckboxWidgetComponent,
-    CustomTextWidgetComponent,
-    CustomMultiselectWidgetComponent,
-    CustomSelectWidgetComponent,
-    CustomRadioWidgetComponent,
-    CustomMultiCheckboxWidgetComponent,
-    CustomTextareaWidgetComponent,
-    MergeActionDialogComponent,
-    UserQueryListDialogComponent,
-    ListCreateDialogComponent,
-    ImportScrubberComponent
-  ],
   exports: [
     StructureEditorModule,
     NameResolverModule,

@@ -100,11 +100,6 @@ export function init_sso_refresh_service(ssoService: SsoRefreshService) {
     ShowApplicationToggleComponent
   ],
   exports: [],
-  entryComponents: [
-    SubstanceCountsComponent,
-    ShowApplicationToggleComponent
-
-  ],
   providers: [
     SsoRefreshService,
     {

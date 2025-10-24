@@ -107,8 +107,6 @@ const ssg2Routes: Routes = [
     SubstanceSsg2FormComponent,
   ],
   exports: [
-  ],
-  entryComponents: [
   ]
 })
 

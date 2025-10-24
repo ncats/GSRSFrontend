@@ -73,9 +73,6 @@ import { CrossEntitySearchService } from './cross-entity-search.service';
   ],
   exports: [
     CrossEntitySearchComponent
-  ],
-  entryComponents: [
-    CrossEntitySearchComponent
   ]
 })
 
