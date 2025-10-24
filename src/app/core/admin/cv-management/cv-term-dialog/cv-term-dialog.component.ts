@@ -126,7 +126,8 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         }, 200);
       }
     },error => {
-        let str = 'Invalid Vocabulary';
+        let str = 'Error Updating Vocabulary';
+        console.log(`error.error: ${error.error}; error.message: ${error.message}`);
         if (error.error && error.error.message) {
           str += '\n\n' + error.error.message;
   
@@ -158,19 +159,6 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
       this.loading = false;
 
     });
-  /*  this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
-      this.loading = false;
-      if (response.terms && response.terms.length === this.vocabulary.terms.length) {
-        alert('vocabulary updated');
-        setTimeout(() => {
-          this.dialogRef.close(response);
-        }, 200);
-        } else {
-          alert('invalid vocabulary');
-        }
-    }, error => {
-      alert('invalid vocabulary');
-    });*/
     this.loading = false;
 
   }
