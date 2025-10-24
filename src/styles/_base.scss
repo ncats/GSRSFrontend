@@ -46,13 +46,18 @@ a:hover, button:hover {
 }
 
 
-.mat-button {
+// Support both legacy and MDC buttons
+.mat-button,
+.mat-mdc-button {
   color: var(--link-color);
 }
 
-.mat-form-field-type-mat-input.mat-focused {
+// Support both legacy and MDC form fields
+.mat-form-field-type-mat-input.mat-focused,
+.mat-mdc-form-field.mat-focused {
 
-  .mat-form-field-infix {
+  .mat-form-field-infix,
+  .mat-mdc-form-field-infix {
     transition: all 500ms;
     padding-top: 5px;
     border: 1px solid var(--primary-color);
