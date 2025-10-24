@@ -1,3 +1,17 @@
+// Angular Material 15 MDC-based card styling fixes
+// The MDC cards have different internal structure and default styles
+// .mat-mdc-card {
+//     max-width: 1228px;
+//     width: 100%;
+//     box-sizing: border-box;
+//     margin-bottom: 20px;
+//     margin: auto;
+
+//     // Angular 15 MDC cards have different default padding
+//     padding: 16px !important;
+// }
+
+// Support both legacy and MDC cards during migration
 .mat-card {
     max-width: 1228px;
     width: 100%;
@@ -5,6 +19,18 @@
     margin-bottom: 20px;
     margin: auto;
 }
+
+// Angular 15 MDC card title styling
+// .mat-mdc-card-title {
+//     display: flex;
+//     box-sizing: border-box;
+//     width: 100%;
+//     flex-direction: row;
+//     align-items: center;
+//     white-space: normal;
+//     margin-bottom: 16px !important;
+//     padding: 0 !important;
+// }
 
 .mat-card-title {
     display: flex;
@@ -16,8 +42,22 @@
     white-space: normal;
 }
 
+// Angular 15 MDC card content styling
+// .mat-mdc-card-content {
+//     padding: 0 !important;
+
+//     &:first-child {
+//         padding-top: 0 !important;
+//     }
+
+//     &:last-child {
+//         padding-bottom: 0 !important;
+//     }
+// }
+
 @media(max-width: 700px) {
-    .mat-card-title {
+    .mat-card-title,
+    .mat-mdc-card-title {
         flex-direction: column;
         align-items: flex-start;
     }
