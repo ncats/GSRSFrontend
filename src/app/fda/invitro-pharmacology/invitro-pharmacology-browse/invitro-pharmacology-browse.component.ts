@@ -1052,8 +1052,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchInvitroAssay();
     }

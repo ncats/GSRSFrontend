@@ -92,8 +92,6 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
   ],
   exports: [
     Ssg2ManufacturingComponent
-  ],
-  entryComponents: [
   ]
 })
 

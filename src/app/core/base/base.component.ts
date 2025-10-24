@@ -184,7 +184,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
       this.version = this.configService.configData.version || buildInfo.version;
       this.versionTooltipMessage = `V${this.version}`;
-      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
+      this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format('ddd MMM D YYYY HH:mm:ss z')}`;
     });
     this.navItems.forEach(item => {
       if (item.display === 'Register') {

@@ -121,12 +121,6 @@ const ssg4mRoutes: Routes = [
   //  CvInputComponent,
   //  CvDialogComponent,
   //  JsonDialogComponent,
-  ],
-  entryComponents: [
-  //  CvDialogComponent,
- //   JsonDialogComponent,
- //   AuditInfoComponent,
-  //  SubmitSuccessDialogComponent,
   ]
 })
 

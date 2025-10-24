@@ -11,7 +11,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es2020",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -52,5 +52,10 @@
     "**/*.spec.ts",
     "src/testing/**/*"
   ],
-  "angularCompilerOptions": { "fullTemplateTypeCheck": false, "strictInjectionParameters": false, "enableIvy": false }
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": false,
+    "strictInjectionParameters": false,
+    "strictTemplates": false,
+    "enableIvy": true
+  }
 }

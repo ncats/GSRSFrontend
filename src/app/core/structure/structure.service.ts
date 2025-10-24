@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable, timeout, BehaviorSubject, Subject, tap} from 'rxjs';
+import { Observable, timeout, BehaviorSubject, Subject} from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';

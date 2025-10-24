@@ -9,7 +9,8 @@ import {
   Inject,
   ComponentFactoryResolver,
   ViewChildren,
-  QueryList
+  QueryList,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
@@ -180,6 +181,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private cvService: ControlledVocabularyService,
     private wildCardService: WildcardService,
     private bulkSearchService: BulkSearchService,
+    private cdr: ChangeDetectorRef,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
   ) {
@@ -366,7 +368,6 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     });
     this.subscriptions.push(dynamicSubscription);
-
   }
 
   ngOnDestroy() {
@@ -465,10 +466,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets.filter(facet => !(facet.type === 'Deprecated' && facet.bool === false));
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+        this.isFacetsParamsInit = true;
+        // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.loadComponent();
+          this.cdr.detectChanges();
+        }, 0);
     } else {
-      this.searchSubstances();
+        this.searchSubstances();
     }
   }
 

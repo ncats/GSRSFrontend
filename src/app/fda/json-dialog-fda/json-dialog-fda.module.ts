@@ -19,9 +19,6 @@ import { Routes, RouterModule } from '@angular/router';
   ],
   exports: [
     JsonDialogFdaComponent
-  ],
-  entryComponents: [
-    JsonDialogFdaComponent
   ]
 })
 export class JsonDialogFdaModule { }

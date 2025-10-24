@@ -20,7 +20,6 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import jp from 'jsonpath';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 
 /* GSRS Product Imports */
 import { ProductService } from '../service/product.service';

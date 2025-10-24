@@ -155,10 +155,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this.facetsFromParams();
     this.setDisplayFacets();
-    this.facetsParamsUpdated.emit({
-      facetParam: this.privateFacetParams,
-      displayFacets: this.displayFacets,
-      deprecated: this.showDeprecated
+    // Defer emission to avoid ExpressionChangedAfterItHasBeenCheckedError
+    Promise.resolve().then(() => {
+      this.facetsParamsUpdated.emit({
+        facetParam: this.privateFacetParams,
+        displayFacets: this.displayFacets,
+        deprecated: this.showDeprecated
+      });
     });
     const deleteEventSubscription = this.facetManagerService.clearSelectionsEvent.subscribe(() => {
       this.clearFacetSelection();

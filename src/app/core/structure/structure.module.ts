@@ -39,10 +39,5 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     StructureImageModalComponent,
     StructureImportComponent
   ],
-  entryComponents: [
-    StructureExportComponent,
-    StructureImageModalComponent,
-    StructureImportComponent
-  ]
 })
 export class StructureModule { }

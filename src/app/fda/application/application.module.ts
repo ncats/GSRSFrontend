@@ -146,8 +146,6 @@ const applicationRoutes: Routes = [
   exports: [
     ApplicationsBrowseComponent,
   ],
-  entryComponents: [
-  ],
   providers: [
     CanActivateRegisterApplicationFormComponent,
     CanActivateUpdateApplicationFormComponent,
