@@ -101,7 +101,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  canImportData = false;
+  canUserImportData = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -365,7 +365,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showDeprecated = true;
       }
     });
-    this.canImportData = await this.authService.hasSpecificPrivilege('Import Data');
+    this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
     this.showAudit = await this.authService.hasSpecificPrivilege('Restore Previous Versions');
 
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getStagingFacets );

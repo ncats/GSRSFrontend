@@ -19,7 +19,9 @@ export class CanActivateAdminPage implements CanActivate {
     return new Observable(observer => {
       this.authService.getAuth().subscribe(auth => {
         if (auth) {
-          if( this.authService.hasSpecificPrivilege("Configure System")) {
+          console.log(`going to check whether user has one of the required privs`);
+          if( this.authService.hasAnyPrivilege("Configure System", "Import Data", "Manage Users", "Manage CVs", "Run Tasks")) {
+              console.log('user CAN');
               observer.next(true);
               observer.complete();
             } else {

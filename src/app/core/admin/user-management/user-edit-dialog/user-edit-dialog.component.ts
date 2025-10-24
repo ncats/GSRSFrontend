@@ -6,6 +6,7 @@ import { IfStmt } from '@angular/compiler';
 import { AuthService, Auth } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-edit-dialog',
@@ -44,6 +45,7 @@ export class UserEditDialogComponent implements OnInit {
     private adminService: AdminService,
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
     private authService: AuthService,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     console.log(`in UserEditDialogComponent ctor, data: ${JSON.stringify(data)}`);
@@ -56,12 +58,15 @@ export class UserEditDialogComponent implements OnInit {
     ngOnInit() {
       if (this.user) {
         console.log(`UserEditDialogComponent ngOnInit have user`);
+        if(! this.authService.hasSpecificPrivilege('Manage Users')) {
+          alert("Sorry! Unable to verify that you have the privileges to access this page");
+          this.router.parseUrl('/home');
+       }
         this.checkRoles();
         this.originalName = this.user.username;
         this.loading = false;
         this.newUser = false;
         this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
-        this.authService.hasSpecificPrivilege('Manage Users')
           this.adminService.getGroups().pipe(take(1)).subscribe( response => {
             this.setupAssignableRoles();
             this.groups = [];

@@ -19,9 +19,10 @@ export class AdminComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    console.log(`in admin.component ngOnInit`);
     this.activatedRoute.params.subscribe(routeParams => {
       this.current = routeParams.function;
+      console.log(`routeParams.function: ${routeParams.function}`);
       switch (this.current) {
         case 'cache': this.activeTab = 0; break;
         case 'info': this.activeTab = 1; break;
@@ -35,6 +36,7 @@ export class AdminComponent implements OnInit {
         default: this.activeTab = 0; break;
     }
     });
+    console.log(`this tab ${this.activeTab}`);
     const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cache';
 
 }

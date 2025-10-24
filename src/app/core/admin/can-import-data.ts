@@ -3,7 +3,7 @@ import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Navig
 import { AuthService } from '../auth/auth.service';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable ({providedIn: 'root'})
 export class CanImportData implements CanActivate {
     constructor(
             private router: Router,
@@ -14,10 +14,13 @@ export class CanImportData implements CanActivate {
             route: ActivatedRouteSnapshot,
             state: RouterStateSnapshot
         ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
+            console.log(`in  CanImportData.canActivate`);
             return new Observable(observer => {
                 this.authService.getAuth().subscribe(auth => {
                     if (auth) {
+                        console.log('   got auth');
                         if(this.authService.hasSpecificPrivilege("Import Data")) {
+                            console.log('   has priv Import Data');
                             observer.next(true);
                             observer.complete();
                         } else {

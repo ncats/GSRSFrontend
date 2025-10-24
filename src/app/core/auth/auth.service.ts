@@ -259,6 +259,12 @@ get auth(): Auth {
     return this._privileges != null && this._privileges.some(p=>p.privilege=="Edit");
   }
 
+  async hasAnyPrivilege(...privs) : Promise< boolean> {
+    if( this._privileges == null || this._privileges.length === 0) {
+      const privs = await firstValueFrom(this.fetchPrivs());
+    }
+    return privs.some(p=>this._privileges.some(pp=>pp.privilege.toUpperCase()== p.toUpperCase()));
+  }
   
   async hasSpecificPrivilege(requestedPrivilege: string ):Promise<boolean> {
     if( this._privileges == null || this._privileges.length === 0) {

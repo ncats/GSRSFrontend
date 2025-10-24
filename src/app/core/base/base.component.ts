@@ -40,7 +40,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
   canConfigureSystem: boolean = false;
-  canImportData: boolean = false;
+  canUserImportData: boolean = false;
   canManageCVs: boolean = false;
   contactEmail: string;
   version?: string;
@@ -153,8 +153,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
     this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
     console.log(`canConfigureSystem ${this.canConfigureSystem}`);
-    this.canImportData = await this.authService.hasSpecificPrivilege('Import Data');
-    console.log(`this.canImportData: ${this.canImportData}`);
+    this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
+    console.log(`this.canUserImportData: ${this.canUserImportData}`);
     this.canRegister=await this.authService.canEditData();
     console.log(`in BaseComponent, canRegister: ${this.canRegister}`);
     this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");

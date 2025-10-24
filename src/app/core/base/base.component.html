@@ -192,13 +192,13 @@
       <a mat-menu-item (click)="viewDrafts()">
         <span>Saved Edit Drafts</span>
       </a>
-      <a routerLink="/admin/import" mat-menu-item *ngIf="canImportData && !canConfigureSystem">
+      <a routerLink="/admin/import" mat-menu-item *ngIf="canUserImportData && !canConfigureSystem">
         <span>Import Data</span>
       </a>
-      <a routerLink="/admin/data" mat-menu-item *ngIf="canImportData && !canConfigureSystem">
+      <a routerLink="/admin/data" mat-menu-item *ngIf="canUserImportData && !canConfigureSystem">
         <span>Legacy Data Import</span>
       </a>
-      <a routerLink="/admin/cv" mat-menu-item *ngIf="canImportData && !canConfigureSystem">
+      <a routerLink="/admin/cv" mat-menu-item *ngIf="canManageCVs && !canConfigureSystem">
         <span>CV Management</span>
       </a>
       <a routerLink="/admin" mat-menu-item *ngIf="canConfigureSystem">
