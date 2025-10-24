@@ -1,3 +1,4 @@
 export * from './auth.model';
-export * from './auth.module';
+//Circular dependecy error
+// export * from './auth.module';
 export * from './auth.service';
