@@ -17,9 +17,6 @@ import { Routes, RouterModule } from '@angular/router';
   ],
   exports: [
     ConfirmDialogComponent
-  ],
-  entryComponents: [
-    ConfirmDialogComponent
   ]
 })
 export class ConfirmDialogModule { }

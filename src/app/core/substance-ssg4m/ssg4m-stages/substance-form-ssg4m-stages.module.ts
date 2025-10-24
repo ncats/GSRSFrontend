@@ -109,12 +109,6 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
   //  CvInputComponent,
   //  CvDialogComponent,
   //  JsonDialogComponent,
-  ],
-  entryComponents: [
-  //  CvDialogComponent,
- //   JsonDialogComponent,
- //   AuditInfoComponent,
-  //  SubmitSuccessDialogComponent,
   ]
 })
 
