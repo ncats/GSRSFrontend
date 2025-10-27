@@ -14,7 +14,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { TagSelectorComponent } from './tag-selector/tag-selector.component';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatLegacyChipsModule } from '@angular/material/legacy-chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ScrollToModule } from '../scroll-to/scroll-to.module';
 import { DomainReferencesComponent } from './references/domain-references/domain-references.component';
@@ -104,7 +103,6 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     MatSelectModule,
     MatInputModule,
     MatChipsModule,
-    MatLegacyChipsModule,
     MatAutocompleteModule,
     ScrollToModule,
     MatDialogModule,
