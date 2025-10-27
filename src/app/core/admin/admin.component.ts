@@ -18,6 +18,7 @@ export class AdminComponent implements OnInit {
   canImportData: boolean =false;
   canManageUsers: boolean = false;
   canViewServerFiles:boolean = false;
+  canViewServiceInfo:boolean = false;
   
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -32,25 +33,27 @@ export class AdminComponent implements OnInit {
     
     this.activatedRoute.params.subscribe(routeParams => {
       this.current = routeParams.function;
-      console.log(`routeParams.function: ${routeParams.function}`);
+      console.log(`routeParams.function: ${routeParams.function} current: ${this.current} will call getActualTab`);
+      let actualTab = this.getActualTab(this.current);
       switch (this.current) {
         case 'cache': this.activeTab = 0; break;
         case 'info': 
-           this.activeTab = 1; break;
+           this.activeTab = actualTab;
+           break;
         case 'user':
           if(!this.canManageUsers){
             console.log("user does not have privs to manage users");
             this.activeTab=-1;
             break;
           }
-           this.activeTab = 2; break;
+           this.activeTab = actualTab; break;
         case 'import': 
           if( !this.canImportData ) {
             console.log("user does not have privs to import data");
             this.activeTab=-1;
             break;
           }
-          this.activeTab = 3;
+          this.activeTab = actualTab;
           break;
          
         case 'cv': 
@@ -59,7 +62,7 @@ export class AdminComponent implements OnInit {
             this.activeTab=-1;
             break;
           }
-          this.activeTab = 4; 
+          this.activeTab = actualTab; 
           break;
         
         case 'jobs':
@@ -68,20 +71,24 @@ export class AdminComponent implements OnInit {
             this.activeTab=-1;
             break;
           }
-           this.activeTab = 5; break;
+           this.activeTab = actualTab;
+           break;
         case 'files':
           if( !this.canViewServerFiles){
             console.log("user does not have privs to view server files");
             this.activeTab=-1;
             break;
-          } this.activeTab = 6; break;
+          }
+          this.activeTab = actualTab;
+          break;
         case 'data':
           if( !this.canImportData){
             console.log("user does not have privs to import data");
             this.activeTab=-1;
             break;
           }
-          this.activeTab = 7; break;
+          this.activeTab = actualTab;
+          break;
 
         default: this.activeTab = 0; break;
     }
@@ -96,41 +103,22 @@ export class AdminComponent implements OnInit {
 async checkPrivileges() {
   this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");
   this.canRunJobs = await this.authService.hasSpecificPrivilege("Run Tasks");
-  this.canImportData= await this.authService.hasSpecificPrivilege("Import Data");
+  this.canImportData = await this.authService.hasSpecificPrivilege("Import Data");
   this.canManageUsers = await this.authService.hasSpecificPrivilege("Manage Users");
   this.canViewServerFiles = await this.authService.hasSpecificPrivilege("View Files");
+  this.canViewServiceInfo = await this.authService.hasSpecificPrivilege("View Service Info");
+  console.log(`canManageCVs: ${this.canManageCVs}; canRunJobs: ${this.canRunJobs};  canImportData: ${this.canImportData}; canManageUsers: ${this.canManageUsers}; canViewServerFiles: ${this.canViewServerFiles}`);
   console.log('checkPrivileges complete');
 }
 
   onTabChanged(event: MatTabChangeEvent): void {
 
-    console.log(`starting onTabChanged at ` + (new Date()));
+    console.log(`starting onTabChanged event.index: ${event.index} at ` + (new Date()));
     let route = 'cache';
 
-    switch (event.index) {
-      case 0:
-        break;
-        case 1:
-      route = 'info';
-        break;
-        case 2:
-      route = 'user';
-        break;
-      case 3:
-        route = 'import';
-      break;
-      case 4:
-        route = 'cv';
-      break;
-      case 5:
-        route = 'jobs';
-      break;
-      case 6:
-        route = 'files';
-      break;
-      case 7:
-        route = 'data';
-      break;
+    let newRoute = this.getActualTabName(event.index);
+    if( newRoute.length > 0) {
+      route = newRoute;
     }
     if( this.current !== route){
       if (this.current !== 'jobs') {
@@ -145,5 +133,41 @@ async checkPrivileges() {
       console.log('already on the desired tab!');
     }
 
+  }
+
+  getFilteredTabs() {
+      let allTabs = [
+      {name: 'cache', available: this.canViewServiceInfo},
+      {name: 'info', available: this.canViewServiceInfo},
+      {name: 'user', available: this.canManageUsers},
+      {name: 'import', available: this.canImportData},
+      {name: 'cv', available: this.canManageCVs},
+      {name: 'jobs', available: this.canRunJobs},
+      {name: 'files', available: this.canViewServerFiles},
+      {name: 'data', available: this.canImportData}
+    ]
+
+    return allTabs.filter(t=>t.available);
+  }
+
+  getActualTab(desiredFunctionality:string): number {
+    console.log(`getActualTab looking for ${desiredFunctionality}`);
+
+    let filteredTabs = this.getFilteredTabs();
+    for(var t=0; t< filteredTabs.length; t++) {
+      console.log(`filteredTabs[t].name: ${filteredTabs[t].name}; desiredFunctionality: ${desiredFunctionality}`);
+      if(filteredTabs[t].name == desiredFunctionality){
+        console.log(`getActualTab about to return ${t} for input ${desiredFunctionality}`)
+        return t;
+      }
+    }
+    console.log(`getActualTab did not locate desire tab`);
+    return -1;
+  }
+
+  getActualTabName(tabNumber: number) {
+    let filteredTabs = this.getFilteredTabs();
+    if( tabNumber <0 || tabNumber >= filteredTabs.length) return '';
+    return filteredTabs[tabNumber].name;
   }
 }
