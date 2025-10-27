@@ -1016,6 +1016,46 @@ button .mat-icon,
 }
 
 // ============================================================================
+// SPECIFIC COMPONENT FIXES
+// ============================================================================
+
+// Fix for search buttons in substance-text-search component
+.search-button,
+.close-button,
+.activate-search-button {
+    &[mat-icon-button] {
+        // Ensure these buttons work properly with icon centering
+        .mat-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+// Fix for login button
+.login-link {
+    &[mat-button] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+// Fix for user account buttons
+.user-button {
+    &[mat-icon-button] {
+        // These have custom sizing, ensure icons still center
+        .mat-icon,
+        .user-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+// ============================================================================
 // COMPREHENSIVE ICON CENTERING FIX
 // ============================================================================
 // This ensures all mat-icons are properly centered regardless of context
@@ -1044,17 +1084,20 @@ a[mat-fab],
         top: auto !important;
         bottom: auto !important;
         transform: none !important;
-        margin: 0 !important;
+        // Don't force margin to 0 - allow component-specific margins
     }
 
-    // Ensure SVG icons are centered
+    // Ensure SVG icons are centered within the mat-icon
+    .mat-icon svg,
     svg {
-        position: relative !important;
-        left: auto !important;
-        right: auto !important;
-        top: auto !important;
-        bottom: auto !important;
-        transform: none !important;
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        bottom: auto;
+        transform: none;
+        display: block;
+        margin: auto;
     }
 }
 
