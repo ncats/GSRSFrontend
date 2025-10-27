@@ -249,39 +249,39 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "gsrs-client:build"
+            "buildTarget": "gsrs-client:build"
           },
           "configurations": {
             "fda.dev": {
-              "browserTarget": "gsrs-client:build:fda.dev"
+              "buildTarget": "gsrs-client:build:fda.dev"
             },
             "fda.local": {
-              "browserTarget": "gsrs-client:build:fda.local"
+              "buildTarget": "gsrs-client:build:fda.local"
             },
             "fda.pre-prod": {
-              "browserTarget": "gsrs-client:build:fda.pre-prod"
+              "buildTarget": "gsrs-client:build:fda.pre-prod"
             },
             "fda.prod": {
-              "browserTarget": "gsrs-client:build:fda.prod"
+              "buildTarget": "gsrs-client:build:fda.prod"
             },
             "gsrs.dev": {
-              "browserTarget": "gsrs-client:build:gsrs.dev"
+              "buildTarget": "gsrs-client:build:gsrs.dev"
             },
             "gsrs.local": {
-              "browserTarget": "gsrs-client:build:gsrs.local"
+              "buildTarget": "gsrs-client:build:gsrs.local"
             },
             "gsrs.pre-prod": {
-              "browserTarget": "gsrs-client:build:gsrs.pre-prod"
+              "buildTarget": "gsrs-client:build:gsrs.pre-prod"
             },
             "gsrs.prod": {
-              "browserTarget": "gsrs-client:build:gsrs.prod"
+              "buildTarget": "gsrs-client:build:gsrs.prod"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gsrs-client:build"
+            "buildTarget": "gsrs-client:build"
           }
         },
         "test": {
