@@ -7,7 +7,7 @@ import {
   QueryList,
   OnDestroy, HostListener
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, Event, NavigationStart, NavigationEnd } from '@angular/router';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
@@ -242,7 +242,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         } //else
       });
     this.subscriptions.push(routeSubscription);
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.substanceSsg4mService.unloadSubstance();
       }

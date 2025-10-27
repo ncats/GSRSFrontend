@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
-import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
+import { Router, Event, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
@@ -250,7 +250,7 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     this.logoSrcPath = `${this.environment.baseHref || ''}assets/images/gsrs-logo.svg`;
 
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof ResolveEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
         urlPath = event.url.split('?')[0];
