@@ -8,7 +8,7 @@ import {
   OnDestroy, HostListener, Input, Output
 } from '@angular/core';
 import {formSections} from './form-sections.constant';
-import {ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd} from '@angular/router';
+import {ActivatedRoute, Router, Event, NavigationStart, NavigationEnd} from '@angular/router';
 import {SubstanceService} from '../substance/substance.service';
 import {LoadingService} from '../loading/loading.service';
 import {MainNotificationService} from '../main-notification/main-notification.service';
@@ -424,7 +424,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       });
     this.subscriptions.push(routeSubscription);
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.substanceFormService.unloadSubstance();
       }

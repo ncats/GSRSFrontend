@@ -288,10 +288,24 @@
     min-width: 64px;
     padding: 0 16px;
 
+    // CRITICAL: Ensure button content respects DOM order
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+
     .mdc-button__label {
         font-size: 14px;
         font-weight: 500;
         line-height: normal;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        order: 0; // Ensure label stays in natural order
+    }
+
+    // Ensure mat-icons stay in their HTML order
+    .mat-icon {
+        order: 0; // Don't reorder
     }
 
     // Fix the persistent ripple that can cause visual issues
@@ -454,6 +468,8 @@ button .mat-icon,
     display: flex;
     align-items: center;
     position: relative;
+    pointer-events: auto !important;
+    cursor: pointer;
 
     .mat-icon {
         margin-right: 16px;
@@ -461,6 +477,18 @@ button .mat-icon,
 
     .mat-mdc-menu-item-text {
         flex-grow: 1;
+    }
+
+    // Ensure the MDC button inside menu item is clickable
+    .mat-mdc-menu-item-text,
+    .mdc-list-item__primary-text {
+        pointer-events: auto !important;
+    }
+
+    // Fix for anchor tag menu items
+    &[href] {
+        pointer-events: auto !important;
+        cursor: pointer !important;
     }
 }
 
@@ -1039,12 +1067,51 @@ a[mat-fab],
 .mat-mdc-raised-button,
 .mat-mdc-unelevated-button,
 .mat-mdc-outlined-button {
-    .mat-icon {
-        vertical-align: middle;
-        position: relative;
+    // Override Angular Material's DOM reordering
+    &:not([mat-icon-button]):not([mat-fab]):not([mat-mini-fab]) {
+        // CRITICAL: Angular Material wraps content in .mdc-button__label
+        // and places mat-icon OUTSIDE of it, but before it in the DOM
+        // We need to visually reorder them
 
-        svg {
-            vertical-align: top;
+        display: inline-flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+
+        // The mat-icon appears FIRST in DOM (Angular moves it)
+        > .mat-icon {
+            order: 10 !important; // Force it to appear LAST visually
+            margin-left: 8px !important;
+            margin-right: 0 !important;
+            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                vertical-align: top;
+            }
+        }
+
+        // The .mdc-button__label contains the text content
+        > .mdc-button__label {
+            order: 1 !important; // Make it appear FIRST visually
+            display: inline-flex;
+            align-items: center;
+
+            // If there's a mat-icon inside the label (shouldn't happen, but just in case)
+            > .mat-icon {
+                margin-left: 8px;
+                order: inherit;
+            }
+        }
+
+        // Handle ripple and touch target (they should be positioned absolutely)
+        > .mat-mdc-button-persistent-ripple,
+        > .mat-mdc-button-ripple,
+        > .mat-mdc-button-touch-target,
+        > .mat-mdc-focus-indicator {
+            order: 0 !important;
+            position: absolute !important;
         }
     }
 }

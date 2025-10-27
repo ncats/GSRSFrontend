@@ -1,5 +1,4 @@
 import {
-    ANALYZE_FOR_ENTRY_COMPONENTS,
     ModuleWithProviders,
     NgModule,
     Type,
@@ -38,7 +37,6 @@ export class DynamicComponentLoaderModule {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
-        { provide: ANALYZE_FOR_ENTRY_COMPONENTS, useValue: manifest, multi: true },
         // provider for @angular/router to parse
         { provide: ROUTES, useValue: manifest, multi: true },
         // provider for DynamicComponentLoader to analyze
@@ -50,7 +48,6 @@ export class DynamicComponentLoaderModule {
     return {
       ngModule: DynamicComponentLoaderModule,
       providers: [
-        { provide: ANALYZE_FOR_ENTRY_COMPONENTS, useValue: component, multi: true },
         // provider for @angular/router to parse
         { provide: ROUTES, useValue: [], multi: true },
         // provider for DynamicComponentLoader to analyze

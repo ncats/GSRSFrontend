@@ -1,7 +1,7 @@
 import { Component, Output, Input, EventEmitter, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { NavigationExtras, Router, RouterEvent, NavigationEnd } from '@angular/router';
+import { NavigationExtras, Router, Event, NavigationEnd } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SubstanceSuggestionsGroup } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils';
@@ -61,7 +61,7 @@ export class MiniSearchComponent implements OnInit, AfterViewInit {
 
     this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
 
-    this.router.events.subscribe((event: RouterEvent) => {
+    this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
       }
