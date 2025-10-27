@@ -39,22 +39,22 @@ $my-blue: (
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$candy-app-primary: mat.define-palette($my-blue, 500, 100, 50);
-$candy-app-accent:  mat.define-palette($my-blue, A100);
+$candy-app-primary: mat.m2-define-palette($my-blue, 500, 100, 50);
+$candy-app-accent:  mat.m2-define-palette($my-blue, A100);
 
 // The warn palette is optional (defaults to red).
-$candy-app-warn:    mat.define-palette($my-blue, A100);
+$candy-app-warn:    mat.m2-define-palette($my-blue, A100);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$candy-app-theme: mat.define-light-theme((
+$candy-app-theme: mat.m2-define-light-theme((
   color: (
     primary: $candy-app-primary,
     accent: $candy-app-accent,
     warn: $candy-app-warn,
   ),
   density: -1 // try -1 (compact). Use -2 if you want tighter.
-  // typography: mat.define-typography-config( /* keep if you had custom fonts */ )
-  
+  // typography: mat.m2-define-typography-config( /* keep if you had custom fonts */ )
+
 ));
 
 // Include theme styles for core and each component used in your app.
