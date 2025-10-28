@@ -10,33 +10,28 @@ export class CanImportData implements CanActivate {
             private authService: AuthService
         ) { }
     
-        canActivate(
+        async canActivate(
             route: ActivatedRouteSnapshot,
             state: RouterStateSnapshot
-        ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
+        ):  Promise<boolean | UrlTree>  {
             console.log(`in  CanImportData.canActivate`);
-            return new Observable(observer => {
-                this.authService.getAuth().subscribe(auth => {
-                    if (auth) {
-                        console.log('   got auth');
-                        if(this.authService.hasSpecificPrivilege("Import Data")) {
-                            console.log('   has priv Import Data');
-                            observer.next(true);
-                            observer.complete();
-                        } else {
-                            observer.next(this.router.parseUrl('/home'));
-                            observer.complete();
-                        }
-                    } else {
-                        const navigationExtras: NavigationExtras = {
-                            queryParams: {
-                                path: state.url
-                            }
-                        };
-                        observer.next(this.router.createUrlTree(['/login'], navigationExtras));
-                        observer.complete();
+            const auth = this.authService.getAuth();
+            if (auth) {
+                console.log(`  got auth `); 
+                const canImporNow = await this.authService.hasSpecificPrivilege("Import Data");
+                if( canImporNow) {
+                    console.log('   has priv \'Import Data\'');
+                    return true;
+                } else {
+                    this.router.parseUrl('/home');
+                }
+            } else {
+                const navigationExtras: NavigationExtras = {
+                    queryParams: {
+                        path: state.url
                     }
-                });
-            });
+                };
+                return this.router.createUrlTree(['/login'], navigationExtras);
+            }
         }
 }

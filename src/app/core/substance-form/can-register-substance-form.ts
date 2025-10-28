@@ -11,30 +11,27 @@ export class CanRegisterSubstanceForm implements CanActivate {
     private authService: AuthService
   ) {}
 
-  canActivate(
+  async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
-    return new Observable(observer => {
-      this.authService.getAuth().subscribe(auth => {
-        if (auth) {
-          if( this.authService.hasSpecificPrivilege('Create')) {
-              observer.next(true);
-              observer.complete();
-            } else {
-              observer.next(this.router.parseUrl('/browse-substance'));
-             observer.complete();
-          }
-        } else {
-          const navigationExtras: NavigationExtras = {
-            queryParams: {
-              path: state.url
-            }
-          };
-          observer.next(this.router.createUrlTree(['/login'], navigationExtras));
-          observer.complete();
+  ): Promise<boolean | UrlTree> {
+
+    const auth = this.authService.getAuth();
+    if (auth) {
+        console.log('in canActivate, going to check for Create priv');
+        const canCreate =await this.authService.hasSpecificPrivilege('Create');
+        if(canCreate){
+            return true;
+        }else {
+            this.router.parseUrl('/browse-substance');
         }
-      });
-    });
+    } else {
+        const navigationExtras: NavigationExtras = {
+            queryParams: {
+                path: state.url
+            }
+        };
+        this.router.createUrlTree(['/login'], navigationExtras);
+    }
   }
 }

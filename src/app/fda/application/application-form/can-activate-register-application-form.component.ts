@@ -12,28 +12,27 @@ export class CanActivateRegisterApplicationFormComponent implements CanActivate 
     private authService: AuthService
   ) {}
 
-  canActivate(
+  async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
-    return new Observable(observer => {
-      this.authService.getAuth().pipe(take(1)).subscribe(auth => {
-        if (auth) {
-          if(this.authService.hasSpecificPrivilege('Create')) {
-            observer.next(true);
-            observer.complete();
-          }
+  ): Promise<boolean | UrlTree> {
+    const auth = this.authService.getAuth();
+    if (auth) {
+        const canCreate =await this.authService.hasSpecificPrivilege('Create');
+        if(canCreate){
+            return true;
         } else {
-          const navigationExtras: NavigationExtras = {
-            queryParams: {
-              path: state.url
-            }
-          };
-          console.log('no auth ');
-          observer.next(this.router.createUrlTree(['/login'], navigationExtras));
-          observer.complete();
+            this.router.parseUrl('/browse-applications');
         }
-      });
-    });
+    } else {
+      {
+        const navigationExtras: NavigationExtras = {
+            queryParams: {
+                path: state.url
+            }
+        };
+        this.router.createUrlTree(['/login'], navigationExtras);
+      }
+    }
   }
 }

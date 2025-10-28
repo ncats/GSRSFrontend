@@ -107,13 +107,13 @@ const childRoutes: Routes = [
     path: 'admin',
     component: AdminComponent,
     canActivate: [CanActivateAdmin],
-      children :[
-        {
+    children :[
+      {
         path: 'import',
         component: ImportManagementComponent,
         canActivate: [CanImportData]
       }
-      ]
+     ]
   },
   {
     path: 'monitor/:id',

@@ -15,36 +15,31 @@ export class CanActivateUpdateApplicationFormComponent implements CanActivate {
 
     ) { }
 
-    canActivate(
+    async canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
-    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
-        return new Observable(observer => {
-            const loadedComponents = this.configService.configData.loadedComponents || null;
-            if (loadedComponents && loadedComponents.applications) {
-            this.authService.getAuth().pipe(take(1)).subscribe(auth => {
-                if (auth) {
-                    if(this.authService.hasSpecificPrivilege('Edit')) {
-                        observer.next(true);
-                        observer.complete();
-                    } else {
-                        observer.next(this.router.parseUrl('/browse-applications'));
-                        observer.complete();
-                    }
+    ): Promise<boolean | UrlTree> {
+        const loadedComponents = this.configService.configData.loadedComponents || null;
+        if (loadedComponents && loadedComponents.applications) {
+
+            const auth = this.authService.getAuth();
+            if (auth) {
+                const canEdit =await this.authService.hasSpecificPrivilege('Edit');
+                if(canEdit){
+                    return true;
                 } else {
-                    const navigationExtras: NavigationExtras = {
-                        queryParams: {
-                            path: state.url
-                        }
-                    };
-                    observer.next(this.router.createUrlTree(['/login'], navigationExtras));
-                    observer.complete();
+                    this.router.parseUrl('/browse-applications');
                 }
-            });
+            } else {
+                const navigationExtras: NavigationExtras = {
+                    queryParams: {
+                        path: state.url
+                    }
+                };
+                this.router.createUrlTree(['/login'], navigationExtras);
+            }
         } else {
-            observer.next(this.router.parseUrl('/home'));
-            observer.complete();
+            this.router.parseUrl('/home');
         }
-        });
     }
 }

@@ -16,7 +16,6 @@ export class ApplicationLoadedComponent implements CanActivate {
     console.log(`starting canActivate with route: ${route}`);
     return new Observable(observer => {
       const loadedComponents = this.configService.configData.loadedComponents || null;
-      console.log(`loadedComponents: ${JSON.stringify(loadedComponents)}`); 
       if ( loadedComponents && loadedComponents.applications) {
         console.log(` true!`)
         observer.next(true);
@@ -26,6 +25,5 @@ export class ApplicationLoadedComponent implements CanActivate {
         observer.complete();
       }
     });
-
   }
 }

@@ -255,7 +255,6 @@ get auth(): Auth {
       console.log(`in canEditData, receives privs: ${JSON.stringify(privs)}`); 
       return privs.some(p => p.privilege === 'Edit');
     }
-    console.log(`starting canEditData.  size of privs ${this._privileges.length}`);
     return this._privileges != null && this._privileges.some(p=>p.privilege=="Edit");
   }
 

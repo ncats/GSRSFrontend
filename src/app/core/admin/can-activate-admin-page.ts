@@ -12,32 +12,27 @@ export class CanActivateAdminPage implements CanActivate {
     private authService: AuthService
   ) {}
 
-  canActivate(
+  async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
-    return new Observable(observer => {
-      this.authService.getAuth().subscribe(auth => {
-        if (auth) {
-          console.log(`going to check whether user has one of the required privs`);
-          if( this.authService.hasAnyPrivilege("Configure System", "Import Data", "Manage Users", "Manage CVs", "Run Tasks")) {
-              console.log('user CAN');
-              observer.next(true);
-              observer.complete();
-            } else {
-              observer.next(this.router.parseUrl('/admin'));
-              observer.complete();
-          }
-        } else {
-          const navigationExtras: NavigationExtras = {
-            queryParams: {
-              path: state.url
-            }
-          };
-          observer.next(this.router.createUrlTree(['/login'], navigationExtras));
-          observer.complete();
+  ):  Promise<boolean | UrlTree> {
+    const auth = this.authService.getAuth();
+    if (auth) {
+      console.log(`going to check whether user has one of the required privs`);
+      const canDoSomethingAdmin= await this.authService.hasAnyPrivilege("Configure System", "Import Data", "Manage Users", "Manage CVs", "Run Tasks");
+      if( canDoSomethingAdmin) {
+        console.log('user CAN');
+        return true;
+      } else {
+        this.router.parseUrl('/home');
+      }
+    } else {
+      const navigationExtras: NavigationExtras = {
+        queryParams: {
+          path: state.url
         }
-      });
-    });
+      };
+      return this.router.createUrlTree(['/login'], navigationExtras);
+    }
   }
 }

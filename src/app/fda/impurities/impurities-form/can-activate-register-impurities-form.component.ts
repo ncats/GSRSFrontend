@@ -12,30 +12,25 @@ export class CanActivateRegisterImpuritiesFormComponent implements CanActivate {
     private authService: AuthService
   ) {}
 
-  canActivate(
+  async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
-    return new Observable(observer => {
-      this.authService.getAuth().pipe(take(1)).subscribe(auth => {
-        if (auth) {
-          if(this.authService.hasSpecificPrivilege('Edit')){
-            observer.next(true);
-              observer.complete();
-            } else {
-              observer.next(this.router.parseUrl('/home'));
-              observer.complete();
-          }
-        } else {
+  ):  Promise<boolean | UrlTree> {
+    const auth =this.authService.getAuth();
+    if (auth) {
+      const canEdit = await this.authService.hasSpecificPrivilege('Edit');
+      if(canEdit){
+        return true;
+      } else {
+        this.router.parseUrl('/home');
+      }
+    } else {
           const navigationExtras: NavigationExtras = {
             queryParams: {
               path: state.url
             }
           };
-          observer.next(this.router.createUrlTree(['/login'], navigationExtras));
-          observer.complete();
-        }
-      });
-    });
+      this.router.createUrlTree(['/login'], navigationExtras);
+    }
   }
 }
