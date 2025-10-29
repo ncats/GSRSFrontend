@@ -235,9 +235,11 @@ export class UserEditDialogComponent implements OnInit {
     this.isError = false;
     if (this.newPassword === this.newPasswordConfirm) {
       const rolesArr = [];
-      this.roles.forEach(role => {
-        if (role.hasRole) {
-          rolesArr.push(role.name);
+      this.assignableRoles.forEach(role => {
+        console.log(`addUser evaluating role ${role.roleName}`);
+        if (role.assigned) {
+          console.log(`user will have role ${role.roleName}`);
+          rolesArr.push(role.roleName);
         }
       });
       const groups = [];
