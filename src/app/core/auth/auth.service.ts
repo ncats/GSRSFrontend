@@ -154,6 +154,7 @@ get auth(): Auth {
     //   const url = (this.configService.configData && this.configService.configData.apiBaseUrl || '/') + 'logout';
     //   this.http.get(url).pipe(take(1)).subscribe(response => {}, error => {});
     // }
+    this._privileges = [];
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem('authToken');
       const cookies = document.cookie.split(';');
