@@ -145,7 +145,8 @@ export class UserEditDialogComponent implements OnInit {
   checkIfUserHasAdminRole(roles): boolean {
     let toReturn = false;
     roles.forEach(role => {
-      if(role.role.toLowerCase() === 'admin') {
+      console.log(`checkIfUserHasAdminRole role ${JSON.stringify(role)}`);
+      if(role.role && role.role.toLowerCase() === 'admin') {
         toReturn = true;
       }
     });

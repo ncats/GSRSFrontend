@@ -33,7 +33,6 @@ export class AdminComponent implements OnInit {
     
     this.activatedRoute.params.subscribe(routeParams => {
       this.current = routeParams.function;
-      console.log(`routeParams.function: ${routeParams.function} current: ${this.current} will call getActualTab`);
       let actualTab = this.getActualTab(this.current);
       switch (this.current) {
         case 'cache': this.activeTab = 0; break;
@@ -155,9 +154,7 @@ async checkPrivileges() {
 
     let filteredTabs = this.getFilteredTabs();
     for(var t=0; t< filteredTabs.length; t++) {
-      console.log(`filteredTabs[t].name: ${filteredTabs[t].name}; desiredFunctionality: ${desiredFunctionality}`);
       if(filteredTabs[t].name == desiredFunctionality){
-        console.log(`getActualTab about to return ${t} for input ${desiredFunctionality}`)
         return t;
       }
     }

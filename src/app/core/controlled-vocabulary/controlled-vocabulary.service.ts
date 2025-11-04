@@ -111,12 +111,18 @@ export class ControlledVocabularyService extends BaseHttpService {
     return this.http.get(url);
   }
   getStructureUrl(structure: string) {
-    structure = structure.replace(/[;]/g, '%3B')
-    .replace(/[#]/g, '%23')
-    .replace(/[+]/g, '%2B')
-    .replace(/[|]/g, '%7C');
-    const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
-    return url;
+    if(structure && structure !== null) {
+      structure = structure.replace(/[;]/g, '%3B')
+      .replace(/[#]/g, '%23')
+      .replace(/[+]/g, '%2B')
+      .replace(/[|]/g, '%7C');
+      const url = this.baseUrl + 'render?structure=' + structure + '&size=150&standardize=true';
+      return url;
+    } else {
+      console.log(`in getStructureUrl received empty structure`);
+    }
+    return "";
+
   }
 
   getStructureUrlFragment(structure: string) {

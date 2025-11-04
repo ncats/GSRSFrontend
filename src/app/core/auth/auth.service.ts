@@ -21,7 +21,6 @@ export class AuthService {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
-      console.log(`starting AuthService constructor`);
       this.isLoading = true;
       configService.afterLoad().then(cs => {
         this.fetchAuth().pipe(take(1)).subscribe(auth => {
@@ -36,7 +35,6 @@ export class AuthService {
           this._authUpdate.next(null);
           this.isLoading = false;
         });
-        console.log('going to call fetchPrivs');
       });
       this.fetchPrivs().subscribe({
           next: privs => {
@@ -46,7 +44,6 @@ export class AuthService {
             console.error('Error fetching privileges:', err);
           },
           complete: () => {
-            console.log('Privilege fetch complete');
             return this._privileges;
           }
 		  });
@@ -135,25 +132,10 @@ get auth(): Auth {
           console.log("Error calling observer, registered error, passed null");
         }
       });
-      /*
-      this._authUpdate.subscribe(auth => {
-        observer.next(auth);
-      }, error => {
-        observer.next(null);
-      });
-      */
     });
   }
 
   logout(): void {
-    // if (
-    //   !this.configService.configData
-    //   || !this.configService.configData.apiBaseUrl
-    //   || this.configService.configData.apiBaseUrl.startsWith('/')
-    // ) {
-    //   const url = (this.configService.configData && this.configService.configData.apiBaseUrl || '/') + 'logout';
-    //   this.http.get(url).pipe(take(1)).subscribe(response => {}, error => {});
-    // }
     this._privileges = [];
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem('authToken');
@@ -251,9 +233,7 @@ get auth(): Auth {
 
   async canEditData( ):Promise<boolean> {
     if( this._privileges == null || this._privileges.length === 0) {
-      console.log(`in canEditData, privilege array is empty/null`);
       const privs = await firstValueFrom(this.fetchPrivs());
-      console.log(`in canEditData, receives privs: ${JSON.stringify(privs)}`); 
       return privs.some(p => p.privilege === 'Edit');
     }
     return this._privileges != null && this._privileges.some(p=>p.privilege=="Edit");
@@ -338,8 +318,6 @@ get auth(): Auth {
         this.http.get<Auth>(`${url}whoami`)
           .subscribe(
             auth => {
-            //  console.log("Authorized as");
-            //  console.log(auth);
               observer.next(auth);
             },
             err => {
@@ -355,12 +333,10 @@ get auth(): Auth {
   }
   
 private fetchPrivs(): Observable<Privilege[]> {
-  console.log('starting fetchPrivs');
   return from(this.configService.afterLoad()).pipe(
     switchMap(() => {
       const baseUrl = this.configService.configData?.apiBaseUrl || '/';
       const url = `${baseUrl}api/v1/allmyprivs`;
-      console.log(`in switchMap, got url: ${url}`);
       return this.http.get<any>(url);
     }),
     map(response => {
@@ -375,11 +351,4 @@ private fetchPrivs(): Observable<Privilege[]> {
   );
 }
 
-
-  /*
-  private fetchAuth(): Observable<Auth> {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
-    return this.http.get<Auth>(`${url}whoami`);
-  }
-  */
 }

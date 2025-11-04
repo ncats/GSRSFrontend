@@ -91,16 +91,16 @@
     "userRegistration": false
   },
   "services": [
-    { "name": "adverse-events", "active": false, "hasEntities": true },
-    { "name": "applications", "active": false, "hasEntities": true },
-    { "name": "clinical-trials", "active": false, "hasEntities": true },
+    { "name": "adverse-events", "active": true, "hasEntities": true },
+    { "name": "applications", "active": true, "hasEntities": true },
+    { "name": "clinical-trials", "active": true, "hasEntities": true },
     { "name": "discovery", "active": false, "hasEntities": false },
     { "name": "frontend", "active": true, "hasEntities": false },
     { "name": "gateway", "active": true, "hasEntities": false },
-    { "name": "impurities", "active": false, "hasEntities": true },
-    { "name": "invitro-pharmacology", "active": false, "hasEntities": true },
-    { "name": "products", "active": false, "hasEntities": true },
-    { "name": "ssg4m", "active": false, "hasEntities": true },
+    { "name": "impurities", "active": true, "hasEntities": true },
+    { "name": "invitro-pharmacology", "active":true, "hasEntities": true },
+    { "name": "products", "active": true, "hasEntities": true },
+    { "name": "ssg4m", "active": true, "hasEntities": true },
     { "name": "substances", "active": true, "hasEntities": true }
    ],
   "usefulLinks": [
