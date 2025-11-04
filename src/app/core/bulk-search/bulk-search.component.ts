@@ -61,7 +61,7 @@ import { BulkSearch } from './bulk-search.model';
     }
 
     ngOnInit() {
-
+      alert("GGGGGGGGGGGGGGGGG");
       this.loadingService.setLoading(true);
       this.showSpinner = true;  // Start progress spinner
 

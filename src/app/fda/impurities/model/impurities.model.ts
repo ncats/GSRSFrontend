@@ -17,6 +17,7 @@ export interface Impurities {
   internalVersion?: number;
   impuritiesSubstanceList?: Array<ImpuritiesSubstance>;
   impuritiesTotal?: ImpuritiesTotal;
+  _dateTypeDate?: Date;
 }
 
 export interface ImpuritiesSubstance {

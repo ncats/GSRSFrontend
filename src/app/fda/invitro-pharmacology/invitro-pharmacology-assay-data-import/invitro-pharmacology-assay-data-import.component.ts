@@ -313,14 +313,18 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     // Loop through each Assay JSON Record, and save into the database
     this.importedAssayJson.forEach((element, index) => {
 
+      this.submitMessage = 'Validating Assay records in Excel file ' + (index + 1) + ' of ' + this.importedAssayJson.length + ', please wait .....';
+
       if (element) {
         let validationMessages: Array<ValidationMessage> = [];
 
+        // Populate Target Name if Target Name Approval Id is available, and Target Name is empty 
+        if (!element['targetName'] && element['targetNameApprovalId']) {
+          this.getSubstanceById(element, element['targetNameApprovalId'], this.TARGET_NAME, validationMessages, index);
+        }
+
         const assay = JSON.parse(JSON.stringify(element));
         this.invitroPharmacologyService.assay = assay;
-
-        this.submitMessage = 'Validating Assay records in Excel file ' + (index + 1) + ' of ' + this.importedAssayJson.length + ', please wait .....';
-
 
         // Validate Assay
         const validateSubscription = this.invitroPharmacologyService.validateAssay().subscribe(response => {
@@ -342,8 +346,17 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
           if (validationMessagesResponse && validationMessagesResponse.length > 0) {
             validationMessagesResponse.forEach(validation => {
+              let isPush = true;
               if (validation) {
-                validationMessages.push(validation);
+                if (validation.message && validation.message === 'Target Name is required.') {
+                  if (element["targetName"]) {
+                    isPush = false;
+                  }
+                }
+
+                if (isPush == true) {
+                  validationMessages.push(validation);
+                }
               }
             });
           }
@@ -594,6 +607,25 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
       });
       this.subscriptions.push(substanceSubscribe);
+    }
+  }
+
+  getSubstanceById(element: any, approvalId: string, fieldName: string, validationMessages: Array<ValidationMessage>, index: number) {
+    if (approvalId) {
+      this.generalService.getSubstanceByAnyId(approvalId).subscribe(substance => {
+        if (substance) {
+          if (substance._name) {
+            let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
+
+            if (fieldName == this.TARGET_NAME) {
+              element["targetName"] = substance._name;
+              element["targetNameSubstanceUuid"] = substance.uuid;
+              element["targetNameSubstanceKey"] = substanceKey;
+              element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
+            }
+          }
+        }
+      });
     }
   }
 
