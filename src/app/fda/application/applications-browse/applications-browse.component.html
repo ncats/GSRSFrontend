@@ -247,7 +247,7 @@
           eventCategory="applicationSearch">
         </app-application-text-search>
 
-        <div>
+        <div *ngIf="!bulkSearchQueryId">
           <button class="margintop10px marginleft20px" mat-raised-button color="primary" (click)="showAllSubstances()"
             matTooltip="Show All Substances associated with these Application records">
             <span>Show All Substances</span>
@@ -307,14 +307,37 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td valign="top" mat-cell *matCellDef="let application">
                   <ol class="olstyle">
-                    <div *ngFor="let prod of application.applicationProductList; let i = index">
+                    <div *ngFor="let prod of application.applicationProductList; let indexProd = index">
                       <!-- Product Names-->
-                      <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
-                        <li>
-                          {{prodName.productName}}
-                        </li>
-                      </div>
-                    </div>
+                      
+                      <b>Product Name {{indexProd + 1}}:</b>
+                      
+                      <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
+                        <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
+                          <div *ngIf="prodName.productName; else noProd">
+                            <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
+                              &#9642;
+                              <span class="colorgray">
+                                <b>{{ prodName.productName }}</b>
+                              </span>
+                              <span class="font10px">
+                                (Deprecated)
+                              </span>
+                            </div>
+                            <ng-template #noDeprecated>
+                              &#9642;
+                              <span class="font14px colorlightblue"><b>{{ prodName.productName }}</b></span>
+                            </ng-template>
+                          </div>
+                          <ng-template #noProd>
+                            (No Product Name)
+                          </ng-template>
+                        </div> <!-- repeat Product Name -->
+                      </div> <!-- Loop applicationProductNameList -->
+                      <ng-template #noProdNameList>
+                        (No Product Name)
+                      </ng-template>
+                    </div> <!-- Loop applicationProductList-->
                   </ol>
                 </td>
               </ng-container>

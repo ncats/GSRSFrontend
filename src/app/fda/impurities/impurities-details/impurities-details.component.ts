@@ -22,6 +22,7 @@ import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
   public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+  public ELUTION_TYPE_GRADIENT = 'GRADIENT';
 
   dataSource: MatTableDataSource<ImpuritiesSolutionTable>;
 

@@ -254,7 +254,8 @@ export class ApplicationService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              order
             );
           } else {
             observer.next(response);
@@ -280,6 +281,7 @@ export class ApplicationService extends BaseHttpService {
     pageSize?: number,
     facets?: FacetParam,
     skip?: number,
+    order?: string,
     view?: string
   ): void {
     // Call Bulk Search Result
@@ -291,7 +293,8 @@ export class ApplicationService extends BaseHttpService {
       facets,
       skip,
       view,
-      bulkSearchResponse.results
+      bulkSearchResponse.results,
+      order
     )
       .subscribe(bulkSearchStatusResponse => {
         // consider making API backend provide statusKey in JSON
@@ -324,6 +327,7 @@ export class ApplicationService extends BaseHttpService {
                 pageSize,
                 facets,
                 skip,
+                order,
                 view
               );
             });
@@ -352,7 +356,8 @@ export class ApplicationService extends BaseHttpService {
     facets?: FacetParam,
     skip?: number,
     view?: string,
-    url?: string
+    url?: string,
+    order?: string
   ): any {
 
     url = this.getBulkSearchUrl(searchEntity, true);
@@ -375,6 +380,10 @@ export class ApplicationService extends BaseHttpService {
 
     if (querySearchTerm != null && querySearchTerm !== '') {
       params = params.append('q', querySearchTerm);
+    }
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
     }
 
     const options = {

@@ -19,6 +19,7 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 
   public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+  public ELUTION_TYPE_GRADIENT = 'GRADIENT';
 
   @Input() impuritiesTest: ImpuritiesTesting;
   @Input() impuritiesTestIndex: number;

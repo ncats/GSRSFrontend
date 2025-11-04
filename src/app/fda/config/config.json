@@ -15,9 +15,13 @@
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
-  "restApiPrefix": "/ginas/app",
   "disableJSDraw": true,
   "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
+  "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
+  "occasionalApiBasePath": "/ginas/app",
+  "restApiPrefix": "/ginas/app",
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -27,11 +31,7 @@
   "stagingArea": {
     "mergeAction": false
   },
-  "apiBaseUrl": "http://localhost:8081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
-  "occasionalApiBasePath": "/ginas/app",
-    
-"userRegistration": {
+  "userRegistration": {
     "configurations": {
       "emailForm": {
         "active": false,
@@ -64,6 +64,14 @@
       {
         "name":"substances",
         "title": "Substances"
+      },
+      {
+        "name":"products",
+        "title": "Products"
+      },
+      {
+        "name":"applications",
+        "title": "Applications"
       }
     ]
   },
@@ -1029,8 +1037,8 @@
       "admin": [
         "Record Created By",
         "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited",
+        "root_creationDate",
+        "root_lastModifiedDate",
         "Ingredient Created By",
         "Ingredient Last Edited By",
         "Ingredient Create Date",

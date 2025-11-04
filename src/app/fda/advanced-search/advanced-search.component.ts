@@ -734,8 +734,11 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   processSearch(): void {
-    // this.storeCriteriaInLocalStorage();
-
+  
+    if (!this.query) {
+      alert("Please enter search value in the textbox");
+    }
+  
     const queryStatementHashes = [];
 
     // Store in cookies, Category tab (Substance, Application, etc)

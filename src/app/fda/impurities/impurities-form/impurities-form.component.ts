@@ -1,31 +1,34 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { FormBuilder } from '@angular/forms';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { jp } from 'jsonpath';
+import { take, map } from 'rxjs/operators';
+import * as moment from 'moment';
+import * as _ from 'lodash';
+import { DatePipe, formatDate } from '@angular/common';
+
+/* GSRS Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ImpuritiesService } from '../service/impurities.service';
+import { ConfigService } from '@gsrs-core/config';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
-import * as moment from 'moment';
-import { take, map } from 'rxjs/operators';
-import { DatePipe, formatDate } from '@angular/common';
-import { Title } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { FormBuilder } from '@angular/forms';
-
-import { ConfigService } from '@gsrs-core/config';
+import { ImpuritiesService } from '../service/impurities.service';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
-import jp from 'jsonpath';
+import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
 
 @Component({
   selector: 'app-impurities-form',
@@ -35,6 +38,7 @@ import jp from 'jsonpath';
 export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+  public ELUTION_TYPE_GRADIENT = 'GRADIENT';
 
   isLoading = true;
   showSubmissionMessages = false;
@@ -63,6 +67,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   panelExpanded = true;
   downloadJsonHref: any;
   jsonFileName: string;
+  dateTypeDate: Date;
 
   showAdvancedSettings = false;
   showTotalImpurities = false;
@@ -89,7 +94,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Get form field configuration to show on either simple or advanced form
     this.getConfigSettings();
-    
+
     // Show Impurities Total Section only if at least one field is either simple or advanced
     this.showHideTotalImpuritiesSection();
 
@@ -242,9 +247,11 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           this.impuritiesService.loadImpurities(response);
           this.impurities = this.impuritiesService.impurities;
 
-          // if (this.impurities.substanceUuid) {
-          //   this.getSubstancePreferredName(this.impurities.substanceUuid);
-          //  }
+          // Load 'Date Type Date' value to on the DatePicker Input textbox
+          if (this.impurities.dateTypeDate) {
+            this.dateTypeDate = new Date(this.impurities.dateTypeDate);
+          }
+
         } else {
           this.handleProductRetrivalError();
         }
@@ -308,6 +315,14 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     this.validationMessages = [];
     this.validationResult = true;
 
+    // Date Type Date field should be valid date
+    if (this.impurities.dateTypeDate) {
+      const isValidDateTypeDate = this.validateDate(this.impurities.dateTypeDate);
+      if (isValidDateTypeDate === false) {
+        this.setValidationMessage('Date Type Date is invalid');
+      }
+    }
+
     // Validate Subsance
     if (this.impurities.impuritiesSubstanceList.length === 0) {
       this.setValidationMessage('Substance Name is required');
@@ -324,10 +339,11 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
         elementSub.impuritiesTestList.forEach(elementTest => {
 
-          // if the elutionType value is not 'Isocratic' and there is data in Mobile Phase table,
+          // if the elutionType value is not 'Isocratic' or 'Gradient' and if there is data in Mobile Phase table,
           // empty the list
           if (elementTest.elutionType) {
-            if (elementTest.elutionType.toUpperCase() !== this.ELUTION_TYPE_ISOCRATIC) {
+            if (elementTest.elutionType.toUpperCase() !== this.ELUTION_TYPE_ISOCRATIC ||
+              elementTest.elutionType.toUpperCase() !== this.ELUTION_TYPE_GRADIENT) {
               if (elementTest.impuritiesSolutionTableList) {
                 if (elementTest.impuritiesSolutionTableList.length > 0) {
                   elementTest.impuritiesSolutionTableList = [];
@@ -484,6 +500,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   submit(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
+
     this.impuritiesService.saveImpurities().subscribe(response => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
@@ -504,24 +521,24 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         }
       }, 4000);
     }, (error: SubstanceFormResults) => {
+      this.showSubmissionMessages = true;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.submissionMessage = null;
+      if (error.validationMessages && error.validationMessages.length) {
+        this.validationResult = error.isSuccessfull;
+        this.validationMessages = error.validationMessages
+          .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
         this.showSubmissionMessages = true;
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-        this.submissionMessage = null;
-        if (error.validationMessages && error.validationMessages.length) {
-          this.validationResult = error.isSuccessfull;
-          this.validationMessages = error.validationMessages
-            .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-          this.showSubmissionMessages = true;
-        } else {
-          this.submissionMessage = 'There was a problem with your submission';
-          this.addServerError(error.serverError);
-          setTimeout(() => {
-            this.showSubmissionMessages = false;
-            this.submissionMessage = null;
-          }, 8000);
-        }
+      } else {
+        this.submissionMessage = 'There was a problem with your submission';
+        this.addServerError(error.serverError);
+        setTimeout(() => {
+          this.showSubmissionMessages = false;
+          this.submissionMessage = null;
+        }, 8000);
       }
+    }
     );
   }
 
@@ -574,7 +591,9 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     const date = new Date();
     let jsonFilename = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    let data = { jsonData: this.impurities, jsonFilename: jsonFilename };
+    let cleanImpurities = this.cleanImpurities();
+
+    let data = { jsonData: cleanImpurities, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -590,9 +609,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    let json = this.impurities;
-
-    // this.json = this.cleanObject(substanceCopy);
+    let json = this.cleanImpurities();
 
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
     this.downloadJsonHref = uri;
@@ -654,6 +671,47 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  changeDateTypeDate(event: MatDatepickerInputEvent<Date>): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: any = (inputElement as HTMLInputElement).value;
+
+    this.impurities.dateTypeDate = inputValue;
+
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
+  validateDate(dateinput: any): boolean {
+    let isValid = true;
+    if ((dateinput !== null) && (dateinput.length > 0)) {
+      if ((dateinput.length < 8) || (dateinput.length > 10)) {
+        return false;
+      }
+      const split = dateinput.split('/');
+      if (split.length !== 3 || (split[0].length < 1 || split[0].length > 2) ||
+        (split[1].length < 1 || split[1].length > 2) || split[2].length !== 4) {
+        return false;
+      }
+      if (split.length === 3) {
+        const comstring = split[0] + split[1] + split[2];
+        for (let i = 0; i < split.length; i++) {
+          const valid = this.isNumber(split[i]);
+          if (valid === false) {
+            isValid = false;
+            break;
+          }
+        }
+      }
+    }
+    return isValid;
+  }
+
   isNumber(str: any): boolean {
     if (str) {
       const num = Number(str);
@@ -663,8 +721,17 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  cleanImpurities(): any {
+    const copiedImpurities = _.cloneDeep(this.impurities);
+
+    delete copiedImpurities._dateTypeDate;
+
+    return copiedImpurities;
+  }
+
   scrub(oldraw: any): any {
     const old = oldraw;
+
     const idHolders = jp.query(old, '$..[?(@.id)]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
@@ -683,7 +750,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     }
 
     const modifyHolders = jp.query(old, '$..[?(@.lastModifiedDate)]');
-      for (let i = 0; i < modifyHolders.length; i++) {
+    for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
@@ -706,12 +773,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     delete old['_self'];
 
     return old;
-  }
-
-  updateDateTypeDate(event) {
-    const impDate = new Date(event);
-    // Adding one day since the Date object is decreasing one day.  moment.utc did not work.
-    this.impurities.dateTypeDate = moment(impDate).add(1, 'days').format('MM/DD/yyyy');
   }
 
 }

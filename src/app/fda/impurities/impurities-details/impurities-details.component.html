@@ -447,7 +447,7 @@
                       <!-- Mobile Phase BEGIN -->
                       <div *ngIf="impTest.impuritiesSolutionTableList">
                         <div class="marginbottom20px"
-                          *ngIf="(impTest.elutionType && impTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC) && impTest.impuritiesSolutionTableList.length > 0">
+                          *ngIf="(impTest.elutionType && (impTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC || impTest.elutionType.toUpperCase() === ELUTION_TYPE_GRADIENT)) && impTest.impuritiesSolutionTableList.length > 0">
 
                           <div class="margintop20px font14px"><b>Mobile Phase</b></div>
 

@@ -577,7 +577,8 @@ export class SubstanceService extends BaseHttpService {
               skip,
               view,
               simpleSearchOnly,
-              viewfield
+              viewfield,
+              order
             );
           } else {
             // consider making API backend provide statusKey in JSON
@@ -607,7 +608,8 @@ export class SubstanceService extends BaseHttpService {
     skip?: number,
     view?: string,
     simpleSearchOnly?: boolean,
-    viewfield?: string
+    viewfield?: string,
+    order?: string
   ): void {
     this.tempObject = {
       querySearchTerm: querySearchTerm,
@@ -621,9 +623,10 @@ export class SubstanceService extends BaseHttpService {
       skip: skip ? skip : 0,
       view: view ? view : null,
       simpleSearchOnly: simpleSearchOnly ? simpleSearchOnly : null,
-      viewfield: viewfield ? viewfield : null
+      viewfield: viewfield ? viewfield : null,
+      order: order ? order : null
     }
-    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view, simpleSearchOnly, viewfield)
+    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view, simpleSearchOnly, viewfield, order)
       .pipe(
         switchMap(response => {
           let temp: any = response;
@@ -656,7 +659,8 @@ export class SubstanceService extends BaseHttpService {
               skip,
               view,
               simpleSearchOnly,
-              viewfield
+              viewfield,
+              order
             );
           });
         },
@@ -682,7 +686,8 @@ export class SubstanceService extends BaseHttpService {
     skip?: number,
     view?: string,
     simpleSearchOnly?: boolean,
-    viewfield?: string
+    viewfield?: string,
+    order?: string
   ): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
     let params = new FacetHttpParams({ encoder: new CustomEncoder() });
@@ -710,6 +715,10 @@ export class SubstanceService extends BaseHttpService {
     // Added for 3.0.2, Advanced Search:Combine structure Search with query search.
     if (querySearchTerm != null && querySearchTerm !== '') {
       params = params.append('q', querySearchTerm);
+    }
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
     }
 
     const options = {
