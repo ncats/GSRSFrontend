@@ -23,9 +23,10 @@ import { GeneralService } from '../../../service/general.service';
 import { InvitroAssayInformation, InvitroAssayScreening } from '../../../invitro-pharmacology/model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-substance-invitro-pharmacology',
-  templateUrl: './substance-invitro-pharmacology.component.html',
-  styleUrls: ['./substance-invitro-pharmacology.component.scss']
+    selector: 'app-substance-invitro-pharmacology',
+    templateUrl: './substance-invitro-pharmacology.component.html',
+    styleUrls: ['./substance-invitro-pharmacology.component.scss'],
+    standalone: false
 })
 export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 

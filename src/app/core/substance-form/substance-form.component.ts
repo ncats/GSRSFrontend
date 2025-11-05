@@ -51,9 +51,10 @@ import { Location } from '@angular/common';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-form',
-  templateUrl: './substance-form.component.html',
-  styleUrls: ['./substance-form.component.scss']
+    selector: 'app-substance-form',
+    templateUrl: './substance-form.component.html',
+    styleUrls: ['./substance-form.component.scss'],
+    standalone: false
 })
 export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   private static simplifiedSuffix = '-simplified';

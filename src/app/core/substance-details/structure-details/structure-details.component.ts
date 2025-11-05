@@ -13,9 +13,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-structure-details',
-  templateUrl: './structure-details.component.html',
-  styleUrls: ['./structure-details.component.scss']
+    selector: 'app-structure-details',
+    templateUrl: './structure-details.component.html',
+    styleUrls: ['./structure-details.component.scss'],
+    standalone: false
 })
 export class StructureDetailsComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
   structure: SubstanceStructure;

@@ -46,9 +46,10 @@ import { ClinicalTrialService } from '../clinical-trials/clinical-trial/clinical
 import { AdverseEventService } from '../adverse-event/service/adverseevent.service';
 import { AdvancedSearchService } from './service/advanced-search.service';
 @Component({
-  selector: 'app-advanced-search',
-  templateUrl: './advanced-search.component.html',
-  styleUrls: ['./advanced-search.component.scss']
+    selector: 'app-advanced-search',
+    templateUrl: './advanced-search.component.html',
+    styleUrls: ['./advanced-search.component.scss'],
+    standalone: false
 })
 
 export class AdvancedSearchComponent implements OnInit, OnDestroy {

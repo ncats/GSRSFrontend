@@ -27,9 +27,10 @@ import { ProductService } from '../service/product.service';
 import { Product, ValidationMessage } from '../model/product.model';
 
 @Component({
-  selector: 'app-product-form',
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+    selector: 'app-product-form',
+    templateUrl: './product-form.component.html',
+    styleUrls: ['./product-form.component.scss'],
+    standalone: false
 })
 
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {

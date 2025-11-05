@@ -11,9 +11,10 @@ import { PreviousReferencesDialogComponent } from '@gsrs-core/substance-form/ref
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-reference-form',
-  templateUrl: './reference-form.component.html',
-  styleUrls: ['./reference-form.component.scss']
+    selector: 'app-reference-form',
+    templateUrl: './reference-form.component.html',
+    styleUrls: ['./reference-form.component.scss'],
+    standalone: false
 })
 export class ReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;

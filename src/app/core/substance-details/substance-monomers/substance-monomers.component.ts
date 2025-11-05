@@ -7,9 +7,10 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-monomers',
-  templateUrl: './substance-monomers.component.html',
-  styleUrls: ['./substance-monomers.component.scss']
+    selector: 'app-substance-monomers',
+    templateUrl: './substance-monomers.component.html',
+    styleUrls: ['./substance-monomers.component.scss'],
+    standalone: false
 })
 export class SubstanceMonomersComponent extends SubstanceCardBaseFilteredList<Monomer> implements OnInit {
   monomers: Array<Monomer>;

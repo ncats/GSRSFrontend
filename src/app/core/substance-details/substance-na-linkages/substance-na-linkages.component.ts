@@ -6,9 +6,10 @@ import {DataDictionaryService} from '@gsrs-core/utils/data-dictionary.service';
 import {ControlledVocabularyService, VocabularyDictionary, VocabularyTerm} from '@gsrs-core/controlled-vocabulary';
 
 @Component({
-  selector: 'app-substance-na-linkages',
-  templateUrl: './substance-na-linkages.component.html',
-  styleUrls: ['./substance-na-linkages.component.scss']
+    selector: 'app-substance-na-linkages',
+    templateUrl: './substance-na-linkages.component.html',
+    styleUrls: ['./substance-na-linkages.component.scss'],
+    standalone: false
 })
 export class SubstanceNaLinkagesComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   linkages: Array<Linkage>;

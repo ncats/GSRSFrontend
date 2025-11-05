@@ -3,9 +3,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {cloneDeep} from 'lodash';
 
 @Component({
-  selector: 'app-subunit-selector-dialog',
-  templateUrl: './subunit-selector-dialog.component.html',
-  styleUrls: ['./subunit-selector-dialog.component.scss']
+    selector: 'app-subunit-selector-dialog',
+    templateUrl: './subunit-selector-dialog.component.html',
+    styleUrls: ['./subunit-selector-dialog.component.scss'],
+    standalone: false
 })
 export class SubunitSelectorDialogComponent implements OnInit, AfterViewInit {
   feature: any;

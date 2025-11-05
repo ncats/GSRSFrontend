@@ -15,9 +15,10 @@ import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragme
  */
 
 @Component({
-  selector: 'app-cv-import',
-  templateUrl: './cv-import.component.html',
-  styleUrls: ['./cv-import.component.scss']
+    selector: 'app-cv-import',
+    templateUrl: './cv-import.component.html',
+    styleUrls: ['./cv-import.component.scss'],
+    standalone: false
 })
 export class CvImportComponent implements OnInit, OnDestroy {
   @Input() vocabulary?: any;

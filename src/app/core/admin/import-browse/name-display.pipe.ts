@@ -2,8 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 
 @Pipe({
-    name: 'namesDisplay'
-  })
+    name: 'namesDisplay',
+    standalone: false
+})
   export class NamesDisplayStagingPipe implements PipeTransform {
     transform(names: Array<any>): Array<any> {
       names = names.slice().sort((a, b) => {

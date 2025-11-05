@@ -18,9 +18,10 @@ import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/face
 import { SubstanceSsg4mService } from '@gsrs-core/substance-ssg4m/substance-ssg4m-form.service';
 
 @Component({
-  selector: 'app-substance-ssg4m',
-  templateUrl: './substance-ssg4m.component.html',
-  styleUrls: ['./substance-ssg4m.component.scss']
+    selector: 'app-substance-ssg4m',
+    templateUrl: './substance-ssg4m.component.html',
+    styleUrls: ['./substance-ssg4m.component.scss'],
+    standalone: false
 })
 export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 

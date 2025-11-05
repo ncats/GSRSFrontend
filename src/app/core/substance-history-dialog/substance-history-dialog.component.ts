@@ -7,9 +7,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'app-substance-history-dialog',
-  templateUrl: './substance-history-dialog.component.html',
-  styleUrls: ['./substance-history-dialog.component.scss']
+    selector: 'app-substance-history-dialog',
+    templateUrl: './substance-history-dialog.component.html',
+    styleUrls: ['./substance-history-dialog.component.scss'],
+    standalone: false
 })
 export class SubstanceHistoryDialogComponent implements OnInit {
   public substance: SubstanceDetail;

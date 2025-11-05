@@ -4,9 +4,10 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-multi-checkbox-widget',
-  templateUrl: './custom-multi-checkbox-widget.component.html',
-  styleUrls: ['./custom-multi-checkbox-widget.component.scss']
+    selector: 'app-custom-multi-checkbox-widget',
+    templateUrl: './custom-multi-checkbox-widget.component.html',
+    styleUrls: ['./custom-multi-checkbox-widget.component.scss'],
+    standalone: false
 })
 export class CustomMultiCheckboxWidgetComponent  extends CheckboxWidget implements OnInit {
   options = [];

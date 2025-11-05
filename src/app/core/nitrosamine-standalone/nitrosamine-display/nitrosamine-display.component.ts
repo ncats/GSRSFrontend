@@ -15,9 +15,10 @@ interface EvaluationResponse {
 }
 
 @Component({
-  selector: 'app-nitrosamine-display',
-  templateUrl: './nitrosamine-display.component.html',
-  styleUrls: ['./nitrosamine-display.component.scss']
+    selector: 'app-nitrosamine-display',
+    templateUrl: './nitrosamine-display.component.html',
+    styleUrls: ['./nitrosamine-display.component.scss'],
+    standalone: false
 })
 export class NitrosamineDisplayComponent implements OnInit {
   private privateStructure: SubstanceStructure | SubstanceMoiety = {};

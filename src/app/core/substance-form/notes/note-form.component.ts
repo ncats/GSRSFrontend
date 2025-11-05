@@ -4,9 +4,10 @@ import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
 
 @Component({
-  selector: 'app-note-form',
-  templateUrl: './note-form.component.html',
-  styleUrls: ['./note-form.component.scss']
+    selector: 'app-note-form',
+    templateUrl: './note-form.component.html',
+    styleUrls: ['./note-form.component.scss'],
+    standalone: false
 })
 export class NoteFormComponent implements OnInit {
   private privateNote: SubstanceNote;

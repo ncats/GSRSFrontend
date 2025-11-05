@@ -8,9 +8,10 @@ import { UtilsService } from '@gsrs-core/utils';
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
-  selector: 'app-mini-search',
-  templateUrl: './mini-search.component.html',
-  styleUrls: ['./mini-search.component.scss']
+    selector: 'app-mini-search',
+    templateUrl: './mini-search.component.html',
+    styleUrls: ['./mini-search.component.scss'],
+    standalone: false
 })
 export class MiniSearchComponent implements OnInit, AfterViewInit {
 

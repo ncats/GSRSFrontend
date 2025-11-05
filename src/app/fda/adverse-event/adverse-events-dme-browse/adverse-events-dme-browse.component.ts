@@ -29,9 +29,10 @@ import { AdverseEventDme } from '../model/adverse-event.model';
 import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sort-values';
 
 @Component({
-  selector: 'app-adverse-events-dme-browse',
-  templateUrl: './adverse-events-dme-browse.component.html',
-  styleUrls: ['./adverse-events-dme-browse.component.scss']
+    selector: 'app-adverse-events-dme-browse',
+    templateUrl: './adverse-events-dme-browse.component.html',
+    styleUrls: ['./adverse-events-dme-browse.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {

@@ -3,9 +3,10 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-merge-action-dialog',
-  templateUrl: './merge-action-dialog.component.html',
-  styleUrls: ['./merge-action-dialog.component.scss']
+    selector: 'app-merge-action-dialog',
+    templateUrl: './merge-action-dialog.component.html',
+    styleUrls: ['./merge-action-dialog.component.scss'],
+    standalone: false
 })
 export class MergeActionDialogComponent implements OnInit {
   mergeSchema: any;

@@ -39,9 +39,10 @@ import { productSearchSortValues } from './product-search-sort-values';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-products-browse',
-  templateUrl: './products-browse.component.html',
-  styleUrls: ['./products-browse.component.scss']
+    selector: 'app-products-browse',
+    templateUrl: './products-browse.component.html',
+    styleUrls: ['./products-browse.component.scss'],
+    standalone: false
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {

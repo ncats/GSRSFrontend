@@ -12,9 +12,10 @@ import { ApplicationService } from '../service/application.service';
 import { GeneralService } from '../../service/general.service';
 
 @Component({
-  selector: 'app-application-details-base',
-  templateUrl: './application-details-base.component.html',
-  styleUrls: ['./application-details-base.component.scss']
+    selector: 'app-application-details-base',
+    templateUrl: './application-details-base.component.html',
+    styleUrls: ['./application-details-base.component.scss'],
+    standalone: false
 })
 export class ApplicationDetailsBaseComponent implements OnInit {
 

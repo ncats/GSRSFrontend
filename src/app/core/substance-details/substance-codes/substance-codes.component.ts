@@ -11,9 +11,10 @@ import { FormControl } from '@angular/forms';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-codes',
-  templateUrl: './substance-codes.component.html',
-  styleUrls: ['./substance-codes.component.scss']
+    selector: 'app-substance-codes',
+    templateUrl: './substance-codes.component.html',
+    styleUrls: ['./substance-codes.component.scss'],
+    standalone: false
 })
 export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<SubstanceCode> implements OnInit, AfterViewInit {
   type: string;

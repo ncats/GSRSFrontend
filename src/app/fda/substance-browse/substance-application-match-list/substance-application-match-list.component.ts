@@ -9,9 +9,10 @@ import { Subscription } from 'rxjs';
 import { Application, SubstanceApplicationMatch } from '../../application/model/application.model';
 
 @Component({
-  selector: 'app-substance-application-match-list',
-  templateUrl: './substance-application-match-list.component.html',
-  styleUrls: ['./substance-application-match-list.component.scss']
+    selector: 'app-substance-application-match-list',
+    templateUrl: './substance-application-match-list.component.html',
+    styleUrls: ['./substance-application-match-list.component.scss'],
+    standalone: false
 })
 
 export class SubstanceApplicationMatchListComponent implements OnInit, AfterViewInit {

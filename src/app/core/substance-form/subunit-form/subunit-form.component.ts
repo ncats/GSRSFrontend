@@ -23,9 +23,10 @@ import { CopyDisulfideDialogComponent } from '@gsrs-core/substance-form/copy-dis
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-subunit-form',
-  templateUrl: './subunit-form.component.html',
-  styleUrls: ['./subunit-form.component.scss']
+    selector: 'app-subunit-form',
+    templateUrl: './subunit-form.component.html',
+    styleUrls: ['./subunit-form.component.scss'],
+    standalone: false
 })
 
 export class SubunitFormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {

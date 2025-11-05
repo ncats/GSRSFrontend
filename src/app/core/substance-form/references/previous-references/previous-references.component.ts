@@ -5,9 +5,10 @@ import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-previous-references',
-  templateUrl: './previous-references.component.html',
-  styleUrls: ['./previous-references.component.scss']
+    selector: 'app-previous-references',
+    templateUrl: './previous-references.component.html',
+    styleUrls: ['./previous-references.component.scss'],
+    standalone: false
 })
 export class PreviousReferencesComponent implements OnInit {
   user: string;

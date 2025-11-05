@@ -8,9 +8,10 @@ import { take } from 'rxjs/operators';
 import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 
 @Component({
-  selector: 'app-user-edit-dialog',
-  templateUrl: './user-edit-dialog.component.html',
-  styleUrls: ['./user-edit-dialog.component.scss']
+    selector: 'app-user-edit-dialog',
+    templateUrl: './user-edit-dialog.component.html',
+    styleUrls: ['./user-edit-dialog.component.scss'],
+    standalone: false
 })
 export class UserEditDialogComponent implements OnInit {
   userLoggedIn: any;

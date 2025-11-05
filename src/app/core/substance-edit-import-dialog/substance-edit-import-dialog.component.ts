@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-substance-edit-import-dialog',
-  templateUrl: './substance-edit-import-dialog.component.html',
-  styleUrls: ['./substance-edit-import-dialog.component.scss']
+    selector: 'app-substance-edit-import-dialog',
+    templateUrl: './substance-edit-import-dialog.component.html',
+    styleUrls: ['./substance-edit-import-dialog.component.scss'],
+    standalone: false
 })
 export class SubstanceEditImportDialogComponent implements OnInit {
   public json: any;

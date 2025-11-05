@@ -5,9 +5,10 @@ import {Subject, Subscription} from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 
 @Component({
-  selector: 'app-substance-na-sugars',
-  templateUrl: './substance-na-sugars.component.html',
-  styleUrls: ['./substance-na-sugars.component.scss']
+    selector: 'app-substance-na-sugars',
+    templateUrl: './substance-na-sugars.component.html',
+    styleUrls: ['./substance-na-sugars.component.scss'],
+    standalone: false
 })
 export class SubstanceNaSugarsComponent extends SubstanceCardBase implements OnInit, OnDestroy {
   sugars: Array<Sugar>;

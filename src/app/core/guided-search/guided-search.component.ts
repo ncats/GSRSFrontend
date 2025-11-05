@@ -9,9 +9,10 @@ import { UtilsService } from '@gsrs-core/utils';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-guided-search',
-  templateUrl: './guided-search.component.html',
-  styleUrls: ['./guided-search.component.scss']
+    selector: 'app-guided-search',
+    templateUrl: './guided-search.component.html',
+    styleUrls: ['./guided-search.component.scss'],
+    standalone: false
 })
 export class GuidedSearchComponent implements OnInit {
   queryableSubstanceDict: QueryableSubstanceDictionary;

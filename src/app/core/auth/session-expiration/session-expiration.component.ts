@@ -9,8 +9,9 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-session-expiration',
-  templateUrl: './session-expiration.component.html'
+    selector: 'app-session-expiration',
+    templateUrl: './session-expiration.component.html',
+    standalone: false
 })
 export class SessionExpirationComponent implements OnInit {
   sessionExpirationWarning: SessionExpirationWarning = null;

@@ -5,9 +5,10 @@ import { UserDownload } from '@gsrs-core/auth/user-downloads/download.model';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-user-downloads',
-  templateUrl: './user-downloads.component.html',
-  styleUrls: ['./user-downloads.component.scss']
+    selector: 'app-user-downloads',
+    templateUrl: './user-downloads.component.html',
+    styleUrls: ['./user-downloads.component.scss'],
+    standalone: false
 })
 export class UserDownloadsComponent implements OnInit {
   id?: string;

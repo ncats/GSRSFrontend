@@ -6,9 +6,10 @@ import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-substance-mixture-components',
-  templateUrl: './substance-mixture-components.component.html',
-  styleUrls: ['./substance-mixture-components.component.scss']
+    selector: 'app-substance-mixture-components',
+    templateUrl: './substance-mixture-components.component.html',
+    styleUrls: ['./substance-mixture-components.component.scss'],
+    standalone: false
 })
 export class SubstanceMixtureComponentsComponent extends SubstanceCardBase implements OnInit {
   components: Array<MixtureComponents>;

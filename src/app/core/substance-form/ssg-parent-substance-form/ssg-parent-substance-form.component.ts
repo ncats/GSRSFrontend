@@ -10,9 +10,10 @@ import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormSsg4mStartingMaterialsModule } from '@gsrs-core/substance-ssg4m/ssg4m-starting-materials/substance-form-ssg4m-starting-materials.module';
 
 @Component({
-  selector: 'app-ssg-parent-substance-form',
-  templateUrl: './ssg-parent-substance-form.component.html',
-  styleUrls: ['./ssg-parent-substance-form.component.scss']
+    selector: 'app-ssg-parent-substance-form',
+    templateUrl: './ssg-parent-substance-form.component.html',
+    styleUrls: ['./ssg-parent-substance-form.component.scss'],
+    standalone: false
 })
 
 export class SsgParentSubstanceFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {

@@ -7,9 +7,10 @@ import { SubstanceFormReferencesService } from '../substance-form-references.ser
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-apply-reference',
-  templateUrl: './apply-reference.component.html',
-  styleUrls: ['./apply-reference.component.scss']
+    selector: 'app-apply-reference',
+    templateUrl: './apply-reference.component.html',
+    styleUrls: ['./apply-reference.component.scss'],
+    standalone: false
 })
 export class ApplyReferenceComponent implements OnInit, OnDestroy {
   domainKeys = domainKeys;

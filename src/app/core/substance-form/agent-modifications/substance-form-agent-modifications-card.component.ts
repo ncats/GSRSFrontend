@@ -7,9 +7,10 @@ import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 
 @Component({
-  selector: 'app-substance-form-agent-modifications-card',
-  templateUrl: './substance-form-agent-modifications-card.component.html',
-  styleUrls: ['./substance-form-agent-modifications-card.component.scss']
+    selector: 'app-substance-form-agent-modifications-card',
+    templateUrl: './substance-form-agent-modifications-card.component.html',
+    styleUrls: ['./substance-form-agent-modifications-card.component.scss'],
+    standalone: false
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormAgentModificationsCardComponent

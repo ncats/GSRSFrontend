@@ -3,9 +3,10 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-copy-disulfide-dialog',
-  templateUrl: './copy-disulfide-dialog.component.html',
-  styleUrls: ['./copy-disulfide-dialog.component.scss']
+    selector: 'app-copy-disulfide-dialog',
+    templateUrl: './copy-disulfide-dialog.component.html',
+    styleUrls: ['./copy-disulfide-dialog.component.scss'],
+    standalone: false
 })
 export class CopyDisulfideDialogComponent implements OnInit {
   unit: any;

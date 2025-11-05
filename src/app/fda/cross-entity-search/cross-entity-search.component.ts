@@ -26,9 +26,10 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { exitCode } from 'process';
 
 @Component({
-  selector: 'app-cross-entity-search',
-  templateUrl: './cross-entity-search.component.html',
-  styleUrls: ['./cross-entity-search.component.scss']
+    selector: 'app-cross-entity-search',
+    templateUrl: './cross-entity-search.component.html',
+    styleUrls: ['./cross-entity-search.component.scss'],
+    standalone: false
 })
 export class CrossEntitySearchComponent implements OnInit {
 

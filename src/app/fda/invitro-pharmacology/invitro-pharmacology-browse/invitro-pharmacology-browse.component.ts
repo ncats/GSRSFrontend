@@ -34,9 +34,10 @@ import { InvitroAssayInformation, InvitroAssayScreening } from '../model/invitro
 import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-search-sort-values';
 
 @Component({
-  selector: 'app-invitro-pharmacology-browse',
-  templateUrl: './invitro-pharmacology-browse.component.html',
-  styleUrls: ['./invitro-pharmacology-browse.component.scss']
+    selector: 'app-invitro-pharmacology-browse',
+    templateUrl: './invitro-pharmacology-browse.component.html',
+    styleUrls: ['./invitro-pharmacology-browse.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyBrowseComponent implements OnInit {
 

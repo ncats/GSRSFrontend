@@ -7,9 +7,10 @@ import { Subscription } from 'rxjs';
 import { SubstanceFormMonomersService } from './substance-form-monomers.service';
 
 @Component({
-  selector: 'app-substance-form-monomers-card',
-  templateUrl: './substance-form-monomers-card.component.html',
-  styleUrls: ['./substance-form-monomers-card.component.scss']
+    selector: 'app-substance-form-monomers-card',
+    templateUrl: './substance-form-monomers-card.component.html',
+    styleUrls: ['./substance-form-monomers-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormMonomersCardComponent extends SubstanceCardBaseFilteredList<Monomer>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

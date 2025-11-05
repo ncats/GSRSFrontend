@@ -10,9 +10,10 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 
 @Component({
-  selector: 'app-structural-modification-form',
-  templateUrl: './structural-modification-form.component.html',
-  styleUrls: ['./structural-modification-form.component.scss']
+    selector: 'app-structural-modification-form',
+    templateUrl: './structural-modification-form.component.html',
+    styleUrls: ['./structural-modification-form.component.scss'],
+    standalone: false
 })
 export class StructuralModificationFormComponent implements OnInit, AfterViewInit {
   private privateMod: StructuralModification;

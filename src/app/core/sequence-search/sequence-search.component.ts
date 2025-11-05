@@ -9,9 +9,10 @@ import {LoadingService} from '@gsrs-core/loading';
 import { Title } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-sequence-search',
-  templateUrl: './sequence-search.component.html',
-  styleUrls: ['./sequence-search.component.scss']
+    selector: 'app-sequence-search',
+    templateUrl: './sequence-search.component.html',
+    styleUrls: ['./sequence-search.component.scss'],
+    standalone: false
 })
 export class SequenceSearchComponent implements OnInit, OnDestroy {
   sequenceSearchForm = new FormGroup({

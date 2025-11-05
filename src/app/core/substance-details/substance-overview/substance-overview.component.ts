@@ -21,9 +21,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 
 @Component({
-  selector: 'app-substance-overview',
-  templateUrl: './substance-overview.component.html',
-  styleUrls: ['./substance-overview.component.scss']
+    selector: 'app-substance-overview',
+    templateUrl: './substance-overview.component.html',
+    styleUrls: ['./substance-overview.component.scss'],
+    standalone: false
 })
 export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit, OnDestroy {
   references: string[] = [];

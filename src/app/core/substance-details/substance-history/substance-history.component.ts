@@ -25,9 +25,10 @@ import {DataDictionary} from '@gsrs-core/utils/data-dictionary';
 import * as jsonpath from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-history',
-  templateUrl: './substance-history.component.html',
-  styleUrls: ['./substance-history.component.scss']
+    selector: 'app-substance-history',
+    templateUrl: './substance-history.component.html',
+    styleUrls: ['./substance-history.component.scss'],
+    standalone: false
 })
 export class SubstanceHistoryComponent extends SubstanceCardBase implements OnInit , AfterViewInit {
   versions: Array<SubstanceEdit>;

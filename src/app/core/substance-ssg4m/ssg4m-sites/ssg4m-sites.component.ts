@@ -24,9 +24,10 @@ import { SpecifiedSubstanceG4mSite } from '@gsrs-core/substance/substance.model'
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-ssg4m-sites',
-  templateUrl: './ssg4m-sites.component.html',
-  styleUrls: ['./ssg4m-sites.component.scss']
+    selector: 'app-ssg4m-sites',
+    templateUrl: './ssg4m-sites.component.html',
+    styleUrls: ['./ssg4m-sites.component.scss'],
+    standalone: false
 })
 export class Ssg4mSitesComponent implements OnInit {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();

@@ -15,9 +15,10 @@ import { SpecifiedSubstanceG4mCriticalParameter, SubstanceAmount } from '@gsrs-c
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-ssg4m-critical-parameter-form',
-  templateUrl: './ssg4m-critical-parameter-form.component.html',
-  styleUrls: ['./ssg4m-critical-parameter-form.component.scss']
+    selector: 'app-ssg4m-critical-parameter-form',
+    templateUrl: './ssg4m-critical-parameter-form.component.html',
+    styleUrls: ['./ssg4m-critical-parameter-form.component.scss'],
+    standalone: false
 })
 export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
 

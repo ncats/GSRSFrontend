@@ -4,9 +4,10 @@ import { AppNotification, NotificationType } from '../notification.model';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-main-notification',
-  templateUrl: './main-notification.component.html',
-  styleUrls: ['./main-notification.component.scss']
+    selector: 'app-main-notification',
+    templateUrl: './main-notification.component.html',
+    styleUrls: ['./main-notification.component.scss'],
+    standalone: false
 })
 export class MainNotificationComponent implements OnInit, OnDestroy {
   @ViewChild('notification', { static: true }) appNotification: { nativeElement: HTMLElement };

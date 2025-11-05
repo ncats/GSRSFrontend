@@ -29,9 +29,10 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analy
 // import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-clinical-trials-browse',
-  templateUrl: './clinical-trials-browse.component.html',
-  styleUrls: ['./clinical-trials-browse.component.scss']
+    selector: 'app-clinical-trials-browse',
+    templateUrl: './clinical-trials-browse.component.html',
+    styleUrls: ['./clinical-trials-browse.component.scss'],
+    standalone: false
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {

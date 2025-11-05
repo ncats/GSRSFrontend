@@ -2,9 +2,10 @@ import { Component, OnInit, Inject, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-text-input-form',
-  templateUrl: './text-input-form.component.html',
-  styleUrls: ['./text-input-form.component.scss']
+    selector: 'app-text-input-form',
+    templateUrl: './text-input-form.component.html',
+    styleUrls: ['./text-input-form.component.scss'],
+    standalone: false
 })
 
 export class TextInputFormComponent implements OnInit {
