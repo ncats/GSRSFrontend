@@ -1,8 +1,10 @@
 /* eslint-disable max-len */
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NgModule, APP_INITIALIZER, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -167,6 +169,8 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'gsrs' }),
+    CommonModule,
+    RouterModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -261,6 +265,7 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
     NameResolverModule,
     NamesDisplayPipe,
     SubstanceStatusPipe
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}
