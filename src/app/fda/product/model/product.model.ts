@@ -64,6 +64,7 @@ export interface ProductProvenance {
   productCompanies?: Array<ProductCompany>;
   productDocumentations?: Array<ProductDocumentation>;
   productIndications?: Array<ProductIndication>;
+  _applicationUrl?: string;
 }
 
 export interface ProductName {
