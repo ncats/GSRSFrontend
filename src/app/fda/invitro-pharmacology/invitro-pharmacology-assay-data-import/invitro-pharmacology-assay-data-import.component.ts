@@ -318,18 +318,18 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
       if (element) {
         let validationMessages: Array<ValidationMessage> = [];
 
-        // Populate Target Name if Target Name Approval Id is available, and Target Name is empty 
-        if (!element['targetName'] && element['targetNameApprovalId']) {
-          this.getSubstanceById(element, element['targetNameApprovalId'], this.TARGET_NAME, validationMessages, index);
-        }
-
         const assay = JSON.parse(JSON.stringify(element));
         this.invitroPharmacologyService.assay = assay;
 
         // Validate Assay
         const validateSubscription = this.invitroPharmacologyService.validateAssay().subscribe(response => {
 
-          // Populated Substance Key and Substance Key Type for Target Name, Homolog, Substrate
+          // Populate 'Target Name' if 'Target Name Approval Id' is available, and 'Target Name' is empty 
+          if (!element['targetName'] && element['targetNameApprovalId']) {
+            this.getTargetNameByApprovalId(element, element['targetNameApprovalId'], this.TARGET_NAME, validationMessages, index);
+          }
+
+          // Populated 'Substance Key' and 'Substance Key Type' for Target Name, Homolog, Substrate
           if (element['targetName']) {
             this.getSubstanceNameDetails(element, element['targetName'], this.TARGET_NAME, validationMessages, index);
           }
@@ -349,7 +349,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
               let isPush = true;
               if (validation) {
                 if (validation.message && validation.message === 'Target Name is required.') {
-                  if (element["targetName"]) {
+                  if (!element['targetName'] && element['targetNameApprovalId']) {
                     isPush = false;
                   }
                 }
@@ -610,7 +610,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     }
   }
 
-  getSubstanceById(element: any, approvalId: string, fieldName: string, validationMessages: Array<ValidationMessage>, index: number) {
+  getTargetNameByApprovalId(element: any, approvalId: string, fieldName: string, validationMessages: Array<ValidationMessage>, index: number) {
     if (approvalId) {
       this.generalService.getSubstanceByAnyId(approvalId).subscribe(substance => {
         if (substance) {
@@ -625,7 +625,9 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             }
           }
         }
-      });
+      }, error => {
+         this.setValidationMessage('Target Name is required.', validationMessages, index);
+      });  
     }
   }
 
