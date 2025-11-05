@@ -9,9 +9,10 @@ import { Impurities, ImpuritiesResidualSolventsTest, ImpuritiesTesting, Impuriti
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-impurities-residual-solvents-test',
-  templateUrl: './impurities-residual-solvents-test.component.html',
-  styleUrls: ['./impurities-residual-solvents-test.component.scss']
+    selector: 'app-impurities-residual-solvents-test',
+    templateUrl: './impurities-residual-solvents-test.component.html',
+    styleUrls: ['./impurities-residual-solvents-test.component.scss'],
+    standalone: false
 })
 export class ImpuritiesResidualSolventsTestComponent implements OnInit {
 

@@ -10,9 +10,10 @@ import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.c
 
 
 @Component({
-  selector: 'app-impurities-residual-solvents-form',
-  templateUrl: './impurities-residual-solvents-form.component.html',
-  styleUrls: ['./impurities-residual-solvents-form.component.scss']
+    selector: 'app-impurities-residual-solvents-form',
+    templateUrl: './impurities-residual-solvents-form.component.html',
+    styleUrls: ['./impurities-residual-solvents-form.component.scss'],
+    standalone: false
 })
 export class ImpuritiesResidualSolventsFormComponent implements OnInit {
 

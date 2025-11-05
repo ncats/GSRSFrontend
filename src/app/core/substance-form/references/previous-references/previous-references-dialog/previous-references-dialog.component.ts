@@ -3,9 +3,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { SubstanceReference } from '@gsrs-core/substance/substance.model';
 
 @Component({
-  selector: 'app-previous-references-dialog',
-  templateUrl: './previous-references-dialog.component.html',
-  styleUrls: ['./previous-references-dialog.component.scss']
+    selector: 'app-previous-references-dialog',
+    templateUrl: './previous-references-dialog.component.html',
+    styleUrls: ['./previous-references-dialog.component.scss'],
+    standalone: false
 })
 export class PreviousReferencesDialogComponent implements OnInit {
 

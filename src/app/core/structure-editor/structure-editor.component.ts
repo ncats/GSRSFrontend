@@ -25,9 +25,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { JSDraw, Ketcher } from './structure.editor.model';
 
 @Component({
-  selector: 'app-structure-editor',
-  templateUrl: './structure-editor.component.html',
-  styleUrls: ['./structure-editor.component.scss']
+    selector: 'app-structure-editor',
+    templateUrl: './structure-editor.component.html',
+    styleUrls: ['./structure-editor.component.scss'],
+    standalone: false
 })
 export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   editor: EditorImplementation;

@@ -50,9 +50,10 @@ import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/impo
 import {Environment} from "@environment/environment.model";
 
 @Component({
-  selector: 'app-import-browse',
-  templateUrl: './import-browse.component.html',
-  styleUrls: ['./import-browse.component.scss']
+    selector: 'app-import-browse',
+    templateUrl: './import-browse.component.html',
+    styleUrls: ['./import-browse.component.scss'],
+    standalone: false
 })
 export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;

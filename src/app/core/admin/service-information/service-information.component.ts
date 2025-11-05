@@ -7,9 +7,10 @@ import { take } from 'rxjs/operators';
 import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-service-information',
-  templateUrl: './service-information.component.html',
-  styleUrls: ['./service-information.component.scss']
+    selector: 'app-service-information',
+    templateUrl: './service-information.component.html',
+    styleUrls: ['./service-information.component.scss'],
+    standalone: false
 })
 export class ServiceInformationComponent implements OnInit {
 

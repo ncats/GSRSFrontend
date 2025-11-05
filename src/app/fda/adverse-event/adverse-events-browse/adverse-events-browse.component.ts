@@ -5,9 +5,10 @@ import { Facet, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets
 import { AdverseEventService } from '../service/adverseevent.service';
 
 @Component({
-  selector: 'app-adverse-events-browse',
-  templateUrl: './adverse-events-browse.component.html',
-  styleUrls: ['./adverse-events-browse.component.scss']
+    selector: 'app-adverse-events-browse',
+    templateUrl: './adverse-events-browse.component.html',
+    styleUrls: ['./adverse-events-browse.component.scss'],
+    standalone: false
 })
 export class AdverseEventsBrowseComponent implements OnInit, AfterViewInit {
   adverseEventPtCount = 0;

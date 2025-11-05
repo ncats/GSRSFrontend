@@ -8,9 +8,10 @@ import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controll
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 
 @Component({
-  selector: 'app-ssg-grade-form',
-  templateUrl: './ssg-grade-form.component.html',
-  styleUrls: ['./ssg-grade-form.component.scss']
+    selector: 'app-ssg-grade-form',
+    templateUrl: './ssg-grade-form.component.html',
+    styleUrls: ['./ssg-grade-form.component.scss'],
+    standalone: false
 })
 
 export class SsgGradeFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {

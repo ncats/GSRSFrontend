@@ -20,9 +20,10 @@ import { ProductLot, ValidationMessage } from '../../model/product.model';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-product-lot-form',
-  templateUrl: './product-lot-form.component.html',
-  styleUrls: ['./product-lot-form.component.scss']
+    selector: 'app-product-lot-form',
+    templateUrl: './product-lot-form.component.html',
+    styleUrls: ['./product-lot-form.component.scss'],
+    standalone: false
 })
 export class ProductLotFormComponent implements OnInit {
 

@@ -9,9 +9,10 @@ import { ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../..
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-impurities-unspecified-form',
-  templateUrl: './impurities-unspecified-form.component.html',
-  styleUrls: ['./impurities-unspecified-form.component.scss']
+    selector: 'app-impurities-unspecified-form',
+    templateUrl: './impurities-unspecified-form.component.html',
+    styleUrls: ['./impurities-unspecified-form.component.scss'],
+    standalone: false
 })
 export class ImpuritiesUnspecifiedFormComponent implements OnInit {
 

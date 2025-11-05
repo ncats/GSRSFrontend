@@ -4,9 +4,10 @@ import { Subject } from 'rxjs';
 import { SubstanceCardBase } from '@gsrs-core/substance-details/substance-card-base';
 
 @Component({
-  selector: 'app-substance-alternative-definition',
-  templateUrl: './substance-alternative-definition.component.html',
-  styleUrls: ['./substance-alternative-definition.component.scss']
+    selector: 'app-substance-alternative-definition',
+    templateUrl: './substance-alternative-definition.component.html',
+    styleUrls: ['./substance-alternative-definition.component.scss'],
+    standalone: false
 })
 export class SubstanceAlternativeDefinitionComponent extends SubstanceCardBase implements OnInit {
   definition: string;

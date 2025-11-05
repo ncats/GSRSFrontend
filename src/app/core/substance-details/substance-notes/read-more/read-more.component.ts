@@ -1,10 +1,11 @@
 import {AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit} from '@angular/core';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'read-more',
-  templateUrl: './read-more.component.html',
-  styleUrls: ['./read-more.component.scss']
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'read-more',
+    templateUrl: './read-more.component.html',
+    styleUrls: ['./read-more.component.scss'],
+    standalone: false
 })
 export class ReadMoreComponent implements OnInit {
   @Input() text: string;

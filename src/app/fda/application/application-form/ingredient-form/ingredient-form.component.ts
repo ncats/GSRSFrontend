@@ -14,9 +14,10 @@ import { GeneralService } from 'src/app/fda/service/general.service';
 import { A } from '@angular/cdk/keycodes';
 
 @Component({
-  selector: 'app-ingredient-form',
-  templateUrl: './ingredient-form.component.html',
-  styleUrls: ['./ingredient-form.component.scss']
+    selector: 'app-ingredient-form',
+    templateUrl: './ingredient-form.component.html',
+    styleUrls: ['./ingredient-form.component.scss'],
+    standalone: false
 })
 export class IngredientFormComponent implements OnInit, OnDestroy {
   @Input() ingredient: ApplicationIngredient;

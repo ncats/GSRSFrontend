@@ -31,9 +31,10 @@ import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-invitro-pharmacology-assay-form',
-  templateUrl: './invitro-pharmacology-assay-form.component.html',
-  styleUrls: ['./invitro-pharmacology-assay-form.component.scss']
+    selector: 'app-invitro-pharmacology-assay-form',
+    templateUrl: './invitro-pharmacology-assay-form.component.html',
+    styleUrls: ['./invitro-pharmacology-assay-form.component.scss'],
+    standalone: false
 })
 
 export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy {

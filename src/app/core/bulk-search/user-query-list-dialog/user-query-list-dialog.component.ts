@@ -11,9 +11,10 @@ import { SubstanceService } from '@gsrs-core/substance';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '@gsrs-core/config';
 @Component({
-  selector: 'app-user-query-list-dialog',
-  templateUrl: './user-query-list-dialog.component.html',
-  styleUrls: ['./user-query-list-dialog.component.scss']
+    selector: 'app-user-query-list-dialog',
+    templateUrl: './user-query-list-dialog.component.html',
+    styleUrls: ['./user-query-list-dialog.component.scss'],
+    standalone: false
 })
 export class UserQueryListDialogComponent implements OnInit {
   lists: Array<any> = [];

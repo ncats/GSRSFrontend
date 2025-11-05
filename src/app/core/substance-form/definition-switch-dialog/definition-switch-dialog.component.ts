@@ -9,9 +9,10 @@ import { UtilsService } from '@gsrs-core/utils/index';
 import jp from 'jsonpath';
 
 @Component( {
-  selector: 'app-definition-switch-dialog',
-  templateUrl: './definition-switch-dialog.component.html',
-  styleUrls: ['./definition-switch-dialog.component.scss']
+    selector: 'app-definition-switch-dialog',
+    templateUrl: './definition-switch-dialog.component.html',
+    styleUrls: ['./definition-switch-dialog.component.scss'],
+    standalone: false
 })
 export class DefinitionSwitchDialogComponent implements OnInit {
   public dialogRef: MatDialogRef < DefinitionSwitchDialogComponent >;

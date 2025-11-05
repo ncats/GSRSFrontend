@@ -10,9 +10,10 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
-  selector: 'app-other-links-form',
-  templateUrl: './other-links-form.component.html',
-  styleUrls: ['./other-links-form.component.scss']
+    selector: 'app-other-links-form',
+    templateUrl: './other-links-form.component.html',
+    styleUrls: ['./other-links-form.component.scss'],
+    standalone: false
 })
 export class OtherLinksFormComponent implements OnInit, OnDestroy {
 

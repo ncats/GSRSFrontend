@@ -5,9 +5,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-access-manager',
-  templateUrl: './access-manager.component.html',
-  styleUrls: ['./access-manager.component.scss']
+    selector: 'app-access-manager',
+    templateUrl: './access-manager.component.html',
+    styleUrls: ['./access-manager.component.scss'],
+    standalone: false
 })
 export class AccessManagerComponent implements OnInit, AfterViewInit {
   accessOptions: Array<VocabularyTerm>;

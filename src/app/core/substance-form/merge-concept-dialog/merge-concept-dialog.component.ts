@@ -8,9 +8,10 @@ import * as _ from 'lodash';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-merge-concept-dialog',
-  templateUrl: './merge-concept-dialog.component.html',
-  styleUrls: ['./merge-concept-dialog.component.scss']
+    selector: 'app-merge-concept-dialog',
+    templateUrl: './merge-concept-dialog.component.html',
+    styleUrls: ['./merge-concept-dialog.component.scss'],
+    standalone: false
 })
 export class MergeConceptDialogComponent implements OnInit {
   public dialogRef: MatDialogRef<MergeConceptDialogComponent>;

@@ -14,9 +14,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceFormReferencesService } from '../substance-form-references.service';
 
 @Component({
-  selector: 'app-domain-references',
-  templateUrl: './domain-references.component.html',
-  styleUrls: ['./domain-references.component.scss']
+    selector: 'app-domain-references',
+    templateUrl: './domain-references.component.html',
+    styleUrls: ['./domain-references.component.scss'],
+    standalone: false
 })
 export class DomainReferencesComponent implements OnInit, OnDestroy {
   @Input() card?: string;

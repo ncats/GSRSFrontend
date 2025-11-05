@@ -9,9 +9,10 @@ import { ImpuritiesService } from '../../service/impurities.service';
 import { Impurities, ImpuritiesDetails, IdentityCriteria, SubRelationship } from '../../model/impurities.model';
 
 @Component({
-  selector: 'app-impurities-details-form',
-  templateUrl: './impurities-details-form.component.html',
-  styleUrls: ['./impurities-details-form.component.scss']
+    selector: 'app-impurities-details-form',
+    templateUrl: './impurities-details-form.component.html',
+    styleUrls: ['./impurities-details-form.component.scss'],
+    standalone: false
 })
 export class ImpuritiesDetailsFormComponent implements OnInit {
 

@@ -22,8 +22,9 @@ import * as lodash from 'lodash';
   @Component({
     selector: 'app-bulk-query',
     templateUrl: './bulk-query.component.html',
-    styleUrls: ['./bulk-query.component.scss']
-  })
+    styleUrls: ['./bulk-query.component.scss'],
+    standalone: false
+})
 
 export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   _ = lodash;

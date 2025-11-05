@@ -4,9 +4,10 @@ import { SelectWidget } from 'ngx-schema-form';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-radio-widget',
-  templateUrl: './custom-radio-widget.component.html',
-  styleUrls: ['./custom-radio-widget.component.scss']
+    selector: 'app-custom-radio-widget',
+    templateUrl: './custom-radio-widget.component.html',
+    styleUrls: ['./custom-radio-widget.component.scss'],
+    standalone: false
 })
 export class CustomRadioWidgetComponent  extends SelectWidget implements OnInit {
   options = [];

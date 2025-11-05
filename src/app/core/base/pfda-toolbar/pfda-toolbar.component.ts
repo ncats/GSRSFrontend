@@ -9,9 +9,10 @@ import { Subscription } from 'rxjs';
 import { NavItem } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-pfda-toolbar',
-  templateUrl: './pfda-toolbar.component.html',
-  styleUrls: ['./pfda-toolbar.component.scss']
+    selector: 'app-pfda-toolbar',
+    templateUrl: './pfda-toolbar.component.html',
+    styleUrls: ['./pfda-toolbar.component.scss'],
+    standalone: false
 })
 export class PfdaToolbarComponent implements OnInit {
   pfdaBaseUrl: string;

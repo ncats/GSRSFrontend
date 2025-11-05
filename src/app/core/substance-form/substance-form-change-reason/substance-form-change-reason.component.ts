@@ -7,9 +7,10 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-substance-form-change-reason',
-  templateUrl: './substance-form-change-reason.component.html',
-  styleUrls: ['./substance-form-change-reason.component.scss']
+    selector: 'app-substance-form-change-reason',
+    templateUrl: './substance-form-change-reason.component.html',
+    styleUrls: ['./substance-form-change-reason.component.scss'],
+    standalone: false
 })
 export class SubstanceFormChangeReasonComponent extends SubstanceFormBase implements OnInit, OnDestroy {
   changeReasonControl = new FormControl();

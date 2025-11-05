@@ -13,9 +13,10 @@ import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
 import { MatSort, Sort} from '@angular/material/sort';
 
 @Component({
-  selector: 'app-bulk-search-results-summary[context][key]',
-  templateUrl: './bulk-search-results-summary.component.html',
-  styleUrls: ['./bulk-search-results-summary.component.scss']
+    selector: 'app-bulk-search-results-summary[context][key]',
+    templateUrl: './bulk-search-results-summary.component.html',
+    styleUrls: ['./bulk-search-results-summary.component.scss'],
+    standalone: false
 })
 
 export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit, OnChanges {

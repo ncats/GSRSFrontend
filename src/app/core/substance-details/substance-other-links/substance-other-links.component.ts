@@ -4,9 +4,10 @@ import {Link, Site, SubstanceDetail} from '../../substance/substance.model';
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-other-links',
-  templateUrl: './substance-other-links.component.html',
-  styleUrls: ['./substance-other-links.component.scss']
+    selector: 'app-substance-other-links',
+    templateUrl: './substance-other-links.component.html',
+    styleUrls: ['./substance-other-links.component.scss'],
+    standalone: false
 })
 export class SubstanceOtherLinksComponent extends SubstanceCardBase implements OnInit {
   otherLinks: Array<Link> = [];

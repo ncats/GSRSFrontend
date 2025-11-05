@@ -12,9 +12,10 @@ import { ImpuritiesTesting, ImpuritiesDetails, ImpuritiesSolutionTable } from '.
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-impurities-test-form',
-  templateUrl: './impurities-test-form.component.html',
-  styleUrls: ['./impurities-test-form.component.scss']
+    selector: 'app-impurities-test-form',
+    templateUrl: './impurities-test-form.component.html',
+    styleUrls: ['./impurities-test-form.component.scss'],
+    standalone: false
 })
 export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 

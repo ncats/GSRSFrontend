@@ -7,9 +7,10 @@ import * as _ from 'lodash';
 
 
 @Component({
-  selector: 'app-scheduled-jobs',
-  templateUrl: './scheduled-jobs.component.html',
-  styleUrls: ['./scheduled-jobs.component.scss']
+    selector: 'app-scheduled-jobs',
+    templateUrl: './scheduled-jobs.component.html',
+    styleUrls: ['./scheduled-jobs.component.scss'],
+    standalone: false
 })
 export class ScheduledJobsComponent implements OnInit {
 

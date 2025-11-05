@@ -40,9 +40,10 @@ import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-ssg2-form',
-  templateUrl: './substance-ssg2-form.component.html',
-  styleUrls: ['./substance-ssg2-form.component.scss']
+    selector: 'app-substance-ssg2-form',
+    templateUrl: './substance-ssg2-form.component.html',
+    styleUrls: ['./substance-ssg2-form.component.scss'],
+    standalone: false
 })
 export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;

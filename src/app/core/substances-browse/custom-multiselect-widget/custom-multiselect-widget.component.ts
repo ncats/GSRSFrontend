@@ -4,9 +4,10 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-multiselect-widget',
-  templateUrl: './custom-multiselect-widget.component.html',
-  styleUrls: ['./custom-multiselect-widget.component.scss']
+    selector: 'app-custom-multiselect-widget',
+    templateUrl: './custom-multiselect-widget.component.html',
+    styleUrls: ['./custom-multiselect-widget.component.scss'],
+    standalone: false
 })
 export class CustomMultiselectWidgetComponent extends SelectWidget implements OnInit {
   options = [];

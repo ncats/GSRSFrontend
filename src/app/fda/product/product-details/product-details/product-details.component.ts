@@ -17,9 +17,10 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ProductService } from '../../service/product.service';
 
 @Component({
-  selector: 'app-product-details',
-  templateUrl: './product-details.component.html',
-  styleUrls: ['./product-details.component.scss']
+    selector: 'app-product-details',
+    templateUrl: './product-details.component.html',
+    styleUrls: ['./product-details.component.scss'],
+    standalone: false
 })
 export class ProductDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {
 

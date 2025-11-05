@@ -3,9 +3,10 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-import-scrubber',
-  templateUrl: './import-scrubber.component.html',
-  styleUrls: ['./import-scrubber.component.scss']
+    selector: 'app-import-scrubber',
+    templateUrl: './import-scrubber.component.html',
+    styleUrls: ['./import-scrubber.component.scss'],
+    standalone: false
 })
 export class ImportScrubberComponent implements OnInit {
 

@@ -13,9 +13,10 @@ import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/impo
 
 
 @Component({
-  selector: 'app-import-management',
-  templateUrl: './import-management.component.html',
-  styleUrls: ['./import-management.component.scss']
+    selector: 'app-import-management',
+    templateUrl: './import-management.component.html',
+    styleUrls: ['./import-management.component.scss'],
+    standalone: false
 })
 export class ImportManagementComponent implements OnInit {
 demo: any;

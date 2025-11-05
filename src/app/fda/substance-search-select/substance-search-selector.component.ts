@@ -4,9 +4,10 @@ import { SubstanceSummary } from '@gsrs-core/substance/substance.model';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-search-selector',
-  templateUrl: './substance-search-selector.component.html',
-  styleUrls: ['./substance-search-selector.component.scss']
+    selector: 'app-substance-search-selector',
+    templateUrl: './substance-search-selector.component.html',
+    styleUrls: ['./substance-search-selector.component.scss'],
+    standalone: false
 })
 export class SubstanceSearchSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;

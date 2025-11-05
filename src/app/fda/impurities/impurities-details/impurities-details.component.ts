@@ -15,9 +15,10 @@ import { GeneralService } from '../../service/general.service';
 import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
 
 @Component({
-  selector: 'app-impurities-details',
-  templateUrl: './impurities-details.component.html',
-  styleUrls: ['./impurities-details.component.scss']
+    selector: 'app-impurities-details',
+    templateUrl: './impurities-details.component.html',
+    styleUrls: ['./impurities-details.component.scss'],
+    standalone: false
 })
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 

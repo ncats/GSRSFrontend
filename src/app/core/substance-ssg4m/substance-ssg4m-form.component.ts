@@ -43,9 +43,10 @@ import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-ssg4m-form',
-  templateUrl: './substance-ssg4m-form.component.html',
-  styleUrls: ['./substance-ssg4m-form.component.scss']
+    selector: 'app-substance-ssg4m-form',
+    templateUrl: './substance-ssg4m-form.component.html',
+    styleUrls: ['./substance-ssg4m-form.component.scss'],
+    standalone: false
 })
 export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;

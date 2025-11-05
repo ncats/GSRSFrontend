@@ -6,9 +6,10 @@ import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from '../../utils/utils.service';
 
 @Component({
-  selector: 'app-relationship-form',
-  templateUrl: './relationship-form.component.html',
-  styleUrls: ['./relationship-form.component.scss']
+    selector: 'app-relationship-form',
+    templateUrl: './relationship-form.component.html',
+    styleUrls: ['./relationship-form.component.scss'],
+    standalone: false
 })
 export class RelationshipFormComponent implements OnInit {
   private privateRelationship: SubstanceRelationship;

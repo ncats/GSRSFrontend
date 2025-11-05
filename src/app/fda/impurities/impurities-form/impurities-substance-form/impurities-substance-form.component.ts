@@ -12,9 +12,10 @@ import { Impurities, ImpuritiesSubstance, ImpuritiesTesting, ImpuritiesDetails, 
 
 
 @Component({
-  selector: 'app-impurities-substance-form',
-  templateUrl: './impurities-substance-form.component.html',
-  styleUrls: ['./impurities-substance-form.component.scss']
+    selector: 'app-impurities-substance-form',
+    templateUrl: './impurities-substance-form.component.html',
+    styleUrls: ['./impurities-substance-form.component.scss'],
+    standalone: false
 })
 export class ImpuritiesSubstanceFormComponent implements OnInit {
 

@@ -40,9 +40,10 @@ import {
 //import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
-  selector: 'app-invitro-pharmacology-form',
-  templateUrl: './invitro-pharmacology-form.component.html',
-  styleUrls: ['./invitro-pharmacology-form.component.scss']
+    selector: 'app-invitro-pharmacology-form',
+    templateUrl: './invitro-pharmacology-form.component.html',
+    styleUrls: ['./invitro-pharmacology-form.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 

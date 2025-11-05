@@ -5,9 +5,10 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-amount-form',
-  templateUrl: './amount-form.component.html',
-  styleUrls: ['./amount-form.component.scss']
+    selector: 'app-amount-form',
+    templateUrl: './amount-form.component.html',
+    styleUrls: ['./amount-form.component.scss'],
+    standalone: false
 })
 export class AmountFormComponent implements OnInit {
   private privateSubstanceAmount: SubstanceAmount;

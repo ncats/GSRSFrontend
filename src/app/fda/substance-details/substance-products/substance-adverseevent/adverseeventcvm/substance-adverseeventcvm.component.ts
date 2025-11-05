@@ -15,9 +15,10 @@ import { Subscription } from 'rxjs';
 import { adverseEventCvmSearchSortValues } from '../../../../adverse-event/adverse-events-cvm-browse/adverse-events-cvm-search-sort-values';
 
 @Component({
-  selector: 'app-substance-adverseeventcvm',
-  templateUrl: './substance-adverseeventcvm.component.html',
-  styleUrls: ['./substance-adverseeventcvm.component.scss']
+    selector: 'app-substance-adverseeventcvm',
+    templateUrl: './substance-adverseeventcvm.component.html',
+    styleUrls: ['./substance-adverseeventcvm.component.scss'],
+    standalone: false
 })
 
 export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {

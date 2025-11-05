@@ -2,7 +2,8 @@ import { Directive, OnInit, OnDestroy, ElementRef, Output, Input, EventEmitter }
 import { HTMLInputEvent } from './html-input-event.model';
 
 @Directive({
-  selector: '[ncatsFileSelect]'
+    selector: '[ncatsFileSelect]',
+    standalone: false
 })
 export class FileSelectDirective implements OnInit, OnDestroy {
   @Input() accept?: string;

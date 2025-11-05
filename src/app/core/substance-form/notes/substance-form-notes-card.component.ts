@@ -8,9 +8,10 @@ import { Subscription } from 'rxjs';
 import { SubstanceFormNotesService } from './substance-form-notes.service';
 
 @Component({
-  selector: 'app-substance-form-notes-card',
-  templateUrl: './substance-form-notes-card.component.html',
-  styleUrls: ['./substance-form-notes-card.component.scss']
+    selector: 'app-substance-form-notes-card',
+    templateUrl: './substance-form-notes-card.component.html',
+    styleUrls: ['./substance-form-notes-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormNotesCardComponent extends SubstanceCardBaseFilteredList<SubstanceNote>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

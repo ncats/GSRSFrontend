@@ -21,9 +21,10 @@ import { productSearchSortValues } from '../../product/products-browse/product-s
 import { StringDecoder } from 'string_decoder';
 
 @Component({
-  selector: 'app-substance-products',
-  templateUrl: './substance-products.component.html',
-  styleUrls: ['./substance-products.component.scss']
+    selector: 'app-substance-products',
+    templateUrl: './substance-products.component.html',
+    styleUrls: ['./substance-products.component.scss'],
+    standalone: false
 })
 
 export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, AfterViewInit {

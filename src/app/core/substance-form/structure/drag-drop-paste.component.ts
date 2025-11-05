@@ -1,7 +1,8 @@
 import { Directive, Output, HostListener, EventEmitter, Input , OnInit } from '@angular/core';
 
 @Directive({
-  selector: '[appDragDropPaste]',
+    selector: '[appDragDropPaste]',
+    standalone: false
 })
 export class DragDropPasteDirective {
 

@@ -4,9 +4,10 @@ import {UtilsService} from '@gsrs-core/utils';
 import {OverlayContainer} from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'app-mixture-component-form',
-  templateUrl: './mixture-component-form.component.html',
-  styleUrls: ['./mixture-component-form.component.scss']
+    selector: 'app-mixture-component-form',
+    templateUrl: './mixture-component-form.component.html',
+    styleUrls: ['./mixture-component-form.component.scss'],
+    standalone: false
 })
 export class MixtureComponentFormComponent implements OnInit {
   private privateComp: MixtureComponents;

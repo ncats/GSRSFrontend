@@ -4,7 +4,8 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Pipe({
-  name: 'codeSystemDisplay'
+    name: 'codeSystemDisplay',
+    standalone: false
 })
 export class CodeSystemDisplayPipe implements PipeTransform {
     constructor(public cvService: ControlledVocabularyService) {

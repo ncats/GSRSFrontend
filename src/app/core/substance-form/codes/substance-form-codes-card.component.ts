@@ -9,9 +9,10 @@ import { SubstanceFormCodesService } from './substance-form-codes.service';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-form-codes-card',
-  templateUrl: './substance-form-codes-card.component.html',
-  styleUrls: ['./substance-form-codes-card.component.scss']
+    selector: 'app-substance-form-codes-card',
+    templateUrl: './substance-form-codes-card.component.html',
+    styleUrls: ['./substance-form-codes-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormCodesCardComponent extends SubstanceCardBaseFilteredList<SubstanceCode>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

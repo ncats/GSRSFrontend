@@ -26,9 +26,10 @@ import { Product, ProductIngredient } from '../model/product.model';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-product-details-base',
-  template: '',
-  styleUrls: ['./product-details-base.component.scss']
+    selector: 'app-product-details-base',
+    template: '',
+    styleUrls: ['./product-details-base.component.scss'],
+    standalone: false
 })
 export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 

@@ -5,9 +5,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 
 @Component({
-  selector: 'app-export-dialog',
-  templateUrl: './export-dialog.component.html',
-  styleUrls: ['./export-dialog.component.scss']
+    selector: 'app-export-dialog',
+    templateUrl: './export-dialog.component.html',
+    styleUrls: ['./export-dialog.component.scss'],
+    standalone: false
 })
 export class ExportDialogComponent implements OnInit {
   name: string;

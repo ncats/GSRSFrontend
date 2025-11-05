@@ -11,9 +11,10 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 
 @Component({
-  selector: 'app-substance-dependencies-image',
-  templateUrl: './substance-dependencies-image.component.html',
-  styleUrls: ['./substance-dependencies-image.component.scss']
+    selector: 'app-substance-dependencies-image',
+    templateUrl: './substance-dependencies-image.component.html',
+    styleUrls: ['./substance-dependencies-image.component.scss'],
+    standalone: false
 })
 
 export class SubstanceDependenciesImageComponent extends SubstanceCardBaseFilteredList<SubstanceDependenciesImageNode> implements OnInit {

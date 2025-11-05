@@ -15,9 +15,10 @@ import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormPolymerClassificationService } from './substance-form-polymer-classification.service';
 
 @Component({
-  selector: 'app-substance-form-polymer-classification',
-  templateUrl: './substance-form-polymer-classification.component.html',
-  styleUrls: ['./substance-form-polymer-classification.component.scss']
+    selector: 'app-substance-form-polymer-classification',
+    templateUrl: './substance-form-polymer-classification.component.html',
+    styleUrls: ['./substance-form-polymer-classification.component.scss'],
+    standalone: false
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormPolymerClassificationComponent extends SubstanceFormBase

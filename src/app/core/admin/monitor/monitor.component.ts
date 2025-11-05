@@ -6,9 +6,10 @@ import * as moment from 'moment';
 import { UploadObject } from '@gsrs-core/admin/admin-objects.model';
 
 @Component({
-  selector: 'app-monitor',
-  templateUrl: './monitor.component.html',
-  styleUrls: ['./monitor.component.scss']
+    selector: 'app-monitor',
+    templateUrl: './monitor.component.html',
+    styleUrls: ['./monitor.component.scss'],
+    standalone: false
 })
 export class MonitorComponent implements OnInit, OnDestroy {
   jobId: any;

@@ -22,9 +22,10 @@ import { InvitroPharmacologyService } from '../service/invitro-pharmacology.serv
 import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-invitro-pharmacology-details',
-  templateUrl: './invitro-pharmacology-details.component.html',
-  styleUrls: ['./invitro-pharmacology-details.component.scss']
+    selector: 'app-invitro-pharmacology-details',
+    templateUrl: './invitro-pharmacology-details.component.html',
+    styleUrls: ['./invitro-pharmacology-details.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 

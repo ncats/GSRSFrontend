@@ -37,9 +37,10 @@ import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
 import { invitroPharmacologySearchSortValues } from '../invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 
 @Component({
-  selector: 'app-invitro-pharmacology-text-search',
-  templateUrl: './invitro-pharmacology-text-search.component.html',
-  styleUrls: ['./invitro-pharmacology-text-search.component.scss']
+    selector: 'app-invitro-pharmacology-text-search',
+    templateUrl: './invitro-pharmacology-text-search.component.html',
+    styleUrls: ['./invitro-pharmacology-text-search.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
 

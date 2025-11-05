@@ -13,9 +13,10 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import { SubstanceFormNamesService } from '@gsrs-core/substance-form/names/substance-form-names.service';
 
 @Component({
-  selector: 'app-name-form',
-  templateUrl: './name-form.component.html',
-  styleUrls: ['./name-form.component.scss']
+    selector: 'app-name-form',
+    templateUrl: './name-form.component.html',
+    styleUrls: ['./name-form.component.scss'],
+    standalone: false
 })
 export class NameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;

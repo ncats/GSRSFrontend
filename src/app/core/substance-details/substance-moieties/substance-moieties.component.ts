@@ -10,9 +10,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-moieties',
-  templateUrl: './substance-moieties.component.html',
-  styleUrls: ['./substance-moieties.component.scss']
+    selector: 'app-substance-moieties',
+    templateUrl: './substance-moieties.component.html',
+    styleUrls: ['./substance-moieties.component.scss'],
+    standalone: false
 })
 export class SubstanceMoietiesComponent extends SubstanceCardBase implements OnInit {
   moieties: Array<SubstanceMoiety> = [];

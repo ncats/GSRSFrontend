@@ -10,9 +10,10 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { ApplicationService } from '../service/application.service';
 
 @Component({
-  selector: 'app-application-text-search',
-  templateUrl: './application-text-search.component.html',
-  styleUrls: ['./application-text-search.component.scss']
+    selector: 'app-application-text-search',
+    templateUrl: './application-text-search.component.html',
+    styleUrls: ['./application-text-search.component.scss'],
+    standalone: false
 })
 
 export class ApplicationTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {
