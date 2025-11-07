@@ -613,7 +613,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
   getTargetNameByApprovalId(element: any, approvalId: string, fieldName: string, validationMessages: Array<ValidationMessage>, index: number) {
     if (approvalId) {
-      this.generalService.getSubstanceByAnyId(approvalId).subscribe(substance => {
+      this.generalService.getSubstanceByAnyIdFullView(approvalId).subscribe(substance => {
         if (substance) {
           if (substance._name) {
             let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
