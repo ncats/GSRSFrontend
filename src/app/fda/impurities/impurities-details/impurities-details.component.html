@@ -181,11 +181,7 @@
                   </div>
 
                   <!-- Impurities Test List -->
-                  <!--
-                    <div class="title2">Total Test ({{subs.impuritiesTestList.length}})</div>
-                    -->
-
-                  <div *ngFor="let impTest of subs.impuritiesTestList; let i = index">
+                  <div style="max-width:100%;" *ngFor="let impTest of subs.impuritiesTestList; let i = index">
                     <fieldset class="border">
                       <legend class="border">
                         Test <span class="colorblack">{{(i + 1)}} of {{subs.impuritiesTestList.length}}</span>&nbsp;
@@ -393,39 +389,6 @@
                           </div>
                         </div>
                         <div class="width50percent">
-
-                          <!-- COMMENTING in release 3.1.1  WE DO NOT NEED THIS -->
-                          <!--
-                          <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let m = index">
-                            <div class="row">
-                              <div class="row-property-3">
-                                <div class="row-property-key-3">
-                                  <div class="bordergraydotted">
-                                    Elution Solvent {{(m+1)}}:
-                                    <!- - if the length of the string is more than 55, add a new line - ->
-                                    <span *ngIf="elu.elutionSolvent && elu.elutionSolvent.length > 55">
-                                      <br><br>
-                                    </span>
-                                  </div>
-                                  <div>
-                                    Elution Solvent Id {{(m+1)}}:
-                                  </div>
-                                </div>
-                                <div class="row-property-value-3">
-                                  <div class="bordergraydotted">
-                                    {{elu.elutionSolvent}}
-                                  </div>
-                                  <div>
-                                    {{elu.elutionSolventCode}}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="divclear"></div>
-                          </div>
-                           COMMENTING OUT in 3.1.1 WE DO NOT NEED THIS -->
-                          <!-- loop Elution Solvent -->
-
                         </div>
                       </div>
 

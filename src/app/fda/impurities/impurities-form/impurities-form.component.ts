@@ -342,7 +342,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           // if the elutionType value is not 'Isocratic' or 'Gradient' and if there is data in Mobile Phase table,
           // empty the list
           if (elementTest.elutionType) {
-            if (elementTest.elutionType.toUpperCase() !== this.ELUTION_TYPE_ISOCRATIC ||
+            if (elementTest.elutionType.toUpperCase() !== this.ELUTION_TYPE_ISOCRATIC &&
               elementTest.elutionType.toUpperCase() !== this.ELUTION_TYPE_GRADIENT) {
               if (elementTest.impuritiesSolutionTableList) {
                 if (elementTest.impuritiesSolutionTableList.length > 0) {

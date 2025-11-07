@@ -128,8 +128,20 @@
   padding: 10px 0px 5px 10px;
 }
 
+.font11px {
+  font-size: 11px;
+}
+
 .font12px {
   font-size: 12px;
+}
+
+.font14px {
+  font-size: 14px;
+}
+
+.colorred {
+  color: var(--regular-red-color);
 }
 
 .colormaroon {
@@ -145,7 +157,11 @@
 }
 
 .colorgray {
-  color: var(--maroon-color);
+  color: var(--regular-grey-color);
+}
+
+.colorlightgray {
+  color: var(--regular-lightgray-color);
 }
 
 .colorwhite {
@@ -184,6 +200,10 @@
   margin-top: 70px;
 }
 
+.marginleft10px {
+  margin-left: 10px;
+}
+
 .marginleft20px {
   margin-left: 20px;
 }
@@ -214,6 +234,10 @@
 
 .marginbottom5px {
   margin-bottom: 5px;
+}
+
+.marginbottom10px {
+  margin-bottom: 10px;
 }
 
 .padtop10px {
