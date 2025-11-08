@@ -417,7 +417,7 @@
                           <table mat-table class="margintop20px bordergray"
                             [dataSource]="impTest.impuritiesSolutionTableList">
 
-                            <span *ngFor="let columnName of displayedColumns; let colIndex = index">
+                            <span *ngFor="let columnName of displayedColumnsRow[i]; let colIndex = index">
                               <ng-container matColumnDef="{{columnName}}">
                                 <th mat-header-cell *matHeaderCellDef>{{columnName}}</th>
                                 <td mat-cell *matCellDef="let row; let indexRow = index;">
@@ -475,11 +475,10 @@
 
                                 </td>
                               </ng-container>
-
                             </span>
 
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsRow[i]"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsRow[i];"></tr>
 
                           </table>
                           <br>
