@@ -319,6 +319,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         // Get Daily Med Url if Product Code Type is NDC CODE
         this.getDailyMedUrlforProductCode();
 
+        // Get Application Type and Application Number Url to go to Browse Application page.
+        this.getApplicationNumberTypeUrl();
+
         // Get list of Export extension options such as .xlsx, .txt
         this.productService.getExportOptions(this.etag).subscribe(response => {
           this.exportOptions = response;
@@ -558,6 +561,46 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.populateUrlQueryParameters();
     this.searchProducts();
     // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
+  getApplicationNumberTypeUrl() {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        if ((prov.applicationType) && (prov.applicationNumber)) {
+          let truncateAppType = this.truncateBeforeNumber(prov.applicationNumber);
+          let truncateAppNum = this.truncateAfterAlpha(prov.applicationNumber);
+          if (prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH FINAL' && prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH NOT FINAL') {
+            prov._applicationUrl = 'root_appType:"^' + truncateAppType + '$" AND root_appNumber:"^' + truncateAppNum + '$"';
+          }
+        }
+      });
+    });
+  }
+
+  truncateBeforeNumber(str: string): string {
+    // Use search() with a regular expression to find the index of the first digit
+    const firstDigitIndex = str.search(/[0-9]/);
+
+    // If a digit is found,slice the string up to that index
+    if (firstDigitIndex !== -1) {
+      return str.slice(0, firstDigitIndex);
+    }
+
+    // If no digit is found, return the original string
+    return str;
+  }
+
+  truncateAfterAlpha(str: string): string {
+    // Use search() with a regular expression to find the index of the first digit
+    const firstDigitIndex = str.search(/[0-9]/);
+
+    // Get Number, If a digit is found, slice number
+    if (firstDigitIndex !== -1) {
+      return str.slice(firstDigitIndex, str.length);
+    }
+
+    // If no digit is found, return the original string
+    return str;
   }
 
   getDailyMedUrlforProductCode(): void {
@@ -897,9 +940,17 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         delete approvalIdHolders[i]._approvalId;
       }
     }
-
+ 
+    const applicationUrlHolders = jp.query(old, '$..[?(@._applicationUrl)]');
+    for (let i = 0; i < applicationUrlHolders.length; i++) {
+      if (applicationUrlHolders[i]._applicationUrl) {
+        delete applicationUrlHolders[i]._applicationUrl;
+      }
+    }
+    
     delete old['_activeIngredients'];
     delete old['_otherIngredients'];
+    
 
     return old;
   }
@@ -948,8 +999,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   forwardToSubstance(bulkQID: number) {
 
     let currentUrl = this.location.path();
-    alert('Current URL:' + currentUrl);
-
+ 
     // store values in array to retreive later from localStorage
     let item = {
       'allSubFromProductUrl': currentUrl

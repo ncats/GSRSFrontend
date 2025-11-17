@@ -148,7 +148,8 @@
             </div>
           </div>
 
-          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()" matTooltip="Clear All Search Criteria"
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+            matTooltip="Clear All Search Criteria"
             *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
             <span>RESET</span>
           </button>
@@ -161,7 +162,8 @@
 
             <div class="search-parameters">
               <div class="marginleftneg10px">
-                <div class="mat-elevation-z2 selected-parameter marginright10px" *ngFor="let facet of subEntityDisplayFacets">
+                <div class="mat-elevation-z2 selected-parameter marginright10px"
+                  *ngFor="let facet of subEntityDisplayFacets">
                   <div class='selected-parameter-crosssearch'>
                     <span class="selected-label">
                       <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
@@ -258,7 +260,7 @@
           [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="productSearch">
         </app-product-text-search>
 
-        <div>
+        <div *ngIf="!bulkSearchQueryId">
           <button class="margintop10px marginleft20px" mat-raised-button color="primary" (click)="showAllSubstances()"
             matTooltip="Show All Substances associated with these Product records">
             <span>Show All Substances</span>
@@ -308,11 +310,19 @@
 
                     <span *ngFor="let prodCode of prodProv.productCodes; let indexCode = index">
 
-                      <span *ngIf="prodCode.productCode; else noProdCode">
-                        <span *ngIf="indexCode > 0"><br><br></span>
-                        {{prodCode.productCode}}
+                      <span *ngIf="i > 0"><br><br></span>
+                      <b>{{prodCode.productCodeType}}</b>: <br>{{prodCode.productCode}}
+
+                      <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
+                      <span *ngIf="prodCode._dailyMedUrl">
+                        <br>
+                        <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
+                          title="Go to DailyMed website">
+                          <img [src]="iconSrcPath">
+                        </a>
+                        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                        </mat-icon>
                       </span>
-                      <ng-template #noProdCode>(NO ID)</ng-template>
 
                     </span> <!-- loop productCode -->
                   </span> <!-- loop productProvenance-->
@@ -346,7 +356,6 @@
                           <span *ngIf="prodIngred.ingredientType; else noIngredientType">
                             <span
                               *ngIf="prodIngred.ingredientType === 'Active Ingredient' || prodIngred.ingredientType === 'ACTIVE INGREDIENT'">
-
                               <span *ngIf="prodIngred._ingredientName">
                                 <li>
 
@@ -369,17 +378,6 @@
                             </span>
                           </span>
                           <!-- No Ingredient Type, Display Ingredient Name -->
-                          <ng-template #noIngredientType>
-                            <!-- if No Ingredient Type, but have Substance Name, display here. -->
-                            <div *ngIf="prodIngred._ingredientName">
-                              <li class="">
-                                <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                  target="_blank">{{prodIngred._ingredientName}}
-                                </a>
-                              </li>
-                            </div>
-                          </ng-template>
-
 
                         </div> <!-- loop Ingredient -->
                       </div> <!-- loop Lot -->
@@ -633,6 +631,7 @@
                             <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                             </mat-icon>
                           </span>
+
                         </span>
                       </div>
                     </div>
@@ -662,12 +661,27 @@
                         Application Type Number:
                       </div>
                       <div class="row-property-value">
-                        <span class="font14px" *ngIf="prodProv.applicationType">
-                          {{prodProv.applicationType}}
-                        </span>
-                        <span class="font14px" *ngIf="prodProv.applicationNumber">
-                          {{prodProv.applicationNumber}}
-                        </span>
+                        <!-- Go to Browse Application page -->
+
+                        <div *ngIf="prodProv._applicationUrl; else noAppTypeOrNumber">
+                          <a [routerLink]="['/browse-applications']" [queryParams]="{search:prodProv._applicationUrl}"
+                            target="_blank" matTooltip='Go to Application record' *ngIf="isAdmin">
+                            <span class="font14px" *ngIf="prodProv.applicationType">
+                              {{prodProv.applicationType}}
+                            </span>
+                            <span class="font14px" *ngIf="prodProv.applicationNumber">
+                              {{prodProv.applicationNumber}}
+                            </span>
+                          </a>
+                        </div>
+                        <ng-template #noAppTypeOrNumber>
+                          <span class="font14px" *ngIf="prodProv.applicationType">
+                            {{prodProv.applicationType}}
+                          </span>
+                          <span class="font14px" *ngIf="prodProv.applicationNumber">
+                            {{prodProv.applicationNumber}}
+                          </span>
+                        </ng-template>
                       </div>
                     </div>
                   </div>

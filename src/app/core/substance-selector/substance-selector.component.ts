@@ -99,12 +99,34 @@ export class SubstanceSelectorComponent implements OnInit {
   processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
-
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
+      
       if (response.content && response.content.length) {
-        this.selectedSubstance = response.content[0];
-        this.selectionUpdated.emit(this.selectedSubstance);
-        this.errorMessage = '';
+
+        let found = false;
+        // Loop through the search results and compare the search term with search result's _name field
+        for (let i = 0; i < response.content.length; i++) {
+          let substance = response.content[i];
+          if (substance._name && substance._name === searchValue) {
+
+              // set to true, since search value matches with search result's _name field
+              found = true;
+              
+              this.selectedSubstance = substance;
+              this.selectionUpdated.emit(this.selectedSubstance);
+
+              // break out of the loop when name found
+              break;
+          }
+        }
+        
+        // If Ingredient Name not found into the database, display message
+        if (found == false) {
+          this.errorMessage = 'No substances found';
+        } else {
+          this.errorMessage = '';
+        }
+
       } else {
         this.errorMessage = 'No substances found';
       }

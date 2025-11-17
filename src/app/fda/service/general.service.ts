@@ -28,6 +28,15 @@ export class GeneralService extends BaseHttpService {
     super(configService);
   }
 
+  getSubstanceByAnyIdFullView(id: string): Observable<any> {
+    const url = this.apiBaseUrl + 'substances(' + id + ')?view=full';
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
+  }
+
   getSubstanceByAnyId(id: string): Observable<any> {
     const url = this.apiBaseUrl + 'substances(' + id + ')';
     return this.http.get<any>(url).pipe(
@@ -54,7 +63,7 @@ export class GeneralService extends BaseHttpService {
       // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
 
       // Get BDNUM from codes
-      if (substance.codes.length > 0) {
+      if (substance.codes && substance.codes.length > 0) {
         substance.codes.forEach((codeObj, index) => {
           if (codeObj) {
             if ((codeObj.codeSystem) && ((codeObj.codeSystem === 'BDNUM') && (codeObj.type === 'PRIMARY'))) {

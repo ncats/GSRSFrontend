@@ -22,6 +22,7 @@ import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
   public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+  public ELUTION_TYPE_GRADIENT = 'GRADIENT';
 
   dataSource: MatTableDataSource<ImpuritiesSolutionTable>;
 
@@ -34,12 +35,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   message = '';
   subRelationship: any;
   private subscriptions: Array<Subscription> = [];
-
-
-  displayedColumns = [
-    'Number',
-    'Time (min)'
-  ]
+  displayedColumnsRow: string[][] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -102,7 +98,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
         // Get Substance Name for SubstanceUuid in ImpuritiesDetailsList
         this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
-          elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
+          elementRelSub.impuritiesTestList.forEach((elementRelTest, indexTest) => {
 
             elementRelTest.impuritiesDetailsList.forEach((elementRelImpuDet) => {
               if (elementRelImpuDet.relatedSubstanceUuid) {
@@ -125,15 +121,23 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
             // add letter in the Mobile Phase column
             if (elementRelTest.impuritiesSolutionList) {
               if (elementRelTest.impuritiesSolutionList.length > 0) {
+
+                let displayedColumns = [
+                  'Number',
+                  'Time (min)'
+                ]
+
                 elementRelTest.impuritiesSolutionList.forEach(solution => {
                   if (solution) {
+
                     if (solution.solutionLetter) {
                       let columnName = 'Solution ' + solution.solutionLetter + ' (%)';
-                      this.displayedColumns.push(columnName);
+                      displayedColumns.push(columnName);
+                     
+                      this.displayedColumnsRow[indexTest] = displayedColumns;
                     }
                   }
                 });
-
               } // impuritiesSolutionTableList length > 0
             } // impuritiesSolutionTableList exists
           }); // Loop: elementRelSub.impuritiesTestList

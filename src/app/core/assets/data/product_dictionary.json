@@ -773,7 +773,7 @@
         "type":"string",
         "cvDomain":null,
         "priority":"x",
-        "suggest":null
+        "suggest":"Product_Name"
     },
     "Product Name Language":{
         "lucenePath":"root_productProvenances_productNames_language",
