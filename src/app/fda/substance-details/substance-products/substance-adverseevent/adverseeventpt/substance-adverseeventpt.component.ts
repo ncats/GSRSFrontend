@@ -16,9 +16,10 @@ import { Subscription } from 'rxjs';
 import { adverseEventPtSearchSortValues } from '../../../../adverse-event/adverse-events-pt-browse/adverse-events-pt-search-sort-values';
 
 @Component({
-  selector: 'app-substance-adverseeventpt',
-  templateUrl: './substance-adverseeventpt.component.html',
-  styleUrls: ['./substance-adverseeventpt.component.scss']
+    selector: 'app-substance-adverseeventpt',
+    templateUrl: './substance-adverseeventpt.component.html',
+    styleUrls: ['./substance-adverseeventpt.component.scss'],
+    standalone: false
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {

@@ -12,9 +12,10 @@ import { SubstanceFormReferencesService } from './substance-form-references.serv
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-form-references-card',
-  templateUrl: './substance-form-references-card.component.html',
-  styleUrls: ['./substance-form-references-card.component.scss']
+    selector: 'app-substance-form-references-card',
+    templateUrl: './substance-form-references-card.component.html',
+    styleUrls: ['./substance-form-references-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormReferencesCardComponent extends SubstanceCardBaseFilteredList<SubstanceReference>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

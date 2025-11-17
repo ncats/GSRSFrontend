@@ -5,9 +5,10 @@ import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-property-parameter-form',
-  templateUrl: './property-parameter-form.component.html',
-  styleUrls: ['./property-parameter-form.component.scss']
+    selector: 'app-property-parameter-form',
+    templateUrl: './property-parameter-form.component.html',
+    styleUrls: ['./property-parameter-form.component.scss'],
+    standalone: false
 })
 export class PropertyParameterFormComponent implements OnInit {
   private privateParameter: SubstanceParameter;

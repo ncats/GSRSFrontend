@@ -11,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -85,6 +86,7 @@ const ssg4mRoutes: Routes = [
     MatTabsModule,
     MatDividerModule,
     MatSelectModule,
+    MatOptionModule,
     MatInputModule,
     MatChipsModule,
     MatAutocompleteModule,

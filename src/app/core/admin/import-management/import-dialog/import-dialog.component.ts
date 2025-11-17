@@ -5,9 +5,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-import-dialog',
-  templateUrl: './import-dialog.component.html',
-  styleUrls: ['./import-dialog.component.scss']
+    selector: 'app-import-dialog',
+    templateUrl: './import-dialog.component.html',
+    styleUrls: ['./import-dialog.component.scss'],
+    standalone: false
 })
 export class ImportDialogComponent implements OnInit {
   settingsActive: any;

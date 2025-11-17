@@ -5,9 +5,10 @@ import { take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-unauthorized',
-  templateUrl: './unauthorized.component.html',
-  styleUrls: ['./unauthorized.component.scss']
+    selector: 'app-unauthorized',
+    templateUrl: './unauthorized.component.html',
+    styleUrls: ['./unauthorized.component.scss'],
+    standalone: false
 })
 export class UnauthorizedComponent implements OnInit {
   email?: string;

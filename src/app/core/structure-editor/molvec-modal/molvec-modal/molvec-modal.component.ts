@@ -2,9 +2,10 @@ import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-molvec-modal',
-  templateUrl: './molvec-modal.component.html',
-  styleUrls: ['./molvec-modal.component.scss']
+    selector: 'app-molvec-modal',
+    templateUrl: './molvec-modal.component.html',
+    styleUrls: ['./molvec-modal.component.scss'],
+    standalone: false
 })
 export class MolvecModalComponent implements OnInit {
 

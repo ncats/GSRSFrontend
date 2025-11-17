@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { SubstanceFormModule } from '../../substance-form/substance-form.module';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 import { Ssg4mCriticalParameterFormComponent } from '../ssg4m-critical-parameter/ssg4m-critical-parameter-form.component';
@@ -22,6 +23,7 @@ import { Ssg4mCriticalParameterFormComponent } from '../ssg4m-critical-parameter
     MatTooltipModule,
     SubstanceFormModule,
     MatSelectModule,
+    MatOptionModule,
     SubstanceSelectorModule,
     CommonModule
   ],

@@ -1,28 +1,30 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
-    <mat-form-field style = "margin-left: 30px;" *ngIf="isAdmin" id = "facetView" class = "facetView">
-      <mat-label>Facet View:</mat-label>
-      <mat-select [formControl]="facetViewControl" (openedChange)="openedFacetViewChange($event)" (selectionChange)="facetViewChange($event)">
-        <mat-option *ngFor="let option of facetViewCategory" [value]="option">
-          {{option}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="sidenav-header-container">
+      <mat-form-field style = "margin-left: 30px;" *ngIf="isAdmin" id="facetView" class="facetView">
+        <mat-label>Facet View:</mat-label>
+        <mat-select [formControl]="facetViewControl" (openedChange)="openedFacetViewChange($event)" (selectionChange)="facetViewChange($event)">
+          <mat-option *ngFor="let option of facetViewCategory" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
-    <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && isAdmin)">
-      <span *ngIf="showCrossEntitySearch == true">
-        <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm"
-          [entitySmiles]="smiles" [entityType]="privateSearchType"
-          [entityCutoff]="privateSearchCutoff"
-          [entityStructureSearchTerm]="privateStructureSearchTerm"
-          [entitySequenceSearchTerm]="privateSequenceSearchTerm"
-          [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
-          [entityTotalRecords]="totalSubstances" [editSubEntitySearchHash]="editSubEntitySearchHash"
-          (getSearchIdsOnly)="getSearchIdsOnly($event)">
-        </app-cross-entity-search>
-      </span>
-    </span>
+      <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
+      <div *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && isAdmin)">
+        <div *ngIf="showCrossEntitySearch == true">
+          <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm"
+            [entitySmiles]="smiles" [entityType]="privateSearchType"
+            [entityCutoff]="privateSearchCutoff"
+            [entityStructureSearchTerm]="privateStructureSearchTerm"
+            [entitySequenceSearchTerm]="privateSequenceSearchTerm"
+            [entityFacetParams]="privateFacetParams" [entityDisplayFacets]="displayFacets"
+            [entityTotalRecords]="totalSubstances" [editSubEntitySearchHash]="editSubEntitySearchHash"
+            (getSearchIdsOnly)="getSearchIdsOnly($event)">
+          </app-cross-entity-search>
+        </div>
+      </div>
+    </div>
 
     <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
       [rawFacets]="rawFacets" [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"

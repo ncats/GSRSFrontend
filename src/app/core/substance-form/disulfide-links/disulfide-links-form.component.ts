@@ -11,9 +11,10 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 
 @Component({
-  selector: 'app-disulfide-links-form',
-  templateUrl: './disulfide-links-form.component.html',
-  styleUrls: ['./disulfide-links-form.component.scss']
+    selector: 'app-disulfide-links-form',
+    templateUrl: './disulfide-links-form.component.html',
+    styleUrls: ['./disulfide-links-form.component.scss'],
+    standalone: false
 })
 export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDestroy {
 

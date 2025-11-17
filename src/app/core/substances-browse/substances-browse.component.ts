@@ -55,9 +55,10 @@ import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.se
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
-  selector: 'app-substances-browse',
-  templateUrl: './substances-browse.component.html',
-  styleUrls: ['./substances-browse.component.scss']
+    selector: 'app-substances-browse',
+    templateUrl: './substances-browse.component.html',
+    styleUrls: ['./substances-browse.component.scss'],
+    standalone: false
 })
 export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;

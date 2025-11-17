@@ -9,9 +9,10 @@ import { ApplicationService } from '../../application/service/application.servic
 import { LoadedComponents } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-counts',
-  templateUrl: './substance-counts.component.html',
-  styleUrls: ['./substance-counts.component.scss']
+    selector: 'app-substance-counts',
+    templateUrl: './substance-counts.component.html',
+    styleUrls: ['./substance-counts.component.scss'],
+    standalone: false
 })
 export class SubstanceCountsComponent implements OnInit, SubstanceSummaryDynamicContent {
   substanceNames: any;

@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 
 @Component({
-  selector: 'app-name-resolver-dialog',
-  templateUrl: './name-resolver-dialog.component.html',
-  styleUrls: ['./name-resolver-dialog.component.scss']
+    selector: 'app-name-resolver-dialog',
+    templateUrl: './name-resolver-dialog.component.html',
+    styleUrls: ['./name-resolver-dialog.component.scss'],
+    standalone: false
 })
 export class NameResolverDialogComponent implements OnInit {
   name: string;

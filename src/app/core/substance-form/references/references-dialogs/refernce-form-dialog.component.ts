@@ -5,9 +5,10 @@ import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { AuthService } from '@gsrs-core/auth';
 
 @Component({
-  selector: 'app-refernce-form-dialog',
-  templateUrl: './refernce-form-dialog.component.html',
-  styleUrls: ['./refernce-form-dialog.component.scss']
+    selector: 'app-refernce-form-dialog',
+    templateUrl: './refernce-form-dialog.component.html',
+    styleUrls: ['./refernce-form-dialog.component.scss'],
+    standalone: false
 })
 export class RefernceFormDialogComponent implements OnInit {
 user: string;

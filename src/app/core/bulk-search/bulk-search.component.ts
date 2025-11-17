@@ -20,8 +20,9 @@ import { BulkSearch } from './bulk-search.model';
   @Component({
     selector: 'app-bulk-search',
     templateUrl: './bulk-search.component.html',
-    styleUrls: ['./bulk-search.component.scss']
-  })
+    styleUrls: ['./bulk-search.component.scss'],
+    standalone: false
+})
   export class BulkSearchComponent implements OnInit, OnDestroy {
     loadedComponents: LoadedComponents;
     showAudit: boolean;

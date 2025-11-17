@@ -19,6 +19,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
@@ -54,6 +55,7 @@ import { CrossEntitySearchService } from './cross-entity-search.service';
     MatSortModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatOptionModule,
     MatSliderModule,
     MatDialogModule,
     MatListModule,

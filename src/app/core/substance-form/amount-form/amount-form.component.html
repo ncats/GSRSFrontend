@@ -20,7 +20,9 @@
     </mat-form-field>
   </div>
   <div *ngIf = "privateSubstanceAmount.type === 'other'" class = "custom">
-    <input matInput placeholder="Custom value" (focusout) = "updateType($event.target)" name="custom" />
+    <mat-form-field>
+      <input matInput placeholder="Custom value" (focusout) = "updateType($event.target)" name="custom" />
+    </mat-form-field>
   </div>
     </div>
     <mat-form-field class="amount-average">
@@ -57,7 +59,9 @@
       </mat-form-field>
     </div>
     <div *ngIf = "privateSubstanceAmount.units === 'other'" class = "custom">
-      <input matInput placeholder="Custom value" (focusout) = "updateUnits($event.target)" name="custom" />
+      <mat-form-field>
+        <input matInput placeholder="Custom value" (focusout) = "updateUnits($event.target)" name="custom" />
+      </mat-form-field>
     </div>
     </div>
     <mat-form-field class="non-numeric-value">

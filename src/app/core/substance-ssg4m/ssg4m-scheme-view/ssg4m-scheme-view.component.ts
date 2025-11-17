@@ -11,9 +11,10 @@ import { SubstanceDetail, SpecifiedSubstanceG4mProcess, SubstanceAmount } from '
 import { SubstanceSsg4mService } from '../substance-ssg4m-form.service';
 
 @Component({
-  selector: 'app-ssg4m-scheme-view',
-  templateUrl: './ssg4m-scheme-view.component.html',
-  styleUrls: ['./ssg4m-scheme-view.component.scss']
+    selector: 'app-ssg4m-scheme-view',
+    templateUrl: './ssg4m-scheme-view.component.html',
+    styleUrls: ['./ssg4m-scheme-view.component.scss'],
+    standalone: false
 })
 export class Ssg4mSchemeViewComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();

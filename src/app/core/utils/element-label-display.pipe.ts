@@ -2,7 +2,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 import { ConfigService } from '@gsrs-core/config';
 
 @Pipe({
-  name: 'elementLabel'
+    name: 'elementLabel',
+    standalone: false
 })
 export class ElementLabelDisplayPipe implements PipeTransform {
 

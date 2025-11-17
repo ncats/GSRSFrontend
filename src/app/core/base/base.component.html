@@ -22,25 +22,27 @@
      <span style = "font-size:16px;">Menu &nbsp;</span><mat-icon svgIcon="menu"></mat-icon>
     </button>
     <mat-menu #nav="matMenu" (closed)="removeZindex()" class = "reg-a">
-      <div *ngFor="let navItem of navItems">
-        <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
+      <ng-container *ngFor="let navItem of navItems">
+        <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path && !navItem.children">
           {{navItem.display}}
         </a>
-        <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
+        <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath && !navItem.children">
           {{navItem.display}}
         </a>
         <a mat-menu-item [href]="transformMailToPath(navItem)"
-          *ngIf="navItem.mailToPath">
+          *ngIf="navItem.mailToPath && !navItem.children">
           {{navItem.display}}
         </a>
-
 
         <ng-container *ngIf="navItem.children">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
             {{navItem.display}}
           </a>
-          <mat-menu #childrenMenu="matMenu">
-            <div *ngFor="let childNavItem of navItem.children">
+          <mat-menu
+                #childrenMenu="matMenu"
+                [overlapTrigger]="false"
+                xPosition="after">
+            <ng-container *ngFor="let childNavItem of navItem.children">
               <a mat-menu-item [routerLink]="['/' + childNavItem.path]" [queryParams]="childNavItem.params||{}"
                 *ngIf="childNavItem.path">
                 {{childNavItem.display}}
@@ -53,13 +55,13 @@
                 *ngIf="childNavItem.mailToPath">
                 {{childNavItem.display}}
               </a>
-            </div>
+            </ng-container>
             <a mat-menu-item *ngIf="navItem.display === 'Register'" (click)="importDialog()">
               Import Substance
             </a>
           </mat-menu>
         </ng-container>
-      </div>
+      </ng-container>
       <a mat-menu-item *ngIf="isAdmin" routerLink="/admin">
         Admin Panel
       </a>

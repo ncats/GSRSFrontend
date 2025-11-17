@@ -4,9 +4,10 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-json-dialog',
-  templateUrl: './json-dialog.component.html',
-  styleUrls: ['./json-dialog.component.scss']
+    selector: 'app-json-dialog',
+    templateUrl: './json-dialog.component.html',
+    styleUrls: ['./json-dialog.component.scss'],
+    standalone: false
 })
 export class JsonDialogComponent implements OnInit {
   public dialogRef: MatDialogRef<JsonDialogComponent>;

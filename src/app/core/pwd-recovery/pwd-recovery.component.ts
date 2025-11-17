@@ -3,9 +3,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-pwd-recovery',
-  templateUrl: './pwd-recovery.component.html',
-  styleUrls: ['./pwd-recovery.component.scss']
+    selector: 'app-pwd-recovery',
+    templateUrl: './pwd-recovery.component.html',
+    styleUrls: ['./pwd-recovery.component.scss'],
+    standalone: false
 })
 export class PwdRecoveryComponent implements OnInit {
 

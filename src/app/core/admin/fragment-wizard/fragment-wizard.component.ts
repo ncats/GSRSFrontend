@@ -11,9 +11,10 @@ import { take } from 'rxjs';
 
 
 @Component({
-  selector: 'app-fragment-wizard',
-  templateUrl: './fragment-wizard.component.html',
-  styleUrls: ['./fragment-wizard.component.scss']
+    selector: 'app-fragment-wizard',
+    templateUrl: './fragment-wizard.component.html',
+    styleUrls: ['./fragment-wizard.component.scss'],
+    standalone: false
 })
 export class FragmentWizardComponent implements OnInit {
   @Output() termUpdated = new EventEmitter();

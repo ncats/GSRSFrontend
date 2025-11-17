@@ -31,9 +31,10 @@ import { InvitroPharmacologyService } from '../service/invitro-pharmacology.serv
 import { InvitroAssayInformation, InvitroAssaySet, InvitroAssayAnalyte, ValidationMessage } from '../model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-invitro-pharmacology-assay-data-import',
-  templateUrl: './invitro-pharmacology-assay-data-import.component.html',
-  styleUrls: ['./invitro-pharmacology-assay-data-import.component.scss']
+    selector: 'app-invitro-pharmacology-assay-data-import',
+    templateUrl: './invitro-pharmacology-assay-data-import.component.html',
+    styleUrls: ['./invitro-pharmacology-assay-data-import.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 

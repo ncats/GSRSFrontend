@@ -7,9 +7,44 @@ form {
 }
 
 .search-form-field {
+  margin: 1.25em;
 
   .mat-input-element {
     font-size: 16px;
+    color: white;
+  }
+
+  // Placeholder color
+  ::ng-deep .mat-mdc-input-element::placeholder {
+    color: white !important;
+    opacity: 1;
+    font: 500 20px / 32px Roboto, Helvetica Neue, sans-serif;
+    letter-spacing: normal;
+    padding: 0;
+  }
+
+  // Label color
+  ::ng-deep .mat-mdc-floating-label {
+    color: white !important;
+  }
+
+  // Form field infix padding
+  ::ng-deep .mat-mdc-form-field-infix {
+    padding: .4375em 0;
+  }
+
+  // Text field wrapper padding
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    padding-left: 0;
+  }
+
+  // Bottom border color
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
+    border-bottom-color: white;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
+    border-bottom-color: white;
   }
 
 }
@@ -52,7 +87,7 @@ form {
 }
 
 .close-button {
-  display: none;
+  display: none !important;
   width: 0;
   transition: all 250ms linear;
 }
@@ -60,7 +95,7 @@ form {
 @media(min-width: $nav-breaking-point) {
 
   .activate-search-button {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -73,7 +108,7 @@ form {
   }
 
   .search-button {
-    display: none;
+    display: none !important;
   }
 
   .active-search {
@@ -102,11 +137,11 @@ form {
       }
 
       .search-button {
-        display: inline-block;
+        display: inline-block !important;
       }
 
       .activate-search-button {
-        display: none;
+        display: none !important;
       }
 
       // ::ng-deep .mat-form-field-infix {
@@ -114,7 +149,7 @@ form {
       // }
 
       .close-button {
-        display: inline-block;
+        display: inline-block !important;
         width: auto;
       }
     }
@@ -152,11 +187,11 @@ form {
       }
 
       .search-button {
-        display: inline-block;
+        display: inline-block !important;
       }
 
       .activate-search-button {
-        display: inline-block;
+        display: inline-block !important;
       }
 
       // ::ng-deep .mat-form-field-infix {
@@ -164,7 +199,7 @@ form {
       // }
 
       .close-button {
-        display: inline-block;
+        display: inline-block !important;
         width: auto;
       }
     }

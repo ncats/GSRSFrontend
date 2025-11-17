@@ -8,21 +8,22 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { SubstanceFormLinksService } from '../links/substance-form-links.service';
 
 @Component({
-  selector: 'app-subunit-selector',
-  templateUrl: './subunit-selector.component.html',
-  styleUrls: ['./subunit-selector.component.scss'],
-  animations: [
-    trigger('errorFlash', [
-      state('initial', style({
-        backgroundColor: 'white'
-      })),
-      state('final', style({
-        backgroundColor: 'pink'
-      })),
-      transition('initial=>final', animate('1000ms')),
-      transition('final=>initial', animate('500ms'))
-    ]),
-  ]
+    selector: 'app-subunit-selector',
+    templateUrl: './subunit-selector.component.html',
+    styleUrls: ['./subunit-selector.component.scss'],
+    animations: [
+        trigger('errorFlash', [
+            state('initial', style({
+                backgroundColor: 'white'
+            })),
+            state('final', style({
+                backgroundColor: 'pink'
+            })),
+            transition('initial=>final', animate('1000ms')),
+            transition('final=>initial', animate('500ms'))
+        ]),
+    ],
+    standalone: false
 })
 export class SubunitSelectorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() card: any;

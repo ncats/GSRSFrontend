@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
-  name: 'facetFilter'
+    name: 'facetFilter',
+    standalone: false
 })
 export class FacetFilterPipe implements PipeTransform {
   transform(items: any[], searchText: string): any[] {

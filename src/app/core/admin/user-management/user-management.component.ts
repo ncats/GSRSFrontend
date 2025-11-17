@@ -14,9 +14,10 @@ import {MatPaginator} from '@angular/material/paginator';
 import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
-  selector: 'app-user-management',
-  templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.scss']
+    selector: 'app-user-management',
+    templateUrl: './user-management.component.html',
+    styleUrls: ['./user-management.component.scss'],
+    standalone: false
 })
 export class UserManagementComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;

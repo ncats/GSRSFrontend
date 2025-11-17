@@ -33,9 +33,10 @@ import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-s
 import { Application } from '../model/application.model';
 
 @Component({
-  selector: 'app-applications-browse',
-  templateUrl: './applications-browse.component.html',
-  styleUrls: ['./applications-browse.component.scss']
+    selector: 'app-applications-browse',
+    templateUrl: './applications-browse.component.html',
+    styleUrls: ['./applications-browse.component.scss'],
+    standalone: false
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;

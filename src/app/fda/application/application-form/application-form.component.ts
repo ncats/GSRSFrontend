@@ -31,9 +31,10 @@ import { Application, ValidationMessage } from '../model/application.model';
 import { forEach } from 'lodash';
 
 @Component({
-  selector: 'app-application-form',
-  templateUrl: './application-form.component.html',
-  styleUrls: ['./application-form.component.scss'],
+    selector: 'app-application-form',
+    templateUrl: './application-form.component.html',
+    styleUrls: ['./application-form.component.scss'],
+    standalone: false
 })
 
 export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestroy {

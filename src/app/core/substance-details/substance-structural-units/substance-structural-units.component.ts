@@ -7,9 +7,10 @@ import {Subject} from 'rxjs';
 import {StructuralUnit} from '@gsrs-core/substance';
 
 @Component({
-  selector: 'app-substance-structural-units',
-  templateUrl: './substance-structural-units.component.html',
-  styleUrls: ['./substance-structural-units.component.scss']
+    selector: 'app-substance-structural-units',
+    templateUrl: './substance-structural-units.component.html',
+    styleUrls: ['./substance-structural-units.component.scss'],
+    standalone: false
 })
 export class SubstanceStructuralUnitsComponent extends SubstanceCardBaseFilteredList<StructuralUnit> implements OnInit {
   structuralUnits: Array<StructuralUnit>;

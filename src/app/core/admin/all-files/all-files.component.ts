@@ -10,9 +10,10 @@ import { DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
 import { LoadingService } from '@gsrs-core/loading';
 
 @Component({
-  selector: 'app-all-files',
-  templateUrl: './all-files.component.html',
-  styleUrls: ['./all-files.component.scss']
+    selector: 'app-all-files',
+    templateUrl: './all-files.component.html',
+    styleUrls: ['./all-files.component.scss'],
+    standalone: false
 })
 export class AllFilesComponent implements OnInit {
 

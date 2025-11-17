@@ -11,9 +11,10 @@ import { Router } from '@angular/router';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 
 @Component({
-  selector: 'app-substance-selector',
-  templateUrl: './substance-selector.component.html',
-  styleUrls: ['./substance-selector.component.scss']
+    selector: 'app-substance-selector',
+    templateUrl: './substance-selector.component.html',
+    styleUrls: ['./substance-selector.component.scss'],
+    standalone: false
 })
 export class SubstanceSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;

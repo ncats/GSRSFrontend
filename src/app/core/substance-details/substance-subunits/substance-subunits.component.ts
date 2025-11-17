@@ -7,9 +7,10 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-subunits',
-  templateUrl: './substance-subunits.component.html',
-  styleUrls: ['./substance-subunits.component.scss']
+    selector: 'app-substance-subunits',
+    templateUrl: './substance-subunits.component.html',
+    styleUrls: ['./substance-subunits.component.scss'],
+    standalone: false
 })
 export class SubstanceSubunitsComponent extends SubstanceCardBase implements OnInit, AfterViewInit {
   subunits: Array<Subunit> = [];

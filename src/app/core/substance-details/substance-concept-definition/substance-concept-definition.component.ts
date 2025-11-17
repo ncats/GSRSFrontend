@@ -4,9 +4,10 @@ import {SubstanceDetail, SubstanceRelated, SubstanceRelationship} from '../../su
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-concept-definition',
-  templateUrl: './substance-concept-definition.component.html',
-  styleUrls: ['./substance-concept-definition.component.scss']
+    selector: 'app-substance-concept-definition',
+    templateUrl: './substance-concept-definition.component.html',
+    styleUrls: ['./substance-concept-definition.component.scss'],
+    standalone: false
 })
 export class SubstanceConceptDefinitionComponent extends SubstanceCardBase implements OnInit {
   relationships: Array<SubstanceRelationship> = [];

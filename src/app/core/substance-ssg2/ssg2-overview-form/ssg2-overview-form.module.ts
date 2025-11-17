@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
@@ -65,6 +66,7 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     MatTabsModule,
     MatDividerModule,
     MatSelectModule,
+    MatOptionModule,
     MatInputModule,
     MatChipsModule,
     MatAutocompleteModule,

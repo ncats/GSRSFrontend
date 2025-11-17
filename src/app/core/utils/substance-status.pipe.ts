@@ -2,7 +2,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 import { ConfigService } from '@gsrs-core/config';
 
 @Pipe({
-  name: 'statusDisplay'
+    name: 'statusDisplay',
+    standalone: false
 })
 export class SubstanceStatusPipe implements PipeTransform {
     constructor(public configService: ConfigService) {

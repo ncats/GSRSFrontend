@@ -10,9 +10,10 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.scss']
+    selector: 'app-user-profile',
+    templateUrl: './user-profile.component.html',
+    styleUrls: ['./user-profile.component.scss'],
+    standalone: false
 })
 export class UserProfileComponent implements OnInit {
 

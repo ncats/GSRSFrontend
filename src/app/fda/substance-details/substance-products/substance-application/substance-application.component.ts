@@ -17,9 +17,10 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { applicationSearchSortValues } from '../../../application/applications-browse/application-search-sort-values';
 
 @Component({
-  selector: 'app-substance-application',
-  templateUrl: './substance-application.component.html',
-  styleUrls: ['./substance-application.component.scss']
+    selector: 'app-substance-application',
+    templateUrl: './substance-application.component.html',
+    styleUrls: ['./substance-application.component.scss'],
+    standalone: false
 })
 
 export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {

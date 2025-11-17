@@ -7,9 +7,10 @@ import { Router, NavigationExtras } from '@angular/router';
 import { SubstanceService } from '@gsrs-core/substance';
 import { take } from 'rxjs/operators';
 @Component({
-  selector: 'app-registrars',
-  templateUrl: './registrars.component.html',
-  styleUrls: ['./registrars.component.scss']
+    selector: 'app-registrars',
+    templateUrl: './registrars.component.html',
+    styleUrls: ['./registrars.component.scss'],
+    standalone: false
 })
 export class RegistrarsComponent implements OnInit {
 

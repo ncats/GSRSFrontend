@@ -11,9 +11,10 @@ import {
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-modifications',
-  templateUrl: './substance-modifications.component.html',
-  styleUrls: ['./substance-modifications.component.scss']
+    selector: 'app-substance-modifications',
+    templateUrl: './substance-modifications.component.html',
+    styleUrls: ['./substance-modifications.component.scss'],
+    standalone: false
 })
 export class SubstanceModificationsComponent extends SubstanceCardBase implements OnInit {
   structural: Array<StructuralModification>;

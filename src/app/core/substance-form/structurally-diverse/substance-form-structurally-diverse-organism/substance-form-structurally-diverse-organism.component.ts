@@ -9,9 +9,10 @@ import { SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substan
 import { SubstanceFormStructurallyDiverseService } from '../substance-form-structurally-diverse.service';
 
 @Component({
-  selector: 'app-substance-form-structurally-diverse-organism',
-  templateUrl: './substance-form-structurally-diverse-organism.component.html',
-  styleUrls: ['./substance-form-structurally-diverse-organism.component.scss']
+    selector: 'app-substance-form-structurally-diverse-organism',
+    templateUrl: './substance-form-structurally-diverse-organism.component.html',
+    styleUrls: ['./substance-form-structurally-diverse-organism.component.scss'],
+    standalone: false
 })
 export class SubstanceFormStructurallyDiverseOrganismComponent extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {

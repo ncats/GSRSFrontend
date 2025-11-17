@@ -28,9 +28,10 @@ import { AdverseEventPt } from '../model/adverse-event.model';
 import { adverseEventPtSearchSortValues } from './adverse-events-pt-search-sort-values';
 
 @Component({
-  selector: 'app-adverse-events-pt-browse',
-  templateUrl: './adverse-events-pt-browse.component.html',
-  styleUrls: ['./adverse-events-pt-browse.component.scss']
+    selector: 'app-adverse-events-pt-browse',
+    templateUrl: './adverse-events-pt-browse.component.html',
+    styleUrls: ['./adverse-events-pt-browse.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, OnDestroy {

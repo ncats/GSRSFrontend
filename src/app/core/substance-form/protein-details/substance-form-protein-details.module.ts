@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 import {SubstanceFormProteinDetailsComponent} from '@gsrs-core/substance-form/protein-details/substance-form-protein-details.component';
@@ -20,6 +21,7 @@ import {CvInputComponent} from '@gsrs-core/substance-form/cv-input/cv-input.comp
     ReactiveFormsModule,
     FormsModule,
     MatSelectModule,
+    MatOptionModule,
     SubstanceFormModule,
     NameResolverModule,
     NgMultiSelectDropDownModule

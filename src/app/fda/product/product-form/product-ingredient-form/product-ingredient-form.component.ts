@@ -22,9 +22,10 @@ import { GeneralService } from '../../../service/general.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 
 @Component({
-  selector: 'app-product-ingredient-form',
-  templateUrl: './product-ingredient-form.component.html',
-  styleUrls: ['./product-ingredient-form.component.scss']
+    selector: 'app-product-ingredient-form',
+    templateUrl: './product-ingredient-form.component.html',
+    styleUrls: ['./product-ingredient-form.component.scss'],
+    standalone: false
 })
 export class ProductIngredientFormComponent implements OnInit {
 

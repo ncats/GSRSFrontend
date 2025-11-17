@@ -13,9 +13,10 @@ import { ExternalSiteWarningDialogComponent } from './external-site-warning-dial
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-name-resolver',
-  templateUrl: './name-resolver.component.html',
-  styleUrls: ['./name-resolver.component.scss']
+    selector: 'app-name-resolver',
+    templateUrl: './name-resolver.component.html',
+    styleUrls: ['./name-resolver.component.scss'],
+    standalone: false
 })
 export class NameResolverComponent implements OnInit {
   resolverControl = new FormControl();

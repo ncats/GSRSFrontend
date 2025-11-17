@@ -61,9 +61,6 @@
   margin-top: 25px;
 }
 
-.left-search {
-}
-
 .image-row {
   justify-content: space-evenly;
     max-width: 1200px;
@@ -231,6 +228,11 @@ mat-list-item {
 
 .home-card {
   margin-bottom: 15px;
+
+  h2 {
+    padding-top: 15px;
+    margin: 0;
+  }
 }
 
 .padding {
@@ -345,7 +347,17 @@ mat-list-item {
 
 .useful-cards {
   max-width: 1240px;
-  margin:auto;
+  margin: auto;
+  width: 100%;
+  box-sizing: border-box;
+
+  mat-card,
+  .mat-card,
+  .mat-mdc-card {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px 5px;
+  }
 }
 
 

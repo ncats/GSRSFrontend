@@ -15,9 +15,10 @@ import { I } from '@angular/cdk/keycodes';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-names',
-  templateUrl: './substance-names.component.html',
-  styleUrls: ['./substance-names.component.scss']
+    selector: 'app-substance-names',
+    templateUrl: './substance-names.component.html',
+    styleUrls: ['./substance-names.component.scss'],
+    standalone: false
 })
 export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit {
   names: Array<SubstanceName>;

@@ -51,15 +51,17 @@
   </div>
   <div class="substance-form-row">
     <mat-form-field class="tag-list">
-      <mat-chip-list #tagList aria-label="Tags edit" selectable="false">
-        <mat-chip
+      <mat-chip-grid #tagList aria-label="Tags edit">
+        <mat-chip-row
           *ngFor="let tag of definition.tags"
-          removable="true"
           (removed)="removeTag(tag)">
             {{tag}}
-          <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-        </mat-chip>
+          <button matChipRemove>
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </mat-chip-row>
         <input
+          matInput
           placeholder="Substance tags"
           #tagsInput
           [formControl]="tagsCtrl"
@@ -68,7 +70,7 @@
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           (matChipInputTokenEnd)="tagAdded($event)"
           (blur)="tagsBlurred()">
-      </mat-chip-list>
+      </mat-chip-grid>
       <mat-autocomplete
         #tagsAuto="matAutocomplete"
         (opened)="increaseOverlayZindex()"
@@ -92,7 +94,7 @@
     </div>
   </div>
 
-  <div class = "substance-form-row" *ngIf="definition.substanceClass === 'concept'">
+  <div class = "substance-info-row" *ngIf="definition.substanceClass === 'concept'">
     Concepts have no defining information, but are collections of terms, codes and related information. <br/> They can be promoted to a defined substance at a later time, when appropriate.
   </div>
   <app-audit-info [source] = "definition"></app-audit-info>

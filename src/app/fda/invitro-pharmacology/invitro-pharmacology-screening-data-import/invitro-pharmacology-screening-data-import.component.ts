@@ -34,9 +34,10 @@ import {
 } from '../model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-invitro-pharmacology-screening-data-import',
-  templateUrl: './invitro-pharmacology-screening-data-import.component.html',
-  styleUrls: ['./invitro-pharmacology-screening-data-import.component.scss']
+    selector: 'app-invitro-pharmacology-screening-data-import',
+    templateUrl: './invitro-pharmacology-screening-data-import.component.html',
+    styleUrls: ['./invitro-pharmacology-screening-data-import.component.scss'],
+    standalone: false
 })
 
 export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {

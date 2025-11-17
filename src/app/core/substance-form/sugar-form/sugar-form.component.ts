@@ -10,9 +10,10 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-sugar-form',
-  templateUrl: './sugar-form.component.html',
-  styleUrls: ['./sugar-form.component.scss']
+    selector: 'app-sugar-form',
+    templateUrl: './sugar-form.component.html',
+    styleUrls: ['./sugar-form.component.scss'],
+    standalone: false
 })
 export class SugarFormComponent implements OnInit, OnDestroy, AfterViewInit {
 

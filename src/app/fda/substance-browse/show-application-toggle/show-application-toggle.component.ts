@@ -12,9 +12,10 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-show-application-toggle',
-  templateUrl: './show-application-toggle.component.html',
-  styleUrls: ['./show-application-toggle.component.scss']
+    selector: 'app-show-application-toggle',
+    templateUrl: './show-application-toggle.component.html',
+    styleUrls: ['./show-application-toggle.component.scss'],
+    standalone: false
 })
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];

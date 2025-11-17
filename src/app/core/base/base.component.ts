@@ -25,10 +25,11 @@ import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.se
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
-  selector: 'app-base',
-  templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-base',
+    templateUrl: './base.component.html',
+    styleUrls: ['./base.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = '';

@@ -7,9 +7,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-substance-properties',
-  templateUrl: './substance-properties.component.html',
-  styleUrls: ['./substance-properties.component.scss']
+    selector: 'app-substance-properties',
+    templateUrl: './substance-properties.component.html',
+    styleUrls: ['./substance-properties.component.scss'],
+    standalone: false
 })
 export class SubstancePropertiesComponent extends SubstanceCardBase implements OnInit {
   properties: Array<SubstanceProperty> = [];

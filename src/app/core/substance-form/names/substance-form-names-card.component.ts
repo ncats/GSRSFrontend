@@ -9,9 +9,10 @@ import { SubstanceFormNamesService } from './substance-form-names.service';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-form-names-card',
-  templateUrl: './substance-form-names-card.component.html',
-  styleUrls: ['./substance-form-names-card.component.scss']
+    selector: 'app-substance-form-names-card',
+    templateUrl: './substance-form-names-card.component.html',
+    styleUrls: ['./substance-form-names-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormNamesCardComponent
   extends SubstanceCardBaseFilteredList<SubstanceName>

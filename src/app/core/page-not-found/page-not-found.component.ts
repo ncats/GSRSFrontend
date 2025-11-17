@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-page-not-found',
-  template: '<div></div>',
-  styles: []
+    selector: 'app-page-not-found',
+    template: '<div></div>',
+    styles: [],
+    standalone: false
 })
 export class PageNotFoundComponent implements OnInit {
 

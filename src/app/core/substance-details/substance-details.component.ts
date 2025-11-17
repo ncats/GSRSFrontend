@@ -31,9 +31,10 @@ import { ConfigService } from '@gsrs-core/config';
 import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-substance-details',
-  templateUrl: './substance-details.component.html',
-  styleUrls: ['./substance-details.component.scss']
+    selector: 'app-substance-details',
+    templateUrl: './substance-details.component.html',
+    styleUrls: ['./substance-details.component.scss'],
+    standalone: false
 })
 export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   id: string;

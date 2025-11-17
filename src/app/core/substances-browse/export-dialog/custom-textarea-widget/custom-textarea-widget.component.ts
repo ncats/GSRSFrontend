@@ -3,9 +3,10 @@ import { ControlWidget } from 'ngx-schema-form';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-textarea-widget',
-  templateUrl: './custom-textarea-widget.component.html',
-  styleUrls: ['./custom-textarea-widget.component.scss']
+    selector: 'app-custom-textarea-widget',
+    templateUrl: './custom-textarea-widget.component.html',
+    styleUrls: ['./custom-textarea-widget.component.scss'],
+    standalone: false
 })
 export class CustomTextareaWidgetComponent extends ControlWidget {
 

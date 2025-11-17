@@ -1,7 +1,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'classDisplay'
+    name: 'classDisplay',
+    standalone: false
 })
 export class SubstanceClassPipe implements PipeTransform {
   transform(name: string, item2?: string): string {

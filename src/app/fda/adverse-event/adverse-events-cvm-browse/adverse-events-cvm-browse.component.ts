@@ -29,9 +29,10 @@ import { AdverseEventCvm } from '../model/adverse-event.model';
 import { adverseEventCvmSearchSortValues } from './adverse-events-cvm-search-sort-values';
 
 @Component({
-  selector: 'app-adverse-events-cvm-browse',
-  templateUrl: './adverse-events-cvm-browse.component.html',
-  styleUrls: ['./adverse-events-cvm-browse.component.scss']
+    selector: 'app-adverse-events-cvm-browse',
+    templateUrl: './adverse-events-cvm-browse.component.html',
+    styleUrls: ['./adverse-events-cvm-browse.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, OnDestroy {

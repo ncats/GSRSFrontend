@@ -2,10 +2,14 @@ import {
   Component,
   OnInit,
   AfterViewInit,
+  AfterViewChecked,
   ViewChildren,
   ViewContainerRef,
   QueryList,
-  OnDestroy, HostListener, Input, Output
+  OnDestroy,
+  HostListener,
+  Input,
+  Output
 } from '@angular/core';
 import {formSections} from './form-sections.constant';
 import {ActivatedRoute, Router, Event, NavigationStart, NavigationEnd} from '@angular/router';
@@ -18,7 +22,7 @@ import {GoogleAnalyticsService} from '../google-analytics/google-analytics.servi
 import {SubstanceFormSection} from './substance-form-section';
 import {SubstanceFormService} from './substance-form.service';
 import {ValidationMessage, SubstanceFormResults, SubstanceFormDefinition} from './substance-form.model';
-import {Subscription, Observable} from 'rxjs';
+import {Subscription, Observable, Subject} from 'rxjs';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
@@ -51,11 +55,12 @@ import { Location } from '@angular/common';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-form',
-  templateUrl: './substance-form.component.html',
-  styleUrls: ['./substance-form.component.scss']
+    selector: 'app-substance-form',
+    templateUrl: './substance-form.component.html',
+    styleUrls: ['./substance-form.component.scss'],
+    standalone: false
 })
-export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
   private static simplifiedSuffix = '-simplified';
 
   simplifiedForm = false
@@ -65,6 +70,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChildren('dynamicComponent', {read: ViewContainerRef}) dynamicComponents: QueryList<ViewContainerRef>;
   @ViewChildren('expansionPanel', {read: MatExpansionPanel}) matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
+  private dynamicComponentsLoaded = false;
+  private formSectionsReady$ = new Subject<void>();
+  private componentLoadingSubscription?: Subscription;
   definitionType: string;
   expandedComponents = [
     'substance-form-definition',
@@ -142,6 +150,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.substanceService.imagePopupUnit.subscribe(data => {
       this.unit = data;
     })
+  }
+
+  // Angular 19 FIX: trackBy function for *ngFor stability
+  trackBySection(index: number, section: SubstanceFormSection): string {
+    return section.dynamicComponentName;
   }
 
   showHidePopup(): void {
@@ -376,8 +389,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
                 this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
                   if(this.simplifiedForm) {
                     this.setFormSections(formSections['chemicalSimplified']);
+                    console.log("sormSection1", this.formSections)
                   } else {
                     this.setFormSections(formSections[response.substanceClass]);
+                    console.log("sormSection2", this.formSections)
                   }
                   this.isLoading = false;
                   this.loadingService.setLoading(false);
@@ -496,6 +511,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngAfterViewInit(): void {
     this.getDrafts();
+
     // set structure based on smiles or molfile
     const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
     if (structure) {
@@ -511,75 +527,114 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       let decode = decodeURI(json);
     }
 
-    const subscription = this.dynamicComponents.changes
-      .subscribe(() => {
+    // Subscribe to formSections being ready
+    this.componentLoadingSubscription = this.formSectionsReady$.subscribe(() => {
+      // Components will be loaded in ngAfterViewChecked
+      // This just marks that formSections are populated
+    });
+  }
 
-        const total = this.formSections.length;
-        let finished = 0;
-        if (!this.forceChange) {
+  /**
+   * Angular 19 FIX: Run after every change detection cycle
+   * This ensures ViewChildren QueryList is fully updated before we try to use it
+   */
+  ngAfterViewChecked(): void {
+    // Only run once when conditions are met
+    if (this.dynamicComponentsLoaded || this.forceChange) {
+      return;
+    }
+
+    // Check if both formSections and dynamicComponents are ready
+    const sectionsReady = this.formSections.length > 0;
+    const containersReady = this.dynamicComponents && this.dynamicComponents.length > 0;
+    const lengthsMatch = sectionsReady && containersReady &&
+                        (this.formSections.length === this.dynamicComponents.length);
+
+    if (lengthsMatch) {
+      // Mark as loaded IMMEDIATELY to prevent multiple calls
+      this.dynamicComponentsLoaded = true;
+
+      console.log(`[Dynamic Loader] ✓ View is stable. Loading ${this.formSections.length} components...`);
+      this.loadDynamicComponents();
+
+      setTimeout(() => {
+        this.autoSave();
+      }, 10000);
+    }
+  }
+
+  /**
+   * Load dynamic components into their ViewContainerRefs
+   */
+  private loadDynamicComponents(): void {
+    const total = this.formSections.length;
+
+    this.loadingService.setLoading(true);
+    const startTime = new Date();
+    let finished = 0;
+
+    console.log(`[Dynamic Loader] Starting to load ${total} components...`);
+
+    this.dynamicComponents.forEach((cRef, index) => {
+      this.dynamicComponentLoader
+        .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
+        .subscribe(componentFactory => {
           this.loadingService.setLoading(true);
-          const startTime = new Date();
-          this.dynamicComponents.forEach((cRef, index) => {
-            this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-              .subscribe(componentFactory => {
-                this.loadingService.setLoading(true);
-                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-                this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
-                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
-                  this.formSections[index].menuLabel = label;
-                });
-                const hiddenStateSubscription =
-                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
-                    this.formSections[index].isHidden = isHidden;
-                });
-                this.subscriptions.push(hiddenStateSubscription);
-                this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
-                  this.formSections[index].canAddItem = isList;
-                  if (isList) {
-                    const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
-                      this.formSections[index].matExpansionPanel.open();
-                      this.formSections[index].dynamicComponentRef.instance.addItem();
-                    });
-                    this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
-                      aieSubscription.unsubscribe();
-                    });
-                  }
-                });
-                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
-                finished++;
-                if (finished >= total) {
-                  this.loadingService.setLoading(false);
-                } else {
-                  const currentTime = new Date();
-                  if (currentTime.getTime() - startTime.getTime() > 12000) {
-                    if (confirm('There was a network error while fetching files, would you like to refresh?')) {
-                      window.location.reload();
-                    }
-                  }
-                }
-                  if (this.featuresOnly && this.formSections[index].dynamicComponentName !== 'substance-form-structure') {
-                this.formSections[index].isHidden = true;
-              }
-            setTimeout(() => {
-                  this.loadingService.setLoading(false);
-                  this.UNII = this.substanceFormService.getUNII();
-                }, 5);
-                if (!this.featuresOnly){
-                  this.updateHiddenFormSections();
-                }
-              });
+          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+          this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+
+          this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+            this.formSections[index].menuLabel = label;
           });
-          // this.loadingService.setLoading(false);
 
-        }
-        subscription.unsubscribe();
-        setTimeout(() => {
+          const hiddenStateSubscription =
+            this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+              this.formSections[index].isHidden = isHidden;
+            });
+          this.subscriptions.push(hiddenStateSubscription);
 
-          this.autoSave();
-        }, 10000);
+          this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+            this.formSections[index].canAddItem = isList;
+            if (isList) {
+              const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                this.formSections[index].matExpansionPanel.open();
+                this.formSections[index].dynamicComponentRef.instance.addItem();
+              });
+              this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                aieSubscription.unsubscribe();
+              });
+            }
+          });
 
-      });
+          this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+          finished++;
+
+          if (finished >= total) {
+            this.loadingService.setLoading(false);
+            console.log(`[Dynamic Loader] ✓ Successfully loaded all ${total} components`);
+          } else {
+            const currentTime = new Date();
+            if (currentTime.getTime() - startTime.getTime() > 12000) {
+              if (confirm('There was a network error while fetching files, would you like to refresh?')) {
+                window.location.reload();
+              }
+            }
+          }
+
+          if (this.featuresOnly && this.formSections[index].dynamicComponentName !== 'substance-form-structure') {
+            this.formSections[index].isHidden = true;
+          }
+
+          setTimeout(() => {
+            this.loadingService.setLoading(false);
+            this.UNII = this.substanceFormService.getUNII();
+          }, 5);
+
+          if (!this.featuresOnly) {
+            this.updateHiddenFormSections();
+          }
+        });
+    });
   }
 
   openedChange(event: any) {
@@ -699,6 +754,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+
+    if (this.componentLoadingSubscription) {
+      this.componentLoadingSubscription.unsubscribe();
+    }
+    this.formSectionsReady$.complete();
   }
 
   canBeApproved(): boolean {
@@ -941,6 +1001,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
        } */
       this.formSections.push(formSection);
     });
+
+    console.log(`[Dynamic Loader] formSections populated with ${this.formSections.length} sections`);
+
+    // Emit signal - ngAfterViewChecked will handle the rest
+    this.formSectionsReady$.next();
   }
 
   private handleSubstanceRetrivalError() {
