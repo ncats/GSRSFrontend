@@ -50,7 +50,9 @@
                   </mat-form-field>
                   </div>
                   <div *ngIf = "mod.residueModified === 'other'" class = "custom">
-                    <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+                    <mat-form-field>
+                      <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+                    </mat-form-field>
                   </div>
             </div>
               <div class="multi" *ngIf = "substanceType === 'protein'">

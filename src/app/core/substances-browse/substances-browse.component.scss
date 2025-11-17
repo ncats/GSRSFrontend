@@ -11,6 +11,20 @@
     z-index: 1002 !important;
 }
 
+.sidenav-header-container {
+    display: flex;
+    flex-direction: column;
+    // padding: 10px 20px;
+    // gap: 10px;
+
+    .facetView,
+    app-cross-entity-search {
+        width: 180px;
+        margin: 0;
+        display: block;
+    }
+}
+
 .smiles-input {
     max-width:350px;
 }
@@ -378,7 +392,10 @@ display: flex;
 
 .export-button {
     color: var(--regular-black-color);
+    background-color: white;
     border-radius: 4px;
+    box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
+    padding: 16px 16px;
 }
 
 .similarity {
@@ -707,6 +724,7 @@ margin-left: 20px;
 
 .full-paginator {
     display: flex;
+    align-items: center;
     min-width: 660px;
 }
 

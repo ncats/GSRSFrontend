@@ -13,6 +13,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSelectModule} from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import {SubstanceFormSugarsComponent} from '@gsrs-core/substance-form/substance-form-sugars/substance-form-sugars.component';
 
 @NgModule({
@@ -31,7 +32,8 @@ import {SubstanceFormSugarsComponent} from '@gsrs-core/substance-form/substance-
     MatTooltipModule,
     MatButtonToggleModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatOptionModule
   ],
   exports: [
   ],

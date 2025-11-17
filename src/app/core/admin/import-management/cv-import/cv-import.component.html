@@ -18,5 +18,7 @@
   </a>-->
 </div>
 <div *ngIf = "privateMod === 'other'" class = "custom">
-  <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+  <mat-form-field>
+    <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+  </mat-form-field>
 </div>

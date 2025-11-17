@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 import {SubstanceFormPolymerClassificationComponent} from '@gsrs-core/substance-form/polymer-classification/substance-form-polymer-classification.component';
@@ -19,6 +20,7 @@ import {SubstanceSelectorModule} from '@gsrs-core/substance-selector/substance-s
     ReactiveFormsModule,
     FormsModule,
     MatSelectModule,
+    MatOptionModule,
     SubstanceFormModule,
     NameResolverModule,
     SubstanceSelectorModule

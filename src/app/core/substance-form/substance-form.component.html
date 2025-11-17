@@ -156,7 +156,7 @@
         <mat-expansion-panel #expansionPanel
                              [class.small-mat-expansion-panel-spacing]="simplifiedForm"
                              [expanded]="expandedComponents.indexOf(section.dynamicComponentName) > -1"
-                             *ngFor="let section of formSections; index as index; last as isLast"
+                             *ngFor="let section of formSections; index as index; last as isLast; trackBy: trackBySection"
                              [id]="section.dynamicComponentName"
                              [ngClass]="{'hidden': section.isHidden}">
           <mat-expansion-panel-header>
@@ -173,7 +173,7 @@
               </div>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div #dynamicComponent></div>
+          <ng-container #dynamicComponent></ng-container>
         </mat-expansion-panel>
       </mat-accordion>
     </div>
@@ -184,7 +184,7 @@
 <ng-template #substanceSubmissionMessages>
   <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
     <div class="submission-message" *ngIf="submissionMessage">
-      {{ submissionMessage }}
+      {{ submissionMessage }} 
     </div>
     <div *ngIf="validationMessages">
       <span *ngIf=" validationMessages.length > 0">

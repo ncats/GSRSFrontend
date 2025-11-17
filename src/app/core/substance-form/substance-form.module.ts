@@ -11,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { TagSelectorComponent } from './tag-selector/tag-selector.component';
 import { MatChipsModule } from '@angular/material/chips';
@@ -101,6 +102,7 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     MatTabsModule,
     MatDividerModule,
     MatSelectModule,
+    MatOptionModule,
     MatInputModule,
     MatChipsModule,
     MatAutocompleteModule,

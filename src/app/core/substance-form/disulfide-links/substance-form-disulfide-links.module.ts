@@ -16,6 +16,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {SubstanceFormDisulfideLinksCardComponent} from '@gsrs-core/substance-form/disulfide-links/substance-form-disulfide-links-card.component';
 import { DisulfideLinksFormComponent } from './disulfide-links-form.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatTooltipModule,
     MatButtonToggleModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatOptionModule
   ],
   exports: [
     DisulfideLinksFormComponent

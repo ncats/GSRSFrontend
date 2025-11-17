@@ -150,7 +150,7 @@
         // Fix infix padding
         .mat-mdc-form-field-infix {
             padding-top: 25px;
-            padding-bottom: 8px;
+            // padding-bottom: 8px;
             min-height: auto;
         }
 
@@ -455,40 +455,100 @@ button .mat-icon,
 }
 
 .mat-mdc-menu-content {
-    padding: 8px 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+
+    // Ensure all menu items have consistent vertical rhythm
+    > * {
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    // Fix for wrapper divs (common pattern but not recommended)
+    > div {
+        display: contents !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+    }
 }
 
 // Fix menu item styling
 .mat-mdc-menu-item {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    min-height: 48px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    position: relative;
+    font-family: Roboto, "Helvetica Neue", sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    min-height: 48px !important;
+    height: 48px !important;
+    padding: 0 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
     pointer-events: auto !important;
-    cursor: pointer;
+    cursor: pointer !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    line-height: 48px !important;
 
     .mat-icon {
         margin-right: 16px;
+        line-height: normal !important;
     }
 
     .mat-mdc-menu-item-text {
         flex-grow: 1;
+        line-height: normal !important;
     }
 
     // Ensure the MDC button inside menu item is clickable
     .mat-mdc-menu-item-text,
     .mdc-list-item__primary-text {
         pointer-events: auto !important;
+        line-height: normal !important;
     }
 
     // Fix for anchor tag menu items
     &[href] {
         pointer-events: auto !important;
         cursor: pointer !important;
+    }
+
+    // Fix internal content wrapper that Angular Material adds
+    .mdc-list-item__content {
+        display: flex !important;
+        align-items: center !important;
+        height: 48px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+// Additional fixes for submenu trigger menu items (menu items with matMenuTriggerFor)
+// The base .mat-mdc-menu-item rule above handles most of it, but ensure no overrides
+.mat-mdc-menu-item.mat-mdc-menu-trigger,
+a.mat-mdc-menu-item[ng-reflect-menu],
+button.mat-mdc-menu-item[ng-reflect-menu],
+.mat-mdc-menu-item.cdk-menu-trigger {
+    // Ensure submenu triggers don't have any extra spacing
+    vertical-align: middle !important;
+
+    // Ensure the submenu indicator icon aligns properly
+    &::after {
+        line-height: normal !important;
+    }
+}
+
+// Fix for nested menu positioning in Angular Material 19 MDC
+// Ensure the CDK overlay positioning works correctly
+.cdk-overlay-connected-position-bounding-box {
+    // Don't interfere with the calculated position
+    .mat-mdc-menu-panel {
+        // Ensure nested menus align properly with their trigger
+        &.mat-mdc-menu-nested {
+            margin-top: 0 !important;
+        }
     }
 }
 
