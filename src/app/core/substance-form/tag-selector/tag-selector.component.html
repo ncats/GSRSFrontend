@@ -6,7 +6,8 @@
                 <mat-icon svgIcon="cancel"></mat-icon>
             </button>
         </mat-chip-row>
-        <input [placeholder]="placeholder"
+        <input matInput
+        [placeholder]="placeholder"
         #tagInput
         [formControl]="tagControl"
         [matAutocomplete]="tagsAuto"
