@@ -29,13 +29,9 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <div *ngIf = "_searchtype === 'substructure'">
-            <div>
-              <button mat-button mat-flat-button  (click) = "standardize('ADD_HYDROGENS')">Add Explicit Hydrogens</button>
-            </div>
-              <div>
-                  <button  mat-button mat-flat-button   (click) = "standardize('STEREO_FLATTEN')">Remove Stereochemistry Bonds</button>
-                </div>
+            <div *ngIf = "_searchtype === 'substructure'" class="substructure-actions">
+              <button mat-button color="primary" (click) = "standardize('ADD_HYDROGENS')">Add Explicit Hydrogens</button>
+              <button mat-button color="primary" (click) = "standardize('STEREO_FLATTEN')">Remove Stereochemistry Bonds</button>
             </div>
             <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
               <div>Similarity cutoff (tanimoto)</div>
