@@ -24,6 +24,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -193,6 +194,7 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
     MatTableModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatOptionModule,
     MatRadioModule,
     MatSliderModule,
     MatDialogModule,

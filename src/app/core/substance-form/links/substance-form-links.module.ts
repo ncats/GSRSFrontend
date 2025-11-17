@@ -14,6 +14,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {SubstanceFormLinksCardComponent} from '@gsrs-core/substance-form/links/substance-form-links_card.component';
 import {MatSelectModule} from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { LinkFormComponent } from './link-form.component';
 
 @NgModule({
@@ -32,7 +33,8 @@ import { LinkFormComponent } from './link-form.component';
     MatTooltipModule,
     MatButtonToggleModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatOptionModule
   ],
   exports: [
   ],

@@ -2,10 +2,12 @@
     <p>{{instruction}}</p>
     <div>
         <div>
-            <textarea matInput
-                placeholder="{{placeholder}}" 
-                [formControl]="textControl"
-            ></textarea>
+            <mat-form-field>
+                <textarea matInput
+                    placeholder="{{placeholder}}"
+                    [formControl]="textControl"
+                ></textarea>
+            </mat-form-field>
         </div>
     </div>
     <div class="file-reader" *ngIf="showLoadTextFileIntoTextarea"> 

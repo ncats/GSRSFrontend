@@ -11,6 +11,7 @@ import { StructureEditorComponent } from './structure-editor.component';
 import {DragDropPasteDirective} from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
 import { StructureModule } from '@gsrs-core/structure/structure.module';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.component';
 import { KetcherWrapperModule } from './ketcher-wrapper/ketcher-wrapper.module';
@@ -23,6 +24,7 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatOptionModule,
     MatButtonModule,
     MatIconModule,
     MatDialogModule,

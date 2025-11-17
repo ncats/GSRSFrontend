@@ -14,6 +14,7 @@ import {SubstanceFormStructuralModificationsCardComponent} from '@gsrs-core/subs
 import { StructuralModificationFormComponent } from './structural-modification-form.component';
 import { SubstanceSelectorModule } from '@gsrs-core/substance-selector/substance-selector.module';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatOptionModule,
     MatInputModule,
     SubstanceSelectorModule
   ],

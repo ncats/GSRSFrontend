@@ -15,6 +15,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { TableModule } from 'primeng/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
@@ -28,6 +29,7 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatOptionModule,
     ReactiveFormsModule,
     FormsModule,
     ReferencesManagerModule,
