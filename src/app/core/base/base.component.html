@@ -160,13 +160,14 @@
       Login
     </button>
     <div class="logged-in" *ngIf="auth">
-      <button aria-label="User Account" class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
-        <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
-      </button>
-      <button aria-label="User Account dropdown" class="user-button arrow-button test-class" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
-        <mat-icon class="user-icon icon-two" svgIcon="chevron_down"></mat-icon>
-      </button>
-      <br />
+      <div class="user-actions">
+        <button aria-label="User Account" class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
+          <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
+        </button>
+        <button aria-label="User Account dropdown" class="user-button arrow-button test-class" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
+          <mat-icon class="user-icon icon-two" svgIcon="chevron_down"></mat-icon>
+        </button>
+      </div>
       <span class="user" *ngIf="auth && auth.identifier" matTooltip="{{auth.identifier}}">{{auth.identifier}}</span>
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
