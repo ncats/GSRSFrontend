@@ -23,7 +23,8 @@
 }
 
 .user {
-  font-size:12px;
+  font-size: 12px;
+  letter-spacing: 0.4px;
 }
 .arrow-button {
   margin-left: -13px !important;
@@ -86,13 +87,15 @@
 }
 
 .logged-in {
-  margin:auto;
-  text-align:center;
-  max-width:90px;
-  overflow:hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
+  .user-actions {
+    display: flex;
+    align-items: center;
+    // gap: 6px;
+  }
 
   .mat-icon, user-icon {
     height: 30px;
@@ -255,4 +258,3 @@
       display: none !important;
     }
   }
-

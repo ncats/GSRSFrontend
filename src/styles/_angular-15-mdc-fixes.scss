@@ -12,61 +12,60 @@
 
 // Fix MDC card padding to match legacy behavior
 .mat-mdc-card {
-    // Angular 15 MDC cards have padding: 16px by default
-    // Ensure consistency with Angular 14 legacy cards
-    padding: 16px !important;
-    margin: 0 auto 20px auto;
-    max-width: 1228px;
-    width: 100%;
-    box-sizing: border-box;
+  // Angular 15 MDC cards have padding: 16px by default
+  // Ensure consistency with Angular 14 legacy cards
+  padding: 16px;
+  margin: 0 auto 20px auto;
+  max-width: 1228px;
+  width: 100%;
+  box-sizing: border-box;
 
-    &:not([class*="mat-elevation-z"]) {
-        box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-                    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-                    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-    }
+  &:not([class*="mat-elevation-z"]) {
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+      0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  }
 }
 
 // Fix MDC card header to match legacy
 .mat-mdc-card-header {
-    display: flex;
-    padding: 0;
+  display: flex;
+  padding: 0;
 }
 
 // Fix MDC card title spacing
 .mat-mdc-card-title {
-    font-size: 24px;
-    font-weight: 500;
-    margin-bottom: 0 !important;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 0 !important;
 
-    // Remove default margins that MDC adds
-    &:not(:first-child) {
-        margin-top: 0 !important;
-    }
+  // Remove default margins that MDC adds
+  &:not(:first-child) {
+    margin-top: 0 !important;
+  }
 
-    &:first-child {
-        margin-top: 0 !important;
-    }
+  &:first-child {
+    margin-top: 0 !important;
+  }
 }
 
 // Fix MDC card subtitle
 .mat-mdc-card-subtitle {
-    margin-top: 0 !important;
-    margin-bottom: 12px !important;
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
 }
 
 // Fix MDC card content spacing
 .mat-mdc-card-content {
-    display: block;
-    padding: 0 !important;
+  display: block;
+  padding: 0;
 
-    &:first-child {
-        padding-top: 0 !important;
-    }
+  &:first-child {
+    padding-top: 0;
+  }
 
-    &:last-child {
-        padding-bottom: 0 !important;
-    }
+  &:last-child {
+    padding-bottom: 0;
+  }
 }
 
 // ============================================================================
@@ -75,32 +74,32 @@
 
 // Fix chip styling for consistency with Angular 14
 .mat-mdc-chip {
-    &.mat-mdc-standard-chip {
-        min-height: 32px;
-        --mdc-chip-container-height: 32px;
-    }
+  &.mat-mdc-standard-chip {
+    min-height: 32px;
+    --mdc-chip-container-height: 32px;
+  }
 
-    .mdc-evolution-chip__action--primary {
-        padding-left: 12px;
-        padding-right: 12px;
-    }
+  .mdc-evolution-chip__action--primary {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 
-    .mdc-evolution-chip__text-label {
-        font-size: 14px;
-    }
+  .mdc-evolution-chip__text-label {
+    font-size: 14px;
+  }
 }
 
 .mat-mdc-chip-set {
-    .mat-mdc-chip {
-        margin: 4px;
-    }
+  .mat-mdc-chip {
+    margin: 4px;
+  }
 }
 
 // Support for chip list (deprecated but may still be in use)
 .mat-mdc-chip-listbox {
-    .mat-mdc-chip {
-        margin: 4px;
-    }
+  .mat-mdc-chip {
+    margin: 4px;
+  }
 }
 
 // ============================================================================
@@ -109,161 +108,160 @@
 
 // MDC form fields have different default appearance and structure
 .mat-mdc-form-field {
-    // Match Angular 14 form field appearance
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 14px;
-    line-height: 1.125;
-    
+  // Match Angular 14 form field appearance
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  line-height: 1.125;
 
-    // Fix the wrapper to not add extra spacing
+  // Fix the wrapper to not add extra spacing
+  .mat-mdc-text-field-wrapper {
+    padding-bottom: 0;
+    background-color: transparent;
+
+    .mat-mdc-form-field-flex {
+      align-items: center;
+    }
+  }
+
+  // Fix fill appearance to match legacy
+  &.mat-form-field-appearance-fill {
     .mat-mdc-text-field-wrapper {
-        padding-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .mdc-text-field {
+      background-color: transparent;
+      border-radius: 4px 4px 0 0;
+      padding: 0 12px;
+    }
+
+    .mdc-text-field--filled {
+      &:not(.mdc-text-field--disabled) {
         background-color: transparent;
+      }
 
-        .mat-mdc-form-field-flex {
-            align-items: center;
-        }
+      .mdc-line-ripple::after {
+        border-bottom-width: 2px;
+      }
     }
 
-    // Fix fill appearance to match legacy
-    &.mat-form-field-appearance-fill {
-        .mat-mdc-text-field-wrapper {
-            padding-bottom: 0;
-        }
-
-        .mdc-text-field {
-            background-color: transparent;
-            border-radius: 4px 4px 0 0;
-            padding: 0 12px;
-        }
-
-        .mdc-text-field--filled {
-            &:not(.mdc-text-field--disabled) {
-                background-color: transparent
-            }
-
-            .mdc-line-ripple::after {
-                border-bottom-width: 2px;
-            }
-        }
-
-        // Fix infix padding
-        .mat-mdc-form-field-infix {
-            padding-top: 25px;
-            // padding-bottom: 8px;
-            min-height: auto;
-        }
-
-        // Fix label positioning
-        .mat-mdc-floating-label {
-            top: 28px;
-        }
+    // Fix infix padding
+    .mat-mdc-form-field-infix {
+      padding-top: 25px;
+      // padding-bottom: 8px;
+      min-height: auto;
     }
 
-    // Fix outline appearance
-    &.mat-form-field-appearance-outline {
-        .mdc-text-field {
-            padding: 0;
-        }
-
-        .mdc-text-field--outlined {
-            .mdc-notched-outline {
-                .mdc-notched-outline__leading,
-                .mdc-notched-outline__notch,
-                .mdc-notched-outline__trailing {
-                    border-color: rgba(0, 0, 0, 0.38);
-                    border-width: 1px;
-                }
-            }
-
-            &:not(.mdc-text-field--disabled) {
-                &:hover .mdc-notched-outline {
-                    .mdc-notched-outline__leading,
-                    .mdc-notched-outline__notch,
-                    .mdc-notched-outline__trailing {
-                        border-color: rgba(0, 0, 0, 0.87);
-                    }
-                }
-            }
-        }
-
-        .mat-mdc-form-field-infix {
-            padding-top: 16px;
-            padding-bottom: 16px;
-        }
-
-        .mat-mdc-floating-label {
-            top: 28px;
-        }
-    }
-
-    // Fix input and label alignment
-    .mat-mdc-input-element {
-        font-size: inherit;
-        font-family: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-    }
-
-    // Fix label styling
+    // Fix label positioning
     .mat-mdc-floating-label {
-        font-size: 14px;
-        font-weight: 400;
+      top: 28px;
+    }
+  }
+
+  // Fix outline appearance
+  &.mat-form-field-appearance-outline {
+    .mdc-text-field {
+      padding: 0;
     }
 
-    // Fix subscript wrapper (hints and errors)
-    .mat-mdc-form-field-subscript-wrapper {
-        font-size: 12px;
-        margin-top: 0.66667em;
-        padding: 0;
-
-        .mat-mdc-form-field-hint-wrapper,
-        .mat-mdc-form-field-error-wrapper {
-            padding: 0;
+    .mdc-text-field--outlined {
+      .mdc-notched-outline {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: rgba(0, 0, 0, 0.38);
+          border-width: 1px;
         }
-    }
+      }
 
-    // Fix bottom spacing
-    .mat-mdc-form-field-bottom-align::before {
-        content: none;
-    }
-
-    // Fix icon button inside form field
-    .mat-mdc-icon-button {
-        width: 36px;
-        height: 36px;
-
-        .mat-icon {
-            font-size: 20px;
-            width: 20px;
-            height: 20px;
+      &:not(.mdc-text-field--disabled) {
+        &:hover .mdc-notched-outline {
+          .mdc-notched-outline__leading,
+          .mdc-notched-outline__notch,
+          .mdc-notched-outline__trailing {
+            border-color: rgba(0, 0, 0, 0.87);
+          }
         }
+      }
     }
 
-    // Fix prefix and suffix icon alignment
-    .mat-mdc-form-field-icon-prefix,
-    .mat-mdc-form-field-icon-suffix {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        .mat-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .mat-mdc-form-field-infix {
+      padding-top: 16px;
+      padding-bottom: 16px;
     }
+
+    .mat-mdc-floating-label {
+      top: 28px;
+    }
+  }
+
+  // Fix input and label alignment
+  .mat-mdc-input-element {
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+
+  // Fix label styling
+  .mat-mdc-floating-label {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  // Fix subscript wrapper (hints and errors)
+  .mat-mdc-form-field-subscript-wrapper {
+    font-size: 12px;
+    margin-top: 0.66667em;
+    padding: 0;
+
+    .mat-mdc-form-field-hint-wrapper,
+    .mat-mdc-form-field-error-wrapper {
+      padding: 0;
+    }
+  }
+
+  // Fix bottom spacing
+  .mat-mdc-form-field-bottom-align::before {
+    content: none;
+  }
+
+  // Fix icon button inside form field
+  .mat-mdc-icon-button {
+    width: 36px;
+    height: 36px;
+
+    .mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  // Fix prefix and suffix icon alignment
+  .mat-mdc-form-field-icon-prefix,
+  .mat-mdc-form-field-icon-suffix {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .mat-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 
 // Legacy form field icon fixes
 .mat-form-field-prefix,
 .mat-form-field-suffix {
-    .mat-icon,
-    .mat-icon-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
+  .mat-icon,
+  .mat-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 // ============================================================================
@@ -275,96 +273,94 @@
 .mat-mdc-raised-button,
 .mat-mdc-unelevated-button,
 .mat-mdc-outlined-button {
-    // Match Angular 14 button heights and appearance
-    --mdc-text-button-container-height: 36px;
-    --mdc-filled-button-container-height: 36px;
-    --mdc-outlined-button-container-height: 36px;
-    --mdc-protected-button-container-height: 36px;
+  // Match Angular 14 button heights and appearance
+  --mdc-text-button-container-height: 36px;
+  --mdc-filled-button-container-height: 36px;
+  --mdc-outlined-button-container-height: 36px;
+  --mdc-protected-button-container-height: 36px;
 
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 36px;
+  min-width: 64px;
+  padding: 0 16px;
+
+  // CRITICAL: Ensure button content respects DOM order
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+
+  .mdc-button__label {
     font-size: 14px;
     font-weight: 500;
-    line-height: 36px;
-    min-width: 64px;
-    padding: 0 16px;
-
-    // CRITICAL: Ensure button content respects DOM order
-    display: inline-flex;
+    line-height: normal;
+    display: flex;
     flex-direction: row;
     align-items: center;
+    order: 0; // Ensure label stays in natural order
+  }
 
-    .mdc-button__label {
-        font-size: 14px;
-        font-weight: 500;
-        line-height: normal;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        order: 0; // Ensure label stays in natural order
-    }
+  // Ensure mat-icons stay in their HTML order
+  .mat-icon {
+    order: 0; // Don't reorder
+  }
 
-    // Ensure mat-icons stay in their HTML order
-    .mat-icon {
-        order: 0; // Don't reorder
-    }
+  // Fix the persistent ripple that can cause visual issues
+  .mat-mdc-button-persistent-ripple {
+    border-radius: 4px;
+  }
 
-    // Fix the persistent ripple that can cause visual issues
-    .mat-mdc-button-persistent-ripple {
-        border-radius: 4px;
-    }
-
-    // Ensure touch target doesn't break layout
-    .mat-mdc-button-touch-target {
-        height: 100%;
-    }
+  // Ensure touch target doesn't break layout
+  .mat-mdc-button-touch-target {
+    height: 100%;
+  }
 }
 
 // Fix raised button elevation
 .mat-mdc-raised-button:not(:disabled) {
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-                0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 
-    &:hover {
-        box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-                    0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-                    0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-    }
+  &:hover {
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+      0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  }
 }
 
 // Fix flat button (now called unelevated in MDC)
 .mat-mdc-unelevated-button {
-    --mdc-filled-button-container-height: 36px;
+  --mdc-filled-button-container-height: 36px;
 }
 
 // Ensure icon buttons have consistent size
 .mat-mdc-icon-button {
-    --mdc-icon-button-state-layer-size: 40px;
-    width: 40px;
-    height: 40px;
-    padding: 8px;
+  --mdc-icon-button-state-layer-size: 40px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  line-height: 24px;
+
+  .mat-mdc-button-touch-target {
+    width: 48px;
+    height: 48px;
+  }
+
+  .mat-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
     line-height: 24px;
-
-    .mat-mdc-button-touch-target {
-        width: 48px;
-        height: 48px;
-    }
-
-    .mat-icon {
-        width: 24px;
-        height: 24px;
-        font-size: 24px;
-        line-height: 24px;
-    }
+  }
 }
 
 // Fix FAB button
 .mat-mdc-fab,
 .mat-mdc-mini-fab {
-    .mat-mdc-button-touch-target {
-        width: 100%;
-        height: 100%;
-    }
+  .mat-mdc-button-touch-target {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 // ============================================================================
@@ -373,24 +369,24 @@
 
 // Fix icon sizing and alignment
 .mat-icon {
-    width: 24px;
-    height: 24px;
-    font-size: 24px;
-    line-height: 24px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-    flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  line-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex-shrink: 0;
 
-    // Critical: Fix SVG positioning to center
-    svg {
-        width: 100%;
-        height: 100%;
-        fill: currentColor;
-        display: block;
-        margin: auto;
-    }
+  // Critical: Fix SVG positioning to center
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+    display: block;
+    margin: auto;
+  }
 }
 
 // Specific fix for mat-icons inside buttons
@@ -403,41 +399,41 @@ button .mat-icon,
 .mat-mdc-raised-button .mat-icon,
 .mat-mdc-unelevated-button .mat-icon,
 .mat-mdc-outlined-button .mat-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
 
 // Fix icon button sizing (already covered above but ensure consistency)
 .mat-mdc-icon-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    .mat-icon {
-        position: relative;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-    }
+  .mat-icon {
+    position: relative;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
 
-    .mat-mdc-button-touch-target {
-        position: absolute;
-    }
+  .mat-mdc-button-touch-target {
+    position: absolute;
+  }
 }
 
 .mat-icon-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    .mat-icon {
-        position: relative;
-        margin: auto;
-    }
+  .mat-icon {
+    position: relative;
+    margin: auto;
+  }
 }
 
 // ============================================================================
@@ -446,83 +442,82 @@ button .mat-icon,
 
 // Fix menu panel
 .mat-mdc-menu-panel {
-    min-width: 112px;
-    max-width: 280px;
-    border-radius: 4px;
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-                0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  min-width: 112px;
+  max-width: 280px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-mdc-menu-content {
-    padding: 0;
-    width: 100%;
-    box-sizing: border-box;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
 
-    // Ensure all menu items have consistent vertical rhythm
-    > * {
-        margin: 0 !important;
-        display: block !important;
-    }
+  // Ensure all menu items have consistent vertical rhythm
+  > * {
+    margin: 0 !important;
+    display: block !important;
+  }
 
-    // Fix for wrapper divs (common pattern but not recommended)
-    > div {
-        display: contents !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        height: auto !important;
-    }
+  // Fix for wrapper divs (common pattern but not recommended)
+  > div {
+    display: contents !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
 }
 
 // Fix menu item styling
 .mat-mdc-menu-item {
-    font-family: Roboto, "Helvetica Neue", sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 400 !important;
-    min-height: 48px !important;
-    height: 48px !important;
-    padding: 0 16px !important;
-    display: flex !important;
-    align-items: center !important;
-    position: relative !important;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 0 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  line-height: 48px !important;
+
+  .mat-icon {
+    margin-right: 16px;
+    line-height: normal !important;
+  }
+
+  .mat-mdc-menu-item-text {
+    flex-grow: 1;
+    line-height: normal !important;
+  }
+
+  // Ensure the MDC button inside menu item is clickable
+  .mat-mdc-menu-item-text,
+  .mdc-list-item__primary-text {
+    pointer-events: auto !important;
+    line-height: normal !important;
+  }
+
+  // Fix for anchor tag menu items
+  &[href] {
     pointer-events: auto !important;
     cursor: pointer !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
+  }
+
+  // Fix internal content wrapper that Angular Material adds
+  .mdc-list-item__content {
+    display: flex !important;
+    align-items: center !important;
+    height: 48px !important;
+    padding: 0 !important;
     margin: 0 !important;
-    line-height: 48px !important;
-
-    .mat-icon {
-        margin-right: 16px;
-        line-height: normal !important;
-    }
-
-    .mat-mdc-menu-item-text {
-        flex-grow: 1;
-        line-height: normal !important;
-    }
-
-    // Ensure the MDC button inside menu item is clickable
-    .mat-mdc-menu-item-text,
-    .mdc-list-item__primary-text {
-        pointer-events: auto !important;
-        line-height: normal !important;
-    }
-
-    // Fix for anchor tag menu items
-    &[href] {
-        pointer-events: auto !important;
-        cursor: pointer !important;
-    }
-
-    // Fix internal content wrapper that Angular Material adds
-    .mdc-list-item__content {
-        display: flex !important;
-        align-items: center !important;
-        height: 48px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
+  }
 }
 
 // Additional fixes for submenu trigger menu items (menu items with matMenuTriggerFor)
@@ -531,25 +526,25 @@ button .mat-icon,
 a.mat-mdc-menu-item[ng-reflect-menu],
 button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-mdc-menu-item.cdk-menu-trigger {
-    // Ensure submenu triggers don't have any extra spacing
-    vertical-align: middle !important;
+  // Ensure submenu triggers don't have any extra spacing
+  vertical-align: middle !important;
 
-    // Ensure the submenu indicator icon aligns properly
-    &::after {
-        line-height: normal !important;
-    }
+  // Ensure the submenu indicator icon aligns properly
+  &::after {
+    line-height: normal !important;
+  }
 }
 
 // Fix for nested menu positioning in Angular Material 19 MDC
 // Ensure the CDK overlay positioning works correctly
 .cdk-overlay-connected-position-bounding-box {
-    // Don't interfere with the calculated position
-    .mat-mdc-menu-panel {
-        // Ensure nested menus align properly with their trigger
-        &.mat-mdc-menu-nested {
-            margin-top: 0 !important;
-        }
+  // Don't interfere with the calculated position
+  .mat-mdc-menu-panel {
+    // Ensure nested menus align properly with their trigger
+    &.mat-mdc-menu-nested {
+      margin-top: 0 !important;
     }
+  }
 }
 
 // ============================================================================
@@ -558,54 +553,60 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-mdc-list,
 .mat-mdc-list-base {
-    padding: 8px 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 8px 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .mat-mdc-list-item {
+  font-size: 14px;
+  font-weight: 400;
+  height: 48px;
+
+  .mdc-list-item__content {
+    // display: flex;
+    // align-items: center;
+    // padding: 0 16px;
+  }
+
+  .mdc-list-item__primary-text {
     font-size: 14px;
     font-weight: 400;
-    height: 48px;
+    color: var(--link-color);
+  }
 
-    .mdc-list-item__content {
-        display: flex;
-        align-items: center;
-        padding: 0 16px;
-    }
+  .mdc-list-item__secondary-text {
+    font-size: 12px;
+    font-weight: 400;
+  }
 
-    .mdc-list-item__primary-text {
-        font-size: 14px;
-        font-weight: 400;
-    }
-
-    .mdc-list-item__secondary-text {
-        font-size: 12px;
-        font-weight: 400;
-    }
+  // Prevent mat-icons from inheriting link-color from primary text
+  .mat-icon {
+    color: var(--mat-list-color);
+  }
 }
 
 .mat-mdc-list-item-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 16px;
 }
 
 .mat-mdc-list-item-icon {
-    width: 24px;
-    height: 24px;
-    font-size: 24px;
-    margin-right: 16px;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+  margin-right: 16px;
 }
 
 // Two-line list items
 .mat-mdc-list-item.mdc-list-item--with-two-lines {
-    height: 64px;
+  height: 64px;
 }
 
 // Three-line list items
 .mat-mdc-list-item.mdc-list-item--with-three-lines {
-    height: 88px;
+  height: 88px;
 }
 
 // ============================================================================
@@ -614,27 +615,27 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 // Fix table styling for consistency with Angular 14
 .mat-mdc-table {
-    background-color: inherit;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: inherit;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .mat-mdc-header-row {
-    min-height: 56px;
+  min-height: 56px;
 }
 
 .mat-mdc-row {
-    min-height: 48px;
+  min-height: 48px;
 }
 
 .mat-mdc-header-cell {
-    font-size: 12px;
-    font-weight: 500;
-    color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.54);
 }
 
 .mat-mdc-cell {
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.87);
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 // ============================================================================
@@ -643,31 +644,31 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 // Fix paginator styling to match Angular 14
 .mat-mdc-paginator {
-    background-color: transparent;
-    display: block;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: transparent;
+  display: block;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .mat-mdc-paginator-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    min-height: 56px;
-    padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 56px;
+  padding: 0 8px;
 }
 
 .mat-mdc-paginator-page-size {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .mat-mdc-paginator-range-label {
-    margin: 0 32px 0 24px;
+  margin: 0 32px 0 24px;
 }
 
 .mat-mdc-paginator-range-actions {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 // ============================================================================
@@ -676,30 +677,30 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 // Fix select styling to match Angular 14
 .mat-mdc-select {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 14px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
 }
 
 .mat-mdc-select-value {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .mat-mdc-select-trigger {
-    height: auto;
+  height: auto;
 }
 
 .mat-mdc-select-panel {
-    max-height: 256px;
+  max-height: 256px;
 }
 
 .mat-mdc-option {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 14px;
-    min-height: 48px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  min-height: 48px;
 
-    .mdc-list-item__primary-text {
-        font-size: 14px;
-    }
+  .mdc-list-item__primary-text {
+    font-size: 14px;
+  }
 }
 
 // ============================================================================
@@ -707,22 +708,22 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-checkbox {
-    --mdc-checkbox-state-layer-size: 40px;
+  --mdc-checkbox-state-layer-size: 40px;
 
-    .mdc-checkbox {
-        padding: 11px;
-    }
+  .mdc-checkbox {
+    padding: 11px;
+  }
 
-    .mdc-checkbox__background {
-        width: 18px;
-        height: 18px;
-        top: 11px;
-        left: 11px;
-    }
+  .mdc-checkbox__background {
+    width: 18px;
+    height: 18px;
+    top: 11px;
+    left: 11px;
+  }
 
-    .mdc-form-field {
-        font-size: 14px;
-    }
+  .mdc-form-field {
+    font-size: 14px;
+  }
 }
 
 // ============================================================================
@@ -730,13 +731,13 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-radio-button {
-    .mdc-radio {
-        padding: 10px;
-    }
+  .mdc-radio {
+    padding: 10px;
+  }
 
-    .mdc-form-field {
-        font-size: 14px;
-    }
+  .mdc-form-field {
+    font-size: 14px;
+  }
 }
 
 // ============================================================================
@@ -744,19 +745,18 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-expansion-panel {
-    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-                0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-expansion-panel-header {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 14px;
-    height: 48px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  height: 48px;
 }
 
 .mat-expansion-panel-content {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 // ============================================================================
@@ -764,26 +764,26 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-dialog-container {
-    .mdc-dialog__surface {
-        border-radius: 4px;
-    }
+  .mdc-dialog__surface {
+    border-radius: 4px;
+  }
 }
 
 .mat-mdc-dialog-title {
-    font-size: 20px;
-    font-weight: 500;
-    margin: 0 0 16px;
-    padding: 24px 24px 0;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0 0 16px;
+  padding: 24px 24px 0;
 }
 
 .mat-mdc-dialog-content {
-    font-size: 14px;
-    padding: 0 24px;
+  font-size: 14px;
+  padding: 0 24px;
 }
 
 .mat-mdc-dialog-actions {
-    padding: 8px;
-    min-height: 52px;
+  padding: 0 24px 8px 24px !important;
+  min-height: 52px;
 }
 
 // ============================================================================
@@ -791,18 +791,18 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-tab-group {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .mat-mdc-tab {
-    font-size: 14px;
-    font-weight: 500;
-    min-width: 160px;
-    height: 48px;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 160px;
+  height: 48px;
 }
 
 .mat-mdc-tab-body-content {
-    padding: 16px 0;
+  padding: 16px 0;
 }
 
 // ============================================================================
@@ -810,14 +810,14 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-slider {
-    .mdc-slider__track {
-        height: 2px;
-    }
+  .mdc-slider__track {
+    height: 2px;
+  }
 
-    .mdc-slider__thumb-knob {
-        width: 12px;
-        height: 12px;
-    }
+  .mdc-slider__thumb-knob {
+    width: 12px;
+    height: 12px;
+  }
 }
 
 // ============================================================================
@@ -825,7 +825,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-progress-bar {
-    --mdc-linear-progress-track-height: 4px;
+  --mdc-linear-progress-track-height: 4px;
 }
 
 // ============================================================================
@@ -833,9 +833,9 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-progress-spinner {
-    circle {
-        stroke-width: 10%;
-    }
+  circle {
+    stroke-width: 10%;
+  }
 }
 
 // ============================================================================
@@ -843,11 +843,11 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-tooltip {
-    .mdc-tooltip__surface {
-        font-size: 10px;
-        padding: 4px 8px;
-        max-width: 200px;
-    }
+  .mdc-tooltip__surface {
+    font-size: 10px;
+    padding: 4px 8px;
+    max-width: 200px;
+  }
 }
 
 // ============================================================================
@@ -855,14 +855,14 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-snack-bar-container {
-    .mdc-snackbar__surface {
-        background-color: #323232;
-    }
+  .mdc-snackbar__surface {
+    background-color: #323232;
+  }
 
-    .mdc-snackbar__label {
-        color: white;
-        font-size: 14px;
-    }
+  .mdc-snackbar__label {
+    color: white;
+    font-size: 14px;
+  }
 }
 
 // ============================================================================
@@ -871,54 +871,54 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-toolbar,
 .mat-mdc-toolbar {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  padding: 0 16px;
+  min-height: 64px;
+
+  // Single row toolbar (default)
+  &:not(.mat-toolbar-multiple-rows) {
     flex-direction: row;
-    align-items: center;
-    white-space: nowrap;
-    padding: 0 16px;
+    height: 64px;
+  }
+
+  // Multiple rows toolbar
+  &.mat-toolbar-multiple-rows {
+    flex-direction: column;
     min-height: 64px;
-
-    // Single row toolbar (default)
-    &:not(.mat-toolbar-multiple-rows) {
-        flex-direction: row;
-        height: 64px;
-    }
-
-    // Multiple rows toolbar
-    &.mat-toolbar-multiple-rows {
-        flex-direction: column;
-        min-height: 64px;
-    }
+  }
 }
 
 // Fix toolbar row heights to match Angular 14
 .mat-toolbar-row,
 .mat-mdc-toolbar-row {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
-    height: 64px;
-    flex-direction: row;
-    align-items: center;
-    white-space: nowrap;
-    padding: 0 16px;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 64px;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  padding: 0 16px;
 }
 
 .mat-toolbar-single-row,
 .mat-mdc-toolbar-single-row {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
-    height: 64px;
-    flex-direction: row;
-    align-items: center;
-    white-space: nowrap;
-    padding: 0 16px;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 64px;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  padding: 0 16px;
 }
 
 // Fix spacer/middle-fill pattern (flex-grow to push items to sides)
@@ -928,7 +928,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-mdc-toolbar .spacer,
 .mat-toolbar .fill,
 .mat-mdc-toolbar .fill {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 // ============================================================================
@@ -937,36 +937,35 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-drawer-container,
 .mat-sidenav-container {
-    background-color: inherit;
-    color: inherit;
+  background-color: inherit;
+  color: inherit;
 }
 
 .mat-drawer,
 .mat-sidenav {
-    box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.2),
-                0px 16px 24px 2px rgba(0, 0, 0, 0.14),
-                0px 6px 30px 5px rgba(0, 0, 0, 0.12);
-    background-color: white;
+  box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.2),
+    0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+  background-color: white;
 }
 
 .mat-drawer-backdrop,
 .mat-sidenav-backdrop {
-    background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .mat-drawer-content,
 .mat-sidenav-content {
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 // Fix sidenav positioning and transitions
 .mat-drawer-side {
-    border-right: solid 1px rgba(0, 0, 0, 0.12);
+  border-right: solid 1px rgba(0, 0, 0, 0.12);
 }
 
 .mat-drawer.mat-drawer-side {
-    z-index: 2;
+  z-index: 2;
 }
 
 // ============================================================================
@@ -975,43 +974,37 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 // Fix elevation classes if needed
 .mat-elevation-z0 {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 .mat-elevation-z1 {
-    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-                0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z2 {
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-                0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z3 {
-    box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
-                0px 3px 4px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z4 {
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-                0px 4px 5px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z6 {
-    box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-                0px 6px 10px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z8 {
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 // Override MDC ripple behavior if it interferes with existing styles
@@ -1019,29 +1012,29 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-mdc-icon-button-ripple,
 .mat-ripple,
 .mat-mdc-button-persistent-ripple {
-    position: absolute;
-    pointer-events: none;
+  position: absolute;
+  pointer-events: none;
 }
 
 // Ensure proper focus indicators
 .mat-mdc-focus-indicator {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    border: 2px solid transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  border: 2px solid transparent;
 }
 
 // Fix button touch targets that can cause layout issues
 .mat-mdc-button-touch-target {
-    position: absolute;
-    top: 50%;
-    height: 48px;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  height: 48px;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
 }
 
 // ============================================================================
@@ -1056,23 +1049,23 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-flat-button,
 .mat-stroked-button,
 .mat-icon-button {
-    // Inherit all MDC button styles
-    @extend .mat-mdc-button;
+  // Inherit all MDC button styles
+  @extend .mat-mdc-button;
 }
 
 // Legacy card support is already handled in _card.scss
 
 // Legacy form field support
 .mat-form-field {
-    // Most properties inherited, but ensure consistency
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 14px;
+  // Most properties inherited, but ensure consistency
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
 }
 
 // Legacy list item support
 .mat-list-item {
-    height: 48px;
-    font-size: 14px;
+  height: 48px;
+  font-size: 14px;
 }
 
 // ============================================================================
@@ -1083,36 +1076,36 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .search-button,
 .close-button,
 .activate-search-button {
-    &[mat-icon-button] {
-        // Ensure these buttons work properly with icon centering
-        .mat-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+  &[mat-icon-button] {
+    // Ensure these buttons work properly with icon centering
+    .mat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
+  }
 }
 
 // Fix for login button
 .login-link {
-    &[mat-button] {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
+  &[mat-button] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 // Fix for user account buttons
 .user-button {
-    &[mat-icon-button] {
-        // These have custom sizing, ensure icons still center
-        .mat-icon,
-        .user-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+  &[mat-icon-button] {
+    // These have custom sizing, ensure icons still center
+    .mat-icon,
+    .user-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
+  }
 }
 
 // ============================================================================
@@ -1133,32 +1126,32 @@ a[mat-fab],
 .mat-mdc-mini-fab,
 .mat-fab,
 .mat-mdc-fab {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 
-    .mat-icon {
-        position: relative !important;
-        left: auto !important;
-        right: auto !important;
-        top: auto !important;
-        bottom: auto !important;
-        transform: none !important;
-        // Don't force margin to 0 - allow component-specific margins
-    }
+  .mat-icon {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    // Don't force margin to 0 - allow component-specific margins
+  }
 
-    // Ensure SVG icons are centered within the mat-icon
-    .mat-icon svg,
-    svg {
-        position: relative;
-        left: auto;
-        right: auto;
-        top: auto;
-        bottom: auto;
-        transform: none;
-        display: block;
-        margin: auto;
-    }
+  // Ensure SVG icons are centered within the mat-icon
+  .mat-icon svg,
+  svg {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+    display: block;
+    margin: auto;
+  }
 }
 
 // Fix for icons in regular buttons (not icon buttons)
@@ -1170,69 +1163,69 @@ a[mat-fab],
 .mat-mdc-raised-button,
 .mat-mdc-unelevated-button,
 .mat-mdc-outlined-button {
-    // Override Angular Material's DOM reordering
-    &:not([mat-icon-button]):not([mat-fab]):not([mat-mini-fab]) {
-        // CRITICAL: Angular Material wraps content in .mdc-button__label
-        // and places mat-icon OUTSIDE of it, but before it in the DOM
-        // We need to visually reorder them
+  // Override Angular Material's DOM reordering
+  &:not([mat-icon-button]):not([mat-fab]):not([mat-mini-fab]) {
+    // CRITICAL: Angular Material wraps content in .mdc-button__label
+    // and places mat-icon OUTSIDE of it, but before it in the DOM
+    // We need to visually reorder them
 
-        display: inline-flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
 
-        // The mat-icon appears FIRST in DOM (Angular moves it)
-        > .mat-icon {
-            order: 10 !important; // Force it to appear LAST visually
-            margin-left: 8px !important;
-            margin-right: 0 !important;
-            vertical-align: middle;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+    // The mat-icon appears FIRST in DOM (Angular moves it)
+    > .mat-icon {
+      order: 10 !important; // Force it to appear LAST visually
+      margin-left: 8px !important;
+      margin-right: 0 !important;
+      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
 
-            svg {
-                vertical-align: top;
-            }
-        }
-
-        // The .mdc-button__label contains the text content
-        > .mdc-button__label {
-            order: 1 !important; // Make it appear FIRST visually
-            display: inline-flex;
-            align-items: center;
-
-            // If there's a mat-icon inside the label (shouldn't happen, but just in case)
-            > .mat-icon {
-                margin-left: 8px;
-                order: inherit;
-            }
-        }
-
-        // Handle ripple and touch target (they should be positioned absolutely)
-        > .mat-mdc-button-persistent-ripple,
-        > .mat-mdc-button-ripple,
-        > .mat-mdc-button-touch-target,
-        > .mat-mdc-focus-indicator {
-            order: 0 !important;
-            position: absolute !important;
-        }
+      svg {
+        vertical-align: top;
+      }
     }
+
+    // The .mdc-button__label contains the text content
+    > .mdc-button__label {
+      order: 1 !important; // Make it appear FIRST visually
+      display: inline-flex;
+      align-items: center;
+
+      // If there's a mat-icon inside the label (shouldn't happen, but just in case)
+      > .mat-icon {
+        margin-left: 8px;
+        order: inherit;
+      }
+    }
+
+    // Handle ripple and touch target (they should be positioned absolutely)
+    > .mat-mdc-button-persistent-ripple,
+    > .mat-mdc-button-ripple,
+    > .mat-mdc-button-touch-target,
+    > .mat-mdc-focus-indicator {
+      order: 0 !important;
+      position: absolute !important;
+    }
+  }
 }
 
 // Fix for menu items with icons
 .mat-menu-item,
 .mat-mdc-menu-item {
-    .mat-icon {
-        margin-right: 16px;
-        vertical-align: middle;
-    }
+  .mat-icon {
+    margin-right: 16px;
+    vertical-align: middle;
+  }
 }
 
 // Fix for list items with icons
 .mat-list-item,
 .mat-mdc-list-item {
-    .mat-icon {
-        margin-right: 16px;
-        flex-shrink: 0;
-    }
+  .mat-icon {
+    margin-right: 16px;
+    flex-shrink: 0;
+  }
 }

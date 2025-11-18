@@ -1,47 +1,56 @@
 .user-container {
-    display: flex;
+  display: flex;
 }
 
 mat-card {
-    margin: auto;
+  margin: auto;
 }
 
 .username {
-    font-size: 20px;
-    margin: 5px;
-    font-weight: 500;
+  font-size: 20px;
+  margin: 5px;
+  font-weight: 500;
 }
 
 .left-side {
-    width:70%;
-    display: flex;
-    flex-direction: column;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
 }
 
 .label-value {
-    display: flex;
-    flex-direction: row;
-    margin: 7px;
+  display: flex;
+  flex-direction: row;
+  margin: 7px;
 
-
-    .label {
-        min-width: 100px;
-        font-weight: 500;
-    }
+  .label {
+    min-width: 100px;
+    font-weight: 500;
+  }
 }
 
 .message {
-    text-align: center;
+  text-align: center;
 }
 
-
-
 .password-column {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .spinner-container {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+}
+
+button[mat-button] {
+  color: var(--link-color);
+}
+
+.mat-mdc-dialog-actions {
+  padding: 0 24px 24px 24px;
+}
+
+.mat-mdc-dialog-title > h2 {
+  margin-top: 0 !important;
 }
