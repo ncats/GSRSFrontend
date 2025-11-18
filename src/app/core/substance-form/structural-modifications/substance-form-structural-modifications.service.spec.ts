@@ -6,7 +6,7 @@ describe('SubstanceFormStructuralModificationsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SubstanceFormStructuralModificationsService = TestBed.get(SubstanceFormStructuralModificationsService);
+    const service: SubstanceFormStructuralModificationsService = TestBed.inject(SubstanceFormStructuralModificationsService);
     expect(service).toBeTruthy();
   });
 });
