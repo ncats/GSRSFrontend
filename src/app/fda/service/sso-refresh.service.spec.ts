@@ -6,7 +6,7 @@ describe('SsoRefreshService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SsoRefreshService = TestBed.get(SsoRefreshService);
+    const service: SsoRefreshService = TestBed.inject(SsoRefreshService);
     expect(service).toBeTruthy();
   });
 });

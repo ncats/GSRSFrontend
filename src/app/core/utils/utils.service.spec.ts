@@ -19,9 +19,9 @@ describe('UtilsService', () => {
       imports: [ HttpClientTestingModule ]
     });
 
-    httpClient = TestBed.get(HttpClient);
-    httpTestingController = TestBed.get(HttpTestingController);
-    domSanitizer = TestBed.get(DomSanitizer);
+    httpClient = TestBed.inject(HttpClient);
+    httpTestingController = TestBed.inject(HttpTestingController);
+    domSanitizer = TestBed.inject(DomSanitizer);
     configService = new ConfigService(httpClient);
     configService.configData = { apiBaseUrl: '' };
     utilsService = new UtilsService(httpClient, configService, domSanitizer);

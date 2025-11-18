@@ -8,8 +8,5 @@
       "test.ts",
       "**/*.spec.ts",
       "testing/**/*"
-    ],
-    "angularCompilerOptions": {
-      "entryModule": "app/core/app.server.module#AppServerModule"
-    }
+    ]
   }

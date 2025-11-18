@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer, Title} from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { GoogleAnalyticsService } from './google-analytics/google-analytics.service';
 import {Router, NavigationStart} from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -10,7 +11,9 @@ import {Router, NavigationStart} from '@angular/router';
     styleUrls: ['./app.component.scss'],
     standalone: false
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
+
   constructor(
     iconRegistry: MatIconRegistry, sanitizer: DomSanitizer,
     private title: Title,
@@ -18,7 +21,9 @@ export class AppComponent {
     private googleAnalyticsService: GoogleAnalyticsService
   ) {
 
-    router.events.subscribe((event) => {
+    router.events.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((event) => {
       title.setTitle('GSRS');
     });
     iconRegistry.addSvgIcon(
@@ -215,6 +220,11 @@ export class AppComponent {
           iconRegistry.addSvgIcon(
             'help',
             sanitizer.bypassSecurityTrustResourceUrl('assets/icons/help-outline-24px.svg'));
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }
