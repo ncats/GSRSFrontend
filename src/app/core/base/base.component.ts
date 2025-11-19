@@ -154,6 +154,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
     this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
     this.canRegister=await this.authService.canEditData();
+    console.log(`canRegister: ${this.canRegister}; `);
     this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");
     //not sure if we need this.
     //  TODO: remove it and test that the component works.

@@ -241,7 +241,7 @@ get auth(): Auth {
 
   async hasAnyPrivilege(...privs) : Promise< boolean> {
     if( this._privileges == null || this._privileges.length === 0) {
-      const privs = await firstValueFrom(this.fetchPrivs());
+      this._privileges = await firstValueFrom(this.fetchPrivs());
     }
     return privs.some(p=>this._privileges.some(pp=>pp.privilege.toUpperCase()== p.toUpperCase()));
   }

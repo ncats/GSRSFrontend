@@ -85,6 +85,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   serverError: boolean;
   canApprove: boolean;
   userCanApprove: boolean;
+  userCanMakePublic: boolean = false;
   approving: boolean;
   definition: SubstanceFormDefinition;
   user: string;
@@ -311,9 +312,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
-    }    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
+    }  
+    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
     this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
+    this.userCanMakePublic = await this.authService.hasSpecificPrivilege('Make Records Public');
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
