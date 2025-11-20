@@ -92,6 +92,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   isAdmin: boolean;
   isUpdater: boolean;
   messageField: string;
+  isPfdaVersion: boolean = false;
   uuid: string;
   substanceClass: string;
   drafts: Array<any>;
@@ -304,6 +305,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     this.isAdmin = this.authService.hasRoles('admin');
     this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     if(this.location.path().includes('chemical-simplified')) {
