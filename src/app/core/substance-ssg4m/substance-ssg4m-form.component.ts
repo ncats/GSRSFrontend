@@ -1043,16 +1043,27 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   async exportStepView(document: Document): Promise<string> {
     const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
     const clone = elementToConvert.cloneNode(true) as HTMLElement;
+    const initialWidth = elementToConvert.offsetWidth;
+    const initialHeight = elementToConvert.offsetHeight;
 
     const container = document.createElement('div');
     container.style.position = 'absolute';
-    container.style.left = '-9999px';
+    container.style.left = '0px';
+    container.style.padding = '0';
+    container.style.margin = '0';
+    container.style.display = 'inline-block';
     const styles = this.getPageStyles();
     container.innerHTML = styles;
     container.appendChild(clone);
     document.body.appendChild(container);
+    clone.style.overflow = 'visible';
+    clone.style.maxWidth = 'none';
+    clone.style.boxSizing = 'content-box';
 
     await this.delay(2500)
+
+    const finalWidth = initialWidth;
+    const finalHeight = initialHeight;
 
     function filter (node: HTMLElement) {
       if (!node.tagName) {
@@ -1063,8 +1074,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }
     const options = {
       filter: filter,
-      width: elementToConvert.offsetWidth,
-      height: elementToConvert.offsetHeight,
+      width: finalWidth,
+      height: finalHeight,
       fetchRequestInit: {
         headers: new Headers(),
         mode: 'cors' as RequestMode,
@@ -1073,6 +1084,12 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     };
 
     const dataUrl = await toSvg(clone, options);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = dataUrl;
+    downloadLink.download = 'step_view.svg';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
     const commaIndex = dataUrl.indexOf(',');
     document.body.removeChild(container);
     return dataUrl.slice(commaIndex + 1);
