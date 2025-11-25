@@ -1048,17 +1048,23 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
 
     const container = document.createElement('div');
     container.style.position = 'absolute';
-    container.style.left = '0px';
+    container.style.left = '-9999px';
     container.style.padding = '0';
     container.style.margin = '0';
     container.style.display = 'inline-block';
+    container.style.width = `${initialWidth}px`;
+    container.style.height = `${initialHeight}px`;
     const styles = this.getPageStyles();
     container.innerHTML = styles;
     container.appendChild(clone);
     document.body.appendChild(container);
     clone.style.overflow = 'visible';
     clone.style.maxWidth = 'none';
-    clone.style.boxSizing = 'content-box';
+    clone.style.boxSizing = 'border-box';
+    clone.style.fontFamily = 'Arial, sans-serif';
+    clone.style.display = 'flex';
+    clone.style.flexDirection = 'column';
+    clone.style.alignItems = 'stretch';
 
     await this.delay(2500)
 
@@ -1086,7 +1092,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     const dataUrl = await toSvg(clone, options);
     const downloadLink = document.createElement('a');
     downloadLink.href = dataUrl;
-    downloadLink.download = 'step_view.svg';
+    downloadLink.download = `ssg4m_step_view_${Date.now().toString(36) + Math.random().toString(36).substring(2, 9)}.svg`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
