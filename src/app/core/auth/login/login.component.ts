@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, Inject, DOCUMENT } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ConfigService } from '@gsrs-core/config/config.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { AppNotification, NotificationType } from '../../main-notification/notif
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import { Subscription } from 'rxjs';
 import { RegisterComponent } from '../../register/register.component';
-import { DOCUMENT } from '@angular/common';
+
 import { LoadedComponents } from '@gsrs-core/config'
 import * as _ from 'lodash';
 import {sprintf} from "sprintf-js";
