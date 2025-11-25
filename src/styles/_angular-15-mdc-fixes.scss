@@ -147,9 +147,10 @@
 
     // Fix infix padding
     .mat-mdc-form-field-infix {
-      padding-top: 25px;
+      // padding-top: 25px;
       // padding-bottom: 8px;
       min-height: auto;
+      padding: 25px 0 0.4375em 0;
     }
 
     // Fix label positioning
@@ -292,7 +293,7 @@
   align-items: center;
 
   .mdc-button__label {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     line-height: normal;
     display: flex;
@@ -666,9 +667,79 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   margin: 0 32px 0 24px;
 }
 
-.mat-mdc-paginator-range-actions {
+// .mat-mdc-paginator-range-actions {
+//   display: flex;
+//   justify-content: flex-end !important;
+//   align-items: center;
+// }
+
+.mat-mdc-paginator-page-size .mdc-notched-outline__leading,
+.mat-mdc-paginator-page-size .mdc-notched-outline__trailing,
+.mat-mdc-paginator-page-size .mdc-notched-outline__notch {
+  border-bottom: 1px solid currentColor !important;
+  border-radius: 0 !important;
+}
+
+// /* Set the infix padding to zero */
+// // .mat-mdc-paginator-page-size .mat-mdc-select-value {
+// //   padding-left: 0 !important;
+// //   padding-right: 0 !important;
+// //   /* You may need to adjust vertical padding based on desired height */
+// //   padding-top: 0 !important;
+// //   padding-bottom: 0 !important;
+// // }
+
+/* Adjust the overall infix height if needed, as padding affects height */
+.mat-mdc-paginator-page-size .mat-mdc-form-field-infix {
+  padding: 5px 0 !important;
+  min-height: auto !important; /* Ensure min-height does not enforce extra space */
+}
+
+/* Adjust the select's value text container height/line-height for vertical alignment */
+.mat-mdc-paginator-page-size .mat-mdc-select-value-text {
+  line-height: unset !important;
   display: flex;
   align-items: center;
+}
+
+// ============================================================================
+// PAGE SELECTOR (GLOBAL)
+// ============================================================================
+
+// Page selector styles used across browse components
+.page-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.page-label {
+  color: var(--dark-label-color);
+  display: block;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  padding-right: 12px;
+}
+
+// Page selector form field adjustments
+// Increase specificity to override the general mat-form-field-appearance-fill styles above
+.page-selector > .mat-mdc-form-field.mat-form-field-appearance-fill {
+  .mat-mdc-form-field-infix {
+    min-height: auto;
+    padding: 10px 0 0 0 !important;
+  }
+
+  .mdc-text-field {
+    padding: 0;
+  }
+}
+
+// Responsive behavior - hide page selector on small screens
+@media (max-width: 730px) {
+  .page-selector {
+    display: none !important;
+  }
 }
 
 // ============================================================================
