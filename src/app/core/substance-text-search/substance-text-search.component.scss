@@ -16,7 +16,7 @@ form {
 
   // Placeholder color
   ::ng-deep .mat-mdc-input-element::placeholder {
-    color: white !important;
+    color: #0000008a !important;
     opacity: 1;
     font: 500 20px / 32px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal;
@@ -25,7 +25,7 @@ form {
 
   // Label color
   ::ng-deep .mat-mdc-floating-label {
-    color: white !important;
+    color: #0000008a !important;
   }
 
   // Form field infix padding
@@ -40,11 +40,11 @@ form {
 
   // Bottom border color
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
-    border-bottom-color: white;
+    border-bottom-color: #0000008a !important;
   }
 
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
-    border-bottom-color: white;
+    border-bottom-color: #0000008a !important;
   }
 
 }

@@ -5,11 +5,9 @@ form {
 }
 
 .search-form-field {
-
   .mat-input-element {
     font-size: 16px;
   }
-
 }
 
 .substance-suggestion-field {
@@ -39,7 +37,6 @@ form {
   padding: 0px;
 }
 
-
 .search-container {
   width: 100%;
 
@@ -55,15 +52,13 @@ form {
   transition: all 250ms linear;
 }
 
-@media(min-width: 750px) {
-
+@media (min-width: 750px) {
   .activate-search-button {
     display: none;
   }
 }
 
-@media(max-width: 1024px) {
-
+@media (max-width: 1024px) {
   .search-container {
     mat-form-field {
       width: 0;
@@ -75,7 +70,6 @@ form {
   }
 
   .active-search {
-
     &.search-container {
       position: fixed;
       top: 0;
@@ -158,7 +152,6 @@ form {
   }
 
   .deactivate-search {
-
     &.search-container {
       .mat-form-field {
         animation-name: reduceWidth;
