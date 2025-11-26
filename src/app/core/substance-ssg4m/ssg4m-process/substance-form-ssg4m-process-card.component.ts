@@ -207,28 +207,28 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
 
   onSelectedIndexChange(tabIndex: number) {
     this.tabSelectedIndex = tabIndex;
-    if (this.tabSelectedIndex === 2) {
-      document.querySelector("#scheme-viz-view").className = "";
-      //This is a hacky placeholder way to force viz
-      //TODO finish this
-      const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+    // if (this.tabSelectedIndex === 2) {
+    //   document.querySelector("#scheme-viz-view").className = "";
+    //   //This is a hacky placeholder way to force viz
+    //   //TODO finish this
+    //   const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
 
-      console.log("About to load the scheme view");
-      if (window['schemeUtil']) {
-        if (window['schemeUtil'].debug) {
-          window['schemeUtil'].executeWhenLoaded = (() => {
-            console.log("About to render the scheme view");
-            window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
-            window['schemeUtil'].executeWhenLoaded = null;
-          });
-        } else {
-          console.log("About to render the scheme view");
-          window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
-        }
-      }
-    } else {
-      document.querySelector("#scheme-viz-view").className = "hidden";
-    }
+    //   console.log("About to load the scheme view");
+    //   if (window['schemeUtil']) {
+    //     if (window['schemeUtil'].debug) {
+    //       window['schemeUtil'].executeWhenLoaded = (() => {
+    //         console.log("About to render the scheme view");
+    //         window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    //         window['schemeUtil'].executeWhenLoaded = null;
+    //       });
+    //     } else {
+    //       console.log("About to render the scheme view");
+    //       window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    //     }
+    //   }
+    // } else {
+    //   document.querySelector("#scheme-viz-view").className = "hidden";
+    // }
   }
 
   tabSelectedIndexOutChange(tabIndex: number) {

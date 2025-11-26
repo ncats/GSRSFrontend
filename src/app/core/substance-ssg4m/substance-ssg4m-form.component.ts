@@ -1005,6 +1005,17 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  generateTimestampId(): string {
+  const now = new Date();
+
+  const pad = (num: number, length: number = 2): string => String(num).padStart(length, '0');
+
+  const datePart = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+  const timePart = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  
+  return `${datePart}${timePart}`;
+}
+
   // waitForElement(selector: string, timeout = 2000): Promise<HTMLElement> {
   //   return new Promise((resolve, reject) => {
   //     const interval = setInterval(() => {
@@ -1040,7 +1051,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     }
   }
 
-  async exportStepView(document: Document): Promise<string> {
+  async exportStepView(document: Document): Promise<void> {
     const elementToConvert = document.querySelector('app-ssg4m-scheme-view') as HTMLElement;
     const clone = elementToConvert.cloneNode(true) as HTMLElement;
     const initialWidth = elementToConvert.offsetWidth;
@@ -1092,13 +1103,13 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     const dataUrl = await toSvg(clone, options);
     const downloadLink = document.createElement('a');
     downloadLink.href = dataUrl;
-    downloadLink.download = `ssg4m_step_view_${Date.now().toString(36) + Math.random().toString(36).substring(2, 9)}.svg`;
+    downloadLink.download = `ssg4m_step_view_${this.generateTimestampId()}.svg`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
-    const commaIndex = dataUrl.indexOf(',');
-    document.body.removeChild(container);
-    return dataUrl.slice(commaIndex + 1);
+    // const commaIndex = dataUrl.indexOf(',');
+    // document.body.removeChild(container);
+    // return dataUrl.slice(commaIndex + 1);
   }
 
   async submit(): Promise<void> {
@@ -1127,10 +1138,11 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
 
       // Save SVG as Clob
-      this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
+      // this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
       
-      const encodedSvg = await this.exportStepView(document)
-      this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
+      await this.exportStepView(document)
+      // const encodedSvg = await this.exportStepView(document)
+      // this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
       // After submitting Save button, the UI waits for 8 seconds to see if it gets a response.
       // after 5 seconds it displays a warning on the top of the UI form.
@@ -1208,7 +1220,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       setTimeout(tempCallback(s),3000);
     };
 
-    window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    // window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
 
   }
 
