@@ -270,15 +270,15 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     });
     */
     // Scheme View loading
-    if (!window['schemeUtil']) {
-      for (let i = 0; i < this.jsLibScriptUrls.length; i++) {
-        const node = document.createElement('script');
-        node.src = this.jsLibScriptUrls[i];
-        node.type = 'text/javascript';
-        node.async = false;
-        document.getElementsByTagName('head')[0].appendChild(node);
-      }
-    }
+    // if (!window['schemeUtil']) {
+    //   for (let i = 0; i < this.jsLibScriptUrls.length; i++) {
+    //     const node = document.createElement('script');
+    //     node.src = this.jsLibScriptUrls[i];
+    //     node.type = 'text/javascript';
+    //     node.async = false;
+    //     document.getElementsByTagName('head')[0].appendChild(node);
+    //   }
+    // }
   }
 
   ngAfterViewInit(): void {
@@ -1125,8 +1125,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     //This is a hacky placeholder way to force viz
     //TODO finish this
     const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-    window["schemeUtil"].onFinishedLayout = async (svg) => {
-      window["schemeUtil"].onFinishedLayout = (svg) => { };
+    // window["schemeUtil"].onFinishedLayout = async (svg) => {
+    //   window["schemeUtil"].onFinishedLayout = (svg) => { };
 
       // if New Record, initialize object
       if (this.ssg4mSyntheticPathway == null) {
@@ -1211,14 +1211,14 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       });
       this.subscriptions.push(this.submitSubscription);
 
-    };  //window
+    // };  //window
 
-    let tempCallback = window["schemeUtil"].onFinishedLayout;
-    window["schemeUtil"].onFinishedLayout = (s)=>{
-      window["schemeUtil"].onFinishedLayout =(ss)=>{};
+    // let tempCallback = window["schemeUtil"].onFinishedLayout;
+    // window["schemeUtil"].onFinishedLayout = (s)=>{
+    //   window["schemeUtil"].onFinishedLayout =(ss)=>{};
 
-      setTimeout(tempCallback(s),3000);
-    };
+    //   setTimeout(tempCallback(s),3000);
+    // };
 
     // window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
 
