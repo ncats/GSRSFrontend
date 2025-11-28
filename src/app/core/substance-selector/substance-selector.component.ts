@@ -100,14 +100,14 @@ export class SubstanceSelectorComponent implements OnInit {
     const q = searchValue.replace('\"', '');
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
-      
       if (response.content && response.content.length) {
-
         let found = false;
         // Loop through the search results and compare the search term with search result's _name field
         for (let i = 0; i < response.content.length; i++) {
           let substance = response.content[i];
-          if (substance._name && substance._name === searchValue) {
+
+          this.substanceService.getSubstanceNames(substance.uuid).subscribe(names => {
+            if (names && names.some(n=>n.name === searchValue)) {
 
               // set to true, since search value matches with search result's _name field
               found = true;
@@ -116,17 +116,16 @@ export class SubstanceSelectorComponent implements OnInit {
               this.selectionUpdated.emit(this.selectedSubstance);
 
               // break out of the loop when name found
-              break;
-          }
+              return;
+            }
+          }); 
         }
-        
         // If Ingredient Name not found into the database, display message
         if (found == false) {
           this.errorMessage = 'No substances found';
         } else {
           this.errorMessage = '';
         }
-
       } else {
         this.errorMessage = 'No substances found';
       }
