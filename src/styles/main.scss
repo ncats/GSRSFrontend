@@ -1,12 +1,12 @@
 @use 'material-design-theme';
-@import 'base';
-@import 'misc';
-@import 'mat-side-nav';
-@import 'table';
-@import 'card';
-@import 'expand-details';
-@import 'styles';
-@import 'angular-15-mdc-fixes';
+@use 'base';
+@use 'misc';
+@use 'mat-side-nav';
+@use 'table';
+@use 'card';
+@use 'expand-details';
+@use 'styles';
+@use 'angular-15-mdc-fixes';
 
 // .cdk-overlay-connected-position-bounding-box {
 //   transform: none !important;

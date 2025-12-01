@@ -20,7 +20,8 @@
 
 
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
-import 'classlist.js';  // Run `npm install --save classlist.js`.
+// Removed: classlist.js is no longer needed for modern browsers (Angular 20+ targets evergreen browsers)
+// import 'classlist.js';  // Run `npm install --save classlist.js`.
 
 
 /**

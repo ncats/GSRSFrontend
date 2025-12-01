@@ -1,13 +1,16 @@
-import { Component, OnInit, Input, Injectable } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
-import { FormControl } from '@angular/forms';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
+import { OnInit, Input, Directive } from "@angular/core";
+import { PageEvent } from "@angular/material/paginator";
+import { GoogleAnalyticsService } from "@gsrs-core/google-analytics";
+import { SubstanceCardBaseFilteredList } from "@gsrs-core/substance-details";
 
-@Injectable()
-export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredList<any> implements OnInit {
-
-  totalRecords: 0;
+// Directive decorator required for Angular features (@Input)
+// Base class - extended by components, not used directly
+@Directive()
+export class SubstanceDetailsBaseTableDisplay
+  extends SubstanceCardBaseFilteredList<any>
+  implements OnInit
+{
+  totalRecords: number = 0;
   public results: Array<any> = [];
   isAdmin = false;
   exportUrl: string;
@@ -16,14 +19,13 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
 
   constructor(
     public gaService: GoogleAnalyticsService,
-    private service
+    private service: any // Base class accepts any service type - child classes pass specific services
   ) {
-      super(gaService);
-     // this.service = service;
-    }
-
-  ngOnInit(): void {
+    super(gaService);
+    // this.service = service;
   }
+
+  ngOnInit(): void {}
 
   setPageEvent(pageEvent?: PageEvent): void {
     if (pageEvent != null) {
@@ -41,7 +43,6 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
 
   pageChangeFda(pageEvent?: PageEvent, analyticsEventCategory?: string): void {
     if (pageEvent != null) {
-
       /*
       let eventAction;
       let eventValue;
@@ -56,22 +57,20 @@ export class SubstanceDetailsBaseTableDisplay extends SubstanceCardBaseFilteredL
 
       this.gaService.sendEvent(analyticsEventCategory, eventAction, 'pager', eventValue);
       */
-
-     // this.page = pageEvent.pageIndex;
-     // this.pageSize = pageEvent.pageSize;
+      // this.page = pageEvent.pageIndex;
+      // this.pageSize = pageEvent.pageSize;
     }
 
     this.paged = [];
 
     if (this.filtered) {
-     for (let i = 0; i < this.filtered.length; i++) {
-       if (this.filtered[i] != null) {
+      for (let i = 0; i < this.filtered.length; i++) {
+        if (this.filtered[i] != null) {
           this.paged.push(this.filtered[i]);
-       } else {
+        } else {
           break;
-       }
-     }
+        }
+      }
     }
   }
-
 }

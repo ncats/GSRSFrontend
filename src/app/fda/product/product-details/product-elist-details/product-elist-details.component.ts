@@ -27,7 +27,7 @@ import { ProductElist } from '../../model/productelist/productelist.model';
 export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dailyMedUrl = '';
-  product: ProductElist;
+  override product: ProductElist = {} as ProductElist;
   showSpinner = false;
 
   constructor(

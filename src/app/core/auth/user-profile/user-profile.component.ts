@@ -75,7 +75,7 @@ export class UserProfileComponent implements OnInit {
       this.message = 'Error: no change in password detected';
     } else {
       this.loading = true;
-        this.adminService.changeMyPassword(this.oldPassword, this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changeMyPassword(this.oldPassword, this.newPassword).pipe(take(1)).subscribe(response => {
           this.message = 'Password updated successfully!';
           this.loading = false;
           this.newPassword = '';

@@ -48,7 +48,7 @@ export class SubstanceSsg4mService implements OnDestroy {
   private _bypassUpdateCheck = false;
   private method?: string;
 
-  apiBaseUrlSsg4mEntityUrl = this.configService.configData.apiSSG4mBaseUrl + 'api/v1/ssg4m' + '/';
+  apiBaseUrlSsg4mEntityUrl: string;
 
   constructor(
     private substanceService: SubstanceService,
@@ -58,6 +58,8 @@ export class SubstanceSsg4mService implements OnDestroy {
     public configService: ConfigService
   ) {
     this.substanceEmitter = new ReplaySubject<SubstanceDetail>();
+    // Initialize fields that depend on configService
+    this.apiBaseUrlSsg4mEntityUrl = this.configService.configData.apiSSG4mBaseUrl + 'api/v1/ssg4m' + '/';
   }
 
   ngOnDestroy() {

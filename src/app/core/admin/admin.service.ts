@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse, HttpParameterCodec, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParameterCodec } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
-import { Observable, Subject, forkJoin, throwError, of } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 
 import { ConfigService } from '../config/config.service';
-import { PagingResponse } from '../utils/paging-response.model';
-import { map, catchError, retry } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
 import { FacetHttpParams } from '@gsrs-core/facets-manager';
 import { ScheduledJob } from '@gsrs-core/admin/scheduled-jobs/scheduled-job.model';
 import { Auth } from '@gsrs-core/auth';
@@ -118,7 +117,7 @@ export class AdminService extends BaseHttpService {
       return this.http.post< any >(`${url}users/${id}/password`, body);
       }
 
-      public changeMyPassword(oldpass: string, newpass: string, id: number): Observable< any > {
+      public changeMyPassword(oldpass: string, newpass: string): Observable< any > {
         const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
         const body3 = {};
           body3['oldPassword'] = oldpass;
@@ -160,7 +159,7 @@ export class AdminService extends BaseHttpService {
           return this.http.put< any >(`${url}`, file);
         }*/
 
-        public previewAdapter(id: string, file: any, adapter?: any, limit?: any): Observable< any > {
+        public previewAdapter(id: string, file: any, limit?: any): Observable< any > {
           let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/import/${id}/@preview`;
          if (limit) {
            if(limit === 'all') {

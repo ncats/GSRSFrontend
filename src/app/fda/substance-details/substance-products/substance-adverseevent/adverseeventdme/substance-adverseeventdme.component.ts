@@ -23,7 +23,6 @@ import { adverseEventDmeSearchSortValues } from '../../../../adverse-event/adver
 
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
-  @Input() bdnum: string;
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
   adverseEventCount = 0;

@@ -42,11 +42,9 @@ export class ProductService extends BaseHttpService {
   public showDeprecated = false;
   private searchKeys: { [structureSearchTerm: string]: string } = {};
 
-  apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
-  apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
-
-  // get service prefix url
-  restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
+  apiBaseUrlWithProductEntityUrl: string;
+  apiBaseUrlWithProductElistEntityUrl: string;
+  restApiPrefix: string;
 
   constructor(
     public http: HttpClient,
@@ -54,6 +52,10 @@ export class ProductService extends BaseHttpService {
     public utilsService: UtilsService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+    this.apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
+    this.restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
   }
 
   getBulkSearchUrl(searchEntity: string, useServiceInUrl: boolean = false): string {

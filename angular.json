@@ -67,10 +67,8 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "vendorChunk": false
             },
             "gsrs.pre-prod": {
               "assets": [
@@ -95,10 +93,8 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "vendorChunk": false
             },
             "gsrs.dev": {
               "assets": [
@@ -156,10 +152,8 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "vendorChunk": false
             },
             "fda.pre-prod": {
               "assets": [
@@ -189,10 +183,8 @@
               "outputHashing": "all",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "vendorChunk": false
             },
             "fda.dev": {
               "assets": [

@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import { take } from 'rxjs/operators';
-import { NestedTreeControl, FlatTreeControl } from '@angular/cdk/tree';
-import {MatTreeModule} from '@angular/material/tree';
-import {MatTreeNestedDataSource} from '@angular/material/tree';
+import { FlatTreeControl } from '@angular/cdk/tree';
 import {MatTreeFlattener} from '@angular/material/tree';
 import {MatTreeFlatDataSource} from '@angular/material/tree';
 import { DirectoryFile } from '@gsrs-core/admin/admin-objects.model';
@@ -30,7 +28,9 @@ export class AllFilesComponent implements OnInit {
          this.dataSource.data = temp;
          this.loadingService.setLoading(false);
 
-    }, error => this.loadingService.setLoading(false));
+    }, () => {
+      this.loadingService.setLoading(false);
+    });
 
   }
 
