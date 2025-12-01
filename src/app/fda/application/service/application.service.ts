@@ -54,15 +54,13 @@ export class ApplicationService extends BaseHttpService {
   public showDeprecated = false;
   private searchKeys: { [structureSearchTerm: string]: string } = {};
 
-  apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
-  apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
-  //TODO: remove explicit references like this if at all possible
-  apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
+  apiBaseUrlWithApplicationEntityUrl: string;
+  apiBaseUrlWithApplicationAllEntityUrl: string;
+  apiBaseUrlWithApplicationDarrtsEntityUrl: string;
 
   APPALL_SEARCH_SUBSTANCE_KEY = 'root_applicationProductList_applicationIngredientList_substanceKey:';
 
-  // get service prefix url
-  restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
+  restApiPrefix: string;
 
   constructor(
     public http: HttpClient,
@@ -70,6 +68,13 @@ export class ApplicationService extends BaseHttpService {
     public utilsService: UtilsService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+    this.apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
+    //TODO: remove explicit references like this if at all possible
+    this.apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
+    // get service prefix url
+    this.restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
   }
 
   getBulkSearchUrl(searchEntity: string, useServiceInUrl: boolean = false): string {

@@ -27,18 +27,21 @@ export class NitrosamineDisplayComponent implements OnInit {
   structureDetails: string;
   potencyScore: number;
   smilesInput: string;
-  smilesFormula$: Observable<string> = this.structureService.smileObservable$
-  
+  smilesFormula$: Observable<string>;
+
   // Add new properties for better state management
   isLoading = false;
   errorMessage: string;
   showResults = false;
   summaryData: Record<string, string> = {};
   responseData: EvaluationResponse;
-  
+
   constructor(
    private structureService: StructureService
-  ) { }
+  ) {
+    // Initialize fields that depend on structureService
+    this.smilesFormula$ = this.structureService.smileObservable$;
+  }
 
    @Input()
     set structure(updatedStructure: SubstanceStructure | SubstanceMoiety) {

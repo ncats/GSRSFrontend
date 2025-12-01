@@ -24,15 +24,19 @@ export class AdverseEventService extends BaseHttpService {
 
   totalRecords = 0;
 
-  apiBaseUrlWithEntityPtContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventpt' + '/';
-  apiBaseUrlWithEntityDmeContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventdme' + '/';
-  apiBaseUrlWithEntityCvmContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventcvm' + '/';
+  apiBaseUrlWithEntityPtContext: string;
+  apiBaseUrlWithEntityDmeContext: string;
+  apiBaseUrlWithEntityCvmContext: string;
 
   constructor(
     public http: HttpClient,
     public configService: ConfigService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithEntityPtContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventpt' + '/';
+    this.apiBaseUrlWithEntityDmeContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventdme' + '/';
+    this.apiBaseUrlWithEntityCvmContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventcvm' + '/';
   }
 
   getAdverseEventPt(

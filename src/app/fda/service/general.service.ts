@@ -18,14 +18,17 @@ export class GeneralService extends BaseHttpService {
 
   private NO_CONFIG_FOUND_DEFAULT_SUBSTANCE_KEY = "UUID";
 
-  private apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
-  private apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+  private apiBaseUrlWithApplicationEntityUrl: string;
+  private apiBaseUrlWithProductEntityUrl: string;
 
   constructor(
     public http: HttpClient,
     public configService: ConfigService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+    this.apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
   }
 
   getSubstanceByAnyIdFullView(id: string): Observable<any> {

@@ -23,7 +23,6 @@ import { adverseEventPtSearchSortValues } from '../../../../adverse-event/advers
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
-  @Input() bdnum: string;
   @Input() substanceName: string;
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -54,7 +53,6 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   FAERSDashboardReactionTerm = "/select/Reaction%20Term/"; // GSRS Adverse Event 'PT Term'
   FAERSDashboardReactionGroup = "/select/Reaction%20Group/"; // GSRS Adverse Event 'Prim SOC'
 
-  filtered: Array<any>;
   displayedColumns: string[] = [
     'ptTerm',
     'primSoc',

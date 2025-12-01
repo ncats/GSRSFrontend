@@ -42,7 +42,6 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   disableExport = false;
   etag = '';
   etagAllExport = '';
-  @Input() bdnum: string;
   @Output() countApplicationOut: EventEmitter<number> = new EventEmitter<number>();
   public sortValues = applicationSearchSortValues;
   order = '$root_appNumber';

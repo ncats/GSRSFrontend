@@ -27,7 +27,7 @@ export class ImpuritiesService extends BaseHttpService {
   totalRecords: 0;
   impurities: Impurities;
 
-  apiBaseUrlWithEntityContext = this.configService.configData.apiBaseUrl + 'api/v1/impurities' + '/';
+  apiBaseUrlWithEntityContext: string;
 
   constructor(
     public http: HttpClient,
@@ -35,6 +35,8 @@ export class ImpuritiesService extends BaseHttpService {
     public utilsService: UtilsService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithEntityContext = this.configService.configData.apiBaseUrl + 'api/v1/impurities' + '/';
   }
 
   get isImpuritiesUpdated(): boolean {

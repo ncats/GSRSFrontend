@@ -282,7 +282,7 @@ export class UserEditDialogComponent implements OnInit {
     } else {
       this.isError = false;
       if ( this.authService.getUser === this.user.identifier ) {
-        this.adminService.changeMyPassword('', this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changeMyPassword('', this.newPassword).pipe(take(1)).subscribe(response => {
         this.isError = false;
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';

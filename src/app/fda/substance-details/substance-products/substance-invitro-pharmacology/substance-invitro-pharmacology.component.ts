@@ -30,7 +30,6 @@ import { InvitroAssayInformation, InvitroAssayScreening } from '../../../invitro
 })
 export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
-  @Input() substance: any;
   @Input() substanceUuid: string;
   @Input() substanceUnii: string;
   @Input() substanceName: string;
