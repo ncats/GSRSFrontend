@@ -101,6 +101,8 @@ export class SubstanceSelectorComponent implements OnInit {
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
 
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
+      console.log(`processSubstanceSearch response: ${JSON.stringify(response)}`);
+      response.total
       if (response.content && response.content.length) {
         this.selectedSubstance = response.content[0];
         this.selectionUpdated.emit(this.selectedSubstance);
@@ -111,63 +113,6 @@ export class SubstanceSelectorComponent implements OnInit {
     });
   }
   
-  processSubstanceSearchNew(searchValue: string = ''): void {
-    const q = searchValue.replace('\"', '');
-    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
-    console.log(`q: ${q}; searchStr: ${searchStr}`);
-    this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
-      console.log(`response: ${JSON.stringify(response)}`);
-      if (response.content && response.content.length) {
-        console.log('response has content');
-        let found = false;
-        // Loop through the search results and compare the search term with search result's _name field
-        for (let i = 0; i < response.content.length; i++) {
-          let substance = response.content[i];
-          if( (substance.uuid != null && substance.uuid === searchValue) || 
-            (substance.approvalID !== null && substance.approvalID === searchValue)) {
-            found = true;
-            this.selectedSubstance = substance;
-            this.selectionUpdated.emit(this.selectedSubstance);
-            console.log('found match for UUID and/or approval ID');
-            return;
-          }
-
-          this.substanceService.getSubstanceNames(substance.uuid).subscribe(names => {
-            if (names && names.some(n=>n.name === searchValue)) {
-
-              // set to true, since search value matches with search result's _name field
-              found = true;
-              
-              this.selectedSubstance = substance;
-              this.selectionUpdated.emit(this.selectedSubstance);
-              console.log('found match for name');
-              // break out of the loop when name found
-              return;
-            }
-          });
-          this.substanceService.getSubstanceCodes(substance.uuid).subscribe(codes => {
-            if(codes && codes.some(c=>c.code === searchValue)){
-              found = true;
-              this.selectedSubstance = substance;
-              this.selectionUpdated.emit(this.selectedSubstance);
-              console.log('found match for code');
-              return;
-            }
-          });
-        }
-        // If Ingredient Name not found into the database, display message
-        if (found == false) {
-          this.errorMessage = 'No substances found';
-        } else {
-          this.errorMessage = '';
-        }
-      } else {
-        this.errorMessage = 'No substances found';
-      }
-    });
-  }
-
- 
 
   advanced(type: string): void {
 

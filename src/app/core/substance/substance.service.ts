@@ -753,7 +753,6 @@ export class SubstanceService extends BaseHttpService {
     const options = {
       params: params
     };
-
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 

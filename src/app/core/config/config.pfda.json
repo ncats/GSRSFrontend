@@ -530,7 +530,8 @@
     "root_approvalID",
     "root_codes_BDNUM",
     "root_codes_CAS",
-    "root_codes_ECHA\\ \\(EC\/EINECS\\)"
+    "root_codes_ECHA",
+    "root_codes_EINECS"
   ],
   "contactEmail": "precisionfda-support@dnanexus.com",
   "sessionExpirationWarning": {
