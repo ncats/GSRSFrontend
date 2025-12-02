@@ -79,8 +79,9 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   }
 
   deleteDownload() {
-    if (!this.download.removeUrl.url) {
+    if (!this.download.removeUrl || !this.download.removeUrl.url) {
       this.cancel();
+      this.refresh();
     }
     this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1)).subscribe(response => {
       this.deleted = true;
