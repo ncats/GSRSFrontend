@@ -1032,6 +1032,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   //   });
   // }
 
+  // Step View cannot be hidden in order to export it
   async expandStepView(): Promise<void> {
     const tabProcesses = document.querySelector("#substance-form-ssg4m-process") as HTMLElement;
     if (tabProcesses.getAttribute('aria-expanded') !== 'true') {
@@ -1113,7 +1114,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   }
 
   async submit(): Promise<void> {
-    await this.expandStepView()
+    !this.configService.configData.isPfdaVersion && await this.expandStepView();
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -1140,7 +1141,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       // Save SVG as Clob
       // this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
       
-      await this.exportStepView(document)
+      !this.configService.configData.isPfdaVersion && await this.exportStepView(document)
       // const encodedSvg = await this.exportStepView(document)
       // this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
