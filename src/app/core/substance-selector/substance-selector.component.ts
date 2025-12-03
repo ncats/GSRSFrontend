@@ -98,41 +98,39 @@ export class SubstanceSelectorComponent implements OnInit {
 
   processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
+    if( this.substanceService.isUUID(q)) {
+      console.log('detected a UUID')
+      this.substanceService.getSubstanceDetails(q).subscribe( {
+        next: response => {
+        if(response && response != null) {
+          this.selectedSubstance = response;
+          this.selectionUpdated.emit(this.selectedSubstance);
+          this.errorMessage = '';
+          console.log('got substance via UUID');
+        } else {
+          console.log('no match for UUID');
+          this.errorMessage = 'No substances found';
+        }
+        },
+        error: err=>{
+          console.log('error retrieving UUID');
+          this.errorMessage = 'No substances found';
+        }
+      });
+      return;
+    } 
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       if (response.content && response.content.length) {
-        let found = false;
-        // Loop through the search results and compare the search term with search result's _name field
-        for (let i = 0; i < response.content.length; i++) {
-          let substance = response.content[i];
-
-          this.substanceService.getSubstanceNames(substance.uuid).subscribe(names => {
-            if (names && names.some(n=>n.name === searchValue)) {
-
-              // set to true, since search value matches with search result's _name field
-              found = true;
-              
-              this.selectedSubstance = substance;
-              this.selectionUpdated.emit(this.selectedSubstance);
-
-              // break out of the loop when name found
-              return;
-            }
-          }); 
-        }
-        // If Ingredient Name not found into the database, display message
-        if (found == false) {
-          this.errorMessage = 'No substances found';
-        } else {
-          this.errorMessage = '';
-        }
+        this.selectedSubstance = response.content[0];
+        this.selectionUpdated.emit(this.selectedSubstance);
+        this.errorMessage = '';
       } else {
         this.errorMessage = 'No substances found';
       }
     });
   }
-
- 
+  
 
   advanced(type: string): void {
 

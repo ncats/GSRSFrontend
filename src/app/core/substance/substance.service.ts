@@ -753,8 +753,15 @@ export class SubstanceService extends BaseHttpService {
     const options = {
       params: params
     };
-
+    console.log(`url: ${url} parms ${options.params}`);
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
+  }
+
+  isUUID(uuidCandidate) {
+    if ((uuidCandidate + "").match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/)) {
+        return true;
+    }
+    return false;
   }
 
   getAllByEtag(etag: string) {
@@ -1155,9 +1162,3 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<SubstanceDetail>(url);
   }
 }
-
-
-
-
-
-
