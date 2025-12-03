@@ -126,7 +126,7 @@
    </div>
 </div>
 <div *ngIf="!download.enabled" class = "bottom-button" >
-   <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="deleteDownload()" [enabled]="download.removeUrl?.url != null">
+   <button mat-button class = "mat-flat-button mat-primary" color = "primary"  (click)="deleteDownload()" [disabled]="!download.removeUrl?.url">
        <mat-icon svgIcon="delete_forever"></mat-icon>
        Delete
    </button>
