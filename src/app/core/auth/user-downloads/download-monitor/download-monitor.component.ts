@@ -67,9 +67,13 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1)).subscribe(response => {
+    const obs = this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1));
+    // keep existing behavior when called from template (subscribe and refresh)
+    obs.subscribe(response => {
       this.refresh();
     });
+    // also return the observable so callers can chain (used by deleteDownload)
+    return obs;
   }
 
   downloadExport() {
@@ -79,9 +83,42 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   }
 
   deleteDownload() {
-    this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1)).subscribe(response => {
-      this.deleted = true;
-    });
+        if (this.download && this.download.removeUrl && this.download.removeUrl.url) {
+      this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1)).subscribe(response => {
+        this.deleted = true;
+      });
+    } else {
+      // If there is no removeUrl yet, attempt to cancel the download first (which should create the removeUrl),
+      // then try deleting. If cancel or removeUrl are not available, mark as deleted to remove from view.
+      if (this.download && this.download.cancelUrl && this.download.cancelUrl.url) {
+        this.cancel().pipe(take(1)).subscribe(() => {
+          // After cancel completes, request the latest status to get any newly-created removeUrl
+          this.authService.getUpdateStatus(this.id).pipe(take(1)).subscribe(response => {
+            this.download = response;
+            if (this.download && this.download.removeUrl && this.download.removeUrl.url) {
+              this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1)).subscribe(resp => {
+                this.deleted = true;
+              });
+            } else {
+              // fallback: if still no removeUrl, mark deleted to hide the entry
+              if (this.download.cancelUrl?.url) {
+                this.authService.deleteDownload(this.download.cancelUrl.url.replace('/@cancel', '')).pipe(take(1)).subscribe(resp => {
+                this.deleted = true;
+              });
+              } else {
+                this.deleted = true;
+              }
+            }
+          }, err => {
+            // on error getting status, fallback to hiding the entry
+            this.deleted = true;
+          });
+        });
+      } else {
+        // No cancel URL either; nothing to call on server — hide it locally
+        this.deleted = true;
+      }
+    }
   }
 
   processQuery(url: string) {
