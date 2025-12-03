@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import * as moment from 'moment';
-import { take } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras } from '@angular/router';
+import { EMPTY, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-download-monitor',
@@ -67,9 +68,12 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1)).subscribe(response => {
-      this.refresh();
-    });
+    // Note: The cancel logic performs a changeDownload and then refreshes.
+    // We will now return the Observable so we can chain it.
+    return this.authService.changeDownload(this.download.cancelUrl.url).pipe(
+      take(1),
+      tap(() => this.refresh()) // Use tap to call refresh, but pass the Observable on
+    );
   }
 
   downloadExport() {
@@ -79,11 +83,24 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   }
 
   deleteDownload() {
-    if (!this.download.removeUrl || !this.download.removeUrl.url) {
-      this.cancel();
-      this.refresh();
-    }
-    this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1)).subscribe(response => {
+    // 1. Determine the URL to use for the initial action.
+    const action$: Observable<any> = this.download.removeUrl?.url 
+      ? of(null) // If remove URL exists, start with a resolved Observable (no initial action needed).
+      : this.cancel(); // If remove URL is missing, execute the cancel logic.
+
+    action$.pipe(
+      // 2. Once the first action (cancel or no-op) is complete, switch to the deletion logic.
+      switchMap(() => {
+        // We only proceed to delete if the remove URL is defined.
+        if (this.download.removeUrl?.url) {
+          return this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1));
+        }
+        
+        // If the remove URL was missing, we just ran 'cancel()' and stop here.
+        return EMPTY; 
+      })
+    ).subscribe(response => {
+      // 3. This runs only if the deletion was attempted and succeeded.
       this.deleted = true;
     });
   }
