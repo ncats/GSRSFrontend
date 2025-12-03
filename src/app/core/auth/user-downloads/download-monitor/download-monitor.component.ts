@@ -89,7 +89,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
       });
     } else {
       // If there is no removeUrl yet, attempt to cancel the download first (which should create the removeUrl),
-      // then try deleting. If cancel or removeUrl are not available, mark as deleted to remove from view.
+      // then try deleting. If cancel or removeUrl are not available, build the remove url from cancel one, otherwise mark as deleted to remove from view.
       if (this.download && this.download.cancelUrl && this.download.cancelUrl.url) {
         this.cancel().pipe(take(1)).subscribe(() => {
           // After cancel completes, request the latest status to get any newly-created removeUrl
@@ -100,7 +100,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
                 this.deleted = true;
               });
             } else {
-              // fallback: if still no removeUrl, mark deleted to hide the entry
+              // fallback: if still no removeUrl, try to create it from cancelUrl
               if (this.download.cancelUrl?.url) {
                 this.authService.deleteDownload(this.download.cancelUrl.url.replace('/@cancel', '')).pipe(take(1)).subscribe(resp => {
                 this.deleted = true;
