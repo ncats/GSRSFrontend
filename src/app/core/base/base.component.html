@@ -1,12 +1,24 @@
-<mat-toolbar class="mat-elevation-z3" color="primary" *ngIf="showHeaderBar === 'true' && (!customToolbarComponent || customToolbarComponent.length == 0)">
+<mat-toolbar
+  class="mat-elevation-z3"
+  color="primary"
+  *ngIf="
+    showHeaderBar === 'true' &&
+    (!customToolbarComponent || customToolbarComponent.length == 0)
+  "
+>
   <div class="logo-container">
     <span class="logo">
       <a routerLink="/home" aria-label="home">
         <img [src]="logoSrcPath" alt="gsrs-logo" />
       </a>
     </span>
-    <span class="version" *ngIf="version && version !== ''" [matTooltip]="versionTooltipMessage"
-      matTooltipPosition="below">Ver. {{version}}</span>
+    <span
+      class="version"
+      *ngIf="version && version !== ''"
+      [matTooltip]="versionTooltipMessage"
+      matTooltipPosition="below"
+      >Ver. {{ version }}</span
+    >
   </div>
 
   <!-- <span class="nav-big">
@@ -18,157 +30,323 @@
   </span> -->
   <!-- <span class="middle-fill"></span> -->
   <span class="nav-small">
-    <button class = "top-button" mat-button mat-primary-button  style = "color:white;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="nav" (click)="increaseMenuZindex()" aria-label="main menu">
-     <span style = "font-size:16px;">Menu &nbsp;</span><mat-icon svgIcon="menu"></mat-icon>
+    <button
+      class="top-button"
+      mat-button
+      mat-primary-button
+      style="color: white; padding-top: 10px; padding-bottom: 10px"
+      [matMenuTriggerFor]="nav"
+      (click)="increaseMenuZindex()"
+      aria-label="main menu"
+    >
+      <span style="font-size: 16px">Menu &nbsp;</span
+      ><mat-icon svgIcon="menu"></mat-icon>
     </button>
-    <mat-menu #nav="matMenu" (closed)="removeZindex()" class = "reg-a">
+    <mat-menu #nav="matMenu" (closed)="removeZindex()" class="reg-a">
       <ng-container *ngFor="let navItem of navItems">
-        <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path && !navItem.children">
-          {{navItem.display}}
+        <a
+          mat-menu-item
+          [routerLink]="['/' + navItem.path]"
+          *ngIf="navItem.path && !navItem.children"
+        >
+          {{ navItem.display }}
         </a>
-        <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath && !navItem.children">
-          {{navItem.display}}
+        <a
+          mat-menu-item
+          [href]="navItem.externalPath"
+          target="_blank"
+          *ngIf="navItem.externalPath && !navItem.children"
+        >
+          {{ navItem.display }}
         </a>
-        <a mat-menu-item [href]="transformMailToPath(navItem)"
-          *ngIf="navItem.mailToPath && !navItem.children">
-          {{navItem.display}}
+        <a
+          mat-menu-item
+          [href]="transformMailToPath(navItem)"
+          *ngIf="navItem.mailToPath && !navItem.children"
+        >
+          {{ navItem.display }}
         </a>
 
         <ng-container *ngIf="navItem.children">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
-            {{navItem.display}}
+            {{ navItem.display }}
           </a>
           <mat-menu
-                #childrenMenu="matMenu"
-                [overlapTrigger]="false"
-                xPosition="after">
+            #childrenMenu="matMenu"
+            [overlapTrigger]="false"
+            xPosition="after"
+          >
             <ng-container *ngFor="let childNavItem of navItem.children">
-              <a mat-menu-item [routerLink]="['/' + childNavItem.path]" [queryParams]="childNavItem.params||{}"
-                *ngIf="childNavItem.path">
-                {{childNavItem.display}}
+              <a
+                mat-menu-item
+                [routerLink]="['/' + childNavItem.path]"
+                [queryParams]="childNavItem.params || {}"
+                *ngIf="childNavItem.path"
+              >
+                {{ childNavItem.display }}
               </a>
-              <a mat-menu-item [href]="[childNavItem.href]"
-                *ngIf="childNavItem.href">
-                {{childNavItem.display}}
+              <a
+                mat-menu-item
+                [href]="[childNavItem.href]"
+                *ngIf="childNavItem.href"
+              >
+                {{ childNavItem.display }}
               </a>
-              <a mat-menu-item [href]="transformMailToPath(childNavItem)"
-                *ngIf="childNavItem.mailToPath">
-                {{childNavItem.display}}
+              <a
+                mat-menu-item
+                [href]="transformMailToPath(childNavItem)"
+                *ngIf="childNavItem.mailToPath"
+              >
+                {{ childNavItem.display }}
               </a>
             </ng-container>
-            <a mat-menu-item *ngIf="navItem.display === 'Register'" (click)="importDialog()">
+            <a
+              mat-menu-item
+              *ngIf="navItem.display === 'Register'"
+              (click)="importDialog()"
+            >
               Import Substance
             </a>
           </mat-menu>
         </ng-container>
       </ng-container>
-      <a mat-menu-item *ngIf="isAdmin" routerLink="/admin">
-        Admin Panel
-      </a>
+      <a mat-menu-item *ngIf="isAdmin" routerLink="/admin"> Admin Panel </a>
     </mat-menu>
   </span>
-  <div >
-    <button class = "top-button extra-item " mat-button mat-primary-button style = "font-size:16px;color:white; padding-right:10px;margin-right:15px;padding-top:10px; padding-bottom:10px;" class = "menu-button extra-item"
-    [routerLink]="['/browse-substance']" aria-label="browse substances" >Browse Substances</button>
+  <div>
+    <button
+      class="top-button extra-item"
+      mat-button
+      mat-primary-button
+      style="
+        font-size: 16px;
+        color: white;
+        padding-right: 10px;
+        margin-right: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+      class="menu-button extra-item"
+      [routerLink]="['/browse-substance']"
+      aria-label="browse substances"
+    >
+      Browse Substances
+    </button>
   </div>
-  <div *ngIf = "this.loadedComponents">
-      <button class = "top-button extra-browse" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [matMenuTriggerFor]="browse" (click)="increaseMenuZindex()" aria-label="main menu" *ngIf = "loadedComponents">
-          <span style = "font-size:16px;">Browse Other</span>
-         <mat-icon svgIcon="chevron_down"></mat-icon>
-         </button>
-         <mat-menu #browse="matMenu" (closed)="removeZindex()">
-      <a mat-menu-item routerLink="/browse-applications" *ngIf = "loadedComponents.applications">
+  <div *ngIf="this.loadedComponents">
+    <button
+      class="top-button extra-browse"
+      mat-button
+      mat-primary-button
+      style="
+        color: white;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+      [matMenuTriggerFor]="browse"
+      (click)="increaseMenuZindex()"
+      aria-label="main menu"
+      *ngIf="loadedComponents"
+    >
+      <span style="font-size: 16px">Browse Other</span>
+      <mat-icon svgIcon="chevron_down"></mat-icon>
+    </button>
+    <mat-menu #browse="matMenu" (closed)="removeZindex()">
+      <a
+        mat-menu-item
+        routerLink="/browse-applications"
+        *ngIf="loadedComponents.applications"
+      >
         Browse Applications
       </a>
-      <mat-divider *ngIf = "loadedComponents.applications"></mat-divider>
-      <a mat-menu-item routerLink="/browse-products" *ngIf = "loadedComponents.products">
+      <mat-divider *ngIf="loadedComponents.applications"></mat-divider>
+      <a
+        mat-menu-item
+        routerLink="/browse-products"
+        *ngIf="loadedComponents.products"
+      >
         Browse Products
       </a>
-      <mat-divider *ngIf = "loadedComponents.products"></mat-divider>
-      <a mat-menu-item routerLink="/browse-clinical-trials" *ngIf = "loadedComponents.clinicaltrials">
+      <mat-divider *ngIf="loadedComponents.products"></mat-divider>
+      <a
+        mat-menu-item
+        routerLink="/browse-clinical-trials"
+        *ngIf="loadedComponents.clinicaltrials"
+      >
         Browse Clinical Trials
       </a>
-      <mat-divider *ngIf = "loadedComponents.clinicaltrials"></mat-divider>
-      <a mat-menu-item routerLink="/browse-adverse-events" *ngIf = "loadedComponents.adverseevents">
+      <mat-divider *ngIf="loadedComponents.clinicaltrials"></mat-divider>
+      <a
+        mat-menu-item
+        routerLink="/browse-adverse-events"
+        *ngIf="loadedComponents.adverseevents"
+      >
         Browse Adverse Events
       </a>
-      <mat-divider *ngIf = "loadedComponents.adverseevents"></mat-divider>
-      <mat-divider *ngIf="loadedComponents.adverseevents && adverseEventShinyHomepageDisplay === true"></mat-divider>
-      <a mat-menu-item [href]="adverseEventShinyHomepageURL" target="_blank" *ngIf="loadedComponents.adverseevents && adverseEventShinyHomepageDisplay === true">
+      <mat-divider *ngIf="loadedComponents.adverseevents"></mat-divider>
+      <mat-divider
+        *ngIf="
+          loadedComponents.adverseevents &&
+          adverseEventShinyHomepageDisplay === true
+        "
+      ></mat-divider>
+      <a
+        mat-menu-item
+        [href]="adverseEventShinyHomepageURL"
+        target="_blank"
+        *ngIf="
+          loadedComponents.adverseevents &&
+          adverseEventShinyHomepageDisplay === true
+        "
+      >
         Browse Adverse Events
       </a>
-      <a mat-menu-item routerLink="/browse-invitro-pharm" *ngIf = "loadedComponents.invitropharmacology">
+      <a
+        mat-menu-item
+        routerLink="/browse-invitro-pharm"
+        *ngIf="loadedComponents.invitropharmacology"
+      >
         Browse In Vitro Pharmacology
       </a>
-      </mat-menu>
-      </div>
-
-      <div>
-        <button class = "top-button extra-item" mat-button mat-primary-button
-        style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;"
-        [matMenuTriggerFor]="reg" (click)="increaseMenuZindex()"
-        aria-label="main menu" *ngIf = "canRegister">
-          <span style = "font-size:16px;">Register</span>
-          <mat-icon svgIcon="chevron_down"></mat-icon>
-        </button>
-
-        <button class = "top-button extra-item" mat-button mat-primary-button
-        style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;"
-        [matMenuTriggerFor]="search" (click)="increaseMenuZindex()" aria-label="search menu">
-          <span style = "font-size:16px;">Search</span>
-          <mat-icon svgIcon="chevron_down"></mat-icon>
-        </button>
-
+    </mat-menu>
   </div>
 
-     <div>
-     <mat-menu #reg="matMenu" (closed)="removeZindex()">
-       <ng-container *ngFor="let navItem of registerNav">
-         <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
-           {{navItem.display}}
-         </a>
-         <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
-           {{navItem.display}}
-         </a>
-       </ng-container>
-       <a mat-menu-item (click)="importDialog()">
-         Import Substance
-       </a>
-     </mat-menu>
-    </div>
+  <div>
+    <button
+      class="top-button extra-item"
+      mat-button
+      mat-primary-button
+      style="
+        color: white;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+      [matMenuTriggerFor]="reg"
+      (click)="increaseMenuZindex()"
+      aria-label="main menu"
+      *ngIf="canRegister"
+    >
+      <span style="font-size: 16px">Register</span>
+      <mat-icon svgIcon="chevron_down"></mat-icon>
+    </button>
 
-    <div>
-      <mat-menu #search="matMenu" (closed)="removeZindex()">
-        <ng-container *ngFor="let navItem of searchNav">
-          <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
-            {{navItem.display}}
-          </a>
-          <a mat-menu-item [href]="navItem.externalPath" target="_blank" *ngIf="navItem.externalPath">
-            {{navItem.display}}
-          </a>
-        </ng-container>
-       </mat-menu>
-    </div>
+    <button
+      class="top-button extra-item"
+      mat-button
+      mat-primary-button
+      style="
+        color: white;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+      [matMenuTriggerFor]="search"
+      (click)="increaseMenuZindex()"
+      aria-label="search menu"
+    >
+      <span style="font-size: 16px">Search</span>
+      <mat-icon svgIcon="chevron_down"></mat-icon>
+    </button>
+  </div>
 
-    <span class="middle-fill"></span>
-  <app-substance-text-search class="top-search" [searchValue]="searchValue" placeholder = "Search Substances"
-    (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
-    (closed)="removeZindex()">
+  <div>
+    <mat-menu #reg="matMenu" (closed)="removeZindex()">
+      <ng-container *ngFor="let navItem of registerNav">
+        <a
+          mat-menu-item
+          [routerLink]="['/' + navItem.path]"
+          *ngIf="navItem.path"
+        >
+          {{ navItem.display }}
+        </a>
+        <a
+          mat-menu-item
+          [href]="navItem.externalPath"
+          target="_blank"
+          *ngIf="navItem.externalPath"
+        >
+          {{ navItem.display }}
+        </a>
+      </ng-container>
+      <a mat-menu-item (click)="importDialog()"> Import Substance </a>
+    </mat-menu>
+  </div>
+
+  <div>
+    <mat-menu #search="matMenu" (closed)="removeZindex()">
+      <ng-container *ngFor="let navItem of searchNav">
+        <a
+          mat-menu-item
+          [routerLink]="['/' + navItem.path]"
+          *ngIf="navItem.path"
+        >
+          {{ navItem.display }}
+        </a>
+        <a
+          mat-menu-item
+          [href]="navItem.externalPath"
+          target="_blank"
+          *ngIf="navItem.externalPath"
+        >
+          {{ navItem.display }}
+        </a>
+      </ng-container>
+    </mat-menu>
+  </div>
+
+  <span class="middle-fill"></span>
+  <app-substance-text-search
+    styling="header"
+    class="top-search"
+    [searchValue]="searchValue"
+    placeholder="Search Substances"
+    (searchPerformed)="processSubstanceSearch($event)"
+    eventCategory="topSearch"
+    (opened)="increaseMenuZindex()"
+    (closed)="removeZindex()"
+  >
   </app-substance-text-search>
   <div>
-    <button mat-button class="login-link" (click)="routeToLogin()" *ngIf="!auth && mainPathSegment !== 'login'">
+    <button
+      mat-button
+      class="login-link"
+      (click)="routeToLogin()"
+      *ngIf="!auth && mainPathSegment !== 'login'"
+    >
       Login
     </button>
     <div class="logged-in" *ngIf="auth">
       <div class="user-actions">
-        <button aria-label="User Account" class="user-button main-button" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
-          <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
+        <button
+          aria-label="User Account"
+          class="user-button main-button"
+          mat-icon-button
+          [matMenuTriggerFor]="accountMenu"
+          (click)="increaseMenuZindex()"
+        >
+          <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
         </button>
-        <button aria-label="User Account dropdown" class="user-button arrow-button test-class" mat-icon-button [matMenuTriggerFor]="accountMenu" (click)="increaseMenuZindex()" >
-          <mat-icon class="user-icon icon-two" svgIcon="chevron_down"></mat-icon>
+        <button
+          aria-label="User Account dropdown"
+          class="user-button arrow-button test-class"
+          mat-icon-button
+          [matMenuTriggerFor]="accountMenu"
+          (click)="increaseMenuZindex()"
+        >
+          <mat-icon
+            class="user-icon icon-two"
+            svgIcon="chevron_down"
+          ></mat-icon>
         </button>
       </div>
-      <span class="user" *ngIf="auth && auth.identifier" matTooltip="{{auth.identifier}}">{{auth.identifier}}</span>
+      <span
+        class="user"
+        *ngIf="auth && auth.identifier"
+        matTooltip="{{ auth.identifier }}"
+        >{{ auth.identifier }}</span
+      >
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
       <a mat-menu-item (click)="openProfile()">
@@ -186,7 +364,12 @@
       <a routerLink="/admin" mat-menu-item *ngIf="isAdmin">
         <span>Admin Panel</span>
       </a>
-      <a [routerLink]="['/registrars']" class = "add-at-low-res" *ngIf = "canRegister" mat-menu-item >
+      <a
+        [routerLink]="['/registrars']"
+        class="add-at-low-res"
+        *ngIf="canRegister"
+        mat-menu-item
+      >
         <span>Registrars</span>
       </a>
       <button mat-menu-item (click)="logout()">
@@ -194,11 +377,22 @@
       </button>
     </mat-menu>
   </div>
-  <div class="classic-view-container"  *ngIf="auth && auth.identifier">
-      <a class = "top-button hide-at-low-res" mat-button mat-primary-button  style = "color:white;font-size:16px;padding-top:10px; padding-bottom:10px;" [routerLink]="['/registrars']" *ngIf = "canRegister">
-          <span style = "font-size:16px;">Registrars</span>
-
-  </a>
+  <div class="classic-view-container" *ngIf="auth && auth.identifier">
+    <a
+      class="top-button hide-at-low-res"
+      mat-button
+      mat-primary-button
+      style="
+        color: white;
+        font-size: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      "
+      [routerLink]="['/registrars']"
+      *ngIf="canRegister"
+    >
+      <span style="font-size: 16px">Registrars</span>
+    </a>
   </div>
 </mat-toolbar>
 <div *ngIf="customToolbarComponent == 'precisionFDA'">

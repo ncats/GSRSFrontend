@@ -255,6 +255,15 @@ mat-list-item {
   min-width: 80%;
 }
 
+:host
+  ::ng-deep
+  .flex-row
+  app-substance-text-search
+  .mat-mdc-input-element::placeholder {
+  color: #0000008a !important;
+  opacity: 1; // for Firefox
+}
+
 .row {
   line-height: 24px;
   padding-bottom: 10px;

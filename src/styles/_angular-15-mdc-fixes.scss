@@ -57,7 +57,6 @@
 // Fix MDC card content spacing
 .mat-mdc-card-content {
   display: block;
-  padding: 0;
 
   &:first-child {
     padding-top: 0;
@@ -67,6 +66,11 @@
     padding-bottom: 0;
   }
 }
+
+// .mat-mdc-card-actions {
+//   justify-content: flex-end;
+//   padding: 0 !important;
+// }
 
 // ============================================================================
 // MAT-CHIP FIXES
@@ -270,6 +274,12 @@
 // ============================================================================
 
 // Fix button styling for consistency with Angular 14
+.mat-mdc-button .mdc-button__label,
+.mat-mdc-raised-button .mdc-button__label,
+.mat-mdc-unelevated-button .mdc-button__label,
+.mat-mdc-outlined-button .mdc-button__label {
+  white-space: nowrap;
+}
 .mat-mdc-button,
 .mat-mdc-raised-button,
 .mat-mdc-unelevated-button,
@@ -292,15 +302,15 @@
   flex-direction: row;
   align-items: center;
 
-  .mdc-button__label {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: normal;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    order: 0; // Ensure label stays in natural order
-  }
+  // .mdc-button__label {
+  //   font-size: 16px;
+  //   font-weight: 500;
+  //   line-height: normal;
+  //   display: flex;
+  //   flex-direction: row;
+  //   align-items: center;
+  //   order: 0; // Ensure label stays in natural order
+  // }
 
   // Ensure mat-icons stay in their HTML order
   .mat-icon {
