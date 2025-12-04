@@ -963,6 +963,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   white-space: nowrap;
   padding: 0 16px;
   min-height: 64px;
+  position: relative;
 
   // Single row toolbar (default)
   &:not(.mat-toolbar-multiple-rows) {
