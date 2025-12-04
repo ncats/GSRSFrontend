@@ -1,4 +1,4 @@
-@use '../../../styles/variables' as *;
+@use "../../../styles/variables" as *;
 
 .version {
   color: var(--version-text-color);
@@ -10,11 +10,10 @@
   margin-bottom: -4px;
 }
 .logo-container {
-  display:flex;
+  display: flex;
   flex-direction: column;
   max-width: 160px;
   margin-right: 20px;
-
 }
 
 .tooltiptest {
@@ -28,16 +27,16 @@
 }
 .arrow-button {
   margin-left: -13px !important;
-  height:25px !important;
+  height: 25px !important;
   width: 25px !important;
 }
 
 .top-button {
   padding-top: 10px;
-    padding-bottom: 10px;
+  padding-bottom: 10px;
 }
 .user-button {
- margin-bottom:-5px;
+  margin-bottom: -5px;
 
   ::ng-deep mat-icon {
     height: 30px;
@@ -61,7 +60,6 @@
     width: 30px;
     margin-bottom: -10px;
   }
-
 }
 .icon-two {
   height: 24px !important;
@@ -75,10 +73,9 @@
 }
 :host ::ng-deep .mat-icon {
   height: 30px !important;
-  width: 30px  !important;
-  margin-bottom: -10px  !important;
+  width: 30px !important;
+  margin-bottom: -10px !important;
 }
-
 
 .mat-icon .user-icon {
   height: 30px;
@@ -97,7 +94,8 @@
     // gap: 6px;
   }
 
-  .mat-icon, user-icon {
+  .mat-icon,
+  user-icon {
     height: 30px;
     width: 30px;
     margin-bottom: -10px;
@@ -108,11 +106,10 @@
     width: 30px;
     margin-bottom: -10px;
   }
-
 }
 
 .mat-toolbar {
-  position: fixed;
+  position: sticky;
   top: 0;
   z-index: 1001;
 }
@@ -128,11 +125,10 @@
 }
 
 .nav-big {
-
   .nav-item {
     padding: 0 5px;
 
-    &>a {
+    & > a {
       font-size: 16px;
       color: #e6e6e6;
       padding-bottom: 7px;
@@ -177,7 +173,6 @@
   max-width: 600px;
 
   ::ng-deep .mat-form-field {
-
     .mat-form-field-label {
       font-size: 16px;
       top: 1.98125em;
@@ -203,9 +198,7 @@
 //   }
 // }
 
-
-
-@media(min-width: $nav-breaking-point) {
+@media (min-width: $nav-breaking-point) {
   .top-search {
     min-width: 500px;
   }
@@ -218,43 +211,41 @@
 }
 
 // hides extra browse (for half 1920 to save space)
-@media(max-width: 1500px ) {
+@media (max-width: 1500px) {
   .extra-browse {
     display: none !important;
   }
 }
 
 // hides all but main menu
-@media(max-width: 1350px ) {
+@media (max-width: 1350px) {
   .extra-item {
     display: none !important;
   }
 }
 
-
-
-  @media(max-width: 1610px ) {
-    .add-at-low-res{
-      display: inline !important;
-    }
-
-    .hide-at-low-res{
-      display: none !important;
-    }
+@media (max-width: 1610px) {
+  .add-at-low-res {
+    display: inline !important;
   }
 
-    @media(min-width: 1610px ) {
-      .add-at-low-res{
-        display: none !important;
-      }
-
-      .hide-at-low-res{
-        display: inline-block;
-      }
-    }
-
-  @media(max-width: 1650px ) {
-    .extra-item-2 {
-      display: none !important;
-    }
+  .hide-at-low-res {
+    display: none !important;
   }
+}
+
+@media (min-width: 1610px) {
+  .add-at-low-res {
+    display: none !important;
+  }
+
+  .hide-at-low-res {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 1650px) {
+  .extra-item-2 {
+    display: none !important;
+  }
+}
