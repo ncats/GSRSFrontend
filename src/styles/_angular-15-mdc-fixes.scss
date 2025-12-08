@@ -1311,3 +1311,8 @@ a[mat-fab],
     flex-shrink: 0;
   }
 }
+
+.mat-mdc-form-field .mat-mdc-form-field-focus-overlay {
+  background: none !important;
+  box-shadow: none !important;
+}
