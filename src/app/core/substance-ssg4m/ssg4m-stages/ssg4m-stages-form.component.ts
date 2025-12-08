@@ -368,8 +368,8 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
         const newStartIndex = stageObj.startingMaterials.length - 1;
 
         // Determine a display name for the substance
-        let displayName = read._name
-          ? String(read._name).replace(/<[^>]*>?/gm, "")
+        let displayName = response.name
+          ? String(response.name).replace(/<[^>]*>?/gm, "")
           : null;
         if (!displayName && read.names && read.names.length > 0) {
           const n = read.names.find((x) => x.stdName) || read.names[0];
