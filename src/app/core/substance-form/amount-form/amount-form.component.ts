@@ -44,12 +44,12 @@ export class AmountFormComponent implements OnInit {
   }
 
   setSubscriptions() {
-    
+
     this.typeControl.setValue(this.privateSubstanceAmount.type);
     this.typeControl.valueChanges.subscribe(value => {
       this.privateSubstanceAmount.type = value;
     });
-    this.averageControl.setValue(this.privateSubstanceAmount.average.toString());
+    this.averageControl.setValue(this.privateSubstanceAmount.average?.toString() || '');
     this.averageControl.valueChanges.subscribe(value => {
       if(value === null) {
         this.averageControl.setValue('');
@@ -61,7 +61,7 @@ export class AmountFormComponent implements OnInit {
       }
       this.privateSubstanceAmount.average = parseInt(value);
     });
-    this.lowControl.setValue(this.privateSubstanceAmount.low.toString());
+    this.lowControl.setValue(this.privateSubstanceAmount.low?.toString() || '');
     this.lowControl.valueChanges.subscribe(value => {
 
       if(value === null) {
@@ -74,7 +74,7 @@ export class AmountFormComponent implements OnInit {
       }
       this.privateSubstanceAmount.low = parseInt(value);
     });
-    this.highControl.setValue(this.privateSubstanceAmount.high.toString());
+    this.highControl.setValue(this.privateSubstanceAmount.high?.toString() || '');
     this.highControl.valueChanges.subscribe(value => {
 
       if(value === null) {
@@ -87,7 +87,7 @@ export class AmountFormComponent implements OnInit {
       }
       this.privateSubstanceAmount.high = parseInt(value);
     });
-    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit.toString());
+    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit?.toString() || '');
     this.lowLimitControl.valueChanges.subscribe(value => {
       if(value === null) {
         this.lowLimitControl.setValue('');
@@ -99,7 +99,7 @@ export class AmountFormComponent implements OnInit {
       }
       this.privateSubstanceAmount.lowLimit = parseInt(value);
     });
-    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit.toString());
+    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit?.toString() || '');
     this.highLimitControl.valueChanges.subscribe(value => {
       if(value === null) {
         this.highLimitControl.setValue('');
