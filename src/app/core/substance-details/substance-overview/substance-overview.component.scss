@@ -1,18 +1,16 @@
-.references-link{
+.references-link {
   display: inline-flex;
   vertical-align: middle;
 }
 
 .left-col {
-  width:50%;
+  width: 50%;
   margin-top: 20px;
-
 }
 
 .right-col {
   width: 50%;
   margin-top: 20px;
-
 }
 
 .tags {
@@ -21,30 +19,31 @@
 
 .full-col {
   width: 100%;
-  display:flex;
+  display: flex;
   flex-direction: row;
 }
 
-.version-dropdown{
-  width:50px;
-  border:0px;
-  height:20px;
-}
-.diverseWrapper{
-  padding-bottom:20px;
-}
-.view-version {
-  margin-left:10px;
-}
-
 .version-dropdown {
-  ::ng-deep .mat-form-field-infix{
+  width: 100px;
+  border: 0px;
+
+  // Fix for Angular 20: Override angular_15_fixes.css padding that hides the value
+  ::ng-deep .mat-mdc-form-field-infix {
     border: 0px;
+    padding-top: 0 !important;
+    min-height: 30px !important;
   }
 }
 
+.diverseWrapper {
+  padding-bottom: 20px;
+}
+.view-version {
+  margin-left: 10px;
+}
+
 .options-area {
-  float:right;
+  float: right;
   display: flex;
   flex-direction: column;
 }
@@ -60,46 +59,45 @@
 
 .deprecated {
   margin-left: 10px;
-    font-size: 13px;
-    color: var(--pink-span-color);
+  font-size: 13px;
+  color: var(--pink-span-color);
 }
 
 .extra-area {
-  float:right;
+  float: right;
   display: flex;
   flex-direction: column;
   padding-right: 70px;
 }
 
 .large-icon {
-  height:32px;
-  width:32px;
+  height: 32px;
+  width: 32px;
 }
 
 .icon-button {
-  padding:5px;
-  height:34px;
+  padding: 5px;
+  height: 34px;
   width: 34px;
   min-width: 34px;
   margin: 2px;
 }
 
 .indent {
-  padding-left:12px;
-  padding-bottom:10px;
+  padding-left: 12px;
+  padding-bottom: 10px;
 }
 
 .standardize {
-  padding-right:25px;
+  padding-right: 25px;
 }
 
-
 .overview-container {
-    display: flex;
+  display: flex;
 }
 
 .form-row {
-  width:100%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -108,4 +106,4 @@
 ::ng-deep .mat-select-value {
   max-width: 100%;
   width: auto;
-} 
+}

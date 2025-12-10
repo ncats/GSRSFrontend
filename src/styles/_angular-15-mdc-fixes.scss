@@ -919,6 +919,15 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
+.mat-mdc-progress-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1003;
+  display: block;
+}
+
 // ============================================================================
 // MAT-TOOLTIP FIXES
 // ============================================================================

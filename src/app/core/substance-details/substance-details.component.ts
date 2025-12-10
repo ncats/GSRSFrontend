@@ -202,6 +202,21 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       });
       name = name.replace(/<[^>]*>?/gm, '');
       this.titleService.setTitle(name);
+
+      // FIX #1: Normalize version field from API response
+      if (!response.version && response._version) {
+        response.version = response._version;
+      }
+      if (!response.version && response.recordVersion) {
+        response.version = response.recordVersion;
+      }
+      if (this.version && !response.version) {
+        response.version = this.version;
+      }
+      if (response.version) {
+        response.version = Number(response.version);
+      }
+
       this.substance = response;
       this.substanceUpdated.next(response);
       this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance, this.source).subscribe(substanceProperty => {

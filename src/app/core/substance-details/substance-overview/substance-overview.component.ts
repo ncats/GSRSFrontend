@@ -189,7 +189,15 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.versions = [];
       this.latestVersion = result;
       this.setVersionList();
-      this.versionControl.setValue(this.substance.version);
+
+      // FIX #2: Normalize version for dropdown - fallback to latest if undefined
+      let currentVersion: number;
+      if (this.substance.version) {
+        currentVersion = Number(this.substance.version);
+      } else {
+        currentVersion = result;
+      }
+      this.versionControl.setValue(currentVersion.toString());
     }, error => {
       console.log(error);
     });
