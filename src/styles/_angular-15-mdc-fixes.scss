@@ -978,6 +978,11 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   &:not(.mat-toolbar-multiple-rows) {
     flex-direction: row;
     height: 64px;
+
+    @media (max-width: 990px) {
+      height: auto;
+      flex-wrap: wrap;
+    }
   }
 
   // Multiple rows toolbar
@@ -1020,6 +1025,66 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-toolbar .fill,
 .mat-mdc-toolbar .fill {
   flex: 1 1 auto;
+}
+
+// ============================================================================
+// RESPONSIVE TOOLBAR ADJUSTMENTS
+// ============================================================================
+
+// Tablet/Mobile: Hide most navigation buttons at 1350px, show only Logo, Menu, Search, and Login
+@media (max-width: 1350px) {
+  .mat-toolbar,
+  .mat-mdc-toolbar {
+    // Logo container - always visible
+    > .logo-container {
+      display: flex !important;
+    }
+
+    // Menu button (nav-small span) - always visible
+    > span.nav-small {
+      display: inline-block !important;
+    }
+
+    // Hide all div containers EXCEPT logo-container and the one containing login
+    > div {
+      // Hide by default
+      display: none !important;
+
+      // But keep logo container visible
+      &.logo-container {
+        display: flex !important;
+      }
+
+      // Keep the div that contains login button or logged-in user visible
+      &:has(.login-link),
+      &:has(.logged-in) {
+        display: block !important;
+      }
+
+      // If logged-in is inside, ensure it displays properly
+      .logged-in {
+        display: flex !important;
+      }
+    }
+
+    // Middle-fill spacer - keep visible
+    > span.middle-fill {
+      display: block !important;
+      flex: 1 1 auto;
+    }
+
+    // Search component - keep visible and maintain flex behavior
+    > app-substance-text-search {
+      display: block !important;
+      flex-grow: 1;
+      max-width: 600px;
+    }
+
+    // Classic view container - hide
+    .classic-view-container {
+      display: none !important;
+    }
+  }
 }
 
 // ============================================================================
