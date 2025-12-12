@@ -17,8 +17,11 @@ mat-sidenav {
 }
 
 // Fix for mat-drawer-content overflowing onto sidenav when sidenav is in "side" mode and opened
+// Using !important to override Angular Material's inline styles (which vary: 297px, 237px, etc)
 .mat-drawer-content.mat-sidenav-content {
-  margin-left: 315px !important;
+  @media (min-width: 1100px) {
+    margin-left: 297px !important;
+  }
 }
 
 .expand-sidenav {
