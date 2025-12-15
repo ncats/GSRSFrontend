@@ -537,16 +537,13 @@ mat-sidenav {
   }
 }
 
+// Merged duplicate .mat-card-title blocks (previously at lines 540-547 and 549-561)
 .mat-card-title {
   display: flex;
   box-sizing: border-box;
   width: 100%;
   flex-direction: row;
   align-items: center;
-  white-space: nowrap;
-}
-
-.mat-card-title {
   white-space: normal;
 
   .substance-name {

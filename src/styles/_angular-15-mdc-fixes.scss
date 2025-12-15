@@ -36,16 +36,8 @@
 .mat-mdc-card-title {
   font-size: 24px;
   font-weight: 500;
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
-
-  // Remove default margins that MDC adds
-  &:not(:first-child) {
-    margin-top: 0 !important;
-  }
-
-  &:first-child {
-    margin-top: 0 !important;
-  }
 }
 
 // Fix MDC card subtitle
@@ -66,11 +58,6 @@
     padding-bottom: 0;
   }
 }
-
-// .mat-mdc-card-actions {
-//   justify-content: flex-end;
-//   padding: 0 !important;
-// }
 
 // ============================================================================
 // MAT-CHIP FIXES
@@ -93,17 +80,10 @@
   }
 }
 
-.mat-mdc-chip-set {
-  .mat-mdc-chip {
-    margin: 4px;
-  }
-}
-
-// Support for chip list (deprecated but may still be in use)
-.mat-mdc-chip-listbox {
-  .mat-mdc-chip {
-    margin: 4px;
-  }
+// Chip spacing for both chip-set and chip-listbox (deprecated)
+.mat-mdc-chip-set .mat-mdc-chip,
+.mat-mdc-chip-listbox .mat-mdc-chip {
+  margin: 4px;
 }
 
 // ============================================================================
@@ -677,27 +657,12 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   margin: 0 32px 0 24px;
 }
 
-// .mat-mdc-paginator-range-actions {
-//   display: flex;
-//   justify-content: flex-end !important;
-//   align-items: center;
-// }
-
 .mat-mdc-paginator-page-size .mdc-notched-outline__leading,
 .mat-mdc-paginator-page-size .mdc-notched-outline__trailing,
 .mat-mdc-paginator-page-size .mdc-notched-outline__notch {
   border-bottom: 1px solid currentColor !important;
   border-radius: 0 !important;
 }
-
-// /* Set the infix padding to zero */
-// // .mat-mdc-paginator-page-size .mat-mdc-select-value {
-// //   padding-left: 0 !important;
-// //   padding-right: 0 !important;
-// //   /* You may need to adjust vertical padding based on desired height */
-// //   padding-top: 0 !important;
-// //   padding-bottom: 0 !important;
-// // }
 
 /* Adjust the overall infix height if needed, as padding affects height */
 .mat-mdc-paginator-page-size .mat-mdc-form-field-infix {
