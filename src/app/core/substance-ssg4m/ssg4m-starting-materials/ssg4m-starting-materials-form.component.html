@@ -17,10 +17,14 @@
     <div>
       <div class="padtop10px related-substance"
         *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
-        <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-          eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header=""
-          [subuuid]="startingMaterial.substanceName?.refuuid" [showMorelinks]="true">
-        </app-substance-selector>
+        <!-- show DB search selector only when this is NOT a draft (drafts have a temporary $$tmpStructureId) -->
+        <ng-container *ngIf="!startingMaterial.$$tmpStructureId">
+          <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+            eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header=""
+            [subuuid]="startingMaterial.substanceName?.refuuid" [showMorelinks]="true">
+          </app-substance-selector>
+        </ng-container>
+
         <!-- Render interpreted structure for drafts (temporary structure id stored on the model) -->
         <div class="related-substance-image" *ngIf="startingMaterial.$$tmpStructureId">
           <img appSubstanceImage [entityId]="startingMaterial.$$tmpStructureId" [size]="150" />
