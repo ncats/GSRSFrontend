@@ -34,6 +34,7 @@ import {
 } from "../../substance/substance.model";
 import { SubstanceDetail } from "@gsrs-core/substance/substance.model";
 import { SubstanceFormSsg4mStagesService } from "./substance-form-ssg4m-stages.service";
+import { StructureService } from "@gsrs-core/structure/structure.service";
 import { SpecifiedSubstanceG4mStage } from "@gsrs-core/substance/substance.model";
 import { ConfirmDialogComponent } from "../../../fda/confirm-dialog/confirm-dialog.component";
 import { SubstanceDraftsComponent } from "@gsrs-core/substance-form/substance-drafts/substance-drafts.component";
@@ -64,7 +65,8 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private scrollToService: ScrollToService,
     public configService: ConfigService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private structureService: StructureService
   ) {}
 
   @Input()
@@ -341,6 +343,32 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
         approvalID: substanceObj.approvalID,
       };
       newStart.verbatimName = primaryName;
+
+      // If the draft contains a structure (molfile or smiles), interpret it on the server
+      // to obtain a temporary structure id that can be rendered via the same image API.
+      try {
+        const mol =
+          substanceObj.structure && substanceObj.structure.molfile
+            ? substanceObj.structure.molfile
+            : substanceObj.structure && substanceObj.structure.smiles
+            ? substanceObj.structure.smiles
+            : null;
+        if (mol) {
+          this.structureService.interpretStructure(mol).subscribe(
+            (response) => {
+              if (response && response.structure && response.structure.id) {
+                // store a temp id used by the image directive
+                (newStart as any).$$tmpStructureId = response.structure.id;
+              }
+            },
+            (error) => {
+              // ignore failures to interpret
+            }
+          );
+        }
+      } catch (e) {
+        // swallow any unexpected errors
+      }
 
       // Scroll to newly added starting material entry
       setTimeout(() => {
