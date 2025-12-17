@@ -334,9 +334,11 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
         null;
 
       newStart.substanceName = {
+        refPname: primaryName,
         name: primaryName,
         refuuid: substanceObj.uuid,
-        substanceClass: substanceObj.substanceClass,
+        substanceClass: "reference",
+        approvalID: substanceObj.approvalID,
       };
       newStart.verbatimName = primaryName;
 
