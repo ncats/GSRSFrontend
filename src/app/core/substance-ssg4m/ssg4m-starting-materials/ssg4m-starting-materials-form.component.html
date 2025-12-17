@@ -21,7 +21,7 @@
         <ng-container *ngIf="!startingMaterial.$$tmpStructureId">
           <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
             eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header=""
-            [subuuid]="startingMaterial.substanceName?.refuuid" [showMorelinks]="true">
+            [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
           </app-substance-selector>
         </ng-container>
 

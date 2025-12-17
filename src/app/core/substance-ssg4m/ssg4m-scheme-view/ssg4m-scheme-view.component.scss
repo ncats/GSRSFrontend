@@ -184,6 +184,13 @@ legend.border-step {
   cursor:zoom-in;
 }
 
+/* Ensure structure images in the scheme/step view scale to available cell space */
+.width33percent img, .width33percent .zoom img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 a {
   color: #0000EE;;;
 }
