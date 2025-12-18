@@ -1423,10 +1423,11 @@ export class SubstanceSsg4ManufactureFormComponent
           "Processing draft entry from localStorage key: " +
             JSON.stringify(draftSub)
         );
-        // If this draft's uuid appears in the current form JSON, treat it as included and process it
+        // If this draft's structure ID appears in the current form JSON, treat it as included and process it
         if (
-          draftSub.$$tmpStructureId &&
-          jsonStr.indexOf('"' + draftSub.$$tmpStructureId + '"') === -1
+          (draftSub.$$tmpStructureId &&
+            jsonStr.indexOf('"' + draftSub.$$tmpStructureId + '"') === -1) ||
+          !draftSub.$$tmpStructureId
         ) {
           // not referenced
           continue;
