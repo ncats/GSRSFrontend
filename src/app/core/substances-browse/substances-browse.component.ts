@@ -95,6 +95,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
+  private resizeTimeout: any;
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes', 'actions'];
   public smiles: string;
   private argsHash?: number;
@@ -375,6 +376,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+    clearTimeout(this.resizeTimeout);
     this.substanceService.pauseAsyncSearch();
     this.substanceService.clearSearchKey();
     this.facetManagerService.unregisterFacetSearchHandler();
@@ -382,7 +384,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {
@@ -1188,18 +1194,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private processResponsiveness = () => {
-    setTimeout(() => {
-      if (window) {
-        if (window.innerWidth < 1100) {
-          this.matSideNav.close();
-          this.isCollapsed = true;
-          this.hasBackdrop = true;
-        } else {
-          this.matSideNav.open();
-          this.hasBackdrop = false;
-        }
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
       }
-    });
+    }
   }
 
   openSideNav() {

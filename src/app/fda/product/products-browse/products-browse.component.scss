@@ -1188,3 +1188,15 @@ mat-card.style {
   font-size: 14px;
   height: 35px;
 }
+
+::ng-deep .mdc-tab {
+  justify-content: flex-start !important;
+  flex-grow: 0 !important;
+  border-bottom: transparent !important;
+  background-color: var(--tabstyle-bg-color-5) !important;
+  border-radius: 10px 10px 0 0;
+}
+
+::ng-deep .mdc-tab .mdc-tab-indicator {
+  display: none;
+}

@@ -131,8 +131,6 @@
 
     // Fix infix padding
     .mat-mdc-form-field-infix {
-      // padding-top: 25px;
-      // padding-bottom: 8px;
       min-height: auto;
       padding: 25px 0 0.4375em 0;
     }
@@ -182,10 +180,7 @@
 
   // Fix input and label alignment
   .mat-mdc-input-element {
-    font-size: inherit;
-    font-family: inherit;
-    font-weight: inherit;
-    line-height: inherit;
+    font: inherit;
   }
 
   // Fix label styling
@@ -552,12 +547,6 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   font-size: 14px;
   font-weight: 400;
   height: 48px;
-
-  .mdc-list-item__content {
-    // display: flex;
-    // align-items: center;
-    // padding: 0 16px;
-  }
 
   .mdc-list-item__primary-text {
     font-size: 14px;
@@ -944,10 +933,10 @@ button.mat-mdc-menu-item[ng-reflect-menu],
     flex-direction: row;
     height: 64px;
 
-    @media (max-width: 990px) {
-      height: auto;
-      flex-wrap: wrap;
-    }
+    // @media (max-width: 990px) {
+    //   height: auto;
+    //   flex-wrap: wrap;
+    // }
   }
 
   // Multiple rows toolbar
@@ -1089,6 +1078,17 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   z-index: 2;
 }
 
+// Global export button styles in sidenav content
+mat-sidenav-content .controls-container .export-button {
+  color: var(--regular-black-color);
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+              0 2px 2px rgba(0, 0, 0, 0.1411764706),
+              0 1px 5px rgba(0, 0, 0, 0.1215686275);
+  padding: 16px 16px;
+}
+
 // ============================================================================
 // GENERAL MDC FIXES
 // ============================================================================
@@ -1170,11 +1170,8 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-flat-button,
 .mat-stroked-button,
 .mat-icon-button {
-  // Inherit all MDC button styles
   @extend .mat-mdc-button;
 }
-
-// Legacy card support is already handled in _card.scss
 
 // Legacy form field support
 .mat-form-field {
@@ -1355,3 +1352,9 @@ a[mat-fab],
   background: none !important;
   box-shadow: none !important;
 }
+
+.mat-mdc-tab-header {
+  margin-top: -10px;
+    border-bottom: 1px solid #cdc9c9;
+}
+

@@ -137,6 +137,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   facetViewControl = new FormControl();
   private wildCardText: string;
   bulkSearchPanelOpen = false;
+  private resizeTimeout: any;
   substanceList: any;
   idMapping: Array< any > = [];
   demoResp: any;
@@ -455,6 +456,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    clearTimeout(this.resizeTimeout);
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -463,7 +465,11 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {
@@ -1139,18 +1145,16 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   private processResponsiveness = () => {
-    setTimeout(() => {
-      if (window) {
-        if (window.innerWidth < 1100) {
-          this.matSideNav.close();
-          this.isCollapsed = true;
-          this.hasBackdrop = true;
-        } else {
-          this.matSideNav.open();
-          this.hasBackdrop = false;
-        }
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
       }
-    });
+    }
   }
 
   openSideNav() {

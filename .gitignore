@@ -55,3 +55,8 @@ Thumbs.db
 /lib/dojo-custom-jsdraw/**/*
 
 /**/venv
+
+# Debug and documentation files
+DEBUG-*.md
+*-EVIDENCE.md
+SIDENAV-*.md

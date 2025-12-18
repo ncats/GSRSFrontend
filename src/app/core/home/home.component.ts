@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
 import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
 import { ConfigService, LoadedComponents } from '@gsrs-core/config';
 import { Environment } from 'src/environments/environment.model';
@@ -19,7 +19,7 @@ import { UsefulLink } from '../config/config.model';
     styleUrls: ['./home.component.scss'],
     standalone: false
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   environment: Environment;
   baseDomain: string;
   isAuthenticated = false;
@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   
   
   private overlayContainer: HTMLElement;
+  private resizeTimeout: any;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
 
 
@@ -143,6 +144,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
   }
+
 ngAfterViewInit(){
   this.processResponsiveness();
   const openSubscription = this.matSideNav.openedStart.subscribe(() => {
@@ -154,24 +156,30 @@ ngAfterViewInit(){
 
 }
 
+ngOnDestroy() {
+  clearTimeout(this.resizeTimeout);
+}
+
 @HostListener('window:resize', ['$event'])
 onResize() {
-  this.processResponsiveness();
+  // Debounce resize handler to avoid measuring during animation
+  clearTimeout(this.resizeTimeout);
+  this.resizeTimeout = setTimeout(() => {
+    this.processResponsiveness();
+  }, 150);
 }
 
 private processResponsiveness = () => {
-  setTimeout(() => {
-    if (window) {
-      if (window.innerWidth < 1100) {
-        this.matSideNav.close();
-        this.isCollapsed = true;
-        this.hasBackdrop = true;
-      } else {
-        this.matSideNav.open();
-        this.hasBackdrop = false;
-      }
+  if (window) {
+    if (window.innerWidth < 1100) {
+      this.matSideNav.close();
+      this.isCollapsed = true;
+      this.hasBackdrop = true;
+    } else {
+      this.matSideNav.open();
+      this.hasBackdrop = false;
     }
-  });
+  }
 }
   openSideNav() {
     this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
