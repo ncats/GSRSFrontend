@@ -1411,14 +1411,22 @@ export class SubstanceSsg4ManufactureFormComponent
     for (const key of draftKeys) {
       try {
         const entry = JSON.parse(localStorage.getItem(key));
+        console.log(
+          "Processing draft entry from localStorage key: " +
+            JSON.stringify(entry)
+        );
         if (!entry || !entry.substance) {
           continue;
         }
         const draftSub = entry.substance;
+        console.log(
+          "Processing draft entry from localStorage key: " +
+            JSON.stringify(draftSub)
+        );
         // If this draft's uuid appears in the current form JSON, treat it as included and process it
         if (
-          draftSub.uuid &&
-          jsonStr.indexOf('"' + draftSub.uuid + '"') === -1
+          draftSub.$$tmpStructureId &&
+          jsonStr.indexOf('"' + draftSub.$$tmpStructureId + '"') === -1
         ) {
           // not referenced
           continue;
