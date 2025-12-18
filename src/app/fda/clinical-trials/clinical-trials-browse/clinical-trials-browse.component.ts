@@ -75,6 +75,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   public isCollapsed = true;
   private searchTermHash: number;
   isSearchEditable = false;
+  private resizeTimeout: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -147,6 +148,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy() {
+    clearTimeout(this.resizeTimeout);
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -155,7 +157,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {

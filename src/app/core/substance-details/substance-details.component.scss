@@ -28,11 +28,23 @@
   background-color: var(--regular-white-color);
 }
 
+// Target the actual mat-drawer element that Material measures
+// Use !important to override Material's CSS variable defaults
+mat-sidenav.substance-sidenav.mat-drawer {
+  width: 315px !important;
+  min-width: 315px !important;
+  max-width: 315px !important;
+  flex: 0 0 315px !important;
+  box-sizing: border-box; // CRITICAL: Include padding in width calculation
+}
+
+// Legacy fallback (lower specificity)
 .substance-sidenav {
   width: 315px;
   min-width: 315px;
   max-width: 315px;
   flex: 0 0 315px;
+  box-sizing: border-box;
 }
 
 .substance-nav-list.mat-mdc-list-base {
