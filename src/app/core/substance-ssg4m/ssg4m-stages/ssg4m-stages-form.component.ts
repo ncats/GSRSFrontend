@@ -307,6 +307,9 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
       }
 
       const substanceObj = draftObj.substance || draftObj;
+      console.log(
+        "Adding draft starting material: " + JSON.stringify(substanceObj)
+      );
 
       // Add a new starting material and populate basic fields from the draft
       this.substanceFormSsg4mStagesService.addStartingMaterials(
