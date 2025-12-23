@@ -74,7 +74,7 @@
     "util": "0.12.4",
     "web-animations-js": "2.3.2",
     "xlsx": "^0.18.5",
-    "z-schema": "4.2.2",
+    "z-schema": "^6.0.2",
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
@@ -118,7 +118,9 @@
     "sass": "1.80.6",
     "ts-node": "10.5.0",
     "tslib": "2.3.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
   },
   "husky": {
     "hooks": {
