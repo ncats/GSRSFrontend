@@ -361,7 +361,26 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
             (response) => {
               if (response && response.structure && response.structure.id) {
                 // store a temp id used by the image directive
-                (newStart as any).$$tmpStructureId = response.structure.id;
+                      (newStart as any).$$tmpStructureId = response.structure.id;
+                      // also attach the temp id to the original draft object so it can be referenced later
+                      try {
+                        if (draftObj) {
+                          if (draftObj.substance) {
+                            draftObj.substance.$$tmpStructureId = response.structure.id;
+                          } else {
+                            (draftObj as any).$$tmpStructureId = response.structure.id;
+                          }
+                          if ((draftObj as any).file) {
+                            try {
+                              localStorage.setItem((draftObj as any).file, JSON.stringify(draftObj));
+                            } catch (e) {
+                              // ignore storage errors
+                            }
+                          }
+                        }
+                      } catch (e) {
+                        // ignore any errors updating draft
+                      }
               }
             },
             (error) => {

@@ -1424,10 +1424,12 @@ export class SubstanceSsg4ManufactureFormComponent
             JSON.stringify(draftSub)
         );
         // If this draft's structure ID appears in the current form JSON, treat it as included and process it
+
+        const tmpStructureId = draftSub.$$tmpStructureId || entry.$$tmpStructureId || null;
         if (
-          (entry.structure.id &&
-            jsonStr.indexOf('"' + entry.structure.id + '"') === -1) ||
-          !entry.structure.id
+          (tmpStructureId &&
+            jsonStr.indexOf('"' + tmpStructureId + '"') === -1) ||
+          !tmpStructureId
         ) {
           // not referenced
           continue;
