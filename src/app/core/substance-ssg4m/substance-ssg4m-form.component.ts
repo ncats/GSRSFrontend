@@ -1425,9 +1425,9 @@ export class SubstanceSsg4ManufactureFormComponent
         );
         // If this draft's structure ID appears in the current form JSON, treat it as included and process it
         if (
-          (draftSub.structure.id &&
-            jsonStr.indexOf('"' + draftSub.structure.id + '"') === -1) ||
-          !draftSub.structure.id
+          (entry.structure.id &&
+            jsonStr.indexOf('"' + entry.structure.id + '"') === -1) ||
+          !entry.structure.id
         ) {
           // not referenced
           continue;
