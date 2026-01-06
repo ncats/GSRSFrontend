@@ -1425,7 +1425,8 @@ export class SubstanceSsg4ManufactureFormComponent
         );
         // If this draft's structure ID appears in the current form JSON, treat it as included and process it
 
-        const tmpStructureId = draftSub.$$tmpStructureId || entry.$$tmpStructureId || null;
+        const tmpStructureId =
+          draftSub.$$tmpStructureId || entry.$$tmpStructureId || null;
         if (
           (tmpStructureId &&
             jsonStr.indexOf('"' + tmpStructureId + '"') === -1) ||
@@ -1459,9 +1460,6 @@ export class SubstanceSsg4ManufactureFormComponent
           validationResult.validationMessages &&
           validationResult.validationMessages.length > 0
         ) {
-          draftErrors.push(
-            'Draft "' + (entry.name || draftSub.uuid) + '" validation failed'
-          );
           validationResult.validationMessages.forEach((m) =>
             draftErrors.push(m.message || JSON.stringify(m))
           );
@@ -1503,10 +1501,21 @@ export class SubstanceSsg4ManufactureFormComponent
       // Stop spinner and display errors similar to other submission failures
       this.loadingService.setLoading(false);
       this.isLoading = false;
+      // this.submissionMessage =
+      //   "One or more drafts failed validation or save:\n" +
+      //   draftErrors.join("\n");
+      this.validationMessages = draftErrors.map((msg) => {
+        return {
+          actionType: "frontEnd",
+          appliedChange: false,
+          links: [],
+          message: msg,
+          messageType: "ERROR",
+          suggestedChange: false,
+        } as ValidationMessage;
+      });
+      this.validationResult = false;
       this.showSubmissionMessages = true;
-      this.submissionMessage =
-        "One or more drafts failed validation or save:\n" +
-        draftErrors.join("\n");
       return;
     }
 
