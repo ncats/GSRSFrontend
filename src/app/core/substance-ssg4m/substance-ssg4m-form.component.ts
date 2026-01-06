@@ -1460,9 +1460,10 @@ export class SubstanceSsg4ManufactureFormComponent
           validationResult.validationMessages &&
           validationResult.validationMessages.length > 0
         ) {
-          validationResult.validationMessages.forEach((m) =>
-            draftErrors.push(m.message || JSON.stringify(m))
-          );
+          this.validationMessages = validationResult.validationMessages;
+          // validationResult.validationMessages.forEach((m) =>
+          //   draftErrors.push(m.message || JSON.stringify(m))
+          // );
           // skip save for this draft
           continue;
         }
@@ -1497,23 +1498,23 @@ export class SubstanceSsg4ManufactureFormComponent
       }
     }
 
-    if (draftErrors.length > 0) {
+    if (this.validationMessages && this.validationMessages.length > 0) {
       // Stop spinner and display errors similar to other submission failures
       this.loadingService.setLoading(false);
       this.isLoading = false;
       // this.submissionMessage =
       //   "One or more drafts failed validation or save:\n" +
       //   draftErrors.join("\n");
-      this.validationMessages = draftErrors.map((msg) => {
-        return {
-          actionType: "frontEnd",
-          appliedChange: false,
-          links: [],
-          message: msg,
-          messageType: "ERROR",
-          suggestedChange: false,
-        } as ValidationMessage;
-      });
+      // this.validationMessages = draftErrors.map((msg) => {
+      //   return {
+      //     actionType: "frontEnd",
+      //     appliedChange: false,
+      //     links: [],
+      //     message: msg,
+      //     messageType: "ERROR",
+      //     suggestedChange: false,
+      //   } as ValidationMessage;
+      // });
       this.validationResult = false;
       this.showSubmissionMessages = true;
       return;
