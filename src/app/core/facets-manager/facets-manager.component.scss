@@ -1,5 +1,7 @@
 .facet-search-container {
     display: flex;
+    align-items: center;
+    margin-left: 10px;
 
     .mat-form-field {
         flex-grow: 1;
@@ -24,6 +26,7 @@
     white-space: nowrap;
     padding: 6px 0;
     overflow: hidden;
+    height: 35px;
 
     .facet-value-checkbox {
         padding: 0 3px 0 0;
@@ -131,4 +134,10 @@
     ::ng-deep  .mat-checkbox-layout {
         margin-bottom: 10px;
     }
+}
+
+::ng-deep .facet-search-container .mat-mdc-form-field .mat-mdc-form-field-infix {
+  width: 235px !important;
+  flex: 0 1 230px !important;
+  min-width: 0 !important;
 }

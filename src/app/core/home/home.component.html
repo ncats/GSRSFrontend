@@ -470,6 +470,7 @@
               <h3 class="resource-link">
                 <a
                   *ngIf="usefulLink.templateDescription"
+                  matButton="elevated"
                   class="mat-raised-button mat-button mat-primary mat-primary-button trial-button"
                   tabindex="0"
                   role="link"
@@ -478,6 +479,7 @@
                 >
                 <a
                   *ngIf="!usefulLink?.templateDescription"
+                  matButton="elevated"
                   class="mat-raised-button mat-button mat-primary mat-primary-button trial-button"
                   target="_blank"
                   href="{{ usefulLink.href }}"

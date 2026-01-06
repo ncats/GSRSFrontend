@@ -116,7 +116,7 @@
     .mdc-text-field {
       background-color: transparent;
       border-radius: 4px 4px 0 0;
-      padding: 0 12px;
+      // padding: 0 12px;
     }
 
     .mdc-text-field--filled {
@@ -1183,7 +1183,7 @@ mat-sidenav-content .controls-container .export-button {
 // Legacy list item support
 .mat-list-item {
   height: 48px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 // ============================================================================

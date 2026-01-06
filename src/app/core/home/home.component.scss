@@ -83,6 +83,8 @@
   font-weight: 550;
   margin-left: 30%;
   font-size: 23px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .resource-row {
@@ -413,16 +415,20 @@ mat-list-item {
   margin-bottom: 10px;
 }
 
-.mat-sidenav {
-  width: 365px;
-}
-
 mat-sidenav {
   width: 365px;
 }
 
 ::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
   padding: 0 12px 10px;
+}
+
+::ng-deep .mat-mdc-card-content {
+  padding: 0 !important;
+}
+
+::ng-deep .mdc-list-item__primary-text {
+  font-size: 16px !important;
 }
 
 .dynamic-container {
