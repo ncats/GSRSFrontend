@@ -1397,7 +1397,7 @@ export class SubstanceSsg4ManufactureFormComponent
     // Save SVG as Clob
     // this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
-    await this.exportStepView(document);
+    // await this.exportStepView(document);
     // const encodedSvg = await this.exportStepView(document)
     // this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
 
@@ -1460,10 +1460,11 @@ export class SubstanceSsg4ManufactureFormComponent
           validationResult.validationMessages &&
           validationResult.validationMessages.length > 0
         ) {
-          this.validationMessages = validationResult.validationMessages;
-          // validationResult.validationMessages.forEach((m) =>
-          //   draftErrors.push(m.message || JSON.stringify(m))
-          // );
+          this.validationMessages = validationResult.validationMessages.filter(
+            (message) =>
+              message.messageType.toUpperCase() === "ERROR" ||
+              message.messageType.toUpperCase() === "WARNING"
+          );
           // skip save for this draft
           continue;
         }
@@ -1502,19 +1503,7 @@ export class SubstanceSsg4ManufactureFormComponent
       // Stop spinner and display errors similar to other submission failures
       this.loadingService.setLoading(false);
       this.isLoading = false;
-      // this.submissionMessage =
-      //   "One or more drafts failed validation or save:\n" +
-      //   draftErrors.join("\n");
-      // this.validationMessages = draftErrors.map((msg) => {
-      //   return {
-      //     actionType: "frontEnd",
-      //     appliedChange: false,
-      //     links: [],
-      //     message: msg,
-      //     messageType: "ERROR",
-      //     suggestedChange: false,
-      //   } as ValidationMessage;
-      // });
+
       this.validationResult = false;
       this.showSubmissionMessages = true;
       return;
@@ -1554,6 +1543,8 @@ export class SubstanceSsg4ManufactureFormComponent
           "Hmm ... this seems to be taking longer than normal, there may be network issues. <br>Click here to cancel and continue working on the form. We suggest you save a local copy of the JSON.";
       }
     }, 8000);
+
+    await this.exportStepView(document);
 
     this.submitSubscription = this.substanceSsg4mService
       .saveSsg4m(this.ssg4mSyntheticPathway)
