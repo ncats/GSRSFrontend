@@ -932,6 +932,10 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   &:not(.mat-toolbar-multiple-rows) {
     flex-direction: row;
     height: 64px;
+    background-color: yellowgreen;
+    position: fixed;
+    top: 0;
+    z-index: 1001;
 
     // @media (max-width: 990px) {
     //   height: auto;
