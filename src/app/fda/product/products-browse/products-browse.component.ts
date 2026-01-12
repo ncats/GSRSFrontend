@@ -85,6 +85,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   lastPage: number;
   invalidPage = false;
   iconSrcPath = '';
+  phpIdIconSrcPath = '';
   dailyMedUrlConfig = '';
   downloadJsonHref: any;
   jsonFileName: string;
@@ -211,7 +212,10 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     });
     this.subscriptions.push(authSubscription);
 
+    // Get dailymed Icon
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
+
+    this.phpIdIconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_phpid.png`;
 
     // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
     if (this.subEntitySearchHash) {
@@ -319,8 +323,19 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         // Get Daily Med Url if Product Code Type is NDC CODE
         this.getDailyMedUrlforProductCode();
 
+        // Get PhPID Url if Product Code Type is PhPID
+        this.getPhpIdUrlforProductCode();
+
+        // Get RxNorm Url if Product Code Type is RxNorm
+        this.getRxNormUrlforProductCode();
+
         // Get Application Type and Application Number Url to go to Browse Application page.
         this.getApplicationNumberTypeUrl();
+
+        this.getIngredientStrengthDisplay();
+
+        // Sort Product Codes by ascending alphabetically
+        this.sortProductCodes();
 
         // Get list of Export extension options such as .xlsx, .txt
         this.productService.getExportOptions(this.etag).subscribe(response => {
@@ -600,6 +615,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     return str;
   }
 
+  sortProductCodes() {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        // Sort by Product Code Type, such as NDC CODE 
+        prov.productCodes.sort((a, b) => (a.productCodeType < b.productCodeType ? -1 : 1));
+      });
+    });
+  }
+
   getDailyMedUrlforProductCode(): void {
     this.products.forEach((product, indexProd) => {
       product.productProvenances.forEach((prov, indexProv) => {
@@ -608,7 +632,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           // if Product Code Type is 'NDC CODE', show Daily Med link on the browse Product page.
           if (prodCode) {
             if (prodCode.productCode) {
-              if (prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE') {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'ndc code') {
                 prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
               }
             }
@@ -617,6 +641,82 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         });
       });
     });
+  }
+
+  getPhpIdUrlforProductCode(): void {
+    let phpIdUrlConfig = this.generalService.getPhpIdUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'PHPID', show PhpID link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'phpid') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (phpIdUrlConfig) {
+                  prodCode._phpIdUrl = phpIdUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getRxNormUrlforProductCode(): void {
+    let rxNormUrlConfig = this.generalService.getRxNormUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'RxNorm', show RxNorm link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxnorm') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (rxNormUrlConfig) {
+                  prodCode._rxNormUrl = rxNormUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getIngredientStrengthDisplay() {
+    this.products.forEach((product, indexProd) => {
+      product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+        elementManuItem.productLots.forEach((elementLot, indexLot) => {
+          elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
+
+            // Display Strength details in readable format
+            if (elementIngred.originalNumeratorNumber && elementIngred.originalNumeratorUnit) {
+              elementIngred._ingredientStrengthDisplay = elementIngred.originalNumeratorNumber + ' '
+                + elementIngred.originalNumeratorUnit.toLowerCase();
+
+              if (elementIngred.originalDenominatorNumber && elementIngred.originalDenominatorUnit) {
+
+                // if Denominator Number is '1' and Denominator Unit is '1', do not display these values
+                if ((elementIngred.originalDenominatorUnit == '1') && (elementIngred.originalDenominatorNumber == '1')) {
+                  // Do something here
+                } else {
+                  elementIngred._ingredientStrengthDisplay = elementIngred._ingredientStrengthDisplay
+                    + ' per ' + elementIngred.originalDenominatorNumber + ' '
+                    + elementIngred.originalDenominatorUnit;
+                }
+              }
+            }
+          }); // ingredient loop
+        }); // product lot loop
+      }); // product manufacture Items loop            
+    }); // product loop
   }
 
   getSubstanceBySubstanceKey(): void {
@@ -937,17 +1037,45 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         delete approvalIdHolders[i]._approvalId;
       }
     }
- 
+
     const applicationUrlHolders = jp.query(old, '$..[?(@._applicationUrl)]');
     for (let i = 0; i < applicationUrlHolders.length; i++) {
       if (applicationUrlHolders[i]._applicationUrl) {
         delete applicationUrlHolders[i]._applicationUrl;
       }
     }
-    
+
+    const dailyMedUrlHolders = jp.query(old, '$..[?(@._dailyMedUrl)]');
+    for (let i = 0; i < dailyMedUrlHolders.length; i++) {
+      if (dailyMedUrlHolders[i]._dailyMedUrl) {
+        delete dailyMedUrlHolders[i]._dailyMedUrl;
+      }
+    }
+
+    const phpIdUrlHolders = jp.query(old, '$..[?(@._phpIdUrl)]');
+    for (let i = 0; i < phpIdUrlHolders.length; i++) {
+      if (phpIdUrlHolders[i]._phpIdUrl) {
+        delete phpIdUrlHolders[i]._phpIdUrl;
+      }
+    }
+
+    const rxNormUrlHolders = jp.query(old, '$..[?(@._rxNormUrl)]');
+    for (let i = 0; i < rxNormUrlHolders.length; i++) {
+      if (rxNormUrlHolders[i]._rxNormUrl) {
+        delete rxNormUrlHolders[i]._rxNormUrl;
+      }
+    }
+
+    const ingredStrenthDisplayHolders = jp.query(old, '$..[?(@._ingredientStrengthDisplay)]');
+    for (let i = 0; i < ingredStrenthDisplayHolders.length; i++) {
+      if (ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay) {
+        delete ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay;
+      }
+    }
+
     delete old['_activeIngredients'];
     delete old['_otherIngredients'];
-    
+
 
     return old;
   }
@@ -996,7 +1124,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   forwardToSubstance(bulkQID: number) {
 
     let currentUrl = this.location.path();
- 
+
     // store values in array to retreive later from localStorage
     let item = {
       'allSubFromProductUrl': currentUrl

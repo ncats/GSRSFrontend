@@ -84,8 +84,6 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     this.productId = this.activatedRoute.snapshot.params['id'];
     this.src = this.activatedRoute.snapshot.params['src'];
 
-    // Get Daily Med Url from Configuration
-    this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
 
     if (this.productId != null) {
@@ -149,8 +147,20 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           // Get Ingredient Name for the Substance Key
           this.getSubstanceBySubstanceKey();
 
+          // Get Ingredient Name Strength
+          this.getIngredientStrengthDisplay();
+
           // Get Daily Med Url
           this.getDailyMedUrlforProductCode();
+
+          // Get PhPID Url if Product Code Type is PhPID
+          this.getPhpIdUrlforProductCode();
+
+          // Get RxNorm Url if Product Code Type is RxNorm
+          this.getRxNormUrlforProductCode();
+
+          // Sort Product Codes by ascending alphabetically
+          this.sortProductCodes();
         }
       }
     }, error => {
@@ -203,7 +213,6 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
                         } // if Substance is public
 
-
                         // if Ingredient Type exists
                         if (elementIngred.ingredientType) {
 
@@ -226,7 +235,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                           // if there is no Ingredient Type
                           this.product._otherIngredients.push(elementIngred);
                         }
-      
+
                       } // if reponse
                     });
                     this.subscriptions.push(subSubscription);
@@ -296,7 +305,17 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
+  sortProductCodes() {
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      // Sort by Product Code Type, such as NDC CODE 
+      prov.productCodes.sort((a, b) => (a.productCodeType < b.productCodeType ? -1 : 1));
+    });
+  }
+
   getDailyMedUrlforProductCode(): void {
+    // Get Daily Med Url from Configuration
+    this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
+
     this.product.productProvenances.forEach((prov, indexProv) => {
       prov.productCodes.forEach(prodCode => {
 
@@ -310,6 +329,75 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         }
       });
     });
+  }
+
+  getPhpIdUrlforProductCode(): void {
+    let phpIdUrlConfig = this.generalService.getPhpIdUrlConfig();
+
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      prov.productCodes.forEach(prodCode => {
+
+        // if Product Code Type is 'PHPID', show PhpID link on the browse Product page.
+        if (prodCode) {
+          if (prodCode.productCode) {
+            if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'phpid') {
+              // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+              if (phpIdUrlConfig) {
+                prodCode._phpIdUrl = phpIdUrlConfig + prodCode.productCode;
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  getRxNormUrlforProductCode(): void {
+    let rxNormUrlConfig = this.generalService.getRxNormUrlConfig();
+
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      prov.productCodes.forEach(prodCode => {
+
+        // if Product Code Type is 'RxNorm', show RxNorm link on the browse Product page.
+        if (prodCode) {
+          if (prodCode.productCode) {
+            if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxnorm') {
+              // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+              if (rxNormUrlConfig) {
+                prodCode._rxNormUrl = rxNormUrlConfig + prodCode.productCode;
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  getIngredientStrengthDisplay() {
+    this.product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+      elementManuItem.productLots.forEach((elementLot, indexLot) => {
+        elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
+
+          // Display Strength details in readable format
+          if (elementIngred.originalNumeratorNumber && elementIngred.originalNumeratorUnit != null) {
+            elementIngred._ingredientStrengthDisplay = elementIngred.originalNumeratorNumber + ' '
+              + elementIngred.originalNumeratorUnit.toLowerCase();
+
+            if (elementIngred.originalDenominatorNumber && elementIngred.originalDenominatorUnit != null) {
+              // if Denominator Number is '1' and Denominator Unit is '1', do not display these values
+              if ((elementIngred.originalDenominatorUnit == '1') && (elementIngred.originalDenominatorNumber == '1')) {
+                // Do something here
+              } else {
+                elementIngred._ingredientStrengthDisplay = elementIngred._ingredientStrengthDisplay
+                  + ' per ' + elementIngred.originalDenominatorNumber + ' '
+                  + elementIngred.originalDenominatorUnit;
+              }
+            }
+          }
+        }); // ingredient loop
+      }); // product lot loop
+    }); // product manufacture Items loop            
   }
 
   saveJSON(): void {
@@ -330,7 +418,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     const copyProd = _.cloneDeep(this.product);
     let cleanProduct = this.scrub(copyProd);
 
-    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
+    let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -457,6 +545,34 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     for (let i = 0; i < approvalIdHolders.length; i++) {
       if (approvalIdHolders[i]._approvalId) {
         delete approvalIdHolders[i]._approvalId;
+      }
+    }
+
+    const dailyMedUrlHolders = jp.query(old, '$..[?(@._dailyMedUrl)]');
+    for (let i = 0; i < dailyMedUrlHolders.length; i++) {
+      if (dailyMedUrlHolders[i]._dailyMedUrl) {
+        delete dailyMedUrlHolders[i]._dailyMedUrl;
+      }
+    }
+
+    const phpIdUrlHolders = jp.query(old, '$..[?(@._phpIdUrl)]');
+    for (let i = 0; i < phpIdUrlHolders.length; i++) {
+      if (phpIdUrlHolders[i]._phpIdUrl) {
+        delete phpIdUrlHolders[i]._phpIdUrl;
+      }
+    }
+
+    const rxNormUrlHolders = jp.query(old, '$..[?(@._rxNormUrl)]');
+    for (let i = 0; i < rxNormUrlHolders.length; i++) {
+      if (rxNormUrlHolders[i]._rxNormUrl) {
+        delete rxNormUrlHolders[i]._rxNormUrl;
+      }
+    }
+
+    const ingredStrenthDisplayHolders = jp.query(old, '$..[?(@._ingredientStrengthDisplay)]');
+    for (let i = 0; i < ingredStrenthDisplayHolders.length; i++) {
+      if (ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay) {
+        delete ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay;
       }
     }
 

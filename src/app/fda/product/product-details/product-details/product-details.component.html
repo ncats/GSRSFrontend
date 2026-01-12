@@ -15,8 +15,7 @@
       <div class="margintopneg10px">
         <!-- Show Json -->
         <span *ngIf="product && product.id">
-          <a button mat-icon-button color="primary" (click)="showJSON()"
-             matTooltip='Show JSON'>
+          <a button mat-icon-button color="primary" (click)="showJSON()" matTooltip='Show JSON'>
             <mat-icon>article</mat-icon>
           </a>&nbsp;
         </span>
@@ -103,7 +102,7 @@
                   <div *ngIf="prodProv.productNames.length > 0; else noProductName">
                     <div *ngFor="let prodName of prodProv.productNames; let indexName = index">
                       <div class="divflex">
-                        <div class="colororange font14px"><b>{{prodName.productName}}</b>
+                        <div class="colorlightblue font16px"><b>{{prodName.productName}}</b>
 
                           <span *ngIf="prodName.productNameType">
                             <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
@@ -126,7 +125,7 @@
 
               <div class="row-property-2">
                 <div class="row-property-key-2">
-                  Marketing Status:
+                  Product Status:
                 </div>
                 <div class="row-property-value-2">
                   {{prodProv.productStatus}}
@@ -134,29 +133,52 @@
               </div>
             </div> <!-- row -->
 
-
             <div class="row">
               <div class="row-property-2">
                 <div class="row-property-key-2">
                   Product Code:
                 </div>
                 <div class="row-property-value-2">
+                  
                   <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
                     <span *ngIf="i > 0"><br></span>
-                    <span class="font14px"><b>{{prodCode.productCode}}</b></span>
-                    <span class="colorgray font11px">&nbsp;({{prodCode.productCodeType}})</span>
+                    <b>{{prodCode.productCodeType}}</b>:
 
                     <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
                     <span *ngIf="prodCode._dailyMedUrl">
-                      &nbsp;&nbsp;&nbsp;
                       <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
                         title="Go to DailyMed website">
-                        <img [src]="iconSrcPath">
+                        {{prodCode.productCode}}<img class="marginleft5px" [src]="iconSrcPath">
                       </a>
                       <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                       </mat-icon>
                     </span>
-                  </span>
+
+                    <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
+                    <span *ngIf="prodCode._phpIdUrl">
+                      <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
+                        title="Go to PhPID website">
+                        {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
+                      </a>
+                      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                      </mat-icon>
+                    </span>
+
+                    <!-- Display RxNorm link, if Product Code Type is 'RxNorm'-->
+                    <span *ngIf="prodCode._rxNormUrl">
+                      <a href="{{prodCode._rxNormUrl}}" target="_blank" alt="Go to RxNorm website"
+                        title="Go to RxNorm website">
+                        {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
+                      </a>
+                      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                      </mat-icon>
+                    </span>
+
+                    <span *ngIf="!prodCode._dailyMedUrl && !prodCode._phpIdUrl && !prodCode._rxNormUrl">
+                      {{prodCode.productCode}}
+                    </span>
+                  </span> <!-- loop productCodes -->
+
                 </div>
               </div>
 
@@ -238,7 +260,11 @@
             </div>
             <div class="row-property-value-2">
               <div *ngFor="let prodManuItem of product.productManufactureItems; let indexManuItem = index">
-                <span *ngIf="indexManuItem > 0">|</span>
+                <span *ngIf="indexManuItem > 0">
+                  <span *ngIf="prodManuItem.dosageForm">
+                    |
+                  </span>
+                </span>
                 {{prodManuItem.dosageForm}}
               </div>
             </div>
@@ -317,16 +343,27 @@
                         <div class="divflex">
                           <!-- Original Numerator -->
                           <div>
+                            <span *ngIf="prodIngred._ingredientStrengthDisplay">
+                              <span class="font11px">
+                                <b>
+                                  {{ prodIngred._ingredientStrengthDisplay }}
+                                </b>
+                              </span>
+                            </span>
+                            <!--
                             <span *ngIf="prodIngred.originalNumeratorNumber">
-                              <span class="font11px">Numerator:
+                              <span class="font11px">
+                                Numerator:
                                 <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{ prodIngred.originalNumeratorUnit
                                   }}
                                 </b>
                               </span>
                             </span>
+                            -->
                           </div>
 
                           <!-- Original Denominator -->
+                          <!--
                           <div class="marginleft5px">
                             <span *ngIf="prodIngred.originalDenominatorNumber">
                               <span class="font11px">&nbsp;Denominator:
@@ -337,6 +374,7 @@
                               </span>
                             </span>
                           </div>
+                          -->
                         </div> <!-- divflex -->
 
                         <!-- Display Ingredient Type -->
@@ -421,6 +459,15 @@
                         <div class="divflex">
                           <!-- Original Numerator -->
                           <div>
+                            <span *ngIf="prodIngred._ingredientStrengthDisplay">
+                              <span class="font11px">
+                                <b>
+                                  {{ prodIngred._ingredientStrengthDisplay }}
+                                </b>
+                              </span>
+                            </span>
+
+                            <!--
                             <span *ngIf="prodIngred.originalNumeratorNumber">
                               <span class="font11px">Numerator:
                                 <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{ prodIngred.originalNumeratorUnit
@@ -428,9 +475,11 @@
                                 </b>
                               </span>
                             </span>
+                            -->
                           </div>
 
                           <!-- Original Denominator -->
+                          <!--
                           <div class="marginleft5px">
                             <span *ngIf="prodIngred.originalDenominatorNumber">
                               <span class="font11px">&nbsp;Denominator:
@@ -441,7 +490,7 @@
                               </span>
                             </span>
                           </div>
-
+                          -->
                         </div> <!-- divflex -->
 
                         <!-- Display Ingredient Type -->
@@ -742,7 +791,7 @@
                         </mat-card>
                         <!-- Product MANUFACTURER END -->
 
-                      </div>  <!-- *ngIf="!showMoreLessManufacture" -->
+                      </div> <!-- *ngIf="!showMoreLessManufacture" -->
 
                       <!-- Lot -->
                       <mat-card [ngClass]="!showMoreLessManufacture?'bordergray margintop20px':''">
@@ -753,60 +802,60 @@
 
                             <div *ngIf="!showMoreLessManufacture">
 
-                            <div class="title2">
-                              <span class="colorgreen">LOT {{indexLot + 1}}</span>
-                            </div>
+                              <div class="title2">
+                                <span class="colorgreen">LOT {{indexLot + 1}}</span>
+                              </div>
 
-                            <div class="row">
-                              <div class="row-property">
-                                <div class="row-property-key">
-                                  Lot Type:
-                                </div>
-                                <div class="row-property-value">
-                                  {{ lot.lotType }}
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key">
+                                    Lot Type:
+                                  </div>
+                                  <div class="row-property-value">
+                                    {{ lot.lotType }}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
 
-                            <div class="row">
-                              <div class="row-property">
-                                <div class="row-property-key">
-                                  Lot Number:
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key">
+                                    Lot Number:
+                                  </div>
+                                  <div class="row-property-value">
+                                    {{ lot.lotNo }}
+                                  </div>
                                 </div>
-                                <div class="row-property-value">
-                                  {{ lot.lotNo }}
+                                <div class="row-property">
+                                  <div class="row-property-key">
+                                    Lot Size:
+                                  </div>
+                                  <div class="row-property-value">
+                                    {{ lot.lotSize }}
+                                  </div>
                                 </div>
                               </div>
-                              <div class="row-property">
-                                <div class="row-property-key">
-                                  Lot Size:
-                                </div>
-                                <div class="row-property-value">
-                                  {{ lot.lotSize }}
-                                </div>
-                              </div>
-                            </div>
 
-                            <div class="row">
-                              <div class="row-property">
-                                <div class="row-property-key">
-                                  Expiry Date:
+                              <div class="row">
+                                <div class="row-property">
+                                  <div class="row-property-key">
+                                    Expiry Date:
+                                  </div>
+                                  <div class="row-property-value">
+                                    {{ lot.expiryDate }}
+                                  </div>
                                 </div>
-                                <div class="row-property-value">
-                                  {{ lot.expiryDate }}
+                                <div class="row-property">
+                                  <div class="row-property-key">
+                                    Manufacture Date:
+                                  </div>
+                                  <div class="row-property-value">
+                                    {{ lot.manufactureDate }}
+                                  </div>
                                 </div>
                               </div>
-                              <div class="row-property">
-                                <div class="row-property-key">
-                                  Manufacture Date:
-                                </div>
-                                <div class="row-property-value">
-                                  {{ lot.manufactureDate }}
-                                </div>
-                              </div>
-                            </div>
-                            <!-- Lot -->
-                          </div>  <!-- *ngIf="!showMoreLessManufacture" -->
+                              <!-- Lot -->
+                            </div> <!-- *ngIf="!showMoreLessManufacture" -->
 
 
                             <!-- Display Ingredient BEGIN -->
@@ -820,7 +869,8 @@
                               </mat-card-title>
                               <mat-card-content>
 
-                                <div class="margintop15px" *ngFor="let ingred of lot.productIngredients; let indexIng = index">
+                                <div class="margintop15px"
+                                  *ngFor="let ingred of lot.productIngredients; let indexIng = index">
 
                                   <span *ngIf="indexIng > 0"><br></span>
 

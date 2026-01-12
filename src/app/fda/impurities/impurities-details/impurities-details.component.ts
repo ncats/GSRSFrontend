@@ -117,29 +117,9 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
             // assign Mobile Phase list to datasource to display on table
             this.dataSource = new MatTableDataSource(elementRelTest.impuritiesSolutionTableList);
 
-            // Populate columns for Mobile Phase
-            // add letter in the Mobile Phase column
-            if (elementRelTest.impuritiesSolutionList) {
-              if (elementRelTest.impuritiesSolutionList.length > 0) {
+            // Get Mobile Phase
+            this.getMobilPhase(elementRelTest, indexTest);
 
-                let displayedColumns = [
-                  'Number',
-                  'Time (min)'
-                ]
-
-                elementRelTest.impuritiesSolutionList.forEach(solution => {
-                  if (solution) {
-
-                    if (solution.solutionLetter) {
-                      let columnName = 'Solution ' + solution.solutionLetter + ' (%)';
-                      displayedColumns.push(columnName);
-                     
-                      this.displayedColumnsRow[indexTest] = displayedColumns;
-                    }
-                  }
-                });
-              } // impuritiesSolutionTableList length > 0
-            } // impuritiesSolutionTableList exists
           }); // Loop: elementRelSub.impuritiesTestList
         });
 
@@ -184,6 +164,33 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
       this.handleSubstanceRetrivalError();
     });
     this.subscriptions.push(getImpuritiesSubscribe);
+  }
+
+  getMobilPhase(elementRelTest: any, indexTest: number) {
+    // Populate columns for Mobile Phase
+    // add letter in the Mobile Phase column
+    if (elementRelTest.impuritiesSolutionList) {
+      if (elementRelTest.impuritiesSolutionList.length > 0) {
+
+        let displayedColumns = [
+          'Number',
+          'Time (min)'
+        ]
+
+        elementRelTest.impuritiesSolutionList.forEach(solution => {
+          if (solution) {
+
+            if (solution.solutionLetter) {
+              let columnName = 'Solution ' + solution.solutionLetter + ' (%)';
+              displayedColumns.push(columnName);
+
+              this.displayedColumnsRow[indexTest] = displayedColumns;
+            }
+          }
+        });
+      } // impuritiesSolutionTableList length > 0
+    } // impuritiesSolutionTableList exists
+
   }
 
   getSubstancePreferredName(substanceUuid: string) {
