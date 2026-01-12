@@ -100,6 +100,8 @@ export interface ProductCode {
   modifiedBy?: string;
   modifyDate?: number;
   _dailyMedUrl?: string;
+  _phpIdUrl?: string;
+  _rxNormUrl?: string;
 }
 
 export interface ProductCompany {
@@ -266,6 +268,7 @@ export interface ProductIngredient {
   _substanceUuid?: string;
   _ingredientName?: string;
   _approvalId?: string;
+  _ingredientStrengthDisplay?: string;
   _ingredientNameActiveMoieties?: Array<String>;
   _basisOfStrengthSubstanceUuid?: string;
   _basisOfStrengthIngredientName?: string;

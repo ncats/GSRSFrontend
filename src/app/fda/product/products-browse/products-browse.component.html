@@ -620,19 +620,43 @@
 
                         <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
                           <span *ngIf="i > 0"><br></span>
-                          <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
+                          <b>{{prodCode.productCodeType}}</b>:
 
                           <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
                           <span *ngIf="prodCode._dailyMedUrl">
                             <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
                               title="Go to DailyMed website">
-                              <img [src]="iconSrcPath">
+                              {{prodCode.productCode}}<img class="marginleft5px" [src]="iconSrcPath">
+                            </a>
+                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                            </mat-icon>
+                          </span>
+  
+                          <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
+                          <span *ngIf="prodCode._phpIdUrl">
+                            <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
+                              title="Go to PhPID Publish website">
+                              {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
                             </a>
                             <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                             </mat-icon>
                           </span>
 
-                        </span>
+                          <!-- Display RxNorm link, if Product Code Type is 'RxNorm'-->
+                          <span *ngIf="prodCode._rxNormUrl">
+                            <a href="{{prodCode._rxNormUrl}}" target="_blank" alt="Go to RxNorm website"
+                              title="Go to RxNorm website">
+                              {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
+                            </a>
+                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                            </mat-icon>
+                          </span>
+
+                          <span *ngIf="!prodCode._dailyMedUrl && !prodCode._phpIdUrl && !prodCode._rxNormUrl">
+                            {{prodCode.productCode}}
+                          </span>
+                        </span> <!-- loop productCodes -->
+
                       </div>
                     </div>
                     <div class="row-property">
@@ -719,30 +743,6 @@
               </mat-tab-group>
               <!-- GROUP BY PROVENANCE END -->
 
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Dosage Form:
-                  </div>
-                  <div class="row-property-value">
-                    <div *ngFor="let prodManuItem of product.productManufactureItems; let indexManuItem = index">
-                      <span *ngIf="indexManuItem > 0">|</span>
-                      {{prodManuItem.dosageForm}}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Route of Administration:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.routeAdmin}}
-                  </div>
-                </div>
-              </div>
-
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
@@ -762,46 +762,31 @@
                 </div>
               </div>
 
-              <!-- Display Audit Details -->
-              <div class="row" *ngIf="isAdmin">
+              <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
-                    Created Date:
+                    Dosage Form:
                   </div>
                   <div class="row-property-value">
-                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                    <div *ngFor="let prodManuItem of product.productManufactureItems; let indexManuItem = index">
+                      <span *ngIf="indexManuItem > 0">
+                        <span *ngIf="prodManuItem.dosageForm">|</span>
+                      </span>
+                      {{prodManuItem.dosageForm}}
+                    </div>
                   </div>
                 </div>
                 <div class="row-property">
                   <div class="row-property-key">
-                    Last Modified:
+                    Route of Administration:
                   </div>
                   <div class="row-property-value">
-                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row" *ngIf="isAdmin">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Created By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.createdBy}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Last Modified By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.modifiedBy}}
+                    {{product.routeAdmin}}
                   </div>
                 </div>
               </div>
 
-              <!-- Display Ingredients -->
+              <!-- Display Ingredients BEGIN -->
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
@@ -870,19 +855,27 @@
                               </div>
 
                               <div class="divflex">
-                                <!-- Original Numerator -->
+                                <!-- Original Numerator and Denominator Strength -->
                                 <div>
-                                  <span *ngIf="prodIngred.originalNumeratorNumber">
-                                    <span class="font11px">Numerator:
-                                      <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                  <span *ngIf="prodIngred._ingredientStrengthDisplay">
+                                    <span class="font11px">
+                                      <b>
+                                        {{ prodIngred._ingredientStrengthDisplay }}
+
+                                        <!--
+                                        {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
                                         prodIngred.originalNumeratorUnit
-                                        }}
+                                        }} per
+                                        {{ prodIngred.originalDenominatorNumber }}
+                                        {{ prodIngred.originalDenominatorUnit }}
+                                        -->
                                       </b>
                                     </span>
                                   </span>
                                 </div>
 
                                 <!-- Original Denominator -->
+                                <!--
                                 <div class="marginleft5px">
                                   <span *ngIf="prodIngred.originalDenominatorNumber">
                                     <span class="font11px">&nbsp;&nbsp;Denominator:
@@ -893,6 +886,7 @@
                                     </span>
                                   </span>
                                 </div>
+                                -->
                               </div> <!-- divflex -->
 
                               <!-- Display Ingredient Type -->
@@ -975,8 +969,25 @@
                               </div>
 
                               <div class="divflex">
-                                <!-- Original Numerator -->
+                                <!-- Original Numerator and Denominator Strength -->
                                 <div>
+                                  <span *ngIf="prodIngred._ingredientStrengthDisplay">
+                                    <span class="font11px">
+                                      <b>
+                                        {{ prodIngred._ingredientStrengthDisplay }}
+
+                                        <!--
+                                      {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                      prodIngred.originalNumeratorUnit
+                                      }} per
+                                      {{ prodIngred.originalDenominatorNumber }}
+                                      {{ prodIngred.originalDenominatorUnit }}
+                                      -->
+                                      </b>
+                                    </span>
+                                  </span>
+                                </div>
+                                <!--
                                   <span *ngIf="prodIngred.originalNumeratorNumber">
                                     <span class="font11px">Numerator:
                                       <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
@@ -985,9 +996,9 @@
                                       </b>
                                     </span>
                                   </span>
-                                </div>
-
+                                  -->
                                 <!-- Original Denominator -->
+                                <!--
                                 <div class="marginleft5px">
                                   <span *ngIf="prodIngred.originalDenominatorNumber">
                                     <span class="font11px">&nbsp;&nbsp;Denominator:
@@ -998,7 +1009,7 @@
                                     </span>
                                   </span>
                                 </div>
-
+                                -->
                               </div> <!-- divflex -->
 
                               <!-- Display Ingredient Type -->
@@ -1021,7 +1032,47 @@
                   </div>
                 </div> <!-- Inactive Substance -->
 
-              </div> <!-- row Substance Name-->
+              </div> <!-- row Substance Name DISPLAY END -->
+
+              <!-- Display Audit Details BEGIN -->
+              <div class="row" *ngIf="isAdmin">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Created Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Last Modified:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="isAdmin">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Created By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.createdBy}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Last Modified By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.modifiedBy}}
+                  </div>
+                </div>
+              </div>
+              <!-- Audit Details END -->
 
             </mat-card-content>
           </mat-card>

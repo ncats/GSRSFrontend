@@ -538,4 +538,26 @@ export class GeneralService extends BaseHttpService {
     return this.getSubstanceKeyTypeForEntityConfig("organization");
   }
 
+  getPhpIdUrlConfig(): string {
+    let phpIdUrlConfig = null;
+
+    // In the frontend configuration file, read 'phpIdUrl' field
+    if (this.configService.configData && this.configService.configData.phpIdUrl) {
+      phpIdUrlConfig = this.configService.configData.phpIdUrl;
+    }
+
+    return phpIdUrlConfig;
+  }
+
+  getRxNormUrlConfig(): any {
+    let rxNormUrlConfig = null;
+
+    // In the frontend configuration file, read 'rxNormUrl' field
+    if (this.configService.configData && this.configService.configData.rxNormUrl) {
+      rxNormUrlConfig = this.configService.configData.rxNormUrl;
+    }
+
+    return rxNormUrlConfig;
+  }
+
 }
