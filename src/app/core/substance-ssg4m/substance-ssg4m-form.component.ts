@@ -1269,6 +1269,32 @@ export class SubstanceSsg4ManufactureFormComponent
     return `${datePart}${timePart}`;
   }
 
+  private removeTmpStructureIdFields(obj: any): void {
+    if (!obj || typeof obj !== "object") {
+      return;
+    }
+    if (Array.isArray(obj)) {
+      for (const item of obj) {
+        this.removeTmpStructureIdFields(item);
+      }
+      return;
+    }
+    for (const key of Object.keys(obj)) {
+      if (key === "$$tmpStructureId") {
+        try {
+          delete obj[key];
+        } catch (e) {
+          // ignore
+        }
+        continue;
+      }
+      const val = obj[key];
+      if (val && typeof val === "object") {
+        this.removeTmpStructureIdFields(val);
+      }
+    }
+  }
+
   // waitForElement(selector: string, timeout = 2000): Promise<HTMLElement> {
   //   return new Promise((resolve, reject) => {
   //     const interval = setInterval(() => {
@@ -1390,10 +1416,6 @@ export class SubstanceSsg4ManufactureFormComponent
       this.ssg4mSyntheticPathway = {};
     }
 
-    // Existing Record
-    // get the JSON from the SSG4m Form and store as a Clob into the database
-    this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
-
     // Save SVG as Clob
     // this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
 
@@ -1407,7 +1429,11 @@ export class SubstanceSsg4ManufactureFormComponent
       k.startsWith("gsrs-draft-")
     );
     const draftErrors: Array<string> = [];
-    const savedUuidMap: { [oldUuid: string]: string } = {};
+    // const savedUuidMap: { [oldUuid: string]: string } = {};
+
+    // Ensure validationMessages is an array before concatenating into it
+    this.validationMessages = [];
+
     for (const key of draftKeys) {
       try {
         const entry = JSON.parse(localStorage.getItem(key));
@@ -1419,12 +1445,8 @@ export class SubstanceSsg4ManufactureFormComponent
           continue;
         }
         const draftSub = entry.substance;
-        console.log(
-          "Processing draft entry from localStorage key: " +
-            JSON.stringify(draftSub)
-        );
-        // If this draft's structure ID appears in the current form JSON, treat it as included and process it
 
+        // If this draft's structure ID appears in the current form JSON, treat it as included and process it
         const tmpStructureId =
           draftSub.$$tmpStructureId || entry.$$tmpStructureId || null;
         if (
@@ -1437,7 +1459,6 @@ export class SubstanceSsg4ManufactureFormComponent
         }
 
         // Validate draft
-        // wrap observable in a Promise to await
         // validation may return ValidationResults or throw error
         // Use take(1) on observable
         // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -1460,15 +1481,35 @@ export class SubstanceSsg4ManufactureFormComponent
           validationResult.validationMessages &&
           validationResult.validationMessages.length > 0
         ) {
-          this.validationMessages = validationResult.validationMessages.filter(
-            (message) =>
-              message.messageType.toUpperCase() === "ERROR" ||
-              message.messageType.toUpperCase() === "WARNING"
-          );
-          // skip save for this draft
-          continue;
+          const filteredValidations = validationResult.validationMessages
+            .filter(
+              (message) =>
+                message.messageType.toUpperCase() === "ERROR" ||
+                message.messageType.toUpperCase() === "WARNING"
+            )
+            .map((msg) => {
+              // prepend draft name/identifier to message
+              msg.message =
+                'Draft "' +
+                (entry.name || draftSub.names?.[0]?.name || entry.key) +
+                '": ' +
+                msg.message;
+              return msg;
+            });
+          this.validationMessages = [
+            ...this.validationMessages,
+            ...filteredValidations,
+          ];
+
+          // skip save for this draft if there are validation errors/warnings
+          if (filteredValidations.length > 0) {
+            continue;
+          }
         }
 
+        if (draftSub && draftSub.$$tmpStructureId) {
+          delete draftSub.$$tmpStructureId;
+        }
         // Submit (save) the draft
         const saveResult: any = await new Promise((resolve) => {
           this.substanceService
@@ -1480,22 +1521,25 @@ export class SubstanceSsg4ManufactureFormComponent
             );
         });
 
-        if (saveResult && saveResult.error) {
-          draftErrors.push(
-            'Draft "' +
-              (entry.name || draftSub.uuid) +
-              '" could not be saved: ' +
-              (saveResult.error.message || JSON.stringify(saveResult.error))
-          );
-        } else if (saveResult && saveResult.uuid) {
-          // record mapping from draft uuid to newly saved uuid
-          try {
-            savedUuidMap[draftSub.uuid] = saveResult.uuid;
-          } catch (e) {}
-        }
+        // if (saveResult && saveResult.error) {
+        // this.submissionMessage = "There was a problem with your submission";
+        // this.addServerError(saveResult.error.serverError);
+        // draftErrors.push(
+        //   'Draft "' +
+        //     (entry.name || draftSub.uuid) +
+        //     '" could not be saved: ' +
+        //     (saveResult.error.message || JSON.stringify(saveResult.error))
+        // );
+        // } // else if (saveResult && saveResult.uuid) {
+        //   // record mapping from draft uuid to newly saved uuid
+        //   try {
+        //     savedUuidMap[draftSub.uuid] = saveResult.uuid;
+        //   } catch (e) {}
+        // }
       } catch (e) {
         // ignore malformed localStorage entries but record error
-        draftErrors.push("Error processing draft " + key + ": " + e.message);
+        this.addServerError(e.serverError);
+        // draftErrors.push("Error processing draft " + key + ": " + e.message);
       }
     }
 
@@ -1510,30 +1554,30 @@ export class SubstanceSsg4ManufactureFormComponent
     }
 
     // If we saved any drafts, replace their refuuids in the form JSON with the returned uuids
-    const savedKeys = Object.keys(savedUuidMap || {});
-    if (savedKeys && savedKeys.length > 0) {
-      try {
-        let updatedJson = jsonValue;
-        savedKeys.forEach((oldUuid) => {
-          const newUuid = savedUuidMap[oldUuid];
-          if (oldUuid && newUuid) {
-            // replace occurrences of the old uuid (as JSON string) with the new uuid
-            updatedJson = updatedJson
-              .split('"' + oldUuid + '"')
-              .join('"' + newUuid + '"');
-          }
-        });
-        // update in-memory json and the payload stored on ssg4mSyntheticPathway
-        this.json = JSON.parse(updatedJson);
-        jsonValue = updatedJson;
-        if (this.ssg4mSyntheticPathway == null) {
-          this.ssg4mSyntheticPathway = {};
-        }
-        this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
-      } catch (e) {
-        // ignore replace errors but continue
-      }
-    }
+    // const savedKeys = Object.keys(savedUuidMap || {});
+    // if (savedKeys && savedKeys.length > 0) {
+    //   try {
+    //     let updatedJson = jsonValue;
+    //     savedKeys.forEach((oldUuid) => {
+    //       const newUuid = savedUuidMap[oldUuid];
+    //       if (oldUuid && newUuid) {
+    //         // replace occurrences of the old uuid (as JSON string) with the new uuid
+    //         updatedJson = updatedJson
+    //           .split('"' + oldUuid + '"')
+    //           .join('"' + newUuid + '"');
+    //       }
+    //     });
+    //     // update in-memory json and the payload stored on ssg4mSyntheticPathway
+    //     this.json = JSON.parse(updatedJson);
+    //     jsonValue = updatedJson;
+    //     if (this.ssg4mSyntheticPathway == null) {
+    //       this.ssg4mSyntheticPathway = {};
+    //     }
+    //     this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
+    //   } catch (e) {
+    //     // ignore replace errors but continue
+    //   }
+    // }
 
     // After submitting Save button, the UI waits for 8 seconds to see if it gets a response.
     // after 5 seconds it displays a warning on the top of the UI form.
@@ -1545,6 +1589,17 @@ export class SubstanceSsg4ManufactureFormComponent
     }, 8000);
 
     await this.exportStepView(document);
+
+    // Existing Record
+    // get the JSON from the SSG4m Form and store as a Clob into the database
+    // Remove any $$tmpStructureId markers from the in-memory JSON before saving
+    try {
+      if (this.json) {
+        this.removeTmpStructureIdFields(this.json);
+        jsonValue = JSON.stringify(this.json);
+      }
+    } catch (e) {}
+    this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
 
     this.submitSubscription = this.substanceSsg4mService
       .saveSsg4m(this.ssg4mSyntheticPathway)

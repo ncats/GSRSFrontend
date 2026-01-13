@@ -100,11 +100,11 @@
             (click)="addStartingMaterial(processIndex, siteIndex, stageIndex)">
             <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Input Material
           </button>
-          &nbsp;
-          <button mat-stroked-button color="primary" class="button-add-draft"
-            matTooltip="Add a Draft as Input Material"
-            (click)="addDraft(processIndex, siteIndex, stageIndex)">
-            <mat-icon>note_add</mat-icon>Add Draft
+          <!-- Button to add an existing draft as an Input Material -->
+          <button mat-stroked-button color="primary" class="button-add" style="margin-left:8px;"
+            (click)="addDraft(processIndex, siteIndex, stageIndex)"
+            matTooltip="Add a Draft as Input Material">
+            <mat-icon>library_add</mat-icon>Add Draft
           </button>
         </div>
       </fieldset>
