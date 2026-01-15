@@ -16,6 +16,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   @Output() deletedEmitter = new EventEmitter();
   download: any;
   deleted = false;
+  canceled = false;
   exists: boolean;
   browseLink = false;
   parameters: NavigationExtras = {};
@@ -68,6 +69,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
 
   cancel() {
     this.authService.changeDownload(this.download.cancelUrl.url).pipe(take(1)).subscribe(response => {
+      this.canceled = true;
       this.refresh();
     });
   }
@@ -79,7 +81,7 @@ export class DownloadMonitorComponent implements OnInit, OnDestroy {
   }
 
   deleteDownload() {
-    this.authService.deleteDownload(this.download.removeUrl.url).pipe(take(1)).subscribe(response => {
+    this.authService.deleteDownload(this.download.removeUrl.url || this.download.cancelUrl.url.replace('/@cancel', '')).pipe(take(1)).subscribe(response => {
       this.deleted = true;
     });
   }
