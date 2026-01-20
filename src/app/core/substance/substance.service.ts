@@ -777,6 +777,11 @@ export class SubstanceService extends BaseHttpService {
   }
 
   saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
+    // Remove temporary structure ID if present (created when loading draft into G4SSM form)
+    if (substance && (substance as any).$$tmpStructureId) {
+        delete (substance as any).$$tmpStructureId;
+    }
+
     const method = type === 'import' || !substance.uuid ? 'POST' : 'PUT';
     const options = { body: substance };
 
