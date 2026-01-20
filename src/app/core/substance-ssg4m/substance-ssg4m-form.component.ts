@@ -1390,13 +1390,10 @@ export class SubstanceSsg4ManufactureFormComponent
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
-    // const commaIndex = dataUrl.indexOf(',');
-    // document.body.removeChild(container);
-    // return dataUrl.slice(commaIndex + 1);
   }
 
   async submit(): Promise<void> {
-    await this.expandStepView();
+    !this.configService.configData.isPfdaVersion && await this.expandStepView();
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -1404,183 +1401,17 @@ export class SubstanceSsg4ManufactureFormComponent
     this.json = this.substanceFormService.cleanSubstance();
     let jsonValue = JSON.stringify(this.json);
 
-    // Save SVG/Image as Blob
-    //This is a hacky placeholder way to force viz
-    //TODO finish this
-    const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
-    // window["schemeUtil"].onFinishedLayout = async (svg) => {
-    //   window["schemeUtil"].onFinishedLayout = (svg) => { };
-
-    // if New Record, initialize object
+    // Initialize pathway object if new record
     if (this.ssg4mSyntheticPathway == null) {
       this.ssg4mSyntheticPathway = {};
     }
 
-    // Save SVG as Clob
-    // this.ssg4mSyntheticPathway.sbmsnImage = document.querySelector("#scheme-viz-view").innerHTML;
-
-    // await this.exportStepView(document);
-    // const encodedSvg = await this.exportStepView(document)
-    // this.ssg4mSyntheticPathway.stepViewImage = decodeURIComponent(encodedSvg);
-
-    // Before saving, find any local drafts that are referenced by this form and validate/save them first.
-    const jsonStr = JSON.stringify(this.json || {});
-    const draftKeys = Object.keys(localStorage).filter((k) =>
-      k.startsWith("gsrs-draft-")
-    );
-    const draftErrors: Array<string> = [];
-    // const savedUuidMap: { [oldUuid: string]: string } = {};
-
-    // Ensure validationMessages is an array before concatenating into it
-    this.validationMessages = [];
-
-    for (const key of draftKeys) {
-      try {
-        const entry = JSON.parse(localStorage.getItem(key));
-        console.log(
-          "Processing draft entry from localStorage key: " +
-            JSON.stringify(entry)
-        );
-        if (!entry || !entry.substance) {
-          continue;
-        }
-        const draftSub = entry.substance;
-
-        // If this draft's structure ID appears in the current form JSON, treat it as included and process it
-        const tmpStructureId =
-          draftSub.$$tmpStructureId || entry.$$tmpStructureId || null;
-        if (
-          (tmpStructureId &&
-            jsonStr.indexOf('"' + tmpStructureId + '"') === -1) ||
-          !tmpStructureId
-        ) {
-          // not referenced
-          continue;
-        }
-
-        // Validate draft
-        // validation may return ValidationResults or throw error
-        // Use take(1) on observable
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        const validationResult: any = await new Promise((resolve) => {
-          this.substanceService
-            .validateSubstance(draftSub)
-            .pipe(take(1))
-            .subscribe(
-              (res) => {
-                resolve(res);
-              },
-              (err) => {
-                resolve({ error: err });
-              }
-            );
-        });
-
-        if (
-          validationResult &&
-          validationResult.validationMessages &&
-          validationResult.validationMessages.length > 0
-        ) {
-          const filteredValidations = validationResult.validationMessages
-            .filter(
-              (message) =>
-                message.messageType.toUpperCase() === "ERROR" ||
-                message.messageType.toUpperCase() === "WARNING"
-            )
-            .map((msg) => {
-              // prepend draft name/identifier to message
-              msg.message =
-                'Draft "' +
-                (entry.name || draftSub.names?.[0]?.name || entry.key) +
-                '": ' +
-                msg.message;
-              return msg;
-            });
-          this.validationMessages = [
-            ...this.validationMessages,
-            ...filteredValidations,
-          ];
-
-          // skip save for this draft if there are validation errors/warnings
-          if (filteredValidations.length > 0) {
-            continue;
-          }
-        }
-
-        if (draftSub && draftSub.$$tmpStructureId) {
-          delete draftSub.$$tmpStructureId;
-        }
-        // Submit (save) the draft
-        const saveResult: any = await new Promise((resolve) => {
-          this.substanceService
-            .saveSubstance(draftSub)
-            .pipe(take(1))
-            .subscribe(
-              (resp) => resolve(resp),
-              (err) => resolve({ error: err })
-            );
-        });
-
-        // if (saveResult && saveResult.error) {
-        // this.submissionMessage = "There was a problem with your submission";
-        // this.addServerError(saveResult.error.serverError);
-        // draftErrors.push(
-        //   'Draft "' +
-        //     (entry.name || draftSub.uuid) +
-        //     '" could not be saved: ' +
-        //     (saveResult.error.message || JSON.stringify(saveResult.error))
-        // );
-        // } // else if (saveResult && saveResult.uuid) {
-        //   // record mapping from draft uuid to newly saved uuid
-        //   try {
-        //     savedUuidMap[draftSub.uuid] = saveResult.uuid;
-        //   } catch (e) {}
-        // }
-      } catch (e) {
-        // ignore malformed localStorage entries but record error
-        this.addServerError(e.serverError);
-        // draftErrors.push("Error processing draft " + key + ": " + e.message);
-      }
-    }
-
-    if (this.validationMessages && this.validationMessages.length > 0) {
-      // Stop spinner and display errors similar to other submission failures
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-
-      this.validationResult = false;
-      this.showSubmissionMessages = true;
+    // Process and validate local drafts referenced by this form
+    const hasValidationErrors = await this.processLocalDrafts(jsonValue);
+    if (hasValidationErrors) {
       return;
     }
 
-    // If we saved any drafts, replace their refuuids in the form JSON with the returned uuids
-    // const savedKeys = Object.keys(savedUuidMap || {});
-    // if (savedKeys && savedKeys.length > 0) {
-    //   try {
-    //     let updatedJson = jsonValue;
-    //     savedKeys.forEach((oldUuid) => {
-    //       const newUuid = savedUuidMap[oldUuid];
-    //       if (oldUuid && newUuid) {
-    //         // replace occurrences of the old uuid (as JSON string) with the new uuid
-    //         updatedJson = updatedJson
-    //           .split('"' + oldUuid + '"')
-    //           .join('"' + newUuid + '"');
-    //       }
-    //     });
-    //     // update in-memory json and the payload stored on ssg4mSyntheticPathway
-    //     this.json = JSON.parse(updatedJson);
-    //     jsonValue = updatedJson;
-    //     if (this.ssg4mSyntheticPathway == null) {
-    //       this.ssg4mSyntheticPathway = {};
-    //     }
-    //     this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
-    //   } catch (e) {
-    //     // ignore replace errors but continue
-    //   }
-    // }
-
-    // After submitting Save button, the UI waits for 8 seconds to see if it gets a response.
-    // after 5 seconds it displays a warning on the top of the UI form.
     setTimeout(() => {
       if (this.isSavedSuccessful === false) {
         this.saveDelayedMessage =
@@ -1588,110 +1419,240 @@ export class SubstanceSsg4ManufactureFormComponent
       }
     }, 8000);
 
-    await this.exportStepView(document);
+    // Export step view as SVG; Disabled for PFDA
+    !this.configService.configData.isPfdaVersion && await this.exportStepView(document);
 
-    // Existing Record
-    // get the JSON from the SSG4m Form and store as a Clob into the database
-    // Remove any $$tmpStructureId markers from the in-memory JSON before saving
+    // Prepare final JSON and call save endpoint
+    jsonValue = this.prepareFinalJson();
+    this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
+
+    this.savePathway();
+  }
+
+  // Processes local drafts from localStorage that are referenced by the G4 form.
+  // Validates and saves each referenced draft.
+  // returns true if there are validation errors that should stop submission, false otherwise
+  private async processLocalDrafts(jsonStr: string): Promise<boolean> {
+    const draftKeys = Object.keys(localStorage).filter((k) =>
+      k.startsWith("gsrs-draft-")
+    );
+
+    this.validationMessages = [];
+
+    for (const key of draftKeys) {
+      await this.processSingleDraft(key, jsonStr);
+    }
+
+    if (this.validationMessages && this.validationMessages.length > 0) {
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
+      this.validationResult = false;
+      this.showSubmissionMessages = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  // Processes a single draft from localStorage.
+  private async processSingleDraft(key: string, jsonStr: string): Promise<void> {
+    try {
+      const entry = JSON.parse(localStorage.getItem(key));
+      console.log(
+        "Processing draft entry from localStorage key: " +
+          JSON.stringify(entry)
+      );
+
+      if (!entry || !entry.substance) {
+        return;
+      }
+
+      const draftSub = entry.substance;
+
+      if (!this.isDraftReferencedInForm(draftSub, entry, jsonStr)) {
+        return;
+      }
+
+      const hasErrors = await this.validateAndCollectDraftErrors(draftSub, entry);
+      if (hasErrors) {
+        return;
+      }
+
+      // Clean up temporary fields and save
+      if (draftSub && draftSub.$$tmpStructureId) {
+        delete draftSub.$$tmpStructureId;
+      }
+
+      await this.saveDraftSubstance(draftSub);
+    } catch (e) {
+      this.addServerError(e.serverError);
+    }
+  }
+
+  // Checks if a draft's temporary structure ID is referenced in the current form JSON.
+  private isDraftReferencedInForm(draftSub: any, entry: any, jsonStr: string): boolean {
+    const tmpStructureId =
+      draftSub.$$tmpStructureId || entry.$$tmpStructureId || null;
+
+    if (!tmpStructureId) {
+      return false;
+    }
+
+    return jsonStr.indexOf('"' + tmpStructureId + '"') !== -1;
+  }
+
+  // Validates a draft and collects any validation errors/warnings.
+  // returns true if there are validation errors that should skip saving, false otherwise
+  private async validateAndCollectDraftErrors(draftSub: any, entry: any): Promise<boolean> {
+    const validationResult: any = await new Promise((resolve) => {
+      this.substanceService
+        .validateSubstance(draftSub)
+        .pipe(take(1))
+        .subscribe(
+          (res) => resolve(res),
+          (err) => resolve({ error: err })
+        );
+    });
+
+    if (
+      validationResult &&
+      validationResult.validationMessages &&
+      validationResult.validationMessages.length > 0
+    ) {
+      const filteredValidations = this.filterAndPrefixValidationMessages(
+        validationResult.validationMessages,
+        entry,
+        draftSub
+      );
+
+      this.validationMessages = [
+        ...this.validationMessages,
+        ...filteredValidations,
+      ];
+
+      return filteredValidations.length > 0;
+    }
+
+    return false;
+  }
+
+  private filterAndPrefixValidationMessages(
+    messages: ValidationMessage[],
+    entry: any,
+    draftSub: any
+  ): ValidationMessage[] {
+    return messages
+      .filter(
+        (message) =>
+          message.messageType.toUpperCase() === "ERROR" ||
+          message.messageType.toUpperCase() === "WARNING"
+      )
+      .map((msg) => {
+        msg.message =
+          'Draft "' +
+          (entry.name || draftSub.names?.[0]?.name || entry.key) +
+          '": ' +
+          msg.message;
+        return msg;
+      });
+  }
+
+  private async saveDraftSubstance(draftSub: any): Promise<any> {
+    return new Promise((resolve) => {
+      this.substanceService
+        .saveSubstance(draftSub)
+        .pipe(take(1))
+        .subscribe(
+          (resp) => resolve(resp),
+          (err) => resolve({ error: err })
+        );
+    });
+  }
+
+  private prepareFinalJson(): string {
     try {
       if (this.json) {
         this.removeTmpStructureIdFields(this.json);
-        jsonValue = JSON.stringify(this.json);
+        return JSON.stringify(this.json);
       }
-    } catch (e) {}
-    this.ssg4mSyntheticPathway.sbmsnDataText = jsonValue;
+    } catch (e) {
+      // Ignore errors and return current JSON
+    }
+    return JSON.stringify(this.json);
+  }
 
+  // Saves the SSG4m synthetic pathway to the backend.
+  private savePathway(): void {
     this.submitSubscription = this.substanceSsg4mService
       .saveSsg4m(this.ssg4mSyntheticPathway)
       .pipe(take(1))
       .subscribe(
-        (response) => {
-          // Stop the spinner
-          this.loadingService.setLoading(false);
-          this.isLoading = false;
-
-          // Set validation messages to null
-          this.validationMessages = null;
-          this.showSubmissionMessages = false;
-          this.validationResult = false;
-
-          // if Saved Successfully
-          if (
-            response &&
-            (response.synthPathwaySkey ||
-              this.configService.configData.isPfdaVersion)
-          ) {
-            if (response.synthPathwaySkey) {
-              this.id = response.synthPathwaySkey.toString();
-            }
-
-            // if the API communication does resolve, AND the initial save went through, it will replace
-            // the warning message. Only show this message when user clicked on the 'Cancel' button.
-            // After user clicks 'Refresh' button, refresh the page manually.
-            this.isSavedSuccessful = true;
-            if (
-              this.isCancelBtnClicked === true &&
-              this.isSavedSuccessful === true
-            ) {
-              this.saveDelayedMessage =
-                " Network communication restored, click here to refresh with saved version.";
-            } else {
-              this.saveDelayedMessage = "";
-              this.isCancelBtnClicked = false;
-              // Only show successful dialog and refresh page, if user does not click on the cancel button.
-              this.openSuccessDialog(
-                undefined,
-                this.configService.configData.isPfdaVersion
-                  ? response.fileUrl
-                  : null
-              );
-            }
-            // Refresh the current page, this will not cause record locking issue
-            /* this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-          this.router.onSameUrlNavigation = 'reload';
-          this.router.navigate(['/substances-ssg4m', this.id, 'edit']);
-          */
-          }
-        },
-        (error: SubstanceFormResults) => {
-          this.loadingService.setLoading(false);
-          this.isLoading = false;
-          // If submit was not successful, display Message
-          this.saveDelayedMessage =
-            " Network communication restored, RECORD HAS NOT BEEN SAVED. Please resave the record.";
-
-          this.showSubmissionMessages = true;
-          this.submissionMessage = null;
-          if (error.validationMessages && error.validationMessages.length) {
-            this.validationResult = error.isSuccessfull;
-            this.validationMessages = error.validationMessages.filter(
-              (message) =>
-                message.messageType.toUpperCase() === "ERROR" ||
-                message.messageType.toUpperCase() === "WARNING"
-            );
-            this.showSubmissionMessages = true;
-          } else {
-            this.submissionMessage = "There was a problem with your submission";
-            this.addServerError(error.serverError);
-            setTimeout(() => {
-              this.showSubmissionMessages = false;
-              this.submissionMessage = null;
-            }, 8000);
-          }
-        }
+        (response) => this.handleSaveSuccess(response),
+        (error: SubstanceFormResults) => this.handleSaveError(error)
       );
     this.subscriptions.push(this.submitSubscription);
+  }
 
-    // };  //window
+  private handleSaveSuccess(response: any): void {
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
+    this.validationMessages = null;
+    this.showSubmissionMessages = false;
+    this.validationResult = false;
 
-    // let tempCallback = window["schemeUtil"].onFinishedLayout;
-    // window["schemeUtil"].onFinishedLayout = (s)=>{
-    //   window["schemeUtil"].onFinishedLayout =(ss)=>{};
+    const isSuccessful =
+      response &&
+      (response.synthPathwaySkey || this.configService.configData.isPfdaVersion);
 
-    //   setTimeout(tempCallback(s),3000);
-    // };
+    if (!isSuccessful) {
+      return;
+    }
 
-    // window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    if (response.synthPathwaySkey) {
+      this.id = response.synthPathwaySkey.toString();
+    }
+
+    this.isSavedSuccessful = true;
+
+    // Handle UI messaging based on whether cancel was clicked
+    if (this.isCancelBtnClicked === true && this.isSavedSuccessful === true) {
+      this.saveDelayedMessage =
+        " Network communication restored, click here to refresh with saved version.";
+    } else {
+      this.saveDelayedMessage = "";
+      this.isCancelBtnClicked = false;
+      this.openSuccessDialog(
+        undefined,
+        this.configService.configData.isPfdaVersion ? response.fileUrl : null
+      );
+    }
+  }
+
+  private handleSaveError(error: SubstanceFormResults): void {
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
+    this.saveDelayedMessage =
+      " Network communication restored, RECORD HAS NOT BEEN SAVED. Please resave the record.";
+
+    this.showSubmissionMessages = true;
+    this.submissionMessage = null;
+
+    if (error.validationMessages && error.validationMessages.length) {
+      this.validationResult = error.isSuccessfull;
+      this.validationMessages = error.validationMessages.filter(
+        (message) =>
+          message.messageType.toUpperCase() === "ERROR" ||
+          message.messageType.toUpperCase() === "WARNING"
+      );
+      this.showSubmissionMessages = true;
+    } else {
+      this.submissionMessage = "There was a problem with your submission";
+      this.addServerError(error.serverError);
+      setTimeout(() => {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = null;
+      }, 8000);
+    }
   }
 
   cancelSubmit() {
