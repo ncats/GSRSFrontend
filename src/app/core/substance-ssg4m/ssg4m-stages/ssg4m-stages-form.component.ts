@@ -287,7 +287,6 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
       // dialog may return either an index (number) or the draft object.
       let draftObj: any = null;
       if (typeof response === "number") {
-        // try to read from the dialog component instance
         const comp = dialogRef.componentInstance as any;
         if (comp) {
           if (comp.filtered && comp.filtered[response]) {
@@ -307,9 +306,6 @@ export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
       }
 
       const substanceObj = draftObj.substance || draftObj;
-      console.log(
-        "Adding draft starting material: " + JSON.stringify(substanceObj)
-      );
 
       // Add a new starting material and populate basic fields from the draft
       this.substanceFormSsg4mStagesService.addStartingMaterials(
