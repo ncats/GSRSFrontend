@@ -1107,6 +1107,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
+
+    // For existing records with changes but no change reason, apply default
+    this.substanceFormService.applyDefaultChangeReasonIfNeeded('Error Checking');
+
     if (this.activatedRoute.snapshot.queryParams['stagingID']) {
       this.submitStaging();
     } else {

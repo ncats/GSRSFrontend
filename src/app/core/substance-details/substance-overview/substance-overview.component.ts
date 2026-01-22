@@ -189,8 +189,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.versions = [];
       this.latestVersion = result;
       this.setVersionList();
-
-      // FIX #2: Normalize version for dropdown - fallback to latest if undefined
+      
       let currentVersion: number;
       if (this.substance.version) {
         currentVersion = Number(this.substance.version);
@@ -239,7 +238,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   restoreVersion() {
     const dialogRef = this.dialog.open(SubstanceHistoryDialogComponent, {
-      data: {'substance': this.substance, 'version': this.substance.version, 'latest': this.latestVersion.toString()},
+      data: {'substance': this.substance, 'version': String(this.substance.version), 'latest': String(this.latestVersion)},
       width: '650px',
       autoFocus: false,
       disableClose: true

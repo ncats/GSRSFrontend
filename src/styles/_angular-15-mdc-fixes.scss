@@ -79,6 +79,10 @@
     font-size: 14px;
   }
 }
+.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
+  --mat-chip-elevated-container-color: var(--primary-color);
+  --mat-chip-label-text-color: #fff; /* optional */
+}
 
 // Chip spacing for both chip-set and chip-listbox (deprecated)
 .mat-mdc-chip-set .mat-mdc-chip,
@@ -932,7 +936,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   &:not(.mat-toolbar-multiple-rows) {
     flex-direction: row;
     height: 64px;
-    background-color: yellowgreen;
+    background-color: var(--primary-color);
     position: fixed;
     top: 0;
     z-index: 1001;

@@ -5,9 +5,9 @@
       <form [formGroup]="sequenceSearchForm">
         <div class="parameters">
           <mat-form-field>
+            <mat-label>Search Identity</mat-label>
             <input
               matInput
-              placeholder="Search Identity"
               formControlName="cutoff"
             />
             <mat-error
@@ -25,14 +25,15 @@
             </mat-error>
           </mat-form-field>
           <mat-form-field>
-            <mat-select placeholder="Cutoff Type" formControlName="type">
+            <mat-label>Cutoff Type</mat-label>
+            <mat-select formControlName="type">
               <mat-option value="SUB"> Contains Alignment Match </mat-option>
               <mat-option value="GLOBAL"> Global Alignment Match </mat-option>
             </mat-select>
           </mat-form-field>
           <mat-form-field>
+            <mat-label>Sequence Type</mat-label>
             <mat-select
-              placeholder="Sequence Type"
               formControlName="sequenceType"
             >
               <mat-option value="protein"> Protein </mat-option>

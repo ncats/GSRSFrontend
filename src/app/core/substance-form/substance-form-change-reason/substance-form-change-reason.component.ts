@@ -1,56 +1,105 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef, signal, computed } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 import { SubstanceFormService } from '../substance-form.service';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-substance-form-change-reason',
-    templateUrl: './substance-form-change-reason.component.html',
-    styleUrls: ['./substance-form-change-reason.component.scss'],
-    standalone: false
+  selector: 'app-substance-form-change-reason',
+  templateUrl: './substance-form-change-reason.component.html',
+  styleUrls: ['./substance-form-change-reason.component.scss'],
+  standalone: false
 })
-export class SubstanceFormChangeReasonComponent extends SubstanceFormBase implements OnInit, OnDestroy {
-  changeReasonControl = new FormControl();
-  subscriptions: Array<Subscription> = [];
+export class SubstanceFormChangeReasonComponent extends SubstanceFormBase implements OnInit {
+  private readonly substanceFormService = inject(SubstanceFormService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor(
-    private substanceFormService: SubstanceFormService
-  ) {
-    super();
+  readonly changeReasonControl = new FormControl<string | null>(null);
+  readonly isNewRecord = signal(true);
+  readonly fieldLabel = computed(() =>
+    this.isNewRecord() ? 'Comment' : 'Change Reason'
+  );
+
+  readonly placeholderText = computed(() =>
+    this.isNewRecord()
+      ? 'Optional comment about this new registration'
+      : 'Describe why you are making this change'
+  );
+
+  readonly hintText = computed(() =>
+    this.isNewRecord()
+      ? 'This comment is optional for new registrations.'
+      : 'Will default to "Error Checking" if left blank.'
+  );
+
+  private readonly userHasTypedInSession = signal(false);
+  private readonly initialLoadComplete = signal(false);
+
+  ngOnInit(): void {
+    this.initializeOnServiceReady();
+    this.subscribeToChangeReasonUpdates();
+    this.subscribeToUserInput();
+    
   }
 
-  ngOnInit() {
-    this.menuLabelUpdate.emit('Change Reason');
-    this.substanceFormService.ready().subscribe(() => {
-      this.setHiddenState();
-    });
-    const changeReasonSubscription = this.substanceFormService.changeReason.subscribe(changeReason => {
-      this.changeReasonControl.setValue(changeReason);
-    });
-    this.subscriptions.push(changeReasonSubscription);
-    const valueSubscription = this.changeReasonControl.valueChanges.pipe(
-      debounceTime(1000),
-      distinctUntilChanged(),
-    ).subscribe(changeReason => {
-      this.substanceFormService.updateChangeReason(changeReason);
-    });
-    this.subscriptions.push(valueSubscription);
+  private initializeOnServiceReady(): void {
+    this.substanceFormService.ready()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.isNewRecord.set(this.substanceFormService.isNewRecord());
+        this.updateHiddenState();
+        this.clearHistoricalValueIfEditing();
+        this.menuLabelUpdate.emit(this.fieldLabel());
+      });
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
+  private subscribeToChangeReasonUpdates(): void {
+    this.substanceFormService.changeReason
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(changeReason => {
+        if (!this.initialLoadComplete()) {
+          this.handleInitialLoad(changeReason);
+        }
+      });
   }
 
-  setHiddenState(): void {
-    const uuid = this.substanceFormService.getUuid();
+ 
+  private handleInitialLoad(changeReason: string | null): void {
+    const value = this.isNewRecord() ? changeReason : null;
+    this.changeReasonControl.setValue(value, { emitEvent: false });
+    this.initialLoadComplete.set(true);
+  }
 
-    if (uuid == null) {
-      this.hiddenStateUpdate.emit(true);
+  
+  private subscribeToUserInput(): void {
+    this.changeReasonControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(changeReason => {
+        if (changeReason && changeReason.trim().length > 0) {
+          this.userHasTypedInSession.set(true);
+        }
+        this.substanceFormService.updateChangeReason(changeReason);
+      });
+  }
+
+  private updateHiddenState(): void {
+    this.hiddenStateUpdate.emit(this.isNewRecord());
+  }
+
+  private clearHistoricalValueIfEditing(): void {
+    if (!this.isNewRecord()) {
+      this.substanceFormService.clearChangeReasonForEdit();
     }
+  }
+
+  resetSessionState(): void {
+    this.userHasTypedInSession.set(false);
+    this.initialLoadComplete.set(false);
+    this.changeReasonControl.setValue(null, { emitEvent: false });
   }
 }

@@ -32,7 +32,7 @@ import {AdminService} from '@gsrs-core/admin/admin.service';
 
 @Injectable()
 export class SubstanceFormService implements OnDestroy {
-  private privateSubstance: SubstanceDetail;
+   privateSubstance: SubstanceDetail;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;
   private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
@@ -589,6 +589,30 @@ export class SubstanceFormService implements OnDestroy {
 
   getUuid(): string {
     return this.privateSubstance.uuid;
+  }
+
+  isNewRecord(): boolean {
+    return this.privateSubstance?.uuid == null;
+  }
+
+  clearChangeReasonForEdit(): void {
+    if (this.privateSubstance) {
+      this.privateSubstance.changeReason = null;
+      this.substanceChangeReasonEmitter.next(null);
+    }
+  }
+
+
+  applyDefaultChangeReasonIfNeeded(defaultReason: string = 'Error Checking'): boolean {
+    if (!this.isNewRecord()) {
+      const currentReason = this.privateSubstance?.changeReason;
+      if (!currentReason || currentReason.trim() === '') {
+        this.privateSubstance.changeReason = defaultReason;
+        this.substanceChangeReasonEmitter.next(defaultReason);
+        return true;
+      }
+    }
+    return false;
   }
 
   getClass(): string {
