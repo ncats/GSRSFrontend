@@ -1393,7 +1393,7 @@ export class SubstanceSsg4ManufactureFormComponent
   }
 
   async submit(): Promise<void> {
-    !this.configService.configData.isPfdaVersion && await this.expandStepView();
+    await this.expandStepView();
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -1420,7 +1420,7 @@ export class SubstanceSsg4ManufactureFormComponent
     }, 8000);
 
     // Export step view as SVG; Disabled for PFDA
-    !this.configService.configData.isPfdaVersion && await this.exportStepView(document);
+    await this.exportStepView(document);
 
     // Prepare final JSON and call save endpoint
     jsonValue = this.prepareFinalJson();
