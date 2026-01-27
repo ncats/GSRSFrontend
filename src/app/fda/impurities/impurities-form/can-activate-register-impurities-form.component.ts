@@ -22,7 +22,7 @@ export class CanActivateRegisterImpuritiesFormComponent implements CanActivate {
       if(canEdit){
         return true;
       } else {
-        this.router.parseUrl('/home');
+        return this.router.parseUrl('/home');
       }
     } else {
           const navigationExtras: NavigationExtras = {
@@ -30,7 +30,7 @@ export class CanActivateRegisterImpuritiesFormComponent implements CanActivate {
               path: state.url
             }
           };
-      this.router.createUrlTree(['/login'], navigationExtras);
+      return this.router.createUrlTree(['/login'], navigationExtras);
     }
   }
 }

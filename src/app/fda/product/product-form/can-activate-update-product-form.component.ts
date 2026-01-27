@@ -22,7 +22,7 @@ export class CanActivateUpdateProductFormComponent implements CanActivate {
             if(canEdit){
                 return true;
             } else {
-                this.router.parseUrl('/browse-products');
+                return this.router.parseUrl('/browse-products');
             }
         } else {
             const navigationExtras: NavigationExtras = {
@@ -30,7 +30,7 @@ export class CanActivateUpdateProductFormComponent implements CanActivate {
                     path: state.url
                 }
             };
-            this.router.createUrlTree(['/login'], navigationExtras);
+            return this.router.createUrlTree(['/login'], navigationExtras);
         }
     }
 }

@@ -22,7 +22,7 @@ export class CanActivateSubstanceForm implements CanActivate {
             if(canEdit){
                 return true;
             }else {
-                this.router.parseUrl('/browse-substance');
+                return this.router.parseUrl('/browse-substance');
             }
         } else {
             const navigationExtras: NavigationExtras = {
@@ -30,7 +30,7 @@ export class CanActivateSubstanceForm implements CanActivate {
                     path: state.url
                 }
             };
-            this.router.createUrlTree(['/login'], navigationExtras);
+            return this.router.createUrlTree(['/login'], navigationExtras);
         }
     }
 }

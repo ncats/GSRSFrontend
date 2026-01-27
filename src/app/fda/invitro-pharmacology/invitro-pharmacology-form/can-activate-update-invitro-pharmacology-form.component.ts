@@ -22,7 +22,7 @@ export class CanActivateUpdateInvitroPharmacologyFormComponent implements CanAct
             if(canRegister ){
                 return true;
             } else {
-                this.router.parseUrl('/browse-invitro-pharm');
+                return this.router.parseUrl('/browse-invitro-pharm');
             }
         } else {
             const navigationExtras: NavigationExtras = {
@@ -30,7 +30,7 @@ export class CanActivateUpdateInvitroPharmacologyFormComponent implements CanAct
                     path: state.url
                 }
             };
-            this.router.createUrlTree(['/login'], navigationExtras);
+            return this.router.createUrlTree(['/login'], navigationExtras);
         }
     }
 }

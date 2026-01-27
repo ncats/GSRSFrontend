@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {Location} from '@angular/common';
 import { AuthService } from '@gsrs-core/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   activeTab: number;
   current: string;
   lastTab: number;
@@ -19,6 +20,7 @@ export class AdminComponent implements OnInit {
   canManageUsers: boolean = false;
   canViewServerFiles:boolean = false;
   canViewServiceInfo:boolean = false;
+  private subscriptions: Subscription[] = [];
   
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -30,8 +32,8 @@ export class AdminComponent implements OnInit {
   async ngOnInit() {
     console.log(`in admin.component ngOnInit`);
     await this.checkPrivileges();
-    
-    this.activatedRoute.params.subscribe(routeParams => {
+  
+    const routeSub =this.activatedRoute.params.subscribe(routeParams => {
       this.current = routeParams.function;
       let actualTab = this.getActualTab(this.current);
       switch (this.current) {
@@ -91,6 +93,7 @@ export class AdminComponent implements OnInit {
 
         default: this.activeTab = 0; break;
     }
+    this.subscriptions.push(routeSub);
     if( this.activeTab <= -1) {
         this.router.navigate(['/home' ] );
     }
@@ -167,4 +170,6 @@ async checkPrivileges() {
     if( tabNumber <0 || tabNumber >= filteredTabs.length) return '';
     return filteredTabs[tabNumber].name;
   }
+
+  ngOnDestroy() { this.subscriptions.forEach(sub => sub.unsubscribe());  }
 }

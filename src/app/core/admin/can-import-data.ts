@@ -23,7 +23,7 @@ export class CanImportData implements CanActivate {
                     console.log('   has priv \'Import Data\'');
                     return true;
                 } else {
-                    this.router.parseUrl('/home');
+                    return this.router.parseUrl('/home');
                 }
             } else {
                 const navigationExtras: NavigationExtras = {

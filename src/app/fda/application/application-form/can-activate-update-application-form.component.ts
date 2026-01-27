@@ -28,7 +28,7 @@ export class CanActivateUpdateApplicationFormComponent implements CanActivate {
                 if(canEdit){
                     return true;
                 } else {
-                    this.router.parseUrl('/browse-applications');
+                    return this.router.parseUrl('/browse-applications');
                 }
             } else {
                 const navigationExtras: NavigationExtras = {
@@ -36,10 +36,10 @@ export class CanActivateUpdateApplicationFormComponent implements CanActivate {
                         path: state.url
                     }
                 };
-                this.router.createUrlTree(['/login'], navigationExtras);
+                return this.router.createUrlTree(['/login'], navigationExtras);
             }
         } else {
-            this.router.parseUrl('/home');
+            return this.router.parseUrl('/home');
         }
     }
 }

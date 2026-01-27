@@ -23,7 +23,7 @@ export class CanActivateAdmin implements CanActivate {
               console.log('   has priv to configure system');
               return true;
             } else {
-              this.router.parseUrl('/home');
+              return this.router.parseUrl('/home');
             }
         }
         else {

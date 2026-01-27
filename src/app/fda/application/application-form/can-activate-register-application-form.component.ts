@@ -22,7 +22,7 @@ export class CanActivateRegisterApplicationFormComponent implements CanActivate 
         if(canCreate){
             return true;
         } else {
-            this.router.parseUrl('/browse-applications');
+            return this.router.parseUrl('/browse-applications');
         }
     } else {
       {
@@ -31,7 +31,7 @@ export class CanActivateRegisterApplicationFormComponent implements CanActivate 
                 path: state.url
             }
         };
-        this.router.createUrlTree(['/login'], navigationExtras);
+        return this.router.createUrlTree(['/login'], navigationExtras);
       }
     }
   }

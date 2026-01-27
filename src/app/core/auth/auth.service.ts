@@ -23,6 +23,8 @@ export class AuthService {
   ) {
       this.isLoading = true;
       configService.afterLoad().then(cs => {
+        //todo: consider switchMap
+
         this.fetchAuth().pipe(take(1)).subscribe(auth => {
           if (auth && auth.computedToken != null) {
             this._auth = auth;

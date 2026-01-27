@@ -55,12 +55,12 @@ export class UserEditDialogComponent implements OnInit {
     this.userLoggedIn = this.authService.getUser();
     }
 
-    ngOnInit() {
+    async ngOnInit() {
       if (this.user) {
         console.log(`UserEditDialogComponent ngOnInit have user`);
-        if(! this.authService.hasSpecificPrivilege('Manage Users')) {
+        if(!await this.authService.hasSpecificPrivilege('Manage Users')) {
           alert("Sorry! Unable to verify that you have the privileges to access this page");
-          this.router.parseUrl('/home');
+          this.router.navigateByUrl('/home');
        }
         this.checkRoles();
         this.originalName = this.user.username;

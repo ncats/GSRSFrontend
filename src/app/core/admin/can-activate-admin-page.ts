@@ -24,7 +24,7 @@ export class CanActivateAdminPage implements CanActivate {
         console.log('user CAN');
         return true;
       } else {
-        this.router.parseUrl('/home');
+        return this.router.parseUrl('/home');
       }
     } else {
       const navigationExtras: NavigationExtras = {

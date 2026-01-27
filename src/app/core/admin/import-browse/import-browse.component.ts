@@ -221,6 +221,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.overlayContainer.style.zIndex = null;
 
       });
+      this.subscriptions.push(exportSub);
   }
 
   selectBulk(type?: string) {

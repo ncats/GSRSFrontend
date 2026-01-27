@@ -23,7 +23,7 @@ export class CanActivateRegisterInvitroPharmacologyFormComponent implements CanA
       if(canEdit) {
         return true;
       } else {
-        this.router.parseUrl('/browse-invitro-pharm');
+        return this.router.parseUrl('/browse-invitro-pharm');
       }
     } else {
       const navigationExtras: NavigationExtras = {
@@ -31,7 +31,7 @@ export class CanActivateRegisterInvitroPharmacologyFormComponent implements CanA
           path: state.url
         }
        };
-      this.router.createUrlTree(['/login'], navigationExtras);
+      return this.router.createUrlTree(['/login'], navigationExtras);
     }
   }
 }
