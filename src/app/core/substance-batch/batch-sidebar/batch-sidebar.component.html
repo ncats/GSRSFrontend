@@ -1,0 +1,51 @@
+<div class="batch-sidebar-container" [@slideInOut]="animationState">
+  <div class="sidebar-header">
+    <h2>Batch</h2>
+    <span class="batch-count" *ngIf="batchItems.length > 0">({{batchItems.length}})</span>
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="close()" matTooltip="Close sidebar">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+  </div>
+
+  <div class="sidebar-content">
+    <div class="empty-state" *ngIf="batchItems.length === 0">
+      <mat-icon svgIcon="inbox" class="empty-icon"></mat-icon>
+      <p>No items in batch</p>
+      <p class="hint">Validated substances can be saved here for later reference.</p>
+    </div>
+
+    <div class="batch-list" *ngIf="batchItems.length > 0">
+      <div class="batch-item" *ngFor="let item of batchItems">
+        <div class="item-content">
+          <div class="item-header">
+            <span class="item-type" [ngClass]="item.type">{{getTypeLabel(item.type)}}</span>
+            <span class="item-date">{{item.fromNow}}</span>
+          </div>
+          <div class="item-name" [title]="item.name">{{item.name || 'Unnamed'}}</div>
+          <div class="item-uuid">{{item.uuid | slice:0:8}}...</div>
+        </div>
+        <div class="item-actions">
+          <button mat-icon-button 
+                  (click)="removeItem(item, $event)" 
+                  matTooltip="Remove from batch"
+                  class="remove-button">
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-footer" *ngIf="batchItems.length > 0">
+    <button mat-stroked-button color="warn" (click)="clearAll()">
+      Clear All
+    </button>
+  </div>
+</div>
+
+<!-- Backdrop for mobile/tablet -->
+<div class="sidebar-backdrop" 
+     *ngIf="isOpen" 
+     (click)="close()">
+</div>

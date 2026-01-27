@@ -8,6 +8,10 @@
 <div *ngIf="!simplifiedForm; else simplifiedActionsComponent">
   <div class="top-fixed" *ngIf = "!featuresOnly">
     <div class="actions-container">
+      <button mat-flat-button color="primary" class="batch-button" (click)="batchSidebarOpen = true">
+        Batch <span class="chip" *ngIf="batchCount > 0">{{ batchCount }}</span>
+      </button>
+      <span class="batch-separator"></span>
       <button mat-flat-button color="primary" (click)="saveDraft()">Save Draft</button>
       <button mat-flat-button color="primary" class="draft-button" (click)="showDrafts()">Show Drafts <span
         class="chip">{{ draftCount }}</span></button>
@@ -210,6 +214,12 @@
         </div>
       </span>
       <div class="dismiss-container">
+        <button mat-flat-button color="accent" *ngIf="!approving && validationResult" 
+                (click)="saveToBatch()" 
+                [disabled]="isLoading"
+                matTooltip="Save this validated substance to the local batch for later reference">
+          Save to Batch
+        </button>
         <span class="middle-fill"></span>
         <button mat-flat-button color="primary" *ngIf="!approving" (click)="submit()"
                 [disabled]="isLoading || (this.validationResult === false)">{{ getSubmitButtonText() }}
@@ -253,3 +263,10 @@
     <ng-container *ngTemplateOutlet=substanceSubmissionMessages></ng-container>
   </div>
 </ng-template>
+
+<!-- Batch Sidebar -->
+<app-batch-sidebar 
+  [isOpen]="batchSidebarOpen" 
+  (closed)="batchSidebarOpen = false"
+  (substanceSelected)="onBatchSubstanceSelected($event)">
+</app-batch-sidebar>

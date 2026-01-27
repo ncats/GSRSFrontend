@@ -113,3 +113,17 @@
 .marginright10px {
     margin-right: 10px;
 }
+
+.batch-link {
+    cursor: pointer;
+    
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.batch-badge {
+    font-size: 12px;
+    color: #1565c0;
+    font-weight: 600;
+}

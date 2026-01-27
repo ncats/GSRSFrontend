@@ -1,12 +1,23 @@
-import {Component, EventEmitter, Input, OnInit, Output, HostListener} from '@angular/core';
-import {MixtureComponents, SubstanceRelated, SubstanceSummary} from '@gsrs-core/substance';
-import {UtilsService} from '@gsrs-core/utils';
-import {OverlayContainer} from '@angular/cdk/overlay';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  HostListener,
+} from "@angular/core";
+import {
+  MixtureComponents,
+  SubstanceRelated,
+  SubstanceSummary,
+} from "@gsrs-core/substance";
+import { UtilsService } from "@gsrs-core/utils";
+import { OverlayContainer } from "@angular/cdk/overlay";
 
 @Component({
-  selector: 'app-mixture-component-form',
-  templateUrl: './mixture-component-form.component.html',
-  styleUrls: ['./mixture-component-form.component.scss']
+  selector: "app-mixture-component-form",
+  templateUrl: "./mixture-component-form.component.html",
+  styleUrls: ["./mixture-component-form.component.scss"],
 })
 export class MixtureComponentFormComponent implements OnInit {
   private privateComp: MixtureComponents;
@@ -17,7 +28,7 @@ export class MixtureComponentFormComponent implements OnInit {
   siteDisplay: string;
   invalid = false;
 
-  @HostListener('focusout') onFocusout() {
+  @HostListener("focusout") onFocusout() {
     if (!this.privateComp.type) {
       this.invalid = true;
     } else {
@@ -27,8 +38,8 @@ export class MixtureComponentFormComponent implements OnInit {
 
   constructor(
     private utilsService: UtilsService,
-    private overlayContainerService: OverlayContainer
-  ) { }
+    private overlayContainerService: OverlayContainer,
+  ) {}
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
@@ -39,7 +50,6 @@ export class MixtureComponentFormComponent implements OnInit {
     if (this.privateComp.substance) {
       this.relatedSubstanceUuid = this.privateComp.substance.refuuid;
     }
-
   }
 
   get component(): MixtureComponents {
@@ -55,13 +65,9 @@ export class MixtureComponentFormComponent implements OnInit {
     }
   }
 
-  
-
-
   deleteComponent(): void {
     this.privateComp.$$deletedCode = this.utilsService.newUUID();
-    if (!this.privateComp || !this.component
-    ) {
+    if (!this.privateComp || !this.component) {
       this.deleteTimer = setTimeout(() => {
         this.componentDeleted.emit(this.privateComp);
       }, 1000);
@@ -74,15 +80,16 @@ export class MixtureComponentFormComponent implements OnInit {
   }
 
   componentUpdated(substance: SubstanceSummary): void {
+    // Check if substance is from batch (marked with $$source: 'batch')
+    const isBatch = (substance as any).$$source === "batch";
     const relatedSubstance: SubstanceRelated = {
       refPname: substance._name,
       name: substance._name,
       refuuid: substance.uuid,
-      substanceClass: 'reference',
-      approvalID: substance.approvalID
+      substanceClass: isBatch ? "batch" : "reference",
+      approvalID: substance.approvalID,
     };
     this.component.substance = relatedSubstance;
     this.relatedSubstanceUuid = this.component.substance.refuuid;
   }
-
 }

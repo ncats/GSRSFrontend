@@ -86,6 +86,7 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReferenceFormComponent } from './references/reference-form.component';
 import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
+import { SubstanceBatchModule } from '@gsrs-core/substance-batch';
 
 @NgModule({
   imports: [
@@ -122,7 +123,8 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     MatProgressSpinnerModule,
     MatSortModule,
     ElementLabelDisplayModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    SubstanceBatchModule
   ],
   declarations: [
     SubstanceFormComponent,

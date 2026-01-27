@@ -33,8 +33,12 @@
       </span>
     </div>
     <a class="zoom" (click)="openImageModal(substance)">
-    <img class="related-image" *ngIf="selectedSubstance.uuid && !hideImage" appSubstanceImage
-      [entityId]="selectedSubstance.uuid"></a>
+    <!-- Render structure for database substances using uuid -->
+    <img class="related-image" *ngIf="selectedSubstance.uuid && !hideImage && !selectedSubstance.$$tmpStructureId" appSubstanceImage
+      [entityId]="selectedSubstance.uuid">
+    <!-- Render structure for batch substances using temporary interpreted structure id -->
+    <img class="related-image" *ngIf="selectedSubstance.$$tmpStructureId && !hideImage" appSubstanceImage
+      [entityId]="selectedSubstance.$$tmpStructureId"></a>
     <div class = "name-div">
       <span >
 
@@ -60,7 +64,15 @@
     </div>
   <div class = "centered">
       <a style = "color: #1565c0;font-weight:550;margin-top:3px; margin-right: 10px;" (click)="advanced('structure')">Structure Search</a>
-      <a style = "color: #1565c0;font-weight:550;margin-top:3px;" (click)="advanced('name')">Name Search</a>
+      <a style = "color: #1565c0;font-weight:550;margin-top:3px; margin-right: 10px;" (click)="advanced('name')">Name Search</a>
+      <a *ngIf="showBatchOption" 
+         style = "color: #1565c0;font-weight:550;margin-top:3px;" 
+         class="batch-link" 
+         (click)="openBatchSelector()" 
+         matTooltip="Select from locally saved batch">
+        Batch
+        <span class="batch-badge" *ngIf="batchCount > 0">({{batchCount}})</span>
+      </a>
 
   </div>
 

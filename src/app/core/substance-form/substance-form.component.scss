@@ -123,6 +123,11 @@ mat-select-panel {
   display: flex;
 }
 
+.batch-separator {
+  width: 40px;
+  flex-shrink: 0;
+}
+
 .small-actions-container {
   padding: 10px;
 }

@@ -1,0 +1,176 @@
+.batch-selector-dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e0e0e0;
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+
+.search-container {
+  padding: 16px 24px 0;
+
+  .search-field {
+    width: 100%;
+  }
+}
+
+.dialog-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 16px;
+  min-height: 200px;
+  max-height: 400px;
+}
+
+.empty-state,
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+
+  .empty-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: #bbb;
+  }
+}
+
+.batch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.batch-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  background-color: #fafafa;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #e3f2fd;
+    border-color: #90caf9;
+  }
+
+  &.selected {
+    background-color: #e3f2fd;
+    border-color: #1976d2;
+  }
+
+  .item-checkbox {
+    margin-right: 12px;
+    padding-top: 2px;
+  }
+
+  .item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .item-type {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background-color: #e0e0e0;
+    color: #666;
+
+    &.chemical {
+      background-color: #c8e6c9;
+      color: #2e7d32;
+    }
+
+    &.protein {
+      background-color: #bbdefb;
+      color: #1565c0;
+    }
+
+    &.nucleicAcid {
+      background-color: #f8bbd9;
+      color: #ad1457;
+    }
+
+    &.mixture {
+      background-color: #ffe0b2;
+      color: #e65100;
+    }
+
+    &.polymer {
+      background-color: #d1c4e9;
+      color: #512da8;
+    }
+
+    &.structurallyDiverse {
+      background-color: #b2dfdb;
+      color: #00695c;
+    }
+  }
+
+  .item-date {
+    font-size: 11px;
+    color: #999;
+  }
+
+  .item-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 2px;
+  }
+
+  .item-uuid {
+    font-size: 11px;
+    color: #999;
+    font-family: monospace;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+}

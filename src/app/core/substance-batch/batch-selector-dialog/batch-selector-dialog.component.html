@@ -1,0 +1,61 @@
+<div class="batch-selector-dialog">
+  <div class="dialog-header">
+    <h2>Select from Batch</h2>
+    <button mat-icon-button (click)="cancel()">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+  </div>
+
+  <div class="search-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search batch items</mat-label>
+      <input matInput 
+             [(ngModel)]="searchTerm" 
+             (ngModelChange)="filterItems()"
+             placeholder="Search by name, UUID, or type...">
+      <mat-icon matSuffix svgIcon="search"></mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="dialog-content">
+    <div class="empty-state" *ngIf="batchItems.length === 0">
+      <mat-icon svgIcon="inbox" class="empty-icon"></mat-icon>
+      <p>No items in batch</p>
+      <p class="hint">Save validated substances to the batch to select them here.</p>
+    </div>
+
+    <div class="no-results" *ngIf="batchItems.length > 0 && filteredItems.length === 0">
+      <p>No items match your search</p>
+    </div>
+
+    <div class="batch-list" *ngIf="filteredItems.length > 0">
+      <div class="batch-item" 
+           *ngFor="let item of filteredItems" 
+           [class.selected]="isSelected(item)"
+           (click)="selectItem(item)"
+           (dblclick)="quickSelect(item)">
+        <div class="item-checkbox">
+          <mat-checkbox [checked]="isSelected(item)" (click)="$event.stopPropagation()"></mat-checkbox>
+        </div>
+        <div class="item-content">
+          <div class="item-header">
+            <span class="item-type" [ngClass]="item.type">{{getTypeLabel(item.type)}}</span>
+            <span class="item-date">{{item.fromNow}}</span>
+          </div>
+          <div class="item-name">{{item.name || 'Unnamed'}}</div>
+          <div class="item-uuid">UUID: {{item.uuid}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-stroked-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button 
+            color="primary" 
+            [disabled]="!selectedItem"
+            (click)="confirmSelection()">
+      Select
+    </button>
+  </div>
+</div>

@@ -5,76 +5,90 @@ import {
   ViewChildren,
   ViewContainerRef,
   QueryList,
-  OnDestroy, HostListener, Input, Output
-} from '@angular/core';
-import {formSections} from './form-sections.constant';
-import {ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd} from '@angular/router';
-import {SubstanceService} from '../substance/substance.service';
-import {LoadingService} from '../loading/loading.service';
-import {MainNotificationService} from '../main-notification/main-notification.service';
-import {AppNotification, NotificationType} from '../main-notification/notification.model';
-import {DynamicComponentLoader} from '../dynamic-component-loader/dynamic-component-loader.service';
-import {GoogleAnalyticsService} from '../google-analytics/google-analytics.service';
-import {SubstanceFormSection} from './substance-form-section';
-import {SubstanceFormService} from './substance-form.service';
-import {ValidationMessage, SubstanceFormResults, SubstanceFormDefinition} from './substance-form.model';
-import {Subscription, Observable} from 'rxjs';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {MatDialog} from '@angular/material/dialog';
-import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
-import * as _ from 'lodash';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
-import {Title} from '@angular/platform-browser';
-import {AuthService} from '@gsrs-core/auth';
-import {take, map} from 'rxjs/operators';
-import {MatExpansionPanel} from '@angular/material/expansion';
-import {SubmitSuccessDialogComponent} from './submit-success-dialog/submit-success-dialog.component';
+  OnDestroy,
+  HostListener,
+  Input,
+  Output,
+} from "@angular/core";
+import { formSections } from "./form-sections.constant";
 import {
-  MergeConceptDialogComponent
-} from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
+  ActivatedRoute,
+  Router,
+  RouterEvent,
+  NavigationStart,
+  NavigationEnd,
+} from "@angular/router";
+import { SubstanceService } from "../substance/substance.service";
+import { LoadingService } from "../loading/loading.service";
+import { MainNotificationService } from "../main-notification/main-notification.service";
 import {
-  DefinitionSwitchDialogComponent
-} from '@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component';
+  AppNotification,
+  NotificationType,
+} from "../main-notification/notification.model";
+import { DynamicComponentLoader } from "../dynamic-component-loader/dynamic-component-loader.service";
+import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
+import { SubstanceFormSection } from "./substance-form-section";
+import { SubstanceFormService } from "./substance-form.service";
 import {
-  SubstanceEditImportDialogComponent
-} from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-import {StructuralUnit} from '@gsrs-core/substance';
-import {ConfigService} from '@gsrs-core/config';
-import {FragmentWizardComponent} from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
-import {SubstanceDraftsComponent} from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
-import {UtilsService} from '@gsrs-core/utils';
-import {ungzip, deflate, inflate} from 'pako';
-import {Buffer} from 'buffer';
-import {AdminService} from '@gsrs-core/admin/admin.service';
-import {MatButtonToggleChange} from "@angular/material/button-toggle";
-import {tr} from "cronstrue/dist/i18n/locales/tr";
-import { Location } from '@angular/common';
-
+  ValidationMessage,
+  SubstanceFormResults,
+  SubstanceFormDefinition,
+} from "./substance-form.model";
+import { Subscription, Observable } from "rxjs";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { MatDialog } from "@angular/material/dialog";
+import { JsonDialogComponent } from "@gsrs-core/substance-form/json-dialog/json-dialog.component";
+import * as _ from "lodash";
+import * as defiant from "../../../../node_modules/defiant.js/dist/defiant.min.js";
+import { Title } from "@angular/platform-browser";
+import { AuthService } from "@gsrs-core/auth";
+import { take, map } from "rxjs/operators";
+import { MatExpansionPanel } from "@angular/material/expansion";
+import { SubmitSuccessDialogComponent } from "./submit-success-dialog/submit-success-dialog.component";
+import { MergeConceptDialogComponent } from "@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component";
+import { DefinitionSwitchDialogComponent } from "@gsrs-core/substance-form/definition-switch-dialog/definition-switch-dialog.component";
+import { SubstanceEditImportDialogComponent } from "@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component";
+import { StructuralUnit } from "@gsrs-core/substance";
+import { ConfigService } from "@gsrs-core/config";
+import { FragmentWizardComponent } from "@gsrs-core/admin/fragment-wizard/fragment-wizard.component";
+import { SubstanceDraftsComponent } from "@gsrs-core/substance-form/substance-drafts/substance-drafts.component";
+import { UtilsService } from "@gsrs-core/utils";
+import { ungzip, deflate, inflate } from "pako";
+import { Buffer } from "buffer";
+import { AdminService } from "@gsrs-core/admin/admin.service";
+import { MatButtonToggleChange } from "@angular/material/button-toggle";
+import { tr } from "cronstrue/dist/i18n/locales/tr";
+import { Location } from "@angular/common";
+import { BatchStorageService } from "@gsrs-core/substance-batch";
 
 @Component({
-  selector: 'app-substance-form',
-  templateUrl: './substance-form.component.html',
-  styleUrls: ['./substance-form.component.scss']
+  selector: "app-substance-form",
+  templateUrl: "./substance-form.component.html",
+  styleUrls: ["./substance-form.component.scss"],
 })
-export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy {
-  private static simplifiedSuffix = '-simplified';
+export class SubstanceFormComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  private static simplifiedSuffix = "-simplified";
 
-  simplifiedForm = false
+  simplifiedForm = false;
   isLoading = true;
   id?: string;
   formSections: Array<SubstanceFormSection> = [];
-  @ViewChildren('dynamicComponent', {read: ViewContainerRef}) dynamicComponents: QueryList<ViewContainerRef>;
-  @ViewChildren('expansionPanel', {read: MatExpansionPanel}) matExpansionPanels: QueryList<MatExpansionPanel>;
+  @ViewChildren("dynamicComponent", { read: ViewContainerRef })
+  dynamicComponents: QueryList<ViewContainerRef>;
+  @ViewChildren("expansionPanel", { read: MatExpansionPanel })
+  matExpansionPanels: QueryList<MatExpansionPanel>;
   private subClass: string;
   definitionType: string;
   expandedComponents = [
-    'substance-form-definition',
-    'substance-form-simplified-names',
-    'substance-form-simplified-codes-card',
-    'substance-form-simplified-references',
-    'substance-form-structure',
-    'substance-form-moieties',
-    'substance-form-references'
+    "substance-form-definition",
+    "substance-form-simplified-names",
+    "substance-form-simplified-codes-card",
+    "substance-form-simplified-references",
+    "substance-form-structure",
+    "substance-form-moieties",
+    "substance-form-references",
   ];
   showSubmissionMessages = false;
   submissionMessage: string;
@@ -97,29 +111,32 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   substanceClass: string;
   drafts: Array<any>;
   draftCount = 0;
+  batchSidebarOpen = false;
+  batchCount = 0;
   status: string;
   hidePopup: boolean;
   unit: StructuralUnit;
   autoSaveWait = 60000;
   classes = [
-    'concept',
-    'protein',
-    'chemical',
-    'structurallyDiverse',
-    'polymer',
-    'nucleicAcid',
-    'mixture',
-    'specifiedSubstanceG1',
-    'specifiedSubstanceG2',
-    'specifiedSubstanceG3'];
+    "concept",
+    "protein",
+    "chemical",
+    "structurallyDiverse",
+    "polymer",
+    "nucleicAcid",
+    "mixture",
+    "specifiedSubstanceG1",
+    "specifiedSubstanceG2",
+    "specifiedSubstanceG3",
+  ];
   imported = false;
   forceChange = false;
   sameSubstance = false;
   UNII: string;
-  approvalType = 'lastEditedBy';
+  approvalType = "lastEditedBy";
   previousState: number;
   useApprovalAPI = false;
-    featuresOnly = false;
+  featuresOnly = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -136,21 +153,21 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     private authService: AuthService,
     private titleService: Title,
     private utilsService: UtilsService,
-    private location: Location
+    private location: Location,
+    private batchStorageService: BatchStorageService,
   ) {
-    this.substanceService.showImagePopup.subscribe(data => {
+    this.substanceService.showImagePopup.subscribe((data) => {
       this.hidePopup = data;
-    })
-    this.substanceService.imagePopupUnit.subscribe(data => {
+    });
+    this.substanceService.imagePopupUnit.subscribe((data) => {
       this.unit = data;
-    })
+    });
   }
 
   showHidePopup(): void {
     this.hidePopup = !this.hidePopup;
     this.substanceService.showImagePopup.next(this.hidePopup);
   }
-
 
   autoSave(): void {
     setTimeout(() => {
@@ -163,36 +180,34 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   openModal(templateRef) {
-
     const dialogRef = this.dialog.open(templateRef, {
-      height: '200px',
-      width: '400px'
+      height: "200px",
+      width: "400px",
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.overlayContainer.style.zIndex = null;
     });
   }
 
   showDrafts(): void {
     const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
-      maxHeight: '85%',
-      width: '70%',
-      data: {uuid: this.id}
+      maxHeight: "85%",
+      width: "70%",
+      data: { uuid: this.id },
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe(response => {
+    dialogRef.afterClosed().subscribe((response) => {
       this.overlayContainer.style.zIndex = null;
-
 
       if (response) {
         this.loadingService.setLoading(true);
 
         const read = response.substance;
         if (this.id && read.uuid && this.id === read.uuid) {
-          this.substanceFormService.importSubstance(read, 'update');
+          this.substanceFormService.importSubstance(read, "update");
           this.submissionMessage = null;
           this.validationMessages = [];
           this.showSubmissionMessages = false;
@@ -201,17 +216,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.isLoading = false;
             this.overlayContainer.style.zIndex = null;
           }, 1000);
-        } else if (response.uuid && response.uuid != 'register') {
-          const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
-          this.router.navigateByUrl(url, {state: {record: response.substance}});
+        } else if (response.uuid && response.uuid != "register") {
+          const url =
+            "/substances/" + response.uuid + "/edit?action=import&source=draft";
+          this.router.navigateByUrl(url, {
+            state: { record: response.substance },
+          });
         } else {
           setTimeout(() => {
             this.overlayContainer.style.zIndex = null;
-            this.router.onSameUrlNavigation = 'reload';
+            this.router.onSameUrlNavigation = "reload";
             this.loadingService.setLoading(false);
-            this.router.onSameUrlNavigation = 'reload';
-            this.router.navigateByUrl('/substances/register/' + response.substance.substanceClass + '?action=import', {state: {record: response.substance}});
-
+            this.router.onSameUrlNavigation = "reload";
+            this.router.navigateByUrl(
+              "/substances/register/" +
+                response.substance.substanceClass +
+                "?action=import",
+              { state: { record: response.substance } },
+            );
           }, 1000);
         }
       }
@@ -222,16 +244,19 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.drafts = [];
 
       while (i--) {
-        if (keys[i].startsWith('gsrs-draft-')) {
+        if (keys[i].startsWith("gsrs-draft-")) {
           const entry = JSON.parse(localStorage.getItem(keys[i]));
           entry.key = keys[i];
           if (this.id && entry.uuid === this.id) {
             this.draftCount++;
-          } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
+          } else if (
+            !this.id &&
+            entry.type === this.activatedRoute.snapshot.params["type"] &&
+            entry.uuid === "register"
+          ) {
             this.draftCount++;
           }
           this.drafts.push(entry);
-
         }
       }
     });
@@ -247,13 +272,16 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
       const read = JSON.parse(response);
 
-      if (read.substanceClass === 'specifiedSubstanceG4m') {
-        this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + true, { state: { record: response } });
+      if (read.substanceClass === "specifiedSubstanceG4m") {
+        this.router.navigateByUrl(
+          "/substances-ssg4m/register?action=import&header=" + true,
+          { state: { record: response } },
+        );
         return;
       }
 
       if (this.id && read.uuid && this.id === read.uuid) {
-        this.substanceFormService.importSubstance(read, 'update');
+        this.substanceFormService.importSubstance(read, "update");
         this.submissionMessage = null;
         this.validationMessages = [];
         this.showSubmissionMessages = false;
@@ -265,10 +293,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       } else {
         setTimeout(() => {
           this.overlayContainer.style.zIndex = null;
-          this.router.onSameUrlNavigation = 'reload';
+          this.router.onSameUrlNavigation = "reload";
           this.loadingService.setLoading(false);
-          this.router.navigateByUrl('/substances/register?action=import', {state: {record: response}});
-
+          this.router.navigateByUrl("/substances/register?action=import", {
+            state: { record: response },
+          });
         }, 1000);
       }
     }
@@ -276,14 +305,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   importDialog(): void {
     const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
-      width: '650px',
-      autoFocus: false
-
+      width: "650px",
+      autoFocus: false,
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => this.processImportedSubstance(response));
-
+    const dialogSubscription = dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((response) => this.processImportedSubstance(response));
   }
 
   test() {
@@ -291,196 +321,263 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.router.navigate([this.router.url]);
   }
 
-
   ngOnInit() {
-    if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
+    if (
+      this.activatedRoute.snapshot.routeConfig.path === "structure-features"
+    ) {
       this.featuresOnly = true;
     }
     this.loadingService.setLoading(true);
-    if (this.configService.configData && this.configService.configData.approvalType) {
+    if (
+      this.configService.configData &&
+      this.configService.configData.approvalType
+    ) {
       this.approvalType = this.configService.configData.approvalType;
     }
-    if (this.configService.configData && this.configService.configData.expandedComponents) {
-      this.expandedComponents = this.configService.configData.expandedComponents;
+    if (
+      this.configService.configData &&
+      this.configService.configData.expandedComponents
+    ) {
+      this.expandedComponents =
+        this.configService.configData.expandedComponents;
     }
-    if (this.configService.configData && this.configService.configData.autoSaveWait) {
+    if (
+      this.configService.configData &&
+      this.configService.configData.autoSaveWait
+    ) {
       this.autoSaveWait = this.configService.configData.autoSaveWait;
     }
-    if (this.configService.configData && this.configService.configData.useApprovalAPI) {
+    if (
+      this.configService.configData &&
+      this.configService.configData.useApprovalAPI
+    ) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    this.isAdmin = this.authService.hasRoles("admin");
+    this.isUpdater = this.authService.hasAnyRoles("Updater", "SuperUpdater");
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
-    if(this.location.path().includes('chemical-simplified')) {
+    if (this.location.path().includes("chemical-simplified")) {
       this.simplifiedForm = true;
     }
-    const simplifiedFormSubscription = this.substanceFormService.simplifiedForm.subscribe(value=>{
-      this.simplifiedForm = value
-    })
+    const simplifiedFormSubscription =
+      this.substanceFormService.simplifiedForm.subscribe((value) => {
+        this.simplifiedForm = value;
+      });
     this.subscriptions.push(simplifiedFormSubscription);
-    const routeSubscription = this.activatedRoute
-      .params
-      .subscribe(params => {
 
-        const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-        if (action && action === 'pfda-file-import') {
-          this.importFromUriParam();
-        }
+    // Subscribe to batch updates to keep count in sync
+    const batchSubscription =
+      this.batchStorageService.batchSubstances$.subscribe((items) => {
+        this.batchCount = items.length;
+      });
+    this.subscriptions.push(batchSubscription);
 
-        if (params['id']) {
+    const routeSubscription = this.activatedRoute.params.subscribe((params) => {
+      const action = this.activatedRoute.snapshot.queryParams["action"] || null;
+      if (action && action === "pfda-file-import") {
+        this.importFromUriParam();
+      }
 
-          if (action && action === 'import' && window.history.state) {
-            const record = window.history.state;
-            this.imported = true;
+      if (params["id"]) {
+        if (action && action === "import" && window.history.state) {
+          const record = window.history.state;
+          this.imported = true;
 
-            this.getDetailsFromImport(record.record);
-          } else {
-            const id = params['id'];
-            if (id !== this.id) {
-              this.id = id;
-              this.gaService.sendPageView(`Substance Edit`);
-              const newType = this.activatedRoute.snapshot.queryParamMap.get('switch') || null;
-              if (newType) {
-                this.getSubstanceDetails(newType);
-              } else {
-                this.getSubstanceDetails();
-              }
+          this.getDetailsFromImport(record.record);
+        } else {
+          const id = params["id"];
+          if (id !== this.id) {
+            this.id = id;
+            this.gaService.sendPageView(`Substance Edit`);
+            const newType =
+              this.activatedRoute.snapshot.queryParamMap.get("switch") || null;
+            if (newType) {
+              this.getSubstanceDetails(newType);
+            } else {
+              this.getSubstanceDetails();
             }
           }
-        } else {
-          if (action && action === 'import' && window.history.state) {
-            const record = window.history.state;
-            this.imported = true;
-            this.getDetailsFromImport(record.record);
-            this.gaService.sendPageView(`Substance Register`);
+        }
+      } else {
+        if (action && action === "import" && window.history.state) {
+          const record = window.history.state;
+          this.imported = true;
+          this.getDetailsFromImport(record.record);
+          this.gaService.sendPageView(`Substance Register`);
+        } else if (this.activatedRoute.snapshot.queryParams["stagingID"]) {
+          this.substanceService
+            .GetStagedRecord(
+              this.activatedRoute.snapshot.queryParams["stagingID"],
+            )
+            .subscribe(
+              (response) => {
+                response.uuid = null;
 
-          } else if (this.activatedRoute.snapshot.queryParams['stagingID']) {
-            this.substanceService.GetStagedRecord(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
-              response.uuid = null;
-
-
-              if (response._name) {
-                let name = response._name;
-                response.names.forEach(current => {
-                  if (current.displayName && current.stdName) {
-                    name = current.stdName;
-                  }
-                });
-                name = name.replace(/<[^>]*>?/gm, '');
-                this.titleService.setTitle('Edit - ' + name);
-              }
-              if (response) {
-                this.definitionType = response.definitionType;
-                this.substanceClass = response.substanceClass;
-                this.status = response.status;
-                this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
-                  if(this.simplifiedForm) {
-                    this.setFormSections(formSections['chemicalSimplified']);
-                  } else {
-                    this.setFormSections(formSections[response.substanceClass]);
-                  }
-                  this.isLoading = false;
-                  this.loadingService.setLoading(false);
-                });
-              }
-            }, error => {
-              this.isLoading = false;
-              this.loadingService.setLoading(false);
-            });
-          } else {
-            this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
-            if (this.copy) {
-              const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
-              this.getPartialSubstanceDetails(this.copy, copyType);
-              this.gaService.sendPageView(`Substance Register`);
-            } else {
-              setTimeout(() => {
-                let type = this.activatedRoute.snapshot.params['type'] || 'chemical';
-                let simplified = false;
-                if (type.endsWith(SubstanceFormComponent.simplifiedSuffix)){
-                  type = type.slice(0, -SubstanceFormComponent.simplifiedSuffix.length)
-                  simplified = true
+                if (response._name) {
+                  let name = response._name;
+                  response.names.forEach((current) => {
+                    if (current.displayName && current.stdName) {
+                      name = current.stdName;
+                    }
+                  });
+                  name = name.replace(/<[^>]*>?/gm, "");
+                  this.titleService.setTitle("Edit - " + name);
                 }
+                if (response) {
+                  this.definitionType = response.definitionType;
+                  this.substanceClass = response.substanceClass;
+                  this.status = response.status;
+                  this.substanceFormService
+                    .loadSubstance(response.substanceClass, response)
+                    .pipe(take(1))
+                    .subscribe(() => {
+                      if (this.simplifiedForm) {
+                        this.setFormSections(
+                          formSections["chemicalSimplified"],
+                        );
+                      } else {
+                        this.setFormSections(
+                          formSections[response.substanceClass],
+                        );
+                      }
+                      this.isLoading = false;
+                      this.loadingService.setLoading(false);
+                    });
+                }
+              },
+              (error) => {
+                this.isLoading = false;
+                this.loadingService.setLoading(false);
+              },
+            );
+        } else {
+          this.copy = this.activatedRoute.snapshot.queryParams["copy"] || null;
+          if (this.copy) {
+            const copyType =
+              this.activatedRoute.snapshot.queryParams["copyType"] || null;
+            this.getPartialSubstanceDetails(this.copy, copyType);
+            this.gaService.sendPageView(`Substance Register`);
+          } else {
+            setTimeout(() => {
+              let type =
+                this.activatedRoute.snapshot.params["type"] || "chemical";
+              let simplified = false;
+              if (type.endsWith(SubstanceFormComponent.simplifiedSuffix)) {
+                type = type.slice(
+                  0,
+                  -SubstanceFormComponent.simplifiedSuffix.length,
+                );
+                simplified = true;
+              }
 
-                this.gaService.sendPageView(`Substance Register`);
-                this.subClass = type;
-                this.substanceClass = type;
-                this.titleService.setTitle('Register - ' + this.subClass);
+              this.gaService.sendPageView(`Substance Register`);
+              this.subClass = type;
+              this.substanceClass = type;
+              this.titleService.setTitle("Register - " + this.subClass);
 
-                this.substanceFormService.loadSubstance(this.subClass,undefined,undefined,undefined, simplified).pipe(take(1)).subscribe(() => {
-                  if(this.simplifiedForm) {
-                    this.setFormSections(formSections['chemicalSimplified']);
+              this.substanceFormService
+                .loadSubstance(
+                  this.subClass,
+                  undefined,
+                  undefined,
+                  undefined,
+                  simplified,
+                )
+                .pipe(take(1))
+                .subscribe(() => {
+                  if (this.simplifiedForm) {
+                    this.setFormSections(formSections["chemicalSimplified"]);
                   } else {
                     this.setFormSections(formSections[this.subClass]);
                   }
                   this.loadingService.setLoading(false);
                   this.isLoading = false;
                 });
-              });
-            }
+            });
           }
-
-
         }
-      });
-    this.subscriptions.push(routeSubscription);
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
-      if (event instanceof NavigationStart) {
-        this.substanceFormService.unloadSubstance();
       }
     });
+    this.subscriptions.push(routeSubscription);
+    const routerSubscription = this.router.events.subscribe(
+      (event: RouterEvent) => {
+        if (event instanceof NavigationStart) {
+          this.substanceFormService.unloadSubstance();
+        }
+      },
+    );
     this.subscriptions.push(routerSubscription);
     this.approving = false;
-    const definitionSubscription = this.substanceFormService.definition.subscribe(response => {
-      this.definition = response;
-      setTimeout(() => {
-        this.canApprove = this.canBeApproved();
+    const definitionSubscription =
+      this.substanceFormService.definition.subscribe((response) => {
+        this.definition = response;
+        setTimeout(() => {
+          this.canApprove = this.canBeApproved();
+        });
       });
-    });
     this.subscriptions.push(definitionSubscription);
-    this.authService.getAuth().pipe(take(1)).subscribe(auth => {
-      this.user = auth.identifier;
-      setTimeout(() => {
-        this.canApprove = this.canBeApproved();
-
+    this.authService
+      .getAuth()
+      .pipe(take(1))
+      .subscribe((auth) => {
+        this.user = auth.identifier;
+        setTimeout(() => {
+          this.canApprove = this.canBeApproved();
+        });
       });
-    });
   }
 
   // Load file from URI (as passed in file-uri URL parameter) and try to import it into a submission form
   private importFromUriParam() {
-    const fileUri = this.activatedRoute.snapshot.queryParams['file-uri'] || null;
+    const fileUri =
+      this.activatedRoute.snapshot.queryParams["file-uri"] || null;
     if (!fileUri) {
       this.isLoading = false;
       this.loadingService.setLoading(false);
-      return this.mainNotificationService.setErrorNotification('File URI was not specified');
+      return this.mainNotificationService.setErrorNotification(
+        "File URI was not specified",
+      );
     }
-    this.mainNotificationService.setSuccessNotification('Loading file...', 0);
-    fetch(fileUri).then((response) => {
-      if (response.status === 200) {
-        response.json().then(responseJson => {
-          this.mainNotificationService.setSuccessNotification('Processing imported substance...');
-          this.processImportedSubstance(JSON.stringify(responseJson));
-        }).catch(reason => {
-          this.mainNotificationService.setErrorNotification(`Error while parsing imported file: ${reason.message}`);
-        })
-      } else {
-        const errMsg = response.status === 401 ? `Your session expired. Please login and try again.` : `Error while loading file: ${response.status}`;
-        this.mainNotificationService.setErrorNotification(errMsg);
-      }
-    }).catch(reason => {
-      this.mainNotificationService.setErrorNotification(`Error while importing file: ${reason.message}`);
-    })
+    this.mainNotificationService.setSuccessNotification("Loading file...", 0);
+    fetch(fileUri)
+      .then((response) => {
+        if (response.status === 200) {
+          response
+            .json()
+            .then((responseJson) => {
+              this.mainNotificationService.setSuccessNotification(
+                "Processing imported substance...",
+              );
+              this.processImportedSubstance(JSON.stringify(responseJson));
+            })
+            .catch((reason) => {
+              this.mainNotificationService.setErrorNotification(
+                `Error while parsing imported file: ${reason.message}`,
+              );
+            });
+        } else {
+          const errMsg =
+            response.status === 401
+              ? `Your session expired. Please login and try again.`
+              : `Error while loading file: ${response.status}`;
+          this.mainNotificationService.setErrorNotification(errMsg);
+        }
+      })
+      .catch((reason) => {
+        this.mainNotificationService.setErrorNotification(
+          `Error while importing file: ${reason.message}`,
+        );
+      });
     this.isLoading = false;
     this.loadingService.setLoading(false);
     return;
   }
 
   isBase64(str) {
-    let base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+    let base64regex =
+      /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
     let result = decodeURIComponent(str);
     return base64regex.test(str);
   }
@@ -490,14 +587,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     /*structure = this.gunzip(structure);
       structure = decodeURIComponent(structure);
       this.substanceFormService.importStructure(structure, 'molfile');*/
-    this.substanceFormService.importStructure(structure, 'smiles');
-
+    this.substanceFormService.importStructure(structure, "smiles");
   }
 
-
   gunzip(t): string {
-
-    const gezipedData = Buffer.from(t, 'base64')
+    const gezipedData = Buffer.from(t, "base64");
     const gzipedDataArray = Uint8Array.from(gezipedData);
     const ungzipedData = ungzip(gzipedDataArray);
     return new TextDecoder().decode(ungzipedData);
@@ -509,18 +603,21 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.drafts = [];
     let temp = 0;
     while (i--) {
-      if (keys[i].startsWith('gsrs-draft-')) {
+      if (keys[i].startsWith("gsrs-draft-")) {
         const entry = JSON.parse(localStorage.getItem(keys[i]));
         entry.key = keys[i];
         if (this.id && entry.uuid === this.id) {
           temp++;
           // this.draftCount++;
-        } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
+        } else if (
+          !this.id &&
+          entry.type === this.activatedRoute.snapshot.params["type"] &&
+          entry.uuid === "register"
+        ) {
           temp++;
           //  this.draftCount++;
         }
         this.drafts.push(entry);
-
       }
     }
     this.draftCount = temp;
@@ -529,176 +626,210 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   ngAfterViewInit(): void {
     this.getDrafts();
     // set structure based on smiles or molfile
-    const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
+    const structure =
+      this.activatedRoute.snapshot.queryParams["importStructure"] || null;
     if (structure) {
       let decode = decodeURIComponent(structure);
       setTimeout(() => {
-        this.setStructureFromUrl(decode, 'molfile');
+        this.setStructureFromUrl(decode, "molfile");
       });
     }
-    const json = this.activatedRoute.snapshot.queryParams['jsonStructure'] || null;
+    const json =
+      this.activatedRoute.snapshot.queryParams["jsonStructure"] || null;
     // TODO add json support
     //   this.setStructureFromUrl(structure, 'json');
     if (json) {
       let decode = decodeURI(json);
     }
 
-    const subscription = this.dynamicComponents.changes
-      .subscribe(() => {
-
-        const total = this.formSections.length;
-        let finished = 0;
-        if (!this.forceChange) {
-          this.loadingService.setLoading(true);
-          const startTime = new Date();
-          this.dynamicComponents.forEach((cRef, index) => {
-            this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-              .subscribe(componentFactory => {
-                this.loadingService.setLoading(true);
-                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-                this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
-                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+    const subscription = this.dynamicComponents.changes.subscribe(() => {
+      const total = this.formSections.length;
+      let finished = 0;
+      if (!this.forceChange) {
+        this.loadingService.setLoading(true);
+        const startTime = new Date();
+        this.dynamicComponents.forEach((cRef, index) => {
+          this.dynamicComponentLoader
+            .getComponentFactory<any>(
+              this.formSections[index].dynamicComponentName,
+            )
+            .subscribe((componentFactory) => {
+              this.loadingService.setLoading(true);
+              this.formSections[index].dynamicComponentRef =
+                cRef.createComponent(componentFactory);
+              this.formSections[index].matExpansionPanel =
+                this.matExpansionPanels.find(
+                  (item, panelIndex) => index === panelIndex,
+                );
+              this.formSections[
+                index
+              ].dynamicComponentRef.instance.menuLabelUpdate
+                .pipe(take(1))
+                .subscribe((label) => {
                   this.formSections[index].menuLabel = label;
                 });
-                const hiddenStateSubscription =
-                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
-                    this.formSections[index].isHidden = isHidden;
-                });
-                this.subscriptions.push(hiddenStateSubscription);
-                this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+              const hiddenStateSubscription = this.formSections[
+                index
+              ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
+                (isHidden) => {
+                  this.formSections[index].isHidden = isHidden;
+                },
+              );
+              this.subscriptions.push(hiddenStateSubscription);
+              this.formSections[
+                index
+              ].dynamicComponentRef.instance.canAddItemUpdate
+                .pipe(take(1))
+                .subscribe((isList) => {
                   this.formSections[index].canAddItem = isList;
                   if (isList) {
-                    const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                    const aieSubscription = this.formSections[
+                      index
+                    ].addItemEmitter.subscribe(() => {
                       this.formSections[index].matExpansionPanel.open();
-                      this.formSections[index].dynamicComponentRef.instance.addItem();
+                      this.formSections[
+                        index
+                      ].dynamicComponentRef.instance.addItem();
                     });
-                    this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
-                      aieSubscription.unsubscribe();
-                    });
+                    this.formSections[
+                      index
+                    ].dynamicComponentRef.instance.componentDestroyed
+                      .pipe(take(1))
+                      .subscribe(() => {
+                        aieSubscription.unsubscribe();
+                      });
                   }
                 });
-                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
-                finished++;
-                if (finished >= total) {
-                  this.loadingService.setLoading(false);
-                } else {
-                  const currentTime = new Date();
-                  if (currentTime.getTime() - startTime.getTime() > 12000) {
-                    if (confirm('There was a network error while fetching files, would you like to refresh?')) {
-                      window.location.reload();
-                    }
+              this.formSections[
+                index
+              ].dynamicComponentRef.changeDetectorRef.detectChanges();
+              finished++;
+              if (finished >= total) {
+                this.loadingService.setLoading(false);
+              } else {
+                const currentTime = new Date();
+                if (currentTime.getTime() - startTime.getTime() > 12000) {
+                  if (
+                    confirm(
+                      "There was a network error while fetching files, would you like to refresh?",
+                    )
+                  ) {
+                    window.location.reload();
                   }
                 }
-                  if (this.featuresOnly && this.formSections[index].dynamicComponentName !== 'substance-form-structure') {
+              }
+              if (
+                this.featuresOnly &&
+                this.formSections[index].dynamicComponentName !==
+                  "substance-form-structure"
+              ) {
                 this.formSections[index].isHidden = true;
               }
-            setTimeout(() => {
-                  this.loadingService.setLoading(false);
-                  this.UNII = this.substanceFormService.getUNII();
-                }, 5);
-                if (!this.featuresOnly){
-                  this.updateHiddenFormSections();
-                }
-              });
-          });
-          // this.loadingService.setLoading(false);
-
-        }
-        subscription.unsubscribe();
-        setTimeout(() => {
-
-          this.autoSave();
-        }, 10000);
-
-      });
+              setTimeout(() => {
+                this.loadingService.setLoading(false);
+                this.UNII = this.substanceFormService.getUNII();
+              }, 5);
+              if (!this.featuresOnly) {
+                this.updateHiddenFormSections();
+              }
+            });
+        });
+        // this.loadingService.setLoading(false);
+      }
+      subscription.unsubscribe();
+      setTimeout(() => {
+        this.autoSave();
+      }, 10000);
+    });
   }
 
   openedChange(event: any) {
     if (event) {
-      this.overlayContainer.style.zIndex = '1002';
+      this.overlayContainer.style.zIndex = "1002";
     } else {
-      this.overlayContainer.style.zIndex = '1000';
+      this.overlayContainer.style.zIndex = "1000";
     }
   }
 
   useFeature(feature: any): void {
     this.feature = feature.value;
-    if (this.feature === 'glyco') {
+    if (this.feature === "glyco") {
       this.glyco();
-    } else if (this.feature === 'disulfide') {
+    } else if (this.feature === "disulfide") {
       this.disulfide();
     }
-    if (this.feature === 'concept') {
+    if (this.feature === "concept") {
       this.concept();
     }
-    if (this.feature === 'unapprove') {
-      if (confirm('Are you sure you\'d like to remove the approvalID?')) {
+    if (this.feature === "unapprove") {
+      if (confirm("Are you sure you'd like to remove the approvalID?")) {
         this.substanceFormService.unapproveRecord();
       }
       this.feature = undefined;
     }
-    if (this.feature === 'setPrivate') {
+    if (this.feature === "setPrivate") {
       this.substanceFormService.setDefinitionPrivate();
       this.feature = undefined;
     }
-    if (this.feature === 'setPublic') {
+    if (this.feature === "setPublic") {
       this.substanceFormService.setDefinitionPublic();
       this.feature = undefined;
     }
-    if (this.feature === 'approved') {
-      this.substanceFormService.changeStatus('approved');
+    if (this.feature === "approved") {
+      this.substanceFormService.changeStatus("approved");
       this.feature = undefined;
     }
-    if (this.feature === 'pending') {
-      this.substanceFormService.changeStatus('pending');
+    if (this.feature === "pending") {
+      this.substanceFormService.changeStatus("pending");
       this.feature = undefined;
     }
-    if (this.feature === 'merge') {
+    if (this.feature === "merge") {
       this.mergeConcept();
       this.feature = undefined;
     }
-    if (this.feature === 'switch') {
+    if (this.feature === "switch") {
       this.definitionSwitch();
       this.feature = undefined;
     }
-    if (this.feature === 'changeApproval') {
+    if (this.feature === "changeApproval") {
       this.substanceFormService.changeApproval();
     }
-    if (this.feature === 'fragment') {
+    if (this.feature === "fragment") {
       this.openFragmentDialog();
     }
-    if (this.feature === 'regenRefs') {
+    if (this.feature === "regenRefs") {
       this.regenRefs();
     }
-    if (this.feature === 'regenUUID') {
-      if(confirm('Warning: This will regenerate the substance UUID which will cause issues with already registered substances. Are you sure you want to continue?')){
+    if (this.feature === "regenUUID") {
+      if (
+        confirm(
+          "Warning: This will regenerate the substance UUID which will cause issues with already registered substances. Are you sure you want to continue?",
+        )
+      ) {
         this.substanceFormService.regenUUID();
-        alert('Substance UUID has been regenerated');
+        alert("Substance UUID has been regenerated");
       }
     }
-
-
-
-
-
   }
 
   openFragmentDialog(): void {
     const dialogRef = this.dialog.open(FragmentWizardComponent, {
-      width: '70%',
-      height: '70%'
+      width: "70%",
+      height: "70%",
     });
-    this.overlayContainer.style.zIndex = '50';
+    this.overlayContainer.style.zIndex = "50";
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
-
-    });
+    const dialogSubscription = dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((response) => {});
     this.subscriptions.push(dialogSubscription);
   }
 
   changeClass(type: any): void {
-    this.router.navigate(['/substances', this.id, 'edit'], {queryParams: {switch: type.value}});
+    this.router.navigate(["/substances", this.id, "edit"], {
+      queryParams: { switch: type.value },
+    });
     this.feature = undefined;
   }
 
@@ -728,123 +859,140 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   ngOnDestroy(): void {
     // this.substanceFormService.unloadSubstance();
-    this.subscriptions.forEach(subscription => {
+    this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
   }
 
   canBeApproved(): boolean {
     if (!this.useApprovalAPI) {
-
-    const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-    if (action && action === 'import') {
-      return false;
-    }
-    const staging = this.activatedRoute.snapshot.queryParams['stagingID'] || null;
-    if (staging && staging.length > 0) {
-      return false
-    }
-    // if config var set and set to 'createdBy then set approval button enabled if user is not creator
-    if (this.approvalType === 'createdBy') {
-      if (this.definition && this.definition.createdBy && this.user) {
-        const creator = this.definition.createdBy;
-        if (!creator) {
-          return false;
-        }
-        if (this.definition.status === 'approved') {
-          return false;
-        }
-        if (creator === this.user) {
-          return false;
-        }
-        return true;
-
-      }
-      return false;
-      //default to 'lastEditedBy' if not set in config
-    } else {
-      if (this.definition && this.definition.lastEditedBy && this.user) {
-        const lastEdit = this.definition.lastEditedBy;
-        if (!lastEdit) {
-          return false;
-        }
-        if (this.definition.status === 'approved') {
-          return false;
-
-        }
-        if (lastEdit === this.user) {
-          return false;
-        }
-        return true;
-      }
-    }
-
-  } else {
-    this.substanceService.isApprovable(this.id).pipe(take(1)).subscribe(response => {
-      if (typeof response === 'boolean') {
-        this.canApprove = response;
-        return response;
-      } else if (response.toLowerCase() === 'true'){
-        return true;
-      } else {
+      const action = this.activatedRoute.snapshot.queryParams["action"] || null;
+      if (action && action === "import") {
         return false;
       }
-
-    }, error => {
-      return false;
-    });
+      const staging =
+        this.activatedRoute.snapshot.queryParams["stagingID"] || null;
+      if (staging && staging.length > 0) {
+        return false;
+      }
+      // if config var set and set to 'createdBy then set approval button enabled if user is not creator
+      if (this.approvalType === "createdBy") {
+        if (this.definition && this.definition.createdBy && this.user) {
+          const creator = this.definition.createdBy;
+          if (!creator) {
+            return false;
+          }
+          if (this.definition.status === "approved") {
+            return false;
+          }
+          if (creator === this.user) {
+            return false;
+          }
+          return true;
+        }
+        return false;
+        //default to 'lastEditedBy' if not set in config
+      } else {
+        if (this.definition && this.definition.lastEditedBy && this.user) {
+          const lastEdit = this.definition.lastEditedBy;
+          if (!lastEdit) {
+            return false;
+          }
+          if (this.definition.status === "approved") {
+            return false;
+          }
+          if (lastEdit === this.user) {
+            return false;
+          }
+          return true;
+        }
+      }
+    } else {
+      this.substanceService
+        .isApprovable(this.id)
+        .pipe(take(1))
+        .subscribe(
+          (response) => {
+            if (typeof response === "boolean") {
+              this.canApprove = response;
+              return response;
+            } else if (response.toLowerCase() === "true") {
+              return true;
+            } else {
+              return false;
+            }
+          },
+          (error) => {
+            return false;
+          },
+        );
     }
   }
 
   showJSON(): void {
     const dialogRef = this.dialog.open(JsonDialogComponent, {
-      width: '90%'
+      width: "90%",
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
-
-    });
+    const dialogSubscription = dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((response) => {});
     this.subscriptions.push(dialogSubscription);
   }
 
   getSubstanceDetails(newType?: string): void {
-    this.substanceService.getSubstanceDetails(this.id).pipe(take(1)).subscribe(response => {
-      if (response._name) {
-        let name = response._name;
-        response.names.forEach(current => {
-          if (current.displayName && current.stdName) {
-            name = current.stdName;
+    this.substanceService
+      .getSubstanceDetails(this.id)
+      .pipe(take(1))
+      .subscribe(
+        (response) => {
+          if (response._name) {
+            let name = response._name;
+            response.names.forEach((current) => {
+              if (current.displayName && current.stdName) {
+                name = current.stdName;
+              }
+            });
+            name = name.replace(/<[^>]*>?/gm, "");
+            this.titleService.setTitle("Edit - " + name);
           }
-        });
-        name = name.replace(/<[^>]*>?/gm, '');
-        this.titleService.setTitle('Edit - ' + name);
-      }
-      if (response) {
-        this.definitionType = response.definitionType;
-        if (newType) {
-          response = this.substanceFormService.switchType(response, newType);
-        }
-        this.substanceClass = response.substanceClass;
-        this.status = response.status;
-        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
-          if(this.simplifiedForm) {
-            this.setFormSections(formSections['chemicalSimplified']);
+          if (response) {
+            this.definitionType = response.definitionType;
+            if (newType) {
+              response = this.substanceFormService.switchType(
+                response,
+                newType,
+              );
+            }
+            this.substanceClass = response.substanceClass;
+            this.status = response.status;
+            this.substanceFormService
+              .loadSubstance(response.substanceClass, response)
+              .pipe(take(1))
+              .subscribe(() => {
+                if (this.simplifiedForm) {
+                  this.setFormSections(formSections["chemicalSimplified"]);
+                } else {
+                  this.setFormSections(formSections[response.substanceClass]);
+                }
+              });
           } else {
-            this.setFormSections(formSections[response.substanceClass]);
+            this.handleSubstanceRetrivalError();
           }
-        });
-      } else {
-        this.handleSubstanceRetrivalError();
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    }, error => {
-      this.gaService.sendException('getSubstanceDetails: error from API call');
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleSubstanceRetrivalError();
-    });
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        },
+        (error) => {
+          this.gaService.sendException(
+            "getSubstanceDetails: error from API call",
+          );
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          this.handleSubstanceRetrivalError();
+        },
+      );
   }
 
   jsonValid(file: any): boolean {
@@ -866,106 +1014,148 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       this.definitionType = response.definitionType;
       this.substanceClass = response.substanceClass;
       this.status = response.status;
-      this.substanceFormService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
-        if(this.simplifiedForm) {
-          this.setFormSections(formSections['chemicalSimplified']);
-        } else {
-          this.setFormSections(formSections[response.substanceClass]);
-        }
-        if (!same) {
-          setTimeout(() => {
-            this.forceChange = true;
-            this.dynamicComponents.forEach((cRef, index) => {
-              this.dynamicComponentLoader
-                .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-                .subscribe(componentFactory => {
-                  this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-                  this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
-                  this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
-                    this.formSections[index].menuLabel = label;
-                  });
-                  const hiddenStateSubscription =
-                    this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
-                      this.formSections[index].isHidden = isHidden;
+      this.substanceFormService
+        .loadSubstance(response.substanceClass, response, "import")
+        .pipe(take(1))
+        .subscribe(
+          () => {
+            if (this.simplifiedForm) {
+              this.setFormSections(formSections["chemicalSimplified"]);
+            } else {
+              this.setFormSections(formSections[response.substanceClass]);
+            }
+            if (!same) {
+              setTimeout(() => {
+                this.forceChange = true;
+                this.dynamicComponents.forEach((cRef, index) => {
+                  this.dynamicComponentLoader
+                    .getComponentFactory<any>(
+                      this.formSections[index].dynamicComponentName,
+                    )
+                    .subscribe((componentFactory) => {
+                      this.formSections[index].dynamicComponentRef =
+                        cRef.createComponent(componentFactory);
+                      this.formSections[index].matExpansionPanel =
+                        this.matExpansionPanels.find(
+                          (item, panelIndex) => index === panelIndex,
+                        );
+                      this.formSections[
+                        index
+                      ].dynamicComponentRef.instance.menuLabelUpdate
+                        .pipe(take(1))
+                        .subscribe((label) => {
+                          this.formSections[index].menuLabel = label;
+                        });
+                      const hiddenStateSubscription = this.formSections[
+                        index
+                      ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
+                        (isHidden) => {
+                          this.formSections[index].isHidden = isHidden;
+                        },
+                      );
+                      this.subscriptions.push(hiddenStateSubscription);
+                      this.formSections[
+                        index
+                      ].dynamicComponentRef.instance.canAddItemUpdate
+                        .pipe(take(1))
+                        .subscribe((isList) => {
+                          this.formSections[index].canAddItem = isList;
+                          if (isList) {
+                            const aieSubscription = this.formSections[
+                              index
+                            ].addItemEmitter.subscribe(() => {
+                              this.formSections[index].matExpansionPanel.open();
+                              this.formSections[
+                                index
+                              ].dynamicComponentRef.instance.addItem();
+                            });
+                            this.formSections[
+                              index
+                            ].dynamicComponentRef.instance.componentDestroyed
+                              .pipe(take(1))
+                              .subscribe(() => {
+                                aieSubscription.unsubscribe();
+                              });
+                          }
+                        });
+                      this.formSections[
+                        index
+                      ].dynamicComponentRef.changeDetectorRef.detectChanges();
+
+                      if (!this.featuresOnly) {
+                        this.updateHiddenFormSections();
+                      }
                     });
-                  this.subscriptions.push(hiddenStateSubscription);
-                  this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
-                    this.formSections[index].canAddItem = isList;
-                    if (isList) {
-                      const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
-                        this.formSections[index].matExpansionPanel.open();
-                        this.formSections[index].dynamicComponentRef.instance.addItem();
-                      });
-                      this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
-                        aieSubscription.unsubscribe();
-                      });
-                    }
-                  });
-                  this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
-
-                  if (!this.featuresOnly){
-                    this.updateHiddenFormSections();
-                  }
                 });
-            });
 
-            this.canApprove = false;
-          });
-        }
-      }, error => {
-        this.loadingService.setLoading(false);
-      });
+                this.canApprove = false;
+              });
+            }
+          },
+          (error) => {
+            this.loadingService.setLoading(false);
+          },
+        );
     } else {
       this.handleSubstanceRetrivalError();
       this.loadingService.setLoading(false);
-
     }
     this.loadingService.setLoading(false);
     this.isLoading = false;
   }
 
   getPartialSubstanceDetails(uuid: string, type: string): void {
-    this.substanceService.getSubstanceDetails(uuid).pipe(take(1)).subscribe(response => {
-      if (response) {
-        this.substanceClass = response.substanceClass;
-        this.status = response.status;
-        delete response.uuid;
-        if (response._name) {
-          delete response._name;
-        }
-        if (response.names && response.names.length > 0) {
-            response.names.forEach(name => {
-              if (name.stdName) {
-                name.stdName = null;
-              }
-            });
-        }
+    this.substanceService
+      .getSubstanceDetails(uuid)
+      .pipe(take(1))
+      .subscribe(
+        (response) => {
+          if (response) {
+            this.substanceClass = response.substanceClass;
+            this.status = response.status;
+            delete response.uuid;
+            if (response._name) {
+              delete response._name;
+            }
+            if (response.names && response.names.length > 0) {
+              response.names.forEach((name) => {
+                if (name.stdName) {
+                  name.stdName = null;
+                }
+              });
+            }
 
-        this.scrub(response, type);
-        this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
-          if(this.simplifiedForm) {
-            this.setFormSections(formSections['chemicalSimplified']);
+            this.scrub(response, type);
+            this.substanceFormService
+              .loadSubstance(response.substanceClass, response)
+              .pipe(take(1))
+              .subscribe(() => {
+                if (this.simplifiedForm) {
+                  this.setFormSections(formSections["chemicalSimplified"]);
+                } else {
+                  this.setFormSections(formSections[response.substanceClass]);
+                }
+                this.loadingService.setLoading(false);
+                this.isLoading = false;
+              });
           } else {
-            this.setFormSections(formSections[response.substanceClass]);
+            this.handleSubstanceRetrivalError();
           }
+        },
+        (error) => {
+          this.gaService.sendException(
+            "getSubstanceDetails: error from API call",
+          );
           this.loadingService.setLoading(false);
           this.isLoading = false;
-        });
-      } else {
-        this.handleSubstanceRetrivalError();
-      }
-    }, error => {
-      this.gaService.sendException('getSubstanceDetails: error from API call');
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleSubstanceRetrivalError();
-    });
+          this.handleSubstanceRetrivalError();
+        },
+      );
   }
-
 
   private setFormSections(sectionNames: Array<string> = []): void {
     this.formSections = [];
-    sectionNames.forEach(sectionName => {
+    sectionNames.forEach((sectionName) => {
       const formSection = new SubstanceFormSection(sectionName);
       /* if (!this.definitionType || !(this.definitionType === 'ALTERNATIVE' &&
          (formSection.dynamicComponentName === 'substance-form-names'
@@ -977,151 +1167,184 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private handleSubstanceRetrivalError() {
     const notification: AppNotification = {
-      message: 'The substance you\'re trying to edit doesn\'t exist.',
+      message: "The substance you're trying to edit doesn't exist.",
       type: NotificationType.error,
-      milisecondsToShow: 4000
+      milisecondsToShow: 4000,
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/substances/register']);
-      this.substanceFormService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-        this.setFormSections(formSections.chemical)
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-      });
+      this.router.navigate(["/substances/register"]);
+      this.substanceFormService
+        .loadSubstance(this.subClass)
+        .pipe(take(1))
+        .subscribe(() => {
+          this.setFormSections(formSections.chemical);
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        });
     }, 5000);
   }
 
   validate(validationType?: string): void {
-    if (validationType && validationType === 'approval') {
+    if (validationType && validationType === "approval") {
       this.approving = true;
     } else {
       this.approving = false;
     }
 
-    this.substanceFormService.validationMutations()
+    this.substanceFormService.validationMutations();
 
     this.isLoading = true;
     this.serverError = false;
     this.loadingService.setLoading(true);
     let stagingID = null;
-    if (this.activatedRoute.snapshot.queryParams['stagingID']) {
-      stagingID = this.activatedRoute.snapshot.queryParams['stagingID'];
+    if (this.activatedRoute.snapshot.queryParams["stagingID"]) {
+      stagingID = this.activatedRoute.snapshot.queryParams["stagingID"];
     }
-    this.substanceFormService.validateSubstance(stagingID).pipe(take(1)).subscribe(results => {
-      this.submissionMessage = null;
-      this.validationMessages = results.validationMessages.filter(
-        message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING' || message.messageType.toUpperCase() === 'NOTICE');
-      this.validationResult = results.valid;
-      this.showSubmissionMessages = true;
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      if (this.validationMessages.length === 0 && results.valid === true) {
-        this.submissionMessage = 'Substance is Valid. Would you like to submit?';
-      }
-      if (validationType && validationType === 'approval') {
-        this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
-      }
-    }, error => {
-      this.addServerError(error);
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-    });
+    this.substanceFormService
+      .validateSubstance(stagingID)
+      .pipe(take(1))
+      .subscribe(
+        (results) => {
+          this.submissionMessage = null;
+          this.validationMessages = results.validationMessages.filter(
+            (message) =>
+              message.messageType.toUpperCase() === "ERROR" ||
+              message.messageType.toUpperCase() === "WARNING" ||
+              message.messageType.toUpperCase() === "NOTICE",
+          );
+          this.validationResult = results.valid;
+          this.showSubmissionMessages = true;
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          if (this.validationMessages.length === 0 && results.valid === true) {
+            this.submissionMessage =
+              "Substance is Valid. Would you like to submit?";
+          }
+          if (validationType && validationType === "approval") {
+            this.submissionMessage =
+              "Are you sure you'd like to approve this substance?";
+          }
+        },
+        (error) => {
+          this.addServerError(error);
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        },
+      );
   }
 
   approve(): void {
     this.isLoading = true;
     this.loadingService.setLoading(true);
-    this.substanceFormService.approveSubstance().pipe(take(1)).subscribe(response => {
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-        this.validationMessages = null;
-        this.openSuccessDialog({ type: 'approve' });
-        this.submissionMessage = 'Substance was approved successfully';
-        this.showSubmissionMessages = true;
-        this.validationResult = false;
-      },
-      (error: SubstanceFormResults) => {
-        this.showSubmissionMessages = true;
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-        this.submissionMessage = 'Substance Could not be approved';
-        this.validationResult = false;
-        this.addServerError(error.serverError);
-        setTimeout(() => {
-          this.showSubmissionMessages = false;
-          this.submissionMessage = null;
-        }, 10000);
-      }
-    );
+    this.substanceFormService
+      .approveSubstance()
+      .pipe(take(1))
+      .subscribe(
+        (response) => {
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          this.validationMessages = null;
+          this.openSuccessDialog({ type: "approve" });
+          this.submissionMessage = "Substance was approved successfully";
+          this.showSubmissionMessages = true;
+          this.validationResult = false;
+        },
+        (error: SubstanceFormResults) => {
+          this.showSubmissionMessages = true;
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          this.submissionMessage = "Substance Could not be approved";
+          this.validationResult = false;
+          this.addServerError(error.serverError);
+          setTimeout(() => {
+            this.showSubmissionMessages = false;
+            this.submissionMessage = null;
+          }, 10000);
+        },
+      );
   }
 
   submitStaging() {
-    this.substanceFormService.submitStaging(this.activatedRoute.snapshot.queryParams['stagingID']).subscribe(response => {
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.validationMessages = null;
-      this.showSubmissionMessages = false;
-      this.submissionMessage = '';
-      if (!this.id) {
-        this.id = response.uuid;
-      }
-      this.openSuccessDialog({type: 'staging'});
-    })
+    this.substanceFormService
+      .submitStaging(this.activatedRoute.snapshot.queryParams["stagingID"])
+      .subscribe((response) => {
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
+        this.validationMessages = null;
+        this.showSubmissionMessages = false;
+        this.submissionMessage = "";
+        if (!this.id) {
+          this.id = response.uuid;
+        }
+        this.openSuccessDialog({ type: "staging" });
+      });
   }
 
   getSubmitButtonText(): string {
     const parts = [];
     if (this.validationMessages && this.validationMessages.length > 0) {
-      parts.push('Dismiss all');
+      parts.push("Dismiss all");
     }
     if (!this.authService.getUser()) {
-      parts.push('Login');
+      parts.push("Login");
     }
-    parts.push('Submit');
+    parts.push("Submit");
 
-    if (parts.length === 0) return '';
+    if (parts.length === 0) return "";
     if (parts.length === 1) return parts[0];
-    return parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+    return parts.slice(0, -1).join(", ") + " and " + parts[parts.length - 1];
   }
 
   submit(): void {
     this.isLoading = true;
     this.approving = false;
     this.loadingService.setLoading(true);
-    if (this.activatedRoute.snapshot.queryParams['stagingID']) {
+    if (this.activatedRoute.snapshot.queryParams["stagingID"]) {
       this.submitStaging();
     } else {
-      this.substanceFormService.saveSubstance().pipe(take(1)).subscribe(response => {
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-        this.validationMessages = null;
-        this.showSubmissionMessages = false;
-        this.submissionMessage = '';
-        if (!this.id) {
-          this.id = response.uuid;
-        }
-        this.openSuccessDialog({ type: 'submit', fileUrl: response.fileUrl });
-      }, (error: SubstanceFormResults) => {
-        this.showSubmissionMessages = true;
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-        this.submissionMessage = null;
-        if (error.validationMessages && error.validationMessages.length) {
-          this.validationResult = error.isSuccessfull;
-          this.validationMessages = error.validationMessages
-            .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-          this.showSubmissionMessages = true;
-        } else {
-          this.submissionMessage = 'There was a problem with your submission';
-          this.addServerError(error.serverError);
-          setTimeout(() => {
+      this.substanceFormService
+        .saveSubstance()
+        .pipe(take(1))
+        .subscribe(
+          (response) => {
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
+            this.validationMessages = null;
             this.showSubmissionMessages = false;
+            this.submissionMessage = "";
+            if (!this.id) {
+              this.id = response.uuid;
+            }
+            this.openSuccessDialog({
+              type: "submit",
+              fileUrl: response.fileUrl,
+            });
+          },
+          (error: SubstanceFormResults) => {
+            this.showSubmissionMessages = true;
+            this.loadingService.setLoading(false);
+            this.isLoading = false;
             this.submissionMessage = null;
-          }, 8000);
-        }
-      });
-
+            if (error.validationMessages && error.validationMessages.length) {
+              this.validationResult = error.isSuccessfull;
+              this.validationMessages = error.validationMessages.filter(
+                (message) =>
+                  message.messageType.toUpperCase() === "ERROR" ||
+                  message.messageType.toUpperCase() === "WARNING",
+              );
+              this.showSubmissionMessages = true;
+            } else {
+              this.submissionMessage =
+                "There was a problem with your submission";
+              this.addServerError(error.serverError);
+              setTimeout(() => {
+                this.showSubmissionMessages = false;
+                this.submissionMessage = null;
+              }, 8000);
+            }
+          },
+        );
     }
   }
 
@@ -1129,7 +1352,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.validationMessages.splice(index, 1);
 
     if (this.validationMessages.length === 0) {
-      this.submissionMessage = 'Substance is Valid. Would you like to submit?';
+      this.submissionMessage = "Substance is Valid. Would you like to submit?";
     }
   }
 
@@ -1139,21 +1362,24 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     this.validationMessages = null;
 
     const message: ValidationMessage = {
-      actionType: 'server failure',
+      actionType: "server failure",
       links: [],
       appliedChange: false,
       suggestedChange: false,
-      messageType: 'ERROR',
-      message: 'Unknown Server Error'
+      messageType: "ERROR",
+      message: "Unknown Server Error",
     };
-    if (error && error.type === 'AUTH') {
+    if (error && error.type === "AUTH") {
       message.message = `Authentication Error: ${error.message}`;
     } else if (error && error.error && error.error.message) {
-      message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
-    } else if (error && error.error && (typeof error.error) === 'string') {
-      message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
+      message.message =
+        "Server Error " + (error.status + ": " || ": ") + error.error.message;
+    } else if (error && error.error && typeof error.error === "string") {
+      message.message =
+        "Server Error " + (error.status + ": " || "") + error.error;
     } else if (error && error.message) {
-      message.message = 'Server Error ' + (error.status + ': ' || '') + error.message;
+      message.message =
+        "Server Error " + (error.status + ": " || "") + error.message;
     }
     this.validationMessages = [message];
     this.showSubmissionMessages = true;
@@ -1165,16 +1391,16 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   dismissAllValidationMessages(): void {
     for (let i = this.validationMessages.length - 1; i >= 0; i--) {
-      if (this.validationMessages[i].messageType !== 'ERROR') {
+      if (this.validationMessages[i].messageType !== "ERROR") {
         this.validationMessages.splice(i, 1);
       }
     }
     if (this.validationMessages.length === 0) {
-      this.submissionMessage = 'Substance is Valid. Would you like to submit?';
+      this.submissionMessage = "Substance is Valid. Would you like to submit?";
     }
   }
 
-  @HostListener('window:beforeunload', ['$event'])
+  @HostListener("window:beforeunload", ["$event"])
   unloadNotification($event: any) {
     if (this.substanceFormService.isSubstanceUpdated) {
       $event.returnValue = true;
@@ -1182,22 +1408,32 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   //generate new uuid string for following scubber functions
-     guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-
+  guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
     }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-    }
+    return (
+      s4() +
+      s4() +
+      "-" +
+      s4() +
+      "-" +
+      s4() +
+      "-" +
+      s4() +
+      "-" +
+      s4() +
+      s4() +
+      s4()
+    );
+  }
 
   scrub(oldraw: any, importType?: string): any {
-
     const old = oldraw;
 
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = defiant.json.search(old, "//*[id]");
     const idMap = {};
     for (let i = 0; i < idHolders.length; i++) {
       const oid = idHolders[i].id;
@@ -1210,7 +1446,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+    const uuidHolders = defiant.json.search(old, "//*[uuid]");
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -1228,71 +1464,73 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       }
     }
-    const refHolders = defiant.json.search(old, '//*[references]');
+    const refHolders = defiant.json.search(old, "//*[references]");
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
         const or = refs[j];
-        if (typeof or === 'object') {
+        if (typeof or === "object") {
           continue;
         }
         refs[j] = _map[or];
       }
     }
-    defiant.json.search(old, '//*[uuid]');
-    let remove = ['BDNUM'];
-    if (this.configService.configData && this.configService.configData.filteredDuplicationCodes) {
+    defiant.json.search(old, "//*[uuid]");
+    let remove = ["BDNUM"];
+    if (
+      this.configService.configData &&
+      this.configService.configData.filteredDuplicationCodes
+    ) {
       remove = this.configService.configData.filteredDuplicationCodes;
     }
-    remove.forEach(code => {
+    remove.forEach((code) => {
       _.remove(old.codes, {
-        codeSystem: code
+        codeSystem: code,
       });
-    })
-    const createHolders = defiant.json.search(old, '//*[created]');
+    });
+    const createHolders = defiant.json.search(old, "//*[created]");
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
-      delete rec['created'];
-      delete rec['createdBy'];
-      delete rec['lastEdited'];
-      delete rec['lastEditedBy'];
+      delete rec["created"];
+      delete rec["createdBy"];
+      delete rec["lastEdited"];
+      delete rec["lastEditedBy"];
     }
 
-    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    const originHolders = defiant.json.search(old, "//*[originatorUuid]");
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
-      delete rec['originatorUuid'];
+      delete rec["originatorUuid"];
     }
 
     delete old.approvalID;
     delete old.approved;
     delete old.approvedBy;
-    old.status = 'pending';
-    if ((importType) && (importType === 'definition')) {
+    old.status = "pending";
+    if (importType && importType === "definition") {
       old.names = [];
       old.codes = [];
       old.notes = [];
       old.relationships = [];
       old.tags = [];
     }
-    delete old['createdBy'];
-    delete old['created'];
-    delete old['lastEdited'];
-    delete old['lastEditedBy'];
-    delete old['version'];
-    delete old['$$update'];
-    delete old['changeReason'];
-
+    delete old["createdBy"];
+    delete old["created"];
+    delete old["lastEdited"];
+    delete old["lastEditedBy"];
+    delete old["version"];
+    delete old["$$update"];
+    delete old["changeReason"];
 
     if (true) {
       const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, '//*[references]');
+      const refHolders2 = defiant.json.search(old, "//*[references]");
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
           const or = refs[j];
-          if (typeof or === 'object') {
+          if (typeof or === "object") {
             continue;
           }
           refSet[or] = true;
@@ -1310,74 +1548,85 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
         .value();
 
       old.references = nrefs;
-
     }
 
     return old;
   }
 
-  openSuccessDialog({ type, fileUrl }: { type?: 'submit'|'approve'|'staging', fileUrl?: string }): void {
+  openSuccessDialog({
+    type,
+    fileUrl,
+  }: {
+    type?: "submit" | "approve" | "staging";
+    fileUrl?: string;
+  }): void {
     const dialogRef = this.dialog.open(SubmitSuccessDialogComponent, {
       data: {
         type: type,
-        fileUrl: fileUrl
+        fileUrl: fileUrl,
       },
-      disableClose: true
+      disableClose: true,
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe((response?: 'continue' | 'browse' | 'view' | 'staging') => {
-
-      this.substanceFormService.bypassUpdateCheck();
-      if (response === 'continue') {
-        this.router.navigate(['/substances', this.id, 'edit']);
-        setTimeout(()=>{window.location.reload();},50);
-      } else if (response === 'browse') {
-        this.router.navigate(['/browse-substance']);
-      } else if (response === 'staging') {
-        this.router.navigate(['/admin/staging-area']);
-      } else if (response === 'view') {
-        this.router.navigate(['/substances', this.id]);
-      } else if (response === 'viewInPfda') {
-        // View the submitted substance file in the user's precisionFDA home
-        window.location.assign(fileUrl);
-      } else {
-        this.submissionMessage = 'Substance was saved successfully!';
-        if (type && type === 'approve') {
-          this.submissionMessage = 'Substance was approved successfully';
-        }
-        this.showSubmissionMessages = true;
-        this.validationResult = false;
-        if (type && type === 'staging') {
-          this.submissionMessage = 'Edits to staged substance were saved successfully';
-        } else {
+    const dialogSubscription = dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((response?: "continue" | "browse" | "view" | "staging") => {
+        this.substanceFormService.bypassUpdateCheck();
+        if (response === "continue") {
+          this.router.navigate(["/substances", this.id, "edit"]);
           setTimeout(() => {
-            this.showSubmissionMessages = false;
-            this.submissionMessage = '';
-            this.router.navigate(['/substances', this.id, 'edit']);
-          }, 3000);
+            window.location.reload();
+          }, 50);
+        } else if (response === "browse") {
+          this.router.navigate(["/browse-substance"]);
+        } else if (response === "staging") {
+          this.router.navigate(["/admin/staging-area"]);
+        } else if (response === "view") {
+          this.router.navigate(["/substances", this.id]);
+        } else if (response === "viewInPfda") {
+          // View the submitted substance file in the user's precisionFDA home
+          window.location.assign(fileUrl);
+        } else {
+          this.submissionMessage = "Substance was saved successfully!";
+          if (type && type === "approve") {
+            this.submissionMessage = "Substance was approved successfully";
+          }
+          this.showSubmissionMessages = true;
+          this.validationResult = false;
+          if (type && type === "staging") {
+            this.submissionMessage =
+              "Edits to staged substance were saved successfully";
+          } else {
+            setTimeout(() => {
+              this.showSubmissionMessages = false;
+              this.submissionMessage = "";
+              this.router.navigate(["/substances", this.id, "edit"]);
+            }, 3000);
+          }
         }
-      }
-    });
+      });
     this.subscriptions.push(dialogSubscription);
-
   }
-
 
   mergeConcept() {
     this.feature = undefined;
     const dialogRef = this.dialog.open(MergeConceptDialogComponent, {
-      width: '900px', data: {uuid: this.id}
+      width: "900px",
+      data: { uuid: this.id },
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
   }
 
   definitionSwitch() {
     this.feature = undefined;
     const dialogRef = this.dialog.open(DefinitionSwitchDialogComponent, {
-      width: '900px', data: {uuid: this.id}, autoFocus: false
+      width: "900px",
+      data: { uuid: this.id },
+      autoFocus: false,
     });
-    this.overlayContainer.style.zIndex = '1000';
+    this.overlayContainer.style.zIndex = "1000";
   }
 
   fixLink(link: string) {
@@ -1386,17 +1635,23 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
 
   updateHiddenFormSections() {
     for (const s of this.formSections) {
-      if (['substance-form-structure'].includes(s.dynamicComponentName)) {
-        s.isHidden = false
-        continue
+      if (["substance-form-structure"].includes(s.dynamicComponentName)) {
+        s.isHidden = false;
+        continue;
       }
 
-      if (['substance-form-simplified-names','substance-form-simplified-codes-card','substance-form-simplified-references'].includes(s.dynamicComponentName)) {
-        s.isHidden = !this.simplifiedForm
-        continue
+      if (
+        [
+          "substance-form-simplified-names",
+          "substance-form-simplified-codes-card",
+          "substance-form-simplified-references",
+        ].includes(s.dynamicComponentName)
+      ) {
+        s.isHidden = !this.simplifiedForm;
+        continue;
       }
 
-      s.isHidden = this.simplifiedForm
+      s.isHidden = this.simplifiedForm;
     }
   }
 
@@ -1404,10 +1659,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
     const json = this.substanceFormService.cleanSubstance();
     const time = new Date().getTime();
 
-    const uuid = json.uuid ? json.uuid : 'register';
+    const uuid = json.uuid ? json.uuid : "register";
     const type = json.substanceClass;
     let primary = null;
-    json.names.forEach(name => {
+    json.names.forEach((name) => {
       if (name.displayName) {
         primary = name.name;
       }
@@ -1416,79 +1671,120 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
       primary = json.names[0].name;
     }
     if (!auto) {
-      const file = 'gsrs-draft-' + time;
+      const file = "gsrs-draft-" + time;
 
       let draft = {
-        'uuid': uuid,
-        'date': time,
-        'type': type,
-        'name': primary,
-        'substance': json,
-        'auto': false,
-        'file': file
-      }
+        uuid: uuid,
+        date: time,
+        type: type,
+        name: primary,
+        substance: json,
+        auto: false,
+        file: file,
+      };
 
       localStorage.setItem(file, JSON.stringify(draft));
       this.draftCount++;
-
     } else {
       this.getDrafts();
-      let autos = this.drafts.filter(opt => {
+      let autos = this.drafts.filter((opt) => {
         return opt.auto;
       });
       let auto1 = null;
       let auto2 = null;
       let auto3 = null;
-      this.drafts.forEach(draft => {
+      this.drafts.forEach((draft) => {
         if (draft.auto) {
-          if (draft.file === 'gsrs-draft-auto1') {
+          if (draft.file === "gsrs-draft-auto1") {
             auto1 = draft;
           }
-          if (draft.file === 'gsrs-draft-auto2') {
+          if (draft.file === "gsrs-draft-auto2") {
             auto2 = draft;
           }
-          if (draft.file === 'gsrs-draft-auto3') {
+          if (draft.file === "gsrs-draft-auto3") {
             auto3 = draft;
           }
         }
       });
-      let file = 'gsrs-draft-auto';
+      let file = "gsrs-draft-auto";
 
       if (!auto1) {
-        file = 'gsrs-draft-auto1';
+        file = "gsrs-draft-auto1";
         this.draftCount++;
-
       } else if (!auto2) {
-        file = 'gsrs-draft-auto2';
+        file = "gsrs-draft-auto2";
         this.draftCount++;
-
       } else if (!auto3) {
-        file = 'gsrs-draft-auto3';
+        file = "gsrs-draft-auto3";
         this.draftCount++;
-
       } else {
         if (auto1.date < auto2.date && auto1.date < auto3.date) {
-          file = 'gsrs-draft-auto1';
+          file = "gsrs-draft-auto1";
         } else if (auto2.date < auto1.date && auto2.date < auto3.date) {
-          file = 'gsrs-draft-auto2';
+          file = "gsrs-draft-auto2";
         } else {
-          file = 'gsrs-draft-auto3';
+          file = "gsrs-draft-auto3";
         }
       }
 
       let draft = {
-        'uuid': uuid,
-        'date': time,
-        'type': type,
-        'name': primary,
-        'substance': json,
-        'auto': true,
-        'file': file
-      }
+        uuid: uuid,
+        date: time,
+        type: type,
+        name: primary,
+        substance: json,
+        auto: true,
+        file: file,
+      };
 
       localStorage.setItem(file, JSON.stringify(draft));
+    }
+  }
 
+  /**
+   * Toggles the batch sidebar visibility
+   */
+  toggleBatchSidebar(): void {
+    this.batchSidebarOpen = !this.batchSidebarOpen;
+  }
 
+  /**
+   * Handles selection of a substance from the batch sidebar
+   */
+  onBatchSubstanceSelected(substance: any): void {
+    // Close the sidebar
+    this.batchSidebarOpen = false;
+
+    // Navigate to view the batch substance details
+    // The batch substance can be used as a reference in relationships
+    if (substance && substance.uuid) {
+      const notification: AppNotification = {
+        message: `Selected "${substance._name || substance.uuid}" from batch`,
+        type: NotificationType.success,
+      };
+      this.mainNotificationService.setNotification(notification);
+    }
+  }
+
+  /**
+   * Saves the current validated substance to the batch
+   */
+  saveToBatch(): void {
+    const json = this.substanceFormService.cleanSubstance();
+    const result = this.batchStorageService.saveToBatch(json);
+
+    if (result.success) {
+      const notification: AppNotification = {
+        message: `Substance "${result.batchItem?.name || "Unnamed"}" saved to batch`,
+        type: NotificationType.success,
+      };
+      this.mainNotificationService.setNotification(notification);
+    } else {
+      const notification: AppNotification = {
+        message: `Failed to save to batch: ${result.error}`,
+        type: NotificationType.error,
+      };
+      this.mainNotificationService.setNotification(notification);
     }
   }
 }
