@@ -5,7 +5,7 @@ import { isString } from 'util';
 import { IfStmt } from '@angular/compiler';
 import { AuthService, Auth } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
-import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
+import { AssignableRole, UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -31,7 +31,7 @@ export class UserEditDialogComponent implements OnInit {
   response: any;
   isError: boolean = false;
   availableRoleNames: string[];
-  assignableRoles: any[];
+  assignableRoles: AssignableRole[];
 
   roles = [
     {name: 'Query', hasRole: false},

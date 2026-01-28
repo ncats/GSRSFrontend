@@ -23,33 +23,33 @@ export class AuthService {
   ) {
       this.isLoading = true;
       configService.afterLoad().then(cs => {
-        //todo: consider switchMap
-
-        this.fetchAuth().pipe(take(1)).subscribe(auth => {
+        this.fetchAuth().pipe(
+        take(1),
+        switchMap(auth => {
           if (auth && auth.computedToken != null) {
             this._auth = auth;
+            this._authUpdate.next(this._auth);
+            // Fetch privileges AFTER successful auth
+            return this.fetchPrivs();
           } else {
             this._auth = null;
+            this._authUpdate.next(null);
+            return of([]);
           }
-          this._authUpdate.next(this._auth);
+        })
+      ).subscribe({
+        next: privs => {
+          this._privileges = privs;
           this.isLoading = false;
-        }, error => {
+        },
+        error: err => {
+          console.error('Error:', err);
           this._authUpdate.next(null);
           this.isLoading = false;
-        });
+        }
       });
-      this.fetchPrivs().subscribe({
-          next: privs => {
-            this._privileges = privs;
-          },
-          error: err=>{
-            console.error('Error fetching privileges:', err);
-          },
-          complete: () => {
-            return this._privileges;
-          }
-		  });
-  }
+   });
+}
 
 
 get auth(): Auth {
@@ -234,25 +234,22 @@ get auth(): Auth {
   }
 
   async canEditData( ):Promise<boolean> {
-    if( this._privileges == null || this._privileges.length === 0) {
-      const privs = await firstValueFrom(this.fetchPrivs());
-      return privs.some(p => p.privilege === 'Edit');
-    }
-    return this._privileges != null && this._privileges.some(p=>p.privilege=="Edit");
+    return this.hasSpecificPrivilege('Edit');
   }
 
   async hasAnyPrivilege(...privs) : Promise< boolean> {
-    if( this._privileges == null || this._privileges.length === 0) {
-      this._privileges = await firstValueFrom(this.fetchPrivs());
-    }
+    await this.ensurePrivilegesLoaded();
     return privs.some(p=>this._privileges.some(pp=>pp.privilege.toUpperCase()== p.toUpperCase()));
   }
   
-  async hasSpecificPrivilege(requestedPrivilege: string ):Promise<boolean> {
-    if( this._privileges == null || this._privileges.length === 0) {
-      const privs = await firstValueFrom(this.fetchPrivs());
-      return privs.some(p => p.privilege === requestedPrivilege);
+  private async ensurePrivilegesLoaded(): Promise<void> {
+    if (!this._privileges || this._privileges.length === 0) {
+      this._privileges = await firstValueFrom(this.fetchPrivs());
     }
+  }
+
+  async hasSpecificPrivilege(requestedPrivilege: string ):Promise<boolean> {
+    await this.ensurePrivilegesLoaded();
     return this._privileges != null && this._privileges.some(p=>p.privilege==requestedPrivilege);
   }
 
