@@ -171,5 +171,17 @@ async checkPrivileges() {
     return filteredTabs[tabNumber].name;
   }
 
-  ngOnDestroy() { this.subscriptions.forEach(sub => sub.unsubscribe());  }
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => {
+      if(sub && sub !== null && sub.hasOwnProperty('unsubscribe') && typeof(sub.unsubscribe)==='function'){
+        sub.unsubscribe();
+        console.log(`found a sub to unsubscribe ${JSON.stringify(sub)}`);
+      } else {
+        console.log('found a sub without an unsubscribe method');
+        if(sub!== null) {
+          console.log(`found invalid sub ${JSON.stringify(sub)}`);
+        }
+      }
+    });
+  }
 }
