@@ -273,6 +273,7 @@ export interface ProductIngredient {
   _basisOfStrengthSubstanceUuid?: string;
   _basisOfStrengthIngredientName?: string;
   _basisOfStrengthActiveMoieties?: Array<String>;
+  _substanceClass?: string;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
 }

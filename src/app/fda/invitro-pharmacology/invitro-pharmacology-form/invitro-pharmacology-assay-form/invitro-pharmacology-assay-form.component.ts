@@ -53,6 +53,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
   newAssaySetObject: InvitroAssaySet;
   newAssaySet: string;
+  correctTargetNameApprovalID: string;
+  correctLigandApprovalID: string;
 
   checkBoxAssaySetList: Array<any> = [];
   existingAssaySetList: Array<any> = [];
@@ -154,13 +156,13 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                 } // if response
               } // if record has JSON
               else {
-                  // if No JSON file selected, show message to user
-                  // Initialized the Assay Objects
-                  this.invitroPharmacologyService.loadAssayOnly();
-                  this.assay = this.invitroPharmacologyService.assay;
+                // if No JSON file selected, show message to user
+                // Initialized the Assay Objects
+                this.invitroPharmacologyService.loadAssayOnly();
+                this.assay = this.invitroPharmacologyService.assay;
 
-                  // Get All the Assay Sets for checkboxes on the form
-                  this.getAllAssaySets();
+                // Get All the Assay Sets for checkboxes on the form
+                this.getAllAssaySets();
 
                 // Stop the Loading/Spinner after the form data is loaded
                 this.isLoading = false;
@@ -423,6 +425,24 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       }
     }
 
+    if ((this.assay.targetName) && (this.assay.targetNameApprovalId)) {
+      if (this.correctTargetNameApprovalID) {
+        // if NOT SAME, display error message
+        if (this.correctTargetNameApprovalID !== this.assay.targetNameApprovalId) {
+          this.setValidationMessage("The Target Name Approval ID for Target Name '" + this.assay.targetName + "' should be '" + this.correctTargetNameApprovalID + "'");
+        }
+      }
+    }
+
+    if ((this.assay.ligandSubstrate) && (this.assay.ligandSubstrateApprovalId)) {
+      if (this.correctLigandApprovalID) {
+        // if NOT SAME, display error message
+        if (this.correctLigandApprovalID !== this.assay.ligandSubstrateApprovalId) {
+          this.setValidationMessage("The Ligand/Substrate Approval ID for Ligand/Substrate '" + this.assay.ligandSubstrate + "' should be '" + this.correctLigandApprovalID + "'");
+        }
+      }
+    }
+
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -569,7 +589,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     const date = new Date();
     let jsonFilename = 'invitro_pharm_assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    let data = {jsonData: this.invitroPharmacologyService.assay, jsonFilename: jsonFilename};
+    let data = { jsonData: this.invitroPharmacologyService.assay, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -707,6 +727,10 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                     this.assay.targetNameSubstanceKey = substanceKey;
                     this.assay.targetNameSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
+                    // Need this for validation, if user changes the Target Name Approval ID in the texbox,
+                    // need to verify that it matches with this Approval ID.
+                    this.correctTargetNameApprovalID = substance.approvalID;
+
                   } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
                     this.assay.humanHomologTargetApprovalId = substance.approvalID;
                     this.assay.humanHomologTargetSubstanceKey = substanceKey;
@@ -716,6 +740,10 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                     this.assay.ligandSubstrateApprovalId = substance.approvalID;
                     this.assay.ligandSubstrateSubstanceKey = substanceKey;
                     this.assay.ligandSubstrateSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+
+                    // Need this for validation, if user changes the Ligand/Substrate Approval ID in the texbox,
+                    // need to verify that it matches with this Approval ID.
+                    this.correctLigandApprovalID = substance.approvalID;
 
                   } else if (fieldName === this.ANALYTE) {
                     this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKey = substanceKey;

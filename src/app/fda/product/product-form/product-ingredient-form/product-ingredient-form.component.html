@@ -55,7 +55,7 @@
     <!-- Substance Selector for Substance/Ingredient Name -->
     <div class="col-4-1">
       <app-substance-selector (selectionUpdated)="ingredientNameUpdated($event)"
-        eventCategory="substanceRelationshipRelatedSub" placeholder="Ingredient Name" header="Ingredient Name"
+        eventCategory="substanceRelationshipRelatedSub" placeholder="Ingredient Name *" header="Ingredient Name *"
         [subuuid]="ingredientNameSubstanceUuid" [showMorelinks]="true">
       </app-substance-selector>
 
@@ -79,84 +79,7 @@
         <span class="font12px"><b>{{active}}</b></span>
         <span class="colorgray font11px">&nbsp;(Active Moiety)</span>
       </div>
-
     </div>
-
-    <!-- Ingredient Name (OLD CODE)-->
-    <!--
-    <div class="col-1-4 flex-column related-substance">
-      <div class="related-substance-border">
-        <app-substance-search-selector (selectionUpdated)="ingredientNameUpdated($event)"
-          (showMessage)="showMessageIngredientName($event)" (searchValueOut)="searchValueOutChange($event)"
-          eventCategory="ingredName" placeholder="Ingredient Name" header="Ingredient Name" [subuuid]="substanceUuid">
-        </app-substance-search-selector>
-
-        <div *ngIf="ingredientNameMessage" class="colorred font12px">
-          {{ingredientNameMessage}}
-        </div>
-
-        <!- - Display Ingredient Name Details - ->
-        <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="ingredientName">
-            <span class="colormaroon"><b>{{ingredientName}}</b></span>
-            <br>
-            <!-- Display Active Moiety - ->
-            <div *ngFor="let active of ingredientNameActiveMoiety; let activeIndex = index">
-              {{active}} <span class="colorgray font11px">(Active Moiety)</span>
-            </div>
-          </div>
-          <div *ngIf="ingredient.substanceKey">
-            <span class="colororange">{{ingredient.substanceKey}}</span><span class="colorgray font11px">
-              ({{ingredient.substanceKeyType}})</span>
-            <br>
-            <button mat-icon-button color="primary" (click)="confirmDeleteIngredientName()"
-              matTooltip="Delete Ingredient Name {{prodIngredientIndex + 1}}">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
-
-    <!-- Basis of Strength -->
-    <!--
-    <div class="col-1-4 flex-column related-substance">
-      <div class="related-substance-border">
-        <app-substance-search-selector (selectionUpdated)="basisOfStrengthUpdated($event)"
-          (showMessage)="showMessageBasisOfStrength($event)" (searchValueOut)="searchValueBasisOutChange($event)"
-          eventCategory="substanceRelationshipRelatedSub" placeholder="Basis Of Strength" header="Basis Of Strength"
-          [subuuid]="basisOfStrengthSubstanceUuid">
-        </app-substance-search-selector>
-
-        <div *ngIf="basisOfStrengthMessage" class="colorred font12px">
-          {{basisOfStrengthMessage}}
-        </div>
-
-        <!- - Display Basis of Strength Details - ->
-        <div class="padall5px fontfamilyhelvetica">
-          <div *ngIf="basisOfStrengthIngredientName">
-            <span class="colormaroon"><b>{{basisOfStrengthIngredientName}}</b></span>
-            <br>
-            <!- - Display Active Moiety - ->
-            <div *ngFor="let active of basisOfStrengthActiveMoiety; let activeIndex = index">
-              {{active}} <span class="colorgray font11px">(Active Moiety)</span>
-            </div>
-          </div>
-
-          <div *ngIf="ingredient.basisOfStrengthSubstanceKey">
-            <span class="colororange">{{ingredient.basisOfStrengthSubstanceKey}}</span><span class="colorgray font11px">
-              ({{ingredient.basisOfStrengthSubstanceKeyType}})</span>
-            <br>
-            <button mat-icon-button color="primary" (click)="confirmDeleteBasisOfStrength()"
-              matTooltip="Delete Basis of Strength {{prodIngredientIndex + 1}}">
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
 
     <div class="col-4-1">
       <label>Ingredient Location</label><br>
@@ -180,7 +103,7 @@
   </div> <!-- row-->
 
   <div class="form-row margintop20px">
-    <app-cv-input class="col-4-1" domain="INGREDIENT_TYPE" title="Ingredient Type" name="ingredientType"
+    <app-cv-input class="col-4-1" domain="INGREDIENT_TYPE" title="Ingredient Type *" name="ingredientType"
       [model]="ingredient.ingredientType" (valueChange)="ingredient.ingredientType = $event">
     </app-cv-input>
 

@@ -1054,6 +1054,7 @@
         "Product Name",
         "Dosage Form Name",
         "Substance UUID",
+        "Substance Class",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
         "Has Ingredients",
@@ -1183,10 +1184,10 @@
         "Sponsor Report Submitter Name"
       ],
       "admin": [
+        "root_createdDate",
         "Record Created By",
-        "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited"
+        "root_modifiedDate",
+        "Record Last Edited By"
       ]
     }
   },

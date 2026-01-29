@@ -285,7 +285,7 @@
         "type":"string",
         "cvDomain":null,
         "priority":"x",
-        "suggest":null
+        "suggest":"Substance_Key"
     },
     "Title":{
         "lucenePath":"root_title",

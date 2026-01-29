@@ -631,7 +631,7 @@
                             <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                             </mat-icon>
                           </span>
-  
+
                           <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
                           <span *ngIf="prodCode._phpIdUrl">
                             <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
@@ -829,19 +829,23 @@
                                   {{prodIngred._ingredientName}}
                                 </ng-template>
 
+                                <!-- Show Substance Type -->
+                                <div *ngIf="prodIngred._substanceClass">
+                                  &nbsp;&nbsp;
+                                  <span class="colororange">
+                                    <span
+                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                    </span>
+                                  </span>
+                                </div>
+
                                 <!-- Show Structures-->
-                                <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
+                                <div class="margintopneg15" *ngIf="prodIngred._substanceUuid">
                                   <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                                     (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
                                     <mat-icon matTooltip="Show Substance chemical structure">analytics
                                     </mat-icon>
                                   </button>
-
-                                  <!-- Show Approval ID-->
-                                  <!--
-                                  <mat-icon class="margintop5px font16px"
-                                    matTooltip="Approval ID: {{prodIngred._approvalId}}">verified</mat-icon>
-                                  -->
                                 </div>
 
                               </div> <!-- class=divflex -->
@@ -950,6 +954,17 @@
                                   {{prodIngred._ingredientName}}
                                 </ng-template>
 
+                                <!-- Show Substance Class/Substance Type -->
+                                <div *ngIf="prodIngred._substanceClass">
+                                  &nbsp;&nbsp;
+                                  <span class="colororange">
+                                    <span
+                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                    </span>
+                                  </span>
+                                </div>
+
+                                <!-- Show Structures -->
                                 <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
                                   <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                                     (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
