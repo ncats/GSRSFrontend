@@ -174,14 +174,8 @@ async checkPrivileges() {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => {
-      if(sub && sub !== null && sub.hasOwnProperty('unsubscribe') && typeof(sub.unsubscribe)==='function'){
+      if(sub && sub !== null) {
         sub.unsubscribe();
-        console.log(`found a sub to unsubscribe ${JSON.stringify(sub)}`);
-      } else {
-        console.log('found a sub without an unsubscribe method');
-        if(sub!== null) {
-          console.log(`found invalid sub ${sub}`);
-        }
       }
     });
   }
