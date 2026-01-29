@@ -139,7 +139,7 @@
                   Product Code:
                 </div>
                 <div class="row-property-value-2">
-                  
+
                   <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
                     <span *ngIf="i > 0"><br></span>
                     <b>{{prodCode.productCodeType}}</b>:
@@ -322,6 +322,17 @@
                             {{prodIngred._ingredientName}}
                           </ng-template>
 
+                          <!-- Show Substance Class/Substance Type -->
+                          <div *ngIf="prodIngred._substanceClass">
+                            &nbsp;&nbsp;
+                            <span class="colororange">
+                              <span
+                                [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                              </span>
+                            </span>
+                          </div>
+
+                          <!-- Show Structure -->
                           <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
                             <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                               (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
@@ -362,19 +373,6 @@
                             -->
                           </div>
 
-                          <!-- Original Denominator -->
-                          <!--
-                          <div class="marginleft5px">
-                            <span *ngIf="prodIngred.originalDenominatorNumber">
-                              <span class="font11px">&nbsp;Denominator:
-                                <b>{{ prodIngred.originalDenominatorNumber }}&nbsp;{{
-                                  prodIngred.originalDenominatorUnit
-                                  }}
-                                </b>
-                              </span>
-                            </span>
-                          </div>
-                          -->
                         </div> <!-- divflex -->
 
                         <!-- Display Ingredient Type -->
@@ -438,6 +436,17 @@
                             {{prodIngred._ingredientName}}
                           </ng-template>
 
+                          <!-- Show Substance Class/Substance Type -->
+                          <div *ngIf="prodIngred._substanceClass">
+                            &nbsp;&nbsp;
+                            <span class="colororange">
+                              <span
+                              [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                            </span>
+                            </span>
+                          </div>
+
+                          <!-- Show Structure -->
                           <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
                             <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                               (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">

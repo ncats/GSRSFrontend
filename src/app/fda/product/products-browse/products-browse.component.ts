@@ -748,7 +748,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                 if (response) {
                   elementIngred._substanceUuid = response.uuid;
                   elementIngred._ingredientName = response._name;
-                  elementIngred._approvalId = response.approvalID
+                  elementIngred._approvalId = response.approvalID;
+
+                  // Substance Type, convert from 'Chemical' to 'C', and for other types also
+                  if (response.substanceClass) {
+                    let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.class === response.substanceClass);
+                    if (subClassIndex > -1) {
+                      elementIngred._substanceClass = this.generalService.substanceClassArray[subClassIndex].shortDisplay;
+                    }
+                  }
 
                   // if Ingredient Type exists
                   if (elementIngred.ingredientType) {
@@ -806,6 +814,16 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         }); // loop productLots
       }); // loop productManufactureItems
     });  // loop product
+  }
+
+  getSubstanceClass(substanceClass: string): string {
+    if (substanceClass) {
+      let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.shortDisplay === substanceClass);
+      if (subClassIndex > -1) {
+        return "The Substance Type is " + this.generalService.substanceClassArray[subClassIndex].longDisplay;
+      }
+    } 
+    return "";
   }
 
   export(extension: string) {
@@ -1070,6 +1088,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     for (let i = 0; i < ingredStrenthDisplayHolders.length; i++) {
       if (ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay) {
         delete ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay;
+      }
+    }
+
+    const ingredSubstanceClassHolders = jp.query(old, '$..[?(@._substanceClass)]');
+    for (let i = 0; i < ingredSubstanceClassHolders.length; i++) {
+      if (ingredSubstanceClassHolders[i]._substanceClass) {
+        delete ingredSubstanceClassHolders[i]._substanceClass;
       }
     }
 
