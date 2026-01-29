@@ -92,12 +92,13 @@ export class AdminComponent implements OnInit, OnDestroy {
           break;
 
         default: this.activeTab = 0; break;
-    }
-    this.subscriptions.push(routeSub);
-    if( this.activeTab <= -1) {
+      }
+    
+      if( this.activeTab <= -1) {
         this.router.navigate(['/home' ] );
-    }
+      }
     });
+    this.subscriptions.push(routeSub);
     const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cache';
   console.log('ngoninit complete at ' + (new Date()));
 }
@@ -179,7 +180,7 @@ async checkPrivileges() {
       } else {
         console.log('found a sub without an unsubscribe method');
         if(sub!== null) {
-          console.log(`found invalid sub ${JSON.stringify(sub)}`);
+          console.log(`found invalid sub ${sub}`);
         }
       }
     });
