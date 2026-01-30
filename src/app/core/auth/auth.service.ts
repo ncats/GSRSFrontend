@@ -321,7 +321,6 @@ get auth(): Auth {
             },
             err => {
               console.log("Authorized error");
-              console.log(err);
               observer.error(err);
             },
             () => observer.complete()

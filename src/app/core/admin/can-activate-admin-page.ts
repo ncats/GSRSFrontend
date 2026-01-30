@@ -18,8 +18,9 @@ export class CanActivateAdminPage implements CanActivate {
   ):  Promise<boolean | UrlTree> {
     const auth = this.authService.getAuth();
     if (auth) {
-      console.log(`going to check whether user has one of the required privs`);
-      const canDoSomethingAdmin= await this.authService.hasAnyPrivilege("Configure System", "Import Data", "Manage Users", "Manage CVs", "Run Tasks");
+      const canDoSomethingAdmin= await this.authService.hasAnyPrivilege("Configure System", "Import Data", "Manage Users", "Manage CVs", "Run Tasks",
+        "View Files",	"View Service Info"
+      );
       if( canDoSomethingAdmin) {
         console.log('user CAN');
         return true;

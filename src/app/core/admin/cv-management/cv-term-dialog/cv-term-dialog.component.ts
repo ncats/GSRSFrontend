@@ -71,20 +71,12 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   }
 
   editTerms(term: any, index): void {
-  //  this.dialog.openDialogs.pop();
-  //  this.overlayContainer.style.zIndex = '1003';
     let thisy = window.pageYOffset;
-  /*  window.scroll({ 
-      top: 0, 
-      left: 0, 
-      behavior: 'auto' });*/
       let dialogConfig = {  width: '70%', height: '85%',data: {vocabulary: this.vocabulary, domain: this.vocabulary.domain, term: term, adminPanel: true}, };
     const dialogRef = this.dialog.open(FragmentWizardComponent, dialogConfig);
     this.overlayContainer.style.zIndex = '1003';
 
     setTimeout(() => {
-    //  this.dialog.openDialogs.pop();
-   // this.overlayContainer.style.zIndex = '10003';
     },3000);
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       window.scroll({ 

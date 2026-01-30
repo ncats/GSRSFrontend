@@ -131,7 +131,6 @@ export class ImportSummaryComponent implements OnInit {
 
 
   matchFieldsToCount(matches: any) {
-    console.log(matches);
     matches.forEach(match => {
       let newArr: Array<any> = [];
       match.records.forEach(record => {
@@ -247,9 +246,7 @@ export class ImportSummaryComponent implements OnInit {
     if (substance != null) {
       this.privateSubstance = substance;
       this.codeSystems = substance.codes;
-     // console.log(substance);
       this.codes = substance.codes;
-    //  this.getStructureID();
     if (substance._metadata.importStatus.toUpperCase() === 'MERGED' || substance._metadata.importStatus.toUpperCase() === 'IMPORTED') {
       this.disabled = true;
     } else {
@@ -307,7 +304,6 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   doAction(action: string, mergeID?: string) {
-    console.log(action);
     this.displayAction = action;
     this.loadingService.setLoading(true);
     this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {

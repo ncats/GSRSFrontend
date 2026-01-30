@@ -166,7 +166,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
 
       if (response) {
         this.loadingService.setLoading(true);
-        //  console.log(response.json);
 
         const read = response.substance;
         if (this.id && read.uuid && this.id === read.uuid) {

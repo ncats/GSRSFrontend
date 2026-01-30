@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class CanActivateAdmin implements CanActivate {
@@ -18,7 +17,7 @@ export class CanActivateAdmin implements CanActivate {
         const auth = await this.authService.getAuth();
         if (auth) {
             let canRunSomethingAdmin = await this.authService.hasAnyPrivilege('Configure System', 'Import Data', 
-                'Manage Users', 'Manage CVs', 'Run Tasks')
+                'Manage Users', 'Manage CVs', 'Run Tasks');
             if( canRunSomethingAdmin) {
               console.log('   has priv to configure system');
               return true;

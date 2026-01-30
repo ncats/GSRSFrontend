@@ -35,13 +35,11 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   agencySubstanceKeyType = 'UUID';
 
   canUpdate: boolean = false;
-  isTesting  = true;
+  isTesting  = false;
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   public  _trialNumber: string;
   bulkInputValue = '';
-  // public facets: Array<Facet> = [];
-  // private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   pageIndex: number;
   pageSize: number;
   totalClinicalTrials: number;
@@ -386,7 +384,6 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
         subscription.unsubscribe();
       }
     });
-    // this.facetManagerService.unregisterFacetSearchHandler();
   }
 
 

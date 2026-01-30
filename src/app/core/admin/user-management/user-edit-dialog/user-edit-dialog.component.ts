@@ -48,7 +48,6 @@ export class UserEditDialogComponent implements OnInit {
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log(`in UserEditDialogComponent ctor, data: ${JSON.stringify(data)}`);
     this.user = data.user;
     this.userID = data.userID;
     this.submitted = data.submission;
@@ -57,7 +56,6 @@ export class UserEditDialogComponent implements OnInit {
 
     async ngOnInit() {
       if (this.user) {
-        console.log(`UserEditDialogComponent ngOnInit have user`);
         if(!await this.authService.hasSpecificPrivilege('Manage Users')) {
           alert("Sorry! Unable to verify that you have the privileges to access this page");
           this.router.navigateByUrl('/home');
@@ -81,7 +79,6 @@ export class UserEditDialogComponent implements OnInit {
             });
           });
       } else if (this.userID) {
-        console.log(`UserEditDialogComponent ngOnInit have userID will fetch user`);
           this.adminService.getUserByID(this.userID).pipe(take(1)).subscribe( resp => {
             this.user = resp;
             this.checkRoles();
@@ -106,7 +103,6 @@ export class UserEditDialogComponent implements OnInit {
             });
           });
       } else {
-        console.log(`UserEditDialogComponent ngOnInit new user`);
         this.newUser = true;
         this.userHasAdminRole = false;
         this.user = {groups: [], roles: [],  user: {}};
@@ -114,7 +110,6 @@ export class UserEditDialogComponent implements OnInit {
         this.loading = false;
         this.assignableRoles = [];
         this.adminService.getAllAvailableRoles().subscribe(roleNames => {
-          console.log(`retrieved available roles`);
           this.availableRoleNames = roleNames;
            this.availableRoleNames.forEach(r=>{
             let newRole = {roleName: r, assigned: false };
@@ -145,7 +140,6 @@ export class UserEditDialogComponent implements OnInit {
   checkIfUserHasAdminRole(roles): boolean {
     let toReturn = false;
     roles.forEach(role => {
-      console.log(`checkIfUserHasAdminRole role ${JSON.stringify(role)}`);
       if(role.role && role.role.toLowerCase() === 'admin') {
         toReturn = true;
       }
@@ -165,16 +159,13 @@ export class UserEditDialogComponent implements OnInit {
 
   saveChanges(): void {
     if (this.changePassword && this.newPassword !== '' ) {
-      console.log(`saveChanges `);
       this.isError = true;
       this.message = 'Cancel or submit new password to save other changes';
     } else {
       this.isError = false;
       const rolesArr = [];
       this.assignableRoles.forEach(role => {
-        console.log(`saveChanges evaluating role ${role.roleName}`);
         if (role.assigned) {
-          console.log(`user has role ${role.roleName}`);
           rolesArr.push(role.roleName);
         }
       });
@@ -237,9 +228,7 @@ export class UserEditDialogComponent implements OnInit {
     if (this.newPassword === this.newPasswordConfirm) {
       const rolesArr = [];
       this.assignableRoles.forEach(role => {
-        console.log(`addUser evaluating role ${role.roleName}`);
         if (role.assigned) {
-          console.log(`user will have role ${role.roleName}`);
           rolesArr.push(role.roleName);
         }
       });
@@ -352,12 +341,10 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   private userHasRole(roleTest: string): boolean {
-    console.log(`in userHasRole, this.user: ${JSON.stringify(this.user)} roleTest: ${roleTest}`);
     if( this.user == null) return true;
     let roleToCompare =roleTest.toLocaleLowerCase();
     for(var r in this.user.roles) {
       let role = this.user.roles[r].role;
-      console.log(` user role: ${role}`);
       if( roleToCompare === role.toLocaleLowerCase()) {
         return true;
       }
@@ -368,12 +355,9 @@ export class UserEditDialogComponent implements OnInit {
   private setupAssignableRoles() {
     this.assignableRoles = [];
     this.adminService.getAllAvailableRoles().subscribe(roleNames => {
-    console.log(`retrieved available roles`)
     this.availableRoleNames = roleNames;
     this.availableRoleNames.forEach(r=>{
-      console.log(`looking at role ${r}`);
       let hasRole:boolean = this.userHasRole(r);
-      console.log(`adding role ${r} to assignableRoles hasRole: ${hasRole}`);
       let newRole = {roleName: r, assigned: hasRole };
       this.assignableRoles.push(newRole);
      })
@@ -381,4 +365,3 @@ export class UserEditDialogComponent implements OnInit {
   }
 
 }
-

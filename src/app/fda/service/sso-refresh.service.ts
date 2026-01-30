@@ -1,7 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { take } from 'rxjs/operators';
 import { AuthService } from '@gsrs-core/auth';
 import { UtilsService } from '@gsrs-core/utils';
 import { ConfigService } from '@gsrs-core/config/config.service';

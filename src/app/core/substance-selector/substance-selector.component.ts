@@ -72,8 +72,6 @@ export class SubstanceSelectorComponent implements OnInit {
     
     if (this.configService.configData.substanceSelectorProperties != null) {
       this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
-    } else {
-      console.log("The config value for substanceSelectorProperties is null.");
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 

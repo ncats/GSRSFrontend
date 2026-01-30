@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class CanRegisterSubstanceForm implements CanActivate {
@@ -18,7 +17,6 @@ export class CanRegisterSubstanceForm implements CanActivate {
 
     const auth = this.authService.getAuth();
     if (auth) {
-        console.log('in canActivate, going to check for Create priv');
         const canCreate =await this.authService.hasSpecificPrivilege('Create');
         if(canCreate){
             return true;

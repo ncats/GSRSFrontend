@@ -30,7 +30,6 @@ export class AdminComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
-    console.log(`in admin.component ngOnInit`);
     await this.checkPrivileges();
   
     const routeSub =this.activatedRoute.params.subscribe(routeParams => {
@@ -43,14 +42,12 @@ export class AdminComponent implements OnInit, OnDestroy {
            break;
         case 'user':
           if(!this.canManageUsers){
-            console.log("user does not have privs to manage users");
             this.activeTab=-1;
             break;
           }
            this.activeTab = actualTab; break;
         case 'import': 
           if( !this.canImportData ) {
-            console.log("user does not have privs to import data");
             this.activeTab=-1;
             break;
           }
@@ -59,7 +56,6 @@ export class AdminComponent implements OnInit, OnDestroy {
          
         case 'cv': 
           if( !this.canManageCVs ) {
-            console.log("user does not have privs to manage CVs");
             this.activeTab=-1;
             break;
           }
@@ -68,7 +64,6 @@ export class AdminComponent implements OnInit, OnDestroy {
         
         case 'jobs':
           if(!this.canRunJobs){
-            console.log("user does not have privs to run jobs");
             this.activeTab=-1;
             break;
           }
@@ -76,7 +71,6 @@ export class AdminComponent implements OnInit, OnDestroy {
            break;
         case 'files':
           if( !this.canViewServerFiles){
-            console.log("user does not have privs to view server files");
             this.activeTab=-1;
             break;
           }
@@ -84,7 +78,6 @@ export class AdminComponent implements OnInit, OnDestroy {
           break;
         case 'data':
           if( !this.canImportData){
-            console.log("user does not have privs to import data");
             this.activeTab=-1;
             break;
           }
@@ -100,7 +93,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(routeSub);
     const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cache';
-  console.log('ngoninit complete at ' + (new Date()));
 }
 
 async checkPrivileges() {
@@ -110,13 +102,10 @@ async checkPrivileges() {
   this.canManageUsers = await this.authService.hasSpecificPrivilege("Manage Users");
   this.canViewServerFiles = await this.authService.hasSpecificPrivilege("View Files");
   this.canViewServiceInfo = await this.authService.hasSpecificPrivilege("View Service Info");
-  console.log(`canManageCVs: ${this.canManageCVs}; canRunJobs: ${this.canRunJobs};  canImportData: ${this.canImportData}; canManageUsers: ${this.canManageUsers}; canViewServerFiles: ${this.canViewServerFiles}`);
-  console.log('checkPrivileges complete');
 }
 
   onTabChanged(event: MatTabChangeEvent): void {
 
-    console.log(`starting onTabChanged event.index: ${event.index} at ` + (new Date()));
     let route = 'cache';
 
     let newRoute = this.getActualTabName(event.index);
@@ -132,10 +121,7 @@ async checkPrivileges() {
         this.activeTab = 0;
         this.router.navigate(['/admin/' + route] );
       }
-    } else {
-      console.log('already on the desired tab!');
     }
-
   }
 
   getFilteredTabs() {
@@ -154,15 +140,13 @@ async checkPrivileges() {
   }
 
   getActualTab(desiredFunctionality:string): number {
-    console.log(`getActualTab looking for ${desiredFunctionality}`);
 
     let filteredTabs = this.getFilteredTabs();
-    for(var t=0; t< filteredTabs.length; t++) {
+    for(let t=0; t< filteredTabs.length; t++) {
       if(filteredTabs[t].name == desiredFunctionality){
         return t;
       }
     }
-    console.log(`getActualTab did not locate desire tab`);
     return -1;
   }
 

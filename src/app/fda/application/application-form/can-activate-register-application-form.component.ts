@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
-import { take } from 'rxjs/operators';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class CanActivateRegisterApplicationFormComponent implements CanActivate {
