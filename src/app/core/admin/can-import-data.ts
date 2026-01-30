@@ -18,8 +18,8 @@ export class CanImportData implements CanActivate {
             const auth = this.authService.getAuth();
             if (auth) {
                 console.log(`  got auth `); 
-                const canImporNow = await this.authService.hasSpecificPrivilege("Import Data");
-                if( canImporNow) {
+                const canImportNow = await this.authService.hasSpecificPrivilege("Import Data");
+                if( canImportNow) {
                     console.log('   has priv \'Import Data\'');
                     return true;
                 } else {

@@ -173,10 +173,6 @@ async checkPrivileges() {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(sub => {
-      if(sub && sub !== null) {
-        sub.unsubscribe();
-      }
-    });
+    this.subscriptions.forEach(sub => sub?.unsubscribe());
   }
 }
