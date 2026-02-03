@@ -220,7 +220,14 @@ submitText() {
           searchEntity: this.searchEntity
         }
       };
+
+      if (this.searchEntity && this.searchEntity === 'substances') {
       this.router.navigate(['/browse-substance'], navigationExtras);
+      } else if (this.searchEntity && this.searchEntity === 'products') {
+        this.router.navigate(['/browse-products'], navigationExtras);
+      } else if (this.searchEntity && this.searchEntity === 'applications') {
+        this.router.navigate(['/browse-applications'], navigationExtras);
+      }
     }, error => {
       console.log('Error trying to post/put a bulk query.');
       const notification: AppNotification = {

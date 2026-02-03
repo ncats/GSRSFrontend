@@ -484,7 +484,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
     this.validateClient();
 
-    // Set total assays to save
+    // Set total number of Assays to save
     this.totalAssayToSave = this.existingAssaysByAssaySetList.length;
 
     // If there is no error on client side, check validation on server side
@@ -494,9 +494,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // Validate Assay
       // this.invitroPharmacologyService.validateAssay().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
+
       //  this.validationMessages = results.validationMessages.filter(
       //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       //    this.validationResult = results.valid;
+
       this.showSubmissionMessages = true;
       this.isLoading = false;
       this.loadingService.setLoading(this.isLoading);
@@ -596,6 +598,34 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     if (this.existingAssaysByAssaySetList.length == 0) {
       this.setValidationMessage('Result is required');
     }
+
+    // Copy the Assays/Screening to new variable
+    let copiedAssays = _.cloneDeep(this.existingAssaysByAssaySetList);
+
+    copiedAssays.forEach((assay, indexAssay) => {
+      if (assay) {
+        assay.invitroAssayScreenings.forEach(screening => {
+          if (screening) {
+            if (screening.invitroAssayResult != null) {
+              // Test Agent Concentration must be a number
+              if (screening.invitroAssayResult.testAgentConcentration) {
+                if (this.isNumber(screening.invitroAssayResult.testAgentConcentration) === false) {
+                  this.setValidationMessage('Test Agent Concentration must be a number in row ' + (indexAssay+1));
+                }
+              }
+
+              // Result Value must be a number
+              if (screening.invitroAssayResult.resultValue) {
+                if (this.isNumber(screening.invitroAssayResult.resultValue) === false) {
+                  this.setValidationMessage('Result Value must be a number in row ' + (indexAssay+1));
+                }
+              }
+
+            }
+          }
+        });
+      }
+    });
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -1515,11 +1545,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     */
 
     // Copy the assay to new variable
-   // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
+    // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
 
     copyAssay.invitroAssayScreenings.push(newScreening);
 
-   // this.existingAssaysByAssaySetList.splice(indexCopyFromAssay + 1, 0, copyAssay);
+    // this.existingAssaysByAssaySetList.splice(indexCopyFromAssay + 1, 0, copyAssay);
   }
 
   setPlasmaProteinCheckBox($event, screeningIndex: number): void {
@@ -1609,6 +1639,15 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     });
     return assayArray;
 
+  }
+
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
   }
 
   scrub(oldraw: any): any {

@@ -52,6 +52,7 @@
 .row {
   display: flex;
   width: 100%;
+  max-width: 100%;
   border-bottom: solid 1px var(--box-shadow-color-3);
 /*
   &:not(:last-child) {
@@ -83,6 +84,9 @@
   max-width: 60%;
   padding: 7px;
   font-size: 12px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .row-property-2 {
@@ -103,6 +107,9 @@
   max-width: 80%;
   padding: 6px;
   font-size: 12px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .row-property-3 {
@@ -125,6 +132,9 @@
   font-size: 12px;
   word-wrap: break-word;
   text-align: left;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .title {
@@ -330,10 +340,11 @@ fieldset.border {
   border: solid 2px var(--fieldset-red-border-color)!important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
+  max-width: 100%;
 }
 
 legend.border {
-  width: auto !important;
+  max-width: 100%;
   border: none;
   border-bottom: none;
   font-size: 14px;

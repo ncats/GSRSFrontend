@@ -235,7 +235,7 @@
         "lucenePath":"root_applicationProductList_routeAdmin",
         "description":"Route of Administration for Application",
         "type":"string",
-        "cvDomain":null,
+        "cvDomain":"PROD_ROUTE_OF_ADMIN",
         "priority":"x",
         "suggest":null
     },
@@ -285,7 +285,7 @@
         "type":"string",
         "cvDomain":null,
         "priority":"x",
-        "suggest":null
+        "suggest":"Substance_Key"
     },
     "Title":{
         "lucenePath":"root_title",

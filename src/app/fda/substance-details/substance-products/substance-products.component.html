@@ -45,27 +45,67 @@
             <table mat-table [dataSource]="paged" class="font12px" matSort (matSortChange)="sortData($event)"
               matSortActive="productCode" matSortDirection="asc" matSortDisableClear>
 
-              <ng-container matColumnDef="productCode">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product ID </th>
-                <td class="width120px" mat-cell *matCellDef="let product">
-
-                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
-                    <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
-                      <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
-                        <span *ngIf="prodCode.productCode; else noProdCode">
-                          {{prodCode.productCode}}
-                        </span>
-                        <ng-template #noProdCode>(NO ID)</ng-template>
-                      </a>
-                    </span>
-                  </span>
-
+              <ng-container matColumnDef="view">
+                <th mat-header-cell *matHeaderCellDef> View </th>
+                <td class="width80px" mat-cell *matCellDef="let product">
+                  <a class="substance-name" [routerLink]="['/product', product.id]" target="_blank">
+                    View
+                  </a>
                   &nbsp;&nbsp;
-                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="canUpdate"
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
                     matTooltip='Edit GSRS Product Record'>
                     <mat-icon svgIcon="edit"></mat-icon>
                   </a>
+                </td>
+              </ng-container>
 
+              <ng-container matColumnDef="productCode">
+                <th mat-header-cell *matHeaderCellDef> Product Code </th>
+                <td class="width120px" mat-cell *matCellDef="let product">
+
+                  <span *ngFor="let prodProv of product.productProvenances; let i = index">
+                    <div *ngIf="prodProv.productCodes; else noProdCodes">
+
+                      <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
+                        <span *ngIf="i > 0"><br></span>
+               
+                        <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
+                        <span *ngIf="prodCode._dailyMedUrl">
+                          <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
+                            title="Go to DailyMed website">
+                            {{prodCode.productCode}}
+                          </a>
+                        </span>
+
+                        <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
+                        <span *ngIf="prodCode._phpIdUrl">
+                          <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
+                            title="Go to PhPID Publish website">
+                            {{prodCode.productCode}}
+                          </a>
+                        </span>
+
+                        <!-- Display RxNorm link, if Product Code Type is 'RxNorm'-->
+                        <span *ngIf="prodCode._rxNormUrl">
+                          <a href="{{prodCode._rxNormUrl}}" target="_blank" alt="Go to RxNorm website"
+                            title="Go to RxNorm website">
+                            {{prodCode.productCode}}
+                          </a>
+                        </span>
+
+                        <span *ngIf="!prodCode._dailyMedUrl && !prodCode._phpIdUrl && !prodCode._rxNormUrl">
+                          {{prodCode.productCode}}
+                        </span>
+
+                        <span class="colorgray">&nbsp;({{prodCode.productCodeType}})</span>
+                        
+                        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                        </mat-icon>
+                      </span> <!-- loop productCodes -->
+
+                    </div>
+                    <ng-template #noProdCodes></ng-template>
+                  </span>
                 </td>
               </ng-container>
 
@@ -73,14 +113,17 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td mat-cell *matCellDef="let product">
                   <div *ngFor="let prodProv of product.productProvenances; let indexProv = index">
-                    <div *ngFor="let prodName of prodProv.productNames">
-                      <span *ngIf="indexProv > 0"><br></span>
-                      &#x2022;&nbsp;{{prodName.productName}}
+                    <ol>
+                      <div *ngFor="let prodName of prodProv.productNames; let indexProdName = index">
+                        <span *ngIf="indexProv > 0"><br></span>
+                        <li>{{prodName.productName}}
 
-                      <span *ngIf="prodName.productNameType">
-                        <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
-                      </span>
-                    </div>
+                          <span *ngIf="prodName.productNameType">
+                            <span class="colorgray font11px">&nbsp;({{prodName.productNameType}})</span>
+                          </span>
+                        </li>
+                      </div>
+                    </ol>
                   </div>
                 </td>
               </ng-container>
@@ -91,17 +134,6 @@
                   <div *ngFor="let prodProv of product.productProvenances">
                     <div *ngFor="let prodComp of prodProv.productCompanies">
                       {{prodComp.companyName}}
-                    </div>
-                  </div>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="country">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
-                <td mat-cell *matCellDef="let product">
-                  <div *ngFor="let prodProv of product.productProvenances">
-                    <div *ngFor="let prodComp of prodProv.productCompanies">
-                      {{prodComp.companyCountry}}
                     </div>
                   </div>
                 </td>
@@ -146,12 +178,13 @@
               </ng-container>
 
               <ng-container matColumnDef="applicationNumber">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Number </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Application Type Number </th>
                 <td mat-cell *matCellDef="let product">
                   <div *ngFor="let prodProv of product.productProvenances">
                     {{prodProv.applicationType}}&nbsp;{{prodProv.applicationNumber}}
                   </div>
-                  {{product.appTypeNumber}} </td>
+                  {{product.appTypeNumber}}
+                </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -216,14 +249,18 @@
       </app-substance-ssg4m>
     </mat-tab>
 
-    <mat-tab label="In Vitro Pharmacology Summary ({{invitroPharmSummaryCount}})" *ngIf="loadedComponents && loadedComponents.invitropharmacology">
-      <app-substance-invitro-pharmacology-summary [substance]="substance" [substanceUuid]="substance.uuid" [substanceUnii]="substance.approvalID" (countInvitroPharmSummaryOut)="getInvitroPharmSummaryCount($event)"
+    <mat-tab label="In Vitro Pharmacology Summary ({{invitroPharmSummaryCount}})"
+      *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+      <app-substance-invitro-pharmacology-summary [substance]="substance" [substanceUuid]="substance.uuid"
+        [substanceUnii]="substance.approvalID" (countInvitroPharmSummaryOut)="getInvitroPharmSummaryCount($event)"
         [substanceName]="substanceName">
       </app-substance-invitro-pharmacology-summary>
     </mat-tab>
 
-    <mat-tab label="In Vitro Pharmacology Screening ({{invitroPharmScreeningCount}})" *ngIf="loadedComponents && loadedComponents.invitropharmacology">
-      <app-substance-invitro-pharmacology [substance]="substance" [substanceUuid]="substance.uuid" [substanceUnii]="substance.approvalID" (countInvitroPharmScreeningOut)="getInvitroPharmScreeningCount($event)"
+    <mat-tab label="In Vitro Pharmacology Screening ({{invitroPharmScreeningCount}})"
+      *ngIf="loadedComponents && loadedComponents.invitropharmacology">
+      <app-substance-invitro-pharmacology [substance]="substance" [substanceUuid]="substance.uuid"
+        [substanceUnii]="substance.approvalID" (countInvitroPharmScreeningOut)="getInvitroPharmScreeningCount($event)"
         [substanceName]="substanceName">
       </app-substance-invitro-pharmacology>
     </mat-tab>

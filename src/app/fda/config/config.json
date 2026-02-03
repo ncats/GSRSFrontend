@@ -7,6 +7,8 @@
   "adverseEventShinyAdverseEventDisplay": "true",
   "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/95239e26-e0be-42d9-a960-9a5f7f1c25ee/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
   "dailyMedUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=",
+  "phpIdUrl": "https://phpidpublish.who-umc.org/search?phpid=",
+  "rxNormUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?searchdb=rxcui&query=",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
@@ -14,10 +16,14 @@
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
-  "disableJSDraw": false,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
-  "restApiPrefix": "/ginas/app",
+  "disableJSDraw": false,
   "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
+  "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
+  "occasionalApiBasePath": "/ginas/app",
+  "restApiPrefix": "/ginas/app",
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -27,11 +33,7 @@
   "stagingArea": {
     "mergeAction": false
   },
-  "apiBaseUrl": "http://localhost:8081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
-  "occasionalApiBasePath": "/ginas/app",
-    
-"userRegistration": {
+  "userRegistration": {
     "configurations": {
       "emailForm": {
         "active": false,
@@ -64,6 +66,14 @@
       {
         "name":"substances",
         "title": "Substances"
+      },
+      {
+        "name":"products",
+        "title": "Products"
+      },
+      {
+        "name":"applications",
+        "title": "Applications"
       }
     ]
   },
@@ -1029,8 +1039,8 @@
       "admin": [
         "Record Created By",
         "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited",
+        "root_creationDate",
+        "root_lastModifiedDate",
         "Ingredient Created By",
         "Ingredient Last Edited By",
         "Ingredient Create Date",
@@ -1044,6 +1054,7 @@
         "Product Name",
         "Dosage Form Name",
         "Substance UUID",
+        "Substance Class",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
         "Has Ingredients",
@@ -1173,10 +1184,10 @@
         "Sponsor Report Submitter Name"
       ],
       "admin": [
+        "root_createdDate",
         "Record Created By",
-        "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited"
+        "root_modifiedDate",
+        "Record Last Edited By"
       ]
     }
   },
@@ -1365,7 +1376,7 @@
     "root_approvalID",
     "root_codes_BDNUM",
     "root_codes_CAS",
-    "root_codes_ECHA\\ \\(EC\\/EINECS\\)"
+    "root_codes_ECHA"
   ],
   "homeDynamicLinks": [
     {

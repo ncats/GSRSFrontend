@@ -34,7 +34,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /* Array data type */
   private subscriptions: Array<Subscription> = [];
-  
+
   validationMessages: Array<ValidationMessage> = [];
   provenanceFieldMessage: Array<String> = [];
   effectiveTimeMessage: any[][] = [];
@@ -130,7 +130,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.product.productProvenances = [];
               }
               this.loadDateFields();
-              
+
               this.loadingService.setLoading(false);
               this.isLoading = false;
             }
@@ -317,29 +317,44 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setValidationMessage(this.manufactureDateMessage);
     }
 
+    // Validate Product Name and Product Name Type in Product Name section
+    this.validateProductName();
+
+    // Validate Product Code and Product Code Type in Product Code section
+    this.validateProductCode();
+
     // Validate Ingredient Average, which should be integer/number
     if (this.product != null) {
-      this.product.productManufactureItems.forEach(elementComp => {
+      this.product.productManufactureItems.forEach((elementComp, indexComp) => {
         if (elementComp != null) {
-          elementComp.productLots.forEach(elementLot => {
+          elementComp.productLots.forEach((elementLot, indexLot) => {
             if (elementLot != null) {
 
               // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
-              elementLot.productIngredients.forEach(elementIngred => {
+              elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
                 if (elementIngred != null) {
+
+                  if (!elementIngred.substanceKey) {
+                    this.setValidationMessage('Ingredient Name is required in Manufacture Item Details ' + (indexComp + 1)  + ' in Lot Details ' + (indexLot + 1) + ' in Ingredient Details ' + (indexIngred + 1));
+                  }
+
+                  if (!elementIngred.ingredientType) {
+                    this.setValidationMessage('Ingredient Type is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1) + ' in Ingredient Details ' + (indexIngred + 1));
+                  }
+
                   if (elementIngred.average) {
                     if (this.isNumber(elementIngred.average) === false) {
-                      this.setValidationMessage('Average must be a number');
+                      this.setValidationMessage('Average must be a number in Ingredient Details ' + (indexIngred + 1));
                     }
                   }
                   if (elementIngred.low) {
                     if (this.isNumber(elementIngred.low) === false) {
-                      this.setValidationMessage('Low must be a number');
+                      this.setValidationMessage('Low must be a number in Ingredient Details ' + (indexIngred + 1));
                     }
                   }
                   if (elementIngred.high) {
                     if (this.isNumber(elementIngred.high) === false) {
-                      this.setValidationMessage('High must be a number');
+                      this.setValidationMessage('High must be a number in Ingredient Details ' + (indexIngred + 1));
                     }
                   }
                   // Ingredient Name Validation
@@ -375,6 +390,68 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Check the Provenance field validation
     this.validateProvenanceField();
+  }
+
+  validateProductName() {
+    // Validate in Product Name section. If user enters value in 'Product Name' field and NOT in 'Product Name Type',
+    // display error message. Same for vice versa.
+    if (this.product != null) {
+      if (this.product.productProvenances) {
+        if (this.product.productProvenances.length > 0) {
+          this.product.productProvenances.forEach((elementProv, index) => {
+            if (elementProv != null) {
+              if (elementProv.productNames) {
+                if (elementProv.productNames.length > 0) {
+                  elementProv.productNames.forEach((elementName, indexName) => {
+                    if (elementName) {
+                      // If entered value in 'Product Name' field and NOT in 'Product Name Type'.
+                      if (elementName.productName && !elementName.productNameType) {
+                        this.setValidationMessage('Enter value in Product Name Type in Product Provenance ' + (index + 1) + ' in Product Name ' + (indexName + 1));
+                      }
+                      // If entered value in 'Product Name Type' field and NOT in 'Product Name'. 
+                      else if (!elementName.productName && elementName.productNameType) {
+                        this.setValidationMessage('Enter value in Product Name in Product Provenance ' + (index + 1) + ' in Product Name ' + (indexName + 1));
+                      }
+                    }
+                  }); // Product Codes loop
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+  }
+
+  validateProductCode() {
+    // Validate in Product Code section. If user enters value in 'Product Code' field and NOT in 'Product Code Type',
+    // display error message. Same for vice versa.
+    if (this.product != null) {
+      if (this.product.productProvenances) {
+        if (this.product.productProvenances.length > 0) {
+          this.product.productProvenances.forEach((elementProv, index) => {
+            if (elementProv != null) {
+              if (elementProv.productCodes) {
+                if (elementProv.productCodes.length > 0) {
+                  elementProv.productCodes.forEach((elementCode, indexCode) => {
+                    if (elementCode) {
+                      // If entered value in 'Product Code' field and NOT in 'Product Code Type'.
+                      if (elementCode.productCode && !elementCode.productCodeType) {
+                        this.setValidationMessage('Enter value in Product Code Type in Product Provenance ' + (index + 1) + ' in Product Code ' + (indexCode + 1));
+                      }
+                      // If entered value in 'Product Code Type' field and NOT in 'Product Code'. 
+                      else if (!elementCode.productCode && elementCode.productCodeType) {
+                        this.setValidationMessage('Enter value in Product Code in Product Provenance ' + (index + 1) + ' in Product Code ' + (indexCode + 1));
+                      }
+                    }
+                  }); // Product Codes loop
+                }
+              }
+            }
+          });
+        }
+      }
+    }
   }
 
   validateProvenanceField(type?: string) {

@@ -60,32 +60,33 @@
 
       <mat-form-field class="col-4-1"
         *ngIf="configSettingsDisplay['columnPackingSize'] || (configSettingsDisplay['columnPackingSize'] === undefined && true)">
-        <input matInput placeholder="Column Packing Size" [(ngModel)]="impuritiesTest.columnPackingSize"
-          name="columnPackingSize" />
+        <textarea matInput placeholder="Column Packing Size" [(ngModel)]="impuritiesTest.columnPackingSize"
+          name="columnPackingSize" row="1"></textarea>
       </mat-form-field>
 
       <mat-form-field class="col-4-1"
         *ngIf="configSettingsDisplay['columnSize'] || (configSettingsDisplay['columnSize'] === undefined && true)">
-        <input matInput placeholder="Column Size" [(ngModel)]="impuritiesTest.columnSize" name="columnSize" />
+        <textarea matInput placeholder="Column Size" [(ngModel)]="impuritiesTest.columnSize" name="columnSize"
+          row="1"></textarea>
       </mat-form-field>
 
       <mat-form-field class="col-4-1"
         *ngIf="configSettingsDisplay['columnTemperature'] || (configSettingsDisplay['columnTemperature'] === undefined && true)">
-        <input matInput placeholder="Column Temperature" [(ngModel)]="impuritiesTest.columnTemperature"
-          name="columnTemperature" />
+        <textarea matInput placeholder="Column Temperature" [(ngModel)]="impuritiesTest.columnTemperature"
+          name="columnTemperature" row="1"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field class="col-2-1"
         *ngIf="configSettingsDisplay['injectionVolumeAmount'] || (configSettingsDisplay['injectionVolumeAmount'] === undefined && true)">
-        <input matInput placeholder="Injection Volume Amount" [(ngModel)]="impuritiesTest.injectionVolumeAmount"
-          name="injectionVolumeAmount" />
+        <textarea matInput placeholder="Injection Volume Amount" [(ngModel)]="impuritiesTest.injectionVolumeAmount"
+          name="injectionVolumeAmount" row="1"></textarea>
       </mat-form-field>
 
       <mat-form-field class="col-2-1"
         *ngIf="configSettingsDisplay['diluent'] || (configSettingsDisplay['diluent'] === undefined && true)">
-        <input matInput placeholder="Diluent" [(ngModel)]="impuritiesTest.diluent" name="diluent" />
+        <textarea matInput placeholder="Diluent" [(ngModel)]="impuritiesTest.diluent" name="diluent" row="1"></textarea>
       </mat-form-field>
     </div>
 
@@ -249,10 +250,10 @@
     </div>
 
     <!-- Mobile Phase Table -->
-    <!-- Only Show Mobile Phase Table when Eution Type is 'Isocratic' and
+    <!-- Only Show Mobile Phase Table when Eution Type is 'Isocratic' or 'Gradient' and
          at least one Solution is added aboved -->
     <div
-      *ngIf="(impuritiesTest.elutionType && impuritiesTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC) && impuritiesTest.impuritiesSolutionList.length > 0">
+      *ngIf="(impuritiesTest.elutionType && (impuritiesTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC || impuritiesTest.elutionType.toUpperCase() === ELUTION_TYPE_GRADIENT)) && impuritiesTest.impuritiesSolutionList.length > 0">
 
       <div *ngIf="configSettingsDisplay['mobilePhase'] || (configSettingsDisplay['mobilePhase'] === undefined && true)">
         <div class="divflex">
@@ -272,7 +273,7 @@
 
         <!-- Mobile Phase TABLE BEGIN -->
 
-        <!-- if Elution Type in the dropdown selection is 'Isocratic', show Mobile Phase Table.
+        <!-- if Elution Type in the dropdown selection is 'Isocratic' or 'Gradient', show Mobile Phase Table.
        Add Solution Column as Solution A, Solution B, etc is getting added  -->
 
         <br>
@@ -355,7 +356,7 @@
         <br>
 
       </div>
-    </div> <!-- if Elution Type == 'Isocratic' -->
+    </div> <!-- if Elution Type == 'Isocratic' or 'Gradient' -->
 
 
     <!-- IMPURITIES DETAILS LIST BEGIN -->

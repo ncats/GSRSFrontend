@@ -148,7 +148,8 @@
             </div>
           </div>
 
-          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()" matTooltip="Clear All Search Criteria"
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+            matTooltip="Clear All Search Criteria"
             *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
             <span>RESET</span>
           </button>
@@ -161,7 +162,8 @@
 
             <div class="search-parameters">
               <div class="marginleftneg10px">
-                <div class="mat-elevation-z2 selected-parameter marginright10px" *ngFor="let facet of subEntityDisplayFacets">
+                <div class="mat-elevation-z2 selected-parameter marginright10px"
+                  *ngFor="let facet of subEntityDisplayFacets">
                   <div class='selected-parameter-crosssearch'>
                     <span class="selected-label">
                       <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
@@ -258,7 +260,7 @@
           [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)" eventCategory="productSearch">
         </app-product-text-search>
 
-        <div>
+        <div *ngIf="!bulkSearchQueryId">
           <button class="margintop10px marginleft20px" mat-raised-button color="primary" (click)="showAllSubstances()"
             matTooltip="Show All Substances associated with these Product records">
             <span>Show All Substances</span>
@@ -308,11 +310,19 @@
 
                     <span *ngFor="let prodCode of prodProv.productCodes; let indexCode = index">
 
-                      <span *ngIf="prodCode.productCode; else noProdCode">
-                        <span *ngIf="indexCode > 0"><br><br></span>
-                        {{prodCode.productCode}}
+                      <span *ngIf="i > 0"><br><br></span>
+                      <b>{{prodCode.productCodeType}}</b>: <br>{{prodCode.productCode}}
+
+                      <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
+                      <span *ngIf="prodCode._dailyMedUrl">
+                        <br>
+                        <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
+                          title="Go to DailyMed website">
+                          <img [src]="iconSrcPath">
+                        </a>
+                        <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                        </mat-icon>
                       </span>
-                      <ng-template #noProdCode>(NO ID)</ng-template>
 
                     </span> <!-- loop productCode -->
                   </span> <!-- loop productProvenance-->
@@ -346,7 +356,6 @@
                           <span *ngIf="prodIngred.ingredientType; else noIngredientType">
                             <span
                               *ngIf="prodIngred.ingredientType === 'Active Ingredient' || prodIngred.ingredientType === 'ACTIVE INGREDIENT'">
-
                               <span *ngIf="prodIngred._ingredientName">
                                 <li>
 
@@ -369,17 +378,6 @@
                             </span>
                           </span>
                           <!-- No Ingredient Type, Display Ingredient Name -->
-                          <ng-template #noIngredientType>
-                            <!-- if No Ingredient Type, but have Substance Name, display here. -->
-                            <div *ngIf="prodIngred._ingredientName">
-                              <li class="">
-                                <a [routerLink]="['/substances', prodIngred._substanceUuid]"
-                                  target="_blank">{{prodIngred._ingredientName}}
-                                </a>
-                              </li>
-                            </div>
-                          </ng-template>
-
 
                         </div> <!-- loop Ingredient -->
                       </div> <!-- loop Lot -->
@@ -622,18 +620,43 @@
 
                         <span *ngFor="let prodCode of prodProv.productCodes; let i = index">
                           <span *ngIf="i > 0"><br></span>
-                          <b>{{prodCode.productCodeType}}</b>: {{prodCode.productCode}}
+                          <b>{{prodCode.productCodeType}}</b>:
 
                           <!-- Display Daily Med link, if Product Code Type is 'NDC CODE'-->
                           <span *ngIf="prodCode._dailyMedUrl">
                             <a href="{{prodCode._dailyMedUrl}}" target="_blank" alt="Go to DailyMed website"
                               title="Go to DailyMed website">
-                              <img [src]="iconSrcPath">
+                              {{prodCode.productCode}}<img class="marginleft5px" [src]="iconSrcPath">
                             </a>
                             <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                             </mat-icon>
                           </span>
-                        </span>
+
+                          <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
+                          <span *ngIf="prodCode._phpIdUrl">
+                            <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
+                              title="Go to PhPID Publish website">
+                              {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
+                            </a>
+                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                            </mat-icon>
+                          </span>
+
+                          <!-- Display RxNorm link, if Product Code Type is 'RxNorm'-->
+                          <span *ngIf="prodCode._rxNormUrl">
+                            <a href="{{prodCode._rxNormUrl}}" target="_blank" alt="Go to RxNorm website"
+                              title="Go to RxNorm website">
+                              {{prodCode.productCode}}<!--<img class="marginleft5px" [src]="phpIdIconSrcPath"> -->
+                            </a>
+                            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
+                            </mat-icon>
+                          </span>
+
+                          <span *ngIf="!prodCode._dailyMedUrl && !prodCode._phpIdUrl && !prodCode._rxNormUrl">
+                            {{prodCode.productCode}}
+                          </span>
+                        </span> <!-- loop productCodes -->
+
                       </div>
                     </div>
                     <div class="row-property">
@@ -662,12 +685,27 @@
                         Application Type Number:
                       </div>
                       <div class="row-property-value">
-                        <span class="font14px" *ngIf="prodProv.applicationType">
-                          {{prodProv.applicationType}}
-                        </span>
-                        <span class="font14px" *ngIf="prodProv.applicationNumber">
-                          {{prodProv.applicationNumber}}
-                        </span>
+                        <!-- Go to Browse Application page -->
+
+                        <div *ngIf="prodProv._applicationUrl; else noAppTypeOrNumber">
+                          <a [routerLink]="['/browse-applications']" [queryParams]="{search:prodProv._applicationUrl}"
+                            target="_blank" matTooltip='Go to Application record' *ngIf="isAdmin">
+                            <span class="font14px" *ngIf="prodProv.applicationType">
+                              {{prodProv.applicationType}}
+                            </span>
+                            <span class="font14px" *ngIf="prodProv.applicationNumber">
+                              {{prodProv.applicationNumber}}
+                            </span>
+                          </a>
+                        </div>
+                        <ng-template #noAppTypeOrNumber>
+                          <span class="font14px" *ngIf="prodProv.applicationType">
+                            {{prodProv.applicationType}}
+                          </span>
+                          <span class="font14px" *ngIf="prodProv.applicationNumber">
+                            {{prodProv.applicationNumber}}
+                          </span>
+                        </ng-template>
                       </div>
                     </div>
                   </div>
@@ -705,30 +743,6 @@
               </mat-tab-group>
               <!-- GROUP BY PROVENANCE END -->
 
-
-              <div class="row">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Dosage Form:
-                  </div>
-                  <div class="row-property-value">
-                    <div *ngFor="let prodManuItem of product.productManufactureItems; let indexManuItem = index">
-                      <span *ngIf="indexManuItem > 0">|</span>
-                      {{prodManuItem.dosageForm}}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Route of Administration:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.routeAdmin}}
-                  </div>
-                </div>
-              </div>
-
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
@@ -748,46 +762,31 @@
                 </div>
               </div>
 
-              <!-- Display Audit Details -->
-              <div class="row" *ngIf="canUpdate">
+              <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
-                    Created Date:
+                    Dosage Form:
                   </div>
                   <div class="row-property-value">
-                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                    <div *ngFor="let prodManuItem of product.productManufactureItems; let indexManuItem = index">
+                      <span *ngIf="indexManuItem > 0">
+                        <span *ngIf="prodManuItem.dosageForm">|</span>
+                      </span>
+                      {{prodManuItem.dosageForm}}
+                    </div>
                   </div>
                 </div>
                 <div class="row-property">
                   <div class="row-property-key">
-                    Last Modified:
+                    Route of Administration:
                   </div>
                   <div class="row-property-value">
-                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row" *ngIf="canUpdate">
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Created By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.createdBy}}
-                  </div>
-                </div>
-                <div class="row-property">
-                  <div class="row-property-key">
-                    Last Modified By:
-                  </div>
-                  <div class="row-property-value">
-                    {{product.modifiedBy}}
+                    {{product.routeAdmin}}
                   </div>
                 </div>
               </div>
 
-              <!-- Display Ingredients -->
+              <!-- Display Ingredients BEGIN -->
               <div class="row">
                 <div class="row-property">
                   <div class="row-property-key">
@@ -830,19 +829,23 @@
                                   {{prodIngred._ingredientName}}
                                 </ng-template>
 
+                                <!-- Show Substance Type -->
+                                <div *ngIf="prodIngred._substanceClass">
+                                  &nbsp;&nbsp;
+                                  <span class="colororange">
+                                    <span
+                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                    </span>
+                                  </span>
+                                </div>
+
                                 <!-- Show Structures-->
-                                <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
+                                <div class="margintopneg15" *ngIf="prodIngred._substanceUuid">
                                   <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                                     (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
                                     <mat-icon matTooltip="Show Substance chemical structure">analytics
                                     </mat-icon>
                                   </button>
-
-                                  <!-- Show Approval ID-->
-                                  <!--
-                                  <mat-icon class="margintop5px font16px"
-                                    matTooltip="Approval ID: {{prodIngred._approvalId}}">verified</mat-icon>
-                                  -->
                                 </div>
 
                               </div> <!-- class=divflex -->
@@ -856,19 +859,27 @@
                               </div>
 
                               <div class="divflex">
-                                <!-- Original Numerator -->
+                                <!-- Original Numerator and Denominator Strength -->
                                 <div>
-                                  <span *ngIf="prodIngred.originalNumeratorNumber">
-                                    <span class="font11px">Numerator:
-                                      <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                  <span *ngIf="prodIngred._ingredientStrengthDisplay">
+                                    <span class="font11px">
+                                      <b>
+                                        {{ prodIngred._ingredientStrengthDisplay }}
+
+                                        <!--
+                                        {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
                                         prodIngred.originalNumeratorUnit
-                                        }}
+                                        }} per
+                                        {{ prodIngred.originalDenominatorNumber }}
+                                        {{ prodIngred.originalDenominatorUnit }}
+                                        -->
                                       </b>
                                     </span>
                                   </span>
                                 </div>
 
                                 <!-- Original Denominator -->
+                                <!--
                                 <div class="marginleft5px">
                                   <span *ngIf="prodIngred.originalDenominatorNumber">
                                     <span class="font11px">&nbsp;&nbsp;Denominator:
@@ -879,6 +890,7 @@
                                     </span>
                                   </span>
                                 </div>
+                                -->
                               </div> <!-- divflex -->
 
                               <!-- Display Ingredient Type -->
@@ -942,6 +954,17 @@
                                   {{prodIngred._ingredientName}}
                                 </ng-template>
 
+                                <!-- Show Substance Class/Substance Type -->
+                                <div *ngIf="prodIngred._substanceClass">
+                                  &nbsp;&nbsp;
+                                  <span class="colororange">
+                                    <span
+                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                    </span>
+                                  </span>
+                                </div>
+
+                                <!-- Show Structures -->
                                 <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
                                   <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                                     (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
@@ -961,8 +984,25 @@
                               </div>
 
                               <div class="divflex">
-                                <!-- Original Numerator -->
+                                <!-- Original Numerator and Denominator Strength -->
                                 <div>
+                                  <span *ngIf="prodIngred._ingredientStrengthDisplay">
+                                    <span class="font11px">
+                                      <b>
+                                        {{ prodIngred._ingredientStrengthDisplay }}
+
+                                        <!--
+                                      {{ prodIngred.originalNumeratorNumber }}&nbsp;{{
+                                      prodIngred.originalNumeratorUnit
+                                      }} per
+                                      {{ prodIngred.originalDenominatorNumber }}
+                                      {{ prodIngred.originalDenominatorUnit }}
+                                      -->
+                                      </b>
+                                    </span>
+                                  </span>
+                                </div>
+                                <!--
                                   <span *ngIf="prodIngred.originalNumeratorNumber">
                                     <span class="font11px">Numerator:
                                       <b>{{ prodIngred.originalNumeratorNumber }}&nbsp;{{
@@ -971,9 +1011,9 @@
                                       </b>
                                     </span>
                                   </span>
-                                </div>
-
+                                  -->
                                 <!-- Original Denominator -->
+                                <!--
                                 <div class="marginleft5px">
                                   <span *ngIf="prodIngred.originalDenominatorNumber">
                                     <span class="font11px">&nbsp;&nbsp;Denominator:
@@ -984,7 +1024,7 @@
                                     </span>
                                   </span>
                                 </div>
-
+                                -->
                               </div> <!-- divflex -->
 
                               <!-- Display Ingredient Type -->
@@ -1007,7 +1047,47 @@
                   </div>
                 </div> <!-- Inactive Substance -->
 
-              </div> <!-- row Substance Name-->
+              </div> <!-- row Substance Name DISPLAY END -->
+
+              <!-- Display Audit Details BEGIN -->
+              <div class="row" *ngIf="isAdmin">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Created Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Last Modified:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="isAdmin">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Created By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.createdBy}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Last Modified By:
+                  </div>
+                  <div class="row-property-value">
+                    {{product.modifiedBy}}
+                  </div>
+                </div>
+              </div>
+              <!-- Audit Details END -->
 
             </mat-card-content>
           </mat-card>
