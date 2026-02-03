@@ -1,5 +1,5 @@
 {
-  "version": "3.1.3-SNAPSHOT",
+  "version": "3.2.0-SNAPSHOT",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -17,7 +17,7 @@
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
-  "disableJSDraw": true,
+  "disableJSDraw": false,
   "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
   "apiBaseUrl": "http://localhost:8081/ginas/app/",
   "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
@@ -107,7 +107,7 @@
     { "name": "frontend", "active": true, "hasEntities": false },
     { "name": "gateway", "active": true, "hasEntities": false },
     { "name": "impurities", "active": true, "hasEntities": true },
-    { "name": "invitro-pharmacology", "active": true, "hasEntities": true },
+    { "name": "invitro-pharmacology", "active":true, "hasEntities": true },
     { "name": "products", "active": true, "hasEntities": true },
     { "name": "ssg4m", "active": true, "hasEntities": true },
     { "name": "substances", "active": true, "hasEntities": true }
@@ -659,7 +659,7 @@
       "filters": [
         {
           "filterName": "hasCredentials",
-          "propertyToCheck": "admin"
+          "propertyToCheck": "Restore Previous Versions"
         }
       ]
     }

@@ -5,10 +5,10 @@
     <div *ngIf = "view == 'all'" >
         <H3>Saved Lists {{setUser ? ' - ' + setUser : ''}}</H3>
         <div class ="form-row">
-            <a *ngIf = "isAdmin" class = "link" (click) = "getUsers()">Other User's Lists</a>
+            <a *ngIf = "canManageListsForOthers" class = "link" (click) = "getUsers()">Other User's Lists</a>
 
             <span class ="middle-fill"></span>
-            <a *ngIf = "isAdmin" class = "link" (click) = "view = 'import'">Saved List Import</a>
+            <a *ngIf = "canManageListsForOthers" class = "link" (click) = "view = 'import'">Saved List Import</a>
     </div>
     </div>
     <div *ngIf = "view == 'add'" >

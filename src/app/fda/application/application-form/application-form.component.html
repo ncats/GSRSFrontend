@@ -29,7 +29,7 @@
           <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
           View Application</a>
         &nbsp;&nbsp;&nbsp;
-        <span *ngIf="isAdmin">
+        <span *ngIf="canDelete">
           <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
             matTooltip='Delete this Application'>
             Delete

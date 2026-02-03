@@ -33,7 +33,7 @@
 
       <div>
         <!-- Edit GSRS record button -->
-        <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+        <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="canUpdate"
           matTooltip='Edit GSRS Product Record'>
           <mat-icon svgIcon="edit"></mat-icon>
         </a>
@@ -42,7 +42,7 @@
       <div class="margintopneg10px marginleft5px">
         <!-- Copy Product to New Register -->
         <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
-          matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
+          matTooltip='copy this Product to new Product registration form' *ngIf="canUpdate">
           <mat-icon svgIcon="file_copy"></mat-icon>
         </a>
       </div>

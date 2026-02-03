@@ -20,60 +20,61 @@
         {{ showSubmissionMessages ? 'Hide' : 'Show' }} messages
         <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
       </button>
-      <div *ngIf="isAdmin === true || isUpdater === true" class="advanced-features">
+      <div *ngIf="canMakeAdvancedEdits === true || canUpdate === true" class="advanced-features">
         <div class="admin-functions">
           <mat-form-field>
             <mat-label>Advanced Features</mat-label>
             <mat-select name="Feature" [ngModel]="feature" (openedChange)="openedChange($event)"
                         (selectionChange)="useFeature($event)" disableOptionCentering>
               <ng-container>
-                <mat-option value="changeClass" [disabled]="!id">
+                <mat-option value="changeClass" [disabled]="!id" *ngIf="userCanApprove">
                   Change Substance Class
                 </mat-option>
-                <mat-option value="approved" [disabled]="status === 'approved'">
+                <mat-option value="approved" [disabled]="status === 'approved'" *ngIf="userCanApprove">
                   Change Status to approved
                 </mat-option>
-                <mat-option value="pending" [disabled]="status === 'pending'">
+                <mat-option value="pending" [disabled]="status === 'pending'" *ngIf="userCanApprove">
                   Change Status to pending
                 </mat-option>
-                <mat-option value="setPrivate">
+                <mat-option value="setPrivate" *ngIf="userCanMakePublic">
                   Set Definition to private
                 </mat-option>
-                <mat-option value="setPublic">
+                <mat-option value="setPublic" *ngIf="userCanMakePublic">
                   Set Definition to public
                 </mat-option>
-                <mat-option value="unapprove">
+                <mat-option value="unapprove" *ngIf="userCanApprove">
                   Un-approve record (Remove approval ID)
                 </mat-option>
                 <mat-option value="changeApproval"
-                            [disabled]="!id || status === 'pending' || (substanceClass === 'concept' && UNII === 'non-approved record')">
+                            [disabled]="!id || status === 'pending' || (substanceClass === 'concept' && UNII === 'non-approved record')"
+                            *ngIf="userCanApprove">
                   Change Approval ID
                 </mat-option>
-                <mat-option value="concept" [disabled]="substanceClass != 'concept'">
+                <mat-option value="concept" [disabled]="substanceClass != 'concept'" *ngIf="userCanApprove">
                   Set concept status to non-approved
                 </mat-option>
-                <mat-option value="merge">
+                <mat-option value="merge" *ngIf="userCanApprove">
                   Merge subconcept
                 </mat-option>
-                <mat-option value="switch">
+                <mat-option value="switch" *ngIf="userCanMakePublic">
                   Switch primary and alt definitions
                 </mat-option>
               </ng-container>
-              <ng-container *ngIf="isAdmin === true || isUpdater === true">
+              <ng-container *ngIf="canUpdate === true">
                 <mat-option value="glyco" [disabled]="substanceClass !== 'protein'">
                   Predict N-Glycosylation Sites
                 </mat-option>
                 <mat-option value="disulfide" [disabled]="substanceClass != 'protein'">
                   Predict disulfide links by monoclonal antibody type
                 </mat-option>
-                <mat-option value="fragment"
+                <mat-option value="fragment" *ngIf="canUpdate"
                             [disabled]="substanceClass != 'protein' && substanceClass != 'nucleicAcid' ">
                   Register a Fragment
                 </mat-option>
-                <mat-option value="regenRefs" >
+                <mat-option value="regenRefs" *ngIf="canUpdate">
                   Regenerate reference UUIDs
                 </mat-option>
-                <mat-option value="regenUUID" >
+                <mat-option value="regenUUID" *ngIf="canUpdate">
                   Regenerate substance UUID
                 </mat-option>
               </ng-container>
@@ -140,7 +141,7 @@
       <span class="middle-fill"></span>
       <button mat-flat-button color="primary" class="validate-button" (click)="validate()">Validate for Submission</button>
       <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
-                    *ngIf="definition && (definition.substanceClass!=='concept' || useApprovalAPI) && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
+                    *ngIf="userCanApprove && definition && (definition.substanceClass!=='concept' || useApprovalAPI) && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
               (click)="validate('approval')">Approve
       </button>
 

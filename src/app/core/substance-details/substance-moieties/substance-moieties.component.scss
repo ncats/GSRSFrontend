@@ -45,6 +45,10 @@
     }
 }
 
+.blue-font ::ng-deep sub {
+    margin-bottom: -10px;
+}
+
 @media(max-width: 900px) {
     .moiety {
         flex-direction: column;

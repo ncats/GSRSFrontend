@@ -61,6 +61,9 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     'ptCount',
     'prr'
   ];
+
+  canExport:boolean = false;
+
   constructor(
     private router: Router,
     public gaService: GoogleAnalyticsService,
@@ -73,11 +76,8 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     super(gaService, adverseEventService);
   }
 
-  ngOnInit() {
-    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(rolesSubscription);
+  async ngOnInit() {
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
 
     if (this.bdnum) {
       this.getAdverseEventPt();

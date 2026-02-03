@@ -71,8 +71,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
-  isAdmin: boolean;
-  isUpdater: boolean;
   messageField: string;
   errorMessage: string;
   microserviceStatusUp = false;
@@ -139,8 +137,6 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.showFormReadOnly = this.activatedRoute.snapshot.queryParams['readonly'] || 'false';
     this.loadingService.setLoading(true);
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
 

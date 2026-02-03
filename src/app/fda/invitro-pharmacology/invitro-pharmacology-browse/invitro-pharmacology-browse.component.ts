@@ -79,7 +79,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   skip: number;
   isLoading = true;
   isError = false;
-  isAdmin: boolean;
+  canExport: boolean = false;
+  canUpdate: boolean = false;
+  canSaveJson: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   appType: string;
@@ -196,7 +198,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     private dialog: MatDialog
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.invitroPharmacologyService.getInvitroPharmacologyFacets);
 
     this.titleService.setTitle(`In Vitro Pharmacology Browser`);
@@ -212,7 +214,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
@@ -233,7 +234,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.searchValue = params.get('search');
     });
     this.subscriptions.push(paramsSubscription);
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canSaveJson = await this.authService.hasSpecificPrivilege('Save Record JSON');
   }
 
   ngAfterViewInit() {

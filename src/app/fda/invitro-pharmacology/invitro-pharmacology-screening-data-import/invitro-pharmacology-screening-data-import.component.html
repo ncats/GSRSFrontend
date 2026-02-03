@@ -8,13 +8,7 @@
     <span class="middle-fill"></span>
 
     <!-- Import Assay JSON into the Database -->
-    <div class="divflex marginleft50px" *ngIf="isAdmin">
-      <!--
-      <div>
-        <button mat-flat-button color="primary" (click)="validate()" [disabled]="disableValidateButton">
-          Validate Assays</button>
-      </div>
-      -->
+    <div class="divflex marginleft50px" *ngIf="canUpdate">
       <div>
         <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
           [disabled]="disableImportButton">
@@ -416,7 +410,7 @@
                     <br>
 
                     <!-- Register Assay Link -->
-                    <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank" *ngIf="isAdmin"
+                    <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank" *ngIf="canUpdate"
                       matTooltip='Register In Vitro Pharmacology Assay'> Register Assay
                     </a>
                   </span>

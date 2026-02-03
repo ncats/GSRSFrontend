@@ -39,7 +39,7 @@ export class UserQueryListDialogComponent implements OnInit {
   users = [];
   setUser: string;
   identifier: string;
-  isAdmin = false;
+  canManageListsForOthers = false;
   etagIDs = [];
   uniqueRecords = [];
   disabled = false;
@@ -70,7 +70,7 @@ export class UserQueryListDialogComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.substanceService.getAllByEtag(this.etag).subscribe(result => {
       if(result.content) {
         result.content.forEach(record => {
@@ -82,19 +82,16 @@ export class UserQueryListDialogComponent implements OnInit {
     this.authService.checkAuth().subscribe(response => {
       this.setUser = response.identifier;
       this.identifier = response.identifier;
-      response.roles.forEach(role => {
-        if (role === 'Admin') {
-          this.isAdmin = true;
-        }
-      });
     });
     this.getUserLists();
     if (this.view === 'single') {
       this.useDraft(this.activeName);
       
     }
+    this.canManageListsForOthers = await this.authService.hasSpecificPrivilege('Manage Others Lists');
   }
 
+  
   viewLists(): void {
     this.getUserLists();
     this.showAddButtons = false;

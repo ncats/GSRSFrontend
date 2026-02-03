@@ -101,7 +101,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin = false;
+  canUserImportData = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -221,6 +221,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.overlayContainer.style.zIndex = null;
 
       });
+      this.subscriptions.push(exportSub);
   }
 
   selectBulk(type?: string) {
@@ -310,7 +311,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.substances = [];
     this.records = [];
 
@@ -364,10 +365,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.showDeprecated = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
-
     });
+    this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
+    this.showAudit = await this.authService.hasSpecificPrivilege('Restore Previous Versions');
+
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getStagingFacets );
 
     this.environment = this.configService.environment;

@@ -44,7 +44,7 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
   jsonFileName: string;
   flagIconSrcPath: string;
 
-  isAdmin = false;
+  canUpdate: boolean = false;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
@@ -63,22 +63,17 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.loadingService.setLoading(true);
 
-    const rolesSubscription = this.authService.hasAnyRolesAsync('admin', 'updater', 'superUpdater').subscribe(canEdit => {
-      this.isAdmin = canEdit;
-    });
-    this.subscriptions.push(rolesSubscription);
-
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getInvitroPharmacology();
     } else {
       this.handleSubstanceRetrivalError();
     }
-    //this.loadingService.setLoading(false);
   }
 
   ngOnDestroy(): void {

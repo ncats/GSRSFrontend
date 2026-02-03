@@ -49,7 +49,7 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
       router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.productId = this.activatedRoute.snapshot.params['id'];
     this.getProduct();
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;

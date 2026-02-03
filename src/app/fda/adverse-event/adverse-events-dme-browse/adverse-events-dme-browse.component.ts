@@ -36,7 +36,7 @@ import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sor
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventDmeOut: EventEmitter<number> = new EventEmitter<number>();
-  isAdmin: boolean;
+  canExport: boolean;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -111,7 +111,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
     //  this.gaService.sendPageView('Browse Adverse Event Dme');
 
@@ -139,8 +139,9 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+
     this.subscriptions.push(authSubscription);
 
     this.isComponentInit = true;

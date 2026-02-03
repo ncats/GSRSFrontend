@@ -1,83 +1,162 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import {Location} from '@angular/common';
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, OnDestroy {
   activeTab: number;
   current: string;
   lastTab: number;
+  canManageCVs: boolean = false;
+  canRunJobs: boolean = false;
+  canImportData: boolean =false;
+  canManageUsers: boolean = false;
+  canViewServerFiles:boolean = false;
+  canViewServiceInfo:boolean = false;
+  private subscriptions: Subscription[] = [];
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) { }
 
-  ngOnInit() {
-
-    this.activatedRoute.params.subscribe(routeParams => {
+  async ngOnInit() {
+    await this.checkPrivileges();
+  
+    const routeSub =this.activatedRoute.params.subscribe(routeParams => {
       this.current = routeParams.function;
+      let actualTab = this.getActualTab(this.current);
       switch (this.current) {
         case 'cache': this.activeTab = 0; break;
-        case 'info': this.activeTab = 1; break;
-        case 'user': this.activeTab = 2; break;
-        case 'import': this.activeTab = 3; break;
-        case 'cv': this.activeTab = 4; break;
-        case 'jobs': this.activeTab = 5; break;
-        case 'files': this.activeTab = 6; break;
-        case 'data': this.activeTab = 7; break;
+        case 'info': 
+           this.activeTab = actualTab;
+           break;
+        case 'user':
+          if(!this.canManageUsers){
+            this.activeTab=-1;
+            break;
+          }
+           this.activeTab = actualTab; break;
+        case 'import': 
+          if( !this.canImportData ) {
+            this.activeTab=-1;
+            break;
+          }
+          this.activeTab = actualTab;
+          break;
+         
+        case 'cv': 
+          if( !this.canManageCVs ) {
+            this.activeTab=-1;
+            break;
+          }
+          this.activeTab = actualTab; 
+          break;
+        
+        case 'jobs':
+          if(!this.canRunJobs){
+            this.activeTab=-1;
+            break;
+          }
+           this.activeTab = actualTab;
+           break;
+        case 'files':
+          if( !this.canViewServerFiles){
+            this.activeTab=-1;
+            break;
+          }
+          this.activeTab = actualTab;
+          break;
+        case 'data':
+          if( !this.canImportData){
+            this.activeTab=-1;
+            break;
+          }
+          this.activeTab = actualTab;
+          break;
 
         default: this.activeTab = 0; break;
-    }
+      }
+    
+      if( this.activeTab <= -1) {
+        this.router.navigate(['/home' ] );
+      }
     });
+    this.subscriptions.push(routeSub);
     const tab = this.activatedRoute.snapshot.queryParams['function'] || 'cache';
-
 }
 
+async checkPrivileges() {
+  this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");
+  this.canRunJobs = await this.authService.hasSpecificPrivilege("Run Tasks");
+  this.canImportData = await this.authService.hasSpecificPrivilege("Import Data");
+  this.canManageUsers = await this.authService.hasSpecificPrivilege("Manage Users");
+  this.canViewServerFiles = await this.authService.hasSpecificPrivilege("View Files");
+  this.canViewServiceInfo = await this.authService.hasSpecificPrivilege("View Service Info");
+}
 
   onTabChanged(event: MatTabChangeEvent): void {
 
     let route = 'cache';
 
-    switch (event.index) {
-      case 0:
-        break;
-        case 1:
-      route = 'info';
-        break;
-        case 2:
-      route = 'user';
-        break;
-      case 3:
-        route = 'import';
-      break;
-      case 4:
-        route = 'cv';
-      break;
-      case 5:
-        route = 'jobs';
-      break;
-      case 6:
-        route = 'files';
-      break;
-      case 7:
-        route = 'data';
-      break;
+    let newRoute = this.getActualTabName(event.index);
+    if( newRoute.length > 0) {
+      route = newRoute;
     }
-    if (this.current !== 'jobs') {
-      this.current = route;
-      this.router.navigate(['/admin/' + route] );
-    } else {
-      this.current = route;
-      this.activeTab = 0;
-      this.router.navigate(['/admin/' + route] );
+    if( this.current !== route){
+      if (this.current !== 'jobs') {
+        this.current = route;
+        this.router.navigate(['/admin/' + route] );
+      } else {
+        this.current = route;
+        this.activeTab = 0;
+        this.router.navigate(['/admin/' + route] );
+      }
     }
+  }
 
+  getFilteredTabs() {
+      let allTabs = [
+      {name: 'cache', available: this.canViewServiceInfo},
+      {name: 'info', available: this.canViewServiceInfo},
+      {name: 'user', available: this.canManageUsers},
+      {name: 'import', available: this.canImportData},
+      {name: 'cv', available: this.canManageCVs},
+      {name: 'jobs', available: this.canRunJobs},
+      {name: 'files', available: this.canViewServerFiles},
+      {name: 'data', available: this.canImportData}
+    ]
 
+    return allTabs.filter(t=>t.available);
+  }
+
+  getActualTab(desiredFunctionality:string): number {
+
+    let filteredTabs = this.getFilteredTabs();
+    for(let t=0; t< filteredTabs.length; t++) {
+      if(filteredTabs[t].name == desiredFunctionality){
+        return t;
+      }
+    }
+    return -1;
+  }
+
+  getActualTabName(tabNumber: number) {
+    let filteredTabs = this.getFilteredTabs();
+    if( tabNumber <0 || tabNumber >= filteredTabs.length) return '';
+    return filteredTabs[tabNumber].name;
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub?.unsubscribe());
   }
 }

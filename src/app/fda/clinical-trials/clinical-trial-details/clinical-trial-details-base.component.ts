@@ -8,6 +8,7 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { ClinicalTrial } from '../../application/model/application.model';
+import { AuthService } from '@gsrs-core/auth';
 
 @Component({
   selector: 'app-clinical-trial-details-base',
@@ -21,6 +22,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
   src: string;
   clinicalTrial: any;
   flagIconSrcPath: string;
+  canUpdate: boolean = false;
 
   constructor(
     private clinicalTrialService: ClinicalTrialService,
@@ -30,9 +32,10 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     private router: Router,
     private gaService: GoogleAnalyticsService,
     private utilsService: UtilsService,
+    protected authService: AuthService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
    // this.loadingService.setLoading(true);
     this.trialNumber = this.activatedRoute.snapshot.params['trialNumber'];
 
@@ -41,6 +44,7 @@ export class ClinicalTrialDetailsBaseComponent implements OnInit {
     } else {
       this.handleSubstanceRetrivalError();
     }
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit'); 
   }
 
   getClinicalTrialDetails(): void {

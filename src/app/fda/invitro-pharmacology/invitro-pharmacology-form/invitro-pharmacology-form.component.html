@@ -106,18 +106,6 @@
             &nbsp;&nbsp;
           </div>
 
-          <!--
-          <div class="width50percent font11px margintop10px colorwhite" *ngIf="assay.id">
-            <span *ngIf="assay.createdBy">
-              <span>Created By:</span> {{assay.createdBy}}&nbsp;&nbsp;&nbsp;
-              <span>Create Date:</span>{{assay.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-              <span>Modified By:</span> {{assay.modifiedBy}}&nbsp;&nbsp;&nbsp;
-              <span>Modify Date:</span> {{assay.lastModifiedDate|date: 'MM/dd/yyyy
-              hh:mm:ss a'}}
-            </span>
-          </div>
-            -->
-
         </div> <!-- class=divflex -->
       </div> <!-- if assay exists -->
     </div> <!-- class=divcenter -->
@@ -308,9 +296,6 @@
                     </div>
 
                     <!-- Form Entry -->
-                    <!--
-                         <div *ngIf="radioSelectedLaboratory == 'selectedNewLaboratory'">
-                         -->
                     <div class="form-row margintop10px">
                       <div class="fieldKey">
                         <mat-label>Laboratory Name:&nbsp;<span class="colorred">*</span></mat-label>
@@ -527,9 +512,6 @@
 
 
                     <!-- Sponsor Data Entry Form BEGIN -->
-                    <!--
-                      <div *ngIf="radioSelectedSponsor == 'selectedNewSponsor'">
-                      -->
                     <div class="form-row margintop10px">
                       <div class="fieldKey">
                         <mat-label>Sponsor Contact Name:&nbsp;<span class="colorred">*</span></mat-label>
@@ -607,18 +589,6 @@
                   </div> <!-- if invitroSponsor exists -->
                   <!-- SPONSOR DETAILS END -->
 
-                  <!--
-                    <ng-template matStepLabel>
-                      <span class="font16px colorblack">Report Submitter and Laboratory</span>
-                      <span class="colormaroon font11px fontbold" *ngIf="screening.invitroSubmitterReport">
-                        <span *ngIf="screening.invitroSubmitterReport.reportNumber">
-                          <br>
-                          Report:&nbsp;{{screening.invitroSubmitterReport.reportNumber}}&nbsp;
-                        </span>
-                      </span>
-                    </ng-template>
-                  -->
-
                   <!-- SPONSOR REPORT DETAILS BEGIN -->
                   <div class="margintop10px" *ngIf="assayResultInfo.invitroSponsorReport">
 
@@ -684,10 +654,6 @@
 
 
                     <!-- Form Entry -->
-                    <!--
-                      <div *ngIf="radioSelectedReportSubmitter == 'selectedNewReportSubmitter'">
-                      -->
-
                     <div class="marginbottom15px"
                       *ngFor="let sponsorSub of assayResultInfo.invitroSponsorReport.invitroSponsorSubmitters; let indexSubmitter = index">
 
@@ -895,20 +861,6 @@
                     </div>
 
 
-                    <!-- Test Agent Form Entry BEGIN -->
-                    <!--
-                      <div *ngIf="radioSelectedTestAgent == 'selectedNewTestAgent'">
-
-                        <div class="form-row margintop15px">
-                          <div class="fieldKey">
-                            <mat-label>Test Agent Company Code:</mat-label>
-                          </div>
-                          <mat-form-field class="fieldvalue">
-                            <input matInput placeholder="" [(ngModel)]="screening.invitroTestAgent.testAgentCompanyCode"
-                              name="testAgentCompanyCode" />
-                          </mat-form-field>
-                        </div>
-                         -->
                     <div *ngIf="assayResultInfo.invitroTestAgent">
                       <div class="divcenter">
 
@@ -1075,13 +1027,6 @@
                   </ng-template>
 
                   <!-- RESULT DETAILS BEGIN -->
-                  <!--
-                  <div class="marginbottom15px"
-                    *ngFor="let screening of assay.invitroAssayScreenings; let screeningIndex = index">
-
-                    <div *ngIf="screening.invitroAssayResult">
-                    -->
-
                   <div class="divflex margintop30px width95percent">
 
                     <div class="padtop5px colorblue font18px fontbold fontverdana">

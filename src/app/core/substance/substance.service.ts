@@ -26,7 +26,6 @@ import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
 
-import { stringify } from 'querystring';
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
     return encodeURIComponent(key);
@@ -886,7 +885,6 @@ export class SubstanceService extends BaseHttpService {
   }
 
   saveSubstanceWithoutValidation(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
-    console.log("in saveSubstanceWithoutValidation");
     const url = `${this.apiBaseUrl}substances/novalid?view=internal`;
     let method = 'PUT';
     if (type && type === 'import') {
@@ -1063,7 +1061,8 @@ export class SubstanceService extends BaseHttpService {
   }
 
   hasInxightLink(ID: string): Observable<any> {
-    const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
+    //const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
+    const url = `https://stitcher.ncats.io/api/stitches/latest/${ID}`;
     return this.http.jsonp(url, 'callback' );
 
   }
@@ -1162,3 +1161,4 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<SubstanceDetail>(url);
   }
 }
+

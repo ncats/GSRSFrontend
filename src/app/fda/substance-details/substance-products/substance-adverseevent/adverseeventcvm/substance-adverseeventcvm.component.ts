@@ -37,6 +37,7 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
   loadingStatus = '';
   public sortValues = adverseEventCvmSearchSortValues;
   private subscriptions: Array<Subscription> = [];
+  canExport: boolean = false;
 
   displayedColumns: string[] = [
     'adverseEvent', 'species', 'adverseEventCount', 'routeOfAdmin'
@@ -53,11 +54,8 @@ export class SubstanceAdverseEventCvmComponent extends SubstanceDetailsBaseTable
     super(gaService, adverseEventService);
   }
 
-  ngOnInit() {
-    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(rolesSubscription);
+  async ngOnInit() {
+    this.canExport = await this.authService.hasSpecificPrivilege("Export Data");
     if (this.bdnum) {
       this.getAdverseEventCvm();
       // this.getSubstanceAdverseEventCvm();

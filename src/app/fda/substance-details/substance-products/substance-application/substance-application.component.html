@@ -13,20 +13,12 @@
       <span class="colorred">{{loadingStatus}}</span>
       &nbsp;&nbsp;&nbsp;
       <!-- Export Button -->
-      <span class="export" *ngIf="isAdmin && totalRecords > 0">
+      <span class="export" *ngIf="canExport && totalRecords > 0">
         <button matTooltip="Export Search Results" mat-button (click)="export()"
           class="mat-button export-button mat-raised-button">
           <mat-icon svgIcon="get_app"></mat-icon> Export All Applications
         </button>
       </span>
-
-      <!--
-      <a [href]="exportUrl" target="_blank" matTooltip='ApplicationRecords' *ngIf="totalRecords > 0">
-        <button mat-icon-button color="primary">
-          <mat-icon>arrow_downward</mat-icon>Export All Applications
-        </button>
-      </a>
-      -->
     </div>
 
     <div class="responsive mat-table-style">
@@ -45,7 +37,7 @@
             <span *ngIf="(application.fromTable && application.fromTable === 'GSRS')">
             <a [routerLink]="['/application', application.id]" target="_blank">{{application.appType}}</a>
             &nbsp;&nbsp;
-            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canUpdate"
               matTooltip='Edit GSRS Application Record'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>

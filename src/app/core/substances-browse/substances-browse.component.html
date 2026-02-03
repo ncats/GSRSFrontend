@@ -1,6 +1,6 @@
 <mat-sidenav-container [hasBackdrop]="hasBackdrop" [ngClass]="{ collapsed: showExactMatches }">
   <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
-    <mat-form-field style = "margin-left: 30px;" *ngIf="isAdmin" id = "facetView" class = "facetView">
+    <mat-form-field style = "margin-left: 30px;" *ngIf="canUpdate" id = "facetView" class = "facetView">
       <mat-label>Facet View:</mat-label>
       <mat-select [formControl]="facetViewControl" (openedChange)="openedFacetViewChange($event)" (selectionChange)="facetViewChange($event)">
         <mat-option *ngFor="let option of facetViewCategory" [value]="option">
@@ -10,7 +10,7 @@
     </mat-form-field>
 
     <!-- Cross Entity Search to search between Substance, Product, Application, etc  [entityDisplayFacets]="displayFacets"-->
-    <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && isAdmin)">
+    <span *ngIf="((isFacetsParamsInitialized && isFacetsParamsInitialized === true) && canUpdate)">
       <span *ngIf="showCrossEntitySearch == true">
         <app-cross-entity-search [entity]='entity' [idLists]="idLists" [searchTerm]="searchTerm"
           [entitySmiles]="smiles" [entityType]="privateSearchType"
@@ -151,9 +151,6 @@
       <div class="mat-elevation-z2 structure-search-status"  *ngIf = "resultsInitiated  && this.structureDialogCanceled && !asyncFinished">
         <div style = "margin:20px">
           <span class = "structure-search-header">Structure Search is Processing...</span>
-            <!--   <span class = "structure-search-header">Structure Search is <b>{{pauseStructureSearch ? "PAUSED":"Processing.."}}</b></span>
-          <button mat-button  mat-raised-button class = "primary mat-primary structure-dialog-button" (click) = "pauseAsync(true)" *ngIf="!pauseStructureSearch">Pause Search</button>
-          <button mat-button mat-raised-button class = "primary mat-primary structure-dialog-button" (click) = "pauseAsync(false)" *ngIf="pauseStructureSearch">Resume Search</button>-->
           </div>
         <div><mat-progress-spinner *ngIf = "!pauseStructureSearch"
           class="spinner"
@@ -265,10 +262,6 @@
                 </span>
               </span>
 
-              <!--  <button mat-icon-button color="primary" (click)="clipboard(this.smiles)">
-                    <mat-icon  color="primary" svgIcon="paste"></mat-icon>
-                  </button>-->
-              <!-- if search is coming from Advanced Search -->
               <button mat-icon-button color="primary" (click)="copySmiles(this.smiles)">
                   <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Smiles to clipboard"></mat-icon>
               </button>
@@ -530,12 +523,12 @@
                       <mat-icon svgIcon="search"></mat-icon>
                     </button>
 
-                    <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
+                    <a mat-menu-item [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="canUpdate"
                       matTooltip='edit record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
 
-                    <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                    <button *ngIf="canUpdate" mat-icon-button [matMenuTriggerFor]="editMenu">
                       <mat-icon svgIcon="file_copy"></mat-icon>
                     </button>
 
@@ -572,12 +565,12 @@
 
                     <mat-menu #editMenu="matMenu">
                       <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                        [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
+                        [queryParams]="{copy:substance.uuid}" *ngIf="canUpdate"
                         matTooltip='copy substance to new registration form'>
                         <span>Copy Substance to New Form</span>
                       </a>
                       <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                        [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin"
+                        [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="canUpdate"
                         matTooltip='copy definition to new registration form'>
                         <span>Copy Definition to New Form</span>
                       </a>
@@ -650,12 +643,12 @@
                       <mat-icon class = "button-link-img" svgIcon="search"></mat-icon>
                         </button>
 
-                    <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="isAdmin"
+                    <a  class = "mat-icon-button" aria-label = "edit substance"  mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']" *ngIf="canUpdate"
                           matTooltip='edit record'>
                           <mat-icon svgIcon="edit"></mat-icon>
                         </a>
 
-                        <button *ngIf="isAdmin" mat-icon-button [matMenuTriggerFor]="editMenu">
+                        <button *ngIf="canUpdate" mat-icon-button [matMenuTriggerFor]="editMenu">
                           <mat-icon svgIcon="file_copy"></mat-icon>
                         </button>
                       </span>
@@ -697,12 +690,12 @@
 
                   <mat-menu #editMenu="matMenu">
                     <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                      [queryParams]="{copy:substance.uuid}" *ngIf="isAdmin"
+                      [queryParams]="{copy:substance.uuid}" *ngIf="canUpdate"
                       matTooltip='copy substance to new registration form'>
                       <span>Copy Substance to New Form</span>
                     </a>
                     <a mat-menu-item [routerLink]="['/substances/register',substance.substanceClass]"
-                      [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="isAdmin"
+                      [queryParams]="{copy:substance.uuid,copyType:'definition'}" *ngIf="canUpdate"
                       matTooltip='copy definition to new registration form'>
                       <span>Copy Definition to New Form</span>
                     </a>
@@ -763,7 +756,6 @@
     <div style = "width:90%;" *ngIf = "resultsInitiated">
       <h3>{{privateSearchType | titlecase }} Search is Processing...</h3><br/>
      <div class = "structure-dialog-content"> Returning all results may take some time depending on the query. <br/>The results will refresh once the search is complete. <br/>You may close this dialog to browse the incomplete results.</div><br/><br/>
-      <!--<button mat-button class = "primary" (click) = "pauseStructureSearch = !pauseStructureSearch">{{pauseStructureSearch ? 'RESUME':'PAUSE'}}</button>-->
     </div>
     <mat-dialog-actions><span class = "middle-fill"></span><button mat-button class = "primary mat-raised-button mat-primary structure-dialog-button" (click) = "pauseCloseAsync()" >Close dialog</button></mat-dialog-actions>
   </mat-dialog>

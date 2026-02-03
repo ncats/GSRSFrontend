@@ -131,7 +131,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   downloadJsonHref: any;
   jsonFileName: string;
 
-  isAdmin = false;
   isLoading = true;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
@@ -164,7 +163,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       this.loadingService.setLoading(this.isLoading);
 
       // Get Username and Admin details
-      this.isAdmin = this.authService.hasRoles('admin');
       this.username = this.authService.getUser();
 
       // Get Invitro Pharmacology Substance Key Type from the configuration file

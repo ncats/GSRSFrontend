@@ -63,13 +63,14 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   endDate: Date;
 
   /* boolean data type */
-  isAdmin = false;
   isLoading = true;
   isDisableData = false;
   showSubmissionMessages = false;
   validationResult = false;
   disableMarketingCategoryCode = true;
   serverError: boolean;
+  canDelete: boolean = false;
+  canCreate: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -86,8 +87,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private titleService: Title,
     private sanitizer: DomSanitizer) { }
 
-  ngOnInit() {
-    this.isAdmin = this.authService.hasRoles('admin');
+  async ngOnInit() {
+    this.canDelete = await this.authService.hasSpecificPrivilege("Delete Lower Level Items");
+    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();

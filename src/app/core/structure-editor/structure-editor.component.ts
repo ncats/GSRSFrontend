@@ -173,7 +173,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   private preventDrag = (event: DragEvent) => {
-    // console.log('prevent drag');
     event.preventDefault();
   }
 

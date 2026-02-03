@@ -116,18 +116,6 @@
 
         <!-- Table, Full, and Summary Views -->
         <mat-button-toggle-group [value]="view" (change)="updateView($event)">
-          <!--
-          <mat-button-toggle value="table" matTooltip="Screening View">
-            <mat-icon svgIcon="list"></mat-icon>
-          </mat-button-toggle>
-          <mat-button-toggle value="summary" matTooltip="Summary View">
-            <mat-icon svgIcon="list"></mat-icon>
-          </mat-button-toggle>
-
-          <mat-button-toggle value="cards" matTooltip="Full View">
-            <mat-icon svgIcon="view_stream"></mat-icon>
-          </mat-button-toggle>
-           -->
         </mat-button-toggle-group>
 
         <!-- Sort By -->
@@ -140,18 +128,8 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- Export Button -->
-        <!--
-        <div class="export" *ngIf="isAdmin">
-          <button matTooltip="Export Search Results" mat-button (click)="export()"
-            class="mat-button export-button mat-raised-button">
-            <mat-icon svgIcon="get_app"></mat-icon> Export
-          </button>
-        </div>
-        -->
-
         <!-- Export Button with dropdown with multiple extension -->
-        <div class="export" *ngIf="isAdmin">
+        <div class="export" *ngIf="canExport">
           <mat-menu #exportMenu="matMenu">
             <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.extension)">
               {{option.displayname}}
@@ -279,13 +257,13 @@
                       <!-- Edit/Update ASSAY record -->
                       <div class="margintop5px">
                         &nbsp;
-                        <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                        <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="canUpdate"
                           matTooltip='Edit Assay Record ONLY'>
                           <mat-icon svgIcon="edit"></mat-icon>
                         </a>
                       </div>
 
-                      <div class="margintopneg5px" *ngIf="isAdmin">
+                      <div class="margintopneg5px" *ngIf="canUpdate">
                         <!-- Show Json -->
                         <span *ngIf="assay && assay.id">
                           <a button mat-icon-button color="primary" (click)="showJSON(indexAllAssay)"
@@ -297,7 +275,7 @@
 
                       <!-- Download Json For this record -->
                       <div class="margintopneg5px marginleftneg10px">
-                        <span *ngIf="isAdmin">
+                        <span *ngIf="canSaveJson">
                           <span *ngIf="assay.id">
                             <a button mat-icon-button color="primary" [href]="downloadJsonHref"
                               (click)="saveJSON(assay.id)" download="{{jsonFileName}}.json"
@@ -310,19 +288,6 @@
 
                     </div> <!-- class=divflex -->
 
-                    <!--
-                      {{assay.assayTarget}}
-                      -->
-                    <!--
-                      <span *ngIf="assay.assayTarget">
-                        <a [routerLink]="['/browse-invitro-pharm']"
-                          [queryParams]='{search: "root_assayTarget:" + "\"^" + assay.assayTarget + "$\""}'
-                          target="_blank">
-                          {{assay.assayTarget}}
-                        </a>
-                      </span>
-                      -->
-
                   </mat-card-title>
 
                   <mat-card-content>
@@ -331,46 +296,6 @@
 
                       <div class="width30percent">
 
-                        <!--  *ngIf="isAdmin" -->
-                        <!--
-                        <span>
-                          <div class="row">
-                            <div class="row-property-key-5">
-                              Created By:
-                            </div>
-                            <div class="row-property-value-5">
-                              {{assay.createdBy}}
-                            </div>
-                          </div>
-
-                          <div class="row">
-                            <div class="row-property-key-5">
-                              Create Date:
-                            </div>
-                            <div class="row-property-value-5">
-                              {{assay.creationDate|date: 'MM/dd/yyyy h:mm a'}}
-                            </div>
-                          </div>
-
-                          <div class="row">
-                            <div class="row-property-key-5">
-                              Edited By:
-                            </div>
-                            <div class="row-property-value-5">
-                              {{assay.modifiedBy}}
-                            </div>
-                          </div>
-
-                          <div class="row">
-                            <div class="row-property-key-5">
-                              Edit Date:
-                            </div>
-                            <div class="row-property-value-5">
-                              {{assay.lastModifiedDate|date: 'MM/dd/yyyy h:mm a'}}
-                            </div>
-                          </div>
-                        </span>
-                      -->
                       </div> <!-- right side -->
 
                     </div>
@@ -474,7 +399,7 @@
                             </div>
                             <div class="margintop5px">
                               <a [routerLink]="['/invitro-pharm', assayscreening.assayResultInfoId, 'edit']"
-                                target="_blank" *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                                target="_blank" *ngIf="canUpdate" matTooltip='Edit Assay Screening Record'>
                                 <span class="font12px">Edit Screening</span>
                               </a>
                             </div>
@@ -733,7 +658,7 @@
                               </div>
                               <div class="margintop5px">
                                 <a [routerLink]="['/invitro-pharm', assayscreening.assayResultInfoId, 'edit']"
-                                  target="_blank" *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                                  target="_blank" *ngIf="canUpdate" matTooltip='Edit Assay Screening Record'>
                                   <span class="font12px">Edit Screening</span>
                                 </a>
                               </div>
@@ -938,20 +863,7 @@
                 <mat-card-title>
 
                   <div>
-                    <!--
-                    <span *ngIf="assay.assayTarget">
-                      <a [routerLink]="['/browse-invitro-pharm']"
-                        [queryParams]='{search: "root_assayTarget:" + "\"^" + assay.assayTarget + "$\""}'
-                        target="_blank">
-                        {{assay.assayTarget}}
-                      </a>
-                    </span>
-                    &nbsp;&nbsp;&nbsp;
-                    <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                      matTooltip='Edit In Vitro Pharmacology Record'>
-                      <mat-icon svgIcon="edit"></mat-icon>
-                    </a>
-                  -->
+
                   </div>
 
                 </mat-card-title>
@@ -970,46 +882,6 @@
 
                     <div class="width30percent">
 
-                      <!--  *ngIf="isAdmin" -->
-                      <!--
-                      <span>
-                        <div class="row">
-                          <div class="row-property-key-5">
-                            Created By:
-                          </div>
-                          <div class="row-property-value-5">
-                            {{assay.createdBy}}
-                          </div>
-                        </div>
-
-                        <div class="row">
-                          <div class="row-property-key-5">
-                            Create Date:
-                          </div>
-                          <div class="row-property-value-5">
-                            {{assay.creationDate|date: 'MM/dd/yyyy h:mm a'}}
-                          </div>
-                        </div>
-
-                        <div class="row">
-                          <div class="row-property-key-5">
-                            Edited By:
-                          </div>
-                          <div class="row-property-value-5">
-                            {{assay.modifiedBy}}
-                          </div>
-                        </div>
-
-                        <div class="row">
-                          <div class="row-property-key-5">
-                            Edit Date:
-                          </div>
-                          <div class="row-property-value-5">
-                            {{assay.lastModifiedDate|date: 'MM/dd/yyyy h:mm a'}}
-                          </div>
-                        </div>
-                      </span>
-                    -->
                     </div> <!-- right side -->
 
                   </div>
@@ -1042,7 +914,7 @@
                       </div>
                       <div>
                         <a [routerLink]="['/invitro-pharm/summary', testAgt.testAgent, 'edit']" target="_blank"
-                          *ngIf="isAdmin" matTooltip='Edit Assay Summary Record'>
+                          *ngIf="canUpdate" matTooltip='Edit Assay Summary Record'>
                           <span class="font12px">Edit Summary Record</span>
                         </a>
                       </div>
@@ -1094,203 +966,12 @@
                                   <div class="divflex">
                                     <div class="margintopneg5px marginleft10px">
                                       <a [routerLink]="['/invitro-pharm', assayscreen.assayResultInfoId, 'edit']"
-                                        target="_blank" *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                                        target="_blank" *ngIf="canUpdate" matTooltip='Edit Assay Screening Record'>
                                         <mat-icon svgIcon="edit"></mat-icon>
                                       </a>
                                     </div>
                                   </div> <!-- divflex -->
 
-                                  <!-- POPUP DIALOG TEST AGENT SUMMARY -->
-                                  <!--
-                                  <div class="marginleft10px" *ngIf="assayscreen.summary">
-                                    <button mat-icon-button color="primary" class="margintopneg20px"
-                                      matTooltip="View Summary Details" (click)="openModalSummary(summaryTemplate)">
-                                      <mat-icon>list_alt</mat-icon>
-                                    </button>
-
-
-                                    <!- - ******************************* - ->
-                                    <!- - POPUP DIALOG for TEST AGENT SUMMARY BEGIN - ->
-                                    <ng-template #summaryTemplate>
-
-                                      <div class="font14px marginbottom10px">Test
-                                        Agent:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-                                          class="fontbold">{{assayscreen.testAgent}}</span></div>
-
-                                      <div class="font14px">Target Name: <span
-                                          class="fontbold">{{assayscreen.targetName}}</span></div>
-
-                                      <br>
-                                      <div class="font18px fontbold" mat-dialog-title>
-                                        Summary
-                                      </div>
-
-                                      <div mat-dialog-content>
-
-                                        <table mat-table [dataSource]="assayscreen.summaries" class="font12px">
-
-                                          <ng-container matColumnDef="viewDetails">
-                                            <th mat-header-cell *matHeaderCellDef> View Details </th>
-                                            <td mat-cell *matCellDef="let assaysum">
-                                              <div class="width100px">
-                                                <a class="substance-name" [routerLink]="['/invitro-pharm', assaysum.id]"
-                                                  target="_blank" alt="View Assay Screening Record"
-                                                  matTooltip='View Assay Record'>View
-                                                </a>&nbsp;&nbsp;&nbsp;
-                                                <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']"
-                                                  target="_blank" *ngIf="isAdmin"
-                                                  matTooltip='Edit Assay Summary Record'>
-                                                  <mat-icon svgIcon="edit"></mat-icon>
-                                                </a>
-                                              </div>
-                                            </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="isFromResult">
-                                            <th mat-header-cell *matHeaderCellDef> From Result Data </th>
-                                            <td class="width80px" mat-cell *matCellDef="let assaysum">
-                                              <span *ngIf="assaysum.isFromResult && assaysum.isFromResult == true">
-                                                <mat-icon matTooltip="This Summary data is from Result data">
-                                                  check_circle_outline
-                                                </mat-icon>
-                                              </span>
-                                            </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="referenceSource">
-                                            <th mat-header-cell *matHeaderCellDef> Reference Source </th>
-                                            <td mat-cell *matCellDef="let assaysum">
-                                              {{assaysum.referenceSourceTypeAndId}} </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="assayTarget">
-                                            <th mat-header-cell *matHeaderCellDef> Target Name </th>
-                                            <td mat-cell *matCellDef="let assaysum">
-                                              <div *ngIf="assaysum._assayTargetSubId; else noAssayTargetSubId">
-                                                <a [routerLink]="['/substances', assaysum._assayTargetSubId]"
-                                                  target="_blank" matTooltip="Go to Substance Details page">
-                                                  {{ assaysum.targetName }}
-                                                </a>
-                                              </div>
-                                              <ng-template #noAssayTargetSubId>
-                                                {{assaysum.targetName}}
-                                              </ng-template>
-                                            </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="bioassayType">
-                                            <th mat-header-cell *matHeaderCellDef> Bioassay Type </th>
-                                            <td mat-cell *matCellDef="let assaysum"> {{assaysum.bioassayType}} </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="studyType">
-                                            <th mat-header-cell *matHeaderCellDef> Study Type </th>
-                                            <td mat-cell *matCellDef="let assaysum"> {{assaysum.studyType}} </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="resultValue">
-                                            <th mat-header-cell *matHeaderCellDef> Result Value </th>
-                                            <td mat-cell *matCellDef="let assaysum">
-                                              <span *ngIf="assaysum.summaryResultValueAvg">
-                                                {{assaysum.summaryResultValueAvg}}&nbsp;(Avg)
-                                              </span>
-                                              <span *ngIf="assaysum.summaryResultValueLow">
-                                                <br>
-                                                {{assaysum.summaryResultValueLow}}&nbsp;(Low)
-                                              </span>
-                                              <span *ngIf="assaysum.summaryResultValueHigh">
-                                                <br>
-                                                {{assaysum.summaryResultValueLow}}&nbsp;(High)
-                                              </span>
-                                              <br>
-                                              {{assaysum.summaryResultValueUnits}}
-                                            </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="resultType">
-                                            <th mat-header-cell *matHeaderCellDef> Result Type </th>
-                                            <td mat-cell *matCellDef="let assaysum"> {{assaysum.resultType}} </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="relationshipType">
-                                            <th mat-header-cell *matHeaderCellDef> Relationship Type </th>
-                                            <td mat-cell *matCellDef="let assaysum">
-                                              {{assaysum.relationshipType}}
-                                            </td>
-                                          </ng-container>
-
-                                          <ng-container matColumnDef="interactionType">
-                                            <th mat-header-cell *matHeaderCellDef> Interaction Type </th>
-                                            <td mat-cell *matCellDef="let assaysum">
-                                              {{assaysum.interactionType}}
-                                            </td>
-                                          </ng-container>
-
-                                          <tr mat-header-row *matHeaderRowDef="testAgentSummaryColumns"></tr>
-                                          <tr mat-row *matRowDef="let row; columns: testAgentSummaryColumns;"></tr>
-                                        </table>
-
-
-                                        <!- - Control Loop table begin - ->
-                                        <!- -
-                                          <table mat-table [dataSource]="assayscreen.summaries" class="font12px">
-
-                                            <ng-container matColumnDef="control">
-                                              <th mat-header-cell *matHeaderCellDef> Control </th>
-                                              <td mat-cell *matCellDef="let ctrl">
-                                                <div *ngIf="ctrl.controlSubstanceUuid; else noAllControlSubUuid">
-                                                  <a [routerLink]="['/substances', ctrl.controlSubstanceUuid]"
-                                                    target="_blank" matTooltip="Go to Substance Details page">
-                                                    {{ ctrl.control }}
-                                                  </a>
-                                                </div>
-                                                <ng-template #noAllControlSubUuid>
-                                                  {{ctrl.control}}
-                                                </ng-template>
-                                              </td>
-                                            </ng-container>
-
-                                            <ng-container matColumnDef="controlType">
-                                              <th mat-header-cell *matHeaderCellDef> Control Type </th>
-                                              <td mat-cell *matCellDef="let ctrl">
-                                                {{ctrl.controlType}}
-                                              </td>
-                                            </ng-container>
-
-                                            <ng-container matColumnDef="controlReferenceValue">
-                                              <th mat-header-cell *matHeaderCellDef> Control Reference Value </th>
-                                              <td mat-cell *matCellDef="let ctrl">
-                                                {{ctrl.controlReferenceValue}}&nbsp;
-                                                {{ctrl.controlReferenceValueUnits}}
-                                              </td>
-                                            </ng-container>
-
-                                            <ng-container matColumnDef="resultType">
-                                              <th mat-header-cell *matHeaderCellDef> Result Type</th>
-                                              <td mat-cell *matCellDef="let ctrl">
-                                                {{ctrl.resultType}}
-                                              </td>
-                                            </ng-container>
-
-                                            <tr mat-header-row *matHeaderRowDef="controlColumns"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: controlColumns;"></tr>
-                                          </table>  - ->
-                                        <!- - Control Loop table end - ->
-
-                                      </div> <!- - mat-dialog-content - ->
-
-                                      <div mat-dialog-actions>
-                                        <span class="middle-fill"></span>
-                                        <button class="mat-raised-button mat-primary" (click)="close()"
-                                          mat-dialog-close>Close</button>
-                                      </div>
-
-                                    </ng-template>
-
-
-                                    <!- - Popup Dialog for Controls END - ->
-
-                                  </div>  -->
                                   <!-- Summary Details  -->
 
                                 </div> <!-- class=divflex -->
@@ -1329,23 +1010,6 @@
                               <th mat-header-cell *matHeaderCellDef> Study Type </th>
                               <td mat-cell *matCellDef="let assayscreen"> {{assayscreen.studyType}} </td>
                             </ng-container>
-
-                            <!--
-                            <ng-container matColumnDef="testCompound">
-                              <th mat-header-cell *matHeaderCellDef mat-sort-header> Test Compound </th>
-                              <td mat-cell *matCellDef="let assay">
-                                <div *ngIf="assay._testCompoundSubId; else noTestCompoundSubId">
-                                  <a [routerLink]="['/substances', assay._testCompoundSubId]" target="_blank"
-                                    matTooltip="Go to Substance Details page">
-                                    {{ assay.testCompound }}
-                                  </a>
-                                </div>
-                                <ng-template #noTestCompoundSubId>
-                                  {{assay.testCompound}}
-                                </ng-template>
-                              </td>
-                            </ng-container>
-                            -->
 
                             <ng-container matColumnDef="testAgentConcentration">
                               <th mat-header-cell *matHeaderCellDef>Test Agent Concentration</th>
@@ -1508,7 +1172,7 @@
 
                                   <div class="margintopneg5px marginleft10px">
                                     <a [routerLink]="['/invitro-pharm', assay.assayResultInfoId, 'edit']"
-                                      target="_blank" *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                                      target="_blank" *ngIf="canUpdate" matTooltip='Edit Assay Screening Record'>
                                       <mat-icon svgIcon="edit"></mat-icon>
                                     </a>
                                   </div>
@@ -1641,20 +1305,6 @@
 
                   <div>
 
-                    <!--
-                    <span *ngIf="assay.assayTarget">
-                      <a [routerLink]="['/browse-invitro-pharm']"
-                        [queryParams]='{search: "root_assayTarget:" + "\"^" + assay.assayTarget + "$\""}'
-                        target="_blank">
-                        {{assay.assayTarget}}
-                      </a>
-                    </span>
-                    &nbsp;&nbsp;&nbsp;
-                    <a [routerLink]="['/invitro-pharm', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                      matTooltip='Edit In Vitro Pharmacology Record'>
-                      <mat-icon svgIcon="edit"></mat-icon>
-                    </a>
-                  -->
                   </div>
 
                 </mat-card-title>
@@ -1699,17 +1349,11 @@
                               alt="View Assay Screening Record" matTooltip='View Assay Record'>View
                             </a>&nbsp;&nbsp;&nbsp;
 
-                            <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                            <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']" target="_blank" *ngIf="canUpdate"
                               matTooltip='Edit In Vitro Pharmacology Record'>
                               <mat-icon svgIcon="edit"></mat-icon>
                             </a>
 
-                            <!--
-                            <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                              matTooltip='Edit Assay Screening Record'>
-                              <mat-icon svgIcon="edit"></mat-icon>
-                            </a>
-                             -->
                           </div>
                         </td>
                       </ng-container>
@@ -1864,7 +1508,7 @@
                     </table>
                     <!-- Reference/Application Summary Table END -->
 
-                  </div> <!-- *ngIf="app" -->
+                  </div> 
                   <!-- END TAB  -->
 
 

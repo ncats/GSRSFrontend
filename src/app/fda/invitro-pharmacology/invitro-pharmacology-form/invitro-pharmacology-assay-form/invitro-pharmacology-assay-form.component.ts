@@ -70,7 +70,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   downloadJsonHref: any;
   jsonFileName: string;
 
-  isAdmin = false;
   isLoading = true;
   username = null;
   title = null;
@@ -96,11 +95,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     setTimeout(() => {
       this.loadingService.setLoading(this.isLoading);
       this.overlayContainer = this.overlayContainerService.getContainerElement();
-
-      // Check if user has either Admin or Updater role
-      this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
-        this.isAdmin = response;
-      });
 
       // Get Username
       this.username = this.authService.getUser();

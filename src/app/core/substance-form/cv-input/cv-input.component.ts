@@ -34,7 +34,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
   dictionary: any;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin: boolean;
+  canManageCVs: boolean = false;
 
   constructor(
     public cvService: ControlledVocabularyService,
@@ -46,7 +46,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
     private configService: ConfigService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.vocabulary) {
       this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
       this.sortFromConfig();
@@ -75,7 +75,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
 
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.isAdmin = this.authService.hasRoles('admin');
+    this.canManageCVs = await this.authService.hasSpecificPrivilege('Manage CVs');
   }
 
   ngOnDestroy() {
