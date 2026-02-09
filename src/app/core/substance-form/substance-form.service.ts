@@ -33,6 +33,7 @@ import {AdminService} from '@gsrs-core/admin/admin.service';
 @Injectable()
 export class SubstanceFormService implements OnDestroy {
    privateSubstance: SubstanceDetail;
+   originalSubstanceSnapshot: SubstanceDetail | null = null;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;
   private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
@@ -61,6 +62,10 @@ export class SubstanceFormService implements OnDestroy {
   private method?: string;
   private previousHash?: number;
   storedRelated = {};
+
+  // Edit session tracking flags for automatic change reason generation
+  private hasAdd = false;
+  private hasRemove = false;
 
   constructor(
     private substanceService: SubstanceService,
@@ -275,6 +280,11 @@ export class SubstanceFormService implements OnDestroy {
       if (this.privateSubstance[this.subClass] == null) {
         this.privateSubstance[this.subClass] = {};
       }
+
+      // Store snapshot for change detection (used to generate descriptive change reason)
+      this.originalSubstanceSnapshot = JSON.parse(JSON.stringify(this.privateSubstance));
+      // Reset edit tracking flags when loading a substance
+      this.resetEditFlags();
       this.initForm();
       this.simplifiedFormEmitter.next(simplified === true)
       this.substanceEmitter.next(this.privateSubstance);
@@ -602,11 +612,37 @@ export class SubstanceFormService implements OnDestroy {
     }
   }
 
+  markAdded(): void {
+    this.hasAdd = true;
+  }
 
-  applyDefaultChangeReasonIfNeeded(defaultReason: string = 'Error Checking'): boolean {
+  markRemoved(): void {
+    this.hasRemove = true;
+  }
+
+  resetEditFlags(): void {
+    this.hasAdd = false;
+    this.hasRemove = false;
+  }
+
+  getDefaultReasonFromFlags(): 'Added' | 'Removed' | 'Added and Removed' | 'Updated' {
+    if (this.hasAdd && this.hasRemove) {
+      return 'Added and Removed';
+    } else if (this.hasAdd) {
+      return 'Added';
+    } else if (this.hasRemove) {
+      return 'Removed';
+    } else {
+      return 'Updated';
+    }
+  }
+
+  applyDefaultChangeReasonIfNeeded(): boolean {
     if (!this.isNewRecord()) {
       const currentReason = this.privateSubstance?.changeReason;
+      // Only apply default if changeReason is empty or whitespace
       if (!currentReason || currentReason.trim() === '') {
+        const defaultReason = this.getDefaultReasonFromFlags();
         this.privateSubstance.changeReason = defaultReason;
         this.substanceChangeReasonEmitter.next(defaultReason);
         return true;
@@ -889,6 +925,7 @@ export class SubstanceFormService implements OnDestroy {
 
 
   addSubstanceSubunit(): void {
+    this.markAdded();
     if (this.privateSubstance.substanceClass === 'protein') {
       const index: number = this.privateSubstance.protein.subunits.length + 1;
       const newSubunit: Subunit = {
@@ -919,6 +956,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   deleteSubstanceSubunit(subunit: Subunit): void {
+    this.markRemoved();
     if (this.privateSubstance.substanceClass === 'protein') {
       const subUnitIndex = this.privateSubstance.protein.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
       if (subUnitIndex > -1) {
@@ -1228,6 +1266,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   addSubstanceSugar(): void {
+    this.markAdded();
     const newSugars: Sugar = {
       sites: [],
       sugar: ''
@@ -1237,6 +1276,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   deleteSubstanceSugar(sugar: Sugar): void {
+    this.markRemoved();
     const subSugarIndex = this.privateSubstance.nucleicAcid.sugars.findIndex(subCode => sugar.$$deletedCode === subCode.$$deletedCode);
     if (subSugarIndex > -1) {
       this.privateSubstance.nucleicAcid.sugars.splice(subSugarIndex, 1);

@@ -840,14 +840,12 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           }
           /********* STRUCTURE QUERY **********/
 
-          // If no structure search, do this
-          else {
-            console.log('no molecule found');
-            this.router.navigate(['/browse-substance'], navigationExtras);
-            //    }
-          }
-        }, () => { });
-
+        // If no structure search, do this
+        else {
+          console.log('no molecule found');
+          this.router.navigate(['/browse-substance'], navigationExtras);
+          //    }
+        }
       });
       }
       else if (this.category === 'Application') {

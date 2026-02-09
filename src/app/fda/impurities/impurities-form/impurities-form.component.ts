@@ -23,24 +23,12 @@ import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
-import * as moment from 'moment';
-import { take, map } from 'rxjs/operators';
-import { DatePipe, formatDate } from '@angular/common';
-import { Title } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { FormBuilder } from '@angular/forms';
-
-import { ConfigService } from '@gsrs-core/config';
+import { ImpuritiesService } from '../service/impurities.service';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
-import jp from 'jsonpath';
+import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
 
 @Component({
     selector: 'app-impurities-form',
@@ -744,6 +732,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
   scrub(oldraw: any): any {
     const old = oldraw;
+
     const idHolders = jp.query(old, '$..[?(@.id)]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
@@ -762,7 +751,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     }
 
     const modifyHolders = jp.query(old, '$..[?(@.lastModifiedDate)]');
-      for (let i = 0; i < modifyHolders.length; i++) {
+    for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 

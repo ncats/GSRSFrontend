@@ -61,6 +61,7 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
   }
 
   addSubstanceName(name?:SubstanceName): void {
+    this.substanceFormService.markAdded();
     if (name == undefined) {
       name = {
         references: [],
@@ -73,6 +74,7 @@ export class SubstanceFormNamesService extends SubstanceFormServiceBase<Array<Su
   }
 
   deleteSubstanceName(name: SubstanceName): void {
+    this.substanceFormService.markRemoved();
     const subNameIndex = this.substance.names.findIndex(subName => name.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.substance.names.splice(subNameIndex, 1);

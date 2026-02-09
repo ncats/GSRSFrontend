@@ -53,6 +53,7 @@ export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<A
   }
 
   addSubstanceConstituent(formulation?:boolean): void {
+    this.substanceFormService.markAdded();
     // for G1 and G2
     let constituent: Constituent = { references: [], access: ['protected'] };
     if (formulation) {
@@ -73,6 +74,7 @@ export class SubstanceFormConstituentsService extends SubstanceFormServiceBase<A
   }
 
   deleteSubstanceConstituent(sugar: Constituent): void {
+    this.substanceFormService.markRemoved();
     const constituentIndex = this.substance.specifiedSubstance.constituents.findIndex(
       subCode => sugar.$$deletedCode === subCode.$$deletedCode);
     if (constituentIndex > -1) {

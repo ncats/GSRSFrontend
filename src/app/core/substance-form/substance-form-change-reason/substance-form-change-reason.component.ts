@@ -30,7 +30,7 @@ export class SubstanceFormChangeReasonComponent extends SubstanceFormBase implem
   readonly hintText = computed(() =>
     this.isNewRecord()
       ? 'This comment is optional for new registrations.'
-      : 'Will default to "Error Checking" if left blank.'
+      : 'If left blank, will auto-fill based on changes: "Information Added", "Form Updated", or "Information Deleted".'
   );
 
   private readonly userHasTypedInSession = signal(false);

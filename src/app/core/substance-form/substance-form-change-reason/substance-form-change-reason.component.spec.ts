@@ -185,13 +185,13 @@ describe('SubstanceFormChangeReasonComponent', () => {
       expect(component.hintText()).toContain('optional');
     }));
 
-    it('should show Error Checking hint for existing records', fakeAsync(() => {
+    it('should show auto-fill hint for existing records', fakeAsync(() => {
       mockSubstanceFormService.isNewRecord.and.returnValue(false);
 
       fixture.detectChanges();
       tick();
 
-      expect(component.hintText()).toContain('Error Checking');
+      expect(component.hintText()).toContain('auto-fill');
     }));
   });
 

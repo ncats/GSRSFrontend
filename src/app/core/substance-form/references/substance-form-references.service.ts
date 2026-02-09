@@ -45,6 +45,7 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
   }
 
   addSubstanceReference(reference: SubstanceReference): SubstanceReference {
+    this.substanceFormService.markAdded();
     reference.uuid = this.utilsService.newUUID();
     if (this.substance.references == null) {
       this.substance.references = [];
@@ -165,6 +166,7 @@ export class SubstanceFormReferencesService extends SubstanceFormServiceBase<Arr
 
 
   deleteSubstanceReference(reference: SubstanceReference): void {
+    this.substanceFormService.markRemoved();
     const subRefIndex = this.substance.references.findIndex(subReference => reference.$$deletedCode === subReference.$$deletedCode);
     if (subRefIndex > -1) {
       this.substance.references.splice(subRefIndex, 1);
