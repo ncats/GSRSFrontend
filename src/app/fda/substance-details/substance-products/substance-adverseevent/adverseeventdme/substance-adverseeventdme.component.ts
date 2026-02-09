@@ -37,6 +37,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   loadingStatus = '';
   public sortValues = adverseEventDmeSearchSortValues;
   private subscriptions: Array<Subscription> = [];
+  canExport: boolean = false;
 
   displayedColumns: string[] = [
     'dmeReactions', 'ptTermMeddra', 'caseCount', 'dmeCount', 'dmeCountPercent', 'weightedAvgPrr'
@@ -53,12 +54,8 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
     super(gaService, adverseEventService);
   }
 
-  ngOnInit() {
-    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(rolesSubscription);
-
+  async ngOnInit() {
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     if (this.bdnum) {
       this.getAdverseEventDme();
       // this.getSubstanceAdverseEventDme();

@@ -115,7 +115,6 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   downloadJsonHref: any;
   jsonFileName: string;
 
-  isAdmin = false;
   isLoading = true;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
@@ -140,7 +139,6 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   ngOnInit() {
     // Get Username and Admin details
-    this.isAdmin = this.authService.hasRoles('admin');
     this.username = this.authService.getUser();
 
     this.loadingService.setLoading(true);

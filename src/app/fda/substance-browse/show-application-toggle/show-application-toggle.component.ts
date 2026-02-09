@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
   test: any;
-  isAdmin = false;
+  canUpdate: boolean = false;
   privateExport = false;
   displayMatchApplicationConfig = false;
   displayMatchAppCheckBoxValue = false;
@@ -43,15 +43,9 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     public loadingService: LoadingService,
     private dialog: MatDialog) { }
 
-  ngOnInit() {
+  async ngOnInit() {
 
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-
-      if (this.isAdmin === true) {
-        this.isDisplayAppToMatchConfig();
-      }
-    });
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
 
     // Get Etag and total from Browse Substance Results
@@ -108,7 +102,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension, source);
-      if (this.isAdmin === true) {
+      if (this.canUpdate) {
         let type = '';
         let entity = '';
         if (source != null) {

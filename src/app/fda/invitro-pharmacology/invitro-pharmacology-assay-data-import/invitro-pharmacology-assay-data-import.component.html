@@ -1,7 +1,7 @@
 <div class="top-fixed">
   <div class="actions-container">
 
-    <span *ngIf="isAdmin">
+    <span *ngIf="canCreate">
       <button mat-flat-button color="primary" (click)="showJSON()">Show JSON</button>
     </span>
 
@@ -9,7 +9,7 @@
 </div> <!-- div class=top-fixed -->
 
 
-<div *ngIf="isAdmin; else noLogin">
+<div *ngIf="canCreate; else noLogin">
 
   <div class="form-content-container">
     <div class="scrollable-container">
@@ -294,7 +294,7 @@
   </div>
   <br><br>
 
-</div> <!-- isAdmin -->
+</div> 
 <ng-template #noLogin>
   <div class="margintop150px marginleft20px font18 colorred">
     Please Login to import Assay Data.

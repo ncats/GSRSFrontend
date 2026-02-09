@@ -23,7 +23,7 @@ import {SubstanceDetail, SubstanceRelationship} from '@gsrs-core/substance/subst
 export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
   test: any;
-  isAdmin = false;
+  canExportRelationships: boolean = false;
   privateExport = false;
   etag = '';
   etagDetails: any;
@@ -48,14 +48,9 @@ export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewIn
     @Input() substance: any;
 
 
-  ngOnInit() {
-
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-
-      if (this.isAdmin === true) {
-      }
-    });
+  async ngOnInit() {
+    this.canExportRelationships = await this.authService.hasSpecificPrivilege("Export Relationships");
+    
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
   }
 
@@ -85,7 +80,7 @@ export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewIn
       if (this.etag) {
         const extension = 'relationships.txt';
         const url = this.getApiExportUrl(this.etag, extension, source);
-        if (this.isAdmin === true) {
+        if (this.canExportRelationships) {
           let type = '';
           if (source != null) {
             if (source === 'relationships') {

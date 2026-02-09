@@ -65,7 +65,7 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
   newSavedAssaySet: any;
   title: string;
   message: string;
-  isAdmin = false;
+  canCreate = false;
   username = null;
   isLoading = false;
   isBuildFromExistingSet = false;
@@ -101,13 +101,9 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(){
 
-    // Check if user has either Admin or Updater role
-    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
-      this.isAdmin = response;
-    });
-
+    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
     // Get Username
     this.username = this.authService.getUser();
 

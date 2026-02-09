@@ -74,7 +74,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   resultMessage = '';
   disableImportButton = "true";
   isExcelDataLoaded = false;
-  isAdmin = false;
+  canUpdate: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -91,13 +91,10 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.titleService.setTitle("IVP Import Screening Data");
 
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
-    
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.initializeRequiredFieldArray();
   }
 

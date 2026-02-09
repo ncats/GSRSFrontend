@@ -40,7 +40,9 @@ export class BaseComponent implements OnInit, OnDestroy {
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  isAdmin = false;
+  canConfigureSystem: boolean = false;
+  canUserImportData: boolean = false;
+  canManageCVs: boolean = false;
   contactEmail: string;
   version?: string;
   versionTooltipMessage = '';
@@ -116,31 +118,11 @@ export class BaseComponent implements OnInit, OnDestroy {
 
       if (text && text !== this.selectedText) {
         this.selectedText = text;
-       /* this.bottomSheetOpenTimer = setTimeout(() => {
-          const subscription = this.openSearchBottomSheet(text).subscribe(() => {
-            setTimeout(() => {
-              if (selection != null && range != null) {
-                selection.removeAllRanges();
-                selection.addRange(range);
-              } else if (selectionStart != null) {
-                activeEl.focus();
-                activeEl.selectionStart = selectionStart;
-                activeEl.selectionEnd = selectionEnd;
-              }
-            });
-            subscription.unsubscribe();
-          }, () => {
-            subscription.unsubscribe();
-          }, () => {
-            this.selectedText = '';
-            subscription.unsubscribe();
-          });
-        }, 600);*/
       }
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 
@@ -170,16 +152,12 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.loadedComponents = null;
       }
     }
-    const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(roleSubscription);
-
-    const regSubscription =
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
-      this.canRegister = response;
-    });
-    this.subscriptions.push(regSubscription);
+    this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
+    this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
+    this.canRegister=await this.authService.canEditData();
+    this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");
+    //not sure if we need this.
+    //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
 
     this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
@@ -529,7 +507,6 @@ export class BaseComponent implements OnInit, OnDestroy {
 
       if (response) {
            this.loadingService.setLoading(true);
-         //  console.log(response.json);
 
           const read = response.substance;
 

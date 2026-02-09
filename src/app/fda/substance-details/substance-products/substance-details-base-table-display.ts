@@ -12,7 +12,6 @@ export class SubstanceDetailsBaseTableDisplay
 {
   totalRecords: number = 0;
   public results: Array<any> = [];
-  isAdmin = false;
   exportUrl: string;
 
   @Input() bdnum: string;

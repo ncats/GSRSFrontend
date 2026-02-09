@@ -217,7 +217,7 @@
         </mat-form-field>
 
         <!-- Export Product Button -->
-        <div class="export" *ngIf="isAdmin">
+        <div class="export" *ngIf="canExport">
           <mat-menu #exportMenu="matMenu">
             <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.extension)">
               {{option.displayname}}
@@ -287,14 +287,14 @@
                 <td class="width100px" mat-cell *matCellDef="let product">
 
                   <!-- View GSRS record button -->
-                  <a [routerLink]="['/product', product.id]" target="_blank" *ngIf="isAdmin"
+                  <a [routerLink]="['/product', product.id]" target="_blank" *ngIf="canUpdate"
                     matTooltip='View GSRS Product Record'>
                     View
                   </a>
 
                   <!-- Edit GSRS record button -->
                   &nbsp;
-                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="canUpdate"
                     matTooltip='Edit GSRS Product Record'>
                     <mat-icon svgIcon="edit"></mat-icon>
                   </a>
@@ -518,7 +518,7 @@
                 <!-- ***** BUTTONS BEGIN ***** -->
 
                 <!-- Edit GSRS record button -->
-                <div class="" *ngIf="isAdmin">
+                <div class="" *ngIf="canUpdate">
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <a [routerLink]="['/product', product.id, 'edit']" target="_blank"
                     matTooltip='Edit GSRS Product Record'>
@@ -526,7 +526,7 @@
                   </a>
                 </div>
 
-                <div class="margintopneg10" *ngIf="isAdmin">
+                <div class="margintopneg10" *ngIf="canUpdate">
                   <!-- Show Json -->
                   <span *ngIf="product && product.id">
                     <a button mat-icon-button color="primary" (click)="showJSON(indexProd)" matTooltip='Show JSON'>
@@ -536,7 +536,7 @@
                 </div>
 
                 <!-- Download Json For this record -->
-                <div class="margintopneg10" *ngIf="isAdmin">
+                <div class="margintopneg10" *ngIf="canUpdate">
                   <span *ngIf="product && product.id">
                     <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON(indexProd)"
                       download="{{jsonFileName}}.json" matTooltip='Download JSON'>
@@ -545,16 +545,16 @@
                   </span>
                 </div>
 
-                <div class="margintopneg10" *ngIf="isAdmin">
+                <div class="margintopneg10" *ngIf="canCreate">
                   <!-- Copy Product to New Register -->
                   <a mat-icon-button [routerLink]="['/product/register']" [queryParams]="{copyId:product.id}"
-                    matTooltip='copy this Product to new Product registration form' *ngIf="isAdmin">
+                    matTooltip='copy this Product to new Product registration form' *ngIf="canCreate">
                     <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
                   </a>
                 </div>
                 <div>
                   <span>
-                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="canUpdate">
                     </mat-icon>
                   </span>
                 </div>
@@ -642,7 +642,7 @@
                             <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window">
                             </mat-icon>
                           </span>
-  
+
                           <!-- Display PhPID link, if Product Code Type is 'PhPID'-->
                           <span *ngIf="prodCode._phpIdUrl">
                             <a href="{{prodCode._phpIdUrl}}" target="_blank" alt="Go to PhPID Publish website"
@@ -840,19 +840,23 @@
                                   {{prodIngred._ingredientName}}
                                 </ng-template>
 
+                                <!-- Show Substance Type -->
+                                <div *ngIf="prodIngred._substanceClass">
+                                  &nbsp;&nbsp;
+                                  <span class="colororange">
+                                    <span
+                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                    </span>
+                                  </span>
+                                </div>
+
                                 <!-- Show Structures-->
-                                <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
+                                <div class="margintopneg15" *ngIf="prodIngred._substanceUuid">
                                   <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                                     (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">
                                     <mat-icon matTooltip="Show Substance chemical structure">analytics
                                     </mat-icon>
                                   </button>
-
-                                  <!-- Show Approval ID-->
-                                  <!--
-                                  <mat-icon class="margintop5px font16px"
-                                    matTooltip="Approval ID: {{prodIngred._approvalId}}">verified</mat-icon>
-                                  -->
                                 </div>
 
                               </div> <!-- class=divflex -->
@@ -961,6 +965,17 @@
                                   {{prodIngred._ingredientName}}
                                 </ng-template>
 
+                                <!-- Show Substance Class/Substance Type -->
+                                <div *ngIf="prodIngred._substanceClass">
+                                  &nbsp;&nbsp;
+                                  <span class="colororange">
+                                    <span
+                                      [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                                    </span>
+                                  </span>
+                                </div>
+
+                                <!-- Show Structures -->
                                 <div class="margintopneg15 marginleft10px" *ngIf="prodIngred._substanceUuid">
                                   <button mat-icon-button color="primary" style="padding:0px;margin:0px;"
                                     (click)="openImageModal(prodIngred._substanceUuid, prodIngred._ingredientName, prodIngred._approvalId)">

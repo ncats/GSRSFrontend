@@ -20,7 +20,7 @@ export class SubstanceHierarchyComponent implements OnInit {
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode: HierarchyNode;
   activeNode: any;
-  isAdmin: boolean;
+  canEdit: boolean;
   loading = true;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
   constructor(
@@ -28,7 +28,7 @@ export class SubstanceHierarchyComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.selfNode = {
       'id': 0,
       'type': 'ROOT',
@@ -47,7 +47,7 @@ export class SubstanceHierarchyComponent implements OnInit {
        this.loadHierarchy([this.selfNode]);
       });
       
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+      this.canEdit = await this.authService.hasSpecificPrivilege("Edit");
   }
 
   loadHierarchy(orig: any): void {

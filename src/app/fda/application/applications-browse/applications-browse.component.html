@@ -213,7 +213,7 @@
         </mat-form-field>
 
         <!-- Export Application Button -->
-        <div class="export" *ngIf="isAdmin">
+        <div class="export" *ngIf="canExport">
           <button matTooltip="Export Search Results" mat-button (click)="export()"
             class="mat-button export-button mat-raised-button">
             <mat-icon svgIcon="get_app"></mat-icon> Export
@@ -275,7 +275,7 @@
                       {{application.appType}}
                       <!--&nbsp;{{application.appNumber}} -->
                     </a>&nbsp;&nbsp;
-                    <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                    <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canUpdate"
                       matTooltip='Edit Application Record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
@@ -396,7 +396,7 @@
                   {{application.appType}}&nbsp;{{application.appNumber}}
                 </a>
                 &nbsp;&nbsp;&nbsp;
-                <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canUpdate"
                   matTooltip='Edit GSRS Application Record'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>
@@ -726,7 +726,6 @@
 
                 <div class="width30percent">
 
-                  <!--  *ngIf="isAdmin" -->
                   <span>
                     <div class="row">
                       <div class="row-property-key-5">

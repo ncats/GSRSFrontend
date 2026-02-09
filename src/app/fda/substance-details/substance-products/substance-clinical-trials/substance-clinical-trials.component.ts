@@ -52,6 +52,8 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     'outcomemeasures'
   ];
 
+  canExport: boolean = false;
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private clinicalTrialService: ClinicalTrialService,
@@ -64,11 +66,9 @@ export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableD
     super(gaService, clinicalTrialService);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     if (this.substanceUuid) {
      this.getSubstanceClinicalTrials(null, 'initial');
     }

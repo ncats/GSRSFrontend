@@ -63,7 +63,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   isAllRecordValidated = false;
   isAllRecordSaved = false;
   isLoading = false;
-  isAdmin = false;
+  canCreate: boolean = false;
 
   targetNameCheckCompleted = false;
   humanHomologCheckCompleted = false;
@@ -96,12 +96,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  ngOnInit(): void {
-    // Check if user has either Admin or Updater role
-    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
-      this.isAdmin = response;
-    });
-
+  async ngOnInit() {
+    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.titleService.setTitle("IVP Import Assay Data");

@@ -55,7 +55,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   public smiles: string;
   private argsHash?: number;
   public auth?: Auth;
-  showAudit: boolean;
   public order: string;
   // public sortValues = searchSortValues;
   searchText: string[] = [];
@@ -63,7 +62,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   toggle: Array<boolean> = [];
   private subscriptions: Array<Subscription> = [];
   dataSource = new MatTableDataSource<ClinicalTrial>([]);
-  isAdmin: boolean;
+  canDelete: boolean = false;
   showExactMatches = false;
   private isComponentInit = false;
 
@@ -94,7 +93,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private titleService: Title
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -115,16 +114,15 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     }
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
     const authSubscription = this.authService.getAuth().subscribe(auth => {
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+
       // testing
-      // this.isAdmin = true;
-      // this.showAudit = this.authService.hasRoles('admin');
-       if (this.isAdmin) {
-        this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
-       } else {
+      if (this.canDelete) {
+       this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
+      } else {
          this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
-       }
+      }
     });
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},

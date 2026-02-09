@@ -92,12 +92,15 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   private overlayContainer: HTMLElement;
   serverError: boolean;
   canApprove: boolean;
+  userCanApprove: boolean;
+  userCanMakePublic: boolean = false;
   approving: boolean;
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
-  isAdmin: boolean;
-  isUpdater: boolean;
+  canUpdate: boolean;
+  canMakeAdvancedEdits: boolean;
+  
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -306,7 +309,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     if(this.activatedRoute.snapshot.routeConfig.path === 'structure-features') {
       this.featuresOnly = true;
     }
@@ -322,9 +325,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     }
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
-    }
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+    }  
+    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
+    this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
+    this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
+    this.userCanMakePublic = await this.authService.hasSpecificPrivilege('Make Records Public');
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     if(this.location.path().includes('chemical-simplified')) {

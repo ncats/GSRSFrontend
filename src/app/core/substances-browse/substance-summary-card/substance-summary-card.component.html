@@ -9,7 +9,7 @@
     <span class="middle-fill"></span>
     <div style = "min-width:260px;">
 
-        <div style = "font-size:16px; margin-top: -15px; margin-right: -15px;" *ngIf = "canCreate || isAdmin">
+        <div style = "font-size:16px; margin-top: -15px; margin-right: -15px;" *ngIf = "canCreate || canUpdate">
             <mat-form-field *ngIf = 'userLists' class = "select-list">
               <mat-label>Add to List</mat-label>
               <mat-select [(ngModel)]="selectedList" name="Add to List" >
@@ -23,7 +23,7 @@
 
             </span>
             <span style = "margin-right:50px;" >
-                <button class = "mat-button" *ngIf = "canCreate || isAdmin" (click) = "createList()" color = "primary">New List</button>
+                <button class = "mat-button" *ngIf = "canCreate || canUpdate" (click) = "createList()" color = "primary">New List</button>
 
               </span>
 
@@ -32,7 +32,6 @@
               {{substance.approvalID}}
             </div>
           <br/>
-
 
   </div>
   </mat-card-title>
@@ -84,33 +83,16 @@
             <mat-icon svgIcon="search"></mat-icon>
           </button>
 
-          <!--
-          <button class="summary-button" aria-label="Advanced Search" mat-icon-button [matMenuTriggerFor]="advancedSearchMenu">
-            <mat-icon svgIcon="youtube"></mat-icon>
-          </button>
-          -->
-
           <a class = "mat-icon-button" aria-label = "Advanced Search" *ngIf="substance.structure"
             class = "summary-button" mat-icon-button
             [routerLink]="['/advanced-search']" [queryParams]="{structure : substance.structure.id}" matTooltip='Transfer Structure to Advanced Search'>
             <mat-icon svgIcon="youtube"></mat-icon>
           </a>
 
-          <!--
-          <a class="mat-icon-button" matTooltip="edit substance" class="summary-button" aria-label="edit substance"
-          </a>
-          -->
           <a class="mat-icon-button" matTooltip="edit substance" aria-label="edit substance" class="summary-button"
-            *ngIf="isAdmin" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
+            *ngIf="canUpdate" mat-icon-button [routerLink]="['/substances', substance.uuid, 'edit']">
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
-
-       <!--  Reverting back from button to link to allow right click -> new tab opening -->
-
-       <!--   <button aria-label="Edit Substance" class="summary-button" *ngIf="isAdmin" mat-icon-button
-            [routerLink]="['/substances', substance.uuid, 'edit']">
-            <mat-icon svgIcon="edit"></mat-icon>
-          </button>-->
 
           <button aria-label="Copy file" class="summary-button" *ngIf="canCreate" mat-icon-button
             [matMenuTriggerFor]="editMenu">
@@ -429,9 +411,6 @@
     </div>
     <div>
       <ng-template appCardDynamicSection></ng-template>
-      <!--
-      <ng-template appBrowseHeaderDynamicSection></ng-template>
-      -->
     </div>
   </mat-card-content>
 </mat-card>

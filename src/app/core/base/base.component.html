@@ -21,14 +21,6 @@
     >
   </div>
 
-  <!-- <span class="nav-big">
-    <span class="nav-item" *ngFor="let navItem of navItems">
-      <a [routerLink]="['/' + navItem.path]" [ngClass]="{active: mainPathSegment == navItem.path}">
-        {{navItem.display}}
-      </a>
-    </span>
-  </span> -->
-  <!-- <span class="middle-fill"></span> -->
   <span class="nav-small">
     <button
       class="top-button"
@@ -110,7 +102,9 @@
           </mat-menu>
         </ng-container>
       </ng-container>
-      <a mat-menu-item *ngIf="isAdmin" routerLink="/admin"> Admin Panel </a>
+      <a mat-menu-item *ngIf="canConfigureSystem" routerLink="/admin">
+        Admin Panel
+      </a>
     </mat-menu>
   </span>
   <div>
@@ -361,7 +355,16 @@
       <a mat-menu-item (click)="viewDrafts()">
         <span>Saved Edit Drafts</span>
       </a>
-      <a routerLink="/admin" mat-menu-item *ngIf="isAdmin">
+      <a routerLink="/admin/import" mat-menu-item *ngIf="canUserImportData && !canConfigureSystem">
+        <span>Import Data</span>
+      </a>
+      <a routerLink="/admin/data" mat-menu-item *ngIf="canUserImportData && !canConfigureSystem">
+        <span>Legacy Data Import</span>
+      </a>
+      <a routerLink="/admin/cv" mat-menu-item *ngIf="canManageCVs && !canConfigureSystem">
+        <span>CV Management</span>
+      </a>
+      <a routerLink="/admin" mat-menu-item *ngIf="canConfigureSystem">
         <span>Admin Panel</span>
       </a>
       <a

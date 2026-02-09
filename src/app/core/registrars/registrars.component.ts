@@ -45,7 +45,7 @@ export class RegistrarsComponent implements OnInit {
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.environment = this.configService.environment;
     this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
@@ -53,9 +53,7 @@ export class RegistrarsComponent implements OnInit {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
     this.appId = this.configService.environment.appId;
 
-    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
-      this.isAuthenticated = response;
-    });
+    this.isAuthenticated = await this.authService.hasSpecificPrivilege('Edit');
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.customLinks1 = this.configService.configData.registrarDynamicLinks;

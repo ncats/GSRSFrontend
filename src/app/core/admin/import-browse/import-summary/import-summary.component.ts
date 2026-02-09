@@ -39,7 +39,6 @@ export class ImportSummaryComponent implements OnInit {
   @Output() bulkSelect = new EventEmitter < any > ();
   privateDummyID: string;
   showAudit = false;
-  isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
   canCreate = false; //meant to allow creating new records
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
@@ -100,21 +99,11 @@ export class ImportSummaryComponent implements OnInit {
   ) { }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getMatchSummary();
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-
-    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
-      if (response) {
-        this.isAdmin = response;
-      }
-    });
-    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'admin').pipe(take(1)).subscribe(response => {
-      if (response) {
-        this.canCreate = response;
-      }
-    });
+    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();
@@ -143,7 +132,6 @@ export class ImportSummaryComponent implements OnInit {
 
 
   matchFieldsToCount(matches: any) {
-    console.log(matches);
     matches.forEach(match => {
       let newArr: Array<any> = [];
       match.records.forEach(record => {
@@ -259,9 +247,7 @@ export class ImportSummaryComponent implements OnInit {
     if (substance != null) {
       this.privateSubstance = substance;
       this.codeSystems = substance.codes;
-     // console.log(substance);
       this.codes = substance.codes;
-    //  this.getStructureID();
     if (substance._metadata.importStatus.toUpperCase() === 'MERGED' || substance._metadata.importStatus.toUpperCase() === 'IMPORTED') {
       this.disabled = true;
     } else {
@@ -319,7 +305,6 @@ export class ImportSummaryComponent implements OnInit {
   }
 
   doAction(action: string, mergeID?: string) {
-    console.log(action);
     this.displayAction = action;
     this.loadingService.setLoading(true);
     this.adminService.stagedRecordSingleAction(this.privateSubstance._metadata.recordId, action).subscribe(result => {

@@ -55,8 +55,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   
   isLoggedIn = false;
   showDeprecated: boolean;
-  isAdmin = false;
-  showAudit = false;
   isPolling = true;
   
   private pollingInterval = 2500;
@@ -161,8 +159,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       } else {
         this.showDeprecated = false;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
     });
 
     this.qPageSize = 10;

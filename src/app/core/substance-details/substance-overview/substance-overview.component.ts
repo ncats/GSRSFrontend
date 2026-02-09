@@ -37,7 +37,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   versionControl = new FormControl('', Validators.required);
   versions: string[] = [];
   isEditable = false;
-  isAdmin = false;
+  canRestoreVersions = false;
+
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
   baseDomain: string;
@@ -72,18 +73,13 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
 
-   const rolesSubscription =  this.authService.hasAnyRolesAsync('updater', 'superUpdater').subscribe(canEdit => {
-      this.canEdit = canEdit;
-      this.isEditable = canEdit
+    this.canEdit=await this.authService.canEditData();
+    this.canRestoreVersions = await this.authService.hasSpecificPrivilege("Restore Previous Versions");
+    this.isEditable =this.canEdit
         && this.substance.substanceClass != null
         && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
-    });
-    const rolesSubscription2 =  this.authService.hasAnyRolesAsync('admin').subscribe(canEdit => {
-      this.isAdmin = canEdit;
-    });
-    this.subscriptions.push(rolesSubscription2);
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));

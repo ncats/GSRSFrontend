@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-import { Observable } from 'rxjs';
-import {Role} from '@gsrs-core/auth/auth.model';
 
 @Injectable()
 export class CanRegisterSubstanceForm implements CanActivate {
@@ -12,32 +10,26 @@ export class CanRegisterSubstanceForm implements CanActivate {
     private authService: AuthService
   ) {}
 
-  canActivate(
+  async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
-    return new Observable(observer => {
-      this.authService.getAuth().subscribe(auth => {
-        if (auth) {
-          this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry').subscribe(response => {
-            if (response) {
-              observer.next(true);
-              observer.complete();
-            } else {
-              observer.next(this.router.parseUrl('/browse-substance'));
-              observer.complete();
-            }
-          });
-        } else {
-          const navigationExtras: NavigationExtras = {
-            queryParams: {
-              path: state.url
-            }
-          };
-          observer.next(this.router.createUrlTree(['/login'], navigationExtras));
-          observer.complete();
+  ): Promise<boolean | UrlTree> {
+
+    const auth = this.authService.getAuth();
+    if (auth) {
+        const canCreate =await this.authService.hasSpecificPrivilege('Create');
+        if(canCreate){
+            return true;
+        }else {
+            return this.router.parseUrl('/browse-substance');
         }
-      });
-    });
+    } else {
+        const navigationExtras: NavigationExtras = {
+            queryParams: {
+                path: state.url
+            }
+        };
+        return this.router.createUrlTree(['/login'], navigationExtras);
+    }
   }
 }

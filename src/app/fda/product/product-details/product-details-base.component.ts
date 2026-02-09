@@ -55,7 +55,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   iconSrcPath: string;
   dailyMedUrlConfig = '';
   message = '';
-  isAdmin = false;
+  canUpdate: boolean = false;
   downloadJsonHref: any;
   jsonFilename: string;
   private overlayContainer: HTMLElement;
@@ -78,7 +78,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     public dialog: MatDialog,
     public sanitizer: DomSanitizer) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.loadingService.setLoading(true);
@@ -214,6 +214,14 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
                         } // if Substance is public
 
+                        // Substance Type, convert from 'Chemical' to 'C', and for other types also
+                        if (response.substanceClass) {
+                          let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.class === response.substanceClass);
+                          if (subClassIndex > -1) {
+                            elementIngred._substanceClass = this.generalService.substanceClassArray[subClassIndex].shortDisplay;
+                          }
+                        }
+
                         // if Ingredient Type exists
                         if (elementIngred.ingredientType) {
 
@@ -304,6 +312,16 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         }
       });
     }
+  }
+
+  getSubstanceClass(substanceClass: string): string {
+    if (substanceClass) {
+      let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.shortDisplay === substanceClass);
+      if (subClassIndex > -1) {
+        return "The Substance Type is " + this.generalService.substanceClassArray[subClassIndex].longDisplay;
+      }
+    }
+    return "";
   }
 
   sortProductCodes() {
@@ -574,6 +592,13 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     for (let i = 0; i < ingredStrenthDisplayHolders.length; i++) {
       if (ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay) {
         delete ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay;
+      }
+    }
+
+    const ingredSubstanceClassHolders = jp.query(old, '$..[?(@._substanceClass)]');
+    for (let i = 0; i < ingredSubstanceClassHolders.length; i++) {
+      if (ingredSubstanceClassHolders[i]._substanceClass) {
+        delete ingredSubstanceClassHolders[i]._substanceClass;
       }
     }
 

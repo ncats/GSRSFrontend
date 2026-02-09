@@ -37,7 +37,7 @@ import { adverseEventCvmSearchSortValues } from './adverse-events-cvm-search-sor
 
 export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventCvmOut: EventEmitter<number> = new EventEmitter<number>();
-  isAdmin: boolean;
+  canUpdate: boolean = false;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -109,7 +109,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventCvmFacets);
     // this.gaService.sendPageView('Browse Adverse Event Cvm');
 
@@ -137,8 +137,9 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+      
     });
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.subscriptions.push(authSubscription);
 
     this.isComponentInit = true;

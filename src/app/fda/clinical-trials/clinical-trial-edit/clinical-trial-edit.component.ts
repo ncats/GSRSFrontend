@@ -35,14 +35,12 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   defaultSubstanceKeyType = 'UUID';
   agencySubstanceKeyType = 'UUID';
 
-  isAdmin: boolean;
+  canUpdate: boolean = false;
   isTesting  = false;
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   public  _trialNumber: string;
   bulkInputValue = '';
-  // public facets: Array<Facet> = [];
-  // private _facetParams: { [facetName: string]: { [facetValueLabel: string]: boolean } } = {};
   pageIndex: number;
   pageSize: number;
   totalClinicalTrials: number;
@@ -67,15 +65,13 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
   ) {
   }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-      if (this.isAdmin) {
-        this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
-       } else {
-         this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
-       }
-    });
+  async ngOnInit() {
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    if (this.canUpdate) {
+      this.displayedColumns = ['id', 'name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link', 'delete'];
+    } else {
+      this.displayedColumns = ['name', 'substanceKey', 'protectedMatch', 'substanceRoles', 'orgSubstanceKey', 'link'];
+    }
     this.pageSize = 10;
     this.pageIndex = 0;
     this.activatedRoute.paramMap.subscribe(params => {
@@ -389,7 +385,6 @@ export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDest
         subscription.unsubscribe();
       }
     });
-    // this.facetManagerService.unregisterFacetSearchHandler();
   }
 
 

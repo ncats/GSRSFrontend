@@ -104,7 +104,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin = false;
+  canUpdate = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -221,7 +221,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.gaService.sendPageView('Browse Substances');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
@@ -288,11 +288,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       } else {
         this.showDeprecated = false;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
-      this.showUserLists = this.authService.hasAnyRoles('Updater', 'SuperUpdater', 'DataEntry');
-
+      
     });
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.showUserLists=this.canUpdate;
+    //todo: evaluate this!
+    this.showAudit =await this.authService.hasSpecificPrivilege('Restore Previous Versions');
+
+    
     if (deprecated && deprecated === 'true' && this.showAudit) {
       this.showDeprecated = true;
     }

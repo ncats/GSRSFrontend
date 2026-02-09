@@ -31,6 +31,18 @@ export class GeneralService extends BaseHttpService {
     this.apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
   }
 
+  // Array for Substance Class
+  substanceClassArray: any[] = [
+    { class: 'chemical', longDisplay: 'Chemical', shortDisplay: 'CH'},
+    { class: 'polymer', longDisplay: 'Polymer', shortDisplay: 'PO'},
+    { class: 'protein', longDisplay: 'Protein', shortDisplay: 'PR'},
+    { class: 'mixture', longDisplay: 'Mixture', shortDisplay: 'MI'},
+    { class: 'nucleicAcid', longDisplay: 'Nucleic Acid', shortDisplay: 'NA'},
+    { class: 'structurallyDiverse', longDisplay: 'Structurally Diverse', shortDisplay: 'SD'},
+    { class: 'concept', longDisplay: 'Concept', shortDisplay: 'CO'},
+    { class: 'specifiedSubstanceG1', longDisplay: 'Specified Substance Group 1', shortDisplay: 'SSG1'},
+  ];
+
   getSubstanceByAnyIdFullView(id: string): Observable<any> {
     const url = this.apiBaseUrl + 'substances(' + id + ')?view=full';
     return this.http.get<any>(url).pipe(
@@ -212,7 +224,7 @@ export class GeneralService extends BaseHttpService {
 
   getProductFacets(): Observable<FacetQueryResponse> {
     let url: string;
-   // url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse`;
+    // url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse`;
     return this.http.get<FacetQueryResponse>(url);
   }
 

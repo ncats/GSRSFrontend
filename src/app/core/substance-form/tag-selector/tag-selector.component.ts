@@ -33,7 +33,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   @ViewChild('tagsAuto', {static: true}) matAutocomplete: MatAutocomplete;
   optionsDictionary: { [dictionaryValue: string]: VocabularyTerm } = {};
   private overlayContainer: HTMLElement;
-  isAdmin: boolean;
+  canUpdateCV: boolean = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -44,9 +44,9 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
   ) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.isAdmin = this.authService.hasRoles('admin');
+    this.canUpdateCV = await this.authService.hasSpecificPrivilege('Manage CVs');
   }
 
   ngAfterViewInit() {
@@ -124,7 +124,7 @@ export class TagSelectorComponent implements OnInit, AfterViewInit {
       const addedTag = event.value.trim();
       this.privateTags.push(addedTag);
       this.tagsUpdate.emit(this.privateTags);
-      if (this.isAdmin && !this.inCV(this.allOptions, addedTag) && !this.disableCV) {
+      if (this.canUpdateCV && !this.inCV(this.allOptions, addedTag) && !this.disableCV) {
         if (confirm('Add new option to the CV?')) {
           const vocabSubscription = this.cvService.fetchFullVocabulary(this.cvDomain).subscribe ( response => {
             if (response.content && response.content.length > 0) {

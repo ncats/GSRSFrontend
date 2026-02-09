@@ -18,7 +18,6 @@ import { Application, SubstanceApplicationMatch } from '../../application/model/
 export class SubstanceApplicationMatchListComponent implements OnInit, AfterViewInit {
 
   id: string;
-  isAdmin = false;
   appMatchList: any;
   substanceNames: any;
   displayedColumns: string[] = ['Num', 'Action', 'Application Type', 'Application Number', 'Status', 'Application Sub Type', 'Product Name', 'Application Substance Key', 'Exact Match'];
@@ -44,10 +43,6 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    this.authService.hasRolesAsync('Admin').subscribe(response => {
-      this.isAdmin = response;
-    });
-
     this.id = this.activatedRoute.snapshot.params['id'];
 
     if (this.id) {

@@ -25,8 +25,6 @@ import { BulkSearch } from './bulk-search.model';
 })
   export class BulkSearchComponent implements OnInit, OnDestroy {
     loadedComponents: LoadedComponents;
-    showAudit: boolean;
-    isAdmin = false;
     isLoggedIn = false;
     showDeprecated = false;
     queryText: string;
@@ -83,8 +81,6 @@ import { BulkSearch } from './bulk-search.model';
         } else {
           this.showDeprecated = false;
         }
-        this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-        this.showAudit = this.authService.hasRoles('admin');
       });
 
       this.route.queryParams.subscribe(params => {

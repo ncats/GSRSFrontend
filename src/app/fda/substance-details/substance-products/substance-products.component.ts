@@ -77,6 +77,8 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   disableExport = false;
   etag = '';
   etagAllExport = '';
+  canExport: boolean = false;
+  canUpdate: boolean = false;
 
   public displayedColumns: string[] = [
     'view',
@@ -102,12 +104,10 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     super(gaService, productService);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     if (this.substance && this.substance.uuid) {
 
       // Get Substance UUID and Approval ID

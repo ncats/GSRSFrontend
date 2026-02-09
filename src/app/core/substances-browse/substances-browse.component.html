@@ -11,7 +11,7 @@
     <div class="sidenav-header-container">
       <mat-form-field
         style="margin-left: 30px"
-        *ngIf="isAdmin"
+        *ngIf="canUpdate"
         id="facetView"
         class="facetView"
       >
@@ -32,7 +32,7 @@
         *ngIf="
           isFacetsParamsInitialized &&
           isFacetsParamsInitialized === true &&
-          isAdmin
+          canUpdate
         "
       >
         <div *ngIf="showCrossEntitySearch == true">
@@ -932,14 +932,14 @@
                     <a
                       mat-menu-item
                       [routerLink]="['/substances', substance.uuid, 'edit']"
-                      *ngIf="isAdmin"
+                      *ngIf="canUpdate"
                       matTooltip="edit record"
                     >
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
 
                     <button
-                      *ngIf="isAdmin"
+                      *ngIf="canUpdate"
                       mat-icon-button
                       [matMenuTriggerFor]="editMenu"
                     >
@@ -1035,7 +1035,7 @@
                           substance.substanceClass
                         ]"
                         [queryParams]="{ copy: substance.uuid }"
-                        *ngIf="isAdmin"
+                        *ngIf="canUpdate"
                         matTooltip="copy substance to new registration form"
                       >
                         <span>Copy Substance to New Form</span>
@@ -1050,7 +1050,7 @@
                           copy: substance.uuid,
                           copyType: 'definition'
                         }"
-                        *ngIf="isAdmin"
+                        *ngIf="canUpdate"
                         matTooltip="copy definition to new registration form"
                       >
                         <span>Copy Definition to New Form</span>
@@ -1192,14 +1192,14 @@
                           aria-label="edit substance"
                           mat-icon-button
                           [routerLink]="['/substances', substance.uuid, 'edit']"
-                          *ngIf="isAdmin"
+                          *ngIf="canUpdate"
                           matTooltip="edit record"
                         >
                           <mat-icon svgIcon="edit"></mat-icon>
                         </a>
 
                         <button
-                          *ngIf="isAdmin"
+                          *ngIf="canUpdate"
                           mat-icon-button
                           [matMenuTriggerFor]="editMenu"
                         >
@@ -1290,7 +1290,7 @@
                         substance.substanceClass
                       ]"
                       [queryParams]="{ copy: substance.uuid }"
-                      *ngIf="isAdmin"
+                      *ngIf="canUpdate"
                       matTooltip="copy substance to new registration form"
                     >
                       <span>Copy Substance to New Form</span>
@@ -1305,7 +1305,7 @@
                         copy: substance.uuid,
                         copyType: 'definition'
                       }"
-                      *ngIf="isAdmin"
+                      *ngIf="canUpdate"
                       matTooltip="copy definition to new registration form"
                     >
                       <span>Copy Definition to New Form</span>
@@ -1395,7 +1395,6 @@
         may close this dialog to browse the incomplete results.
       </div>
       <br /><br />
-      <!--<button mat-button class = "primary" (click) = "pauseStructureSearch = !pauseStructureSearch">{{pauseStructureSearch ? 'RESUME':'PAUSE'}}</button>-->
     </div>
     <mat-dialog-actions
       ><span class="middle-fill"></span

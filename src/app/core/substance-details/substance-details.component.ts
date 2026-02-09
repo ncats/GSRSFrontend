@@ -320,6 +320,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private handleSubstanceRetrivalError() {
+    console.log(`in handleSubstanceRetrivalError`);
     const notification: AppNotification = {
       message: 'The web address above is incorrect or the substance you\'re trying to see doesn\'t exist. We\'re forwarding you to Browse Substances',
       type: NotificationType.error,

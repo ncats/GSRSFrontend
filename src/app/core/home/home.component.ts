@@ -22,7 +22,6 @@ import { UsefulLink } from '../config/config.model';
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   environment: Environment;
   baseDomain: string;
-  isAuthenticated = false;
   contactEmail: string;
   homeHeader: string;
   homeContents: string;
@@ -117,9 +116,6 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/`;
 
 
-    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'Admin').subscribe(response => {
-      this.isAuthenticated = response;
-    });
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.customLinks = this.configService.configData.homeDynamicLinks || [];

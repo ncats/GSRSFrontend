@@ -10,17 +10,17 @@
           <div>
             Application Details
             &nbsp;&nbsp;&nbsp;
-            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canEdit"
               matTooltip='Edit GSRS Application Record (opens in new window)'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
             <span>
-              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="canEdit">
               </mat-icon>
             </span>
           </div>
 
-          <div class="width650px textalignright font11px" *ngIf="isAdmin">
+          <div class="width650px textalignright font11px" *ngIf="canEdit">
             <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Create Date:</span>
             {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;

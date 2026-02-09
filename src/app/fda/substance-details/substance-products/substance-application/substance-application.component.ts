@@ -54,6 +54,8 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     'appStatus',
     'applicationSubType'
   ];
+  canExport: boolean = false;
+  canUpdate: boolean = false;
 
   constructor(
     private router: Router,
@@ -67,10 +69,9 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     super(gaService, applicationService);
   }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
+  async ngOnInit() {
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit')
 
     if (this.bdnum) {
       this.getApplicationCenterList();

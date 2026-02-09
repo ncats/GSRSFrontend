@@ -38,8 +38,8 @@ export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
   @Output() openImage = new EventEmitter<SubstanceSummary>();
   @Input() showAudit: boolean;
-  isAdmin = false;  //this shouldn't be called "isAdmin", it's typically used to mean "canUpdate". Should fix for future devs.
   canCreate = false; //meant to allow creating new records
+  canUpdate = false;
   subunits?: Array<Subunit>;
   @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
   @Input() codeSystemNames?: Array<string>;
@@ -79,18 +79,10 @@ export class SubstanceSummaryCardComponent implements OnInit {
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.authService.hasAnyRolesAsync('Updater', 'SuperUpdater', 'Approver', 'admin').pipe(take(1)).subscribe(response => {
-      if (response) {
-        this.isAdmin = response;
-      }
-    });
-    this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry', 'admin').pipe(take(1)).subscribe(response => {
-      if (response) {
-        this.canCreate = response;
-      }
-    });
+    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
+    this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     if (this.substance.protein) {
       this.subunits = this.substance.protein.subunits;
       this.getAlignments();

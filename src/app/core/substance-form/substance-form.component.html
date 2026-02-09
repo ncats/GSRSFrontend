@@ -58,7 +58,7 @@
         ></mat-icon>
       </button>
       <div
-        *ngIf="isAdmin === true || isUpdater === true"
+        *ngIf="canMakeAdvancedEdits === true || canUpdate === true"
         class="advanced-features"
       >
         <div class="admin-functions">
@@ -72,22 +72,22 @@
               disableOptionCentering
             >
               <ng-container>
-                <mat-option value="changeClass" [disabled]="!id">
+                <mat-option value="changeClass" [disabled]="!id" *ngIf="userCanApprove">
                   Change Substance Class
                 </mat-option>
-                <mat-option value="approved" [disabled]="status === 'approved'">
+                <mat-option value="approved" [disabled]="status === 'approved'" *ngIf="userCanApprove">
                   Change Status to approved
                 </mat-option>
-                <mat-option value="pending" [disabled]="status === 'pending'">
+                <mat-option value="pending" [disabled]="status === 'pending'" *ngIf="userCanApprove">
                   Change Status to pending
                 </mat-option>
-                <mat-option value="setPrivate">
+                <mat-option value="setPrivate" *ngIf="userCanMakePublic">
                   Set Definition to private
                 </mat-option>
-                <mat-option value="setPublic">
+                <mat-option value="setPublic" *ngIf="userCanMakePublic">
                   Set Definition to public
                 </mat-option>
-                <mat-option value="unapprove">
+                <mat-option value="unapprove" *ngIf="userCanApprove">
                   Un-approve record (Remove approval ID)
                 </mat-option>
                 <mat-option
@@ -98,21 +98,25 @@
                     (substanceClass === 'concept' &&
                       UNII === 'non-approved record')
                   "
+                  *ngIf="userCanApprove"
                 >
                   Change Approval ID
                 </mat-option>
                 <mat-option
                   value="concept"
                   [disabled]="substanceClass != 'concept'"
+                  *ngIf="userCanApprove"
                 >
                   Set concept status to non-approved
                 </mat-option>
-                <mat-option value="merge"> Merge subconcept </mat-option>
-                <mat-option value="switch">
+                <mat-option value="merge" *ngIf="userCanApprove">
+                  Merge subconcept
+                </mat-option>
+                <mat-option value="switch" *ngIf="userCanMakePublic">
                   Switch primary and alt definitions
                 </mat-option>
               </ng-container>
-              <ng-container *ngIf="isAdmin === true || isUpdater === true">
+              <ng-container *ngIf="canUpdate === true">
                 <mat-option
                   value="glyco"
                   [disabled]="substanceClass !== 'protein'"
@@ -127,6 +131,7 @@
                 </mat-option>
                 <mat-option
                   value="fragment"
+                  *ngIf="canUpdate"
                   [disabled]="
                     substanceClass != 'protein' &&
                     substanceClass != 'nucleicAcid'
@@ -134,10 +139,10 @@
                 >
                   Register a Fragment
                 </mat-option>
-                <mat-option value="regenRefs">
+                <mat-option value="regenRefs" *ngIf="canUpdate">
                   Regenerate reference UUIDs
                 </mat-option>
-                <mat-option value="regenUUID">
+                <mat-option value="regenUUID" *ngIf="canUpdate">
                   Regenerate substance UUID
                 </mat-option>
               </ng-container>
@@ -231,6 +236,7 @@
         class="validate-button"
         [disabled]="!canApprove || approving"
         *ngIf="
+          userCanApprove &&
           definition &&
           (definition.substanceClass !== 'concept' || useApprovalAPI) &&
           !definition.approvalID &&
