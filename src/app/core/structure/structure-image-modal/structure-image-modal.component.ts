@@ -24,6 +24,7 @@ export class StructureImageModalComponent implements OnInit {
   showSubstanceSelector = false;
   gsrsHomeBaseUrl = '';
   inchiNote = false;
+  isDraft = false;
 
   constructor(
     private configService: ConfigService,
@@ -78,6 +79,8 @@ export class StructureImageModalComponent implements OnInit {
     if (this.data.component && this.data.component === 'substanceSelector') {
       this.showSubstanceSelector = true;
     }
+
+    this.isDraft = this.data && this.data.isDraft ? this.data.isDraft : false;
   }
 
   dismissDialog(): void {

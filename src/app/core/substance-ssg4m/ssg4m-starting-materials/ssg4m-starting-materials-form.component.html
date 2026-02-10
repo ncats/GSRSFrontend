@@ -18,17 +18,18 @@
       <div class="padtop10px related-substance"
         *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
         <!-- show DB search selector only when this is NOT a draft (drafts have a temporary $$tmpStructureId) -->
-        <ng-container *ngIf="!startingMaterial.$$tmpStructureId">
+        <!-- <ng-container *ngIf="!startingMaterial.$$tmpStructureId"> -->
           <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+            (draftSelected)="draftSubstanceSelected($event)"
             eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header=""
-            [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
+            [subuuid]="relatedSubstanceUuid" [showMorelinks]="true" [showDraftOption]="true">
           </app-substance-selector>
-        </ng-container>
+        <!-- </ng-container> -->
 
-        <!-- Render interpreted structure for drafts (temporary structure id stored on the model) -->
+        <!-- Render interpreted structure for drafts (temporary structure id stored on the model)
         <div class="related-substance-image" *ngIf="startingMaterial.$$tmpStructureId">
           <img appSubstanceImage [entityId]="startingMaterial.$$tmpStructureId" [size]="150" />
-        </div>
+        </div> -->
       </div>
     </div> <!-- FIRST COLUMN END -->
 

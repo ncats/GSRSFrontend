@@ -65,13 +65,13 @@
                               <b>+</b>
                             </div>
                             <a class="zoom"
-                              (click)="openImageModal(startingMaterial.substanceName?.refuuid || startingMaterial.$$tmpStructureId, startingMaterial.substanceName?.approvalID, startingMaterial.substanceName?.refPname || startingMaterial.verbatimName)">
-                              <img appSubstanceImage [entityId]="startingMaterial.substanceName?.refuuid || startingMaterial.$$tmpStructureId">
+                              (click)="openImageModal(startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid, startingMaterial.substanceName?.approvalID, startingMaterial.substanceName?.refPname || startingMaterial.verbatimName)">
+                              <img appSubstanceImage [entityId]="startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid">
                             </a>
 
                             <div>
                               <span *ngIf="startingMaterial.substanceName.refPname">
-                                <a href="" (click)="openImageModal(startingMaterial.substanceName?.refuuid || startingMaterial.$$tmpStructureId, startingMaterial.substanceName?.approvalID, startingMaterial.substanceName?.refPname || startingMaterial.verbatimName);
+                                <a href="" (click)="openImageModal(startingMaterial.$$tmpStructureId || startingMaterial.substanceName?.refuuid, startingMaterial.substanceName?.approvalID, startingMaterial.substanceName?.refPname || startingMaterial.verbatimName);
                                false">
                                   {{startingMaterial.substanceName.refPname}}
                                 </a>
@@ -113,13 +113,13 @@
                                   <div class="margintopneg5px">
                                     <!-- Display Structure when rollover icon -->
                                     <button mat-button
-                                      (click)="openImageModal(processingMaterial.substanceName?.refuuid || processingMaterial.$$tmpStructureId, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
+                                      (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
                                       <mat-icon class="colorblue fontsize14px">info</mat-icon>
                                     </button>
                                   </div>
                                   <div>
                                     <span *ngIf="processingMaterial.substanceName.refPname">
-                                      <a href="" (click)="openImageModal(processingMaterial.substanceName?.refuuid || processingMaterial.$$tmpStructureId, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName);
+                                      <a href="" (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName);
                                      false">
                                         <b>{{processingMaterial.substanceName.refPname}}</b>
                                       </a>
@@ -162,7 +162,7 @@
                                   <div class="margintopneg5px">
                                     <!-- Display Structure when rollover icon -->
                                     <button mat-button
-                                      (click)="openImageModal(processingMaterial.substanceName?.refuuid || processingMaterial.$$tmpStructureId, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
+                                      (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName)">
                                       <mat-icon class="colorblue fontsize14px">info</mat-icon>
                                     </button>
                                   </div>
@@ -174,7 +174,7 @@
                                   </a>
                                   -->
                                     <span *ngIf="processingMaterial.substanceName.refPname">
-                                      <a href="" (click)="openImageModal(processingMaterial.substanceName?.refuuid || processingMaterial.$$tmpStructureId, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName);
+                                      <a href="" (click)="openImageModal(processingMaterial.$$tmpStructureId || processingMaterial.substanceName?.refuuid, processingMaterial.substanceName?.approvalID, processingMaterial.substanceName?.refPname || processingMaterial.verbatimName);
                                      false">
                                         <b>{{processingMaterial.substanceName.refPname}}</b>
                                       </a>
@@ -221,8 +221,8 @@
                               <b>+</b>
                             </div>
                             <a class="zoom"
-                              (click)="openImageModal(resultingMaterial.substanceName?.refuuid || resultingMaterial.$$tmpStructureId, resultingMaterial.substanceName?.approvalID, resultingMaterial.substanceName?.refPname || resultingMaterial.verbatimName)">
-                              <img appSubstanceImage [entityId]="resultingMaterial.substanceName?.refuuid || resultingMaterial.$$tmpStructureId">
+                              (click)="openImageModal(resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid, resultingMaterial.substanceName?.approvalID, resultingMaterial.substanceName?.refPname || resultingMaterial.verbatimName)">
+                              <img appSubstanceImage [entityId]="resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid">
                             </a>
                             <div>
                               <!--
@@ -231,7 +231,7 @@
                             </a>
                             -->
                               <span *ngIf="resultingMaterial.substanceName.refPname">
-                                <a href="" (click)="openImageModal(resultingMaterial.substanceName?.refuuid || resultingMaterial.$$tmpStructureId, resultingMaterial.substanceName?.approvalID, resultingMaterial.substanceName?.refPname || resultingMaterial.verbatimName);
+                                <a href="" (click)="openImageModal(resultingMaterial.$$tmpStructureId || resultingMaterial.substanceName?.refuuid, resultingMaterial.substanceName?.approvalID, resultingMaterial.substanceName?.refPname || resultingMaterial.verbatimName);
                                false">
                                   {{resultingMaterial.substanceName.refPname}}
                                 </a>

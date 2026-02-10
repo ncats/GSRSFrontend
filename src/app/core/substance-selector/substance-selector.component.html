@@ -31,12 +31,19 @@
       <span class="approval-id" *ngIf="selectedSubstance.approvalID">
         {{selectedSubstance.approvalID}}
       </span>
+      <span class="approval-id" *ngIf="selectedSubstance.$$tmpStructureId && selectedSubstance._name && !selectedSubstance.approvalID">
+        Draft: {{selectedSubstance._name}}
+      </span>
     </div>
     <a class="zoom" (click)="openImageModal(substance)">
-    <img class="related-image" *ngIf="selectedSubstance.uuid && !hideImage" appSubstanceImage
-      [entityId]="selectedSubstance.uuid"></a>
+    <!-- Render structure for database substances using uuid -->
+    <img class="related-image" *ngIf="selectedSubstance.uuid && !hideImage && !selectedSubstance.$$tmpStructureId" appSubstanceImage
+      [entityId]="selectedSubstance.uuid">
+    <!-- Render structure for draft substances using temporary interpreted structure id -->
+    <img class="related-image" *ngIf="selectedSubstance.$$tmpStructureId && !hideImage" appSubstanceImage
+      [entityId]="selectedSubstance.$$tmpStructureId"></a>
     <div class = "name-div">
-      <span >
+      <span *ngIf="!selectedSubstance.$$tmpStructureId">
 
       <a  target="_blank" class = "name-link"
       (click) ="openInNewTab(selectedSubstance.uuid)"  matTooltip="view details in a new tab" >
@@ -60,8 +67,8 @@
     </div>
   <div class = "centered">
       <a style = "color: #1565c0;font-weight:550;margin-top:3px; margin-right: 10px;" (click)="advanced('structure')">Structure Search</a>
-      <a style = "color: #1565c0;font-weight:550;margin-top:3px;" (click)="advanced('name')">Name Search</a>
-
+      <a style = "color: #1565c0;font-weight:550;margin-top:3px; margin-right: 10px;" (click)="advanced('name')">Name Search</a>
+      <a *ngIf="showDraftOption" style = "color: #1565c0;font-weight:550;margin-top:3px;" (click)="selectDraft()">Add Draft</a>
   </div>
 
   <span class='code' *ngIf="errorMessage === 'No substances found'"><br />NO SUBSTANCES FOUND</span>

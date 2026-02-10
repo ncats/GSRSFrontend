@@ -648,8 +648,11 @@ export class SubstanceSsg4ManufactureFormComponent
   }
 
   showJSON(): void {
+    const json = this.substanceFormService.cleanSubstance();
+    this.removeTmpStructureIdFields(json);
     const dialogRef = this.dialog.open(JsonDialogComponent, {
       width: "90%",
+      data: { substance: json }
     });
     this.overlayContainer.style.zIndex = "1002";
 
@@ -663,7 +666,8 @@ export class SubstanceSsg4ManufactureFormComponent
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
     this.json = this.substanceFormService.cleanSubstance();
-    // this.json = this.cleanObject(substanceCopy);
+    // Remove $$tmpStructureId fields before export
+    this.removeTmpStructureIdFields(this.json);
     const uri = this.sanitizer.bypassSecurityTrustUrl(
       "data:text/json;charset=UTF-8," +
         encodeURIComponent(JSON.stringify(this.json))
@@ -1393,7 +1397,7 @@ export class SubstanceSsg4ManufactureFormComponent
   }
 
   async submit(): Promise<void> {
-    await this.expandStepView();
+    !this.configService.configData.isPfdaVersion && await this.expandStepView();
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -1420,7 +1424,7 @@ export class SubstanceSsg4ManufactureFormComponent
     }, 8000);
 
     // Export step view as SVG; Disabled for PFDA
-    await this.exportStepView(document);
+    !this.configService.configData.isPfdaVersion && await this.exportStepView(document);
 
     // Prepare final JSON and call save endpoint
     jsonValue = this.prepareFinalJson();

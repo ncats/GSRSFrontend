@@ -23,10 +23,18 @@
     <div>
       <div class="padtop10px related-substance"
         *ngIf="configSettingsDisplay['substanceName'] || (configSettingsDisplay['substanceName'] === undefined && true)">
-        <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-          eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header=""
-          [subuuid]="relatedSubstanceUuid" [showMorelinks]="true">
-        </app-substance-selector>
+        <!-- <ng-container *ngIf="!processingMaterial.$$tmpStructureId"> -->
+          <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
+            (draftSelected)="draftSubstanceSelected($event)"
+            eventCategory="substanceRelationshipRelatedSub" placeholder="Search by Name/CAS RN/UNII/BDNUM" header=""
+            [subuuid]="relatedSubstanceUuid" [showMorelinks]="true" [showDraftOption]="true">
+          </app-substance-selector>
+        <!-- </ng-container> -->
+
+        <!-- Render interpreted structure for drafts (temporary structure id stored on the model) -->
+        <!-- <div class="related-substance-image" *ngIf="processingMaterial.$$tmpStructureId">
+          <img appSubstanceImage [entityId]="processingMaterial.$$tmpStructureId" [size]="150" />
+        </div> -->
       </div>
     </div> <!-- FIRST COLUMN END -->
 
