@@ -131,7 +131,23 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.contactEmail = this.configService.configData.contactEmail || null;
     this.navItems = this.configService.configData.navItems || null;
 
-  let notempty = false;
+    // CRITICAL: Subscribe to auth FIRST, before any await calls that might fail
+    // This ensures UI updates reactively when auth state changes
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      this.auth = auth;
+      // Re-check privileges when auth changes
+      if (auth) {
+        this.updatePrivileges();
+      } else {
+        this.canConfigureSystem = false;
+        this.canUserImportData = false;
+        this.canRegister = false;
+        this.canManageCVs = false;
+      }
+    });
+    this.subscriptions.push(authSubscription);
+
+    let notempty = false;
     if (this.loadedComponents) {
       if (this.loadedComponents.applications) {
         notempty = true;
@@ -151,10 +167,9 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.loadedComponents = null;
       }
     }
-    this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
-    this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
-    this.canRegister=await this.authService.canEditData();
-    this.canManageCVs = await this.authService.hasSpecificPrivilege("Manage CVs");
+
+    // Initial privilege check with error handling
+    await this.updatePrivileges();
     //not sure if we need this.
     //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
@@ -207,21 +222,14 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(paramsSubscription);
 
-    const authSubscription2 = this.authService.checkAuth().subscribe(auth => {
+    const authSubscription2 = this.authService.checkAuth().subscribe(_auth => {
     }, error => {
       if (error.status === 403 && (this.router.url.split('?')[0] !== '/login' && this.router.url.split('?')[0] !== '/unauthorized')) {
         this.loadingService.setLoading(false);
         this.router.navigate(['/unauthorized']);
       }
     });
-      this.subscriptions.push(authSubscription2);
-
-    const authSubscription = this.authService.getAuth().subscribe(auth => {
-      this.auth = auth;
-    }, error => {
-    });
-
-    this.subscriptions.push(authSubscription);
+    this.subscriptions.push(authSubscription2);
 
     this.environment = this.configService.environment;
     this.appId = this.environment.appId;
@@ -525,6 +533,25 @@ export class BaseComponent implements OnInit, OnDestroy {
 
 
     });
+  }
+
+  /**
+   * Updates privilege flags based on current auth state.
+   * Called on init and whenever auth changes.
+   */
+  private async updatePrivileges(): Promise<void> {
+    try {
+      this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
+      this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
+      this.canRegister = await this.authService.canEditData();
+      this.canManageCVs = await this.authService.hasSpecificPrivilege('Manage CVs');
+    } catch (e) {
+      // Not authenticated or error - all privileges default to false
+      this.canConfigureSystem = false;
+      this.canUserImportData = false;
+      this.canRegister = false;
+      this.canManageCVs = false;
+    }
   }
 
 }

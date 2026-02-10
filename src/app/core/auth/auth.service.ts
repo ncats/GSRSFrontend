@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { Auth, Privilege, Role, UserGroup } from './auth.model';
-import { from, Observable, Subject, throwError, of, firstValueFrom } from 'rxjs';
+import { from, Observable, BehaviorSubject, of, firstValueFrom, throwError } from 'rxjs';
 import { map, take, catchError, concat, switchMap, tap } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
@@ -12,7 +12,7 @@ import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/d
 })
 export class AuthService {
   private _auth: Auth;
-  private _authUpdate: Subject<Auth> = new Subject();
+  private _authUpdate = new BehaviorSubject<Auth | null>(null);
   private isLoading: boolean;
   private _privileges: Array<Privilege> = [];
 
@@ -81,60 +81,50 @@ get auth(): Auth {
       obs = of(this.configService.configData.dummyWhoami);
     }
     return obs.pipe(
-      map(auth => {
+      switchMap(auth => {
         if (auth && auth.computedToken) {
           this._auth = auth;
           if (isPlatformBrowser(this.platformId)) {
             sessionStorage.setItem('authToken', auth.computedToken);
           }
+          this._authUpdate.next(this._auth);
+          // Fetch privileges after successful login
+          return this.fetchPrivs().pipe(
+            map(() => this._auth),
+            catchError(() => {
+              // Privileges fetch failed, but auth succeeded - still return auth
+              return of(this._auth);
+            })
+          );
         } else {
           this._auth = null;
+          this._authUpdate.next(null);
+          return of(null);
         }
-
-        this._authUpdate.next(this._auth);
-        return this._auth;
       })
     );
   }
 
-  getAuth(): Observable<Auth> {
-    return new Observable(observer => {
-
-      if (this._auth != null) {
-        observer.next(this._auth);
-      } else if (!this.isLoading) {
-        this.isLoading = true;
-        this.fetchAuth().pipe(take(1)).subscribe(auth => {
-          if (auth && auth.computedToken != null) {
-            this._auth = auth;
-          } else {
-            this._auth = null;
-          }
-
-          observer.next(this._auth);
+  getAuth(): Observable<Auth | null> {
+    // Trigger a fetch if not loading and no auth yet
+    if (this._auth == null && !this.isLoading) {
+      this.isLoading = true;
+      this.fetchAuth().pipe(take(1)).subscribe({
+        next: auth => {
+          this._auth = auth?.computedToken ? auth : null;
           this._authUpdate.next(this._auth);
           this.isLoading = false;
-        }, error => {
-          this.logout();
+        },
+        error: () => {
+          this._auth = null;
+          this._authUpdate.next(null);
           this.isLoading = false;
-        });
-      }
-
-      this._authUpdate.subscribe(auth => {
-        try {
-          observer.next(auth);
-        } catch (e) {
-          console.log("Error calling observer");
-        }
-      }, error => {
-        console.log("Error calling observer, registered error");
-        try {
-          observer.next(null);
-        } catch (e) {
-          console.log("Error calling observer, registered error, passed null");
         }
       });
-    });
+    }
+
+    // Return the BehaviorSubject as observable - late subscribers get current value
+    return this._authUpdate.asObservable();
   }
 
   logout(): void {
@@ -244,7 +234,12 @@ get auth(): Auth {
   
   private async ensurePrivilegesLoaded(): Promise<void> {
     if (!this._privileges || this._privileges.length === 0) {
-      this._privileges = await firstValueFrom(this.fetchPrivs());
+      try {
+        this._privileges = await firstValueFrom(this.fetchPrivs());
+      } catch (e) {
+        // Not authenticated or fetch failed - use empty privileges
+        this._privileges = [];
+      }
     }
   }
 
