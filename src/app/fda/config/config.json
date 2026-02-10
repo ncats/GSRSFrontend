@@ -16,14 +16,14 @@
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
-  "disableJSDraw": false,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
+  "disableJSDraw": false,
+  "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
   "apiBaseUrl": "http://localhost:8081/ginas/app/",
   "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
   "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
   "occasionalApiBasePath": "/ginas/app",
   "restApiPrefix": "/ginas/app",
-  "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -33,11 +33,7 @@
   "stagingArea": {
     "mergeAction": false
   },
-  "apiBaseUrl": "http://localhost:8081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
-  "occasionalApiBasePath": "/ginas/app",
-    
-"userRegistration": {
+  "userRegistration": {
     "configurations": {
       "emailForm": {
         "active": false,
@@ -49,39 +45,42 @@
       }
     }
   },
-  "enablePDFDownload": {
-    "enablePDFDownload": true,
-    "buttonName": "Print to PDF",
-    "companyName": "",
-    "proprietaryNote": ""
+  "enablePDFDownload":{
+    "enablePDFDownload" : true,
+    "buttonName":"Print to PDF",
+    "companyName" : "",
+    "proprietaryNote":""
   },
   "elementLabelDisplay": {
     "labels": {
       "substance_names_name": {
-        "displayNameTitle": "Display Name",
-        "displayNameShortTitle": "DN",
-        "preferredTitle": "Additional Listing Name",
-        "preferredShortTitle": "AL"
+          "displayNameTitle": "Display Name",
+          "displayNameShortTitle":"DN",
+          "preferredTitle": "Additional Listing Name",
+          "preferredShortTitle": "AL"
       }
     }
   },
   "bulkSearch": {
     "entities": [
       {
-        "name": "substances",
+        "name":"substances",
         "title": "Substances"
       },
       {
-        "name": "products",
+        "name":"products",
         "title": "Products"
       },
       {
-        "name": "applications",
+        "name":"applications",
         "title": "Applications"
       }
     ]
   },
-  "filteredDuplicationCodes": ["BDNUM", "FDA UNII"],
+  "filteredDuplicationCodes": [
+    "BDNUM",
+    "FDA UNII"
+  ],
   "typeaheadFields": [
     "Standardized_Name",
     "Display_Name",
@@ -112,7 +111,7 @@
     { "name": "products", "active": true, "hasEntities": true },
     { "name": "ssg4m", "active": true, "hasEntities": true },
     { "name": "substances", "active": true, "hasEntities": true }
-  ],
+   ],
   "usefulLinks": [
     {
       "title": "GSRSFind Excel tools",
@@ -160,7 +159,9 @@
     {
       "card": "fda-substance-product",
       "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In Vitro Pharmacology",
-      "filters": [{}]
+      "filters": [
+        {}
+      ]
     },
     {
       "card": "substance-primary-definition",
@@ -330,7 +331,7 @@
     },
     {
       "card": "substance-subunits",
-      "title": "Nuceic Acid Subunits",
+      "title": "Nucleic Acid Subunits",
       "filters": [
         {
           "filterName": "equals",
@@ -797,7 +798,11 @@
         },
         {
           "category": "User Data",
-          "facets": ["Record Created By", "Approved By", "root_lastEditedBy"]
+          "facets": [
+            "Record Created By",
+            "Approved By",
+            "root_lastEditedBy"
+          ]
         },
         {
           "category": "CMC Data",
@@ -1186,7 +1191,13 @@
       ]
     }
   },
-  "codeSystemOrder": ["BDNUM", "CAS", "WHO-ATC", "EVMPD", "NCI"],
+  "codeSystemOrder": [
+    "BDNUM",
+    "CAS",
+    "WHO-ATC",
+    "EVMPD",
+    "NCI"
+  ],
   "homeHeader": "Global Substance Registration System - GSRS",
   "homeContents": "<p>The primary goal of the Global Substance Registration System (GSRS) program is the production of software to assist agencies in registering and documenting information about substances found in medicines and other regulated products. GSRS provides common identifiers including FDA UNIIs for all substances used in regulated products. It utilizes definitions of substances  globally-consistent with ISO 11238 and DTS 19844 including active substances under clinical investigation.\n\n</p><p>\n\n<img src='assets/icons/home/fda.logo.h77px.png' alt='' title='Food and Drug Administration' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n\n<img src='assets/icons/home/ncats.logo.h77px.png' alt='' title='National Center for Advancing Translational Science' />\n\n</p><p>Many organizations contribute to the GSRS project including the Food and Drug Administration (FDA) and the National Center for Advancing Translational Science (NCATS). For more information about GSRS, code and public data, please consult <a href='https://gsrs.ncats.nih.gov/'>https://gsrs.ncats.nih.gov/</a>.</p>\n\n<p>",
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
@@ -1215,22 +1226,16 @@
       "order": 13
     },
     {
-      "component": "impurities",
-      "display": "Browse Impurities",
-      "path": "browse-impurities",
-      "order": 14
-    },
-    {
       "component": "adverseevents",
       "display": "Browse Adverse Events",
       "path": "browse-adverse-events",
-      "order": 15
+      "order": 14
     },
     {
       "component": "invitropharmacology",
       "display": "Browse In Vitro Pharmacology",
       "path": "browse-invitro-pharm",
-      "order": 16
+      "order": 15
     },
     {
       "display": "Register",
@@ -1351,7 +1356,7 @@
           "kind": "contact-us",
           "display": "Email GSRS Support",
           "mailToPath": "mailto:%s",
-          "queryParams": { "subject": "Support request" },
+          "queryParams": {"subject" : "Support request"},
           "order": 30
         }
       ]
@@ -1361,7 +1366,7 @@
       "kind": "contact-us",
       "display": "Contact Us",
       "mailToPath": "mailto:%s",
-      "queryParams": { "subject": "Support request" },
+      "queryParams": {"subject" : "Support request"},
       "order": 2000
     }
   ],
