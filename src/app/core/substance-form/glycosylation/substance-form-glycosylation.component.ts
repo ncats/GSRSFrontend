@@ -10,9 +10,10 @@ import {MatDialog} from '@angular/material/dialog';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import { SubstanceFormGlycosylationService } from './substance-form-glycosylation.service';
 @Component({
-  selector: 'app-substance-form-glycosylation',
-  templateUrl: './substance-form-glycosylation.component.html',
-  styleUrls: ['./substance-form-glycosylation.component.scss']
+    selector: 'app-substance-form-glycosylation',
+    templateUrl: './substance-form-glycosylation.component.html',
+    styleUrls: ['./substance-form-glycosylation.component.scss'],
+    standalone: false
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormGlycosylationComponent extends SubstanceCardBaseFilteredList<SubstanceName> implements OnInit, AfterViewInit, OnDestroy {

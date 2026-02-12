@@ -16,9 +16,10 @@ import { ConfigService } from '@gsrs-core/config';
  */
 
 @Component({
-  selector: 'app-cv-input',
-  templateUrl: './cv-input.component.html',
-  styleUrls: ['./cv-input.component.scss']
+    selector: 'app-cv-input',
+    templateUrl: './cv-input.component.html',
+    styleUrls: ['./cv-input.component.scss'],
+    standalone: false
 })
 export class CvInputComponent implements OnInit, OnDestroy {
   @Input() vocabulary?: any;

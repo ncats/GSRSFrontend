@@ -23,9 +23,10 @@ import { Observable } from 'rxjs';
  */
 
 @Component({
-  selector: 'app-clinical-trial-edit',
-  templateUrl: './clinical-trial-edit.component.html',
-  styleUrls: ['./clinical-trial-edit.component.scss']
+    selector: 'app-clinical-trial-edit',
+    templateUrl: './clinical-trial-edit.component.html',
+    styleUrls: ['./clinical-trial-edit.component.scss'],
+    standalone: false
 })
 export class ClinicalTrialEditComponent implements OnInit, AfterViewInit, OnDestroy {
   clinicalTrial: ClinicalTrial;

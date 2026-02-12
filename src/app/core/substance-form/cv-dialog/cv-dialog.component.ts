@@ -5,9 +5,10 @@ import {ControlledVocabularyService, Vocabulary, VocabularyTerm} from '@gsrs-cor
 import {UtilsService} from '@gsrs-core/utils';
 
 @Component({
-  selector: 'app-cv-dialog',
-  templateUrl: './cv-dialog.component.html',
-  styleUrls: ['./cv-dialog.component.scss']
+    selector: 'app-cv-dialog',
+    templateUrl: './cv-dialog.component.html',
+    styleUrls: ['./cv-dialog.component.scss'],
+    standalone: false
 })
 export class CvDialogComponent implements OnInit {
   isNew: boolean;

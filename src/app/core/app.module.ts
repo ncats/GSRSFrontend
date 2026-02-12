@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { HttpClientModule, HttpClientJsonpModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -23,6 +24,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -166,7 +168,8 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
 
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'gsrs' }),
+    BrowserModule,
+    RouterModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -191,6 +194,7 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
     MatTableModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatOptionModule,
     MatRadioModule,
     MatSliderModule,
     MatDialogModule,
@@ -256,24 +260,6 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
     {provide: WidgetRegistry, useClass: MyWidgetRegistry}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [
-    HighlightedSearchActionComponent,
-    ExportDialogComponent,
-    SubstanceEditImportDialogComponent,
-    SubstanceHistoryDialogComponent,
-    ShowMolfileDialogComponent,
-    CustomCheckboxWidgetComponent,
-    CustomTextWidgetComponent,
-    CustomMultiselectWidgetComponent,
-    CustomSelectWidgetComponent,
-    CustomRadioWidgetComponent,
-    CustomMultiCheckboxWidgetComponent,
-    CustomTextareaWidgetComponent,
-    MergeActionDialogComponent,
-    UserQueryListDialogComponent,
-    ListCreateDialogComponent,
-    ImportScrubberComponent
-  ],
   exports: [
     StructureEditorModule,
     NameResolverModule,

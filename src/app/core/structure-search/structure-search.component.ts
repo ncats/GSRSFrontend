@@ -18,9 +18,10 @@ import { take } from 'rxjs';
 import { StructureEditorComponent } from '@gsrs-core/structure-editor';
 
 @Component({
-  selector: 'app-structure-search',
-  templateUrl: './structure-search.component.html',
-  styleUrls: ['./structure-search.component.scss']
+    selector: 'app-structure-search',
+    templateUrl: './structure-search.component.html',
+    styleUrls: ['./structure-search.component.scss'],
+    standalone: false
 })
 export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private editor: Editor;

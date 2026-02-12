@@ -24,9 +24,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NitrosamineDisplayDialogComponent } from './nitrosamine-display-dialog/nitrosamine-display-dialog.component';
 
 @Component({
-  selector: 'app-substance-form-structure-card',
-  templateUrl: './substance-form-structure-card.component.html',
-  styleUrls: ['./substance-form-structure-card.component.scss']
+    selector: 'app-substance-form-structure-card',
+    templateUrl: './substance-form-structure-card.component.html',
+    styleUrls: ['./substance-form-structure-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormStructureCardComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   structureEditor: Editor;

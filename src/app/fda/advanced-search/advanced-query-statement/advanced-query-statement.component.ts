@@ -22,9 +22,10 @@ import { AdvancedSearchService } from '../service/advanced-search.service';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
-  selector: 'app-advanced-query-statement',
-  templateUrl: './advanced-query-statement.component.html',
-  styleUrls: ['./advanced-query-statement.component.scss']
+    selector: 'app-advanced-query-statement',
+    templateUrl: './advanced-query-statement.component.html',
+    styleUrls: ['./advanced-query-statement.component.scss'],
+    standalone: false
 })
 
 export class AdvancedQueryStatementComponent implements OnInit, OnDestroy {

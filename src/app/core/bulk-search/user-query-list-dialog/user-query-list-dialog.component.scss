@@ -1,6 +1,6 @@
 .link {
-    color: var(--primary-color);
-  
+  color: var(--primary-color);
+
   font-size: 18px;
   text-decoration: none;
 }
@@ -8,10 +8,9 @@
 .loading-spinner {
   width: 70px;
   mat-progress-spinner {
-      margin: auto;
+    margin: auto;
   }
 }
-
 
 .file-import {
   width: 100%;
@@ -29,7 +28,6 @@
   padding: 15px;
 }
 
-
 .italics {
   font-style: italic;
   color: var(--text-color);
@@ -46,8 +44,8 @@
 }
 
 .single-header {
-  margin-bottom:10px;
-  padding-right:25px;
+  margin-bottom: 10px;
+  padding-right: 25px;
 }
 
 .primary-color {
@@ -64,26 +62,26 @@
   flex-direction: row;
 
   .spinner-labels {
-      
   }
 
   .spinner-row {
-      width: 33%;
-      flex-direction: column;
+    width: 33%;
+    flex-direction: column;
 
-      .spinner-labels {
+    .spinner-labels {
       display: flex;
       flex-direction: row;
 
-
       .spinner {
-          width: 50px;
+        width: 50px;
       }
-      }
+    }
   }
 }
 
-.mat-mini-fab {
+.mat-mini-fab,
+.mat-mdc-mini-fab,
+.mat-mdc-fab {
   position: absolute;
   right: 17px;
   top: 8px;
@@ -93,25 +91,31 @@
   height: 35px;
 
   &:not(:first-child) {
-      margin-top: 3px;
+    margin-top: 3px;
   }
 
   ::ng-deep .mat-button-wrapper {
-      padding: 0;
+    padding: 0;
   }
 }
 
 ::ng-deep {
-
-    .mat-dialog-container {
-     // padding: 5px;
-      position: relative;
+  .mat-dialog-container {
+    // padding: 5px;
+    position: relative;
     //  overflow: hidden;
-    }
   }
+}
 
+.icon-super {
+  height: 20px;
+  width: 20px;
+}
 
-  .icon-super {
-    height: 20px;
-    width: 20px;
-  }
+.header {
+  padding: 24px 24px 0 24px;
+}
+
+::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-content {
+  padding: 0 24px 24px 24px;
+}

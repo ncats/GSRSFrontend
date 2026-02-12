@@ -5,9 +5,10 @@ import {DatePipe} from '@angular/common';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-references-manager',
-  templateUrl: './references-manager.component.html',
-  styleUrls: ['./references-manager.component.scss']
+    selector: 'app-references-manager',
+    templateUrl: './references-manager.component.html',
+    styleUrls: ['./references-manager.component.scss'],
+    standalone: false
 })
 export class ReferencesManagerComponent implements OnInit {
   @Input() substance?: SubstanceDetail;

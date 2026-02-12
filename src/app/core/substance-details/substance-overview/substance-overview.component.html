@@ -54,7 +54,7 @@
       <button *ngIf="substance.version != versionControl.value" mat-button
         class="mat-raised-button mat-primary view-version" (click)='changeVersion()'>View</button>
     </div>
-    <div *ngIf="substance.version != latestVersion  && !substance.$$source" class="indent">
+    <div *ngIf="substance.version && latestVersion && +substance.version < latestVersion && !substance.$$source" class="indent">
       This is an older version of this substance - Ver. {{this.substance.version}}
       <button *ngIf="canRestoreVersions" mat-button
         class="mat-raised-button mat-primary view-version" (click)='restoreVersion()'>Restore this version</button>

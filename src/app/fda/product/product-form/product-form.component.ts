@@ -20,14 +20,17 @@ import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-im
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import jp from 'jsonpath';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
+
 /* GSRS Product Imports */
 import { ProductService } from '../service/product.service';
 import { Product, ValidationMessage } from '../model/product.model';
 
 @Component({
-  selector: 'app-product-form',
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+    selector: 'app-product-form',
+    templateUrl: './product-form.component.html',
+    styleUrls: ['./product-form.component.scss'],
+    standalone: false
 })
 
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {

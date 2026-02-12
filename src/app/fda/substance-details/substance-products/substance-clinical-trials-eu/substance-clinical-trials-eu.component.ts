@@ -18,9 +18,10 @@ import * as _ from 'lodash';
 import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
 
 @Component({
-  selector: 'app-substance-clinical-trials-eu',
-  templateUrl: './substance-clinical-trials-eu.component.html',
-  styleUrls: ['./substance-clinical-trials-eu.component.scss']
+    selector: 'app-substance-clinical-trials-eu',
+    templateUrl: './substance-clinical-trials-eu.component.html',
+    styleUrls: ['./substance-clinical-trials-eu.component.scss'],
+    standalone: false
 })
 
 export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {

@@ -20,9 +20,10 @@ import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms'
 
 
 @Component({
-  selector: 'app-facets-manager',
-  templateUrl: './facets-manager.component.html',
-  styleUrls: ['./facets-manager.component.scss']
+    selector: 'app-facets-manager',
+    templateUrl: './facets-manager.component.html',
+    styleUrls: ['./facets-manager.component.scss'],
+    standalone: false
 })
 export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() facetsParamsUpdated = new EventEmitter<FacetUpdateEvent>();
@@ -144,10 +145,13 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this.facetsFromParams();
     this.setDisplayFacets();
-    this.facetsParamsUpdated.emit({
-      facetParam: this.privateFacetParams,
-      displayFacets: this.displayFacets,
-      deprecated: this.showDeprecated
+    // Defer emission to avoid ExpressionChangedAfterItHasBeenCheckedError
+    Promise.resolve().then(() => {
+      this.facetsParamsUpdated.emit({
+        facetParam: this.privateFacetParams,
+        displayFacets: this.displayFacets,
+        deprecated: this.showDeprecated
+      });
     });
     const deleteEventSubscription = this.facetManagerService.clearSelectionsEvent.subscribe(() => {
       this.clearFacetSelection();

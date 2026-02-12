@@ -1,4 +1,9 @@
-<mat-form-field>
-    <input matInput placeholder="Change reason"
-    [formControl]="changeReasonControl" required />
+<mat-form-field class="full-width-textarea">
+    <textarea matInput
+              [placeholder]="placeholderText()"
+              [formControl]="changeReasonControl"
+              rows="3"
+              maxlength="2000">
+    </textarea>
+    <mat-hint class="hint">{{ hintText() }}</mat-hint>
 </mat-form-field>

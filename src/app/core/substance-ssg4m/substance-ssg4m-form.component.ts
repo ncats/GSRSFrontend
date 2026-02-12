@@ -7,7 +7,7 @@ import {
   QueryList,
   OnDestroy, HostListener
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, Event, NavigationStart, NavigationEnd } from '@angular/router';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatDialog } from '@angular/material/dialog';
@@ -43,9 +43,10 @@ import { Ssg4mSyntheticPathway } from './model/substance-ssg4m.model';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-ssg4m-form',
-  templateUrl: './substance-ssg4m-form.component.html',
-  styleUrls: ['./substance-ssg4m-form.component.scss']
+    selector: 'app-substance-ssg4m-form',
+    templateUrl: './substance-ssg4m-form.component.html',
+    styleUrls: ['./substance-ssg4m-form.component.scss'],
+    standalone: false
 })
 export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
@@ -238,7 +239,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         } //else
       });
     this.subscriptions.push(routeSubscription);
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.substanceSsg4mService.unloadSubstance();
       }
@@ -929,7 +930,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
           if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
             for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
               const prop = substanceCopy.polymer.monomers[i];
-              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
+              if (!prop.monomerSubstance || Object.keys(prop.monomerSubstance).length === 0) {
                 const invalidPropertyMessage: ValidationMessage = {
                   actionType: 'frontEnd',
                   appliedChange: false,

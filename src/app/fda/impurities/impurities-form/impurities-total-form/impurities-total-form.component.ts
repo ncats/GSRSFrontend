@@ -9,9 +9,10 @@ import { Impurities, ValidationMessage, ImpuritiesTotal } from '../../model/impu
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-impurities-total-form',
-  templateUrl: './impurities-total-form.component.html',
-  styleUrls: ['./impurities-total-form.component.scss']
+    selector: 'app-impurities-total-form',
+    templateUrl: './impurities-total-form.component.html',
+    styleUrls: ['./impurities-total-form.component.scss'],
+    standalone: false
 })
 export class ImpuritiesTotalFormComponent implements OnInit {
 

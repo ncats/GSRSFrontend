@@ -36,9 +36,10 @@ import * as _ from 'lodash';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-invitro-pharmacology-summary-form',
-  templateUrl: './invitro-pharmacology-summary-form.component.html',
-  styleUrls: ['./invitro-pharmacology-summary-form.component.scss']
+    selector: 'app-invitro-pharmacology-summary-form',
+    templateUrl: './invitro-pharmacology-summary-form.component.html',
+    styleUrls: ['./invitro-pharmacology-summary-form.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestroy {
 

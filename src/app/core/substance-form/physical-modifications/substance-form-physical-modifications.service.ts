@@ -34,12 +34,14 @@ export class SubstanceFormPhysicalModificationsService extends SubstanceFormServ
   }
 
   addSubstancePhysicalModification(): void {
+    this.substanceFormService.markAdded();
     const newPhysicalModifications: PhysicalModification = {};
     this.substance.modifications.physicalModifications.unshift(newPhysicalModifications);
     this.propertyEmitter.next(this.substance.modifications.physicalModifications);
   }
 
   deleteSubstancePhysicalModification(physicalModification: PhysicalModification): void {
+    this.substanceFormService.markRemoved();
     const physicalModIndex = this.substance.modifications.physicalModifications.findIndex(
       physicalMod => physicalModification.$$deletedCode === physicalMod.$$deletedCode);
     if (physicalModIndex > -1) {

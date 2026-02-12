@@ -3,9 +3,10 @@ import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bott
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 
 @Component({
-  selector: 'app-highlighted-search-action',
-  templateUrl: './highlighted-search-action.component.html',
-  styleUrls: ['./highlighted-search-action.component.scss']
+    selector: 'app-highlighted-search-action',
+    templateUrl: './highlighted-search-action.component.html',
+    styleUrls: ['./highlighted-search-action.component.scss'],
+    standalone: false
 })
 export class HighlightedSearchActionComponent implements OnInit {
   searchTerm: string;

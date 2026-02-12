@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { BehaviorSubject, interval, Observable, Observer, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -804,21 +804,27 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<Array<SubstanceEdit>>(url, { withCredentials: true });
   }
 
-  getSubstanceDetails(id: string, version?: string): Observable<SubstanceDetail> {
+  getSubstanceDetails(id: string, version?: string | number): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
     let params = new HttpParams();
     params = params.append('view', 'internal');
     const options = {
       params: params
     };
-    if (version) {
-
+    if (version !== undefined && version !== null) {
+      const v = String(version);
       const editurl = `${this.apiBaseUrl}substances(${id})/@edits`;
 
-      return this.http.get<any>(editurl, { withCredentials: true }).pipe(
-        switchMap(response => {
-          response = response.filter(resp => resp.version === version);
-          return this.http.get<SubstanceDetail>(response[0].oldValue, options);
+      return this.http.get<any[]>(editurl, { withCredentials: true }).pipe(
+        switchMap((response: any[]) => {
+          const match = (response ?? []).find(resp => String(resp?.version) === v);
+
+          if(!match?.oldValue) {
+            return throwError(() => new Error(
+              `No @edits entry found for version=${v} on substance(${id}).`
+            ));
+          }
+          return this.http.get<SubstanceDetail>(match.oldValue, options);
         }));
 
     } else {

@@ -32,9 +32,10 @@ import { InvitroAssayInformation, InvitroAssayScreening } from '../../model/invi
 import { invitroPharmacologySearchSortValues } from '../../invitro-pharmacology-browse/invitro-pharmacology-search-sort-values';
 
 @Component({
-  selector: 'app-invitro-pharmacology-details-testagent',
-  templateUrl: './invitro-pharmacology-details-testagent.component.html',
-  styleUrls: ['./invitro-pharmacology-details-testagent.component.scss']
+    selector: 'app-invitro-pharmacology-details-testagent',
+    templateUrl: './invitro-pharmacology-details-testagent.component.html',
+    styleUrls: ['./invitro-pharmacology-details-testagent.component.scss'],
+    standalone: false
 })
 
 export class InvitroPharmacologyDetailsTestagentComponent implements OnInit {

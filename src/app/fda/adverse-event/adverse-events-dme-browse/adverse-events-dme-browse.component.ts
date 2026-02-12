@@ -29,9 +29,10 @@ import { AdverseEventDme } from '../model/adverse-event.model';
 import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sort-values';
 
 @Component({
-  selector: 'app-adverse-events-dme-browse',
-  templateUrl: './adverse-events-dme-browse.component.html',
-  styleUrls: ['./adverse-events-dme-browse.component.scss']
+    selector: 'app-adverse-events-dme-browse',
+    templateUrl: './adverse-events-dme-browse.component.html',
+    styleUrls: ['./adverse-events-dme-browse.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -360,8 +361,11 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchAdverseEventDme();
     }

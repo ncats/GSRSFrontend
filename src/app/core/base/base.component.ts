@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
-import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
+import { Router, Event, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
@@ -25,10 +25,11 @@ import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.se
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
-  selector: 'app-base',
-  templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-base',
+    templateUrl: './base.component.html',
+    styleUrls: ['./base.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = '';
@@ -177,7 +178,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
       this.version = this.configService.configData.version || buildInfo.version;
       this.versionTooltipMessage = `V${this.version}`;
-      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
+      this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format('ddd MMM D YYYY HH:mm:ss z')}`;
     });
     this.navItems.forEach(item => {
       if (item.display === 'Register') {
@@ -236,7 +237,7 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     this.logoSrcPath = `${this.environment.baseHref || ''}assets/images/gsrs-logo.svg`;
 
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof ResolveEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
         urlPath = event.url.split('?')[0];

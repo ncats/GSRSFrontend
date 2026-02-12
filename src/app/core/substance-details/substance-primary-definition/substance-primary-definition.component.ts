@@ -4,9 +4,10 @@ import {SubstanceDetail, SubstanceRelated} from '../../substance/substance.model
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-primary-definition',
-  templateUrl: './substance-primary-definition.component.html',
-  styleUrls: ['./substance-primary-definition.component.scss']
+    selector: 'app-substance-primary-definition',
+    templateUrl: './substance-primary-definition.component.html',
+    styleUrls: ['./substance-primary-definition.component.scss'],
+    standalone: false
 })
 export class SubstancePrimaryDefinitionComponent extends SubstanceCardBase implements OnInit {
   definition: string;

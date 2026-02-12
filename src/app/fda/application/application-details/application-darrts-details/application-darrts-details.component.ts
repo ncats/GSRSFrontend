@@ -12,9 +12,10 @@ import { ApplicationDetailsBaseComponent } from '../application-details-base.com
 import { element } from 'protractor';
 
 @Component({
-  selector: 'app-application-darrts-details',
-  templateUrl: './application-darrts-details.component.html',
-  styleUrls: ['./application-darrts-details.component.scss']
+    selector: 'app-application-darrts-details',
+    templateUrl: './application-darrts-details.component.html',
+    styleUrls: ['./application-darrts-details.component.scss'],
+    standalone: false
 })
 
 export class ApplicationDarrtsDetailsComponent extends ApplicationDetailsBaseComponent implements OnInit {

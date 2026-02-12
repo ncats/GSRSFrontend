@@ -8,7 +8,7 @@ import {
   OnDestroy, HostListener
 } from '@angular/core';
 import { formSections } from '../substance-form/form-sections.constant';
-import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, Event, NavigationStart, NavigationEnd } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
@@ -40,9 +40,10 @@ import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-ssg2-form',
-  templateUrl: './substance-ssg2-form.component.html',
-  styleUrls: ['./substance-ssg2-form.component.scss']
+    selector: 'app-substance-ssg2-form',
+    templateUrl: './substance-ssg2-form.component.html',
+    styleUrls: ['./substance-ssg2-form.component.scss'],
+    standalone: false
 })
 export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
@@ -340,7 +341,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         }
       });
     this.subscriptions.push(routeSubscription);
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.substanceFormService.unloadSubstance();
       }

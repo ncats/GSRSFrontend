@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceParameter } from '../../substance/substance.model';
 
 @Component({
-  selector: 'app-property-parameter-dialog',
-  templateUrl: './property-parameter-dialog.component.html',
-  styleUrls: ['./property-parameter-dialog.component.scss']
+    selector: 'app-property-parameter-dialog',
+    templateUrl: './property-parameter-dialog.component.html',
+    styleUrls: ['./property-parameter-dialog.component.scss'],
+    standalone: false
 })
 export class PropertyParameterDialogComponent implements OnInit {
   isNew: boolean;

@@ -20,7 +20,7 @@ const nitrosamineRoutes: Routes = [
 @NgModule({
   declarations: [
     NitrosamineStandaloneComponent
-    
+
   ],
   imports: [
     CommonModule,
@@ -31,7 +31,7 @@ const nitrosamineRoutes: Routes = [
     NitrosamineDisplayModule,
     MatCardModule,
     StructureEditorModule
-
+    
   ],exports: [
     NitrosamineStandaloneComponent
   ]

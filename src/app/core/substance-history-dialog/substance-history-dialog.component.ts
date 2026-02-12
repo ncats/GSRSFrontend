@@ -7,15 +7,16 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'app-substance-history-dialog',
-  templateUrl: './substance-history-dialog.component.html',
-  styleUrls: ['./substance-history-dialog.component.scss']
+    selector: 'app-substance-history-dialog',
+    templateUrl: './substance-history-dialog.component.html',
+    styleUrls: ['./substance-history-dialog.component.scss'],
+    standalone: false
 })
 export class SubstanceHistoryDialogComponent implements OnInit {
   public substance: SubstanceDetail;
   public status: string;
-  public latest: string;
-  public version: any;
+  public latest!: string;
+  public version!: string;
   public validationMessages: Array<string>;
   public serverError: string;
 
@@ -30,8 +31,8 @@ export class SubstanceHistoryDialogComponent implements OnInit {
 
   ngOnInit() {
     this.substance = this.data.substance;
-    this.latest = this.data.latest;
-    this.version = this.data.version;
+    this.latest = String(this.data.latest);
+    this.version = String(this.data.version);
     this.status = 'start';
   }
 
@@ -42,30 +43,53 @@ export class SubstanceHistoryDialogComponent implements OnInit {
 
   accept() {
     this.status = 'running';
-      this.loadingService.setLoading(true);
-      this.substanceService.getSubstanceDetails(this.substance.uuid, this.version).subscribe( sub => {
-        this.substance.changeReason = 'reverted to version ' + this.version;
-        this.substance.version = this.latest;
-        this.substanceService.saveSubstance(this.substance).subscribe( response => {
+    this.loadingService.setLoading(true);
+
+    const version = String(this.version);
+    const latest = String(this.latest);
+    // Fetch the old version to restore
+    this.substanceService.getSubstanceDetails(this.substance.uuid, this.version).subscribe({
+      next: sub => {
+        sub.changeReason = `reverted to version ${version}`;
+        sub.version = latest;
+
+        this.substanceService.saveSubstance(sub).subscribe({
+          next: response => {
           this.substance = response;
           this.status = 'complete';
           this.loadingService.setLoading(false);
-        }, error => {
-          this.status = 'failed';
-          this.loadingService.setLoading(false);
-          if (error && error.error && error.error.validationMessages) {
-            this.validationMessages = error.error.validationMessages;
-          } else {
-            this.serverError = error;
-          }
-
-        });
-      }, error => {
-        this.status = 'failed';
-          this.loadingService.setLoading(false);
-          console.log(error);
+        }, 
+          error: error => {
+            this.status = 'failed';
+            this.loadingService.setLoading(false);
+            this.handleError(error);
+        }
       });
+    }, 
+      error: error => {
+        this.status = 'failed';
+        this.loadingService.setLoading(false);
+        this.handleError(error);
+      }
+    });
+  }
+
+  /**
+   * Extracts and stores error information for display.
+   */
+  private handleError(error: any): void {
+    if (error?.error?.validationMessages) {
+      this.validationMessages = error.error.validationMessages;
+    } else if (error?.message) {
+      this.serverError = error.message;
+    } else if (error?.error?.message) {
+      this.serverError = error.error.message;
+    } else if (typeof error === 'string') {
+      this.serverError = error;
+    } else {
+      this.serverError = JSON.stringify(error, null, 2);
     }
+  }
 
   }
 

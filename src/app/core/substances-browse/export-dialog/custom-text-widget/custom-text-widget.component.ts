@@ -3,9 +3,10 @@ import { TextAreaWidget, CheckboxWidget, StringWidget } from 'ngx-schema-form';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-text-widget',
-  templateUrl: './custom-text-widget.component.html',
-  styleUrls: ['./custom-text-widget.component.scss']
+    selector: 'app-custom-text-widget',
+    templateUrl: './custom-text-widget.component.html',
+    styleUrls: ['./custom-text-widget.component.scss'],
+    standalone: false
 })
 export class CustomTextWidgetComponent extends StringWidget {
   constructor(

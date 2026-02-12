@@ -29,9 +29,10 @@ import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.se
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 
 @Component({
-  selector: 'app-substance-summary-card',
-  templateUrl: './substance-summary-card.component.html',
-  styleUrls: ['./substance-summary-card.component.scss']
+    selector: 'app-substance-summary-card',
+    templateUrl: './substance-summary-card.component.html',
+    styleUrls: ['./substance-summary-card.component.scss'],
+    standalone: false
 })
 export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;

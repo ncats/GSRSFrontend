@@ -11,9 +11,10 @@ import { ClinicalTrial } from '../../application/model/application.model';
 import { AuthService } from '@gsrs-core/auth';
 
 @Component({
-  selector: 'app-clinical-trial-details-base',
-  template: '',
-  styleUrls: ['./clinical-trial-details-base.component.scss']
+    selector: 'app-clinical-trial-details-base',
+    template: '',
+    styleUrls: ['./clinical-trial-details-base.component.scss'],
+    standalone: false
 })
 
 export class ClinicalTrialDetailsBaseComponent implements OnInit {

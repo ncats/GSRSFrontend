@@ -41,9 +41,9 @@
       <div class="structure-container">
         <div *ngIf="substance.structure">
           <div class="mat-chip-list-container" *ngIf="substance.structure.stereochemistry">
-            <mat-chip-list selectable="false" multiple="false">
-              <mat-chip color="primary" selected>{{substance.structure.stereochemistry}}</mat-chip>
-            </mat-chip-list>
+            <mat-chip-set>
+              <mat-chip color="primary">{{substance.structure.stereochemistry}}</mat-chip>
+            </mat-chip-set>
           </div>
         </div>
         <div *ngIf="!substance.structure">

@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 // eslint-disable-next-line max-len
@@ -20,6 +21,7 @@ import {NucleicAcidDetailsFormComponent} from '@gsrs-core/substance-form/nucleic
     ReactiveFormsModule,
     FormsModule,
     MatSelectModule,
+    MatOptionModule,
     SubstanceFormModule,
     NameResolverModule,
     NgMultiSelectDropDownModule

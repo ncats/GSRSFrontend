@@ -5,9 +5,10 @@ import {Subject} from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-substance-polymer-structure',
-  templateUrl: './substance-polymer-structure.component.html',
-  styleUrls: ['./substance-polymer-structure.component.scss']
+    selector: 'app-substance-polymer-structure',
+    templateUrl: './substance-polymer-structure.component.html',
+    styleUrls: ['./substance-polymer-structure.component.scss'],
+    standalone: false
 })
 export class SubstancePolymerStructureComponent extends SubstanceCardBase implements OnInit {
   structure: DisplayStructure;

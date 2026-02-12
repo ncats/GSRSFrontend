@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable, timeout, BehaviorSubject} from 'rxjs';
+import { Observable, timeout, BehaviorSubject, Subject, tap} from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';
@@ -11,6 +11,8 @@ import { InterpretStructureResponse } from './structure-post-response.model';
   providedIn: 'root'
 })
 export class StructureService {
+  private smileSubject = new Subject<string>();
+  smileObservable$ = this.smileSubject.asObservable();
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -128,5 +130,9 @@ export class StructureService {
     let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/evaluateSmiles?smiles=${encodeURIComponent(smiles)}`;
     
     return this.http.get(url, {responseType: 'json'});
+  }
+
+  getSmilesFormula(smiles: string) {
+    this.smileSubject.next(smiles);
   }
 }

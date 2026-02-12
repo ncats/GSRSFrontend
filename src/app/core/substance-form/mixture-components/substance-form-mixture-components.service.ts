@@ -33,12 +33,14 @@ export class SubstanceFormMixtureComponentsService extends SubstanceFormServiceB
   }
 
   addSubstanceMixtureComponent(): void {
+    this.substanceFormService.markAdded();
     const newMix: MixtureComponents = {};
     this.substance.mixture.components.unshift(newMix);
     this.propertyEmitter.next(this.substance.mixture.components);
   }
 
   deleteSubstanceMixtureComponent(mix: MixtureComponents): void {
+    this.substanceFormService.markRemoved();
     const subNameIndex = this.substance.mixture.components.findIndex(subName => mix.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.substance.mixture.components.splice(subNameIndex, 1);

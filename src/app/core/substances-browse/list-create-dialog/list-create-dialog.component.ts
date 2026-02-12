@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 
 @Component({
-  selector: 'app-list-create-dialog',
-  templateUrl: './list-create-dialog.component.html',
-  styleUrls: ['./list-create-dialog.component.scss']
+    selector: 'app-list-create-dialog',
+    templateUrl: './list-create-dialog.component.html',
+    styleUrls: ['./list-create-dialog.component.scss'],
+    standalone: false
 })
 export class ListCreateDialogComponent implements OnInit {
   message: string;

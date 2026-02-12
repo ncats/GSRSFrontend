@@ -33,9 +33,10 @@ import { BulkSearchResultsSummaryComponent } from '@gsrs-core/bulk-search/bulk-s
 import { Application } from '../model/application.model';
 
 @Component({
-  selector: 'app-applications-browse',
-  templateUrl: './applications-browse.component.html',
-  styleUrls: ['./applications-browse.component.scss']
+    selector: 'app-applications-browse',
+    templateUrl: './applications-browse.component.html',
+    styleUrls: ['./applications-browse.component.scss'],
+    standalone: false
 })
 export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   // @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
@@ -314,7 +315,7 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
       }
 
     }, error => {
-      console.log('error');
+      console.log('Applications fetch failed:', error);
       const notification: AppNotification = {
         message: 'There was an error trying to retrieve Applications. Please refresh and try again.',
         type: NotificationType.error,
@@ -494,8 +495,11 @@ export class ApplicationsBrowseComponent implements OnInit, AfterViewInit, OnDes
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchApplications();
     }

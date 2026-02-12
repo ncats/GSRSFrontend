@@ -7,9 +7,10 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { HierarchyNode } from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 
 @Component({
-  selector: 'app-substance-hierarchy',
-  templateUrl: './substance-hierarchy.component.html',
-  styleUrls: ['./substance-hierarchy.component.scss']
+    selector: 'app-substance-hierarchy',
+    templateUrl: './substance-hierarchy.component.html',
+    styleUrls: ['./substance-hierarchy.component.scss'],
+    standalone: false
 })
 export class SubstanceHierarchyComponent extends SubstanceCardBase implements OnInit {
 

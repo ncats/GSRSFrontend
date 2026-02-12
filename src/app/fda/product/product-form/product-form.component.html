@@ -186,6 +186,14 @@
 
                   <!--
                   <mat-form-field class="col-4-1">
+                    <mat-label>End Date (mm/dd/yyyy)</mat-label>
+                    <input matInput [matDatepicker]="pickerEndDate" [(ngModel)]="endDate" placeholder="End Date (mm/dd/yyyy)" (dateChange)="changeEndDate($event)">
+                    <mat-datepicker-toggle matSuffix [for]="pickerEndDate"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerEndDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
+                  </mat-form-field>
+
+                  <!--
+                  <mat-form-field class="col-4-1">
                     <input matInput placeholder="End Date (mm/dd/yyyy)" [(ngModel)]="product.endDate"
                       name="endDate" />
                   </mat-form-field>

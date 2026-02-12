@@ -4,9 +4,10 @@ import {DisulfideLink, Site, SubstanceDetail} from '../../substance/substance.mo
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-disulfide-links',
-  templateUrl: './substance-disulfide-links.component.html',
-  styleUrls: ['./substance-disulfide-links.component.scss']
+    selector: 'app-substance-disulfide-links',
+    templateUrl: './substance-disulfide-links.component.html',
+    styleUrls: ['./substance-disulfide-links.component.scss'],
+    standalone: false
 })
 export class SubstanceDisulfideLinksComponent extends SubstanceCardBase implements OnInit {
   disulfideLinks: Array<DisulfideLink>;

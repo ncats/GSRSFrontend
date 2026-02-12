@@ -1,9 +1,11 @@
-import { ComponentRef, Output, EventEmitter, Injectable } from '@angular/core';
+import { ComponentRef, Output, EventEmitter, Directive } from '@angular/core';
 import { SubstanceFormBase } from './base-classes/substance-form-base';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { MatExpansionPanel } from '@angular/material/expansion';
 
-@Injectable()
+// Directive decorator required for Angular features (@Output)
+// Not used as directive - instantiated with 'new' keyword in components
+@Directive()
 export class SubstanceFormSection {
     dynamicComponentName: string;
     dynamicComponentRef: ComponentRef<SubstanceFormBase | SubstanceCardBaseFilteredList<any> | any>;
@@ -13,7 +15,7 @@ export class SubstanceFormSection {
     canAddItem = false;
     @Output() addItemEmitter = new EventEmitter();
 
-    constructor(dynamicComponentName?: string) {
+    constructor(dynamicComponentName: string = '') {
         this.dynamicComponentName = dynamicComponentName;
     }
 

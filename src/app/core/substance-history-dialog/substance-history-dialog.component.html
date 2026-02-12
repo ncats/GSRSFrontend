@@ -35,8 +35,8 @@
                 </span>
         </div>
 
-        <div *ngIf = "serverError">
-                {{this.serverError}}
+        <div *ngIf="serverError" class="server-error">
+                <pre>{{ serverError }}</pre>
             </div>
             <div *ngIf = "!validationMessages && !serverError">
                 <i>No error information returned from the server</i>

@@ -20,9 +20,10 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { impuritiesSearchSortValues } from '../../../impurities/impurities-search-sort-values';
 
 @Component({
-  selector: 'app-substance-impurities',
-  templateUrl: './substance-impurities.component.html',
-  styleUrls: ['./substance-impurities.component.scss']
+    selector: 'app-substance-impurities',
+    templateUrl: './substance-impurities.component.html',
+    styleUrls: ['./substance-impurities.component.scss'],
+    standalone: false
 })
 export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 

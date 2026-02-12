@@ -1,22 +1,24 @@
 <mat-form-field>
-    <mat-chip-list #chipList>
-        <mat-chip *ngFor="let tag of tags" removable="true" (removed)="remove(tag)">
+    <mat-chip-grid #chipList>
+        <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)">
             {{optionsDictionary[tag] && optionsDictionary[tag].display || tag}}
-            <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-        </mat-chip>
-        <input [placeholder]="placeholder" 
-        #tagInput 
-        [formControl]="tagControl" 
+            <button matChipRemove>
+                <mat-icon svgIcon="cancel"></mat-icon>
+            </button>
+        </mat-chip-row>
+        <input matInput
+        [placeholder]="placeholder"
+        #tagInput
+        [formControl]="tagControl"
         [matAutocomplete]="tagsAuto"
-        [matChipInputFor]="chipList" 
-        matChipInputAddOnBlur="false"
+        [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          (matChipInputTokenEnd)="tagAdded($event)" 
+          (matChipInputTokenEnd)="tagAdded($event)"
         (blur)="clearTagsInput()">
-    </mat-chip-list>
+    </mat-chip-grid>
     <mat-autocomplete
-     #tagsAuto="matAutocomplete" 
-     (optionSelected)="selected($event)" 
+     #tagsAuto="matAutocomplete"
+     (optionSelected)="selected($event)"
      (closed)="clearTagsInput()">
         <mat-option *ngFor="let option of filteredOptions | async" [value]="option.value">
             {{option.display}}

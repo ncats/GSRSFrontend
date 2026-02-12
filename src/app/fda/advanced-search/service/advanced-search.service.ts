@@ -19,27 +19,31 @@ export class AdvancedSearchService extends BaseHttpService {
   totalRecords: 0;
   baseHref: '';
 
-  apiBaseUrlWithSubstanceEntityUrl = this.configService.configData.apiBaseUrl || '' + 'api/v1/substances' + '/';
-  apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
-  apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
-  apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
-
-  apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
-  //apiBaseUrlWithProductBrowseEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productsall' + '/';
-  //apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
-
-  apiBaseUrlWithClinicalTrialEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/clinicaltrialsus' + '/';
-
-  apiBaseUrlWithEntityPtContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventpt' + '/';
-  apiBaseUrlWithEntityDmeContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventdme' + '/';
-  apiBaseUrlWithEntityCvmContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventcvm' + '/';
-
+  apiBaseUrlWithSubstanceEntityUrl: string;
+  apiBaseUrlWithApplicationEntityUrl: string;
+  apiBaseUrlWithApplicationAllEntityUrl: string;
+  apiBaseUrlWithApplicationDarrtsEntityUrl: string;
+  apiBaseUrlWithProductEntityUrl: string;
+  apiBaseUrlWithClinicalTrialEntityUrl: string;
+  apiBaseUrlWithEntityPtContext: string;
+  apiBaseUrlWithEntityDmeContext: string;
+  apiBaseUrlWithEntityCvmContext: string;
 
   constructor(
     public http: HttpClient,
     public configService: ConfigService,
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithSubstanceEntityUrl = this.configService.configData.apiBaseUrl || '' + 'api/v1/substances' + '/';
+    this.apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+    this.apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
+    this.apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
+    this.apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+    this.apiBaseUrlWithClinicalTrialEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/clinicaltrialsus' + '/';
+    this.apiBaseUrlWithEntityPtContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventpt' + '/';
+    this.apiBaseUrlWithEntityDmeContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventdme' + '/';
+    this.apiBaseUrlWithEntityCvmContext = this.configService.configData.apiBaseUrl + 'api/v1/adverseeventcvm' + '/';
   }
 
   getBaseHref(): string {

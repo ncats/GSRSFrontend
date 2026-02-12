@@ -10,9 +10,10 @@ import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-d
 import {PhysicalParameterFormDialogComponent} from '@gsrs-core/substance-form/physical-parameter-form-dialog/physical-parameter-form-dialog.component';
 
 @Component({
-  selector: 'app-physical-modification-form',
-  templateUrl: './physical-modification-form.component.html',
-  styleUrls: ['./physical-modification-form.component.scss']
+    selector: 'app-physical-modification-form',
+    templateUrl: './physical-modification-form.component.html',
+    styleUrls: ['./physical-modification-form.component.scss'],
+    standalone: false
 })
 export class PhysicalModificationFormComponent implements OnInit {
   private privateMod: PhysicalModification;

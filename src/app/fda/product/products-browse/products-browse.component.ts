@@ -39,9 +39,10 @@ import { productSearchSortValues } from './product-search-sort-values';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-products-browse',
-  templateUrl: './products-browse.component.html',
-  styleUrls: ['./products-browse.component.scss']
+    selector: 'app-products-browse',
+    templateUrl: './products-browse.component.html',
+    styleUrls: ['./products-browse.component.scss'],
+    standalone: false
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -430,8 +431,11 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchProducts();
     }
@@ -1152,6 +1156,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   forwardToSubstance(bulkQID: number) {
 
     let currentUrl = this.location.path();
+    alert('Current URL:' + currentUrl);
 
     // store values in array to retreive later from localStorage
     let item = {

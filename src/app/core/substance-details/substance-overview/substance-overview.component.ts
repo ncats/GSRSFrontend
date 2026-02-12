@@ -21,9 +21,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 
 @Component({
-  selector: 'app-substance-overview',
-  templateUrl: './substance-overview.component.html',
-  styleUrls: ['./substance-overview.component.scss']
+    selector: 'app-substance-overview',
+    templateUrl: './substance-overview.component.html',
+    styleUrls: ['./substance-overview.component.scss'],
+    standalone: false
 })
 export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit, OnDestroy {
   references: string[] = [];
@@ -184,7 +185,14 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.versions = [];
       this.latestVersion = result;
       this.setVersionList();
-      this.versionControl.setValue(this.substance.version);
+      
+      let currentVersion: number;
+      if (this.substance.version) {
+        currentVersion = Number(this.substance.version);
+      } else {
+        currentVersion = result;
+      }
+      this.versionControl.setValue(currentVersion.toString());
     }, error => {
       console.log(error);
     });
@@ -226,7 +234,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   restoreVersion() {
     const dialogRef = this.dialog.open(SubstanceHistoryDialogComponent, {
-      data: {'substance': this.substance, 'version': this.substance.version, 'latest': this.latestVersion.toString()},
+      data: {'substance': this.substance, 'version': String(this.substance.version), 'latest': String(this.latestVersion)},
       width: '650px',
       autoFocus: false,
       disableClose: true

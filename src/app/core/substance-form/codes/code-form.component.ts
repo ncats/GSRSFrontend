@@ -7,9 +7,10 @@ import { UtilsService } from '../../utils/utils.service';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-code-form',
-  templateUrl: './code-form.component.html',
-  styleUrls: ['./code-form.component.scss']
+    selector: 'app-code-form',
+    templateUrl: './code-form.component.html',
+    styleUrls: ['./code-form.component.scss'],
+    standalone: false
 })
 export class CodeFormComponent implements OnInit {
   private privateCode: SubstanceCode;

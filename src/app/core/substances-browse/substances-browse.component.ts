@@ -9,7 +9,8 @@ import {
   Inject,
   ComponentFactoryResolver,
   ViewChildren,
-  QueryList
+  QueryList,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
@@ -54,9 +55,10 @@ import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.se
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
-  selector: 'app-substances-browse',
-  templateUrl: './substances-browse.component.html',
-  styleUrls: ['./substances-browse.component.scss']
+    selector: 'app-substances-browse',
+    templateUrl: './substances-browse.component.html',
+    styleUrls: ['./substances-browse.component.scss'],
+    standalone: false
 })
 export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;
@@ -93,6 +95,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
   hasBackdrop = false;
   view = 'cards';
+  private resizeTimeout: any;
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes', 'actions'];
   public smiles: string;
   private argsHash?: number;
@@ -180,6 +183,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private cvService: ControlledVocabularyService,
     private wildCardService: WildcardService,
     private bulkSearchService: BulkSearchService,
+    private cdr: ChangeDetectorRef,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
   ) {
@@ -369,13 +373,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     });
     this.subscriptions.push(dynamicSubscription);
-
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+    clearTimeout(this.resizeTimeout);
     this.substanceService.pauseAsyncSearch();
     this.substanceService.clearSearchKey();
     this.facetManagerService.unregisterFacetSearchHandler();
@@ -383,7 +387,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {
@@ -468,10 +476,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets.filter(facet => !(facet.type === 'Deprecated' && facet.bool === false));
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+        this.isFacetsParamsInit = true;
+        // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.loadComponent();
+          this.cdr.detectChanges();
+        }, 0);
     } else {
-      this.searchSubstances();
+        this.searchSubstances();
     }
   }
 
@@ -1185,18 +1197,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private processResponsiveness = () => {
-    setTimeout(() => {
-      if (window) {
-        if (window.innerWidth < 1100) {
-          this.matSideNav.close();
-          this.isCollapsed = true;
-          this.hasBackdrop = true;
-        } else {
-          this.matSideNav.open();
-          this.hasBackdrop = false;
-        }
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
       }
-    });
+    }
   }
 
   openSideNav() {

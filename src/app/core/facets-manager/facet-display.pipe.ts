@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 
 @Pipe({
-  name: 'facetDisplay'
+    name: 'facetDisplay',
+    standalone: false
 })
 export class FacetDisplayPipe implements PipeTransform {
   constructor(

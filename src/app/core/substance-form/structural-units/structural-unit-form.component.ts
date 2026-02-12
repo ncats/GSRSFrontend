@@ -10,9 +10,10 @@ import { StructuralUnit, SubstanceCode, SubstanceService } from '@gsrs-core/subs
 import { SafeUrl } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-structural-unit-form',
-  templateUrl: './structural-unit-form.component.html',
-  styleUrls: ['./structural-unit-form.component.scss']
+    selector: 'app-structural-unit-form',
+    templateUrl: './structural-unit-form.component.html',
+    styleUrls: ['./structural-unit-form.component.scss'],
+    standalone: false
 })
 export class StructuralUnitFormComponent implements OnInit {
   @Input() unit: StructuralUnit;

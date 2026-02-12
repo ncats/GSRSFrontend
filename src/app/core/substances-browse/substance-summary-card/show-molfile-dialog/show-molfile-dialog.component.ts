@@ -4,9 +4,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { StructureService } from '@gsrs-core/structure';
 
 @Component({
-  selector: 'app-show-molfile-dialog',
-  templateUrl: './show-molfile-dialog.component.html',
-  styleUrls: ['./show-molfile-dialog.component.scss']
+    selector: 'app-show-molfile-dialog',
+    templateUrl: './show-molfile-dialog.component.html',
+    styleUrls: ['./show-molfile-dialog.component.scss'],
+    standalone: false
 })
 export class ShowMolfileDialogComponent implements OnInit {
 molfile: string;

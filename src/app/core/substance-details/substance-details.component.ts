@@ -6,8 +6,7 @@ import {
   ViewContainerRef,
   QueryList,
   ViewChild,
-  OnDestroy,
-  HostListener
+  OnDestroy
 } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
@@ -29,11 +28,14 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ConfigService } from '@gsrs-core/config';
 import { DatePipe } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-substance-details',
-  templateUrl: './substance-details.component.html',
-  styleUrls: ['./substance-details.component.scss']
+    selector: 'app-substance-details',
+    templateUrl: './substance-details.component.html',
+    styleUrls: ['./substance-details.component.scss'],
+    standalone: false
 })
 export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   id: string;
@@ -49,6 +51,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   substanceUpdated = new Subject<SubstanceDetail>();
   companyName_pdf='';
   proprietaryNote_pdf='';
+  private currentBreakpoint: 'mobile' | 'desktop' = 'desktop';
+  private destroyed = new Subject<void>();
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
@@ -64,6 +68,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private titleService: Title,
     private adminService: AdminService,
     private configService: ConfigService,
+    private breakpointObserver: BreakpointObserver,
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -155,18 +160,37 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
 
-    setTimeout(() => {
-      this.processResponsiveness();
-    });
-  }
+    // Use BreakpointObserver to only toggle on actual breakpoint crossing
+    // Prevents continuous toggle during resize and mid-animation measurements
+    this.breakpointObserver
+      .observe(['(max-width: 1099px)'])
+      .pipe(
+        distinctUntilChanged((prev, curr) => prev.matches === curr.matches),
+        takeUntil(this.destroyed)
+      )
+      .subscribe(result => {
+        const newBreakpoint = result.matches ? 'mobile' : 'desktop';
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.processResponsiveness();
+        // Only toggle if breakpoint actually changed
+        if (newBreakpoint !== this.currentBreakpoint) {
+          this.currentBreakpoint = newBreakpoint;
+
+          if (result.matches) {
+            // Mobile breakpoint
+            this.matSideNav.close();
+            this.hasBackdrop = true;
+          } else {
+            // Desktop breakpoint
+            this.matSideNav.open();
+            this.hasBackdrop = false;
+          }
+        }
+      });
   }
 
   ngOnDestroy() {
-    // window.removeEventListener('resize', this.processResponsiveness);
+    this.destroyed.next();
+    this.destroyed.complete();
   }
   checkVersion() {
     return this.substanceService.checkVersion(this.id);
@@ -201,6 +225,21 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       });
       name = name.replace(/<[^>]*>?/gm, '');
       this.titleService.setTitle(name);
+
+      // FIX #1: Normalize version field from API response
+      if (!response.version && response._version) {
+        response.version = response._version;
+      }
+      if (!response.version && response.recordVersion) {
+        response.version = response.recordVersion;
+      }
+      if (this.version && !response.version) {
+        response.version = this.version;
+      }
+      if (response.version) {
+        response.version = Number(response.version);
+      }
+
       this.substance = response;
       this.substanceUpdated.next(response);
       this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance, this.source).subscribe(substanceProperty => {
@@ -295,18 +334,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       navigationExtras.queryParams['search'] = this.id || null;
       this.router.navigate(['/browse-substance'], navigationExtras);
     }, 5000);
-  }
-
-  private processResponsiveness = () => {
-    if (window) {
-      if (window.innerWidth < 1100) {
-        this.matSideNav.close();
-        this.hasBackdrop = true;
-      } else {
-        this.matSideNav.open();
-        this.hasBackdrop = false;
-      }
-    }
   }
 
   openSideNav() {

@@ -3,9 +3,10 @@ import {PhysicalModificationParameter, SubstanceAmount, SubstanceParameter} from
 import {UtilsService} from '@gsrs-core/utils';
 
 @Component({
-  selector: 'app-physical-parameter-form',
-  templateUrl: './physical-parameter-form.component.html',
-  styleUrls: ['./physical-parameter-form.component.scss']
+    selector: 'app-physical-parameter-form',
+    templateUrl: './physical-parameter-form.component.html',
+    styleUrls: ['./physical-parameter-form.component.scss'],
+    standalone: false
 })
 export class PhysicalParameterFormComponent implements OnInit {
   private privateParameter: PhysicalModificationParameter;

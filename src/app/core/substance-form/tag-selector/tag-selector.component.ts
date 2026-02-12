@@ -13,9 +13,10 @@ import { AuthService } from '@gsrs-core/auth';
 import { CvDialogComponent } from '@gsrs-core/substance-form/cv-dialog/cv-dialog.component';
 
 @Component({
-  selector: 'app-tag-selector',
-  templateUrl: './tag-selector.component.html',
-  styleUrls: ['./tag-selector.component.scss']
+    selector: 'app-tag-selector',
+    templateUrl: './tag-selector.component.html',
+    styleUrls: ['./tag-selector.component.scss'],
+    standalone: false
 })
 export class TagSelectorComponent implements OnInit, AfterViewInit {
   @Input() cvDomain: string;

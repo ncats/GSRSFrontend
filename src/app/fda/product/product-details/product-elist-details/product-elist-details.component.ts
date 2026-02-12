@@ -18,15 +18,16 @@ import { GeneralService } from '../../../service/general.service';
 import { ProductElist } from '../../model/productelist/productelist.model';
 
 @Component({
-  selector: 'app-product-elist-details',
-  templateUrl: './product-elist-details.component.html',
-  styleUrls: ['./product-elist-details.component.scss']
+    selector: 'app-product-elist-details',
+    templateUrl: './product-elist-details.component.html',
+    styleUrls: ['./product-elist-details.component.scss'],
+    standalone: false
 })
 
 export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dailyMedUrl = '';
-  product: ProductElist;
+  override product: ProductElist = {} as ProductElist;
   showSpinner = false;
 
   constructor(

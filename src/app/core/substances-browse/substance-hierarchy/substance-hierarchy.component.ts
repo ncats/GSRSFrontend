@@ -6,9 +6,10 @@ import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hi
 import {AuthService} from '@gsrs-core/auth';
 
 @Component({
-  selector: 'app-substance-hierarchy',
-  templateUrl: './substance-hierarchy.component.html',
-  styleUrls: ['./substance-hierarchy.component.scss']
+    selector: 'app-substance-hierarchy',
+    templateUrl: './substance-hierarchy.component.html',
+    styleUrls: ['./substance-hierarchy.component.scss'],
+    standalone: false
 })
 export class SubstanceHierarchyComponent implements OnInit {
   @Input() uuid: string;

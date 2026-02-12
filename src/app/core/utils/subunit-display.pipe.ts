@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
-  name: 'subunitDisplay'
+    name: 'subunitDisplay',
+    standalone: false
 })
 export class SubunitDisplayPipe implements PipeTransform {
   transform(item: string, item2?: string): string {

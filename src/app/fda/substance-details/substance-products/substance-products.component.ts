@@ -23,9 +23,10 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { productSearchSortValues } from '../../product/products-browse/product-search-sort-values';
 
 @Component({
-  selector: 'app-substance-products',
-  templateUrl: './substance-products.component.html',
-  styleUrls: ['./substance-products.component.scss']
+    selector: 'app-substance-products',
+    templateUrl: './substance-products.component.html',
+    styleUrls: ['./substance-products.component.scss'],
+    standalone: false
 })
 
 export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, AfterViewInit {

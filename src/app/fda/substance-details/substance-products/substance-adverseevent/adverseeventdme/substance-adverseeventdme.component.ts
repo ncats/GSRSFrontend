@@ -15,14 +15,14 @@ import { Subscription } from 'rxjs';
 import { adverseEventDmeSearchSortValues } from '../../../../adverse-event/adverse-events-dme-browse/adverse-events-dme-search-sort-values';
 
 @Component({
-  selector: 'app-substance-adverseeventdme',
-  templateUrl: './substance-adverseeventdme.component.html',
-  styleUrls: ['./substance-adverseeventdme.component.scss']
+    selector: 'app-substance-adverseeventdme',
+    templateUrl: './substance-adverseeventdme.component.html',
+    styleUrls: ['./substance-adverseeventdme.component.scss'],
+    standalone: false
 })
 
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
-  @Input() bdnum: string;
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
   adverseEventCount = 0;

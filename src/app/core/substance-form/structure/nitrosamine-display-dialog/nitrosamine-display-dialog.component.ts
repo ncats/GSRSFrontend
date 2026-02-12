@@ -2,9 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-nitrosamine-display-dialog',
-  templateUrl: './nitrosamine-display-dialog.component.html',
-  styleUrls: ['./nitrosamine-display-dialog.component.scss']
+    selector: 'app-nitrosamine-display-dialog',
+    templateUrl: './nitrosamine-display-dialog.component.html',
+    styleUrls: ['./nitrosamine-display-dialog.component.scss'],
+    standalone: false
 })
 export class NitrosamineDisplayDialogComponent implements OnInit {
 structure: any;

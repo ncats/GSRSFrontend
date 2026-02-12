@@ -6,7 +6,7 @@ describe('SubstanceFormGlycosylationService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SubstanceFormGlycosylationService = TestBed.get(SubstanceFormGlycosylationService);
+    const service: SubstanceFormGlycosylationService = TestBed.inject(SubstanceFormGlycosylationService);
     expect(service).toBeTruthy();
   });
 });

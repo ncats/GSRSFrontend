@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfigService, ExternalSiteWarning } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-external-site-warning-dialog',
-  templateUrl: './external-site-warning-dialog.component.html',
-  styleUrls: ['./external-site-warning-dialog.component.scss']
+    selector: 'app-external-site-warning-dialog',
+    templateUrl: './external-site-warning-dialog.component.html',
+    styleUrls: ['./external-site-warning-dialog.component.scss'],
+    standalone: false
 })
 export class ExternalSiteWarningDialogComponent implements OnInit {
   externalSiteWarning: ExternalSiteWarning;

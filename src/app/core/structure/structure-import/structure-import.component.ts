@@ -5,9 +5,10 @@ import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.
 import { StructureService } from '../structure.service';
 
 @Component({
-  selector: 'app-structure-import',
-  templateUrl: './structure-import.component.html',
-  styleUrls: ['./structure-import.component.scss']
+    selector: 'app-structure-import',
+    templateUrl: './structure-import.component.html',
+    styleUrls: ['./structure-import.component.scss'],
+    standalone: false
 })
 export class StructureImportComponent implements OnInit {
   isLoading = false;

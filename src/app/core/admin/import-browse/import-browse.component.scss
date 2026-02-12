@@ -653,20 +653,7 @@ color: white;
     }  
 }
 
-.page-label {
-    color:var(--dark-label-color);
-    display:block;
-    font-family:Roboto, "Helvetica Neue", sans-serif;
-    font-size:14px;
-    padding-right: 12px;
-}
-
-.page-selector {
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-margin-left: 20px;
- }
+// Page label and page selector styles moved to global _angular-15-mdc-fixes.scss
 
 
  :host ::ng-deep .mat-paginator-range-label{

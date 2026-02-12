@@ -1,53 +1,66 @@
+// Define sidenav width as CSS custom property for single source of truth
+:root {
+  --gsrs-sidenav-width: 315px;
+}
+
 .mat-drawer-container.mat-sidenav-container {
-    position: fixed;
-    top: 64px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--regular-transparent-color);
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--regular-transparent-color);
 }
 
 mat-sidenav {
-    width: 315px;
-    padding: 15px 10px;
+  // Tell Angular Material the exact width via its CSS variable
+  --mat-sidenav-container-width: var(--gsrs-sidenav-width);
+  width: var(--gsrs-sidenav-width);
+  min-width: var(--gsrs-sidenav-width);
+  max-width: var(--gsrs-sidenav-width);
+  padding: 15px 10px;
+  box-sizing: border-box; // CRITICAL: Include padding in width calculation
 }
 
 .mat-drawer-content {
-    background-color: var(--regular-transparent-color);
+  background-color: var(--regular-transparent-color);
 }
+
+// REMOVED: No longer needed - Material calculates margin correctly from --mat-sidenav-container-width
+// The !important override was a symptom of the measurement race condition, not the fix
 
 .expand-sidenav {
-    position: fixed;
-    left: 0;
-    top: 80px;
-    z-index: 10000;
-    background-color: var(--regular-white-color);
-    border: none;
-    border-top-right-radius: 25%;
-    border-bottom-right-radius: 25%;
-    transition: all 800ms;
-    padding: 5px 0;
+  position: fixed;
+  left: 0;
+  top: 80px;
+  z-index: 10000;
+  background-color: var(--regular-white-color);
+  border: none;
+  border-top-right-radius: 25%;
+  border-bottom-right-radius: 25%;
+  transition: all 800ms;
+  padding: 5px 0;
 
-    .mat-icon {
-        width: 30px;
-        height: 30px;
-    }
+  .mat-icon {
+    width: 30px;
+    height: 30px;
+  }
 }
 
-@media(max-width: 1100px) {
-    .expand-sidenav {
-        display: block;
-        opacity: 1;
-    }
+@media (max-width: 1100px) {
+  .expand-sidenav {
+    display: block;
+    opacity: 1;
+  }
 }
 
-@media(min-width: 1100px) {
-    .expand-sidenav {
-        display: none;
-        opacity: 0;
-    }
+@media (min-width: 1100px) {
+  .expand-sidenav {
+    display: none;
+    opacity: 0;
+  }
 
-    mat-sidenav.mat-drawer {
-        background-color: var(--regular-transparent-color);
-    }
+  mat-sidenav.mat-drawer {
+    background-color: var(--regular-transparent-color);
+  }
 }

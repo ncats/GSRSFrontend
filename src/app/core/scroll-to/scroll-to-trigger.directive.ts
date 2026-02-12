@@ -9,7 +9,8 @@ import { ScrollToRegistration } from './scroll-to-registration.class';
 import { ScrollToService } from './scroll-to.service';
 
 @Directive({
-  selector: '[appScrollToTrigger]'
+    selector: '[appScrollToTrigger]',
+    standalone: false
 })
 export class ScrollToTriggerDirective implements AfterViewInit, OnDestroy {
   @Input() scrollToElementId: string;

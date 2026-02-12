@@ -29,7 +29,7 @@ export class InvitroPharmacologyService extends BaseHttpService {
   totalRecords = 0;
 
   invitroPharmEntityEndpoint = 'invitropharmacology';
-  apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/' + this.invitroPharmEntityEndpoint + '/';
+  apiBaseUrlWithInvitroPharmEntityUrl: string;
 
   constructor(
     public http: HttpClient,
@@ -37,6 +37,8 @@ export class InvitroPharmacologyService extends BaseHttpService {
     public utilsService: UtilsService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithInvitroPharmEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/' + this.invitroPharmEntityEndpoint + '/';
   }
 
   getInvitroPharmacology(

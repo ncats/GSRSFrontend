@@ -7,9 +7,10 @@ import { Subject } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'app-substance-ssg-parent-substance',
-  templateUrl: './substance-ssg-parent-substance.component.html',
-  styleUrls: ['./substance-ssg-parent-substance.component.scss']
+    selector: 'app-substance-ssg-parent-substance',
+    templateUrl: './substance-ssg-parent-substance.component.html',
+    styleUrls: ['./substance-ssg-parent-substance.component.scss'],
+    standalone: false
 })
 
 export class SubstanceSsgParentSubstanceComponent extends SubstanceCardBase implements OnInit {

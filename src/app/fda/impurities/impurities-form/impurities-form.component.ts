@@ -31,9 +31,10 @@ import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.m
 import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
 
 @Component({
-  selector: 'app-impurities-form',
-  templateUrl: './impurities-form.component.html',
-  styleUrls: ['./impurities-form.component.scss']
+    selector: 'app-impurities-form',
+    templateUrl: './impurities-form.component.html',
+    styleUrls: ['./impurities-form.component.scss'],
+    standalone: false
 })
 export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 

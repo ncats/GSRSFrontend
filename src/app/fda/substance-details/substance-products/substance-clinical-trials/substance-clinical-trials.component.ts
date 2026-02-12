@@ -17,9 +17,10 @@ import { take } from 'rxjs/operators';
 import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
 
 @Component({
-  selector: 'app-substance-clinical-trials',
-  templateUrl: './substance-clinical-trials.component.html',
-  styleUrls: ['./substance-clinical-trials.component.scss']
+    selector: 'app-substance-clinical-trials',
+    templateUrl: './substance-clinical-trials.component.html',
+    styleUrls: ['./substance-clinical-trials.component.scss'],
+    standalone: false
 })
 
 export class SubstanceClinicalTrialsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {

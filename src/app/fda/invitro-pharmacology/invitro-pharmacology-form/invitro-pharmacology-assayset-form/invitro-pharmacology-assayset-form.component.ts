@@ -32,9 +32,10 @@ import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.s
 import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../../model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-invitro-pharmacology-assayset-form',
-  templateUrl: './invitro-pharmacology-assayset-form.component.html',
-  styleUrls: ['./invitro-pharmacology-assayset-form.component.scss']
+    selector: 'app-invitro-pharmacology-assayset-form',
+    templateUrl: './invitro-pharmacology-assayset-form.component.html',
+    styleUrls: ['./invitro-pharmacology-assayset-form.component.scss'],
+    standalone: false
 })
 
 export class InvitroPharmacologyAssaysetFormComponent implements OnInit {

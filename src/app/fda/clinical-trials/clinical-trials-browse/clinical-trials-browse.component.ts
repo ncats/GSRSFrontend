@@ -29,9 +29,10 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analy
 // import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-clinical-trials-browse',
-  templateUrl: './clinical-trials-browse.component.html',
-  styleUrls: ['./clinical-trials-browse.component.scss']
+    selector: 'app-clinical-trials-browse',
+    templateUrl: './clinical-trials-browse.component.html',
+    styleUrls: ['./clinical-trials-browse.component.scss'],
+    standalone: false
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -73,6 +74,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   public isCollapsed = true;
   private searchTermHash: number;
   isSearchEditable = false;
+  private resizeTimeout: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -144,6 +146,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy() {
+    clearTimeout(this.resizeTimeout);
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -152,7 +155,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {
@@ -188,8 +195,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchClinicalTrials();
     }

@@ -6,9 +6,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 
 @Component({
-  selector: 'app-cv-term-dialog',
-  templateUrl: './cv-term-dialog.component.html',
-  styleUrls: ['./cv-term-dialog.component.scss']
+    selector: 'app-cv-term-dialog',
+    templateUrl: './cv-term-dialog.component.html',
+    styleUrls: ['./cv-term-dialog.component.scss'],
+    standalone: false
 })
 export class CvTermDialogComponent implements OnInit, AfterViewInit{
   isNew: boolean;

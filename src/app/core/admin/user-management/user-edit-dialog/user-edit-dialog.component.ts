@@ -9,9 +9,10 @@ import { AssignableRole, UserEditObject } from '@gsrs-core/admin/admin-objects.m
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-user-edit-dialog',
-  templateUrl: './user-edit-dialog.component.html',
-  styleUrls: ['./user-edit-dialog.component.scss']
+    selector: 'app-user-edit-dialog',
+    templateUrl: './user-edit-dialog.component.html',
+    styleUrls: ['./user-edit-dialog.component.scss'],
+    standalone: false
 })
 export class UserEditDialogComponent implements OnInit {
   userLoggedIn: any;
@@ -303,7 +304,7 @@ export class UserEditDialogComponent implements OnInit {
     } else {
       this.isError = false;
       if ( this.authService.getUser === this.user.identifier ) {
-        this.adminService.changeMyPassword('', this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changeMyPassword('', this.newPassword).pipe(take(1)).subscribe(response => {
         this.isError = false;
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';

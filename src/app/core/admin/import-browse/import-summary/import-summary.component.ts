@@ -27,9 +27,10 @@ import { LoadingService } from '@gsrs-core/loading';
 import { MergeActionDialogComponent } from '@gsrs-core/admin/import-browse/merge-action-dialog/merge-action-dialog.component';
 import { PageEvent } from '@angular/material/paginator';
 @Component({
-  selector: 'app-import-summary',
-  templateUrl: './import-summary.component.html',
-  styleUrls: ['./import-summary.component.scss']
+    selector: 'app-import-summary',
+    templateUrl: './import-summary.component.html',
+    styleUrls: ['./import-summary.component.scss'],
+    standalone: false
 })
 export class ImportSummaryComponent implements OnInit {
   private privateSubstance: any;

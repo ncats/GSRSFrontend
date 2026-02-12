@@ -15,9 +15,10 @@ import {SubstanceDetail, SubstanceRelationship} from '@gsrs-core/substance/subst
 
 
 @Component({
-  selector: 'app-relationships-download-button',
-  templateUrl: './relationships-download-button.component.html',
-  styleUrls: ['./relationships-download-button.component.scss']
+    selector: 'app-relationships-download-button',
+    templateUrl: './relationships-download-button.component.html',
+    styleUrls: ['./relationships-download-button.component.scss'],
+    standalone: false
 })
 export class RelationshipsDownloadButtonComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];

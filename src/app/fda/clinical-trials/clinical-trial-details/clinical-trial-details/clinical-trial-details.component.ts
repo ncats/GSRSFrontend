@@ -11,9 +11,10 @@ import { ConfigService } from '@gsrs-core/config';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-clinical-trial-details',
-  templateUrl: './clinical-trial-details.component.html',
-  styleUrls: ['./clinical-trial-details.component.scss']
+    selector: 'app-clinical-trial-details',
+    templateUrl: './clinical-trial-details.component.html',
+    styleUrls: ['./clinical-trial-details.component.scss'],
+    standalone: false
 })
 
 export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
