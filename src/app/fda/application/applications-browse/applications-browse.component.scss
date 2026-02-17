@@ -562,17 +562,20 @@
   }
 }
 
-.mat-card-title, .facet-value {
+.mat-card-title, .mat-mdc-card-title, .facet-value {
   display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
   box-sizing: border-box;
-  width: 100%;
+  width: 98%;
   flex-direction: row;
   align-items: center;
   white-space: nowrap;
 }
 
-.mat-card-title {
+.mat-card-title, .mat-mdc-card-title {
   white-space: normal;
+  flex-wrap: wrap;
 
   .substance-name {
     color: var(--link-primary-color);
