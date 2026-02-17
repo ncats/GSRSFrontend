@@ -24,6 +24,7 @@
 .user {
   font-size: 12px;
   letter-spacing: 0.4px;
+  color: var(--regular-white-color);
 }
 .arrow-button {
   margin-left: -13px !important;
@@ -92,6 +93,23 @@
     display: flex;
     align-items: center;
     // gap: 6px;
+
+    .user-button.mat-mdc-icon-button {
+      --mat-icon-button-icon-size: 30px;
+      color: var(--regular-white-color);
+
+      ::ng-deep .mat-icon {
+        color: var(--regular-white-color);
+        height: 30px !important;
+        width: 30px !important;
+      }
+
+      ::ng-deep svg {
+        fill: var(--regular-white-color);
+        height: 30px !important;
+        width: 30px !important;
+      }
+    }
   }
 
   .mat-icon,
@@ -100,7 +118,9 @@
     width: 30px;
     margin-bottom: -10px;
     line-height: unset;
+    color: white;
   }
+
   ::ng-deep svg {
     height: 30px;
     width: 30px;
@@ -163,7 +183,7 @@
 }
 
 .login-link {
-  color: white;
+  color: white !important;
   font-size: 16px;
   text-decoration: none;
 }

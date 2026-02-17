@@ -67,25 +67,27 @@
 }
 
 .include {
-    ::ng-deep .mat-checkbox-frame {
-        border-color: var(--include-checkbox-border-color);
+    ::ng-deep .mdc-checkbox__background {
+        border-color: var(--include-checkbox-border-color) !important;
     }
 
-    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
-    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: var(--include-checkbox-bg-color);
+    ::ng-deep &.mat-mdc-checkbox-checked .mdc-checkbox__background,
+    ::ng-deep &.mat-mdc-checkbox-indeterminate .mdc-checkbox__background {
+        background-color: var(--include-checkbox-bg-color) !important;
+        border-color: var(--include-checkbox-bg-color) !important;
     }
 }
 
 .exclude {
-    margin-left: 5px;
-    ::ng-deep .mat-checkbox-frame {
-        border-color: var(--exclude-checkbox-border-color);
+    margin-left: 2px;
+    ::ng-deep .mdc-checkbox__background {
+        border-color: var(--exclude-checkbox-border-color) !important;
     }
 
-    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
-    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: var(--exclude-checkbox-bg-color);
+    ::ng-deep &.mat-mdc-checkbox-checked .mdc-checkbox__background,
+    ::ng-deep &.mat-mdc-checkbox-indeterminate .mdc-checkbox__background {
+        background-color: var(--exclude-checkbox-bg-color) !important;
+        border-color: var(--exclude-checkbox-bg-color) !important;
     }
 }
 
@@ -100,6 +102,7 @@
 .facet-advanced-options-link {
     margin-top: 7px;
     color: var(--link-primary-color);
+    margin-left: 10px;
 }
 
 .facet-actions {

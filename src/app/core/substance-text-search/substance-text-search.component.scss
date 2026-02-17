@@ -107,6 +107,20 @@ form {
   }
 }
 
+.search-button,
+.close-button,
+.activate-search-button {
+  color: var(--regular-white-color);
+
+  ::ng-deep .mat-icon {
+    color: var(--regular-white-color);
+
+    svg {
+      fill: var(--regular-white-color);
+    }
+  }
+}
+
 .close-button {
   display: none !important;
   width: 0;
