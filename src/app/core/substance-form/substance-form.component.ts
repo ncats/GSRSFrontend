@@ -201,7 +201,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
             this.isLoading = false;
             this.overlayContainer.style.zIndex = null;
           }, 1000);
-        } else if (response.uuid && response.uuid != 'register') {
+        } else if (this.id && response.uuid && response.uuid != 'register') {
           const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
           this.router.navigateByUrl(url, {state: {record: response.substance}});
         } else {
@@ -1403,6 +1403,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, OnDestroy 
   saveDraft(auto?: boolean) {
     const json = this.substanceFormService.cleanSubstance();
     const time = new Date().getTime();
+
+    if (!json.uuid) {
+      this.substanceFormService.regenUUID();
+      json.uuid = this.substanceFormService.cleanSubstance().uuid;
+    }
 
     const uuid = json.uuid ? json.uuid : 'register';
     const type = json.substanceClass;

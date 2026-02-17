@@ -182,7 +182,7 @@ export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy 
     this.privateProcessingMaterial.substanceName = {
       refPname: primaryName,
       name: primaryName,
-      refuuid: 'draft',
+      refuuid: substanceObj?.uuid || "draft",
       substanceClass: 'mention',
       approvalID: substanceObj?.approvalID
     };

@@ -150,7 +150,7 @@ export class SubstanceSsg4ManufactureFormComponent
     private authService: AuthService,
     private titleService: Title,
     private configService: ConfigService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
@@ -180,7 +180,7 @@ export class SubstanceSsg4ManufactureFormComponent
           this.id = id;
           this.gaService.sendPageView(`Substance Edit`);
           this.titleService.setTitle(
-            "Edit - Specified Substance Group 4 Manufacturing"
+            "Edit - Specified Substance Group 4 Manufacturing",
           );
           const newType =
             this.activatedRoute.snapshot.queryParamMap.get("switch") || null;
@@ -210,14 +210,14 @@ export class SubstanceSsg4ManufactureFormComponent
                     this.dynamicComponents.forEach((cRef, index) => {
                       this.dynamicComponentLoader
                         .getComponentFactory<any>(
-                          this.formSections[index].dynamicComponentName
+                          this.formSections[index].dynamicComponentName,
                         )
                         .subscribe((componentFactory) => {
                           this.formSections[index].dynamicComponentRef =
                             cRef.createComponent(componentFactory);
                           this.formSections[index].matExpansionPanel =
                             this.matExpansionPanels.find(
-                              (item, panelIndex) => index === panelIndex
+                              (item, panelIndex) => index === panelIndex,
                             );
                           this.formSections[
                             index
@@ -231,7 +231,7 @@ export class SubstanceSsg4ManufactureFormComponent
                           ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
                             (isHidden) => {
                               this.formSections[index].isHidden = isHidden;
-                            }
+                            },
                           );
                           this.subscriptions.push(hiddenStateSubscription);
                           this.formSections[
@@ -292,7 +292,7 @@ export class SubstanceSsg4ManufactureFormComponent
             "specifiedSubstanceG4m";
           this.substanceClass = this.subClass;
           this.titleService.setTitle(
-            "Register - Specified Substance Group 4 Manufacturing"
+            "Register - Specified Substance Group 4 Manufacturing",
           );
           this.substanceFormService
             .loadSubstance(this.substanceClass)
@@ -311,7 +311,7 @@ export class SubstanceSsg4ManufactureFormComponent
         if (event instanceof NavigationStart) {
           this.substanceSsg4mService.unloadSubstance();
         }
-      }
+      },
     );
     this.subscriptions.push(routerSubscription);
     this.approving = false;
@@ -354,7 +354,7 @@ export class SubstanceSsg4ManufactureFormComponent
         this.dynamicComponents.forEach((cRef, index) => {
           this.dynamicComponentLoader
             .getComponentFactory<any>(
-              this.formSections[index].dynamicComponentName
+              this.formSections[index].dynamicComponentName,
             )
             .subscribe((componentFactory) => {
               this.loadingService.setLoading(true);
@@ -362,7 +362,7 @@ export class SubstanceSsg4ManufactureFormComponent
                 cRef.createComponent(componentFactory);
               this.formSections[index].matExpansionPanel =
                 this.matExpansionPanels.find(
-                  (item, panelIndex) => index === panelIndex
+                  (item, panelIndex) => index === panelIndex,
                 );
               this.formSections[
                 index
@@ -376,7 +376,7 @@ export class SubstanceSsg4ManufactureFormComponent
               ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
                 (isHidden) => {
                   this.formSections[index].isHidden = isHidden;
-                }
+                },
               );
               this.subscriptions.push(hiddenStateSubscription);
               this.formSections[
@@ -414,7 +414,7 @@ export class SubstanceSsg4ManufactureFormComponent
                 if (currentTime.getTime() - startTime.getTime() > 12000) {
                   if (
                     confirm(
-                      "There was a network error while fetching files, would you like to refresh?"
+                      "There was a network error while fetching files, would you like to refresh?",
                     )
                   ) {
                     window.location.reload();
@@ -604,14 +604,14 @@ export class SubstanceSsg4ManufactureFormComponent
                   this.id +
                   "/edit?action=import&header=" +
                   this.showHeaderBar,
-                { state: { record: response } }
+                { state: { record: response } },
               );
             } else {
               // new record
               this.router.navigateByUrl(
                 "/substances-ssg4m/register?action=import&header=" +
                   this.showHeaderBar,
-                { state: { record: response } }
+                { state: { record: response } },
               );
             }
           }, 1000);
@@ -652,7 +652,7 @@ export class SubstanceSsg4ManufactureFormComponent
     this.removeTmpStructureIdFields(json);
     const dialogRef = this.dialog.open(JsonDialogComponent, {
       width: "90%",
-      data: { substance: json }
+      data: { substance: json },
     });
     this.overlayContainer.style.zIndex = "1002";
 
@@ -670,12 +670,81 @@ export class SubstanceSsg4ManufactureFormComponent
     this.removeTmpStructureIdFields(this.json);
     const uri = this.sanitizer.bypassSecurityTrustUrl(
       "data:text/json;charset=UTF-8," +
-        encodeURIComponent(JSON.stringify(this.json))
+        encodeURIComponent(JSON.stringify(this.json)),
     );
     this.downloadJsonHref = uri;
 
     const date = new Date();
     this.jsonFileName = "SSG4m_" + moment(date).format("MMM-DD-YYYY_H-mm-ss");
+  }
+
+  saveLocalBatch(): void {
+    const json = this.substanceFormService.cleanSubstance();
+    this.removeTmpStructureIdFields(json);
+
+    const timestamp = moment(new Date()).format("MMM-DD-YYYY_H-mm-ss");
+
+    // Download the SSG4M substance file
+    this.downloadFile(JSON.stringify(json), "SSG4m_" + timestamp + ".json");
+
+    // Collect all refuuids from materials in the SSG4M hierarchy
+    const referencedUuids = new Set<string>();
+    if (json.specifiedSubstanceG4m && json.specifiedSubstanceG4m.process) {
+      for (const process of json.specifiedSubstanceG4m.process) {
+        if (!process.sites) {
+          continue;
+        }
+        for (const site of process.sites) {
+          if (!site.stages) {
+            continue;
+          }
+          for (const stage of site.stages) {
+            const allMaterials = [
+              ...(stage.startingMaterials || []),
+              ...(stage.processingMaterials || []),
+              ...(stage.resultingMaterials || []),
+            ];
+            for (const material of allMaterials) {
+              if (material.substanceName && material.substanceName.refuuid) {
+                referencedUuids.add(material.substanceName.refuuid);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Find matching drafts in localStorage and download each as a separate file
+    const keys = Object.keys(localStorage);
+    for (const key of keys) {
+      if (key.startsWith("gsrs-draft-")) {
+        const draft = JSON.parse(localStorage.getItem(key));
+        if (
+          draft &&
+          draft.substance &&
+          referencedUuids.has(draft.substance.uuid)
+        ) {
+          const name = draft.substance.uuid || draft.name || "unknown";
+          const safeName = name.replace(/[^a-zA-Z0-9_-]/g, "_");
+          this.downloadFile(
+            JSON.stringify(draft.substance),
+            "Draft_" + safeName + "_" + timestamp + ".json",
+          );
+        }
+      }
+    }
+  }
+
+  private downloadFile(content: string, fileName: string): void {
+    const blob = new Blob([content], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   checkSsg4mServerStatus(): void {
@@ -707,7 +776,7 @@ export class SubstanceSsg4ManufactureFormComponent
             console.log("Error Status is 0");
             let totalNumberRefresh = 2;
             let preventRefresh = parseInt(
-              new URLSearchParams(window.location.search).get("refreshcount")
+              new URLSearchParams(window.location.search).get("refreshcount"),
             );
             // if parameter 'refreshcount' is NOT found in the URL, add refreshcount in the URL.
             // refresh n/totalNumberRefresh times
@@ -786,7 +855,7 @@ export class SubstanceSsg4ManufactureFormComponent
               this.errorMessage +
               "There could be an authentication issue. <br>-Make sure that you are logged into the GSRS website.<br>-Clear your browser cache.<br>-Reload your SSG4 page or Appian";
           }
-        }
+        },
       );
   }
 
@@ -837,7 +906,7 @@ export class SubstanceSsg4ManufactureFormComponent
               this.substanceFormService
                 .loadSubstance(
                   substanceSsg4mFromDb.substanceClass,
-                  substanceSsg4mFromDb
+                  substanceSsg4mFromDb,
                 )
                 .pipe(take(1))
                 .subscribe(() => {
@@ -868,7 +937,7 @@ export class SubstanceSsg4ManufactureFormComponent
           this.loadingService.setLoading(false);
           this.isLoading = false;
           //  this.handleSubstanceRetrivalError();
-        }
+        },
       );
   }
 
@@ -901,14 +970,14 @@ export class SubstanceSsg4ManufactureFormComponent
                 this.dynamicComponents.forEach((cRef, index) => {
                   this.dynamicComponentLoader
                     .getComponentFactory<any>(
-                      this.formSections[index].dynamicComponentName
+                      this.formSections[index].dynamicComponentName,
                     )
                     .subscribe((componentFactory) => {
                       this.formSections[index].dynamicComponentRef =
                         cRef.createComponent(componentFactory);
                       this.formSections[index].matExpansionPanel =
                         this.matExpansionPanels.find(
-                          (item, panelIndex) => index === panelIndex
+                          (item, panelIndex) => index === panelIndex,
                         );
                       this.formSections[
                         index
@@ -922,7 +991,7 @@ export class SubstanceSsg4ManufactureFormComponent
                       ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
                         (isHidden) => {
                           this.formSections[index].isHidden = isHidden;
-                        }
+                        },
                       );
                       this.subscriptions.push(hiddenStateSubscription);
                       this.formSections[
@@ -961,7 +1030,7 @@ export class SubstanceSsg4ManufactureFormComponent
           },
           (error) => {
             this.loadingService.setLoading(false);
-          }
+          },
         );
     } else {
       this.handleSubstanceRetrivalError();
@@ -999,12 +1068,12 @@ export class SubstanceSsg4ManufactureFormComponent
         },
         (error) => {
           this.gaService.sendException(
-            "getSubstanceDetails: error from API call"
+            "getSubstanceDetails: error from API call",
           );
           this.loadingService.setLoading(false);
           this.isLoading = false;
           this.handleSubstanceRetrivalError();
-        }
+        },
       );
   }
 
@@ -1231,7 +1300,7 @@ export class SubstanceSsg4ManufactureFormComponent
         (error) => {
           observer.error();
           observer.complete();
-        }
+        },
       );
     });
   }
@@ -1264,10 +1333,10 @@ export class SubstanceSsg4ManufactureFormComponent
       String(num).padStart(length, "0");
 
     const datePart = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(
-      now.getDate()
+      now.getDate(),
     )}`;
     const timePart = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(
-      now.getSeconds()
+      now.getSeconds(),
     )}`;
 
     return `${datePart}${timePart}`;
@@ -1317,7 +1386,7 @@ export class SubstanceSsg4ManufactureFormComponent
 
   async expandStepView(): Promise<void> {
     const tabProcesses = document.querySelector(
-      "#substance-form-ssg4m-process"
+      "#substance-form-ssg4m-process",
     ) as HTMLElement;
     if (tabProcesses.getAttribute("aria-expanded") !== "true") {
       console.log("Tab Processes not selected. Clicking it...");
@@ -1327,7 +1396,7 @@ export class SubstanceSsg4ManufactureFormComponent
 
     const allTabs = document.querySelectorAll(".mat-tab-label");
     const tabStepView = Array.from(allTabs).find(
-      (tab) => tab.textContent.trim() === "Step View"
+      (tab) => tab.textContent.trim() === "Step View",
     ) as HTMLElement;
     if (tabStepView.getAttribute("aria-selected") !== "true") {
       console.log("Tab Step View not selected. Clicking it...");
@@ -1338,7 +1407,7 @@ export class SubstanceSsg4ManufactureFormComponent
 
   async exportStepView(document: Document): Promise<void> {
     const elementToConvert = document.querySelector(
-      "app-ssg4m-scheme-view"
+      "app-ssg4m-scheme-view",
     ) as HTMLElement;
     const clone = elementToConvert.cloneNode(true) as HTMLElement;
     const initialWidth = elementToConvert.offsetWidth;
@@ -1438,7 +1507,7 @@ export class SubstanceSsg4ManufactureFormComponent
   // returns true if there are validation errors that should stop submission, false otherwise
   private async processLocalDrafts(jsonStr: string): Promise<boolean> {
     const draftKeys = Object.keys(localStorage).filter((k) =>
-      k.startsWith("gsrs-draft-")
+      k.startsWith("gsrs-draft-"),
     );
 
     this.validationMessages = [];
@@ -1459,12 +1528,15 @@ export class SubstanceSsg4ManufactureFormComponent
   }
 
   // Processes a single draft from localStorage.
-  private async processSingleDraft(key: string, jsonStr: string): Promise<void> {
+  private async processSingleDraft(
+    key: string,
+    jsonStr: string,
+  ): Promise<void> {
     try {
       const entry = JSON.parse(localStorage.getItem(key));
       console.log(
         "Processing draft entry from localStorage key: " +
-          JSON.stringify(entry)
+          JSON.stringify(entry),
       );
 
       if (!entry || !entry.substance) {
@@ -1477,7 +1549,10 @@ export class SubstanceSsg4ManufactureFormComponent
         return;
       }
 
-      const hasErrors = await this.validateAndCollectDraftErrors(draftSub, entry);
+      const hasErrors = await this.validateAndCollectDraftErrors(
+        draftSub,
+        entry,
+      );
       if (hasErrors) {
         return;
       }
@@ -1494,7 +1569,11 @@ export class SubstanceSsg4ManufactureFormComponent
   }
 
   // Checks if a draft's temporary structure ID is referenced in the current form JSON.
-  private isDraftReferencedInForm(draftSub: any, entry: any, jsonStr: string): boolean {
+  private isDraftReferencedInForm(
+    draftSub: any,
+    entry: any,
+    jsonStr: string,
+  ): boolean {
     const tmpStructureId =
       draftSub.$$tmpStructureId || entry.$$tmpStructureId || null;
 
@@ -1507,14 +1586,17 @@ export class SubstanceSsg4ManufactureFormComponent
 
   // Validates a draft and collects any validation errors/warnings.
   // returns true if there are validation errors that should skip saving, false otherwise
-  private async validateAndCollectDraftErrors(draftSub: any, entry: any): Promise<boolean> {
+  private async validateAndCollectDraftErrors(
+    draftSub: any,
+    entry: any,
+  ): Promise<boolean> {
     const validationResult: any = await new Promise((resolve) => {
       this.substanceService
         .validateSubstance(draftSub)
         .pipe(take(1))
         .subscribe(
           (res) => resolve(res),
-          (err) => resolve({ error: err })
+          (err) => resolve({ error: err }),
         );
     });
 
@@ -1526,7 +1608,7 @@ export class SubstanceSsg4ManufactureFormComponent
       const filteredValidations = this.filterAndPrefixValidationMessages(
         validationResult.validationMessages,
         entry,
-        draftSub
+        draftSub,
       );
 
       this.validationMessages = [
@@ -1543,13 +1625,13 @@ export class SubstanceSsg4ManufactureFormComponent
   private filterAndPrefixValidationMessages(
     messages: ValidationMessage[],
     entry: any,
-    draftSub: any
+    draftSub: any,
   ): ValidationMessage[] {
     return messages
       .filter(
         (message) =>
           message.messageType.toUpperCase() === "ERROR" ||
-          message.messageType.toUpperCase() === "WARNING"
+          message.messageType.toUpperCase() === "WARNING",
       )
       .map((msg) => {
         msg.message =
@@ -1568,7 +1650,7 @@ export class SubstanceSsg4ManufactureFormComponent
         .pipe(take(1))
         .subscribe(
           (resp) => resolve(resp),
-          (err) => resolve({ error: err })
+          (err) => resolve({ error: err }),
         );
     });
   }
@@ -1592,7 +1674,7 @@ export class SubstanceSsg4ManufactureFormComponent
       .pipe(take(1))
       .subscribe(
         (response) => this.handleSaveSuccess(response),
-        (error: SubstanceFormResults) => this.handleSaveError(error)
+        (error: SubstanceFormResults) => this.handleSaveError(error),
       );
     this.subscriptions.push(this.submitSubscription);
   }
@@ -1606,7 +1688,8 @@ export class SubstanceSsg4ManufactureFormComponent
 
     const isSuccessful =
       response &&
-      (response.synthPathwaySkey || this.configService.configData.isPfdaVersion);
+      (response.synthPathwaySkey ||
+        this.configService.configData.isPfdaVersion);
 
     if (!isSuccessful) {
       return;
@@ -1627,7 +1710,7 @@ export class SubstanceSsg4ManufactureFormComponent
       this.isCancelBtnClicked = false;
       this.openSuccessDialog(
         undefined,
-        this.configService.configData.isPfdaVersion ? response.fileUrl : null
+        this.configService.configData.isPfdaVersion ? response.fileUrl : null,
       );
     }
   }
@@ -1646,7 +1729,7 @@ export class SubstanceSsg4ManufactureFormComponent
       this.validationMessages = error.validationMessages.filter(
         (message) =>
           message.messageType.toUpperCase() === "ERROR" ||
-          message.messageType.toUpperCase() === "WARNING"
+          message.messageType.toUpperCase() === "WARNING",
       );
       this.showSubmissionMessages = true;
     } else {

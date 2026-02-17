@@ -105,11 +105,12 @@ export class SubstanceDraftsComponent implements OnInit {
 
     this.filtered = this.values;
     if (this.onlyCurrent) {
+      const isNewRegistration = !this.data || !this.data.uuid;
       this.filtered = this.filtered.filter(obj => {
         if(this.uuid) {
-          return obj.uuid == this.uuid;
+          return obj.uuid == this.uuid || (isNewRegistration && obj.uuid === 'register');
         } else if (this.json && this.json.uuid){
-          return obj.uuid == this.json.uuid;
+          return obj.uuid == this.json.uuid || (isNewRegistration && obj.uuid === 'register');
         } else {
           return false;
         }
@@ -372,12 +373,6 @@ export class SubstanceDraftsComponent implements OnInit {
         return b.date - a.date;
       });
       this.selectedKeys = [];
-
-      if (this.json && this.json.uuid) {
-        this.filterToggle('substance');
-      } else {
-        this.filterToggle('register');
-      }
   }
 
 

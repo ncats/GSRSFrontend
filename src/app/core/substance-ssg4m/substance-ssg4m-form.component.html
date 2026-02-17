@@ -25,6 +25,9 @@
         <a mat-menu-item [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
           <span>Save Local Copy</span>
         </a>
+        <button mat-menu-item (click)="saveLocalBatch()">
+          <span>Save Local Batch</span>
+        </button>
         <button mat-menu-item (click)="importDialog()">Import Local Copy</button>
         <button mat-menu-item (click)="showJSON()">Show Data Structure</button>
       </mat-menu>

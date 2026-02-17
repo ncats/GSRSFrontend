@@ -22,7 +22,7 @@
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef> Select </th>
       <td mat-cell *matCellDef="let draft">
-        <mat-checkbox [ngModel]="onlyCurrent" (change) = "toggleDraft(draft, $event.checked)" matTooltip="Select for submission"></mat-checkbox>
+        <mat-checkbox [ngModel]="selectedKeys.includes(draft.key)" (change) = "toggleDraft(draft, $event.checked)" matTooltip="Select for submission"></mat-checkbox>
       </td>
     </ng-container>
           <ng-container matColumnDef="delete">
