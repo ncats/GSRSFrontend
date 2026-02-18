@@ -31,8 +31,9 @@ form {
 
   // Form field infix padding
   ::ng-deep .mat-mdc-form-field-infix {
-    padding: 0.4375em 0;
-  }
+  padding-top: 0.5em;
+  padding-bottom: 0.25em;
+}
 
   // Text field wrapper padding
   ::ng-deep .mat-mdc-text-field-wrapper {
@@ -40,10 +41,14 @@ form {
   }
 
   // Bottom border color
-  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before,
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
+  border-bottom-color: #0000008a;
+}
+
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
-    border-bottom-color: #0000008a;
+    border-bottom-color: var(--primary-color);
   }
+
 }
 
 /* HEADER VARIANT – only when styling="header" */
@@ -51,6 +56,14 @@ form {
   .mat-input-element {
     font-size: 20px;
     color: white;
+  }
+
+  // MDC input text
+  ::ng-deep .mat-mdc-input-element {
+    color: white !important;
+    // font-size: 16px !important;
+    font-weight: 500 !important;
+    caret-color: white !important;
   }
 
   ::ng-deep .mat-mdc-input-element::placeholder {
@@ -65,8 +78,19 @@ form {
     color: #ffffffcc !important;
   }
 
-  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before,
+  // Inactive underline
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
+    border-bottom-color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  // Active/focused underline
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
+    border-bottom-color: white !important;
+  }
+
+  // Ensure focus state is visible
+  ::ng-deep .mdc-text-field--focused .mdc-line-ripple::after {
+    opacity: 1 !important;
     border-bottom-color: white !important;
   }
 }

@@ -765,6 +765,7 @@
 
   .label {
     font-weight: bold;
+    font-size: 14px;
     min-width: 100px;
   }
 }
@@ -827,6 +828,7 @@
   max-width: 38%;
   padding: 8px;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .row-property-value {
@@ -1105,71 +1107,42 @@
 }
 
 /* mat-tab styles */
+:host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab,
 :host ::ng-deep .mat-tab-list .mat-tab-label {
-  /*
-  border-width: 1px;
-  border-style: solid;
-  border-color: black;*/
-  /*color: black;*/
-  /*background-color: rgb(247, 241, 241);*/
-  /*border-right: 1px solid rgb(182, 177, 177);*/
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
   min-width: 250px;
   max-width: 250px;
   height: 35px;
   padding-top: 3px;
-  text-align: top;
-  /*margin-bottom: 10px;*/
-  /* FDA COLOR BLUE CODE Hex: #007CBA */
   color: #007cba;
   opacity: 1 !important;
   border-radius: 10px 10px 0px 0px;
-
-  /*
-  margin-left: 5px;
-
-  flex-wrap: wrap!important;
-  min-width: 120px;
-  max-width: 120px;
-  height: 35px;*/
 }
 
+:host ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
 :host ::ng-deep .mat-tab-label-content {
   margin-top: -5px;
 }
-/*
-::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-  color: red;
-  background-color: green;
-}
-*/
 
+:host ::ng-deep .mat-mdc-tab-header,
 :host ::ng-deep .mat-tab-header {
   margin-top: -10px; /* tab margin*/
-  /*border-bottom: 2px solid rgb(148, 149, 163); */
   border-bottom: 1px solid rgb(205, 201, 201);
 }
 
+:host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab.mdc-tab--active,
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
   background-color: var(--tabstyle-bg-color-5);
-  /*background: url("../../../core/assets/images/home/tab_active.png");*/
   color: #ffffff;
-  padding-top: -10px;
-
-  /*font-weight: bold;*/
-  /*background-color: #FFFFFF;*/
-  /*background-image: url("http://localhost:8081/ginas/app/beta/assets/images/home/tab_active.png");*/
-  /*background-color: rgb(20, 76, 189);*/
-  /*
-   color: rgb(248, 250, 248);
-   background-color: rgb(44, 70, 141);
-
-   opacity: 1;
-     */
 }
 
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #ffffff;
+}
+
+:host ::ng-deep .mdc-tab-indicator,
 :host ::ng-deep .mat-ink-bar {
-  /*background-color: var(--primary-color, --royal-blue-color) !important;
-  height: 3px;*/
   display: none !important;
 }
 
@@ -1193,16 +1166,4 @@ mat-card.style {
   background-color: var(--regular-white-color);
   font-size: 14px;
   height: 35px;
-}
-
-::ng-deep .mdc-tab {
-  justify-content: flex-start !important;
-  flex-grow: 0 !important;
-  border-bottom: transparent !important;
-  background-color: var(--tabstyle-bg-color-5) !important;
-  border-radius: 10px 10px 0 0;
-}
-
-::ng-deep .mdc-tab .mdc-tab-indicator {
-  display: none;
 }

@@ -840,6 +840,16 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   height: 48px;
 }
 
+.mat-mdc-tab-list .mat-mdc-tab,
+.mat-tab-list .mat-tab-label {
+  letter-spacing: normal;
+
+  .mdc-tab__text-label {
+    letter-spacing: normal;
+    line-height: 1.3;
+  }
+}
+
 .mat-mdc-tab-body-content {
   padding: 16px 0;
 }
@@ -1097,6 +1107,29 @@ mat-sidenav-content .controls-container .export-button {
   padding: 16px 16px;
 }
 
+button.mat-mdc-button.export-button > .mat-icon,
+button.mat-mdc-button.export-button .mat-icon,
+.mat-icon[data-mat-icon-name="chevron_down"] {
+  height: 24px !important;
+  width: 24px !important;
+  font-size: 24px !important;
+  line-height: 24px !important;
+}
+
+// Specificity (0,5,1) beats the general button rule's (0,5,0) — moves svg icon left of label
+button.mat-mdc-button.mat-button.export-button > .mat-icon[svgicon] {
+  order: 0 !important;
+  margin-right: 6px !important;
+  margin-left: 0 !important;
+}
+
+// button.mat-mdc-button >.mat-icon[data-mat-icon-name="chevron_down"]{
+//   height: 24px !important;
+//   width: 24px !important;
+//   font-size: 24px !important;
+//   line-height: 24px !important;
+// }
+
 // ============================================================================
 // GENERAL MDC FIXES
 // ============================================================================
@@ -1302,7 +1335,7 @@ a[mat-fab],
     // The mat-icon appears FIRST in DOM (Angular moves it)
     > .mat-icon {
       order: 10 !important; // Force it to appear LAST visually
-      margin-left: 8px !important;
+      // margin-left: 8px !important;
       margin-right: 0 !important;
       vertical-align: middle;
       display: inline-flex;
@@ -1320,11 +1353,11 @@ a[mat-fab],
       display: inline-flex;
       align-items: center;
 
-      // If there's a mat-icon inside the label (shouldn't happen, but just in case)
-      > .mat-icon {
-        margin-left: 8px;
-        order: inherit;
-      }
+      // // If there's a mat-icon inside the label (shouldn't happen, but just in case)
+      // > .mat-icon {
+      //   margin-left: 8px;
+      //   order: inherit;
+      // }
     }
 
     // Handle ripple and touch target (they should be positioned absolutely)
