@@ -236,12 +236,26 @@
                   Application Type Number:
                 </div>
                 <div class="row-property-value-2">
-                  <span class="font14px" *ngIf="prodProv.applicationType">
-                    {{prodProv.applicationType}}
-                  </span>
-                  <span class="font14px" *ngIf="prodProv.applicationNumber">
-                    {{prodProv.applicationNumber}}
-                  </span>
+                  <!-- Go to Browse Application page -->
+                  <div *ngIf="prodProv._applicationUrl; else noAppTypeOrNumber">
+                    <a [routerLink]="['/browse-applications']" [queryParams]="{search:prodProv._applicationUrl}"
+                      target="_blank" matTooltip='Go to Application record' *ngIf="canUpdate">
+                      <span class="font14px" *ngIf="prodProv.applicationType">
+                        {{prodProv.applicationType}}
+                      </span>
+                      <span class="font14px" *ngIf="prodProv.applicationNumber">
+                        {{prodProv.applicationNumber}}
+                      </span>
+                    </a>
+                  </div>
+                  <ng-template #noAppTypeOrNumber>
+                    <span class="font14px" *ngIf="prodProv.applicationType">
+                      {{prodProv.applicationType}}
+                    </span>
+                    <span class="font14px" *ngIf="prodProv.applicationNumber">
+                      {{prodProv.applicationNumber}}
+                    </span>
+                  </ng-template>
                 </div>
               </div>
 
@@ -441,8 +455,8 @@
                             &nbsp;&nbsp;
                             <span class="colororange">
                               <span
-                              [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
-                            </span>
+                                [title]="getSubstanceClass(prodIngred._substanceClass)"><b>{{prodIngred._substanceClass}}</b>
+                              </span>
                             </span>
                           </div>
 

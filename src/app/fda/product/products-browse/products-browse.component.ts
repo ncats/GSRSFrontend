@@ -446,19 +446,34 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   sortData(sort: Sort) {
+    // Check if a valid column is selected for sorting
     if (sort.active) {
+      // Get the index of the column being sorted from the displayedColumns array
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      
+      // Store the current sort direction (ascending or descending)
       this.ascDescDir = sort.direction;
+      
+      // Iterate through predefined sort configurations to find matching sort criteria
       this.sortValues.forEach(sortValue => {
+        // Verify that the sort configuration has both column and direction defined
         if (sortValue.displayedColumns && sortValue.direction) {
-          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+          // Match the current column and direction with predefined sort values
+          // to determine the appropriate sort order value for the API/backend
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && 
+              this.ascDescDir === sortValue.direction) {
+            // Set the order value that will be used in the search/filter request
             this.order = sortValue.value;
           }
         }
       });
+      
+      // Trigger a new search with the updated sort parameters
       // Search Applications
       this.searchProducts();
     }
+    
+    // Exit the function (explicit return for clarity)
     return;
   }
 
@@ -589,7 +604,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           let truncateAppType = this.truncateBeforeNumber(prov.applicationNumber);
           let truncateAppNum = this.truncateAfterAlpha(prov.applicationNumber);
           if (prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH FINAL' && prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH NOT FINAL') {
-            prov._applicationUrl = 'root_appType:"^' + truncateAppType + '$" AND root_appNumber:"^' + truncateAppNum + '$"';
+            prov._applicationUrl = 'root_appType:"^' + prov.applicationType + '$" AND root_appNumber:"^' + prov.applicationNumber + '$"';
           }
         }
       });

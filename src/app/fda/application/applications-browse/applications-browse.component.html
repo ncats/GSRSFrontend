@@ -395,11 +395,17 @@
                 <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank">
                   {{application.appType}}&nbsp;{{application.appNumber}}
                 </a>
-                &nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;
                 <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canUpdate"
                   matTooltip='Edit GSRS Application Record'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>
+
+                <!-- LOCK ICON if Application record Public Domain is NO -->
+                <span *ngIf="application.publicDomain && application.publicDomain.toLowerCase() === 'no'">
+                  &nbsp;&nbsp;
+                  <mat-icon svgIcon="lock" class="lock-icon" matTooltip="The Public Domain for this Application record is '{{application.publicDomain}}'"></mat-icon>
+                </span>
               </div>
 
               <div>

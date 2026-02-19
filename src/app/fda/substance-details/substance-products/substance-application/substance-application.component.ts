@@ -113,36 +113,29 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     if ($event) {
       const evt: any = $event.tab;
       const textLabel: string = evt.textLabel;
-      // Get Center and fromTable/Source from Tab Label
+      
+      // Extract center and table information from the tab label
       if (textLabel != null) {
         this.loadingStatus = 'Loading data...';
+        
+        // Parse the tab label to extract center (before space) and fromTable (after space)
         const index = textLabel.indexOf(' ');
         this.center = textLabel.slice(0, index);
         this.fromTable = textLabel.slice(index + 1, textLabel.length);
-
-        //let fromReplace = '';
-        /*
-        if (this.fromTable.indexOf('Integrity') >= 0) {
-          fromReplace = this.fromTable.replace('Integrity', 'Darrts');
-        } else if (this.fromTable.indexOf('GSRS') >= 0) {
-          fromReplace = this.fromTable.replace('GSRS', 'SRS');
-        }
-        if (fromReplace && fromReplace.length > 0) {
-          this.fromTable = fromReplace;
-        }
-        */
       }
-
-      // set the current result data to empty or null.
+  
+      // Clear existing results before loading new data
       this.paged = [];
-
+  
+      // Build search query with substance key, center, and source table parameters
       this.privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
         + this.bdnum + ' AND root_center:' + this.center + ' AND root_fromTable: ' + this.fromTable;
-
+  
+      // Fetch application data based on the constructed search criteria
       this.getApplicationBySubstanceKeyCenter();
     }
   }
-
+  
   // GSRS 3.0
   getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent, searchType?: string) {
     this.setPageEvent(pageEvent);

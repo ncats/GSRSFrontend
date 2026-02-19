@@ -697,10 +697,9 @@
                       </div>
                       <div class="row-property-value">
                         <!-- Go to Browse Application page -->
-
                         <div *ngIf="prodProv._applicationUrl; else noAppTypeOrNumber">
                           <a [routerLink]="['/browse-applications']" [queryParams]="{search:prodProv._applicationUrl}"
-                            target="_blank" matTooltip='Go to Application record' *ngIf="isAdmin">
+                            target="_blank" matTooltip='Go to Application record' *ngIf="isLoggedIn">
                             <span class="font14px" *ngIf="prodProv.applicationType">
                               {{prodProv.applicationType}}
                             </span>
@@ -1061,7 +1060,7 @@
               </div> <!-- row Substance Name DISPLAY END -->
 
               <!-- Display Audit Details BEGIN -->
-              <div class="row" *ngIf="isAdmin">
+              <div class="row" *ngIf="isLoggedIn">
                 <div class="row-property">
                   <div class="row-property-key">
                     Created Date:
@@ -1080,7 +1079,7 @@
                 </div>
               </div>
 
-              <div class="row" *ngIf="isAdmin">
+              <div class="row" *ngIf="isLoggedIn">
                 <div class="row-property">
                   <div class="row-property-key">
                     Created By:

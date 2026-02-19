@@ -160,6 +160,9 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           // Get RxNorm Url if Product Code Type is RxNorm
           this.getRxNormUrlforProductCode();
 
+          // Get Application Type and Application Number Url to go to Browse Application page.
+          this.getApplicationNumberTypeUrl();
+
           // Sort Product Codes by ascending alphabetically
           this.sortProductCodes();
         }
@@ -419,6 +422,16 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     }); // product manufacture Items loop            
   }
 
+  getApplicationNumberTypeUrl() {
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      if ((prov.applicationType) && (prov.applicationNumber)) {
+        if (prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH FINAL' && prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH NOT FINAL') {
+          prov._applicationUrl = 'root_appType:"^' + prov.applicationType + '$" AND root_appNumber:"^' + prov.applicationNumber + '$"';
+        }
+      }
+    });
+  }
+
   saveJSON(): void {
     const copyProd = _.cloneDeep(this.product);
     let cleanProduct = this.scrub(copyProd);
@@ -567,6 +580,13 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
       }
     }
 
+    const applicationUrlHolders = jp.query(old, '$..[?(@._applicationUrl)]');
+    for (let i = 0; i < applicationUrlHolders.length; i++) {
+      if (applicationUrlHolders[i]._applicationUrl) {
+        delete applicationUrlHolders[i]._applicationUrl;
+      }
+    }
+
     const dailyMedUrlHolders = jp.query(old, '$..[?(@._dailyMedUrl)]');
     for (let i = 0; i < dailyMedUrlHolders.length; i++) {
       if (dailyMedUrlHolders[i]._dailyMedUrl) {
@@ -601,6 +621,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
         delete ingredSubstanceClassHolders[i]._substanceClass;
       }
     }
+
 
     delete old['_activeIngredients'];
     delete old['_otherIngredients'];
