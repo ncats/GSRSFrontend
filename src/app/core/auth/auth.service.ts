@@ -156,14 +156,14 @@ get auth(): Auth {
     }
   }
 
-  hasRoles(...roles: Array<Role | string>): boolean {
+  hasRoles(...roles: Array<string>): boolean {
     const rolesList = [...roles];
-
+    const checkableRoles = this._auth.roles.map((x: Role) => x.role.toUpperCase());
+    
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
       for (const r of rolesList) {
-        let role = r.charAt(0).toLowerCase() + r.slice(1);
-        role = role.charAt(0).toUpperCase() + role.slice(1);
-        if (this._auth.roles.indexOf(role as Role) === -1) {
+        let role = r.toUpperCase();
+        if (checkableRoles.indexOf(role) === -1) {
           return false;
         }
       }
@@ -193,7 +193,7 @@ get auth(): Auth {
     return true;
   }
 
-  hasRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
+  hasRolesAsync(...roles: Array< string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasRoles(...roles));
@@ -207,13 +207,13 @@ get auth(): Auth {
     });
   }
 
-  hasAnyRoles(...roles: Array<Role | string>): boolean {
+  hasAnyRoles(...roles: Array<string>): boolean {
     const rolesList = [...roles];
+    const checkableRoles = this._auth.roles.map((x: Role) => x.role.toUpperCase());
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
       for (const r of rolesList) {
-        let role = r.charAt(0).toLowerCase() + r.slice(1);
-        role = role.charAt(0).toUpperCase() + role.slice(1);
-        if (this._auth.roles.indexOf(role as Role) > -1) {
+        let role = r.toUpperCase();
+        if (checkableRoles.indexOf(role) === -1) {
           return true;
         }
       }
@@ -248,7 +248,7 @@ get auth(): Auth {
     return this._privileges != null && this._privileges.some(p=>p.privilege==requestedPrivilege);
   }
 
-  hasAnyRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
+  hasAnyRolesAsync(...roles: Array<string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasAnyRoles(...roles));

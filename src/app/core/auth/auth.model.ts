@@ -52,4 +52,6 @@ export interface Privilege {
     privilege: string;
 }
 
-export type Role = 'Updater'|'Admin'|'Query'|'SuperUpdate'|'DataEntry'|'SuperDataEntry'|'Approver';
+export type Role ={
+    role: string;
+}
