@@ -52,7 +52,7 @@
                     View
                   </a>
                   &nbsp;&nbsp;
-                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                  <a [routerLink]="['/product', product.id, 'edit']" target="_blank" *ngIf="canUpdate"
                     matTooltip='Edit GSRS Product Record'>
                     <mat-icon svgIcon="edit"></mat-icon>
                   </a>
