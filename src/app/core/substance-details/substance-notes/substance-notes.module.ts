@@ -6,6 +6,7 @@ import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import {ReadMoreComponent} from '@gsrs-core/substance-details/substance-notes/read-more/read-more.component';
 
@@ -17,7 +18,8 @@ import {ReadMoreComponent} from '@gsrs-core/substance-details/substance-notes/re
     CdkTableModule,
     MatDialogModule,
     ReferencesManagerModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule
   ],
   declarations: [SubstanceNotesComponent, ReadMoreComponent]
 })

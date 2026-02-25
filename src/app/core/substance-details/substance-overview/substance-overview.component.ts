@@ -74,6 +74,13 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   }
 
   async ngOnInit() {
+    // Synchronously seed versionControl with the current substance version BEFORE any
+    // async awaits below. Without this, canRestoreVersions can flip to true while
+    // versionControl still holds '' (its FormControl default), making the View button
+    // flash visible until the checkVersion() HTTP response arrives.
+    if (this.substance?.version) {
+      this.versionControl.setValue(this.substance.version.toString());
+    }
 
     this.canEdit=await this.authService.canEditData();
     this.canRestoreVersions = await this.authService.hasSpecificPrivilege("Restore Previous Versions");

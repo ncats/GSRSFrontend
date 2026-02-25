@@ -93,6 +93,9 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   isRefresher = false;
   @ViewChildren(BrowseHeaderDynamicSectionDirective) dynamicContentContainer: QueryList<BrowseHeaderDynamicSectionDirective>;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+  // Initialized before any lifecycle hook so the first template render uses the correct state.
+  // This prevents mat-sidenav-content from flashing at full width before the sidenav opens.
+  readonly initialSidenavOpen = typeof window !== 'undefined' && window.innerWidth >= 1100;
   hasBackdrop = false;
   view = 'cards';
   private resizeTimeout: any;

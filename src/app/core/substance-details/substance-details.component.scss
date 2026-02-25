@@ -52,6 +52,12 @@ mat-sidenav.substance-sidenav.mat-drawer {
   flex-direction: column;
 }
 
+:host ::ng-deep .substance-nav-list 
+  .mat-mdc-list-item 
+  .mdc-list-item__primary-text {
+  color: #000;
+}
+
 .list-content {
   display: flex;
   flex-direction: row;

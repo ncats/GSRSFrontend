@@ -226,7 +226,7 @@
 
           <div class="export ">
             <button *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
-              mat-button class="mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
+              mat-raised-button class="export-button" [matMenuTriggerFor]="exportMenu">
               <mat-icon svgIcon="get_app"></mat-icon> Export
               <mat-icon>arrow_drop_down</mat-icon>
             </button>

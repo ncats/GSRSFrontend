@@ -7,6 +7,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTreeModule} from '@angular/material/tree';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -27,6 +28,7 @@ import {RouterModule} from '@angular/router';
     ReferencesManagerModule,
     MatIconModule,
     MatDialogModule,
+    MatButtonModule,
     MatSortModule,
     MatTreeModule,
     RouterModule,

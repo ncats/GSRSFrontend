@@ -10,6 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 import {MatSortModule} from '@angular/material/sort';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { TableModule } from 'primeng/table';
@@ -39,7 +40,8 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
     TableModule,
     MatTooltipModule,
     MatRadioModule,
-    ElementLabelDisplayModule
+    ElementLabelDisplayModule,
+    MatButtonModule
   ],
   declarations: [SubstanceNamesComponent,
   ]

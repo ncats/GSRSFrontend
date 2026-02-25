@@ -10,6 +10,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSortModule} from '@angular/material/sort';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -34,7 +35,8 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MatTooltipModule,
     RouterModule,
     MatSortModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatButtonModule
   ],
   declarations: [
     SubstanceConstituentsComponent

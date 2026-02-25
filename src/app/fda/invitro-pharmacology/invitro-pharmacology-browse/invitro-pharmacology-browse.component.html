@@ -138,7 +138,7 @@
 
           <div class="export ">
             <button *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
-              mat-button class="mat-button export-button mat-raised-button" [matMenuTriggerFor]="exportMenu">
+              mat-button mat-raised-button color="primary" class="export-button" [matMenuTriggerFor]="exportMenu">
               <mat-icon svgIcon="get_app"></mat-icon> Export
               <mat-icon>arrow_drop_down</mat-icon>
             </button>
@@ -459,7 +459,7 @@
 
                           <div *ngIf="assayscreen.controls">
 
-                            <button class="mat-raised-button mat-primary dialog-close marginright10px"
+                            <button mat-raised-button color="primary" class="dialog-close marginright10px"
                               (click)="openModalControls(controlTemplate)">Controls
                               ({{assayscreen.controls.length}})
                             </button>
@@ -529,7 +529,7 @@
 
                               <div mat-dialog-actions>
                                 <span class="middle-fill"></span>
-                                <button class="mat-raised-button mat-primary" (click)="close()"
+                                <button mat-raised-button color="primary" (click)="close()"
                                   mat-dialog-close>Close</button>
                               </div>
 
@@ -736,7 +736,7 @@
 
                             <div *ngIf="assayscreen.controls">
 
-                              <button class="mat-raised-button mat-primary dialog-close marginright10px"
+                              <button mat-raised-button color="primary" class="dialog-close marginright10px"
                                 (click)="openModalControls(controlTemplate)">Controls
                                 ({{assayscreen.controls.length}})
                               </button>
@@ -808,7 +808,7 @@
 
                                 <div mat-dialog-actions>
                                   <span class="middle-fill"></span>
-                                  <button class="mat-raised-button mat-primary" (click)="close()"
+                                  <button mat-raised-button color="primary" (click)="close()"
                                     mat-dialog-close>Close</button>
                                 </div>
 
@@ -1040,7 +1040,7 @@
 
                                 <div *ngIf="assayscreen.controls">
 
-                                  <button class="mat-raised-button mat-primary dialog-close marginright10px"
+                                  <button mat-raised-button color="primary" class="dialog-close marginright10px"
                                     (click)="openModalControls(controlTemplate)" aria-label="View Controls">Controls
                                     ({{assayscreen.controls.length}})
                                   </button>
@@ -1112,7 +1112,7 @@
 
                                     <div mat-dialog-actions>
                                       <span class="middle-fill"></span>
-                                      <button class="mat-raised-button mat-primary" (click)="close()"
+                                      <button mat-raised-button color="primary" (click)="close()"
                                         mat-dialog-close>Close</button>
                                     </div>
 
@@ -1427,7 +1427,7 @@
 
                           <div *ngIf="assayscreen.controls">
 
-                            <button class=" mat-raised-button mat-primary dialog-close marginright10px"
+                            <button mat-raised-button color="primary" class="dialog-close marginright10px"
                               (click)="openModalControls(controlTemplate)">Controls
                               ({{assayscreen.controls.length}})
                             </button>
@@ -1491,7 +1491,7 @@
 
                               <div mat-dialog-actions>
                                 <span class="middle-fill"></span>
-                                <button class="mat-raised-button mat-primary" (click)="close()"
+                                <button mat-raised-button color="primary" (click)="close()"
                                   mat-dialog-close>Close</button>
                               </div>
 

@@ -1116,12 +1116,66 @@ button.mat-mdc-button.export-button .mat-icon,
   line-height: 24px !important;
 }
 
-// Specificity (0,5,1) beats the general button rule's (0,5,0) — moves svg icon left of label
-button.mat-mdc-button.mat-button.export-button > .mat-icon[svgicon] {
-  order: 0 !important;
-  margin-right: 6px !important;
-  margin-left: 0 !important;
+// ============================================================================
+// GLOBAL BUTTON ICON SIZING + SPACING (MDC)
+// ============================================================================
+
+// Apply to "text buttons" (buttons that can have icon + label)
+button.mat-mdc-button,
+button.mat-mdc-raised-button,
+button.mat-mdc-unelevated-button,
+button.mat-mdc-outlined-button {
+  .mat-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 24px;
+
+    // space between icon and label
+    margin-right: 6px;
+    margin-left: 0;
+  }
+
+  // If svgIcon renders sizing on the SVG element
+  .mat-icon svg {
+    width: 24px;
+    height: 24px;
+  }
 }
+
+// Do NOT add label spacing to icon-only buttons
+button.mat-mdc-icon-button .mat-icon {
+  margin-right: 0;
+}
+
+// ============================================================================
+// EXPORT BUTTON ONLY: keep svg mat-icon LEFT of label + spacing
+// ============================================================================
+
+button.export-button {
+  // Only for SVG icons inside export buttons
+  .mat-icon[data-mat-icon-type="svg"] {
+    order: 0 !important;
+    margin-right: 6px !important;
+    margin-left: 0 !important;
+
+    width: 24px;
+    height: 24px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  // Ensure label stays after the icon
+  .mdc-button__label {
+    order: 1 !important;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
 
 // button.mat-mdc-button >.mat-icon[data-mat-icon-name="chevron_down"]{
 //   height: 24px !important;
@@ -1370,6 +1424,80 @@ a[mat-fab],
     }
   }
 }
+
+// ============================================================================
+// EXPORT BUTTON: put SVG icon left, keep dropdown icon right
+// (Matches the specificity of the global reorder rule)
+// ============================================================================
+
+.mat-mdc-button.export-button,
+.mat-mdc-raised-button.export-button,
+.mat-mdc-unelevated-button.export-button,
+.mat-mdc-outlined-button.export-button {
+  &:not([mat-icon-button]):not([mat-fab]):not([mat-mini-fab]) {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+
+    // SVG icon (get_app) must be LEFT of label
+    > .mat-icon[data-mat-icon-type="svg"] {
+      order: 0 !important;
+      margin-right: 6px !important;
+      margin-left: 0 !important;
+    }
+
+    // Label in the middle
+    > .mdc-button__label {
+      order: 1 !important;
+    }
+
+    // Font icon (arrow_drop_down) stays on the RIGHT
+    > .mat-icon[data-mat-icon-type="font"] {
+      order: 2 !important;
+      margin-left: 6px !important;
+      margin-right: 0 !important;
+    }
+  }
+}
+
+// ============================================================================
+// ANCHOR "BUTTONS" (a[mat-button], a[mat-flat-button], etc.)
+// Restore icon sizing (24px) + spacing for svg icons inside anchors
+// ============================================================================
+
+a.mat-mdc-button,
+a.mat-mdc-raised-button,
+a.mat-mdc-unelevated-button,
+a.mat-mdc-outlined-button {
+  &:not([mat-icon-button]):not([mat-fab]):not([mat-mini-fab]) {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+
+    // SVG icons should have proper size + spacing
+    > .mat-icon[data-mat-icon-type="svg"] {
+      order: 0 !important;
+      width: 24px !important;
+      height: 24px !important;
+      margin-right: 6px !important;
+      margin-left: 0 !important;
+      flex: 0 0 auto;
+
+      svg {
+        width: 24px !important;
+        height: 24px !important;
+      }
+    }
+
+    // Optional: keep label after icon (normal button behavior)
+    > .mdc-button__label {
+      order: 1 !important;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+}
+
 
 // Fix for menu items with icons
 .mat-menu-item,
