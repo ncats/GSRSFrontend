@@ -117,7 +117,7 @@
   <app-structure-form [structure]="structure" showSettings="true" [type]="substanceType">
   </app-structure-form>
   <div class="button-container" *ngIf="substanceType === 'polymer'">
-    <button class="mat-flat-button mat-primary" color="primary" (click)="generateSRU()"
+    <button mat-flat-button color="primary" (click)="generateSRU()"
       matTooltip="generate structural units for this structure">Generate SRUs</button>
   </div>
 </div>

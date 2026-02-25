@@ -125,8 +125,8 @@
         </div>
         <button
           mat-flat-button
+          color="primary"
           (click)="onSubmit()"
-          class="mat-button mat-primary mat-flat-button"
           type="submit"
         >
           Upload
@@ -194,9 +194,8 @@
           style="min-width: 100px; max-width: 150px; margin: auto"
         >
           <button
-            mat-button
             mat-flat-button
-            class="mat-button mat-flat-button step2-button"
+            class="step2-button"
             (click)="openAction(settingTemplate, $index)"
           >
             Settings
@@ -351,8 +350,8 @@
       <br />
       <br />
       <button
-        mat-button
-        class="mat-button mat-primary mat-flat-button"
+        mat-flat-button
+        color="primary"
         (click)="putSettings()"
       >
         Use Settings and Continue
@@ -402,9 +401,9 @@
     </div>
 
     <button
-      mat-button
+      mat-flat-button
+      color="primary"
       [disabled]="executeLoading"
-      class="mat-button mat-primary mat-flat-button"
       (click)="stagingArea(true)"
     >
       View Records in Staging Area

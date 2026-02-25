@@ -26,8 +26,21 @@ mat-sidenav {
   background-color: var(--regular-transparent-color);
 }
 
-// REMOVED: No longer needed - Material calculates margin correctly from --mat-sidenav-container-width
-// The !important override was a symptom of the measurement race condition, not the fix
+// On viewports where the sidenav is always open, lock the content margin to the
+// sidenav width immediately via CSS. This prevents the layout shift caused by
+// Angular Material measuring the drawer width asynchronously in ngAfterContentInit
+// and then animating margin-left from 0 → 315px after the first paint.
+//
+// CSS !important in a stylesheet overrides Angular Material's inline margin-left
+// style (which lacks !important). Because the computed value of margin-left is
+// pinned to 315px from the very first frame, Angular Material's later updates to
+// the inline style never change the computed value, so no CSS transition fires.
+@media (min-width: 1100px) {
+  .mat-drawer-container .mat-drawer-content,
+  .mat-drawer-container .mat-sidenav-content {
+    margin-left: var(--gsrs-sidenav-width) !important;
+  }
+}
 
 .expand-sidenav {
   position: fixed;

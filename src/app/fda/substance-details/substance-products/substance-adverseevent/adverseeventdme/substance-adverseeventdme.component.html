@@ -3,8 +3,8 @@
   &nbsp;&nbsp;&nbsp;
   <!-- Export Button -->
   <span class="export" *ngIf="canExport && adverseEventCount > 0">
-    <button matTooltip="Export Search Results" mat-button (click)="export()"
-      class="mat-button export-button mat-raised-button">
+    <button matTooltip="Export Search Results" mat-button mat-raised-button (click)="export()"
+      class="export-button">
       <mat-icon svgIcon="get_app"></mat-icon> Export
     </button>
   </span>

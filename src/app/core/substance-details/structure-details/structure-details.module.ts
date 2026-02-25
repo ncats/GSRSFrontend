@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   imports: [
@@ -16,7 +18,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReferencesManagerModule,
     SubstanceImageModule,
     MatListModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonModule
   ],
   declarations: [
     StructureDetailsComponent

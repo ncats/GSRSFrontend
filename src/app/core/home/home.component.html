@@ -471,7 +471,9 @@
                 <a
                   *ngIf="usefulLink.templateDescription"
                   matButton="elevated"
-                  class="mat-raised-button mat-button mat-primary mat-primary-button trial-button"
+                  mat-raised-button
+                  color="primary"
+                  class="mat-primary-button trial-button"
                   tabindex="0"
                   role="link"
                   (click)="openModal(helpfulResourceModal, usefulLink)"
@@ -480,7 +482,9 @@
                 <a
                   *ngIf="!usefulLink?.templateDescription"
                   matButton="elevated"
-                  class="mat-raised-button mat-button mat-primary mat-primary-button trial-button"
+                  mat-raised-button
+                  color="primary"
+                  class="mat-primary-button trial-button"
                   target="_blank"
                   href="{{ usefulLink.href }}"
                   >{{ usefulLink.title ? usefulLink.title : "no title" }}</a
@@ -514,7 +518,8 @@
           <div mat-dialog-actions>
             <span class="middle-fill"></span>
             <button
-              class="mat-raised-button mat-primary"
+              mat-raised-button
+              color="primary"
               style="margin-top: 30px"
               (click)="dialogRef.close()"
             >

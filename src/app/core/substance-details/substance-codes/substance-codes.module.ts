@@ -10,6 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import {ReferencesManagerModule} from '../../references-manager/references-manager.module';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSortModule} from '@angular/material/sort';
@@ -38,7 +39,8 @@ import { forwardSlash } from './codeSearchPipe';
     ReferencesManagerModule,
     MatDialogModule,
     MatSortModule,
-    CodeDisplayModule
+    CodeDisplayModule,
+    MatButtonModule
   ],
   declarations: [
     SubstanceCodesComponent,

@@ -6,7 +6,7 @@
     [disableClose]="!isCollapsed"
     #matSideNavInstance
     mode="side"
-    opened="false"
+    [opened]="initialSidenavOpen"
   >
     <div class="sidenav-header-container">
       <mat-form-field
@@ -675,8 +675,8 @@
             <button
               *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0"
               matTooltip="Export Search Results"
-              mat-button
-              class="mat-button export-button mat-raised-button"
+              mat-raised-button
+              class="export-button"
               [matMenuTriggerFor]="exportMenu"
             >
               <mat-icon svgIcon="get_app"></mat-icon> Export
@@ -1399,8 +1399,9 @@
     <mat-dialog-actions
       ><span class="middle-fill"></span
       ><button
-        mat-button
-        class="primary mat-raised-button mat-primary structure-dialog-button"
+        mat-raised-button
+        color="primary"
+        class="primary structure-dialog-button"
         (click)="pauseCloseAsync()"
       >
         Close dialog
