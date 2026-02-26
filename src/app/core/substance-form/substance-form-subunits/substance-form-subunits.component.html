@@ -1,11 +1,11 @@
 <div class="add-container">
     <div class='add-button'>
-      <button mat-button (click)="openDialog()">
+      <button mat-button color="primary" (click)="openDialog()">
         Add Feature <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
     </div>
     <div class='add-button' *ngIf='substanceType === "protein"'>
-      <button mat-button (click)="openAnyDialog()">
+      <button mat-button color="primary" (click)="openAnyDialog()">
         Add Any Site Type <mat-icon svgIcon="add_circle_outline"></mat-icon>
       </button>
     </div>

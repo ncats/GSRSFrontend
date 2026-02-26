@@ -51,6 +51,7 @@
 
 .background-button {
     background-color: #ebf1f6;
+    color: var(--link-color);
 }
 
 .button-margin {
@@ -67,11 +68,11 @@
 .top-button {
     font-size: 20px;
     margin-left: 150px;
-padding-top: 4px;
-padding-bottom: 4px;
-width: 200px;
-background-color:  var(--primary-color);
-color: white;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    width: 200px;
+    background-color:  var(--primary-color);
+    color: white;
 }
 
 .search-parameters {
@@ -743,4 +744,16 @@ color: white;
 }
 .cdk-overlay-backdrop, .cdk-global-overlay-wrapper {
     display: none !important;
+}
+
+:host ::ng-deep .mat-sidenav-content,
+:host ::ng-deep .mat-drawer-content {
+  margin-left: 0 !important;
+}
+
+// Keep the expand button visible at all viewport widths since the sidenav is
+// never pre-opened (the global rule hides it at >= 1100px).
+.expand-sidenav {
+  display: block !important;
+  opacity: 1 !important;
 }

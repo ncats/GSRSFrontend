@@ -1,4 +1,7 @@
 .mat-form-field {
-    width: 100%;
-    
+    width: 100%;    
+}
+
+:host .mat-mdc-form-field {
+  display: flex;
 }
