@@ -125,6 +125,7 @@ import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
 import { FileSelectModule } from './file-select/file-select.module';
 import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamine-standalone.module';
+import { MatDividerModule } from '@angular/material/divider';
 @NgModule({
   declarations: [
     AppComponent,
@@ -239,7 +240,8 @@ import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamin
     ElementLabelDisplayModule,
     PrivacyStatementModule,
     CrossEntitySearchModule,
-    NitrosamineStandaloneModule
+    NitrosamineStandaloneModule,
+    MatDividerModule
   ],
   providers: [
     {
