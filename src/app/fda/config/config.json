@@ -116,7 +116,7 @@
     {
       "title": "GSRSFind Excel tools",
       "description": "GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)<br/>GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.",
-      "href": "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip",
+      "href": "https://github.com/ncats/gsrsfind/releases/download/v1.6/GSRS.Excel.Tool.1.6.zip",
       "imageFile": "xlsx.png",
       "templateDescription": "Click to download GSRSFind Excel tools.zip"
     },
