@@ -107,3 +107,14 @@
   max-width: 100%;
   width: auto;
 }
+
+::ng-deep .icon-row-menu.mat-mdc-menu-panel {
+  min-height: unset !important;
+  min-width: unset !important;
+}
+
+::ng-deep .icon-row-menu .mat-mdc-menu-content {
+  display: flex;
+  flex-direction: row;
+  padding: 4px;
+}

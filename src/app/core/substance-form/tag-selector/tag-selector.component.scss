@@ -5,3 +5,7 @@
 :host .mat-mdc-form-field {
   display: flex;
 }
+
+::ng-deep mat-chip-grid {
+  margin-top: 5px;
+}

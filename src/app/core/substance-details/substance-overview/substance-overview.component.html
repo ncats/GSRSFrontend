@@ -261,7 +261,7 @@
         <span>{{pdfDownloadBtnName}}</span>
       </a>
     </mat-menu>
-    <mat-menu #editMenu="matMenu" xPosition="before">
+    <mat-menu #editMenu="matMenu" xPosition="before" class="icon-row-menu">
       <a mat-icon-button [routerLink]="['/substances/register',substance.substanceClass]"
         [queryParams]="{copy:substance.uuid}" matTooltip='copy substance to new registration form'>
         <mat-icon svgIcon="file_copy"></mat-icon>

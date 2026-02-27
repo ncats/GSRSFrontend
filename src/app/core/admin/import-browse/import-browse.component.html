@@ -1,7 +1,7 @@
-<mat-sidenav-container [hasBackdrop]="hasBackdrop" >
-    <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="over" opened="false">
+<mat-sidenav-container [hasBackdrop]="hasBackdrop">
+    <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
-        [rawFacets]="rawFacets" calledFrom = "staging" 
+        [rawFacets]="rawFacets" calledFrom = "staging"
         [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
          configName="substances" includeFacetSearch="true">
       </app-facets-manager>
@@ -365,10 +365,10 @@
         </div>
         </div>
       </div>
-  
+
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <div >
+  <div>
     <div class="substance-cards">
       <app-substance-summary-card *ngFor="let substance of exactMatchSubstances" [substance]="substance"
         (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"

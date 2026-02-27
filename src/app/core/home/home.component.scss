@@ -415,8 +415,11 @@ mat-list-item {
   margin-bottom: 10px;
 }
 
-mat-sidenav {
-  width: 365px;
+:host {
+  // Global default is 315px (--gsrs-sidenav-width in _mat-side-nav.scss).
+  // Home page needs a wider sidenav; override the token at the host so all
+  // descendants (mat-sidenav width, mat-sidenav-content margin-left) update.
+  --gsrs-sidenav-width: 365px;
 }
 
 ::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
@@ -1017,4 +1020,14 @@ mat-paginator {
 .button-link-img {
   line-height: 40px;
   color: var(--regular-black-color);
+}
+
+:host ::ng-deep mat-card app-substance-text-search {
+  .search-button,
+  .close-button,
+  .activate-search-button {
+    mat-icon svg {
+      fill: black !important;
+    }
+  }
 }
