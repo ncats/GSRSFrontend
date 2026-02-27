@@ -1,4 +1,5 @@
 <mat-form-field>
+    <mat-label>{{placeholder}}</mat-label>
     <mat-chip-grid #chipGrid>
         <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)">
             {{optionsDictionary[tag] && optionsDictionary[tag].display || tag}}
@@ -6,9 +7,7 @@
                 <mat-icon>cancel</mat-icon>
             </button>
         </mat-chip-row>
-    </mat-chip-grid>
-    <input matInput
-            [placeholder]="placeholder"
+        <input matInput
             #tagInput
             [formControl]="tagControl"
             [matAutocomplete]="tagsAuto"
@@ -27,4 +26,6 @@
                 Press enter to add custom value
             </mat-option>
     </mat-autocomplete>
+    </mat-chip-grid>
+    
 </mat-form-field>

@@ -25,17 +25,27 @@
     justify-content: flex-start;
     flex-wrap:wrap;
     padding: 10px;
+    min-width: 0; // allow flex children to shrink below their natural size
 
     .action-list {
         max-width:70%;
         width: 900px;
     }
-    
+
     .preview-window {
         max-width: 28%;
         margin-right:25px;
         width: 500px;
     }
+}
+
+#previewLines {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;       // scroll horizontally if content is truly too wide
+    white-space: pre-wrap;  // wrap long lines inside the parent
+    word-break: break-all;
+    box-sizing: border-box;
 }
 
 .spinner {
@@ -47,7 +57,24 @@
 }
 
 .importer-radio {
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
+}
+
+.adapter-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 40px;
+    margin-bottom: 4px;
+
+    mat-radio-button {
+        min-width: 220px;
+    }
+}
+
+.adapter-description {
+    margin-left: 20px;
 }
 
 .half-column {

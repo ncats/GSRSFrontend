@@ -742,18 +742,4 @@
     height: 10px !important;
     display: inline;
 }
-.cdk-overlay-backdrop, .cdk-global-overlay-wrapper {
-    display: none !important;
-}
 
-:host ::ng-deep .mat-sidenav-content,
-:host ::ng-deep .mat-drawer-content {
-  margin-left: 0 !important;
-}
-
-// Keep the expand button visible at all viewport widths since the sidenav is
-// never pre-opened (the global rule hides it at >= 1100px).
-.expand-sidenav {
-  display: block !important;
-  opacity: 1 !important;
-}
