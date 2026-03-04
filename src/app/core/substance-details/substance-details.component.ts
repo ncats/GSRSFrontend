@@ -364,72 +364,76 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       const margin = [0.5, 0.75];
       var imgWidth = 8.5;
       var pageHeight = 11;
-  
+
       var innerPageWidth = imgWidth - margin[0] * 2;
       var innerPageHeight = pageHeight - margin[1] * 2;
-  
+
       // Calculate the number of pages.
       var pxFullHeight = canvas.height;
       var pxPageHeight = Math.floor(canvas.width * (pageHeight / imgWidth));
       var nPages = Math.ceil(pxFullHeight / pxPageHeight);
-  
+
       // Define pageHeight separately so it can be trimmed on the final page.
       var pageHeight = innerPageHeight;
-  
+
       // Create a one-page canvas to split up the full image.
       var pageCanvas = document.createElement('canvas');
       var pageCtx = pageCanvas.getContext('2d');
       pageCanvas.width = canvas.width;
       pageCanvas.height = pxPageHeight;
-  
+
       // Initialize the PDF.
-      var pdf = new jsPDF('p', 'in', [8.5, 11],true);
-  
+      var pdf = new jsPDF('p', 'in', [8.5, 11]);
+
       for (var page = 0; page < nPages; page++) {
         // Trim the final page to reduce file size.
         if (page === nPages - 1 && pxFullHeight % pxPageHeight !== 0) {
           pageCanvas.height = pxFullHeight % pxPageHeight;
           pageHeight = (pageCanvas.height * innerPageWidth) / pageCanvas.width;
         }
-  
+
         // Display the page.
         var w = pageCanvas.width;
         var h = pageCanvas.height;
         pageCtx.fillStyle = 'white';
         pageCtx.fillRect(0, 0, w, h);
         pageCtx.drawImage(canvas, 0, page * pxPageHeight, w, h, 0, 0, w, h);
-  
+
         // Add the page to the PDF.
         if (page > 0) {
           pdf.addPage();
           pageNum++;
         }
-  
+
         var imgData = pageCanvas.toDataURL('image/' + image.type, image.quality);
         pdf.addImage(imgData, image.type, margin[0], margin[1], innerPageWidth, pageHeight);
         pdf.setFontSize(8);
-        if (this.companyName_pdf != ' '&&this.companyName_pdf !=undefined) {
+        if (this.companyName_pdf !== '' && this.companyName_pdf != undefined) {
           pdf.text(this.companyName_pdf, margin[0], margin[1] - 0.5);
           var substanceName = pdf.splitTextToSize(this.substance._name, 3.5);
           pdf.text(substanceName, 3.5, margin[1] - 0.5);
-          pdf.text(formattedDate, 7.5, margin[1] - 0.5).setFont(undefined, 'bold');
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(formattedDate, 7.5, margin[1] - 0.5);
         } else {
           var substanceName = pdf.splitTextToSize(this.substance._name, 6);
           pdf.text(substanceName, margin[0], margin[1] - 0.5);
-          pdf.text(formattedDate, 7.5, margin[1] - 0.5).setFont(undefined, 'bold');
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(formattedDate, 7.5, margin[1] - 0.5);
         }
-        
-  
+
+        pdf.setFont('helvetica', 'normal');
         if (pageNum < nPages) {
-          pdf.text(this.proprietaryNote_pdf, margin[0], pageHeight + 1.2).setFont(undefined, 'normal');
+          pdf.text(this.proprietaryNote_pdf, margin[0], pageHeight + 1.2);
           pdf.text(pageNum + " of " + nPages, 8, pageHeight + 1.2);
         } else {
-          pdf.text(this.proprietaryNote_pdf, margin[0], 10.8).setFont(undefined, 'normal');
+          pdf.text(this.proprietaryNote_pdf, margin[0], 10.8);
           pdf.text(pageNum + " of " + nPages, 8, 10.8);
         }
       }
-  
+
       pdf.save(this.substance._name+'.pdf');
-  });
+    }).catch((error) => {
+      console.error('PDF generation failed:', error);
+    });
   }
 }
