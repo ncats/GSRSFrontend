@@ -4,7 +4,7 @@
         <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)">
             {{optionsDictionary[tag] && optionsDictionary[tag].display || tag}}
             <button matChipRemove>
-                <mat-icon>cancel</mat-icon>
+                <mat-icon svgIcon="cancel"></mat-icon>
             </button>
         </mat-chip-row>
         <input matInput

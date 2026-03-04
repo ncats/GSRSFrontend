@@ -1,5 +1,11 @@
 {
   "version": "3.2.0-SNAPSHOT",
+  "enablePDFDownload": {
+    "enablePDFDownload": true,
+    "buttonName": "Download PDF",
+    "companyName": "",
+    "proprietaryNote": ""
+  },
   "contactEmail": "ncatsgsrs@mail.nih.gov",
   "displayMatchApplication": "false",
   "adverseEventShinyHomepageDisplay": "false",
