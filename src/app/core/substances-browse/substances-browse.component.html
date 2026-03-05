@@ -1389,7 +1389,7 @@
 <ng-template #structureRefTemplate class="structure-template">
   <mat-dialog>
     <div style="width: 90%" *ngIf="resultsInitiated">
-      <h3>{{ privateSearchType | titlecase }} Search is Processing...</h3>
+      <h3 mat-dialog-title>{{ privateSearchType | titlecase }} Search is Processing...</h3>
       <br />
       <div class="structure-dialog-content">
         Returning all results may take some time depending on the query.

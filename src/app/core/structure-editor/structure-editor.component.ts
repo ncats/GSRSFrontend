@@ -451,7 +451,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
         });
         sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
-        document.getElementById("root").style.display = "none";
       });
 
       this.structureEditor = 'ketcher';

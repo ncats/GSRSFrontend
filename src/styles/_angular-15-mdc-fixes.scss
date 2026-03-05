@@ -807,6 +807,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
   .mdc-dialog__surface {
     border-radius: 4px;
+    padding: 24px;
   }
 }
 
@@ -1545,5 +1546,21 @@ a.mat-mdc-outlined-button {
 .mat-mdc-tab-header {
   margin-top: -10px;
     border-bottom: 1px solid #cdc9c9;
+}
+
+// ============================================================================
+// TEXTAREA FIXES
+// ============================================================================
+
+// Override the global align-items: center (correct for inputs, wrong for textareas)
+// and reduce the excess padding-bottom on the infix for textarea form fields.
+.mat-mdc-form-field .mdc-text-field--textarea {
+  .mat-mdc-form-field-flex {
+    align-items: flex-start;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding-bottom: 8px;
+  }
 }
 
