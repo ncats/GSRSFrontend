@@ -19,7 +19,10 @@ form {
   ::ng-deep .mat-mdc-input-element::placeholder {
     color: #666;
     opacity: 1;
-    font: 400 14px / 20px Roboto, Helvetica Neue, sans-serif;
+    font:
+      400 14px / 20px Roboto,
+      Helvetica Neue,
+      sans-serif;
     letter-spacing: normal;
     padding: 0;
   }
@@ -31,9 +34,9 @@ form {
 
   // Form field infix padding
   ::ng-deep .mat-mdc-form-field-infix {
-  padding-top: 0.5em;
-  padding-bottom: 0.25em;
-}
+    padding-top: 0.5em;
+    padding-bottom: 0.25em;
+  }
 
   // Text field wrapper padding
   ::ng-deep .mat-mdc-text-field-wrapper {
@@ -42,13 +45,37 @@ form {
 
   // Bottom border color
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
-  border-bottom-color: #0000008a;
-}
+    border-bottom-color: #0000008a;
+  }
 
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
     border-bottom-color: var(--primary-color);
   }
+}
 
+/* Button icon colors by context */
+form.header {
+  .search-button,
+  .close-button,
+  .activate-search-button {
+    color: white;
+
+    ::ng-deep .mat-icon svg {
+      fill: white;
+    }
+  }
+}
+
+form:not(.header) {
+  .search-button,
+  .close-button,
+  .activate-search-button {
+    color: black;
+
+    ::ng-deep .mat-icon svg {
+      fill: black;
+    }
+  }
 }
 
 /* HEADER VARIANT – only when styling="header" */
@@ -69,7 +96,10 @@ form {
   ::ng-deep .mat-mdc-input-element::placeholder {
     color: white !important;
     opacity: 1;
-    font: 500 20px / 32px Roboto, Helvetica Neue, sans-serif;
+    font:
+      500 20px / 32px Roboto,
+      Helvetica Neue,
+      sans-serif;
     letter-spacing: normal;
     padding: 0;
   }
@@ -131,19 +161,19 @@ form {
   }
 }
 
-.search-button,
-.close-button,
-.activate-search-button {
-  color: var(--regular-white-color);
+// .search-button,
+// .close-button,
+// .activate-search-button {
+//   color: var(--regular-white-color);
 
-  ::ng-deep .mat-icon {
-    color: var(--regular-white-color);
+//   ::ng-deep .mat-icon {
+//     color: var(--regular-white-color);
 
-    svg {
-      fill: var(--regular-white-color);
-    }
-  }
-}
+//     svg {
+//       fill: currentColor;
+//     }
+//   }
+// }
 
 .close-button {
   display: none !important;

@@ -276,12 +276,12 @@
                 <!-- [(ngModel)]="product.effectiveDate" -->
                 <div class="form-row">
                   <mat-form-field class="col-4-1">
-                    <mat-label>Effective Date (mm/dd/yyyy)</mat-label>
+                    <mat-label>Effective Date</mat-label>
                     <input
                       matInput
                       [matDatepicker]="pickerEffectiveDate"
                       [(ngModel)]="effectiveDate"
-                      placeholder="Effective Date (mm/dd/yyyy)"
+                      placeholder="(mm/dd/yyyy)"
                       (dateChange)="changeEffectiveDate($event)"
                     />
                     <mat-datepicker-toggle
@@ -296,12 +296,12 @@
                   </mat-form-field>
 
                   <mat-form-field class="col-4-1">
-                    <mat-label>End Date (mm/dd/yyyy)</mat-label>
+                    <mat-label>End Date</mat-label>
                     <input
                       matInput
                       [matDatepicker]="pickerEndDate"
                       [(ngModel)]="endDate"
-                      placeholder="End Date (mm/dd/yyyy)"
+                      placeholder="(mm/dd/yyyy)"
                       (dateChange)="changeEndDate($event)"
                     />
                     <mat-datepicker-toggle
@@ -363,18 +363,18 @@
                   </app-cv-input>
 
                   <mat-form-field class="col-4-1">
+                    <mat-label>Shelf Life</mat-label>
                     <input
                       matInput
-                      placeholder="Shelf Life"
                       [(ngModel)]="product.shelfLife"
                       name="shelfLife"
                     />
                   </mat-form-field>
 
                   <mat-form-field class="col-4-1">
+                    <mat-label>Storage Conditions</mat-label>
                     <input
                       matInput
-                      placeholder="Storage Conditions"
                       [(ngModel)]="product.storageConditions"
                       name="storageConditions"
                     />
@@ -393,18 +393,18 @@
                   </app-cv-input>
 
                   <mat-form-field class="col-4-1">
+                    <mat-label>Manufacturer Name</mat-label>
                     <input
                       matInput
-                      placeholder="Manufacturer Name"
                       [(ngModel)]="product.manufacturerName"
                       name="manufacturerName"
                     />
                   </mat-form-field>
 
                   <mat-form-field class="col-4-1">
+                    <mat-label>Manufacturer Code</mat-label>
                     <input
                       matInput
-                      placeholder="Manufacturer Code"
                       [(ngModel)]="product.manufacturerCode"
                       name="manufacturerCode"
                     />
@@ -531,9 +531,9 @@
                       </app-cv-input>
 
                       <mat-form-field class="col-4-1">
+                        <mat-label>Application Number</mat-label>
                         <input
                           matInput
-                          placeholder="Application Number"
                           [(ngModel)]="prodProv.applicationNumber"
                           name="applicationNumber"
                         />
@@ -564,9 +564,9 @@
                       </app-cv-input>
 
                       <mat-form-field class="col-4-1">
+                        <mat-label>Marketing Category Code</mat-label>
                         <input
                           matInput
-                          placeholder="Marketing Category Code"
                           [(ngModel)]="prodProv.marketingCategoryCode"
                           name="marketingCategoryCode"
                           [disabled]="disableMarketingCategoryCode"
@@ -586,9 +586,9 @@
                       </app-cv-input>
 
                       <mat-form-field class="col-4-1">
+                        <mat-label>Control Substance Code</mat-label>
                         <input
                           matInput
-                          placeholder="Control Substance Code"
                           [(ngModel)]="prodProv.controlSubstanceCode"
                           name="controlSubstanceCode"
                         />
@@ -637,9 +637,9 @@
                       </app-cv-input>
 
                       <mat-form-field class="col-2-1">
+                        <mat-label>Product URL</mat-label>
                         <input
                           matInput
-                          placeholder="Product URL"
                           [(ngModel)]="prodProv.productUrl"
                           name="productUrl"
                         />
@@ -713,8 +713,12 @@
                             <div class="divflex">
                               <div class="form-row">
                                 <mat-form-field class="col-1-1">
-                                  <input matInput placeholder="Product Name *" [(ngModel)]="prodName.productName"
-                                    name="productName" />
+                                  <mat-label>Product Name</mat-label>
+                                  <input
+                                    matInput
+                                    [(ngModel)]="prodName.productName"
+                                    name="productName"
+                                  />
                                 </mat-form-field>
                               </div>
 
@@ -781,9 +785,9 @@
                               <div class="divflex">
                                 <div class="form-row">
                                   <mat-form-field class="col-2-1">
+                                    <mat-label>Term</mat-label>
                                     <input
                                       matInput
-                                      placeholder="Term"
                                       [(ngModel)]="prodNameTerm.productTerm"
                                       name="productTerm"
                                     />
@@ -869,9 +873,9 @@
                           <div class="divflexrow">
                             <div class="form-row">
                               <mat-form-field class="col-2-1">
+                                <mat-label>Product Code</mat-label>
                                 <input
                                   matInput
-                                  placeholder="Product Code"
                                   [(ngModel)]="prodCode.productCode"
                                   name="productCode"
                                 />
@@ -998,15 +1002,13 @@
                             >
                             </app-cv-input>
 
-                            <mat-form-field class="col-4-1" floatLabel="always">
-                              <mat-label
-                                >Start Marketing Date (mm/dd/yyyy)</mat-label
-                              >
+                            <mat-form-field class="col-4-1" floatLabel="auto">
+                              <mat-label>Start Marketing Date</mat-label>
                               <input
                                 matInput
                                 [matDatepicker]="pickerStartMarketingDate"
                                 [(ngModel)]="prodCompany._startMarketingDate"
-                                placeholder="Start Marketing Date (mm/dd/yyyy)"
+                                placeholder="(mm/dd/yyyy)"
                                 (dateChange)="
                                   changestartMarketingDate(
                                     $event,
@@ -1026,15 +1028,13 @@
                               ></mat-datepicker>
                             </mat-form-field>
 
-                            <mat-form-field class="col-4-1" floatLabel="always">
-                              <mat-label
-                                >End Marketing Date (mm/dd/yyyy)</mat-label
-                              >
+                            <mat-form-field class="col-4-1" floatLabel="auto">
+                              <mat-label>End Marketing Date</mat-label>
                               <input
                                 matInput
                                 [matDatepicker]="pickerEndMarketingDate"
                                 [(ngModel)]="prodCompany._endMarketingDate"
-                                placeholder="End Marketing Date (mm/dd/yyyy)"
+                                placeholder="(mm/dd/yyyy)"
                                 (dateChange)="
                                   changeEndMarketingDate(
                                     $event,
@@ -1069,18 +1069,18 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-2-1">
+                              <mat-label>Company Name</mat-label>
                               <input
                                 matInput
-                                placeholder="Company Name"
                                 [(ngModel)]="prodCompany.companyName"
                                 name="companyName"
                               />
                             </mat-form-field>
 
                             <mat-form-field class="col-2-1">
+                              <mat-label>Company Address</mat-label>
                               <input
                                 matInput
-                                placeholder="Company Address"
                                 [(ngModel)]="prodCompany.companyAddress"
                                 name="companyAddress"
                               />
@@ -1089,27 +1089,27 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-4-1">
+                              <mat-label>Company City</mat-label>
                               <input
                                 matInput
-                                placeholder="Company City"
                                 [(ngModel)]="prodCompany.companyCity"
                                 name="companyCity"
                               />
                             </mat-form-field>
 
                             <mat-form-field class="col-4-1">
+                              <mat-label>Company State</mat-label>
                               <input
                                 matInput
-                                placeholder="Company State"
                                 [(ngModel)]="prodCompany.companyState"
                                 name="companyState"
                               />
                             </mat-form-field>
 
                             <mat-form-field class="col-4-1">
+                              <mat-label>Company Zip</mat-label>
                               <input
                                 matInput
-                                placeholder="Company Zip"
                                 [(ngModel)]="prodCompany.companyZip"
                                 name="companyZip"
                               />
@@ -1130,27 +1130,27 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-4-1">
+                              <mat-label>Company GPS Latitude</mat-label>
                               <input
                                 matInput
-                                placeholder="Company GPS Latitude"
                                 [(ngModel)]="prodCompany.companyGpsLatitude"
                                 name="companyGpsLatitude"
                               />
                             </mat-form-field>
 
                             <mat-form-field class="col-4-1">
+                              <mat-label>Company GPS Longitude</mat-label>
                               <input
                                 matInput
-                                placeholder="Company GPS Longitude"
                                 [(ngModel)]="prodCompany.companyGpsLongitude"
                                 name="companyGpsLongitude"
                               />
                             </mat-form-field>
 
                             <mat-form-field class="col-2-1">
+                              <mat-label>Company GPS Elevation</mat-label>
                               <input
                                 matInput
-                                placeholder="Company GPS Elevation"
                                 [(ngModel)]="prodCompany.companyGpsElevation"
                                 name="companyGpsElevation"
                               />
@@ -1159,18 +1159,18 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-2-1">
+                              <mat-label>Company Product ID</mat-label>
                               <input
                                 matInput
-                                placeholder="Company Product ID"
                                 [(ngModel)]="prodCompany.companyProductId"
                                 name="companyProductId"
                               />
                             </mat-form-field>
 
                             <mat-form-field class="col-2-1">
+                              <mat-label>Company Document ID</mat-label>
                               <input
                                 matInput
-                                placeholder="Company Document ID"
                                 [(ngModel)]="prodCompany.companyDocumentId"
                                 name="companyDocumentId"
                               />
@@ -1179,9 +1179,9 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-1-1">
+                              <mat-label>Provenance Document ID</mat-label>
                               <input
                                 matInput
-                                placeholder="Provenance Document ID"
                                 [(ngModel)]="prodCompany.provenanceDocumentId"
                                 name="provenanceDocumentId"
                               />
@@ -1227,9 +1227,9 @@
                             >
                               <div class="form-row margintop10px">
                                 <mat-form-field class="col-2-1">
+                                  <mat-label>Company Code</mat-label>
                                   <input
                                     matInput
-                                    placeholder="Company Code"
                                     [(ngModel)]="prodCompanyCd.companyCode"
                                     name="companyCode"
                                   />
@@ -1339,9 +1339,9 @@
 
                           <div class="form-row margintop10px">
                             <mat-form-field class="col-3-1">
+                              <mat-label>Document ID</mat-label>
                               <input
                                 matInput
-                                placeholder="Document ID"
                                 [(ngModel)]="prodDoc.documentId"
                                 name="documentId"
                               />
@@ -1358,9 +1358,9 @@
                             </app-cv-input>
 
                             <mat-form-field class="col-3-1">
+                              <mat-label>Set Id Version</mat-label>
                               <input
                                 matInput
-                                placeholder="Set Id Version"
                                 [(ngModel)]="prodDoc.setIdVersion"
                                 name="setIdVersion"
                               />
@@ -1369,12 +1369,12 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-3-1">
-                              <mat-label>Effective Time (mm/dd/yyyy)</mat-label>
+                              <mat-label>Effective Time</mat-label>
                               <input
                                 matInput
                                 [matDatepicker]="pickerEffectiveTime"
                                 [(ngModel)]="prodDoc._effectiveTime"
-                                placeholder="Effective Time (mm/dd/yyyy)"
+                                placeholder="(mm/dd/yyyy)"
                                 (dateChange)="
                                   changeEffectiveTime(
                                     $event,
@@ -1471,9 +1471,9 @@
                           </legend>
                           <div class="form-row">
                             <mat-form-field class="col-1-1">
+                              <mat-label>Indication</mat-label>
                               <input
                                 matInput
-                                placeholder="Indication"
                                 [(ngModel)]="prodInd.indication"
                                 name="indication"
                               />
@@ -1482,9 +1482,9 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-1-1">
+                              <mat-label>Indication Text</mat-label>
                               <textarea
                                 matInput
-                                placeholder="Indication Text"
                                 [(ngModel)]="prodInd.indicationText"
                                 name="indicationText"
                                 rows="1"
@@ -1494,9 +1494,9 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-3-1">
+                              <mat-label>Indication Code</mat-label>
                               <input
                                 matInput
-                                placeholder="Indication Code"
                                 [(ngModel)]="prodInd.indicationCode"
                                 name="indicationCode"
                               />
@@ -1527,9 +1527,9 @@
 
                           <div class="form-row">
                             <mat-form-field class="col-3-1">
+                              <mat-label>Indication Source</mat-label>
                               <input
                                 matInput
-                                placeholder="Indication Source"
                                 [(ngModel)]="prodInd.indicationSource"
                                 name="indicationSource"
                               />
@@ -1548,9 +1548,9 @@
                             </app-cv-input>
 
                             <mat-form-field class="col-3-1">
+                              <mat-label>Indication Source URL</mat-label>
                               <input
                                 matInput
-                                placeholder="Indication Source URL"
                                 [(ngModel)]="prodInd.indicationSourceUrl"
                                 name="indicationSourceUrl"
                               />

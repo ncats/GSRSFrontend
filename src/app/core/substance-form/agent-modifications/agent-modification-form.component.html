@@ -6,50 +6,73 @@
     </button>
   </div>
   <div class="delete-container">
-  <button mat-icon-button matTooltip="Delete code" (click)="deleteCode()">
-    <mat-icon svgIcon="delete_forever"></mat-icon>
-  </button>
-</div>
+    <button mat-icon-button matTooltip="Delete code" (click)="deleteCode()">
+      <mat-icon svgIcon="delete_forever"></mat-icon>
+    </button>
+  </div>
   <div class="flex-column related-substance">
-    <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-                            eventCategory="substanceRelationshipRelatedSub" placeholder="Agent Substance" header="Agent Substance"
-                            [subuuid]="relatedSubstanceUuid">
+    <app-substance-selector
+      (selectionUpdated)="relatedSubstanceUpdated($event)"
+      eventCategory="substanceRelationshipRelatedSub"
+      placeholder="Agent Substance"
+      header="Agent Substance"
+      [subuuid]="relatedSubstanceUuid"
+    >
     </app-substance-selector>
   </div>
-    <div class="flex-column form-content">
-      <div class="form-row">
-        <app-cv-input key = "Agent Modification Agent Modification Process" title = "Modification Process" [model] = "mod.agentModificationProcess" (valueChange)="updateProcess($event)"></app-cv-input>
-        <app-cv-input key = "Agent Modification Agent Modification Type" title = "Modification Type" [model] = "mod.agentModificationType" (valueChange)="mod.agentModificationType = $event"></app-cv-input>
-        <app-cv-input key = "Agent Modification Agent Modification Role" title = "Modification Role" [model] = "mod.agentModificationRole" (valueChange)="mod.agentModificationRole = $event"></app-cv-input>
+  <div class="flex-column form-content">
+    <div class="form-row">
+      <app-cv-input
+        key="Agent Modification Agent Modification Process"
+        title="Modification Process"
+        [model]="mod.agentModificationProcess"
+        (valueChange)="updateProcess($event)"
+      ></app-cv-input>
+      <app-cv-input
+        key="Agent Modification Agent Modification Type"
+        title="Modification Type"
+        [model]="mod.agentModificationType"
+        (valueChange)="mod.agentModificationType = $event"
+      ></app-cv-input>
+      <app-cv-input
+        key="Agent Modification Agent Modification Role"
+        title="Modification Role"
+        [model]="mod.agentModificationRole"
+        (valueChange)="mod.agentModificationRole = $event"
+      ></app-cv-input>
+    </div>
+    <div class="form-row">
+      <div class="amount">
+        <div class="label amt-label">Amount</div>
+        <button mat-icon-button matTooltip="add" (click)="openAmountDialog()">
+          <mat-icon svgIcon="add_circle_outline"></mat-icon>
+        </button>
+        <div class="amount-display">
+          <div *ngIf="mod.amount">
+            {{ displayAmount(mod.amount) }}
+          </div>
+        </div>
+      </div>
 
-      </div>
-      <div class="form-row">
-    <div class = 'amount'>
-      <div class = "label amt-label">
-        Amount
-      </div>
-      <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>
-      </button>
-    <div class = "amount-display">
-      <div *ngIf = "mod.amount">
-        {{displayAmount(mod.amount)}}
+      <mat-form-field class="group">
+        <mat-label>Group</mat-label>
+        <input
+          matInput
+          [(ngModel)]="mod.modificationGroup"
+          required
+          name="group"
+        />
+      </mat-form-field>
+      <div class="access">
+        <app-access-manager
+          (accessOut)="updateAccess($event)"
+          [access]="mod.access"
+        >
+        </app-access-manager>
       </div>
     </div>
-    </div>
-
-    <mat-form-field class="group">
-      <input matInput placeholder="Group" [(ngModel)]="mod.modificationGroup" required name="group" />
-    </mat-form-field>
-    <div class = "access">
-      <app-access-manager (accessOut)="updateAccess($event)" [access]="mod.access">
-      </app-access-manager>
-    </div>
-      </div>
-    </div>
-
-
   </div>
-  <div class = "form-row">
-      <app-audit-info [source] = "mod"></app-audit-info>
-    </div>
+</div>
+<div class="form-row">
+  <app-audit-info [source]="mod"></app-audit-info>
+</div>

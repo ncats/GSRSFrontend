@@ -21,6 +21,7 @@ export class SubstanceSelectorComponent implements OnInit {
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Input() placeholder = 'Search';
+  @Input() label = '';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
   @Input() name?: string;
