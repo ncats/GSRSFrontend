@@ -51,7 +51,7 @@ export class SequenceSearchComponent implements OnInit, OnDestroy {
           this.sequenceSearchForm.controls.type.setValue(params.get('type'));
         }
         if (params.has('cutoff')) {
-          this.sequenceSearchForm.controls.cutoff.setValue(parseInt(params.get('cutoff')));
+          this.sequenceSearchForm.controls.cutoff.setValue(parseFloat(params.get('cutoff')));
         }
         if (params.has('seq_type')) {
           const type = params.get('seq_type');

@@ -26,14 +26,32 @@
     white-space: nowrap;
     padding: 6px 0;
     overflow: hidden;
-    height: 35px;
+    // height: 35px;
 
     .facet-value-checkbox {
-        padding: 0 3px 0 0;
+        padding: 0 5px 0 0;
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+
+        ::ng-deep .mat-mdc-checkbox .mat-internal-form-field {
+            width: 24px;
+            height: 24px;
+            margin: 0;
+            padding: 0;
+        }
+
+        // Keep big click target, but don't let it affect layout
+        ::ng-deep .mat-mdc-checkbox .mat-mdc-checkbox-touch-target {
+            position: absolute;
+            inset: 50% auto auto 50%;
+            transform: translate(-50%, -50%);
+            }
+
     }
 
     .facet-value-label {
-        padding: 0 3px;
+        padding: 0 5px;
         max-width: 150px;
         overflow: hidden;
         color: var(--label-color);

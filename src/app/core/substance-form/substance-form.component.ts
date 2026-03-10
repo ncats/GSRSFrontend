@@ -586,6 +586,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
         .subscribe(componentFactory => {
           this.loadingService.setLoading(true);
+          cRef.clear();
           this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
           this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
 
@@ -913,6 +914,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
               this.dynamicComponentLoader
                 .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
                 .subscribe(componentFactory => {
+                  cRef.clear();
                   this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
                   this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
                   this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {

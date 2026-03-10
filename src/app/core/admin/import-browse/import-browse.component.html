@@ -1,7 +1,7 @@
-<mat-sidenav-container [hasBackdrop]="hasBackdrop" >
+<mat-sidenav-container [hasBackdrop]="hasBackdrop">
     <mat-sidenav [disableClose]="!isCollapsed" #matSideNavInstance mode="side" opened="false">
       <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
-        [rawFacets]="rawFacets" calledFrom = "staging" 
+        [rawFacets]="rawFacets" calledFrom = "staging"
         [facetViewCategorySelected]="facetViewCategorySelected" [facetDisplayType]="facetDisplayType"
          configName="substances" includeFacetSearch="true">
       </app-facets-manager>
@@ -155,7 +155,7 @@
         <div class="controls-container">
             <div class = "title-container">
                 <span class = "main-title">Staged Substances</span> &nbsp; &nbsp; &nbsp; 
-                <a  class = "top-button mat-flat-button mat-button"  color = "primary" [routerLink] = "['/admin/import']"> New Data Import</a>
+                <a  class = "top-button "  mat-flat-button color = "primary" [routerLink] = "['/admin/import']"> New Data Import</a>
 
             </div>
   
@@ -196,10 +196,14 @@
 
           <span class = "middle-fill"></span>
           <button class = "bulk-action-button button-margin" color = "primary" mat-button mat-primary-button mat-flat-button (click) = "bulkActionDialog()">Bulk Actions</button>
-          &nbsp; <button  class = "bulk-action-button button-margin background-button"  (click) = "selectBulk()" mat-button mat-primary-button mat-flat-button >Select All On Page</button> &nbsp;
-          &nbsp; <button  class = "bulk-action-button button-margin background-button"  (click) = "selectBulk('all')" mat-button mat-primary-button mat-flat-button >Select All Results</button> &nbsp;
+          &nbsp; 
 
-           <button  class = "bulk-action-button background-button"  (click) = "deselectAll()" mat-button mat-primary-button mat-flat-button >Clear Selections</button> 
+          <button  class = "bulk-action-button button-margin background-button" (click) = "selectBulk()" mat-button >Select All On Page</button> &nbsp;
+          &nbsp; 
+          
+          <button  class = "bulk-action-button button-margin background-button" (click) = "selectBulk('all')" mat-button >Select All Results</button> &nbsp;
+
+           <button  class = "bulk-action-button background-button" (click) = "deselectAll()" mat-button >Clear Selections</button> 
           
         </div>
         <ng-template appBrowseHeaderDynamicSection></ng-template>
@@ -361,10 +365,10 @@
         </div>
         </div>
       </div>
-  
+
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <div >
+  <div>
     <div class="substance-cards">
       <app-substance-summary-card *ngFor="let substance of exactMatchSubstances" [substance]="substance"
         (openImage)="openImageModal($event)" [showAudit]="showAudit" [names]="names[substance.uuid]"

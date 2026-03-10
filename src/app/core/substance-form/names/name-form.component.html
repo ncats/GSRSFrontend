@@ -25,7 +25,8 @@
     </div>
 
     <mat-form-field class="name">
-      <textarea matInput placeholder="Name" [(ngModel)]="name.name" required name="name" (keypress)="preventNewLine($event)"></textarea>
+      <mat-label>Name</mat-label>
+      <textarea matInput rows="1" [(ngModel)]="name.name" required name="name" (keypress)="preventNewLine($event)"></textarea>
       <!-- <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" /> -->
     </mat-form-field>
     <a class="resolve" *ngIf="name.name && name.name.length > 0 && substanceType === 'structure'"

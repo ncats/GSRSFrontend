@@ -136,7 +136,7 @@
     // Fix infix padding
     .mat-mdc-form-field-infix {
       min-height: auto;
-      padding: 25px 0 0.4375em 0;
+      // padding: 25px 0 0.4375em 0;
     }
 
     // Fix label positioning
@@ -803,8 +803,18 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-mdc-dialog-container {
+  --mat-dialog-supporting-text-color: black;
+
   .mdc-dialog__surface {
     border-radius: 4px;
+    padding: 24px;
+  }
+}
+
+// Cross Entity Search dialog — MDC caps surface at 560px by default; override per panel class
+.cross-entity-search-dialog {
+  .mdc-dialog__surface {
+    max-width: none !important;
   }
 }
 
@@ -1367,6 +1377,17 @@ a[mat-fab],
   }
 }
 
+// Exception: substance-hierarchy tree toggle buttons — keep icon in static flow
+.tree-button.mat-mdc-icon-button .mat-icon {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
 // Fix for icons in regular buttons (not icon buttons)
 .mat-button,
 .mat-raised-button,
@@ -1525,5 +1546,21 @@ a.mat-mdc-outlined-button {
 .mat-mdc-tab-header {
   margin-top: -10px;
     border-bottom: 1px solid #cdc9c9;
+}
+
+// ============================================================================
+// TEXTAREA FIXES
+// ============================================================================
+
+// Override the global align-items: center (correct for inputs, wrong for textareas)
+// and reduce the excess padding-bottom on the infix for textarea form fields.
+.mat-mdc-form-field .mdc-text-field--textarea {
+  .mat-mdc-form-field-flex {
+    align-items: flex-start;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding-bottom: 8px;
+  }
 }
 

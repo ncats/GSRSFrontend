@@ -86,39 +86,34 @@
           <label>Select Importer </label><br />
         </div>
 
-        <div class="half-row importer-radio">
+        <div class="importer-radio">
           <mat-radio-group
             placeholder="Adapter"
             name="adapter"
             (change)="setAdapter($event)"
           >
             <div
-              style="height: 32px; margin-right: 15px"
+              class="adapter-row"
               *ngFor="let adapter of demo"
             >
               <mat-radio-button
-                style="width: 100%"
                 value="{{ adapter.adapterKey }}"
                 [checked]="adapter.adapterKey == adapterKey"
               >
-                {{ adapter.adapterName }}</mat-radio-button
-              >
+                {{ adapter.adapterName }}
+              </mat-radio-button>
+              <div class="adapter-description">
+                {{ adapter.description }}. Supported extensions:
+                <span *ngFor="let ext of adapter.fileExtensions; last as last"
+                  >{{ ext }}{{ !last ? "," : "" }} </span
+                >
+              </div>
             </div>
           </mat-radio-group>
         </div>
-
-        <div class="half-row">
-          <label> </label>
-          <div style="height: 32px" *ngFor="let adapter of demo">
-            {{ adapter.description }}. Supported extensions:
-            <span *ngFor="let ext of adapter.fileExtensions; last as last"
-              >{{ ext }}{{ !last ? "," : "" }} </span
-            ><br />
-          </div>
-        </div>
       </div>
 
-      <div class="full-row bottom">
+      <div class="full-row bottom" style="position: relative; min-height: 60px;">
         <span class="middle-fill"></span>
         <div>
           <i>{{ message }}</i>

@@ -51,6 +51,7 @@
 
 .background-button {
     background-color: #ebf1f6;
+    color: var(--link-color);
 }
 
 .button-margin {
@@ -67,11 +68,11 @@
 .top-button {
     font-size: 20px;
     margin-left: 150px;
-padding-top: 4px;
-padding-bottom: 4px;
-width: 200px;
-background-color:  var(--primary-color);
-color: white;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    width: 200px;
+    background-color:  var(--primary-color);
+    color: white;
 }
 
 .search-parameters {
@@ -741,6 +742,4 @@ color: white;
     height: 10px !important;
     display: inline;
 }
-.cdk-overlay-backdrop, .cdk-global-overlay-wrapper {
-    display: none !important;
-}
+

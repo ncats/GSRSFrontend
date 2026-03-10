@@ -28,6 +28,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
   @Input() key?: string;
   @Input() required?: boolean;
   @Input() disable?: boolean;
+  @Input() hintMessage?: string;
   @Output()
   valueChange = new EventEmitter<string>();
   vocabName = '';

@@ -986,9 +986,11 @@ export class CrossEntitySearchComponent implements OnInit {
 
   openModal() {
     const dialogRef = this.dialog.open(this.crossEntitySearchTemplate, {
-      width: '1048px',
-      minHeight: '50%',
-      maxHeight: '80%',
+      minWidth: '60vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      maxHeight: '80vh',
+      panelClass: 'cross-entity-search-dialog',
       disableClose: true // Prevents closing on outside click
     });
 

@@ -1069,13 +1069,15 @@
           </div>
           <div class="substance-tiles">
             <mat-card *ngFor="let substance of substances" class="tile">
-              <mat-card-title>
-                <div class="tile-title">
-                  <a class="approval-id">
-                    {{ substance.approvalID }}
-                  </a>
-                </div>
-              </mat-card-title>
+              <mat-card-header>
+                <mat-card-title class="tile-title">
+                  
+                    <a class="approval-id">
+                      {{ substance.approvalID }}
+                    </a>
+                  
+                </mat-card-title>
+              </mat-card-header>
 
               <mat-card-content>
                 <div class="substance-content">
@@ -1168,7 +1170,7 @@
                       >
                         <mat-icon svgIcon="get_app"></mat-icon>
                       </button>
-                      <span
+                      <div
                         *ngIf="
                           substance.structure ||
                           ((substance.protein || substance.nucleicAcid) &&
@@ -1205,7 +1207,7 @@
                         >
                           <mat-icon svgIcon="file_copy"></mat-icon>
                         </button>
-                      </span>
+                      </div>
                     </div>
                   </div>
 
@@ -1387,7 +1389,7 @@
 <ng-template #structureRefTemplate class="structure-template">
   <mat-dialog>
     <div style="width: 90%" *ngIf="resultsInitiated">
-      <h3>{{ privateSearchType | titlecase }} Search is Processing...</h3>
+      <h3 mat-dialog-title>{{ privateSearchType | titlecase }} Search is Processing...</h3>
       <br />
       <div class="structure-dialog-content">
         Returning all results may take some time depending on the query.
