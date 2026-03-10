@@ -7,9 +7,10 @@ import { VocabularyTerm } from '../../../controlled-vocabulary/vocabulary.model'
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-reuse-references-dialog',
-  templateUrl: './reuse-references-dialog.component.html',
-  styleUrls: ['./reuse-references-dialog.component.scss']
+    selector: 'app-reuse-references-dialog',
+    templateUrl: './reuse-references-dialog.component.html',
+    styleUrls: ['./reuse-references-dialog.component.scss'],
+    standalone: false
 })
 export class ReuseReferencesDialogComponent implements OnInit {
   domainReferenceUuids: Array<string> = [];

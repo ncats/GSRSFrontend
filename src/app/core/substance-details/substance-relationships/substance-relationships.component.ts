@@ -10,9 +10,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import {Sort} from '@angular/material/sort';
 
 @Component({
-  selector: 'app-substance-relationships',
-  templateUrl: './substance-relationships.component.html',
-  styleUrls: ['./substance-relationships.component.scss']
+    selector: 'app-substance-relationships',
+    templateUrl: './substance-relationships.component.html',
+    styleUrls: ['./substance-relationships.component.scss'],
+    standalone: false
 })
 export class SubstanceRelationshipsComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship> implements OnInit {
   type: string;

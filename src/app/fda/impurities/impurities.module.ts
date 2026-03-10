@@ -12,6 +12,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { SubstanceFormModule } from '../../core/substance-form/substance-form.module';
 import { SubstanceSearchSelectorModule } from '../substance-search-select/substance-search-selector.module';
 import { SubstanceTextSearchModule } from '@gsrs-core/substance-text-search/substance-text-search.module';
@@ -82,6 +83,7 @@ const impurityRoutes: Routes = [
     MatBadgeModule,
     MatExpansionModule,
     MatTableModule,
+    MatDatepickerModule,
     SubstanceFormModule,
     SubstanceTextSearchModule,
     SubstanceSearchSelectorModule,

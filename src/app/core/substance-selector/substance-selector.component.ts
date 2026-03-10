@@ -11,15 +11,17 @@ import { Router } from '@angular/router';
 import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 
 @Component({
-  selector: 'app-substance-selector',
-  templateUrl: './substance-selector.component.html',
-  styleUrls: ['./substance-selector.component.scss']
+    selector: 'app-substance-selector',
+    templateUrl: './substance-selector.component.html',
+    styleUrls: ['./substance-selector.component.scss'],
+    standalone: false
 })
 export class SubstanceSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Input() placeholder = 'Search';
+  @Input() label = '';
   @Input() hintMessage = '';
   @Input() header = 'Substance';
   @Input() name?: string;
@@ -72,8 +74,6 @@ export class SubstanceSelectorComponent implements OnInit {
     
     if (this.configService.configData.substanceSelectorProperties != null) {
       this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
-    } else {
-      console.log("The config value for substanceSelectorProperties is null.");
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
@@ -98,8 +98,28 @@ export class SubstanceSelectorComponent implements OnInit {
 
   processSubstanceSearch(searchValue: string = ''): void {
     const q = searchValue.replace('\"', '');
+    if( this.substanceService.isUUID(q)) {
+      console.log('detected a UUID')
+      this.substanceService.getSubstanceDetails(q).subscribe( {
+        next: response => {
+        if(response && response != null) {
+          this.selectedSubstance = response;
+          this.selectionUpdated.emit(this.selectedSubstance);
+          this.errorMessage = '';
+          console.log('got substance via UUID');
+        } else {
+          console.log('no match for UUID');
+          this.errorMessage = 'No substances found';
+        }
+        },
+        error: err=>{
+          console.log('error retrieving UUID');
+          this.errorMessage = 'No substances found';
+        }
+      });
+      return;
+    } 
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
-
     this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
       if (response.content && response.content.length) {
         this.selectedSubstance = response.content[0];
@@ -110,8 +130,7 @@ export class SubstanceSelectorComponent implements OnInit {
       }
     });
   }
-
- 
+  
 
   advanced(type: string): void {
 

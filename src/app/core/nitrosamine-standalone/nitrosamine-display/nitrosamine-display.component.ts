@@ -2,7 +2,8 @@ import {Component, OnInit, Input} from '@angular/core';
 import { SubstanceMoiety, SubstanceStructure } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormStructureService } from '../../substance-form/structure/substance-form-structure.service';
 import { StructureService } from '@gsrs-core/structure';
-import { finalize } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 interface EvaluationResponse {
   structureDetails: string;
@@ -14,9 +15,10 @@ interface EvaluationResponse {
 }
 
 @Component({
-  selector: 'app-nitrosamine-display',
-  templateUrl: './nitrosamine-display.component.html',
-  styleUrls: ['./nitrosamine-display.component.scss']
+    selector: 'app-nitrosamine-display',
+    templateUrl: './nitrosamine-display.component.html',
+    styleUrls: ['./nitrosamine-display.component.scss'],
+    standalone: false
 })
 export class NitrosamineDisplayComponent implements OnInit {
   private privateStructure: SubstanceStructure | SubstanceMoiety = {};
@@ -25,17 +27,21 @@ export class NitrosamineDisplayComponent implements OnInit {
   structureDetails: string;
   potencyScore: number;
   smilesInput: string;
-  
+  smilesFormula$: Observable<string>;
+
   // Add new properties for better state management
   isLoading = false;
   errorMessage: string;
   showResults = false;
   summaryData: Record<string, string> = {};
   responseData: EvaluationResponse;
-  
+
   constructor(
    private structureService: StructureService
-  ) { }
+  ) {
+    // Initialize fields that depend on structureService
+    this.smilesFormula$ = this.structureService.smileObservable$;
+  }
 
    @Input()
     set structure(updatedStructure: SubstanceStructure | SubstanceMoiety) {
@@ -63,6 +69,14 @@ export class NitrosamineDisplayComponent implements OnInit {
     if (this.privateSmiles) {
       this.smilesInput = this.privateSmiles;
     }
+    if (!this.smilesInput) {
+    this.smilesFormula$.pipe(take(1)).subscribe(res => {
+      if (res) {
+        this.smilesInput = res;
+      }
+    });
+  }
+
   }
 
   // Function to highlight a box

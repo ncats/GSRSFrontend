@@ -8,9 +8,10 @@ import { SubstanceFormBase } from '../../base-classes/substance-form-base';
 import { SubstanceFormStructurallyDiverseService } from '../substance-form-structurally-diverse.service';
 
 @Component({
-  selector: 'app-substance-form-structurally-diverse-source',
-  templateUrl: './substance-form-structurally-diverse-source.component.html',
-  styleUrls: ['./substance-form-structurally-diverse-source.component.scss']
+    selector: 'app-substance-form-structurally-diverse-source',
+    templateUrl: './substance-form-structurally-diverse-source.component.html',
+    styleUrls: ['./substance-form-structurally-diverse-source.component.scss'],
+    standalone: false
 })
 export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceFormBase
   implements OnInit, AfterViewInit, OnDestroy {
@@ -108,7 +109,7 @@ export class SubstanceFormStructurallyDiverseSourceComponent  extends SubstanceF
     check.forEach( field => {
       if (this.structurallyDiverse[field] && this.structurallyDiverse[field] !== null &&
         this.structurallyDiverse[field] !== '' &&
-        this.structurallyDiverse[field] !== {} ) {
+        Object.keys(this.structurallyDiverse[field]).length > 0  ) {
          found = false;
         }
     });

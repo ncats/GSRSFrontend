@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { SubstanceFormModule } from '../substance-form.module';
 import { NameResolverModule } from '../../name-resolver/name-resolver.module';
 import { DragDropPasteDirective } from '@gsrs-core/substance-form/structure/drag-drop-paste.component';
@@ -30,6 +31,7 @@ import { NitrosamineDisplayModule } from '@gsrs-core/nitrosamine-standalone/nitr
     ReactiveFormsModule,
     FormsModule,
     MatSelectModule,
+    MatOptionModule,
     SubstanceFormModule,
     NameResolverModule,
     MatMenuModule,

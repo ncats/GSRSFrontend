@@ -1,22 +1,33 @@
-html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  letter-spacing: normal;
 }
 
 div {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .side-nav-content {
-    padding: 15px 10px;
+  padding: 15px 10px;
 }
 
-a:hover, button:hover {
-    cursor: pointer;
+a:hover,
+button:hover {
+  cursor: pointer;
 }
-
 
 .multiselect-dropdown .dropdown-btn {
   display: inline-block;
@@ -40,21 +51,24 @@ a:hover, button:hover {
   }
 }
 
-
-.mat-progress-bar-background{
+.mat-progress-bar-background {
   fill: whitesmoke !important;
 }
 
-
-.mat-button {
+// Support both legacy and MDC buttons
+.mat-button,
+.mat-mdc-button {
   color: var(--link-color);
 }
 
-.mat-form-field-type-mat-input.mat-focused {
+// Support both legacy and MDC form fields
+// .mat-form-field-type-mat-input.mat-focused,
+// .mat-mdc-form-field.mat-focused {
 
-  .mat-form-field-infix {
-    transition: all 500ms;
-    padding-top: 5px;
-    border: 1px solid var(--primary-color);
-  }
-}
+//   .mat-form-field-infix,
+//   .mat-mdc-form-field-infix {
+//     transition: all 500ms;
+//     padding-top: 5px;
+//     border: 1px solid var(--primary-color);
+//   }
+// }

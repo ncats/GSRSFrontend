@@ -48,4 +48,10 @@ export interface UserGroup {
     _matchContext?: string;
 }
 
-export type Role = 'Updater'|'Admin'|'Query'|'SuperUpdate'|'DataEntry'|'SuperDataEntry'|'Approver';
+export interface Privilege {
+    privilege: string;
+}
+
+export type Role ={
+    role: string;
+}

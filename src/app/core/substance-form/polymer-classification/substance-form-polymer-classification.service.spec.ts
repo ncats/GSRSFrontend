@@ -6,7 +6,7 @@ describe('SubstanceFormPolymerClassificationService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SubstanceFormPolymerClassificationService = TestBed.get(SubstanceFormPolymerClassificationService);
+    const service: SubstanceFormPolymerClassificationService = TestBed.inject(SubstanceFormPolymerClassificationService);
     expect(service).toBeTruthy();
   });
 });

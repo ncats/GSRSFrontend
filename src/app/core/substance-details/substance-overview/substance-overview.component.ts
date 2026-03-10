@@ -21,9 +21,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
 
 @Component({
-  selector: 'app-substance-overview',
-  templateUrl: './substance-overview.component.html',
-  styleUrls: ['./substance-overview.component.scss']
+    selector: 'app-substance-overview',
+    templateUrl: './substance-overview.component.html',
+    styleUrls: ['./substance-overview.component.scss'],
+    standalone: false
 })
 export class SubstanceOverviewComponent extends SubstanceCardBase implements OnInit, AfterViewInit, OnDestroy {
   references: string[] = [];
@@ -36,7 +37,8 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   versionControl = new FormControl('', Validators.required);
   versions: string[] = [];
   isEditable = false;
-  isAdmin = false;
+  canRestoreVersions = false;
+
   substanceUpdated = new Subject<SubstanceDetail>();
   oldUrl: string;
   baseDomain: string;
@@ -71,18 +73,20 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    // Synchronously seed versionControl with the current substance version BEFORE any
+    // async awaits below. Without this, canRestoreVersions can flip to true while
+    // versionControl still holds '' (its FormControl default), making the View button
+    // flash visible until the checkVersion() HTTP response arrives.
+    if (this.substance?.version) {
+      this.versionControl.setValue(this.substance.version.toString());
+    }
 
-   const rolesSubscription =  this.authService.hasAnyRolesAsync('updater', 'superUpdater').subscribe(canEdit => {
-      this.canEdit = canEdit;
-      this.isEditable = canEdit
+    this.canEdit=await this.authService.canEditData();
+    this.canRestoreVersions = await this.authService.hasSpecificPrivilege("Restore Previous Versions");
+    this.isEditable =this.canEdit
         && this.substance.substanceClass != null
         && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
-    });
-    const rolesSubscription2 =  this.authService.hasAnyRolesAsync('admin').subscribe(canEdit => {
-      this.isAdmin = canEdit;
-    });
-    this.subscriptions.push(rolesSubscription2);
     this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
@@ -188,7 +192,14 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.versions = [];
       this.latestVersion = result;
       this.setVersionList();
-      this.versionControl.setValue(this.substance.version);
+      
+      let currentVersion: number;
+      if (this.substance.version) {
+        currentVersion = Number(this.substance.version);
+      } else {
+        currentVersion = result;
+      }
+      this.versionControl.setValue(currentVersion.toString());
     }, error => {
       console.log(error);
     });
@@ -230,7 +241,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
 
   restoreVersion() {
     const dialogRef = this.dialog.open(SubstanceHistoryDialogComponent, {
-      data: {'substance': this.substance, 'version': this.substance.version, 'latest': this.latestVersion.toString()},
+      data: {'substance': this.substance, 'version': String(this.substance.version), 'latest': String(this.latestVersion)},
       width: '650px',
       autoFocus: false,
       disableClose: true

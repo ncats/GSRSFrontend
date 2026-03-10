@@ -64,6 +64,7 @@ export interface ProductProvenance {
   productCompanies?: Array<ProductCompany>;
   productDocumentations?: Array<ProductDocumentation>;
   productIndications?: Array<ProductIndication>;
+  _applicationUrl?: string;
 }
 
 export interface ProductName {
@@ -99,6 +100,8 @@ export interface ProductCode {
   modifiedBy?: string;
   modifyDate?: number;
   _dailyMedUrl?: string;
+  _phpIdUrl?: string;
+  _rxNormUrl?: string;
 }
 
 export interface ProductCompany {
@@ -126,6 +129,8 @@ export interface ProductCompany {
   modifiedBy?: string;
   modifyDate?: number;
   productCompanyCodes?: Array<ProductCompanyCode>;
+  _startMarketingDate?: Date;
+  _endMarketingDate?: Date;
 }
 
 export interface ProductCompanyCode {
@@ -163,6 +168,7 @@ export interface ProductDocumentation {
   createDate?: number;
   modifiedBy?: string;
   modifyDate?: number;
+  _effectiveTime?: Date;
 }
 
 export interface ProductIndication {
@@ -218,6 +224,8 @@ export interface ProductLot {
   modifiedBy?: string;
   modifyDate?: number;
   productIngredients?: Array<ProductIngredient>;
+  _expiryDate?: Date;
+  _manufactureDate?: Date;
 }
 
 export interface ProductIngredient {
@@ -260,10 +268,12 @@ export interface ProductIngredient {
   _substanceUuid?: string;
   _ingredientName?: string;
   _approvalId?: string;
+  _ingredientStrengthDisplay?: string;
   _ingredientNameActiveMoieties?: Array<String>;
   _basisOfStrengthSubstanceUuid?: string;
   _basisOfStrengthIngredientName?: string;
   _basisOfStrengthActiveMoieties?: Array<String>;
+  _substanceClass?: string;
   $$ingredientNameValidation?: string;
   $$basisOfStrengthValidation?: string;
 }

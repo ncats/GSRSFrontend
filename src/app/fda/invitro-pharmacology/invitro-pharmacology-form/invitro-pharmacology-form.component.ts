@@ -23,13 +23,13 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SubstanceRelationship, SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
+import jp from 'jsonpath';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
@@ -40,9 +40,10 @@ import {
 //import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
-  selector: 'app-invitro-pharmacology-form',
-  templateUrl: './invitro-pharmacology-form.component.html',
-  styleUrls: ['./invitro-pharmacology-form.component.scss']
+    selector: 'app-invitro-pharmacology-form',
+    templateUrl: './invitro-pharmacology-form.component.html',
+    styleUrls: ['./invitro-pharmacology-form.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
@@ -131,14 +132,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   downloadJsonHref: any;
   jsonFileName: string;
 
-  isAdmin = false;
   isLoading = true;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
-  firstFormGroup = this._formBuilder.group({
-    firstCtrl: ['', Validators.required],
-  });
+  firstFormGroup: any;
   isLinear = false;
 
   constructor(
@@ -160,11 +158,15 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // Initialize fields that depend on _formBuilder
+    this.firstFormGroup = this._formBuilder.group({
+      firstCtrl: ['', Validators.required],
+    });
+
     setTimeout(() => {
       this.loadingService.setLoading(this.isLoading);
 
       // Get Username and Admin details
-      this.isAdmin = this.authService.hasRoles('admin');
       this.username = this.authService.getUser();
 
       // Get Invitro Pharmacology Substance Key Type from the configuration file
@@ -486,7 +488,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
     this.validateClient();
 
-    // Set total assays to save
+    // Set total number of Assays to save
     this.totalAssayToSave = this.existingAssaysByAssaySetList.length;
 
     // If there is no error on client side, check validation on server side
@@ -496,9 +498,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // Validate Assay
       // this.invitroPharmacologyService.validateAssay().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
+
       //  this.validationMessages = results.validationMessages.filter(
       //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       //    this.validationResult = results.valid;
+
       this.showSubmissionMessages = true;
       this.isLoading = false;
       this.loadingService.setLoading(this.isLoading);
@@ -598,6 +602,34 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     if (this.existingAssaysByAssaySetList.length == 0) {
       this.setValidationMessage('Result is required');
     }
+
+    // Copy the Assays/Screening to new variable
+    let copiedAssays = _.cloneDeep(this.existingAssaysByAssaySetList);
+
+    copiedAssays.forEach((assay, indexAssay) => {
+      if (assay) {
+        assay.invitroAssayScreenings.forEach(screening => {
+          if (screening) {
+            if (screening.invitroAssayResult != null) {
+              // Test Agent Concentration must be a number
+              if (screening.invitroAssayResult.testAgentConcentration) {
+                if (this.isNumber(screening.invitroAssayResult.testAgentConcentration) === false) {
+                  this.setValidationMessage('Test Agent Concentration must be a number in row ' + (indexAssay+1));
+                }
+              }
+
+              // Result Value must be a number
+              if (screening.invitroAssayResult.resultValue) {
+                if (this.isNumber(screening.invitroAssayResult.resultValue) === false) {
+                  this.setValidationMessage('Result Value must be a number in row ' + (indexAssay+1));
+                }
+              }
+
+            }
+          }
+        });
+      }
+    });
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -1517,11 +1549,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     */
 
     // Copy the assay to new variable
-   // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
+    // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
 
     copyAssay.invitroAssayScreenings.push(newScreening);
 
-   // this.existingAssaysByAssaySetList.splice(indexCopyFromAssay + 1, 0, copyAssay);
+    // this.existingAssaysByAssaySetList.splice(indexCopyFromAssay + 1, 0, copyAssay);
   }
 
   setPlasmaProteinCheckBox($event, screeningIndex: number): void {
@@ -1613,41 +1645,51 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   }
 
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
+
   scrub(oldraw: any): any {
     const old = oldraw;
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
       }
     }
 
-    const showHolders = defiant.json.search(old, '//*[_show]');
+    const showHolders = jp.query(old, '$..[?(@._show)]');
     for (let i = 0; i < showHolders.length; i++) {
       delete showHolders[i]._show;
     }
 
-    const createHolders = defiant.json.search(old, '//*[createdDate]');
+    const createHolders = jp.query(old, '$..[?(@.createdDate)]');
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = defiant.json.search(old, '//*[modifiedDate]');
+    const modifyHolders = jp.query(old, '$..[?(@.modifiedDate)]');
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
+
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
     }

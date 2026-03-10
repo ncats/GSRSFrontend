@@ -9,9 +9,10 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 
 @Component({
-  selector: 'app-substance-form-mixture-details',
-  templateUrl: './substance-form-mixture-details.component.html',
-  styleUrls: ['./substance-form-mixture-details.component.scss']
+    selector: 'app-substance-form-mixture-details',
+    templateUrl: './substance-form-mixture-details.component.html',
+    styleUrls: ['./substance-form-mixture-details.component.scss'],
+    standalone: false
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormMixtureDetailsComponent  extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {

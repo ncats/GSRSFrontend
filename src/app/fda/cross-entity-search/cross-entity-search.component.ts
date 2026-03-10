@@ -26,9 +26,10 @@ import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
 import { exitCode } from 'process';
 
 @Component({
-  selector: 'app-cross-entity-search',
-  templateUrl: './cross-entity-search.component.html',
-  styleUrls: ['./cross-entity-search.component.scss']
+    selector: 'app-cross-entity-search',
+    templateUrl: './cross-entity-search.component.html',
+    styleUrls: ['./cross-entity-search.component.scss'],
+    standalone: false
 })
 export class CrossEntitySearchComponent implements OnInit {
 
@@ -392,7 +393,6 @@ export class CrossEntitySearchComponent implements OnInit {
         this.statusMessage = "Applying " + this.subEntityDisplay + " facets and will reload " + this.thisEntityDisplay + " search results.";
 
         // ******** Perform bulk search on sub-entity after FACET SELECTION on sub-entity ********
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         this.getSearchStatusResults(this.subEntityEndpoint, this.bulkSearchKey, 'key', 10);
 
         // this.performBulkSearch(this.subEntityEndpoint, this.bulkQID, 'key', this.MAX_RECORD);
@@ -986,10 +986,11 @@ export class CrossEntitySearchComponent implements OnInit {
 
   openModal() {
     const dialogRef = this.dialog.open(this.crossEntitySearchTemplate, {
-      minWidth: '60%',
-      maxWidth: '80%',
-      minHeight: '50%',
-      maxHeight: '80%',
+      minWidth: '60vw',
+      maxWidth: '80vw',
+      minHeight: '50vh',
+      maxHeight: '80vh',
+      panelClass: 'cross-entity-search-dialog',
       disableClose: true // Prevents closing on outside click
     });
 

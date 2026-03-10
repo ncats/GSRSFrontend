@@ -86,3 +86,17 @@ $screenMedium: 1045px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
+::ng-deep .reg-a {
+	.mat-mdc-menu-content {
+		padding: 0;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.mat-mdc-menu-item {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0 16px;
+	}
+}

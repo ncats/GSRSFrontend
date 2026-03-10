@@ -2,9 +2,10 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Alignment} from '@gsrs-core/utils';
 
 @Component({
-  selector: 'app-sequence-alignment',
-  templateUrl: './sequence-alignment.component.html',
-  styleUrls: ['./sequence-alignment.component.scss']
+    selector: 'app-sequence-alignment',
+    templateUrl: './sequence-alignment.component.html',
+    styleUrls: ['./sequence-alignment.component.scss'],
+    standalone: false
 })
 export class SequenceAlignmentComponent implements OnInit {
   @Input() alignmentArray: Alignment;

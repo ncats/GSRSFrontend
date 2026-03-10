@@ -8,9 +8,10 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 
 @Component({
-  selector: 'app-monomer-form',
-  templateUrl: './monomer-form.component.html',
-  styleUrls: ['./monomer-form.component.scss']
+    selector: 'app-monomer-form',
+    templateUrl: './monomer-form.component.html',
+    styleUrls: ['./monomer-form.component.scss'],
+    standalone: false
 })
 export class MonomerFormComponent implements OnInit, AfterViewInit {
   privateMonomer: Monomer;

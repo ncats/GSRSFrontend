@@ -2,6 +2,10 @@
   font-size: 20px !important;
 }
 
+::ng-deep .resolver-search-icon svg {
+  fill: var(--primary-color);
+}
+
 .result-container {
   flex-direction: row;
   justify-content: space-evenly;

@@ -7,7 +7,7 @@
   <div class="name-value">
     <div class="name">References</div>
     <div class="value">
-      <button class="mat-raised-button mat-primary dialog-close" (click)="openModal(refTemplate)"
+      <button mat-raised-button color="primary" class="dialog-close" (click)="openModal(refTemplate)"
         [disabled]="substance.specifiedSubstanceG3.definition.references.length <= 0">View</button>
 
       <ng-template #refTemplate>
@@ -18,7 +18,7 @@
         </div>
         <div mat-dialog-actions>
           <span class="middle-fill"></span>
-          <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "close()">Close</button>
+          <button mat-raised-button color="primary" mat-dialog-close (click) = "close()">Close</button>
         </div>
       </ng-template>
     </div>

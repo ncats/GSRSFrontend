@@ -6,9 +6,10 @@ import { FormControl } from '@angular/forms';
 import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 
 @Component({
-  selector: 'app-clinical-trial-edit-substance-roles',
-  templateUrl: './clinical-trial-edit-substance-roles.component.html',
-  styleUrls: ['./clinical-trial-edit-substance-roles.component.scss']
+    selector: 'app-clinical-trial-edit-substance-roles',
+    templateUrl: './clinical-trial-edit-substance-roles.component.html',
+    styleUrls: ['./clinical-trial-edit-substance-roles.component.scss'],
+    standalone: false
 })
 export class ClinicalTrialEditSubstanceRolesComponent implements OnInit {
   @Input() tableRowIndex: number;

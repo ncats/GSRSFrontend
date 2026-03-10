@@ -129,8 +129,20 @@
   padding: 10px 0px 5px 10px;
 }
 
+.font11px {
+  font-size: 11px;
+}
+
 .font12px {
   font-size: 12px;
+}
+
+.font14px {
+  font-size: 14px;
+}
+
+.colorred {
+  color: var(--regular-red-color);
 }
 
 .colormaroon {
@@ -146,7 +158,11 @@
 }
 
 .colorgray {
-  color: var(--maroon-color);
+  color: var(--regular-grey-color);
+}
+
+.colorlightgray {
+  color: var(--regular-lightgray-color);
 }
 
 .colorwhite {
@@ -185,6 +201,10 @@
   margin-top: 70px;
 }
 
+.marginleft10px {
+  margin-left: 10px;
+}
+
 .marginleft20px {
   margin-left: 20px;
 }
@@ -215,6 +235,10 @@
 
 .marginbottom5px {
   margin-bottom: 5px;
+}
+
+.marginbottom10px {
+  margin-bottom: 10px;
 }
 
 .padtop10px {
@@ -416,11 +440,6 @@
   }
 }
 
-.tab-style {
-  position: relative;
-  z-index: 1;
-}
-
 .search-button {
   position: relative;
   top: 30px;
@@ -466,6 +485,17 @@
 ::ng-deep .panel-height-scroll {
   height: 800px;
   overflow-y: scroll;
+}
+
+.tab-style {
+  position: relative;
+  z-index: 1;
+}
+
+:host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab,
+:host ::ng-deep .mat-tab-list .mat-tab-label {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
 }
 
 /*******************************/

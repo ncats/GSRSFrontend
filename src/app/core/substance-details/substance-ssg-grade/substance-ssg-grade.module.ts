@@ -4,13 +4,15 @@ import { SubstanceSsgGradeComponent } from './substance-ssg-grade.component';
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicComponentLoaderModule.forChild(SubstanceSsgGradeComponent),
     ReferencesManagerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule
   ],
   declarations: [
     SubstanceSsgGradeComponent

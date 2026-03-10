@@ -7,9 +7,10 @@ import { Router } from '@angular/router';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-structure-image-modal',
-  templateUrl: './structure-image-modal.component.html',
-  styleUrls: ['./structure-image-modal.component.scss']
+    selector: 'app-structure-image-modal',
+    templateUrl: './structure-image-modal.component.html',
+    styleUrls: ['./structure-image-modal.component.scss'],
+    standalone: false
 })
 export class StructureImageModalComponent implements OnInit {
   structure: string;

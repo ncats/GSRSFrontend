@@ -20,6 +20,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
@@ -110,6 +111,7 @@ const applicationRoutes: Routes = [
     MatSortModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatOptionModule,
     MatSliderModule,
     MatDialogModule,
     MatListModule,
@@ -145,8 +147,6 @@ const applicationRoutes: Routes = [
   ],
   exports: [
     ApplicationsBrowseComponent,
-  ],
-  entryComponents: [
   ],
   providers: [
     CanActivateRegisterApplicationFormComponent,

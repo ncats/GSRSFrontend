@@ -1,12 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
-import { SubstanceSummary } from '@gsrs-core/substance/substance.model';
-import { ConfigService } from '@gsrs-core/config';
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { SubstanceService } from "@gsrs-core/substance/substance.service";
+import { SubstanceSummary } from "@gsrs-core/substance/substance.model";
+import { ConfigService } from "@gsrs-core/config";
 
 @Component({
-  selector: 'app-substance-search-selector',
-  templateUrl: './substance-search-selector.component.html',
-  styleUrls: ['./substance-search-selector.component.scss']
+  selector: "app-substance-search-selector",
+  templateUrl: "./substance-search-selector.component.html",
+  styleUrls: ["./substance-search-selector.component.scss"],
+  standalone: false,
 })
 export class SubstanceSearchSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
@@ -14,9 +15,10 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Output() showMessage = new EventEmitter<String>();
   @Output() searchValueOut = new EventEmitter<String>();
-  @Input() placeholder = 'Search';
-  @Input() hintMessage = '';
-  @Input() header = 'Substance';
+  @Input() placeholder = "Search";
+  @Input() label = "";
+  @Input() hintMessage = "";
+  @Input() header = "Substance";
   @Input() name?: string;
   errorMessage: string;
   showOptions: boolean;
@@ -28,11 +30,12 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   constructor(
     public substanceService: SubstanceService,
     public configService: ConfigService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.configService.configData.substanceSelectorProperties != null) {
-      this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
+      this.substanceSelectorProperties =
+        this.configService.configData.substanceSelectorProperties;
     } else {
       console.log("The config value for substanceSelectorProperties is null.");
     }
@@ -41,28 +44,33 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   @Input()
   set subuuid(uuid: string) {
     if (uuid) {
-      this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
-        this.selectedSubstance = response;
-      }, error => {
-        console.log(error);
-        if (this.name && this.name !== '') {
-          this.selectedSubstance = {_name: this.name};
-        } else {
-          this.selectedSubstance = {_name: ''};
-        }
-        this.errorMessage = 'Not in database';
-      });
+      this.substanceService.getSubstanceSummary(uuid).subscribe(
+        (response) => {
+          this.selectedSubstance = response;
+        },
+        (error) => {
+          console.log(error);
+          if (this.name && this.name !== "") {
+            this.selectedSubstance = { _name: this.name };
+          } else {
+            this.selectedSubstance = { _name: "" };
+          }
+          this.errorMessage = "Not in database";
+        },
+      );
     } else {
       this.selectedSubstance = null;
-      this.searchValue = '';
+      this.searchValue = "";
     }
   }
 
-  processSubstanceSearch(searchValue: string = ''): void {
+  processSubstanceSearch(searchValue: string = ""): void {
     this.searchValue = searchValue;
-    const q = searchValue.replace('\"', '');
+    const q = searchValue.replace('\"', "");
     // Changed to configuration approach.
-    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
+    const searchStr = this.substanceSelectorProperties
+      .map((property) => `${property}:\"^${q}$\"`)
+      .join(" OR ");
     /*
     const searchStr =
       `root_names_name:\"^${q}$\" OR ` +
@@ -71,17 +79,19 @@ export class SubstanceSearchSelectorComponent implements OnInit {
       `root_codes_BDNUM:\"^${q}$\"`
       ;
     */
-    this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
-      this.loadingStructure = true;
-      if (response.content && response.content.length) {
-        this.selectedSubstance = response.content[0];
-        this.selectionUpdated.emit(this.selectedSubstance);
-        this.errorMessage = '';
-      } else {
-        this.showMessage.emit('No substances found for ' + this.searchValue);
-      }
-      this.loadingStructure = false;
-    });
+    this.substanceService
+      .getQuickSubstancesSummaries(searchStr, true)
+      .subscribe((response) => {
+        this.loadingStructure = true;
+        if (response.content && response.content.length) {
+          this.selectedSubstance = response.content[0];
+          this.selectionUpdated.emit(this.selectedSubstance);
+          this.errorMessage = "";
+        } else {
+          this.showMessage.emit("No substances found for " + this.searchValue);
+        }
+        this.loadingStructure = false;
+      });
   }
 
   editSelectedSubstance(): void {

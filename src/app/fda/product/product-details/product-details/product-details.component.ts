@@ -17,11 +17,14 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ProductService } from '../../service/product.service';
 
 @Component({
-  selector: 'app-product-details',
-  templateUrl: './product-details.component.html',
-  styleUrls: ['./product-details.component.scss']
+    selector: 'app-product-details',
+    templateUrl: './product-details.component.html',
+    styleUrls: ['./product-details.component.scss'],
+    standalone: false
 })
 export class ProductDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit {
+
+  canUpdate: boolean = false;
 
   constructor(
     public productService: ProductService,
@@ -38,18 +41,15 @@ export class ProductDetailsComponent extends ProductDetailsBaseComponent impleme
     titleService: Title,
     overlayContainerService: OverlayContainer,
     dialog: MatDialog,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer 
   ) {
     super(productService, generalService, activatedRoute, loadingService, mainNotificationService,
       router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
   }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', ', Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-
+  async ngOnInit() {
     super.ngOnInit();
+    this.canUpdate = await this.authService.canEditData();
   }
 
   ngAfterViewInit() {

@@ -2,7 +2,8 @@ import { Directive, Input, ElementRef, HostListener, Renderer2, AfterViewInit, C
 import { ExpandableDetailsDirective } from './expandable-details.directive';
 
 @Directive({
-  selector: '[appExpandDetails]',
+    selector: '[appExpandDetails]',
+    standalone: false
 })
 export class ExpandDetailsDirective implements AfterViewInit, OnDestroy {
   private focused = 0;

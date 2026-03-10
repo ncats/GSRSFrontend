@@ -9,7 +9,8 @@ import {
   Inject,
   ComponentFactoryResolver,
   ViewChildren,
-  QueryList
+  QueryList,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras, Params } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
@@ -54,9 +55,10 @@ import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.se
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
 
 @Component({
-  selector: 'app-substances-browse',
-  templateUrl: './substances-browse.component.html',
-  styleUrls: ['./substances-browse.component.scss']
+    selector: 'app-substances-browse',
+    templateUrl: './substances-browse.component.html',
+    styleUrls: ['./substances-browse.component.scss'],
+    standalone: false
 })
 export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;
@@ -91,8 +93,12 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   isRefresher = false;
   @ViewChildren(BrowseHeaderDynamicSectionDirective) dynamicContentContainer: QueryList<BrowseHeaderDynamicSectionDirective>;
   @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
+  // Initialized before any lifecycle hook so the first template render uses the correct state.
+  // This prevents mat-sidenav-content from flashing at full width before the sidenav opens.
+  readonly initialSidenavOpen = typeof window !== 'undefined' && window.innerWidth >= 1100;
   hasBackdrop = false;
   view = 'cards';
+  private resizeTimeout: any;
   displayedColumns: string[] = ['name', 'approvalID', 'names', 'codes', 'actions'];
   public smiles: string;
   private argsHash?: number;
@@ -101,7 +107,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin = false;
+  canUpdate = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -180,6 +186,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     private cvService: ControlledVocabularyService,
     private wildCardService: WildcardService,
     private bulkSearchService: BulkSearchService,
+    private cdr: ChangeDetectorRef,
     @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[],
 
   ) {
@@ -217,7 +224,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.gaService.sendPageView('Browse Substances');
     this.cvService.getDomainVocabulary('CODE_SYSTEM').pipe(take(1)).subscribe(response => {
       this.codeSystem = response['CODE_SYSTEM'].dictionary;
@@ -284,11 +291,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       } else {
         this.showDeprecated = false;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
-      this.showUserLists = this.authService.hasAnyRoles('Updater', 'SuperUpdater', 'DataEntry');
-
+      
     });
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.showUserLists=this.canUpdate;
+    //todo: evaluate this!
+    this.showAudit =await this.authService.hasSpecificPrivilege('Restore Previous Versions');
+
+    
     if (deprecated && deprecated === 'true' && this.showAudit) {
       this.showDeprecated = true;
     }
@@ -366,13 +376,13 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
       }
     });
     this.subscriptions.push(dynamicSubscription);
-
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+    clearTimeout(this.resizeTimeout);
     this.substanceService.pauseAsyncSearch();
     this.substanceService.clearSearchKey();
     this.facetManagerService.unregisterFacetSearchHandler();
@@ -380,7 +390,11 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {
@@ -465,10 +479,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets.filter(facet => !(facet.type === 'Deprecated' && facet.bool === false));
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+        this.isFacetsParamsInit = true;
+        // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.loadComponent();
+          this.cdr.detectChanges();
+        }, 0);
     } else {
-      this.searchSubstances();
+        this.searchSubstances();
     }
   }
 
@@ -1182,18 +1200,16 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private processResponsiveness = () => {
-    setTimeout(() => {
-      if (window) {
-        if (window.innerWidth < 1100) {
-          this.matSideNav.close();
-          this.isCollapsed = true;
-          this.hasBackdrop = true;
-        } else {
-          this.matSideNav.open();
-          this.hasBackdrop = false;
-        }
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
       }
-    });
+    }
   }
 
   openSideNav() {
@@ -1356,10 +1372,80 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     });
   }
 
+  createQueryTextWithIds(idListForSearch: Array<string>, entity: string, rootId: boolean = false): string {
+    let queryText = '';
+
+    idListForSearch.forEach((id, index) => {
+      if (id) {
+        if (index > 0) {
+          queryText = queryText + '\n';
+        }
+        if (entity && entity === 'substances') {
+          queryText = queryText + 'root_uuid:"' + id + '"';
+        } else {
+          if (rootId) {
+            queryText = queryText + 'root_id:"' + id + '"';
+          } else {
+            queryText = queryText + 'entity_link_substances:"' + id + '"';
+          }
+        }
+      }
+    });
+
+    return queryText;
+  }
+
+  getBulkQuery(substanceIdLists: Array<string>, entity: string) {
+    let queryText = this.createQueryTextWithIds(substanceIdLists, entity);
+
+    if (queryText) {
+      this.bulkSearchService.postOrPutBulkQuery(entity, queryText).subscribe(result => {
+        if (result) {
+          if (result.id) {
+            this.forwardToSubstance(result.id, entity);
+          }
+        }
+      });
+    }
+  }
+
+  showAllApplications() {
+    this.getSearchIdsOnly(true, "all applications");
+  }
+
+  showAllProducts() {
+    this.getSearchIdsOnly(true, "all products");
+  }
+
+  forwardToSubstance(bulkQID: number, entity: string) {
+    // Store current url in cookies
+
+    const searchItemHash = this.utilsService.hashCode();
+
+    // Store parameters in local storage
+    // localStorage.setItem(searchItemHash.toString(), JSON.stringify(item));
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    if (bulkQID > 0) {
+      navigationExtras.queryParams['bulkQID'] = bulkQID;
+    }
+
+    if (entity && entity === 'applications') {
+      this.router.navigate(['/browse-applications'], navigationExtras);
+    } else if (entity && entity === 'products') {
+      this.router.navigate(['/browse-products'], navigationExtras);
+    } else {
+      this.router.navigate(['/browse-substance'], navigationExtras);
+    }
+  }
+
   // Need this for Cross Entity Search. Return all the IDs only for the current search
-  getSearchIdsOnly(doPerformSearch: boolean) {
+  getSearchIdsOnly(doPerformSearch: boolean, searchType?: string) {
     if (doPerformSearch) {
-      let idListsTemp: Array<String> = [];
+      let idListsTemp: Array<string> = [];
 
       let iterations = 0;
       const skip = 0;
@@ -1399,8 +1485,14 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
               }
                 // Copy after the last record
               if (results.length == index + 1) {
-                // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
-                this.idLists = idListsTemp;
+                if (searchType && searchType === 'all applications') {
+                  this.getBulkQuery(idListsTemp, 'applications',);
+                } else if (searchType && searchType === 'all products') {
+                  this.getBulkQuery(idListsTemp, 'products',);  
+                } else {
+                  // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+                  this.idLists = idListsTemp;
+                }
               }
             }); // forEach
           } else {

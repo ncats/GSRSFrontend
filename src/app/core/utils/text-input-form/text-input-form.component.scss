@@ -1,18 +1,31 @@
 
-.text-input-form mat-form-field { 
-    width:100% !important;
+.text-input-form mat-form-field {
+    width: 100% !important;
 }
 
+// MDC sets .mdc-text-field to height:56px + overflow:hidden, clipping the textarea.
+// :host ::ng-deep is used to pierce into mat-form-field's DOM while staying scoped to this component.
+:host ::ng-deep .textarea-form-field {
+    .mdc-text-field {
+        height: auto !important;
+        overflow: visible !important;
+    }
 
-.text-input-form mat-form-field { 
-    width:100% !important;
-}
+    .mat-mdc-form-field-infix {
+        height: auto !important;
+        min-height: auto !important;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
 
-.text-input-form textarea  {
-    width: 100%;
-    border: 2px solid var(--regular-lightgray-color);
-    height: 300px;
-    overflow-y: auto;
+    textarea {
+        width: 100% !important;
+        border: 2px solid var(--regular-lightgray-color) !important;
+        min-height: 300px;
+        overflow-y: auto;
+        resize: vertical;
+        box-sizing: border-box;
+    }
 }
 
 

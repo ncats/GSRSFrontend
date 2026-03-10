@@ -7,9 +7,10 @@ import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-scheduled-job',
-  templateUrl: './scheduled-job.component.html',
-  styleUrls: ['./scheduled-job.component.scss']
+    selector: 'app-scheduled-job',
+    templateUrl: './scheduled-job.component.html',
+    styleUrls: ['./scheduled-job.component.scss'],
+    standalone: false
 })
 export class ScheduledJobComponent implements OnInit, OnDestroy {
 

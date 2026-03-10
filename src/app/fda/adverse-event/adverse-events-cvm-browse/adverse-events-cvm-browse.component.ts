@@ -29,14 +29,15 @@ import { AdverseEventCvm } from '../model/adverse-event.model';
 import { adverseEventCvmSearchSortValues } from './adverse-events-cvm-search-sort-values';
 
 @Component({
-  selector: 'app-adverse-events-cvm-browse',
-  templateUrl: './adverse-events-cvm-browse.component.html',
-  styleUrls: ['./adverse-events-cvm-browse.component.scss']
+    selector: 'app-adverse-events-cvm-browse',
+    templateUrl: './adverse-events-cvm-browse.component.html',
+    styleUrls: ['./adverse-events-cvm-browse.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventCvmOut: EventEmitter<number> = new EventEmitter<number>();
-  isAdmin: boolean;
+  canUpdate: boolean = false;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -108,7 +109,7 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventCvmFacets);
     // this.gaService.sendPageView('Browse Adverse Event Cvm');
 
@@ -136,8 +137,9 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+      
     });
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.subscriptions.push(authSubscription);
 
     this.isComponentInit = true;
@@ -356,8 +358,11 @@ export class AdverseEventsCvmBrowseComponent implements OnInit, AfterViewInit, O
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchAdverseEventCvm();
     }

@@ -75,7 +75,7 @@
     <img class="structure-img" (click) = "openModal(structureTemplate)" *ngIf = "substance.$$source && substance.$$source == 'staging'"   appSubstanceImage  size = "250" [entityId]="substance.uuid" [stereo]="showStereo">
 
     <br/>
-      <button class ="mat-raised-button mat-primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
+      <button mat-raised-button color="primary" [disabled]="structure.definedStereo == 0" (click)="toggleStereo()">{{showStereo === false ? 'Show' : 'Hide'}} Stereo</button>
 
   </div>
 

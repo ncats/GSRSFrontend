@@ -6,9 +6,10 @@ import { InvitroAssayInformation, ValidationMessage } from './model/invitro-phar
 
 
 @Component({
-  selector: 'app-invitro-pharmacology',
-  templateUrl: './invitro-pharmacology.component.html',
-  styleUrls: ['./invitro-pharmacology.component.scss']
+    selector: 'app-invitro-pharmacology',
+    templateUrl: './invitro-pharmacology.component.html',
+    styleUrls: ['./invitro-pharmacology.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyComponent implements OnInit {
 
@@ -32,8 +33,7 @@ export class InvitroPharmacologyComponent implements OnInit {
   submitDateMessage = '';
   statusDateMessage = '';
   // appForm: FormGroup;
-  isAdmin = false;
-
+  
   constructor() { }
 
   ngOnInit(): void {

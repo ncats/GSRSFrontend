@@ -8,9 +8,10 @@ import { SubstanceFormBase } from '../../substance-form/base-classes/substance-f
 import { SubstanceDetail, SpecifiedSubstanceG2 } from '@gsrs-core/substance/substance.model';
 
 @Component({
-  selector: 'app-ssg2-overview-form',
-  templateUrl: './ssg2-overview-form.component.html',
-  styleUrls: ['./ssg2-overview-form.component.scss']
+    selector: 'app-ssg2-overview-form',
+    templateUrl: './ssg2-overview-form.component.html',
+    styleUrls: ['./ssg2-overview-form.component.scss'],
+    standalone: false
 })
 export class Ssg2OverviewFormComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 

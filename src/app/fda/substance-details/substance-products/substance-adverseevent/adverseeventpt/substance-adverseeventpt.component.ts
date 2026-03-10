@@ -16,13 +16,13 @@ import { Subscription } from 'rxjs';
 import { adverseEventPtSearchSortValues } from '../../../../adverse-event/adverse-events-pt-browse/adverse-events-pt-search-sort-values';
 
 @Component({
-  selector: 'app-substance-adverseeventpt',
-  templateUrl: './substance-adverseeventpt.component.html',
-  styleUrls: ['./substance-adverseeventpt.component.scss']
+    selector: 'app-substance-adverseeventpt',
+    templateUrl: './substance-adverseeventpt.component.html',
+    styleUrls: ['./substance-adverseeventpt.component.scss'],
+    standalone: false
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
-  @Input() bdnum: string;
   @Input() substanceName: string;
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
@@ -53,7 +53,6 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   FAERSDashboardReactionTerm = "/select/Reaction%20Term/"; // GSRS Adverse Event 'PT Term'
   FAERSDashboardReactionGroup = "/select/Reaction%20Group/"; // GSRS Adverse Event 'Prim SOC'
 
-  filtered: Array<any>;
   displayedColumns: string[] = [
     'ptTerm',
     'primSoc',
@@ -61,6 +60,9 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     'ptCount',
     'prr'
   ];
+
+  canExport:boolean = false;
+
   constructor(
     private router: Router,
     public gaService: GoogleAnalyticsService,
@@ -73,11 +75,8 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     super(gaService, adverseEventService);
   }
 
-  ngOnInit() {
-    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(rolesSubscription);
+  async ngOnInit() {
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
 
     if (this.bdnum) {
       this.getAdverseEventPt();

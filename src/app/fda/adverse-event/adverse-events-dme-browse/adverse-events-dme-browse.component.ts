@@ -29,14 +29,15 @@ import { AdverseEventDme } from '../model/adverse-event.model';
 import { adverseEventDmeSearchSortValues } from './adverse-events-dme-search-sort-values';
 
 @Component({
-  selector: 'app-adverse-events-dme-browse',
-  templateUrl: './adverse-events-dme-browse.component.html',
-  styleUrls: ['./adverse-events-dme-browse.component.scss']
+    selector: 'app-adverse-events-dme-browse',
+    templateUrl: './adverse-events-dme-browse.component.html',
+    styleUrls: ['./adverse-events-dme-browse.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventDmeOut: EventEmitter<number> = new EventEmitter<number>();
-  isAdmin: boolean;
+  canExport: boolean;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -111,7 +112,7 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventDmeFacets);
     //  this.gaService.sendPageView('Browse Adverse Event Dme');
 
@@ -139,8 +140,9 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+
     this.subscriptions.push(authSubscription);
 
     this.isComponentInit = true;
@@ -359,8 +361,11 @@ export class AdverseEventsDmeBrowseComponent implements OnInit, AfterViewInit, O
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchAdverseEventDme();
     }

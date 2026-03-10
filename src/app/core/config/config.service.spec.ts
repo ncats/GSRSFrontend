@@ -15,8 +15,8 @@ describe('ConfigService', () => {
       imports: [ HttpClientTestingModule ]
     });
 
-    httpClient = TestBed.get(HttpClient);
-    httpTestingController = TestBed.get(HttpTestingController);
+    httpClient = TestBed.inject(HttpClient);
+    httpTestingController = TestBed.inject(HttpTestingController);
     configService = new ConfigService(httpClient);
   });
 

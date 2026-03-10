@@ -16,9 +16,10 @@ import { ConfigService } from '@gsrs-core/config';
  */
 
 @Component({
-  selector: 'app-cv-input',
-  templateUrl: './cv-input.component.html',
-  styleUrls: ['./cv-input.component.scss']
+    selector: 'app-cv-input',
+    templateUrl: './cv-input.component.html',
+    styleUrls: ['./cv-input.component.scss'],
+    standalone: false
 })
 export class CvInputComponent implements OnInit, OnDestroy {
   @Input() vocabulary?: any;
@@ -27,6 +28,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
   @Input() key?: string;
   @Input() required?: boolean;
   @Input() disable?: boolean;
+  @Input() hintMessage?: string;
   @Output()
   valueChange = new EventEmitter<string>();
   vocabName = '';
@@ -34,7 +36,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
   dictionary: any;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin: boolean;
+  canManageCVs: boolean = false;
 
   constructor(
     public cvService: ControlledVocabularyService,
@@ -46,7 +48,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
     private configService: ConfigService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.vocabulary) {
       this.vocabulary = this.addOtherOption(this.vocabulary, this.privateMod);
       this.sortFromConfig();
@@ -75,7 +77,7 @@ export class CvInputComponent implements OnInit, OnDestroy {
 
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    this.isAdmin = this.authService.hasRoles('admin');
+    this.canManageCVs = await this.authService.hasSpecificPrivilege('Manage CVs');
   }
 
   ngOnDestroy() {

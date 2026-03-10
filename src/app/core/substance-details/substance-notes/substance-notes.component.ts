@@ -8,9 +8,10 @@ import {Subject} from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
-  selector: 'app-substance-notes',
-  templateUrl: './substance-notes.component.html',
-  styleUrls: ['./substance-notes.component.scss']
+    selector: 'app-substance-notes',
+    templateUrl: './substance-notes.component.html',
+    styleUrls: ['./substance-notes.component.scss'],
+    standalone: false
 })
 export class SubstanceNotesComponent extends SubstanceCardBase implements OnInit {
   notes: Array<SubstanceNote> = [];

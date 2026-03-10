@@ -5,9 +5,10 @@ import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {ConfigService} from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-relationships-visualization',
-  templateUrl: './substance-relationships-visualization.component.html',
-  styleUrls: ['./substance-relationships-visualization.component.scss']
+    selector: 'app-substance-relationships-visualization',
+    templateUrl: './substance-relationships-visualization.component.html',
+    styleUrls: ['./substance-relationships-visualization.component.scss'],
+    standalone: false
 })
 export class SubstanceRelationshipsVisualizationComponent extends SubstanceCardBase implements OnInit {
   visualizationUri: SafeResourceUrl;

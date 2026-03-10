@@ -23,13 +23,13 @@ import { GeneralService } from '../../../service/general.service';
 import { InvitroAssayInformation, InvitroAssayScreening } from '../../../invitro-pharmacology/model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-substance-invitro-pharmacology',
-  templateUrl: './substance-invitro-pharmacology.component.html',
-  styleUrls: ['./substance-invitro-pharmacology.component.scss']
+    selector: 'app-substance-invitro-pharmacology',
+    templateUrl: './substance-invitro-pharmacology.component.html',
+    styleUrls: ['./substance-invitro-pharmacology.component.scss'],
+    standalone: false
 })
 export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
-  @Input() substance: any;
   @Input() substanceUuid: string;
   @Input() substanceUnii: string;
   @Input() substanceName: string;
@@ -92,11 +92,12 @@ export class SubstanceInvitroPharmacologyComponent extends SubstanceDetailsBaseT
     super(gaService, invitroPharmService);
   }
 
-  ngOnInit() {
-    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(rolesSubscription);
+  canUpdate: boolean = false;
+  canExport: boolean = false;
+
+  async ngOnInit() {
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
 
     if (this.substanceUuid) {
       this.privateSearch = this.privateSearchBase + '\"' + this.substanceUuid + '\"';

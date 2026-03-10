@@ -12,12 +12,15 @@ import { ApplicationService } from '../../service/application.service';
 import { GeneralService } from '../../../service/general.service';
 
 @Component({
-  selector: 'app-application-details',
-  templateUrl: './application-details.component.html',
-  styleUrls: ['./application-details.component.scss']
+    selector: 'app-application-details',
+    templateUrl: './application-details.component.html',
+    styleUrls: ['./application-details.component.scss'],
+    standalone: false
 })
 
 export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent implements OnInit {
+
+  canEdit: boolean = false;
 
   constructor(
     applicationService: ApplicationService,
@@ -34,11 +37,8 @@ export class ApplicationDetailsComponent extends ApplicationDetailsBaseComponent
     super(applicationService, generalService, activatedRoute, loadingService, mainNotificationService, router, gaService, utilsService, titleService);
   }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-
+  async ngOnInit() {
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     this.appType = this.activatedRoute.snapshot.params['appType'];
     this.appNumber = this.activatedRoute.snapshot.params['appNumber'];

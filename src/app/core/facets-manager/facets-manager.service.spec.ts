@@ -6,7 +6,7 @@ describe('FacetsManagerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: FacetsManagerService = TestBed.get(FacetsManagerService);
+    const service: FacetsManagerService = TestBed.inject(FacetsManagerService);
     expect(service).toBeTruthy();
   });
 });

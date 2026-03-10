@@ -9,9 +9,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-substance-constituents',
-  templateUrl: './substance-constituents.component.html',
-  styleUrls: ['./substance-constituents.component.scss']
+    selector: 'app-substance-constituents',
+    templateUrl: './substance-constituents.component.html',
+    styleUrls: ['./substance-constituents.component.scss'],
+    standalone: false
 })
 export class SubstanceConstituentsComponent extends SubstanceCardBaseFilteredList<Constituent> implements OnInit {
   constituents: Array<Constituent>;

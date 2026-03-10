@@ -5,9 +5,10 @@ import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary';
 import { UtilsService } from '@gsrs-core/utils';
 
 @Component({
-  selector: 'app-simplified-code-form',
-  templateUrl: './simplified-code-form.component.html',
-  styleUrls: ['./simplified-code-form.component.scss']
+    selector: 'app-simplified-code-form',
+    templateUrl: './simplified-code-form.component.html',
+    styleUrls: ['./simplified-code-form.component.scss'],
+    standalone: false
 })
 export class SimplifiedCodeFormComponent implements OnInit {
   private privateCode: SubstanceCode;

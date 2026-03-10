@@ -6,9 +6,10 @@ import { AdminService } from '@gsrs-core/admin/admin.service';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-bulk-action-dialog',
-  templateUrl: './bulk-action-dialog.component.html',
-  styleUrls: ['./bulk-action-dialog.component.scss']
+    selector: 'app-bulk-action-dialog',
+    templateUrl: './bulk-action-dialog.component.html',
+    styleUrls: ['./bulk-action-dialog.component.scss'],
+    standalone: false
 })
 export class BulkActionDialogComponent implements OnInit {
   records: any;

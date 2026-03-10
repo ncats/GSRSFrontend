@@ -31,6 +31,7 @@ export class SubstanceFormRelationshipsService extends SubstanceFormServiceBase<
   }
 
   addSubstanceRelationship(): void {
+    this.substanceFormService.markAdded();
     const newRelationship: SubstanceRelationship = {
       relatedSubstance: {},
       amount: {},
@@ -42,6 +43,7 @@ export class SubstanceFormRelationshipsService extends SubstanceFormServiceBase<
   }
 
   deleteSubstanceRelationship(relationship: SubstanceRelationship): void {
+    this.substanceFormService.markRemoved();
     const subRelationshipIndex = this.substance.relationships
       .findIndex(subRelationship => relationship.$$deletedCode === subRelationship.$$deletedCode);
     if (subRelationshipIndex > -1) {

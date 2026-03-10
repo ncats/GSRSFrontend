@@ -15,9 +15,10 @@ import { StructureExportComponent } from '@gsrs-core/structure/structure-export/
 import { searchSortValues } from '@gsrs-core/utils';
 import { take } from 'rxjs';
 @Component({
-  selector: 'app-advanced-selector-dialog',
-  templateUrl: './advanced-selector-dialog.component.html',
-  styleUrls: ['./advanced-selector-dialog.component.scss']
+    selector: 'app-advanced-selector-dialog',
+    templateUrl: './advanced-selector-dialog.component.html',
+    styleUrls: ['./advanced-selector-dialog.component.scss'],
+    standalone: false
 })
 export class AdvancedSelectorDialogComponent implements OnInit {
 

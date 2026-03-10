@@ -82,3 +82,8 @@ export interface DirectoryFile {
     order?: string;
     children?: Array< DirectoryFile >;
 }
+
+export interface AssignableRole {
+roleName: string;
+assigned: boolean;
+}

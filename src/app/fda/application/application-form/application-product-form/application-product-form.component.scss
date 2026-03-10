@@ -12,6 +12,7 @@
 .form-row {
   display: flex;
   width: 100%;
+  align-items: flex-end;
 
   .col-1 {
     width: calc((100% - 30px * 4) / 5);

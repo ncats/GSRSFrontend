@@ -9,9 +9,10 @@ import { FormControl } from '@angular/forms';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-references',
-  templateUrl: './substance-references.component.html',
-  styleUrls: ['./substance-references.component.scss']
+    selector: 'app-substance-references',
+    templateUrl: './substance-references.component.html',
+    styleUrls: ['./substance-references.component.scss'],
+    standalone: false
 })
 export class SubstanceReferencesComponent extends SubstanceCardBaseFilteredList<SubstanceReference> implements OnInit {
   references: Array<SubstanceReference> = [];

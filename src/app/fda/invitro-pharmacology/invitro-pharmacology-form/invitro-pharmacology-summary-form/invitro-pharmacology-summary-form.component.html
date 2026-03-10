@@ -9,27 +9,12 @@
       <span>Export JSON</span>
     </a>&nbsp;&nbsp;&nbsp;
 
-    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
-    <!--
-    <span *ngIf="assay && !assay.id">
-      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
-    </span>
-    -->
     <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
       *ngIf="validationMessages && validationMessages.length > 0">
       {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
       <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
     </button>
     <span class="middle-fill"></span>
-
-    <!-- Assay Details Link -->
-    <!--
-    <a mat-flat-button color="primary" routerLink="/invitro-pharm/{{assay.id}}" target="_blank"
-      matTooltip='Opens in a new window' *ngIf="assay && assay.id">
-      View Assay Details
-      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    -->
 
     <!-- Validate and Submit Button -->
     &nbsp;
@@ -93,14 +78,6 @@
           <b>{{title}}</b>
           &nbsp;&nbsp;
 
-          <!-- Edit GSRS record button -->
-          <!--
-          <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-            matTooltip='Edit GSRS In Vitro Pharmacology Record'>
-            <mat-icon svgIcon="edit"></mat-icon>
-          </a>&nbsp;&nbsp;
-          -->
-
           <a color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json"
             matTooltip='Export Json'>
             <mat-icon svgIcon="get_app" [ngStyle]="{'color':'white'}"></mat-icon>
@@ -108,16 +85,6 @@
         </div>
 
       </div> <!-- class=divflex -->
-
-      <!-- Link to All Test Agent page -->
-      <div class="marginleft40px margintop10px">
-        <a mat-flat-button class="bordergray" color="basic" [routerLink]="['/invitro-pharm']"
-          [queryParams]="{view : 'all-testagents'}" target="_blank" matTooltip='Opens in a new window'>
-          <mat-icon class="small-icon" svgIcon="open_in_new" alt="View All Test Agents"
-            matTooltip="View All Test Agents. Opens in new window"></mat-icon>
-          View All Test Agents
-        </a>
-      </div>
 
     </div> <!-- class=divcenter -->
 
@@ -133,7 +100,7 @@
             <span class="colorblue font20px"><b></b></span>
           </mat-card-title>
 
-          <mat-card-content class="marginright10px">
+          <mat-card-content class="">
 
             <div class="divflex">
 

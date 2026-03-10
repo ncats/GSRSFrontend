@@ -3,9 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-ssg4m-step-view-dialog',
-  templateUrl: './ssg4m-step-view-dialog.component.html',
-  styleUrls: ['./ssg4m-step-view-dialog.component.scss']
+    selector: 'app-ssg4m-step-view-dialog',
+    templateUrl: './ssg4m-step-view-dialog.component.html',
+    styleUrls: ['./ssg4m-step-view-dialog.component.scss'],
+    standalone: false
 })
 
 export class Ssg4mStepViewDialogComponent implements OnInit {

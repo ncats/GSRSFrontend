@@ -31,6 +31,7 @@ export class SubstanceFormPropertiesService extends SubstanceFormServiceBase<Arr
   }
 
   addSubstanceProperty(): void {
+    this.substanceFormService.markAdded();
     const newProperty: SubstanceProperty = {
       value: {},
       references: [],
@@ -41,6 +42,7 @@ export class SubstanceFormPropertiesService extends SubstanceFormServiceBase<Arr
   }
 
   addSubstancePropertyFromFeature(feature: any): void {
+    this.substanceFormService.markAdded();
     let type = 'NUCLEIC ACID FEATURE';
     if (this.substance.substanceClass === 'protein') {
       type = 'PROTEIN FEATURE';
@@ -58,6 +60,7 @@ export class SubstanceFormPropertiesService extends SubstanceFormServiceBase<Arr
   }
 
   deleteSubstanceProperty(property: SubstanceProperty): void {
+    this.substanceFormService.markRemoved();
     const subPropertyIndex =
       this.substance.properties.findIndex(subProperty => property.$$deletedCode === subProperty.$$deletedCode);
     if (subPropertyIndex > -1) {

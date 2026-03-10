@@ -5,25 +5,27 @@
 
       <mat-card class="bordergray">
         <mat-card-title>
-          <div class="width300px">
-            Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
-            <!-- Edit GSRS record button -->
-            <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="isAdmin"
-              matTooltip='Edit GSRS Impurities Record'>
-              <mat-icon svgIcon="edit"></mat-icon>
-            </a>
-            <!-- Copy Impurities -->
-            <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
-              matTooltip='copy Impurities to new registration form' *ngIf="isAdmin">
-              <mat-icon svgIcon="file_copy"></mat-icon>
-            </a>
-          </div>
-          <div class="width60percent font11px">
-            <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Create
-              Date:</span>{{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modify Date:</span> {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+          <div class="divflex">
+            <div class="width300px">
+              Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
+              <!-- Edit GSRS record button -->
+              <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="canEdit"
+                matTooltip='Edit GSRS Impurities Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+              <!-- Copy Impurities -->
+              <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
+                matTooltip='copy Impurities to new registration form' *ngIf="canEdit">
+                <mat-icon svgIcon="file_copy"></mat-icon>
+              </a>
+            </div>
+            <div class="width60percent margintop10px font11px">
+              <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Create
+                Date:</span>{{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Modify Date:</span> {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+            </div>
           </div>
         </mat-card-title>
 
@@ -181,11 +183,7 @@
                   </div>
 
                   <!-- Impurities Test List -->
-                  <!--
-                    <div class="title2">Total Test ({{subs.impuritiesTestList.length}})</div>
-                    -->
-
-                  <div *ngFor="let impTest of subs.impuritiesTestList; let i = index">
+                  <div style="max-width:100%;" *ngFor="let impTest of subs.impuritiesTestList; let i = index">
                     <fieldset class="border">
                       <legend class="border">
                         Test <span class="colorblack">{{(i + 1)}} of {{subs.impuritiesTestList.length}}</span>&nbsp;
@@ -393,39 +391,6 @@
                           </div>
                         </div>
                         <div class="width50percent">
-
-                          <!-- COMMENTING in release 3.1.1  WE DO NOT NEED THIS -->
-                          <!--
-                          <div *ngFor="let elu of impTest.impuritiesElutionSolventList; let m = index">
-                            <div class="row">
-                              <div class="row-property-3">
-                                <div class="row-property-key-3">
-                                  <div class="bordergraydotted">
-                                    Elution Solvent {{(m+1)}}:
-                                    <!- - if the length of the string is more than 55, add a new line - ->
-                                    <span *ngIf="elu.elutionSolvent && elu.elutionSolvent.length > 55">
-                                      <br><br>
-                                    </span>
-                                  </div>
-                                  <div>
-                                    Elution Solvent Id {{(m+1)}}:
-                                  </div>
-                                </div>
-                                <div class="row-property-value-3">
-                                  <div class="bordergraydotted">
-                                    {{elu.elutionSolvent}}
-                                  </div>
-                                  <div>
-                                    {{elu.elutionSolventCode}}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="divclear"></div>
-                          </div>
-                           COMMENTING OUT in 3.1.1 WE DO NOT NEED THIS -->
-                          <!-- loop Elution Solvent -->
-
                         </div>
                       </div>
 
@@ -447,25 +412,26 @@
                       <!-- Mobile Phase BEGIN -->
                       <div *ngIf="impTest.impuritiesSolutionTableList">
                         <div class="marginbottom20px"
-                          *ngIf="(impTest.elutionType && impTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC) && impTest.impuritiesSolutionTableList.length > 0">
+                          *ngIf="(impTest.elutionType && (impTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC || impTest.elutionType.toUpperCase() === ELUTION_TYPE_GRADIENT)) && impTest.impuritiesSolutionTableList.length > 0">
 
                           <div class="margintop20px font14px"><b>Mobile Phase</b></div>
 
                           <table mat-table class="margintop20px bordergray"
                             [dataSource]="impTest.impuritiesSolutionTableList">
 
-                            <span *ngFor="let columnName of displayedColumns; let colIndex = index">
+                            <span *ngFor="let columnName of displayedColumnsRow[i]; let colIndex = index">
                               <ng-container matColumnDef="{{columnName}}">
                                 <th mat-header-cell *matHeaderCellDef>{{columnName}}</th>
                                 <td mat-cell *matCellDef="let row; let indexRow = index;">
 
-                                  <!-- Delete Mobile Phase Row -->
+                                  <!-- Display Mobile Phase columns Time (min), Solution A (%), Solution B (%), etc. -->
+                                  <!--
                                   <div class="divflex width40px" *ngIf="columnName == 'Number'">
                                     <div class="margintop10px">
                                       {{(indexRow+1)}}
                                     </div>
                                   </div>
-
+                                  -->
                                   <div *ngIf="columnName == 'Time (min)'">
                                     {{row.solutionTime}}
                                   </div>
@@ -512,11 +478,10 @@
 
                                 </td>
                               </ng-container>
-
                             </span>
 
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsRow[i]"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsRow[i];"></tr>
 
                           </table>
                           <br>

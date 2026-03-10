@@ -3,9 +3,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {SubstanceAmount} from '@gsrs-core/substance';
 
 @Component({
-  selector: 'app-amount-form-dialog',
-  templateUrl: './amount-form-dialog.component.html',
-  styleUrls: ['./amount-form-dialog.component.scss']
+    selector: 'app-amount-form-dialog',
+    templateUrl: './amount-form-dialog.component.html',
+    styleUrls: ['./amount-form-dialog.component.scss'],
+    standalone: false
 })
 export class AmountFormDialogComponent implements OnInit {
   isNew: boolean;

@@ -3,9 +3,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { JSDraw } from '@gsrs-core/structure-editor';
 
 @Component({
-  selector: 'ncats-jsdraw-wrapper',
-  template: `<div [id]="randomId" dataformat="molfile"  ></div>`,
-  styles: []
+    selector: 'ncats-jsdraw-wrapper',
+    template: `<div [id]="randomId" dataformat="molfile"  ></div>`,
+    styles: [],
+    standalone: false
 })
 export class JsdrawWrapperComponent implements AfterViewInit {
   randomId: string;

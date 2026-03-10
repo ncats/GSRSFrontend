@@ -1,4 +1,4 @@
-@import '../../../styles/variables';
+@use "../../../styles/variables" as *;
 
 .base-page-wrapper {
   width: 100%;
@@ -53,7 +53,6 @@
   flex-direction: column;
   max-width: 160px;
   margin-right: 20px;
-
 }
 
 .tooltiptest {
@@ -63,6 +62,8 @@
 
 .user {
   font-size:12px;
+  letter-spacing: 0.4px;
+  color: var(--regular-white-color);
 }
 .arrow-button {
   margin-left: -13px !important;
@@ -70,10 +71,18 @@
   width: 25px !important;
 }
 
-.top-button {
+button.mat-mdc-button.top-button {
+  font-size: 16px;
+        color: white;
+        padding-right: 10px;
+        margin-right: 15px;
   padding-top: 10px;
     padding-bottom: 10px;
 }
+::ng-deep button.mat-mdc-button.top-button:hover {
+    background-color: rgb(71, 147, 209) !important;
+  }
+
 .user-button {
  margin-bottom:-5px;
 
@@ -99,7 +108,6 @@
     width: 30px;
     margin-bottom: -10px;
   }
-
 }
 .icon-two {
   height: 24px !important;
@@ -117,7 +125,6 @@
   margin-bottom: -10px  !important;
 }
 
-
 .mat-icon .user-icon {
   height: 30px;
   width: 30px;
@@ -125,32 +132,54 @@
 }
 
 .logged-in {
-  margin:auto;
-  text-align:center;
-  max-width:90px;
-  overflow:hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
+  .user-actions {
+    display: flex;
+    align-items: center;
+    // gap: 6px;
 
-  .mat-icon, user-icon {
+    .user-button.mat-mdc-icon-button {
+      --mat-icon-button-icon-size: 30px;
+      color: var(--regular-white-color);
+
+      ::ng-deep .mat-icon {
+        color: var(--regular-white-color);
+        height: 30px !important;
+        width: 30px !important;
+      }
+
+      ::ng-deep svg {
+        fill: var(--regular-white-color);
+        height: 30px !important;
+        width: 30px !important;
+      }
+    }
+  }
+
+  .mat-icon,
+  user-icon {
     height: 30px;
     width: 30px;
     margin-bottom: -10px;
     line-height: unset;
+    color: white;
   }
+
   ::ng-deep svg {
     height: 30px;
     width: 30px;
     margin-bottom: -10px;
   }
-
 }
 
-.mat-toolbar {
-  position: fixed;
-  z-index: 1001;
-}
+// .mat-toolbar {
+//   position: fixed;
+//   top: 0;
+//   z-index: 1001;
+// }
 
 .logo {
   height: 35px;
@@ -163,7 +192,6 @@
 }
 
 .nav-big {
-
   .nav-item {
     padding: 0 5px;
 
@@ -196,13 +224,13 @@
   }
 
   .mat-icon {
-    width: 40px;
-    height: 40px;
+    width: 40px !important;
+    height: 40px !important;
   }
 }
 
 .login-link {
-  color: white;
+  color: white !important;
   font-size: 16px;
   text-decoration: none;
 }
@@ -212,7 +240,6 @@
   max-width: 600px;
 
   ::ng-deep .mat-form-field {
-
     .mat-form-field-label {
       font-size: 16px;
       top: 1.98125em;
@@ -238,14 +265,9 @@
 //   }
 // }
 
-
-
 @media(min-width: $nav-breaking-point) {
   .top-search {
     min-width: 500px;
-  }
-  .menu-button :hover {
-    background-color: rgb(71, 147, 209) !important;
   }
 }
 .extra-item {
@@ -265,8 +287,6 @@
     display: none !important;
   }
 }
-
-
 
   @media(max-width: 1610px ) {
     .add-at-low-res{
@@ -293,7 +313,7 @@
       display: none !important;
     }
   }
-
+/* __aw__ see if needed in with ncats branch */
   .top-banner {
     width:100%;
     padding: 5px;

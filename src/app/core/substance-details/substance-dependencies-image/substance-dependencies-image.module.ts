@@ -15,6 +15,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSortModule} from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { CodeDisplayModule } from '@gsrs-core/utils/code-display.module';
 import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.module';
 
@@ -28,6 +29,7 @@ import { SubstanceImageModule } from '@gsrs-core/substance/substance-image.modul
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatOptionModule,
     ReactiveFormsModule,
     FormsModule,
     MatTreeModule,

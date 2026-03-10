@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
-  name: 'namesDisplayOrder'
+    name: 'namesDisplayOrder',
+    standalone: false
 })
 export class NamesDisplayPipe implements PipeTransform {
   transform(names: Array<any>): Array<any> {

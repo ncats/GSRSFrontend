@@ -8,6 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -34,7 +35,8 @@ import { RelationshipsDownloadButtonComponent } from '@gsrs-core/substance-form/
     MatTooltipModule,
     RouterModule,
     MatSortModule,
-    SubstanceImageModule
+    SubstanceImageModule,
+    MatButtonModule
   ],
   declarations: [
     SubstanceRelationshipsComponent,

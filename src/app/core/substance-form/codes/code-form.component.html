@@ -1,9 +1,12 @@
-<div class="code-form-container" [ngClass] = "!viewFull? 'collapse':'code-form-container'">
+<div
+  class="code-form-container"
+  [ngClass]="!viewFull ? 'collapse' : 'code-form-container'"
+>
   <div *ngIf="code.$$deletedCode" class="notification-backdrop">
-      Deleted&nbsp;
-      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-        <mat-icon svgIcon="undo"></mat-icon>
-      </button>
+    Deleted&nbsp;
+    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+      <mat-icon svgIcon="undo"></mat-icon>
+    </button>
   </div>
   <div class="form-row">
     <div class="delete-container">
@@ -11,56 +14,94 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <app-cv-input required = 'true' class="code-system" key = 'Code System'  title = "Code System" name = "code"
-                  [model] = "code.codeSystem" (valueChange)= "setCodeSystemType($event)">
+    <app-cv-input
+      required="true"
+      class="code-system"
+      key="Code System"
+      title="Code System"
+      name="code"
+      [model]="code.codeSystem"
+      (valueChange)="setCodeSystemType($event)"
+    >
     </app-cv-input>
     <div class="key-value-pair code-system-type" *ngIf="code.codeSystem">
-      <div class="key">
-        Code System Type
-      </div>
+      <div class="key">Code System Type</div>
       <div class="value">
-        {{codeSystemType}}
+        {{ codeSystemType }}
       </div>
     </div>
-    <app-cv-input class = "type" domain = "CODE_TYPE"  title = "Type" name = "type"
-                  [model] = "code.type" (valueChange)= "code.type = $event">
+    <app-cv-input
+      class="type"
+      domain="CODE_TYPE"
+      title="Type"
+      name="type"
+      [model]="code.type"
+      (valueChange)="code.type = $event"
+    >
     </app-cv-input>
     <mat-form-field class="code">
-      <input matInput placeholder="Code" [(ngModel)]="code.code" required name="code" />
+      <mat-label>Code</mat-label>
+      <input matInput [(ngModel)]="code.code" required name="code" />
     </mat-form-field>
     <div>
-      <app-access-manager (accessOut)="updateAccess($event)" [access]="code.access">
+      <app-access-manager
+        (accessOut)="updateAccess($event)"
+        [access]="code.access"
+      >
       </app-access-manager>
     </div>
-    <div class = "chevron"><button mat-icon-button (click) = "viewFull = !viewFull" class = "chevron-button" matTooltip = "Expand / collapse rows">
-      <mat-icon *ngIf = "viewFull"svgIcon="chevron_up"></mat-icon>
-      <mat-icon *ngIf = "!viewFull"svgIcon="chevron_down"></mat-icon>
-
-  </button></div>
+    <div class="chevron">
+      <button
+        mat-icon-button
+        (click)="viewFull = !viewFull"
+        class="chevron-button"
+        matTooltip="Expand / collapse rows"
+      >
+        <mat-icon *ngIf="viewFull" svgIcon="chevron_up"></mat-icon>
+        <mat-icon *ngIf="!viewFull" svgIcon="chevron_down"></mat-icon>
+      </button>
+    </div>
   </div>
   <div *ngIf="!code.$$deletedCode && viewFull">
     <div class="form-row">
       <mat-form-field class="url">
-        <input matInput placeholder="Url" [ngModel]="code.url" (ngModelChange) = "trimWhitespace($event)" name="url" />
+        <mat-label>Url</mat-label>
+        <input
+          matInput
+          [ngModel]="code.url"
+          (ngModelChange)="trimWhitespace($event)"
+          name="url"
+        />
       </mat-form-field>
     </div>
     <div class="form-row">
       <div class="code-text">
         <div class="textarea-label">Code text</div>
-        <textarea placeholder="Enter text here" [(ngModel)]="code.comments" name="comments"></textarea>
+        <textarea
+          placeholder="Enter text here"
+          [(ngModel)]="code.comments"
+          name="comments"
+        ></textarea>
       </div>
     </div>
-    <div class = "form-row">
+    <div class="form-row">
       <div class="code-text">
         <div class="textarea-label">Comments</div>
-        <textarea placeholder="Enter text here" [(ngModel)]="code.codeText" name="codeText"></textarea>
+        <textarea
+          placeholder="Enter text here"
+          [(ngModel)]="code.codeText"
+          name="codeText"
+        ></textarea>
       </div>
     </div>
     <div class="form-row">
       <div class="references-container">
-        <app-domain-references [referencesUuids]="code.references" #references></app-domain-references>
+        <app-domain-references
+          [referencesUuids]="code.references"
+          #references
+        ></app-domain-references>
       </div>
     </div>
   </div>
-  <app-audit-info [source] = "code" *ngIf="viewFull"></app-audit-info>
+  <app-audit-info [source]="code" *ngIf="viewFull"></app-audit-info>
 </div>

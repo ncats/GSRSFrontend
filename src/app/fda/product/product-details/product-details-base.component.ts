@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DomSanitizer, SafeUrl, Title } from '@angular/platform-browser';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -24,12 +23,13 @@ import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.co
 import { ProductService } from '../service/product.service';
 import { GeneralService } from '../../service/general.service';
 import { Product, ProductIngredient } from '../model/product.model';
-
+import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-product-details-base',
-  template: '',
-  styleUrls: ['./product-details-base.component.scss']
+    selector: 'app-product-details-base',
+    template: '',
+    styleUrls: ['./product-details-base.component.scss'],
+    standalone: false
 })
 export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -55,7 +55,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   iconSrcPath: string;
   dailyMedUrlConfig = '';
   message = '';
-  isAdmin = false;
+  canUpdate: boolean = false;
   downloadJsonHref: any;
   jsonFilename: string;
   private overlayContainer: HTMLElement;
@@ -78,15 +78,13 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     public dialog: MatDialog,
     public sanitizer: DomSanitizer) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     this.loadingService.setLoading(true);
     this.productId = this.activatedRoute.snapshot.params['id'];
     this.src = this.activatedRoute.snapshot.params['src'];
 
-    // Get Daily Med Url from Configuration
-    this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
 
     if (this.productId != null) {
@@ -150,8 +148,23 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           // Get Ingredient Name for the Substance Key
           this.getSubstanceBySubstanceKey();
 
+          // Get Ingredient Name Strength
+          this.getIngredientStrengthDisplay();
+
           // Get Daily Med Url
           this.getDailyMedUrlforProductCode();
+
+          // Get PhPID Url if Product Code Type is PhPID
+          this.getPhpIdUrlforProductCode();
+
+          // Get RxNorm Url if Product Code Type is RxNorm
+          this.getRxNormUrlforProductCode();
+
+          // Get Application Type and Application Number Url to go to Browse Application page.
+          this.getApplicationNumberTypeUrl();
+
+          // Sort Product Codes by ascending alphabetically
+          this.sortProductCodes();
         }
       }
     }, error => {
@@ -204,6 +217,13 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
 
                         } // if Substance is public
 
+                        // Substance Type, convert from 'Chemical' to 'C', and for other types also
+                        if (response.substanceClass) {
+                          let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.class === response.substanceClass);
+                          if (subClassIndex > -1) {
+                            elementIngred._substanceClass = this.generalService.substanceClassArray[subClassIndex].shortDisplay;
+                          }
+                        }
 
                         // if Ingredient Type exists
                         if (elementIngred.ingredientType) {
@@ -227,7 +247,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
                           // if there is no Ingredient Type
                           this.product._otherIngredients.push(elementIngred);
                         }
-      
+
                       } // if reponse
                     });
                     this.subscriptions.push(subSubscription);
@@ -297,7 +317,27 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
+  getSubstanceClass(substanceClass: string): string {
+    if (substanceClass) {
+      let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.shortDisplay === substanceClass);
+      if (subClassIndex > -1) {
+        return "The Substance Type is " + this.generalService.substanceClassArray[subClassIndex].longDisplay;
+      }
+    }
+    return "";
+  }
+
+  sortProductCodes() {
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      // Sort by Product Code Type, such as NDC CODE 
+      prov.productCodes.sort((a, b) => (a.productCodeType < b.productCodeType ? -1 : 1));
+    });
+  }
+
   getDailyMedUrlforProductCode(): void {
+    // Get Daily Med Url from Configuration
+    this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
+
     this.product.productProvenances.forEach((prov, indexProv) => {
       prov.productCodes.forEach(prodCode => {
 
@@ -310,6 +350,85 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
           }
         }
       });
+    });
+  }
+
+  getPhpIdUrlforProductCode(): void {
+    let phpIdUrlConfig = this.generalService.getPhpIdUrlConfig();
+
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      prov.productCodes.forEach(prodCode => {
+
+        // if Product Code Type is 'PHPID', show PhpID link on the browse Product page.
+        if (prodCode) {
+          if (prodCode.productCode) {
+            if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'phpid') {
+              // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+              if (phpIdUrlConfig) {
+                prodCode._phpIdUrl = phpIdUrlConfig + prodCode.productCode;
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  getRxNormUrlforProductCode(): void {
+    let rxNormUrlConfig = this.generalService.getRxNormUrlConfig();
+
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      prov.productCodes.forEach(prodCode => {
+
+        // if Product Code Type is 'RxNorm', show RxNorm link on the browse Product page.
+        if (prodCode) {
+          if (prodCode.productCode) {
+            if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxcui') {
+              // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+              if (rxNormUrlConfig) {
+                prodCode._rxNormUrl = rxNormUrlConfig + prodCode.productCode;
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  getIngredientStrengthDisplay() {
+    this.product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+      elementManuItem.productLots.forEach((elementLot, indexLot) => {
+        elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
+
+          // Display Strength details in readable format
+          if (elementIngred.originalNumeratorNumber && elementIngred.originalNumeratorUnit != null) {
+            elementIngred._ingredientStrengthDisplay = elementIngred.originalNumeratorNumber + ' '
+              + elementIngred.originalNumeratorUnit.toLowerCase();
+
+            if (elementIngred.originalDenominatorNumber && elementIngred.originalDenominatorUnit != null) {
+              // if Denominator Number is '1' and Denominator Unit is '1', do not display these values
+              if ((elementIngred.originalDenominatorUnit == '1') && (elementIngred.originalDenominatorNumber == '1')) {
+                // Do something here
+              } else {
+                elementIngred._ingredientStrengthDisplay = elementIngred._ingredientStrengthDisplay
+                  + ' per ' + elementIngred.originalDenominatorNumber + ' '
+                  + elementIngred.originalDenominatorUnit;
+              }
+            }
+          }
+        }); // ingredient loop
+      }); // product lot loop
+    }); // product manufacture Items loop            
+  }
+
+  getApplicationNumberTypeUrl() {
+    this.product.productProvenances.forEach((prov, indexProv) => {
+      if ((prov.applicationType) && (prov.applicationNumber)) {
+        if (prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH FINAL' && prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH NOT FINAL') {
+          prov._applicationUrl = 'root_appType:"^' + prov.applicationType + '$" AND root_appNumber:"^' + prov.applicationNumber + '$"';
+        }
+      }
     });
   }
 
@@ -331,7 +450,7 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
     const copyProd = _.cloneDeep(this.product);
     let cleanProduct = this.scrub(copyProd);
 
-    let data = {jsonData: cleanProduct, jsonFilename: jsonFilename};
+    let data = { jsonData: cleanProduct, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -412,54 +531,97 @@ export class ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDes
   scrub(oldraw: any): any {
     const old = oldraw;
 
-    const activeMoietyHolders = defiant.json.search(old, '//*[_ingredientNameActiveMoieties]');
+    const activeMoietyHolders = jp.query(old, '$..[?(@._ingredientNameActiveMoieties)]');
     for (let i = 0; i < activeMoietyHolders.length; i++) {
       if (activeMoietyHolders[i]._ingredientNameActiveMoieties) {
         delete activeMoietyHolders[i]._ingredientNameActiveMoieties;
       }
     }
 
-    const basisOfStrenghActiveMoietyHolders = defiant.json.search(old, '//*[_basisOfStrengthActiveMoieties]');
+    const basisOfStrenghActiveMoietyHolders = jp.query(old, '$..[?(@._basisOfStrengthActiveMoieties)]');
     for (let i = 0; i < basisOfStrenghActiveMoietyHolders.length; i++) {
       if (basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties) {
         delete basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties;
       }
     }
 
-    const basisOfStrengthSubUuidHolders = defiant.json.search(old, '//*[_basisOfStrengthSubstanceUuid]');
+    const basisOfStrengthSubUuidHolders = jp.query(old, '$..[?(@._basisOfStrengthSubstanceUuid)]');
     for (let i = 0; i < basisOfStrengthSubUuidHolders.length; i++) {
       if (basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid) {
         delete basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid;
       }
     }
 
-    const basisOfStrengthIngNameHolders = defiant.json.search(old, '//*[_basisOfStrengthIngredientName]');
+    const basisOfStrengthIngNameHolders = jp.query(old, '$..[?(@._basisOfStrengthIngredientName)]');
     for (let i = 0; i < basisOfStrengthIngNameHolders.length; i++) {
       if (basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName) {
         delete basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName;
       }
     }
 
-    const substanceUuidHolders = defiant.json.search(old, '//*[_substanceUuid]');
+    const substanceUuidHolders = jp.query(old, '$..[?(@._substanceUuid)]');
     for (let i = 0; i < substanceUuidHolders.length; i++) {
       if (substanceUuidHolders[i]._substanceUuid) {
         delete substanceUuidHolders[i]._substanceUuid;
       }
     }
 
-    const ingredientNameHolders = defiant.json.search(old, '//*[_ingredientName]');
+    const ingredientNameHolders = jp.query(old, '$..[?(@._ingredientName)]');
     for (let i = 0; i < ingredientNameHolders.length; i++) {
       if (ingredientNameHolders[i]._ingredientName) {
         delete ingredientNameHolders[i]._ingredientName;
       }
     }
 
-    const approvalIdHolders = defiant.json.search(old, '//*[_approvalId]');
+    const approvalIdHolders = jp.query(old, '$..[?(@._approvalId)]');
     for (let i = 0; i < approvalIdHolders.length; i++) {
       if (approvalIdHolders[i]._approvalId) {
         delete approvalIdHolders[i]._approvalId;
       }
     }
+
+    const applicationUrlHolders = jp.query(old, '$..[?(@._applicationUrl)]');
+    for (let i = 0; i < applicationUrlHolders.length; i++) {
+      if (applicationUrlHolders[i]._applicationUrl) {
+        delete applicationUrlHolders[i]._applicationUrl;
+      }
+    }
+
+    const dailyMedUrlHolders = jp.query(old, '$..[?(@._dailyMedUrl)]');
+    for (let i = 0; i < dailyMedUrlHolders.length; i++) {
+      if (dailyMedUrlHolders[i]._dailyMedUrl) {
+        delete dailyMedUrlHolders[i]._dailyMedUrl;
+      }
+    }
+
+    const phpIdUrlHolders = jp.query(old, '$..[?(@._phpIdUrl)]');
+    for (let i = 0; i < phpIdUrlHolders.length; i++) {
+      if (phpIdUrlHolders[i]._phpIdUrl) {
+        delete phpIdUrlHolders[i]._phpIdUrl;
+      }
+    }
+
+    const rxNormUrlHolders = jp.query(old, '$..[?(@._rxNormUrl)]');
+    for (let i = 0; i < rxNormUrlHolders.length; i++) {
+      if (rxNormUrlHolders[i]._rxNormUrl) {
+        delete rxNormUrlHolders[i]._rxNormUrl;
+      }
+    }
+
+    const ingredStrenthDisplayHolders = jp.query(old, '$..[?(@._ingredientStrengthDisplay)]');
+    for (let i = 0; i < ingredStrenthDisplayHolders.length; i++) {
+      if (ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay) {
+        delete ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay;
+      }
+    }
+
+    const ingredSubstanceClassHolders = jp.query(old, '$..[?(@._substanceClass)]');
+    for (let i = 0; i < ingredSubstanceClassHolders.length; i++) {
+      if (ingredSubstanceClassHolders[i]._substanceClass) {
+        delete ingredSubstanceClassHolders[i]._substanceClass;
+      }
+    }
+
 
     delete old['_activeIngredients'];
     delete old['_otherIngredients'];

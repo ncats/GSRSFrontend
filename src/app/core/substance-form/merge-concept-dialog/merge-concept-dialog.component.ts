@@ -5,12 +5,13 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {SubstanceDetail, SubstanceRelated, SubstanceService} from '@gsrs-core/substance';
 import {take} from 'rxjs/operators';
 import * as _ from 'lodash';
-import * as defiant from '../../../../../node_modules/defiant.js/dist/defiant.min.js';
+import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-merge-concept-dialog',
-  templateUrl: './merge-concept-dialog.component.html',
-  styleUrls: ['./merge-concept-dialog.component.scss']
+    selector: 'app-merge-concept-dialog',
+    templateUrl: './merge-concept-dialog.component.html',
+    styleUrls: ['./merge-concept-dialog.component.scss'],
+    standalone: false
 })
 export class MergeConceptDialogComponent implements OnInit {
   public dialogRef: MatDialogRef<MergeConceptDialogComponent>;
@@ -225,11 +226,12 @@ export class MergeConceptDialogComponent implements OnInit {
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
     }
-    const old = JSON.parse(JSON.stringify(oldraw));
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+    const old = JSON.parse(JSON.stringify(oldraw)); 
+    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
+      console.log(`processing UUID num ${i} ${ouuid}`);
       if (map[ouuid]) {
         uuidHolders[i].uuid = map[ouuid];
         if (uuidHolders[i].id) {
@@ -244,7 +246,8 @@ export class MergeConceptDialogComponent implements OnInit {
         }
       }
     }
-    const refHolders = defiant.json.search(old, '//*[references]');
+
+    const refHolders = jp.query(old, '$..[?(@.references)]');
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -253,11 +256,10 @@ export class MergeConceptDialogComponent implements OnInit {
         refs[j] = map[or];
       }
     }
-    defiant.json.search(old, '//*[uuid]');
     _.remove(old.codes, {
       codeSystem: 'BDNUM'
     });
-    const createHolders = defiant.json.search(old, '//*[created]');
+    const createHolders = jp.query(old, '$..[?(@.created)]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -266,7 +268,7 @@ export class MergeConceptDialogComponent implements OnInit {
       delete rec['lastEditedBy'];
     }
 
-    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    const originHolders = jp.query(old, '$..[?(@.originatorUuid)]');
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
       delete rec['originatorUuid'];
@@ -294,7 +296,7 @@ export class MergeConceptDialogComponent implements OnInit {
     if (true) {
       const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, '//*[references]');
+      const refHolders2 = jp.query(old, '$..[?(@.references)]');
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
@@ -331,4 +333,5 @@ export class MergeConceptDialogComponent implements OnInit {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
       s4() + '-' + s4() + s4() + s4();
   }
+  
 }

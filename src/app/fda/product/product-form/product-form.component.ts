@@ -1,60 +1,81 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { ProductService } from '../service/product.service';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Title, DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import * as moment from 'moment';
+
+/* GSRS Core Imports */
 import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ControlledVocabularyService } from '../../../core/controlled-vocabulary/controlled-vocabulary.service';
-import { Product, ValidationMessage } from '../model/product.model';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
-import * as moment from 'moment';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
-import { Title } from '@angular/platform-browser';
-import { take } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { ConfigService } from '@gsrs-core/config';
 
+import jp from 'jsonpath';
+import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
+
+/* GSRS Product Imports */
+import { ProductService } from '../service/product.service';
+import { Product, ValidationMessage } from '../model/product.model';
+
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+  styleUrls: ['./product-form.component.scss'],
+  standalone: false
 })
 
 export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  product: Product;
-  id?: number;
-  isLoading = true;
-  showSubmissionMessages = false;
-  submissionMessage: string;
-  validationMessages: Array<ValidationMessage> = [];
-  validationResult = false;
+  /* Array data type */
   private subscriptions: Array<Subscription> = [];
-  copy: string;
-  private overlayContainer: HTMLElement;
-  serverError: boolean;
-  isDisableData = false;
+
+  validationMessages: Array<ValidationMessage> = [];
+  provenanceFieldMessage: Array<String> = [];
+  effectiveTimeMessage: any[][] = [];
+
+  /* object data type */
+  product: Product;
+  overlayContainer: HTMLElement;
+  downloadJsonHref: any;
+
+  /* string data type */
   username = null;
   title = null;
-  isAdmin = false;
-  disableMarketingCategoryCode = true;
   expiryDateMessage = '';
   manufactureDateMessage = '';
   viewProductUrl = '';
   message = '';
-  downloadJsonHref: any;
+  copy: string;
+  submissionMessage: string;
   jsonFileName: string;
-  provenanceFieldMessage: Array<String> = [];
-  effectiveTimeMessage: any[][] = [];
-  showTopBanner: boolean;
+
+  /* number data type */
+  id?: number;
+
+  /* Date data type */
+  effectiveDate: Date;
+  endDate: Date;
+
+  /* boolean data type */
+  isLoading = true;
+  isDisableData = false;
+  showSubmissionMessages = false;
+  validationResult = false;
+  disableMarketingCategoryCode = true;
+  serverError: boolean;
+  canDelete: boolean = false;
+  canCreate: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -72,8 +93,9 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private configService: ConfigService) { }
 
-  ngOnInit() {
-    this.isAdmin = this.authService.hasRoles('admin');
+  async ngOnInit() {
+    this.canDelete = await this.authService.hasSpecificPrivilege("Delete Lower Level Items");
+    this.canCreate = await this.authService.hasSpecificPrivilege("Create");
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
@@ -124,6 +146,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.product.productProvenances == null) {
                 this.product.productProvenances = [];
               }
+              this.loadDateFields();
+
               this.loadingService.setLoading(false);
               this.isLoading = false;
             }
@@ -173,6 +197,8 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
             this.product.productProvenances = [{ productNames: [], productCodes: [], productDocumentations: [] }];
           }
 
+          this.loadDateFields();
+
         } else {
           this.message = 'No Product Record found for Id ' + this.id;
         }
@@ -186,6 +212,47 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.handleProductRetrivalError();
       });
     }
+  }
+
+  loadDateFields() {
+    // Load 'Effective Date' value to on the DatePicker Input textbox
+    if (this.product.effectiveDate) {
+      this.effectiveDate = new Date(this.product.effectiveDate);
+    }
+
+    // Load/Assign 'endDate' value on the DatePicker Input textbox
+    if (this.product.endDate) {
+      this.endDate = new Date(this.product.endDate);
+    }
+
+    // Load/Assign 'Start Marketing Date' and 'End Marketing Date' values on the DatePicker Input textbox
+    if (this.product.productProvenances.length > 0) {
+      this.product.productProvenances.forEach((elementProv, indexProv) => {
+        if (elementProv != null) {
+
+          // Loop Companies
+          elementProv.productCompanies.forEach((elementComp, indexComp) => {
+            if (elementComp.startMarketingDate) {
+              elementComp._startMarketingDate = new Date(elementComp.startMarketingDate);
+            }
+
+            // Load/Assign End Marketing Date in Datepicker Input Textbox
+            if (elementComp.endMarketingDate) {
+              elementComp._endMarketingDate = new Date(elementComp.endMarketingDate);
+            }
+          }); // loop companies
+
+          // Loop Document IDs
+          elementProv.productDocumentations.forEach((elementDoc, indexDoc) => {
+            // Load/Assign 'Effective Time' value on the DatePicker Input textbox
+            if (elementDoc.effectiveTime) {
+              elementDoc._effectiveTime = new Date(elementDoc.effectiveTime);
+            }
+          }); // loop document Ids.
+
+        } // provenances object exists
+      }); // loop provenances
+    } // if provenances length > 0
   }
 
   validate(validationType?: string): void {
@@ -232,12 +299,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.validationMessages = [];
     this.validationResult = true;
 
-    // Validate Provenance field in Provenance section
-    this.validateProvenanceField('main-validation');
-
-    // Validate Effective Time in Documentation IDs
-    this.validateEffectiveTime('main-validation');
-
     // Validate Effective Date Date in Product Overview section
     if (this.product.effectiveDate) {
       const isValidEffectiveDate = this.validateDate(this.product.effectiveDate);
@@ -254,6 +315,15 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
+    // Validate Provenance field in Provenance section
+    this.validateProvenanceField('main-validation');
+
+    // Validate Start Marketing Date and End Marketing Date in Company section
+    this.validateMarketingDate('main-validation');
+
+    // Validate Effective Time in Documentation IDs
+    this.validateEffectiveTime('main-validation');
+
     // Validate Expiry Date in Lot section
     if ((this.expiryDateMessage !== null) && (this.expiryDateMessage.length > 0)) {
       this.setValidationMessage(this.expiryDateMessage);
@@ -264,29 +334,54 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.setValidationMessage(this.manufactureDateMessage);
     }
 
+    // Validate Product Name and Product Name Type in Product Name section
+    this.validateProductName();
+
+    // Validate Product Code and Product Code Type in Product Code section
+    this.validateProductCode();
+
     // Validate Ingredient Average, which should be integer/number
     if (this.product != null) {
-      this.product.productManufactureItems.forEach(elementComp => {
+      if (this.product.productManufactureItems && this.product.productManufactureItems.length > 0) {
+        this.product.productManufactureItems.forEach((elementComp, indexComp) => {
         if (elementComp != null) {
-          elementComp.productLots.forEach(elementLot => {
+
+            // Validate 'Amount' field. The value should be numbers and not any characters
+            if (elementComp.amount) {
+              if (this.isNumber(elementComp.amount) === false) {
+                this.setValidationMessage('Amount must be a number in Manufacture Item Details ' + (indexComp + 1));
+              }
+            }
+
+            elementComp.productLots.forEach((elementLot, indexLot) => {
             if (elementLot != null) {
 
               // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
-              elementLot.productIngredients.forEach(elementIngred => {
+                if (elementLot.productIngredients && elementLot.productIngredients.length > 0) {
+                  elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
                 if (elementIngred != null) {
+
+                      if (!elementIngred.substanceKey) {
+                        this.setValidationMessage('Ingredient Name is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1) + ' in Ingredient Details ' + (indexIngred + 1));
+                      }
+
+                      if (!elementIngred.ingredientType) {
+                        this.setValidationMessage('Ingredient Type is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1) + ' in Ingredient Details ' + (indexIngred + 1));
+                      }
+
                   if (elementIngred.average) {
                     if (this.isNumber(elementIngred.average) === false) {
-                      this.setValidationMessage('Average must be a number');
+                          this.setValidationMessage('Average must be a number in Ingredient Details ' + (indexIngred + 1));
                     }
                   }
                   if (elementIngred.low) {
                     if (this.isNumber(elementIngred.low) === false) {
-                      this.setValidationMessage('Low must be a number');
+                          this.setValidationMessage('Low must be a number in Ingredient Details ' + (indexIngred + 1));
                     }
                   }
                   if (elementIngred.high) {
                     if (this.isNumber(elementIngred.high) === false) {
-                      this.setValidationMessage('High must be a number');
+                          this.setValidationMessage('High must be a number in Ingredient Details ' + (indexIngred + 1));
                     }
                   }
                   // Ingredient Name Validation
@@ -299,11 +394,20 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
                   }
                 }
               });
+                } // if Product Ingredients length > 0
+                else {
+                  this.setValidationMessage('At least one Ingredient Details section is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1));
             }
           });
         }
       });
     }
+        }); // productManufactureItems For each 
+      } // if productManufactureItems length > 0
+      else {
+        this.setValidationMessage('At least one Ingredient Details section is required in Manufacture Item Details in Lot Details');
+      }
+    } // if product is not null
 
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
@@ -322,6 +426,85 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Check the Provenance field validation
     this.validateProvenanceField();
+  }
+
+  validateProductName() {
+    // Validate in Product Name section. 
+    // If Product Name card is open, and there is no values in 'Product Name' and 'Product Name Type'
+    // display error message
+    // If user enters value in 'Product Name' field and NOT in 'Product Name Type',
+    // display error message. Same for vice versa.
+    if (this.product != null) {
+      if (this.product.productProvenances && this.product.productProvenances.length > 0) {
+        this.product.productProvenances.forEach((elementProv, index) => {
+          if (elementProv != null) {
+            if (elementProv.productNames && elementProv.productNames.length > 0) {
+              elementProv.productNames.forEach((elementName, indexName) => {
+                if (elementName) {
+                  // If there is no values in 'Product Name' and 'Product Name Type' fields
+                  if (!elementName.productName && !elementName.productNameType) {
+                    this.setValidationMessage('Enter values in Product Name and Product Name Type in Product Provenance ' + (index + 1) + ' in Product Name ' + (indexName + 1));
+                  }
+                  // If entered value in 'Product Name' field and NOT in 'Product Name Type'.
+                  if (elementName.productName && !elementName.productNameType) {
+                    this.setValidationMessage('Enter value in Product Name Type in Product Provenance ' + (index + 1) + ' in Product Name ' + (indexName + 1));
+                  }
+                  // If entered value in 'Product Name Type' field and NOT in 'Product Name'. 
+                  else if (!elementName.productName && elementName.productNameType) {
+                    this.setValidationMessage('Enter value in Product Name in Product Provenance ' + (index + 1) + ' in Product Name ' + (indexName + 1));
+                  }
+                }
+              }); // Product Codes loop
+            } // productNames length > 0 
+            else {
+              this.setValidationMessage('At least one Product Name section is required in Product Provenance ' + (index + 1));
+            }
+          }
+        });
+      } // productProvenances length > 0 
+      else {
+        this.setValidationMessage('At least one Product Name section is required in Product Provenance section');
+      }
+    }
+  }
+
+  validateProductCode() {
+    // Validate in Product Code section. 
+    // If Product Code card is open, and values are empty in "Product Code" and "Product Code Type", display message
+    // If user enters value in 'Product Code' field and NOT in 'Product Code Type',
+    // display error message. Same for vice versa.
+    if (this.product != null) {
+      if (this.product.productProvenances && this.product.productProvenances.length > 0) {
+        this.product.productProvenances.forEach((elementProv, index) => {
+          if (elementProv != null) {
+            if (elementProv.productCodes && elementProv.productCodes.length > 0) {
+              elementProv.productCodes.forEach((elementCode, indexCode) => {
+                if (elementCode) {
+                  // If there is no values in 'Product Code' and 'Product Code Type' fields
+                  if (!elementCode.productCode && !elementCode.productCodeType) {
+                    this.setValidationMessage('Enter values in Product Code and Product Code Type in Product Provenance ' + (index + 1) + ' in Product Code ' + (indexCode + 1));
+                  }
+                  // If entered value in 'Product Code' field and NOT in 'Product Code Type'.
+                  if (elementCode.productCode && !elementCode.productCodeType) {
+                    this.setValidationMessage('Enter value in Product Code Type in Product Provenance ' + (index + 1) + ' in Product Code ' + (indexCode + 1));
+                  }
+                  // If entered value in 'Product Code Type' field and NOT in 'Product Code'. 
+                  else if (!elementCode.productCode && elementCode.productCodeType) {
+                    this.setValidationMessage('Enter value in Product Code in Product Provenance ' + (index + 1) + ' in Product Code ' + (indexCode + 1));
+                  }
+                }
+              }); // Product Codes loop
+            } // productCodes length > 0 
+            else {
+              this.setValidationMessage('At least one Product Code section is required in Product Provenance ' + (index + 1));
+            }
+          }
+        });
+      } // if productProvenances lenght > 0
+      else {
+        this.setValidationMessage('At least one Product Code section is required in Product Provenance section');
+      }
+    }
   }
 
   validateProvenanceField(type?: string) {
@@ -348,6 +531,41 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       }
+    }
+  }
+
+  validateMarketingDate(type?: string) {
+    // Validate Start and End Marketing Date in Provenance Company section
+    if (this.product != null) {
+      this.product.productProvenances.forEach((elementProv, indexProv) => {
+        if (elementProv != null) {
+          elementProv.productCompanies.forEach((elementComp, indexComp) => {
+
+            // Validate Start Marketing Date
+            if (elementComp.startMarketingDate) {
+              const isValid = this.validateDate(elementComp.startMarketingDate);
+
+              if (isValid === false) {
+                if (type && type === 'main-validation') {
+                  this.setValidationMessage('Start Marketing Date is invalid in Product Provenance ' + (indexProv + 1) + ' in Product Company ' + (indexComp + 1));
+                }
+              }
+            }
+
+            // Validate End Marketing Date
+            if (elementComp.endMarketingDate) {
+              const isValid = this.validateDate(elementComp.endMarketingDate);
+
+              if (isValid === false) {
+                if (type && type === 'main-validation') {
+                  this.setValidationMessage('End Marketing Date is invalid in Product Provenance ' + (indexProv + 1) + ' in Product Company ' + (indexComp + 1));
+                }
+              }
+            }
+
+          });
+        }
+      });
     }
   }
 
@@ -482,12 +700,34 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   cleanProduct(): Product {
     let productStr = JSON.stringify(this.product);
     let productCopy: Product = JSON.parse(productStr);
+
+    productCopy.productProvenances.forEach((elementProv, indexProv) => {
+      if (elementProv != null) {
+        // Loop Companies
+        elementProv.productCompanies.forEach((elementComp, indexComp) => {
+          delete elementComp._startMarketingDate;
+          delete elementComp._endMarketingDate;
+        });
+
+        // Loop Documentations IDs
+        elementProv.productDocumentations.forEach((elementDoc, indexDoc) => {
+          delete elementDoc._effectiveTime;
+        });
+      }
+    });
+
     productCopy.productManufactureItems.forEach(elementComp => {
       if (elementComp != null) {
         elementComp.productLots.forEach(elementLot => {
           if (elementLot != null) {
+
+            delete elementLot._expiryDate;
+            delete elementLot._manufactureDate;
+
+            // Loop Ingredients
             elementLot.productIngredients.forEach(elementIngred => {
               if (elementIngred != null) {
+
                 // remove property for Ingredient Name Validation. Do not need in the form JSON
                 if (elementIngred.$$ingredientNameValidation || elementIngred.$$ingredientNameValidation === "") {
                   delete elementIngred.$$ingredientNameValidation;
@@ -498,6 +738,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
               } // if ingred is not null
             }); // ingred loop
+
           } // if lot is not null
         }); // lot loop
       } // if comp is not null
@@ -520,17 +761,15 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       data: data
     });
 
-    // this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
   }
 
   saveJSON(): void {
-    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    this.cleanProduct();
-    let json = this.product;
-    // this.json = this.cleanObject(substanceCopy);
+    let json = this.cleanProduct();
+
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
     this.downloadJsonHref = uri;
 
@@ -574,7 +813,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // Display Existing Provenance field Validation
     this.validateProvenanceField();
-
   }
 
   addNewProductNameInProv(prodProvenanceIndex: number) {
@@ -836,6 +1074,49 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscriptions.push(cvSubscription);
   }
 
+  changeEffectiveDate(event: MatDatepickerInputEvent<Date>): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.effectiveDate = inputValue;
+  }
+
+  changeEndDate(event: MatDatepickerInputEvent<Date>): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.endDate = inputValue;
+  }
+
+  changestartMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].startMarketingDate = inputValue;
+  }
+
+  changeEndMarketingDate(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodCompanyIndex: number): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.productProvenances[prodProvIndex].productCompanies[prodCompanyIndex].endMarketingDate = inputValue;
+  }
+
+  changeEffectiveTime(event: MatDatepickerInputEvent<Date>, prodProvIndex: number, prodDocIndex: number): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: string = (inputElement as HTMLInputElement).value;
+
+    this.product.productProvenances[prodProvIndex].productDocumentations[prodDocIndex].effectiveTime = inputValue;
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
   scrub(oldraw: any): any {
     const old = oldraw;
     const idHolders = defiant.json.search(old, '//*[id]');
@@ -845,27 +1126,27 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    const createHolders = jp.query(old, '$..[?(@.creationDate)]');
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    const modifyHolders = jp.query(old, '$..[?(@.lastModifiedDate)]');
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
     }

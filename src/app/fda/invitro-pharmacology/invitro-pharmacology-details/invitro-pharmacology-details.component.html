@@ -11,7 +11,7 @@
 
           <!-- Edit GSRS record button ASSAY -->
           <div class="margintop10px">
-            <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="canUpdate"
               matTooltip='Edit GSRS In Vitro Pharmacology ASSAY Record ONLY'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>&nbsp;&nbsp;
@@ -158,25 +158,15 @@
               <tr>
                 <td class="fieldKey">Target Name:</td>
                 <td>
-                  <div *ngIf="assay.targetNameApprovalId; else noTargetNameApprovalId">
+                  <div *ngIf="assay.targetNameSubstanceKey; else noTargetNameSubstanceKey">
                     <!-- Go to Substance Details page -->
                     <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank"
                       matTooltip="Go to Substance Details page">
                       <b>{{assay.targetName}}</b>
                     </a>
-                    <!-- Display Chemical Structure -->
-                    <!--
-                    <div class="marginleft30px margintopneg10px width100px">
-                      <a role="img" aria-label="substance image" class="zoom"
-                        (click)="openImageModal(assay.targetNameSubstanceUuid)">
-                        <img class="image-icon" appSubstanceImage size="90"
-                          [entityId]="assay.targetNameSubstanceUuid">
-                      </a>
-                    </div>
-                    -->
 
                   </div>
-                  <ng-template #noTargetNameApprovalId>
+                  <ng-template #noTargetNameSubstanceKey>
                     <b>{{assay.targetName}}</b>
                   </ng-template>
                 </td>
@@ -372,7 +362,7 @@
                         <!-- Edit Screening link -->
                         <div>
                           <a [routerLink]="['/invitro-pharm', screening.invitroAssayResultInformation.id, 'edit']"
-                            target="_blank" *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                            target="_blank" *ngIf="canUpdate" matTooltip='Edit Assay Screening Record'>
                             <span class="font12px">Edit Screening</span>
                           </a>
                         </div>

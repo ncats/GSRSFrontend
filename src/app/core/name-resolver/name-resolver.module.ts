@@ -33,10 +33,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   exports: [
     NameResolverComponent,
     NameResolverDialogComponent
-  ],
-  entryComponents: [
-    NameResolverDialogComponent,
-    ExternalSiteWarningDialogComponent
   ]
 })
 export class NameResolverModule { }

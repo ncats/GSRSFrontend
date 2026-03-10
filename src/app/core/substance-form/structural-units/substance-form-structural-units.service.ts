@@ -35,6 +35,7 @@ export class SubstanceFormStructuralUnitsService extends SubstanceFormServiceBas
   }
 
   deleteSubstanceSRU(unit: StructuralUnit): void {
+    this.substanceFormService.markRemoved();
     const subNameIndex = this.substance.polymer.structuralUnits.findIndex(subName => unit.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.substance.polymer.structuralUnits.splice(subNameIndex, 1);

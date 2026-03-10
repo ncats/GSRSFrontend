@@ -8,9 +8,10 @@ import { SubstanceFormRelationshipsService } from './substance-form-relationship
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-form-relationships-card',
-  templateUrl: './substance-form-relationships-card.component.html',
-  styleUrls: ['./substance-form-relationships-card.component.scss']
+    selector: 'app-substance-form-relationships-card',
+    templateUrl: './substance-form-relationships-card.component.html',
+    styleUrls: ['./substance-form-relationships-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormRelationshipsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

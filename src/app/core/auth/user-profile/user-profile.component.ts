@@ -10,9 +10,10 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.scss']
+    selector: 'app-user-profile',
+    templateUrl: './user-profile.component.html',
+    styleUrls: ['./user-profile.component.scss'],
+    standalone: false
 })
 export class UserProfileComponent implements OnInit {
 
@@ -74,7 +75,7 @@ export class UserProfileComponent implements OnInit {
       this.message = 'Error: no change in password detected';
     } else {
       this.loading = true;
-        this.adminService.changeMyPassword(this.oldPassword, this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changeMyPassword(this.oldPassword, this.newPassword).pipe(take(1)).subscribe(response => {
           this.message = 'Password updated successfully!';
           this.loading = false;
           this.newPassword = '';
@@ -92,42 +93,41 @@ export class UserProfileComponent implements OnInit {
             this.message = 'Error: unknown error';
           }
         });
+    }
   }
 
-}
+  close() {
+    this.dialog.closeAll();
+  }
 
-close() {
-  this.dialog.closeAll();
-}
+  viewDrafts(): void {
+    const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
+      maxHeight: '85%',
+      width: '70%',
+      data: {profile: true}
+    });
+   // this.overlayContainer.style.zIndex = '1002';
 
-viewDrafts(): void {
-  const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
-    maxHeight: '85%',
-    width: '70%',
-    data: {profile: true}
-  });
- // this.overlayContainer.style.zIndex = '1002';
-
-  dialogRef.afterClosed().subscribe(response => {
- //   this.overlayContainer.style.zIndex = null;
+    dialogRef.afterClosed().subscribe(response => {
+   //   this.overlayContainer.style.zIndex = null;
 
 
-  /*  if (response) {
+    /*  if (response) {
 
-        const read = response.substance;
-          if (response.uuid && response.uuid != 'register'){
-           const url = '/substances/' + response.uuid + '/edit?action=import';
-          this.router.navigateByUrl(url, { state: { record: response.substance } });
-         } else {
-           setTimeout(() => {
-          //   this.overlayContainer.style.zIndex = null;
-             this.router.onSameUrlNavigation = 'reload';
-            this.router.navigateByUrl('/substances/register?action=import', { state: { record: response.json } });
- 
-           }, 1000);
-         }
-        }*/
+          const read = response.substance;
+            if (response.uuid && response.uuid != 'register'){
+             const url = '/substances/' + response.uuid + '/edit?action=import';
+            this.router.navigateByUrl(url, { state: { record: response.substance } });
+           } else {
+             setTimeout(() => {
+            //   this.overlayContainer.style.zIndex = null;
+               this.router.onSameUrlNavigation = 'reload';
+              this.router.navigateByUrl('/substances/register?action=import', { state: { record: response.json } });
 
-  });
-}
+             }, 1000);
+           }
+          }*/
+
+    });
+  }
 }

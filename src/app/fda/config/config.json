@@ -1,15 +1,14 @@
 {
   "_customToolbarComponent": "precisionFDA",
-  "_apiBaseUrl": "http://localhost:9081/ginas/app/",
-  "_gsrsHomeBaseUrl": "http://localhost:9081/ginas/app/",
-  "_apiSSG4mBaseUrl": "http://localhost:9081/ginas/app/",
+  "apiBaseUrl": "http://localhost:9081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:9081/ginas/app/",
+  "apiSSG4mBaseUrl": "http://localhost:9081/ginas/app/",
 
-  "apiBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
-  "gsrsHomeBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/ui/",
-  "apiSSG4mBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
+  "_apiBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
+  "_gsrsHomeBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/ui/",
+  "_apiSSG4mBaseUrl": "https://gsrs-dev-public.ncats.io/ginas/app/",
   "showFooter": true,
-  "occasionalApiBasePath": "/ginas/app",
-  "version": "3.1.2",
+  "version": "3.2.0-SNAPSHOT",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -17,6 +16,8 @@
   "adverseEventShinyAdverseEventDisplay": "true",
   "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/95239e26-e0be-42d9-a960-9a5f7f1c25ee/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
   "dailyMedUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=",
+  "phpIdUrl": "https://phpidpublish.who-umc.org/search?phpid=",
+  "rxNormUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?searchdb=rxcui&query=",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
@@ -24,8 +25,10 @@
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
-  "disableJSDraw": false,
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
+  "disableJSDraw": false,
+  "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
+  "occasionalApiBasePath": "/ginas/app",
   "restApiPrefix": "/ginas/app",
   "showTopBanner": true, 
   "authenticateAs": {
@@ -37,10 +40,6 @@
   "stagingArea": {
     "mergeAction": false
   },
-  "apiBaseUrl": "http://localhost:8081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
-  "occasionalApiBasePath": "/ginas/app",
-    
 "userRegistration": {
     "configurations": {
       "emailForm": {
@@ -74,6 +73,14 @@
       {
         "name":"substances",
         "title": "Substances"
+      },
+      {
+        "name":"products",
+        "title": "Products"
+      },
+      {
+        "name":"applications",
+        "title": "Applications"
       }
     ]
   },
@@ -116,7 +123,7 @@
     {
       "title": "GSRSFind Excel tools",
       "description": "GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)<br/>GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.",
-      "href": "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip",
+      "href": "https://github.com/ncats/gsrsfind/releases/download/v1.6/GSRS.Excel.Tool.1.6.zip",
       "imageFile": "xlsx.png",
       "templateDescription": "Click to download GSRSFind Excel tools.zip"
     },
@@ -331,7 +338,7 @@
     },
     {
       "card": "substance-subunits",
-      "title": "Nuceic Acid Subunits",
+      "title": "Nucleic Acid Subunits",
       "filters": [
         {
           "filterName": "equals",
@@ -1039,8 +1046,8 @@
       "admin": [
         "Record Created By",
         "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited",
+        "root_creationDate",
+        "root_lastModifiedDate",
         "Ingredient Created By",
         "Ingredient Last Edited By",
         "Ingredient Create Date",
@@ -1054,6 +1061,7 @@
         "Product Name",
         "Dosage Form Name",
         "Substance UUID",
+        "Substance Class",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
         "Has Ingredients",
@@ -1183,10 +1191,10 @@
         "Sponsor Report Submitter Name"
       ],
       "admin": [
+        "root_createdDate",
         "Record Created By",
-        "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited"
+        "root_modifiedDate",
+        "Record Last Edited By"
       ]
     }
   },

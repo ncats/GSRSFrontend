@@ -4,11 +4,11 @@
     align-items: center;
     justify-content: center;
     padding: 65px 5px 0 5px;
+    /** __aw__ see if needed for ncats branch **/
     margin-bottom: 400px;
-
 }
 
-.mat-card {
+.sequence-search-card {
     margin-top: 15px;
     display: flex;
     flex-direction: column;
@@ -30,7 +30,6 @@
 }
 
 .sequence-body {
-
     textarea {
         box-sizing: border-box;
         width: 100%;

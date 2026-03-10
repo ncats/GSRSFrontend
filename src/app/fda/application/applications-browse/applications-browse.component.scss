@@ -240,20 +240,7 @@
     }
 }
 
-.page-label {
-  color:var(--dark-label-color);
-  display:block;
-  font-family:Roboto, "Helvetica Neue", sans-serif;
-  font-size:14px;
-  padding-right: 12px;
-}
-
-.page-selector {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 20px;
-}
+// Page label and page selector styles moved to global _angular-15-mdc-fixes.scss
 
 :host ::ng-deep .mat-paginator-range-label {
   margin: 0 5px 0 5px !important;
@@ -327,9 +314,7 @@
     }
   }
 
-  .page-selector {
-      display:none !important;
-  }
+  // .page-selector display:none moved to global _angular-15-mdc-fixes.scss
 
   .full-paginator {
     min-width: 500px !important;
@@ -365,11 +350,6 @@
 
 .lock-icon {
   color: #f0ad4e;
-}
-
-.narrow-search-dropdown {
-  /*width: -moz-fit-content;
-  width: fit-content;*/
 }
 
 .narrow-search-suggestions-container {
@@ -577,17 +557,20 @@
   }
 }
 
-.mat-card-title, .facet-value {
+.mat-card-title, .mat-mdc-card-title, .facet-value {
   display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
   box-sizing: border-box;
-  width: 100%;
+  width: 98%;
   flex-direction: row;
   align-items: center;
   white-space: nowrap;
 }
 
-.mat-card-title {
+.mat-card-title, .mat-mdc-card-title {
   white-space: normal;
+  flex-wrap: wrap;
 
   .substance-name {
     color: var(--link-primary-color);

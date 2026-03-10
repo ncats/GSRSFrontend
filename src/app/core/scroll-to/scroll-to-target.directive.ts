@@ -2,7 +2,8 @@ import { Directive, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { ScrollToService } from './scroll-to.service';
 
 @Directive({
-  selector: '[appScrollToTarget]'
+    selector: '[appScrollToTarget]',
+    standalone: false
 })
 export class ScrollToTargetDirective implements AfterViewInit, OnDestroy {
 

@@ -15,9 +15,10 @@ import { ConfigService } from '@gsrs-core/config';
 // }
 
 @Component({
-  selector: 'app-privacy-statement',
-  templateUrl: './privacy-statement.component.html',
-  styleUrls: ['./privacy-statement.component.scss']
+    selector: 'app-privacy-statement',
+    templateUrl: './privacy-statement.component.html',
+    styleUrls: ['./privacy-statement.component.scss'],
+    standalone: false
 })
 export class PrivacyStatementComponent implements OnInit {
   htmlText;

@@ -8,9 +8,10 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormStructuralModificationsService } from './substance-form-structural-modifications.service';
 
 @Component({
-  selector: 'app-substance-form-structural-modifications-card',
-  templateUrl: './substance-form-structural-modifications-card.component.html',
-  styleUrls: ['./substance-form-structural-modifications-card.component.scss']
+    selector: 'app-substance-form-structural-modifications-card',
+    templateUrl: './substance-form-structural-modifications-card.component.html',
+    styleUrls: ['./substance-form-structural-modifications-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormStructuralModificationsCardComponent extends SubstanceCardBaseFilteredList<StructuralModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

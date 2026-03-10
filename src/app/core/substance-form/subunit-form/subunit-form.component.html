@@ -11,21 +11,21 @@
     </div>
     <div class = "subunit-label">Subunit {{subunit.subunitIndex}}</div>
     <div class = "buttons">
-      <button class = "mat-button mat-primary action-button" (click) = 'editSubunit(subunit, editSequence)'>
+      <button  mat-button class = " action-button " color="primary" (click) = 'editSubunit(subunit, editSequence)'>
         {{toggle[subunit.subunitIndex] ? 'save': 'edit'}}</button>
-      <button class = "mat-button action-button mat-primary" (click) = cleanSequence()>
+      <button mat-button class = " action-button " color="primary" (click) = cleanSequence()>
         clean</button>
       <span class = "spacer"> </span>
-      <button class = "mat-button action-button mat-primary convert" matTooltip = "convert 3 letter sequence to 1 letter"
+      <button mat-button class = " action-button convert" color="primary" matTooltip = "convert 3 letter sequence to 1 letter"
       *ngIf = "substanceType !== 'nucleicAcid'"  (click) = convertSequence()>
         convert</button>
         
 
-      <a class = "button-link " matTooltip ="search for sequence in a new tab" (click) = "search()">sequence search</a>
-      <button class = "mat-button action-button mat-primary" matTooltip = "copy disulfides from another subunit"  (click) = copyDisulfides() *ngIf = "substanceType === 'protein'">
+      <a mat-button color="primary" class = "button-link " matTooltip ="search for sequence in a new tab" (click) = "search()">sequence search</a>
+      <button mat-button class = " action-button " color="primary" matTooltip = "copy disulfides from another subunit"  (click) = copyDisulfides() *ngIf = "substanceType === 'protein'">
           copy disulfide links</button>
 <span class = "middle-fill"></span>
-        <button class = "mat-button action-button mat-primary"  color="primary" (click)="copySequence()">
+        <button mat-button class = " action-button " color="primary" (click)="copySequence()">
           Copy to Clipboard
           <mat-icon svgIcon="outline-file_copy" matTooltip = "Copy Sequence to clipboard"></mat-icon>
         </button>

@@ -1,8 +1,8 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { ConfigService } from '../config/config.service';
-import { Auth, Role, UserGroup } from './auth.model';
-import { Observable, Subject, of } from 'rxjs';
-import { map, take, catchError } from 'rxjs/operators';
+import { Auth, Privilege, Role, UserGroup } from './auth.model';
+import { from, Observable, BehaviorSubject, of, firstValueFrom, throwError } from 'rxjs';
+import { map, take, catchError, concat, switchMap, tap } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/download.model';
@@ -12,48 +12,49 @@ import { UserDownload, AllUserDownloads } from '@gsrs-core/auth/user-downloads/d
 })
 export class AuthService {
   private _auth: Auth;
-  private _authUpdate: Subject<Auth> = new Subject();
+  private _authUpdate = new BehaviorSubject<Auth | null>(null);
   private isLoading: boolean;
+  private _privileges: Array<Privilege> = [];
 
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: any
   ) {
-    this.isLoading = true;
-    /*
-    this.fetchAuth().pipe(take(1)).subscribe(auth => {
-      if (auth && auth.computedToken != null) {
-        this._auth = auth;
-      } else {
-        this._auth = null;
-      }
-      this._authUpdate.next(this._auth);
-      this.isLoading = false;
-    }, error => {
-      this._authUpdate.next(null);
-      this.isLoading = false;
-    });
-    */
-    configService.afterLoad().then(cs => {
-      this.fetchAuth().pipe(take(1)).subscribe(auth => {
-        if (auth && auth.computedToken != null) {
-          this._auth = auth;
-        } else {
-          this._auth = null;
+      this.isLoading = true;
+      configService.afterLoad().then(cs => {
+        this.fetchAuth().pipe(
+        take(1),
+        switchMap(auth => {
+          if (auth && auth.computedToken != null) {
+            this._auth = auth;
+            this._authUpdate.next(this._auth);
+            // Fetch privileges AFTER successful auth
+            return this.fetchPrivs();
+          } else {
+            this._auth = null;
+            this._authUpdate.next(null);
+            return of([]);
+          }
+        })
+      ).subscribe({
+        next: privs => {
+          this._privileges = privs;
+          this.isLoading = false;
+        },
+        error: err => {
+          console.error('Error:', err);
+          this._authUpdate.next(null);
+          this.isLoading = false;
         }
-        this._authUpdate.next(this._auth);
-        this.isLoading = false;
-      }, error => {
-        this._authUpdate.next(null);
-        this.isLoading = false;
       });
-    });
-  }
+   });
+}
 
-  get auth(): Auth {
+
+get auth(): Auth {
     return this._auth;
-  }
+ }
 
   public checkAuth(): Observable<Auth> {
     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
@@ -80,78 +81,54 @@ export class AuthService {
       obs = of(this.configService.configData.dummyWhoami);
     }
     return obs.pipe(
-      map(auth => {
+      switchMap(auth => {
         if (auth && auth.computedToken) {
           this._auth = auth;
           if (isPlatformBrowser(this.platformId)) {
             sessionStorage.setItem('authToken', auth.computedToken);
           }
+          this._authUpdate.next(this._auth);
+          // Fetch privileges after successful login
+          return this.fetchPrivs().pipe(
+            map(() => this._auth),
+            catchError(() => {
+              // Privileges fetch failed, but auth succeeded - still return auth
+              return of(this._auth);
+            })
+          );
         } else {
           this._auth = null;
+          this._authUpdate.next(null);
+          return of(null);
         }
-
-        this._authUpdate.next(this._auth);
-        return this._auth;
       })
     );
   }
 
-  getAuth(): Observable<Auth> {
-    return new Observable(observer => {
-
-      if (this._auth != null) {
-        observer.next(this._auth);
-      } else if (!this.isLoading) {
-        this.isLoading = true;
-        this.fetchAuth().pipe(take(1)).subscribe(auth => {
-          if (auth && auth.computedToken != null) {
-            this._auth = auth;
-          } else {
-            this._auth = null;
-          }
-
-          observer.next(this._auth);
+  getAuth(): Observable<Auth | null> {
+    // Trigger a fetch if not loading and no auth yet
+    if (this._auth == null && !this.isLoading) {
+      this.isLoading = true;
+      this.fetchAuth().pipe(take(1)).subscribe({
+        next: auth => {
+          this._auth = auth?.computedToken ? auth : null;
           this._authUpdate.next(this._auth);
           this.isLoading = false;
-        }, error => {
-          this.logout();
+        },
+        error: () => {
+          this._auth = null;
+          this._authUpdate.next(null);
           this.isLoading = false;
-        });
-      }
+        }
+      });
+    }
 
-      this._authUpdate.subscribe(auth => {
-        try {
-          observer.next(auth);
-        } catch (e) {
-          console.log("Error calling observer");
-        }
-      }, error => {
-        console.log("Error calling observer, registered error");
-        try {
-          observer.next(null);
-        } catch (e) {
-          console.log("Error calling observer, registered error, passed null");
-        }
-      });
-      /*
-      this._authUpdate.subscribe(auth => {
-        observer.next(auth);
-      }, error => {
-        observer.next(null);
-      });
-      */
-    });
+    // Return the BehaviorSubject as observable - late subscribers get current value
+    return this._authUpdate.asObservable();
   }
 
   logout(): void {
-    // if (
-    //   !this.configService.configData
-    //   || !this.configService.configData.apiBaseUrl
-    //   || this.configService.configData.apiBaseUrl.startsWith('/')
-    // ) {
-    //   const url = (this.configService.configData && this.configService.configData.apiBaseUrl || '/') + 'logout';
-    //   this.http.get(url).pipe(take(1)).subscribe(response => {}, error => {});
-    // }
+    this._privileges = [];
     if (isPlatformBrowser(this.platformId)) {
       sessionStorage.removeItem('authToken');
       const cookies = document.cookie.split(';');
@@ -179,14 +156,14 @@ export class AuthService {
     }
   }
 
-  hasRoles(...roles: Array<Role | string>): boolean {
+  hasRoles(...roles: Array<string>): boolean {
     const rolesList = [...roles];
-
+    const checkableRoles = this._auth.roles.map((x: Role) => x.role.toUpperCase());
+    
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
       for (const r of rolesList) {
-        let role = r.charAt(0).toLowerCase() + r.slice(1);
-        role = role.charAt(0).toUpperCase() + role.slice(1);
-        if (this._auth.roles.indexOf(role as Role) === -1) {
+        let role = r.toUpperCase();
+        if (checkableRoles.indexOf(role) === -1) {
           return false;
         }
       }
@@ -216,7 +193,7 @@ export class AuthService {
     return true;
   }
 
-  hasRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
+  hasRolesAsync(...roles: Array< string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasRoles(...roles));
@@ -230,13 +207,13 @@ export class AuthService {
     });
   }
 
-  hasAnyRoles(...roles: Array<Role | string>): boolean {
+  hasAnyRoles(...roles: Array<string>): boolean {
     const rolesList = [...roles];
+    const checkableRoles = this._auth.roles.map((x: Role) => x.role.toUpperCase());
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
       for (const r of rolesList) {
-        let role = r.charAt(0).toLowerCase() + r.slice(1);
-        role = role.charAt(0).toUpperCase() + role.slice(1);
-        if (this._auth.roles.indexOf(role as Role) > -1) {
+        let role = r.toUpperCase();
+        if (checkableRoles.indexOf(role) === -1) {
           return true;
         }
       }
@@ -246,7 +223,32 @@ export class AuthService {
     return false;
   }
 
-  hasAnyRolesAsync(...roles: Array<Role | string>): Observable<boolean> {
+  async canEditData( ):Promise<boolean> {
+    return this.hasSpecificPrivilege('Edit');
+  }
+
+  async hasAnyPrivilege(...privs) : Promise< boolean> {
+    await this.ensurePrivilegesLoaded();
+    return privs.some(p=>this._privileges.some(pp=>pp.privilege.toUpperCase()== p.toUpperCase()));
+  }
+  
+  private async ensurePrivilegesLoaded(): Promise<void> {
+    if (!this._privileges || this._privileges.length === 0) {
+      try {
+        this._privileges = await firstValueFrom(this.fetchPrivs());
+      } catch (e) {
+        // Not authenticated or fetch failed - use empty privileges
+        this._privileges = [];
+      }
+    }
+  }
+
+  async hasSpecificPrivilege(requestedPrivilege: string ):Promise<boolean> {
+    await this.ensurePrivilegesLoaded();
+    return this._privileges != null && this._privileges.some(p=>p.privilege==requestedPrivilege);
+  }
+
+  hasAnyRolesAsync(...roles: Array<string>): Observable<boolean> {
     return new Observable(observer => {
       if (this.auth != null) {
         observer.next(this.hasAnyRoles(...roles));
@@ -310,13 +312,10 @@ export class AuthService {
         this.http.get<Auth>(`${url}whoami`)
           .subscribe(
             auth => {
-            //  console.log("Authorized as");
-            //  console.log(auth);
               observer.next(auth);
             },
             err => {
               console.log("Authorized error");
-              console.log(err);
               observer.error(err);
             },
             () => observer.complete()
@@ -325,11 +324,24 @@ export class AuthService {
       });
     });
   }
+  
+private fetchPrivs(): Observable<Privilege[]> {
+  return from(this.configService.afterLoad()).pipe(
+    switchMap(() => {
+      const baseUrl = this.configService.configData?.apiBaseUrl || '/';
+      const url = `${baseUrl}api/v1/allmyprivs`;
+      return this.http.get<any>(url);
+    }),
+    map(response => {
+      const privs: Privilege[] = response.privileges.map(p => ({ privilege: p }));
+      this._privileges = privs;
+      return privs;
+    }),
+    catchError(err => {
+      console.error("Authorized error", err);
+      return throwError(() => err);
+    })
+  );
+}
 
-  /*
-  private fetchAuth(): Observable<Auth> {
-    const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
-    return this.http.get<Auth>(`${url}whoami`);
-  }
-  */
 }

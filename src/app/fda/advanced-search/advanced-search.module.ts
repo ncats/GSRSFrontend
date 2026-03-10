@@ -19,6 +19,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
@@ -67,6 +68,7 @@ const advSearchRoutes: Routes = [
     MatTableModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatOptionModule,
     MatSliderModule,
     MatDialogModule,
     MatListModule,

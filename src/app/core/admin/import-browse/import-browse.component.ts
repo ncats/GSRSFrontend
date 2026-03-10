@@ -50,9 +50,10 @@ import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/impo
 import {Environment} from "@environment/environment.model";
 
 @Component({
-  selector: 'app-import-browse',
-  templateUrl: './import-browse.component.html',
-  styleUrls: ['./import-browse.component.scss']
+    selector: 'app-import-browse',
+    templateUrl: './import-browse.component.html',
+    styleUrls: ['./import-browse.component.scss'],
+    standalone: false
 })
 export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   private privateSearchTerm?: string;
@@ -101,7 +102,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   showAudit: boolean;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
-  isAdmin = false;
+  canUserImportData = false;
   isLoggedIn = false;
   showExactMatches = false;
   names: { [substanceId: string]: Array<SubstanceName> } = {};
@@ -136,6 +137,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   facetViewControl = new FormControl();
   private wildCardText: string;
   bulkSearchPanelOpen = false;
+  private resizeTimeout: any;
   substanceList: any;
   idMapping: Array< any > = [];
   demoResp: any;
@@ -221,6 +223,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.overlayContainer.style.zIndex = null;
 
       });
+      this.subscriptions.push(exportSub);
   }
 
   selectBulk(type?: string) {
@@ -310,7 +313,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.substances = [];
     this.records = [];
 
@@ -364,10 +367,10 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.showDeprecated = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
-
     });
+    this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
+    this.showAudit = await this.authService.hasSpecificPrivilege('Restore Previous Versions');
+
     this.facetManagerService.registerGetFacetsHandler(this.substanceService.getStagingFacets );
 
     this.environment = this.configService.environment;
@@ -454,6 +457,7 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    clearTimeout(this.resizeTimeout);
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -462,7 +466,11 @@ export class ImportBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {
@@ -1138,18 +1146,16 @@ searchTermOkforBeginsWithSearch(): boolean {
   }
 
   private processResponsiveness = () => {
-    setTimeout(() => {
-      if (window) {
-        if (window.innerWidth < 1100) {
-          this.matSideNav.close();
-          this.isCollapsed = true;
-          this.hasBackdrop = true;
-        } else {
-          this.matSideNav.open();
-          this.hasBackdrop = false;
-        }
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
       }
-    });
+    }
   }
 
   openSideNav() {

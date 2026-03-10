@@ -11,9 +11,10 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 
 @Component({
-  selector: 'app-disulfide-links-form',
-  templateUrl: './disulfide-links-form.component.html',
-  styleUrls: ['./disulfide-links-form.component.scss']
+    selector: 'app-disulfide-links-form',
+    templateUrl: './disulfide-links-form.component.html',
+    styleUrls: ['./disulfide-links-form.component.scss'],
+    standalone: false
 })
 export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -43,8 +44,8 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
 
   ngOnInit() {
     if (this.privateLink.sites) {
-      this.testForm.controls['site0'].setValue(this.privateLink.sites[0]);
-      this.testForm.controls['site1'].setValue(this.privateLink.sites[1]);
+      this.testForm.controls['site0'].setValue(this.privateLink.sites[0].toString());
+      this.testForm.controls['site1'].setValue(this.privateLink.sites[1].toString());
     } else {
       this.privateLink.sites = [{}, {}];
     }
@@ -128,14 +129,14 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
       if (newLinks) {
         if (newLinks[0] && newLinks[0].subunitIndex) {
           this.privateLink.sites[0] = newLinks[0];
-          this.testForm.controls['site0'].setValue(this.privateLink.sites[0]);
+          this.testForm.controls['site0'].setValue(this.privateLink.sites[0].toString());
         } else {
           this.privateLink.sites[0] = {};
           this.testForm.controls['site0'].reset();
         }
         if (newLinks[1] && newLinks[1].subunitIndex) {
           this.privateLink.sites[1] = newLinks[1];
-          this.testForm.controls['site1'].setValue(this.privateLink.sites[1]);
+          this.testForm.controls['site1'].setValue(this.privateLink.sites[1].toString());
         } else {
           this.privateLink.sites[1] = {};
           this.testForm.controls['site1'].reset();

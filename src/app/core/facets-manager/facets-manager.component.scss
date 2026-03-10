@@ -1,5 +1,7 @@
 .facet-search-container {
     display: flex;
+    align-items: center;
+    margin-left: 10px;
 
     .mat-form-field {
         flex-grow: 1;
@@ -24,13 +26,32 @@
     white-space: nowrap;
     padding: 6px 0;
     overflow: hidden;
+    // height: 35px;
 
     .facet-value-checkbox {
-        padding: 0 3px 0 0;
+        padding: 0 5px 0 0;
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+
+        ::ng-deep .mat-mdc-checkbox .mat-internal-form-field {
+            width: 24px;
+            height: 24px;
+            margin: 0;
+            padding: 0;
+        }
+
+        // Keep big click target, but don't let it affect layout
+        ::ng-deep .mat-mdc-checkbox .mat-mdc-checkbox-touch-target {
+            position: absolute;
+            inset: 50% auto auto 50%;
+            transform: translate(-50%, -50%);
+            }
+
     }
 
     .facet-value-label {
-        padding: 0 3px;
+        padding: 0 5px;
         max-width: 150px;
         overflow: hidden;
         color: var(--label-color);
@@ -64,25 +85,27 @@
 }
 
 .include {
-    ::ng-deep .mat-checkbox-frame {
-        border-color: var(--include-checkbox-border-color);
+    ::ng-deep .mdc-checkbox__background {
+        border-color: var(--include-checkbox-border-color) !important;
     }
 
-    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
-    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: var(--include-checkbox-bg-color);
+    ::ng-deep &.mat-mdc-checkbox-checked .mdc-checkbox__background,
+    ::ng-deep &.mat-mdc-checkbox-indeterminate .mdc-checkbox__background {
+        background-color: var(--include-checkbox-bg-color) !important;
+        border-color: var(--include-checkbox-bg-color) !important;
     }
 }
 
 .exclude {
-    margin-left: 5px;
-    ::ng-deep .mat-checkbox-frame {
-        border-color: var(--exclude-checkbox-border-color);
+    margin-left: 2px;
+    ::ng-deep .mdc-checkbox__background {
+        border-color: var(--exclude-checkbox-border-color) !important;
     }
 
-    ::ng-deep &.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
-    ::ng-deep &.mat-checkbox-checked.mat-accent .mat-checkbox-background {
-        background-color: var(--exclude-checkbox-bg-color);
+    ::ng-deep &.mat-mdc-checkbox-checked .mdc-checkbox__background,
+    ::ng-deep &.mat-mdc-checkbox-indeterminate .mdc-checkbox__background {
+        background-color: var(--exclude-checkbox-bg-color) !important;
+        border-color: var(--exclude-checkbox-bg-color) !important;
     }
 }
 
@@ -97,6 +120,7 @@
 .facet-advanced-options-link {
     margin-top: 7px;
     color: var(--link-primary-color);
+    margin-left: 10px;
 }
 
 .facet-actions {
@@ -131,4 +155,10 @@
     ::ng-deep  .mat-checkbox-layout {
         margin-bottom: 10px;
     }
+}
+
+::ng-deep .facet-search-container .mat-mdc-form-field .mat-mdc-form-field-infix {
+  width: 235px !important;
+  flex: 0 1 230px !important;
+  min-width: 0 !important;
 }

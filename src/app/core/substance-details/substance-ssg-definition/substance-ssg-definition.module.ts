@@ -4,13 +4,15 @@ import { SubstanceSsgDefinitionComponent } from './substance-ssg-definition.comp
 import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
 import { ReferencesManagerModule } from '../../references-manager/references-manager.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
     CommonModule,
     DynamicComponentLoaderModule.forChild(SubstanceSsgDefinitionComponent),
     ReferencesManagerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule
   ],
   declarations: [
     SubstanceSsgDefinitionComponent

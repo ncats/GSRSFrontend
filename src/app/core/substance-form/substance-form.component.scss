@@ -63,13 +63,11 @@
   background-color: var(--regular-white-color);
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
+  box-shadow: 0px 3px 3px -2px var(--box-shadow-color),
+    0px 3px 4px 0px var(--box-shadow-color-2),
+    0px 1px 8px 0px var(--box-shadow-color-3);
   z-index: 1001;
 }
-
-.top-fixed-with-top-banner {
-  top: 92px;
-} 
 
 .cdk-overlay-pane {
   z-index: 1005;
@@ -79,13 +77,13 @@ mat-select-panel {
   z-index: 1005;
 }
 
-.admin-functions, .changeClass {
+.admin-functions,
+.changeClass {
   margin-bottom: -15px;
   margin-left: 30px;
   margin-right: 5px;
   margin-top: -10px;
   color: var(--primary-color);
-
 
   ::ng-deep .mat-form-field-wrapper {
     padding-bottom: 20px !important;
@@ -111,9 +109,9 @@ mat-select-panel {
 .form-content-container {
   overflow: hidden;
   padding-top: 121px;
+  /* __aw__ see if needed for ncats branch */
   margin-bottom: 200px;
 }
-
 
 .small-form-content-container {
   overflow: hidden;
@@ -121,11 +119,18 @@ mat-select-panel {
 }
 
 .actions-container {
+  display: flex;
+  overflow-x: auto;
+  flex-wrap: nowrap;
   max-width: 1128px;
   width: 100%;
   background-color: var(--regular-white-color);
   padding: 10px;
-  display: flex;
+  overflow: visible;
+}
+
+.actions-container button {
+  flex-shrink: 0;
 }
 
 .small-actions-container {
@@ -172,6 +177,8 @@ mat-select-panel {
     max-height: 500px;
     overflow-y: auto;
     padding: 10px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 16px;
   }
 
   .submission-message {
@@ -201,9 +208,7 @@ mat-select-panel {
   .warning-message {
     color: var(--warning-dialog-color);
     background-color: var(--warning-dialog-bg-color);
-
   }
-
 
   .error-message {
     color: var(--error-dialog-color);
@@ -213,9 +218,7 @@ mat-select-panel {
   .notice-message {
     color: var(--notice-dialog-color);
     background-color: var(--notice-dialog-bg-color);
-
   }
-
 }
 
 .mat-expansion-panel-header-title {
@@ -259,16 +262,22 @@ mat-select-panel {
   align-items: center;
 }
 
-
 .chip {
   background-color: var(--regular-white-color);
   border-radius: 50%;
   padding: 3px 5px;
   margin-left: 5px;
   color: var(--link-color);
-  height: 33px;
+  // height: 33px;
 }
 
-.mat-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button {
+.mat-button,
+.mat-icon-button,
+.mat-stroked-button,
+.mat-flat-button {
   min-width: auto;
+}
+
+::ng-deep .mat-mdc-form-field-infix {
+  padding-top: 18px !important;
 }

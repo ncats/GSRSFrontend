@@ -19,7 +19,7 @@
                     </div>
                     <div class = "value">
                             <span *ngFor = "let role of user.roles; last as islast">
-                                    {{role}}{{!islast? ', ':''}}
+                                    {{role.role}}{{!islast? ', ':''}}
                                 </span>
                     </div>
                 </div>

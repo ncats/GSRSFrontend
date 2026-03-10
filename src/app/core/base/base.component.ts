@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy, AfterViewInit } from '@angular/core';
-import { Router, RouterEvent, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
+import { Router, Event, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
 import { Environment } from '../../../environments/environment.model';
 import { AuthService } from '../auth/auth.service';
 import { Auth } from '../auth/auth.model';
@@ -28,9 +28,10 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
   selector: 'app-base',
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
-export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = '';
   logoSrcPath: string;
   auth?: Auth;
@@ -39,7 +40,9 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
   baseDomain: string;
   classicLinkPath: string;
   classicLinkQueryParamsString: string;
-  isAdmin = false;
+  canConfigureSystem: boolean = false;
+  canUserImportData: boolean = false;
+  canManageCVs: boolean = false;
   contactEmail: string;
   contactEmailAlt: string;
   version?: string;
@@ -121,37 +124,13 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (text && text !== this.selectedText) {
         this.selectedText = text;
-       /* this.bottomSheetOpenTimer = setTimeout(() => {
-          const subscription = this.openSearchBottomSheet(text).subscribe(() => {
-            setTimeout(() => {
-              if (selection != null && range != null) {
-                selection.removeAllRanges();
-                selection.addRange(range);
-              } else if (selectionStart != null) {
-                activeEl.focus();
-                activeEl.selectionStart = selectionStart;
-                activeEl.selectionEnd = selectionEnd;
-              }
-            });
-            subscription.unsubscribe();
-          }, () => {
-            subscription.unsubscribe();
-          }, () => {
-            this.selectedText = '';
-            subscription.unsubscribe();
-          });
-        }, 600);*/
       }
     }
   }
 
-
-
-
-  ngOnInit() {
+  async ngOnInit() {
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -160,6 +139,22 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.contactEmailAlt = this.configService.configData.contactEmailAlt || null;
     
     this.navItems = this.configService.configData.navItems || null;
+
+    // CRITICAL: Subscribe to auth FIRST, before any await calls that might fail
+    // This ensures UI updates reactively when auth state changes
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      this.auth = auth;
+      // Re-check privileges when auth changes
+      if (auth) {
+        this.updatePrivileges();
+      } else {
+        this.canConfigureSystem = false;
+        this.canUserImportData = false;
+        this.canRegister = false;
+        this.canManageCVs = false;
+      }
+    });
+    this.subscriptions.push(authSubscription);
 
   let notempty = false;
     if (this.loadedComponents) {
@@ -181,22 +176,17 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadedComponents = null;
       }
     }
-    const roleSubscription = this.authService.hasRolesAsync('Admin').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(roleSubscription);
 
-    const regSubscription =
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater', 'DataEntry', 'SuperDataEntry').subscribe(response => {
-      this.canRegister = response;
-    });
-    this.subscriptions.push(regSubscription);
+    // Initial privilege check with error handling
+    await this.updatePrivileges();
+    //not sure if we need this.
+    //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
 
     this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
       this.version = this.configService.configData.version || buildInfo.version;
       this.versionTooltipMessage = `V${this.version}`;
-      this.versionTooltipMessage += ` built on ${moment(buildInfo.buildTime).utc().format('ddd MMM D YYYY HH:mm:SS z')}`;
+      this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format('ddd MMM D YYYY HH:mm:ss z')}`;
     });
     this.navItems.forEach(item => {
       if (item.display === 'Register') {
@@ -241,7 +231,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.subscriptions.push(paramsSubscription);
 
-    const authSubscription2 = this.authService.checkAuth().subscribe(auth => {
+    const authSubscription2 = this.authService.checkAuth().subscribe(_auth => {
     }, error => {
       if (error.status === 403 && (this.router.url.split('?')[0] !== '/login' && this.router.url.split('?')[0] !== '/unauthorized')) {
         this.loadingService.setLoading(false);
@@ -250,19 +240,12 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
     });
       this.subscriptions.push(authSubscription2);
 
-    const authSubscription = this.authService.getAuth().subscribe(auth => {
-      this.auth = auth;
-    }, error => {
-    });
-
-    this.subscriptions.push(authSubscription);
-
     this.environment = this.configService.environment;
     this.appId = this.environment.appId;
 
     this.logoSrcPath = `${this.environment.baseHref || ''}assets/images/gsrs-logo.svg`;
 
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof ResolveEnd) {
         this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
         urlPath = event.url.split('?')[0];
@@ -594,7 +577,6 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if (response) {
            this.loadingService.setLoading(true);
-         //  console.log(response.json);
 
           const read = response.substance;
 
@@ -614,6 +596,25 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     });
+  }
+
+  /**
+   * Updates privilege flags based on current auth state.
+   * Called on init and whenever auth changes.
+   */
+  private async updatePrivileges(): Promise<void> {
+    try {
+      this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
+      this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
+      this.canRegister = await this.authService.canEditData();
+      this.canManageCVs = await this.authService.hasSpecificPrivilege('Manage CVs');
+    } catch (e) {
+      // Not authenticated or error - all privileges default to false
+      this.canConfigureSystem = false;
+      this.canUserImportData = false;
+      this.canRegister = false;
+      this.canManageCVs = false;
+    }
   }
 
 }

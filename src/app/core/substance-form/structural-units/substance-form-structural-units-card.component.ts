@@ -7,9 +7,10 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormStructuralUnitsService } from './substance-form-structural-units.service';
 
 @Component({
-  selector: 'app-substance-form-structural-units-card',
-  templateUrl: './substance-form-structural-units-card.component.html',
-  styleUrls: ['./substance-form-structural-units-card.component.scss']
+    selector: 'app-substance-form-structural-units-card',
+    templateUrl: './substance-form-structural-units-card.component.html',
+    styleUrls: ['./substance-form-structural-units-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormStructuralUnitsCardComponent extends SubstanceCardBaseFilteredList<StructuralUnit>
   implements OnInit, AfterViewInit, OnDestroy {

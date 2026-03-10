@@ -4,9 +4,10 @@ import { Subject } from 'rxjs';
 import { SubstanceCardBase } from '@gsrs-core/substance-details/substance-card-base';
 
 @Component({
-  selector: 'app-substance-mixture-parent',
-  templateUrl: './substance-mixture-parent.component.html',
-  styleUrls: ['./substance-mixture-parent.component.scss']
+    selector: 'app-substance-mixture-parent',
+    templateUrl: './substance-mixture-parent.component.html',
+    styleUrls: ['./substance-mixture-parent.component.scss'],
+    standalone: false
 })
 export class SubstanceMixtureParentComponent extends SubstanceCardBase implements OnInit {
   substanceUpdated = new Subject<SubstanceDetail>();

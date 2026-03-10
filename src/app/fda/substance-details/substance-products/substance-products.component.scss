@@ -75,12 +75,23 @@
   justify-content: center; /* horizonal align */
 }
 
+.small-icon {
+  width: 15px;
+  height: 15px;
+  padding-left: 5px;
+  margin-top: 5px;
+}
+
 .divflex {
   display: flex;
 }
 
 .middle-fill {
   flex: 1 1 auto;
+}
+
+.width80px {
+  width: 80px;
 }
 
 .width120px {

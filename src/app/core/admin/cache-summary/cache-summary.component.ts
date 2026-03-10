@@ -6,9 +6,10 @@ import { Subscription } from 'rxjs';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-cache-summary',
-  templateUrl: './cache-summary.component.html',
-  styleUrls: ['./cache-summary.component.scss']
+    selector: 'app-cache-summary',
+    templateUrl: './cache-summary.component.html',
+    styleUrls: ['./cache-summary.component.scss'],
+    standalone: false
 })
 export class CacheSummaryComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['database', 'driver', 'product', 'latency', 'connected', 'max', 'active', 'usage'];

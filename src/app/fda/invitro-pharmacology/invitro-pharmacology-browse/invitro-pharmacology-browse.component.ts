@@ -8,6 +8,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 import * as moment from 'moment';
 
 /* GSRS Core Imports */
@@ -25,6 +26,7 @@ import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { environment } from '../../../../environments/environment';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
@@ -32,9 +34,10 @@ import { InvitroAssayInformation, InvitroAssayScreening } from '../model/invitro
 import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-search-sort-values';
 
 @Component({
-  selector: 'app-invitro-pharmacology-browse',
-  templateUrl: './invitro-pharmacology-browse.component.html',
-  styleUrls: ['./invitro-pharmacology-browse.component.scss']
+    selector: 'app-invitro-pharmacology-browse',
+    templateUrl: './invitro-pharmacology-browse.component.html',
+    styleUrls: ['./invitro-pharmacology-browse.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologyBrowseComponent implements OnInit {
 
@@ -77,7 +80,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   skip: number;
   isLoading = true;
   isError = false;
-  isAdmin: boolean;
+  canExport: boolean = false;
+  canUpdate: boolean = false;
+  canSaveJson: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   appType: string;
@@ -194,7 +199,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     private dialog: MatDialog
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.invitroPharmacologyService.getInvitroPharmacologyFacets);
 
     this.titleService.setTitle(`In Vitro Pharmacology Browser`);
@@ -210,7 +215,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
@@ -231,7 +235,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.searchValue = params.get('search');
     });
     this.subscriptions.push(paramsSubscription);
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canSaveJson = await this.authService.hasSpecificPrivilege('Save Record JSON');
   }
 
   ngAfterViewInit() {
@@ -1050,8 +1056,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchInvitroAssay();
     }
@@ -1190,6 +1199,26 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   close() {
     this.dialog.closeAll();
+  }
+
+  showJSON(index: number): void {
+    const date = new Date();
+    let jsonFilename = 'Invitro_Pharmacology_Assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    const copyAssay = _.cloneDeep(this.assays[index]);
+    //let cleanProduct = this.scrub(copyProd);
+
+    let data = { jsonData: copyAssay, jsonFilename: jsonFilename };
+
+    const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
+      width: '90%',
+      height: '90%',
+      data: data
+    });
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
   saveJSON(id: number): void {

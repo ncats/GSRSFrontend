@@ -8,9 +8,10 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-dialog/amount-form-dialog.component';
 
 @Component({
-  selector: 'app-constituent-form',
-  templateUrl: './constituent-form.component.html',
-  styleUrls: ['./constituent-form.component.scss']
+    selector: 'app-constituent-form',
+    templateUrl: './constituent-form.component.html',
+    styleUrls: ['./constituent-form.component.scss'],
+    standalone: false
 })
 export class ConstituentFormComponent implements OnInit {
    privateConstituent: Constituent;

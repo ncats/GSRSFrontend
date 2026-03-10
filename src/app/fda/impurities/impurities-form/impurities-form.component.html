@@ -36,7 +36,7 @@
             View Impurities
           </a>&nbsp;&nbsp;&nbsp;
 
-          <span *ngIf="isAdmin">
+          <span *ngIf="canEdit">
             <button mat-flat-button color="primary" (click)="confirmDeleteImpurities()"
               matTooltip='Delete this Impurity'>
               Delete
@@ -183,11 +183,11 @@
                   (valueChange)="impurities.dateType = $event">
                 </app-cv-input>
 
-                <mat-form-field class="col-6-1"
-                  *ngIf="configSettingsDisplay['dateTypeDate'] || (configSettingsDisplay['dateTypeDate'] === undefined && true)">
-                  <input matInput placeholder="Date Type Date" name="dateTypeDate"
-                    (ngModelChange)="updateDateTypeDate($event)" [ngModel]="impurities.dateTypeDate |date:'yyyy-MM-dd'"
-                    #dateT="ngModel" type="date" />
+                <mat-form-field class="col-5" *ngIf="configSettingsDisplay['dateTypeDate'] || (configSettingsDisplay['dateTypeDate'] === undefined && true)">
+                  <mat-label>Date Type Date</mat-label>
+                  <input matInput [matDatepicker]="pickerDateTypeDate" [(ngModel)]="dateTypeDate" placeholder="(mm/dd/yyyy)" (dateChange)="changeDateTypeDate($event)">
+                  <mat-datepicker-toggle matSuffix [for]="pickerDateTypeDate"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDateTypeDate (opened)="increaseOverlayZindex()" (closed)="decreaseOverlayZindex()"></mat-datepicker>
                 </mat-form-field>
 
               </div>

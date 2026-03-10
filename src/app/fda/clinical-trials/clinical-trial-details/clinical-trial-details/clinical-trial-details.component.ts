@@ -11,14 +11,15 @@ import { ConfigService } from '@gsrs-core/config';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-clinical-trial-details',
-  templateUrl: './clinical-trial-details.component.html',
-  styleUrls: ['./clinical-trial-details.component.scss']
+    selector: 'app-clinical-trial-details',
+    templateUrl: './clinical-trial-details.component.html',
+    styleUrls: ['./clinical-trial-details.component.scss'],
+    standalone: false
 })
 
 export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
 
-  isAdmin = false;
+  canEdit:boolean = false;
 
   constructor(
     clinicalTrialService: ClinicalTrialService,
@@ -28,20 +29,15 @@ export class ClinicalTrialDetailsComponent extends ClinicalTrialDetailsBaseCompo
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    public authService: AuthService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    authService: AuthService
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
-    router, gaService, utilsService);
+    router, gaService, utilsService, authService);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     super.ngOnInit();
-
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.flagIconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/united-states.svg`;
-
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
   }
 
 }

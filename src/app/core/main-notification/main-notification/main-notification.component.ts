@@ -5,9 +5,10 @@ import { Subscription } from 'rxjs';
 import { ConfigService } from '@gsrs-core/config/config.service';
 
 @Component({
-  selector: 'app-main-notification',
-  templateUrl: './main-notification.component.html',
-  styleUrls: ['./main-notification.component.scss']
+    selector: 'app-main-notification',
+    templateUrl: './main-notification.component.html',
+    styleUrls: ['./main-notification.component.scss'],
+    standalone: false
 })
 export class MainNotificationComponent implements OnInit, OnDestroy {
   @ViewChild('notification', { static: true }) appNotification: { nativeElement: HTMLElement };

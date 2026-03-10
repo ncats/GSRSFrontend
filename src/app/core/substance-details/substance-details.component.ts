@@ -6,8 +6,7 @@ import {
   ViewContainerRef,
   QueryList,
   ViewChild,
-  OnDestroy,
-  HostListener
+  OnDestroy
 } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
@@ -29,11 +28,14 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ConfigService } from '@gsrs-core/config';
 import { DatePipe } from '@angular/common';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-substance-details',
-  templateUrl: './substance-details.component.html',
-  styleUrls: ['./substance-details.component.scss']
+    selector: 'app-substance-details',
+    templateUrl: './substance-details.component.html',
+    styleUrls: ['./substance-details.component.scss'],
+    standalone: false
 })
 export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   id: string;
@@ -49,6 +51,8 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   substanceUpdated = new Subject<SubstanceDetail>();
   companyName_pdf='';
   proprietaryNote_pdf='';
+  private currentBreakpoint: 'mobile' | 'desktop' = 'desktop';
+  private destroyed = new Subject<void>();
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
@@ -64,6 +68,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
     private titleService: Title,
     private adminService: AdminService,
     private configService: ConfigService,
+    private breakpointObserver: BreakpointObserver,
   ) { }
 
   // use aspirin for initial development a05ec20c-8fe2-4e02-ba7f-df69e5e30248
@@ -155,18 +160,37 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       this.utilsService.handleMatSidenavClose();
     });
 
-    setTimeout(() => {
-      this.processResponsiveness();
-    });
-  }
+    // Use BreakpointObserver to only toggle on actual breakpoint crossing
+    // Prevents continuous toggle during resize and mid-animation measurements
+    this.breakpointObserver
+      .observe(['(max-width: 1099px)'])
+      .pipe(
+        distinctUntilChanged((prev, curr) => prev.matches === curr.matches),
+        takeUntil(this.destroyed)
+      )
+      .subscribe(result => {
+        const newBreakpoint = result.matches ? 'mobile' : 'desktop';
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.processResponsiveness();
+        // Only toggle if breakpoint actually changed
+        if (newBreakpoint !== this.currentBreakpoint) {
+          this.currentBreakpoint = newBreakpoint;
+
+          if (result.matches) {
+            // Mobile breakpoint
+            this.matSideNav.close();
+            this.hasBackdrop = true;
+          } else {
+            // Desktop breakpoint
+            this.matSideNav.open();
+            this.hasBackdrop = false;
+          }
+        }
+      });
   }
 
   ngOnDestroy() {
-    // window.removeEventListener('resize', this.processResponsiveness);
+    this.destroyed.next();
+    this.destroyed.complete();
   }
   checkVersion() {
     return this.substanceService.checkVersion(this.id);
@@ -201,6 +225,21 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       });
       name = name.replace(/<[^>]*>?/gm, '');
       this.titleService.setTitle(name);
+
+      // FIX #1: Normalize version field from API response
+      if (!response.version && response._version) {
+        response.version = response._version;
+      }
+      if (!response.version && response.recordVersion) {
+        response.version = response.recordVersion;
+      }
+      if (this.version && !response.version) {
+        response.version = this.version;
+      }
+      if (response.version) {
+        response.version = Number(response.version);
+      }
+
       this.substance = response;
       this.substanceUpdated.next(response);
       this.substanceCardsService.getSubstanceDetailsPropertiesAsync(this.substance, this.source).subscribe(substanceProperty => {
@@ -281,6 +320,7 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   private handleSubstanceRetrivalError() {
+    console.log(`in handleSubstanceRetrivalError`);
     const notification: AppNotification = {
       message: 'The web address above is incorrect or the substance you\'re trying to see doesn\'t exist. We\'re forwarding you to Browse Substances',
       type: NotificationType.error,
@@ -294,18 +334,6 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       navigationExtras.queryParams['search'] = this.id || null;
       this.router.navigate(['/browse-substance'], navigationExtras);
     }, 5000);
-  }
-
-  private processResponsiveness = () => {
-    if (window) {
-      if (window.innerWidth < 1100) {
-        this.matSideNav.close();
-        this.hasBackdrop = true;
-      } else {
-        this.matSideNav.open();
-        this.hasBackdrop = false;
-      }
-    }
   }
 
   openSideNav() {
@@ -336,72 +364,76 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
       const margin = [0.5, 0.75];
       var imgWidth = 8.5;
       var pageHeight = 11;
-  
+
       var innerPageWidth = imgWidth - margin[0] * 2;
       var innerPageHeight = pageHeight - margin[1] * 2;
-  
+
       // Calculate the number of pages.
       var pxFullHeight = canvas.height;
       var pxPageHeight = Math.floor(canvas.width * (pageHeight / imgWidth));
       var nPages = Math.ceil(pxFullHeight / pxPageHeight);
-  
+
       // Define pageHeight separately so it can be trimmed on the final page.
       var pageHeight = innerPageHeight;
-  
+
       // Create a one-page canvas to split up the full image.
       var pageCanvas = document.createElement('canvas');
       var pageCtx = pageCanvas.getContext('2d');
       pageCanvas.width = canvas.width;
       pageCanvas.height = pxPageHeight;
-  
+
       // Initialize the PDF.
-      var pdf = new jsPDF('p', 'in', [8.5, 11],true);
-  
+      var pdf = new jsPDF('p', 'in', [8.5, 11]);
+
       for (var page = 0; page < nPages; page++) {
         // Trim the final page to reduce file size.
         if (page === nPages - 1 && pxFullHeight % pxPageHeight !== 0) {
           pageCanvas.height = pxFullHeight % pxPageHeight;
           pageHeight = (pageCanvas.height * innerPageWidth) / pageCanvas.width;
         }
-  
+
         // Display the page.
         var w = pageCanvas.width;
         var h = pageCanvas.height;
         pageCtx.fillStyle = 'white';
         pageCtx.fillRect(0, 0, w, h);
         pageCtx.drawImage(canvas, 0, page * pxPageHeight, w, h, 0, 0, w, h);
-  
+
         // Add the page to the PDF.
         if (page > 0) {
           pdf.addPage();
           pageNum++;
         }
-  
+
         var imgData = pageCanvas.toDataURL('image/' + image.type, image.quality);
         pdf.addImage(imgData, image.type, margin[0], margin[1], innerPageWidth, pageHeight);
         pdf.setFontSize(8);
-        if (this.companyName_pdf != ' '&&this.companyName_pdf !=undefined) {
+        if (this.companyName_pdf !== '' && this.companyName_pdf != undefined) {
           pdf.text(this.companyName_pdf, margin[0], margin[1] - 0.5);
           var substanceName = pdf.splitTextToSize(this.substance._name, 3.5);
           pdf.text(substanceName, 3.5, margin[1] - 0.5);
-          pdf.text(formattedDate, 7.5, margin[1] - 0.5).setFont(undefined, 'bold');
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(formattedDate, 7.5, margin[1] - 0.5);
         } else {
           var substanceName = pdf.splitTextToSize(this.substance._name, 6);
           pdf.text(substanceName, margin[0], margin[1] - 0.5);
-          pdf.text(formattedDate, 7.5, margin[1] - 0.5).setFont(undefined, 'bold');
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(formattedDate, 7.5, margin[1] - 0.5);
         }
-        
-  
+
+        pdf.setFont('helvetica', 'normal');
         if (pageNum < nPages) {
-          pdf.text(this.proprietaryNote_pdf, margin[0], pageHeight + 1.2).setFont(undefined, 'normal');
+          pdf.text(this.proprietaryNote_pdf, margin[0], pageHeight + 1.2);
           pdf.text(pageNum + " of " + nPages, 8, pageHeight + 1.2);
         } else {
-          pdf.text(this.proprietaryNote_pdf, margin[0], 10.8).setFont(undefined, 'normal');
+          pdf.text(this.proprietaryNote_pdf, margin[0], 10.8);
           pdf.text(pageNum + " of " + nPages, 8, 10.8);
         }
       }
-  
+
       pdf.save(this.substance._name+'.pdf');
-  });
+    }).catch((error) => {
+      console.error('PDF generation failed:', error);
+    });
   }
 }

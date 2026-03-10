@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 
 @Pipe({
-  name: 'facetDisplay'
+    name: 'facetDisplay',
+    standalone: false
 })
 export class FacetDisplayPipe implements PipeTransform {
   constructor(
@@ -97,9 +98,15 @@ export class FacetDisplayPipe implements PipeTransform {
       return 'Submit Date';
     }
     if (name === 'root_creationDate') {
-      return 'Record Create Date';
+      return 'Record Created Date';
+    }
+    if (name === 'root_createdDate') {
+      return 'Record Created Date';
     }
     if (name === 'root_lastModifiedDate') {
+      return 'Record Last Edited';
+    } 
+    if (name === 'root_modifiedDate') {
       return 'Record Last Edited';
     }
 

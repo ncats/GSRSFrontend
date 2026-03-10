@@ -8,11 +8,13 @@ import { UtilsService } from '../../../../core/utils/utils.service';
 import { ClinicalTrialDetailsBaseComponent} from '../clinical-trial-details-base.component';
 import { Environment } from 'src/environments/environment.model';
 import { ConfigService } from '@gsrs-core/config';
+import { Auth, AuthService } from '@gsrs-core/auth';
 
 @Component({
-  selector: 'app-clinical-trial-europe-details',
-  templateUrl: './clinical-trial-europe-details.component.html',
-  styleUrls: ['./clinical-trial-europe-details.component.scss']
+    selector: 'app-clinical-trial-europe-details',
+    templateUrl: './clinical-trial-europe-details.component.html',
+    styleUrls: ['./clinical-trial-europe-details.component.scss'],
+    standalone: false
 })
 
 export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBaseComponent implements OnInit {
@@ -26,13 +28,14 @@ export class ClinicalTrialEuropeDetailsComponent extends ClinicalTrialDetailsBas
     router: Router,
     gaService: GoogleAnalyticsService,
     utilsService: UtilsService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    authService: AuthService
   ) { super(clinicalTrialService, activatedRoute, loadingService, mainNotificationService,
-    router, gaService, utilsService);
+    router, gaService, utilsService, authService);
     this.environment = configService.environment;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     super.ngOnInit();
 
     this.flagIconSrcPath = `${this.environment.baseHref || ''}assets/icons/fda/european-union.svg`;

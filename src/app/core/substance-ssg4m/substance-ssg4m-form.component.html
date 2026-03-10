@@ -1,13 +1,7 @@
 <div class="main-container" [ngClass]="['top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']">
 
-  <!--keep <div [ngClass]="['top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']"  style="width: 100%"> -->
 
     <div class="top-fixed" [ngClass]="{'top-fixed-with-top-banner': showTopBanner , zindex2000 : saveDelayedMessage}">
-
-
-      <!--__aw__ original was like this -->
-
-  <!-- <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', zindex2000 : saveDelayedMessage}"> -->
     <div class="actions-container">
 
       <!-- SAVING DELAY: Display Cancel button if it is taking too long to save -->
@@ -19,7 +13,7 @@
         <button mat-flat-button *ngIf="isCancelBtnClicked === false" color="primary" class="validate-button"
           (click)="cancelSubmit()" [disabled]="showFormReadOnly === 'true'">Cancel
         </button>
-        <button mat-flat-button *ngIf="isCancelBtnClicked === true && isSavedSuccessful === true" color="	primary"
+        <button mat-flat-button *ngIf="isCancelBtnClicked === true && isSavedSuccessful === true" color="primary"
           class="validate-button" (click)="refreshPage()" [disabled]="showFormReadOnly === 'true'">Refresh
         </button>
       </div> <!-- SAVING DELAY -->
@@ -37,21 +31,6 @@
         <button mat-menu-item (click)="showJSON()">Show Data Structure</button>
       </mat-menu>
 
-      <!--
-    <button mat-stroked-button color="primary" class="borderblue" (click)="showJSON()">Show JSON</button>
-
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <div>
-      <a mat-stroked-button color="primary" class="borderblue" [href]="downloadJsonHref" (click)="saveJSON()"
-        download="{{jsonFileName}}.json">
-        <span>Save as JSON</span>
-      </a>
-    </div>
-
-    <button mat-stroked-button color="primary" class="borderblue import-button" (click)="importDialog()">Import
-      JSON</button>
-    -->
-
       <button mat-stroked-button color="primary" class="borderblue hide-show-messages" (click)="toggleValidation()"
         [disabled]="isLoading" *ngIf="(validationMessages && validationMessages.length > 0)">
         {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -61,12 +40,6 @@
       <button mat-flat-button color="primary" class="validate-button" (click)="submit()"
         [disabled]="showFormReadOnly === 'true'">Save</button>
 
-      <!--
-    <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
-      *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
-      (click)="validate('approval')">Approve
-    </button>
-    -->
     </div>
 
     <!-- Display Validation Message -->
@@ -108,12 +81,7 @@
     </div> <!-- Validation Message -->
   </div>
 
-  <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}" style="width: 100%; scroll: auto;">
-    <!--
-  <div class="form-header"
-    [ngClass]="{'form-header-no-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'false'), 'form-header-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'true')}">
-    <div *ngIf="showRegisterEditTitle === 'true'">
-    -->
+  <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}"  style="width: 100%; scroll: auto;">
     <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
       <!-- Only show the title when passed parameter header=true in the Url -->
       <div *ngIf="showHeaderBar === 'true'">
@@ -154,7 +122,7 @@
             </mat-expansion-panel>
           </mat-accordion>
         </div>
+        </div>
       </div>
-    </div>
     </div>
   </div>

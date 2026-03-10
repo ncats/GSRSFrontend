@@ -355,6 +355,10 @@
   padding-top: 17px;
 }
 
+.padright30px {
+  padding-right: 30px;
+}
+
 .bordergray {
   border: 1px solid var(--regular-grey-color);
 }
@@ -449,6 +453,10 @@
 
 .font20px {
   font-size: 20px;
+}
+
+.fontbold {
+  font-weight: 600;
 }
 
 .backgroundgreen {
@@ -597,6 +605,7 @@ table.tableStyle {
   max-width: 100%;
   text-align: left;
   border-collapse: collapse;
+  padding-right: 60px;
 }
 
 table.tableStyle td, table.tableStyle th {

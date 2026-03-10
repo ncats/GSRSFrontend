@@ -1276,7 +1276,7 @@ export class SubstanceSsg2FormService implements OnDestroy {
           if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
             for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
               const prop = substanceCopy.polymer.monomers[i];
-              if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
+              if (!prop.monomerSubstance || Object.keys(prop.monomerSubstance).length === 0) {
                 const invalidPropertyMessage: ValidationMessage = {
                   actionType: 'frontEnd',
                   appliedChange: false,

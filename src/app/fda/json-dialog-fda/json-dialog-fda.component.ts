@@ -4,9 +4,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @Component({
-  selector: 'app-json-fda-dialog',
-  templateUrl: './json-dialog-fda.component.html',
-  styleUrls: ['./json-dialog-fda.component.scss']
+    selector: 'app-json-fda-dialog',
+    templateUrl: './json-dialog-fda.component.html',
+    styleUrls: ['./json-dialog-fda.component.scss'],
+    standalone: false
 })
 export class JsonDialogFdaComponent implements OnInit {
 

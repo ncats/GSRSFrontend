@@ -137,7 +137,8 @@
               </button>
             </div>
           </div>
-          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()" matTooltip="Clear All Search Criteria"
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+            matTooltip="Clear All Search Criteria"
             *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
             <span>RESET</span>
           </button>
@@ -150,7 +151,8 @@
 
             <div class="search-parameters">
               <div class="marginleftneg10">
-                <div class="mat-elevation-z2 selected-parameter marginright10px" *ngFor="let facet of subEntityDisplayFacets">
+                <div class="mat-elevation-z2 selected-parameter marginright10px"
+                  *ngFor="let facet of subEntityDisplayFacets">
                   <div class='selected-parameter-crosssearch'>
                     <span class="selected-label">
                       <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
@@ -211,9 +213,9 @@
         </mat-form-field>
 
         <!-- Export Application Button -->
-        <div class="export" *ngIf="isAdmin">
-          <button matTooltip="Export Search Results" mat-button (click)="export()"
-            class="mat-button export-button mat-raised-button">
+        <div class="export" *ngIf="canExport">
+          <button matTooltip="Export Search Results" mat-button mat-raised-button (click)="export()"
+            class="export-button">
             <mat-icon svgIcon="get_app"></mat-icon> Export
           </button>
         </div>
@@ -245,16 +247,12 @@
           eventCategory="applicationSearch">
         </app-application-text-search>
 
-        <!-- Search Any Text Text Box -->
-        <!--
-        <mat-form-field class="width350px font13px">
-          <input matInput placeholder="Search Any Text" [(ngModel)]="privateSearchTerm" name="privateSearchTerm"
-            size="50" />
-        </mat-form-field>
-        <button class="activate-search-button" mat-icon-button (click)="setSearchTermValue()">
-          <mat-icon svgIcon="search"></mat-icon>
-        </button>
-        -->
+        <div>
+          <button class="margintop10px marginleft20px" mat-raised-button color="primary" (click)="showAllSubstances()"
+            matTooltip="Show All Substances associated with these Application records">
+            <span>Show All Substances</span>
+          </button>
+        </div>
       </div>
 
       <!--********** Display Content Details ******* -->
@@ -277,7 +275,7 @@
                       {{application.appType}}
                       <!--&nbsp;{{application.appNumber}} -->
                     </a>&nbsp;&nbsp;
-                    <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                    <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canUpdate"
                       matTooltip='Edit Application Record'>
                       <mat-icon svgIcon="edit"></mat-icon>
                     </a>
@@ -309,14 +307,37 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
                 <td valign="top" mat-cell *matCellDef="let application">
                   <ol class="olstyle">
-                    <div *ngFor="let prod of application.applicationProductList; let i = index">
+                    <div *ngFor="let prod of application.applicationProductList; let indexProd = index">
                       <!-- Product Names-->
-                      <div class="row" *ngFor="let prodName of prod.applicationProductNameList; let i = index">
-                        <li>
-                          {{prodName.productName}}
-                        </li>
-                      </div>
-                    </div>
+                      
+                      <b>Product Name {{indexProd + 1}}:</b>
+                      
+                      <div *ngIf="prod.applicationProductNameList.length > 0; else noProdNameList">
+                        <div *ngFor="let prodName of prod.applicationProductNameList; let indexName = index">
+                          <div *ngIf="prodName.productName; else noProd">
+                            <div *ngIf="prodName.deprecated && prodName.deprecated == 'Y'; else noDeprecated">
+                              &#9642;
+                              <span class="colorgray">
+                                <b>{{ prodName.productName }}</b>
+                              </span>
+                              <span class="font10px">
+                                (Deprecated)
+                              </span>
+                            </div>
+                            <ng-template #noDeprecated>
+                              &#9642;
+                              <span class="font14px colorlightblue"><b>{{ prodName.productName }}</b></span>
+                            </ng-template>
+                          </div>
+                          <ng-template #noProd>
+                            (No Product Name)
+                          </ng-template>
+                        </div> <!-- repeat Product Name -->
+                      </div> <!-- Loop applicationProductNameList -->
+                      <ng-template #noProdNameList>
+                        (No Product Name)
+                      </ng-template>
+                    </div> <!-- Loop applicationProductList-->
                   </ol>
                 </td>
               </ng-container>
@@ -374,11 +395,17 @@
                 <a class="substance-name" [routerLink]="['/application', application.id]" target="_blank">
                   {{application.appType}}&nbsp;{{application.appNumber}}
                 </a>
-                &nbsp;&nbsp;&nbsp;
-                <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                &nbsp;&nbsp;
+                <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canUpdate"
                   matTooltip='Edit GSRS Application Record'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>
+
+                <!-- LOCK ICON if Application record Public Domain is NO -->
+                <span *ngIf="application.publicDomain && application.publicDomain.toLowerCase() === 'no'">
+                  &nbsp;&nbsp;
+                  <mat-icon svgIcon="lock" class="lock-icon" matTooltip="The Public Domain for this Application record is '{{application.publicDomain}}'"></mat-icon>
+                </span>
               </div>
 
               <div>
@@ -705,7 +732,6 @@
 
                 <div class="width30percent">
 
-                  <!--  *ngIf="isAdmin" -->
                   <span>
                     <div class="row">
                       <div class="row-property-key-5">

@@ -31,6 +31,7 @@ export class SubstanceFormCodesService extends SubstanceFormServiceBase<Array<Su
   }
 
   addSubstanceCode(code?: SubstanceCode): void {
+    this.substanceFormService.markAdded();
     if (code === undefined) {
       code = {
         references: [],
@@ -42,6 +43,7 @@ export class SubstanceFormCodesService extends SubstanceFormServiceBase<Array<Su
   }
 
   deleteSubstanceCode(code: SubstanceCode): void {
+    this.substanceFormService.markRemoved();
     const subCodeIndex = this.substance.codes.findIndex(subCode => code.$$deletedCode === subCode.$$deletedCode);
     if (subCodeIndex > -1) {
       this.substance.codes.splice(subCodeIndex, 1);

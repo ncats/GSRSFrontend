@@ -7,9 +7,10 @@ import { SubstanceFormStructureService } from '../structure/substance-form-struc
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-substance-form-moieties',
-  templateUrl: './substance-form-moieties.component.html',
-  styleUrls: ['./substance-form-moieties.component.scss']
+    selector: 'app-substance-form-moieties',
+    templateUrl: './substance-form-moieties.component.html',
+    styleUrls: ['./substance-form-moieties.component.scss'],
+    standalone: false
 })
 export class SubstanceFormMoietiesComponent extends SubstanceFormBase implements OnInit, OnDestroy {
   moieties: Array<SubstanceMoiety> = [];

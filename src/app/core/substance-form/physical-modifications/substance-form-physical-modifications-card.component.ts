@@ -7,9 +7,10 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormPhysicalModificationsService } from './substance-form-physical-modifications.service';
 
 @Component({
-  selector: 'app-substance-form-physical-modifications-card',
-  templateUrl: './substance-form-physical-modifications-card.component.html',
-  styleUrls: ['./substance-form-physical-modifications-card.component.scss']
+    selector: 'app-substance-form-physical-modifications-card',
+    templateUrl: './substance-form-physical-modifications-card.component.html',
+    styleUrls: ['./substance-form-physical-modifications-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormPhysicalModificationsCardComponent extends SubstanceCardBaseFilteredList<PhysicalModification>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

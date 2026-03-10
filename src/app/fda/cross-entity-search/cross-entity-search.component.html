@@ -81,7 +81,7 @@
 
         <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == false && facetsParamsUpdateCount == 0">
           <div>
-            <button class="mat-raised-button mat-primary" (click)="showSubEntityFacets()">
+            <button mat-raised-button color="primary" (click)="showSubEntityFacets()">
               Show {{subEntityDisplay}} Facets
             </button>
           </div>
@@ -89,7 +89,7 @@
 
         <div class="margintop30px marginleft30px" *ngIf="isSearchRunning == true">
           <div>
-            <button class="mat-raised-button mat-primary" (click)="cancelBulkSearch()">
+            <button mat-raised-button color="primary" (click)="cancelBulkSearch()">
               Cancel Search
             </button>
 
@@ -151,7 +151,7 @@
 
     <div mat-dialog-actions>
       <span class="middle-fill"></span>
-      <button *ngIf="!isSearchRunning" class="mat-raised-button mat-primary" (click)="closePopup()" mat-dialog-close>Close</button>
+      <button *ngIf="!isSearchRunning" mat-raised-button color="primary" (click)="closePopup()" mat-dialog-close>Close</button>
     </div>
 
   </ng-template>

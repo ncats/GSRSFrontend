@@ -3,9 +3,10 @@ import { TextAreaWidget, CheckboxWidget } from 'ngx-schema-form';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-custom-checkbox-widget',
-  templateUrl: './custom-checkbox-widget.component.html',
-  styleUrls: ['./custom-checkbox-widget.component.scss']
+    selector: 'app-custom-checkbox-widget',
+    templateUrl: './custom-checkbox-widget.component.html',
+    styleUrls: ['./custom-checkbox-widget.component.scss'],
+    standalone: false
 })
 export class CustomCheckboxWidgetComponent extends CheckboxWidget {
   constructor(

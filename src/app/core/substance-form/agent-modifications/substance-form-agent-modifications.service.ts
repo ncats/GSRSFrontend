@@ -35,12 +35,14 @@ export class SubstanceFormAgentModificationsService extends SubstanceFormService
   }
 
   addSubstanceAgentModification(): void {
+    this.substanceFormService.markAdded();
     const newAgentModifications: AgentModification = {};
     this.substance.modifications.agentModifications.unshift(newAgentModifications);
     this.propertyEmitter.next(this.substance.modifications.agentModifications);
   }
 
   deleteSubstanceAgentModification(agentModification: AgentModification): void {
+    this.substanceFormService.markRemoved();
     const agentModIndex = this.substance.modifications.agentModifications.findIndex(
       agentMod => agentModification.$$deletedCode === agentMod.$$deletedCode);
     if (agentModIndex > -1) {

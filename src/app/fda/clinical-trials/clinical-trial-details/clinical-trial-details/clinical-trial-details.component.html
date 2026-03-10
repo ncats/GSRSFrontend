@@ -10,7 +10,7 @@
           &nbsp;<b>Clinical Trial US Details</b>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <a [routerLink]="['/edit-clinical-trial', clinicalTrial.trialNumber]" [queryParams]="{}" target="_blank"
-            *ngIf="isAdmin" title='Edit Clinical Trial US Record'>
+            *ngIf="canUpdate" title='Edit Clinical Trial US Record'>
             <mat-icon svgIcon="edit"></mat-icon>
           </a>
         </div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { BehaviorSubject, interval, Observable, Observer, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -26,7 +26,6 @@ import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
 
-import { stringify } from 'querystring';
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
     return encodeURIComponent(key);
@@ -577,7 +576,8 @@ export class SubstanceService extends BaseHttpService {
               skip,
               view,
               simpleSearchOnly,
-              viewfield
+              viewfield,
+              order
             );
           } else {
             // consider making API backend provide statusKey in JSON
@@ -607,7 +607,8 @@ export class SubstanceService extends BaseHttpService {
     skip?: number,
     view?: string,
     simpleSearchOnly?: boolean,
-    viewfield?: string
+    viewfield?: string,
+    order?: string
   ): void {
     this.tempObject = {
       querySearchTerm: querySearchTerm,
@@ -621,9 +622,10 @@ export class SubstanceService extends BaseHttpService {
       skip: skip ? skip : 0,
       view: view ? view : null,
       simpleSearchOnly: simpleSearchOnly ? simpleSearchOnly : null,
-      viewfield: viewfield ? viewfield : null
+      viewfield: viewfield ? viewfield : null,
+      order: order ? order : null
     }
-    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view, simpleSearchOnly, viewfield)
+    this.getAsyncSearchResults(querySearchTerm, searchKey, pageSize, facets, skip, view, simpleSearchOnly, viewfield, order)
       .pipe(
         switchMap(response => {
           let temp: any = response;
@@ -656,7 +658,8 @@ export class SubstanceService extends BaseHttpService {
               skip,
               view,
               simpleSearchOnly,
-              viewfield
+              viewfield,
+              order
             );
           });
         },
@@ -682,7 +685,8 @@ export class SubstanceService extends BaseHttpService {
     skip?: number,
     view?: string,
     simpleSearchOnly?: boolean,
-    viewfield?: string
+    viewfield?: string,
+    order?: string
   ): any {
     const url = `${this.apiBaseUrl}status(${structureSearchKey})/results`;
     let params = new FacetHttpParams({ encoder: new CustomEncoder() });
@@ -710,6 +714,10 @@ export class SubstanceService extends BaseHttpService {
     // Added for 3.0.2, Advanced Search:Combine structure Search with query search.
     if (querySearchTerm != null && querySearchTerm !== '') {
       params = params.append('q', querySearchTerm);
+    }
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
     }
 
     const options = {
@@ -744,8 +752,15 @@ export class SubstanceService extends BaseHttpService {
     const options = {
       params: params
     };
-
+    console.log(`url: ${url} parms ${options.params}`);
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
+  }
+
+  isUUID(uuidCandidate) {
+    if ((uuidCandidate + "").match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/)) {
+        return true;
+    }
+    return false;
   }
 
   getAllByEtag(etag: string) {
@@ -789,21 +804,27 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<Array<SubstanceEdit>>(url, { withCredentials: true });
   }
 
-  getSubstanceDetails(id: string, version?: string): Observable<SubstanceDetail> {
+  getSubstanceDetails(id: string, version?: string | number): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
     let params = new HttpParams();
     params = params.append('view', 'internal');
     const options = {
       params: params
     };
-    if (version) {
-
+    if (version !== undefined && version !== null) {
+      const v = String(version);
       const editurl = `${this.apiBaseUrl}substances(${id})/@edits`;
 
-      return this.http.get<any>(editurl, { withCredentials: true }).pipe(
-        switchMap(response => {
-          response = response.filter(resp => resp.version === version);
-          return this.http.get<SubstanceDetail>(response[0].oldValue, options);
+      return this.http.get<any[]>(editurl, { withCredentials: true }).pipe(
+        switchMap((response: any[]) => {
+          const match = (response ?? []).find(resp => String(resp?.version) === v);
+
+          if(!match?.oldValue) {
+            return throwError(() => new Error(
+              `No @edits entry found for version=${v} on substance(${id}).`
+            ));
+          }
+          return this.http.get<SubstanceDetail>(match.oldValue, options);
         }));
 
     } else {
@@ -870,7 +891,6 @@ export class SubstanceService extends BaseHttpService {
   }
 
   saveSubstanceWithoutValidation(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
-    console.log("in saveSubstanceWithoutValidation");
     const url = `${this.apiBaseUrl}substances/novalid?view=internal`;
     let method = 'PUT';
     if (type && type === 'import') {
@@ -1047,7 +1067,8 @@ export class SubstanceService extends BaseHttpService {
   }
 
   hasInxightLink(ID: string): Observable<any> {
-    const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
+    //const url = `https://drugs.ncats.io/api/v1/substances/search?q=root_approvalID:${ID}&fdim=1`;
+    const url = `https://stitcher.ncats.io/api/stitches/latest/${ID}`;
     return this.http.jsonp(url, 'callback' );
 
   }
@@ -1146,9 +1167,4 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<SubstanceDetail>(url);
   }
 }
-
-
-
-
-
 

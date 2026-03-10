@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 import { Config } from './config.model';
 import { Environment } from '../../../environments/environment.model';
 import { navItems } from './nav-items.constant';
@@ -40,9 +41,7 @@ export class ConfigService {
         const configFilePath = environment.configFileLocation ?
             environment.configFileLocation : `${environment.baseHref || ''}assets/data/config.json`;
 
-        return this.http
-            .get(configFilePath)
-            .toPromise()
+        return lastValueFrom(this.http.get<Config>(configFilePath))
             .then((config: Config) => {
                 if (config.apiBaseUrl == null && environment.apiBaseUrl != null) {
                     config.apiBaseUrl = environment.apiBaseUrl;

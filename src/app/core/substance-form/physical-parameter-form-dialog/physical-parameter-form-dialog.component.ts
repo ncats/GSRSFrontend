@@ -3,9 +3,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {PhysicalModificationParameter, SubstanceParameter} from '@gsrs-core/substance';
 
 @Component({
-  selector: 'app-physical-parameter-form-dialog',
-  templateUrl: './physical-parameter-form-dialog.component.html',
-  styleUrls: ['./physical-parameter-form-dialog.component.scss']
+    selector: 'app-physical-parameter-form-dialog',
+    templateUrl: './physical-parameter-form-dialog.component.html',
+    styleUrls: ['./physical-parameter-form-dialog.component.scss'],
+    standalone: false
 })
 export class PhysicalParameterFormDialogComponent implements OnInit {
   isNew: boolean;

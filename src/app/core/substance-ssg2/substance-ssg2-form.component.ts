@@ -8,7 +8,7 @@ import {
   OnDestroy, HostListener
 } from '@angular/core';
 import { formSections } from '../substance-form/form-sections.constant';
-import { ActivatedRoute, Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, Event, NavigationStart, NavigationEnd } from '@angular/router';
 import { SubstanceService } from '../substance/substance.service';
 import { LoadingService } from '../loading/loading.service';
 import { MainNotificationService } from '../main-notification/main-notification.service';
@@ -23,7 +23,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-dialog.component';
 import * as _ from 'lodash';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
 import { take, map } from 'rxjs/operators';
@@ -38,11 +37,13 @@ import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragme
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import { UtilsService } from '@gsrs-core/utils';
 import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
+import jp from 'jsonpath';
 
 @Component({
   selector: 'app-substance-ssg2-form',
   templateUrl: './substance-ssg2-form.component.html',
-  styleUrls: ['./substance-ssg2-form.component.scss']
+    styleUrls: ['./substance-ssg2-form.component.scss'],
+    standalone: false
 })
 export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true;
@@ -71,8 +72,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
-  isAdmin: boolean;
-  isUpdater: boolean;
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -169,7 +168,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
 
       if (response) {
         this.loadingService.setLoading(true);
-        //  console.log(response.json);
 
         const read = response.substance;
         if (this.id && read.uuid && this.id === read.uuid) {
@@ -293,9 +291,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         this.showTopBanner = true;
       }
     }
-
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     const routeSubscription = this.activatedRoute
@@ -357,7 +352,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         }
       });
     this.subscriptions.push(routeSubscription);
-    const routerSubscription = this.router.events.subscribe((event: RouterEvent) => {
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.substanceFormService.unloadSubstance();
       }
@@ -938,7 +933,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     }
     const old = oldraw;
 
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     const idMap = {};
     for (let i = 0; i < idHolders.length; i++) {
       const oid = idHolders[i].id;
@@ -951,7 +946,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       }
     }
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
+    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -969,7 +964,8 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         }
       }
     }
-    const refHolders = defiant.json.search(old, '//*[references]');
+    const refHolders = jp.query(old, '$..[?(@.references)]');
+
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -989,7 +985,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       });
     })
 
-    const createHolders = defiant.json.search(old, '//*[created]');
+    const createHolders = jp.query(old, '$..[?(@.created)]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec['created'];
@@ -998,7 +994,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       delete rec['lastEditedBy'];
     }
 
-    const originHolders = defiant.json.search(old, '//*[originatorUuid]');
+    const originHolders = jp.query(old, '$..[?(@.originatorUuid)]');
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
       delete rec['originatorUuid'];
@@ -1024,10 +1020,9 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     delete old['changeReason'];
 
 
-    if (true) {
       const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, '//*[references]');
+    const refHolders2 = jp.query(old, '$..[?(@.references)]');
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {
@@ -1048,8 +1043,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         .value();
 
       old.references = nrefs;
-
-    }
 
     return old;
   }

@@ -46,18 +46,11 @@ import { ClinicalTrialService } from '../clinical-trials/clinical-trial/clinical
 import { AdverseEventService } from '../adverse-event/service/adverseevent.service';
 import { AdvancedSearchService } from './service/advanced-search.service';
 @Component({
-  selector: 'app-advanced-search',
-  templateUrl: './advanced-search.component.html',
-  styleUrls: ['./advanced-search.component.scss']
+    selector: 'app-advanced-search',
+    templateUrl: './advanced-search.component.html',
+    styleUrls: ['./advanced-search.component.scss'],
+    standalone: false
 })
-
-/*
-export interface FacetValueAdvanced {
-  label: string;
-  count: number;
-  url: string;
-}
-*/
 
 export class AdvancedSearchComponent implements OnInit, OnDestroy {
   loadedComponents: LoadedComponents;
@@ -107,6 +100,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   dictionaryFileName: string;
   private subscriptions: Array<Subscription> = [];
   panelExpanded = false;
+  isStrcuturePanelOpen = false;
+ 
   numFacetsLoaded = 0;
   // queryHash: number;
   queryStatementHashes: Array<number>;
@@ -134,6 +129,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   queryFacet = '';
   queryDisplay = '';
   facetNameText = '';
+  message = '';
+      
   facetDisplayType = 'all';
   substanceFacetsDisplay = ['Record Status', 'Substance Class', 'Relationships', 'GInAS Tag'];
   applicationFacetsDisplay = ['Center', 'Application Type', 'Application Status', 'Provenance (GSRS)'];
@@ -734,8 +731,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   processSearch(): void {
-    // this.storeCriteriaInLocalStorage();
-
+  
+    this.message = '';
     const queryStatementHashes = [];
 
     // Store in cookies, Category tab (Substance, Application, etc)
@@ -767,7 +764,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       queryParams: {}
     };
 
-    if ((this.query) || (Object.keys(this.privateFacetParams).length > 0)) {
+    if ((this.query) || ((this.privateFacetParams && Object.keys(this.privateFacetParams).length > 0))) {
 
       if (this.query) {
         if (this.category === 'Clinical Trial') {
@@ -863,7 +860,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.router.navigate(['/browse-substance'], navigationExtras);
       }
     } else {
-      alert('Please select any criteria to search');
+      if (!this.query) {
+        this.message = "Please enter search value in the textbox"
+      }
+    
     }
   }
 
@@ -997,5 +997,13 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   nameResolved(molfile: string): void {
     this.editor.setMolecule(molfile);
   }
+ 
+  panelOpened() {
+    this.isStrcuturePanelOpen = true;
+  }
+
+  panelClosed() {
+    this.isStrcuturePanelOpen = false;
+  } 
 
 }

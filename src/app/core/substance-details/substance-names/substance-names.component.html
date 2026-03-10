@@ -162,7 +162,7 @@
     <ng-container matColumnDef="details" >
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Details </th>
       <td mat-cell *matCellDef="let name">
-        <button class = "mat-raised-button mat-primary dialog-close" (click)="openModal(detailTemplate)" 
+        <button mat-raised-button color="primary" class = " dialog-close" (click)="openModal(detailTemplate)" 
         [disabled] = "(!name.nameOrgs || name.nameOrgs.length == 0) && (!name.domains || name.domains.length == 0) &&
         (!name.nameJurisdiction || name.nameJurisdiction.length == 0 )" [ngClass] = "isButtonDisabled(name)? 'disabled-btn':''"> View</button>
         <ng-template #detailTemplate>
@@ -202,7 +202,7 @@
           </div>
           <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" (click) = "close()">Close</button>
+            <button mat-raised-button color="primary" (click) = "close()">Close</button>
           </div>
         </ng-template>
       </td>
@@ -211,7 +211,7 @@
     <ng-container matColumnDef="references">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> References </th>
       <td mat-cell *matCellDef="let name">
-        <button class = "mat-raised-button mat-primary dialog-close" (click)="openModal(refTemplate)"  [disabled]="name.references.length <= 0">View</button>
+        <button mat-raised-button color="primary" class = " dialog-close" (click)="openModal(refTemplate)"  [disabled]="name.references.length <= 0">View</button>
 
         <ng-template #refTemplate>
           <h2 mat-dialog-title>References</h2>
@@ -220,7 +220,7 @@
           </div>
             <div mat-dialog-actions>
               <span class="middle-fill"></span>
-              <button class="mat-raised-button mat-primary" (click) = "close()">Close</button>
+              <button mat-raised-button color="primary" (click) = "close()">Close</button>
             </div>
         </ng-template>
       </td>

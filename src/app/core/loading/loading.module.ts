@@ -17,9 +17,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   ],
   exports: [
     LoadingComponent
-  ],
-  entryComponents: [
-    LoadingOverlayComponent
   ]
 })
 export class LoadingModule { }

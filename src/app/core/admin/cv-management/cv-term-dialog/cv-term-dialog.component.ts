@@ -6,9 +6,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { FragmentWizardComponent } from '@gsrs-core/admin/fragment-wizard/fragment-wizard.component';
 
 @Component({
-  selector: 'app-cv-term-dialog',
-  templateUrl: './cv-term-dialog.component.html',
-  styleUrls: ['./cv-term-dialog.component.scss']
+    selector: 'app-cv-term-dialog',
+    templateUrl: './cv-term-dialog.component.html',
+    styleUrls: ['./cv-term-dialog.component.scss'],
+    standalone: false
 })
 export class CvTermDialogComponent implements OnInit, AfterViewInit{
   isNew: boolean;
@@ -71,20 +72,12 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
   }
 
   editTerms(term: any, index): void {
-  //  this.dialog.openDialogs.pop();
-  //  this.overlayContainer.style.zIndex = '1003';
     let thisy = window.pageYOffset;
-  /*  window.scroll({ 
-      top: 0, 
-      left: 0, 
-      behavior: 'auto' });*/
       let dialogConfig = {  width: '70%', height: '85%',data: {vocabulary: this.vocabulary, domain: this.vocabulary.domain, term: term, adminPanel: true}, };
     const dialogRef = this.dialog.open(FragmentWizardComponent, dialogConfig);
     this.overlayContainer.style.zIndex = '1003';
 
     setTimeout(() => {
-    //  this.dialog.openDialogs.pop();
-   // this.overlayContainer.style.zIndex = '10003';
     },3000);
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
       window.scroll({ 
@@ -126,7 +119,8 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
         }, 200);
       }
     },error => {
-        let str = 'Invalid Vocabulary';
+        let str = 'Error Updating Vocabulary';
+        console.log(`error.error: ${error.error}; error.message: ${error.message}`);
         if (error.error && error.error.message) {
           str += '\n\n' + error.error.message;
   
@@ -158,19 +152,6 @@ export class CvTermDialogComponent implements OnInit, AfterViewInit{
       this.loading = false;
 
     });
-  /*  this.cvService.addVocabTerm( this.vocabulary).subscribe (response => {
-      this.loading = false;
-      if (response.terms && response.terms.length === this.vocabulary.terms.length) {
-        alert('vocabulary updated');
-        setTimeout(() => {
-          this.dialogRef.close(response);
-        }, 200);
-        } else {
-          alert('invalid vocabulary');
-        }
-    }, error => {
-      alert('invalid vocabulary');
-    });*/
     this.loading = false;
 
   }

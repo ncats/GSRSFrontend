@@ -3,12 +3,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubstanceReference } from '../../../substance/substance.model';
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { AuthService } from '@gsrs-core/auth';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
-  selector: 'app-refernce-form-dialog',
-  templateUrl: './refernce-form-dialog.component.html',
-  styleUrls: ['./refernce-form-dialog.component.scss']
+    selector: 'app-refernce-form-dialog',
+    templateUrl: './refernce-form-dialog.component.html',
+    styleUrls: ['./refernce-form-dialog.component.scss'],
+    standalone: false
 })
 export class RefernceFormDialogComponent implements OnInit {
 user: string;

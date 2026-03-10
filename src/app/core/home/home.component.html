@@ -1,18 +1,19 @@
 <div class = "main-container">
   <mat-sidenav-container [hasBackdrop]="hasBackdrop">
-    <mat-sidenav  [disableClose]="!isCollapsed"  #matSideNavInstance mode="side" opened="true">
-
-
-
+    <mat-sidenav
+      [disableClose]="!isCollapsed"
+      #matSideNavInstance
+      mode="side"
+      opened="true"
+    >
     <div class = "side-bar" >
         <div class="register-main">
             <mat-card-content class="left-search" >
-              <mat-card class = "side-header" style = "margin-bottom:10px;">
+            <mat-card class="side-header" style="margin-bottom: 10px">
                   <h2 class = "quick-links">Quick Links</h2>
               </mat-card>
                 <mat-accordion multi="true">
-                    <mat-expansion-panel
-                      [expanded]="true">
+              <mat-expansion-panel [expanded]="true">
                       <mat-expansion-panel-header>
                         <mat-panel-title class = "panel-header">
                              Substances
@@ -43,8 +44,7 @@
                                   </mat-nav-list>
 
                     </mat-expansion-panel>
-                    <mat-expansion-panel
-                    [expanded]="false" *ngIf="loadedComponents">
+              <mat-expansion-panel [expanded]="false" *ngIf="loadedComponents">
                     <mat-expansion-panel-header>
                       <mat-panel-title  class = "panel-header">
                             Other
@@ -103,12 +103,9 @@
                               </span>
                           </span>
                       </mat-nav-list>
-                    <ng-container>
-
-                    </ng-container>
+                <ng-container> </ng-container>
                   </mat-expansion-panel>
-                  <mat-expansion-panel
-                  [expanded]="true">
+              <mat-expansion-panel [expanded]="true">
                   <mat-expansion-panel-header>
                     <mat-panel-title  class = "panel-header">
                            Register
@@ -116,54 +113,83 @@
                   </mat-expansion-panel-header>
                     <mat-nav-list class="main-list">
                         <a mat-list-item routerLink="/substances/register/chemical">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
                           Chemical
                         </a>
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/substances/register/protein">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
                           Protein
                         </a>
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/substances/register/polymer">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
                           Polymer
                         </a>
                         <mat-divider></mat-divider>
-                        <a mat-list-item routerLink="/substances/register/nucleicAcid">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                  <a
+                    mat-list-item
+                    routerLink="/substances/register/nucleicAcid"
+                  >
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
                           Nucleic Acid
                         </a>
                         <mat-divider></mat-divider>
-                        <a mat-list-item routerLink="/substances/register/structurallyDiverse">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                  <a
+                    mat-list-item
+                    routerLink="/substances/register/structurallyDiverse"
+                  >
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
                           Structurally Diverse
                         </a>
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/substances/register/concept">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
                           Concept
                         </a>
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/substances/register/mixture">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
                           Mixture
                         </a>
                           <mat-divider></mat-divider>
 
-                          <a mat-list-item routerLink="/substances/register/specifiedSubstanceG1">
-                            <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                  <a
+                    mat-list-item
+                    routerLink="/substances/register/specifiedSubstanceG1"
+                  >
+                    <mat-icon
+                      matListIcon
+                      svgIcon="outline-description"
+                    ></mat-icon>
 
                             Specified Substance Group 1
                           </a>
-
                       </mat-nav-list>
-                  <ng-container>
-
-                  </ng-container>
+                <ng-container> </ng-container>
                 </mat-expansion-panel>
-                <mat-expansion-panel  *ngIf="loadedComponents"
-                [expanded]="false">
+              <mat-expansion-panel *ngIf="loadedComponents" [expanded]="false">
                 <mat-expansion-panel-header>
                   <mat-panel-title  class = "panel-header">
                        Register Other
@@ -171,7 +197,6 @@
                 </mat-expansion-panel-header>
                   <div>
                   <mat-nav-list class="other-list">
-
                      <!-- <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG2'">
                         <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
 
@@ -202,7 +227,10 @@
                         <span *ngIf = "loadedComponents.products">
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/product/register">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          <mat-icon
+                            matListIcon
+                            svgIcon="outline-description"
+                          ></mat-icon>
                           Product
                         </a>
                         <!--
@@ -216,7 +244,10 @@
                       <span *ngIf = "loadedComponents.applications">
                           <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/application/register">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          <mat-icon
+                            matListIcon
+                            svgIcon="outline-description"
+                          ></mat-icon>
                           Application
                         </a>
 
@@ -231,21 +262,33 @@
                         <span *ngIf = "loadedComponents.impurities">
                         <mat-divider></mat-divider>
                         <a mat-list-item routerLink="/impurities/register">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          <mat-icon
+                            matListIcon
+                            svgIcon="outline-description"
+                          ></mat-icon>
                           Impurities
                         </a>
                         </span>
                         <span *ngIf = "loadedComponents.invitropharmacology">
                           <mat-divider></mat-divider>
-                          <a mat-list-item routerLink="/invitro-pharm/assay/register">
-                            <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                        <a
+                          mat-list-item
+                          routerLink="/invitro-pharm/assay/register"
+                        >
+                          <mat-icon
+                            matListIcon
+                            svgIcon="outline-description"
+                          ></mat-icon>
                             In Vitro Pharmacology Assay
                           </a>
                         </span>
                         <span *ngIf = "loadedComponents.invitropharmacology">
                           <mat-divider></mat-divider>
                           <a mat-list-item routerLink="/invitro-pharm/register">
-                            <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
+                          <mat-icon
+                            matListIcon
+                            svgIcon="outline-description"
+                          ></mat-icon>
                             In Vitro Pharmacology Screening
                           </a>
                         </span>
@@ -263,14 +306,10 @@
                           Indication
                           <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
                         </a>-->
-
                       </span>
-
                     </mat-nav-list>
                   </div>
-                <ng-container>
-
-                </ng-container>
+                <ng-container> </ng-container>
               </mat-expansion-panel>
                   </mat-accordion>
             </mat-card-content>
@@ -278,119 +317,218 @@
         </div>
       </mat-sidenav>
       <mat-sidenav-content>
-        <button aria-label="Open Side Navigation" class="expand-sidenav mat-elevation-z4" (click)="openSideNav()">
+      <button
+        aria-label="Open Side Navigation"
+        class="expand-sidenav mat-elevation-z4"
+        (click)="openSideNav()"
+      >
           <mat-icon svgIcon="chevron_right"></mat-icon>
         </button>
-    <div class="side-nav-content" [ngClass] = "isClosedWelcomeMessage? 'topMargin' : ''" >
-        <mat-card class="welcome-banner home-card"  *ngIf="bannerMessage && bannerMessage !== ''">
-            <div class = "banner-main" [innerHTML] = "bannerMessage">
-            </div>
+      <div
+        class="side-nav-content"
+        [ngClass]="isClosedWelcomeMessage ? 'topMargin' : ''"
+      >
+        <mat-card
+          class="welcome-banner home-card"
+          *ngIf="bannerMessage && bannerMessage !== ''"
+        >
+          <div class="banner-main" [innerHTML]="bannerMessage"></div>
 
           <!--  <div class="close-container" style = "width:50px">
                 <button mat-icon-button (click)="closeWelcomeMessage()">
                   <mat-icon svgIcon="close"></mat-icon>
                 </button>
               </div>-->
-
-
           </mat-card>
-    <mat-card class=" home-card" [ngClass] = "(bannerMessage && bannerMessage !== '')? '' : ''" >
-
+        <mat-card
+          class="home-card"
+          [ngClass]="bannerMessage && bannerMessage !== '' ? '' : ''"
+        >
         <div class = "flex-row image-row">
           <div class = "image-container">
-            <img class = "display-image" src = "{{imageLoc}}pills1.png" alt="first display image" />
+              <img
+                class="display-image"
+                src="{{ imageLoc }}pills1.png"
+                alt="first display image"
+              />
           </div>
           <div class = "image-container">
-              <img class = "display-image" src = "{{imageLoc}}chemistry2.png" alt="second display image"/>
+              <img
+                class="display-image"
+                src="{{ imageLoc }}chemistry2.png"
+                alt="second display image"
+              />
             </div>
             <div class = "image-container">
-                <img class = "display-image" src = "{{imageLoc}}hydrangea.png" alt="third display image"/>
+              <img
+                class="display-image"
+                src="{{ imageLoc }}hydrangea.png"
+                alt="third display image"
+              />
               </div>
               <div class = "image-container">
-                  <img class = "display-image" src = "{{imageLoc}}dna.png" alt="fourth display image"/>
+              <img
+                class="display-image"
+                src="{{ imageLoc }}dna.png"
+                alt="fourth display image"
+              />
                 </div>
            </div>
 
       <div class = "row">
         <h1 class = "home">{{homeHeader}}</h1>
-          <div style = "padding-left:15px;" [innerHTML] = homeContents></div>
+            <div style="padding-left: 15px" [innerHTML]="homeContents"></div>
       </div>
       <mat-divider class = "divide-test"></mat-divider>
 
-      <div class = "flex-row" style = "padding:5px;">
-          <app-substance-text-search class="main-search" placeholder = "Search Substances" styling = "homePage" [searchValue]="searchValue"
-          (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
-          (closed)="removeZindex()">
+          <div class="flex-row" style="padding: 5px">
+            <app-substance-text-search
+              class="main-search"
+              placeholder="Search Substances"
+              styling="homePage"
+              [searchValue]="searchValue"
+              (searchPerformed)="processSubstanceSearch($event)"
+              eventCategory="topSearch"
+              (opened)="increaseMenuZindex()"
+              (closed)="removeZindex()"
+            >
         </app-substance-text-search>
       </div>
-      <div class = "flex-row even" style = " margin-bottom: 25px;">
+          <div class="flex-row even" style="margin-bottom: 25px">
         <div class="button-container">
-          <a mat-raised-button class="big-button" routerLink="/browse-substance">Browse Substances</a>
+              <a
+                mat-raised-button
+                class="big-button"
+                routerLink="/browse-substance"
+                >Browse Substances</a
+              >
         </div>
-        <div class="button-container" *ngIf="loadedComponents && loadedComponents.applications">
-            <a mat-raised-button class="big-button" routerLink="/browse-applications">Browse Applications</a>
+            <div
+              class="button-container"
+              *ngIf="loadedComponents && loadedComponents.applications"
+            >
+              <a
+                mat-raised-button
+                class="big-button"
+                routerLink="/browse-applications"
+                >Browse Applications</a
+              >
         </div>
         <div class="button-container">
-            <a mat-raised-button class="big-button" routerLink="/structure-search">Structure Search</a>
+              <a
+                mat-raised-button
+                class="big-button"
+                routerLink="/structure-search"
+                >Structure Search</a
+              >
         </div>
         <div class="button-container">
-            <a mat-raised-button class="big-button" routerLink="/sequence-search">Sequence Search</a>
+              <a
+                mat-raised-button
+                class="big-button"
+                routerLink="/sequence-search"
+                >Sequence Search</a
+              >
         </div>
         <div class="button-container">
-          <a mat-raised-button class="big-button" routerLink="/bulk-search">Bulk Search</a>
+              <a mat-raised-button class="big-button" routerLink="/bulk-search"
+                >Bulk Search</a
+              >
         </div>
       </div>
       <mat-divider class = "divide-test"></mat-divider>
 
-    <div class = "flex-row" style = "padding-bottom: 10px;">
+          <div class="flex-row" style="padding-bottom: 10px">
       <div class = "data">
-          Total substances: {{total | number:'1.0':'en-US'}}
+              Total substances: {{ total | number : "1.0" : "en-US" }}
       </div>
       </div>
-      <div class = "flex-row test" style = "padding-bottom: 10px;">
-        <div *ngFor = "let link of customLinks" class = "custom-wrap" (click) = "routeToCustom(link)">
+          <div class="flex-row test" style="padding-bottom: 10px">
+            <div
+              *ngFor="let link of customLinks"
+              class="custom-wrap"
+              (click)="routeToCustom(link)"
+            >
           <span class = "entry">
               <div class = "label">
                   {{link.display}}
                 </div>
                 <div class = "value">
-                  {{link.total  | number:'1.0':'en-US'}}
+                  {{ link.total | number : "1.0" : "en-US" }}
                 </div>
               </span>
         </div>
     </div>
-    <div style = "padding-left:15px; padding-top: 10px;">
-    </div>
+          <div style="padding-left: 15px; padding-top: 10px"></div>
     </mat-card>
 
     <mat-card *ngIf = "usefulLinks?.length" class = "home-card" >
-        <h2 class = "home" style = "padding-top:15px;">Helpful Resources</h2>
+          <h2 class="home" style="padding-top: 15px">Helpful Resources</h2>
     </mat-card>
-    <mat-grid-list cols="2" class = "useful-cards">
+        <mat-grid-list cols="2" class="useful-cards" gutterSize="15px">
         <mat-grid-tile *ngFor="let usefulLink of usefulLinks">
             <mat-card class="temprow right-link left-link">
                 <h3 class = "resource-link">
-                    <a *ngIf = "usefulLink.templateDescription" class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" tabindex="0" role="link" (click) = "openModal(helpfulResourceModal, usefulLink)">{{usefulLink.title? usefulLink.title : 'no title'}}</a>
-                    <a *ngIf = "!usefulLink?.templateDescription" class = "mat-raised-button mat-button mat-primary mat-primary-button trial-button" target ="_blank" href = "{{usefulLink.href}}">{{usefulLink.title? usefulLink.title : 'no title'}}</a>
+                <a
+                  *ngIf="usefulLink.templateDescription"
+                  matButton="elevated"
+                  mat-raised-button
+                  color="primary"
+                  class="mat-primary-button trial-button"
+                  tabindex="0"
+                  role="link"
+                  (click)="openModal(helpfulResourceModal, usefulLink)"
+                  >{{ usefulLink.title ? usefulLink.title : "no title" }}</a
+                >
+                <a
+                  *ngIf="!usefulLink?.templateDescription"
+                  matButton="elevated"
+                  mat-raised-button
+                  color="primary"
+                  class="mat-primary-button trial-button"
+                  target="_blank"
+                  href="{{ usefulLink.href }}"
+                  >{{ usefulLink.title ? usefulLink.title : "no title" }}</a
+                >
                 </h3>
                 <div class = "img-container">
-                    <img class = "test" src = "{{imageLoc}}{{usefulLink.imageFile}}" alt="GSRS Helpful Resource" />
+                <img
+                  class="test"
+                  src="{{ imageLoc }}{{ usefulLink.imageFile }}"
+                  alt="GSRS Helpful Resource"
+                />
                 </div>
-                <div class = "resource-desc" [innerHtml] = "usefulLink.description">  </div>
+              <div
+                class="resource-desc"
+                [innerHtml]="usefulLink.description"
+              ></div>
             </mat-card>
         </mat-grid-tile>
     </mat-grid-list>
 
-
-    <ng-template #helpfulResourceModal let-usefulLink let-dialogRef="dialogRef">
+        <ng-template
+          #helpfulResourceModal
+          let-usefulLink
+          let-dialogRef="dialogRef"
+        >
       <div mat-dialog-content class = "button-modal">
-          <a class = "modal-button" href = "{{usefulLink.href}}">{{usefulLink.templateDescription}}</a>
+            <a class="modal-button" href="{{ usefulLink.href }}">{{
+              usefulLink.templateDescription
+            }}</a>
       </div>
       <div mat-dialog-actions>
           <span class="middle-fill"></span>
-          <button class="mat-raised-button mat-primary" style = "margin-top:30px" (click) = "dialogRef.close()">Close</button>        </div>
+            <button
+              mat-raised-button
+              color="primary"
+              style="margin-top: 30px"
+              (click)="dialogRef.close()"
+            >
+              Close
+            </button>
+          </div>
     </ng-template>
-
     </div>
     </mat-sidenav-content>
     </mat-sidenav-container>
+</div>

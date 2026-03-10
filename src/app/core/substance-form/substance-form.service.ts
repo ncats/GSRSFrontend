@@ -25,14 +25,15 @@ import {SubstanceService} from '../substance/substance.service';
 import {UtilsService} from '../utils/utils.service';
 import {StructureService} from '@gsrs-core/structure';
 import * as _ from 'lodash';
-import * as defiant from '../../../../node_modules/defiant.js/dist/defiant.min.js';
+import jp from 'jsonpath';
 
 import {take} from 'rxjs/operators';
 import {AdminService} from '@gsrs-core/admin/admin.service';
 
 @Injectable()
 export class SubstanceFormService implements OnDestroy {
-  private privateSubstance: SubstanceDetail;
+   privateSubstance: SubstanceDetail;
+   originalSubstanceSnapshot: SubstanceDetail | null = null;
   private substanceStateHash?: number;
   private substanceEmitter: ReplaySubject<SubstanceDetail>;
   private substanceDisulfideLinksEmitter = new ReplaySubject<Array<DisulfideLink>>();
@@ -61,6 +62,10 @@ export class SubstanceFormService implements OnDestroy {
   private method?: string;
   private previousHash?: number;
   storedRelated = {};
+
+  // Edit session tracking flags for automatic change reason generation
+  private hasAdd = false;
+  private hasRemove = false;
 
   constructor(
     private substanceService: SubstanceService,
@@ -275,6 +280,11 @@ export class SubstanceFormService implements OnDestroy {
       if (this.privateSubstance[this.subClass] == null) {
         this.privateSubstance[this.subClass] = {};
       }
+
+      // Store snapshot for change detection (used to generate descriptive change reason)
+      this.originalSubstanceSnapshot = JSON.parse(JSON.stringify(this.privateSubstance));
+      // Reset edit tracking flags when loading a substance
+      this.resetEditFlags();
       this.initForm();
       this.simplifiedFormEmitter.next(simplified === true)
       this.substanceEmitter.next(this.privateSubstance);
@@ -591,6 +601,56 @@ export class SubstanceFormService implements OnDestroy {
     return this.privateSubstance.uuid;
   }
 
+  isNewRecord(): boolean {
+    return this.privateSubstance?.uuid == null;
+  }
+
+  clearChangeReasonForEdit(): void {
+    if (this.privateSubstance) {
+      this.privateSubstance.changeReason = null;
+      this.substanceChangeReasonEmitter.next(null);
+    }
+  }
+
+  markAdded(): void {
+    this.hasAdd = true;
+  }
+
+  markRemoved(): void {
+    this.hasRemove = true;
+  }
+
+  resetEditFlags(): void {
+    this.hasAdd = false;
+    this.hasRemove = false;
+  }
+
+  getDefaultReasonFromFlags(): 'Added' | 'Removed' | 'Added and Removed' | 'Updated' {
+    if (this.hasAdd && this.hasRemove) {
+      return 'Added and Removed';
+    } else if (this.hasAdd) {
+      return 'Added';
+    } else if (this.hasRemove) {
+      return 'Removed';
+    } else {
+      return 'Updated';
+    }
+  }
+
+  applyDefaultChangeReasonIfNeeded(): boolean {
+    if (!this.isNewRecord()) {
+      const currentReason = this.privateSubstance?.changeReason;
+      // Only apply default if changeReason is empty or whitespace
+      if (!currentReason || currentReason.trim() === '') {
+        const defaultReason = this.getDefaultReasonFromFlags();
+        this.privateSubstance.changeReason = defaultReason;
+        this.substanceChangeReasonEmitter.next(defaultReason);
+        return true;
+      }
+    }
+    return false;
+  }
+
   getClass(): string {
     return this.privateSubstance.substanceClass;
   }
@@ -865,6 +925,7 @@ export class SubstanceFormService implements OnDestroy {
 
 
   addSubstanceSubunit(): void {
+    this.markAdded();
     if (this.privateSubstance.substanceClass === 'protein') {
       const index: number = this.privateSubstance.protein.subunits.length + 1;
       const newSubunit: Subunit = {
@@ -895,6 +956,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   deleteSubstanceSubunit(subunit: Subunit): void {
+    this.markRemoved();
     if (this.privateSubstance.substanceClass === 'protein') {
       const subUnitIndex = this.privateSubstance.protein.subunits.findIndex(subUnit => subunit.subunitIndex === subUnit.subunitIndex);
       if (subUnitIndex > -1) {
@@ -1204,6 +1266,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   addSubstanceSugar(): void {
+    this.markAdded();
     const newSugars: Sugar = {
       sites: [],
       sugar: ''
@@ -1213,6 +1276,7 @@ export class SubstanceFormService implements OnDestroy {
   }
 
   deleteSubstanceSugar(sugar: Sugar): void {
+    this.markRemoved();
     const subSugarIndex = this.privateSubstance.nucleicAcid.sugars.findIndex(subCode => sugar.$$deletedCode === subCode.$$deletedCode);
     if (subSugarIndex > -1) {
       this.privateSubstance.nucleicAcid.sugars.splice(subSugarIndex, 1);
@@ -1307,7 +1371,7 @@ export class SubstanceFormService implements OnDestroy {
           if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
             for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
               const prop = substanceCopy.polymer.monomers[i];
-              if (!prop.monomerSubstance || prop.monomerSubstance == {}) {
+              if (!prop.monomerSubstance || Object.keys(prop.monomerSubstance).length === 0) {
                 const invalidPropertyMessage: ValidationMessage = {
                   actionType: 'frontEnd',
                   appliedChange: false,
@@ -2093,9 +2157,7 @@ export class SubstanceFormService implements OnDestroy {
         ref.uuid = nid;
     });
 
-    const uuidHolders = defiant.json.search(old, '//*[uuid]');
-
-    const refHolders = defiant.json.search(old, '//*[references]');
+    const refHolders = jp.query(old, '$..[?(@.references)]');
 
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
@@ -2110,7 +2172,7 @@ export class SubstanceFormService implements OnDestroy {
     if (true) {
       const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, '//*[references]');
+      const refHolders2 = jp.query(old, '$..[?(@.references)]');
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {

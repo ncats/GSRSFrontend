@@ -4,7 +4,8 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Pipe({
-  name: 'relationshipDisplay'
+    name: 'relationshipDisplay',
+    standalone: false
 })
 export class RelationshipDisplayPipe implements PipeTransform {
     constructor(public cvService: ControlledVocabularyService) {

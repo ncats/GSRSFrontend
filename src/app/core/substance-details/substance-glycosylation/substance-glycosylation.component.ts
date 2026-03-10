@@ -4,9 +4,10 @@ import {Glycosylation, Site, SubstanceDetail} from '../../substance/substance.mo
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-glycosylation',
-  templateUrl: './substance-glycosylation.component.html',
-  styleUrls: ['./substance-glycosylation.component.scss']
+    selector: 'app-substance-glycosylation',
+    templateUrl: './substance-glycosylation.component.html',
+    styleUrls: ['./substance-glycosylation.component.scss'],
+    standalone: false
 })
 export class SubstanceGlycosylationComponent extends SubstanceCardBase implements OnInit {
   glycosylation: Glycosylation;
