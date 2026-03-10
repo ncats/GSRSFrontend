@@ -698,7 +698,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           // if Product Code Type is 'RxNorm', show RxNorm link on the browse Product page.
           if (prodCode) {
             if (prodCode.productCode) {
-              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxnorm') {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxcui') {
                 // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
                 if (rxNormUrlConfig) {
                   prodCode._rxNormUrl = rxNormUrlConfig + prodCode.productCode;

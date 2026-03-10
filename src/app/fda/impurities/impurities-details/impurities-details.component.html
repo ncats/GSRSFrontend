@@ -5,25 +5,27 @@
 
       <mat-card class="bordergray">
         <mat-card-title>
-          <div class="width300px">
-            Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
-            <!-- Edit GSRS record button -->
-            <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="canEdit"
-              matTooltip='Edit GSRS Impurities Record'>
-              <mat-icon svgIcon="edit"></mat-icon>
-            </a>
-            <!-- Copy Impurities -->
-            <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
-              matTooltip='copy Impurities to new registration form' *ngIf="canEdit">
-              <mat-icon svgIcon="file_copy"></mat-icon>
-            </a>
-          </div>
-          <div class="width60percent font11px">
-            <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Create
-              Date:</span>{{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
-            <span class="colorgray">Modify Date:</span> {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+          <div class="divflex">
+            <div class="width300px">
+              Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
+              <!-- Edit GSRS record button -->
+              <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="canEdit"
+                matTooltip='Edit GSRS Impurities Record'>
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+              <!-- Copy Impurities -->
+              <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
+                matTooltip='copy Impurities to new registration form' *ngIf="canEdit">
+                <mat-icon svgIcon="file_copy"></mat-icon>
+              </a>
+            </div>
+            <div class="width60percent margintop10px font11px">
+              <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Create
+                Date:</span>{{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Modified By:</span> {{impurities.modifiedBy}}&nbsp;&nbsp;&nbsp;
+              <span class="colorgray">Modify Date:</span> {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+            </div>
           </div>
         </mat-card-title>
 
@@ -422,13 +424,14 @@
                                 <th mat-header-cell *matHeaderCellDef>{{columnName}}</th>
                                 <td mat-cell *matCellDef="let row; let indexRow = index;">
 
-                                  <!-- Delete Mobile Phase Row -->
+                                  <!-- Display Mobile Phase columns Time (min), Solution A (%), Solution B (%), etc. -->
+                                  <!--
                                   <div class="divflex width40px" *ngIf="columnName == 'Number'">
                                     <div class="margintop10px">
                                       {{(indexRow+1)}}
                                     </div>
                                   </div>
-
+                                  -->
                                   <div *ngIf="columnName == 'Time (min)'">
                                     {{row.solutionTime}}
                                   </div>

@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ConfigService } from '@gsrs-core/config';
 import { UtilsService } from '../../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { MainNotificationService } from '@gsrs-core/main-notification';
@@ -31,10 +32,10 @@ import { InvitroAssayInformation, InvitroAssaySet, ValidationMessage } from '../
 import jp from 'jsonpath';
 
 @Component({
-    selector: 'app-invitro-pharmacology-assay-form',
-    templateUrl: './invitro-pharmacology-assay-form.component.html',
-    styleUrls: ['./invitro-pharmacology-assay-form.component.scss'],
-    standalone: false
+  selector: 'app-invitro-pharmacology-assay-form',
+  templateUrl: './invitro-pharmacology-assay-form.component.html',
+  styleUrls: ['./invitro-pharmacology-assay-form.component.scss'],
+  standalone: false
 })
 
 export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy {
@@ -48,6 +49,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
+  private substanceSelectorProperties: Array<string> = null;
 
   assay: InvitroAssayInformation;
   id: number;
@@ -84,6 +86,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     private titleService: Title,
     private overlayContainerService: OverlayContainer,
     private authService: AuthService,
+    private configService: ConfigService,
+    private substanceService: SubstanceService,
     private cvService: ControlledVocabularyService,
     private utilsService: UtilsService,
     private loadingService: LoadingService,
@@ -102,6 +106,12 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
       // Get Invitro Pharmacology Substance Key Type from the configuration file
       this.substanceKeyTypeForInvitroPharmacologyConfig = this.generalService.getSubstanceKeyTypeForInvitroPharmacologyConfig();
+
+      if (this.configService.configData.substanceSelectorProperties != null) {
+        this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
+      } else {
+        console.log("The config value for substanceSelectorProperties is null.");
+      }
 
       const routeSubscription = this.activatedRoute
         .params
@@ -629,25 +639,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
         // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
         // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
-
-        /* const read = JSON.parse(response);
-         if (this.id && read.uuid && this.id === read.uuid) {
-           this.substanceFormService.importSubstance(read, 'update');
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {
-         if ( read.substanceClass === this.substanceClass) {
-           this.imported = true;
-           this.substanceFormService.importSubstance(read);
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {*/
         setTimeout(() => {
           this.router.onSameUrlNavigation = 'reload';
           this.loadingService.setLoading(false);
@@ -657,8 +648,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
           }
         }, 1000);
       }
-      // }
-      // }
     });
   }
 
@@ -672,6 +661,11 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
   nameSearch(event: any, fieldName: string, indexRow?: number): void {
     // Get Ingredient Name from the Substance Search Textbox (Type Ahead)
+
+    const q = event.replace('\"', '');
+    // Changed to configuration approach.
+    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
+
     const ingredientName = event;
 
     // Assign Substance/Ingredient name to either Target Name, Human Homolog Target, or Ligand/Substrate
@@ -697,65 +691,53 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     }
 
     // Get Substance record by Ingredient/Substance Name, to get Substance UUID and Approval ID
-    const substanceSubscribe = this.generalService.getSubstanceByName(ingredientName).subscribe(response => {
+    const substanceSubscribe = this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
+
       if (response) {
         if (response.content && response.content.length > 0) {
 
-          // Loop through the search results and if the Substance/Ingredient name is same as name in the search
-          // result, select that substance
-          response.content.forEach(substance => {
+          let substance = response.content[0];
 
-            if (substance) {
-              if (substance._name) {
+          if (substance) {
+            /****************************************************************/
+            /* SUBSTANCE KEY RESOLVER BEGIN                                 */
+            /****************************************************************/
+            let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
 
-                // If Substance Name is same as in the Search Result
-                if (substance._name === ingredientName) {
+            // Set the Substance Key and Substance Key Type
+            if (fieldName && fieldName === this.TARGET_NAME) {
+              this.assay.targetNameApprovalId = substance.approvalID;
+              this.assay.targetNameSubstanceKey = substanceKey;
+              this.assay.targetNameSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                  /****************************************************************/
-                  /* SUBSTANCE KEY RESOLVER BEGIN                                 */
-                  /****************************************************************/
-                  let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
+              // Need this for validation, if user changes the Target Name Approval ID in the texbox,
+              // need to verify that it matches with this Approval ID.
+              this.correctTargetNameApprovalID = substance.approvalID;
 
-                  // Set the Substance Key and Substance Key Type
-                  if (fieldName && fieldName === this.TARGET_NAME) {
-                    this.assay.targetNameApprovalId = substance.approvalID;
-                    this.assay.targetNameSubstanceKey = substanceKey;
-                    this.assay.targetNameSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+            } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
+              this.assay.humanHomologTargetApprovalId = substance.approvalID;
+              this.assay.humanHomologTargetSubstanceKey = substanceKey;
+              this.assay.humanHomologTargetSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                    // Need this for validation, if user changes the Target Name Approval ID in the texbox,
-                    // need to verify that it matches with this Approval ID.
-                    this.correctTargetNameApprovalID = substance.approvalID;
+            } else if (fieldName === this.LIGAND_SUBSTRATE) {
+              this.assay.ligandSubstrateApprovalId = substance.approvalID;
+              this.assay.ligandSubstrateSubstanceKey = substanceKey;
+              this.assay.ligandSubstrateSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                  } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
-                    this.assay.humanHomologTargetApprovalId = substance.approvalID;
-                    this.assay.humanHomologTargetSubstanceKey = substanceKey;
-                    this.assay.humanHomologTargetSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+              // Need this for validation, if user changes the Ligand/Substrate Approval ID in the texbox,
+              // need to verify that it matches with this Approval ID.
+              this.correctLigandApprovalID = substance.approvalID;
 
-                  } else if (fieldName === this.LIGAND_SUBSTRATE) {
-                    this.assay.ligandSubstrateApprovalId = substance.approvalID;
-                    this.assay.ligandSubstrateSubstanceKey = substanceKey;
-                    this.assay.ligandSubstrateSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+            } else if (fieldName === this.ANALYTE) {
+              this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKey = substanceKey;
+              this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
+            }
+            // SUBSTANCE KEY RESOLVER END
 
-                    // Need this for validation, if user changes the Ligand/Substrate Approval ID in the texbox,
-                    // need to verify that it matches with this Approval ID.
-                    this.correctLigandApprovalID = substance.approvalID;
-
-                  } else if (fieldName === this.ANALYTE) {
-                    this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKey = substanceKey;
-                    this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
-                  }
-                  /* SUBSTANCE KEY RESOLVER END */
-
-                } // if substance._name === ingredientName
-
-              } // if substance._name is not null
-            } // if Substance exists
-
-          });  // LOOP Substance search result
-
+          } // if Substance exists
         } // if response content > 0
       } // if response
-    });
+    }); // subscribe 
     this.subscriptions.push(substanceSubscribe);
   }
 

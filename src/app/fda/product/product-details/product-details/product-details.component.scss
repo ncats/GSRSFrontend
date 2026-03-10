@@ -551,7 +551,7 @@ table.blueTable tfoot .links a{
   flex-grow: 0 !important;
   flex-shrink: 0 !important;
   min-width: 200px;
-  max-width: 2000px;
+  max-width: 200px;
   height: 35px;
   margin-right: 7px;
   color: #393939;
@@ -574,12 +574,12 @@ table.blueTable tfoot .links a{
 :host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab.mdc-tab--active,
 :host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
   background-color: var(--tabstyle-bg-color-7);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   font-weight: bold;
 }
 
 :host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 :host ::ng-deep .mdc-tab-indicator,
