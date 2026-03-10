@@ -7,12 +7,6 @@
       </button>
     </div>
 
-    <!--
-    <button mat-stroked-button color="primary" class="button-add divflexright"
-      matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
-      <mat-icon svgIcon="delete_forever"></mat-icon>Delete Process {{(processIndex+1)}}
-    </button>
-  -->
     <div class="divflexright">
       <button mat-stroked-button color="primary" class="button-insert-before" matTooltip="Insert Process Before"
         (click)="insertProcess(processIndex, 'before')">
@@ -31,13 +25,6 @@
     </div>
 
     <div class="form-row">
-      <!--
-      <div class="delete-container">
-        <button mat-icon-button matTooltip="Delete Process {{(processIndex+1)}}" (click)="confirmDeleteProcess()">
-          <mat-icon svgIcon="delete_forever"></mat-icon>
-        </button>
-      </div>
-      -->
 
       <!-- if Config is not set, as a Default, intitally show some fields and make some fields as Advanced Setting -->
       <mat-form-field class="col-3-1"
@@ -75,23 +62,8 @@
     </div>
 
     <!-- SITES LIST BEGIN -->
-    <!--
-    <hr>
-    -->
-    <!--  *ngIf="showAdvancedSettings"-->
     <div>
-      <!--
-      <span matBadge="{{process.sites.length}}" matBadgeOverlap="false">
-        <span class="fontsize18px"><b>Site Information</b></span>
-      </span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <button mat-raised-button color="primary" (click)="addSite()" matTooltip="Add New Site">
-        <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Sites
-      </button>
-      <br><br>
-      </div>
-       -->
-      <div class="margintop10px" [ngClass]="{'marginbottom25px': showAdvancedSettings === true}"
+      <div class="margintop10px margintop20px" [ngClass]="{'marginbottom25px': showAdvancedSettings === true}"
         *ngFor="let site of process.sites; let siteIndex = index">
         <fieldset class="border" [ngClass]="{'bordernone': showAdvancedSettings === true}">
           <legend class="border" *ngIf="showAdvancedSettings === true">Site &nbsp;<b><span

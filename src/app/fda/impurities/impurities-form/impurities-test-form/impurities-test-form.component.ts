@@ -12,10 +12,10 @@ import { ImpuritiesTesting, ImpuritiesDetails, ImpuritiesSolutionTable } from '.
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-impurities-test-form',
-    templateUrl: './impurities-test-form.component.html',
-    styleUrls: ['./impurities-test-form.component.scss'],
-    standalone: false
+  selector: 'app-impurities-test-form',
+  templateUrl: './impurities-test-form.component.html',
+  styleUrls: ['./impurities-test-form.component.scss'],
+  standalone: false
 })
 export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 
@@ -33,7 +33,6 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
   elutionType = 'Isocratic';
 
   displayedColumns = [
-    'Number',
     'Time (min)'
   ]
 
@@ -72,12 +71,12 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
   get showAdvancedSettings(): boolean {
     return this.privateShowAdvancedSettings;
   }
-  
+
   getConfigSettings(): void {
     // Get Impurities Config Settings from config.json file to show and hide fields in the form
     let configImpuritiesForm: any;
     configImpuritiesForm = this.configService.configData && this.configService.configData.impuritiesForm || null;
-    
+
     // Get 'test' json values from config
     const confSettings = configImpuritiesForm.settingsDisplay.test
 
@@ -166,15 +165,15 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     this.impuritiesService.deleteImpuritiesSolution(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, solutionIndex);
 
     // Remove the same Letter/column in the Mobile Phase table.
-    // solutionIndex + 2, means do not count 'Number', 'Time (min)' in the displayedColumns
-    this.displayedColumns.splice(solutionIndex + 2, 1);
+    // solutionIndex + 1, means do not count 'Time (min)' in the displayedColumns
+    this.displayedColumns.splice(solutionIndex + 1, 1);
 
     // Set fields to empty string
     this.impuritiesTest.impuritiesSolutionTableList.forEach(solTable => {
-       if (solTable) {
+      if (solTable) {
         let fieldName = 'solution' + solutionLetterBeforeDelete + 'Percent';
         solTable[fieldName] = 0;
-       }
+      }
     });
 
     // After Solution is deleted, reassign the solutionletter to A, B, ect by Solution index
@@ -184,7 +183,7 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
 
         let columnName = 'Solution ' + solution.solutionLetter + ' (%)';
 
-        this.displayedColumns[indexSol + 2] = columnName;
+        this.displayedColumns[indexSol + 1] = columnName;
       }
     });
 
@@ -290,6 +289,10 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(substanceSubscribe);
+  }
+
+  copyImpuritiesTest() {
+    this.impuritiesService.copyImpuritiesTest(this.impuritiesSubstanceIndex, this.impuritiesTest);
   }
 
   getLetter(index: number): string {

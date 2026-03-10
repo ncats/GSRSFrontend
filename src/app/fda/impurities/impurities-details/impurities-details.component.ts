@@ -170,7 +170,6 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
       if (elementRelTest.impuritiesSolutionList.length > 0) {
 
         let displayedColumns = [
-          'Number',
           'Time (min)'
         ]
 

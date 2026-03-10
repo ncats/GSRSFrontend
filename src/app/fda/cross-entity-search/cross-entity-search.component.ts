@@ -986,8 +986,7 @@ export class CrossEntitySearchComponent implements OnInit {
 
   openModal() {
     const dialogRef = this.dialog.open(this.crossEntitySearchTemplate, {
-      minWidth: '60%',
-      maxWidth: '80%',
+      width: '1048px',
       minHeight: '50%',
       maxHeight: '80%',
       disableClose: true // Prevents closing on outside click

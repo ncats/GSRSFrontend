@@ -1,13 +1,5 @@
 <!-- [ngClass]="{'bordergreen': showAdvancedSettings === true}"> -->
 <div class="form-container">
-  <!--
-    <div *ngIf="site.$$deletedCode" class="notification-backdrop">
-      Deleted&nbsp;
-      <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
-        <mat-icon svgIcon="undo"></mat-icon>
-      </button>
-    </div>
-    -->
 
   <div class="divflexright" *ngIf="showAdvancedSettings">
     <button mat-stroked-button color="primary" class="button-delete" matTooltip="Delete Site {{(siteIndex+1)}}"
@@ -17,13 +9,6 @@
   </div>
 
   <div class="form-row">
-    <!--
-    <div class="delete-container" *ngIf="showAdvancedSettings">
-      <button mat-icon-button matTooltip="Delete Site {{(siteIndex+1)}}" (click)="confirmDeleteSite()">
-        <mat-icon svgIcon="delete_forever"></mat-icon>
-      </button>
-    </div>
-    -->
 
     <mat-form-field class="col-4-1"
       *ngIf="configSettingsDisplay['siteName'] || (configSettingsDisplay['siteName'] === undefined && showAdvancedSettings)">
@@ -49,9 +34,6 @@
   </div> <!-- form row -->
 
   <div class="form-row">
-    <!--
-    <div class="marginleft45px bordergreen">&nbsp;</div>
-    -->
     <mat-form-field class="col-4-1"
       *ngIf="configSettingsDisplay['siteAddress'] || (configSettingsDisplay['siteAddress'] === undefined && showAdvancedSettings)">
       <input matInput placeholder="Site Address" [(ngModel)]="site.siteAddress" name="site.siteAddress" />
@@ -101,41 +83,9 @@
   </mat-form-field>
   </div>
 
-
   <!-- STAGES LIST BEGIN -->
-  <!--
-  <hr *ngIf="showAdvancedSettings">
-  -->
   <div>
-    <!--
-    <span matBadge="{{site.stages.length}}" matBadgeOverlap="false">
-      <span class="fontsize18px"><b>{{configTitleStage}} Information</b></span>
-    </span>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    -->
-
-    <!-- Add Button -->
-    <!--
-    <div class="divflexright">
-      <div class="">
-        <span class="middle-fill"></span>
-        <button mat-stroked-button color="primary" class="button-add-top" (click)="addStage(processIndex, siteIndex)"
-          matTooltip="Add New Stage">
-          <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
-        </button>
-      </div>
-   </div>
-   -->
-
-    <!--
-    <button mat-raised-button color="primary" (click)="addStage(processIndex, siteIndex)" matTooltip="Add New Stage">
-      <mat-icon svgIcon="add_circle_outline"></mat-icon>Add {{configTitleStage}}
-    </button>
-    <br><br>
-    -->
-
-    <!-- </div> appScrollToTarget [id]="'stage_' + processIndex + '_' + stageIndex"> -->
-    <div class="marginbottom30px" *ngFor="let stage of site.stages; let stageIndex = index">
+    <div class="marginbottom30px margintop15px" *ngFor="let stage of site.stages; let stageIndex = index">
       <fieldset class="border">
         <legend class="border">{{configTitleStage}}&nbsp;
           <span *ngIf="site.stages.length > 0">
@@ -151,7 +101,6 @@
         </app-ssg4m-stages-form>
 
         <!-- Another Add Button-->
-        <!--  *ngIf="site.stages && site.stages.length > 0" -->
         <div class="divflex">
           <span class="middle-fill"></span>
           <button mat-stroked-button color="primary" class="button-add" (click)="addStage(processIndex, siteIndex)">
@@ -169,17 +118,5 @@
       </button>
     </div>
 
-    <!-- Sites List -->
-    <!--
-    <app-substance-form-ssg4m-sites-card></app-substance-form-ssg4m-sites-card>
-    -->
-
-    <!--
-    <div class="form-row" *ngIf="!site.$$deletedCode">
-    <div class="references-container">
-      <app-domain-references [referencesUuids]="site.references" #references></app-domain-references>
-    </div>
-    </div>
-    -->
   </div>
 </div>

@@ -419,7 +419,7 @@
                             <div class="divflex">
                               <div class="form-row">
                                 <mat-form-field class="col-1-1">
-                                  <input matInput placeholder="Product Name" [(ngModel)]="prodName.productName"
+                                  <input matInput placeholder="Product Name *" [(ngModel)]="prodName.productName"
                                     name="productName" />
                                 </mat-form-field>
                               </div>
@@ -435,7 +435,7 @@
 
                             <div class="divflex">
                               <div class="form-row">
-                                <app-cv-input class="col-2-1" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type"
+                                <app-cv-input class="col-2-1" domain="PROD_PRODUCT_NAME_TYPE" title="Product Name Type *"
                                   name="productNameType" [model]="prodName.productNameType"
                                   (valueChange)="prodName.productNameType = $event">
                                 </app-cv-input>
