@@ -695,4 +695,8 @@ mat-hint {
   color: var(--regular-red-color) !important;
 }
 
+::ng-deep .mat-mdc-text-field-wrapper {
+  flex: unset;
+}
+
 /* Datepicker css */

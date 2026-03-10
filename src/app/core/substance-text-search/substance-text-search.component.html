@@ -1,14 +1,15 @@
 <div class="search-container">
-  <form>
+  <form [ngClass]="formFieldClasses">
     <mat-form-field
-      [floatLabel]="'never'"
+      [floatLabel]="label ? 'auto' : 'never'"
       class="search-form-field space-right-small"
       [ngClass]="formFieldClasses"
     >
+      <mat-label *ngIf="label">{{ label }}</mat-label>
       <input
         class="search"
         type="text"
-        [placeholder]="placeholder"
+        [placeholder]="label ? '' : placeholder"
         aria-label="Search substances"
         matInput
         [formControl]="searchControl"

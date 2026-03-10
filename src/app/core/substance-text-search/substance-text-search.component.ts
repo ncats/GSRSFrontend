@@ -46,6 +46,7 @@ export class SubstanceTextSearchComponent
   @Output() searchPerformed = new EventEmitter<string>();
   @Output() searchValueOut = new EventEmitter<string>();
   @Input() placeholder = "Search";
+  @Input() label = "";
   @Input() hintMessage = "";
   private privateErrorMessage = "";
   @Output() opened = new EventEmitter<void>();
@@ -63,7 +64,7 @@ export class SubstanceTextSearchComponent
     private element: ElementRef,
     public gaService: GoogleAnalyticsService,
     public configService: ConfigService,
-    private cvService: ControlledVocabularyService
+    private cvService: ControlledVocabularyService,
   ) {}
 
   ngOnInit() {
@@ -96,12 +97,12 @@ export class SubstanceTextSearchComponent
           this.gaService.sendEvent(
             eventCategory,
             "search:enter-term",
-            eventLabel
+            eventLabel,
           );
           return this.utilsService.getStructureSearchSuggestions(
-            searchValue.toUpperCase()
+            searchValue.toUpperCase(),
           );
-        })
+        }),
       )
       .subscribe(
         (response: SubstanceSuggestionsGroup) => {
@@ -121,7 +122,7 @@ export class SubstanceTextSearchComponent
             showTypes = this.configService.configData.typeaheadFields;
           }
           this.suggestionsFields = Object.keys(
-            this.substanceSuggestionsGroup
+            this.substanceSuggestionsGroup,
           ).filter(function (item) {
             return showTypes.indexOf(item) > -1;
           });
@@ -187,7 +188,7 @@ export class SubstanceTextSearchComponent
         (error) => {
           this.gaService.sendException("search suggestion error from API call");
           console.log(error);
-        }
+        },
       );
   }
 

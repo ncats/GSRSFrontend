@@ -5,100 +5,162 @@
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
-    <div class="delete-container">
-      <button mat-icon-button matTooltip="Delete code" (click)="deleteMod()">
-        <mat-icon svgIcon="delete_forever"></mat-icon>
-      </button>
+  <div class="delete-container">
+    <button
+      class="delete-code"
+      mat-icon-button
+      matTooltip="Delete code"
+      (click)="deleteMod()"
+    >
+      <mat-icon svgIcon="delete_forever"></mat-icon>
+    </button>
+  </div>
+  <div class="flex-column related-substance">
+    <div class="related-holder">
+      <app-substance-selector
+        (selectionUpdated)="relatedSubstanceUpdated($event)"
+        eventCategory="substanceRelationshipRelatedSub"
+        placeholder="Molecular Fragment"
+        header="Molecular Fragment"
+        [subuuid]="relatedSubstanceUuid"
+      >
+      </app-substance-selector>
     </div>
-      <div class="flex-column related-substance">
-        <div class = "related-holder">
-          <app-substance-selector (selectionUpdated)="relatedSubstanceUpdated($event)"
-                                  eventCategory="substanceRelationshipRelatedSub" placeholder="Molecular Fragment" header="Molecular Fragment"
-                                  [subuuid]="relatedSubstanceUuid">
-          </app-substance-selector>
+  </div>
+  <div class="flex-column form-content">
+    <div class="form-row">
+      <app-cv-input
+        key="Structural Modification Structural Modification Type"
+        title="Modification Type"
+        [model]="mod.structuralModificationType"
+        (valueChange)="mod.structuralModificationType = $event"
+      ></app-cv-input>
+      <div class="sites" *ngIf="mod.locationType !== 'RESIDUE_SPECIFIC'">
+        <div class="label">Sites</div>
+        {{ siteDisplay }}
+        <button mat-icon-button matTooltip="Undo" (click)="openDialog()">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+      </div>
+      <div class="residues">
+        <mat-form-field
+          class="group"
+          *ngIf="substanceType !== 'nucleicAcid' && substanceType !== 'protein'"
+        >
+          <mat-label>Residue Modified</mat-label>
+          <input
+            matInput
+            [(ngModel)]="mod.residueModified"
+            name="Residue Modified"
+          />
+        </mat-form-field>
+        <div class="group" *ngIf="substanceType === 'nucleicAcid'">
+          <div class="flex-row">
+            <mat-form-field
+              [ngClass]="privateMod === 'other' ? 'risen' : ''"
+              class="cv-field"
+            >
+              <mat-label>Residue Modified</mat-label>
+              <mat-select
+                [(ngModel)]="mod.residueModified"
+                name="residueModified"
+                (ngModelChange)="updateResidue($event)"
+                [disabled]="disable"
+              >
+                <mat-option [value]="null" *ngIf="mod.residueModified"
+                  ><span class="deselect">Clear selection</span></mat-option
+                >
+                <mat-option
+                  *ngFor="let term of nucleicAcidOptions"
+                  [value]="term.value"
+                >
+                  {{ term.display }}
+                </mat-option>
+                <mat-option
+                  *ngIf="
+                    mod.residueModified &&
+                    !inCV(nucleicAcidOptions, mod.residueModified) &&
+                    mod.residueModified !== ''
+                  "
+                  value="{{ mod.residueModified }}"
+                  >{{ mod.residueModified }} (not in CV)</mat-option
+                >
+                <mat-option value="other">Other (New Value)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div *ngIf="mod.residueModified === 'other'" class="custom">
+            <mat-form-field>
+              <mat-label>Custom Value</mat-label>
+              <input
+                matInput
+                (focusout)="updateOrigin($event.target)"
+                name="custom"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="multi" *ngIf="substanceType === 'protein'">
+          <app-tag-selector
+            placeholder="Residue Modified"
+            class="tags"
+            (tagsUpdate)="update($event)"
+            disableCV="true"
+            [tags]="pipeToArray(mod.residueModified)"
+            cvDomain="AMINO_ACID_RESIDUE"
+          ></app-tag-selector>
         </div>
       </div>
-      <div class="flex-column form-content">
+    </div>
 
+    <div class="form-row">
+      <app-cv-input
+        domain="EXTENT_TYPE"
+        title="Extent"
+        (valueChange)="mod.extent = $event"
+        [model]="mod.extent"
+      ></app-cv-input>
+      <app-cv-input
+        domain="LOCATION_TYPE"
+        title="Location"
+        (valueChange)="mod.locationType = $event"
+        [model]="mod.locationType"
+      ></app-cv-input>
+      <div class="group-access">
         <div class="form-row">
-        <app-cv-input key = "Structural Modification Structural Modification Type"  title = "Modification Type" [model] = "mod.structuralModificationType"
-                      (valueChange)= "mod.structuralModificationType = $event"></app-cv-input>
-          <div class = 'sites' *ngIf = "mod.locationType !== 'RESIDUE_SPECIFIC'">
-            <div class="label">Sites</div>
-            {{siteDisplay}}
-            <button mat-icon-button matTooltip="Undo" (click)="(openDialog())">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-          </div>
-          <div class = 'residues'>
-            <mat-form-field class="group" *ngIf = "substanceType !== 'nucleicAcid' && substanceType !== 'protein'">
-              <input matInput placeholder="Residue Modified" [(ngModel)]="mod.residueModified"  name="Residue Modified" />
-            </mat-form-field>
-            <div class="group" *ngIf = "substanceType === 'nucleicAcid'">
-                <div class = "flex-row">
-                <mat-form-field [ngClass] = "privateMod === 'other'?'risen':''" class = "cv-field">
-                    <mat-label>Residue Modified</mat-label>
-                    <mat-select [(ngModel)]="mod.residueModified" name="residueModified" (ngModelChange)="updateResidue($event)" [disabled] = "disable">
-                      <mat-option [value] = 'null' *ngIf = "mod.residueModified" ><span class = 'deselect' >Clear selection</span></mat-option>
-                    <mat-option *ngFor="let term of nucleicAcidOptions" [value]=" term.value">
-                      {{term.display}}
-                    </mat-option>
-                    <mat-option *ngIf = "mod.residueModified && !inCV(  nucleicAcidOptions, mod.residueModified) && mod.residueModified !== ''"
-                                value = "{{mod.residueModified}}">{{mod.residueModified}} (not in CV)</mat-option>
-                    <mat-option value = 'other' >Other (New Value)</mat-option>
-                  </mat-select>
-                  </mat-form-field>
-                  </div>
-                  <div *ngIf = "mod.residueModified === 'other'" class = "custom">
-                    <mat-form-field>
-                      <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
-                    </mat-form-field>
-                  </div>
-            </div>
-              <div class="multi" *ngIf = "substanceType === 'protein'">
-                  <app-tag-selector placeholder = "Residue Modified" class="tags" (tagsUpdate)="update($event)" disableCV = "true"
-                   [tags]="pipeToArray(mod.residueModified)" cvDomain="AMINO_ACID_RESIDUE"></app-tag-selector>
-                </div>
+          <mat-form-field class="group">
+            <mat-label>Group</mat-label>
+            <input
+              matInput
+              [(ngModel)]="mod.modificationGroup"
+              required
+              name="group"
+            />
+          </mat-form-field>
+          <div class="access">
+            <app-access-manager
+              (accessOut)="updateAccess($event)"
+              [access]="mod.access"
+            >
+            </app-access-manager>
           </div>
         </div>
+      </div>
+    </div>
 
-   <div class="form-row">
-  <app-cv-input domain = "EXTENT_TYPE" title = "Extent" (valueChange)= "mod.extent = $event" [model] = "mod.extent"></app-cv-input>
-  <app-cv-input domain = "LOCATION_TYPE" title = "Location" (valueChange)= "mod.locationType = $event" [model] = "mod.locationType"></app-cv-input>
-     <div class = "group-access">
-       <div class = 'form-row'>
-         <mat-form-field class="group">
-           <input matInput placeholder="Group" [(ngModel)]="mod.modificationGroup" required name="group" />
-         </mat-form-field>
-         <div class = "access">
-           <app-access-manager (accessOut)="updateAccess($event)" [access]="mod.access">
-           </app-access-manager>
-         </div>
-       </div>
-     </div>
-
-   </div>
-
-
-   <div class="form-row">
-     <div class = 'amount'>
-       <div class = "label padded">
-         Amount
-       </div>
-       <button mat-icon-button matTooltip="add" (click)="(openAmountDialog())">
+    <div class="form-row">
+      <div class="amount">
+        <div class="label padded">Amount</div>
+        <button mat-icon-button matTooltip="add" (click)="openAmountDialog()">
           <mat-icon svgIcon="edit"></mat-icon>
-       </button>
-       <div *ngIf = "mod.extentAmount" class = "amount-display">
-         {{displayAmount(mod.extentAmount)}}
-       </div>
-
-     </div>
-
-   </div>
-   <div class = "form-row">
-    <app-audit-info [source] = "mod"></app-audit-info>
+        </button>
+        <div *ngIf="mod.extentAmount" class="amount-display">
+          {{ displayAmount(mod.extentAmount) }}
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <app-audit-info [source]="mod"></app-audit-info>
+    </div>
   </div>
-   </div>
-
 </div>
-
