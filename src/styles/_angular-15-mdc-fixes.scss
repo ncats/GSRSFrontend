@@ -82,6 +82,11 @@
   }
 }
 
+.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
+  --mat-chip-elevated-container-color: var(--primary-color);
+  --mat-chip-label-text-color: #fff; /* optional */
+}
+
 // Chip spacing for both chip-set and chip-listbox (deprecated)
 .mat-mdc-chip-set .mat-mdc-chip,
 .mat-mdc-chip-listbox .mat-mdc-chip {

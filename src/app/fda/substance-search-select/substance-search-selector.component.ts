@@ -13,8 +13,8 @@ export class SubstanceSearchSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
-  @Output() showMessage = new EventEmitter<String>();
-  @Output() searchValueOut = new EventEmitter<String>();
+  @Output() showMessage = new EventEmitter<string>();
+  @Output() searchValueOut = new EventEmitter<string>();
   @Input() placeholder = "Search";
   @Input() label = "";
   @Input() hintMessage = "";
@@ -61,12 +61,13 @@ export class SubstanceSearchSelectorComponent implements OnInit {
     } else {
       this.selectedSubstance = null;
       this.searchValue = "";
+      this.errorMessage = "";
     }
   }
 
   processSubstanceSearch(searchValue: string = ""): void {
     this.searchValue = searchValue;
-    const q = searchValue.replace('\"', "");
+    const q = searchValue.replace(/"/g, "");
     // Changed to configuration approach.
     const searchStr = this.substanceSelectorProperties
       .map((property) => `${property}:\"^${q}$\"`)
@@ -79,10 +80,10 @@ export class SubstanceSearchSelectorComponent implements OnInit {
       `root_codes_BDNUM:\"^${q}$\"`
       ;
     */
+    this.loadingStructure = true;
     this.substanceService
       .getQuickSubstancesSummaries(searchStr, true)
       .subscribe((response) => {
-        this.loadingStructure = true;
         if (response.content && response.content.length) {
           this.selectedSubstance = response.content[0];
           this.selectionUpdated.emit(this.selectedSubstance);
@@ -96,6 +97,7 @@ export class SubstanceSearchSelectorComponent implements OnInit {
 
   editSelectedSubstance(): void {
     this.selectedSubstance = null;
+    this.errorMessage = "";
     this.selectionUpdated.emit(this.selectedSubstance);
   }
 
