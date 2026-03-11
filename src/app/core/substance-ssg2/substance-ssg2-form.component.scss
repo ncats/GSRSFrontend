@@ -59,10 +59,11 @@
     box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
     z-index: 1001;
 }
-
+/* ncats branch begin */
 .top-fixed-with-top-banner {
   top: 92px;
 } 
+/* ncats branch end */
 
 .cdk-overlay-pane {
   z-index: 1005;
@@ -106,7 +107,7 @@ mat-select-panel{
     // left: 0;
     overflow: hidden;
     padding-top: 121px;
-    margin-bottom: 200px;
+    margin-bottom: 200px; /* ncats branch begin/end */
   }
 
 .actions-container {

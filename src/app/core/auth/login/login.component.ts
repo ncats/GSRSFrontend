@@ -32,7 +32,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   private newuserinfo = {};
   private emailFormUserRegConf: any = undefined;
   public emailFormUserRegActive: boolean = false;
+  <!-- ncats branch begin -->
   showLogin = false;
+  <!-- ncats branch end -->
 
   constructor(
     private authService: AuthService,
@@ -56,6 +58,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loadingService.setLoading(true);
     // As we develop more types of userRegistration, make a utility service to provide configuration information. 
 
+    // ncats branch begin
+
     if(this.configService.configData.showLogin === undefined) {
       this.showLogin = true;
     } else {
@@ -65,6 +69,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.showLogin = true;
       }
     }
+    // ncats branch end
    
     this.loadedComponents = this.configService.configData.loadedComponents || null;
     if(typeof this.configService.configData.userRegistration !== "undefined" ) {

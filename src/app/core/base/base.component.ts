@@ -294,6 +294,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login'], navigationExtras);
   }
 
+  // ncats branch begin
+ 
   ngAfterViewInit() {
  
     if(this.configService.configData.bannerText) {
@@ -343,6 +345,7 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   }
 
+  // ncats branch end 
 
   processSubstanceSearch(searchValue: string) {
     this.wildCardService.getTopSearchBoxText(searchValue);

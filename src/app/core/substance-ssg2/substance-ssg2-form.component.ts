@@ -98,7 +98,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   UNII: string;
   approvalType = 'lastEditedBy';
   previousState: number;
-  showTopBanner: boolean;
+  showTopBanner: boolean; // ncats branch begin/end
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -281,7 +281,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     if (this.configService.configData && this.configService.configData.autoSaveWait) {
       this.autoSaveWait = this.configService.configData.autoSaveWait;
     }
-
+    // ncats branch begin
     if(this.configService.configData.showTopBanner === undefined) {
       this.showTopBanner = false;
     } else {
@@ -291,6 +291,8 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         this.showTopBanner = true;
       }
     }
+    // ncats branch end
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     const routeSubscription = this.activatedRoute
@@ -974,7 +976,6 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         refs[j] = _map[or];
       }
     }
-    defiant.json.search(old, '//*[uuid]');
     let remove = ['BDNUM'];
     if (this.configService.configData && this.configService.configData.filteredDuplicationCodes) {
       remove = this.configService.configData.filteredDuplicationCodes;

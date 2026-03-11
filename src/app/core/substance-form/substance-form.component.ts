@@ -326,7 +326,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
-
+    // ncats branch begin 
     if(this.configService.configData.showTopBanner === undefined) {
       this.showTopBanner = false;
     } else {
@@ -336,6 +336,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         this.showTopBanner = true;
       }
     }
+    // ncats branch end 
 
     this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");

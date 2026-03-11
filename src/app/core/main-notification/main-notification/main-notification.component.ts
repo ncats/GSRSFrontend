@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MainNotificationService } from '../main-notification.service';
 import { AppNotification, NotificationType } from '../notification.model';
 import { Subscription } from 'rxjs';
+/* ncats branch begin */
 import { ConfigService } from '@gsrs-core/config/config.service';
+/* ncats branch end */
 
 @Component({
     selector: 'app-main-notification',
@@ -16,15 +18,20 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
   private notifcationType: NotificationType;
   public notificationMessage: string;
   private subscriptions: Array<Subscription> = [];
+
+  /* ncats branch begin */
   public showTopBanner:boolean;
+  /* ncats branch end */
 
   constructor(
     private notificationService: MainNotificationService,
+    // ncats branch addition
     private configService: ConfigService
   ) { }
 
   ngOnInit() {
 
+    /* ncats branch begin */
     if(this.configService.configData.showTopBanner === undefined) {
       this.showTopBanner = false;
     } else {
@@ -34,7 +41,7 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
         this.showTopBanner = true;
       }
     }
-    
+    /* ncats branch end */
 
     this.appNotification.nativeElement.classList.add('hidden');
     const subscription = this.notificationService.notificationEvent.subscribe(notification => {

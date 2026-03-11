@@ -3,6 +3,7 @@
   --gsrs-sidenav-width: 315px;
 }
 
+/* ncats branch begin */
 .mat-drawer-container.mat-sidenav-container {
     /* let .base-main-container set top */
     left: 0;
@@ -12,6 +13,7 @@
     margin-bottom: 200px;
     background-color: var(--regular-transparent-color);
 }
+/* ncats branch end */
 
 mat-sidenav {
   // Tell Angular Material the exact width via its CSS variable

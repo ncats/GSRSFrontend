@@ -114,7 +114,8 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
     `${environment.baseHref || ''}assets/pathway/d3v4.js`,
     `${environment.baseHref || ''}assets/pathway/pathwayviz.js`
   ];
-  showTopBanner: boolean;
+  showTopBanner: boolean; /* ncats branch change begin/end */
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -148,6 +149,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
       this.showRegisterEditTitle = this.configSsg4Form.showRegisterEditTitle;
     }
 
+    // ncats branch begin
     if(this.configService.configData.showTopBanner === undefined) {
       this.showTopBanner = false;
     } else {
@@ -157,7 +159,7 @@ export class SubstanceSsg4ManufactureFormComponent implements OnInit, AfterViewI
         this.showTopBanner = true;
       }
     }
-
+    // ncats branch end
 
     this.substanceClass = 'specifiedSubstanceG4m';
 

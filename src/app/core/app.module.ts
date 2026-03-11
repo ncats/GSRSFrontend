@@ -121,7 +121,10 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
+
+// ncats branch begin 
 import { FooterComponent } from './footer/footer.component';
+// ncats branch end 
 
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
@@ -168,7 +171,7 @@ import { MatDividerModule } from '@angular/material/divider';
     UserQueryListDialogComponent,
     ListCreateDialogComponent,
     ImportScrubberComponent,
-    FooterComponent
+    FooterComponent // ncats branch addtion
   ],
   imports: [
     BrowserModule,

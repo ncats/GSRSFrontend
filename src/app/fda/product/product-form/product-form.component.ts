@@ -19,7 +19,9 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+// ncats branch begin 
 import { ConfigService } from '@gsrs-core/config';
+// ncats branch end 
 
 import jp from 'jsonpath';
 import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';

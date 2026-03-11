@@ -1,8 +1,11 @@
+<!-- ncats branch begin (2 open divs) -->
 <div class="base-page-wrapper">
   <div *ngIf = "showTopBanner"> 
     <div class = "top-banner">{{bannerText}}</div>
-</div>
+  </div>
+
   <div [ngClass]="['base-menu-wrapper', (showTopBanner) ? 'base-menu-wrapper-with-top-banner': '']">
+<!-- ncats branch begin end -->
 <mat-toolbar
   class="mat-elevation-z3"
   
@@ -298,6 +301,7 @@
   >
   </app-substance-text-search>
   <div>
+   <!-- ncats branch begin --> 
    <div *ngIf="showLoginButton">
     <button
       mat-button
@@ -307,7 +311,7 @@
     >
       Login
     </button>
-   </div>
+   </div>    <!-- ncats branch end --> 
     <div class="logged-in" *ngIf="auth">
       <div class="user-actions">
         <button
@@ -398,15 +402,22 @@
 <div *ngIf="customToolbarComponent == 'precisionFDA'">
   <app-pfda-toolbar></app-pfda-toolbar>
 </div>
-  </div>
+  <!-- ncats branch begin --> 
+  </div> 
   <div [ngClass]="['base-main-wrapper', (showTopBanner) ? 'base-main-wrapper-with-top-banner': '']">
+ <!-- ncats branch end --> 
+
 <app-main-notification></app-main-notification>
 <app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
 <router-outlet></router-outlet>
-    </div>
+<!-- ncats branch begin --> 
+    </div>   <!-- ncats branch fragment ngClass.2 bottom -->
+
   </div>
 
 <div *ngIf="showFooter" class="footer-wrapper">
   <app-footer></app-footer>
 </div>
+ <!-- ncats branch end --> 
+

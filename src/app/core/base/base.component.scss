@@ -1,5 +1,6 @@
 @use "../../../styles/variables" as *;
 
+/* ncats branch begin */
 .base-page-wrapper {
   width: 100%;
   display: inline;
@@ -38,6 +39,7 @@
   position: fixed;
 
 }
+/* ncats branch end */
 
 .version {
   color: var(--version-text-color);
@@ -313,7 +315,7 @@ button.mat-mdc-button.top-button {
       display: none !important;
     }
   }
-/* __aw__ see if needed in with ncats branch */
+/* ncats branch begin */
   .top-banner {
     width:100%;
     padding: 5px;
@@ -328,5 +330,6 @@ button.mat-mdc-button.top-button {
     z-index: 1001;
     font-weight: 600;
   }
+/* ncats branch end */
 
 

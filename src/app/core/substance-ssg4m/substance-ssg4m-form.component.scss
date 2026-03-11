@@ -2,8 +2,7 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  // __aw__ this was commented out, turned on because seems like is on by default
-  top: 64px;
+  top: 64px; /* ncats branch change begin/end */
   width: 100%;
   background-color: var(--regular-white-color);
   align-items: center;
@@ -13,9 +12,11 @@
   justify-content: flex-end;
 }
 
+/* ncats branch change begin */
 .top-fixed-with-top-banner {
   top: 92px;
 }
+/* ncats branch change end */
 
 .zindex2000 {
   z-index: 2000;
@@ -39,7 +40,7 @@
   overflow: hidden;
   margin-top: -100;
   padding-top: 0;
-  margin-bottom: 200px;
+  margin-bottom: 200px; /* ncats branch change begin/end */
 }
 
 .cards-container {
