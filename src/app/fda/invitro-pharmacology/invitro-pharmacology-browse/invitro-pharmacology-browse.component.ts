@@ -225,7 +225,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_modifiedDate';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_modifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
