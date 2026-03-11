@@ -619,8 +619,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
   openModalSave() {
     const dialogRef = this.dialog.open(this.saveTemplate, {
-      width: '60%',
-      height: '30%'
+      width: '60vw',
+      height: '30vh',
     });
 
     this.overlayContainer.style.zIndex = '1002';

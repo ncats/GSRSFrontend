@@ -12,10 +12,10 @@ import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialo
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-show-application-toggle',
-    templateUrl: './show-application-toggle.component.html',
-    styleUrls: ['./show-application-toggle.component.scss'],
-    standalone: false
+  selector: 'app-show-application-toggle',
+  templateUrl: './show-application-toggle.component.html',
+  styleUrls: ['./show-application-toggle.component.scss'],
+  standalone: false
 })
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
@@ -46,6 +46,11 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
   async ngOnInit() {
 
     this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+
+    if (this.canUpdate === true) {
+      this.isDisplayAppToMatchConfig();
+    }
+
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
 
     // Get Etag and total from Browse Substance Results
@@ -134,7 +139,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
             const fullname = name + '.' + extension;
 
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-            // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {

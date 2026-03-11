@@ -430,21 +430,27 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       }
     }
 
-    if ((this.assay.targetName) && (this.assay.targetNameApprovalId)) {
-      if (this.correctTargetNameApprovalID) {
+    if (this.assay.targetName) {
+      if (this.correctTargetNameApprovalID && this.assay.targetNameApprovalId) {
         // if NOT SAME, display error message
         if (this.correctTargetNameApprovalID !== this.assay.targetNameApprovalId) {
           this.setValidationMessage("The Target Name Approval ID for Target Name '" + this.assay.targetName + "' should be '" + this.correctTargetNameApprovalID + "'");
         }
       }
+      if (!this.correctTargetNameApprovalID && this.assay.targetNameApprovalId) {
+        this.setValidationMessage("The Target Name Approval ID for Target Name '" + this.assay.targetName + "' should be blank since this Substance is pending");
+      }
     }
 
-    if ((this.assay.ligandSubstrate) && (this.assay.ligandSubstrateApprovalId)) {
-      if (this.correctLigandApprovalID) {
+    if (this.assay.ligandSubstrate) {
+      if (this.correctLigandApprovalID && this.assay.ligandSubstrateApprovalId) {
         // if NOT SAME, display error message
         if (this.correctLigandApprovalID !== this.assay.ligandSubstrateApprovalId) {
           this.setValidationMessage("The Ligand/Substrate Approval ID for Ligand/Substrate '" + this.assay.ligandSubstrate + "' should be '" + this.correctLigandApprovalID + "'");
         }
+      }
+      if (!this.correctLigandApprovalID && this.assay.ligandSubstrateApprovalId) {
+        this.setValidationMessage("The Ligand/Substrate Approval ID for Ligand/Substrate '" + this.assay.ligandSubstrate + "' should be blank since this Substance is pending");
       }
     }
 

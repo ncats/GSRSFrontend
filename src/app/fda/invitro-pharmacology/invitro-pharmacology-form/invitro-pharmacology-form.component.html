@@ -142,14 +142,6 @@
                   </div>
                 </div> <!-- mat-dialog-content -->
 
-                <!-- CLOSE BUTTON -->
-                <!--
-                <div mat-dialog-actions>
-                  <span class="middle-fill"></span>
-                  <button class="mat-raised-button mat-primary" (click)="close()" mat-dialog-close>Close</button>
-                </div>
-                -->
-
               </ng-template>
               <!-- POPUP SAVING ASSAY/SCREENIG END -->
 
@@ -322,8 +314,7 @@
                         <mat-label>Laboratory Affiliation:</mat-label>
                       </div>
                       <mat-form-field class="fieldvalue">
-                        <input matInput placeholder=""
-                          [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryAffiliation"
+                        <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryAffiliation"
                           name="laboratoryAffiliation" />
                       </mat-form-field>
                     </div>
@@ -333,8 +324,7 @@
                         <mat-label>Laboratory Street Address:</mat-label>
                       </div>
                       <mat-form-field class="fieldvalue">
-                        <input matInput placeholder=""
-                          [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryStreetAddress"
+                        <input matInput placeholder="" [(ngModel)]="assayResultInfo.invitroLaboratory.laboratoryStreetAddress"
                           name="laboratoryStreetAddress" />
                       </mat-form-field>
                     </div>

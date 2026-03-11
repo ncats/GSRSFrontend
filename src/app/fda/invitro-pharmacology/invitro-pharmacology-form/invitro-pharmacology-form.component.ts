@@ -767,8 +767,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   openModalSave(template: TemplateRef<any>) {
     const dialogRef = this.dialog.open(template, {
-      minWidth: '50%',
-      maxWidth: '50%'
+      width: '60vw',
+      height: '30vh',
     });
 
     this.overlayContainer.style.zIndex = '1002';
