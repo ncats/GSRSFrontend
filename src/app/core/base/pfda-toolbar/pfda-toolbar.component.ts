@@ -44,7 +44,7 @@ export class PfdaToolbarComponent implements OnInit {
     const baseHref = this.configService.environment.baseHref || '/ginas/app/beta/';
     this.logoSrcPath = `${baseHref}assets/images/pfda/trs-logo.png`;
     this.homeIconPath = `${baseHref}assets/images/pfda/home.svg`;
-    this.supportEmail = this.configService.configData.contactEmail || 'fda-srs@fda.hhs.gov';
+    this.supportEmail = this.configService.configData.contactEmail || 'trsc@dnanexus.com';
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
