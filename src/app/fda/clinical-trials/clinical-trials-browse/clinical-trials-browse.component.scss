@@ -296,3 +296,7 @@ table td.mat-cell {
     }
   }
 }
+
+::ng-deep .clinical-trials-browse-filter-form-searchTerm .mat-mdc-form-field-infix {
+  padding-bottom: 8px !important;
+}
