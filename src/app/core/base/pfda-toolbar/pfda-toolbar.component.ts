@@ -42,7 +42,8 @@ export class PfdaToolbarComponent implements OnInit {
     this.pfdaBaseUrl = this.configService.configData.pfdaBaseUrl || '/';
 
     const baseHref = this.configService.environment.baseHref || '/ginas/app/beta/';
-    this.logoSrcPath = `${baseHref}assets/images/pfda/trs-logo.png`;
+    const logoFileName = this.configService.configData.pfdaLogoFileName || 'pfda-logo.png';
+    this.logoSrcPath = `${baseHref}assets/images/pfda/${logoFileName}`;
     this.homeIconPath = `${baseHref}assets/images/pfda/home.svg`;
     this.supportEmail = this.configService.configData.contactEmail || 'trsc@dnanexus.com';
 

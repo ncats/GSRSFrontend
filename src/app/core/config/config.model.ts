@@ -44,6 +44,7 @@ export interface Config {
     disableReferenceDocumentUpload?: boolean;
     externalSiteWarning?: ExternalSiteWarning;
     pfdaBaseUrl?: string;
+    pfdaLogoFileName?: string;
     homeDynamicLinks?: Array<any>;
     registrarDynamicLinks?: Array<any>;
     registrarDynamicLinks2?: Array<any>;
