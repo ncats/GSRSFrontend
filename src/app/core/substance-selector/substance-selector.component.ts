@@ -102,7 +102,7 @@ export class SubstanceSelectorComponent implements OnInit {
   }
 
   processSubstanceSearch(searchValue: string = ""): void {
-    const q = searchValue.replace('\"', "");
+    const q = searchValue.replace(/"/g, "");
     if (this.substanceService.isUUID(q)) {
       console.log("detected a UUID");
       this.substanceService.getSubstanceDetails(q).subscribe({
