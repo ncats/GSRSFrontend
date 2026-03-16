@@ -99,8 +99,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   user: string;
   feature: string;
   canUpdate: boolean;
-  canMakeAdvancedEdits: boolean;
-  
+  canMakeAdvancedEdits: boolean;  
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -129,6 +128,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   previousState: number;
   useApprovalAPI = false;
     featuresOnly = false;
+  // ncats branch begin
+  showTopBanner = false;
+  // ncats branch end
 
   constructor(
     private activatedRoute: ActivatedRoute,

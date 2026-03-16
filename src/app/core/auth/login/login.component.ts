@@ -32,9 +32,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   private newuserinfo = {};
   private emailFormUserRegConf: any = undefined;
   public emailFormUserRegActive: boolean = false;
-  <!-- ncats branch begin -->
-  showLogin = false;
-  <!-- ncats branch end -->
+  // ncats branch begin
+  public showLogin = false;
+ // ncats branch end
 
   constructor(
     private authService: AuthService,

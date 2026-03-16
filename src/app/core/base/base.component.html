@@ -2,10 +2,12 @@
 <div class="base-page-wrapper">
   <div *ngIf = "showTopBanner"> 
     <div class = "top-banner">{{bannerText}}</div>
+
   </div>
 
   <div [ngClass]="['base-menu-wrapper', (showTopBanner) ? 'base-menu-wrapper-with-top-banner': '']">
-<!-- ncats branch begin end -->
+ 
+    <!-- ncats branch begin end -->
 <mat-toolbar
   class="mat-elevation-z3"
   
@@ -417,6 +419,7 @@
   </div>
 
 <div *ngIf="showFooter" class="footer-wrapper">
+  footer
   <app-footer></app-footer>
 </div>
  <!-- ncats branch end --> 

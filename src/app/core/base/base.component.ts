@@ -23,13 +23,14 @@ import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-dr
 import {sprintf} from "sprintf-js";
 import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
+import { FooterComponent } from '@gsrs-core/footer/footer.component';
 
 @Component({
   selector: 'app-base',
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
 export class BaseComponent implements OnInit, OnDestroy {
   mainPathSegment = '';

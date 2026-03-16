@@ -171,7 +171,7 @@ import { MatDividerModule } from '@angular/material/divider';
     UserQueryListDialogComponent,
     ListCreateDialogComponent,
     ImportScrubberComponent,
-    FooterComponent // ncats branch addtion
+    FooterComponent
   ],
   imports: [
     BrowserModule,

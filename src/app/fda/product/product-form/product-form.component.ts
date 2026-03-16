@@ -78,6 +78,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   serverError: boolean;
   canDelete: boolean = false;
   canCreate: boolean = false;
+  showTopBanner = false;
 
   constructor(
     private productService: ProductService,
@@ -400,7 +401,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
                 else {
                   this.setValidationMessage('At least one Ingredient Details section is required in Manufacture Item Details ' + (indexComp + 1) + ' in Lot Details ' + (indexLot + 1));
             }
-          });
         }
       });
     }
