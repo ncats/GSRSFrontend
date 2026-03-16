@@ -118,13 +118,19 @@
   margin-top: 15px;
 }
 
+.editor-container {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .tile {
   height: 305px;
   margin: 10px;
   padding: 10px;
-  width: calc(25% - 20px);
-  min-width: 200px;
-  max-width: 230px;
+  width: calc(25% - 20px) !important;
+  min-width: 200px !important;
+  max-width: 230px !important;
   align-content: center;
   overflow: hidden;
   text-overflow: ellipsis;

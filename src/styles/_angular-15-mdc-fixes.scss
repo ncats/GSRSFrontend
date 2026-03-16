@@ -829,6 +829,18 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
+// Advanced Selector dialog — override MDC's 560px max-width CSS variable at the pane level,
+// which is where var(--mat-dialog-container-max-width, 560px) is resolved. Children that use
+// max-width: inherit will then inherit none instead of 560px.
+.advanced-selector-dialog {
+  --mat-dialog-container-max-width: none;
+
+  .mat-mdc-dialog-inner-container,
+  .mdc-dialog__surface {
+    max-width: none !important;
+  }
+}
+
 .mat-mdc-dialog-title {
   font-size: 20px;
   font-weight: 500;
@@ -852,6 +864,10 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-mdc-tab-group {
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-tab-list {
+  flex-grow: 0 !important;
 }
 
 .mat-mdc-tab {
