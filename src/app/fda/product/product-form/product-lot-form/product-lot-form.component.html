@@ -53,30 +53,22 @@
     </app-cv-input>
 
     <mat-form-field class="col-5">
-      <input
-        matInput
-        placeholder="Lot No"
-        [(ngModel)]="productLot.lotNo"
-        name="lotNo"
-      />
+      <mat-label>Lot No</mat-label>
+      <input matInput [(ngModel)]="productLot.lotNo" name="lotNo" />
     </mat-form-field>
 
     <mat-form-field class="col-5">
-      <input
-        matInput
-        placeholder="Lot Size"
-        [(ngModel)]="productLot.lotSize"
-        name="lotSize"
-      />
+      <mat-label>Lot Size</mat-label>
+      <input matInput [(ngModel)]="productLot.lotSize" name="lotSize" />
     </mat-form-field>
 
-    <mat-form-field class="col-5" floatLabel="always">
-      <mat-label>Expiry Date (mm/dd/yyyy)</mat-label>
+    <mat-form-field class="col-5" floatLabel="auto">
+      <mat-label>Expiry Date</mat-label>
       <input
         matInput
         [matDatepicker]="pickerExpiryDate"
         [(ngModel)]="productLot._expiryDate"
-        placeholder="Expiry Date (mm/dd/yyyy)"
+        placeholder="(mm/dd/yyyy)"
         (dateChange)="changeExpiryDate($event)"
       />
       <mat-datepicker-toggle
@@ -90,13 +82,13 @@
       ></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field class="col-5" floatLabel="always">
-      <mat-label>Manufacture Date (mm/dd/yyyy)</mat-label>
+    <mat-form-field class="col-5" floatLabel="auto">
+      <mat-label>Manufacture Date</mat-label>
       <input
         matInput
         [matDatepicker]="pickerManufactureDate"
         [(ngModel)]="productLot._manufactureDate"
-        placeholder="Manufacture Date (mm/dd/yyyy)"
+        placeholder="(mm/dd/yyyy)"
         (dateChange)="changeManufactureDate($event)"
       />
       <mat-datepicker-toggle

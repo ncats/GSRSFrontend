@@ -1,38 +1,50 @@
-import { Component, OnInit, Input, Output, EventEmitter, ComponentFactoryResolver, Inject, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ComponentFactoryResolver,
+  Inject,
+  ViewChild,
+} from "@angular/core";
 import {
   SubstanceDetail,
   SubstanceName,
   SubstanceSummary,
   SubstanceCode,
   SubstanceRelationship,
-  Subunit
-} from '../../substance/substance.model';
-import { DYNAMIC_COMPONENT_MANIFESTS, DynamicComponentManifest } from '@gsrs-core/dynamic-component-loader';
-import { CardDynamicSectionDirective } from '../card-dynamic-section/card-dynamic-section.directive';
-import { UtilsService } from '../../utils/utils.service';
-import { SafeUrl } from '@angular/platform-browser';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { AuthService } from '@gsrs-core/auth';
-import { SubstanceService } from '@gsrs-core/substance/substance.service';
-import { StructureService } from '@gsrs-core/structure';
-import { SubstanceSummaryDynamicContent } from './substance-summary-dynamic-content.component';
-import {Router} from '@angular/router';
-import {Alignment} from '@gsrs-core/utils';
-import { take } from 'rxjs/operators';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { MatDialog } from '@angular/material/dialog';
-import { ShowMolfileDialogComponent } from '@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component';
-import { ConfigService } from '@gsrs-core/config';
-import { Vocabulary } from '@gsrs-core/controlled-vocabulary';
-import * as lodash from 'lodash';
-import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
-import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
+  Subunit,
+} from "../../substance/substance.model";
+import {
+  DYNAMIC_COMPONENT_MANIFESTS,
+  DynamicComponentManifest,
+} from "@gsrs-core/dynamic-component-loader";
+import { CardDynamicSectionDirective } from "../card-dynamic-section/card-dynamic-section.directive";
+import { UtilsService } from "../../utils/utils.service";
+import { SafeUrl } from "@angular/platform-browser";
+import { GoogleAnalyticsService } from "@gsrs-core/google-analytics";
+import { AuthService } from "@gsrs-core/auth";
+import { SubstanceService } from "@gsrs-core/substance/substance.service";
+import { StructureService } from "@gsrs-core/structure";
+import { SubstanceSummaryDynamicContent } from "./substance-summary-dynamic-content.component";
+import { Router } from "@angular/router";
+import { Alignment } from "@gsrs-core/utils";
+import { take } from "rxjs/operators";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { MatDialog } from "@angular/material/dialog";
+import { ShowMolfileDialogComponent } from "@gsrs-core/substances-browse/substance-summary-card/show-molfile-dialog/show-molfile-dialog.component";
+import { ConfigService } from "@gsrs-core/config";
+import { Vocabulary } from "@gsrs-core/controlled-vocabulary";
+import * as lodash from "lodash";
+import { BulkSearchService } from "@gsrs-core/bulk-search/service/bulk-search.service";
+import { ListCreateDialogComponent } from "@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component";
 
 @Component({
-    selector: 'app-substance-summary-card',
-    templateUrl: './substance-summary-card.component.html',
-    styleUrls: ['./substance-summary-card.component.scss'],
-    standalone: false
+  selector: "app-substance-summary-card",
+  templateUrl: "./substance-summary-card.component.html",
+  styleUrls: ["./substance-summary-card.component.scss"],
+  standalone: false,
 })
 export class SubstanceSummaryCardComponent implements OnInit {
   private privateSubstance: SubstanceSummary;
@@ -41,21 +53,22 @@ export class SubstanceSummaryCardComponent implements OnInit {
   canCreate = false; //meant to allow creating new records
   canUpdate = false;
   subunits?: Array<Subunit>;
-  @ViewChild(CardDynamicSectionDirective, {static: true}) dynamicContentContainer: CardDynamicSectionDirective;
+  @ViewChild(CardDynamicSectionDirective, { static: true })
+  dynamicContentContainer: CardDynamicSectionDirective;
   @Input() codeSystemNames?: Array<string>;
   @Input() codeSystemVocab?: Vocabulary;
-  @Input() searchStrategy?: string = '';
+  @Input() searchStrategy?: string = "";
   @Input() userLists?: Array<string>;
-  
-//  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
+
+  //  @Input() codeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
   alignments?: Array<Alignment>;
   inxightLink = false;
   inxightUrl: string;
   overlayContainer: any;
-  rounding = '1.0-2';
+  rounding = "1.0-2";
   showAll = [];
   privateCodeSystems?: { [codeSystem: string]: Array<SubstanceCode> };
-  privateCodeSystemNames?:  Array<string>;
+  privateCodeSystemNames?: Array<string>;
   allPrimary = [];
   showLessNames = true;
   showLessCodes = true;
@@ -76,8 +89,9 @@ export class SubstanceSummaryCardComponent implements OnInit {
     private dialog: MatDialog,
     private configService: ConfigService,
     private bulkSearchService: BulkSearchService,
-    @Inject(DYNAMIC_COMPONENT_MANIFESTS) private dynamicContentItems: DynamicComponentManifest<any>[]
-  ) { }
+    @Inject(DYNAMIC_COMPONENT_MANIFESTS)
+    private dynamicContentItems: DynamicComponentManifest<any>[],
+  ) {}
 
   async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
@@ -93,58 +107,67 @@ export class SubstanceSummaryCardComponent implements OnInit {
     }
 
     if (this.substance.structure && this.substance.structure.formula) {
-      this.substance.structure.formula = this.structureService.formatFormula(this.substance.structure);
+      this.substance.structure.formula = this.structureService.formatFormula(
+        this.substance.structure,
+      );
     }
     if (this.substance.approvalID) {
-      this.substanceService.hasInxightLink(this.substance.approvalID).subscribe(response => {
-        if (response.total && response.total > 0) {
-          this.inxightLink = true;
-          this.inxightUrl = 'https://drugs.ncats.io/drug/' + this.substance.approvalID;
-        }
-      }, error => {});
+      this.substanceService.hasInxightLink(this.substance.approvalID).subscribe(
+        (response) => {
+          if (response.total && response.total > 0) {
+            this.inxightLink = true;
+            this.inxightUrl =
+              "https://drugs.ncats.io/drug/" + this.substance.approvalID;
+          }
+        },
+        (error) => {},
+      );
     } else {
       this.getApprovalID();
     }
 
-    if (this.configService.configData && this.configService.configData.molWeightRounding) {
-      this.rounding = '1.0-' + this.configService.configData.molWeightRounding;
+    if (
+      this.configService.configData &&
+      this.configService.configData.molWeightRounding
+    ) {
+      this.rounding = "1.0-" + this.configService.configData.molWeightRounding;
     }
   }
 
   @Input()
-
   set names(name: any) {
-    if (typeof(name) != "undefined") {
+    if (typeof name != "undefined") {
       this.privateNames = name;
       this.nameLoading = false;
     }
-    
   }
 
   get names(): any {
     return this.privateNames;
   }
 
-  
-openMessageDialog(message: string) {
-  const dialogRef = this.dialog.open(ListCreateDialogComponent, {
-    minWidth: '25%',
-    maxWidth: '50%',
-    data: {"message": message}
-  });
-  this.overlayContainer.style.zIndex = '1002';
+  openMessageDialog(message: string) {
+    const dialogRef = this.dialog.open(ListCreateDialogComponent, {
+      width: "400px",
+      minWidth: "25%",
+      maxWidth: "50%",
+      data: { message: message },
+    });
+    this.overlayContainer.style.zIndex = "1002";
 
-  dialogRef.afterClosed().subscribe(result => {
-    this.overlayContainer.style.zIndex = null;
-  });
-}
+    dialogRef.afterClosed().subscribe((result) => {
+      this.overlayContainer.style.zIndex = null;
+    });
+  }
 
   getApprovalID() {
     if (!this.substance.approvalID) {
-      if (this.substance._approvalIDDisplay &&
-         this.substance._approvalIDDisplay.length === 10 &&
-        this.substance._approvalIDDisplay.indexOf(' ') < 0) {
-          this.substance.approvalID = this.substance._approvalIDDisplay;
+      if (
+        this.substance._approvalIDDisplay &&
+        this.substance._approvalIDDisplay.length === 10 &&
+        this.substance._approvalIDDisplay.indexOf(" ") < 0
+      ) {
+        this.substance.approvalID = this.substance._approvalIDDisplay;
       }
     }
   }
@@ -176,19 +199,19 @@ openMessageDialog(message: string) {
 
   formatCodeSystems() {
     // sort() function in substance-browse isn't working... pushing this as alternative to get all primary codes first
-    this.codeSystemNames.forEach(sysName => {
+    this.codeSystemNames.forEach((sysName) => {
       const testing = [];
-      this.allPrimary[sysName] = 'true';
-      this.codeSystems[sysName].forEach(code => {
-          if (code.type === 'PRIMARY') {
-            testing.unshift(code);
-          } else {
-            this.allPrimary[sysName] = 'false';
-            testing.push(code);
-          }
+      this.allPrimary[sysName] = "true";
+      this.codeSystems[sysName].forEach((code) => {
+        if (code.type === "PRIMARY") {
+          testing.unshift(code);
+        } else {
+          this.allPrimary[sysName] = "false";
+          testing.push(code);
+        }
       });
       this.codeSystems[sysName] = testing;
-      });
+    });
   }
 
   openImageModal(): void {
@@ -197,16 +220,16 @@ openMessageDialog(message: string) {
   }
 
   editForm(): void {
-    this.router.navigate(['/substances/' + this.substance.uuid + '/edit']);
+    this.router.navigate(["/substances/" + this.substance.uuid + "/edit"]);
   }
   getFasta(id: string, filename: string): void {
-    this.substanceService.getFasta(id).subscribe(response => {
+    this.substanceService.getFasta(id).subscribe((response) => {
       this.downloadFile(response, filename);
     });
   }
 
   getMol(id: string, filename: string): void {
-    this.structureService.downloadMolfile(id).subscribe(response => {
+    this.structureService.downloadMolfile(id).subscribe((response) => {
       this.downloadFile(response, filename);
     });
   }
@@ -215,9 +238,11 @@ openMessageDialog(message: string) {
     const dataType = response.type;
     const binaryData = [];
     binaryData.push(response);
-    const downloadLink = document.createElement('a');
-    downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
-    downloadLink.setAttribute('download', filename);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = window.URL.createObjectURL(
+      new Blob(binaryData, { type: dataType }),
+    );
+    downloadLink.setAttribute("download", filename);
     document.body.appendChild(downloadLink);
     downloadLink.click();
   }
@@ -225,29 +250,43 @@ openMessageDialog(message: string) {
   loadDynamicContent(): void {
     const viewContainerRef = this.dynamicContentContainer.viewContainerRef;
     viewContainerRef.clear();
-    if (this.configService.configData && this.configService.configData.loadedComponents){
-      const dynamicContentItemsFlat =  this.dynamicContentItems.reduce((acc, val) => acc.concat(val), [])
-      .filter(item => item.componentType === 'summary');
-      dynamicContentItemsFlat.forEach(dynamicContentItem => {
-        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicContentItem.component);
+    if (
+      this.configService.configData &&
+      this.configService.configData.loadedComponents
+    ) {
+      const dynamicContentItemsFlat = this.dynamicContentItems
+        .reduce((acc, val) => acc.concat(val), [])
+        .filter((item) => item.componentType === "summary");
+      dynamicContentItemsFlat.forEach((dynamicContentItem) => {
+        const componentFactory =
+          this.componentFactoryResolver.resolveComponentFactory(
+            dynamicContentItem.component,
+          );
         const componentRef = viewContainerRef.createComponent(componentFactory);
-        (<SubstanceSummaryDynamicContent>componentRef.instance).substance = this.privateSubstance;
+        (<SubstanceSummaryDynamicContent>componentRef.instance).substance =
+          this.privateSubstance;
       });
-  }
+    }
   }
 
   downloadJson() {
-    this.substanceService.getSubstanceDetails(this.substance.uuid).pipe(take(1)).subscribe(response => {
-        this.downloadFile(JSON.stringify(response), this.substance.uuid + '.json');
-    });
+    this.substanceService
+      .getSubstanceDetails(this.substance.uuid)
+      .pipe(take(1))
+      .subscribe((response) => {
+        this.downloadFile(
+          JSON.stringify(response),
+          this.substance.uuid + ".json",
+        );
+      });
   }
 
   getAlignments(): void {
     if (this.substance._matchContext) {
       if (this.substance._matchContext.alignments) {
         this.alignments = this.substance._matchContext.alignments;
-        this.alignments.forEach(alignment => {
-          this.subunits.forEach(subunit => {
+        this.alignments.forEach((alignment) => {
+          this.subunits.forEach((subunit) => {
             if (subunit.uuid === alignment.id) {
               alignment.subunitIndex = subunit.subunitIndex;
             }
@@ -258,22 +297,21 @@ openMessageDialog(message: string) {
   }
 
   openMolModal() {
-
     const dialogRef = this.dialog.open(ShowMolfileDialogComponent, {
-      minWidth: '40%',
-      maxWidth: '90%',
-      height: '90%',
-      data: {uuid: this.substance.uuid, approval: this.substance.approvalID}
+      minWidth: "40%",
+      maxWidth: "90%",
+      height: "90%",
+      data: { uuid: this.substance.uuid, approval: this.substance.approvalID },
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.overlayContainer.style.zIndex = null;
     });
   }
 
   moreThanNumberCount(names, number) {
-    if(names.length < number) {
+    if (names.length < number) {
       return false;
     } else {
       return true;
@@ -290,18 +328,18 @@ openMessageDialog(message: string) {
 
   createList() {
     let send = {
-      'record': this.privateSubstance,
-      'newList': true
-    }
+      record: this.privateSubstance,
+      newList: true,
+    };
 
     const dialogRef = this.dialog.open(ListCreateDialogComponent, {
-      minWidth: '25%',
-      maxWidth: '50%',
-      data: send
+      minWidth: "25%",
+      maxWidth: "100%",
+      data: send,
     });
-    this.overlayContainer.style.zIndex = '1002';
-  
-    dialogRef.afterClosed().subscribe(result => {
+    this.overlayContainer.style.zIndex = "1002";
+
+    dialogRef.afterClosed().subscribe((result) => {
       this.overlayContainer.style.zIndex = null;
     });
   }
@@ -309,33 +347,35 @@ openMessageDialog(message: string) {
   addToList() {
     let exists = false;
     let toPut = "";
-    this.bulkSearchService.getSingleBulkSearchList(this.selectedList).subscribe(record => {
-      record.lists.forEach(entry =>{
-        if (entry.key === this.privateSubstance.uuid) {
-          exists = true;
-          this.openMessageDialog('Cannot add: Already in list'); 
-        } else {
-        //  toPut += entry.key + ", ";
+    this.bulkSearchService
+      .getSingleBulkSearchList(this.selectedList)
+      .subscribe((record) => {
+        record.lists.forEach((entry) => {
+          if (entry.key === this.privateSubstance.uuid) {
+            exists = true;
+            this.openMessageDialog("Cannot add: Already in list");
+          } else {
+            //  toPut += entry.key + ", ";
+          }
+        });
+        if (!exists) {
+          toPut += this.privateSubstance.uuid;
+          this.addCall(toPut);
         }
       });
-      if (!exists) {
-        toPut += this.privateSubstance.uuid;
-        this.addCall(toPut);
-      }
-    })
-   
   }
 
   addCall(list: string) {
-    this.bulkSearchService.editKeysBulkSearchLists(this.selectedList, list, 'add').subscribe(response => {
-      this.openMessageDialog('Record successfully added');
-      
-    }, error => {
-      console.log(error);
-      this.openMessageDialog('Failed to Add to List: error in console');
-
-    })
+    this.bulkSearchService
+      .editKeysBulkSearchLists(this.selectedList, list, "add")
+      .subscribe(
+        (response) => {
+          this.openMessageDialog("Record successfully added");
+        },
+        (error) => {
+          console.log(error);
+          this.openMessageDialog("Failed to Add to List: error in console");
+        },
+      );
   }
-
-
 }

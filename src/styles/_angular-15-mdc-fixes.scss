@@ -21,8 +21,10 @@
   box-sizing: border-box;
 
   &:not([class*="mat-elevation-z"]) {
-    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-      0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+    box-shadow:
+      0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+      0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 3px 0px rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -79,6 +81,7 @@
     font-size: 14px;
   }
 }
+
 .mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
   --mat-chip-elevated-container-color: var(--primary-color);
   --mat-chip-label-text-color: #fff; /* optional */
@@ -309,12 +312,16 @@
 
 // Fix raised button elevation
 .mat-mdc-raised-button:not(:disabled) {
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 
   &:hover {
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-      0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    box-shadow:
+      0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+      0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 10px 0px rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -435,8 +442,10 @@ button .mat-icon,
   min-width: 112px;
   max-width: 280px;
   border-radius: 4px;
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-mdc-menu-content {
@@ -784,8 +793,10 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 // ============================================================================
 
 .mat-expansion-panel {
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-expansion-panel-header {
@@ -818,6 +829,18 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
+// Advanced Selector dialog — override MDC's 560px max-width CSS variable at the pane level,
+// which is where var(--mat-dialog-container-max-width, 560px) is resolved. Children that use
+// max-width: inherit will then inherit none instead of 560px.
+.advanced-selector-dialog {
+  --mat-dialog-container-max-width: none;
+
+  .mat-mdc-dialog-inner-container,
+  .mdc-dialog__surface {
+    max-width: none !important;
+  }
+}
+
 .mat-mdc-dialog-title {
   font-size: 20px;
   font-weight: 500;
@@ -841,6 +864,10 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-mdc-tab-group {
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-mdc-tab-list {
+  flex-grow: 0 !important;
 }
 
 .mat-mdc-tab {
@@ -1081,8 +1108,10 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-drawer,
 .mat-sidenav {
-  box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.2),
-    0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 8px 10px -5px rgba(0, 0, 0, 0.2),
+    0px 16px 24px 2px rgba(0, 0, 0, 0.14),
+    0px 6px 30px 5px rgba(0, 0, 0, 0.12);
   background-color: white;
 }
 
@@ -1111,9 +1140,10 @@ mat-sidenav-content .controls-container .export-button {
   color: var(--regular-black-color);
   background-color: white;
   border-radius: 4px;
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
-              0 2px 2px rgba(0, 0, 0, 0.1411764706),
-              0 1px 5px rgba(0, 0, 0, 0.1215686275);
+  box-shadow:
+    0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 2px 2px rgba(0, 0, 0, 0.1411764706),
+    0 1px 5px rgba(0, 0, 0, 0.1215686275);
   padding: 16px 16px;
 }
 
@@ -1186,7 +1216,6 @@ button.export-button {
   }
 }
 
-
 // button.mat-mdc-button >.mat-icon[data-mat-icon-name="chevron_down"]{
 //   height: 24px !important;
 //   width: 24px !important;
@@ -1204,33 +1233,45 @@ button.export-button {
 }
 
 .mat-elevation-z1 {
-  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
-    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z2 {
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z3 {
-  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2),
-    0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 8px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z4 {
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z6 {
-  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-    0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 18px 0px rgba(0, 0, 0, 0.12);
 }
 
 .mat-elevation-z8 {
-  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 // Override MDC ripple behavior if it interferes with existing styles
@@ -1519,7 +1560,6 @@ a.mat-mdc-outlined-button {
   }
 }
 
-
 // Fix for menu items with icons
 .mat-menu-item,
 .mat-mdc-menu-item {
@@ -1545,7 +1585,7 @@ a.mat-mdc-outlined-button {
 
 .mat-mdc-tab-header {
   margin-top: -10px;
-    border-bottom: 1px solid #cdc9c9;
+  border-bottom: 1px solid #cdc9c9;
 }
 
 // ============================================================================
@@ -1563,4 +1603,3 @@ a.mat-mdc-outlined-button {
     padding-bottom: 8px;
   }
 }
-

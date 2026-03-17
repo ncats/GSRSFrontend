@@ -1,10 +1,12 @@
 .relationship-form-container {
-    padding: 30px 10px 12px 10px;
-    position: relative;
-    display: flex;
+  padding: 30px 10px 12px 10px;
+  position: relative;
+  display: flex;
 }
 
-.type, .name, .property-name {
+.type,
+.name,
+.property-name {
   ::ng-deep mat-form-field {
     width: 100%;
   }
@@ -23,101 +25,107 @@
 .chevron-button {
   width: 20px;
 }
-  .notification-backdrop {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    z-index: 10;
-    background-color: var(--notif-backdrop-bg-color);
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    font-weight: bold;
-    color: var(--notif-backdrop-color);
+.notification-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: var(--notif-backdrop-bg-color);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--notif-backdrop-color);
+}
+
+.related-substance,
+.mediator-substance {
+  max-width: 25%;
+  width: 25%;
+}
+
+.form-content {
+  flex-grow: 1;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .delete-container {
+    padding: 0 10px 8px 0;
   }
 
-  .related-substance, .mediator-substance {
-    max-width: 25%;
-    width: 25%;
-  }
-
-  .form-content {
+  .type,
+  .qualification,
+  .interaction-type,
+  .comments {
     flex-grow: 1;
+    padding-right: 15px;
+  }
+}
+
+.key-value-pair {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+
+  .key {
+    font-size: 11px;
+    padding-bottom: 3.5px;
+    line-height: 11px;
   }
 
-  .form-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-
-    .delete-container {
-      padding: 0 10px 8px 0;
-    }
-
-    .type, .qualification, .interaction-type, .comments {
-      flex-grow: 1;
-      padding-right: 15px;
-    }
+  .value {
+    font-size: 15.5px;
   }
+}
 
-  .key-value-pair {
-    display: flex;
-    flex-direction: column;
-    align-self: flex-start;
+.references-container {
+  width: 100%;
+}
 
-    .key {
-      font-size: 11px;
-      padding-bottom: 3.5px;
-      line-height: 11px;
-    }
+.amount-title {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
 
-    .value {
-      font-size: 15.5px;
-    }
-  }
+.amount-form-container {
+  padding: 0 7px;
+}
 
-  .references-container {
+@media (max-width: 990px) {
+  .form-content {
     width: 100%;
   }
 
-  .amount-title {
-    margin-bottom: 10px;
-    font-weight: bold;
+  .mediator-substance {
+    order: -1;
+    width: 40%;
+    max-width: 40%;
   }
 
-  .amount-form-container {
-    padding: 0 7px;
+  .related-substance {
+    order: -2;
+    width: 40%;
+    max-width: 40%;
   }
 
+  .delete-column {
+    order: -3;
 
-  @media(max-width: 990px) {
-      .form-content {
-        width: 100%;
-      }
-
-      .mediator-substance {
-        order: -1;
-        width: 40%;
-        max-width: 40%;
-      }
-
-      .related-substance {
-        order: -2;
-        width: 40%;
-        max-width: 40%;
-      }
-
-      .delete-column {
-        order: -3;
-
-        width: 5%;
-
-      }
-      .relationship-form-container {
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
+    width: 5%;
   }
+  .relationship-form-container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+::ng-deep .search-form-field .mat-mdc-form-field-infix {
+  padding-bottom: 8px !important;
+}

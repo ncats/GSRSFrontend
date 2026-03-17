@@ -26,7 +26,8 @@
     </app-cv-input>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Dosage Form Code" [(ngModel)]="productComponent.dosageFormCode"
+      <mat-label>Dosage Form Code</mat-label>
+      <input matInput [(ngModel)]="productComponent.dosageFormCode"
         name="dosageFormCode" />
     </mat-form-field>
 
@@ -37,12 +38,14 @@
 
   <div class="form-row">
     <mat-form-field class="col-2-4">
-      <textarea matInput placeholder="Dosage Form Note" [(ngModel)]="productComponent.dosageFormNote"
+      <mat-label>Dosage Form Note</mat-label>
+      <textarea matInput [(ngModel)]="productComponent.dosageFormNote"
         name="dosageFormNote"></textarea>
     </mat-form-field>
 
     <mat-form-field class="col-2-4">
-      <textarea matInput placeholder="Composition Note" [(ngModel)]="productComponent.compositionNote"
+      <mat-label>Composition Note</mat-label>
+      <textarea matInput [(ngModel)]="productComponent.compositionNote"
         name="compositionNote"></textarea>
     </mat-form-field>
   </div>
@@ -57,11 +60,13 @@
     </app-cv-input>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Size" [(ngModel)]="productComponent.charSize" name="charSize" />
+      <mat-label>Size</mat-label>
+      <input matInput [(ngModel)]="productComponent.charSize" name="charSize" />
     </mat-form-field>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Imprint Text" [(ngModel)]="productComponent.charImprintText"
+      <mat-label>Imprint Text</mat-label>
+      <input matInput [(ngModel)]="productComponent.charImprintText"
         name="charImprintText" />
     </mat-form-field>
   </div>
@@ -78,7 +83,8 @@
 
   <div class="form-row">
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Amount" [(ngModel)]="productComponent.amount" name="amount" />
+      <mat-label>Amount</mat-label>
+      <input matInput [(ngModel)]="productComponent.amount" name="amount" />
     </mat-form-field>
 
     <app-cv-input class="col-1-4" domain="PROD_UNIT" title="Unit" name="unit" [model]="productComponent.unit"
@@ -91,7 +97,8 @@
     </app-cv-input>
 
     <mat-form-field class="col-1-4">
-      <input matInput placeholder="Provenance Manufacture Item ID"
+      <mat-label>Provenance Manufacture Item ID</mat-label>
+      <input matInput
         [(ngModel)]="productComponent.provenanceManufactureItemId" name="provenanceManufactureItemId" />
     </mat-form-field>
   </div>
@@ -131,7 +138,8 @@
         </app-cv-input>
 
         <mat-form-field class="col-3-1">
-          <input matInput placeholder="Manufacturer Name" [(ngModel)]="productManufacturer.manufacturerName"
+          <mat-label>Manufacturer Name</mat-label>
+          <input matInput [(ngModel)]="productManufacturer.manufacturerName"
             name="manufacturerName" />
         </mat-form-field>
 
@@ -143,12 +151,14 @@
 
       <div class="form-row margintop10px">
         <mat-form-field class="col-3-1">
-          <input matInput placeholder="Manufacturer Code" [(ngModel)]="productManufacturer.manufacturerCode"
+          <mat-label>Manufacturer Code</mat-label>
+          <input matInput [(ngModel)]="productManufacturer.manufacturerCode"
             name="manufacturerCode" />
         </mat-form-field>
 
         <mat-form-field class="col-3-1">
-          <input matInput placeholder="Manufactured Item Code" [(ngModel)]="productManufacturer.manufacturedItemCode"
+          <mat-label>Manufactured Item Code</mat-label>
+          <input matInput [(ngModel)]="productManufacturer.manufacturedItemCode"
             name="manufacturedItemCode" />
         </mat-form-field>
 
