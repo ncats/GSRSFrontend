@@ -126,7 +126,7 @@
                 <mat-label>Assay Set:&nbsp;<span class="colorred">*</span></mat-label>
               </div>
 
-              <div class="divflex borderlightgray divradius">
+              <div class="divflex width95percent borderlightgray divradius">
 
                 <!-- Assay Set Checkboxes -->
                 <div class="padtop5px height100px fieldValueCheckboxes">
@@ -140,7 +140,7 @@
 
                 <!-- Add New Assay Set -->
                 <div class="marginright10px marginbottom10px padtop10px">
-                  <mat-form-field class="marginleft15px width150px">
+                  <mat-form-field class="marginleft15px width160px">
                     <input matInput placeholder="Enter New Assay Set" [(ngModel)]="newAssaySet" name="newAssaySet" />
                   </mat-form-field>
                   <br>
@@ -300,38 +300,20 @@
               <div class="divflex width95percent">
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.targetName"
-                  placeholder="Search Substances" (searchPerformed)="nameSearch($event, TARGET_NAME)"
+                  placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, TARGET_NAME)" (searchPerformed)="nameSearch($event, TARGET_NAME)"
                   eventCategory="selectorSearch">
                 </app-substance-text-search>
 
                 <div class="marginleft20px margintop10px">
-                  <!--
-                  <span *ngIf="assay.targetName && assay.targetNameSubstanceKey; else noTargetNameSubKey">
-                  -->
                   <span *ngIf="assay.targetNameSubstanceKey">
                     <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank">
                       <span class="font12px">Substance Details</span>
                     </a>
                   </span>
-                  <!--
-                  </span>
-                  <ng-template #noTargetNameSubKey>
-                    No Substance Found
-                  </ng-template>
-                   -->
                 </div>
               </div> <!-- divflex -->
 
             </div> <!-- form-row -->
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Target Name Approval ID:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input matInput placeholder="" [(ngModel)]="assay.targetNameApprovalId" name="targetNameApprovalId" />
-              </mat-form-field>
-            </div>
 
             <div class="form-row">
               <div class="fieldKey">
@@ -341,7 +323,7 @@
               <div class="divflex width95percent">
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.humanHomologTarget"
-                  placeholder="Search Substances" (searchPerformed)="nameSearch($event, HUMAN_HOMOLOG_TARGET)"
+                  placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, HUMAN_HOMOLOG_TARGET)" (searchPerformed)="nameSearch($event, HUMAN_HOMOLOG_TARGET)"
                   eventCategory="selectorSearch">
                 </app-substance-text-search>
 
@@ -359,16 +341,6 @@
 
             <div class="form-row">
               <div class="fieldKey">
-                <mat-label>Human Homolog Target Approval ID:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input matInput placeholder="" [(ngModel)]="assay.humanHomologTargetApprovalId"
-                  name="humanHomologTargetApprovalId" />
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <div class="fieldKey">
                 <mat-label>Ligand/Substrate:</mat-label>
               </div>
 
@@ -376,7 +348,7 @@
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.ligandSubstrate"
                   placeholder="Search Substances" (searchPerformed)="nameSearch($event, LIGAND_SUBSTRATE)"
-                  eventCategory="selectorSearch">
+                  (searchValueOut)="searchValueOutChange($event, LIGAND_SUBSTRATE)" eventCategory="selectorSearch">
                 </app-substance-text-search>
 
                 <div class="marginleft20px margintop10px">
@@ -390,16 +362,6 @@
               </div> <!-- divflex -->
 
             </div> <!-- form-row -->
-
-            <div class="form-row">
-              <div class="fieldKey">
-                <mat-label>Ligand/Substrate Approval ID:</mat-label>
-              </div>
-              <mat-form-field class="fieldvalue">
-                <input matInput placeholder="" [(ngModel)]="assay.ligandSubstrateApprovalId"
-                  name="ligandSubstrateApprovalId" />
-              </mat-form-field>
-            </div>
 
             <div class="form-row">
               <div class="fieldKey">
@@ -449,7 +411,7 @@
                   <div class="divflex width95percent">
                     <!-- Substance Text Search Suggestions/TypeAhead -->
                     <app-substance-text-search class="fieldValueSubstance" [searchValue]="analy.analyte"
-                      placeholder="Search Substances" (searchPerformed)="nameSearch($event, 'ANALYTE', indexAnalyte)"
+                      placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, ANALYTE, indexAnalyte)" (searchPerformed)="nameSearch($event, ANALYTE, indexAnalyte)"
                       eventCategory="selectorSearch">
                     </app-substance-text-search>
 

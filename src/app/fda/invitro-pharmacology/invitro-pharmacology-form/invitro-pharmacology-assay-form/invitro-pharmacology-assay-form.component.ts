@@ -56,8 +56,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
   newAssaySetObject: InvitroAssaySet;
   newAssaySet: string;
-  correctTargetNameApprovalID: string;
-  correctLigandApprovalID: string;
 
   checkBoxAssaySetList: Array<any> = [];
   existingAssaySetList: Array<any> = [];
@@ -155,6 +153,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                   // Get All the Assay Sets for checkboxes on the form
                   this.getAllAssaySets();
 
+                  // Get Substance Details
+                  this.getSubstanceDetailsForImport();
+
                   // Stop the Loading/Spinner after the form data is loaded
                   this.isLoading = false;
                   this.loadingService.setLoading(this.isLoading);
@@ -176,7 +177,8 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
                 alert("There was no JSON file selected to import the data. Please click the 'Import JSON' button");
               }
             }
-          }
+          }  // else if Import Assay
+
           // Register New Assay
           else {
             this.title = 'Register New In Vitro Pharmacology Assay Only';
@@ -239,26 +241,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     }
   }
 
-  /*
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('INVITRO_ASSAY_SET').subscribe(response => {
-      let vocabulary = response['INVITRO_ASSAY_SET'].dictionary;
-      if (vocabulary !== null) {
-        const keys = Object.keys(vocabulary);
-        keys.forEach(key => {
-          if (key) {
-            const setObj: any = {};
-            setObj.value = key;
-            // setObj.checked = false;
-            this.assaySetList.push(setObj);
-          }
-        })
-      }
-    }, error => {
-    });
-  }
-  */
-
   getAllAssaySets() {
     const getInvitroSubscribe = this.invitroPharmacologyService.getAllAssaySets().subscribe(response => {
       if (response) {
@@ -281,6 +263,45 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       this.handleProductRetrivalError();
     });
     this.subscriptions.push(getInvitroSubscribe);
+  }
+
+  getSubstanceDetailsForImport() {
+    // Clear these fields
+    this.assay.targetNameApprovalId = '';
+    this.assay.targetNameSubstanceKey = '';
+    this.assay.targetNameSubstanceKeyType = '';
+
+    this.assay.humanHomologTargetApprovalId = '';
+    this.assay.humanHomologTargetSubstanceKey = '';
+    this.assay.humanHomologTargetSubstanceKeyType = '';
+
+    this.assay.ligandSubstrateApprovalId = '';
+    this.assay.ligandSubstrateSubstanceKey = '';
+    this.assay.ligandSubstrateSubstanceKeyType = '';
+
+    if (this.assay.targetName) {
+      this.nameSearch(this.assay.targetName, this.TARGET_NAME);
+    }
+    if (this.assay.humanHomologTarget) {
+      this.nameSearch(this.assay.humanHomologTarget, this.HUMAN_HOMOLOG_TARGET);
+    }
+    if (this.assay.ligandSubstrate) {
+      this.nameSearch(this.assay.ligandSubstrate, this.LIGAND_SUBSTRATE);
+    }
+
+    // Get Analytes
+    if (this.assay.invitroAssayAnalytes && this.assay.invitroAssayAnalytes.length > 0) {
+      this.assay.invitroAssayAnalytes.forEach((analy, index) => {
+        if (analy) {
+          if (analy.analyte) {
+            this.nameSearch(analy.analyte, this.ANALYTE, index);
+            if (!analy.analyteSubstanceKey) {
+            }
+          }
+        }
+      });
+    }
+
   }
 
   createAssaySetCheckBoxes() {
@@ -310,11 +331,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
   }
 
   setSelectedAssaySet($event, data: any, indexCheckbox: number) {
-    // const set = this.existingAssaySetList[indexCheckbox];
-    // this.assay.invitroAssaySets.push(set);
-
-    //const checked = this.checkBox.filter(checkbox1 => checkbox1.checked);
-
     // To get the actual values instead of just the element
     const checkedItems = this.checkBoxAssaySetList.filter((x, index) => this.checkBox.find((c, i) => i == index).checked).map(x => x.value);
 
@@ -344,7 +360,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
           this.assay.invitroAssaySets.push(existingAssaySetObject);
         }
       } else {  // Not found in the Existing AsssaySets into the database
-
       }
 
     });
@@ -431,27 +446,37 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     }
 
     if (this.assay.targetName) {
-      if (this.correctTargetNameApprovalID && this.assay.targetNameApprovalId) {
-        // if NOT SAME, display error message
-        if (this.correctTargetNameApprovalID !== this.assay.targetNameApprovalId) {
-          this.setValidationMessage("The Target Name Approval ID for Target Name '" + this.assay.targetName + "' should be '" + this.correctTargetNameApprovalID + "'");
-        }
+      // if Target Name Substance Key is empty, it means Substance not found in the database.
+      if (!this.assay.targetNameSubstanceKey) {
+        this.setValidationMessage("The Target Name '" + this.assay.targetName + " not found in the database");
       }
-      if (!this.correctTargetNameApprovalID && this.assay.targetNameApprovalId) {
-        this.setValidationMessage("The Target Name Approval ID for Target Name '" + this.assay.targetName + "' should be blank since this Substance is pending");
+    }
+
+    if (this.assay.humanHomologTarget) {
+      // if Human Homolog Target Substance Key is empty, it means Substance not found in the database.
+      if (!this.assay.humanHomologTargetSubstanceKey) {
+        this.setValidationMessage("The Human Homolog Target '" + this.assay.humanHomologTarget + "' not found in the database");
       }
     }
 
     if (this.assay.ligandSubstrate) {
-      if (this.correctLigandApprovalID && this.assay.ligandSubstrateApprovalId) {
-        // if NOT SAME, display error message
-        if (this.correctLigandApprovalID !== this.assay.ligandSubstrateApprovalId) {
-          this.setValidationMessage("The Ligand/Substrate Approval ID for Ligand/Substrate '" + this.assay.ligandSubstrate + "' should be '" + this.correctLigandApprovalID + "'");
+      // if Ligand Substance Key is empty, it means Substance not found in the database.
+      if (!this.assay.ligandSubstrateSubstanceKey) {
+        this.setValidationMessage("The Ligand/Substrate '" + this.assay.ligandSubstrate + "' not found in the database");
+      }
+    }
+
+    // Validate Analytes
+    if (this.assay.invitroAssayAnalytes && this.assay.invitroAssayAnalytes.length > 0) {
+      this.assay.invitroAssayAnalytes.forEach(analy => {
+        if (analy) {
+          if (analy.analyte) {
+            if (!analy.analyteSubstanceKey) {
+              this.setValidationMessage("The Analyte '" + analy.analyte + "' not found in the database");
+            }
+          }
         }
-      }
-      if (!this.correctLigandApprovalID && this.assay.ligandSubstrateApprovalId) {
-        this.setValidationMessage("The Ligand/Substrate Approval ID for Ligand/Substrate '" + this.assay.ligandSubstrate + "' should be blank since this Substance is pending");
-      }
+      });
     }
 
     if (this.validationMessages.length > 0) {
@@ -507,34 +532,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     this.isLoading = true;
     this.loadingService.setLoading(true);
 
-    // Get Substance UUID for Target Name
-    /*
-    if (this.assay.targetNameApprovalId) {
-      const substanceSubscription = this.generalService.getSubstanceByAnyId(this.assay.targetNameApprovalId).subscribe(response => {
-        if (response) {
-          this.assay.targetNameSubstanceUuid = response.uuid;
-        }
-      });
-      this.subscriptions.push(substanceSubscription);
-
-    } else if (this.assay.targetName) {
-      const subSubscription = this.generalService.getSubstanceByName(this.assay.targetName).subscribe(response => {
-        if (response) {
-          if (response.content && response.content.length > 0) {
-            response.content.forEach(sub => {
-              if (sub._name && sub._name === this.assay.targetName) {
-                if (sub.uuid) {
-                  this.assay.targetNameSubstanceUuid = sub.uuid;
-                }
-              }
-            });
-          }
-        }
-      });
-      this.subscriptions.push(subSubscription);
-    }
-    */
-
     // Set service assay
     this.invitroPharmacologyService.assay = this.assay;
 
@@ -558,28 +555,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
         }
       }, 4000);
     }
-
-
-      /*
-      , (error: SubstanceFormResults) => {
-        this.showSubmissionMessages = true;
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-        this.submissionMessage = null;
-        if (error.validationMessages && error.validationMessages.length) {
-          this.validationResult = error.isSuccessfull;
-          this.validationMessages = error.validationMessages
-            .filter(message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
-          this.showSubmissionMessages = true;
-        } else {
-          this.submissionMessage = 'There was a problem with your submission';
-          this.addServerError(error.serverError);
-          setTimeout(() => {
-            this.showSubmissionMessages = false;
-            this.submissionMessage = null;
-          }, 8000);
-        }
-      }*/
     );
   }
 
@@ -665,12 +640,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     return oldObj;
   }
 
-  nameSearch(event: any, fieldName: string, indexRow?: number): void {
-    // Get Ingredient Name from the Substance Search Textbox (Type Ahead)
-
-    const q = event.replace('\"', '');
-    // Changed to configuration approach.
-    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
+  setSubstanceValues(event: string, fieldName: string, indexRow?: number) {
 
     const ingredientName = event;
 
@@ -679,22 +649,50 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       //clear existing values
       this.assay.targetNameApprovalId = '';
       this.assay.targetNameSubstanceKey = '';
-      this.assay.targetName = ingredientName;
+      this.assay.targetNameSubstanceKeyType = '';
 
     } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
       this.assay.humanHomologTargetApprovalId = '';
       this.assay.humanHomologTargetSubstanceKey = '';
-      this.assay.humanHomologTarget = ingredientName;
+      this.assay.humanHomologTargetSubstanceKeyType = '';
 
     } else if (fieldName === this.LIGAND_SUBSTRATE) {
       this.assay.ligandSubstrateApprovalId = '';
       this.assay.ligandSubstrateSubstanceKey = '';
-      this.assay.ligandSubstrate = ingredientName;
+      this.assay.ligandSubstrateSubstanceKeyType = '';
 
     } else if (fieldName === this.ANALYTE) {
       this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKey = '';
-      this.assay.invitroAssayAnalytes[indexRow].analyte = ingredientName;
+      this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKeyType = '';
     }
+  }
+
+  searchValueOutChange(event: string, fieldName: string, indexRow?: number) {
+
+    if (fieldName && fieldName === this.TARGET_NAME) {
+      this.assay.targetName = event;
+    }
+    if (fieldName && fieldName === this.HUMAN_HOMOLOG_TARGET) {
+      this.assay.humanHomologTarget = event;
+    }
+    if (fieldName && fieldName === this.LIGAND_SUBSTRATE) {
+      this.assay.ligandSubstrate = event;
+    }
+    if (fieldName && fieldName === this.ANALYTE) {
+      this.assay.invitroAssayAnalytes[indexRow].analyte = event;
+    }
+
+    this.nameSearch(event, fieldName, indexRow);
+  }
+
+  nameSearch(event: any, fieldName: string, indexRow?: number): void {
+
+    // Get Ingredient Name from the Substance Search Textbox (Type Ahead)
+    this.setSubstanceValues(event, fieldName, indexRow);
+
+    const q = event.replace(/"/g, "");
+    // Changed to configuration approach.
+    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
 
     // Get Substance record by Ingredient/Substance Name, to get Substance UUID and Approval ID
     const substanceSubscribe = this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
@@ -716,10 +714,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
               this.assay.targetNameSubstanceKey = substanceKey;
               this.assay.targetNameSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-              // Need this for validation, if user changes the Target Name Approval ID in the texbox,
-              // need to verify that it matches with this Approval ID.
-              this.correctTargetNameApprovalID = substance.approvalID;
-
             } else if (fieldName === this.HUMAN_HOMOLOG_TARGET) {
               this.assay.humanHomologTargetApprovalId = substance.approvalID;
               this.assay.humanHomologTargetSubstanceKey = substanceKey;
@@ -730,10 +724,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
               this.assay.ligandSubstrateSubstanceKey = substanceKey;
               this.assay.ligandSubstrateSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-              // Need this for validation, if user changes the Ligand/Substrate Approval ID in the texbox,
-              // need to verify that it matches with this Approval ID.
-              this.correctLigandApprovalID = substance.approvalID;
-
             } else if (fieldName === this.ANALYTE) {
               this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKey = substanceKey;
               this.assay.invitroAssayAnalytes[indexRow].analyteSubstanceKeyType = this.substanceKeyTypeForInvitroPharmacologyConfig;
@@ -741,6 +731,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
             // SUBSTANCE KEY RESOLVER END
 
           } // if Substance exists
+
         } // if response content > 0
       } // if response
     }); // subscribe 
@@ -773,9 +764,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       }
     }
 
-    const createHolders = jp.query(old, '$..[?(@.creationDate)]');
+    const createHolders = jp.query(old, '$..[?(@.createdDate)]');
     for (let i = 0; i < createHolders.length; i++) {
-      delete createHolders[i].creationDate;
+      delete createHolders[i].createdDate;
     }
 
     const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
@@ -783,9 +774,9 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = jp.query(old, '$..[?(@.lastModifiedDate)]');
+    const modifyHolders = jp.query(old, '$..[?(@.modifiedDate)]');
     for (let i = 0; i < modifyHolders.length; i++) {
-      delete modifyHolders[i].lastModifiedDate;
+      delete modifyHolders[i].modifiedDate;
     }
 
     const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
@@ -795,13 +786,16 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
 
     const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
     for (let i = 0; i < intVersionHolders.length; i++) {
-      delete intVersionHolders[i].internalVersion;
+      if (intVersionHolders[i].internalVersion) {
+        delete intVersionHolders[i].internalVersion;
+      }
     }
 
-    delete old['creationDate'];
+    delete old['id'];
+    delete old['createdDate'];
     delete old['createdBy'];
     delete old['modifiedBy'];
-    delete old['lastModifiedDate'];
+    delete old['modifiedDate'];
     delete old['internalVersion'];
     //delete old['externalAssaySource'];
     //delete old['externalAssayId'];

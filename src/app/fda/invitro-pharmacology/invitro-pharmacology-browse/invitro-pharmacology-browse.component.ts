@@ -512,7 +512,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               referenceSourceTypeNumber = referenceSourceType + ' ' + referenceSource;
               assayObj.referenceSourceTypeNumber = referenceSourceTypeNumber;
             } // if invitroReference exists
-
+            */
 
           /* Invitro Test Agent Object exists */
             if (screening.invitroAssayResultInformation.invitroTestAgent) {
