@@ -134,13 +134,13 @@ form {
 .search-button,
 .close-button,
 .activate-search-button {
-  color: var(--regular-white-color);
+  color: var(--regular-blue-color);
 
   ::ng-deep .mat-icon {
-    color: var(--regular-white-color);
+    color: var(--regular-blue-color);
 
     svg {
-      fill: var(--regular-white-color);
+      fill: var(--regular-blue-color);
     }
   }
 }
