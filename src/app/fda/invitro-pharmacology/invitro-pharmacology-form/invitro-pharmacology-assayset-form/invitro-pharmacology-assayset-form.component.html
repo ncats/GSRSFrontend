@@ -1,10 +1,16 @@
 <div class="top-fixed">
   <div class="actions-container">
-
-    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0">
-      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
-      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+    <button
+      mat-flat-button
+      class="hide-show-messages"
+      (click)="toggleValidation()"
+      [disabled]="isLoading"
+      *ngIf="validationMessages && validationMessages.length > 0"
+    >
+      {{ showSubmissionMessages ? "Hide" : "Show" }} messages
+      <mat-icon
+        [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"
+      ></mat-icon>
     </button>
     <span class="middle-fill"></span>
 
@@ -19,32 +25,67 @@
 
     <!-- Validate and Submit Button -->
     &nbsp;
-    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
+    <button mat-flat-button color="warn" (click)="validate()">
+      Validate and Submit
+    </button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
-
-  </div> <!-- div class=actions-container-->
-
+    <button
+      mat-flat-button
+      color="primary"
+      [routerLink]="['/home']"
+      matTooltip="Close this window"
+    >
+      Close
+    </button>
+  </div>
+  <!-- div class=actions-container-->
 
   <!-- Validation Message Display -->
-  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
+  <div
+    [ngClass]="{
+      'submission-messages': true,
+      collapsed: !showSubmissionMessages,
+      expanded: showSubmissionMessages,
+    }"
+  >
     <div class="submission-message" *ngIf="submissionMessage">
-      {{submissionMessage}}
+      {{ submissionMessage }}
     </div>
 
     <!-- Validation Message Display and Submit Button -->
     <div *ngIf="validationMessages">
-      <span *ngIf=" validationMessages.length > 0">
-        <div class="submission-message" *ngIf='!serverError && !approving'>
+      <span *ngIf="validationMessages.length > 0">
+        <div class="submission-message" *ngIf="!serverError && !approving">
           Please correct or dismiss the following errors and submit again:
         </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
-          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
-            {{message.messageType}}</div>
-          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
-                target="_blank">{{link.text}}</a></span></div>
-          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-            (click)="dismissValidationMessage(i)">
+        <div
+          class="validation-message"
+          *ngFor="let message of validationMessages; index as i"
+        >
+          <div
+            class="message-type"
+            [ngClass]="
+              message.messageType == 'ERROR'
+                ? 'error-message'
+                : 'warning-message'
+            "
+          >
+            {{ message.messageType }}
+          </div>
+          <div class="message">
+            {{ message.message
+            }}<span *ngFor="let link of message.links"
+              ><br /><a [href]="link.href" target="_blank">{{
+                link.text
+              }}</a></span
+            >
+          </div>
+          <button
+            mat-icon-button
+            matTooltip="Dismiss"
+            *ngIf="message.messageType != 'ERROR' && !approving"
+            (click)="dismissValidationMessage(i)"
+          >
             <mat-icon svgIcon="cancel"></mat-icon>
           </button>
         </div>
@@ -52,52 +93,64 @@
 
       <div class="dismiss-container">
         <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" (click)="submit()"
-          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
-          validationMessages.length > 0?'Dismiss All and ':''}}
-          Submit</button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="submit()"
+          [disabled]="isLoading || this.validationResult === false"
+        >
+          {{
+            validationMessages && validationMessages.length > 0
+              ? "Dismiss All and "
+              : ""
+          }}
+          Submit
+        </button>
       </div>
     </div>
     <!-- Validation Message and Submit Button END -->
-  </div> <!-- div submission-messages collapsed/expanded -->
-
-</div> <!-- div class=top-fixed -->
-
+  </div>
+  <!-- div submission-messages collapsed/expanded -->
+</div>
+<!-- div class=top-fixed -->
 
 <div class="form-content-container mat-form-field-style">
   <div class="scrollable-container">
-
     <div class="divcenter headerstyle margintop20px">
-
       <div class="width620px font24px">
-        <b>{{title}}</b>
+        <b>{{ title }}</b>
         &nbsp;&nbsp;
       </div>
-
-    </div> <!-- class=divcenter -->
-
+    </div>
+    <!-- class=divcenter -->
 
     <!-- ############################################################ -->
     <!-- ASSAY DETAILS FORM BEGIN                                     -->
     <!-- ************************************************************ -->
     <div class="details-container">
       <div class="width100percent">
-
         <mat-card class="bordergray">
-
           <mat-card-content class="marginright10px">
-
             <div class="divflex margintop10px">
-
               <div>
                 <!-- Display Existing Assay Set in the dropdown -->
                 <mat-form-field class="width300px">
                   <mat-label>Select from Existing Assay Set: </mat-label>
-                  <mat-select class="margintop20px" [formControl]="existingAssaySetControl"
-                    [(ngModel)]="selectedAssaySet" (selectionChange)="selectionChangeExistingAssaySet($event.value)">
-                    <mat-option *ngFor="let asySet of existingAssaySetList; let indexAssaySet = index"
-                      [value]="asySet.assaySet">
-                      {{asySet.assaySet}}
+                  <!-- Removed [formControl]="existingAssaySetControl" not allowed and value is declared but not used -->
+                  <mat-select
+                    [(ngModel)]="selectedAssaySet"
+                    (selectionChange)="
+                      selectionChangeExistingAssaySet($event.value)
+                    "
+                  >
+                    <mat-option
+                      *ngFor="
+                        let asySet of existingAssaySetList;
+                        let indexAssaySet = index
+                      "
+                      [value]="asySet.assaySet"
+                    >
+                      {{ asySet.assaySet }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -106,79 +159,117 @@
               <!-- Add New Assay Set -->
               <div class="marginleft80px marginright10px marginbottom10px">
                 <mat-form-field class="marginleft15px width150px">
-                  <input matInput placeholder="Enter New Assay Set" [(ngModel)]="newAssaySet" name="newAssaySet" />
+                  <mat-label>Enter New Assay Set</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="newAssaySet"
+                    name="newAssaySet"
+                  />
                 </mat-form-field>
-                <br>
+                <br />
                 <span class="marginleft15px">
-                  <button mat-flat-button color="primary" (click)="addNewAssaySet()">Add New
-                    Assay Set</button>
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    (click)="addNewAssaySet()"
+                  >
+                    Add New Assay Set
+                  </button>
                 </span>
               </div>
 
               <div class="marginleft30px marginright10px marginbottom10px">
                 <mat-form-field class="marginleft15px width150px">
-                  <input matInput placeholder="Enter Existing Assay Set" [(ngModel)]="existingAssaySet"
-                    name="existingAssaySet" />
+                  <mat-label>Enter Existing Assay Se</mat-label>
+                  <input
+                    matInput
+                    [(ngModel)]="existingAssaySet"
+                    name="existingAssaySet"
+                  />
                 </mat-form-field>
-                <br>
+                <br />
                 <span class="marginleft15px">
-                  <button mat-flat-button color="primary" (click)="addNewAssaySetFromExistingSet()">Build from Existing
-                    Set</button>
+                  <button
+                    mat-flat-button
+                    color="primary"
+                    (click)="addNewAssaySetFromExistingSet()"
+                  >
+                    Build from Existing Set
+                  </button>
                 </span>
               </div>
-
-            </div> <!-- class=divflex -->
-
+            </div>
+            <!-- class=divflex -->
 
             <!-- Display Error Messages -->
             <div class="colorred">
-              {{assayMessage}}
-              <br>
+              {{ assayMessage }}
+              <br />
             </div>
 
-
             <div *ngIf="selectedAssaySet" class="font15px">
-              <br>
-              <b>Selected Assay Set: <span class="colormaroon">{{selectedAssaySet}}</span></b>
+              <br />
+              <b
+                >Selected Assay Set:
+                <span class="colormaroon">{{ selectedAssaySet }}</span></b
+              >
             </div>
 
             <!-- Display Assay Sets Details -->
-            <div *ngIf="selectedAssaySet && ((assaysAssingedToAssaySet && assaysAssingedToAssaySet.length > 0)
-              || (assaysNOTAssignedToAssaySet && assaysNOTAssignedToAssaySet.length > 0))">
-
-              <br>
-              <div class="font15px"><b>Total Assays in Database ({{totalAllAssays}})</b></div>
-              <br><br>
+            <div
+              *ngIf="
+                selectedAssaySet &&
+                ((assaysAssingedToAssaySet &&
+                  assaysAssingedToAssaySet.length > 0) ||
+                  (assaysNOTAssignedToAssaySet &&
+                    assaysNOTAssignedToAssaySet.length > 0))
+              "
+            >
+              <br />
+              <div class="font15px">
+                <b>Total Assays in Database ({{ totalAllAssays }})</b>
+              </div>
+              <br /><br />
 
               <!-- TABS -->
-              <mat-tab-group class="" [(selectedIndex)]="tabSelectedIndex"
-                (selectedTabChange)="tabSelectedUpdated($event)">
-
+              <mat-tab-group
+                class=""
+                [(selectedIndex)]="tabSelectedIndex"
+                (selectedTabChange)="tabSelectedUpdated($event)"
+              >
                 <mat-tab label="">
-
                   <!-- TAB Label -->
                   <ng-template mat-tab-label>
-                    <div>Assays assigned to {{selectedAssaySet}}
+                    <div>
+                      Assays assigned to {{ selectedAssaySet }}
                       <div class="font12px">
                         <div class="font12px">
-                          (<span class="colorblack font12px fontbold">{{assaysAssingedToAssaySet.length}}</span>)
+                          (<span class="colorblack font12px fontbold">{{
+                            assaysAssingedToAssaySet.length
+                          }}</span
+                          >)
                         </div>
                       </div>
                     </div>
                   </ng-template>
 
-
                   <!-- Display Assays -->
                   <div class="font16px" *ngIf="isBuildFromExistingSet == true">
-                    <br>
-                    <b>Build from existing set <span class="colormaroon">{{existingAssaySet}}</span></b>
+                    <br />
+                    <b
+                      >Build from existing set
+                      <span class="colormaroon">{{ existingAssaySet }}</span></b
+                    >
                   </div>
 
-                  <br>
+                  <br />
                   <div class="divflex">
                     <div class="font18px colorblue">
-                      <b>Assays already assigned to {{selectedAssaySet}}
-                        ({{assaysAssingedToAssaySet.length}})</b>
+                      <b
+                        >Assays already assigned to {{ selectedAssaySet }} ({{
+                          assaysAssingedToAssaySet.length
+                        }})</b
+                      >
                     </div>
 
                     <!-- If NO Assay assigned to Assay Set, display Delete button to delete the Assay Set -->
@@ -192,10 +283,10 @@
                       <br>
                     </div>
                     -->
+                  </div>
+                  <!-- class=divflex -->
 
-                  </div> <!-- class=divflex -->
-
-                  <br>
+                  <br />
                   <table border="1">
                     <tr>
                       <th>#</th>
@@ -205,90 +296,140 @@
                       <th>Assay Target Name</th>
                       <th>Assay Title</th>
                       <th>Assay Sets</th>
-                      <th>Select Checkbox to assign Assay to ({{selectedAssaySet}})</th>
+                      <th>
+                        Select Checkbox to assign Assay to ({{
+                          selectedAssaySet
+                        }})
+                      </th>
                     </tr>
 
-                    <tr class="font12px" *ngFor="let assay of assaysAssingedToAssaySet; let indexAssayBySet = index">
-                      <td>{{(indexAssayBySet+1)}}</td>
+                    <tr
+                      class="font12px"
+                      *ngFor="
+                        let assay of assaysAssingedToAssaySet;
+                        let indexAssayBySet = index
+                      "
+                    >
+                      <td>{{ indexAssayBySet + 1 }}</td>
 
                       <td>
                         <div class="width70px">
-                          <a class="view-detail-link" [routerLink]="['/invitro-pharm', assay.id]" target="_blank"
-                            matTooltip='View Assay Record'>
+                          <a
+                            class="view-detail-link"
+                            [routerLink]="['/invitro-pharm', assay.id]"
+                            target="_blank"
+                            matTooltip="View Assay Record"
+                          >
                             View Details
                           </a>
                         </div>
                       </td>
 
-                      <td class="font12px">{{assay.externalAssaySource}}</td>
+                      <td class="font12px">{{ assay.externalAssaySource }}</td>
 
-                      <td class="font12px">{{assay.externalAssayId}}</td>
+                      <td class="font12px">{{ assay.externalAssayId }}</td>
 
                       <td class="font12px">
-                        <div *ngIf="assay.targetNameApprovalId; else noAssignedTargetApprovId">
-                          <a [routerLink]="['/substances', assay.targetNameApprovalId]" target="_blank"
-                            matTooltip="Go to Substance Details page">
-                            <b>{{assay.targetName}}</b>
+                        <div
+                          *ngIf="
+                            assay.targetNameApprovalId;
+                            else noAssignedTargetApprovId
+                          "
+                        >
+                          <a
+                            [routerLink]="[
+                              '/substances',
+                              assay.targetNameApprovalId,
+                            ]"
+                            target="_blank"
+                            matTooltip="Go to Substance Details page"
+                          >
+                            <b>{{ assay.targetName }}</b>
                           </a>
                         </div>
                         <ng-template #noAssignedTargetApprovId>
-                          <b>{{assay.targetName}}</b>
+                          <b>{{ assay.targetName }}</b>
                         </ng-template>
                       </td>
 
-                      <td class="font12px">{{assay.assayTitle}}</td>
+                      <td class="font12px">{{ assay.assayTitle }}</td>
 
                       <td class="width120px">
-                        <div *ngFor="let asySet of assay.invitroAssaySets; let indexSet = index">
-                          {{(indexSet+1)}}.&nbsp;{{asySet.assaySet}}
+                        <div
+                          *ngFor="
+                            let asySet of assay.invitroAssaySets;
+                            let indexSet = index
+                          "
+                        >
+                          {{ indexSet + 1 }}.&nbsp;{{ asySet.assaySet }}
                         </div>
                       </td>
 
                       <td>
                         <div class="divflex">
                           <div class="margintop3px marginleft80px">
-                            <mat-checkbox color="primary" [disabled]="assay.invitroAssaySets.length == 1"
+                            <mat-checkbox
+                              color="primary"
+                              [disabled]="assay.invitroAssaySets.length == 1"
                               [checked]="assay._assaySet"
-                              (change)="updateCheckBoxAssaySet($event.checked, assay, 'remove')">
+                              (change)="
+                                updateCheckBoxAssaySet(
+                                  $event.checked,
+                                  assay,
+                                  'remove'
+                                )
+                              "
+                            >
                             </mat-checkbox>
                           </div>
 
                           <!-- Display message if there is only one Assay Set in the Assay -->
-                          <div class="marginleft30px" *ngIf="assay.invitroAssaySets.length == 1">
-                            <mat-icon matTooltip="An Assay record must have at least one Assay Set">help</mat-icon>
+                          <div
+                            class="marginleft30px"
+                            *ngIf="assay.invitroAssaySets.length == 1"
+                          >
+                            <mat-icon
+                              matTooltip="An Assay record must have at least one Assay Set"
+                              >help</mat-icon
+                            >
                           </div>
-                        </div> <!-- class=divflex-->
+                        </div>
+                        <!-- class=divflex-->
                       </td>
-
-                    </tr> <!-- FOR LOOP: assay result -->
-
+                    </tr>
+                    <!-- FOR LOOP: assay result -->
                   </table>
-                  <br><br>
-
-                </mat-tab> <!-- Tab: Assays by Assay Set -->
-
+                  <br /><br />
+                </mat-tab>
+                <!-- Tab: Assays by Assay Set -->
 
                 <!-- TAB: Assays NOT Assigned to Assay Set -->
                 <mat-tab label="">
-
                   <!-- TAB Label -->
                   <ng-template mat-tab-label>
-                    <div>Assays NOT assigned to {{selectedAssaySet}}
+                    <div>
+                      Assays NOT assigned to {{ selectedAssaySet }}
                       <div class="font12px">
                         <div class="font12px">
-                          (<span class="colorblack font12px fontbold">{{assaysNOTAssignedToAssaySet.length}}</span>)
+                          (<span class="colorblack font12px fontbold">{{
+                            assaysNOTAssignedToAssaySet.length
+                          }}</span
+                          >)
                         </div>
                       </div>
                     </div>
                   </ng-template>
 
-
                   <!-- Display Assays -->
-                  <br>
-                  <div class="font18px colorblue"><b>Assays NOT assigned to {{selectedAssaySet}}
-                      ({{assaysNOTAssignedToAssaySet.length}})</b>
+                  <br />
+                  <div class="font18px colorblue">
+                    <b
+                      >Assays NOT assigned to {{ selectedAssaySet }} ({{
+                        assaysNOTAssignedToAssaySet.length
+                      }})</b
+                    >
                   </div>
-                  <br>
+                  <br />
 
                   <table border="1">
                     <tr>
@@ -299,74 +440,110 @@
                       <th>Assay Target Name</th>
                       <th>Assay Title</th>
                       <th>Assay Sets</th>
-                      <th>Select Checkbox to assign Assay to ({{selectedAssaySet}})</th>
+                      <th>
+                        Select Checkbox to assign Assay to ({{
+                          selectedAssaySet
+                        }})
+                      </th>
                     </tr>
 
-                    <tr class="font12px" *ngFor="let assay of assaysNOTAssignedToAssaySet; let indexAssayBySet = index">
-                      <td>{{(indexAssayBySet+1)}}</td>
+                    <tr
+                      class="font12px"
+                      *ngFor="
+                        let assay of assaysNOTAssignedToAssaySet;
+                        let indexAssayBySet = index
+                      "
+                    >
+                      <td>{{ indexAssayBySet + 1 }}</td>
 
                       <td>
                         <div class="width70px">
-                          <a class="view-detail-link" [routerLink]="['/invitro-pharm', assay.id]" target="_blank"
-                            matTooltip='View Assay Record'>
+                          <a
+                            class="view-detail-link"
+                            [routerLink]="['/invitro-pharm', assay.id]"
+                            target="_blank"
+                            matTooltip="View Assay Record"
+                          >
                             View Details
                           </a>
                         </div>
                       </td>
 
-                      <td class="font12px">{{assay.externalAssaySource}}</td>
+                      <td class="font12px">{{ assay.externalAssaySource }}</td>
 
-                      <td class="font12px">{{assay.externalAssayId}}</td>
+                      <td class="font12px">{{ assay.externalAssayId }}</td>
 
                       <td class="font12px">
-                        <div *ngIf="assay.targetNameApprovalId; else noNotAssignedTargetApprovId">
-                          <a [routerLink]="['/substances', assay.targetNameApprovalId]" target="_blank"
-                            matTooltip="Go to Substance Details page">
-                            <b>{{assay.targetName}}</b>
+                        <div
+                          *ngIf="
+                            assay.targetNameApprovalId;
+                            else noNotAssignedTargetApprovId
+                          "
+                        >
+                          <a
+                            [routerLink]="[
+                              '/substances',
+                              assay.targetNameApprovalId,
+                            ]"
+                            target="_blank"
+                            matTooltip="Go to Substance Details page"
+                          >
+                            <b>{{ assay.targetName }}</b>
                           </a>
                         </div>
                         <ng-template #noNotAssignedTargetApprovId>
-                          <b>{{assay.targetName}}</b>
+                          <b>{{ assay.targetName }}</b>
                         </ng-template>
                       </td>
 
-                      <td class="font12px">{{assay.assayTitle}}</td>
+                      <td class="font12px">{{ assay.assayTitle }}</td>
 
                       <td class="width120px">
-                        <div *ngFor="let asySet of assay.invitroAssaySets; let indexSet = index">
-                          {{(indexSet+1)}}.&nbsp;{{asySet.assaySet}}
+                        <div
+                          *ngFor="
+                            let asySet of assay.invitroAssaySets;
+                            let indexSet = index
+                          "
+                        >
+                          {{ indexSet + 1 }}.&nbsp;{{ asySet.assaySet }}
                         </div>
                       </td>
 
                       <td>
                         <div class="marginleft80px">
-                          <mat-checkbox color="primary" [checked]="assay._assaySet" [checked]="assay._assaySet"
-                            (change)="updateCheckBoxAssaySet($event.checked, assay, 'add')">
+                          <mat-checkbox
+                            color="primary"
+                            [checked]="assay._assaySet"
+                            [checked]="assay._assaySet"
+                            (change)="
+                              updateCheckBoxAssaySet(
+                                $event.checked,
+                                assay,
+                                'add'
+                              )
+                            "
+                          >
                           </mat-checkbox>
                         </div>
                       </td>
-
-                    </tr> <!-- FOR LOOP: assay result -->
-
+                    </tr>
+                    <!-- FOR LOOP: assay result -->
                   </table>
-                  <br><br>
-
-                </mat-tab> <!-- Tab: All Assays -->
-
-
+                  <br /><br />
+                </mat-tab>
+                <!-- Tab: All Assays -->
               </mat-tab-group>
               <!-- MAT-TAB-GROUP END -->
-
-            </div> <!-- if selectedAssaySet exists -->
-
-
+            </div>
+            <!-- if selectedAssaySet exists -->
           </mat-card-content>
         </mat-card>
-
-      </div> <!-- width100percent -->
-
-    </div> <!-- class=details-container -->
-    <br><br><br>
-
-  </div> <!-- scrollable-container -->
-</div> <!-- class=form-content-container -->
+      </div>
+      <!-- width100percent -->
+    </div>
+    <!-- class=details-container -->
+    <br /><br /><br />
+  </div>
+  <!-- scrollable-container -->
+</div>
+<!-- class=form-content-container -->
