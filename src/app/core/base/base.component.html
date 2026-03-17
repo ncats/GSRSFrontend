@@ -59,7 +59,7 @@
           {{ navItem.display }}
         </a>
 
-        <ng-container *ngIf="navItem.children">
+        <ng-container *ngIf="navItem.children && (navItem.display.toUpperCase()!='REGISTER' || canRegister)">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
             {{ navItem.display }}
           </a>

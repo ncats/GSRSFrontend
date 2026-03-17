@@ -104,7 +104,7 @@
                 </mat-nav-list>
                 <ng-container> </ng-container>
               </mat-expansion-panel>
-              <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel [expanded]="true" *ngIf="canRegister">
                 <mat-expansion-panel-header>
                   <mat-panel-title class="panel-header">
                     Register
@@ -188,7 +188,7 @@
                 </mat-nav-list>
                 <ng-container> </ng-container>
               </mat-expansion-panel>
-              <mat-expansion-panel *ngIf="loadedComponents" [expanded]="false">
+              <mat-expansion-panel *ngIf="loadedComponents && canRegister" [expanded]="false" >
                 <mat-expansion-panel-header>
                   <mat-panel-title class="panel-header">
                     Register Other
@@ -196,32 +196,6 @@
                 </mat-expansion-panel-header>
                 <div>
                   <mat-nav-list class="other-list">
-                    <!-- <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG2'">
-                        <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-
-                        Specified Substance Group 2
-                        <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-
-                      </a>
-                      <mat-divider></mat-divider>
-                      <a mat-list-item routerLink="/substances/register/specifiedSubstanceG3">
-                        <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                        Specified Substance Group 3
-                      </a>
-
-                      <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG3'">
-                        <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                        Specified Substance Group 3
-                        <mat-icon  class = "shrunken-icon"  svgIcon="open_in_new"></mat-icon>
-                      </a>
-                      <mat-divider></mat-divider>
-                      <a mat-list-item [href]="baseDomain + clasicBaseHref + 'wizard?kind=specifiedSubstanceG4'">
-                        <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                        Specified Substance Group 4
-                        <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-                      </a>
-                      -->
-
                     <span *ngIf="loadedComponents">
                       <span *ngIf="loadedComponents.products">
                         <mat-divider></mat-divider>
@@ -232,13 +206,6 @@
                           ></mat-icon>
                           Product
                         </a>
-                        <!--
-                        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerProduct'">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                          Product
-                          <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-                        </a>
-                        -->
                       </span>
                       <span *ngIf="loadedComponents.applications">
                         <mat-divider></mat-divider>
@@ -250,13 +217,6 @@
                           Application
                         </a>
 
-                        <!--
-                        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerApplication'">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                          Application
-                          <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-                        </a>
-                        -->
                       </span>
                       <span *ngIf="loadedComponents.impurities">
                         <mat-divider></mat-divider>
@@ -292,19 +252,6 @@
                         </a>
                       </span>
 
-                      <!-- <mat-divider></mat-divider>
-                        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerBiomarker'">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                          Biomarker
-                          <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-                        </a>
-
-                        <mat-divider></mat-divider>
-                        <a mat-list-item [href]="baseDomain + clasicBaseHref + 'registerIndication'">
-                          <mat-icon matListIcon svgIcon="outline-description"></mat-icon>
-                          Indication
-                          <mat-icon class="shrunken-icon" svgIcon="open_in_new"></mat-icon>
-                        </a>-->
                     </span>
                   </mat-nav-list>
                 </div>
@@ -333,11 +280,6 @@
         >
           <div class="banner-main" [innerHTML]="bannerMessage"></div>
 
-          <!--  <div class="close-container" style = "width:50px">
-                <button mat-icon-button (click)="closeWelcomeMessage()">
-                  <mat-icon svgIcon="close"></mat-icon>
-                </button>
-              </div>-->
         </mat-card>
         <mat-card
           class="home-card"
