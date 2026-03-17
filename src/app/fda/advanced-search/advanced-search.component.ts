@@ -981,8 +981,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
     }); // getMolFile
   }
 
-  searchCutoffChanged(event): void {
-    this.similarityCutoff = event.value;
+  searchCutoffChanged(value: number): void {
+    this.similarityCutoff = value;
     this.gaService.sendEvent('structureSearch', 'slider', 'similarity-cutoff', this.similarityCutoff);
   }
 

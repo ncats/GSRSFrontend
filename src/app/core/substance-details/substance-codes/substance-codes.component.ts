@@ -1,28 +1,36 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import { SubstanceCardBaseFilteredList } from '../substance-card-base-filtered-list';
-import {SubstanceCode, SubstanceDetail, SubstanceName, TableFilterDDModel} from '../../substance/substance.model';
-import {MatDialog} from '@angular/material/dialog';
-import { GoogleAnalyticsService } from '../../google-analytics/google-analytics.service';
-import {Subject} from 'rxjs';
-import {Sort} from '@angular/material/sort';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import {UtilsService} from '@gsrs-core/utils';
-import { FormControl } from '@angular/forms';
-import { ConfigService } from '@gsrs-core/config';
+import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { SubstanceCardBaseFilteredList } from "../substance-card-base-filtered-list";
+import {
+  SubstanceCode,
+  SubstanceDetail,
+  SubstanceName,
+  TableFilterDDModel,
+} from "../../substance/substance.model";
+import { MatDialog } from "@angular/material/dialog";
+import { GoogleAnalyticsService } from "../../google-analytics/google-analytics.service";
+import { Subject } from "rxjs";
+import { Sort } from "@angular/material/sort";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { UtilsService } from "@gsrs-core/utils";
+import { FormControl } from "@angular/forms";
+import { ConfigService } from "@gsrs-core/config";
 
 @Component({
-    selector: 'app-substance-codes',
-    templateUrl: './substance-codes.component.html',
-    styleUrls: ['./substance-codes.component.scss'],
-    standalone: false
+  selector: "app-substance-codes",
+  templateUrl: "./substance-codes.component.html",
+  styleUrls: ["./substance-codes.component.scss"],
+  standalone: false,
 })
-export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<SubstanceCode> implements OnInit, AfterViewInit {
+export class SubstanceCodesComponent
+  extends SubstanceCardBaseFilteredList<SubstanceCode>
+  implements OnInit, AfterViewInit
+{
   type: string;
   codes: Array<SubstanceCode> = [];
   displayedColumns: string[];
   substanceUpdated = new Subject<SubstanceDetail>();
   hideFilters = true;
-  showHideFilterText = 'Show Filter';
+  showHideFilterText = "Show Filter";
   displayedFilterColumns: string[];
   codeSystemFilter = new FormControl();
   typeFilter = new FormControl();
@@ -37,29 +45,45 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     private overlayContainerService: OverlayContainer,
     private utilsService: UtilsService,
     private configService: ConfigService,
-
   ) {
     super(gaService);
   }
 
   ngOnInit() {
     this.pageSize = 10;
-    this.substanceUpdated.subscribe(substance => {
+    this.substanceUpdated.subscribe((substance) => {
       this.substance = substance;
       this.codes = [];
       if (this.substance != null && this.type != null) {
-        if (this.type === 'Codes - Classifications') {
-          this.displayedColumns = ['classificationTree', 'codeSystem', 'code', 'references'];
+        if (this.type === "Codes - Classifications") {
+          this.displayedColumns = [
+            "classificationTree",
+            "codeSystem",
+            "code",
+            "references",
+          ];
           //this.displayedFilterColumns = ['classTreeFilter', 'codeSystemFilter', 'codeFilter', 'emptyFilter', 'resetFilter'];
         } else {
-          this.displayedColumns = ['codeSystem', 'code', 'type', 'comments', 'references'];
-          this.displayedFilterColumns = ['codeSystemFilter', 'codeFilter', 'typeFilter', 'emptyFilter', 'resetFilter'];
+          this.displayedColumns = [
+            "codeSystem",
+            "code",
+            "type",
+            "comments",
+            "references",
+          ];
+          this.displayedFilterColumns = [
+            "codeSystemFilter",
+            "codeFilter",
+            "typeFilter",
+            "emptyFilter",
+            "resetFilter",
+          ];
         }
 
-          this.filterSubstanceCodes();
+        this.filterSubstanceCodes();
 
         if (this.codes != null && this.codes.length) {
-          this.codes.forEach(code => {
+          this.codes.forEach((code) => {
             if (code.url) {
               code.url = code.url.trim();
             }
@@ -67,18 +91,21 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
           this.filtered = this.codes;
           this.pageChange();
 
-          this.searchControl.valueChanges.subscribe(value => {
-            this.filterList(value, this.codes);
-          }, error => {
-         //   console.log(error);
-          });
+          this.searchControl.valueChanges.subscribe(
+            (value) => {
+              this.filterList(value, this.codes);
+            },
+            (error) => {
+              //   console.log(error);
+            },
+          );
           this.getTypeFilterOptions();
         } else {
           this.filtered = [];
         }
       }
     });
-    
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.codeSystemFilter.valueChanges.subscribe((codeSystemFilterValue) => {
       this.filterTable();
@@ -90,90 +117,105 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
       this.filterTable();
     });
 
-    if (this.configService && this.configService.configData && this.configService.configData.editPagingOptionSettings && this.configService.configData.editPagingOptionSettings.codes ){
-      let pagingSettings = this.configService.configData.editPagingOptionSettings.codes;
-      console.log('setting codes');
-      if(pagingSettings.pageSizeDefault) {
-        this.pageSize = pagingSettings.pageSizeDefault
+    if (
+      this.configService &&
+      this.configService.configData &&
+      this.configService.configData.editPagingOptionSettings &&
+      this.configService.configData.editPagingOptionSettings.codes
+    ) {
+      let pagingSettings =
+        this.configService.configData.editPagingOptionSettings.codes;
+      console.log("setting codes");
+      if (pagingSettings.pageSizeDefault) {
+        this.pageSize = pagingSettings.pageSizeDefault;
       }
-      if(pagingSettings.pageSizeOptions) {
+      if (pagingSettings.pageSizeOptions) {
         this.pageSizeOptions = pagingSettings.pageSizeOptions;
       }
-}
+    }
   }
 
-  filterTable(type?:string) {
-    const csFilter = this.codeSystemFilter.value === null ? '' : this.codeSystemFilter.value;
-    const cFilter = this.codeFilter.value === null ? '' : this.codeFilter.value;
-    const tFilter = this.typeFilter.value === null ? '' : this.typeFilter.value;
+  filterTable(type?: string) {
+    const csFilter =
+      this.codeSystemFilter.value === null ? "" : this.codeSystemFilter.value;
+    const cFilter = this.codeFilter.value === null ? "" : this.codeFilter.value;
+    const tFilter = this.typeFilter.value === null ? "" : this.typeFilter.value;
     this.filtered = [];
-    for(let n of this.codes) {
-      if((n.codeSystem.toLowerCase().includes(csFilter.toLowerCase())) &&
-      (n.code.toLowerCase().includes(cFilter.toLowerCase())) &&
-      (n.type.toLowerCase().includes(tFilter.toLowerCase()))) {
+    for (let n of this.codes) {
+      if (
+        n.codeSystem.toLowerCase().includes(csFilter.toLowerCase()) &&
+        n.code.toLowerCase().includes(cFilter.toLowerCase()) &&
+        n.type.toLowerCase().includes(tFilter.toLowerCase())
+      ) {
         this.filtered.push(n);
       }
     }
-    
+
     this.pageChange();
   }
 
   toggleFilter() {
     this.hideFilters = !this.hideFilters;
-    if(this.hideFilters) {
-      this.showHideFilterText = 'Show Filter';
+    if (this.hideFilters) {
+      this.showHideFilterText = "Show Filter";
     } else {
-      this.showHideFilterText = 'Hide Filter';
+      this.showHideFilterText = "Hide Filter";
     }
   }
 
   getTypeFilterValue(value) {
-    for(let l of this.typeFilterOptions) {
-      if(l.display === value) {
+    for (let l of this.typeFilterOptions) {
+      if (l.display === value) {
         return l;
       }
     }
   }
 
   getTypeFilterOptions() {
-    for(let n of this.codes) {
-        let oneType = n.type;
-        let value: TableFilterDDModel = {
-          value: oneType,
-          display: oneType
-        }
-        if (this.typeFilterOptions.filter(e => e.value === oneType).length > 0) {
-        } else {
-          this.typeFilterOptions.push(value);
-        }
+    for (let n of this.codes) {
+      let oneType = n.type;
+      let value: TableFilterDDModel = {
+        value: oneType,
+        display: oneType,
+      };
+      if (
+        this.typeFilterOptions.filter((e) => e.value === oneType).length > 0
+      ) {
+      } else {
+        this.typeFilterOptions.push(value);
+      }
     }
   }
 
   sortData(sort: Sort) {
     const data = this.codes.slice();
-    if (!sort.active || sort.direction === '') {
+    if (!sort.active || sort.direction === "") {
       this.filtered = data;
       this.pageChange();
       return;
     }
     this.filtered = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
-      return this.utilsService.compare(a[sort.active] ? a[sort.active].toString().toUpperCase() : null, b[sort.active] ? b[sort.active].toString().toUpperCase() : null, isAsc);
+      const isAsc = sort.direction === "asc";
+      return this.utilsService.compare(
+        a[sort.active] ? a[sort.active].toString().toUpperCase() : null,
+        b[sort.active] ? b[sort.active].toString().toUpperCase() : null,
+        isAsc,
+      );
     });
     this.pageChange();
-
-    
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   private filterSubstanceCodes(): void {
     if (this.substance.codes && this.substance.codes.length > 0) {
-      this.substance.codes.forEach(code => {
-        if (code._isClassification && this.type === 'Codes - Classifications') {
+      this.substance.codes.forEach((code) => {
+        if (code._isClassification && this.type === "Codes - Classifications") {
           this.codes.push(code);
-        } else if (!code._isClassification && this.type === 'Codes - Identifiers') {
+        } else if (
+          !code._isClassification &&
+          this.type === "Codes - Identifiers"
+        ) {
           this.codes.push(code);
         }
       });
@@ -183,8 +225,8 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
 
   codeIsProtected(access: string[]) {
     let itIs = false;
-    for(let a of access) {
-      if(a.toLowerCase() === 'protected') {
+    for (let a of access) {
+      if (a.toLowerCase() === "protected") {
         itIs = true;
       }
     }
@@ -192,28 +234,31 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
   }
 
   getClassificationTree(comments: string): Array<string> {
-    return comments.split('|');
+    return comments.split("|");
   }
 
   resetFilters() {
     this.pageChange();
-    this.searchControl.setValue('');
-    this.codeFilter.setValue('');
-    this.codeSystemFilter.setValue('');
-    this.typeFilter.setValue('');
+    this.searchControl.setValue("");
+    this.codeFilter.setValue("");
+    this.codeSystemFilter.setValue("");
+    this.typeFilter.setValue("");
   }
 
   openModal(templateRef) {
-
-    this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
+    this.gaService.sendEvent(
+      this.analyticsEventCategory,
+      "button",
+      "references view",
+    );
 
     const dialogRef = this.dialog.open(templateRef, {
-      minWidth: '40%',
-      maxWidth: '90%'
+      minWidth: "60%",
+      maxWidth: "90%",
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.overlayContainer.style.zIndex = null;
     });
   }
@@ -222,4 +267,3 @@ export class SubstanceCodesComponent extends SubstanceCardBaseFilteredList<Subst
     this.dialog.closeAll();
   }
 }
-

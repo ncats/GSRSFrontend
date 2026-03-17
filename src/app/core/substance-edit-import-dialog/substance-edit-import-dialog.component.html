@@ -1,28 +1,58 @@
-<h3  mat-dialog-title class="colorblue">{{title}}</h3>
+<h3 mat-dialog-title class="colorblue">{{ title }}</h3>
 
 <mat-divider></mat-divider>
 
-<div mat-dialog-content class = "mat-dialog-content">
-    <div class = "info">
-        Select a .json file to import into a new edit form.
+<mat-dialog-content class="mat-dialog-content">
+  <div class="info">Select a .json file to import into a new edit form.</div>
+  <div class="full-row">
+    <div>
+      <button
+        mat-stroked-button
+        class="button-select-file"
+        (click)="openInput()"
+      >
+        Select File to Import
+      </button>
     </div>
-    <div class = "full-row">
-            <div><button mat-stroked-button class="button-select-file" (click)="openInput()">Select File to Import</button></div>
-            <div class = "file-name" [ngClass] = "filename? 'test':'italics'">{{filename? filename: 'no file chosen'}}</div>
-            <input id="fileInput" hidden type="file" (change)="uploadFile($event)" name="file1" accept=".json">
+    <div class="file-name" [ngClass]="filename ? 'test' : 'italics'">
+      {{ filename ? filename : "no file chosen" }}
     </div>
-    <div class = "full-row-col"  *ngIf = "!this.record" style = "margin-top:10px;">
-       <div style = "width:100%" class="padbottom20px">Or paste JSON here:</div>
-       <textarea class="bordergray" [(ngModel)] = "pastedJSON" cdkAutosizeMinRows="8" (ngModelChange)="checkLoaded()" style = "min-height: 180px;"></textarea>
-    </div>
-    <div class = "message" *ngIf="message">
-        {{message}}
-    </div>
-</div>
+    <input
+      id="fileInput"
+      hidden
+      type="file"
+      (change)="uploadFile($event)"
+      name="file1"
+      accept=".json"
+    />
+  </div>
+  <div class="full-row-col" *ngIf="!this.record" style="margin-top: 10px">
+    <div style="width: 100%" class="padbottom20px">Or paste JSON here:</div>
+    <textarea
+      class="bordergray"
+      [(ngModel)]="pastedJSON"
+      cdkAutosizeMinRows="8"
+      (ngModelChange)="checkLoaded()"
+      style="min-height: 180px"
+    ></textarea>
+  </div>
+  <div class="message" *ngIf="message">
+    {{ message }}
+  </div>
+</mat-dialog-content>
 <mat-divider></mat-divider>
 
-<div mat-dialog-actions class = "mat-dialog-actions" >
-    <button mat-stroked-button class="button-cancel colorred" matDialogClose>Cancel</button>
-    <span class="middle-fill"></span>
-    <button mat-flat-button color="primary" [disabled]= "!loaded" (click) ="useFile()">Import</button>
-</div>
+<mat-dialog-actions class="mat-dialog-actions">
+  <button mat-stroked-button class="button-cancel colorred" matDialogClose>
+    Cancel
+  </button>
+  <span class="middle-fill"></span>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="!loaded"
+    (click)="useFile()"
+  >
+    Import
+  </button>
+</mat-dialog-actions>
