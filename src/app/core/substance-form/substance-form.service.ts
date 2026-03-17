@@ -2299,6 +2299,13 @@ export class SubstanceFormService implements OnDestroy {
         }
   }
 
+  getSubstanceStatus(): string {
+    if(this.privateSubstance && this.privateSubstance.status) {
+      return this.privateSubstance.status;
+    }
+    return "";
+  }
+
 
 }
 

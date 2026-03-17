@@ -180,6 +180,8 @@ export class BaseComponent implements OnInit, OnDestroy {
       this.versionTooltipMessage = `V${this.version}`;
       this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format('ddd MMM D YYYY HH:mm:ss z')}`;
     });
+    let okToRegister: boolean = await this.authService.canEditData();
+    if(okToRegister) {
     this.navItems.forEach(item => {
       if (item.display === 'Register') {
         this.registerNav = item.children;
@@ -204,6 +206,7 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.navItems.splice(i, 1);
 
     }
+   }
   }
   }
 }
