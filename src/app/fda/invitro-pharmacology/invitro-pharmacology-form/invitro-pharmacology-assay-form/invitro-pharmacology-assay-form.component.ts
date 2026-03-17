@@ -690,7 +690,7 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     // Get Ingredient Name from the Substance Search Textbox (Type Ahead)
     this.setSubstanceValues(event, fieldName, indexRow);
 
-    const q = event.replace('\"', '');
+    const q = event.replace(/"/g, "");
     // Changed to configuration approach.
     const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
 
