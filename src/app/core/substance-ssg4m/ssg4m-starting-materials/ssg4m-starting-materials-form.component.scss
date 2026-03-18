@@ -26,12 +26,12 @@
   align-items: flex-end;
 
   .delete-container {
-      padding: 0 10px 8px 0;
+    padding: 0 10px 8px 0;
   }
 
   .col {
-      flex-grow: 1;
-      padding-right: 25px;
+    flex-grow: 1;
+    padding-right: 25px;
   }
 
   .col-1-1 {
@@ -54,10 +54,10 @@
   text-align: left !important;
   position: relative;
   img {
-      width: 100%;
-      height: auto;
-      display: block;
-      max-width: 220px;
+    width: 100%;
+    height: auto;
+    display: block;
+    max-width: 220px;
   }
 }
 
@@ -170,9 +170,19 @@ hr.style {
 }
 
 .amount-display {
-  padding-top:11px;
+  padding-top: 11px;
 }
 
 .middle-fill {
   flex: 1 1 auto;
 }
+
+::ng-deep .search-form-field .mat-mdc-form-field-infix {
+  padding-top: 24px !important;
+  padding-bottom: 8px !important;
+}
+
+// ::ng-deep .mat-mdc-form-field {
+//   line-height: 1.125 !important;
+//   font-size: 14px !important;
+// }
