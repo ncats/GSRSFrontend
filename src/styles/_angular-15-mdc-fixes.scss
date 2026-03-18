@@ -100,9 +100,9 @@
 // MDC form fields have different default appearance and structure
 .mat-mdc-form-field {
   // Match Angular 14 form field appearance
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  font-size: 14px;
-  line-height: 1.125;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  // font-size: 14px !important;
+  // line-height: 1.125 !important;
 
   // Fix the wrapper to not add extra spacing
   .mat-mdc-text-field-wrapper {
@@ -1603,3 +1603,13 @@ a.mat-mdc-outlined-button {
     padding-bottom: 8px;
   }
 }
+
+// .mat-button,
+// .matButton,
+// .mat-mdc-button {
+//   color: var(--link-color) !important;
+// }
+
+// .mat-mdc-button-disabled {
+//   color: #00000042 !important;
+// }
