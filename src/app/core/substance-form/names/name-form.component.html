@@ -15,18 +15,10 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <div class="radio-container column-radio">
-      <mat-radio-button
-        class="radio-vertical"
-        name="priorityName"
-        value="true"
-        [checked]="name.displayName"
-        (change)="priorityUpdated($event)"
-        matTooltip="{{
-          'displayNameTitle' | elementLabel: 'substance_names_name'
-        }}"
-      >
-        {{ "displayNameShortTitle" | elementLabel: "substance_names_name" }}
+    <div class="radio-container column-radio" *ngIf="canChangeDisplayName || substanceStatus !== 'APPROVED'">
+      <mat-radio-button name="priorityName" value="true" [checked]="name.displayName" (change)="priorityUpdated($event)"
+        matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
+        {{ 'displayNameShortTitle' | elementLabel : 'substance_names_name' }}
       </mat-radio-button>
     </div>
     <div class="checkbox-container column-checkbox" *ngIf="showStd && viewFull">

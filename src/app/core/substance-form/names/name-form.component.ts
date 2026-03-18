@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { SubstanceName, SubstanceNameOrg } from '../../substance/substance.model';
+import { SubstanceDetail, SubstanceName, SubstanceNameOrg } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
 import { FormControl, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { UtilsService } from '../../utils/utils.service';
@@ -11,6 +10,7 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {MatDialog} from '@angular/material/dialog';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 import { SubstanceFormNamesService } from '@gsrs-core/substance-form/names/substance-form-names.service';
+import { AuthService } from '@gsrs-core/auth';
 
 @Component({
     selector: 'app-name-form',
@@ -30,6 +30,8 @@ export class NameFormComponent implements OnInit, OnDestroy {
   substanceType = '';
   viewFull = true;
   showStd = false;
+  canChangeDisplayName: boolean = false;
+  substanceStatus: string = "";
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -37,17 +39,20 @@ export class NameFormComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private substanceFormService: SubstanceFormService,
     private overlayContainerService: OverlayContainer,
-    private nameFormService: SubstanceFormNamesService
+    private nameFormService: SubstanceFormNamesService,
+    private authService: AuthService,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const definition = this.substanceFormService.definition.subscribe(def => {
       this.substanceType = def.substanceClass;
     });
     definition.unsubscribe();
     
-
+    this.canChangeDisplayName = await this.authService.hasSpecificPrivilege("Change Display Name for Approved");
+    
+    this.substanceStatus = this.substanceFormService.getSubstanceStatus().toUpperCase();
   }
 
   ngOnDestroy() {
