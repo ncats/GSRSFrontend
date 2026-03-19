@@ -532,8 +532,8 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         element["targetNameSubstanceUuid"] = substance.uuid;
                         element["targetNameSubstanceKey"] = substanceKey;
                         element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
-
-                        if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"] !== substance.approvalID)) {
+                         console.log(element["targetNameApprovalId"] + "        " + substance.approvalID);
+                        if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
                       }
@@ -541,7 +541,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         element["humanHomologTargetSubstanceKey"] = substanceKey;
                         element["humanHomologTargetSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                        if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"] !== substance.approvalID)) {
+                        if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.HUMAN_HOMOLOG_TARGET + ' Approval ID "' + element["humanHomologTargetApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
                       }
@@ -549,7 +549,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         element["ligandSubstrateSubstanceKey"] = substanceKey;
                         element["ligandSubstrateSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                        if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"] !== substance.approvalID)) {
+                        if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.LIGAND_SUBSTRATE + ' Approval ID "' + element["ligandSubstrateApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
                       }
