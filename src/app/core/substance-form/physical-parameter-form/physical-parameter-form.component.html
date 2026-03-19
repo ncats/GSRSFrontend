@@ -1,7 +1,13 @@
 <div class="parameter-form-container">
-  <div class="form-row">
+  <div class="form-row" class="name-row">
     <mat-form-field class="name">
-      <input matInput placeholder="Name" [(ngModel)]="parameter.parameterName" required name="name" />
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        [(ngModel)]="parameter.parameterName"
+        required
+        name="name"
+      />
     </mat-form-field>
   </div>
   <div class="amount-form-container">

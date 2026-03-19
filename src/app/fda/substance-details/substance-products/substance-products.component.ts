@@ -58,7 +58,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   phpIdIconSrcPath = '';
 
   loadedComponents: LoadedComponents;
-  products: any;
+  products: any = [];
 
   // Search variables
   ascDescDir = 'asc';

@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // Config for Adverse Event on Shiny Server
   adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
+  canRegister: boolean = false;
 
   constructor(
     private gaService: GoogleAnalyticsService,
@@ -71,7 +72,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.environment = this.configService.environment;
     this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
     this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
@@ -83,17 +84,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.homeHeader = this.configService.configData.homeHeader || null;
     this.homeContents = this.configService.configData.homeContents || null;
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    // this code cause memory errors in the build process
-    /*let notempty = false;
-    for (const property in this.loadedComponents) {
-      if (this.loadedComponents[property] === true) {
-        notempty = true;
-      }
-    }
-    if (!notempty) {
-      this.loadedComponents = null;
-    }*/
-
+    
     let notempty = false;
     if (this.loadedComponents) {
       if (this.loadedComponents.applications) {
@@ -139,6 +130,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getAdverseEventShinyConfig();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
+    this.canRegister = await this.authService.canEditData();
   }
 
 ngAfterViewInit(){
