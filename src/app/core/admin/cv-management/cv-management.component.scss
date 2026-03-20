@@ -39,12 +39,12 @@
   max-height: 90%;
 }
 
-::ng-deep .mat-dialog-container {
+::ng-deep .mat-mdc-dialog-container {
   height: unset !important;
   max-height: 90%;
 }
 
-.mat-dialog-content {
+.mat-mdc-dialog-content {
   max-height: 95%;
 }
 

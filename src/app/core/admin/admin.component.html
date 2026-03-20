@@ -1,93 +1,80 @@
-<div class = "admin-container">
-    <div class = "page-container">
-        <mat-tab-group [selectedIndex] = "activeTab" (selectedTabChange)="onTabChanged($event)" class = "tab-group">
-              <mat-tab name="status" *ngIf="canViewServiceInfo">
-                  <ng-template mat-tab-label>
-                      Server Status
-                  </ng-template>
-                  <h2 class = "tab-label" name="statusH2" id="statusH2">Server Status</h2>
-                <div class = "app-container">
-                      <app-cache-summary class =  "full-width"></app-cache-summary>
-                </div>
-              </mat-tab>
+<div class="admin-container">
+  <div class="page-container">
+    <mat-tab-group
+      [selectedIndex]="activeTab"
+      (selectedTabChange)="onTabChanged($event)"
+      class="tab-group"
+    >
+      <mat-tab name="status" *ngIf="canViewServiceInfo">
+        <ng-template mat-tab-label> Server Status </ng-template>
+        <h2 class="tab-label" name="statusH2" id="statusH2">Server Status</h2>
+        <div class="app-container">
+          <app-cache-summary class="full-width"></app-cache-summary>
+        </div>
+      </mat-tab>
 
-              <mat-tab *ngIf="canViewServiceInfo" >
-                <ng-template mat-tab-label >
-                    Service Information
-                </ng-template>
-                <ng-template matTabContent>
-                <h2 class = "tab-label" >Service Information</h2>
-                  <mat-card class = "app-container">
-                        <app-service-information class =  "full-width"></app-service-information>
-                  </mat-card>
-                  </ng-template>
-                </mat-tab>
+      <mat-tab *ngIf="canViewServiceInfo">
+        <ng-template mat-tab-label> Service Information </ng-template>
+        <ng-template matTabContent>
+          <h2 class="tab-label">Service Information</h2>
+          <mat-card class="app-container">
+            <app-service-information
+              class="full-width"
+            ></app-service-information>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
 
-
-              <mat-tab *ngIf="canManageUsers" >
-                <ng-template mat-tab-label>
-                    User Management
-                </ng-template>
-                <ng-template matTabContent>
-                <h2 class = "tab-label" >User Management</h2>
-                  <mat-card class = "app-container">
-                        <app-user-management class =  "full-width"></app-user-management>
-                  </mat-card>
-                  </ng-template>
-                </mat-tab>
-                <mat-tab *ngIf="canImportData" >
-                    <ng-template mat-tab-label>
-                       Data Import
-                    </ng-template>
-                    <ng-template matTabContent>
-                    <h2 class = "tab-label" >Staged Data Import</h2>
-                  <mat-card  class = "app-container">
-                        <app-import-management class =  "full-width"></app-import-management>
-                  </mat-card>
-                </ng-template>
-                </mat-tab>
-                <mat-tab *ngIf="canManageCVs" name="cvs">
-                  <ng-template mat-tab-label>
-                    CV Management
-                  </ng-template>
-                  <h2 class = "tab-label" name="cvsH2">Controlled Vocabulary Edit</h2>
-                  <mat-card class = "app-container">
-                        <app-cv-management class =  "full-width"></app-cv-management>
-                    </mat-card>
-                </mat-tab>
-                <mat-tab *ngIf="canRunJobs" name="jobs">
-                  <ng-template mat-tab-label>
-                    Scheduled Jobs
-                  </ng-template>
-                  <ng-template matTabContent>
-                  <h2 class = "tab-label" name="jobsH2">Scheduled Jobs</h2>
-                  <div class = "app-container">
-                        <app-scheduled-jobs></app-scheduled-jobs>
-                    </div>
-                </ng-template>
-                </mat-tab>
-                <mat-tab *ngIf="canViewServerFiles" name="files">
-                  <ng-template mat-tab-label>
-                      All Files
-                  </ng-template>
-                  <ng-template matTabContent>
-                  <h2 class = "tab-label" name="filesH2">All Files</h2>
-                <mat-card  class = "app-container">
-                      <app-all-files class =  "full-width"></app-all-files>
-                </mat-card>
-              </ng-template>
-              </mat-tab>
-            <mat-tab *ngIf="canImportData" name="legacyImport">
-                <ng-template mat-tab-label>
-                 Data Management (Legacy)
-                </ng-template>
-                <h2 class = "tab-label" name="legacyImportH2">Bulk Data Import</h2>
-              <mat-card class = "app-container">
-                    <app-data-management class =  "full-width"></app-data-management>
-              </mat-card>
-            </mat-tab>
-                        
-              </mat-tab-group>
-              
-            </div>
+      <mat-tab *ngIf="canManageUsers">
+        <ng-template mat-tab-label> User Management </ng-template>
+        <ng-template matTabContent>
+          <h2 class="tab-label">User Management</h2>
+          <mat-card class="app-container">
+            <app-user-management class="full-width"></app-user-management>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab *ngIf="canImportData">
+        <ng-template mat-tab-label> Data Import </ng-template>
+        <ng-template matTabContent>
+          <h2 class="tab-label">Staged Data Import</h2>
+          <mat-card class="app-container">
+            <app-import-management class="full-width"></app-import-management>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab *ngIf="canManageCVs" name="cvs">
+        <ng-template mat-tab-label> CV Management </ng-template>
+        <h2 class="tab-label" name="cvsH2">Controlled Vocabulary Edit</h2>
+        <mat-card class="app-container">
+          <app-cv-management class="full-width"></app-cv-management>
+        </mat-card>
+      </mat-tab>
+      <mat-tab *ngIf="canRunJobs" name="jobs">
+        <ng-template mat-tab-label> Scheduled Jobs </ng-template>
+        <ng-template matTabContent>
+          <h2 class="tab-label" name="jobsH2">Scheduled Jobs</h2>
+          <div class="app-container">
+            <app-scheduled-jobs></app-scheduled-jobs>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab *ngIf="canViewServerFiles" name="files">
+        <ng-template mat-tab-label> All Files </ng-template>
+        <ng-template matTabContent>
+          <h2 class="tab-label" name="filesH2">All Files</h2>
+          <mat-card class="app-container">
+            <app-all-files class="full-width"></app-all-files>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab *ngIf="canImportData" name="legacyImport">
+        <ng-template mat-tab-label> Data Management (Legacy) </ng-template>
+        <h2 class="tab-label" name="legacyImportH2">Bulk Data Import</h2>
+        <mat-card class="app-container">
+          <app-data-management class="full-width"></app-data-management>
+        </mat-card>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>

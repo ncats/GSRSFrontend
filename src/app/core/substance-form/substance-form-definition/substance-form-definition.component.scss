@@ -1,6 +1,7 @@
 .substance-form-row {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
 
     &.tag-row {
         justify-content: flex-start;

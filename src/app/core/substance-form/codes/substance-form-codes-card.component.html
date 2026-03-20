@@ -11,7 +11,6 @@
     *ngIf="codes && codes.length > 0"
     class="standardize"
     matButton
-    color="primary"
     matTooltip="expand / collapse code view rows"
     (click)="collapse()"
   >
@@ -61,12 +60,7 @@
 
 <div *ngIf="codes && codes.length > 0" style="display: flex">
   <span class="middle-fill"></span>
-  <button
-    matButton
-    color="primary"
-    (click)="addCode()"
-    [disabled]="isAlternative"
-  >
+  <button matButton (click)="addCode()" [disabled]="isAlternative">
     Add code <mat-icon svgIcon="add_circle_outline"></mat-icon>
   </button>
 </div>

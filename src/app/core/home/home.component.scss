@@ -323,7 +323,7 @@ mat-list-item {
 }
 
 .test {
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -372,6 +372,7 @@ mat-list-item {
   display: flex;
   padding: 5px;
   margin: auto;
+  font-size: 16px;
 }
 
 .entry:hover {
@@ -782,7 +783,7 @@ mat-list-item {
     }
   }
 
-  // .page-selector display:none moved to global _angular-15-mdc-fixes.scss
+  // .page-selector display:none moved to global _material-overrides.scss
 
   .full-paginator {
     min-width: 500px !important;
@@ -989,7 +990,7 @@ mat-list-item {
   }
 }
 
-// Page label and page selector styles moved to global _angular-15-mdc-fixes.scss
+// Page label and page selector styles moved to global _material-overrides.scss
 :host ::ng-deep .mat-paginator-range-label {
   margin: 0 5px 0 5px !important;
 }
@@ -1030,4 +1031,16 @@ mat-paginator {
       fill: black !important;
     }
   }
+}
+
+.mat-mdc-dialog-content.button-modal {
+  padding: 0;
+}
+
+.modal-button {
+  letter-spacing: normal;
+}
+
+.mat-mdc-dialog-actions.button-actions {
+  padding: 8px 0 !important;
 }

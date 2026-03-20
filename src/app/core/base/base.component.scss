@@ -33,6 +33,8 @@
 }
 
 button.mat-mdc-button.top-button {
+  --button-icon-svg-size: 100%;
+
   font-size: 16px;
         color: white;
         padding-right: 10px;
@@ -80,10 +82,10 @@ button.mat-mdc-button.top-button {
     width: 25px !important;
   }
 }
-:host ::ng-deep .mat-icon {
-  height: 30px !important;
-  width: 30px !important;
-  margin-bottom: -10px !important;
+.logged-in .user-actions .mat-icon {
+  height: 30px;
+  width: 30px;
+  margin-bottom: -10px;
 }
 
 .mat-icon .user-icon {
@@ -179,7 +181,7 @@ button.mat-mdc-button.top-button {
 .nav-small {
   padding-right: 10px;
 
-  .mat-icon-button {
+  button[mat-icon-button] {
     width: 50px;
     height: 50px;
   }
@@ -199,13 +201,6 @@ button.mat-mdc-button.top-button {
 .top-search {
   flex-grow: 1;
   max-width: 600px;
-
-  ::ng-deep .mat-form-field {
-    .mat-form-field-label {
-      font-size: 16px;
-      top: 1.98125em;
-    }
-  }
 }
 
 ::ng-deep .transparent-background {
@@ -214,10 +209,6 @@ button.mat-mdc-button.top-button {
 
 .classic-view-container {
   padding-left: 15px;
-
-  ::ng-deep .mat-raised-button {
-    color: #296ca3;
-  }
 }
 
 // @media(max-width: $nav-breaking-point) {

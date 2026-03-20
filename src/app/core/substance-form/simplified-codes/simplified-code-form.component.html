@@ -13,16 +13,27 @@
       </button>
     </div>
 
-    <app-cv-input required='true' class="code-system" key='Code System' title="Code System" name="code"
-                  [model]="code.codeSystem" (valueChange)="setCodeSystemType($event)">
+    <app-cv-input
+      required="true"
+      class="code-system"
+      key="Code System"
+      title="Code System"
+      name="code"
+      [model]="code.codeSystem"
+      (valueChange)="setCodeSystemType($event)"
+    >
     </app-cv-input>
 
     <mat-form-field class="code">
-      <input matInput placeholder="Code" [(ngModel)]="code.code" required name="code"/>
+      <mat-label>Code</mat-label>
+      <input matInput [(ngModel)]="code.code" required name="code" />
     </mat-form-field>
 
     <div>
-      <app-access-manager (accessOut)="updateAccess($event)" [access]="code.access">
+      <app-access-manager
+        (accessOut)="updateAccess($event)"
+        [access]="code.access"
+      >
       </app-access-manager>
     </div>
   </div>

@@ -143,8 +143,8 @@ export class AdvancedSelectorDialogComponent implements OnInit {
     this.activeTab = event.index;
   }
 
-  searchCutoffChanged(event): void {
-    this.similarityCutoff = event.value;
+  searchCutoffChanged(event: Event): void {
+    this.similarityCutoff = Number((event.target as HTMLInputElement).value);
   }
 
   nameSearch(event: any): void {

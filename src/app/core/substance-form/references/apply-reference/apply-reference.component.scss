@@ -1,7 +1,7 @@
-::ng-deep .mat-menu-item {
-    height: auto
+::ng-deep .mat-mdc-menu-item {
+    height: auto;
 }
 
-::ng-deep .mat-checkbox-layout {
+::ng-deep .mat-internal-form-field > label {
     white-space: normal;
 }

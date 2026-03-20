@@ -1,24 +1,50 @@
-<div class = "flex-row">
-<mat-form-field [ngClass] = "privateMod === 'other'?'risen':''" class = "cv-field" subscriptSizing="dynamic">
-  <mat-label>{{title}} {{required? ' *':''}}</mat-label>
-  <mat-select [(ngModel)]="privateMod" name="term" (ngModelChange)="select($event)" [disabled] = "disable">
-    <mat-option [value] = 'null' *ngIf = "privateMod" ><span class = 'deselect' >Clear selection</span></mat-option>
-  <mat-option *ngFor="let term of vocabulary" [value]="term.value">
-    {{term.display}}
-  </mat-option>
-  <mat-option *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== ''"
-              value = "{{privateMod}}">{{privateMod}} (not in CV)</mat-option>
-  <mat-option value = 'other' >Other (New Value)</mat-option>
-</mat-select>
-<mat-hint *ngIf="hintMessage">{{hintMessage}}</mat-hint>
-</mat-form-field>
-  <a class = "add-term" mat-button *ngIf = "privateMod && !inCV(  vocabulary, privateMod) && privateMod !== 'other' && canManageCVs"
-     matTooltip = "add term to Controlled Vocabulary"(click) = "addToVocab()">
+<div class="flex-row">
+  <mat-form-field class="cv-field" subscriptSizing="dynamic">
+    <mat-label>{{ title }} {{ required ? " *" : "" }}</mat-label>
+    <mat-select
+      [(ngModel)]="privateMod"
+      name="term"
+      (ngModelChange)="select($event)"
+      [disabled]="disable"
+    >
+      <mat-option [value]="null" *ngIf="privateMod"
+        ><span class="deselect">Clear selection</span></mat-option
+      >
+      <mat-option *ngFor="let term of vocabulary" [value]="term.value">
+        {{ term.display }}
+      </mat-option>
+      <mat-option
+        *ngIf="
+          privateMod &&
+          !inCV(vocabulary, privateMod) &&
+          privateMod !== '' &&
+          privateMod !== 'other'
+        "
+        value="{{ privateMod }}"
+        >{{ privateMod }} (not in CV)</mat-option
+      >
+      <mat-option value="other">Other (New Value)</mat-option>
+    </mat-select>
+    <mat-hint *ngIf="hintMessage">{{ hintMessage }}</mat-hint>
+  </mat-form-field>
+  <a
+    class="add-term"
+    mat-button
+    *ngIf="
+      privateMod &&
+      !inCV(vocabulary, privateMod) &&
+      privateMod !== 'other' &&
+      canManageCVs
+    "
+    matTooltip="add term to Controlled Vocabulary"
+    (click)="addToVocab()"
+  >
     add
   </a>
 </div>
-<div *ngIf = "privateMod === 'other'" class = "custom">
+<div *ngIf="privateMod === 'other'" class="custom">
   <mat-form-field>
-    <input matInput placeholder="Custom value" (focusout) = "updateOrigin($event.target)" name="custom" />
+    <mat-label>Custom Value</mat-label>
+    <input matInput (focusout)="updateOrigin($event.target)" name="custom" />
   </mat-form-field>
 </div>

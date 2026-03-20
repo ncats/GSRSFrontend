@@ -34,24 +34,13 @@
 }
 
 .load-fail {
-    // transform: rotate(180deg);
     margin-top: -22px;
-    ::ng-deep .mat-progress-bar-fill {
-        background-color: rgb(173, 26, 26);
+    mat-progress-bar {
+        --mdc-linear-progress-active-indicator-color: rgb(173, 26, 26);
+        --mdc-linear-progress-track-color: rgba(0, 0, 0, 0.01);
+    }
+    ::ng-deep .mdc-linear-progress__primary-bar {
         z-index: 1;
-
-    }
-    ::ng-deep .mat-progress-bar-fill::after {
-        background-color: rgb(173, 26, 26);
-     //    z-index: 1;
-
-    }
-
-
-      
-    
-    ::ng-deep .mat-progress-bar-buffer {
-        background: rgba(0, 0, 0, 0.01);
     }
 }
 
@@ -61,60 +50,34 @@
         margin: auto;
     }
 }
+
 .load-fail-old {
-     transform: rotate(180deg);
+    transform: rotate(180deg);
     margin-top: -22px;
-    ::ng-deep .mat-progress-bar-fill {
-        background-color: rgb(173, 26, 26);
-        z-index: 2;
-
-
+    mat-progress-bar {
+        --mdc-linear-progress-active-indicator-color: rgb(173, 26, 26);
+        --mdc-linear-progress-track-color: rgba(0, 0, 0, 0.01);
     }
-    ::ng-deep .mat-progress-bar-fill::after {
-        background-color: rgb(173, 26, 26);
+    ::ng-deep .mdc-linear-progress__primary-bar {
         z-index: 2;
-
-
-    }
-
-
-      
-    
-    ::ng-deep .mat-progress-bar-buffer {
-        background: rgba(0, 0, 0, 0.01);
     }
 }
 
 .load-success {
-    ::ng-deep .mat-progress-bar-fill {
-        // background-color: rgb(173, 26, 26);
-         z-index: 2;
-
+    mat-progress-bar {
+        --mdc-linear-progress-track-color: rgba(0, 0, 0, 0.01);
     }
-    ::ng-deep .mat-progress-bar-fill::after {
-        // background-color: rgb(173, 26, 26);
-       //  z-index: 2;
-
-    }
-    ::ng-deep .mat-progress-bar-buffer {
-        background: rgba(0, 0, 0, 0.01);
+    ::ng-deep .mdc-linear-progress__primary-bar {
+        z-index: 2;
     }
 }
 
-
 .load-success-old {
-    ::ng-deep .mat-progress-bar-fill {
-        // background-color: rgb(173, 26, 26);
+    mat-progress-bar {
+        --mdc-linear-progress-track-color: rgba(0, 0, 0, 0.01);
+    }
+    ::ng-deep .mdc-linear-progress__primary-bar {
         z-index: 2;
-
-    }
-    ::ng-deep .mat-progress-bar-fill::after {
-        // background-color: rgb(173, 26, 26);
-         z-index: 2;
-
-    }
-    ::ng-deep .mat-progress-bar-buffer {
-        background: rgba(0, 0, 0, 0.01);
     }
 }
 

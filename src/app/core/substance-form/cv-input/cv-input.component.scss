@@ -1,11 +1,13 @@
-.risen {
-  margin-top: -15px;
+:host {
+  display: block;
 }
 
 .custom {
-  padding-bottom: 10px;
   padding-top: 10px;
-  border-bottom: 1px solid var(--box-shadow-color-6);
+
+  mat-form-field {
+    width: 100%;
+  }
 }
 
 .deselect {

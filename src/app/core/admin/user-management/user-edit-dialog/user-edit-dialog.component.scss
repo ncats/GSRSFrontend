@@ -1,95 +1,103 @@
 .user-container {
-    display:flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .password-column {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .loading-container {
-    height:200px;
-    margin: auto;
+  height: 200px;
+  margin: auto;
 }
 
 .form-row {
-    display:flex;
-    width: 100%;
-    flex-direction: row;
-    margin-bottom: 15px;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  margin-bottom: 15px;
 
-    .username {
-        width: 35%;
-    }
-    .email {
-        width: 45%;
-    }
-    .active {
-        width: 20%;
-    }
+  .username {
+    width: 35%;
+  }
+  .email {
+    width: 45%;
+  }
+  .active {
+    width: 20%;
+  }
 }
 
 .user-field {
-    width: 90%;
+  width: 90%;
 }
 
 .groups-group {
-    width: 70%;
+  width: 70%;
 }
 
 .roles-group {
-    width: 30%;
+  width: 30%;
 }
 
 .group-field {
-    width: 90%;
-    margin-top: 5px;
+  width: 90%;
+  margin-top: 5px;
 }
 
 ::ng-deep .mat-dialog-content {
-    padding: 10px 24px !important;
+  padding: 10px 24px !important;
 }
 
 .message {
-    margin: auto;
-    text-align: center;
-    padding: 10px;
+  margin: auto;
+  text-align: center;
+  padding: 10px;
 }
 
 .error-msg {
-    background: var(--regular-red-color);
-    color: var(--regular-white-color);
-    border: 1px solid var(--regular-black-color);
+  background: var(--regular-red-color);
+  color: var(--regular-white-color);
+  border: 1px solid var(--regular-black-color);
 }
 
 .box-label {
-    padding-bottom: 10px;
+  padding-bottom: 10px;
 }
 
-::ng-deep .mat-dialog-container {
-    height: unset !important;
-    max-height: 90%;
+::ng-deep .mat-mdc-dialog-container {
+  height: unset !important;
+  max-height: 90%;
 }
 
-::ng-deep .mat-checkbox-label {
-    word-break: break-word !important;
-    white-space: initial !important;
+::ng-deep .mdc-label {
+  word-break: break-word !important;
+  white-space: initial !important;
 }
 
 .group-checkbox {
-    padding-bottom: 4px;
+  margin-bottom: -8px;
+
+  mat-checkbox {
+    --mdc-checkbox-state-layer-size: 32px;
+  }
 }
 
 .submitted-container {
-    height: 200px;
-    vertical-align: middle;
-    text-align: center;
-    display: flex;
-
+  height: 200px;
+  vertical-align: middle;
+  text-align: center;
+  display: flex;
 }
 
 .submit-message {
-    margin: auto;
-    font-size: 20px;
+  margin: auto;
+  font-size: 20px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 500;
 }

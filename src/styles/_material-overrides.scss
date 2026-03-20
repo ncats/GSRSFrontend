@@ -1,9 +1,9 @@
 /**
- * Angular Material 15 MDC Migration Compatibility Fixes
+ * Global Angular Material Overrides
  *
- * Angular Material 15 introduced Material Design Components (MDC) which changed
- * the internal structure and styling of many components. This file provides
- * compatibility fixes to maintain consistent styling between Angular 14 and 15.
+ * Project-wide overrides for Angular Material (MDC) components.
+ * Loaded last in main.scss so these rules take precedence over Material's
+ * generated theme styles.
  */
 
 // ============================================================================
@@ -194,6 +194,12 @@
   .mat-mdc-floating-label {
     font-size: 14px;
     font-weight: 400;
+  }
+
+  // Beat Material's runtime: .mdc-text-field--filled .mdc-floating-label { font-size: Xrem }
+  // That rule has specificity (0,2,0). Adding .mat-mdc-form-field parent gives us (0,3,0).
+  .mdc-text-field .mdc-floating-label {
+    font-size: var(--floating-label-font-size, 14px);
   }
 
   // Fix subscript wrapper (hints and errors)
@@ -747,7 +753,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   min-height: 48px;
 
   .mdc-list-item__primary-text {
-    font-size: 14px;
+    font-size: 14px !important;
   }
 }
 
@@ -759,14 +765,14 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   --mdc-checkbox-state-layer-size: 40px;
 
   .mdc-checkbox {
-    padding: 11px;
+    padding: calc((var(--mdc-checkbox-state-layer-size) - 18px) / 2);
   }
 
   .mdc-checkbox__background {
     width: 18px;
     height: 18px;
-    top: 11px;
-    left: 11px;
+    top: calc((var(--mdc-checkbox-state-layer-size) - 18px) / 2);
+    left: calc((var(--mdc-checkbox-state-layer-size) - 18px) / 2);
   }
 
   .mdc-form-field {
@@ -891,6 +897,11 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   padding: 16px 0;
 }
 
+// Admin tab group: 18px tab labels (beats Material runtime at 0,2,0)
+.tab-group .mat-mdc-tab .mdc-tab__text-label {
+  font-size: 18px;
+}
+
 // ============================================================================
 // MAT-SLIDER FIXES
 // ============================================================================
@@ -924,7 +935,8 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
-.mat-mdc-progress-spinner {
+// Scoped to app-loading only — prevents ALL spinners from being fixed/centered
+app-loading .mat-mdc-progress-spinner {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -1178,8 +1190,8 @@ button.mat-mdc-outlined-button {
 
   // If svgIcon renders sizing on the SVG element
   .mat-icon svg {
-    width: 24px;
-    height: 24px;
+    width: var(--button-icon-svg-size, 24px);
+    height: var(--button-icon-svg-size, 24px);
   }
 }
 
@@ -1302,34 +1314,6 @@ button.export-button {
   left: 0;
   right: 0;
   transform: translateY(-50%);
-}
-
-// ============================================================================
-// LEGACY COMPATIBILITY LAYER
-// ============================================================================
-// These styles ensure legacy class names work alongside MDC components
-// This helps with gradual migration and reduces breaking changes
-
-// Legacy button support
-.mat-button,
-.mat-raised-button,
-.mat-flat-button,
-.mat-stroked-button,
-.mat-icon-button {
-  @extend .mat-mdc-button;
-}
-
-// Legacy form field support
-.mat-form-field {
-  // Most properties inherited, but ensure consistency
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  font-size: 14px;
-}
-
-// Legacy list item support
-.mat-list-item {
-  height: 48px;
-  font-size: 16px;
 }
 
 // ============================================================================
@@ -1585,7 +1569,7 @@ a.mat-mdc-outlined-button {
 
 .mat-mdc-tab-header {
   margin-top: -10px;
-  border-bottom: 1px solid #cdc9c9;
+  border-bottom: 1px solid var(--grey-border-color);
 }
 
 // ============================================================================
@@ -1613,3 +1597,41 @@ a.mat-mdc-outlined-button {
 // .mat-mdc-button-disabled {
 //   color: #00000042 !important;
 // }
+
+// ============================================================================
+// IMPURITIES FORM — custom-themed form fields inside .mat-form-field-style
+// These were previously dead legacy selectors in impurities-substance-form.component.scss.
+// CSS custom properties cascade through component boundaries without ::ng-deep.
+// ============================================================================
+
+.mat-form-field-style {
+  // Label color (unfocused)
+  --mdc-filled-text-field-label-text-color: var(--mat-form-field-label-color);
+
+  // Active indicator (underline)
+  --mdc-filled-text-field-active-indicator-color: var(
+    --mat-form-field-underline-bg-color
+  );
+
+  // Focused states
+  --mdc-filled-text-field-focus-active-indicator-color: var(
+    --mat-form-field-focused-color
+  );
+  --mdc-filled-text-field-focus-label-text-color: var(
+    --mat-form-field-focused-color
+  );
+
+  // Hint text color (validation hints shown in red)
+  mat-hint {
+    color: var(--regular-red-color) !important;
+  }
+
+  // Disabled form fields
+  .mat-mdc-form-field-disabled,
+  mat-form-field.mat-form-field-disabled {
+    cursor: not-allowed;
+    * {
+      cursor: not-allowed;
+    }
+  }
+}

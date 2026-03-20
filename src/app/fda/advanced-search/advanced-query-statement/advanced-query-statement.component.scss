@@ -53,7 +53,7 @@ mat-form-field {
 
     // Ensure consistent font size
     .mat-mdc-form-field-infix {
-      padding-top: 16px;
+      padding-top: 24px;
       padding-bottom: 8px;
 
       input {
@@ -104,8 +104,8 @@ mat-form-field {
   }
 
   div {
-     color: var(--regular-grey-color);
-     font-size: 12px;
+    color: var(--regular-grey-color);
+    font-size: 12px;
   }
 
   span {
@@ -113,7 +113,8 @@ mat-form-field {
   }
 }
 
-.mat-error {
+mat-error {
+  --mat-form-field-error-text-color: var(--regular-red-color);
   color: var(--regular-red-color);
 }
 
