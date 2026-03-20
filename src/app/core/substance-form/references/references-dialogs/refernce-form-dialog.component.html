@@ -18,10 +18,9 @@
     ></app-reference-form>
     <div class="actions">
       <span class="middle-fill"></span>
-      <button matButton color="primary" (click)="cancel()">Cancel</button>
+      <button matButton (click)="cancel()">Cancel</button>
       <button
         matButton
-        color="primary"
         [disabled]="!referenceForm || !referenceForm.isValid"
         (click)="save()"
       >

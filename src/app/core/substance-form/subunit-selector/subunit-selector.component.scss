@@ -1,3 +1,7 @@
+.subunit-dialog-content {
+  padding: 0 10px;
+}
+
 .details {
   & .subunit {
     display: none;
@@ -17,15 +21,15 @@
   width: 70%;
 }
 .show {
-  display:block;
+  display: block;
 }
 
-.hide{
-  display:none;
+.hide {
+  display: none;
 }
 
 .top-padding {
-  padding-top:10px;
+  padding-top: 10px;
 }
 
 .raw {
@@ -62,7 +66,7 @@
 .section-number {
   text-align: right;
   padding: 0 10px;
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .sequence-section {
@@ -76,7 +80,7 @@
   display: flex;
 
   .section-unit {
-  /*  flex-grow: 1;*/
+    /*  flex-grow: 1;*/
 
     &:hover {
       cursor: default;
@@ -139,33 +143,32 @@
   padding: 0 10px 8px 0;
 }
 .form-header {
-  display:flex;
+  display: flex;
 
   .form-input {
-    width:75%;
+    width: 75%;
   }
   .key-row {
-    width:25%
+    width: 25%;
   }
 }
 .key-row {
   justify-content: flex-end;
   align-items: flex-end;
 
-width:100%;
+  width: 100%;
   .key-container {
-    width:250px;
+    width: 250px;
     align-items: flex-end;
-    display:flex;
-    font-size:13px;
+    display: flex;
+    font-size: 13px;
 
     .key-label {
-      width:125px;
-      display:flex;
-      padding-bottom:5px;
+      width: 125px;
+      display: flex;
+      padding-bottom: 5px;
     }
   }
-
 }
 
 .unit-tooltip {
@@ -174,89 +177,86 @@ width:100%;
 
 .mat-tooltip {
   white-space: pre-line !important;
-
 }
 .key-color {
-  width:15px;
-  height:18px;
-  padding-right:5px;
+  width: 15px;
+  height: 18px;
+  padding-right: 5px;
 }
 
-.disulfide{
-  color:var(--regular-white-color);
+.disulfide {
+  color: var(--regular-white-color);
   background-color: var(--disulfide-color);
 }
 
-.other{
-  color:var(--regular-white-color);
-  background-color:var(--regular-darkslateblue-color);
-}
-
-.glycosylation{
+.other {
   color: var(--regular-white-color);
-  background-color:var(--glycosylation-color);
+  background-color: var(--regular-darkslateblue-color);
 }
 
-.N-Glycosylation{
-  color:var(--regular-white-color);
-  background-color:var(--n-glycosylation-color);
+.glycosylation {
+  color: var(--regular-white-color);
+  background-color: var(--glycosylation-color);
 }
 
-.C-Glycosylation{
-  color:var(--regular-white-color);
-  background-color:var(--regular-grey-color);
+.N-Glycosylation {
+  color: var(--regular-white-color);
+  background-color: var(--n-glycosylation-color);
 }
 
-.O-Glycosylation{
-  color:var(--regular-white-color);
-  background-color:var(--o-glycosylation-color);
+.C-Glycosylation {
+  color: var(--regular-white-color);
+  background-color: var(--regular-grey-color);
 }
 
-.feature{
-  border-top:1px solid var(--regular-magenta-color);
+.O-Glycosylation {
+  color: var(--regular-white-color);
+  background-color: var(--o-glycosylation-color);
+}
+
+.feature {
+  border-top: 1px solid var(--regular-magenta-color);
   border-bottom: 1px solid var(--regular-magenta-color);
 }
 
-.modification{
-  color:var(--regular-white-color);
-  background-color:var(--regular-darkgreen-color);
+.modification {
+  color: var(--regular-white-color);
+  background-color: var(--regular-darkgreen-color);
 }
 
 .chosen {
-  color:var(--regular-black-color) !important;
-  background-color:var(--regular-turquoise-color) !important;
+  color: var(--regular-black-color) !important;
+  background-color: var(--regular-turquoise-color) !important;
 }
 
 .new-disulfide {
-  color:var(--regular-black-color) !important;
-  background-color:var(--regular-lightskyblue-color) !important;
+  color: var(--regular-black-color) !important;
+  background-color: var(--regular-lightskyblue-color) !important;
 }
 
-.selectedSite{
-  padding-left:1px;
-  padding-right:1px;
+.selectedSite {
+  padding-left: 1px;
+  padding-right: 1px;
 }
-
 
 .feature-step {
-  width:50%;
-  font-size:15px;
-
+  width: 50%;
+  font-size: 15px;
 }
 
 .feature-display {
-  width:30%;
+  width: 30%;
 }
 
 .name-type {
-  width:40%;
-  padding-right:50px;
+  width: 40%;
+  padding-right: 50px;
 }
 .key-value-pair {
   display: flex;
   flex-direction: row;
   align-self: flex-start;
-  width:50%;
+  width: 50%;
 
   .key {
     font-size: 11px;
@@ -273,21 +273,21 @@ width:100%;
   }
 
   .bold {
-    font-weight:bold;
+    font-weight: bold;
   }
 }
 .siteref {
-  display:block;
+  display: block;
   width: 15.5px !important;
   text-align: center;
 }
 
 .featlink {
-  padding-right:7px;
+  padding-right: 7px;
   color: var(--primary-color);
 }
 .featlink a:hover {
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .form-row {
@@ -299,12 +299,15 @@ width:100%;
     padding: 0 10px 8px 0;
   }
 
-  .code-system, .code-system-type, .type {
+  .code-system,
+  .code-system-type,
+  .type {
     flex-grow: 1;
     padding-right: 15px;
   }
 
-  .code-text, .url {
+  .code-text,
+  .url {
     flex-grow: 1;
   }
 }
@@ -317,18 +320,21 @@ width:100%;
     padding: 0 10px 8px 0;
   }
 
-  .code-system, .code-system-type, .type {
+  .code-system,
+  .code-system-type,
+  .type {
     flex-grow: 1;
     padding-right: 15px;
   }
 
-  .code-text, .url {
+  .code-text,
+  .url {
     flex-grow: 1;
   }
 }
 
 .clear-button {
-  width:40px;
+  width: 40px;
 }
 
 .disulfide-form {
@@ -336,7 +342,7 @@ width:100%;
   justify-content: flex-start;
 }
 .disulfide-display {
-  width : 100px;
+  width: 100px;
 }
 
 .cys {
@@ -345,15 +351,15 @@ width:100%;
 }
 
 .unavailable {
-  color:var(--regular-lightgray-color) !important;
+  color: var(--regular-lightgray-color) !important;
 }
 
 .invalid_blink {
-  animation: blinker .5s linear 1;
+  animation: blinker 0.5s linear 1;
 }
 @keyframes blinker {
   50% {
-   opacity: 0;
+    opacity: 0;
   }
 }
 
@@ -363,18 +369,18 @@ width:100%;
 }
 
 .valid {
-  color:var(--regular-black-color);
+  color: var(--regular-black-color);
 }
 
 .invalid-cysteine {
-  color:var(--regular-red-color);
+  color: var(--regular-red-color);
 }
 .last-section {
-  flex-basis: 0!important;
+  flex-basis: 0 !important;
 }
 
 .note {
-  padding-top:10px;
-  padding-left:15px;
-  font-size:14px;
+  padding-top: 10px;
+  padding-left: 15px;
+  font-size: 14px;
 }

@@ -1,13 +1,17 @@
 <div class="parameter-form-container">
   <div class="form-row">
     <mat-form-field class="name">
-      <input matInput placeholder="Name" [(ngModel)]="parameter.name" required name="name" />
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="parameter.name" required name="name" />
     </mat-form-field>
     <mat-form-field class="type">
       <mat-label>Type</mat-label>
       <mat-select [(ngModel)]="parameter.type" name="type">
-        <mat-option *ngFor="let propertyType of propertyTypeList" [value]="propertyType.value">
-          {{propertyType.display}}
+        <mat-option
+          *ngFor="let propertyType of propertyTypeList"
+          [value]="propertyType.value"
+        >
+          {{ propertyType.display }}
         </mat-option>
       </mat-select>
     </mat-form-field>

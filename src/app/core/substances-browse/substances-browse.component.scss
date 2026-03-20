@@ -469,7 +469,7 @@
     }
   }
 
-  // .page-selector display:none moved to global _angular-15-mdc-fixes.scss
+  // .page-selector display:none moved to global _material-overrides.scss
 
   .full-paginator {
     min-width: 500px !important;
@@ -704,7 +704,7 @@
   }
 }
 
-// Page selector and page label styles moved to global _angular-15-mdc-fixes.scss
+// Page selector and page label styles moved to global _material-overrides.scss
 
 :host ::ng-deep .mat-paginator-range-label,
 :host ::ng-deep .mat-mdc-paginator-range-label {

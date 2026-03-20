@@ -1,88 +1,86 @@
 .reference-form-container {
-    padding: 30px 0 12px 0;
-    position: relative;
+  padding: 30px 0 12px 0;
+  position: relative;
 }
 
 .notification-backdrop {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    z-index: 10;
-    background-color: var(--notif-backdrop-bg-color);
-    justify-content: center;
-    align-items: center;
-    font-size: 30px;
-    font-weight: bold;
-    color: var(--notif-backdrop-color);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  z-index: 10;
+  background-color: var(--notif-backdrop-bg-color);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--notif-backdrop-color);
 }
 
 .form-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10px;
-    align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  align-items: flex-end;
 
-    .checkbox-container {
-        padding-bottom: 18px;
-    }
+  .checkbox-container {
+    // padding-bottom: 18px;
+  }
 }
 
 .form-actions {
-    justify-content: flex-start;
-    margin: 5px 0 10px 0;
+  justify-content: flex-start;
+  margin: 5px 0 10px 0;
 }
 
-.source-type, .citation, .url {
-    width: 30%;
+.source-type,
+.citation,
+.url {
+  width: 30%;
 }
 
 .tags {
-    width: 40%;
+  width: 40%;
 }
 
 .previous-ref {
-    margin: auto;
-    width:90%;
+  margin: auto;
+  width: 90%;
 }
 
-
 .spinner {
-    height: 20px;
-    width: 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .loading-container {
-   display:flex;
-   text-align:center;
-   height: 26px;
+  display: flex;
+  text-align: center;
+  height: 26px;
 }
 
 .spinner-container {
-    height: 20px;
-    width: 20px;
-    margin-right: 5px;
-
+  height: 20px;
+  width: 20px;
+  margin-right: 5px;
 }
 
 .progress-spinner {
-    margin: auto;
+  margin: auto;
 }
 
-
-
 .mat-progress-spinner {
-    height:20px !important;
-    width: 20px !important;
+  height: 20px !important;
+  width: 20px !important;
 
   ::ng-deep svg {
-        height:20px !important;
-        width: 20px !important; 
-    }
-    svg {
-        height:20px !important;
-     width: 20px !important; 
-    }
+    height: 20px !important;
+    width: 20px !important;
+  }
+  svg {
+    height: 20px !important;
+    width: 20px !important;
+  }
 }
