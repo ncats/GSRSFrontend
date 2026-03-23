@@ -33,14 +33,14 @@ export class GeneralService extends BaseHttpService {
 
   // Array for Substance Class
   substanceClassArray: any[] = [
-    { class: 'chemical', longDisplay: 'Chemical', shortDisplay: 'CH'},
-    { class: 'polymer', longDisplay: 'Polymer', shortDisplay: 'PO'},
-    { class: 'protein', longDisplay: 'Protein', shortDisplay: 'PR'},
-    { class: 'mixture', longDisplay: 'Mixture', shortDisplay: 'MI'},
-    { class: 'nucleicAcid', longDisplay: 'Nucleic Acid', shortDisplay: 'NA'},
-    { class: 'structurallyDiverse', longDisplay: 'Structurally Diverse', shortDisplay: 'SD'},
-    { class: 'concept', longDisplay: 'Concept', shortDisplay: 'CO'},
-    { class: 'specifiedSubstanceG1', longDisplay: 'Specified Substance Group 1', shortDisplay: 'SSG1'},
+    { class: 'chemical', longDisplay: 'Chemical', shortDisplay: 'CH' },
+    { class: 'polymer', longDisplay: 'Polymer', shortDisplay: 'PO' },
+    { class: 'protein', longDisplay: 'Protein', shortDisplay: 'PR' },
+    { class: 'mixture', longDisplay: 'Mixture', shortDisplay: 'MI' },
+    { class: 'nucleicAcid', longDisplay: 'Nucleic Acid', shortDisplay: 'NA' },
+    { class: 'structurallyDiverse', longDisplay: 'Structurally Diverse', shortDisplay: 'SD' },
+    { class: 'concept', longDisplay: 'Concept', shortDisplay: 'CO' },
+    { class: 'specifiedSubstanceG1', longDisplay: 'Specified Substance Group 1', shortDisplay: 'SSG1' },
   ];
 
   getSubstanceByAnyIdFullView(id: string): Observable<any> {
@@ -74,6 +74,9 @@ export class GeneralService extends BaseHttpService {
     } else if (substanceKeyType === 'APPROVAL_ID') {
       // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
       return substance.approvalID;
+    } else if (substanceKeyType === 'UNII') {
+      // If Substance Key Type is UNII in the frontend config, set value of Substance Key to Substance Approval ID value
+      return substance.approvalID;
     } else if (substanceKeyType === 'BDNUM') {
       // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
 
@@ -98,9 +101,15 @@ export class GeneralService extends BaseHttpService {
     // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
     if (substanceKeyType === 'UUID') {
       substanceKey = relatedSubstance.refuuid;
+    }
 
-      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
-    } else if (substanceKeyType === 'APPROVAL_ID') {
+    // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
+    else if (substanceKeyType === 'APPROVAL_ID') {
+      substanceKey = relatedSubstance.approvalID;
+    }
+
+    // If Substance Key Type is UNII in the frontend config, set value of Substance Key to Substance Approval ID value
+    else if (substanceKeyType === 'UNII') {
       substanceKey = relatedSubstance.approvalID;
     }
 

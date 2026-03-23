@@ -234,7 +234,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
       }, error => {
         this.isLoading = false;
         this.loadingService.setLoading(this.isLoading);
-        this.handleProductRetrivalError();
       });
 
       this.subscriptions.push(getDetailsSubscribe);
@@ -260,7 +259,6 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     }, error => {
       this.loadingService.setLoading(false);
       this.isLoading = false;
-      this.handleProductRetrivalError();
     });
     this.subscriptions.push(getInvitroSubscribe);
   }
@@ -515,15 +513,16 @@ export class InvitroPharmacologyAssayFormComponent implements OnInit, OnDestroy 
     this.showSubmissionMessages = true;
   }
 
-  private handleProductRetrivalError() {
+  private handleInvitroPharmacologyRetrivalError() {
+    console.log("In 'Register In Vitro Pharmacology Assay' page, there was an error in retrieving data from the server.");
     const notification: AppNotification = {
-      message: 'The In Vitro pharmacology record you\'re trying to edit doesn\'t exist.',
+      message: 'There was an error in retrieving data from the server.',
       type: NotificationType.error,
       milisecondsToShow: 4000
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/invitro-pharm/assay/register']);
+    //  this.router.navigate(['/invitro-pharm/assay/register']);
       this.invitroPharmacologyService.loadAssay();
     }, 5000);
   }

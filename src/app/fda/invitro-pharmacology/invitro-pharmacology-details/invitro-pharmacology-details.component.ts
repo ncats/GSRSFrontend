@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 /* GSRS Core Imports */
 import { AuthService } from '@gsrs-core/auth/auth.service';
@@ -22,10 +23,10 @@ import { InvitroPharmacologyService } from '../service/invitro-pharmacology.serv
 import { InvitroAssayInformation } from '../model/invitro-pharmacology.model';
 
 @Component({
-    selector: 'app-invitro-pharmacology-details',
-    templateUrl: './invitro-pharmacology-details.component.html',
-    styleUrls: ['./invitro-pharmacology-details.component.scss'],
-    standalone: false
+  selector: 'app-invitro-pharmacology-details',
+  templateUrl: './invitro-pharmacology-details.component.html',
+  styleUrls: ['./invitro-pharmacology-details.component.scss'],
+  standalone: false
 })
 export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
@@ -111,32 +112,6 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
           this.loadingService.setLoading(false);
         }
-        /*
-
-        // Get Substance Id for Test Compound
-        if (this.assay.testAgentApprovalId) {
-          const testCompoundSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.testAgentUnii).subscribe
-            (substance => {
-              if (substance) {
-                this.testCompoundSubId = substance.uuid;
-              }
-            });
-          this.subscriptions.push(testCompoundSubIdSubscription);
-        }
-        */
-
-        /*
-        // Get Substance Id for Ligand/Substrate
-        if (this.assay.ligandSubstrateApprovalId) {
-          const ligandSubIdSubscription = this.generalService.getSubstanceBySubstanceUuid(this.assay.ligandSubstrateUnii).subscribe
-            (substance => {
-              if (substance) {
-                this.ligandSubId = substance.uuid;
-              }
-            });
-          this.subscriptions.push(ligandSubIdSubscription);
-        }
-        */
 
       } // response
     }, error => {
@@ -153,9 +128,10 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
 
   saveJSON(): void {
     // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    let json = this.assay;
-    // this.json = this.cleanObject(substanceCopy);
-    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    const copyAssay = _.cloneDeep(this.assay);
+    let cleanAssay = this.scrub(copyAssay);
+
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanAssay)));
     this.downloadJsonHref = uri;
 
     const date = new Date();
@@ -166,7 +142,10 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     const date = new Date();
     let jsonFilename = 'invitro_pharm_assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
 
-    let data = {jsonData: this.assay, jsonFilename: jsonFilename};
+    const copyAssay = _.cloneDeep(this.assay);
+    let cleanAssay = this.scrub(copyAssay);
+
+    let data = { jsonData: cleanAssay, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -282,5 +261,12 @@ export class InvitroPharmacologyDetailsComponent implements OnInit, OnDestroy {
     } // if assay exists
   }
 
+  scrub(oldraw: any): any {
+    const old = oldraw;
+
+    delete old['_resultInformationList'];
+
+    return old;
+  }
 }
 

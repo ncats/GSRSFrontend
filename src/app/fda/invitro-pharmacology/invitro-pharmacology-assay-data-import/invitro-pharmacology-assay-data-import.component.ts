@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { DatePipe, formatDate } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Subscription } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { forkJoin, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 
@@ -31,10 +32,10 @@ import { InvitroPharmacologyService } from '../service/invitro-pharmacology.serv
 import { InvitroAssayInformation, InvitroAssaySet, InvitroAssayAnalyte, ValidationMessage } from '../model/invitro-pharmacology.model';
 
 @Component({
-    selector: 'app-invitro-pharmacology-assay-data-import',
-    templateUrl: './invitro-pharmacology-assay-data-import.component.html',
-    styleUrls: ['./invitro-pharmacology-assay-data-import.component.scss'],
-    standalone: false
+  selector: 'app-invitro-pharmacology-assay-data-import',
+  templateUrl: './invitro-pharmacology-assay-data-import.component.html',
+  styleUrls: ['./invitro-pharmacology-assay-data-import.component.scss'],
+  standalone: false
 })
 export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
@@ -43,6 +44,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   private TARGET_NAME = "Assay Target Name";
   private HUMAN_HOMOLOG_TARGET = "Human Homolog Target";
   private LIGAND_SUBSTRATE = "Ligand/Substrate";
+  private ANALYTE = "Analyte";
 
   private overlayContainer: HTMLElement;
   substanceKeyTypeForInvitroPharmacologyConfig = null;
@@ -71,6 +73,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
   message = '';
   submitMessage = '';
+  assaySetFromDB = null;
 
   errorMessage: string;
   serverError: boolean;
@@ -82,6 +85,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
   totalRecordSavedInDatabase = 0;
 
   constructor(
+    public http: HttpClient,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private sanitizer: DomSanitizer,
@@ -106,6 +110,9 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     this.substanceKeyTypeForInvitroPharmacologyConfig = this.generalService.getSubstanceKeyTypeForInvitroPharmacologyConfig();
 
   }
+
+  ngAfterViewInit() {
+  } 
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => {
@@ -278,9 +285,10 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     let analytes: Array<InvitroAssayAnalyte> = [];
     let analytesFromFile = this.replaceUndefinedValue(element["Analytes"]);
 
-    // If multiple Anaytes are separated by pipe | delimter in the Excel file, separate
+    // If multiple Analytes are separated by pipe | delimter in the Excel file, separate
     // each Analyte as a separate object
     if (analytesFromFile) {
+      // if multiple Analytes separated by pipe delimeter |
       if (analytesFromFile.includes("|")) {
         let analyteArray = analytesFromFile.split("|");
         analyteArray.forEach(analyte => {
@@ -288,6 +296,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             const newAssayAnalyte: InvitroAssayAnalyte = {};
 
             newAssayAnalyte.analyte = analyte;
+
             analytes.push(newAssayAnalyte);
           }
         });
@@ -304,6 +313,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     this.serverError = false;
     this.isLoading = true;
     this.loadingService.setLoading(true);
+
 
     this.importValidateMessageArray = [];
 
@@ -331,6 +341,16 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
           }
           if (element['ligandSubstrate']) {
             this.getSubstanceNameDetails(element, element['ligandSubstrate'], this.LIGAND_SUBSTRATE, validationMessages, index)
+          }
+
+          if (element["invitroAssayAnalytes"]) {
+            if (element["invitroAssayAnalytes"].length > 0) {
+              element["invitroAssayAnalytes"].forEach(analy => {
+                if (analy.analyte) {
+                  this.getSubstanceNameDetails(analy, analy.analyte, this.ANALYTE, validationMessages, index)
+                }
+              });
+            }
           }
 
           // NEED this two fields to check if valid or not
@@ -430,6 +450,205 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     // Display error message
     if (this.validationMessages.length > 0) {
       this.submitMessage = "There is an error. " + message.message;
+    }
+  }
+
+  createFirstAssayToSave() {
+    let firstAssayToSave: InvitroAssayInformation;
+    // Using this assay list in the form
+    if (this.importedAssayJson.length > 0) {
+
+      // Get the first Assay from the list
+      firstAssayToSave = this.importedAssayJson[0];
+
+    }
+  }
+
+  saveFirstAssay() {
+
+    let assayApiUrlList: any = [];
+
+    const params = new HttpParams();
+    const options = {
+      params: params,
+      type: "JSON",
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    const url = this.invitroPharmacologyService.apiBaseUrlWithInvitroPharmEntityUrl;
+
+    if (this.importedAssayJson && this.importedAssayJson.length > 0) {
+
+      this.isLoading = true;
+      this.loadingService.setLoading(true);
+
+      this.submitMessage = 'Saving Assay records into the database, please wait .....';
+
+      // Get First Record from the Array
+      let firstAssay = this.importedAssayJson[0];
+
+      const apiUrl = this.http
+        .post<InvitroAssayInformation>(url, firstAssay, options)
+        .pipe(
+          catchError((error) => {
+            throw error;
+          }),
+        );
+
+      // Rest API Urls for forkJoin
+      assayApiUrlList.push(apiUrl);
+
+      let savedCount = 0;
+
+      if (assayApiUrlList && assayApiUrlList.length > 0) {
+        // Save Assays into the database
+        forkJoin(assayApiUrlList).subscribe(
+          (results) => {
+            let resultList: any = [];
+
+            resultList = results;
+
+            // return list of array of the result
+            resultList.forEach((result) => {
+              if (result.id) {
+                savedCount = savedCount + 1;
+
+                if ((result.invitroAssaySets) && (result.invitroAssaySets.length > 0)) {
+                  this.assaySetFromDB = result.invitroAssaySets[0];
+                }
+
+                const saved = { 'indexRecord': savedCount, 'assayId': result.assayId, 'externalAssaySource': result.externalAssaySource, 'externalAssayId': result.externalAssayId, 'saved': 'Yes', 'savedId': result.id }
+                this.importSaveMessageArray.push(saved);
+              }
+
+            });
+
+            // if all the records are saved, refresh the page
+            if (savedCount == assayApiUrlList.length) {
+
+              // Save remaining of Assays in the Array, if there is more than one Assay
+              this.saveRemainingAssays();
+            }
+
+          },
+          (error) => {
+            this.errorMessage = "There was a problem importing Assay from Excel file to Database";
+            this.isLoading = false;
+            this.loadingService.setLoading(false);
+            alert("ERROR: Something went wrong importing Assay from Excel file to Database");
+          },
+        ); // forkJoin
+      }
+    }
+  }
+
+  saveRemainingAssays() {
+    let assayApiUrlList: any = [];
+
+    const params = new HttpParams();
+    const options = {
+      params: params,
+      type: "JSON",
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    const url = this.invitroPharmacologyService.apiBaseUrlWithInvitroPharmEntityUrl;
+
+    if (this.importedAssayJson && this.importedAssayJson.length > 0) {
+      this.importedAssayJson.forEach((assay, indexAssay) => {
+        // Do not save the first assay record
+        if (indexAssay > 0) {
+          if (assay.invitroAssaySets == null) {
+            assay.invitroAssaySets = [];
+          } else {
+            assay.invitroAssaySets = [{}];
+          }
+          // Set AssaySet that received from database
+          assay.invitroAssaySets[0] = this.assaySetFromDB;
+
+          const apiUrl = this.http
+            .post<InvitroAssayInformation>(url, assay, options)
+            .pipe(
+              catchError((error) => {
+                throw error;
+              }),
+            );
+
+          assayApiUrlList.push(apiUrl);
+        } else {
+          this.savedCompleted(1, this.importedAssayJson);
+        }
+      });
+
+      let savedCount = 1;
+
+      if (assayApiUrlList && assayApiUrlList.length > 0) {
+        // Save Assays into the database
+        forkJoin(assayApiUrlList).subscribe(
+          (results) => {
+            let resultList: any = [];
+
+            resultList = results;
+
+            // return list of array of the result
+            resultList.forEach((result) => {
+              if (result.id) {
+
+                savedCount = savedCount + 1;
+
+                const saved = { 'indexRecord': savedCount, 'assayId': result.assayId, 'externalAssaySource': result.externalAssaySource, 'externalAssayId': result.externalAssayId, 'saved': 'Yes', 'savedId': result.id }
+                this.importSaveMessageArray.push(saved);
+              }
+            });
+
+            // if all the records are saved, refresh the page
+            if (savedCount == this.importedAssayJson.length) {
+              this.savedCompleted(savedCount, this.importedAssayJson);
+            }
+          },
+          (error) => {
+            this.errorMessage = "There was a problem saving Assay";
+            this.toggleValidation();
+            this.isLoading = false;
+            this.loadingService.setLoading(false);
+            alert("ERROR: Something went wrong during saving Assay");
+          },
+        );
+      }
+    } else {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+    }
+  }
+
+  savedCompleted(savedCount, AssayList) {
+    // All records saved
+    console.log("AAAAAAA COMPLETE" + savedCount + "    " + AssayList.length);
+    if (savedCount == AssayList.length) {
+      this.message = "";
+      this.submitMessage = "Import Successful";
+
+      // Clear Validation variables
+      this.importValidateMessageArray = [];
+      this.isAllRecordValid = false;
+      this.isAllRecordValidated = false;
+
+      this.disableValidateButton = 'true';
+      this.disableImportButton = 'true';
+
+      this.isAllRecordSaved = true;
+
+      // SORT the validation array by id
+      this.importSaveMessageArray.sort((a, b) => {
+        return a.indexRecord - b.indexRecord;
+      });
+
+      this.isLoading = false;
+      this.loadingService.setLoading(this.isLoading);
     }
   }
 
@@ -533,7 +752,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         element["targetNameSubstanceKey"] = substanceKey;
                         element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                        if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"] !== substance.approvalID)) {
+                        if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
                       }
@@ -541,7 +760,7 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         element["humanHomologTargetSubstanceKey"] = substanceKey;
                         element["humanHomologTargetSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                        if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"] !== substance.approvalID)) {
+                        if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.HUMAN_HOMOLOG_TARGET + ' Approval ID "' + element["humanHomologTargetApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
                       }
@@ -549,9 +768,13 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
                         element["ligandSubstrateSubstanceKey"] = substanceKey;
                         element["ligandSubstrateSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
 
-                        if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"] !== substance.approvalID)) {
+                        if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"].trim() !== substance.approvalID)) {
                           this.setValidationMessage(this.LIGAND_SUBSTRATE + ' Approval ID "' + element["ligandSubstrateApprovalId"] + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" for "' + ingredientName + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
                         }
+                      }
+                      else if (fieldName == this.ANALYTE) {
+                        element["analyteSubstanceKey"] = substanceKey;
+                        element["analyteSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
                       }
                     }
                   }); // substance names for loop
@@ -628,6 +851,10 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.overlayContainer.style.zIndex = null;
     });
+  }
+
+  toggleValidation(): void {
+    this.showSubmissionMessages = !this.showSubmissionMessages;
   }
 
   close() {
