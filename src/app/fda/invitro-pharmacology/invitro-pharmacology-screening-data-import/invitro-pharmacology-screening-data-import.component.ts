@@ -92,10 +92,15 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.initializeRequiredFieldArray();
+
     this.titleService.setTitle("IVP Import Screening Data");
 
     this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
-    this.initializeRequiredFieldArray();
+  
+  }
+
+  ngAfterViewInit() {
   }
 
   ngOnDestroy(): void {

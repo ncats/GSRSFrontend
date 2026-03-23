@@ -49,7 +49,7 @@
 
           <!-- Import Assay JSON into the Database -->
           <div class="marginleft20px">
-            <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
+            <button mat-flat-button color="primary" (click)="saveFirstAssay()"
               [disabled]="disableImportButton">Import Data
               into Database</button>
           </div>
@@ -170,11 +170,20 @@
               <th>Saved Assay Details</th>
             </tr>
             <tr class="font12px" *ngFor="let msg of importSaveMessageArray; let indexMessage = index">
-              <td>{{(msg.indexRecord+1)}}</td>
+              <td>{{(msg.indexRecord)}}</td>
               <td>{{msg.assayId}}</td>
               <td>{{msg.externalAssaySource}}</td>
               <td>{{msg.externalAssayId}}</td>
-              <td>{{msg.saved}}</td>
+              <td>{{msg.saved}}
+                <span *ngIf="msg.saved === 'Yes'">
+                  &nbsp;
+                  <mat-icon matTooltip='Assay saved successfully into the database'>check</mat-icon>
+                </span>
+                <span *ngIf="msg.saved === 'No'">
+                  &nbsp;
+                  <mat-icon matTooltip='Assay was not saved successfully into the database'>cancel</mat-icon>
+                </span>
+              </td>
               <td>
                 <div *ngIf="msg.savedId">
                   <a class="view-detail-link" [routerLink]="['/invitro-pharm', msg.savedId]" target="_blank"
@@ -288,7 +297,7 @@
   <div class="marginleft30px margintop10px" *ngIf="importDataList.length > 0">
     <!-- Import Assay JSON into the Database -->
     <span>
-      <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
+      <button mat-flat-button color="primary" (click)="saveFirstAssay()"
         [disabled]="disableImportButton">Import Data into Database</button>
     </span>
   </div>

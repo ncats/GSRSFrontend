@@ -19,6 +19,8 @@ export class Ssg2ManufacturingComponent extends SubstanceFormBase implements OnI
   private substance: SubstanceDetail;
   manufacturing: Array<SpecifiedSubstanceG2Manufacturing>;
   private subscriptions: Array<Subscription> = [];
+  seachedOrganization = null;
+  
   constructor(
     private substanceFormService: SubstanceFormService,
     private substanceFormSsg2ManufacturingService: SubstanceFormSsg2ManufacturingService,

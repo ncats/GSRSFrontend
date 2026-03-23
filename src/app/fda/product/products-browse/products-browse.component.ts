@@ -755,11 +755,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
       product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
 
-        // Sort Product Name by create date descending
-        // elementManuItem.applicationProductNameList.sort((a, b) => {
-        //   return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
-        // });
-
         elementManuItem.productLots.forEach((elementLot, indexLot) => {
           elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
 
@@ -802,31 +797,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                     // if there is no Ingredient Type
                     product._otherIngredients.push(elementIngred);
                   }
-
-                  /*
-                  // Get Substance Details, uuid, approval_id, substance name
-                  if (elementIngred.substanceKey) {
-                    this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
-                      if (responseInactive) {
-                        elementIngred._substanceUuid = responseInactive.uuid;
-                        elementIngred._ingredientName = responseInactive._name;
-                      }
-                    });
-                  }
-                  */
-
-                  // Get Active Moiety - Relationship
-                  /*
-                  this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
-                    relationship = responseRel;
-                    relationship.forEach((elementRel, indexRel) => {
-                      if (elementRel.relationshipName != null) {
-                        elementIngred.activeMoietyName = elementRel.relationshipName;
-                        elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
-                      }
-                    });
-                  });
-                  */
 
                 } // response
               });
@@ -886,36 +856,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   getApiExportUrl(etag: string, extension: string): string {
     return this.productService.getApiExportUrl(etag, extension);
   }
-
-  /*
-  separateAppTypeNumber(): void {
-    if (this.products) {
-      this.products.forEach((element, index) => {
-        if (element.appTypeNumber) {
-          let apt = '';
-          let apn = '';
-          let done = false;
-          for (const char of element.appTypeNumber) {
-            // Application Number
-            if (char) {
-              if (this.isNumber(char) === true) {
-                done = true;
-                apn = apn + char;
-                element.appNumber = apn;
-              } else {
-                if (done === false) {
-                  // Application Type
-                  apt = apt + char;
-                  element.appType = apt;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-  }
-  */
 
   isNumber(str: any): boolean {
     if (str) {

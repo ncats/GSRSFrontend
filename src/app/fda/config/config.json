@@ -1584,7 +1584,7 @@
         "default": "BDNUM",
         "orgDisplayKeyType": "BDNUM",
         "clinicalTrialKeyType": "UUID",
-        "productKeyType": "UUID",
+        "productKeyType": "UNII",
         "applicationKeyType": "UUID",
         "impuritiesKeyType": "UUID",
         "invitroPharmacologyKeyType": "UUID"

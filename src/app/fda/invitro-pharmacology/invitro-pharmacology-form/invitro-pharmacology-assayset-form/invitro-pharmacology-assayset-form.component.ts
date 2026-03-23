@@ -124,15 +124,6 @@ export class InvitroPharmacologyAssaysetFormComponent implements OnInit {
     // Get All the Assay Sets for checkbox
     this.getAllAssaySets();
 
-    /*
-      if (this.isAssaySetExists(assaySetFromUrl) == true) {
-        this.selectedAssaySet = assaySetFromUrl;
-        // Get All Assays from the database
-        this.getAllAssays(this.selectedAssaySet);
-      } else {
-        this.assayMessage = "Assay Set '" + assaySetFromUrl + "' does not exist in the database";
-      }
-    */
   }
 
   ngOnDestroy(): void {

@@ -300,8 +300,8 @@
               <div class="divflex width95percent">
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.targetName"
-                  placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, TARGET_NAME)" (searchPerformed)="nameSearch($event, TARGET_NAME)"
-                  eventCategory="selectorSearch">
+                  placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, TARGET_NAME)"
+                  (searchPerformed)="nameSearch($event, TARGET_NAME)" eventCategory="selectorSearch">
                 </app-substance-text-search>
 
                 <div class="marginleft20px margintop10px">
@@ -323,13 +323,12 @@
               <div class="divflex width95percent">
                 <!-- Substance Text Search Suggestions/TypeAhead -->
                 <app-substance-text-search class="fieldValueSubstance" [searchValue]="assay.humanHomologTarget"
-                  placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, HUMAN_HOMOLOG_TARGET)" (searchPerformed)="nameSearch($event, HUMAN_HOMOLOG_TARGET)"
-                  eventCategory="selectorSearch">
+                  placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, HUMAN_HOMOLOG_TARGET)"
+                  (searchPerformed)="nameSearch($event, HUMAN_HOMOLOG_TARGET)" eventCategory="selectorSearch">
                 </app-substance-text-search>
 
                 <div class="marginleft20px margintop10px">
-                  <span *ngIf="assay.humanHomologTargetSubstanceKeyType == 'UUID' || assay.humanHomologTargetSubstanceKeyType == 'APPROVAL_ID'
-                    || assay.humanHomologTargetSubstanceKeyType == 'BDNUM'">
+                  <span *ngIf="assay.humanHomologTargetSubstanceKey">
                     <a [routerLink]="['/substances', assay.humanHomologTargetSubstanceKey]" target="_blank">
                       <span class="font12px">Substance Details</span>
                     </a>
@@ -352,8 +351,7 @@
                 </app-substance-text-search>
 
                 <div class="marginleft20px margintop10px">
-                  <span *ngIf="assay.ligandSubstrateSubstanceKeyType == 'UUID' || assay.ligandSubstrateSubstanceKeyType == 'APPROVAL_ID'
-                    || assay.ligandSubstrateSubstanceKeyType == 'BDNUM'">
+                  <span *ngIf="assay.ligandSubstrateSubstanceKey">
                     <a [routerLink]="['/substances', assay.ligandSubstrateSubstanceKey]" target="_blank">
                       <span class="font12px">Substance Details</span>
                     </a>
@@ -411,8 +409,9 @@
                   <div class="divflex width95percent">
                     <!-- Substance Text Search Suggestions/TypeAhead -->
                     <app-substance-text-search class="fieldValueSubstance" [searchValue]="analy.analyte"
-                      placeholder="Search Substances" (searchValueOut)="searchValueOutChange($event, ANALYTE, indexAnalyte)" (searchPerformed)="nameSearch($event, ANALYTE, indexAnalyte)"
-                      eventCategory="selectorSearch">
+                      placeholder="Search Substances"
+                      (searchValueOut)="searchValueOutChange($event, ANALYTE, indexAnalyte)"
+                      (searchPerformed)="nameSearch($event, ANALYTE, indexAnalyte)" eventCategory="selectorSearch">
                     </app-substance-text-search>
 
                     <!-- DELETE ANALYTE BUTTON -->
@@ -422,13 +421,13 @@
                     </button>
 
                     <div class="marginleft7px margintop10px">
-                      <span *ngIf="analy.analyteSubstanceKeyType == 'UUID' || analy.analyteSubstanceKeyType == 'APPROVAL_ID'
-                      || analy.analyteSubstanceKeyType == 'BDNUM'">
+                      <span *ngIf="analy.analyteSubstanceKey">
                         <a [routerLink]="['/substances', analy.analyteSubstanceKey]" target="_blank">
                           <span class="font12px">Substance Details</span>
                         </a>
                       </span>
                     </div>
+
                   </div> <!-- divflex -->
 
                 </div> <!-- form-row -->
