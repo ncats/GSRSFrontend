@@ -39,6 +39,8 @@ export interface Config {
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
     isPfdaVersion?: boolean;
+    customToolbarComponent?: string;
+    disableSessionRefresh?: boolean;
     sessionRefreshOnActiveUserOnly?: boolean;
     sessionExpirationWarning?: SessionExpirationWarning;
     disableReferenceDocumentUpload?: boolean;

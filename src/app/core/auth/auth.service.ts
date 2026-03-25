@@ -1,8 +1,26 @@
 import { Injectable, PLATFORM_ID, Inject } from "@angular/core";
 import { ConfigService } from "../config/config.service";
-import { Auth, Role, UserGroup } from "./auth.model";
-import { Observable, Subject, of } from "rxjs";
-import { map, take, catchError } from "rxjs/operators";
+import { Auth, Privilege, Role, UserGroup } from "./auth.model";
+import {
+  interval,
+  from,
+  Observable,
+  BehaviorSubject,
+  of,
+  firstValueFrom,
+  throwError,
+} from "rxjs";
+import {
+  map,
+  take,
+  catchError,
+  concat,
+  switchMap,
+  tap,
+  takeWhile,
+  filter,
+  concatMap,
+} from "rxjs/operators";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { isPlatformBrowser } from "@angular/common";
 import {
