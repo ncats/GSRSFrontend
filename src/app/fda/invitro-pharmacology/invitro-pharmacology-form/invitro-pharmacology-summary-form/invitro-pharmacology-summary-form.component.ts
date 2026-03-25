@@ -22,7 +22,6 @@ import { ControlledVocabularyService } from '../../../../core/controlled-vocabul
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../../json-dialog-fda/json-dialog-fda.component';
@@ -34,11 +33,13 @@ import { FacetParam } from '@gsrs-core/facets-manager';
 import { InvitroPharmacologyService } from '../../service/invitro-pharmacology.service';
 import { InvitroAssayInformation, InvitroAssayScreening, InvitroSummary, InvitroReference, InvitroTestAgent, ValidationMessage, InvitroAssayResultInformation } from '../../model/invitro-pharmacology.model';
 import * as _ from 'lodash';
+import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-invitro-pharmacology-summary-form',
-  templateUrl: './invitro-pharmacology-summary-form.component.html',
-  styleUrls: ['./invitro-pharmacology-summary-form.component.scss']
+    selector: 'app-invitro-pharmacology-summary-form',
+    templateUrl: './invitro-pharmacology-summary-form.component.html',
+    styleUrls: ['./invitro-pharmacology-summary-form.component.scss'],
+    standalone: false
 })
 export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestroy {
 
@@ -114,7 +115,6 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   downloadJsonHref: any;
   jsonFileName: string;
 
-  isAdmin = false;
   isLoading = true;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
@@ -139,7 +139,6 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   ngOnInit() {
     // Get Username and Admin details
-    this.isAdmin = this.authService.hasRoles('admin');
     this.username = this.authService.getUser();
 
     this.loadingService.setLoading(true);
@@ -151,11 +150,11 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
         // Get existing record
         if (params['id']) {
           const id = params['id'];
-          this.title = 'Update In-vitro Pharmacology Summary';
+          this.title = 'Update In Vitro Pharmacology Summary';
           if (id !== this.id) {
             this.id = id;
             this.testAgent = this.id;
-            this.titleService.setTitle(`Edit In-vitro Pharmacology Summary ` + this.id);
+            this.titleService.setTitle(`Edit In Vitro Pharmacology Summary ` + this.id);
             // Get Assays by Test Agent
             this.getTestAgentSummariesDetails();
           }
@@ -163,15 +162,15 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
         else if (this.activatedRoute.snapshot.queryParams['copyId']) {
           this.id = this.activatedRoute.snapshot.queryParams['copyId'];
           if (this.id) {  //copy from existing Product
-            this.titleService.setTitle(`Register In-vitro Pharmacology from Copy ` + this.id);
+            this.titleService.setTitle(`Register In Vitro Pharmacology from Copy ` + this.id);
             this.title = 'Register New Invitro-Pharmacology Summary from Copy Assay Id ' + this.id;
           }
         }
         else if (this.activatedRoute.snapshot.queryParams['action']) {
           let actionParam = this.activatedRoute.snapshot.queryParams['action'];
           if (actionParam && actionParam === 'import' && window.history.state) {
-            this.titleService.setTitle(`Register New In-vitro Pharmacology from Import`);
-            this.title = 'Register New In-vitro Pharmacology from Import';
+            this.titleService.setTitle(`Register New In Vitro Pharmacology from Import`);
+            this.title = 'Register New In Vitro Pharmacology from Import';
             const record = window.history.state.record;
             const response = JSON.parse(record);
             if (response) {
@@ -181,11 +180,11 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
             }
           }
         }
-        // Register New In-vitro Pharamcology Screening Summary
+        // Register New In Vitro Pharamcology Screening Summary
         else {
-          this.title = 'Register New In-vitro Pharmacology Summary';
+          this.title = 'Register New In Vitro Pharmacology Summary';
           setTimeout(() => {
-            this.titleService.setTitle(`Register In-vitro Pharmacology Summary`);
+            this.titleService.setTitle(`Register In Vitro Pharmacology Summary`);
 
             this.invitroPharmacologyService.loadAssay();
             this.assay = this.invitroPharmacologyService.assay;
@@ -236,7 +235,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       }, error => {
         console.log('error');
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve in-vitro pharmacology data. Please refresh and try again.',
+          message: 'There was an error trying to retrieve In Vitro pharmacology data. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };
@@ -392,7 +391,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       this.isLoading = false;
 
       if (this.validationMessages.length === 0 && this.validationResult === true) {
-        this.submissionMessage = 'Invitro Pharmacology Assay Screening is Valid. Would you like to submit?';
+        this.submissionMessage = 'In Vitro Pharmacology Assay Summary is Valid. Would you like to submit?';
       }
       /* }, error => {
          this.addServerError(error);
@@ -496,7 +495,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   private handleRecordRetrivalError() {
     const notification: AppNotification = {
-      message: 'The in-vitro pharmacology record you\'re trying to edit doesn\'t exist.',
+      message: 'The In Vitro pharmacology record you\'re trying to edit doesn\'t exist.',
       type: NotificationType.error,
       milisecondsToShow: 4000
     };
@@ -625,7 +624,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
           /*
           this.validationMessages = null;
-          this.submissionMessage = 'In-vitro Pharmacology Summary data was saved successfully!';
+          this.submissionMessage = 'In Vitro Pharmacology Summary data was saved successfully!';
           this.showSubmissionMessages = true;
           this.validationResult = false;
 
@@ -658,7 +657,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   reloadPageAfterSave() {
     this.validationMessages = null;
-    this.submissionMessage = 'In-vitro Pharmacology Summary data was saved successfully!';
+    this.submissionMessage = 'In Vitro Pharmacology Summary data was saved successfully!';
     this.showSubmissionMessages = true;
     this.validationResult = false;
 
@@ -790,7 +789,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   displayMessageAfterDeleteSummarities() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        message: 'This in-vitro pharmacology assay screening record was deleted successfully',
+        message: 'This In Vitro pharmacology assay screening record was deleted successfully',
         type: 'home'
       }
     });
@@ -935,12 +934,12 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
   cleanData(oldraw: any): any {
     const old = oldraw;
 
-    const assayResults = defiant.json.search(old, '//*[_assayResults]');
+    const assayResults = jp.query(old, '$..[?(@._assayResults)]');
     for (let i = 0; i < assayResults.length; i++) {
       delete assayResults[i]._assayResults;
     }
 
-    const selectedAssay = defiant.json.search(old, '//*[_selectedAssay]');
+    const selectedAssay = jp.query(old, '$..[?(@._selectedAssay)]');
     for (let i = 0; i < selectedAssay.length; i++) {
       delete selectedAssay[i]._selectedAssay;
     }
@@ -959,43 +958,42 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
 
   scrub(oldraw: any): any {
     const old = oldraw;
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
       }
     }
 
-    const createHolders = defiant.json.search(old, '//*[creationDate]');
+    const createHolders = jp.query(old, '$..[?(@.creationDate)]');
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = defiant.json.search(old, '//*[lastModifiedDate]');
+    const modifyHolders = jp.query(old, '$..[?(@.lastModifiedDate)]');
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
     }
 
-    const assayResults = defiant.json.search(old, '//*[_assayResults]');
+    const assayResults = jp.query(old, '$..[?(@._assayResults)]');
     for (let i = 0; i < assayResults.length; i++) {
       delete assayResults[i]._assayResults;
     }
-
 
     delete old['creationDate'];
     delete old['createdBy'];

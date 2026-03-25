@@ -1,8 +1,26 @@
-@import 'material-design-theme';
-@import 'base';
-@import 'misc';
-@import 'mat-side-nav';
-@import 'table';
-@import 'card';
-@import 'expand-details';
-@import 'styles';
+@use "material-design-theme";
+@use "base";
+@use "misc";
+@use "mat-side-nav";
+@use "table";
+@use "card";
+@use "expand-details";
+@use "styles";
+@use "material-overrides";
+
+
+:host .mdc-text-field {
+  padding: 0 !important;
+}
+
+.mdc-text-field {
+  padding: 0 !important;
+}
+
+:root {
+  --mat-menu-item-label-text-size: 14px;
+  --mat-menu-item-label-text-font: Roboto, "Helvetica Neue", sans-serif;
+  --mat-button-text-label-text-tracking: normal;
+  --mat-button-filled-label-text-tracking: normal;
+  --mat-expansion-container-text-tracking: normal;
+}

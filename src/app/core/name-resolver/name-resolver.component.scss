@@ -2,12 +2,15 @@
   font-size: 20px !important;
 }
 
+::ng-deep .resolver-search-icon svg {
+  fill: var(--primary-color);
+}
+
 .result-container {
   flex-direction: row;
   justify-content: space-evenly;
   display: flex;
   justify-content: space-evenly;
-
 }
 
 .name-result {
@@ -21,11 +24,14 @@
 }
 
 .mat-form-field {
-    width: 500px;
-    max-width: 100%;
+  width: 500px;
+  max-width: 100%;
 }
 
-
+.search-formfield {
+  width: 500px;
+  max-width: 100%;
+}
 
 .search ::ng-deep .mat-form-field-infix {
   border-top-width: 1px !important;

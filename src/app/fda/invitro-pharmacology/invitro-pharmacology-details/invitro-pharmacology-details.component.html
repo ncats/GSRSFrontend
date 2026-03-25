@@ -5,14 +5,14 @@
 
       <div class="divflexrow margintop20px">
         <div class="divflex">
-          <div class="title margintop10px width53percent">
-            In-vitro Pharmacology Assay/Screening Details&nbsp;&nbsp;
+          <div class="title margintop10px width45percent">
+            In Vitro Pharmacology Assay/Screening Details&nbsp;&nbsp;
           </div>
 
           <!-- Edit GSRS record button ASSAY -->
           <div class="margintop10px">
-            <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="isAdmin"
-              matTooltip='Edit GSRS In-vitro Pharmacology ASSAY Record ONLY'>
+            <a [routerLink]="['/invitro-pharm/assay', assay.id, 'edit']" target="_blank" *ngIf="canUpdate"
+              matTooltip='Edit GSRS In Vitro Pharmacology ASSAY Record ONLY'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>&nbsp;&nbsp;
           </div>
@@ -158,75 +158,55 @@
               <tr>
                 <td class="fieldKey">Target Name:</td>
                 <td>
-                  <div *ngIf="assay.targetNameApprovalId; else noTargetNameApprovalId">
+                  <div *ngIf="assay.targetNameSubstanceKey; else noTargetNameSubstanceKey">
                     <!-- Go to Substance Details page -->
                     <a [routerLink]="['/substances', assay.targetNameSubstanceKey]" target="_blank"
                       matTooltip="Go to Substance Details page">
                       <b>{{assay.targetName}}</b>
                     </a>
-                    <!-- Display Chemical Structure -->
-                    <!--
-                    <div class="marginleft30px margintopneg10px width100px">
-                      <a role="img" aria-label="substance image" class="zoom"
-                        (click)="openImageModal(assay.targetNameSubstanceUuid)">
-                        <img class="image-icon" appSubstanceImage size="90"
-                          [entityId]="assay.targetNameSubstanceUuid">
-                      </a>
-                    </div>
-                    -->
-
+                    &nbsp;&nbsp;&nbsp;
+                    ({{ assay.targetNameApprovalId }})
                   </div>
-                  <ng-template #noTargetNameApprovalId>
+                  <ng-template #noTargetNameSubstanceKey>
                     <b>{{assay.targetName}}</b>
                   </ng-template>
                 </td>
               </tr>
 
               <tr>
-                <td class="fieldKey">Target Name Approval ID:</td>
-                <td>{{ assay.targetNameApprovalId }}</td>
-              </tr>
-
-              <tr>
                 <td class="fieldKey">Human Homolog Target:</td>
                 <td>
-                  <div *ngIf="assay.humanHomologApprovalId; else noHumanHomologApprovalId">
+                  <div *ngIf="assay.humanHomologTargetSubstanceKey; else noHumanHomologSubKey">
                     <!-- Go to Substance Details page -->
-                    <a [routerLink]="['/substances', assay.humanHomologApprovalId]" target="_blank"
+                    <a [routerLink]="['/substances', assay.humanHomologTargetSubstanceKey]" target="_blank"
                       matTooltip="Go to Substance Details page">
                       <b>{{assay.humanHomologTarget}}</b>
                     </a>
+                    &nbsp;&nbsp;&nbsp;
+                    ({{ assay.humanHomologTargetApprovalId }})
                   </div>
-                  <ng-template #noHumanHomologApprovalId>
+                  <ng-template #noHumanHomologSubKey>
                     <b>{{assay.humanHomologTarget}}</b>
                   </ng-template>
                 </td>
               </tr>
 
               <tr>
-                <td class="fieldKey">Human Homolog Target Approval ID:</td>
-                <td>{{ assay.humanHomologTargetApprovalId }}</td>
-              </tr>
-
-              <tr>
                 <td class="fieldKey">Ligand/Substrate:</td>
                 <td>
-                  <div *ngIf="assay.ligandSubstrateApprovalId; else noLigandApprovalId">
+                  <div *ngIf="assay.ligandSubstrateSubstanceKey; else noLigandSubstanceKey">
                     <!-- Go to Substance Details page -->
-                    <a [routerLink]="['/substances', assay.ligandSubstrateApprovalId]" target="_blank"
+                    <a [routerLink]="['/substances', assay.ligandSubstrateSubstanceKey]" target="_blank"
                       matTooltip="Go to Substance Details page">
                       <b> {{assay.ligandSubstrate}}</b>
                     </a>
+                    &nbsp;&nbsp;&nbsp;
+                    ({{ assay.ligandSubstrateApprovalId }})
                   </div>
-                  <ng-template #noLigandApprovalId>
+                  <ng-template #noLigandSubstanceKey>
                     <b> {{assay.ligandSubstrate}}</b>
                   </ng-template>
                 </td>
-              </tr>
-
-              <tr>
-                <td class="fieldKey">Ligand/Substrate Approval ID:</td>
-                <td>{{ assay.ligandSubstrateApprovalId }}</td>
               </tr>
 
               <tr>
@@ -236,13 +216,35 @@
                 </td>
               </tr>
 
+              <tr>
+                <td class="fieldKey">Analytes:</td>
+                <td>
+                  <div *ngFor="let analy of assay.invitroAssayAnalytes; let indexAnalyte = index">
+                    <div *ngIf="analy">
+                      <span *ngIf="indexAnalyte > 0"> <br> </span>
+                      <div *ngIf="analy.analyte; else noAnalyteSubstanceKey">
+                        <!-- Go to Substance Details page -->
+                        <a [routerLink]="['/substances', analy.analyteSubstanceKey]" target="_blank"
+                          matTooltip="Go to Substance Details page">
+                          <b>{{analy.analyte}}</b>
+                        </a>
+                      </div>
+                      <ng-template #noAnalyteSubstanceKey>
+                        <b> {{analy.analyte}} </b>
+                      </ng-template>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
             </tbody>
           </table>
         </div>
         <!-- Display Assay Details End -->
 
         <div *ngIf="assay._resultInformationList.length > 0; else noResults">
-          <div class="colorblue font20px"><b>Screening Results ({{assay.invitroAssayScreenings.length}}), Controls, and Summaries</b></div>
+          <div class="colorblue font20px"><b>Screening Results ({{assay.invitroAssayScreenings.length}}), Controls, and
+              Summaries</b></div>
         </div>
         <ng-template #noResults>
           <div class="colorblue font20px"><b>NO Results and Summaries</b></div>
@@ -372,7 +374,7 @@
                         <!-- Edit Screening link -->
                         <div>
                           <a [routerLink]="['/invitro-pharm', screening.invitroAssayResultInformation.id, 'edit']"
-                            target="_blank" *ngIf="isAdmin" matTooltip='Edit Assay Screening Record'>
+                            target="_blank" *ngIf="canUpdate" matTooltip='Edit Assay Screening Record'>
                             <span class="font12px">Edit Screening</span>
                           </a>
                         </div>
@@ -895,11 +897,10 @@
                                   <tr *ngFor="let ctr of screening.invitroControlList; let indexControl = index">
                                     <td>
                                       <span *ngIf="ctr.control" class="font14px">
-                                        <span
-                                          *ngIf="ctr.controlApprovalId; else noConrolApprovalId">
+                                        <span *ngIf="ctr.controlApprovalId; else noConrolApprovalId">
                                           <!-- Go to Substance Details page -->
-                                          <a [routerLink]="['/substances', ctr.controlApprovalId]"
-                                            target="_blank" matTooltip="Go to Substance Details page">
+                                          <a [routerLink]="['/substances', ctr.controlApprovalId]" target="_blank"
+                                            matTooltip="Go to Substance Details page">
                                             <b>{{ctr.control}}</b>
                                           </a>
                                         </span>

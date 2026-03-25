@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, NavigationExtras, UrlTree } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { Observable } from 'rxjs';
-import {Role} from '@gsrs-core/auth/auth.model';
 import { ConfigService } from "@gsrs-core/config";
 
 @Injectable()

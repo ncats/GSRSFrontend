@@ -8,84 +8,14 @@
     <span class="middle-fill"></span>
 
     <!-- Import Assay JSON into the Database -->
-    <div class="marginleft50px" *ngIf="isAdmin">
-      <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()" [disabled]="disableImportButton">
-        Import Data into Database
-      </button>
-    </div>
-
-    <!--
-    <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()" download="{{jsonFileName}}.json">
-      <span>Export JSON</span>
-    </a>&nbsp;&nbsp;&nbsp;
-    -->
-
-    <!-- Do not show 'Import JSON' button when in Update Invitro Pharamcology page -->
-    <!--
-    <span *ngIf="assay && !assay.id">
-      <button mat-flat-button color="primary" (click)="importJSON()">Import JSON</button>
-    </span>
-    -->
-
-    <!--
-    <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
-      *ngIf="validationMessages && validationMessages.length > 0">
-      {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
-      <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
-    </button>
-    <span class="middle-fill"></span>
-
-    <!- - Assay Details Link - ->
-    <a mat-flat-button color="primary" routerLink="/invitro-pharm/{{assay.id}}" target="_blank"
-      matTooltip='Opens in a new window' *ngIf="assay && assay.id">
-      View Assay Details
-      <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
-    </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
-    <!- - Validate and Submit Button - ->
-    &nbsp;
-    <button mat-flat-button color="warn" (click)="validate()">Validate and Submit</button>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button mat-flat-button color="primary" [routerLink]="['/home']" matTooltip='Close this window'>Close</button>
-  </div> <!- - div class=actions-container- ->
-
-
-  <!- - Validation Message Display - ->
-  <div [ngClass]="{'submission-messages': true, collapsed: !showSubmissionMessages, expanded: showSubmissionMessages}">
-    <div class="submission-message" *ngIf="submissionMessage">
-      {{submissionMessage}}
-    </div>
-
-
-    <!- - Validation Message Display and Submit Button - ->
-    <div *ngIf="validationMessages">
-      <span *ngIf=" validationMessages.length > 0">
-        <div class="submission-message" *ngIf='!serverError && !approving'>
-          Please correct or dismiss the following errors and submit again:
-        </div>
-        <div class="validation-message" *ngFor="let message of validationMessages; index as i">
-          <div class="message-type" [ngClass]="message.messageType == 'ERROR' ? 'error-message' : 'warning-message'">
-            {{message.messageType}}</div>
-          <div class="message">{{message.message}}<span *ngFor="let link of message.links"><br /><a [href]="link.href"
-                target="_blank">{{link.text}}</a></span></div>
-          <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
-            (click)="dismissValidationMessage(i)">
-            <mat-icon svgIcon="cancel"></mat-icon>
-          </button>
-        </div>
-      </span>
-
-      <div class="dismiss-container">
-        <span class="middle-fill"></span>
-        <button mat-flat-button color="primary" (click)="submit()"
-          [disabled]="isLoading || (this.validationResult === false)">{{validationMessages &&
-          validationMessages.length > 0?'Dismiss All and ':''}}
-          Submit</button>
+    <div class="divflex marginleft50px" *ngIf="canUpdate">
+      <div>
+        <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
+          [disabled]="disableImportButton">
+          Import Data into Database
+        </button>
       </div>
-    </div>
-    <!- - Validation Message and Submit Button - ->
-    -->
+    </div> <!-- class=divflex -->
 
   </div> <!-- div class=actions-container -->
 </div> <!-- div class=top-fixed -->
@@ -137,10 +67,26 @@
             <span class="font14px"><b>1. Reference Information</b></span><br><br>
 
             <span class="fieldKey">Reference Source Type <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroReference.sourceType}}</span><br>
+            <span class="fieldvalue">
+              {{invitroReference.sourceType}}
+
+              <!-- Required Field message -->
+              <span class="colorred fontbold"
+                *ngIf="(requiredFieldMissingArray[0].sourceType && requiredFieldMissingArray[0].sourceType == true)">
+                Required Field
+              </span>
+            </span><br>
 
             <span class="fieldKey">Reference Source/Citation <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroReference.sourceCitation}}</span><br>
+            <span class="fieldvalue">
+              {{invitroReference.sourceCitation}}
+
+              <!-- Required Field message -->
+              <span class="colorred fontbold"
+                *ngIf="(requiredFieldMissingArray[0].sourceCitation && requiredFieldMissingArray[0].sourceCitation == true)">
+                Required Field
+              </span>
+            </span><br>
 
             <span class="fieldKey">Reference Source Id:</span>
             <span class="fieldvalue">{{invitroReference.sourceId}}</span><br>
@@ -157,7 +103,14 @@
             <br><br>
 
             <span class="fieldKey">Laboratory Name <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}</span><br>
+            <span class="fieldvalue">{{invitroLaboratory.laboratoryName}}
+
+              <!-- Required Field message -->
+              <span class="colorred fontbold"
+                *ngIf="(requiredFieldMissingArray[0].laboratoryName && requiredFieldMissingArray[0].laboratoryName == true)">
+                Required Field
+              </span>
+            </span><br>
 
             <span class="fieldKey">Laboratory Affiliation:</span>
             <span class="fieldvalue">{{invitroLaboratory.laboratoryAffiliation}}</span><br>
@@ -196,7 +149,14 @@
             <span class="font14px"><b>3. Sponsor Information</b></span><br><br>
 
             <span class="fieldKey">Sponsor Contact Name <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroSponsor.sponsorContactName}}</span><br>
+            <span class="fieldvalue">{{invitroSponsor.sponsorContactName}}
+
+              <!-- Required Field message -->
+              <span class="colorred fontbold"
+                *ngIf="(requiredFieldMissingArray[0].sponsorContactName && requiredFieldMissingArray[0].sponsorContactName == true)">
+                Required Field
+              </span>
+            </span><br>
 
             <span class="fieldKey">Sponsor Affiliation:</span>
             <span class="fieldvalue">{{invitroSponsor.sponsorAffiliation}}</span><br>
@@ -226,10 +186,17 @@
             <div *ngFor="let submitter of invitroSponsorReport.invitroSponsorSubmitters; let index = index">
 
               <span class="fieldKey">Sponsor Report Submitter Name <span class="colorred">*</span>:</span>
-              <span class="fieldvalue">{{submitter.sponsorReportSubmitterName}}</span><br>
+              <span class="fieldvalue">{{submitter.sponsorReportSubmitterName}}
+
+                <!-- Required Field message -->
+                <span class="colorred fontbold"
+                  *ngIf="(requiredFieldMissingArray[0].sponsorReportSubmitterName && requiredFieldMissingArray[0].sponsorReportSubmitterName == true)">
+                  Required Field
+                </span>
+              </span><br>
 
               <span class="fieldKey">Sponsor Report Submitter Title:</span>
-              <span class="fieldvalue">{{submitter.sponsorRepoortSubmitterTitle}}</span><br>
+              <span class="fieldvalue">{{submitter.sponsorReportSubmitterTitle}}</span><br>
 
               <span class="fieldKey">Sponsor Report Submitter Affiliation:</span>
               <span class="fieldvalue">{{submitter.sponsorReportSubmitterAffiliation}}</span><br>
@@ -252,10 +219,22 @@
             <span class="font14px"><b>5. Report Information</b></span><br><br>
 
             <span class="fieldKey">Report Number <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroSponsorReport.reportNumber}}</span><br>
+            <span class="fieldvalue">{{invitroSponsorReport.reportNumber}}
 
-            <span class="fieldKey">Report Date <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroSponsorReport.reportDate}}</span><br>
+              <!-- Required Field message -->
+              <span class="colorred fontbold"
+                *ngIf="(requiredFieldMissingArray[0].reportNumber && requiredFieldMissingArray[0].reportNumber == true)">
+                Required Field
+              </span>
+            </span><br>
+
+            <span class="fieldKey">Report Date:</span>
+            <span class="fieldvalue">
+              <span
+                [ngClass]="invitroSponsorReport.reportDate && invitroSponsorReport.reportDate !== 'Invalid date'? '' : 'colorred'">
+                {{invitroSponsorReport.reportDate}}
+              </span>
+            </span><br>
           </span>
         </div>
 
@@ -272,11 +251,18 @@
           <span *ngIf="invitroTestAgent">
             <span class="font14px"><b>6. Test Agent Information</b></span><br><br>
 
-            <span class="fieldKey">Test Agent ID (Company Code) <span class="colorred">*</span>:</span>
+            <span class="fieldKey">Test Agent ID (Company Code):</span>
             <span class="fieldvalue">{{invitroTestAgent.testAgentCompanyCode}}</span><br>
 
             <span class="fieldKey">Test Agent Name (FDA) <span class="colorred">*</span>:</span>
-            <span class="fieldvalue">{{invitroTestAgent.testAgent}}</span><br>
+            <span class="fieldvalue">{{invitroTestAgent.testAgent}}
+
+              <!-- Required Field message -->
+              <span class="colorred fontbold"
+                *ngIf="(requiredFieldMissingArray[0].testAgent && requiredFieldMissingArray[0].testAgent == true)">
+                Required Field
+              </span>
+            </span><br>
 
             <span class="fieldKey">Test Agent Approval ID/UNII:</span>
             <span class="fieldvalue">{{invitroTestAgent.testAgentApprovalId}}</span><br>
@@ -296,8 +282,14 @@
           <span *ngIf="invitroResultInfo">
             <span class="font14px"><b>7. Batch Information</b></span><br><br>
 
-            <span class="fieldKey">Batch Number:</span>
-            <span class="fieldvalue">{{invitroResultInfo.batchNumber}}</span><br>
+            <span class="fieldKey">Batch Number <span class="colorred">*</span>:</span>
+            <span class="fieldvalue">{{invitroResultInfo.batchNumber}}
+
+              <span class="colorred fontbold"
+                *ngIf="(requiredFieldMissingArray[0].batchNumber && requiredFieldMissingArray[0].batchNumber == true)">
+                Required Field
+              </span>
+            </span><br>
           </span>
         </div>
 
@@ -323,21 +315,38 @@
                 <td>Assay ID</td>
                 <td>Control Substance</td>
                 <td>Type of Control</td>
-                <td>Control Value Type</td>
-                <td>Control Value</td>
-                <td>Control Value Units</td>
+                <td>Control Result Type</td>
+                <td>Control Reference Value</td>
+                <td>Control Reference Value Units</td>
               </tr>
 
-              <tr valing="top" class="font11px" *ngFor="let ctrl of invitroControlsTemp; let index = index">
-                <td>{{(index+1)}}</td>
-                <td>{{ctrl.externalAssaySource}}</td>
-                <td>{{ctrl.externalAssayId}}</td>
+              <tr valing="top" class="font11px" *ngFor="let ctrl of invitroControlsTemp; let indexControl = index">
+                <td>{{(indexControl+1)}}</td>
+
+                <td>{{ctrl.externalAssaySource}}
+
+                  <!-- Required Field message -->
+                  <span class="colorred fontbold"
+                    *ngIf="(requiredFieldMissingArray[indexControl].controlExternalAssaySource && requiredFieldMissingArray[indexControl].controlExternalAssaySource == true)">
+                    Required Field
+                  </span>
+                </td>
+
+                <td>{{ctrl.externalAssayId}}
+
+                  <!-- Required Field message -->
+                  <span class="colorred fontbold"
+                    *ngIf="(requiredFieldMissingArray[indexControl].controlExternalAssayId && requiredFieldMissingArray[indexControl].controlExternalAssayId == true)">
+                    Required Field
+                  </span>
+                </td>
+
                 <td>{{ctrl.assayId}}</td>
                 <td>{{ctrl.control}}</td>
                 <td>{{ctrl.controlType}}</td>
-                <td>{{ctrl.controlValueType}}</td>
-                <td>{{ctrl.controlValue}}</td>
-                <td>{{ctrl.controlValueUnits}}</td>
+                <td>{{ctrl.controlResultType}}</td>
+                <td>{{ctrl.controlReferenceValue}}</td>
+                <td>{{ctrl.controlReferenceValueUnits}}</td>
               </tr>
             </table>
           </span>
@@ -356,14 +365,18 @@
             <mat-icon>list_alt</mat-icon>&nbsp;Sheet 5.Assay Results
           </div><br><br>
 
+          <span *ngIf="resultMessage" class="colorgreen"><b>{{resultMessage}}</b>
+            <br><br>
+          </span>
+
           <span>
             <table class="tableStyle">
               <tr>
                 <td>Number</td>
-                <td>Assay found in Database</td>
+                <td>Assay Found In Database</td>
+                <td>Assay Set</td>
                 <td>External Assay Source <span class="colorred">*</span></td>
                 <td>External Assay ID <span class="colorred">*</span></td>
-                <td>External Assay URL/Document Link</td>
                 <td>Assay ID</td>
                 <td>Test Date (mm/dd/yyyy)</td>
                 <td>Test Agent Concentration</td>
@@ -382,9 +395,9 @@
                 <td>Measurements</td>
               </tr>
 
-              <tr valing="top" class="font11px" *ngFor="let result of invitroResultsTemp; let index = index">
+              <tr valing="top" class="font11px" *ngFor="let result of invitroResultsTemp; let indexResult = index">
 
-                <td>{{(index+1)}}</td>
+                <td>{{(indexResult+1)}}</td>
 
                 <td>
                   <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'true'">
@@ -395,9 +408,10 @@
                       </span>
                     </div>
                     <br>
+
                     <!-- Register Assay Link -->
-                    <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank" *ngIf="isAdmin"
-                      matTooltip='Register In-vitro Pharmacology Assay'> Register Assay
+                    <a [routerLink]="['/invitro-pharm/assay/register']" target="_blank" *ngIf="canUpdate"
+                      matTooltip='Register In Vitro Pharmacology Assay'> Register Assay
                     </a>
                   </span>
                   <span *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'Error getting Assay'">
@@ -405,6 +419,8 @@
                   </span>
                 </td>
 
+                <td>{{result.assaySet}}</td>
+                
                 <td>
                   <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundAssaySource">
                     <span class="colorred"><b>{{result.externalAssaySource}}</b></span>
@@ -412,6 +428,12 @@
                   <ng-template #foundAssaySource>
                     {{result.externalAssaySource}}
                   </ng-template>
+
+                  <!-- Required Field message -->
+                  <span class="colorred fontbold"
+                    *ngIf="(requiredFieldMissingArray[indexResult].resultExternalAssaySource && requiredFieldMissingArray[indexResult].resultExternalAssaySource == true)">
+                    Required Field
+                  </span>
                 </td>
 
                 <td>
@@ -421,9 +443,14 @@
                   <ng-template #foundExternalAssayId>
                     {{result.externalAssayId}}
                   </ng-template>
+
+                  <!-- Required Field message -->
+                  <span class="colorred fontbold"
+                    *ngIf="(requiredFieldMissingArray[indexResult].resultExternalAssayId && requiredFieldMissingArray[indexResult].resultExternalAssayId == true)">
+                    Required Field
+                  </span>
                 </td>
 
-                <td>{{result.externalAssayUrl}}</td>
                 <td>{{result.assayId}}</td>
                 <td>{{result.testDate}}</td>
                 <td>{{result.testAgentConcentration}}</td>

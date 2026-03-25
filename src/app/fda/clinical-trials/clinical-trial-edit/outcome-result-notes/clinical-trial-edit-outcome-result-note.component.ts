@@ -5,9 +5,10 @@ import * as _ from 'lodash';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-clinical-trial-edit-outcome-result-note',
-  templateUrl: './clinical-trial-edit-outcome-result-note.component.html',
-  styleUrls: ['./clinical-trial-edit-outcome-result-note.component.scss']
+    selector: 'app-clinical-trial-edit-outcome-result-note',
+    templateUrl: './clinical-trial-edit-outcome-result-note.component.html',
+    styleUrls: ['./clinical-trial-edit-outcome-result-note.component.scss'],
+    standalone: false
 })
 export class ClinicalTrialEditOutcomeResultNoteComponent implements OnInit {
   @Input() outcomeResultNote: OutcomeResultNote;

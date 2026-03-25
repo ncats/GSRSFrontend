@@ -1,0 +1,79 @@
+name: Build & Publish Frontend Binaries
+on:
+  release:
+    types: [published] # Triggers when a release is published
+    inputs:
+      npm_build_string:
+        description: "NPM build script to run (e.g. build:fda:prod)"
+        required: true
+        default: "build:fda:prod"
+#      release_tag:
+#        description: "Release tag to publish"
+#        required: true
+#        default: ${{ github.ref_name }}
+      frontend_dir:
+        description: "Path to GSRSFrontend (relative to repo root)"
+        required: true
+        default: "."
+      node_version:
+        description: "Node.js version"
+        required: true
+        default: "18.x"
+#  push:
+#    branches:
+#      - feature/deployable_binary_build
+
+permissions:
+  contents: write  # needed to create/update releases
+
+jobs:
+  build-and-release:
+    runs-on:
+      group: ncats-onprem-internal-runners
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x #${{ inputs.node_version }}
+
+      - name: Run build.sh
+        working-directory: ${{ inputs.frontend_dir }}
+        run: bash build.sh
+
+      - name: Run NPM build
+        working-directory: ${{ inputs.frontend_dir }}
+        run: npm run build:fda:prod
+      #${{ inputs.npm_build_string }}
+
+      - name: Zip dist into deployable_binaries.zip
+        working-directory: . #${{ inputs.frontend_dir }}
+        run: |
+          test -d dist || { echo "dist/ not found after build"; exit 1; }
+          rm -f deployable_binaries.zip
+          zip -r deployable_binaries.zip dist
+
+      - name: Create/Update GitHub Release and upload asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          #${{ inputs.frontend_dir }}/
+          files: |
+            deployable_binaries.zip
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print download URL
+        run: |
+          echo "Download:"
+          echo "https://github.com/${{ github.repository }}/releases/download/buildRelease2/deployable_binaries.zip" 
+          
+        #  ${{ inputs.release_tag }}/deployable_binaries.zip"

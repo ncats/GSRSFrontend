@@ -1,6 +1,4 @@
-<div *ngIf = "newList" mat-dialog-header>
-    <h3>Create List from {{record._name}}</h3>
-</div>
+<h2 *ngIf="newList" mat-dialog-title>Create List from {{record._name}}</h2>
 
 <div mat-dialog-content class = "list-dialog" >
     <div *ngIf = "newList">

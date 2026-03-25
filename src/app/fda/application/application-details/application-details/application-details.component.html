@@ -10,17 +10,24 @@
           <div>
             Application Details
             &nbsp;&nbsp;&nbsp;
-            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="isAdmin"
+            <a [routerLink]="['/application', application.id, 'edit']" target="_blank" *ngIf="canEdit"
               matTooltip='Edit GSRS Application Record (opens in new window)'>
               <mat-icon svgIcon="edit"></mat-icon>
             </a>
             <span>
-              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="isAdmin">
+              <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window" *ngIf="canEdit">
               </mat-icon>
+            </span>
+
+            <!-- LOCK ICON if Application record Public Domain is NO -->
+            <span *ngIf="application.publicDomain && application.publicDomain.toLowerCase() === 'no'">
+              &nbsp;&nbsp;
+              <mat-icon svgIcon="lock" class="lock-icon"
+                matTooltip="The Public Domain for this Application record is '{{application.publicDomain}}'"></mat-icon>
             </span>
           </div>
 
-          <div class="width650px textalignright font11px" *ngIf="isAdmin">
+          <div class="width650px textalignright font11px" *ngIf="canEdit">
             <span class="colorgray">Created By:</span> {{application.createdBy}}&nbsp;&nbsp;&nbsp;
             <span class="colorgray">Create Date:</span>
             {{application.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}&nbsp;&nbsp;&nbsp;
@@ -203,7 +210,8 @@
                     <tr *ngFor="let clinical of application.clinicalTrialList; let i = index">
                       <td>{{(i+1)}}</td>
                       <td>
-                        <a target="_blank" title="see clinicaltrials.gov" [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.nctNumber">{{clinical.nctNumber}}</a>
+                        <a target="_blank" title="see clinicaltrials.gov"
+                          [href]="'https://clinicaltrials.gov/ct2/show/' + clinical.nctNumber">{{clinical.nctNumber}}</a>
                         <!--
                         <a [routerLink]="['/clinical-trial', clinical.nctNumber]"
                           target="_blank">{{clinical.nctNumber}}</a>

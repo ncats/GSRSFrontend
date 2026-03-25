@@ -12,18 +12,20 @@ import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
 import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 
 @Component({
-  selector: 'app-substance-selector',
-  templateUrl: './substance-selector.component.html',
-  styleUrls: ['./substance-selector.component.scss']
+  selector: "app-substance-selector",
+  templateUrl: "./substance-selector.component.html",
+  styleUrls: ["./substance-selector.component.scss"],
+  standalone: false,
 })
 export class SubstanceSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
   @Output() draftSelected = new EventEmitter<any>();
-  @Input() placeholder = 'Search';
-  @Input() hintMessage = '';
-  @Input() header = 'Substance';
+  @Input() placeholder = "Search";
+  @Input() label = "";
+  @Input() hintMessage = "";
+  @Input() header = "Substance";
   @Input() name?: string;
   @Input() hideImage?: boolean;
   @Input() showMorelinks? = false;
@@ -55,105 +57,134 @@ export class SubstanceSelectorComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private structureService: StructureService
-  ) { }
+  ) {}
 
   StoreSelection() {
-   // sessionStorage.setItem('GSRS-default-selected-substance', JSON.stringify(this.selectedSubstance));
-   this.substanceFormService.setStoredRelated(this.selectedSubstance, this.header);
-   alert('Default ' + this.header + ' is set to ' + this.selectedSubstance._name);
+    // sessionStorage.setItem('GSRS-default-selected-substance', JSON.stringify(this.selectedSubstance));
+    this.substanceFormService.setStoredRelated(
+      this.selectedSubstance,
+      this.header,
+    );
+    alert(
+      "Default " + this.header + " is set to " + this.selectedSubstance._name,
+    );
   }
 
   ngOnInit() {
-
-   // const data = sessionStorage.getItem('GSRS-default-selected-substance');
-   const data = this.substanceFormService.getStoredRelated(this.header);
-    if(data) {
+    // const data = sessionStorage.getItem('GSRS-default-selected-substance');
+    const data = this.substanceFormService.getStoredRelated(this.header);
+    if (data) {
       this.selectedSubstance = data;
       this.selectionUpdated.emit(this.selectedSubstance);
     }
 
-
-    
     if (this.configService.configData.substanceSelectorProperties != null) {
-      this.substanceSelectorProperties = this.configService.configData.substanceSelectorProperties;
-    } else {
-      console.log("The config value for substanceSelectorProperties is null.");
+      this.substanceSelectorProperties =
+        this.configService.configData.substanceSelectorProperties;
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-
   }
 
   @Input()
   set subuuid(uuid: string) {
     if (uuid) {
-      this.substanceService.getSubstanceSummary(uuid).subscribe(response => {
-        this.selectedSubstance = response;
-        this.errorMessage = '';
-      }, error => {
-        if (this.name && this.name !== '') {
-          this.selectedSubstance = {_name: this.name};
-        } else {
-          this.selectedSubstance = {_name: ''};
-        }
-        this.errorMessage = 'Not in database';
-      });
+      this.substanceService.getSubstanceSummary(uuid).subscribe(
+        (response) => {
+          this.selectedSubstance = response;
+          this.errorMessage = "";
+        },
+        (error) => {
+          if (this.name && this.name !== "") {
+            this.selectedSubstance = { _name: this.name };
+          } else {
+            this.selectedSubstance = { _name: "" };
+          }
+          this.errorMessage = "Not in database";
+        },
+      );
     }
   }
 
-  processSubstanceSearch(searchValue: string = ''): void {
-    const q = searchValue.replace('\"', '');
-    const searchStr = this.substanceSelectorProperties.map(property => `${property}:\"^${q}$\"`).join(' OR ');
-
-    this.substanceService.getQuickSubstancesSummaries(searchStr, true).subscribe(response => {
-      if (response.content && response.content.length) {
-        this.selectedSubstance = response.content[0];
-        this.selectionUpdated.emit(this.selectedSubstance);
-        this.errorMessage = '';
-      } else {
-        this.errorMessage = 'No substances found';
-      }
-    });
+  processSubstanceSearch(searchValue: string = ""): void {
+    const q = searchValue.replace(/"/g, "");
+    if (this.substanceService.isUUID(q)) {
+      console.log("detected a UUID");
+      this.substanceService.getSubstanceDetails(q).subscribe({
+        next: (response) => {
+          if (response && response != null) {
+            this.selectedSubstance = response;
+            this.selectionUpdated.emit(this.selectedSubstance);
+            this.errorMessage = "";
+            console.log("got substance via UUID");
+          } else {
+            console.log("no match for UUID");
+            this.errorMessage = "No substances found";
+          }
+        },
+        error: (err) => {
+          console.log("error retrieving UUID");
+          this.errorMessage = "No substances found";
+        },
+      });
+      return;
+    }
+    const searchStr = this.substanceSelectorProperties
+      .map((property) => `${property}:\"^${q}$\"`)
+      .join(" OR ");
+    this.substanceService
+      .getQuickSubstancesSummaries(searchStr, true)
+      .subscribe((response) => {
+        if (response.content && response.content.length) {
+          this.selectedSubstance = response.content[0];
+          this.selectionUpdated.emit(this.selectedSubstance);
+          this.errorMessage = "";
+        } else {
+          this.errorMessage = "No substances found";
+        }
+      });
   }
 
- 
-
   advanced(type: string): void {
-
     let thisy = window.pageYOffset;
-    window.scroll({ 
-      top: 0, 
-      left: 0, 
-      behavior: 'auto' });
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
 
     let active = 0;
-    if (type === 'name') {
+    if (type === "name") {
       active = 1;
-    } 
+    }
     const dialogRef = this.dialog.open(AdvancedSelectorDialogComponent, {
-      minWidth: '80%',
-      maxWidth: '90%',
-      height: '92%',
-      data: {uuid: this.selectedSubstance ? this.selectedSubstance.uuid : null,
-          name: this.selectedSubstance ? this.selectedSubstance._name : null,
-      tab: active}
+      width: "100%",
+      minWidth: "80%",
+      maxWidth: "90%",
+      height: "92%",
+      panelClass: "advanced-selector-dialog",
+      data: {
+        uuid: this.selectedSubstance ? this.selectedSubstance.uuid : null,
+        name: this.selectedSubstance ? this.selectedSubstance._name : null,
+        tab: active,
+      },
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe(result => {
-      window.scroll({ 
-        top: thisy, 
-        left: 0, 
-        behavior: 'auto' });
+    dialogRef.afterClosed().subscribe((result) => {
+      window.scroll({
+        top: thisy,
+        left: 0,
+        behavior: "auto",
+      });
       if (result) {
         this.selectedSubstance = result;
         this.selectionUpdated.emit(result);
-        this.errorMessage = '';
+        this.errorMessage = "";
       }
-      
+
       this.overlayContainer.style.zIndex = null;
     });
   }
-
 
   openImageModal() {
     let data: any;
@@ -164,13 +195,13 @@ export class SubstanceSelectorComponent implements OnInit {
     const structureId = (substance as any).$$tmpStructureId || substance.uuid;
     const isDraft = (substance as any).$$tmpStructureId ? true : false;
 
-    if (substance.substanceClass === 'chemical') {
+    if (substance.substanceClass === "chemical") {
       data = {
         structure: structureId,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
         names: substance.names,
-        component: 'substanceSelector',
+        component: "substanceSelector",
         isDraft: isDraft
       };
       molfile = substance.structure.molfile;
@@ -178,7 +209,7 @@ export class SubstanceSelectorComponent implements OnInit {
       data = {
         structure: structureId,
         names: substance.names,
-        component: 'substanceSelector',
+        component: "substanceSelector",
         uuid: substance.uuid,
         isDraft: isDraft
       };
@@ -189,23 +220,24 @@ export class SubstanceSelectorComponent implements OnInit {
       }
     }
 
-    
-
     const dialogRef = this.dialog.open(StructureImageModalComponent, {
-      width: '650px',
-      panelClass: 'structure-image-panel',
-      data: data
+      width: "650px",
+      panelClass: "structure-image-panel",
+      data: data,
     });
 
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    const subscription = dialogRef.afterClosed().subscribe(response => {
-      this.overlayContainer.style.zIndex = null;
-      subscription.unsubscribe();
-    }, () => {
-      this.overlayContainer.style.zIndex = null;
-      subscription.unsubscribe();
-    });
+    const subscription = dialogRef.afterClosed().subscribe(
+      (response) => {
+        this.overlayContainer.style.zIndex = null;
+        subscription.unsubscribe();
+      },
+      () => {
+        this.overlayContainer.style.zIndex = null;
+        subscription.unsubscribe();
+      },
+    );
   }
 
   editSelectedSubstance(): void {
@@ -226,30 +258,41 @@ export class SubstanceSelectorComponent implements OnInit {
   }
 
   openInNewTab(uuid: string): void {
-    let url = '';
-    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
-      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/' + uuid;
-      
+    let url = "";
+    if (
+      this.configService.configData &&
+      this.configService.configData.gsrsHomeBaseUrl
+    ) {
+      url =
+        this.configService.configData.gsrsHomeBaseUrl + "/substances/" + uuid;
     } else {
-      const baseUrl = window.location.href.replace(this.router.url, '');
-      url = baseUrl + this.router.serializeUrl(this.router.createUrlTree(['/substances/' + uuid])
-      );
+      const baseUrl = window.location.href.replace(this.router.url, "");
+      url =
+        baseUrl +
+        this.router.serializeUrl(
+          this.router.createUrlTree(["/substances/" + uuid]),
+        );
     }
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   }
 
   registerNew() {
-    let url = '';
-    if (this.configService.configData && this.configService.configData.gsrsHomeBaseUrl) {
-      url = this.configService.configData.gsrsHomeBaseUrl + '/substances/register';
-      
+    let url = "";
+    if (
+      this.configService.configData &&
+      this.configService.configData.gsrsHomeBaseUrl
+    ) {
+      url =
+        this.configService.configData.gsrsHomeBaseUrl + "/substances/register";
     } else {
-      const baseUrl = window.location.href.replace(this.router.url, '');
-      url = baseUrl + this.router.serializeUrl(
-        this.router.createUrlTree(['/substances/register'])
-      );
+      const baseUrl = window.location.href.replace(this.router.url, "");
+      url =
+        baseUrl +
+        this.router.serializeUrl(
+          this.router.createUrlTree(["/substances/register"]),
+        );
     }
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   }
 
   selectDraft(): void {
@@ -376,5 +419,6 @@ export class SubstanceSelectorComponent implements OnInit {
       tmpStructureId: tmpStructureId
     });
   }
+
 
 }

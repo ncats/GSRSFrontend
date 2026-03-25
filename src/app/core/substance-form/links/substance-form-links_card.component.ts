@@ -8,9 +8,10 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormLinksService } from './substance-form-links.service';
 
 @Component({
-  selector: 'app-substance-form-links',
-  templateUrl: './substance-form-links_card.component.html',
-  styleUrls: ['./substance-form-links_card.component.scss']
+    selector: 'app-substance-form-links',
+    templateUrl: './substance-form-links_card.component.html',
+    styleUrls: ['./substance-form-links_card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormLinksCardComponent extends SubstanceCardBaseFilteredList<Linkage>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

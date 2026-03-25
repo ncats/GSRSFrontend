@@ -12,9 +12,10 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
-  selector: 'app-property-form',
-  templateUrl: './property-form.component.html',
-  styleUrls: ['./property-form.component.scss']
+    selector: 'app-property-form',
+    templateUrl: './property-form.component.html',
+    styleUrls: ['./property-form.component.scss'],
+    standalone: false
 })
 export class PropertyFormComponent implements OnInit {
   deleteTimer: any;

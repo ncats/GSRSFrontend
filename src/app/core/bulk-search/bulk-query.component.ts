@@ -22,14 +22,13 @@ import * as lodash from 'lodash';
   @Component({
     selector: 'app-bulk-query',
     templateUrl: './bulk-query.component.html',
-    styleUrls: ['./bulk-query.component.scss']
-  })
+    styleUrls: ['./bulk-query.component.scss'],
+    standalone: false
+})
 
 export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
   _ = lodash;
   loadedComponents: LoadedComponents;
-  showAudit: boolean;
-  isAdmin = false;
   isLoggedIn = false;
   showDeprecated = false;
   queryText: string;
@@ -104,8 +103,6 @@ export class BulkQueryComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.showDeprecated = false;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
     });
     this.setSearchEntity('substances');
     this.checkBulkQueryIdParameterOnLoad();
@@ -224,7 +221,14 @@ submitText() {
           searchEntity: this.searchEntity
         }
       };
+
+      if (this.searchEntity && this.searchEntity === 'substances') {
       this.router.navigate(['/browse-substance'], navigationExtras);
+      } else if (this.searchEntity && this.searchEntity === 'products') {
+        this.router.navigate(['/browse-products'], navigationExtras);
+      } else if (this.searchEntity && this.searchEntity === 'applications') {
+        this.router.navigate(['/browse-applications'], navigationExtras);
+      }
     }, error => {
       console.log('Error trying to post/put a bulk query.');
       const notification: AppNotification = {

@@ -7,9 +7,10 @@ import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 
 @Component({
-  selector: 'app-substance-form-sugars',
-  templateUrl: './substance-form-sugars.component.html',
-  styleUrls: ['./substance-form-sugars.component.scss']
+    selector: 'app-substance-form-sugars',
+    templateUrl: './substance-form-sugars.component.html',
+    styleUrls: ['./substance-form-sugars.component.scss'],
+    standalone: false
 })
 export class SubstanceFormSugarsComponent extends SubstanceCardBaseFilteredList<Sugar>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList  {

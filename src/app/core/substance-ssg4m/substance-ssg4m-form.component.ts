@@ -11,7 +11,7 @@ import {
 import {
   ActivatedRoute,
   Router,
-  RouterEvent,
+  Event,
   NavigationStart,
   NavigationEnd,
 } from "@angular/router";
@@ -22,7 +22,6 @@ import { take, map } from "rxjs/operators";
 import { Subscription, Observable } from "rxjs";
 import * as _ from "lodash";
 import * as moment from "moment";
-import * as defiant from "../../../../node_modules/defiant.js/dist/defiant.min.js";
 import { Title } from "@angular/platform-browser";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 // GSRS Import
@@ -56,11 +55,13 @@ import { SubstanceSsg4mService } from "./substance-ssg4m-form.service";
 import { environment } from "@gsrs-core/../../environments/environment";
 import { Ssg4mSyntheticPathway } from "./model/substance-ssg4m.model";
 import { toSvg } from "html-to-image";
+import jp from 'jsonpath';
 
 @Component({
   selector: "app-substance-ssg4m-form",
   templateUrl: "./substance-ssg4m-form.component.html",
   styleUrls: ["./substance-ssg4m-form.component.scss"],
+  standalone: false
 })
 export class SubstanceSsg4ManufactureFormComponent
   implements OnInit, AfterViewInit, OnDestroy
@@ -306,13 +307,11 @@ export class SubstanceSsg4ManufactureFormComponent
       } //else
     });
     this.subscriptions.push(routeSubscription);
-    const routerSubscription = this.router.events.subscribe(
-      (event: RouterEvent) => {
-        if (event instanceof NavigationStart) {
-          this.substanceSsg4mService.unloadSubstance();
-        }
-      },
-    );
+    const routerSubscription = this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationStart) {
+        this.substanceSsg4mService.unloadSubstance();
+      }
+    });
     this.subscriptions.push(routerSubscription);
     this.approving = false;
     /* // Commenting this out
@@ -1169,139 +1168,109 @@ export class SubstanceSsg4ManufactureFormComponent
       // const substanceCopy = this.cleanSubstance();
       // CHANGING THIS NOW CHANGING THIS NOW
       const substanceCopy = null;
-      this.substanceService.validateSubstance(substanceCopy).subscribe(
-        (results) => {
-          // check for missing required reference fields and append a validationMessage
-          if (results.validationMessages) {
-            for (let i = 0; i < substanceCopy.references.length; i++) {
-              const ref = substanceCopy.references[i];
-              if (ref.docType !== "SYSTEM") {
-                if (
-                  !ref.citation ||
-                  ref.citation === "" ||
-                  !ref.docType ||
-                  ref.docType === ""
-                ) {
-                  const invalidReferenceMessage: ValidationMessage = {
-                    actionType: "frontEnd",
-                    appliedChange: false,
-                    links: [],
-                    message:
-                      "All references require a non-empty source type and text/citation value",
-                    messageType: "WARNING",
-                    suggestedChange: true,
-                  };
-                  results.validationMessages.push(invalidReferenceMessage);
-                  break;
-                }
-              }
-            }
-            if (substanceCopy.properties) {
-              for (let i = 0; i < substanceCopy.properties.length; i++) {
-                const prop = substanceCopy.properties[i];
-                if (!prop.propertyType || !prop.name) {
-                  const invalidPropertyMessage: ValidationMessage = {
-                    actionType: "frontEnd",
-                    appliedChange: false,
-                    links: [],
-                    message:
-                      "Property #" +
-                      (i + 1) +
-                      " requires a non-empty name and type",
-                    messageType: "ERROR",
-                    suggestedChange: true,
-                  };
-                  results.validationMessages.push(invalidPropertyMessage);
-                  results.valid = false;
-                }
-              }
-            }
-            if (substanceCopy.relationships) {
-              for (let i = 0; i < substanceCopy.relationships.length; i++) {
-                const relationship = substanceCopy.relationships[i];
-                if (
-                  !relationship.relatedSubstance ||
-                  !relationship.type ||
-                  relationship.type === ""
-                ) {
-                  const invalidRelationshipMessage: ValidationMessage = {
-                    actionType: "frontEnd",
-                    appliedChange: false,
-                    links: [],
-                    message:
-                      "Relationship  #" +
-                      (i + 1) +
-                      " requires a non-empty related substance and type",
-                    messageType: "ERROR",
-                    suggestedChange: true,
-                  };
-                  results.validationMessages.push(invalidRelationshipMessage);
-                  results.valid = false;
-                }
-              }
-            }
-            if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
-              for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
-                const prop = substanceCopy.polymer.monomers[i];
-                if (!prop.monomerSubstance || prop.monomerSubstance === {}) {
-                  const invalidPropertyMessage: ValidationMessage = {
-                    actionType: "frontEnd",
-                    appliedChange: false,
-                    links: [],
-                    message:
-                      "Monomer #" + (i + 1) + " requires a selected substance",
-                    messageType: "ERROR",
-                    suggestedChange: true,
-                  };
-                  results.validationMessages.push(invalidPropertyMessage);
-                  results.valid = false;
-                }
-              }
-            }
-            if (
-              substanceCopy.modifications &&
-              substanceCopy.modifications.physicalModifications
-            ) {
-              for (
-                let i = 0;
-                i < substanceCopy.modifications.physicalModifications.length;
-                i++
-              ) {
-                const prop =
-                  substanceCopy.modifications.physicalModifications[i];
-                let present = false;
-                prop.parameters.forEach((param) => {
-                  if (param.parameterName) {
-                    present = true;
-                  }
-                });
-
-                if (!prop.physicalModificationRole && !present) {
-                  const invalidPropertyMessage: ValidationMessage = {
-                    actionType: "frontEnd",
-                    appliedChange: false,
-                    links: [],
-                    message:
-                      "Physical Modification #" +
-                      (i + 1) +
-                      " requires a modification role or valid parameter",
-                    messageType: "ERROR",
-                    suggestedChange: true,
-                  };
-                  results.validationMessages.push(invalidPropertyMessage);
-                  results.valid = false;
-                }
+      this.substanceService.validateSubstance(substanceCopy).subscribe(results => {
+        // check for missing required reference fields and append a validationMessage
+        if (results.validationMessages) {
+          for (let i = 0; i < substanceCopy.references.length; i++) {
+            const ref = substanceCopy.references[i];
+            if (ref.docType !== 'SYSTEM') {
+              if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
+                const invalidReferenceMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'All references require a non-empty source type and text/citation value',
+                  messageType: 'WARNING',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidReferenceMessage);
+                break;
               }
             }
           }
-          observer.next(results);
-          observer.complete();
-        },
-        (error) => {
-          observer.error();
-          observer.complete();
-        },
-      );
+          if (substanceCopy.properties) {
+            for (let i = 0; i < substanceCopy.properties.length; i++) {
+              const prop = substanceCopy.properties[i];
+              if (!prop.propertyType || !prop.name) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Property #' + (i + 1) + ' requires a non-empty name and type',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.relationships) {
+            for (let i = 0; i < substanceCopy.relationships.length; i++) {
+              const relationship = substanceCopy.relationships[i];
+              if (!relationship.relatedSubstance || !relationship.type || relationship.type === '') {
+                const invalidRelationshipMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Relationship  #' + (i + 1) + ' requires a non-empty related substance and type',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidRelationshipMessage);
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
+            for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
+              const prop = substanceCopy.polymer.monomers[i];
+              if (!prop.monomerSubstance || Object.keys(prop.monomerSubstance).length === 0) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Monomer #' + (i + 1) + ' requires a selected substance',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
+          if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
+            for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
+              const prop = substanceCopy.modifications.physicalModifications[i];
+              let present = false;
+              prop.parameters.forEach(param => {
+                if (param.parameterName) {
+                  present = true;
+                }
+              });
+
+              if (!prop.physicalModificationRole && !present) {
+                const invalidPropertyMessage: ValidationMessage = {
+                  actionType: 'frontEnd',
+                  appliedChange: false,
+                  links: [],
+                  message: 'Physical Modification #' + (i + 1) + ' requires a modification role or valid parameter',
+                  messageType: 'ERROR',
+                  suggestedChange: true
+                };
+                results.validationMessages.push(invalidPropertyMessage);
+                results.valid = false;
+              }
+            }
+          }
+        }
+        observer.next(results);
+        observer.complete();
+      },
+      (error) => {
+        observer.error();
+        observer.complete();
+      });
     });
   }
 
@@ -1846,7 +1815,7 @@ export class SubstanceSsg4ManufactureFormComponent
     }
     const old = oldraw;
 
-    const idHolders = defiant.json.search(old, "//*[id]");
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     const idMap = {};
     for (let i = 0; i < idHolders.length; i++) {
       const oid = idHolders[i].id;
@@ -1859,7 +1828,7 @@ export class SubstanceSsg4ManufactureFormComponent
       }
     }
 
-    const uuidHolders = defiant.json.search(old, "//*[uuid]");
+    const uuidHolders = jp.query(old, '$..[?(@.uuid)]');
     const _map = {};
     for (let i = 0; i < uuidHolders.length; i++) {
       const ouuid = uuidHolders[i].uuid;
@@ -1877,7 +1846,7 @@ export class SubstanceSsg4ManufactureFormComponent
         }
       }
     }
-    const refHolders = defiant.json.search(old, "//*[references]");
+    const refHolders = jp.query(old, '$..[?(@.references)]');
     for (let i = 0; i < refHolders.length; i++) {
       const refs = refHolders[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -1888,11 +1857,10 @@ export class SubstanceSsg4ManufactureFormComponent
         refs[j] = _map[or];
       }
     }
-    defiant.json.search(old, "//*[uuid]");
     _.remove(old.codes, {
       codeSystem: "BDNUM",
     });
-    const createHolders = defiant.json.search(old, "//*[created]");
+    const createHolders = jp.query(old, '$..[?(@.created)]');
     for (let i = 0; i < createHolders.length; i++) {
       const rec = createHolders[i];
       delete rec["created"];
@@ -1901,7 +1869,7 @@ export class SubstanceSsg4ManufactureFormComponent
       delete rec["lastEditedBy"];
     }
 
-    const originHolders = defiant.json.search(old, "//*[originatorUuid]");
+    const originHolders = jp.query(old, '$..[?(@.originatorUuid)]');
     for (let i = 0; i < originHolders.length; i++) {
       const rec = originHolders[i];
       delete rec["originatorUuid"];
@@ -1929,7 +1897,7 @@ export class SubstanceSsg4ManufactureFormComponent
     if (true) {
       const refSet = {};
 
-      const refHolders2 = defiant.json.search(old, "//*[references]");
+      const refHolders2 = jp.query(old, '$..[?(@.references)]');
       for (let i = 0; i < refHolders2.length; i++) {
         const refs = refHolders2[i].references;
         for (let j = 0; j < refs.length; j++) {

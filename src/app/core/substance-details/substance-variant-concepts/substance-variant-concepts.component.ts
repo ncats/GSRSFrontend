@@ -4,9 +4,10 @@ import {SubstanceDetail, SubstanceRelated} from '../../substance/substance.model
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-variant-concepts',
-  templateUrl: './substance-variant-concepts.component.html',
-  styleUrls: ['./substance-variant-concepts.component.scss']
+    selector: 'app-substance-variant-concepts',
+    templateUrl: './substance-variant-concepts.component.html',
+    styleUrls: ['./substance-variant-concepts.component.scss'],
+    standalone: false
 })
 export class SubstanceVariantConceptsComponent extends SubstanceCardBase implements OnInit {
   definition: string;

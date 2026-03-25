@@ -1,17 +1,22 @@
-.mat-progress-bar {
-    z-index: 1003;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-}
+/* app-loading.css */
 
+/* Top loading bar (old + MDC) */
+// :host ::ng-deep .mat-progress-bar,
+// :host ::ng-deep .mat-mdc-progress-bar {
+//   z-index: 1003;
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+// }
 
-
-.mat-progress-spinner {
-    z-index: 1003;
-    position: fixed;
-  top: 50%;
-  left: calc(50% - 25px);
-/*  transform: translate(-50%, -50%); */
-}
+// /* Centered spinner (old + MDC) */
+// :host ::ng-deep .mat-progress-spinner,
+// :host ::ng-deep .mat-mdc-progress-spinner {
+//   z-index: 1003;
+//   position: fixed;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%, -50%);
+//   display: block;
+// }

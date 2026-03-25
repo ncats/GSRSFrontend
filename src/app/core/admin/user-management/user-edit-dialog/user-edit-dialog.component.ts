@@ -5,12 +5,14 @@ import { isString } from 'util';
 import { IfStmt } from '@angular/compiler';
 import { AuthService, Auth } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
-import { UserEditObject } from '@gsrs-core/admin/admin-objects.model';
+import { AssignableRole, UserEditObject } from '@gsrs-core/admin/admin-objects.model';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-user-edit-dialog',
-  templateUrl: './user-edit-dialog.component.html',
-  styleUrls: ['./user-edit-dialog.component.scss']
+    selector: 'app-user-edit-dialog',
+    templateUrl: './user-edit-dialog.component.html',
+    styleUrls: ['./user-edit-dialog.component.scss'],
+    standalone: false
 })
 export class UserEditDialogComponent implements OnInit {
   userLoggedIn: any;
@@ -29,6 +31,9 @@ export class UserEditDialogComponent implements OnInit {
   submitted = false;
   response: any;
   isError: boolean = false;
+  availableRoleNames: string[];
+  assignableRoles: AssignableRole[];
+
   roles = [
     {name: 'Query', hasRole: false},
     {name: 'DataEntry', hasRole: false},
@@ -41,6 +46,7 @@ export class UserEditDialogComponent implements OnInit {
     private adminService: AdminService,
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
     private authService: AuthService,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.user = data.user;
@@ -49,14 +55,19 @@ export class UserEditDialogComponent implements OnInit {
     this.userLoggedIn = this.authService.getUser();
     }
 
-    ngOnInit() {
+    async ngOnInit() {
       if (this.user) {
+        if(!await this.authService.hasSpecificPrivilege('Manage Users')) {
+          alert("Sorry! Unable to verify that you have the privileges to access this page");
+          this.router.navigateByUrl('/home');
+       }
         this.checkRoles();
         this.originalName = this.user.username;
         this.loading = false;
         this.newUser = false;
         this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
           this.adminService.getGroups().pipe(take(1)).subscribe( response => {
+            this.setupAssignableRoles();
             this.groups = [];
             response.forEach( grp => {
               const temp = {name: grp, hasGroup: false};
@@ -76,6 +87,9 @@ export class UserEditDialogComponent implements OnInit {
             this.loading = false;
             this.newUser = false;
             this.userHasAdminRole = this.checkIfUserHasAdminRole(this.user.roles);
+            
+            this.setupAssignableRoles();
+
             this.adminService.getGroups().pipe(take(1)).subscribe( response => {
               this.groups = [];
               response.forEach( grp => {
@@ -95,6 +109,15 @@ export class UserEditDialogComponent implements OnInit {
         this.user = {groups: [], roles: [],  user: {}};
         this.user.active = true;
         this.loading = false;
+        this.assignableRoles = [];
+        this.adminService.getAllAvailableRoles().subscribe(roleNames => {
+          this.availableRoleNames = roleNames;
+           this.availableRoleNames.forEach(r=>{
+            let newRole = {roleName: r, assigned: false };
+            this.assignableRoles.push(newRole);
+           })
+        });
+
         this.adminService.getGroups().pipe(take(1)).subscribe( response => {
           this.groups = [];
           response.forEach( grp => {
@@ -118,7 +141,7 @@ export class UserEditDialogComponent implements OnInit {
   checkIfUserHasAdminRole(roles): boolean {
     let toReturn = false;
     roles.forEach(role => {
-      if(role.toLowerCase() === 'admin') {
+      if(role.role && role.role.toLowerCase() === 'admin') {
         toReturn = true;
       }
     });
@@ -142,9 +165,9 @@ export class UserEditDialogComponent implements OnInit {
     } else {
       this.isError = false;
       const rolesArr = [];
-      this.roles.forEach(role => {
-        if (role.hasRole) {
-          rolesArr.push(role.name);
+      this.assignableRoles.forEach(role => {
+        if (role.assigned) {
+          rolesArr.push(role.roleName);
         }
       });
       const groups = [];
@@ -205,9 +228,9 @@ export class UserEditDialogComponent implements OnInit {
     this.isError = false;
     if (this.newPassword === this.newPasswordConfirm) {
       const rolesArr = [];
-      this.roles.forEach(role => {
-        if (role.hasRole) {
-          rolesArr.push(role.name);
+      this.assignableRoles.forEach(role => {
+        if (role.assigned) {
+          rolesArr.push(role.roleName);
         }
       });
       const groups = [];
@@ -281,7 +304,7 @@ export class UserEditDialogComponent implements OnInit {
     } else {
       this.isError = false;
       if ( this.authService.getUser === this.user.identifier ) {
-        this.adminService.changeMyPassword('', this.newPassword, this.user.id).pipe(take(1)).subscribe(response => {
+        this.adminService.changeMyPassword('', this.newPassword).pipe(take(1)).subscribe(response => {
         this.isError = false;
           this.changePassword = !this.changePassword;
           this.message = 'Password updated successfully';
@@ -317,4 +340,29 @@ export class UserEditDialogComponent implements OnInit {
       }
     }
   }
+
+  private userHasRole(roleTest: string): boolean {
+    if( this.user == null) return true;
+    let roleToCompare =roleTest.toLocaleLowerCase();
+    for(var r in this.user.roles) {
+      let role = this.user.roles[r].role;
+      if( roleToCompare === role.toLocaleLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private setupAssignableRoles() {
+    this.assignableRoles = [];
+    this.adminService.getAllAvailableRoles().subscribe(roleNames => {
+    this.availableRoleNames = roleNames;
+    this.availableRoleNames.forEach(r=>{
+      let hasRole:boolean = this.userHasRole(r);
+      let newRole = {roleName: r, assigned: hasRole };
+      this.assignableRoles.push(newRole);
+     })
+   });
+  }
+
 }

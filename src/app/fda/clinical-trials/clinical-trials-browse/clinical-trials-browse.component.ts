@@ -29,9 +29,10 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics/google-analy
 // import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-clinical-trials-browse',
-  templateUrl: './clinical-trials-browse.component.html',
-  styleUrls: ['./clinical-trials-browse.component.scss']
+    selector: 'app-clinical-trials-browse',
+    templateUrl: './clinical-trials-browse.component.html',
+    styleUrls: ['./clinical-trials-browse.component.scss'],
+    standalone: false
 })
 
 export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -54,7 +55,6 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   public smiles: string;
   private argsHash?: number;
   public auth?: Auth;
-  showAudit: boolean;
   public order: string;
   // public sortValues = searchSortValues;
   searchText: string[] = [];
@@ -62,7 +62,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   toggle: Array<boolean> = [];
   private subscriptions: Array<Subscription> = [];
   dataSource = new MatTableDataSource<ClinicalTrial>([]);
-  isAdmin: boolean;
+  canDelete: boolean = false;
   showExactMatches = false;
   private isComponentInit = false;
 
@@ -74,6 +74,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   public isCollapsed = true;
   private searchTermHash: number;
   isSearchEditable = false;
+  private resizeTimeout: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -92,7 +93,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     private titleService: Title
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.clinicalTrialService.getClinicalTrialsFacets);
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -113,16 +114,15 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     }
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
     const authSubscription = this.authService.getAuth().subscribe(auth => {
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
+
       // testing
-      // this.isAdmin = true;
-      // this.showAudit = this.authService.hasRoles('admin');
-       if (this.isAdmin) {
-        this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
-       } else {
+      if (this.canDelete) {
+       this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
+      } else {
          this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
-       }
+      }
     });
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
@@ -146,6 +146,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy() {
+    clearTimeout(this.resizeTimeout);
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -154,7 +155,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    this.processResponsiveness();
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
   }
 
   private loadComponent(): void {
@@ -190,8 +195,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchClinicalTrials();
     }

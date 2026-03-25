@@ -2,9 +2,10 @@ import { Component, OnInit, ViewChild, Input, Output, EventEmitter, ElementRef, 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
-  selector: 'ncats-ketcher-wrapper',
-  templateUrl: './ketcher-wrapper.component.html',
-  styleUrls: ['./ketcher-wrapper.component.scss']
+    selector: 'ncats-ketcher-wrapper',
+    templateUrl: './ketcher-wrapper.component.html',
+    styleUrls: ['./ketcher-wrapper.component.scss'],
+    standalone: false
 })
 export class KetcherWrapperComponent implements OnInit, AfterViewInit {
   @ViewChild('ketcherFrame', { static: true }) ketcherFrame: { nativeElement: HTMLIFrameElement };

@@ -28,14 +28,15 @@ import { AdverseEventPt } from '../model/adverse-event.model';
 import { adverseEventPtSearchSortValues } from './adverse-events-pt-search-sort-values';
 
 @Component({
-  selector: 'app-adverse-events-pt-browse',
-  templateUrl: './adverse-events-pt-browse.component.html',
-  styleUrls: ['./adverse-events-pt-browse.component.scss']
+    selector: 'app-adverse-events-pt-browse',
+    templateUrl: './adverse-events-pt-browse.component.html',
+    styleUrls: ['./adverse-events-pt-browse.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() countAdverseEventPtOut: EventEmitter<number> = new EventEmitter<number>();
-  isAdmin: boolean;
+  canExport: boolean = false;
   isLoggedIn = false;
   isLoading = true;
   isError = false;
@@ -122,7 +123,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.adverseEventService.getAdverseEventPtFacets);
     //  this.gaService.sendPageView('Browse Adverse Event');
 
@@ -150,7 +151,6 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
@@ -159,7 +159,7 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
 
     // FAERS DASHBOARD
     this.getFaersDashboardUrl();
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
   }
 
   ngAfterViewInit() {
@@ -415,8 +415,11 @@ export class AdverseEventsPtBrowseComponent implements OnInit, AfterViewInit, On
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchAdverseEventPt();
     }

@@ -18,9 +18,10 @@ import { ConfigService } from '@gsrs-core/config';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-substance-form-definition',
-  templateUrl: './substance-form-definition.component.html',
-  styleUrls: ['./substance-form-definition.component.scss']
+    selector: 'app-substance-form-definition',
+    templateUrl: './substance-form-definition.component.html',
+    styleUrls: ['./substance-form-definition.component.scss'],
+    standalone: false
 })
 export class SubstanceFormDefinitionComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
   definitionTypes: Array<VocabularyTerm>;

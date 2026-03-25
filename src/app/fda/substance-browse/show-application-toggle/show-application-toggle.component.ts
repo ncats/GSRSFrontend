@@ -14,12 +14,13 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-show-application-toggle',
   templateUrl: './show-application-toggle.component.html',
-  styleUrls: ['./show-application-toggle.component.scss']
+  styleUrls: ['./show-application-toggle.component.scss'],
+  standalone: false
 })
 export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, OnDestroy, SubstanceBrowseHeaderDynamicContent {
   private subscriptions: Array<Subscription> = [];
   test: any;
-  isAdmin = false;
+  canUpdate: boolean = false;
   privateExport = false;
   displayMatchApplicationConfig = false;
   displayMatchAppCheckBoxValue = false;
@@ -42,15 +43,14 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     public loadingService: LoadingService,
     private dialog: MatDialog) { }
 
-  ngOnInit() {
+  async ngOnInit() {
 
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
 
-      if (this.isAdmin === true) {
-        this.isDisplayAppToMatchConfig();
-      }
-    });
+    if (this.canUpdate === true) {
+      this.isDisplayAppToMatchConfig();
+    }
+
     this.loadedComponents = (this.configService.configData && this.configService.configData.loadedComponents) || null;
 
     // Get Etag and total from Browse Substance Results
@@ -107,23 +107,28 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
     if (this.etag) {
       const extension = 'xlsx';
       const url = this.getApiExportUrl(this.etag, extension, source);
-      if (this.isAdmin === true) {
+      if (this.canUpdate) {
         let type = '';
+        let entity = '';
         if (source != null) {
           if (source === 'app') {
             type = 'browseSubstanceApplication';
+            entity = 'applications';
           } else if (source === 'prod') {
             type = 'browseSubstanceProduct';
+            entity = 'products';
           } else if (source === 'clinicaltrialsus') {
             type = 'browseSubstanceClinicalTrial-US';
+            entity = 'clinicaltrialsus';
           } else if (source === 'clinicaltrialseurope') {
             type = 'browseSubstanceClinicalTrial-EU';
+            entity = 'clinicaltrialseurope';
           }
         }
         const dialogReference = this.dialog.open(ExportDialogComponent, {
           // height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': type, 'entity': 'applications', 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': type, 'entity': entity, 'hideOptionButtons': true }
         });
         dialogReference.afterClosed().subscribe(response => {
           // this.overlayContainer.style.zIndex = null;
@@ -134,7 +139,7 @@ export class ShowApplicationToggleComponent implements OnInit, AfterViewInit, On
             const fullname = name + '.' + extension;
 
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-            // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {

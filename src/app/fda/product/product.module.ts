@@ -19,6 +19,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
@@ -27,6 +28,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 /* GSRS Core Imports */
@@ -41,7 +44,6 @@ import { CrossEntitySearchModule } from '../cross-entity-search/cross-entity-sea
 /* GSRS Product Imports */
 import { ProductTextSearchModule } from './product-text-search/product-text-search.module';
 import { ProductService } from './service/product.service';
-
 import { ProductsBrowseComponent } from './products-browse/products-browse.component';
 import { ProductDetailsBaseComponent } from './product-details/product-details-base.component';
 import { ProductDetailsComponent } from './product-details/product-details/product-details.component';
@@ -106,6 +108,7 @@ const productRoutes: Routes = [
     MatSortModule,
     MatPaginatorModule,
     MatSelectModule,
+    MatOptionModule,
     MatSliderModule,
     MatDialogModule,
     MatListModule,
@@ -115,6 +118,8 @@ const productRoutes: Routes = [
     MatTabsModule,
     MatBottomSheetModule,
     MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     FormsModule,
     ReactiveFormsModule,
     OverlayModule,
@@ -146,8 +151,7 @@ const productRoutes: Routes = [
   providers: [
     CanActivateRegisterProductFormComponent,
     CanActivateUpdateProductFormComponent,
-    CanDeactivateProductFormComponent,
-    ActivateProductsComponent
+    CanDeactivateProductFormComponent
   ]
 })
 

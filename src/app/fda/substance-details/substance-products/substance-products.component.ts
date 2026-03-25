@@ -1,29 +1,32 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { ProductService } from '../../product/service/product.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sort } from '@angular/material/sort';
+import { PageEvent } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { PageEvent } from '@angular/material/paginator';
+import { StringDecoder } from 'string_decoder';
+import { take } from 'rxjs/operators';
+
+import { AuthService } from '@gsrs-core/auth';
+import { ConfigService, LoadedComponents } from '@gsrs-core/config';
+import { LoadingService } from '@gsrs-core/loading/loading.service';
+import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
+import { GeneralService } from '../../service/general.service';
+import { ProductService } from '../../product/service/product.service';
+import { FacetParam } from '@gsrs-core/facets-manager';
+import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { SubstanceDetailsBaseTableDisplay } from './substance-details-base-table-display';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
-import { ConfigService, LoadedComponents } from '@gsrs-core/config';
-import { AuthService } from '@gsrs-core/auth';
-import { take } from 'rxjs/operators';
-import { FacetParam } from '@gsrs-core/facets-manager';
-import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
 import { productSearchSortValues } from '../../product/products-browse/product-search-sort-values';
-import { StringDecoder } from 'string_decoder';
 
 @Component({
-  selector: 'app-substance-products',
-  templateUrl: './substance-products.component.html',
-  styleUrls: ['./substance-products.component.scss']
+    selector: 'app-substance-products',
+    templateUrl: './substance-products.component.html',
+    styleUrls: ['./substance-products.component.scss'],
+    standalone: false
 })
 
 export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, AfterViewInit {
@@ -51,8 +54,11 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   substanceName = '';
   substanceUuid = '';
   approvalId = '';
+  dailyMedIconSrcPath = '';
+  phpIdIconSrcPath = '';
+
   loadedComponents: LoadedComponents;
-  products: any;
+  products: any = [];
 
   // Search variables
   ascDescDir = 'asc';
@@ -71,12 +77,14 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
   disableExport = false;
   etag = '';
   etagAllExport = '';
+  canExport: boolean = false;
+  canUpdate: boolean = false;
 
   public displayedColumns: string[] = [
+    'view',
     'productCode',
     'productName',
     'labelerName',
-    'country',
     'status',
     'productType',
     'ingredientType',
@@ -90,17 +98,16 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     private configService: ConfigService,
     public authService: AuthService,
     private loadingService: LoadingService,
+    private generalService: GeneralService,
     private dialog: MatDialog
   ) {
     super(gaService, productService);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     if (this.substance && this.substance.uuid) {
 
       // Get Substance UUID and Approval ID
@@ -119,6 +126,12 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     } // if substance exists
 
     this.baseDomain = this.configService.configData.apiUrlDomain;
+
+    // Get dailymed Icon
+    this.dailyMedIconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
+
+    this.phpIdIconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_phpid.png`;
+
   }
 
   ngAfterViewInit() {
@@ -228,6 +241,7 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
               }
             }
           });
+
         } // if facets exists
 
       } else { // search product by Provenance for the tab selected on the page
@@ -237,6 +251,19 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
         this.productCount = pagingResponse.total;
         this.etag = pagingResponse.etag;
       }
+
+      // Get Daily Med Url if Product Code Type is NDC CODE
+      this.getDailyMedUrlforProductCode();
+
+      // Get PhPID Url if Product Code Type is PhPID
+      this.getPhpIdUrlforProductCode();
+
+      // Get RxNorm Url if Product Code Type is RxNorm
+      this.getRxNormUrlforProductCode();
+
+      // Sort Product Codes by ascending alphabetically
+      this.sortProductCodes();
+
     }, error => {
       this.showSpinner = false;  // Stop progress spinner
       console.log('error');
@@ -246,6 +273,82 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     });
     this.loadingStatus = '';
     // this.showSpinner = false;  // Stop progress spinner
+  }
+
+  sortProductCodes() {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        // Sort by Product Code Type, such as NDC CODE 
+        prov.productCodes.sort((a, b) => (a.productCodeType < b.productCodeType ? -1 : 1));
+      });
+    });
+  }
+  
+  getDailyMedUrlforProductCode(): void {
+    // Get Daily Med Url from Configuration
+    let dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'NDC CODE', show Daily Med link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE') {
+                prodCode._dailyMedUrl = dailyMedUrlConfig + prodCode.productCode;
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getPhpIdUrlforProductCode(): void {
+    let phpIdUrlConfig = this.generalService.getPhpIdUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'PHPID', show PhpID link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'phpid') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (phpIdUrlConfig) {
+                  prodCode._phpIdUrl = phpIdUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getRxNormUrlforProductCode(): void {
+    let rxNormUrlConfig = this.generalService.getRxNormUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'RxNorm', show RxNorm link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxcui') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (rxNormUrlConfig) {
+                  prodCode._rxNormUrl = rxNormUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
   }
 
   export() {
@@ -314,15 +417,15 @@ export class SubstanceProductsComponent extends SubstanceDetailsBaseTableDisplay
     if (sort.active) {
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
       this.ascDescDir = sort.direction;
-        this.sortValues.forEach(sortValue => {
-          if (sortValue.displayedColumns && sortValue.direction) {
-            if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
-              this.order = sortValue.value;
-            }
+      this.sortValues.forEach(sortValue => {
+        if (sortValue.displayedColumns && sortValue.direction) {
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+            this.order = sortValue.value;
           }
-        });
+        }
+      });
 
-        this.getSubstanceProducts();
+      this.getSubstanceProducts();
     }
     return;
   }

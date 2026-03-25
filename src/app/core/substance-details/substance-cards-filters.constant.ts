@@ -223,7 +223,7 @@ export function substanceRelationshipsFilter(
 
       let isApproved = false;
       if (filter.propertyToCheck != null) {
-        if (auth.hasRoles(filter.propertyToCheck) === true) {
+        if (auth.hasSpecificPrivilege(filter.propertyToCheck)) {
           isApproved = true;
         }
       }

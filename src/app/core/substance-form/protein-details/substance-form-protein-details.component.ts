@@ -9,9 +9,10 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { SubstanceFormBase } from '../base-classes/substance-form-base';
 
 @Component({
-  selector: 'app-substance-form-protein-details',
-  templateUrl: './substance-form-protein-details.component.html',
-  styleUrls: ['./substance-form-protein-details.component.scss']
+    selector: 'app-substance-form-protein-details',
+    templateUrl: './substance-form-protein-details.component.html',
+    styleUrls: ['./substance-form-protein-details.component.scss'],
+    standalone: false
 })
 // eslint-disable-next-line max-len
 export class SubstanceFormProteinDetailsComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {

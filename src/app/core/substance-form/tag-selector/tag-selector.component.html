@@ -1,22 +1,23 @@
 <mat-form-field>
-    <mat-chip-list #chipList>
-        <mat-chip *ngFor="let tag of tags" removable="true" (removed)="remove(tag)">
+    <mat-label>{{placeholder}}</mat-label>
+    <mat-chip-grid #chipGrid>
+        <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)">
             {{optionsDictionary[tag] && optionsDictionary[tag].display || tag}}
-            <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-        </mat-chip>
-        <input [placeholder]="placeholder" 
-        #tagInput 
-        [formControl]="tagControl" 
-        [matAutocomplete]="tagsAuto"
-        [matChipInputFor]="chipList" 
-        matChipInputAddOnBlur="false"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          (matChipInputTokenEnd)="tagAdded($event)" 
+            <button matChipRemove>
+                <mat-icon svgIcon="cancel"></mat-icon>
+            </button>
+        </mat-chip-row>
+        <input matInput
+            #tagInput
+            [formControl]="tagControl"
+            [matAutocomplete]="tagsAuto"
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="tagAdded($event)"
         (blur)="clearTagsInput()">
-    </mat-chip-list>
     <mat-autocomplete
-     #tagsAuto="matAutocomplete" 
-     (optionSelected)="selected($event)" 
+     #tagsAuto="matAutocomplete"
+     (optionSelected)="selected($event)"
      (closed)="clearTagsInput()">
         <mat-option *ngFor="let option of filteredOptions | async" [value]="option.value">
             {{option.display}}
@@ -25,4 +26,6 @@
                 Press enter to add custom value
             </mat-option>
     </mat-autocomplete>
+    </mat-chip-grid>
+    
 </mat-form-field>

@@ -1,3 +1,7 @@
+.header {
+    padding-top: 24px;
+}
+
 .spinner {
     width: 100px !important;
 height: 100px !important;
@@ -21,4 +25,8 @@ font-size: 18px;
 
 .scrubber-row {
     margin: 15px;
+}
+
+::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-content {
+    color: black;
 }

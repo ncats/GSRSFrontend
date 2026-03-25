@@ -17,6 +17,11 @@
     </div>
   </div>
 
+  <!-- Display Message -->
+  <div class="margintop5px marginbottom20px marginleft10px" *ngIf="message">
+    <span class="colorred font14px">{{message}}</span>
+  </div>
+
   <!-- Search Button -->
   <div class="search-button">
     <div>
@@ -116,11 +121,6 @@
               </button>
             </div>
 
-            <!--
-              <div class="query-builder-actions" *ngIf="isFirst">
-                <button mat-flat-button color="primary" (click)="processSearch()">Search</button>
-              </div>
-              -->
           </div>
         </div>
       </div>
@@ -148,11 +148,6 @@
     </mat-expansion-panel-header>
 
     <div class="div-flex">
-      <!--
-      <div class="colorgray"><b>Filter by <span class="colororange">
-            {{category}}</span> Facets({{numFacetsLoaded}})</b>
-      </div>
-      -->
       <div>
         <mat-form-field>
           <input matInput placeholder="Search Facet Name" [(ngModel)]="facetNameText" name="facetNameText" />
@@ -172,7 +167,7 @@
 
       <div class="align-right">
         <button class="bordergray" mat-flat-button (click)="togglePanelExpand()">{{panelExpanded? 'Collapse':'Expand'}}
-          All</button>
+          All </button>
       </div>
     </div>
     <br>
@@ -191,25 +186,23 @@
     </div>
   </mat-expansion-panel>
 
-
-
-  <!--
-  <app-structure-search></app-structure-search>
-  -->
   <!-- ****************************************************** -->
   <!-- Structure Editor Begin -->
 
   <!-- Show Structure Search only for Substance Now -->
   <div class="width100percent">
     <div class="panel-style" *ngIf="category === 'Substance'">
-      <mat-expansion-panel [expanded]="true" class="panel-style width100percent">
+      <mat-expansion-panel [expanded]="true" class="panel-style width100percent" (closed)="panelClosed()"
+        (opened)="panelOpened()">
         <mat-expansion-panel-header class="">
           <mat-panel-title class="margintop12px">
-            AND Search Structure
+            AND Search Structure <span class="colorgray" *ngIf="isStrcuturePanelOpen == true">&nbsp;(At least one search
+              value needs to be entered above, along with structure)</span>
           </mat-panel-title>
           <mat-panel-description class="marginleft25px">
           </mat-panel-description>
         </mat-expansion-panel-header>
+
         <div class="search-content-container" #contentContainer>
           <mat-card>
             <div class="structure-editor-actions-container">
@@ -231,26 +224,26 @@
                       <mat-option value="exact">
                         Exact
                       </mat-option>
+                      <mat-option value="exactplus">
+                        Exact Plus
+                      </mat-option>
                       <mat-option value="flex">
                         Flex
+                      </mat-option>
+                      <mat-option value="flexplus">
+                        Flex Plus
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                   <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
                     <div>Similarity cutoff (tanimoto)</div>
-                    <mat-slider min=".40" max="1" step="0.01" [value]="similarityCutoff"
-                      (input)="searchCutoffChanged($event)"></mat-slider>
+                    <mat-slider min=".40" max="1" step="0.01">
+                      <input matSliderThumb [value]="similarityCutoff" (valueChange)="searchCutoffChanged($event)">
+                    </mat-slider>
                     <div>{{similarityCutoff}}</div>
                   </div>
                 </div>
 
-                <!---
-              <div class="action-button-container three">
-                <button class="search-button" name="search" mat-raised-button color="primary"
-                  (click)="searchStructure()">Search</button>
-              </div>
-              <br>
-              -->
                 <div class="action-button-container one">
                   <button class="import-button" name="export" mat-raised-button color="primary"
                     (click)="openStructureImportDialog()">Import</button>

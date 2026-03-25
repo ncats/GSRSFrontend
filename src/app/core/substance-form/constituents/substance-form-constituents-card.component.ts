@@ -9,9 +9,10 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { EventEmitter } from 'stream';
 
 @Component({
-  selector: 'app-substance-form-constituents-card',
-  templateUrl: './substance-form-constituents-card.component.html',
-  styleUrls: ['./substance-form-constituents-card.component.scss']
+    selector: 'app-substance-form-constituents-card',
+    templateUrl: './substance-form-constituents-card.component.html',
+    styleUrls: ['./substance-form-constituents-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFilteredList<Constituent>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

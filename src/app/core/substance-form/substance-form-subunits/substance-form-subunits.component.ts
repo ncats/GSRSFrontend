@@ -13,9 +13,10 @@ import {DisplaySite, SubunitSequence} from '@gsrs-core/substance-form/substance-
 import { SubstanceFormPropertiesService } from '../properties/substance-form-properties.service';
 
 @Component({
-  selector: 'app-substance-form-subunits',
-  templateUrl: './substance-form-subunits.component.html',
-  styleUrls: ['./substance-form-subunits.component.scss']
+    selector: 'app-substance-form-subunits',
+    templateUrl: './substance-form-subunits.component.html',
+    styleUrls: ['./substance-form-subunits.component.scss'],
+    standalone: false
 })
 export class SubstanceFormSubunitsComponent extends SubstanceCardBaseFilteredList<Subunit> implements OnInit, AfterViewInit, OnDestroy {
   subunits: Array<Subunit> = [];

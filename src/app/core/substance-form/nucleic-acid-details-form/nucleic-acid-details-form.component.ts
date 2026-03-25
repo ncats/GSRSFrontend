@@ -8,9 +8,10 @@ import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.ser
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 
 @Component({
-  selector: 'app-nucleic-acid-details-form',
-  templateUrl: './nucleic-acid-details-form.component.html',
-  styleUrls: ['./nucleic-acid-details-form.component.scss']
+    selector: 'app-nucleic-acid-details-form',
+    templateUrl: './nucleic-acid-details-form.component.html',
+    styleUrls: ['./nucleic-acid-details-form.component.scss'],
+    standalone: false
 })
 // eslint-disable-next-line max-len
 export class NucleicAcidDetailsFormComponent extends SubstanceCardBaseFilteredList<NucleicAcid> implements OnInit, AfterViewInit, OnDestroy {

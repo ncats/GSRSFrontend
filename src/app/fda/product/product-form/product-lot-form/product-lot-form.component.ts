@@ -1,25 +1,29 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
-import { ProductService } from '../../service/product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingService } from '@gsrs-core/loading';
-import { MainNotificationService } from '@gsrs-core/main-notification';
-import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { UtilsService } from '@gsrs-core/utils/utils.service';
-import { AuthService } from '@gsrs-core/auth/auth.service';
-import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
-import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
-import { ProductLot, ValidationMessage } from '../../model/product.model';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import * as moment from 'moment';
+
+/* GSRS Core Imports */
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { LoadingService } from '@gsrs-core/loading';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary/controlled-vocabulary.service';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { VocabularyTerm } from '@gsrs-core/controlled-vocabulary/vocabulary.model';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
+/* GSRS Product Imports */
+import { ProductService } from '../../service/product.service';
+import { ProductLot, ValidationMessage } from '../../model/product.model';
+import { formatDate } from '@angular/common';
+
 @Component({
-  selector: 'app-product-lot-form',
-  templateUrl: './product-lot-form.component.html',
-  styleUrls: ['./product-lot-form.component.scss']
+    selector: 'app-product-lot-form',
+    templateUrl: './product-lot-form.component.html',
+    styleUrls: ['./product-lot-form.component.scss'],
+    standalone: false
 })
 export class ProductLotFormComponent implements OnInit {
 
@@ -36,37 +40,49 @@ export class ProductLotFormComponent implements OnInit {
   shapeList: Array<VocabularyTerm> = [];
   scoringList: Array<VocabularyTerm> = [];
   reviewProductMessage: Array<any> = [];
+
   productMessage = '';
   username = null;
   expiryDateMessage = '';
   manufactureDateMessage = '';
+  overlayContainer: HTMLElement;
 
   constructor(
     private productService: ProductService,
     public cvService: ControlledVocabularyService,
     private authService: AuthService,
+    private overlayContainerService: OverlayContainer,
     private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
-  //  this.getVocabularies();
+
+    this.getLotDetails();
   }
 
-  /*
-  getVocabularies(): void {
-    this.cvService.getDomainVocabulary('DOSAGE_FORM', 'PROD_CHARACTER_COLOR', 'PROD_CHARACTER_FLAVOR',
-      'PROD_CHARACTER_SHAPE', 'PROD_CHARACTER_FRAGMENTS').subscribe(response => {
-        this.dosageFormList = response['DOSAGE_FORM'].list;
-        this.colorList = response['PROD_CHARACTER_COLOR'].list;
-        this.flavorList = response['PROD_CHARACTER_FLAVOR'].list;
-        this.shapeList = response['PROD_CHARACTER_SHAPE'].list;
-        this.scoringList = response['PROD_CHARACTER_FRAGMENTS'].list;
-      });
+  getLotDetails() {
+    // If updating record, load date fields in the Datepicker Input Textbox
+    if (this.productLot != null) {
+      if (this.productLot.id != null) {
+
+        if (this.productLot.expiryDate) {
+          // Load/Assign 'Expiry Date' value on the DatePicker Input textbox
+          this.productLot._expiryDate = new Date(this.productLot.expiryDate);
+        }
+
+        if (this.productLot.manufactureDate) {
+          // Load/Assign 'Manufacture Date' value on the DatePicker Input textbox
+          this.productLot._manufactureDate = new Date(this.productLot.manufactureDate);
+        }
+
+      }
+    }
   }
-*/
+
   confirmDeleteProductLot(prodComponentIndex: number, prodLotIndex: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {message: 'Are you sure you want to delete Product Lot Details ' + (prodLotIndex + 1) + ' data?'}
+      data: { message: 'Are you sure you want to delete Product Lot Details ' + (prodLotIndex + 1) + ' data?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -92,7 +108,7 @@ export class ProductLotFormComponent implements OnInit {
     this.expiryDateMessage = '';
     const isValid = this.validateDate(this.productLot.expiryDate);
     if (isValid === false) {
-      this.expiryDateMessage = 'Expiry Date is invalid';
+      this.expiryDateMessage = 'Expiry Date is invalid in Manufacture Item ' + (this.prodComponentIndex + 1) + ' in Lot ' + (this.prodLotIndex + 1);
     }
     this.expiryDateMessageOut.emit(this.expiryDateMessage);
   }
@@ -101,7 +117,7 @@ export class ProductLotFormComponent implements OnInit {
     this.manufactureDateMessage = '';
     const isValid = this.validateDate(this.productLot.manufactureDate);
     if (isValid === false) {
-      this.manufactureDateMessage = 'Manufacture Date is invalid';
+      this.manufactureDateMessage = 'Manufacture Date is invalid in Manufacture Item ' + (this.prodComponentIndex + 1) + ' in Lot ' + (this.prodLotIndex + 1);
     }
     this.manufactureDateMessageOut.emit(this.manufactureDateMessage);
   }
@@ -129,6 +145,33 @@ export class ProductLotFormComponent implements OnInit {
       }
     }
     return isValid;
+  }
+
+  changeExpiryDate(event: MatDatepickerInputEvent<Date>): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: any = (inputElement as HTMLInputElement).value;
+
+    this.productLot.expiryDate = inputValue;
+
+    this.validateExpiryDate();
+  }
+
+  changeManufactureDate(event: MatDatepickerInputEvent<Date>): void {
+    const inputElement: HTMLElement = event.targetElement;
+    const inputValue: any = (inputElement as HTMLInputElement).value;
+
+    this.productLot.manufactureDate = inputValue;
+
+    this.validateManufactureDate();
+
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
   }
 
   isNumber(str: string): boolean {

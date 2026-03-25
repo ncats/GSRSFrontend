@@ -24,9 +24,10 @@ enum FormState {
 }
 
 @Component({
-  selector: 'app-substance-drafts',
-  templateUrl: './substance-drafts.component.html',
-  styleUrls: ['./substance-drafts.component.scss']
+    selector: 'app-substance-drafts',
+    templateUrl: './substance-drafts.component.html',
+    styleUrls: ['./substance-drafts.component.scss'],
+    standalone: false
 })
 export class SubstanceDraftsComponent implements OnInit {
   draft: SubstanceDraft;

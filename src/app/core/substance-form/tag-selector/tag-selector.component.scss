@@ -1,4 +1,16 @@
-.mat-form-field {
-    width: 100%;
-    
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+:host .mat-mdc-form-field {
+  display: flex;
+}
+
+::ng-deep mat-chip-grid {
+  // margin-top: 5px;
+}
+
+.mat-mdc-standard-chip:not(.mdc-evolution-chip--disabled) {
+  --mat-chip-elevated-container-color: #e0e0e0;
+  --mat-chip-label-text-color: #000000de;
 }

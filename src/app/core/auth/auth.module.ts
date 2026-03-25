@@ -46,9 +46,6 @@ import { SessionExpirationDialogComponent } from './session-expiration/session-e
     DecodeUriPipe,
     FileSizePipe
   ],
-  entryComponents: [
-    SessionExpirationDialogComponent
-  ],
   exports: [
     LoginComponent,
     UserProfileComponent,

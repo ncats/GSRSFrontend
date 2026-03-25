@@ -10,9 +10,10 @@ import { FormControl } from '@angular/forms';
 import { DataDictionaryService } from '@gsrs-core/utils/data-dictionary.service';
 
 @Component({
-  selector: 'app-cv-management',
-  templateUrl: './cv-management.component.html',
-  styleUrls: ['./cv-management.component.scss']
+    selector: 'app-cv-management',
+    templateUrl: './cv-management.component.html',
+    styleUrls: ['./cv-management.component.scss'],
+    standalone: false
 })
 export class CvManagementComponent implements OnInit {
   vocabularies: Array< Vocabulary > = [];

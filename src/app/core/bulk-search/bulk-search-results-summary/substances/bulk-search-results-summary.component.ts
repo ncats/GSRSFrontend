@@ -13,9 +13,10 @@ import { interval, Subscription, switchMap, takeWhile } from 'rxjs';
 import { MatSort, Sort} from '@angular/material/sort';
 
 @Component({
-  selector: 'app-bulk-search-results-summary[context][key]',
-  templateUrl: './bulk-search-results-summary.component.html',
-  styleUrls: ['./bulk-search-results-summary.component.scss']
+    selector: 'app-bulk-search-results-summary[context][key]',
+    templateUrl: './bulk-search-results-summary.component.html',
+    styleUrls: ['./bulk-search-results-summary.component.scss'],
+    standalone: false
 })
 
 export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit, OnChanges {
@@ -54,8 +55,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
   
   isLoggedIn = false;
   showDeprecated: boolean;
-  isAdmin = false;
-  showAudit = false;
   isPolling = true;
   
   private pollingInterval = 2500;
@@ -160,8 +159,6 @@ export class BulkSearchResultsSummaryComponent implements OnInit, AfterViewInit,
       } else {
         this.showDeprecated = false;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-      this.showAudit = this.authService.hasRoles('admin');
     });
 
     this.qPageSize = 10;

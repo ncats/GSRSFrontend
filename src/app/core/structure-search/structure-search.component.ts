@@ -1,36 +1,47 @@
-import { Component, OnInit, AfterViewInit, Renderer2, ViewChild, OnDestroy } from '@angular/core';
-import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
-import { InterpretStructureResponse } from '../structure/structure-post-response.model';
-import { MatDialog } from '@angular/material/dialog';
-import { StructureImportComponent } from '../structure/structure-import/structure-import.component';
-import { Editor } from '../structure-editor/structure.editor.model';
-import { LoadingService } from '../loading/loading.service';
-import { environment } from '../../../environments/environment';
-import { StructureService } from '../structure/structure.service';
-import { FormControl } from '@angular/forms';
-import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { StructureExportComponent } from '@gsrs-core/structure/structure-export/structure-export.component';
-import { Title } from '@angular/platform-browser';
-import * as _ from 'lodash';
-import { pipeline } from 'stream';
-import { take } from 'rxjs';
-import { StructureEditorComponent } from '@gsrs-core/structure-editor';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  Renderer2,
+  ViewChild,
+  OnDestroy,
+} from "@angular/core";
+import { NavigationExtras, Router, ActivatedRoute } from "@angular/router";
+import { InterpretStructureResponse } from "../structure/structure-post-response.model";
+import { MatDialog } from "@angular/material/dialog";
+import { StructureImportComponent } from "../structure/structure-import/structure-import.component";
+import { Editor } from "../structure-editor/structure.editor.model";
+import { LoadingService } from "../loading/loading.service";
+import { environment } from "../../../environments/environment";
+import { StructureService } from "../structure/structure.service";
+import { FormControl } from "@angular/forms";
+import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { StructureExportComponent } from "@gsrs-core/structure/structure-export/structure-export.component";
+import { Title } from "@angular/platform-browser";
+import * as _ from "lodash";
+import { pipeline } from "stream";
+import { take } from "rxjs";
+import { StructureEditorComponent } from "@gsrs-core/structure-editor";
 
 @Component({
-  selector: 'app-structure-search',
-  templateUrl: './structure-search.component.html',
-  styleUrls: ['./structure-search.component.scss']
+  selector: "app-structure-search",
+  templateUrl: "./structure-search.component.html",
+  styleUrls: ["./structure-search.component.scss"],
+  standalone: false,
 })
-export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestroy {
+export class StructureSearchComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   private editor: Editor;
   private searchType: string;
   _searchtype: string;
   similarityCutoff?: number;
   showSimilarityCutoff = false;
   searchTypeControl = new FormControl();
-  @ViewChild('contentContainer', { static: true }) contentContainer;
-  @ViewChild(StructureEditorComponent) structureEditor!: StructureEditorComponent;
+  @ViewChild("contentContainer", { static: true }) contentContainer;
+  @ViewChild(StructureEditorComponent)
+  structureEditor!: StructureEditorComponent;
   private overlayContainer: HTMLElement;
 
   constructor(
@@ -42,22 +53,24 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     private renderer: Renderer2,
     private gaService: GoogleAnalyticsService,
     private overlayContainerService: OverlayContainer,
-    private titleService: Title
-
+    private titleService: Title,
   ) {
-    this.searchType = 'substructure';
-    this._searchtype ='substructure';
+    this.searchType = "substructure";
+    this._searchtype = "substructure";
   }
 
   ngOnInit() {
     this.gaService.sendPageView(`Structure Search`);
-    this.titleService.setTitle('Structure Search');
+    this.titleService.setTitle("Structure Search");
     this.loadingService.setLoading(true);
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
 
   ngAfterViewInit() {
-    this.renderer.addClass(this.contentContainer.nativeElement, environment.structureEditor);
+    this.renderer.addClass(
+      this.contentContainer.nativeElement,
+      environment.structureEditor,
+    );
   }
 
   ngOnDestroy() {}
@@ -70,105 +83,129 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
     this.loadingService.setLoading(false);
     this.editor = editor;
     setTimeout(() => {
-      this.activatedRoute
-        .queryParamMap
-        .subscribe(params => {
-          if (params.has('structure')) {
-            this.structureService.getMolfile(params.get('structure')).subscribe(molfile => {
+      this.activatedRoute.queryParamMap.subscribe((params) => {
+        if (params.has("structure")) {
+          this.structureService
+            .getMolfile(params.get("structure"))
+            .subscribe((molfile) => {
               this.editor.setMolecule(molfile);
             });
-          }
-          if (params.has('type')) {
-            this.searchType = params.get('type');
-            this._searchtype = params.get('type');
+        }
+        if (params.has("type")) {
+          this.searchType = params.get("type");
+          this._searchtype = params.get("type");
+        }
 
-          }
+        if (this.searchType === "similarity") {
+          this.showSimilarityCutoff = true;
+          this.similarityCutoff =
+            (params.has("cutoff") && Number(params.get("cutoff"))) || 0.8;
+        }
 
-          if (this.searchType === 'similarity') {
-            this.showSimilarityCutoff = true;
-            this.similarityCutoff = params.has('cutoff') && Number(params.get('cutoff')) || 0.8;
-          }
-
-          this.searchTypeControl.setValue(this.searchType);
-        });
+        this.searchTypeControl.setValue(this.searchType);
+      });
     });
   }
 
   search(): void {
-    let mol = '';
+    let mol = "";
     this.loadingService.setLoading(true);
-     this.editor.getMolfile().pipe(take(1)).subscribe(resp => {
-      mol = resp;
-      this.structureService.interpretStructure(mol).subscribe(response => {
-      //  const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
-      //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
-        this.loadingService.setLoading(false);
-        this.navigateToBrowseSubstance(response.structure.id, response.structure.smiles);
-      }, error => {
-        console.log(error);
+    this.editor
+      .getMolfile()
+      .pipe(take(1))
+      .subscribe((resp) => {
+        mol = resp;
+        this.structureService.interpretStructure(mol).subscribe(
+          (response) => {
+            //  const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
+            //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
+            this.loadingService.setLoading(false);
+            this.navigateToBrowseSubstance(
+              response.structure.id,
+              response.structure.smiles,
+            );
+          },
+          (error) => {
+            console.log(error);
+          },
+        );
       });
-    });
-  
-    
   }
 
   standardize(standard: string): void {
-    let mol = ''
-     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
-      mol = response;
-    this.structureService.interpretStructure(mol, '', standard).subscribe((response: InterpretStructureResponse) => {
-      if (response && response.structure && response.structure.molfile) {
-        this.editor.setMolecule(response.structure.molfile);
-      }
-      }, () => {});
-    });
+    let mol = "";
+    this.editor
+      .getMolfile()
+      .pipe(take(1))
+      .subscribe((response) => {
+        mol = response;
+        this.structureService.interpretStructure(mol, "", standard).subscribe(
+          (response: InterpretStructureResponse) => {
+            if (response && response.structure && response.structure.molfile) {
+              this.editor.setMolecule(response.structure.molfile);
+            }
+          },
+          () => {},
+        );
+      });
   }
-    
 
-
-  private navigateToBrowseSubstance(structureSearchTerm: string, smiles?: string): void {
+  private navigateToBrowseSubstance(
+    structureSearchTerm: string,
+    smiles?: string,
+  ): void {
     const navigationExtras: NavigationExtras = {
-      queryParams: {}
+      queryParams: {},
     };
-  const navigationExtras2: NavigationExtras = {
-      queryParams: {}
+    const navigationExtras2: NavigationExtras = {
+      queryParams: {},
     };
 
-    navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
-    navigationExtras.queryParams['type'] = this.searchType || null;
+    navigationExtras.queryParams["structure_search"] =
+      structureSearchTerm || null;
+    navigationExtras.queryParams["type"] = this.searchType || null;
 
-    navigationExtras2.queryParams['structure'] = structureSearchTerm;
-    navigationExtras2.queryParams['type'] = this.searchType || null;
+    navigationExtras2.queryParams["structure"] = structureSearchTerm;
+    navigationExtras2.queryParams["type"] = this.searchType || null;
 
-    if (this.searchType === 'similarity') {
-      navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
-      navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
+    if (this.searchType === "similarity") {
+      navigationExtras.queryParams["cutoff"] = this.similarityCutoff || 0;
+      navigationExtras2.queryParams["cutoff"] = this.similarityCutoff || 0;
     }
 
     if (smiles != null) {
-      navigationExtras.queryParams['smiles'] = smiles;
+      navigationExtras.queryParams["smiles"] = smiles;
     }
-  // this is a test of the push state needed
+    // this is a test of the push state needed
     // to keep the back button working as desired
-    window.history.pushState({},'Structure Search', '/structure-search'
-      + '?structure=' + navigationExtras2.queryParams['structure']
-      + '&type=' + navigationExtras2.queryParams['type']
-      + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
+    window.history.pushState(
+      {},
+      "Structure Search",
+      "/structure-search" +
+        "?structure=" +
+        navigationExtras2.queryParams["structure"] +
+        "&type=" +
+        navigationExtras2.queryParams["type"] +
+        "&cutoff=" +
+        navigationExtras2.queryParams["cutoff"],
+    );
 
-
-    this.router.navigate(['/browse-substance'], navigationExtras).then(() => window.location.reload());
-
-
+    this.router
+      .navigate(["/browse-substance"], navigationExtras)
+      .then(() => window.location.reload());
   }
 
   searchTypeSelected(event): void {
     this.searchType = event.value;
     this._searchtype = event.value;
 
+    this.gaService.sendEvent(
+      "structureSearch",
+      "select:search-type",
+      this.searchType,
+    );
 
-    this.gaService.sendEvent('structureSearch', 'select:search-type', this.searchType);
-
-    if (this.searchType === 'similarity') {
+    if (this.searchType === "similarity") {
       this.showSimilarityCutoff = true;
       this.similarityCutoff = 0.8;
     } else {
@@ -177,53 +214,85 @@ export class StructureSearchComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   openStructureImportDialog(): void {
-    this.gaService.sendEvent('structureSearch', 'button:import', 'import structure');
+    this.gaService.sendEvent(
+      "structureSearch",
+      "button:import",
+      "import structure",
+    );
     const dialogRef = this.dialog.open(StructureImportComponent, {
-      height: 'auto',
-      width: '650px',
-      data: {}
+      height: "auto",
+      width: "650px",
+      data: {},
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe((structurePostResponse?: InterpretStructureResponse) => {
-      this.overlayContainer.style.zIndex = null;
+    dialogRef.afterClosed().subscribe(
+      (structurePostResponse?: InterpretStructureResponse) => {
+        this.overlayContainer.style.zIndex = null;
 
-      if (structurePostResponse && structurePostResponse.structure && structurePostResponse.structure.molfile) {
-        this.structureEditor.setMolecule(structurePostResponse.structure.molfile);
-      }
-    }, () => {
-      this.overlayContainer.style.zIndex = null;
-    });
+        if (
+          structurePostResponse &&
+          structurePostResponse.structure &&
+          structurePostResponse.structure.molfile
+        ) {
+          this.structureEditor.setMolecule(
+            structurePostResponse.structure.molfile,
+          );
+        }
+      },
+      () => {
+        this.overlayContainer.style.zIndex = null;
+      },
+    );
   }
 
   openStructureExportDialog(): void {
-    let mol = ''
-     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
-      this.editor.getSmiles().pipe(take(1)).subscribe(resp => {
-      mol = response;
-    this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
-    const dialogRef = this.dialog.open(StructureExportComponent, {
-      height: 'auto',
-      width: '650px',
-      data: {
-        molfile: mol,
-        smiles: resp
-      }
-    });
-    this.overlayContainer.style.zIndex = '1002';
+    let mol = "";
+    this.editor
+      .getMolfile()
+      .pipe(take(1))
+      .subscribe((response) => {
+        this.editor
+          .getSmiles()
+          .pipe(take(1))
+          .subscribe((resp) => {
+            mol = response;
+            this.gaService.sendEvent(
+              "structureSearch",
+              "button:export",
+              "export structure",
+            );
+            const dialogRef = this.dialog.open(StructureExportComponent, {
+              height: "auto",
+              width: "650px",
+              data: {
+                molfile: mol,
+                smiles: resp,
+              },
+            });
+            this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = null;
-    }, () => {
-      this.overlayContainer.style.zIndex = null;
-    });
-    });
-  });
+            dialogRef.afterClosed().subscribe(
+              () => {
+                this.overlayContainer.style.zIndex = null;
+              },
+              () => {
+                this.overlayContainer.style.zIndex = null;
+              },
+            );
+          });
+      });
   }
 
-  searchCutoffChanged(event): void {
-    this.similarityCutoff = event.value;
-    this.gaService.sendEvent('structureSearch', 'slider', 'similarity-cutoff', this.similarityCutoff);
+  searchCutoffChanged(event: Event): void {
+    const value = Number((event.target as HTMLInputElement).value);
+    this.similarityCutoff = value;
+    this.gaService.sendEvent(
+      "structureSearch",
+      "slider",
+      "similarity-cutoff",
+      this.similarityCutoff,
+    );
   }
 
   get _editor(): Editor {

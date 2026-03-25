@@ -16,6 +16,10 @@
   padding-top: 110px;
 }
 
+.height30px {
+    height: 30px;
+  }
+
 .scrollable-container {
   padding-top: 15px;
 }
@@ -71,6 +75,7 @@
 .form-row {
   display: flex;
   width: 100%;
+  align-items: flex-start;
 }
 
 .col-6-1 {
@@ -306,6 +311,10 @@
   margin-left: 10px;
 }
 
+.marginleft15px {
+  margin-left: 15px;
+}
+
 .marginleft20px {
   margin-left: 20px;
 }
@@ -318,8 +327,16 @@
   margin-left: -20px;
 }
 
+.marginleftneg30px {
+  margin-left: -30px;
+}
+
 .marginleftneg40px {
   margin-left: -40px;
+}
+
+.marginleftneg50px {
+  margin-left: -50px;
 }
 
 .marginleftneg7px {
@@ -340,6 +357,10 @@
 
 .padleft20px {
   padding-left: 20px;
+}
+
+.padleft50px {
+  padding-left: 50px;
 }
 
 .padleft185px {
@@ -386,6 +407,10 @@
 
 .width60px {
   width: 60px;
+}
+
+.width70px {
+  width: 70px;
 }
 
 .width100px {
@@ -488,6 +513,17 @@ width15percent {
 
 .cvwidth2 {
   width: 300px;
+}
+
+.table-row-with-action {
+  position: relative;
+}
+
+.external-delete-btn {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .mat-form-field-style> {

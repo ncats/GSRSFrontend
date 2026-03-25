@@ -12,6 +12,7 @@
   border: 1px solid var(--regular-grey-color);
 }
 
+
 .margintopneg10px {
   margin-top: -10px;
 }
@@ -108,7 +109,7 @@ legend.border {
 }
 
 /* Dialog Class */
-.mat-dialog-container {
+.mat-mdc-dialog-container {
   padding: 5px;
   position: relative;
 }
@@ -122,18 +123,18 @@ legend.border {
   min-width: auto;
 }
 
-.mat-dialog-content {
+.mat-mdc-dialog-content {
   margin: 0;
   padding: 0;
   max-height: 100%;
 }
 
-.mat-tab-body-content {
+.mat-mdc-tab-body-content {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-.mat-mini-fab {
+[mat-mini-fab] {
   position: absolute;
   right: 17px;
   top: 8px;
@@ -145,27 +146,23 @@ legend.border {
   &:not(:first-child) {
       margin-top: 3px;
   }
-
-  ::ng-deep .mat-button-wrapper {
-      padding: 0;
-  }
 }
 
 ::ng-deep {
   .structure-image-panel {
 
-    .mat-dialog-container {
+    .mat-mdc-dialog-container {
       padding: 5px;
       position: relative;
     }
 
-    .mat-dialog-content {
+    .mat-mdc-dialog-content {
       margin: 0;
       padding: 0;
       max-height: 100%;
     }
 
-    .mat-tab-body-content {
+    .mat-mdc-tab-body-content {
       padding-left: 10px;
       padding-right: 10px;
     }

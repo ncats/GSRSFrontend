@@ -1,6 +1,7 @@
 .query-statement-container {
   display: flex;
   width: 100%;
+  align-items: flex-start;
 }
 
 .condition-column {
@@ -8,15 +9,9 @@
   max-width: 100px;
   min-width: 100px;
   padding-right: 20px;
-  padding-top: 1px;
-}
 
-.mat-form-field {
-  width: 100%;
-  max-width: 100%;
-
-  ::ng-deep .mat-form-field-infix {
-      width: 100%;
+  mat-form-field {
+    width: 100%;
   }
 }
 
@@ -25,28 +20,79 @@
   min-width: 350px;
   max-width: 350px;
   padding-right: 20px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  // Ensure nested divs don't add extra offset
+  > div {
+    width: 100%;
+  }
 }
 
 .command-column {
   display: flex;
   padding-right: 10px;
-  padding-top: 1px;
   width: 250px;
   max-width: 250px;
   min-width: 250px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+// Global mat-form-field alignment fixes for Angular Material 19
+mat-form-field {
+  ::ng-deep {
+    // Remove default margin/padding that causes offset
+    .mat-mdc-text-field-wrapper {
+      padding: 0;
+    }
+
+    // Ensure consistent font size
+    .mat-mdc-form-field-infix {
+      padding-top: 24px;
+      padding-bottom: 8px;
+
+      input {
+        font-size: 14px;
+      }
+    }
+  }
 }
 
 .query-column {
-  flex-grow: 1;
+  flex: 1 1 auto;
   display: flex;
+  min-width: 0; // Allow flex item to shrink below its content size
+  width: 100%;
 }
 
 .query-input {
-  flex-grow: 1;
-  padding: 0 10px;
+  flex: 1 1 auto;
+  min-width: 0; // Allow flex item to shrink below its content size
+  width: 100%;
+
+  // Remove any nested div width constraints
+  > div {
+    width: 100%;
+  }
+
+  mat-form-field {
+    width: 100%;
+
+    // Fix placeholder font size to match other columns
+    ::ng-deep .mat-mdc-form-field-infix {
+      input::placeholder {
+        font-size: 14px;
+      }
+    }
+  }
 }
 
-.mat-hint.action-hint {
+::ng-deep .mat-mdc-form-field-hint.action-hint {
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -54,11 +100,12 @@
 
   a {
     color: var(--link-primary-color);
+    cursor: pointer;
   }
 
   div {
-     color: var(--regular-grey-color);
-     font-size: 12px; 
+    color: var(--regular-grey-color);
+    font-size: 12px;
   }
 
   span {
@@ -66,7 +113,8 @@
   }
 }
 
-.mat-error {
+mat-error {
+  --mat-form-field-error-text-color: var(--regular-red-color);
   color: var(--regular-red-color);
 }
 

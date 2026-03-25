@@ -19,9 +19,10 @@ import { SubstanceFormSsg4mSitesService } from '../ssg4m-sites/substance-form-ss
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-ssg4m-process-form',
-  templateUrl: './ssg4m-process-form.component.html',
-  styleUrls: ['./ssg4m-process-form.component.scss']
+    selector: 'app-ssg4m-process-form',
+    templateUrl: './ssg4m-process-form.component.html',
+    styleUrls: ['./ssg4m-process-form.component.scss'],
+    standalone: false
 })
 export class Ssg4mProcessFormComponent implements OnInit, OnDestroy {
   @Output() tabSelectedIndexOut = new EventEmitter<number>();

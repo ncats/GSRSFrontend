@@ -5,9 +5,10 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ConfigService } from '@gsrs-core/config';
 
 @Component({
-  selector: 'app-substance-edit-import-dialog',
-  templateUrl: './substance-edit-import-dialog.component.html',
-  styleUrls: ['./substance-edit-import-dialog.component.scss']
+    selector: 'app-substance-edit-import-dialog',
+    templateUrl: './substance-edit-import-dialog.component.html',
+    styleUrls: ['./substance-edit-import-dialog.component.scss'],
+    standalone: false
 })
 export class SubstanceEditImportDialogComponent implements OnInit {
   public json: any;

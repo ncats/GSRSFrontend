@@ -18,13 +18,6 @@
           Show All Parameters
         </mat-checkbox>
       </div>
-
-      <!--
-      <mat-form-field [floatLabel]="'never'" class="search" *ngIf="process && process.length > pageSize">
-        <input matInput placeholder="Search" [formControl]="searchControl">
-      </mat-form-field>
-      <span class="middle-fill"></span>
-      -->
     </div>
 
     <mat-paginator *ngIf="process && process.length > 5" [length]="filtered && filtered.length || 0" [pageIndex]="page"

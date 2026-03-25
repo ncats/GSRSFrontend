@@ -34,6 +34,7 @@ export class SubstanceFormStructuralModificationsService extends SubstanceFormSe
   }
 
   addSubstanceStructuralModification(): void {
+    this.substanceFormService.markAdded();
     if (!this.substance.modifications) {
       this.substance.modifications = {};
     }
@@ -46,6 +47,7 @@ export class SubstanceFormStructuralModificationsService extends SubstanceFormSe
   }
 
   deleteSubstanceStructuralModification(structuralModification: StructuralModification): void {
+    this.substanceFormService.markRemoved();
     const structuralModIndex = this.substance.modifications.structuralModifications.findIndex(
       structuralMod => structuralModification.$$deletedCode === structuralMod.$$deletedCode);
     if (structuralModIndex > -1) {

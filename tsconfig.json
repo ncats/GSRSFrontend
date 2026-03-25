@@ -1,5 +1,4 @@
 {
-  "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
     "downlevelIteration": true,
@@ -8,49 +7,38 @@
     "sourceMap": true,
     "declaration": false,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "target": "es2022",
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2022", "dom"],
     "paths": {
-      "jsdraw-wrapper": [
-        "dist/jsdraw-wrapper"
-      ],
-      "jsdraw-wrapper/*": [
-        "dist/jsdraw-wrapper/*"
-      ],
-      "ketcher-wrapper": [
-        "dist/ketcher-wrapper"
-      ],
-      "ketcher-wrapper/*": [
-        "dist/ketcher-wrapper/*"
-      ],
-      "file-select": [
-        "dist/file-select"
-      ],
-      "file-select/*": [
-        "dist/file-select/*"
-      ],
-      "@gsrs-core/*": [
-        "src/app/core/*"
-      ],
-      "@environment/*": [
-        "src/environments/*"
-      ]
-    }
+      "jsdraw-wrapper": ["dist/jsdraw-wrapper"],
+      "jsdraw-wrapper/*": ["dist/jsdraw-wrapper/*"],
+      "ketcher-wrapper": ["dist/ketcher-wrapper"],
+      "ketcher-wrapper/*": ["dist/ketcher-wrapper/*"],
+      "file-select": ["dist/file-select"],
+      "file-select/*": ["dist/file-select/*"],
+      "@gsrs-core/*": ["src/app/core/*"],
+      "@environment/*": ["src/environments/*"]
+    },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "strictPropertyInitialization": false,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
-  "exclude": [
-    "testing",
-    "test.ts",
-    "**/*.spec.ts",
-    "src/testing/**/*"
-  ],
-  "angularCompilerOptions": { "fullTemplateTypeCheck": false, "strictInjectionParameters": false, "enableIvy": false }
+  "exclude": ["testing", "test.ts", "**/*.spec.ts", "src/testing/**/*"],
+  "angularCompilerOptions": {
+    // Removed obsolete settings: enableIvy (always true), fullTemplateTypeCheck (deprecated)
+    // Progressive strictness enablement
+    "strictInjectionParameters": true,
+    "strictTemplates": false,
+    "strictInputAccessModifiers": false,
+    "strictPropertyInitialization": false
+  }
 }

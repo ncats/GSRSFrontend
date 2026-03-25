@@ -1,3 +1,4 @@
+// Support both legacy and MDC cards during migration
 .mat-card {
     max-width: 1228px;
     width: 100%;
@@ -12,12 +13,12 @@
     width: 100%;
     flex-direction: row;
     align-items: center;
-    white-space: nowrap;
     white-space: normal;
 }
 
 @media(max-width: 700px) {
-    .mat-card-title {
+    .mat-card-title,
+    .mat-mdc-card-title {
         flex-direction: column;
         align-items: flex-start;
     }
@@ -46,7 +47,7 @@
   }
 
   ::ng-deep {
-    .mat-expansion-panel, .mat-table, textarea {
+    .mat-expansion-panel, .mat-mdc-table, textarea {
       background-color: var(--regular-transparent-color);
     }
   }

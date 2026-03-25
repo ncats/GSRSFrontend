@@ -10,9 +10,10 @@ import { Subscription } from 'rxjs';
 import {SubstanceFormReferencesService} from "@gsrs-core/substance-form/references/substance-form-references.service";
 
 @Component({
-  selector: 'app-simplified-reference-form',
-  templateUrl: './simplified-reference-form.component.html',
-  styleUrls: ['./simplified-reference-form.component.scss']
+    selector: 'app-simplified-reference-form',
+    templateUrl: './simplified-reference-form.component.html',
+    styleUrls: ['./simplified-reference-form.component.scss'],
+    standalone: false
 })
 export class SimplifiedReferenceFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() reference: SubstanceReference;

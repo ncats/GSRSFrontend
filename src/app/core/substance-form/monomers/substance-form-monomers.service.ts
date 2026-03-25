@@ -33,12 +33,14 @@ export class SubstanceFormMonomersService extends SubstanceFormServiceBase<Array
   }
 
   addSubstanceMonomer(): void {
+    this.substanceFormService.markAdded();
     const newMix: Monomer = {};
     this.substance.polymer.monomers.unshift(newMix);
     this.propertyEmitter.next(this.substance.polymer.monomers);
   }
 
   deleteSubstanceMonomer(mix: Monomer): void {
+    this.substanceFormService.markRemoved();
     const subNameIndex = this.substance.polymer.monomers.findIndex(subName => mix.$$deletedCode === subName.$$deletedCode);
     if (subNameIndex > -1) {
       this.substance.polymer.monomers.splice(subNameIndex, 1);

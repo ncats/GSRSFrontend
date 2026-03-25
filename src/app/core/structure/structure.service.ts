@@ -1,22 +1,42 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable, timeout } from 'rxjs';
+import { Observable, timeout, BehaviorSubject, Subject, tap} from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';
 import { InterpretStructureResponse } from './structure-post-response.model';
-import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
+
 @Injectable({
   providedIn: 'root'
 })
 export class StructureService {
+  private smileSubject = new Subject<string>();
+  smileObservable$ = this.smileSubject.asObservable();
 
   constructor(
     private sanitizer: DomSanitizer,
     public configService: ConfigService,
     private http: HttpClient
   ) {
+  }
+
+  private _pageKetcherIsOpen = new BehaviorSubject<string>(''); // Initial value
+  readonly pageKetcherIsOpen$ = this._pageKetcherIsOpen.asObservable(); // Expose as an Observable
+
+  private _reloadKetcher = new BehaviorSubject<boolean>(false); // Initial value
+  readonly reloadKetcher$ = this._reloadKetcher.asObservable(); // Expose as an Observable
+
+  updatePageKetcherIsOpen(pageKetcherIsOpen: string) {
+    if (pageKetcherIsOpen) {
+      this._pageKetcherIsOpen.next(pageKetcherIsOpen);
+    }
+  }
+
+  updateReloadKetcher(uploadKetcher: boolean) {
+    if (uploadKetcher == true) {
+       this._reloadKetcher.next(uploadKetcher);
+    }
   }
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
@@ -108,22 +128,11 @@ export class StructureService {
 
   evaluateSmiles(smiles: string): Observable<any> {
     let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/substances/evaluateSmiles?smiles=${encodeURIComponent(smiles)}`;
-    console.log('API URL:', url);
-    
-    // Create form data for the request
-    // const formData = new FormData();
-    // formData.append('smiles', smiles);
-    
-    // Alternatively, for url-encoded format:
-    // const body = `smiles=${encodeURIComponent(smiles)}`;
-    
-    // const options = {
-    //   headers: {
-    //     // Using FormData, let the browser set the content type
-    //     // 'Content-type': 'application/x-www-form-urlencoded'
-    //   }
-    // };
     
     return this.http.get(url, {responseType: 'json'});
+  }
+
+  getSmilesFormula(smiles: string) {
+    this.smileSubject.next(smiles);
   }
 }

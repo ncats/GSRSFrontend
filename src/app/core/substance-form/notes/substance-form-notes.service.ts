@@ -31,6 +31,7 @@ export class SubstanceFormNotesService extends SubstanceFormServiceBase<Array<Su
   }
 
   addSubstanceNote(): void {
+    this.substanceFormService.markAdded();
     const newNote: SubstanceNote = {
       references: [],
       access: []
@@ -40,6 +41,7 @@ export class SubstanceFormNotesService extends SubstanceFormServiceBase<Array<Su
   }
 
   deleteSubstanceNote(note: SubstanceNote): void {
+    this.substanceFormService.markRemoved();
     const subNoteIndex = this.substance.notes.findIndex(subNote => note.$$deletedCode === subNote.$$deletedCode);
     if (subNoteIndex > -1) {
       this.substance.notes.splice(subNoteIndex, 1);

@@ -1,3 +1,11 @@
 .menu-container {
     padding-bottom: 14px;
 }
+
+:host {
+  --mat-button-text-label-text-color: #1565C0;
+}
+
+.button {
+    padding-top: 15px;
+}

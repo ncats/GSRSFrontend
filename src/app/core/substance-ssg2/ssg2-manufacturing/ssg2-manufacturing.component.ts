@@ -9,15 +9,18 @@ import { SubstanceDetail, SpecifiedSubstanceG2Manufacturing } from '@gsrs-core/s
 import { SubstanceFormSsg2ManufacturingService } from './substance-form-ssg2-manufacturing.service';
 
 @Component({
-  selector: 'app-ssg2-manufacturing',
-  templateUrl: './ssg2-manufacturing.component.html',
-  styleUrls: ['./ssg2-manufacturing.component.scss']
+    selector: 'app-ssg2-manufacturing',
+    templateUrl: './ssg2-manufacturing.component.html',
+    styleUrls: ['./ssg2-manufacturing.component.scss'],
+    standalone: false
 })
 export class Ssg2ManufacturingComponent extends SubstanceFormBase implements OnInit, AfterViewInit, OnDestroy {
 
   private substance: SubstanceDetail;
   manufacturing: Array<SpecifiedSubstanceG2Manufacturing>;
   private subscriptions: Array<Subscription> = [];
+  seachedOrganization = null;
+  
   constructor(
     private substanceFormService: SubstanceFormService,
     private substanceFormSsg2ManufacturingService: SubstanceFormSsg2ManufacturingService,

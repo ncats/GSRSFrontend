@@ -1,94 +1,102 @@
 /* awtodo not sure about differences */
 .message {
-    padding: 10px;
+  padding: 10px;
 }
 
 .info {
-    padding: 20px;
-    padding-bottom:30px;
+  padding: 20px;
+  padding-bottom: 30px;
+  color: black;
 }
 
 .file-import {
-    width: 100%;
+  width: 100%;
 }
 
 .file-row {
-    width: 100%;
+  width: 100%;
 }
 
-
 .italics {
-    font-style: italic;
-    color: var(--text-color);
+  font-style: italic;
+  color: var(--text-color);
 }
 
 .file-name {
-    display: flex;
-    text-align: center;
-    margin-left: 15px;
-    margin-top: auto;
-    margin-bottom: auto;
-    font-size: 15px;
-    color: var(--deprecated-color);
+  display: flex;
+  text-align: center;
+  margin-left: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 15px;
+  color: var(--deprecated-color);
 }
 
 .full-row {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    padding: 15px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 15px;
 }
 
 .full-row-col {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 10px;
 }
 
 .button-select-file {
-    color: #007CBA;
-    border: 1px solid #007CBA;
+  color: #007cba;
+  border: 1px solid #007cba;
 }
 
 .button-cancel {
-    background-color: #FFFFFF;
-    border: 1px solid #D60036;
+  background-color: #ffffff;
+  border: 1px solid #d60036;
 }
 
-.button-import {
-    color: #FFFFFF;
-    background-color: #007CBA;
-    border: 1px solid 007CBA;
-}
+// .button-import {
+//     color: #FFFFFF;
+//     background-color: #007CBA;
+//     border: 1px solid 007CBA;
+// }
 
 .colorwhite {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 
 .colorred {
-    color: red;
+  color: red;
 }
 
 .colorblue {
-    color: #007CBA;
+  color: #007cba;
+  padding-top: 24px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .bordergray {
-    border: 1px solid rgb(37, 34, 34);
+  border: 1px solid rgb(37, 34, 34);
 }
 
 .padbottom20px {
-    padding-bottom: 20px;
+  padding-bottom: 20px;
+  color: black;
 }
 
-hr {
-    border: none;
-    border-top: 1px solid rgb(126, 131, 126);
-    color: #333;
-    overflow: visible;
-    text-align: center;
-    height: 5px;
+.mat-divider {
+  margin: 20px 20px;
+  border-top-color: black;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  padding: 0;
+}
+
+::ng-deep .mat-mdc-dialog-container-with-actions .mat-mdc-dialog-content {
+  padding: 0 24px;
 }

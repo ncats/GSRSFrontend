@@ -18,15 +18,16 @@ import { GeneralService } from '../../../service/general.service';
 import { ProductElist } from '../../model/productelist/productelist.model';
 
 @Component({
-  selector: 'app-product-elist-details',
-  templateUrl: './product-elist-details.component.html',
-  styleUrls: ['./product-elist-details.component.scss']
+    selector: 'app-product-elist-details',
+    templateUrl: './product-elist-details.component.html',
+    styleUrls: ['./product-elist-details.component.scss'],
+    standalone: false
 })
 
 export class ProductElistDetailsComponent extends ProductDetailsBaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dailyMedUrl = '';
-  product: ProductElist;
+  override product: ProductElist = {} as ProductElist;
   showSpinner = false;
 
   constructor(
@@ -49,7 +50,7 @@ export class ProductElistDetailsComponent extends ProductDetailsBaseComponent im
       router, gaService, utilsService, cvService, configService, titleService, overlayContainerService, dialog, sanitizer);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.productId = this.activatedRoute.snapshot.params['id'];
     this.getProduct();
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;

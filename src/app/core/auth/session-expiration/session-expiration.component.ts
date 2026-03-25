@@ -7,8 +7,9 @@ import { MatDialog, MatDialogRef, MatDialogState } from '@angular/material/dialo
 import { UtilsService } from "@gsrs-core/utils";
 
 @Component({
-  selector: 'app-session-expiration',
-  templateUrl: './session-expiration.component.html'
+    selector: 'app-session-expiration',
+    templateUrl: './session-expiration.component.html',
+    standalone: false
 })
 export class SessionExpirationComponent implements OnInit {
   sessionExpirationWarning: SessionExpirationWarning = null;

@@ -1,21 +1,13 @@
-.risen {
-  margin-top: -15px;
-}
-
-
 .custom {
-  padding-bottom: 10px;
-  padding-top:10px;
-  border-bottom: 1px solid var(--box-shadow-color-6);
+  padding-top: 10px;
+
+  mat-form-field {
+    width: 100%;
+  }
 }
 
 .deselect {
   color: var(--text-color);
-}
-
-.add-term {
-  margin-left: -7px;
-  margin-bottom: -10px;
 }
 
 .form-row {
@@ -24,16 +16,27 @@
   align-items: flex-end;
 }
 
-.value, .display, .description {
+.value,
+.display,
+.description {
   flex-grow: 1;
   padding-right: 15px;
 }
 .cv-field {
-  width:100%;
+  width: 100%;
+
+  mat-hint {
+    color: var(--regular-red-color);
+  }
 }
 
-
 .add-term {
-  color: var(--secondary-blue);
+  --mat-text-button-horizontal-padding: 4px;
+  color: var(--secondary-blue) !important;
   font-style: italic;
+  min-width: 0 !important;
+  flex-shrink: 0;
+  margin-left: -4px;
+  align-self: center;
+  margin-bottom: 8px;
 }

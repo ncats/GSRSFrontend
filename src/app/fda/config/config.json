@@ -1,5 +1,5 @@
 {
-  "version": "3.1.2",
+  "version": "3.2.0-SNAPSHOT",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
   "adverseEventShinyHomepageDisplay": "true",
@@ -7,6 +7,8 @@
   "adverseEventShinyAdverseEventDisplay": "true",
   "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/95239e26-e0be-42d9-a960-9a5f7f1c25ee/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
   "dailyMedUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=",
+  "phpIdUrl": "https://phpidpublish.who-umc.org/search?phpid=",
+  "rxNormUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?searchdb=rxcui&query=",
   "bannerMessage": null,
   "showNameStandardizeButton": true,
   "advancedSearchFacetDisplay": false,
@@ -14,6 +16,13 @@
   "primaryCode": "BDNUM",
   "useDataUrl": false,
   "showCrossEntitySearchDropdown": true,
+  "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
+  "disableJSDraw": false,
+  "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
+  "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
+  "occasionalApiBasePath": "/ginas/app",
   "restApiPrefix": "/ginas/app",
   "authenticateAs": {
     "apiUsername": null,
@@ -24,7 +33,7 @@
   "stagingArea": {
     "mergeAction": false
   },
-"userRegistration": {
+  "userRegistration": {
     "configurations": {
       "emailForm": {
         "active": false,
@@ -35,6 +44,12 @@
         "registrationAccessEmailBodyTemplate": "Please register this new user OR resolve login access issue in %s\n\nUsername: %s\nUser email: %s\n\nTo the USER making the request, please provide below any details that will help the Admin facilitate your request:\n\n"
       }
     }
+  },
+  "enablePDFDownload":{
+    "enablePDFDownload" : true,
+    "buttonName":"Print to PDF",
+    "companyName" : "",
+    "proprietaryNote":""
   },
   "elementLabelDisplay": {
     "labels": {
@@ -51,6 +66,14 @@
       {
         "name":"substances",
         "title": "Substances"
+      },
+      {
+        "name":"products",
+        "title": "Products"
+      },
+      {
+        "name":"applications",
+        "title": "Applications"
       }
     ]
   },
@@ -84,7 +107,7 @@
     { "name": "frontend", "active": true, "hasEntities": false },
     { "name": "gateway", "active": true, "hasEntities": false },
     { "name": "impurities", "active": true, "hasEntities": true },
-    { "name": "invitro-pharmacology", "active": true, "hasEntities": true },
+    { "name": "invitro-pharmacology", "active":true, "hasEntities": true },
     { "name": "products", "active": true, "hasEntities": true },
     { "name": "ssg4m", "active": true, "hasEntities": true },
     { "name": "substances", "active": true, "hasEntities": true }
@@ -93,7 +116,7 @@
     {
       "title": "GSRSFind Excel tools",
       "description": "GSRSFind is an add-in for Microsoft Excel that gives a user access to data in GSRS for both search/browse and creation/modification purposes. (Note: write access requires valid credentials!)<br/>GSRSFind can augment an existing spreadsheet with data from GSRS. For example, you can add chemical structures to a column of names or identifiers.",
-      "href": "https://gsrs.ncats.nih.gov/downloads/GinasExcelTools.zip",
+      "href": "https://github.com/ncats/gsrsfind/releases/download/v1.6/GSRS.Excel.Tool.1.6.zip",
       "imageFile": "xlsx.png",
       "templateDescription": "Click to download GSRSFind Excel tools.zip"
     },
@@ -135,7 +158,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In-vitro Pharmacology",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In Vitro Pharmacology",
       "filters": [
         {}
       ]
@@ -308,7 +331,7 @@
     },
     {
       "card": "substance-subunits",
-      "title": "Nuceic Acid Subunits",
+      "title": "Nucleic Acid Subunits",
       "filters": [
         {
           "filterName": "equals",
@@ -636,7 +659,7 @@
       "filters": [
         {
           "filterName": "hasCredentials",
-          "propertyToCheck": "admin"
+          "propertyToCheck": "Restore Previous Versions"
         }
       ]
     }
@@ -898,7 +921,7 @@
             "DASH INDICATION",
             "DEA NO.",
             "DME Reactions",
-            "DRUG BANK",
+            "DRUGBANK",
             "DRUG CENTRAL",
             "DSLD",
             "EC (ENZYME CLASS)",
@@ -1016,8 +1039,8 @@
       "admin": [
         "Record Created By",
         "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited",
+        "root_creationDate",
+        "root_lastModifiedDate",
         "Ingredient Created By",
         "Ingredient Last Edited By",
         "Ingredient Create Date",
@@ -1031,6 +1054,7 @@
         "Product Name",
         "Dosage Form Name",
         "Substance UUID",
+        "Substance Class",
         "Ingredient Name (Preferred)",
         "Ingredient Name",
         "Has Ingredients",
@@ -1160,10 +1184,10 @@
         "Sponsor Report Submitter Name"
       ],
       "admin": [
+        "root_createdDate",
         "Record Created By",
-        "Record Last Edited By",
-        "Record Create Date",
-        "Record Last Edited"
+        "root_modifiedDate",
+        "Record Last Edited By"
       ]
     }
   },
@@ -1209,7 +1233,7 @@
     },
     {
       "component": "invitropharmacology",
-      "display": "Browse In-vitro Pharmacology",
+      "display": "Browse In Vitro Pharmacology",
       "path": "browse-invitro-pharm",
       "order": 15
     },
@@ -1248,37 +1272,37 @@
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology Assay",
+          "display": "In Vitro Pharmacology Assay",
           "path": "invitro-pharm/assay/register",
           "order": 230
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology Screening",
+          "display": "In Vitro Pharmacology Screening",
           "path": "invitro-pharm/register",
           "order": 240
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology Summary",
+          "display": "In Vitro Pharmacology Summary",
           "path": "invitro-pharm/summary/register",
           "order": 250
         },
         {
           "component": "invitropharmacology",
-          "display": "In-vitro Pharmacology AssaySet Builder",
+          "display": "In Vitro Pharmacology AssaySet Builder",
           "path": "invitro-pharm/assaySetBuilder",
           "order": 260
         },
         {
           "component": "invitropharmacology",
-          "display": "Import In-vitro Pharm Assay",
+          "display": "Import In Vitro Pharm Assay",
           "path": "invitro-pharm/import/assay",
           "order": 270
         },
         {
           "component": "invitropharmacology",
-          "display": "Import In-vitro Pharm Screening",
+          "display": "Import In Vitro Pharm Screening",
           "path": "invitro-pharm/import/screening",
           "order": 280
         }
@@ -1352,7 +1376,7 @@
     "root_approvalID",
     "root_codes_BDNUM",
     "root_codes_CAS",
-    "root_codes_ECHA\\ \\(EC\\/EINECS\\)"
+    "root_codes_ECHA"
   ],
   "homeDynamicLinks": [
     {
@@ -1384,6 +1408,16 @@
       "display": "Concepts",
       "facetName": "Substance Class",
       "facetValue": "concept"
+    },
+    {
+      "display": "Mixtures",
+      "facetName": "Substance Class",
+      "facetValue": "mixture"
+    },
+    {
+      "display": "SSG1",
+      "facetName": "Substance Class",
+      "facetValue": "specifiedSubstanceG1"
     }
   ],
   "registrarDynamicLinks": [

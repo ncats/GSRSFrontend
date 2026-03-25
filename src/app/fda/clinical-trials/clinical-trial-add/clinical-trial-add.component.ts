@@ -11,9 +11,10 @@ import {AuthService} from '@gsrs-core/auth/auth.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-clinical-add',
-  templateUrl: './clinical-trial-add.component.html',
-  styleUrls: ['./clinical-trial-add.component.scss']
+    selector: 'app-clinical-add',
+    templateUrl: './clinical-trial-add.component.html',
+    styleUrls: ['./clinical-trial-add.component.scss'],
+    standalone: false
 })
 export class ClinicalTrialAddComponent implements OnInit {
   public clinicalTrials: Array<ClinicalTrial>;
@@ -32,10 +33,8 @@ export class ClinicalTrialAddComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  ngOnInit() {
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-    this.canEdit = response;
-      });
+  async ngOnInit() {
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
   }
 
  addClinicalTrial() {

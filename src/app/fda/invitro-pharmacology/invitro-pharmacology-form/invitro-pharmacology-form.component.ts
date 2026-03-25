@@ -23,13 +23,13 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SubstanceRelationship, SubstanceSummary, SubstanceRelated } from '@gsrs-core/substance/substance.model';
 import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.model';
+import jp from 'jsonpath';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service';
@@ -42,7 +42,8 @@ import {
 @Component({
   selector: 'app-invitro-pharmacology-form',
   templateUrl: './invitro-pharmacology-form.component.html',
-  styleUrls: ['./invitro-pharmacology-form.component.scss']
+  styleUrls: ['./invitro-pharmacology-form.component.scss'],
+  standalone: false
 })
 export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
@@ -131,14 +132,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   downloadJsonHref: any;
   jsonFileName: string;
 
-  isAdmin = false;
   isLoading = true;
   private overlayContainer: HTMLElement;
   private subscriptions: Array<Subscription> = [];
 
-  firstFormGroup = this._formBuilder.group({
-    firstCtrl: ['', Validators.required],
-  });
+  firstFormGroup: any;
   isLinear = false;
 
   constructor(
@@ -160,11 +158,15 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // Initialize fields that depend on _formBuilder
+    this.firstFormGroup = this._formBuilder.group({
+      firstCtrl: ['', Validators.required],
+    });
+
     setTimeout(() => {
       this.loadingService.setLoading(this.isLoading);
 
       // Get Username and Admin details
-      this.isAdmin = this.authService.hasRoles('admin');
       this.username = this.authService.getUser();
 
       // Get Invitro Pharmacology Substance Key Type from the configuration file
@@ -178,10 +180,10 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           // Get existing Assay record
           if (params['id']) {
             const id = params['id'];
-            this.title = 'Update In-vitro Pharmacology Screening';
+            this.title = 'Update In Vitro Pharmacology Screening';
             if (id !== this.id) {
               this.id = id;
-              this.titleService.setTitle(`Edit In-vitro Pharmacology Screening ` + this.id);
+              this.titleService.setTitle(`Edit In Vitro Pharmacology Screening ` + this.id);
               this.invitroPharmacologyService.loadAssay();
               this.assay = this.invitroPharmacologyService.assay;
 
@@ -192,7 +194,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           else if (this.activatedRoute.snapshot.queryParams['copyId']) {
             this.id = this.activatedRoute.snapshot.queryParams['copyId'];
             if (this.id) {  //copy from existing Product
-              this.titleService.setTitle(`Register In-vitro Pharmacology from Copy ` + this.id);
+              this.titleService.setTitle(`Register In Vitro Pharmacology from Copy ` + this.id);
               this.title = 'Register New Invitro-Pharmacology Assay from Copy Assay Id ' + this.id;
             }
           }
@@ -200,13 +202,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
           else if (this.activatedRoute.snapshot.queryParams['action']) {
             let actionParam = this.activatedRoute.snapshot.queryParams['action'];
             if (actionParam && actionParam === 'import' && window.history.state) {
-              this.titleService.setTitle(`Register New In-vitro Pharmacology from Import`);
-              this.title = 'Register New In-vitro Pharmacology from Import';
+              this.titleService.setTitle(`Register New In Vitro Pharmacology from Import`);
+              this.title = 'Register New In Vitro Pharmacology from Import';
               const record = window.history.state.record;
               const response = JSON.parse(record);
               if (response) {
-
-                // this.scrub(response);
 
                 // Get All Assay Sets
                 this.getAllAssaySets();
@@ -222,13 +222,13 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
             }
           }
-          // Register New In-vitro Pharamcology Screening Assay
+          // Register New In Vitro Pharamcology Screening Assay
           else {
-            this.title = 'Register New In-vitro Pharmacology Screening';
+            this.title = 'Register New In Vitro Pharmacology Screening';
             setTimeout(() => {
               // Create new Result Information Object to store Laboratory, Sponsor, Test Agents, Batch Number, Reference
               this.createResultInfoObject();
-              this.titleService.setTitle(`Register In-vitro Pharmacology Screening`);
+              this.titleService.setTitle(`Register In Vitro Pharmacology Screening`);
 
               this.invitroPharmacologyService.loadAssay();
 
@@ -337,11 +337,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       if (response) {
         this.existingAssaySetList = response;
       }
-
-      //  this.loadingService.setLoading(false);
-      //  this.isLoading = false;
     }, error => {
-      // this.loadingService.setLoading(false);
       // this.isLoading = false;
       this.loadingService.setLoading(false);
       this.handleRecordRetrivalError();
@@ -486,7 +482,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
     this.validateClient();
 
-    // Set total assays to save
+    // Set total number of Assays to save
     this.totalAssayToSave = this.existingAssaysByAssaySetList.length;
 
     // If there is no error on client side, check validation on server side
@@ -496,15 +492,17 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // Validate Assay
       // this.invitroPharmacologyService.validateAssay().pipe(take(1)).subscribe(results => {
       this.submissionMessage = null;
+
       //  this.validationMessages = results.validationMessages.filter(
       //      message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING');
       //    this.validationResult = results.valid;
+
       this.showSubmissionMessages = true;
       this.isLoading = false;
       this.loadingService.setLoading(this.isLoading);
 
       if (this.validationMessages.length === 0) { //&& results.valid === true) {
-        this.submissionMessage = 'Invitro Pharmacology Assay Screening is Valid. Would you like to submit?';
+        this.submissionMessage = 'In Vitro Pharmacology Assay Screening is Valid. Would you like to submit?';
       }
       //   }, error => {
       ////     this.addServerError(error);
@@ -599,6 +597,34 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       this.setValidationMessage('Result is required');
     }
 
+    // Copy the Assays/Screening to new variable
+    let copiedAssays = _.cloneDeep(this.existingAssaysByAssaySetList);
+
+    copiedAssays.forEach((assay, indexAssay) => {
+      if (assay) {
+        assay.invitroAssayScreenings.forEach(screening => {
+          if (screening) {
+            if (screening.invitroAssayResult != null) {
+              // Test Agent Concentration must be a number
+              if (screening.invitroAssayResult.testAgentConcentration) {
+                if (this.isNumber(screening.invitroAssayResult.testAgentConcentration) === false) {
+                  this.setValidationMessage('Test Agent Concentration must be a number in row ' + (indexAssay + 1));
+                }
+              }
+
+              // Result Value must be a number
+              if (screening.invitroAssayResult.resultValue) {
+                if (this.isNumber(screening.invitroAssayResult.resultValue) === false) {
+                  this.setValidationMessage('Result Value must be a number in row ' + (indexAssay + 1));
+                }
+              }
+
+            }
+          }
+        });
+      }
+    });
+
     if (this.validationMessages.length > 0) {
       this.showSubmissionMessages = true;
       this.loadingService.setLoading(false);
@@ -635,14 +661,15 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   }
 
   private handleRecordRetrivalError() {
+    console.log("In 'Register In Vitro Pharmacology Screening' page, there was an error in retrieving data from the server.");
     const notification: AppNotification = {
-      message: 'The in-vitro pharmacology record you\'re trying to edit doesn\'t exist.',
+      message: 'There was an error in retrieving data from the server.',
       type: NotificationType.error,
       milisecondsToShow: 4000
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/invitro-pharm/register']);
+      // this.router.navigate(['/invitro-pharm/register']);
       this.invitroPharmacologyService.loadAssay();
     }, 5000);
   }
@@ -735,8 +762,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   openModalSave(template: TemplateRef<any>) {
     const dialogRef = this.dialog.open(template, {
-      minWidth: '50%',
-      maxWidth: '50%'
+      width: '60vw',
+      height: '30vh',
     });
 
     this.overlayContainer.style.zIndex = '1002';
@@ -966,7 +993,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   reloadPageAfterSave() {
     this.validationMessages = null;
-    this.submissionMessage = 'In-vitro Pharmacology Assay Screening data was saved successfully!';
+    this.submissionMessage = 'In Vitro Pharmacology Assay Screening data was saved successfully!';
     this.showSubmissionMessages = true;
     this.validationResult = false;
 
@@ -988,7 +1015,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         this.router.onSameUrlNavigation = 'reload';
         this.router.navigate(['/invitro-pharm/', forwardId, 'edit']);
       } else {
-        alert("Something went wrong while retrieving the In-vitro Pharmacology Screening data");
+        alert("Something went wrong while retrieving the In Vitro Pharmacology Screening data");
       }
 
       this.isLoading = false;
@@ -1186,13 +1213,13 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // > 60                     - 10 in the high    Summary
 
       if (assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue < 30) {
-        assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueLow = 10;
+            assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueLow = 10;
       } else if ((assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue >= 30)
         && (assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue <= 60)) {
-        assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueAverage = 10;
+            assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueAverage = 10;
       } else if (assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue > 60) {
-        assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueHigh = 10;
-      }
+            assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueHigh = 10;
+          }
 
       assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.isFromResult = true;
     });
@@ -1226,7 +1253,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         //  this.ingredientNameMessage = 'Add Substance Key Type in Config';
         //} else {
         // KEY RESOLVER
-        if (this.substanceKeyTypeForInvitroPharmacologyConfig === 'UUID' || this.substanceKeyTypeForInvitroPharmacologyConfig === 'APPROVAL_ID') {
+        if (this.substanceKeyTypeForInvitroPharmacologyConfig === 'UUID' || this.substanceKeyTypeForInvitroPharmacologyConfig === 'APPROVAL_ID'
+          || this.substanceKeyTypeForInvitroPharmacologyConfig === 'UNII') {
           this.assayResultInfo.invitroTestAgent.testAgentSubstanceKey = this.generalService.getSubstanceKeyByRelatedSubstanceResolver(relatedSubstance, this.substanceKeyTypeForInvitroPharmacologyConfig);
         } else if (this.substanceKeyTypeForInvitroPharmacologyConfig === 'BDNUM') {
           this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
@@ -1517,11 +1545,11 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
     */
 
     // Copy the assay to new variable
-   // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
+    // let copyAssay = _.cloneDeep(this.existingAssaysByAssaySetList[indexCopyFromAssay]);
 
     copyAssay.invitroAssayScreenings.push(newScreening);
 
-   // this.existingAssaysByAssaySetList.splice(indexCopyFromAssay + 1, 0, copyAssay);
+    // this.existingAssaysByAssaySetList.splice(indexCopyFromAssay + 1, 0, copyAssay);
   }
 
   setPlasmaProteinCheckBox($event, screeningIndex: number): void {
@@ -1613,41 +1641,51 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   }
 
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
+
   scrub(oldraw: any): any {
     const old = oldraw;
-    const idHolders = defiant.json.search(old, '//*[id]');
+    const idHolders = jp.query(old, '$..[?(@.id)]');
     for (let i = 0; i < idHolders.length; i++) {
       if (idHolders[i].id) {
         delete idHolders[i].id;
       }
     }
 
-    const showHolders = defiant.json.search(old, '//*[_show]');
+    const showHolders = jp.query(old, '$..[?(@._show)]');
     for (let i = 0; i < showHolders.length; i++) {
       delete showHolders[i]._show;
     }
 
-    const createHolders = defiant.json.search(old, '//*[createdDate]');
+    const createHolders = jp.query(old, '$..[?(@.createdDate)]');
     for (let i = 0; i < createHolders.length; i++) {
       delete createHolders[i].creationDate;
     }
 
-    const createdByHolders = defiant.json.search(old, '//*[createdBy]');
+    const createdByHolders = jp.query(old, '$..[?(@.createdBy)]');
     for (let i = 0; i < createdByHolders.length; i++) {
       delete createdByHolders[i].createdBy;
     }
 
-    const modifyHolders = defiant.json.search(old, '//*[modifiedDate]');
+    const modifyHolders = jp.query(old, '$..[?(@.modifiedDate)]');
     for (let i = 0; i < modifyHolders.length; i++) {
       delete modifyHolders[i].lastModifiedDate;
     }
 
-    const modifiedByHolders = defiant.json.search(old, '//*[modifiedBy]');
+    const modifiedByHolders = jp.query(old, '$..[?(@.modifiedBy)]');
     for (let i = 0; i < modifiedByHolders.length; i++) {
       delete modifiedByHolders[i].modifiedBy;
     }
 
-    const intVersionHolders = defiant.json.search(old, '//*[internalVersion]');
+    const intVersionHolders = jp.query(old, '$..[?(@.internalVersion)]');
+
     for (let i = 0; i < intVersionHolders.length; i++) {
       delete intVersionHolders[i].internalVersion;
     }

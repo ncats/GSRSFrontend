@@ -1,23 +1,23 @@
-table.mat-table {
+table.mat-mdc-table {
     width: 100%;
 }
 
-td.mat-cell:not(:last-child), td.mat-footer-cell:not(:last-child), th.mat-header-cell:not(:last-child) {
+td.mat-mdc-cell:not(:last-child), td.mat-mdc-footer-cell:not(:last-child), th.mat-mdc-header-cell:not(:last-child) {
     padding-right: 10px;
 }
 
-td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+td.mat-mdc-cell, td.mat-mdc-footer-cell, th.mat-mdc-header-cell {
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
 .no-bottom-border {
     tr:last-child {
-        td.mat-cell {
+        td.mat-mdc-cell {
             border-bottom: none;
         }
     }
-    
+
 }
 
 .mat-sort-header-content {

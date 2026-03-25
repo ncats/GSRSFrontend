@@ -7,29 +7,30 @@
 }
 /* awtodo not sure about .code */
 .code {
-
   &:nth-child(odd) {
-    background-color: rgba(68, 138, 255, .07);
+    background-color: rgba(68, 138, 255, 0.07);
 
     ::ng-deep {
-
-      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-        background-color: rgba(68, 138, 255, .15);
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"])
+        .mat-expansion-panel-header:hover {
+        background-color: rgba(68, 138, 255, 0.15);
       }
     }
   }
 
   &:nth-child(even) {
     ::ng-deep {
-
-      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"]) .mat-expansion-panel-header:hover {
-        background-color: rgba(128, 128, 128, .15);
+      .mat-expansion-panel:not(.mat-expanded):not([aria-disabled="true"])
+        .mat-expansion-panel-header:hover {
+        background-color: rgba(128, 128, 128, 0.15);
       }
     }
   }
 
   ::ng-deep {
-    .mat-expansion-panel, .mat-table, textarea {
+    .mat-expansion-panel,
+    .mat-table,
+    textarea {
       background-color: transparent;
     }
   }
@@ -38,4 +39,8 @@
 .search {
   width: 400px;
   max-width: 100%;
+}
+
+::ng-deep .search-form-field .mat-mdc-form-field-infix {
+  padding-bottom: 8px !important;
 }

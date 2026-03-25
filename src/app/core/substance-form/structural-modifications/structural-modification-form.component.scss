@@ -7,13 +7,13 @@
 .related-substance {
   max-width: 25%;
   width: 25%;
+  margin-top: 11px;
 }
 
- ::ng-deep .related-substance img {
-  max-width:125px !important;
-   margin: auto;
+::ng-deep .related-substance img {
+  max-width: 125px !important;
+  margin: auto;
 }
-
 
 .notification-backdrop {
   position: absolute;
@@ -40,12 +40,15 @@
     padding: 0 10px 8px 0;
   }
 
-  .code-system, .code-system-type, .type {
+  .code-system,
+  .code-system-type,
+  .type {
     flex-grow: 1;
     padding-right: 15px;
   }
 
-  .code-text, .url {
+  .code-text,
+  .url {
     flex-grow: 1;
   }
 }
@@ -84,26 +87,26 @@
   }
 
   .location-type .extent .sites {
-    flex-grow:1;
+    flex-grow: 1;
   }
 
   .amount {
     width: 45%;
     padding-right: 15px;
-    flex-grow:1;
+    flex-grow: 1;
   }
   .comment {
     width: 45%;
     padding-right: 15px;
-    flex-grow:1;
+    flex-grow: 1;
   }
 }
 
 .padded {
-  padding-right:20px;
+  padding-right: 20px;
 }
 .amount-display {
-  padding-top:11px;
+  padding-top: 11px;
 }
 .form-actions {
   justify-content: flex-start;
@@ -113,20 +116,23 @@
   flex-grow: 1;
 }
 
-.mod-type, .location-type {
+.mod-type,
+.location-type {
   width: 33%;
 }
 
-.sites, .group-access {
-  width:33%;
+.sites,
+.group-access {
+  width: 33%;
 }
 
-.extent, .amount {
-  width:33%;
+.extent,
+.amount {
+  width: 33%;
 }
 
-
-.group, .access {
+.group,
+.access {
   width: 45%;
 }
 
@@ -140,6 +146,10 @@
 
 .custom {
   padding-bottom: 10px;
-  padding-top:10px;
+  padding-top: 10px;
   border-bottom: 1px solid var(--box-shadow-color-6);
+}
+
+.delete-code {
+  margin-top: 16px;
 }

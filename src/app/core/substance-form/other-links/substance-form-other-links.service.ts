@@ -37,6 +37,7 @@ export class SubstanceFormOtherLinksService extends SubstanceFormServiceBase<Arr
   }
 
   addSubstanceOtherLink(): void {
+    this.substanceFormService.markAdded();
     const newOtherLinks: Link = {
       references: [],
       access: []
@@ -46,6 +47,7 @@ export class SubstanceFormOtherLinksService extends SubstanceFormServiceBase<Arr
   }
 
   deleteSubstanceOtherLink(link: Link): void {
+    this.substanceFormService.markRemoved();
     const subLinkIndex = this.substance.protein.otherLinks.findIndex(subCode => link.$$deletedCode === subCode.$$deletedCode);
     if (subLinkIndex > -1) {
       this.substance.protein.otherLinks.splice(subLinkIndex, 1);

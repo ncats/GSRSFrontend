@@ -9,9 +9,10 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
 
 @Component({
-  selector: 'app-agent-modification-form',
-  templateUrl: './agent-modification-form.component.html',
-  styleUrls: ['./agent-modification-form.component.scss']
+    selector: 'app-agent-modification-form',
+    templateUrl: './agent-modification-form.component.html',
+    styleUrls: ['./agent-modification-form.component.scss'],
+    standalone: false
 })
 export class AgentModificationFormComponent implements OnInit {
   private privateMod: AgentModification;

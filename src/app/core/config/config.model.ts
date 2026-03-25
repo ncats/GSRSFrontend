@@ -78,11 +78,12 @@ export interface Config {
     citationMapping?: {
         [code: string]: string;
     };
-    structureEditor?: 'ketcher' | 'jsdraw';
     nameFormPageSizeOptions?: Array<number>;
     nameFormPageSizeDefault?: number;
+    structureEditor?: 'ketcher' | 'jsdraw';
     disableJSDraw?: boolean;
     disableKetcher?: boolean;
+    polymerDisclaimer?: string;
     useApprovalAPI?: boolean;
     dummyWhoami?: Auth;
     enableStructureFeatures?: boolean;
@@ -94,6 +95,9 @@ export interface Config {
     showCrossEntitySearchDropdown?: boolean;
     restApiPrefix?: string;
     nitrosamineDisplay?: boolean;
+    registerApplicationCenterNotAllowed?: Array<string>;
+    phpIdUrl?: string;
+    rxNormUrl?: string;
 }
 
 export interface StagingAreaSettings {

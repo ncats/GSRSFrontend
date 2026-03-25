@@ -8,6 +8,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
 import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 import * as moment from 'moment';
 
 /* GSRS Core Imports */
@@ -25,6 +26,7 @@ import { NarrowSearchSuggestion } from '@gsrs-core/utils';
 import { environment } from '../../../../environments/environment';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 
 /* Invitro Pharmacology Imports */
 import { InvitroPharmacologyService } from '../service/invitro-pharmacology.service'
@@ -34,7 +36,8 @@ import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-sear
 @Component({
   selector: 'app-invitro-pharmacology-browse',
   templateUrl: './invitro-pharmacology-browse.component.html',
-  styleUrls: ['./invitro-pharmacology-browse.component.scss']
+  styleUrls: ['./invitro-pharmacology-browse.component.scss'],
+  standalone: false
 })
 export class InvitroPharmacologyBrowseComponent implements OnInit {
 
@@ -77,7 +80,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   skip: number;
   isLoading = true;
   isError = false;
-  isAdmin: boolean;
+  canExport: boolean = false;
+  canUpdate: boolean = false;
+  canSaveJson: boolean = false;
   isLoggedIn = false;
   dataSource = [];
   appType: string;
@@ -194,10 +199,10 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     private dialog: MatDialog
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.invitroPharmacologyService.getInvitroPharmacologyFacets);
 
-    this.titleService.setTitle(`In-vitro Pharmacology Browser`);
+    this.titleService.setTitle(`In Vitro Pharmacology Browser`);
 
     this.pageSize = 10;
     this.pageIndex = 0;
@@ -210,7 +215,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
@@ -221,7 +225,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_modifiedDate';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_modifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
@@ -231,7 +235,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.searchValue = params.get('search');
     });
     this.subscriptions.push(paramsSubscription);
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canSaveJson = await this.authService.hasSpecificPrivilege('Save Record JSON');
   }
 
   ngAfterViewInit() {
@@ -352,7 +358,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       }, error => {
         console.log('error');
         const notification: AppNotification = {
-          message: 'There was an error trying to retrieve in-vitro pharmacology data. Please refresh and try again.',
+          message: 'There was an error trying to retrieve In Vitro pharmacology data. Please refresh and try again.',
           type: NotificationType.error,
           milisecondsToShow: 6000
         };
@@ -506,9 +512,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               referenceSourceTypeNumber = referenceSourceType + ' ' + referenceSource;
               assayObj.referenceSourceTypeNumber = referenceSourceTypeNumber;
             } // if invitroReference exists
+            */
 
-
-          /* Invitro Test Agent Object exists */
+            /* Invitro Test Agent Object exists */
             if (screening.invitroAssayResultInformation.invitroTestAgent) {
               assayObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
               assayObj.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
@@ -766,37 +772,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
                       }
                       referenceSourceTypeNumber = referenceSourceType + ' ' + referenceSourceId;
 
-                      /*
-                      if (reference.sourceType) {
-                        referenceSourceType = reference.sourceType;
-                      }
-                      if (reference.sourceId) {
-                        referenceSourceId = reference.sourceId;
-                      }
-                      referenceSourceTypeAndId = referenceSourceType + ' ' + referenceSourceId;
-                      */
-
-                      /* Invitro Reference Object exists */
-                      /*
-
-                      let referenceSourceType = '';
-                      let referenceSource = '';
-                      if (screening.invitroAssayResultInformation.invitroReference) {
-                        if (screening.invitroAssayResultInformation.invitroReference.referenceSourceType) {
-                          referenceSourceType = screening.invitroAssayResultInformation.invitroReference.referenceSourceType;
-                        }
-                        if (screening.invitroAssayResultInformation.invitroReference.referenceSource) {
-                          referenceSource = screening.invitroAssayResultInformation.invitroReference.referenceSource;
-                        }
-
-                        referenceSourceTypeNumber = referenceSourceType + ' ' + referenceSource;
-                        assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
-                        */
-
-                      // let referenceSourceTypeNumber = this.getReferenceFields(screening);
-                      //assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
-
-
                       // Get the index if the value exists in the key 'referenceSourceTypeNumber'
                       const sourceFoundIndex = this.browseByReferenceList.findIndex(record => record.referenceSourceTypeNumber === referenceSourceTypeNumber);
 
@@ -868,11 +843,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               testAgentConcentrationUnits = result.testAgentConcentrationUnits;
               resultValue = result.resultValue;
               resultValueUnits = result.resultValueUnits;
-
-              // Invitro Summary
-              // if (result.invitroSummary) {
-              //    assaySummary.relationshipType = result.invitroSummary.relationshipType;
-              //  }
             }
           });
 
@@ -958,13 +928,13 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     // if percentInhibition/resultValue < 30, then IC50 > Test Agent Concentration
     // if percentInhibition/resultValue between 30 and 60, then IC50 approx. = Test Agent Concentration
     // if percentInhibition/resultValue above 60, then IC50 < Test Agent Concentration
-    if (resultValue) {
+      if (resultValue) {
       if (resultValue < 30) {
-        calculateIC50Value = resultType + ' > ' + testAgentConcentration;
+            calculateIC50Value = resultType + ' > ' + testAgentConcentration;
       } else if (resultValue >= 30 && resultValue <= 60) {
-        calculateIC50Value = resultType + ' approx. = ' + testAgentConcentration;
+            calculateIC50Value = resultType + ' approx. = ' + testAgentConcentration;
       } else if (resultValue > 60) {
-        calculateIC50Value = resultType + ' < ' + testAgentConcentration;
+            calculateIC50Value = resultType + ' < ' + testAgentConcentration;
       }
     }
 
@@ -1050,8 +1020,11 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchInvitroAssay();
     }
@@ -1091,7 +1064,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
   }
 
   editAdvancedSearch(): void {
-    const eventLabel = environment.isAnalyticsPrivate ? 'Browse In-vitro Pharmacology search term' :
+    const eventLabel = environment.isAnalyticsPrivate ? 'Browse In Vitro Pharmacology search term' :
       `${this.privateSearchTerm}`;
 
     const navigationExtras: NavigationExtras = {
@@ -1190,6 +1163,26 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
 
   close() {
     this.dialog.closeAll();
+  }
+
+  showJSON(index: number): void {
+    const date = new Date();
+    let jsonFilename = 'Invitro_Pharmacology_Assay_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    const copyAssay = _.cloneDeep(this.assays[index]);
+    //let cleanProduct = this.scrub(copyProd);
+
+    let data = { jsonData: copyAssay, jsonFilename: jsonFilename };
+
+    const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
+      width: '90%',
+      height: '90%',
+      data: data
+    });
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    });
+    this.subscriptions.push(dialogSubscription);
   }
 
   saveJSON(id: number): void {

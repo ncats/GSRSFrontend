@@ -10,9 +10,10 @@ import { ControlledVocabularyService } from '@gsrs-core/controlled-vocabulary';
 import { AdverseEventService } from '../service/adverseevent.service';
 
 @Component({
-  selector: 'app-adverse-event-text-search',
-  templateUrl: './adverse-event-text-search.component.html',
-  styleUrls: ['./adverse-event-text-search.component.scss']
+    selector: 'app-adverse-event-text-search',
+    templateUrl: './adverse-event-text-search.component.html',
+    styleUrls: ['./adverse-event-text-search.component.scss'],
+    standalone: false
 })
 
 export class AdverseEventTextSearchComponent implements OnInit, AfterViewInit, OnDestroy {

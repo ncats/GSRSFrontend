@@ -10,9 +10,10 @@ import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-link-form',
-  templateUrl: './link-form.component.html',
-  styleUrls: ['./link-form.component.scss']
+    selector: 'app-link-form',
+    templateUrl: './link-form.component.html',
+    styleUrls: ['./link-form.component.scss'],
+    standalone: false
 })
 export class LinkFormComponent implements OnInit, OnDestroy {
 

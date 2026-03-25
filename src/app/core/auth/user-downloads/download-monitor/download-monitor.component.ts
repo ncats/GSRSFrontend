@@ -6,9 +6,10 @@ import { ConfigService } from '@gsrs-core/config';
 import { NavigationExtras } from '@angular/router';
 
 @Component({
-  selector: 'app-download-monitor',
-  templateUrl: './download-monitor.component.html',
-  styleUrls: ['./download-monitor.component.scss']
+    selector: 'app-download-monitor',
+    templateUrl: './download-monitor.component.html',
+    styleUrls: ['./download-monitor.component.scss'],
+    standalone: false
 })
 export class DownloadMonitorComponent implements OnInit, OnDestroy {
   @Input() id: string;

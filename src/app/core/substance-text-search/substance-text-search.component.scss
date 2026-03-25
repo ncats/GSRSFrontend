@@ -1,4 +1,4 @@
-@import '../../../styles/variables';
+@use "../../../styles/variables" as *;
 
 form {
   display: flex;
@@ -6,12 +6,123 @@ form {
   justify-content: flex-end;
 }
 
+/* Base styles for all uses */
 .search-form-field {
+  // margin: 1.25em;
 
   .mat-input-element {
     font-size: 16px;
+    color: #0000008a;
   }
 
+  // Placeholder color
+  ::ng-deep .mat-mdc-input-element::placeholder {
+    color: #666;
+    opacity: 1;
+    font:
+      400 14px / 20px Roboto,
+      Helvetica Neue,
+      sans-serif;
+    letter-spacing: normal;
+    padding: 0;
+  }
+
+  // Label color
+  ::ng-deep .mat-mdc-floating-label {
+    color: #0000008a !important;
+  }
+
+  // Form field infix padding
+  ::ng-deep .mat-mdc-form-field-infix {
+    padding-top: 0.5em;
+    padding-bottom: 8px;
+  }
+
+  // Text field wrapper padding
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    padding-left: 0;
+  }
+
+  // Bottom border color
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
+    border-bottom-color: #0000008a;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
+    border-bottom-color: var(--primary-color);
+  }
+}
+
+/* Button icon colors by context */
+form.header {
+  .search-button,
+  .close-button,
+  .activate-search-button {
+    color: white;
+
+    ::ng-deep .mat-icon svg {
+      fill: white;
+    }
+  }
+}
+
+form:not(.header) {
+  .search-button,
+  .close-button,
+  .activate-search-button {
+    color: black;
+
+    ::ng-deep .mat-icon svg {
+      fill: black;
+    }
+  }
+}
+
+/* HEADER VARIANT – only when styling="header" */
+.search-form-field.header {
+  .mat-input-element {
+    font-size: 20px;
+    color: white;
+  }
+
+  // MDC input text
+  ::ng-deep .mat-mdc-input-element {
+    color: white !important;
+    // font-size: 16px !important;
+    font-weight: 500 !important;
+    caret-color: white !important;
+  }
+
+  ::ng-deep .mat-mdc-input-element::placeholder {
+    color: white !important;
+    opacity: 1;
+    font:
+      500 20px / 32px Roboto,
+      Helvetica Neue,
+      sans-serif;
+    letter-spacing: normal;
+    padding: 0;
+  }
+
+  ::ng-deep .mat-mdc-floating-label {
+    color: #ffffffcc !important;
+  }
+
+  // Inactive underline
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
+    border-bottom-color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  // Active/focused underline
+  ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
+    border-bottom-color: white !important;
+  }
+
+  // Ensure focus state is visible
+  ::ng-deep .mdc-text-field--focused .mdc-line-ripple::after {
+    opacity: 1 !important;
+    border-bottom-color: white !important;
+  }
 }
 
 .substance-suggestion-field {
@@ -41,7 +152,6 @@ form {
   padding: 0px;
 }
 
-
 .search-container {
   width: 100%;
 
@@ -51,21 +161,33 @@ form {
   }
 }
 
+// .search-button,
+// .close-button,
+// .activate-search-button {
+//   color: var(--regular-white-color);
+
+//   ::ng-deep .mat-icon {
+//     color: var(--regular-white-color);
+
+//     svg {
+//       fill: currentColor;
+//     }
+//   }
+// }
+
 .close-button {
-  display: none;
+  display: none !important;
   width: 0;
   transition: all 250ms linear;
 }
 
-@media(min-width: $nav-breaking-point) {
-
+@media (min-width: $nav-breaking-point) {
   .activate-search-button {
-    display: none;
+    display: none !important;
   }
 }
 
-@media(max-width: $nav-breaking-point) {
-
+@media (max-width: $nav-breaking-point) {
   .search-container {
     mat-form-field {
       width: 0;
@@ -73,11 +195,10 @@ form {
   }
 
   .search-button {
-    display: none;
+    display: none !important;
   }
 
   .active-search {
-
     &.search-container {
       position: fixed;
       top: 0;
@@ -102,11 +223,11 @@ form {
       }
 
       .search-button {
-        display: inline-block;
+        display: inline-block !important;
       }
 
       .activate-search-button {
-        display: none;
+        display: none !important;
       }
 
       // ::ng-deep .mat-form-field-infix {
@@ -114,7 +235,7 @@ form {
       // }
 
       .close-button {
-        display: inline-block;
+        display: inline-block !important;
         width: auto;
       }
     }
@@ -127,10 +248,10 @@ form {
   .active-form-search {
     &.search-container {
       position: relative;
-    //  top: 0;
-   //   right: 0;
+      //  top: 0;
+      //   right: 0;
       width: 100%;
-    //  left: 0;
+      //  left: 0;
       height: 48px;
       padding-right: 0px;
       padding-left: 0px;
@@ -152,11 +273,11 @@ form {
       }
 
       .search-button {
-        display: inline-block;
+        display: inline-block !important;
       }
 
       .activate-search-button {
-        display: inline-block;
+        display: inline-block !important;
       }
 
       // ::ng-deep .mat-form-field-infix {
@@ -164,14 +285,13 @@ form {
       // }
 
       .close-button {
-        display: inline-block;
+        display: inline-block !important;
         width: auto;
       }
     }
   }
 
   .deactivate-search {
-
     &.search-container {
       .mat-form-field {
         animation-name: reduceWidth;

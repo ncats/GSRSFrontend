@@ -6,14 +6,13 @@
 .related-substance {
   max-width: 60%;
   width: 60%;
-  padding-right:20px;
+  padding-right: 20px;
 }
 
 ::ng-deep .related-substance img {
-  max-width:125px !important;
+  max-width: 125px !important;
   margin: auto;
 }
-
 
 .notification-backdrop {
   position: absolute;
@@ -42,7 +41,7 @@
   }
 
   .field-column {
-    width : 70%;
+    width: 70%;
 
     .amount {
       width: 100%;
@@ -53,21 +52,22 @@
       width: 100%;
       margin-bottom: 10px;
     }
-
   }
 
-  .code-system, .code-system-type, .type {
+  .code-system,
+  .code-system-type,
+  .type {
     flex-grow: 1;
     padding-right: 15px;
   }
 
-  .code-text, .url {
+  .code-text,
+  .url {
     flex-grow: 1;
   }
 
-
   .access {
-    width:15%;
+    width: 15%;
   }
 }
 
@@ -75,12 +75,11 @@
   width: 100%;
 }
 
-
 .padded {
-  padding-right:20px;
+  padding-right: 20px;
 }
 .amount-display {
-  padding-top:11px;
+  padding-top: 11px;
 }
 .form-actions {
   justify-content: flex-start;
@@ -90,19 +89,27 @@
   flex-grow: 1;
 }
 
-.mod-type, .location-type {
+.mod-type,
+.location-type {
   width: 33%;
 }
 
-.sites, .group-access {
-  width:33%;
+.sites,
+.group-access {
+  width: 33%;
 }
 
-.extent, .amount {
-  width:33%;
+.extent,
+.amount {
+  width: 33%;
 }
 
-
-.group, .access {
+.group,
+.access {
   width: 45%;
+}
+
+::ng-deep .search-form-field .mat-mdc-form-field-infix {
+  padding-top: 24px !important;
+  padding-bottom: 8px !important;
 }

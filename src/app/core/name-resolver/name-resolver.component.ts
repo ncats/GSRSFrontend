@@ -1,21 +1,23 @@
-import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { LoadingService } from '../loading/loading.service';
-import { SubstanceSummary} from '../substance/substance.model';
-import {PagingResponse} from '../utils/paging-response.model';
-import {forkJoin} from 'rxjs';
-import { ResolverResponse } from '../structure/structure-post-response.model';
-import { SubstanceService } from '../substance/substance.service';
-import { StructureService } from '../structure/structure.service';
-import { ConfigService, ExternalSiteWarning } from '@gsrs-core/config';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { ExternalSiteWarningDialogComponent } from './external-site-warning-dialog/external-site-warning-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, Output, EventEmitter, Input } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { LoadingService } from "../loading/loading.service";
+import { SubstanceSummary } from "../substance/substance.model";
+import { PagingResponse } from "../utils/paging-response.model";
+import { forkJoin, of } from "rxjs";
+import { catchError } from "rxjs/operators";
+import { ResolverResponse } from "../structure/structure-post-response.model";
+import { SubstanceService } from "../substance/substance.service";
+import { StructureService } from "../structure/structure.service";
+import { ConfigService, ExternalSiteWarning } from "@gsrs-core/config";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { ExternalSiteWarningDialogComponent } from "./external-site-warning-dialog/external-site-warning-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-name-resolver',
-  templateUrl: './name-resolver.component.html',
-  styleUrls: ['./name-resolver.component.scss']
+  selector: "app-name-resolver",
+  templateUrl: "./name-resolver.component.html",
+  styleUrls: ["./name-resolver.component.scss"],
+  standalone: false,
 })
 export class NameResolverComponent implements OnInit {
   resolverControl = new FormControl();
@@ -35,16 +37,17 @@ export class NameResolverComponent implements OnInit {
     private substanceService: SubstanceService,
     private structureService: StructureService,
     private dialog: MatDialog,
-    private overlayContainerService: OverlayContainer
-    ) { }
+    private overlayContainerService: OverlayContainer,
+  ) {}
 
   ngOnInit() {
-    this.externalSiteWarning = this.configService.configData.externalSiteWarning;
+    this.externalSiteWarning =
+      this.configService.configData.externalSiteWarning;
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     if (this.startingName) {
       this.resolverControl.setValue(this.startingName);
-      setTimeout( () => {
+      setTimeout(() => {
         this.resolveName(this.startingName);
       });
     }
@@ -61,31 +64,36 @@ export class NameResolverComponent implements OnInit {
       this.showExternalSiteWarningDialog();
       return;
     }
-
     this.resolveNameInternal(name);
   }
 
   resolveNameInternal(name: string): void {
-    this.errorMessage = '';
+    this.errorMessage = "";
     this.resolvedNames = [];
     this.matchedNames = null;
     this.loadingService.setLoading(true);
-    const n = name.replace('"', '');
+    const n = name.replace('"', "");
     const searchStr = `root_names_name:"^${n}$" OR root_approvalID:"^${n}$" OR root_codes_BDNUM:"^${n}$"`;
-    forkJoin([this.substanceService.getQuickSubstancesSummaries(searchStr),
-      this.structureService.resolveName(name)]).subscribe(([local, remote]) => {
+    forkJoin([
+      this.substanceService.getQuickSubstancesSummaries(searchStr),
+      this.structureService.resolveName(name).pipe(catchError(() => of([]))),
+    ]).subscribe({
+      next: ([local, remote]) => {
         this.loadingService.setLoading(false);
         this.resolvedNames = remote;
         this.matchedNames = local;
-        if (this.matchedNames.content.length === 0 && this.resolvedNames.length === 0) {
-         this.errorMessage = 'no results found for \'' + name + '\'';
+        if (
+          this.matchedNames.content.length === 0 &&
+          this.resolvedNames.length === 0
+        ) {
+          this.errorMessage = "no results found for '" + name + "'";
         }
       },
-      error => {
-        this.errorMessage = 'there was a problem returning your query';
-
+      error: () => {
+        this.errorMessage = "there was a problem returning your query";
         this.loadingService.setLoading(false);
-      });
+      },
+    });
   }
 
   applyStructure(molfile: string) {
@@ -96,16 +104,16 @@ export class NameResolverComponent implements OnInit {
     if (!this.externalSiteWarning || !this.externalSiteWarning.enabled) {
       return false;
     }
-    return localStorage.getItem('externalSiteWarningDontAskAgain') != 'true';
+    return localStorage.getItem("externalSiteWarningDontAskAgain") != "true";
   }
 
   showExternalSiteWarningDialog(): void {
     const dialogRef = this.dialog.open(ExternalSiteWarningDialogComponent, {
-      width: '800px',
-      autoFocus: false
+      width: "800px",
+      autoFocus: false,
     });
-    this.overlayContainer.style.zIndex = '1002';
-    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    this.overlayContainer.style.zIndex = "1002";
+    const dialogSubscription = dialogRef.afterClosed().subscribe((response) => {
       this.overlayContainer.style.zIndex = null;
       if (response) {
         this.resolveNameInternal(this.resolverControl.value);

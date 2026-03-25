@@ -8,9 +8,10 @@ import { ControlledVocabularyService, VocabularyTerm } from '@gsrs-core/controll
 import { QueryStatement } from './query-statement.model';
 
 @Component({
-  selector: 'app-query-statement',
-  templateUrl: './query-statement.component.html',
-  styleUrls: ['./query-statement.component.scss']
+    selector: 'app-query-statement',
+    templateUrl: './query-statement.component.html',
+    styleUrls: ['./query-statement.component.scss'],
+    standalone: false
 })
 export class QueryStatementComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() queryStatementHash?: number;

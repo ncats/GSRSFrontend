@@ -46,18 +46,11 @@ import { ClinicalTrialService } from '../clinical-trials/clinical-trial/clinical
 import { AdverseEventService } from '../adverse-event/service/adverseevent.service';
 import { AdvancedSearchService } from './service/advanced-search.service';
 @Component({
-  selector: 'app-advanced-search',
-  templateUrl: './advanced-search.component.html',
-  styleUrls: ['./advanced-search.component.scss']
+    selector: 'app-advanced-search',
+    templateUrl: './advanced-search.component.html',
+    styleUrls: ['./advanced-search.component.scss'],
+    standalone: false
 })
-
-/*
-export interface FacetValueAdvanced {
-  label: string;
-  count: number;
-  url: string;
-}
-*/
 
 export class AdvancedSearchComponent implements OnInit, OnDestroy {
   loadedComponents: LoadedComponents;
@@ -107,6 +100,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   dictionaryFileName: string;
   private subscriptions: Array<Subscription> = [];
   panelExpanded = false;
+  isStrcuturePanelOpen = false;
+ 
   numFacetsLoaded = 0;
   // queryHash: number;
   queryStatementHashes: Array<number>;
@@ -134,6 +129,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   queryFacet = '';
   queryDisplay = '';
   facetNameText = '';
+  message = '';
+      
   facetDisplayType = 'all';
   substanceFacetsDisplay = ['Record Status', 'Substance Class', 'Relationships', 'GInAS Tag'];
   applicationFacetsDisplay = ['Center', 'Application Type', 'Application Status', 'Provenance (GSRS)'];
@@ -734,8 +731,8 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   }
 
   processSearch(): void {
-    // this.storeCriteriaInLocalStorage();
-
+  
+    this.message = '';
     const queryStatementHashes = [];
 
     // Store in cookies, Category tab (Substance, Application, etc)
@@ -767,7 +764,7 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
       queryParams: {}
     };
 
-    if ((this.query) || (Object.keys(this.privateFacetParams).length > 0)) {
+    if ((this.query) || ((this.privateFacetParams && Object.keys(this.privateFacetParams).length > 0))) {
 
       if (this.query) {
         if (this.category === 'Clinical Trial') {
@@ -803,48 +800,49 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         let mol = '';
         this.editor.getMolfile().pipe(take(1)).subscribe(response => {
           mol = response;
-        if (mol && mol.length > 72) {
+        if (this.isPossibleMol(mol)) {
           this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
             const eventLabel = !environment.isAnalyticsPrivate && response.structure.smiles || 'structure search term';
             //  this.gaService.sendEvent('structureSearch', 'button:search', eventLabel);
 
-            const navigationExtrasStructure: NavigationExtras = {
-              queryParams: {}
-            };
+              const navigationExtrasStructure: NavigationExtras = {
+                queryParams: {}
+              };
 
-            const structureSearchTerm = response.structure.id;
-            const smiles = response.structure.smiles;
+              const structureSearchTerm = response.structure.id;
+              const smiles = response.structure.smiles;
 
-            navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
-            navigationExtras.queryParams['type'] = this.searchType || null;
+              navigationExtras.queryParams['structure_search'] = structureSearchTerm || null;
+              navigationExtras.queryParams['type'] = this.searchType || null;
 
-            navigationExtras2.queryParams['structure'] = structureSearchTerm;
-            navigationExtras2.queryParams['type'] = this.searchType || null;
+              navigationExtras2.queryParams['structure'] = structureSearchTerm;
+              navigationExtras2.queryParams['type'] = this.searchType || null;
 
-            if (this.searchType === 'similarity') {
-              navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
-              navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
-            }
+              if (this.searchType === 'similarity') {
+                navigationExtras.queryParams['cutoff'] = this.similarityCutoff || 0;
+                navigationExtras2.queryParams['cutoff'] = this.similarityCutoff || 0;
+              }
 
-            if (smiles != null) {
-              navigationExtras.queryParams['smiles'] = smiles;
-            }
+              if (smiles != null) {
+                navigationExtras.queryParams['smiles'] = smiles;
+              }
 
-            // this is a test of the push state needed
-            // to keep the back button working as desired
-            window.history.pushState({}, 'Structure Search', '/structure-search'
-              + '?structure=' + navigationExtras2.queryParams['structure']
-              + '&type=' + navigationExtras2.queryParams['type']
-              + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
+              // this is a test of the push state needed
+              // to keep the back button working as desired
+              window.history.pushState({}, 'Structure Search', '/structure-search'
+                + '?structure=' + navigationExtras2.queryParams['structure']
+                + '&type=' + navigationExtras2.queryParams['type']
+                + '&cutoff=' + navigationExtras2.queryParams['cutoff']);
 
-            this.router.navigate(['/browse-substance'], navigationExtras);
-          }, () => { });
+              this.router.navigate(['/browse-substance'], navigationExtras);
+            }, () => { });
 
-        }
-        /********* STRUCTURE QUERY **********/
+          }
+          /********* STRUCTURE QUERY **********/
 
         // If no structure search, do this
         else {
+          console.log('no molecule found');
           this.router.navigate(['/browse-substance'], navigationExtras);
           //    }
         }
@@ -862,7 +860,10 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
         this.router.navigate(['/browse-substance'], navigationExtras);
       }
     } else {
-      alert('Please select any criteria to search');
+      if (!this.query) {
+        this.message = "Please enter search value in the textbox"
+      }
+    
     }
   }
 
@@ -897,6 +898,21 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
           this.searchTypeControl.setValue(this.searchType);
         });
     });
+  }
+
+  isPossibleMol(testMol: string) : boolean {
+    const blankCountsLine = "  0  0  0  0  0  0  0  0  0  0999 V2000";
+    if( !testMol || testMol === null || !testMol.length || testMol.length < 100){
+      return false;
+    }
+    let lines = testMol.split('\n');
+    if( lines === null || lines.length < 4){
+      return false;
+    }
+    if(lines[3] === blankCountsLine) {
+      return false;
+    }
+    return true;
   }
 
   searchTypeSelected(event): void {
@@ -937,28 +953,36 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
 
   openStructureExportDialog(): void {
     let mol = '';
+    let smiles = '';
+
     this.editor.getMolfile().pipe(take(1)).subscribe(response => {
       mol = response;
-    this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
-    const dialogRef = this.dialog.open(StructureExportComponent, {
-      height: 'auto',
-      width: '650px',
-      data: {
-        molfile: mol,
-        smiles: '' //this.editor.getSmiles()
-      }
-    });
-    this.overlayContainer.style.zIndex = '1002';
-    dialogRef.afterClosed().subscribe(() => {
-      this.overlayContainer.style.zIndex = null;
-    }, () => {
-      this.overlayContainer.style.zIndex = null;
-    });
-  });
+
+      this.structureService.interpretStructure(mol).subscribe((response: InterpretStructureResponse) => {
+        smiles = response.structure.smiles;
+
+        this.gaService.sendEvent('structureSearch', 'button:export', 'export structure');
+        const dialogRef = this.dialog.open(StructureExportComponent, {
+          height: 'auto',
+          width: '650px',
+          data: {
+            molfile: mol,
+            smiles: smiles
+          }
+        });
+        this.overlayContainer.style.zIndex = '1002';
+        dialogRef.afterClosed().subscribe(() => {
+          this.overlayContainer.style.zIndex = null;
+        }, () => {
+          this.overlayContainer.style.zIndex = null;
+        });
+
+      }); // getSmiles
+    }); // getMolFile
   }
 
-  searchCutoffChanged(event): void {
-    this.similarityCutoff = event.value;
+  searchCutoffChanged(value: number): void {
+    this.similarityCutoff = value;
     this.gaService.sendEvent('structureSearch', 'slider', 'similarity-cutoff', this.similarityCutoff);
   }
 
@@ -973,5 +997,13 @@ export class AdvancedSearchComponent implements OnInit, OnDestroy {
   nameResolved(molfile: string): void {
     this.editor.setMolecule(molfile);
   }
+ 
+  panelOpened() {
+    this.isStrcuturePanelOpen = true;
+  }
+
+  panelClosed() {
+    this.isStrcuturePanelOpen = false;
+  } 
 
 }

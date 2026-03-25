@@ -10,9 +10,10 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import { SubstanceFormService } from '../substance-form.service';
 
 @Component({
-  selector: 'app-substance-form-disulfide-links-card',
-  templateUrl: './substance-form-disulfide-links-card.component.html',
-  styleUrls: ['./substance-form-disulfide-links-card.component.scss']
+    selector: 'app-substance-form-disulfide-links-card',
+    templateUrl: './substance-form-disulfide-links-card.component.html',
+    styleUrls: ['./substance-form-disulfide-links-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseFilteredList<DisulfideLink>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

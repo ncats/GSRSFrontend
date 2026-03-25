@@ -6,7 +6,7 @@ describe('SubstanceFormStructurallyDiverseService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SubstanceFormStructurallyDiverseService = TestBed.get(SubstanceFormStructurallyDiverseService);
+    const service: SubstanceFormStructurallyDiverseService = TestBed.inject(SubstanceFormStructurallyDiverseService);
     expect(service).toBeTruthy();
   });
 });

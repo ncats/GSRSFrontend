@@ -15,13 +15,15 @@ import { GeneralService } from '../../service/general.service';
 import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
 
 @Component({
-  selector: 'app-impurities-details',
-  templateUrl: './impurities-details.component.html',
-  styleUrls: ['./impurities-details.component.scss']
+    selector: 'app-impurities-details',
+    templateUrl: './impurities-details.component.html',
+    styleUrls: ['./impurities-details.component.scss'],
+    standalone: false
 })
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
   public ELUTION_TYPE_ISOCRATIC = 'ISOCRATIC';
+  public ELUTION_TYPE_GRADIENT = 'GRADIENT';
 
   dataSource: MatTableDataSource<ImpuritiesSolutionTable>;
 
@@ -29,17 +31,12 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   impurities: Impurities;
   substanceName = '';
   flagIconSrcPath: string;
-  isAdmin = false;
+  canEdit: boolean = false;
   updateApplicationUrl: string;
   message = '';
   subRelationship: any;
   private subscriptions: Array<Subscription> = [];
-
-
-  displayedColumns = [
-    'Number',
-    'Time (min)'
-  ]
+  displayedColumnsRow: string[][] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -54,14 +51,10 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
     private titleService: Title
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadingService.setLoading(true);
 
-    const rolesSubscription = this.authService.hasAnyRolesAsync('admin', 'updater', 'superUpdater').subscribe(canEdit => {
-      this.isAdmin = canEdit;
-    });
-    this.subscriptions.push(rolesSubscription);
-
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
       this.getImpurities();
@@ -102,7 +95,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
         // Get Substance Name for SubstanceUuid in ImpuritiesDetailsList
         this.impurities.impuritiesSubstanceList.forEach((elementRelSub) => {
-          elementRelSub.impuritiesTestList.forEach((elementRelTest) => {
+          elementRelSub.impuritiesTestList.forEach((elementRelTest, indexTest) => {
 
             elementRelTest.impuritiesDetailsList.forEach((elementRelImpuDet) => {
               if (elementRelImpuDet.relatedSubstanceUuid) {
@@ -121,21 +114,9 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
             // assign Mobile Phase list to datasource to display on table
             this.dataSource = new MatTableDataSource(elementRelTest.impuritiesSolutionTableList);
 
-            // Populate columns for Mobile Phase
-            // add letter in the Mobile Phase column
-            if (elementRelTest.impuritiesSolutionList) {
-              if (elementRelTest.impuritiesSolutionList.length > 0) {
-                elementRelTest.impuritiesSolutionList.forEach(solution => {
-                  if (solution) {
-                    if (solution.solutionLetter) {
-                      let columnName = 'Solution ' + solution.solutionLetter + ' (%)';
-                      this.displayedColumns.push(columnName);
-                    }
-                  }
-                });
+            // Get Mobile Phase
+            this.getMobilPhase(elementRelTest, indexTest);
 
-              } // impuritiesSolutionTableList length > 0
-            } // impuritiesSolutionTableList exists
           }); // Loop: elementRelSub.impuritiesTestList
         });
 
@@ -180,6 +161,32 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
       this.handleSubstanceRetrivalError();
     });
     this.subscriptions.push(getImpuritiesSubscribe);
+  }
+
+  getMobilPhase(elementRelTest: any, indexTest: number) {
+    // Populate columns for Mobile Phase
+    // add letter in the Mobile Phase column
+    if (elementRelTest.impuritiesSolutionList) {
+      if (elementRelTest.impuritiesSolutionList.length > 0) {
+
+        let displayedColumns = [
+          'Time (min)'
+        ]
+
+        elementRelTest.impuritiesSolutionList.forEach(solution => {
+          if (solution) {
+
+            if (solution.solutionLetter) {
+              let columnName = 'Solution ' + solution.solutionLetter + ' (%)';
+              displayedColumns.push(columnName);
+
+              this.displayedColumnsRow[indexTest] = displayedColumns;
+            }
+          }
+        });
+      } // impuritiesSolutionTableList length > 0
+    } // impuritiesSolutionTableList exists
+
   }
 
   getSubstancePreferredName(substanceUuid: string) {

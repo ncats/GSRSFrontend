@@ -7,9 +7,10 @@ import { Subscription } from 'rxjs';
 import { SubstanceFormPropertiesService } from './substance-form-properties.service';
 
 @Component({
-  selector: 'app-substance-form-properties-card',
-  templateUrl: './substance-form-properties-card.component.html',
-  styleUrls: ['./substance-form-properties-card.component.scss']
+    selector: 'app-substance-form-properties-card',
+    templateUrl: './substance-form-properties-card.component.html',
+    styleUrls: ['./substance-form-properties-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormPropertiesCardComponent extends SubstanceCardBaseFilteredList<SubstanceProperty>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

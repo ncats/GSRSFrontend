@@ -51,6 +51,7 @@
 
 .background-button {
     background-color: #ebf1f6;
+    color: var(--link-color);
 }
 
 .button-margin {
@@ -67,11 +68,11 @@
 .top-button {
     font-size: 20px;
     margin-left: 150px;
-padding-top: 4px;
-padding-bottom: 4px;
-width: 200px;
-background-color:  var(--primary-color);
-color: white;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    width: 200px;
+    background-color:  var(--primary-color);
+    color: white;
 }
 
 .search-parameters {
@@ -333,7 +334,7 @@ color: white;
 }
 
 .facet-advanced-options-link {
-    margin-top: 7px;
+    margin: 7px;
     color: #448aff;
 }
 
@@ -653,20 +654,7 @@ color: white;
     }  
 }
 
-.page-label {
-    color:var(--dark-label-color);
-    display:block;
-    font-family:Roboto, "Helvetica Neue", sans-serif;
-    font-size:14px;
-    padding-right: 12px;
-}
-
-.page-selector {
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-margin-left: 20px;
- }
+// Page label and page selector styles moved to global _material-overrides.scss
 
 
  :host ::ng-deep .mat-paginator-range-label{
@@ -754,6 +742,4 @@ margin-left: 20px;
     height: 10px !important;
     display: inline;
 }
-.cdk-overlay-backdrop, .cdk-global-overlay-wrapper {
-    display: none !important;
-}
+

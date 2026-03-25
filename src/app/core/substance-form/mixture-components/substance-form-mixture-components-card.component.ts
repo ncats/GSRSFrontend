@@ -7,9 +7,10 @@ import {ScrollToService} from '@gsrs-core/scroll-to/scroll-to.service';
 import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 
 @Component({
-  selector: 'app-substance-form-mixture-components-card',
-  templateUrl: './substance-form-mixture-components-card.component.html',
-  styleUrls: ['./substance-form-mixture-components-card.component.scss']
+    selector: 'app-substance-form-mixture-components-card',
+    templateUrl: './substance-form-mixture-components-card.component.html',
+    styleUrls: ['./substance-form-mixture-components-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormMixtureComponentsCardComponent extends SubstanceCardBaseFilteredList<SubstanceRelationship>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

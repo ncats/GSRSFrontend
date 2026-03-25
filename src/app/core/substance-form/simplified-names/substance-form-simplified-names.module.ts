@@ -18,6 +18,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-display.module';
 
@@ -42,6 +43,7 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
     MatTableModule,
     MatBadgeModule,
     MatSelectModule,
+    MatOptionModule,
     MatTooltipModule,
     ElementLabelDisplayModule
   ],

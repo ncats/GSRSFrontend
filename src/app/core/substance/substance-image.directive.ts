@@ -4,7 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { ConfigService } from "@gsrs-core/config/config.service";
 
 @Directive({
-  selector: "[appSubstanceImage]",
+  selector: "[appSubstanceImage]"
 })
 export class SubstanceImageDirective implements AfterViewInit {
   private privateEntityId: string;

@@ -4,9 +4,10 @@ import {SubstanceCardBase} from '../substance-card-base';
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'app-substance-mixture-source',
-  templateUrl: './substance-mixture-source.component.html',
-  styleUrls: ['./substance-mixture-source.component.scss']
+    selector: 'app-substance-mixture-source',
+    templateUrl: './substance-mixture-source.component.html',
+    styleUrls: ['./substance-mixture-source.component.scss'],
+    standalone: false
 })
 export class SubstanceMixtureSourceComponent extends SubstanceCardBase implements OnInit {
  parent: SubstanceRelated;

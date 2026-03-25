@@ -32,7 +32,7 @@
     <ng-container matColumnDef="details">
       <th mat-header-cell *matHeaderCellDef > Details </th>
       <td mat-cell *matCellDef="let relationship">
-          <button class = "mat-raised-button mat-primary" (click)="openModal(detailTemplate)" [disabled]="
+          <button mat-raised-button color="primary" (click)="openModal(detailTemplate)" [disabled]="
           (!relationship.mediatorSubstance || !relationship.mediatorSubstance.name)
           && !(relationship.qualification)
           && !(relationship.interactionType)
@@ -109,7 +109,7 @@
           </div>
           <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "close()">Close</button>
+            <button mat-raised-button color="primary" mat-dialog-close (click) = "close()">Close</button>
           </div>
         </ng-template>
       </td>
@@ -118,7 +118,7 @@
     <ng-container matColumnDef="references">
       <th mat-header-cell *matHeaderCellDef> References </th>
       <td mat-cell *matCellDef="let relationship">
-        <button class = "mat-raised-button mat-primary" (click)="openModal(refTemplate)" [disabled]="relationship.references.length <= 0">View {{relationship.references.length > 0? relationship.references.length : ''}} references</button>
+        <button mat-raised-button color="primary" (click)="openModal(refTemplate)" [disabled]="relationship.references.length <= 0">View {{relationship.references.length > 0? relationship.references.length : ''}} references</button>
 
         <ng-template #refTemplate>
           <h2 mat-dialog-title>References</h2>
@@ -127,7 +127,7 @@
           </div>
           <div mat-dialog-actions>
             <span class="middle-fill"></span>
-            <button class="mat-raised-button mat-primary" mat-dialog-close (click) = "close()">Close</button>
+            <button mat-raised-button color="primary" mat-dialog-close (click) = "close()">Close</button>
           </div>
         </ng-template>
 

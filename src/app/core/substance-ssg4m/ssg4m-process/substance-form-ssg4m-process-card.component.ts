@@ -16,9 +16,10 @@ import { StructureImageModalComponent, StructureService } from '@gsrs-core/struc
 import { Ssg4mStepViewDialogComponent } from '../ssg4m-step-view-dialog/ssg4m-step-view-dialog.component';
 
 @Component({
-  selector: 'app-substance-form-ssg4m-process-card',
-  templateUrl: './substance-form-ssg4m-process-card.component.html',
-  styleUrls: ['./substance-form-ssg4m-process-card.component.scss']
+    selector: 'app-substance-form-ssg4m-process-card',
+    templateUrl: './substance-form-ssg4m-process-card.component.html',
+    styleUrls: ['./substance-form-ssg4m-process-card.component.scss'],
+    standalone: false
 })
 
 export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFilteredList<SpecifiedSubstanceG4mProcess>

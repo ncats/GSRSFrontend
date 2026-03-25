@@ -9,15 +9,15 @@ import { Subscription } from 'rxjs';
 import { Application, SubstanceApplicationMatch } from '../../application/model/application.model';
 
 @Component({
-  selector: 'app-substance-application-match-list',
-  templateUrl: './substance-application-match-list.component.html',
-  styleUrls: ['./substance-application-match-list.component.scss']
+    selector: 'app-substance-application-match-list',
+    templateUrl: './substance-application-match-list.component.html',
+    styleUrls: ['./substance-application-match-list.component.scss'],
+    standalone: false
 })
 
 export class SubstanceApplicationMatchListComponent implements OnInit, AfterViewInit {
 
   id: string;
-  isAdmin = false;
   appMatchList: any;
   substanceNames: any;
   displayedColumns: string[] = ['Num', 'Action', 'Application Type', 'Application Number', 'Status', 'Application Sub Type', 'Product Name', 'Application Substance Key', 'Exact Match'];
@@ -43,10 +43,6 @@ export class SubstanceApplicationMatchListComponent implements OnInit, AfterView
 
   ngOnInit() {
     this.loadingService.setLoading(true);
-    this.authService.hasRolesAsync('Admin').subscribe(response => {
-      this.isAdmin = response;
-    });
-
     this.id = this.activatedRoute.snapshot.params['id'];
 
     if (this.id) {

@@ -10,9 +10,10 @@ import {SubstanceFormNamesService} from "@gsrs-core/substance-form/names/substan
 import {tr} from "cronstrue/dist/i18n/locales/tr";
 
 @Component({
-  selector: 'app-simplified-substance-form-names-card',
-  templateUrl: './substance-form-simplified-names-card.component.html',
-  styleUrls: ['./substance-form-simplified-names-card.component.scss']
+    selector: 'app-simplified-substance-form-names-card',
+    templateUrl: './substance-form-simplified-names-card.component.html',
+    styleUrls: ['./substance-form-simplified-names-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormSimplifiedNamesCardComponent
   extends SubstanceCardBaseFilteredList<SubstanceName>

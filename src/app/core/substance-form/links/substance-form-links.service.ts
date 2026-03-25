@@ -37,6 +37,7 @@ export class SubstanceFormLinksService extends SubstanceFormServiceBase<Array<Li
   }
 
   addSubstanceLink(): void {
+    this.substanceFormService.markAdded();
     const newLinks: Linkage = {
       sites: []
     };
@@ -45,6 +46,7 @@ export class SubstanceFormLinksService extends SubstanceFormServiceBase<Array<Li
   }
 
   deleteSubstanceLink(link: Link): void {
+    this.substanceFormService.markRemoved();
     const subLinkIndex = this.substance.nucleicAcid.linkages.findIndex(subCode => link.$$deletedCode === subCode.$$deletedCode);
     if (subLinkIndex > -1) {
       this.substance.nucleicAcid.linkages.splice(subLinkIndex, 1);

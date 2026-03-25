@@ -96,7 +96,6 @@ const fdaRoutes: Routes = [
   entryComponents: [
     SubstanceCountsComponent,
     ShowApplicationToggleComponent
-
   ]
 })
 export class FdaModule {

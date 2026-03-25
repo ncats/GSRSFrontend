@@ -13,9 +13,10 @@ import { AmountFormDialogComponent} from '@gsrs-core/substance-form/amount-form-
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-ssg4m-resulting-materials-form',
-  templateUrl: './ssg4m-resulting-materials-form.component.html',
-  styleUrls: ['./ssg4m-resulting-materials-form.component.scss']
+    selector: 'app-ssg4m-resulting-materials-form',
+    templateUrl: './ssg4m-resulting-materials-form.component.html',
+    styleUrls: ['./ssg4m-resulting-materials-form.component.scss'],
+    standalone: false
 })
 export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
 

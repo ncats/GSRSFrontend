@@ -7,9 +7,10 @@ import { AuthService } from '@gsrs-core/auth';
 import { concatMap } from "rxjs"
 
 @Component({
-  selector: 'app-session-expiration-dialog',
-  templateUrl: './session-expiration-dialog.component.html',
-  styleUrls: ['./session-expiration-dialog.component.scss']
+    selector: 'app-session-expiration-dialog',
+    templateUrl: './session-expiration-dialog.component.html',
+    styleUrls: ['./session-expiration-dialog.component.scss'],
+    standalone: false
 })
 export class SessionExpirationDialogComponent implements OnInit {
   sessionExpirationWarning: SessionExpirationWarning = null;

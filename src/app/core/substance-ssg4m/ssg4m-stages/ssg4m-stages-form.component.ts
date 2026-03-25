@@ -41,6 +41,7 @@ import { ConfirmDialogComponent } from "../../../fda/confirm-dialog/confirm-dial
   selector: "app-ssg4m-stages-form",
   templateUrl: "./ssg4m-stages-form.component.html",
   styleUrls: ["./ssg4m-stages-form.component.scss"],
+  standalone: false
 })
 export class Ssg4mStagesFormComponent implements OnInit, OnDestroy {
   public configSettingsDisplay = {};

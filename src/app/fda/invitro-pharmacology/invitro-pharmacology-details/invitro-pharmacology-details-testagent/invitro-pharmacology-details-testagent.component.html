@@ -5,7 +5,7 @@
 
     <div class="divflex">
       <div class="margintop20px font22px">
-        <b>All In-vitro Pharmacology Assays
+        <b>All In Vitro Pharmacology Assays
           <span class="colorblue">({{allAssaysList.length}})
           </span>
         </b>
@@ -48,7 +48,7 @@
 
               <div class="marginleft10px margintop10px">
                 <!-- Edit Assay Data -->
-                <a [routerLink]="['/invitro-pharm/assay', assaysum.id, 'edit']" target="_blank" *ngIf="isAdmin"
+                <a [routerLink]="['/invitro-pharm/assay', assaysum.id, 'edit']" target="_blank" *ngIf="canUpdate"
                   matTooltip='Edit Assay Record ONLY'>
                   <mat-icon svgIcon="edit"></mat-icon>
                 </a>&nbsp;
@@ -244,7 +244,7 @@
 
     <div class="divflex">
       <div class="margintop20px font22px">
-        <b>All In-vitro Pharmacology Test Agents
+        <b>All In Vitro Pharmacology Test Agents
           <span class="colorblue">({{allScreeningTestAgents.length}})
           </span>
         </b>
@@ -285,7 +285,7 @@
           <mat-icon svgIcon="edit"></mat-icon>
         </div>
         <div>
-          <a [routerLink]="['/invitro-pharm/summary', screen.testAgent, 'edit']" target="_blank" *ngIf="isAdmin"
+          <a [routerLink]="['/invitro-pharm/summary', screen.testAgent, 'edit']" target="_blank" *ngIf="canUpdate"
             matTooltip='Edit Assay Summary Record'>
             <span class="font12px">Edit Summary Record</span>
           </a>
@@ -316,14 +316,6 @@
                 alt="View Assay Record" matTooltip='View Assay Screening Record'>View
               </a>
 
-              <!-- Edit Record -->
-              <!--
-              &nbsp;&nbsp;&nbsp;
-              <a [routerLink]="['/invitro-pharm', assaysum.id, 'edit']" target="_blank" *ngIf="isAdmin"
-                matTooltip='Edit Assay Screening Record'>
-                <mat-icon svgIcon="edit"></mat-icon>
-              </a>
-              -->
             </div>
           </td>
         </ng-container>

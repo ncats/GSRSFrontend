@@ -32,21 +32,6 @@
         <button mat-menu-item (click)="showJSON()">Show Data Structure</button>
       </mat-menu>
 
-      <!--
-    <button mat-stroked-button color="primary" class="borderblue" (click)="showJSON()">Show JSON</button>
-
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <div>
-      <a mat-stroked-button color="primary" class="borderblue" [href]="downloadJsonHref" (click)="saveJSON()"
-        download="{{jsonFileName}}.json">
-        <span>Save as JSON</span>
-      </a>
-    </div>
-
-    <button mat-stroked-button color="primary" class="borderblue import-button" (click)="importDialog()">Import
-      JSON</button>
-    -->
-
       <button mat-stroked-button color="primary" class="borderblue hide-show-messages" (click)="toggleValidation()"
         [disabled]="isLoading" *ngIf="(validationMessages && validationMessages.length > 0)">
         {{showSubmissionMessages ? 'Hide' : 'Show'}} messages
@@ -56,12 +41,6 @@
       <button mat-flat-button color="primary" class="validate-button" (click)="submit()"
         [disabled]="showFormReadOnly === 'true' || isAuthenticated === false">Save</button>
 
-      <!--
-    <button mat-flat-button color="primary" class="validate-button" [disabled]="!canApprove || approving"
-      *ngIf="definition && definition.substanceClass!=='concept' && !definition.approvalID && !imported && definitionType !== 'ALTERNATIVE'"
-      (click)="validate('approval')">Approve
-    </button>
-    -->
     </div>
 
     <!-- Display Validation Message -->
@@ -104,11 +83,6 @@
   </div>
 
   <div class="form-content-container" [ngClass]="{'padtop70px': showHeaderBar === 'false'}">
-    <!--
-  <div class="form-header"
-    [ngClass]="{'form-header-no-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'false'), 'form-header-title-top': (showHeaderBar === 'true' && showRegisterEditTitle === 'true')}">
-    <div *ngIf="showRegisterEditTitle === 'true'">
-    -->
     <div class="form-header" [ngClass]="{'form-header-title-top': showHeaderBar === 'true'}">
       <!-- Only show the title when passed parameter header=true in the Url -->
       <div *ngIf="showHeaderBar === 'true'">

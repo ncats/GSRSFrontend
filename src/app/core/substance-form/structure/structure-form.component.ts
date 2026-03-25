@@ -7,9 +7,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import {Subscription} from 'rxjs';
 
 @Component({
-  selector: 'app-structure-form',
-  templateUrl: './structure-form.component.html',
-  styleUrls: ['./structure-form.component.scss']
+    selector: 'app-structure-form',
+    templateUrl: './structure-form.component.html',
+    styleUrls: ['./structure-form.component.scss'],
+    standalone: false
 })
 export class StructureFormComponent implements OnInit, OnDestroy {
   private privateStructure: SubstanceStructure | SubstanceMoiety = {};

@@ -17,9 +17,10 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-product-component-form',
-  templateUrl: './product-component-form.component.html',
-  styleUrls: ['./product-component-form.component.scss']
+    selector: 'app-product-component-form',
+    templateUrl: './product-component-form.component.html',
+    styleUrls: ['./product-component-form.component.scss'],
+    standalone: false
 })
 export class ProductComponentFormComponent implements OnInit {
 

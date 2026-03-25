@@ -1,18 +1,19 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SubstanceReferencesComponent } from './substance-references.component';
-import { DynamicComponentLoaderModule } from '../../dynamic-component-loader/dynamic-component-loader.module';
-import { MatTableModule } from '@angular/material/table';
-import { CdkTableModule } from '@angular/cdk/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import {MatSortModule} from '@angular/material/sort';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatIconModule} from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { SubstanceReferencesComponent } from "./substance-references.component";
+import { DynamicComponentLoaderModule } from "../../dynamic-component-loader/dynamic-component-loader.module";
+import { MatTableModule } from "@angular/material/table";
+import { CdkTableModule } from "@angular/cdk/table";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatInputModule } from "@angular/material/input";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { MatSortModule } from "@angular/material/sort";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatIconModule } from "@angular/material/icon";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
+import { MatOptionModule } from "@angular/material/core";
+import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
   imports: [
@@ -24,12 +25,14 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatOptionModule,
     ReactiveFormsModule,
     FormsModule,
     MatSortModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatButtonModule,
   ],
-  declarations: [SubstanceReferencesComponent]
+  declarations: [SubstanceReferencesComponent],
 })
-export class SubstanceReferencesModule { }
+export class SubstanceReferencesModule {}

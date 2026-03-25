@@ -7,7 +7,7 @@ import {
   Compiler,
   createNgModuleRef
 } from '@angular/core';
-import { from, Observable, throwError, of } from 'rxjs';
+import { from, Observable, throwError, of, lastValueFrom } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
 import {
@@ -96,13 +96,13 @@ export class DynamicComponentLoader {
         throw new Error(`${componentId} unknown!`);
       }
 
-      return this._wrapIntoObservable(path()).pipe(mergeMap((t: any) => {
+      return lastValueFrom(this._wrapIntoObservable(path()).pipe(mergeMap((t: any) => {
         let moduleFactory = null;
         const offlineMode = this.compiler instanceof Compiler;
         //  true means AOT enalbed compiler (Prod build), false means JIT enabled compiler (Dev build)
         moduleFactory = offlineMode ? t : this.compiler.compileModuleSync(t);
         return this.loadFactory<T>(moduleFactory, componentId, injector);
-      })).toPromise();
+      })));
     }
 
     return Promise.resolve(moduleRef.componentFactoryResolver.resolveComponentFactory<T>(dynamicComponentType));

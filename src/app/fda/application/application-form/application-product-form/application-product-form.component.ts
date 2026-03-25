@@ -9,9 +9,10 @@ import { AuthService } from '@gsrs-core/auth/auth.service';
 import { GeneralService } from 'src/app/fda/service/general.service';
 
 @Component({
-  selector: 'app-application-product-form',
-  templateUrl: './application-product-form.component.html',
-  styleUrls: ['./application-product-form.component.scss']
+    selector: 'app-application-product-form',
+    templateUrl: './application-product-form.component.html',
+    styleUrls: ['./application-product-form.component.scss'],
+    standalone: false
 })
 export class ApplicationProductFormComponent implements OnInit {
   @Input() application: Application;

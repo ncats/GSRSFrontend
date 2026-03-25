@@ -7,9 +7,10 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceFormOtherLinksService } from './substance-form-other-links.service';
 
 @Component({
-  selector: 'app-substance-form-other-links-card',
-  templateUrl: './substance-form-other-links-card.component.html',
-  styleUrls: ['./substance-form-other-links-card.component.scss']
+    selector: 'app-substance-form-other-links-card',
+    templateUrl: './substance-form-other-links-card.component.html',
+    styleUrls: ['./substance-form-other-links-card.component.scss'],
+    standalone: false
 })
 export class SubstanceFormOtherLinksCardComponent extends SubstanceCardBaseFilteredList<Link>
   implements OnInit, AfterViewInit, OnDestroy, SubstanceCardBaseList {

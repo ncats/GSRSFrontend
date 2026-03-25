@@ -18,14 +18,38 @@ export class GeneralService extends BaseHttpService {
 
   private NO_CONFIG_FOUND_DEFAULT_SUBSTANCE_KEY = "UUID";
 
-  private apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
-  private apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+  private apiBaseUrlWithApplicationEntityUrl: string;
+  private apiBaseUrlWithProductEntityUrl: string;
 
   constructor(
     public http: HttpClient,
     public configService: ConfigService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+    this.apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+  }
+
+  // Array for Substance Class
+  substanceClassArray: any[] = [
+    { class: 'chemical', longDisplay: 'Chemical', shortDisplay: 'CH' },
+    { class: 'polymer', longDisplay: 'Polymer', shortDisplay: 'PO' },
+    { class: 'protein', longDisplay: 'Protein', shortDisplay: 'PR' },
+    { class: 'mixture', longDisplay: 'Mixture', shortDisplay: 'MI' },
+    { class: 'nucleicAcid', longDisplay: 'Nucleic Acid', shortDisplay: 'NA' },
+    { class: 'structurallyDiverse', longDisplay: 'Structurally Diverse', shortDisplay: 'SD' },
+    { class: 'concept', longDisplay: 'Concept', shortDisplay: 'CO' },
+    { class: 'specifiedSubstanceG1', longDisplay: 'Specified Substance Group 1', shortDisplay: 'SSG1' },
+  ];
+
+  getSubstanceByAnyIdFullView(id: string): Observable<any> {
+    const url = this.apiBaseUrl + 'substances(' + id + ')?view=full';
+    return this.http.get<any>(url).pipe(
+      map(results => {
+        return results;
+      })
+    );
   }
 
   getSubstanceByAnyId(id: string): Observable<any> {
@@ -50,11 +74,14 @@ export class GeneralService extends BaseHttpService {
     } else if (substanceKeyType === 'APPROVAL_ID') {
       // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
       return substance.approvalID;
+    } else if (substanceKeyType === 'UNII') {
+      // If Substance Key Type is UNII in the frontend config, set value of Substance Key to Substance Approval ID value
+      return substance.approvalID;
     } else if (substanceKeyType === 'BDNUM') {
       // If Substance Key Type is BDNUM in the frontend config, set value of Substance Key to Substance Bdnum/Code value
 
       // Get BDNUM from codes
-      if (substance.codes.length > 0) {
+      if (substance.codes && substance.codes.length > 0) {
         substance.codes.forEach((codeObj, index) => {
           if (codeObj) {
             if ((codeObj.codeSystem) && ((codeObj.codeSystem === 'BDNUM') && (codeObj.type === 'PRIMARY'))) {
@@ -74,9 +101,15 @@ export class GeneralService extends BaseHttpService {
     // If Substance Key Type is UUID in the frontend config, set value of Substance Key to Substance Uuid value
     if (substanceKeyType === 'UUID') {
       substanceKey = relatedSubstance.refuuid;
+    }
 
-      // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
-    } else if (substanceKeyType === 'APPROVAL_ID') {
+    // If Substance Key Type is APPROVAL_ID in the frontend config, set value of Substance Key to Substance Approval ID value
+    else if (substanceKeyType === 'APPROVAL_ID') {
+      substanceKey = relatedSubstance.approvalID;
+    }
+
+    // If Substance Key Type is UNII in the frontend config, set value of Substance Key to Substance Approval ID value
+    else if (substanceKeyType === 'UNII') {
       substanceKey = relatedSubstance.approvalID;
     }
 
@@ -156,6 +189,38 @@ export class GeneralService extends BaseHttpService {
     return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
   }
 
+  getSubstanceByNameExactMatch(
+    searchTerm?: string,
+    getFacets?: boolean,
+    facets?: FacetParam
+  ): Observable<PagingResponse<any>> {
+    let params = new FacetHttpParams();
+
+    let url = this.apiBaseUrl + 'substances/';
+
+    let nameSearchTerm = 'root_names_name:"^' + searchTerm + '$"';
+
+    if (searchTerm) {
+      params = params.append('q', nameSearchTerm);
+      params = params.append('view', 'full');
+    }
+
+    if (searchTerm != null || getFacets === true) {
+      url += 'search';
+    }
+
+    if (facets != null) {
+      let showDeprecated = false;
+      params = params.appendFacetParams(facets, showDeprecated);
+    }
+
+    const options = {
+      params: params
+    };
+
+    return this.http.get<PagingResponse<SubstanceSummary>>(url, options);
+  }
+
   getSearchCount(substanceUuid: string): Observable<any> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/searchcounts/` + substanceUuid;
     return this.http.get<any>(url)
@@ -166,10 +231,9 @@ export class GeneralService extends BaseHttpService {
       );
   }
 
-
   getProductFacets(): Observable<FacetQueryResponse> {
     let url: string;
-   // url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse`;
+    // url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse`;
     return this.http.get<FacetQueryResponse>(url);
   }
 
@@ -496,6 +560,28 @@ export class GeneralService extends BaseHttpService {
 
   getSubstanceKeyTypeForOrganizationDisplayConfig(): any {
     return this.getSubstanceKeyTypeForEntityConfig("organization");
+  }
+
+  getPhpIdUrlConfig(): string {
+    let phpIdUrlConfig = null;
+
+    // In the frontend configuration file, read 'phpIdUrl' field
+    if (this.configService.configData && this.configService.configData.phpIdUrl) {
+      phpIdUrlConfig = this.configService.configData.phpIdUrl;
+    }
+
+    return phpIdUrlConfig;
+  }
+
+  getRxNormUrlConfig(): any {
+    let rxNormUrlConfig = null;
+
+    // In the frontend configuration file, read 'rxNormUrl' field
+    if (this.configService.configData && this.configService.configData.rxNormUrl) {
+      rxNormUrlConfig = this.configService.configData.rxNormUrl;
+    }
+
+    return rxNormUrlConfig;
   }
 
 }

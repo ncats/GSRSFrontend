@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Location, LocationStrategy } from '@angular/common';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Sort } from '@angular/material/sort';
@@ -32,15 +31,18 @@ import { StructureImageModalComponent, StructureService } from '@gsrs-core/struc
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 
 /* GSRS Product Imports */
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
 import { GeneralService } from '../../service/general.service';
 import { ProductService } from '../service/product.service';
 import { Product, ProductIngredient } from '../model/product.model';
 import { productSearchSortValues } from './product-search-sort-values';
+import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-products-browse',
-  templateUrl: './products-browse.component.html',
-  styleUrls: ['./products-browse.component.scss']
+    selector: 'app-products-browse',
+    templateUrl: './products-browse.component.html',
+    styleUrls: ['./products-browse.component.scss'],
+    standalone: false
 })
 
 export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -71,7 +73,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   disableExport = false;
   private overlayContainer: HTMLElement;
   isLoggedIn = false;
-  isAdmin = false;
+  canUpdate: boolean = false;
+  canExport: boolean = false;
+  canCreate: boolean = false;
   etag = '';
   environment: any;
   narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
@@ -84,6 +88,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   lastPage: number;
   invalidPage = false;
   iconSrcPath = '';
+  phpIdIconSrcPath = '';
   dailyMedUrlConfig = '';
   downloadJsonHref: any;
   jsonFileName: string;
@@ -138,6 +143,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   private subscriptions: Array<Subscription> = [];
 
   constructor(
+    public bulkSearchService: BulkSearchService,
     public productService: ProductService,
     private authService: AuthService,
     private facetManagerService: FacetsManagerService,
@@ -165,7 +171,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     }, 50);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.facetManagerService.registerGetFacetsHandler(this.productService.getProductFacets);
 
     // Get Daily Med Url from Configuration
@@ -205,11 +211,13 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
       if (auth) {
         this.isLoggedIn = true;
       }
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
     });
     this.subscriptions.push(authSubscription);
 
+    // Get dailymed Icon
     this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
+
+    this.phpIdIconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_phpid.png`;
 
     // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
     if (this.subEntitySearchHash) {
@@ -218,7 +226,9 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.isComponentInit = true;
     this.loadComponent();
-
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
   }
 
   ngAfterViewInit() {
@@ -317,6 +327,20 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         // Get Daily Med Url if Product Code Type is NDC CODE
         this.getDailyMedUrlforProductCode();
 
+        // Get PhPID Url if Product Code Type is PhPID
+        this.getPhpIdUrlforProductCode();
+
+        // Get RxNorm Url if Product Code Type is RxNorm
+        this.getRxNormUrlforProductCode();
+
+        // Get Application Type and Application Number Url to go to Browse Application page.
+        this.getApplicationNumberTypeUrl();
+
+        this.getIngredientStrengthDisplay();
+
+        // Sort Product Codes by ascending alphabetically
+        this.sortProductCodes();
+
         // Get list of Export extension options such as .xlsx, .txt
         this.productService.getExportOptions(this.etag).subscribe(response => {
           this.exportOptions = response;
@@ -407,8 +431,11 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     this.privateFacetParams = facetsUpdateEvent.facetParam;
     this.displayFacets = facetsUpdateEvent.displayFacets;
     if (!this.isFacetsParamsInit) {
-      this.isFacetsParamsInit = true;
-      this.loadComponent();
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
     } else {
       this.searchProducts();
     }
@@ -419,19 +446,34 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   sortData(sort: Sort) {
+    // Check if a valid column is selected for sorting
     if (sort.active) {
+      // Get the index of the column being sorted from the displayedColumns array
       const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+      
+      // Store the current sort direction (ascending or descending)
       this.ascDescDir = sort.direction;
+      
+      // Iterate through predefined sort configurations to find matching sort criteria
       this.sortValues.forEach(sortValue => {
+        // Verify that the sort configuration has both column and direction defined
         if (sortValue.displayedColumns && sortValue.direction) {
-          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && this.ascDescDir === sortValue.direction) {
+          // Match the current column and direction with predefined sort values
+          // to determine the appropriate sort order value for the API/backend
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns && 
+              this.ascDescDir === sortValue.direction) {
+            // Set the order value that will be used in the search/filter request
             this.order = sortValue.value;
           }
         }
       });
+      
+      // Trigger a new search with the updated sort parameters
       // Search Applications
       this.searchProducts();
     }
+    
+    // Exit the function (explicit return for clarity)
     return;
   }
 
@@ -555,6 +597,55 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
     // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
   }
 
+  getApplicationNumberTypeUrl() {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        if ((prov.applicationType) && (prov.applicationNumber)) {
+          let truncateAppType = this.truncateBeforeNumber(prov.applicationNumber);
+          let truncateAppNum = this.truncateAfterAlpha(prov.applicationNumber);
+          if (prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH FINAL' && prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH NOT FINAL') {
+            prov._applicationUrl = 'root_appType:"^' + prov.applicationType + '$" AND root_appNumber:"^' + prov.applicationNumber + '$"';
+          }
+        }
+      });
+    });
+  }
+
+  truncateBeforeNumber(str: string): string {
+    // Use search() with a regular expression to find the index of the first digit
+    const firstDigitIndex = str.search(/[0-9]/);
+
+    // If a digit is found,slice the string up to that index
+    if (firstDigitIndex !== -1) {
+      return str.slice(0, firstDigitIndex);
+    }
+
+    // If no digit is found, return the original string
+    return str;
+  }
+
+  truncateAfterAlpha(str: string): string {
+    // Use search() with a regular expression to find the index of the first digit
+    const firstDigitIndex = str.search(/[0-9]/);
+
+    // Get Number, If a digit is found, slice number
+    if (firstDigitIndex !== -1) {
+      return str.slice(firstDigitIndex, str.length);
+    }
+
+    // If no digit is found, return the original string
+    return str;
+  }
+
+  sortProductCodes() {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        // Sort by Product Code Type, such as NDC CODE 
+        prov.productCodes.sort((a, b) => (a.productCodeType < b.productCodeType ? -1 : 1));
+      });
+    });
+  }
+
   getDailyMedUrlforProductCode(): void {
     this.products.forEach((product, indexProd) => {
       product.productProvenances.forEach((prov, indexProv) => {
@@ -563,7 +654,7 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
           // if Product Code Type is 'NDC CODE', show Daily Med link on the browse Product page.
           if (prodCode) {
             if (prodCode.productCode) {
-              if (prodCode.productCodeType && prodCode.productCodeType === 'NDC CODE') {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'ndc code') {
                 prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
               }
             }
@@ -572,6 +663,82 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         });
       });
     });
+  }
+
+  getPhpIdUrlforProductCode(): void {
+    let phpIdUrlConfig = this.generalService.getPhpIdUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'PHPID', show PhpID link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'phpid') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (phpIdUrlConfig) {
+                  prodCode._phpIdUrl = phpIdUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getRxNormUrlforProductCode(): void {
+    let rxNormUrlConfig = this.generalService.getRxNormUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'RxNorm', show RxNorm link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxcui') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (rxNormUrlConfig) {
+                  prodCode._rxNormUrl = rxNormUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getIngredientStrengthDisplay() {
+    this.products.forEach((product, indexProd) => {
+      product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+        elementManuItem.productLots.forEach((elementLot, indexLot) => {
+          elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
+
+            // Display Strength details in readable format
+            if (elementIngred.originalNumeratorNumber && elementIngred.originalNumeratorUnit) {
+              elementIngred._ingredientStrengthDisplay = elementIngred.originalNumeratorNumber + ' '
+                + elementIngred.originalNumeratorUnit.toLowerCase();
+
+              if (elementIngred.originalDenominatorNumber && elementIngred.originalDenominatorUnit) {
+
+                // if Denominator Number is '1' and Denominator Unit is '1', do not display these values
+                if ((elementIngred.originalDenominatorUnit == '1') && (elementIngred.originalDenominatorNumber == '1')) {
+                  // Do something here
+                } else {
+                  elementIngred._ingredientStrengthDisplay = elementIngred._ingredientStrengthDisplay
+                    + ' per ' + elementIngred.originalDenominatorNumber + ' '
+                    + elementIngred.originalDenominatorUnit;
+                }
+              }
+            }
+          }); // ingredient loop
+        }); // product lot loop
+      }); // product manufacture Items loop            
+    }); // product loop
   }
 
   getSubstanceBySubstanceKey(): void {
@@ -588,11 +755,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
 
       product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
 
-        // Sort Product Name by create date descending
-        // elementManuItem.applicationProductNameList.sort((a, b) => {
-        //   return <any>new Date(b.creationDate) - <any>new Date(a.creationDate);
-        // });
-
         elementManuItem.productLots.forEach((elementLot, indexLot) => {
           elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
 
@@ -603,7 +765,15 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                 if (response) {
                   elementIngred._substanceUuid = response.uuid;
                   elementIngred._ingredientName = response._name;
-                  elementIngred._approvalId = response.approvalID
+                  elementIngred._approvalId = response.approvalID;
+
+                  // Substance Type, convert from 'Chemical' to 'C', and for other types also
+                  if (response.substanceClass) {
+                    let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.class === response.substanceClass);
+                    if (subClassIndex > -1) {
+                      elementIngred._substanceClass = this.generalService.substanceClassArray[subClassIndex].shortDisplay;
+                    }
+                  }
 
                   // if Ingredient Type exists
                   if (elementIngred.ingredientType) {
@@ -628,31 +798,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
                     product._otherIngredients.push(elementIngred);
                   }
 
-                  /*
-                  // Get Substance Details, uuid, approval_id, substance name
-                  if (elementIngred.substanceKey) {
-                    this.generalService.getSubstanceByAnyId(elementIngred.substanceKey).subscribe(responseInactive => {
-                      if (responseInactive) {
-                        elementIngred._substanceUuid = responseInactive.uuid;
-                        elementIngred._ingredientName = responseInactive._name;
-                      }
-                    });
-                  }
-                  */
-
-                  // Get Active Moiety - Relationship
-                  /*
-                  this.applicationService.getSubstanceRelationship(substanceId).subscribe(responseRel => {
-                    relationship = responseRel;
-                    relationship.forEach((elementRel, indexRel) => {
-                      if (elementRel.relationshipName != null) {
-                        elementIngred.activeMoietyName = elementRel.relationshipName;
-                        elementIngred.activeMoietyUnii = elementRel.relationshipUnii;
-                      }
-                    });
-                  });
-                  */
-
                 } // response
               });
               this.subscriptions.push(substanceSubscription);
@@ -661,6 +806,16 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
         }); // loop productLots
       }); // loop productManufactureItems
     });  // loop product
+  }
+
+  getSubstanceClass(substanceClass: string): string {
+    if (substanceClass) {
+      let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.shortDisplay === substanceClass);
+      if (subClassIndex > -1) {
+        return "The Substance Type is " + this.generalService.substanceClassArray[subClassIndex].longDisplay;
+      }
+    } 
+    return "";
   }
 
   export(extension: string) {
@@ -701,36 +856,6 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   getApiExportUrl(etag: string, extension: string): string {
     return this.productService.getApiExportUrl(etag, extension);
   }
-
-  /*
-  separateAppTypeNumber(): void {
-    if (this.products) {
-      this.products.forEach((element, index) => {
-        if (element.appTypeNumber) {
-          let apt = '';
-          let apn = '';
-          let done = false;
-          for (const char of element.appTypeNumber) {
-            // Application Number
-            if (char) {
-              if (this.isNumber(char) === true) {
-                done = true;
-                apn = apn + char;
-                element.appNumber = apn;
-              } else {
-                if (done === false) {
-                  // Application Type
-                  apt = apt + char;
-                  element.appType = apt;
-                }
-              }
-            }
-          }
-        }
-      });
-    }
-  }
-  */
 
   isNumber(str: any): boolean {
     if (str) {
@@ -844,63 +969,178 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
   scrub(oldraw: any): any {
     const old = oldraw;
 
-    const activeMoietyHolders = defiant.json.search(old, '//*[_ingredientNameActiveMoieties]');
+    const activeMoietyHolders = jp.query(old, '$..[?(@._ingredientNameActiveMoieties)]');
     for (let i = 0; i < activeMoietyHolders.length; i++) {
       if (activeMoietyHolders[i]._ingredientNameActiveMoieties) {
         delete activeMoietyHolders[i]._ingredientNameActiveMoieties;
       }
     }
 
-    const basisOfStrenghActiveMoietyHolders = defiant.json.search(old, '//*[_basisOfStrengthActiveMoieties]');
+    const basisOfStrenghActiveMoietyHolders = jp.query(old, '$..[?(@._basisOfStrengthActiveMoieties)]');
     for (let i = 0; i < basisOfStrenghActiveMoietyHolders.length; i++) {
       if (basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties) {
         delete basisOfStrenghActiveMoietyHolders[i]._basisOfStrengthActiveMoieties;
       }
     }
 
-    const basisOfStrengthSubUuidHolders = defiant.json.search(old, '//*[_basisOfStrengthSubstanceUuid]');
+    const basisOfStrengthSubUuidHolders = jp.query(old, '$..[?(@._basisOfStrengthSubstanceUuid)]');
     for (let i = 0; i < basisOfStrengthSubUuidHolders.length; i++) {
       if (basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid) {
         delete basisOfStrengthSubUuidHolders[i]._basisOfStrengthSubstanceUuid;
       }
     }
 
-    const basisOfStrengthIngNameHolders = defiant.json.search(old, '//*[_basisOfStrengthIngredientName]');
+    const basisOfStrengthIngNameHolders = jp.query(old, '$..[?(@._basisOfStrengthIngredientName)]');
     for (let i = 0; i < basisOfStrengthIngNameHolders.length; i++) {
       if (basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName) {
         delete basisOfStrengthIngNameHolders[i]._basisOfStrengthIngredientName;
       }
     }
 
-    const substanceUuidHolders = defiant.json.search(old, '//*[_substanceUuid]');
+    const substanceUuidHolders = jp.query(old, '$..[?(@._substanceUuid)]');
     for (let i = 0; i < substanceUuidHolders.length; i++) {
       if (substanceUuidHolders[i]._substanceUuid) {
         delete substanceUuidHolders[i]._substanceUuid;
       }
     }
 
-    const ingredientNameHolders = defiant.json.search(old, '//*[_ingredientName]');
+    const ingredientNameHolders = jp.query(old, '$..[?(@._ingredientName)]');
     for (let i = 0; i < ingredientNameHolders.length; i++) {
       if (ingredientNameHolders[i]._ingredientName) {
         delete ingredientNameHolders[i]._ingredientName;
       }
     }
 
-    const approvalIdHolders = defiant.json.search(old, '//*[_approvalId]');
+    const approvalIdHolders = jp.query(old, '$..[?(@._approvalId)]');
     for (let i = 0; i < approvalIdHolders.length; i++) {
       if (approvalIdHolders[i]._approvalId) {
         delete approvalIdHolders[i]._approvalId;
       }
     }
 
+    const applicationUrlHolders = jp.query(old, '$..[?(@._applicationUrl)]');
+    for (let i = 0; i < applicationUrlHolders.length; i++) {
+      if (applicationUrlHolders[i]._applicationUrl) {
+        delete applicationUrlHolders[i]._applicationUrl;
+      }
+    }
+
+    const dailyMedUrlHolders = jp.query(old, '$..[?(@._dailyMedUrl)]');
+    for (let i = 0; i < dailyMedUrlHolders.length; i++) {
+      if (dailyMedUrlHolders[i]._dailyMedUrl) {
+        delete dailyMedUrlHolders[i]._dailyMedUrl;
+      }
+    }
+
+    const phpIdUrlHolders = jp.query(old, '$..[?(@._phpIdUrl)]');
+    for (let i = 0; i < phpIdUrlHolders.length; i++) {
+      if (phpIdUrlHolders[i]._phpIdUrl) {
+        delete phpIdUrlHolders[i]._phpIdUrl;
+      }
+    }
+
+    const rxNormUrlHolders = jp.query(old, '$..[?(@._rxNormUrl)]');
+    for (let i = 0; i < rxNormUrlHolders.length; i++) {
+      if (rxNormUrlHolders[i]._rxNormUrl) {
+        delete rxNormUrlHolders[i]._rxNormUrl;
+      }
+    }
+
+    const ingredStrenthDisplayHolders = jp.query(old, '$..[?(@._ingredientStrengthDisplay)]');
+    for (let i = 0; i < ingredStrenthDisplayHolders.length; i++) {
+      if (ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay) {
+        delete ingredStrenthDisplayHolders[i]._ingredientStrengthDisplay;
+      }
+    }
+
+    const ingredSubstanceClassHolders = jp.query(old, '$..[?(@._substanceClass)]');
+    for (let i = 0; i < ingredSubstanceClassHolders.length; i++) {
+      if (ingredSubstanceClassHolders[i]._substanceClass) {
+        delete ingredSubstanceClassHolders[i]._substanceClass;
+      }
+    }
+
     delete old['_activeIngredients'];
     delete old['_otherIngredients'];
+
 
     return old;
   }
 
+  createQueryTextWithIds(idListForSearch: Array<string>, entity: string, rootId: boolean = false): string {
+    let queryText = '';
+
+    idListForSearch.forEach((id, index) => {
+      if (id) {
+        if (index > 0) {
+          queryText = queryText + '\n';
+        }
+        if (entity && entity === 'substances') {
+          queryText = queryText + 'root_uuid:"' + id + '"';
+        } else {
+          if (rootId) {
+            queryText = queryText + 'root_id:"' + id + '"';
+          } else {
+            queryText = queryText + 'entity_link_substances:"' + id + '"';
+          }
+        }
+      }
+    });
+
+    return queryText;
+  }
+
+  getBulkQuery(substanceIdLists: Array<string>, entity: string) {
+    let queryText = this.createQueryTextWithIds(substanceIdLists, entity);
+
+    if (queryText) {
+      this.bulkSearchService.postOrPutBulkQuery(entity, queryText).subscribe(result => {
+        if (result) {
+          if (result.id) {
+            this.forwardToSubstance(result.id);
+          }
+        }
+      });
+    }
+  }
+
+  showAllSubstances() {
+    this.getSearchIdsOnly(true, "all substances");
+  }
+
+  forwardToSubstance(bulkQID: number) {
+
+    let currentUrl = this.location.path();
+    alert('Current URL:' + currentUrl);
+
+    // store values in array to retreive later from localStorage
+    let item = {
+      'allSubFromProductUrl': currentUrl
+    };
+
+    // Store current url in cookies
+    const searchItemHash = this.utilsService.hashCode();
+
+    // Store parameters in local storage
+    localStorage.setItem(searchItemHash.toString(), JSON.stringify(item));
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    if (bulkQID > 0) {
+      navigationExtras.queryParams['bulkQID'] = bulkQID;
+    }
+
+    if (searchItemHash) {
+      navigationExtras.queryParams['allSubFromProd-hash'] = searchItemHash;
+    }
+
+    this.router.navigate(['/browse-substance'], navigationExtras);
+  }
+
   // Need this for Cross Entity Search. Return all the IDs only for the current search
-  getSearchIdsOnly(doPerformSearch: boolean) {
+  getSearchIdsOnly(doPerformSearch: boolean = true, searchType?: string) {
     if (doPerformSearch) {
       let idListsTemp: Array<string> = [];
 
@@ -933,8 +1173,12 @@ export class ProductsBrowseComponent implements OnInit, AfterViewInit, OnDestroy
               // Copy after the last record
               if (response.content.length == index + 1) {
 
-                // Get Search Product Ids
-                this.getSearchProductIds(idListsTemp);
+                if (searchType && searchType === 'all substances') {
+                  this.getBulkQuery(idListsTemp, 'substances',);
+                } else {
+                  // Get Search Product Ids for Cross Entity Search
+                  this.getSearchProductIds(idListsTemp);
+                }
 
                 // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
                 // this.idLists = idListsTemp;

@@ -29,7 +29,7 @@
           <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
           View Application</a>
         &nbsp;&nbsp;&nbsp;
-        <span *ngIf="isAdmin">
+        <span *ngIf="canDelete">
           <button mat-flat-button color="primary" (click)="confirmDeleteApplication()"
             matTooltip='Delete this Application'>
             Delete
@@ -133,7 +133,8 @@
               </app-cv-input>
 
               <mat-form-field class="col-1">
-                <input matInput [disabled]="isDisableData" placeholder="Application Number"
+                <mat-label>Application Number</mat-label>
+                <input matInput [disabled]="isDisableData"
                   [(ngModel)]="application.appNumber" name="appNumber" required />
               </mat-form-field>
 
@@ -143,7 +144,8 @@
               </app-cv-input>
 
               <mat-form-field class="col-1">
-                <input matInput [disabled]="isDisableData" placeholder="Submit Date (mm/dd/yyyy)"
+                <mat-label>Submit Date</mat-label>
+                <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
                   [(ngModel)]="application.submitDate" name="submitDate" (change)="validateSubmitDate()" />
                 <mat-hint *ngIf="submitDateMessage"><span class="colorred">{{submitDateMessage}}</span></mat-hint>
               </mat-form-field>
@@ -174,7 +176,8 @@
             -->
 
               <mat-form-field class="col-1">
-                <input matInput [disabled]="isDisableData" placeholder="Status Date (mm/dd/yyyy)"
+                <mat-label>Status Date</mat-label>
+                <input matInput [disabled]="isDisableData" placeholder="(mm/dd/yyyy)"
                   [(ngModel)]="application.statusDate" name="statusDate" (change)="validateStatusDate()" />
                 <mat-hint *ngIf="statusDateMessage"><span class="colorred">{{statusDateMessage}}</span></mat-hint>
               </mat-form-field>
@@ -200,7 +203,8 @@
               </mat-form-field>
             -->
               <mat-form-field class="col-3">
-                <input matInput [disabled]="isDisableData" placeholder="Division Class Desc"
+                <mat-label>Division Class Desc</mat-label>
+                <input matInput [disabled]="isDisableData"
                   [(ngModel)]="application.divisionClassDesc" name="divisionClassDesc" />
               </mat-form-field>
 
@@ -209,7 +213,8 @@
               </app-cv-input>
 
               <mat-form-field class="col-1">
-                <input matInput placeholder="Non Proprietary Name" [(ngModel)]="application.nonProprietaryName"
+                <mat-label>Non Proprietary Name</mat-label>
+                <input matInput [(ngModel)]="application.nonProprietaryName"
                   name="nonProprietaryName" />
               </mat-form-field>
 
@@ -218,7 +223,8 @@
 
             <div class="row">
               <mat-form-field class="col-6">
-                <input matInput placeholder="Sponsor Name" [disabled]="isDisableData"
+                <mat-label>Sponsor Name</mat-label>
+                <input matInput [disabled]="isDisableData"
                   [(ngModel)]="application.sponsorName" name="sponsorName" />
               </mat-form-field>
             </div>
@@ -233,7 +239,8 @@
 
             <div class="row">
               <mat-form-field class="col-6">
-                <input matInput placeholder="External Title" [disabled]="isDisableData"
+                <mat-label>External Title</mat-label>
+                <input matInput [disabled]="isDisableData"
                   [(ngModel)]="application.externalTitle" name="externalTitle" />
               </mat-form-field>
             </div>
@@ -241,7 +248,8 @@
 
             <div class="row">
               <mat-form-field class="col-6">
-                <input matInput placeholder="Title" [(ngModel)]="application.title" name="title" />
+                <mat-label>Title</mat-label>
+                <input matInput [(ngModel)]="application.title" name="title" />
               </mat-form-field>
             </div>
 
@@ -249,7 +257,8 @@
             <div *ngFor="let ind of application.applicationIndicationList; let indIndex = index">
               <div class="row">
                 <mat-form-field class="col-5-more">
-                  <input matInput placeholder="Indication" [(ngModel)]="ind.indication" name="indication" />
+                  <mat-label>Indication</mat-label>
+                  <input matInput [(ngModel)]="ind.indication" name="indication" />
                 </mat-form-field>
 
                 <!-- INDICATION Button -->

@@ -1,53 +1,106 @@
-<div appDragDropPaste (dropHandler)="onDropHandler($event)" class="z-index"  [ngClass]="tempClass">
-  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'ketcher' && enableJSDraw && enableKetcher">Toggle Editor to JSDraw</button>
-  <button mat-button color="primary" id = "toggle-edit" (click) = "toggleEditor()" *ngIf = "structureEditor === 'jsdraw' && enableJSDraw && enableKetcher">Toggle Editor to Ketcher</button>
-    <div style = "width: 100%">
-    <ncats-jsdraw-wrapper id = "jsdrawwrap" oncontextmenu="return false" (jsDrawOnLoad)="jsDrawOnLoad($event)" [hidden]="structureEditor === 'ketcher' && !firstload" style = "width:990px"></ncats-jsdraw-wrapper>
+<div
+  appDragDropPaste
+  (dropHandler)="onDropHandler($event)"
+  class="z-index"
+  [ngClass]="tempClass"
+>
+  <button
+    matButton
+    id="toggle-edit"
+    (click)="toggleEditor()"
+    *ngIf="structureEditor === 'ketcher' && enableJSDraw && enableKetcher"
+  >
+    Toggle Editor to JSDraw
+  </button>
+  <button
+    matButton
+    id="toggle-edit"
+    (click)="toggleEditor()"
+    *ngIf="structureEditor === 'jsdraw' && enableJSDraw && enableKetcher"
+  >
+    Toggle Editor to Ketcher
+  </button>
+  <div style="width: 100%">
+    <ncats-jsdraw-wrapper
+      id="jsdrawwrap"
+      oncontextmenu="return false;"
+      (jsDrawOnLoad)="jsDrawOnLoad($event)"
+      [hidden]="structureEditor === 'ketcher' && !firstload"
+      style="width: 990px"
+    ></ncats-jsdraw-wrapper>
   </div>
-  <div style = "width: 100%">
-    <ncats-ketcher-wrapper id="ketcherwrapper" (ketcherOnLoad)="ketcherOnLoad($event)" [hidden]="structureEditor === 'jsdraw'">
+  <div style="width: 100%">
+    <ncats-ketcher-wrapper
+      id="ketcherwrapper"
+      (ketcherOnLoad)="ketcherOnLoad($event)"
+      [hidden]="structureEditor === 'jsdraw'"
+    >
     </ncats-ketcher-wrapper>
   </div>
 
+  <div id="canvas-container">
+    <div class="below-editor-container">
+      <div class="molvec-message">
+        <div class="marginright10px">
+          <div *ngIf="disclaimerMessage">
+            <span class="fontbold fontsize12px"
+              >DISCLAIMER: {{ disclaimerMessage }}</span
+            >
+          </div>
+          <span *ngIf="structureEditor == 'ketcher'">
+            Use blue Export and Import buttons to copy and paste structure.
+          </span>
+        </div>
+        <div>
+          Load an image by pasting a copied image into the canvas with ctrl + v,
+          or dragging a local image file.
+        </div>
+      </div>
 
-
-<div id ="canvas-container">
-  <div class="below-editor-container">
-      
-    
-    <div class="molvec-message">
-      Load an image by pasting a copied image into the canvas with ctrl + v, or dragging a local image file
-  </div>
-   
-    <div class = "options">
-        <button mat-button color="primary" [matMenuTriggerFor]="importMenu">Structure Options &#9660; </button>
+      <div class="options">
+        <button mat-button color="primary" [matMenuTriggerFor]="importMenu">
+          Structure Options &#9660;
+        </button>
+      </div>
+      <div class="clean-button">
+        <button mat-button color="primary" (click)="cleanStructure()">
+          <mat-icon svgIcon="brush"></mat-icon>
+          Clean structure
+        </button>
+      </div>
     </div>
-    <div class = "clean-button">
-        <button mat-button color="primary" (click)="cleanStructure()" >
-            <mat-icon svgIcon="brush"></mat-icon>
-            Clean structure
-          </button>
+    <div id="canvas-label canvas" *ngIf="height > 0">
+      Original Image:
+      <a class="blue-font toggle" (click)="canvasToggle = !canvasToggle">{{
+        canvasToggle ? "hide" : "show"
+      }}</a>
+    </div>
+    <div [hidden]="!canvasToggle">
+      <div class="canvas-message canvas" *ngIf="canvasMessage !== ''">
+        {{ canvasMessage }}
+      </div>
+      <canvas
+        role="img"
+        aria-label="Structure Canvas"
+        #structure_canvas
+        id="structure_canvas"
+        name="structure_canvas"
+        [height]="height"
+        [width]="width"
+      >
+      </canvas>
     </div>
   </div>
-  <div id = "canvas-label canvas" *ngIf = "height > 0">Original Image:
-    <a class = "blue-font toggle" (click) = "canvasToggle = !canvasToggle">{{canvasToggle? 'hide': 'show'}}</a>
-  </div>
-  <div [hidden]="!canvasToggle">
-    <div class = "canvas-message canvas" *ngIf = "canvasMessage !== ''">{{canvasMessage}}</div>
-    <canvas role="img" aria-label="Structure Canvas" #structure_canvas id = "structure_canvas" name = "structure_canvas" [height] = 'height' [width] = "width" >
-    </canvas>
-  </div>
-</div> 
 </div>
 
 <mat-menu #importMenu="matMenu">
-    <button mat-menu-item (click)="standardize('REMOVE_HYDROGENS')">
-        Remove Explicit Hydrogens
-    </button>
-    <button mat-menu-item (click)="standardize('ADD_HYDROGENS')">
-        Add Explicit Hydrogens
-      </button>
-      <button mat-menu-item (click)="standardize('STEREO_FLATTEN')">
-          Remove Stereo Bonds
-        </button>
-  </mat-menu>
+  <button mat-menu-item (click)="standardize('REMOVE_HYDROGENS')">
+    Remove Explicit Hydrogens
+  </button>
+  <button mat-menu-item (click)="standardize('ADD_HYDROGENS')">
+    Add Explicit Hydrogens
+  </button>
+  <button mat-menu-item (click)="standardize('STEREO_FLATTEN')">
+    Remove Stereo Bonds
+  </button>
+</mat-menu>

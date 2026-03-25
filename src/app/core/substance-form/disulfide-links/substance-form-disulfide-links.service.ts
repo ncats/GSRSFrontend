@@ -69,12 +69,14 @@ export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase
   }
 
   addSubstanceDisulfideLink(): void {
+    this.substanceFormService.markAdded();
     const newDisulfideLinks: DisulfideLink = {};
     this.substance.protein.disulfideLinks.unshift(newDisulfideLinks);
     this.propertyEmitter.next(this.substance.protein.disulfideLinks);
   }
 
   addCompleteDisulfideLinks(sites: Array<Site>): void {
+    this.substanceFormService.markAdded();
     sites.forEach(link => {
       const newSites = [{ subunitIndex: link[0].subunitIndex, residueIndex: link[0].residueIndex },
       { subunitIndex: link[1].subunitIndex, residueIndex: link[1].residueIndex },
@@ -89,6 +91,7 @@ export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase
   }
 
   deleteSubstanceDisulfideLink(disulfideLink: DisulfideLink): void {
+    this.substanceFormService.markRemoved();
     const subLinkIndex =
       this.substance.protein.disulfideLinks.findIndex(subLink => disulfideLink.$$deletedCode === subLink.$$deletedCode);
     if (subLinkIndex > -1) {
@@ -98,6 +101,7 @@ export class SubstanceFormDisulfideLinksService extends SubstanceFormServiceBase
   }
 
   deleteAllDisulfideLinks(): void {
+    this.substanceFormService.markRemoved();
     this.substance.protein.disulfideLinks = [];
     this.emitDisulfideLinkUpdate();
   }

@@ -6,7 +6,7 @@ describe('SubstanceFormOtherLinksService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SubstanceFormOtherLinksService = TestBed.get(SubstanceFormOtherLinksService);
+    const service: SubstanceFormOtherLinksService = TestBed.inject(SubstanceFormOtherLinksService);
     expect(service).toBeTruthy();
   });
 });

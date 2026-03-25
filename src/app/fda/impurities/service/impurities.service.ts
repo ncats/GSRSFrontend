@@ -27,7 +27,7 @@ export class ImpuritiesService extends BaseHttpService {
   totalRecords: 0;
   impurities: Impurities;
 
-  apiBaseUrlWithEntityContext = this.configService.configData.apiBaseUrl + 'api/v1/impurities' + '/';
+  apiBaseUrlWithEntityContext: string;
 
   constructor(
     public http: HttpClient,
@@ -35,6 +35,8 @@ export class ImpuritiesService extends BaseHttpService {
     public utilsService: UtilsService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithEntityContext = this.configService.configData.apiBaseUrl + 'api/v1/impurities' + '/';
   }
 
   get isImpuritiesUpdated(): boolean {
@@ -339,6 +341,87 @@ export class ImpuritiesService extends BaseHttpService {
     impuritiesUnspecifiedIndex: number, identityCriteriaIndex: number): void {
     const impuritiesTest = this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex];
     impuritiesTest.impuritiesUnspecifiedList[impuritiesUnspecifiedIndex].identityCriteriaList.splice(identityCriteriaIndex, 1);
+  }
+
+  copyImpuritiesTest(impuritiesSubstanceIndex: number, impuritiesTest: ImpuritiesTesting): void {
+    const newImpuritiesTest = JSON.parse(JSON.stringify(impuritiesTest));
+
+    newImpuritiesTest.id = null;
+    newImpuritiesTest.internalVersion = null;
+    newImpuritiesTest.createdBy = null;
+    newImpuritiesTest.creationDate = null;
+    newImpuritiesTest.modifiedBy = null;
+    newImpuritiesTest.createdBy = null;
+    newImpuritiesTest.lastModifiedDate = null;
+
+    newImpuritiesTest.impuritiesSolutionList.forEach(elementSolution => {
+      if (elementSolution != null) {
+        elementSolution.id = null;
+        elementSolution.internalVersion = null;
+        elementSolution.createdBy = null;
+        elementSolution.creationDate = null;
+        elementSolution.modifiedBy = null;
+        elementSolution.lastModifiedDate = null;
+      }
+    });
+
+    newImpuritiesTest.impuritiesSolutionTableList.forEach(elementSolutionTable => {
+      if (elementSolutionTable != null) {
+        elementSolutionTable.id = null;
+        elementSolutionTable.internalVersion = null;
+        elementSolutionTable.createdBy = null;
+        elementSolutionTable.creationDate = null;
+        elementSolutionTable.modifiedBy = null;
+        elementSolutionTable.lastModifiedDate = null;
+      }
+    });
+
+    newImpuritiesTest.impuritiesDetailsList.forEach(elementDetails => {
+      if (elementDetails != null) {
+        elementDetails.id = null;
+        elementDetails.internalVersion = null;
+        elementDetails.createdBy = null;
+        elementDetails.creationDate = null;
+        elementDetails.modifiedBy = null;
+        elementDetails.lastModifiedDate = null;
+
+        elementDetails.identityCriteriaList.forEach(elementIdentity => {
+          if (elementIdentity != null) {
+            elementIdentity.id = null;
+            elementIdentity.internalVersion = null;
+            elementIdentity.createdBy = null;
+            elementIdentity.creationDate = null;
+            elementIdentity.modifiedBy = null;
+            elementIdentity.lastModifiedDate = null;
+          }
+        });
+      }
+    });
+
+    newImpuritiesTest.impuritiesUnspecifiedList.forEach(elementUnspecified => {
+      if (elementUnspecified != null) {
+        elementUnspecified.id = null;
+        elementUnspecified.internalVersion = null;
+        elementUnspecified.createdBy = null;
+        elementUnspecified.creationDate = null;
+        elementUnspecified.modifiedBy = null;
+        elementUnspecified.lastModifiedDate = null;
+
+        elementUnspecified.identityCriteriaList.forEach(elementIdentity => {
+          if (elementIdentity != null) {
+            elementIdentity.id = null;
+            elementIdentity.internalVersion = null;
+            elementIdentity.createdBy = null;
+            elementIdentity.creationDate = null;
+            elementIdentity.modifiedBy = null;
+            elementIdentity.lastModifiedDate = null;
+          }
+        });
+      }
+
+    });
+
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList.unshift(newImpuritiesTest);
   }
 
   getSubstanceImpurities(

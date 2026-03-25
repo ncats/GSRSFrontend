@@ -4,7 +4,8 @@ import { GoogleAnalyticsService } from '../google-analytics.service';
 import { ConfigService } from '../../config/config.service';
 
 @Directive({
-  selector: '[appTrackLinkEvent]'
+    selector: '[appTrackLinkEvent]',
+    standalone: false
 })
 export class TrackLinkEventDirective {
   @Input() evCategory = 'Undefined';

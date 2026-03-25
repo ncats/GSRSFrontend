@@ -18,9 +18,10 @@ import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/face
 import { SubstanceSsg4mService } from '@gsrs-core/substance-ssg4m/substance-ssg4m-form.service';
 
 @Component({
-  selector: 'app-substance-ssg4m',
-  templateUrl: './substance-ssg4m.component.html',
-  styleUrls: ['./substance-ssg4m.component.scss']
+    selector: 'app-substance-ssg4m',
+    templateUrl: './substance-ssg4m.component.html',
+    styleUrls: ['./substance-ssg4m.component.scss'],
+    standalone: false
 })
 export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
@@ -43,6 +44,8 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
     'substanceReaction'
   ];
 
+  canUpdate: boolean = false;
+
   constructor(
     private router: Router,
     public gaService: GoogleAnalyticsService,
@@ -55,12 +58,9 @@ export class SubstanceSsg4mComponent extends SubstanceDetailsBaseTableDisplay im
     super(gaService, ssg4mService);
   }
 
-  ngOnInit() {
-    const rolesSubscription = this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').subscribe(response => {
-      this.isAdmin = response;
-    });
-    this.subscriptions.push(rolesSubscription);
-
+  async ngOnInit() {
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+   
     if (this.substanceUuid) {
       this.getSsg4mBySubstanceUuid();
     }

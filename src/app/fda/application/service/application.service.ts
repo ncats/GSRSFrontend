@@ -54,15 +54,13 @@ export class ApplicationService extends BaseHttpService {
   public showDeprecated = false;
   private searchKeys: { [structureSearchTerm: string]: string } = {};
 
-  apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
-  apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
-  //TODO: remove explicit references like this if at all possible
-  apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
+  apiBaseUrlWithApplicationEntityUrl: string;
+  apiBaseUrlWithApplicationAllEntityUrl: string;
+  apiBaseUrlWithApplicationDarrtsEntityUrl: string;
 
   APPALL_SEARCH_SUBSTANCE_KEY = 'root_applicationProductList_applicationIngredientList_substanceKey:';
 
-  // get service prefix url
-  restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
+  restApiPrefix: string;
 
   constructor(
     public http: HttpClient,
@@ -70,6 +68,13 @@ export class ApplicationService extends BaseHttpService {
     public utilsService: UtilsService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithApplicationEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applications' + '/';
+    this.apiBaseUrlWithApplicationAllEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsall' + '/';
+    //TODO: remove explicit references like this if at all possible
+    this.apiBaseUrlWithApplicationDarrtsEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/applicationsdarrts' + '/';
+    // get service prefix url
+    this.restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
   }
 
   getBulkSearchUrl(searchEntity: string, useServiceInUrl: boolean = false): string {
@@ -254,7 +259,8 @@ export class ApplicationService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              order
             );
           } else {
             observer.next(response);
@@ -280,6 +286,7 @@ export class ApplicationService extends BaseHttpService {
     pageSize?: number,
     facets?: FacetParam,
     skip?: number,
+    order?: string,
     view?: string
   ): void {
     // Call Bulk Search Result
@@ -291,7 +298,8 @@ export class ApplicationService extends BaseHttpService {
       facets,
       skip,
       view,
-      bulkSearchResponse.results
+      bulkSearchResponse.results,
+      order
     )
       .subscribe(bulkSearchStatusResponse => {
         // consider making API backend provide statusKey in JSON
@@ -324,6 +332,7 @@ export class ApplicationService extends BaseHttpService {
                 pageSize,
                 facets,
                 skip,
+                order,
                 view
               );
             });
@@ -352,7 +361,8 @@ export class ApplicationService extends BaseHttpService {
     facets?: FacetParam,
     skip?: number,
     view?: string,
-    url?: string
+    url?: string,
+    order?: string
   ): any {
 
     url = this.getBulkSearchUrl(searchEntity, true);
@@ -375,6 +385,10 @@ export class ApplicationService extends BaseHttpService {
 
     if (querySearchTerm != null && querySearchTerm !== '') {
       params = params.append('q', querySearchTerm);
+    }
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
     }
 
     const options = {

@@ -7,9 +7,10 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { HierarchyNode } from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 
 @Component({
-  selector: 'app-substance-hierarchy',
-  templateUrl: './substance-hierarchy.component.html',
-  styleUrls: ['./substance-hierarchy.component.scss']
+    selector: 'app-substance-hierarchy',
+    templateUrl: './substance-hierarchy.component.html',
+    styleUrls: ['./substance-hierarchy.component.scss'],
+    standalone: false
 })
 export class SubstanceHierarchyComponent extends SubstanceCardBase implements OnInit {
 
@@ -28,10 +29,10 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
   dataSource = new MatTreeNestedDataSource<any>();
   selfNode: HierarchyNode;
   activeNode: any;
-  isAdmin: boolean;
+  canEdit: boolean = false;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.uuid = this.substance.uuid;
     this.name = this.substance._nameHTML;
     this.selfNode = {
@@ -51,7 +52,7 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
       }, error => {
        this.loadHierarchy([this.selfNode]);
       });
-      this.isAdmin = this.authService.hasAnyRoles('Admin', 'Updater', 'SuperUpdater');
+      this.canEdit = await this.authService.hasSpecificPrivilege('Edit')
   }
 
   loadHierarchy(orig: any): void {

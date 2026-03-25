@@ -31,11 +31,11 @@
       <div class="pfda-toolbar-button-title">New Substance</div>
     </div>
     <mat-menu #nav="matMenu" (closed)="removeZindex()" class = "reg-a">
-      <div *ngFor="let navItem of registerItems">
+      <ng-container *ngFor="let navItem of registerItems">
         <a mat-menu-item [routerLink]="['/' + navItem.path]" *ngIf="navItem.path">
           {{navItem.display}}
         </a>
-      </div>
+      </ng-container>
     </mat-menu>
   </span>
 

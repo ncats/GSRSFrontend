@@ -21,7 +21,6 @@ import { ControlledVocabularyService } from '../../../core/controlled-vocabulary
 import { SubstanceService } from '@gsrs-core/substance/substance.service';
 import { GeneralService } from '../../service/general.service';
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
-import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
 import { StructureImageModalComponent } from '@gsrs-core/structure';
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
@@ -35,14 +34,19 @@ import {
 } from '../model/invitro-pharmacology.model';
 
 @Component({
-  selector: 'app-invitro-pharmacology-screening-data-import',
-  templateUrl: './invitro-pharmacology-screening-data-import.component.html',
-  styleUrls: ['./invitro-pharmacology-screening-data-import.component.scss']
+    selector: 'app-invitro-pharmacology-screening-data-import',
+    templateUrl: './invitro-pharmacology-screening-data-import.component.html',
+    styleUrls: ['./invitro-pharmacology-screening-data-import.component.scss'],
+    standalone: false
 })
 
 export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
+  private TEST_AGENT = "Test Agent";
+
   private subscriptions: Array<Subscription> = [];
+
+  invtroReferences: Array<InvitroReference> = [];
 
   invitroReference: InvitroReference = {};
   invitroLaboratory: InvitroLaboratory = {};
@@ -60,15 +64,17 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   invitroAssayResult: InvitroAssayResult = {};
   invitroResultInfo: InvitroAssayResultInformation = {}
 
+  requiredFieldMissingArray: Array<any> = [];
   importDataList: Array<any> = [];
   importedBulkAssayJson: Array<InvitroAssayInformation> = [{}];
   importedAssayJson: any;
 
   message = '';
   submitMessage = '';
+  resultMessage = '';
   disableImportButton = "true";
   isExcelDataLoaded = false;
-  isAdmin = false;
+  canUpdate: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -85,13 +91,16 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     private invitroPharmacologyService: InvitroPharmacologyService
   ) { }
 
-  ngOnInit(): void {
-
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
+  async ngOnInit() {
+    this.initializeRequiredFieldArray();
 
     this.titleService.setTitle("IVP Import Screening Data");
+
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+  
+  }
+
+  ngAfterViewInit() {
   }
 
   ngOnDestroy(): void {
@@ -109,6 +118,9 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     else {
       // Empty the list
       this.importDataList.length = 0;
+      //requiredFieldMissingArray = [{}];
+      
+      this.initializeRequiredFieldArray();
 
       // Assign FileReader
       const reader: FileReader = new FileReader();
@@ -124,26 +136,26 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           cellNF: true
         });
 
-        this.readInvitroReference(workbook);
+        this.getInvitroReference(workbook);
 
-        this.createInvitroLaboratory(workbook);
+        this.getInvitroLaboratory(workbook);
 
-        this.createInvitroSponsor(workbook);
+        this.getInvitroSponsor(workbook);
 
-        this.createInvitroSponsorReport(workbook);
+        this.getInvitroSponsorReport(workbook);
 
-        this.createInvitroSponsorSubmitters(workbook);
+        this.getInvitroSponsorSubmitters(workbook);
 
-        this.createInvitroTestAgent(workbook);
+        this.getInvitroTestAgent(workbook);
 
-        this.createInvitroBatchNumber(workbook);
+        this.getInvitroBatchNumber(workbook);
 
-        this.createInvitroControls(workbook);
+        this.getInvitroControls(workbook);
 
-        this.createInvitroResults(workbook);
+        this.getInvitroResults(workbook);
 
-        // Validate
-        this.validateExcelImportData();
+        // Validate all data from Excel file
+        this.validate();
 
       } // reader.onload
 
@@ -153,7 +165,14 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   }
 
-  readInvitroReference(workbook: XLSX.WorkBook) {
+  initializeRequiredFieldArray() {
+    this.requiredFieldMissingArray = [{}];
+
+    this.requiredFieldMissingArray[0].sourceType = false;
+    this.requiredFieldMissingArray[0].controlExternalAssaySource = false;
+
+  }
+  getInvitroReference(workbook: XLSX.WorkBook) {
     // Read the Second Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "1. Reference and Laboratory"
     const worksheetName = workbook.SheetNames[1];
@@ -186,13 +205,27 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           if (worksheetRefLab[cellKey].v) {
             if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Type *') {
               this.invitroReference.sourceType = this.getValue(worksheetRefLab[cellKeyValue]);
-            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source/Citation *') {
+
+              // ** Validate Required field
+              if (!this.invitroReference.sourceType) {
+                this.requiredFieldMissingArray[0].sourceType = true;
+              }
+            }
+            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source/Citation *') {
               this.invitroReference.sourceCitation = this.getValue(worksheetRefLab[cellKeyValue]);
-            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Id') {
+
+              // ** Validate Required field
+              if (!this.invitroReference.sourceCitation) {
+                this.requiredFieldMissingArray[0].sourceCitation = true;
+              }
+            }
+            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Source Id') {
               this.invitroReference.sourceId = this.getValue(worksheetRefLab[cellKeyValue]);
-            } else if (worksheetRefLab[cellKey].v.trim() === 'Reference Digital Object Identifier') {
+            }
+            else if (worksheetRefLab[cellKey].v.trim() === 'Reference Digital Object Identifier') {
               this.invitroReference.digitalObjectIdentifier = this.getValue(worksheetRefLab[cellKeyValue]);
             }
+
           } // if value is not null
 
         } // else
@@ -200,13 +233,18 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       } // for loop Column
     } // for loop Row
 
+    if (this.invitroReference) {
+      this.invitroReference.primaryReference = true;
+      this.invtroReferences.push(this.invitroReference);
+    }
+
     // Set Reference to InvitroAssayResultInformation
     // this.invitroResultInfo.invitroReferences[0].primaryReference = true;
     // this.invitroResultInfo.invitroReferences[0] = this.invitroReference;
 
   }
 
-  createInvitroLaboratory(workbook: XLSX.WorkBook) {
+  getInvitroLaboratory(workbook: XLSX.WorkBook) {
     // Read the Second Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "1. Reference and Laboratory"
     const worksheetName = workbook.SheetNames[1];
@@ -236,6 +274,11 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           if (worksheetRefLab[cellKey].v) {
             if (worksheetRefLab[cellKey].v.trim() === 'Laboratory Name *') {
               this.invitroLaboratory.laboratoryName = this.getValue(worksheetRefLab[cellKeyValue]);
+
+              // ** Validate Required field
+              if (!this.invitroLaboratory.laboratoryName) {
+                this.requiredFieldMissingArray[0].laboratoryName = true;
+              }
             } else if (worksheetRefLab[cellKey].v.trim() === 'Laboratory Affiliation') {
               this.invitroLaboratory.laboratoryAffiliation = this.getValue(worksheetRefLab[cellKeyValue]);
             } else if (worksheetRefLab[cellKey].v.trim() === 'Laboratory Type') {
@@ -259,7 +302,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   }
 
-  createInvitroSponsor(workbook: XLSX.WorkBook) {
+  getInvitroSponsor(workbook: XLSX.WorkBook) {
     // Read the Third Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "2. Sponsor,Submitter,Report"
     const worksheetName = workbook.SheetNames[2];
@@ -289,6 +332,11 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           if (worksheetRefLab[cellKey].v) {
             if (worksheetRefLab[cellKey].v.trim() === 'Sponsor Contact Name *') {
               this.invitroSponsor.sponsorContactName = this.getValue(worksheetRefLab[cellKeyValue]);
+
+              // ** Validate Required field
+              if (!this.invitroSponsor.sponsorContactName) {
+                this.requiredFieldMissingArray[0].sponsorContactName = true;
+              }
             } else if (worksheetRefLab[cellKey].v.trim() === 'Sponsor Affiliation') {
               this.invitroSponsor.sponsorAffiliation = this.getValue(worksheetRefLab[cellKeyValue]);
             } else if (worksheetRefLab[cellKey].v.trim() === 'Sponsor Street Address') {
@@ -310,7 +358,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   }
 
-  createInvitroSponsorSubmitters(workbook: XLSX.WorkBook) {
+  getInvitroSponsorSubmitters(workbook: XLSX.WorkBook) {
     // Read the Third Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "2.Sponsor,Submitter,Report"
     const worksheetName = workbook.SheetNames[2];
@@ -344,15 +392,20 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
             if (worksheet[cellKey].v.trim() === 'Sponsor Report Submitter Name *') {
               this.invitroSponsorSubmitter.sponsorReportSubmitterName = this.getValue(worksheet[cellKeyValue]);
+
+              // ** Validate Required field
+              if (!this.invitroSponsorSubmitter.sponsorReportSubmitterName) {
+                this.requiredFieldMissingArray[0].sponsorReportSubmitterName = true;
+              }
             } else if (worksheet[cellKey].v.trim() === 'Sponsor Report Submitter Title') {
-              this.invitroSponsorSubmitter.sponsorRepoortSubmitterTitle = this.getValue(worksheet[cellKeyValue]);
+              this.invitroSponsorSubmitter.sponsorReportSubmitterTitle = this.getValue(worksheet[cellKeyValue]);
             } else if (worksheet[cellKey].v.trim() === 'Sponsor Report Submitter Affiliation') {
               this.invitroSponsorSubmitter.sponsorReportSubmitterAffiliation = this.getValue(worksheet[cellKeyValue]);
             } else if (worksheet[cellKey].v.trim() === 'Sponsor Report Submitter Email') {
               this.invitroSponsorSubmitter.sponsorReportSubmitterEmail = this.getValue(worksheet[cellKeyValue]);
             } else if (worksheet[cellKey].v.trim() === 'Sponsor Report Submitter Phone Number') {
               this.invitroSponsorSubmitter.sponsorReportSubmitterPhoneNumber = this.getValue(worksheet[cellKeyValue]);
-            } else if (worksheet[cellKey].v.trim() === 'Sponsor Report Submitter Assay Type') {
+            } else if (worksheet[cellKey].v.trim() === 'Sponsor Report Submitter Bioassay Type') {
               this.invitroSponsorSubmitter.sponsorReportSubmitterAssayType = this.getValue(worksheet[cellKeyValue]);
             }
           } // if value is not null
@@ -365,7 +418,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     //this.invitroSponsorReport.invitroSponsorSubmitters.push(this.invitroSponsorSubmitter);
   }
 
-  createInvitroSponsorReport(workbook: XLSX.WorkBook) {
+  getInvitroSponsorReport(workbook: XLSX.WorkBook) {
     // Read the Third Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "2. Sponsor,Submitter,Report"
     const worksheetName = workbook.SheetNames[2];
@@ -395,8 +448,12 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           if (worksheet[cellKey].v) {
             if (worksheet[cellKey].v.trim() === 'Report Number *') {
               this.invitroSponsorReport.reportNumber = this.getValue(worksheet[cellKeyValue]);
-            } else if (worksheet[cellKey].v.trim() === 'Report Date *') {
 
+              // ** Validate Required field
+              if (!this.invitroSponsorReport.reportNumber) {
+                this.requiredFieldMissingArray[0].reportNumber = true;
+              }
+            } else if (worksheet[cellKey].v.trim() === 'Report Date') {
               // Convert Report Date from Number to Date datatype
               if (this.getValue(worksheet[cellKeyValue])) {
                 const parsedReportDate: Date = new Date(this.getValue(worksheet[cellKeyValue]));
@@ -413,7 +470,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   }
 
-  createInvitroTestAgent(workbook: XLSX.WorkBook) {
+  getInvitroTestAgent(workbook: XLSX.WorkBook) {
     // Read the Fourth Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "3. Test Agent,Batch Number"
     const worksheetName = workbook.SheetNames[3];
@@ -441,10 +498,15 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
 
           if (worksheet[cellKey].v) {
-            if (worksheet[cellKey].v.trim() === 'Test Agent ID (Company Code) *') {
+            if (worksheet[cellKey].v.trim() === 'Test Agent ID (Company Code)') {
               this.invitroTestAgent.testAgentCompanyCode = this.getValue(worksheet[cellKeyValue]);
             } else if (worksheet[cellKey].v.trim() === 'Test Agent Name  (FDA) *') {
               this.invitroTestAgent.testAgent = this.getValue(worksheet[cellKeyValue]);
+
+              // ** Validate Required field
+              if (!this.invitroTestAgent.testAgent) {
+                this.requiredFieldMissingArray[0].testAgent = true;
+              }
             } else if (worksheet[cellKey].v.trim() === 'Test Agent Approval ID/UNII') {
               this.invitroTestAgent.testAgentApprovalId = this.getValue(worksheet[cellKeyValue]);
             } else if (worksheet[cellKey].v.trim() === 'Test Agent CAS Number') {
@@ -460,9 +522,12 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       } // for loop Column
     } // for loop Row
 
+    if (this.invitroTestAgent.testAgent) {
+      this.getSubstanceByNameExactMatch(this.invitroTestAgent.testAgent);
+    }
   }
 
-  createInvitroBatchNumber(workbook: XLSX.WorkBook) {
+  getInvitroBatchNumber(workbook: XLSX.WorkBook) {
     // Read the Fourth Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "3. Test Agent,Batch Number"
     const worksheetName = workbook.SheetNames[3];
@@ -490,8 +555,13 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           var cellKeyValue = XLSX.utils.encode_cell({ r: R, c: C + 1 });
 
           if (worksheet[cellKey].v) {
-            if (worksheet[cellKey].v.trim() === 'Batch Number') {
+            if (worksheet[cellKey].v.trim() === 'Batch Number *') {
               this.invitroResultInfo.batchNumber = this.getValue(worksheet[cellKeyValue]);
+
+              // ** Validate Required field
+              if (!this.invitroResultInfo.batchNumber) {
+                this.requiredFieldMissingArray[0].batchNumber = true;
+              }
             }
           } // if value is not null
         } // else
@@ -501,7 +571,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
   }
 
-  createInvitroControls(workbook: XLSX.WorkBook) {
+  getInvitroControls(workbook: XLSX.WorkBook) {
     // Read the Second Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "4. Assay Controls"
     const worksheetName = workbook.SheetNames[4];
@@ -518,26 +588,41 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         element["externalAssayId"] = this.replaceUndefinedValue(element["External Assay ID *"]);
         element["assayId"] = this.replaceUndefinedValue(element["Assay ID"]);
         element["control"] = this.replaceUndefinedValue(element["Control Substance *"]);
+        element["controlApprovalId"] = this.replaceUndefinedValue(element["Control Substance Approval ID"]);
         element["controlType"] = this.replaceUndefinedValue(element["Type of Control"]);
-        element["controlValueType"] = this.replaceUndefinedValue(element["Control Value Type"]);
-        element["controlValue"] = this.replaceUndefinedValue(element["Control Value"]);
-        element["controlValueUnits"] = this.replaceUndefinedValue(element["Control Value Units"]);
+        element["controlResultType"] = this.replaceUndefinedValue(element["Control Result Type"]);
+        element["controlReferenceValue"] = this.replaceUndefinedValue(element["Control Reference Value"]);
+        element["controlReferenceValueUnits"] = this.replaceUndefinedValue(element["Control Reference Value Units"]);
 
         // Delete Excel Object key
         delete element["External Assay Source *"];
         delete element["External Assay ID *"];
         delete element["Assay ID"];
-        delete element["Control Substance"];
+        delete element["Control Substance *"];
+        delete element["Control Substance Approval ID"];
         delete element["Type of Control"];
-        delete element["Control Value Type"];
-        delete element["Control Value"];
-        delete element["Control Value Units"];
+        delete element["Control Result Type"];
+        delete element["Control Reference Value"];
+        delete element["Control Reference Value Units"];
+
+        // create a row if it is empty
+        if (this.requiredFieldMissingArray[index] == null) {
+          this.requiredFieldMissingArray[index] = {};
+        }
+
+        // ** Validate Required field
+        if (!element["externalAssaySource"]) {
+          this.requiredFieldMissingArray[index].controlExternalAssaySource = true;
+        }
+        if (!element["externalAssayId"]) {
+          this.requiredFieldMissingArray[index].controlExternalAssayId = true;
+        }
       }
 
     });
   }
 
-  createInvitroResults(workbook: XLSX.WorkBook) {
+  getInvitroResults(workbook: XLSX.WorkBook) {
     // Read the Second Excel Spreadsheet, the worksheet index starts with 0.
     // Read Sheet "5. Assay Results"
     const worksheetName = workbook.SheetNames[5];
@@ -550,9 +635,9 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
     this.invitroResultsTemp.forEach((element, index) => {
       if (element) {
+        element["assaySet"] = this.replaceUndefinedValue(element["Assay Set"]);
         element["externalAssaySource"] = this.replaceUndefinedValue(element["External Assay Source *"]);
         element["externalAssayId"] = this.replaceUndefinedValue(element["External Assay ID *"]);
-        element["externalAssayUrl"] = this.replaceUndefinedValue(element["External Assay URL/Document Link"]);
         element["assayId"] = this.replaceUndefinedValue(element["Assay ID"]);
         let testDateNum = this.replaceUndefinedValue(element["Test Date (mm/dd/yyyy)"]);
         element["testAgentConcentration"] = this.replaceUndefinedValue(element["Test Agent Concentration"]);
@@ -578,10 +663,31 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
           element["testDate"] = testDate;
         }
 
+        // Convert Plasma Protein Added from "YES" or "NO" to boolean true and false
+        if (element["plasmaProteinAdded"]) {
+          if (element["plasmaProteinAdded"] === "YES") {
+            element["plasmaProteinAdded"] = true;
+          } else if (element["plasmaProteinAdded"] === "NO") {
+            element["plasmaProteinAdded"] = false;
+          }
+        }
+
+        // create a row if it is empty
+        if (this.requiredFieldMissingArray[index] == null) {
+          this.requiredFieldMissingArray[index] = {};
+        }
+        // ** Validate Required field
+        if (!element["externalAssaySource"]) {
+          this.requiredFieldMissingArray[index].resultExternalAssaySource = true;
+        }
+        if (!element["externalAssayId"]) {
+          this.requiredFieldMissingArray[index].resultExternalAssayId = true;
+        }
+
         // Delete Excel Object key
+        delete element["Assay Set"];
         delete element["External Assay Source *"];
         delete element["External Assay ID *"];
-        delete element["External Assay URL/Document Link"];
         delete element["Assay ID"];
         delete element["Test Date (mm/dd/yyyy)"];
         delete element["Test Agent Concentration"];
@@ -614,7 +720,13 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     return (value === undefined || value == null || value.length <= 0) ? "" : value;
   }
 
-  validateExcelImportData() {
+  validate() {
+
+    //this.checkControlAssayFoundInDatabase();
+
+    this.checkResultAssayFoundInDatabase();
+
+    /*
     let foundallAssays = 'true';
 
     // Validate if Assay already Exists into the database
@@ -649,6 +761,106 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     // Enable "Import into the Database" button
     this.disableImportButton = 'false';
   }
+  */
+
+  }
+
+  /*
+  checkControlAssayFoundInDatabase() {
+    let foundallAssays = 'true';
+
+    // Validate if Assay already Exists into the database
+    this.invitroControlsTemp.forEach((control, index) => {
+      if (control.externalAssaySource && control.externalAssayId) {
+
+        const invitroSubscribe = this.invitroPharmacologyService.getAssayByExternalAssay(control.externalAssaySource, control.externalAssayId).subscribe(assay => {
+          if (assay) {
+            // Assay Found in the Database
+            control.assayFoundInDb = 'true';
+          }
+          else {
+            // Assay NOT Found in the Database
+            control.assayFoundInDb = 'false';
+            foundallAssays = 'false';
+          }
+        }, error => {
+          control.assayFoundInDb = 'Error getting Assay';
+          console.log("Import Screeing data - error getting Assay");
+        }
+        );  // subscribe
+
+        this.subscriptions.push(invitroSubscribe);
+      } else {
+        foundallAssays = 'false';
+      }
+
+    });
+
+    // Enable "Import into the Database" button
+    this.disableImportButton = 'false';
+  }
+  */
+
+  checkResultAssayFoundInDatabase() {
+    let foundallAssays = 'true';
+    this.resultMessage = '';
+
+    // Validate if Assay already Exists into the database
+    this.invitroResultsTemp.forEach((result, index) => {
+
+      if (result.externalAssaySource && result.externalAssayId) {
+
+        this.resultMessage = 'Checking Assays in the database ...';
+
+        /*
+        // CONTROL ASSAY CHECK, check if Result Assays match control Assays
+        this.invitroControlsTemp.forEach(ctrl => {
+          if (ctrl) {
+            if ((ctrl.externalAssaySource) && (ctrl.externalAssayId)) {
+
+              // if Result and Control Assays match 
+              if ((ctrl.externalAssaySource.externalAssaySource === result.externalAssaySource)
+                && (ctrl.externalAssayId === result.externalAssayId)) {
+                controlAssayMatch = true;
+              }
+            }
+          } // if control object exists
+        }); // control loop
+        */
+
+        const invitroSubscribe = this.invitroPharmacologyService.getAssayByExternalAssay(result.externalAssaySource, result.externalAssayId).subscribe(assay => {
+          if (assay) {
+            // Assay Found in the Database
+            result.assayFoundInDb = 'true';
+
+            this.createNewScreeningData(assay, result);
+          }
+          else {
+            // Assay NOT Found in the Database
+            result.assayFoundInDb = 'false';
+            foundallAssays = 'false';
+          }
+
+          if (this.invitroResultsTemp.length === (index + 1)) {
+            this.resultMessage = '';
+          }
+
+        }, error => {
+          result.assayFoundInDb = 'Error getting Assay';
+          console.log("Import Screeing data - error getting Assay");
+        }
+        );  // subscribe
+
+        this.subscriptions.push(invitroSubscribe);
+      } else {
+        foundallAssays = 'false';
+      }
+
+    });
+
+    // Enable "Import into the Database" button
+    this.disableImportButton = 'false';
+  }
 
   createNewScreeningData(assay: InvitroAssayInformation, resultElement: any) {
     // Create new screening object
@@ -659,7 +871,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
     screening.screeningImportFileName = importfilename;
 
-    // Invitro Result
+    // Create new Invitro Control and Result
+    screening.invitroControls = this.createNewInvitroControl(resultElement);
     screening.invitroAssayResult = this.createInvitroResult(resultElement);
 
     // Push screening to Assay
@@ -685,6 +898,39 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     newObject = tempObject;
 
     return newObject;
+  }
+
+  createNewInvitroControl(resultObject: any): any {
+    let invitroControls: Array<InvitroControl> = [];
+
+    let tempResultObject = _.cloneDeep(resultObject);
+
+    // CONTROL ASSAY CHECK, check if Result Assays match control Assays
+    this.invitroControlsTemp.forEach(ctrl => {
+      if (ctrl) {
+        if ((ctrl.externalAssaySource) && (ctrl.externalAssayId)) {
+          // if Result and Control Assays match 
+          if ((ctrl.externalAssaySource === tempResultObject.externalAssaySource)
+            && (ctrl.externalAssayId === tempResultObject.externalAssayId)) {
+            let tempObject = _.cloneDeep(ctrl);
+
+            // Delete the keys that not needed
+            delete tempObject.externalAssaySource;
+            delete tempObject.externalAssayId;
+            delete tempObject.assayId;
+            delete tempObject.assayFoundInDb;
+
+            // Create new control object
+            let newObject: InvitroControl = {};
+            newObject = tempObject;
+
+            invitroControls.push(newObject);
+          }
+        }
+      } // if control object exists
+    }); // control loop
+
+    return invitroControls;
   }
 
   createInvitroResult(object: any): any {
@@ -770,6 +1016,98 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   }
   */
 
+  getSubstanceByNameExactMatch(ingredientName: string, fieldName?: string) {
+    let found = false;
+
+    const substanceSubscribe = this.generalService.getSubstanceByNameExactMatch(ingredientName).subscribe(response => {
+      if (response) {
+        if (response.content && response.content.length > 0) {
+
+          // Loop through the search results and if the Substance/Ingredient name is same as name in the search
+          // result, select that substance
+          let substances = response.content;
+          for (let i = 0; i < substances.length; i++) {
+            let substance = substances[i];
+            if (substance) {
+              if (substance.names && substance.names.length > 0) {
+
+                substance.names.forEach(nameObj => {
+                  if (nameObj && nameObj.name === ingredientName) {
+
+                    found = true;
+
+                    this.invitroTestAgent.testAgentSubstanceUuid = substance.uuid;
+                    
+                   // let substanceKey = this.generalService.getSubstanceKeyBySubstanceResolver(substance, this.substanceKeyTypeForInvitroPharmacologyConfig);
+
+                    /*     
+                    if (fieldName == this.TARGET_NAME) {
+                    
+                      element["targetNameSubstanceUuid"] = substance.uuid;
+                      element["targetNameSubstanceKey"] = substanceKey;
+                      element["targetNameSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
+                    
+                      if ((element["targetNameApprovalId"]) && (element["targetNameApprovalId"] !== substance.approvalID)) {
+                        this.setValidationMessage(this.TARGET_NAME + ' Approval ID "' + element["targetNameApprovalId"]  + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
+                      }
+                    } 
+                    else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
+                      element["humanHomologTargetSubstanceKey"] = substanceKey;
+                      element["humanHomologTargetSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
+                    
+                      if ((element["humanHomologTargetApprovalId"]) && (element["humanHomologTargetApprovalId"] !== substance.approvalID)) {
+                        this.setValidationMessage(this.HUMAN_HOMOLOG_TARGET + ' Approval ID "' + element["humanHomologTargetApprovalId"]  + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
+                      }
+                    } 
+                    else if (fieldName == this.LIGAND_SUBSTRATE) {
+                      element["ligandSubstrateSubstanceKey"] = substanceKey;
+                      element["ligandSubstrateSubstanceKeyType"] = this.substanceKeyTypeForInvitroPharmacologyConfig;
+                    
+                      if ((element["ligandSubstrateApprovalId"]) && (element["ligandSubstrateApprovalId"] !== substance.approvalID)) {
+                        this.setValidationMessage(this.LIGAND_SUBSTRATE + ' Approval ID "' + element["ligandSubstrateApprovalId"]  + '" in Excel file does not match with Approval ID "' + substance.approvalID + '" in the database. Please fix in the Excel file and then import again', validationMessages, index);
+                      }
+                    }  */
+
+                  } // if names match
+                }); // substance names for loop
+              } // if names exist
+            } // if substance exists
+          } // substances for loop
+
+          /*
+          if (found == false) {
+            this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
+          }
+
+          if (fieldName == this.TARGET_NAME) {
+            this.targetNameCheckCompleted = true;
+          } else if (fieldName == this.HUMAN_HOMOLOG_TARGET) {
+            this.humanHomologCheckCompleted = true;
+          } else if (fieldName == this.LIGAND_SUBSTRATE) {
+            this.ligandCheckCompleted = true;
+          }  */
+
+          // Enable Database Import button
+          //if ( this.targetNameCheckCompleted &&  this.targetNameCheckCompleted &&  this.targetNameCheckCompleted) {
+          //  this.disableImportButton = "false";
+         // }
+
+        } // if content > 0
+        else {
+         // this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
+        }
+      } // if response 
+      else {
+       // this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
+      }
+    }, error => {
+     // this.setValidationMessage(fieldName + ' "' + ingredientName + '" does not exist in the database. Please register this substance first and then import again', validationMessages, index);
+    }, () => {
+     
+    });
+    this.subscriptions.push(substanceSubscribe);
+  }
+
   importAssayJSONIntoDatabase() {
 
     this.loadingService.setLoading(true);
@@ -780,6 +1118,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       let firstAssayToSave = this.assayToSave[0];
 
       // Set Reference to Result Information Object
+      this.invitroResultInfo.invitroReferences = this.invtroReferences;
       this.invitroResultInfo.invitroLaboratory = this.invitroLaboratory;
       this.invitroResultInfo.invitroSponsor = this.invitroSponsor;
       this.invitroResultInfo.invitroSponsorReport = this.invitroSponsorReport;
@@ -815,7 +1154,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
                     assay.invitroAssayScreenings.forEach(screening => {
                       // Assign the first invitroAssayResultInformation here.
 
-                     // screening.invitroAssayResultInformation = savedResultInfo;
+                      // screening.invitroAssayResultInformation = savedResultInfo;
 
                       //  screening.invitroAssayResultInformation = {};
                       //  screening.invitroAssayResultInformation.id = savedResultInfo.id;
@@ -823,9 +1162,9 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
                     });
 
-                      assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = savedResultInfo;
-                      //assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = {};
-                      //assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id = savedResultInfo.id;
+                    assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = savedResultInfo;
+                    //assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation = {};
+                    //assay.invitroAssayScreenings[assay.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id = savedResultInfo.id;
 
                     // Assign the assay to service assay
                     this.invitroPharmacologyService.assay = assay;
@@ -873,7 +1212,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       json = this.assayToSave;
     }
 
-    let data = {jsonData: json, jsonFilename: jsonFilename};
+    let data = { jsonData: json, jsonFilename: jsonFilename };
 
     const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
       width: '90%',
@@ -884,6 +1223,40 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
+  }
+
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
+
+  validateDate(dateinput: any): boolean {
+    let isValid = true;
+    if ((dateinput !== null) && (dateinput.length > 0)) {
+      if ((dateinput.length < 8) || (dateinput.length > 10)) {
+        return false;
+      }
+      const split = dateinput.split('/');
+      if (split.length !== 3 || (split[0].length < 1 || split[0].length > 2) ||
+        (split[1].length < 1 || split[1].length > 2) || split[2].length !== 4) {
+        return false;
+      }
+      if (split.length === 3) {
+        const comstring = split[0] + split[1] + split[2];
+        for (let i = 0; i < split.length; i++) {
+          const valid = this.isNumber(split[i]);
+          if (valid === false) {
+            isValid = false;
+            break;
+          }
+        }
+      }
+    }
+    return isValid;
   }
 
   scrub(oldraw: any): any {

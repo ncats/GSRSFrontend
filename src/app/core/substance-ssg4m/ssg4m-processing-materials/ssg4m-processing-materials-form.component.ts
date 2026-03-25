@@ -13,9 +13,10 @@ import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dial
 import { SubstanceFormSsg4mStagesService } from '../ssg4m-stages/substance-form-ssg4m-stages.service';
 
 @Component({
-  selector: 'app-ssg4m-processing-materials-form',
-  templateUrl: './ssg4m-processing-materials-form.component.html',
-  styleUrls: ['./ssg4m-processing-materials-form.component.scss']
+    selector: 'app-ssg4m-processing-materials-form',
+    templateUrl: './ssg4m-processing-materials-form.component.html',
+    styleUrls: ['./ssg4m-processing-materials-form.component.scss'],
+    standalone: false
 })
 export class Ssg4mProcessingMaterialsFormComponent implements OnInit, OnDestroy {
 

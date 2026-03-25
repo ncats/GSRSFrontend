@@ -42,11 +42,9 @@ export class ProductService extends BaseHttpService {
   public showDeprecated = false;
   private searchKeys: { [structureSearchTerm: string]: string } = {};
 
-  apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
-  apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
-
-  // get service prefix url
-  restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
+  apiBaseUrlWithProductEntityUrl: string;
+  apiBaseUrlWithProductElistEntityUrl: string;
+  restApiPrefix: string;
 
   constructor(
     public http: HttpClient,
@@ -54,6 +52,10 @@ export class ProductService extends BaseHttpService {
     public utilsService: UtilsService
   ) {
     super(configService);
+    // Initialize fields that depend on configService
+    this.apiBaseUrlWithProductEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/products' + '/';
+    this.apiBaseUrlWithProductElistEntityUrl = this.configService.configData.apiBaseUrl + 'api/v1/productselist' + '/';
+    this.restApiPrefix = this.configService.configData && this.configService.configData.restApiPrefix || '';
   }
 
   getBulkSearchUrl(searchEntity: string, useServiceInUrl: boolean = false): string {
@@ -95,7 +97,6 @@ export class ProductService extends BaseHttpService {
     return new Observable(observer => {
 
       if (bulkQID != null && bulkQID.toString() != '') {
-
         // Perform bulk search
         this.productBulkSearch(
           searchTerm,
@@ -121,8 +122,8 @@ export class ProductService extends BaseHttpService {
 
         let params = new FacetHttpParams();
 
-        params = params.append('top', top.toString());
         params = params.append('skip', skip.toString());
+        params = params.append('top', top.toString());
         params = params.append('fdim', fdim.toString());
 
         if (view) {
@@ -218,7 +219,8 @@ export class ProductService extends BaseHttpService {
               options,
               pageSize,
               facets,
-              skip
+              skip,
+              order
             );
           } else {
             observer.next(response);
@@ -243,7 +245,8 @@ export class ProductService extends BaseHttpService {
     pageSize?: number,
     facets?: FacetParam,
     skip?: number,
-    view?: string
+    order?: string,
+    view?: string,
   ): void {
     // Get Buk Search Results
     this.getAsyncSearchResults(
@@ -254,7 +257,8 @@ export class ProductService extends BaseHttpService {
       facets,
       skip,
       view,
-      bulkSearchResponse.results
+      bulkSearchResponse.results,
+      order
     )
       .subscribe(bulkSearchStatusResponse => {
         // consider making API backend provide statusKey in JSON
@@ -282,7 +286,8 @@ export class ProductService extends BaseHttpService {
                 pageSize,
                 facets,
                 skip,
-                view
+                order,
+                view,
               );
             });
           }, error => {
@@ -307,9 +312,11 @@ export class ProductService extends BaseHttpService {
     facets?: FacetParam,
     skip?: number,
     view?: string,
-    url?: string
+    url?: string,
+    order?: string
   ): any {
 
+    // Get Bulk Search Results
     url = this.getBulkSearchUrl(searchEntity, true);
 
     if (url) {
@@ -332,6 +339,10 @@ export class ProductService extends BaseHttpService {
 
     if (querySearchTerm != null && querySearchTerm !== '') {
       params = params.append('q', querySearchTerm);
+    }
+
+    if (order != null && order !== '') {
+      params = params.append('order', order);
     }
 
     const options = {

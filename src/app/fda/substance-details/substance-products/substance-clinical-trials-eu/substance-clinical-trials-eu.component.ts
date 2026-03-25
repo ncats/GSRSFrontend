@@ -18,9 +18,10 @@ import * as _ from 'lodash';
 import { clinicalTrialSearchSortValues } from '../../../clinical-trials/clinical-trial-search-sort-values';
 
 @Component({
-  selector: 'app-substance-clinical-trials-eu',
-  templateUrl: './substance-clinical-trials-eu.component.html',
-  styleUrls: ['./substance-clinical-trials-eu.component.scss']
+    selector: 'app-substance-clinical-trials-eu',
+    templateUrl: './substance-clinical-trials-eu.component.html',
+    styleUrls: ['./substance-clinical-trials-eu.component.scss'],
+    standalone: false
 })
 
 export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
@@ -49,6 +50,8 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     'conditionsEU'
   ];
 
+  canExport: boolean = false;
+
   constructor(
     public gaService: GoogleAnalyticsService,
     private clinicalTrialService: ClinicalTrialService,
@@ -61,11 +64,9 @@ export class SubstanceClinicalTrialsEuropeComponent extends SubstanceDetailsBase
     super(gaService, clinicalTrialService);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadedComponents = this.configService.configData.loadedComponents || null;
-    this.authService.hasAnyRolesAsync('Admin', 'Updater', 'SuperUpdater').pipe(take(1)).subscribe(response => {
-      this.isAdmin = response;
-    });
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     if (this.substanceUuid) {
      this.getSubstanceClinicalTrialsEurope(null, 'initial');
     }

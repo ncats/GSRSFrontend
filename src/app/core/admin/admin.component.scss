@@ -1,40 +1,36 @@
 .admin-container {
-    padding-top:65px;
-    width:100%;
+  padding-top: 65px;
+  width: 100%;
 }
 
 .page-container {
-    align-items: center;
-    justify-content: center;
-    padding: 65px 5px 0 5px;
+  align-items: center;
+  justify-content: center;
+  padding: 65px 5px 0 5px;
 }
 
-
 .app-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    margin-top: 15px;
-    max-width: 1500px;
-    min-width: 1000px;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  margin-top: 15px;
+  max-width: 1500px;
+  min-width: 1000px;
+  margin-bottom: 10px;
 }
 
 .full-width {
-    width: 100%;
+  width: 100%;
 }
 
 .tab-label {
-    margin-left: 75px;
-
+  margin-left: 75px;
+  font-size: 18px;
 }
 
-::ng-deep .mat-tab-label {
-    font-size: 18px !important;
-}
 
 .admin-header {
-    font-size:18px;
-    font-weight: 400;
+  font-size: 18px;
+  font-weight: 400;
 }

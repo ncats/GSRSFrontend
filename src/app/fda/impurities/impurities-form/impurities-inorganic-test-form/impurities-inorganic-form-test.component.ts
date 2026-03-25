@@ -9,9 +9,10 @@ import { Impurities, ImpuritiesSubstance, ImpuritiesInorganicTest } from '../../
 import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
-  selector: 'app-impurities-inorganic-form-test',
-  templateUrl: './impurities-inorganic-form-test.component.html',
-  styleUrls: ['./impurities-inorganic-form-test.component.scss']
+    selector: 'app-impurities-inorganic-form-test',
+    templateUrl: './impurities-inorganic-form-test.component.html',
+    styleUrls: ['./impurities-inorganic-form-test.component.scss'],
+    standalone: false
 })
 export class ImpuritiesInorganicFormTestComponent implements OnInit {
 

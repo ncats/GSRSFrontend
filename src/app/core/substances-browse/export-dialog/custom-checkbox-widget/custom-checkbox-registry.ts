@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { CustomCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-checkbox-widget/custom-checkbox-widget.component';
 import { DefaultWidgetRegistry } from 'ngx-schema-form';
 import { CustomTextWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-text-widget/custom-text-widget.component';
@@ -7,6 +8,7 @@ import { CustomRadioWidgetComponent } from '@gsrs-core/substances-browse/export-
 import { CustomMultiCheckboxWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-multi-checkbox-widget/custom-multi-checkbox-widget.component';
 import { CustomTextareaWidgetComponent } from '@gsrs-core/substances-browse/export-dialog/custom-textarea-widget/custom-textarea-widget.component';
 
+@Injectable()
 export class MyWidgetRegistry extends DefaultWidgetRegistry {
   constructor() {
     super();

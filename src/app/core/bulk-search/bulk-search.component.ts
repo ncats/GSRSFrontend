@@ -20,12 +20,11 @@ import { BulkSearch } from './bulk-search.model';
   @Component({
     selector: 'app-bulk-search',
     templateUrl: './bulk-search.component.html',
-    styleUrls: ['./bulk-search.component.scss']
-  })
+    styleUrls: ['./bulk-search.component.scss'],
+    standalone: false
+})
   export class BulkSearchComponent implements OnInit, OnDestroy {
     loadedComponents: LoadedComponents;
-    showAudit: boolean;
-    isAdmin = false;
     isLoggedIn = false;
     showDeprecated = false;
     queryText: string;
@@ -61,7 +60,7 @@ import { BulkSearch } from './bulk-search.model';
     }
 
     ngOnInit() {
-
+      alert("GGGGGGGGGGGGGGGGG");
       this.loadingService.setLoading(true);
       this.showSpinner = true;  // Start progress spinner
 
@@ -82,8 +81,6 @@ import { BulkSearch } from './bulk-search.model';
         } else {
           this.showDeprecated = false;
         }
-        this.isAdmin = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
-        this.showAudit = this.authService.hasRoles('admin');
       });
 
       this.route.queryParams.subscribe(params => {

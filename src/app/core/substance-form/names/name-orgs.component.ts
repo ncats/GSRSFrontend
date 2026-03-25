@@ -7,9 +7,10 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-name-orgs',
-  templateUrl: './name-orgs.component.html',
-  styleUrls: ['./name-orgs.component.scss']
+    selector: 'app-name-orgs',
+    templateUrl: './name-orgs.component.html',
+    styleUrls: ['./name-orgs.component.scss'],
+    standalone: false
 })
 export class NameOrgsComponent implements OnInit {
   private privateNameOrgs: Array<SubstanceNameOrg>;
