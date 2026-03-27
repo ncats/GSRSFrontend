@@ -1,134 +1,186 @@
-<div class="message" [ngClass]="{'error-msg' : isError}">{{message}}</div>
-<div mat-dialog-title class = "title" *ngIf = "!submitted">
-        <h1 *ngIf = "newUser">
-         Add User
-        </h1>
-        <h1 *ngIf = "!newUser">
-        Edit User
-        </h1>
-</div>
-<div mat-dialog-content *ngIf = "user && user.user && !submitted">
-<div *ngIf = "loading === false">
-    <div class = "form-row">
-        <div class="username">
-        <mat-form-field class = "user-field">
-            <mat-label>Username</mat-label>
-                <input matInput placeholder="user name" [(ngModel)]="user.user.username" required name="name" />
+<div class="message" [ngClass]="{ 'error-msg': isError }">{{ message }}</div>
+<h2 mat-dialog-title *ngIf="!submitted">{{ newUser ? 'Add User' : 'Edit User' }}</h2>
+<div mat-dialog-content *ngIf="user && user.user && !submitted">
+  <div *ngIf="loading === false">
+    <div class="form-row">
+      <div class="username">
+        <mat-form-field class="user-field">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            placeholder="user name"
+            [(ngModel)]="user.user.username"
+            required
+            name="name"
+          />
         </mat-form-field>
-        </div>
-        <div class="email">
-            <mat-form-field class = "user-field">
-                    <mat-label>Email</mat-label>
-                    <input matInput placeholder="email" [(ngModel)]="user.user.email"  name="Email" />
-            </mat-form-field>
-            </div>
-            <div class = "active">
-                    <mat-checkbox [(ngModel)] = 'user.active'  >
-                            active
-                    </mat-checkbox>
-            </div>
-        </div>
-    <div class = "form-row">
-
-        <div class = "password-column" *ngIf = "!newUser">
-              <div>
-            <button (click) = "changePassword = !changePassword" mat-button class = " mat-flat-button">
-                   {{!changePassword?"Change Password":"Cancel"}}  
-                </button>
-            </div>
-                    <span *ngIf = "changePassword === true" >
-                            <div>
-                                <mat-form-field>
-                                    <input matInput type = "password" [(ngModel)] = "newPassword" placeholder="new password" required name="Password" />
-                                 </mat-form-field> 
-                            </div>
-                                <div>
-                                    <mat-form-field>
-                                        <input matInput type = "password" [(ngModel)] = "newPasswordConfirm" placeholder="confirm new password" required name="Password" />
-                                     </mat-form-field>
-                                </div>
-                           
-                           
-                                <div>
-                            <button mat-button class = " mat-primary mat-flat-button" (click) = "validatePassword()">Submit Change</button>
-                            </div>
-                    </span>
-        </div>
-        <div class = "password-column" *ngIf = "newUser">
-            <div>
-                <mat-form-field>
-                    <input matInput type = "password" [(ngModel)] = "newPassword" placeholder="new password" required name="Password" />
-                </mat-form-field> 
-            </div>
-                <div>
-                    <mat-form-field>
-                        <input matInput type = "password" [(ngModel)] = "newPasswordConfirm" placeholder="confirm new password" required name="Password" />
-                    </mat-form-field>
-                </div>
-            
-        
-                <div>
-            </div>
+      </div>
+      <div class="email">
+        <mat-form-field class="user-field">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            placeholder="email"
+            [(ngModel)]="user.user.email"
+            name="Email"
+          />
+        </mat-form-field>
+      </div>
+      <div class="active">
+        <mat-checkbox [(ngModel)]="user.active"> active </mat-checkbox>
       </div>
     </div>
-    
-    
-<div class = "form-row">
-<div class = "groups-group"><span class = "mat-header-cell box-label">Groups</span>
-            <div *ngFor = "let group of groups" class = "group-checkbox">
-                <mat-checkbox [(ngModel)] = 'group.hasGroup'>
-               <div class = "group-name">
-                {{group.name}}
-               </div>
-                </mat-checkbox>
-            </div>
-            <mat-form-field class = "group-field">
-                    <input matInput [(ngModel)] = "newGroup" placeholder = "new group" class = "group-input" />
-                    </mat-form-field>
-</div>
-<div class = "roles-group box-label"><span class = "mat-header-cell">Roles</span>
-        <div *ngFor = "let role of assignableRoles">
-                <mat-checkbox [(ngModel)] = 'role.assigned'> 
-                 {{role.roleName}}
-                </mat-checkbox>
+    <div class="form-row">
+      <div class="password-column" *ngIf="!newUser">
+        <div>
+          <button
+            (click)="changePassword = !changePassword"
+            mat-button
+            class="mat-flat-button"
+          >
+            {{ !changePassword ? "Change Password" : "Cancel" }}
+          </button>
         </div>
-</div>
-</div>
-    
-</div>
-    <div class = "form-row">
-<div class = "loading-container" *ngIf = "loading === true">
-        <mat-progress-spinner
-          class="spinner"
-          [color]="primary"
-          mode = "indeterminate">
+        <span *ngIf="changePassword === true">
+          <div>
+            <mat-form-field>
+              <input
+                matInput
+                type="password"
+                [(ngModel)]="newPassword"
+                placeholder="new password"
+                required
+                name="Password"
+              />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <input
+                matInput
+                type="password"
+                [(ngModel)]="newPasswordConfirm"
+                placeholder="confirm new password"
+                required
+                name="Password"
+              />
+            </mat-form-field>
+          </div>
+
+          <div>
+            <button
+              mat-button
+              class="mat-primary mat-flat-button"
+              (click)="validatePassword()"
+            >
+              Submit Change
+            </button>
+          </div>
+        </span>
+      </div>
+      <div class="password-column" *ngIf="newUser">
+        <div>
+          <mat-form-field>
+            <input
+              matInput
+              type="password"
+              [(ngModel)]="newPassword"
+              placeholder="new password"
+              required
+              name="Password"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <input
+              matInput
+              type="password"
+              [(ngModel)]="newPasswordConfirm"
+              placeholder="confirm new password"
+              required
+              name="Password"
+            />
+          </mat-form-field>
+        </div>
+
+        <div></div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="groups-group">
+        <span class="mat-header-cell box-label">Groups</span>
+        <div *ngFor="let group of groups" class="group-checkbox">
+          <mat-checkbox [(ngModel)]="group.hasGroup">
+            <div class="group-name">
+              {{ group.name }}
+            </div>
+          </mat-checkbox>
+        </div>
+        <mat-form-field class="group-field">
+          <mat-label>new group</mat-label>
+          <input matInput [(ngModel)]="newGroup" class="group-input" />
+        </mat-form-field>
+      </div>
+      <div class="roles-group box-label">
+        <span class="mat-header-cell">Roles</span>
+        <div *ngFor="let role of assignableRoles">
+          <mat-checkbox [(ngModel)]="role.assigned">
+            {{ role.roleName }}
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="loading-container" *ngIf="loading === true">
+      <mat-progress-spinner
+        class="spinner"
+        [color]="primary"
+        mode="indeterminate"
+      >
       </mat-progress-spinner>
+    </div>
+  </div>
 </div>
+<div *ngIf="submitted" class="submitted-container">
+  <div class="submit-message">
+    User successfully {{ newUser ? "added" : "edited" }}!
+  </div>
 </div>
 
+<div mat-dialog-actions *ngIf="!submitted">
+  <button mat-flat-button color="primary" matDialogClose>Cancel</button>
+
+  <span class="middle-fill"></span>
+
+  <button
+    mat-flat-button
+    color="primary"
+    *ngIf="!newUser"
+    [disabled]="
+      !user || !user.user || !user.user.username || user.user.username === ''
+    "
+    (click)="saveChanges()"
+  >
+    Save
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    *ngIf="newUser"
+    [disabled]="
+      !user || !user.user || !user.user.username || user.user.username === ''
+    "
+    (click)="addUser()"
+  >
+    Add
+  </button>
 </div>
-<div *ngIf = "submitted" class = "submitted-container">
-<div class = "submit-message"> User successfully {{newUser? 'added': 'edited'}}!</div>
+
+<div mat-dialog-actions *ngIf="submitted">
+  <span class="middle-fill"></span>
+
+  <button mat-flat-button color="primary" (click)="succesClose()">Close</button>
 </div>
-
-<div mat-dialog-actions *ngIf = "!submitted">
-        <button mat-flat-button color="primary" matDialogClose>Cancel</button>
-      
-        <span class="middle-fill"></span>
-
-      <button mat-flat-button color="primary" *ngIf = "!newUser" [disabled] = "!user || !user.user || !user.user.username || user.user.username === ''" 
-       (click) = "saveChanges()">Save</button>
-      <button mat-flat-button color="primary" *ngIf = "newUser" [disabled] = "!user || !user.user || !user.user.username || user.user.username === ''" 
-      (click) = "addUser()">Add</button>
-
-      
-      </div>
-
-      <div mat-dialog-actions *ngIf = "submitted">
-      
-        <span class="middle-fill"></span>
-
-        <button mat-flat-button color="primary" (click) = "succesClose()">Close</button>
-     
-      
-      </div>

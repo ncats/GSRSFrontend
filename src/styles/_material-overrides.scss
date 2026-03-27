@@ -828,6 +828,27 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
+// User Edit dialog
+.user-edit-dialog {
+  .mat-mdc-dialog-title {
+    font-size: 40px !important;
+    font-weight: bold !important;
+  }
+
+  .mat-mdc-dialog-content {
+    padding: 10px 24px !important;
+    max-height: none !important;
+    overflow-y: unset !important;
+  }
+
+  .mat-mdc-dialog-container,
+  .mdc-dialog__surface {
+    height: unset !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+  }
+}
+
 // Cross Entity Search dialog — MDC caps surface at 560px by default; override per panel class
 .cross-entity-search-dialog {
   .mdc-dialog__surface {
@@ -857,6 +878,12 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-mdc-dialog-content {
   font-size: 14px;
   padding: 0 24px;
+}
+
+.mat-mdc-dialog-inner-container {
+  height: fit-content !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
 }
 
 .mat-mdc-dialog-actions {
