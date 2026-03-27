@@ -145,14 +145,7 @@
       "title": "Substance Dependencies",
       "filters": [
         {
-          "filterName": "exists",
-          "propertyToCheck": "references"
-        },
-        {
-          "filterName": "equals_in_array",
-          "propertyToCheck": "references",
-          "value": "IMAGE REFERENCE",
-          "propertyInArray": "docType"
+          "filterName": "showDependenciesFilter"
         }
       ]
     },

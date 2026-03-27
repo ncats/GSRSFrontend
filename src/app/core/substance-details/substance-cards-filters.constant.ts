@@ -42,6 +42,10 @@ export const substanceCardsFilters: Array<SubstanceCardFilter> = [
     {
         name: 'isInGroups',
         filter: groupFilter
+    },
+    {
+         name: "showDependenciesFilter",
+         filter: showDependenciesFilter
     }
 ];
 
@@ -209,6 +213,41 @@ export function substanceRelationshipsFilter(
             }
         }
         observer.next(isApproved);
+        observer.complete();
+    });
+}
+
+export function showDependenciesFilter(
+    substance: SubstanceDetail,
+    filter: SubstanceCardFilterParameters
+): Observable<boolean> {
+    const requiredCodeSystem = "POWO";
+    const requiredClass = "structurallyDiverse";
+    const requiredReferenceType = "IMAGE REFERENCE";
+
+    return new Observable(observer => {
+
+        let showDependencies = false;
+
+        if (substance.codes && substance.codes.length > 0 && substance.substanceClass ===  requiredClass) {
+
+            for (let i = 0; i < substance.codes.length; i++) {
+                if(requiredCodeSystem === substance.codes[i].codeSystem && 
+                    substance.codes[i].url && substance.codes[i].url.length > 0) {
+                        showDependencies = true;
+                    }
+                } 
+        }
+        if( !showDependencies && substance.references && substance.references.length >0) {
+            for (let i = 0; i < substance.references.length; i++) {
+                if( substance.references[i].docType === requiredReferenceType 
+                    && substance.references[i].uploadedFile
+                    && substance.references[i].uploadedFile.length > 0 ) {
+                        showDependencies = true;
+                }
+            }
+        }
+        observer.next(showDependencies);
         observer.complete();
     });
 }
