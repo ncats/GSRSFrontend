@@ -172,7 +172,8 @@ showInactiveUsers(): void {
         data: {'user': response},
         width: '800px',
         autoFocus: false,
-      disableClose: true
+        disableClose: true,
+        panelClass: 'user-edit-dialog'
       });
       this.overlayContainer.style.zIndex = '1002';
       const dialogSubscription = dialogRef.afterClosed().subscribe(resp => {
@@ -200,7 +201,8 @@ showInactiveUsers(): void {
       data: {userID: userID, submission: false},
       width: '800px',
       autoFocus: false,
-      disableClose: true
+      disableClose: true,
+      panelClass: 'user-edit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
@@ -236,7 +238,8 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
         data: {userID: response.id, submission: true},
         width: '800px',
         autoFocus: false,
-        disableClose: true
+        disableClose: true,
+        panelClass: 'user-edit-dialog'
       });
       this.overlayContainer.style.zIndex = '1002';
       const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
@@ -261,7 +264,8 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
         data: {userID: response.id, submission: true},
         width: '800px',
         autoFocus: false,
-        disableClose: true
+        disableClose: true,
+        panelClass: 'user-edit-dialog'
       });
       this.overlayContainer.style.zIndex = '1002';
       const dialogSubscription = dialogRef.afterClosed().subscribe(response1 => {
@@ -281,7 +285,8 @@ updateLocalData(response: any, index?: number, id?: number, username?: string ) 
       data: {type: 'add', submission: false},
       width: '800px',
       autoFocus: false,
-      disableClose: true
+      disableClose: true,
+      panelClass: 'user-edit-dialog'
     });
     this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {

@@ -47,9 +47,6 @@
   margin-top: 5px;
 }
 
-::ng-deep .mat-dialog-content {
-  padding: 10px 24px !important;
-}
 
 .message {
   margin: auto;
@@ -67,10 +64,6 @@
   padding-bottom: 10px;
 }
 
-::ng-deep .mat-mdc-dialog-container {
-  height: unset !important;
-  max-height: 90%;
-}
 
 ::ng-deep .mdc-label {
   word-break: break-word !important;
@@ -97,7 +90,3 @@
   font-size: 20px;
 }
 
-.title {
-  font-size: 14px;
-  font-weight: 500;
-}
