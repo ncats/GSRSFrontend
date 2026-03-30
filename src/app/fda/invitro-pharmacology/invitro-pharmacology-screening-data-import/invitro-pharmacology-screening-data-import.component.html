@@ -9,6 +9,11 @@
 
     <!-- Import Assay JSON into the Database -->
     <div class="divflex marginleft50px" *ngIf="canUpdate">
+      <div class="marginright30px">
+        <button mat-flat-button color="primary" (click)="validate()" [disabled]="disableValidateButton">
+          Validate Assays</button>
+      </div>
+
       <div>
         <button mat-flat-button color="primary" (click)="importAssayJSONIntoDatabase()"
           [disabled]="disableImportButton">
@@ -45,12 +50,34 @@
 
       </div> <!-- class divflex -->
 
-      <!-- DISPLAY JSON -->
-      <!--
-      <div *ngIf="message">
-        {{message}}
-      </div>
-      -->
+      <!-- ***** DIALOG POPUP: SAVING PROGRESS BEGIN *************** -->
+      <ng-template #progressDialogTemplate>
+        <h1 mat-dialog-title>Importing Assays</h1>
+
+        <div mat-dialog-content>
+          <!-- Main status count that will update live -->
+          <p style="font-size: 1.2em; text-align: center; margin: 20px 0;">
+            <strong>Saved {{ savedCount }} of {{ totalAssays }} Assays</strong>
+          </p>
+
+          <!-- A message to show the current action or final status -->
+          <p style="text-align: center;">{{ progressMessage }}</p>
+
+          <!-- This section will only appear if an error occurs -->
+          <div *ngIf="isError" class="error-panel" style="margin-top: 15px; padding: 10px; background-color: #fdd;">
+            <h4>An error occurred:</h4>
+            <p>{{ errorMessage }}</p>
+          </div>
+        </div>
+
+        <div mat-dialog-actions align="end">
+          <!-- This button is disabled until the process is complete or has failed -->
+          <button mat-raised-button color="primary" [mat-dialog-close]="true" [disabled]="!isComplete && !isError">
+            Close
+          </button>
+        </div>
+      </ng-template>
+      <!-- ***** DIALOG POPUP: SAVING PROGRESS END *************** -->
 
       <!-- Display Data from Excel file to import into the database -->
       <div class="divflex margintop30px font13px">
@@ -420,7 +447,7 @@
                 </td>
 
                 <td>{{result.assaySet}}</td>
-                
+
                 <td>
                   <div *ngIf="result.assayFoundInDb && result.assayFoundInDb == 'false'; else foundAssaySource">
                     <span class="colorred"><b>{{result.externalAssaySource}}</b></span>
