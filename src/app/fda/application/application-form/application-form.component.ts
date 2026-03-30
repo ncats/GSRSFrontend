@@ -253,6 +253,12 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
           // Validate Ingredient Average, Low, High, LowLimit, HighLimit should be integer/number
           elementProd.applicationIngredientList.forEach(elementIngred => {
             if (elementIngred != null) {
+              
+              // Trim Applicant Ingredient Name
+              if (elementIngred.applicantIngredName) {
+                elementIngred.applicantIngredName = elementIngred.applicantIngredName.trim();
+              }
+              
               if (elementIngred.average) {
                 if (this.isNumber(elementIngred.average) === false) {
                   this.setValidationMessage('Average must be a number');
@@ -522,7 +528,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
     } else {
       const isValid = this.validateSubmitDateWithStatusDate(this.application.submitDate, this.application.statusDate);
       if (isValid === false) {
-        this.submitDateMessage = 'Submit Date should be earlier than Status Date;';
+        this.submitDateMessage = 'Submit Date should be earlier than Status Date';
       }
     }
   }
@@ -539,7 +545,7 @@ export class ApplicationFormComponent implements OnInit, AfterViewInit, OnDestro
       } else {
         isValid = this.validateSubmitDateWithStatusDate(this.application.submitDate, this.application.statusDate);
         if (isValid === false) {
-          this.submitDateMessage = 'Submit Date should be earlier than Status Date;';
+          this.submitDateMessage = 'Submit Date should be earlier than Status Date';
         }
       }
     }
