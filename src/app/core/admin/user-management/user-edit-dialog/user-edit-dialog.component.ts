@@ -7,6 +7,7 @@ import { AuthService, Auth } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { AssignableRole, UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 import { Router } from '@angular/router';
+import { ConfigService } from "../../../config/config.service";
 
 @Component({
     selector: 'app-user-edit-dialog',
@@ -33,6 +34,7 @@ export class UserEditDialogComponent implements OnInit {
   isError: boolean = false;
   availableRoleNames: string[];
   assignableRoles: AssignableRole[];
+  selectedRole: string;
 
   roles = [
     {name: 'Query', hasRole: false},
@@ -47,7 +49,8 @@ export class UserEditDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
     private authService: AuthService,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private configService: ConfigService,
   ) {
     this.user = data.user;
     this.userID = data.userID;
@@ -164,12 +167,7 @@ export class UserEditDialogComponent implements OnInit {
       this.message = 'Cancel or submit new password to save other changes';
     } else {
       this.isError = false;
-      const rolesArr = [];
-      this.assignableRoles.forEach(role => {
-        if (role.assigned) {
-          rolesArr.push(role.roleName);
-        }
-      });
+      const rolesArr = [this.selectedRole];
       const groups = [];
       this.groups.forEach(group => {
         if (group.hasGroup ) {
@@ -227,12 +225,7 @@ export class UserEditDialogComponent implements OnInit {
   addUser(): void {
     this.isError = false;
     if (this.newPassword === this.newPasswordConfirm) {
-      const rolesArr = [];
-      this.assignableRoles.forEach(role => {
-        if (role.assigned) {
-          rolesArr.push(role.roleName);
-        }
-      });
+      const rolesArr = [this.selectedRole];
       const groups = [];
       this.groups.forEach(group => {
         if (group.hasGroup ) {
@@ -353,16 +346,56 @@ export class UserEditDialogComponent implements OnInit {
     return false;
   }
 
+  private getRoleNumericValue(roleName: string): number {
+    if(!roleName || roleName === null || roleName.length ==- 0 ) return 
+    (this.configService.configData.roleSortingConfig && this.configService.configData.roleSortingConfig["null"] != null )
+    ? this.configService.configData.roleSortingConfig["null"] : 0;
+
+    if(roleName.toUpperCase() in this.configService.configData.roleSortingConfig) {
+      return this.configService.configData.roleSortingConfig[roleName.toUpperCase()];
+    }
+    return 1;
+  }
+
   private setupAssignableRoles() {
     this.assignableRoles = [];
     this.adminService.getAllAvailableRoles().subscribe(roleNames => {
-    this.availableRoleNames = roleNames;
-    this.availableRoleNames.forEach(r=>{
-      let hasRole:boolean = this.userHasRole(r);
-      let newRole = {roleName: r, assigned: hasRole };
-      this.assignableRoles.push(newRole);
-     })
-   });
+      this.availableRoleNames = roleNames;
+      this.availableRoleNames.forEach(r=>{
+        let hasRole:boolean = this.userHasRole(r);
+        let newRole = {roleName: r, assigned: hasRole };
+        this.assignableRoles.push(newRole);
+      });
+      this.assignableRoles.sort( (role1: AssignableRole,  role2: AssignableRole )=> {
+        return this.getRoleNumericValue(role2.roleName) - this.getRoleNumericValue(role1.roleName); 
+      });
+      for( let r in this.user.roleNames) {
+        let role =this.user.roleNames[r];
+        let roleValue = this.getRoleNumericValue(role);
+        for( let role2 in this.assignableRoles) {
+          //look for another role with a higher soft value.  If found, set assigned for this role to false
+          if( role2 !== role) {
+            let role2Value = this.getRoleNumericValue(role2);
+            if( role2Value > roleValue) {
+              this.assignableRoles[role].assigned = false;
+            }
+          }
+        }
+      }
+      this.selectedRole = this.getHighestPriorityRole();
+     });
+   }
+
+  getHighestPriorityRole(): string {
+    if(this.user.roles === null || this.user.roles ===0) {
+      return '';
+    }
+    let selectedRoleName= this.user.roles.reduce((highest, role) => 
+      this.getRoleNumericValue(role.role) > this.getRoleNumericValue(highest.role) 
+        ? role 
+        : highest
+    ).role;
+    return selectedRoleName;
   }
 
 }
