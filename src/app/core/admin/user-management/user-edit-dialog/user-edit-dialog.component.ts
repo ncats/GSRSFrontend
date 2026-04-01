@@ -369,19 +369,6 @@ export class UserEditDialogComponent implements OnInit {
       this.assignableRoles.sort( (role1: AssignableRole,  role2: AssignableRole )=> {
         return this.getRoleNumericValue(role2.roleName) - this.getRoleNumericValue(role1.roleName); 
       });
-      for( let r in this.user.roleNames) {
-        let role =this.user.roleNames[r];
-        let roleValue = this.getRoleNumericValue(role);
-        for( let role2 in this.assignableRoles) {
-          //look for another role with a higher soft value.  If found, set assigned for this role to false
-          if( role2 !== role) {
-            let role2Value = this.getRoleNumericValue(role2);
-            if( role2Value > roleValue) {
-              this.assignableRoles[role].assigned = false;
-            }
-          }
-        }
-      }
       this.selectedRole = this.getHighestPriorityRole();
      });
    }
