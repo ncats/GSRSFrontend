@@ -40,6 +40,7 @@ export interface Config {
     relationshipsVisualizationUri?: string;
     isPfdaVersion?: boolean;
     customToolbarComponent?: string;
+    ssg4mExportSvg?: boolean;
     disableSessionRefresh?: boolean;
     sessionRefreshOnActiveUserOnly?: boolean;
     sessionExpirationWarning?: SessionExpirationWarning;

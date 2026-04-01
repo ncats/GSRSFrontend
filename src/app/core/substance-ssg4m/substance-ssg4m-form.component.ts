@@ -129,6 +129,7 @@ export class SubstanceSsg4ManufactureFormComponent
   configSsg4Form: any;
   configSettingReferences = false;
   private submitSubscription: any = null;
+  ssg4mExportSvg: boolean;
 
   private jsLibScriptUrls = [
     `${environment.baseHref || ""}assets/pathway/cola.min.js`,
@@ -165,6 +166,7 @@ export class SubstanceSsg4ManufactureFormComponent
     this.isAuthenticated = this.authService.getUser() !== "";
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
+    this.ssg4mExportSvg = this.configService.configData.ssg4mExportSvg || false;
 
     this.getConfigSettings();
     if (this.configSsg4Form) {
@@ -1435,7 +1437,7 @@ export class SubstanceSsg4ManufactureFormComponent
   }
 
   async submit(): Promise<void> {
-    await this.expandStepView();
+    this.ssg4mExportSvg && await this.expandStepView();
     this.isLoading = true;
     this.loadingService.setLoading(true);
     this.approving = false;
@@ -1461,8 +1463,8 @@ export class SubstanceSsg4ManufactureFormComponent
       }
     }, 8000);
 
-    // Export step view as SVG; Disabled for PFDA
-    await this.exportStepView(document);
+    // Export step view as SVG; default disabled
+    this.ssg4mExportSvg && await this.exportStepView(document);
 
     // Prepare final JSON and call save endpoint
     jsonValue = this.prepareFinalJson();
