@@ -233,11 +233,11 @@ export class AuthService {
 
   hasRoles(...roles: Array<string>): boolean {
     const rolesList = [...roles];
-    const checkableRoles = this._auth.roles.map((x: Role) =>
-      x.role.toUpperCase(),
-    );
 
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
+      const checkableRoles = this._auth.roles.map((x: Role) =>
+        x.role.toUpperCase(),
+      );
       for (const r of rolesList) {
         let role = r.toUpperCase();
         if (checkableRoles.indexOf(role) === -1) {
@@ -288,10 +288,11 @@ export class AuthService {
 
   hasAnyRoles(...roles: Array<string>): boolean {
     const rolesList = [...roles];
-    const checkableRoles = this._auth.roles.map((x: Role) =>
-      x.role.toUpperCase(),
-    );
+
     if (this._auth && this._auth.roles && rolesList && rolesList.length) {
+      const checkableRoles = this._auth.roles.map((x: Role) =>
+        x.role.toUpperCase(),
+      );
       for (const r of rolesList) {
         let role = r.toUpperCase();
         if (checkableRoles.indexOf(role) === -1) {

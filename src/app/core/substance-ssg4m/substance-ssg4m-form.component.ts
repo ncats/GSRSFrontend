@@ -1363,7 +1363,7 @@ export class SubstanceSsg4ManufactureFormComponent
       await this.delay(200);
     }
 
-    const allTabs = document.querySelectorAll(".mat-tab-label");
+    const allTabs = document.querySelectorAll(".mat-mdc-tab");
     const tabStepView = Array.from(allTabs).find(
       (tab) => tab.textContent.trim() === "Step View",
     ) as HTMLElement;

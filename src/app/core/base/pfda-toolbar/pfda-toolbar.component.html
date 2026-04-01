@@ -42,6 +42,7 @@
   <span class="middle-fill"></span>
 
   <app-substance-text-search class="top-search" [searchValue]="searchValue"
+    styling="header"
     (searchPerformed)="processSubstanceSearch($event)" eventCategory="topSearch" (opened)="increaseMenuZindex()"
     (closed)="removeZindex()">
   </app-substance-text-search>

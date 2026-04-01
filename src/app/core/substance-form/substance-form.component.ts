@@ -98,8 +98,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
-  isAdmin: boolean;
-  isUpdater: boolean;
   isPfdaVersion: boolean = false;
   canUpdate: boolean;
   canMakeAdvancedEdits: boolean;
@@ -321,8 +319,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
-    this.isAdmin = this.authService.hasRoles('admin');
-    this.isUpdater = this.authService.hasAnyRoles('Updater', 'SuperUpdater');
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;
     this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
