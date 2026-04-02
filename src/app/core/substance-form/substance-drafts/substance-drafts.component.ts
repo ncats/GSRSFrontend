@@ -297,6 +297,8 @@ export class SubstanceDraftsComponent implements OnInit {
   submitValid() {
     this.formState = FormState.SUBMISSION;
     this.isLoading = true;
+    let completedCount = 0;
+    const submittableDrafts = this.validatedDrafts.filter(draft => draft.validationResult);
     this.validatedDrafts.forEach(draft => {
       if (!draft.validationResult) {
         draft.submitStatus = SubmissionStatus.CANNOT_BE_SUBMITTED;
@@ -310,8 +312,10 @@ export class SubstanceDraftsComponent implements OnInit {
         this.substanceService.saveSubstance(draft.json.substance, 'import').subscribe(substance => {
           draft.submitStatus = SubmissionStatus.SUCCESS;
           draft.fileUrl = substance.fileUrl;
-          this.isLoading = false;
-
+          completedCount++;
+          if (completedCount === submittableDrafts.length) {
+            this.isLoading = false;
+          }
         }, error => {
           draft.submitStatus = SubmissionStatus.ERROR;
           result.isSuccessfull = false;
@@ -319,6 +323,10 @@ export class SubstanceDraftsComponent implements OnInit {
             result.validationMessages = error.error.validationMessages;
           } else {
             result.serverError = error;
+          }
+          completedCount++;
+          if (completedCount === submittableDrafts.length) {
+            this.isLoading = false;
           }
         });
       }
