@@ -326,7 +326,7 @@
 
           <div class="row">
             <h1 class="home">{{ homeHeader }}</h1>
-            <div style="padding-left: 15px" [innerHTML]="homeContents"></div>
+            <div class="home-contents" style="padding-left: 15px" [innerHTML]="homeContents"></div>
           </div>
           <mat-divider class="divide-test"></mat-divider>
 
@@ -414,8 +414,8 @@
         <mat-card *ngIf="usefulLinks?.length" class="home-card">
           <h2 class="home" style="padding-top: 15px">Helpful Resources</h2>
         </mat-card>
-        <mat-grid-list cols="2" class="useful-cards" gutterSize="15px">
-          <mat-grid-tile *ngFor="let usefulLink of usefulLinks">
+        <div class="useful-cards">
+          <div class="useful-card-wrapper" *ngFor="let usefulLink of usefulLinks">
             <mat-card class="temprow right-link left-link">
               <h3 class="resource-link">
                 <a
@@ -452,8 +452,8 @@
                 [innerHtml]="usefulLink.description"
               ></div>
             </mat-card>
-          </mat-grid-tile>
-        </mat-grid-list>
+          </div>
+        </div>
 
         <ng-template
           #helpfulResourceModal
