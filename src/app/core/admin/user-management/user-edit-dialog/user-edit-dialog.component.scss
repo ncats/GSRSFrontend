@@ -90,3 +90,7 @@
   font-size: 20px;
 }
 
+.radio-item {
+  display: block !important;  // Override Material inline flex
+  margin-bottom: 8px;
+}
