@@ -128,7 +128,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   approvalType = 'lastEditedBy';
   previousState: number;
   useApprovalAPI = false;
-    featuresOnly = false;
+  featuresOnly = false;
+  userCanChangeDefinitionVisibility = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -330,6 +331,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
     this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
     this.userCanMakePublic = await this.authService.hasSpecificPrivilege('Make Records Public');
+    this.userCanChangeDefinitionVisibility = await this.authService.hasSpecificPrivilege('Change Definition Visibility');
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
