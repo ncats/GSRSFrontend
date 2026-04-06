@@ -351,7 +351,9 @@ export class UserEditDialogComponent implements OnInit {
     (this.configService.configData.roleSortingConfig && this.configService.configData.roleSortingConfig["null"] != null )
     ? this.configService.configData.roleSortingConfig["null"] : 0;
 
-    if(roleName.toUpperCase() in this.configService.configData.roleSortingConfig) {
+    let roleUpper = roleName?.toUpperCase();
+    if (roleUpper && this.configService.configData?.roleSortingConfig 
+      && Object.hasOwn(this.configService.configData.roleSortingConfig, roleUpper)) {
       return this.configService.configData.roleSortingConfig[roleName.toUpperCase()];
     }
     return 1;
