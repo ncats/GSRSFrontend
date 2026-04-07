@@ -165,6 +165,9 @@ export class UserEditDialogComponent implements OnInit {
     if (this.changePassword && this.newPassword !== '' ) {
       this.isError = true;
       this.message = 'Cancel or submit new password to save other changes';
+    } else if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
+        this.message = "Please select a role for this user";
+        return;
     } else {
       this.isError = false;
       const rolesArr = [this.selectedRole];
@@ -175,6 +178,11 @@ export class UserEditDialogComponent implements OnInit {
 
         }
       });
+
+      if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
+        this.message = "Please select a role for this user";
+        return;
+      }
 
       if (this.newGroup && this.newGroup !== '') {
         groups.push(this.newGroup);
@@ -225,6 +233,11 @@ export class UserEditDialogComponent implements OnInit {
   addUser(): void {
     this.isError = false;
     if (this.newPassword === this.newPasswordConfirm) {
+      if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
+        this.message = "Please select a role for this user";
+        return;
+      }
+
       const rolesArr = [this.selectedRole];
       const groups = [];
       this.groups.forEach(group => {
@@ -376,7 +389,7 @@ export class UserEditDialogComponent implements OnInit {
    }
 
   getHighestPriorityRole(): string {
-    if(this.user.roles === null || this.user.roles ===0) {
+    if(! this.user.roles || this.user.roles === null || this.user.roles.length ===0) {
       return '';
     }
     let selectedRoleName= this.user.roles.reduce((highest, role) => 
