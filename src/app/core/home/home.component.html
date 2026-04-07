@@ -188,7 +188,10 @@
                 </mat-nav-list>
                 <ng-container> </ng-container>
               </mat-expansion-panel>
-              <mat-expansion-panel *ngIf="loadedComponents && canRegister" [expanded]="false" >
+              <mat-expansion-panel
+                *ngIf="loadedComponents && canRegister"
+                [expanded]="false"
+              >
                 <mat-expansion-panel-header>
                   <mat-panel-title class="panel-header">
                     Register Other
@@ -216,7 +219,6 @@
                           ></mat-icon>
                           Application
                         </a>
-
                       </span>
                       <span *ngIf="loadedComponents.impurities">
                         <mat-divider></mat-divider>
@@ -251,7 +253,6 @@
                           In Vitro Pharmacology Screening
                         </a>
                       </span>
-
                     </span>
                   </mat-nav-list>
                 </div>
@@ -279,7 +280,6 @@
           *ngIf="bannerMessage && bannerMessage !== ''"
         >
           <div class="banner-main" [innerHTML]="bannerMessage"></div>
-
         </mat-card>
         <mat-card
           class="home-card"
@@ -318,7 +318,7 @@
 
           <div class="row">
             <h1 class="home">{{ homeHeader }}</h1>
-            <div style="padding-left: 15px" [innerHTML]="homeContents"></div>
+            <div class="home-contents" style="padding-left: 15px" [innerHTML]="homeContents"></div>
           </div>
           <mat-divider class="divide-test"></mat-divider>
 
@@ -381,7 +381,7 @@
 
           <div class="flex-row" style="padding-bottom: 10px">
             <div class="data">
-              Total substances: {{ total | number : "1.0" : "en-US" }}
+              Total substances: {{ total | number: "1.0" : "en-US" }}
             </div>
           </div>
           <div class="flex-row test" style="padding-bottom: 10px">
@@ -395,7 +395,7 @@
                   {{ link.display }}
                 </div>
                 <div class="value">
-                  {{ link.total | number : "1.0" : "en-US" }}
+                  {{ link.total | number: "1.0" : "en-US" }}
                 </div>
               </span>
             </div>
@@ -406,8 +406,8 @@
         <mat-card *ngIf="usefulLinks?.length" class="home-card">
           <h2 class="home" style="padding-top: 15px">Helpful Resources</h2>
         </mat-card>
-        <mat-grid-list cols="2" class="useful-cards" gutterSize="15px">
-          <mat-grid-tile *ngFor="let usefulLink of usefulLinks">
+        <div class="useful-cards">
+          <div class="useful-card-wrapper" *ngFor="let usefulLink of usefulLinks">
             <mat-card class="temprow right-link left-link">
               <h3 class="resource-link">
                 <a
@@ -444,8 +444,8 @@
                 [innerHtml]="usefulLink.description"
               ></div>
             </mat-card>
-          </mat-grid-tile>
-        </mat-grid-list>
+          </div>
+        </div>
 
         <ng-template
           #helpfulResourceModal
@@ -457,7 +457,7 @@
               usefulLink.templateDescription
             }}</a>
           </div>
-          <div mat-dialog-actions>
+          <div mat-dialog-actions class="button-actions">
             <span class="middle-fill"></span>
             <button
               mat-raised-button

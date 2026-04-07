@@ -1,59 +1,66 @@
 .form-row {
-    display: flex;
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  .amount-type,
+  .amount-average,
+  .low,
+  .high,
+  .low-limit,
+  .high-limit,
+  .amount-units,
+  .non-numeric-value {
     flex-grow: 1;
-    justify-content: space-between;
-    align-items: flex-end;
+    padding-right: 15px;
+  }
 
-    .amount-type, .amount-average, .low, .high,
-    .low-limit, .high-limit, .amount-units, .non-numeric-value {
-        flex-grow: 1;
-        padding-right: 15px;
-    }
+  .amount-type {
+    width: 180px;
+  }
 
-    .amount-type {
-        width: 125px;
-    }
+  .amount-units {
+    width: 180px;
+  }
 
-    .amount-units {
-        width: 110px;
-    }
+  .amount-average,
+  .low,
+  .high,
+  .low-limit,
+  .high-limit {
+    width: 70px;
+  }
 
-    .amount-average, .low, .high,
-    .low-limit, .high-limit {
-        width: 70px;
-    }
+  .non-numeric-value {
+    width: 90px;
+  }
 
-    .non-numeric-value {
-        width: 90px;
-    }
-
-    .jurisdiction {
-        flex-grow: 1;
-    }
-}
-
-.risen {
-  margin-top: -15px;
+  .jurisdiction {
+    flex-grow: 1;
+  }
 }
 
 .deselect {
-    color: var(--text-color);
-  }
+  color: var(--text-color);
+}
 
 .other-container {
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
 }
 
 .custom {
-  border-bottom: 1px solid var(--box-shadow-color-4);
-
+  //   padding-top: 10px;
+  //   mat-form-field {
+  //     width: 100%;
+  //   }
 }
 .amount-form {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
 .right {
-    float: right;
+  float: right;
 }

@@ -47,7 +47,7 @@
   }
 
   ::ng-deep {
-    .mat-expansion-panel, .mat-table, textarea {
+    .mat-expansion-panel, .mat-mdc-table, textarea {
       background-color: var(--regular-transparent-color);
     }
   }

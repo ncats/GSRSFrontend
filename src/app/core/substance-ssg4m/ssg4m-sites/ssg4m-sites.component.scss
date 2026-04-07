@@ -12,7 +12,7 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: rgba(255, 255, 255, .8);
+  background-color: rgba(255, 255, 255, 0.8);
   justify-content: center;
   align-items: center;
   font-size: 30px;
@@ -23,6 +23,7 @@
 .form-row {
   display: flex;
   width: 100%;
+  align-items: flex-start;
 
   .delete-container {
     padding: 0 10px 8px 0;
@@ -127,8 +128,8 @@ hr {
   position: relative;
   top: -10px;
   margin-right: 25px;
-  background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  background-color: #ffffff;
+  border: 1px solid #007cba;
 }
 
 .button-add {
@@ -136,8 +137,8 @@ hr {
   position: relative;
   top: 30px;
   margin-right: 25px;
-  background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  background-color: #ffffff;
+  border: 1px solid #007cba;
 }
 
 .button-delete {
@@ -146,7 +147,7 @@ hr {
   top: -40px;
   margin-right: 20px;
   color: red;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border: 1px solid red;
 }
 
@@ -155,8 +156,8 @@ fieldset.border {
   padding: 0 10px 10px 10px;
   border-bottom: none;
   /*border-radius: 8px;*/
-  min-width: 0;  /* override the default value of min-content */
-/*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
+  min-width: 0; /* override the default value of min-content */
+  /*-webkit-box-shadow: 2px 3px 3px 1px var(--fieldset-box-shadow-color);
   -moz-box-shadow: 2px 3px 5px 1px var(--fieldset-box-shadow-color);
   box-shadow: 2px 2px 3px 1px var(--fieldset-box-shadow-color);*/
 }
@@ -173,4 +174,3 @@ legend.border {
   margin-left: 30px;
   /*margin-left: 40%;*/
 }
-

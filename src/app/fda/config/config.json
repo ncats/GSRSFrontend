@@ -19,7 +19,8 @@
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "disableJSDraw": false,
   "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
-  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "apiBaseUrl": "http://localhost:8080",
+  "formerApiBaseUrl" : "http://localhost:8081/ginas/app/",
   "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
   "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
   "occasionalApiBasePath": "/ginas/app",
@@ -1377,6 +1378,13 @@
     "root_codes_BDNUM",
     "root_codes_CAS",
     "root_codes_ECHA"
+  ],
+  "roleSortConfig" : [
+	{"roleName" : "null", "numericValue": 0},
+	{"roleName" : "ADMIN", "numericValue": 100},
+	{"roleName" : "APPROVER", "numericValue": 80},
+	{"roleName" : "DATAENTRY", "numericValue": 50},
+	{"roleName" : "QUERY", "numericValue": 10}
   ],
   "homeDynamicLinks": [
     {

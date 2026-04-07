@@ -192,7 +192,7 @@
     }
 }
 
-// Page label and page selector styles moved to global _angular-15-mdc-fixes.scss
+// Page label and page selector styles moved to global _material-overrides.scss
 
 :host ::ng-deep .mat-paginator-range-label {
   margin: 0 5px 0 5px !important;
@@ -424,7 +424,6 @@
   width:45%;
 }
 
-
 /*
 .search-parameters {
   display: flex;
@@ -443,7 +442,6 @@
    //   margin-bottom: 5px;
    //   display: flex;
    //   align-items: center;
-
 
       padding-left:10px;
       padding-right: 2px;
@@ -579,7 +577,6 @@
       margin-bottom: 10px;
   }
 }
-
 
 .substance-content {
   display: flex;

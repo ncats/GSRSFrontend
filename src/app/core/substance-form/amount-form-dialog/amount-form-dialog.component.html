@@ -5,15 +5,8 @@
     </app-amount-form>
     <div class="actions">
       <span class="middle-fill"></span>
-      <button matButton color="primary" (click)="cancel()">Cancel</button>
-      <button
-        matButton
-        color="primary"
-        [disabled]="!amountForm"
-        (click)="save()"
-      >
-        Save
-      </button>
+      <button matButton (click)="cancel()">Cancel</button>
+      <button matButton [disabled]="!amountForm" (click)="save()">Save</button>
     </div>
   </div>
 </div>
