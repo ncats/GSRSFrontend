@@ -1225,21 +1225,15 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
 
         assayReadyToSave = _.cloneDeep(assayToSave);
 
-        /*
         assayReadyToSave.invitroAssayScreenings.forEach((screening, indexScreening) => {
           if (screening) {
             if (!screening.id) {
-              alert("SCREENING ID "  + screening.id);
               if (!screening.invitroAssayResultInformation || !screening.invitroAssayResultInformation.id) {
-                alert("AAAAAAAAAAAAAAAAAaa");
-                alert("AAAAAAAAA INSIDE SETTING REFINFO " + screening.id +  "   " + screening.invitroAssayResultInformation.id);
-               // screening.invitroAssayResultInformation = this.savedResultInfo;
-              } else {
-                alert("GGGGGGGGGGGGGGGGGGGG " + screening.invitroAssayResultInformation + "  " + screening.invitroAssayResultInformation.id);
+                screening.invitroAssayResultInformation = this.savedResultInfo;
               }
             }
           }
-        });*/
+        });
 
         // Set the assay on the service (following your existing stateful pattern).
         this.invitroPharmacologyService.assay = assayReadyToSave;
@@ -1264,7 +1258,12 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       })
     ).subscribe({
       // 'next' is handled by tap, so this can be empty. It's called after each successful save.
-      next: () => { },
+      next: (savedAssay) => { 
+
+        if (savedAssay) {
+           this.savedResultInfo = savedAssay.invitroAssayScreenings[savedAssay.invitroAssayScreenings.length - 1].invitroAssayResultInformation;
+        }
+      },
 
       // --- C. Handle any error in the stream ---
       error: err => {

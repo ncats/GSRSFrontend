@@ -627,7 +627,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
 
   savedCompleted(savedCount, AssayList) {
     // All records saved
-    console.log("AAAAAAA COMPLETE" + savedCount + "    " + AssayList.length);
     if (savedCount == AssayList.length) {
       this.message = "";
       this.submitMessage = "Import Successful";
@@ -707,7 +706,6 @@ export class InvitroPharmacologyAssayDataImportComponent implements OnInit {
             }
           }, error => {
             // Error occured during saving
-            console.log("ERROR DURING SAVING ASSAY IMPORT " + error)
             const saved = { 'indexRecord': index, 'assayId': element['assayId'], 'externalAssaySource': element['externalAssaySource'], 'externalAssayId': element['externalAssayId'], 'saved': 'No', 'savedId': '', 'error': error }
             this.importSaveMessageArray.push(saved);
 
