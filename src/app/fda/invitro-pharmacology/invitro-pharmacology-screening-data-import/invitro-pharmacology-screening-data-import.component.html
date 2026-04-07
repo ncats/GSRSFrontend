@@ -55,13 +55,9 @@
         <h1 mat-dialog-title>Importing Results Data into Assays</h1>
 
         <div mat-dialog-content>
-          <!-- Main status count that will update live -->
-          <p class="font14px textaligncenter margintop20px">
-            <strong>Saved {{ savedCount }} of {{ totalAssays }} Assays</strong>
-          </p>
 
           <!-- A message to show the current action or final status -->
-          <!-- <p style="text-align: center;">{{ progressMessage }}</p> -->
+          <p class="font14px textaligncenter margintop20px">{{ progressMessage }}</p>
 
           <!-- This section will only appear if an error occurs -->
           <div *ngIf="isError" class="error-panel" style="margin-top: 15px; padding: 10px; background-color: #fdd;">
@@ -70,12 +66,6 @@
           </div>
         </div>
 
-        <div mat-dialog-actions align="end">
-          <!-- This button is disabled until the process is complete or has failed -->
-          <button mat-raised-button color="primary" [mat-dialog-close]="true" [disabled]="!isComplete && !isError">
-            Close
-          </button>
-        </div>
       </ng-template>
       <!-- ***** DIALOG POPUP: SAVING PROGRESS END *************** -->
 
