@@ -360,7 +360,7 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   private getRoleNumericValue(roleName: string): number {
-    if(!roleName || roleName === null || roleName.length ==- 0 ) return 
+    if(!roleName || roleName === null || roleName.length === 0 ) return
     (this.configService.configData.roleSortingConfig && this.configService.configData.roleSortingConfig["null"] != null )
     ? this.configService.configData.roleSortingConfig["null"] : 0;
 
