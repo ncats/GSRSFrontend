@@ -821,6 +821,8 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-mdc-dialog-container {
   --mat-dialog-supporting-text-color: black;
+  --mat-dialog-container-max-width: none;
+  max-width: none !important;
 
   .mdc-dialog__surface {
     border-radius: 4px;
@@ -883,6 +885,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-mdc-dialog-inner-container {
   height: fit-content !important;
   max-height: 90vh !important;
+  max-width: none !important;
   overflow-y: auto !important;
 }
 
