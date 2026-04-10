@@ -207,9 +207,9 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format("ddd MMM D YYYY HH:mm:ss z")}`;
       });
     let okToRegister: boolean = await this.authService.canEditData();
-    if (okToRegister) {
+    
       this.navItems.forEach((item) => {
-        if (item.display === "Register") {
+        if (item.display === "Register" && okToRegister) {
           this.registerNav = item.children;
         }
         if (item.display === "Search") {
@@ -236,7 +236,7 @@ export class BaseComponent implements OnInit, OnDestroy {
           }
         }
       }
-    }
+    
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     let urlPath = this.router.routerState.snapshot.url.split("?")[0];
