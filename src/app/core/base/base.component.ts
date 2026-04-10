@@ -222,12 +222,12 @@ export class BaseComponent implements OnInit, OnDestroy {
               ) {
                 this.navItems[i].children.splice(j, 1);
               }
-              }
             }
           }
-          if (this.navItems[i].component) {
-            if (!this.loadedComponents[this.navItems[i].component]) {
-              this.navItems.splice(i, 1);
+        }
+        if (this.navItems[i].component) {
+          if (!this.loadedComponents[this.navItems[i].component]) {
+            this.navItems.splice(i, 1);
           }
         }
       }
