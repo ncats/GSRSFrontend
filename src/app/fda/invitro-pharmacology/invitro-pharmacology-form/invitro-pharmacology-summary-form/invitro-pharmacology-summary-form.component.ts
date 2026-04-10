@@ -995,6 +995,7 @@ export class InvitroPharmacologySummaryFormComponent implements OnInit, OnDestro
       delete assayResults[i]._assayResults;
     }
 
+    delete old['id'];
     delete old['creationDate'];
     delete old['createdBy'];
     delete old['modifiedBy'];
