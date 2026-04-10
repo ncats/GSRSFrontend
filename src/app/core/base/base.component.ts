@@ -95,8 +95,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     private utilsService: UtilsService,
     private wildCardService: WildcardService,
   ) {
-    this.customToolbarComponent =
-      this.configService.configData.customToolbarComponent;
+    this.customToolbarComponent = this.configService.configData.customToolbarComponent;
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
     });
@@ -111,8 +110,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     let range: Range;
     let selectionStart: number;
     let selectionEnd: number;
-    const activeEl: HTMLInputElement =
-      document.activeElement as HTMLInputElement;
+    const activeEl: HTMLInputElement = document.activeElement as HTMLInputElement;
 
     if (activeEl != null) {
       const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
@@ -143,10 +141,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.showHeaderBar =
-      this.activatedRoute.snapshot.queryParams["header"] || "true";
-    this.loadedComponents =
-      this.configService.configData.loadedComponents || null;
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams["header"] || "true";
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -208,34 +204,34 @@ export class BaseComponent implements OnInit, OnDestroy {
       });
     let okToRegister: boolean = await this.authService.canEditData();
     
-      this.navItems.forEach((item) => {
-        if (item.display === "Register" && okToRegister) {
-          this.registerNav = item.children;
-        }
-        if (item.display === "Search") {
-          this.searchNav = item.children;
-        }
-      });
-      if (this.loadedComponents) {
-        for (let i = this.navItems.length - 1; i >= 0; i--) {
-          if (this.navItems[i].children) {
-            for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
-              if (this.navItems[i].children[j].component) {
-                if (
-                  !this.loadedComponents[this.navItems[i].children[j].component]
-                ) {
-                  this.navItems[i].children.splice(j, 1);
-                }
+    this.navItems.forEach((item) => {
+      if (item.display === "Register" && okToRegister) {
+        this.registerNav = item.children;
+      }
+      if (item.display === "Search") {
+        this.searchNav = item.children;
+      }
+    });
+    if (this.loadedComponents) {
+      for (let i = this.navItems.length - 1; i >= 0; i--) {
+        if (this.navItems[i].children) {
+          for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
+            if (this.navItems[i].children[j].component) {
+              if (
+                !this.loadedComponents[this.navItems[i].children[j].component]
+              ) {
+                this.navItems[i].children.splice(j, 1);
+              }
               }
             }
           }
           if (this.navItems[i].component) {
             if (!this.loadedComponents[this.navItems[i].component]) {
               this.navItems.splice(i, 1);
-            }
           }
         }
       }
+    }
     
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
