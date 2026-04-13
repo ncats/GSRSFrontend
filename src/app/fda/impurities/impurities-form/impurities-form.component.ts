@@ -8,7 +8,7 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { jp } from 'jsonpath';
+import jp from 'jsonpath';
 import { take, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -31,10 +31,10 @@ import { SubstanceFormResults } from '@gsrs-core/substance-form/substance-form.m
 import { Impurities, ImpuritiesDetails, ImpuritiesUnspecified, SubRelationship, ValidationMessage } from '../model/impurities.model';
 
 @Component({
-    selector: 'app-impurities-form',
-    templateUrl: './impurities-form.component.html',
-    styleUrls: ['./impurities-form.component.scss'],
-    standalone: false
+  selector: 'app-impurities-form',
+  templateUrl: './impurities-form.component.html',
+  styleUrls: ['./impurities-form.component.scss'],
+  standalone: false
 })
 export class ImpuritiesFormComponent implements OnInit, OnDestroy {
 
@@ -128,6 +128,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
             // if ((record) && this.jsonValid(record)) {
             const response = JSON.parse(record);
             if (response) {
+              // scrub ids and audit information before saving in import json
               this.scrub(response);
 
               this.impuritiesService.loadImpurities(response);
@@ -762,6 +763,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       delete intVersionHolders[i].internalVersion;
     }
 
+    delete old['id'];
     delete old['creationDate'];
     delete old['createdBy'];
     delete old['modifiedBy'];

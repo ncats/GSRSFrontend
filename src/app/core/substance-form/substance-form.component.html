@@ -81,10 +81,10 @@
                 <mat-option value="pending" [disabled]="status === 'pending'" *ngIf="userCanApprove">
                   Change Status to pending
                 </mat-option>
-                <mat-option value="setPrivate" *ngIf="userCanMakePublic">
+                <mat-option value="setPrivate" *ngIf="userCanChangeDefinitionVisibility">
                   Set Definition to private
                 </mat-option>
-                <mat-option value="setPublic" *ngIf="userCanMakePublic">
+                <mat-option value="setPublic" *ngIf="userCanChangeDefinitionVisibility">
                   Set Definition to public
                 </mat-option>
                 <mat-option value="unapprove" *ngIf="userCanApprove">

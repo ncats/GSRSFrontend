@@ -1136,6 +1136,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
       delete intVersionHolders[i].internalVersion;
     }
 
+    delete old['id'];
     delete old['creationDate'];
     delete old['createdBy'];
     delete old['modifiedBy'];

@@ -7,6 +7,7 @@ import { AuthService, Auth } from '@gsrs-core/auth';
 import { take } from 'rxjs/operators';
 import { AssignableRole, UserEditObject } from '@gsrs-core/admin/admin-objects.model';
 import { Router } from '@angular/router';
+import { ConfigService } from "../../../config/config.service";
 
 @Component({
     selector: 'app-user-edit-dialog',
@@ -33,6 +34,7 @@ export class UserEditDialogComponent implements OnInit {
   isError: boolean = false;
   availableRoleNames: string[];
   assignableRoles: AssignableRole[];
+  selectedRole: string;
 
   roles = [
     {name: 'Query', hasRole: false},
@@ -47,7 +49,8 @@ export class UserEditDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<UserEditDialogComponent>,
     private authService: AuthService,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private configService: ConfigService,
   ) {
     this.user = data.user;
     this.userID = data.userID;
@@ -162,14 +165,12 @@ export class UserEditDialogComponent implements OnInit {
     if (this.changePassword && this.newPassword !== '' ) {
       this.isError = true;
       this.message = 'Cancel or submit new password to save other changes';
+    } else if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
+        this.message = "Please select a role for this user";
+        return;
     } else {
       this.isError = false;
-      const rolesArr = [];
-      this.assignableRoles.forEach(role => {
-        if (role.assigned) {
-          rolesArr.push(role.roleName);
-        }
-      });
+      const rolesArr = [this.selectedRole];
       const groups = [];
       this.groups.forEach(group => {
         if (group.hasGroup ) {
@@ -177,6 +178,11 @@ export class UserEditDialogComponent implements OnInit {
 
         }
       });
+
+      if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
+        this.message = "Please select a role for this user";
+        return;
+      }
 
       if (this.newGroup && this.newGroup !== '') {
         groups.push(this.newGroup);
@@ -227,12 +233,12 @@ export class UserEditDialogComponent implements OnInit {
   addUser(): void {
     this.isError = false;
     if (this.newPassword === this.newPasswordConfirm) {
-      const rolesArr = [];
-      this.assignableRoles.forEach(role => {
-        if (role.assigned) {
-          rolesArr.push(role.roleName);
-        }
-      });
+      if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
+        this.message = "Please select a role for this user";
+        return;
+      }
+
+      const rolesArr = [this.selectedRole];
       const groups = [];
       this.groups.forEach(group => {
         if (group.hasGroup ) {
@@ -353,16 +359,45 @@ export class UserEditDialogComponent implements OnInit {
     return false;
   }
 
+  private getRoleNumericValue(roleName: string): number {
+    if(!roleName || roleName === null || roleName.length === 0 ) return
+    (this.configService.configData.roleSortingConfig && this.configService.configData.roleSortingConfig["null"] != null )
+    ? this.configService.configData.roleSortingConfig["null"] : 0;
+
+    let roleUpper = roleName?.toUpperCase();
+    if (roleUpper && this.configService.configData?.roleSortingConfig 
+      && Object.hasOwn(this.configService.configData.roleSortingConfig, roleUpper)) {
+      return this.configService.configData.roleSortingConfig[roleName.toUpperCase()];
+    }
+    return 1;
+  }
+
   private setupAssignableRoles() {
     this.assignableRoles = [];
     this.adminService.getAllAvailableRoles().subscribe(roleNames => {
-    this.availableRoleNames = roleNames;
-    this.availableRoleNames.forEach(r=>{
-      let hasRole:boolean = this.userHasRole(r);
-      let newRole = {roleName: r, assigned: hasRole };
-      this.assignableRoles.push(newRole);
-     })
-   });
+      this.availableRoleNames = roleNames;
+      this.availableRoleNames.forEach(r=>{
+        let hasRole:boolean = this.userHasRole(r);
+        let newRole = {roleName: r, assigned: hasRole };
+        this.assignableRoles.push(newRole);
+      });
+      this.assignableRoles.sort( (role1: AssignableRole,  role2: AssignableRole )=> {
+        return this.getRoleNumericValue(role2.roleName) - this.getRoleNumericValue(role1.roleName); 
+      });
+      this.selectedRole = this.getHighestPriorityRole();
+     });
+   }
+
+  getHighestPriorityRole(): string {
+    if(! this.user.roles || this.user.roles === null || this.user.roles.length ===0) {
+      return '';
+    }
+    let selectedRoleName= this.user.roles.reduce((highest, role) => 
+      this.getRoleNumericValue(role.role) > this.getRoleNumericValue(highest.role) 
+        ? role 
+        : highest
+    ).role;
+    return selectedRoleName;
   }
 
 }
