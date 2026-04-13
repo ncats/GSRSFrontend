@@ -851,6 +851,22 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
+// Show Molfile dialog — needs to fill the 90% height passed in dialog.open()
+// The global fit-content rule on mat-mdc-dialog-inner-container collapses it otherwise.
+.show-molfile-dialog {
+  .mat-mdc-dialog-inner-container,
+  .mdc-dialog__surface {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .mat-mdc-dialog-content {
+    flex: 1 !important;
+    max-height: none !important;
+  }
+}
+
 // Cross Entity Search dialog — MDC caps surface at 560px by default; override per panel class
 .cross-entity-search-dialog {
   .mdc-dialog__surface {
