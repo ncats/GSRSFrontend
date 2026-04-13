@@ -1080,9 +1080,10 @@ app-loading .mat-mdc-progress-spinner {
 // ============================================================================
 
 // Tablet/Mobile: Hide most navigation buttons at 1350px, show only Logo, Menu, Search, and Login
+// Note: scoped to :not(.pfda-toolbar) to avoid hiding pfda-toolbar buttons
 @media (max-width: 1350px) {
-  .mat-toolbar,
-  .mat-mdc-toolbar {
+  .mat-toolbar:not(.pfda-toolbar),
+  .mat-mdc-toolbar:not(.pfda-toolbar) {
     // Logo container - always visible
     > .logo-container {
       display: flex !important;
