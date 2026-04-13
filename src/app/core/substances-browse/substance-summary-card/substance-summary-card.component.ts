@@ -301,6 +301,7 @@ export class SubstanceSummaryCardComponent implements OnInit {
       minWidth: "40%",
       maxWidth: "90%",
       height: "90%",
+      panelClass: "show-molfile-dialog",
       data: { uuid: this.substance.uuid, approval: this.substance.approvalID },
     });
     this.overlayContainer.style.zIndex = "1002";
