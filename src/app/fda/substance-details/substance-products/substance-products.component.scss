@@ -7,10 +7,16 @@
 }
 
 .mat-tab-style {
+  :host ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
   .mat-tab-labels, .mat-tab-label, .mat-tab-link {
-     color: var(--regular-blue-color);
+    color: var(--regular-blue-color);
   }
+}
 
+:host ::ng-deep .mat-mdc-tab-list .mat-mdc-tab,
+:host ::ng-deep .mat-tab-list .mat-tab-label {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
 }
 
 .bordergray {

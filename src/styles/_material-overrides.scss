@@ -1332,10 +1332,12 @@ button.export-button {
     0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
-// Override MDC ripple behavior if it interferes with existing styles
+// Override MDC ripple behavior if it interferes with existing styles.
+// NOTE: .mat-ripple is intentionally excluded — MatRipple directive adds that class
+// to its HOST element (e.g. the pagination <button> itself), so pointer-events: none
+// on it would make interactive elements unclickable (e.g. mat-tab-header pagination arrows).
 .mat-mdc-button-ripple,
 .mat-mdc-icon-button-ripple,
-.mat-ripple,
 .mat-mdc-button-persistent-ripple {
   position: absolute;
   pointer-events: none;
