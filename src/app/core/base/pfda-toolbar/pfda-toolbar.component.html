@@ -17,12 +17,21 @@
 
   <div class="pfda-toolbar-spacer"></div>
 
-  <a routerLink="/home" aria-label ="GSRS Home">
-    <div class="pfda-toolbar-button active">
-      <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_gsrs"></mat-icon>
-      <div class="pfda-toolbar-button-title">GSRS</div>
+  <div class="gsrs-menu-trigger">
+    <a routerLink="/home" aria-label="GSRS Home">
+      <div class="pfda-toolbar-button active">
+        <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_gsrs"></mat-icon>
+        <div class="pfda-toolbar-button-title">GSRS</div>
+      </div>
+    </a>
+    <div class="gsrs-dropdown">
+      <a routerLink="/browse-substance">Browse Substances</a>
+      <a routerLink="/structure-search">Structure Search</a>
+      <a routerLink="/sequence-search">Sequence Search</a>
+      <a routerLink="/advanced-search">Advanced Search</a>
+      <a routerLink="/bulk-search">Bulk Search</a>
     </div>
-  </a>
+  </div>
 
   <span aria-label ="Register New Substance" title="Register New Substance"
         *ngIf="registerItems !== undefined && registerItems.length > 0">

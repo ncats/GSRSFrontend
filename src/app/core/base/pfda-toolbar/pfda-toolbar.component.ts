@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { ConfigService } from '../../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -13,7 +13,7 @@ import { NavItem } from '@gsrs-core/config';
   templateUrl: './pfda-toolbar.component.html',
   styleUrls: ['./pfda-toolbar.component.scss']
 })
-export class PfdaToolbarComponent implements OnInit {
+export class PfdaToolbarComponent implements OnInit, OnDestroy {
   pfdaBaseUrl: string;
   supportEmail: string;
   logoSrcPath: string;
@@ -100,5 +100,9 @@ export class PfdaToolbarComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
