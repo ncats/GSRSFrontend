@@ -89,46 +89,7 @@ $screenMedium: 1045px;
 }
 
 .gsrs-menu-trigger {
-	position: relative;
 	display: inline-block;
-
-	.gsrs-dropdown {
-		display: none;
-		position: absolute;
-		top: 100%;
-		left: 0;
-		z-index: 1002;
-		background: #fff;
-		min-width: 112px;
-		max-width: 280px;
-		border-radius: 4px;
-		box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-		padding: 0;
-
-		a {
-			display: flex;
-			align-items: center;
-			height: 48px;
-			padding: 0 16px;
-			color: rgba(0,0,0,0.87);
-			text-decoration: none;
-			white-space: nowrap;
-			font-family: Roboto, "Helvetica Neue", sans-serif;
-			font-size: 14px;
-			font-weight: 400;
-			line-height: 48px;
-			cursor: pointer;
-			box-sizing: border-box;
-
-			&:hover {
-				background: rgba(0,0,0,0.04);
-			}
-		}
-	}
-
-	&:hover .gsrs-dropdown {
-		display: block;
-	}
 }
 
 
