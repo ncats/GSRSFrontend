@@ -17,27 +17,21 @@
 
   <div class="pfda-toolbar-spacer"></div>
 
-  <div class="gsrs-menu-trigger"
-       [matMenuTriggerFor]="gsrsMenu"
-       #gsrsMenuTrigger="matMenuTrigger"
-       (mouseenter)="gsrsMenuTrigger.openMenu(); increaseMenuZindex()"
-       (mouseleave)="gsrsMenuTrigger.closeMenu()">
+  <div class="gsrs-menu-trigger">
     <a routerLink="/home" aria-label="GSRS Home">
       <div class="pfda-toolbar-button active">
         <mat-icon class="pfda-toolbar-button-icon" svgIcon="pfda_gsrs"></mat-icon>
         <div class="pfda-toolbar-button-title">GSRS</div>
       </div>
     </a>
-  </div>
-  <mat-menu #gsrsMenu="matMenu" (closed)="removeZindex()" class="gsrs-dropdown-menu">
-    <div (mouseenter)="$event.stopPropagation()" (mouseleave)="gsrsMenuTrigger.closeMenu()">
-      <a mat-menu-item routerLink="/browse-substance">Browse Substances</a>
-      <a mat-menu-item routerLink="/structure-search">Structure Search</a>
-      <a mat-menu-item routerLink="/sequence-search">Sequence Search</a>
-      <a mat-menu-item routerLink="/bulk-search">Bulk Search</a>
-      <a mat-menu-item routerLink="/advanced-search">Advanced Search</a>
+    <div class="gsrs-dropdown">
+      <a routerLink="/browse-substance">Browse Substances</a>
+      <a routerLink="/structure-search">Structure Search</a>
+      <a routerLink="/sequence-search">Sequence Search</a>
+      <a routerLink="/bulk-search">Bulk Search</a>
+      <a routerLink="/advanced-search">Advanced Search</a>
     </div>
-  </mat-menu>
+  </div>
 
   <span aria-label ="Register New Substance" title="Register New Substance"
         *ngIf="registerItems !== undefined && registerItems.length > 0">
