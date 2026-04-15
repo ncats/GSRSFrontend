@@ -19,9 +19,9 @@
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "disableJSDraw": false,
   "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
-  "apiBaseUrl": "http://localhost:8081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
-  "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
+  "apiBaseUrl": "http://localhost:9081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:9081/ginas/app/ui/",
+  "apiSSG4mBaseUrl": "http://localhost:9081/ginas/app/",
   "occasionalApiBasePath": "/ginas/app",
   "restApiPrefix": "/ginas/app",
   "authenticateAs": {
@@ -45,8 +45,23 @@
       }
     }
   },
+  "downloadList": { 
+    "disableAll": false,
+    "downloads": {
+      "emaSmsSimpleRecord": {
+        "enabled": true,
+        "title": "Download European Medicines Agency Simple FHIR message",
+        "buttonName": "Download EMA FHIR Simple"
+      },
+      "emaSmsSubstanceDefinition": {
+        "enabled": true,
+        "title": "Download European Medicines Agency Substance Definition FHIR message",
+        "buttonName": "Download EMA FHIR SD"
+      }
+    }
+  },
   "enablePDFDownload":{
-    "enablePDFDownload" : true,
+    "enablePDFDownload" : false,
     "buttonName":"Print to PDF",
     "companyName" : "",
     "proprietaryNote":""

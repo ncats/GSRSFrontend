@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
 import { BehaviorSubject, interval, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
@@ -25,6 +25,8 @@ import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
+import { of } from 'rxjs';
+
 
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
@@ -832,6 +834,16 @@ export class SubstanceService extends BaseHttpService {
     }
   }
 
+  public getSubstanceEmaSmsFhirRecord(id: string , endpointFunction: string): Observable< any > {
+    const responseType='json';
+    const url = `${this.apiBaseUrl}substances/${id}/${endpointFunction}`;
+    const result = this.http.get< any >(`${url}`, { responseType: responseType, observe: 'response' }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      return of(error);
+    }));
+    return result;
+  }
+
   getSubstanceNames(id: string): Observable<Array<SubstanceName>> {
     const url = `${this.apiBaseUrl}substances(${id})/names`;
     return this.http.get<Array<SubstanceName>>(url);
@@ -1167,4 +1179,3 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<SubstanceDetail>(url);
   }
 }
-
