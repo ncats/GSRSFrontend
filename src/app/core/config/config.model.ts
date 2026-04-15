@@ -99,6 +99,7 @@ export interface Config {
     registerApplicationCenterNotAllowed?: Array<string>;
     phpIdUrl?: string;
     rxNormUrl?: string;
+    roleSortingConfig?: roleSortConfig;
 }
 
 
@@ -205,5 +206,9 @@ export interface DownloadAsPDF {
     buttonName?:string;
     companyName?:string;
     proprietaryNote?:string;
+}
+
+export interface roleSortConfig {
+  [key: string]: number;
 }
 

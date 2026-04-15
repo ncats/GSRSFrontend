@@ -22,7 +22,7 @@
 .form-row {
   display: flex;
   width: 100%;
-
+  align-items: flex-start;
 
   .col-1-1 {
     width: calc((100% - 20px * 1)); // 1 column
@@ -126,8 +126,8 @@
   position: relative;
   top: 25px;
   margin-right: 20px;
-  background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  background-color: #ffffff;
+  border: 1px solid #007cba;
 }
 
 .button-delete-stage {
@@ -136,7 +136,7 @@
   top: -60px;
   margin-right: 20px;
   color: red;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border: 1px solid red;
 }
 
@@ -151,9 +151,9 @@
   position: absolute;
   top: -60px;
   margin-right: 190px;
-  color: #007CBA;
-  background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  color: #007cba;
+  background-color: #ffffff;
+  border: 1px solid #007cba;
 }
 
 .button-insert-after {
@@ -161,18 +161,18 @@
   position: absolute;
   top: -60px;
   margin-right: 190px;
-  color: #007CBA;
-  background-color: #FFFFFF;
-  border: 1px solid #007CBA;
+  color: #007cba;
+  background-color: #ffffff;
+  border: 1px solid #007cba;
 }
 
 fieldset.border {
-  border: solid 2px #A0A0A3 !important;
+  border: solid 2px #a0a0a3 !important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
   border-radius: 3px;
   margin-bottom: 30px;
-  min-width: 0;  /* override the default value of min-content */
+  min-width: 0; /* override the default value of min-content */
   /*
   -webkit-box-shadow: 2px 3px 3px 1px rgba(110,104,110,0.64);
   -moz-box-shadow: 2px 3px 5px 1px rgba(110,104,110,0.64);
@@ -185,12 +185,12 @@ legend.border {
   border-bottom: none;
   font-size: 15px;
   /* FDA COLOR BLUE CODE Hex: #007CBA */
-  color: #007CBA;
+  color: #007cba;
   font-family: Verdana;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
 .mat-menu-item {
-  color: #007CBA !important;
+  color: #007cba !important;
 }

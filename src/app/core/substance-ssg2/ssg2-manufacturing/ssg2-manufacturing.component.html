@@ -74,12 +74,12 @@
       <mat-label>Search Organization Name</mat-label>
       <input
         matInput
-        [(ngModel)]="manufacture.productionMethodDescription"
-        name="manufacture.productionMethodDescription"
+        [(ngModel)]="seachedOrganization"
+        name="seachedOrganization"
       />
     </mat-form-field>
 
-    <button matButton color="primary" (click)="searchOrganization()">
+    <button matButton class="icon-left" (click)="searchOrganization()">
       <mat-icon svgIcon="search"></mat-icon>
       Search
     </button>

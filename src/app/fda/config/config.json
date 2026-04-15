@@ -19,9 +19,9 @@
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "disableJSDraw": false,
   "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
-  "apiBaseUrl": "http://localhost:9081/ginas/app/",
-  "gsrsHomeBaseUrl": "http://localhost:9081/ginas/app/ui/",
-  "apiSSG4mBaseUrl": "http://localhost:9081/ginas/app/",
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
+  "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
+  "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
   "occasionalApiBasePath": "/ginas/app",
   "restApiPrefix": "/ginas/app",
   "authenticateAs": {
@@ -45,23 +45,8 @@
       }
     }
   },
-  "downloadList": { 
-    "disableAll": false,
-    "downloads": {
-      "emaSmsSimpleRecord": {
-        "enabled": true,
-        "title": "Download European Medicines Agency Simple FHIR message",
-        "buttonName": "Download EMA FHIR Simple"
-      },
-      "emaSmsSubstanceDefinition": {
-        "enabled": true,
-        "title": "Download European Medicines Agency Substance Definition FHIR message",
-        "buttonName": "Download EMA FHIR SD"
-      }
-    }
-  },
   "enablePDFDownload":{
-    "enablePDFDownload" : false,
+    "enablePDFDownload": true,
     "buttonName":"Print to PDF",
     "companyName" : "",
     "proprietaryNote":""
@@ -92,10 +77,7 @@
       }
     ]
   },
-  "filteredDuplicationCodes": [
-    "BDNUM",
-    "FDA UNII"
-  ],
+  "filteredDuplicationCodes": ["BDNUM", "FDA UNII"],
   "typeaheadFields": [
     "Standardized_Name",
     "Display_Name",
@@ -174,9 +156,7 @@
     {
       "card": "fda-substance-product",
       "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In Vitro Pharmacology",
-      "filters": [
-        {}
-      ]
+      "filters": [{}]
     },
     {
       "card": "substance-primary-definition",
@@ -813,11 +793,7 @@
         },
         {
           "category": "User Data",
-          "facets": [
-            "Record Created By",
-            "Approved By",
-            "root_lastEditedBy"
-          ]
+          "facets": ["Record Created By", "Approved By", "root_lastEditedBy"]
         },
         {
           "category": "CMC Data",
@@ -1206,13 +1182,7 @@
       ]
     }
   },
-  "codeSystemOrder": [
-    "BDNUM",
-    "CAS",
-    "WHO-ATC",
-    "EVMPD",
-    "NCI"
-  ],
+  "codeSystemOrder": ["BDNUM", "CAS", "WHO-ATC", "EVMPD", "NCI"],
   "homeHeader": "Global Substance Registration System - GSRS",
   "homeContents": "<p>The primary goal of the Global Substance Registration System (GSRS) program is the production of software to assist agencies in registering and documenting information about substances found in medicines and other regulated products. GSRS provides common identifiers including FDA UNIIs for all substances used in regulated products. It utilizes definitions of substances  globally-consistent with ISO 11238 and DTS 19844 including active substances under clinical investigation.\n\n</p><p>\n\n<img src='assets/icons/home/fda.logo.h77px.png' alt='' title='Food and Drug Administration' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n\n<img src='assets/icons/home/ncats.logo.h77px.png' alt='' title='National Center for Advancing Translational Science' />\n\n</p><p>Many organizations contribute to the GSRS project including the Food and Drug Administration (FDA) and the National Center for Advancing Translational Science (NCATS). For more information about GSRS, code and public data, please consult <a href='https://gsrs.ncats.nih.gov/'>https://gsrs.ncats.nih.gov/</a>.</p>\n\n<p>",
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
@@ -1393,6 +1363,13 @@
     "root_codes_CAS",
     "root_codes_ECHA"
   ],
+  "roleSortingConfig": {
+    "NULL": 0,
+    "ADMIN": 100,
+    "APPROVER": 80,
+    "DATAENTRY": 50,
+    "QUERY": 10
+  },
   "homeDynamicLinks": [
     {
       "display": "Chemicals",

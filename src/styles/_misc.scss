@@ -1,17 +1,32 @@
+// Flex layout utilities
 .middle-fill {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
- .unit-tooltip {
-  white-space: pre-line !important;
+
+.divflex {
+  display: flex;
 }
-::ng-deep .unit-tooltip {
+
+.divflexspace {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+// Border utility
+.bordergray {
+  border: 1px solid var(--regular-grey-color);
+}
+
+// Tooltip
+.unit-tooltip {
   white-space: pre-line !important;
 }
 .margin-bottom {
     margin-bottom: 15px;
 }
 
-.mat-autocomplete-panel {
+.mat-mdc-autocomplete-panel {
   min-width: 200px;
 }
 
@@ -198,7 +213,7 @@ body {
     padding: 15px 10px;
   }
 
-  .mat-menu-item {
+  .mat-mdc-menu-item {
     display: flex;
     word-wrap: normal;
     white-space: normal;
@@ -318,9 +333,9 @@ textarea {
   text-decoration: none;
 }
 
-.mat-select-panel {
+.mat-mdc-select-panel {
 
-  mat-option.mat-option {
+  mat-option.mat-mdc-option {
     display: flex;
     word-wrap: normal;
     white-space: normal;
@@ -334,7 +349,7 @@ textarea {
   }
 }
 
-.subunit-dialog > .mat-dialog-container {
+.subunit-dialog .mdc-dialog__surface {
   height: unset !important;
   max-height: 95%;
 }

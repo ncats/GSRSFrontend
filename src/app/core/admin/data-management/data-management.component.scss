@@ -34,24 +34,13 @@
 }
 
 .load-fail {
-    // transform: rotate(180deg);
     margin-top: -22px;
-    ::ng-deep .mat-progress-bar-fill {
-        background-color: var(--error);
+    mat-progress-bar {
+        --mdc-linear-progress-active-indicator-color: var(--error);
+        --mdc-linear-progress-track-color: var(--progress-bar-buffer-bg-color);
+    }
+    ::ng-deep .mdc-linear-progress__primary-bar {
         z-index: 1;
-
-    }
-    ::ng-deep .mat-progress-bar-fill::after {
-        background-color: var(--error);
-     //    z-index: 1;
-
-    }
-
-
-      
-    
-    ::ng-deep .mat-progress-bar-buffer {
-        background: var(--progress-bar-buffer-bg-color);
     }
 }
 
@@ -61,60 +50,34 @@
         margin: auto;
     }
 }
+
 .load-fail-old {
-     transform: rotate(180deg);
+    transform: rotate(180deg);
     margin-top: -22px;
-    ::ng-deep .mat-progress-bar-fill {
-        background-color: var(--error);
-        z-index: 2;
-
-
+    mat-progress-bar {
+        --mdc-linear-progress-active-indicator-color: var(--error);
+        --mdc-linear-progress-track-color: var(--progress-bar-buffer-bg-color);
     }
-    ::ng-deep .mat-progress-bar-fill::after {
-        background-color: var(--error);
+    ::ng-deep .mdc-linear-progress__primary-bar {
         z-index: 2;
-
-
-    }
-
-
-      
-    
-    ::ng-deep .mat-progress-bar-buffer {
-        background: var(--progress-bar-buffer-bg-color);
     }
 }
 
 .load-success {
-    ::ng-deep .mat-progress-bar-fill {
-        // background-color: var(--error);
-         z-index: 2;
-
+    mat-progress-bar {
+        --mdc-linear-progress-track-color: var(--progress-bar-buffer-bg-color);
     }
-    ::ng-deep .mat-progress-bar-fill::after {
-        // background-color: var(--error);
-       //  z-index: 2;
-
-    }
-    ::ng-deep .mat-progress-bar-buffer {
-        background: var(--progress-bar-buffer-bg-color);
+    ::ng-deep .mdc-linear-progress__primary-bar {
+        z-index: 2;
     }
 }
 
-
 .load-success-old {
-    ::ng-deep .mat-progress-bar-fill {
-        // background-color: var(--error);
+    mat-progress-bar {
+        --mdc-linear-progress-track-color: var(--progress-bar-buffer-bg-color);
+    }
+    ::ng-deep .mdc-linear-progress__primary-bar {
         z-index: 2;
-
-    }
-    ::ng-deep .mat-progress-bar-fill::after {
-        // background-color: var(--error);
-         z-index: 2;
-
-    }
-    ::ng-deep .mat-progress-bar-buffer {
-        background: var(--progress-bar-buffer-bg-color);
     }
 }
 

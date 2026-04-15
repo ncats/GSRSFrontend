@@ -63,18 +63,13 @@
         </button>
       </div>
       <div *ngIf="!(disableReferenceDocumentUpload || reference.uploadedFile)">
-        <button
-          matButton
-          color="primary"
-          ncatsFileSelect
-          (selectedFile)="fileSelected($event)"
-        >
+        <button matButton ncatsFileSelect (selectedFile)="fileSelected($event)">
           <span>Upload Document</span>&nbsp;
           <mat-icon svgIcon="cloud_upload"></mat-icon>
         </button>
       </div>
       <div *ngIf="reference.uploadedFile">
-        <button matButton color="primary" [matMenuTriggerFor]="documentMenu">
+        <button matButton [matMenuTriggerFor]="documentMenu">
           Attachment
           <mat-icon svgIcon="attachment"></mat-icon>
         </button>
@@ -115,7 +110,6 @@
       <div *ngIf="!reference.uuid">
         <button
           matButton
-          color="primary"
           (click)="showPrev = !showPrev"
           matTooltip="use a previously submitted reference"
         >
@@ -127,7 +121,6 @@
       <div *ngIf="reference.uuid && !reference.docType && !reference.citation">
         <button
           matButton
-          color="primary"
           (click)="openPreviousDialog()"
           matTooltip="use a previously submitted reference"
         >

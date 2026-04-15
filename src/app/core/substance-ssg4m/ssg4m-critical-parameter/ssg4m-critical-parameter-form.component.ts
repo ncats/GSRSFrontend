@@ -15,10 +15,10 @@ import { SpecifiedSubstanceG4mCriticalParameter, SubstanceAmount } from '@gsrs-c
 import { ConfirmDialogComponent } from '../../../fda/confirm-dialog/confirm-dialog.component';
 
 @Component({
-    selector: 'app-ssg4m-critical-parameter-form',
-    templateUrl: './ssg4m-critical-parameter-form.component.html',
-    styleUrls: ['./ssg4m-critical-parameter-form.component.scss'],
-    standalone: false
+  selector: 'app-ssg4m-critical-parameter-form',
+  templateUrl: './ssg4m-critical-parameter-form.component.html',
+  styleUrls: ['./ssg4m-critical-parameter-form.component.scss'],
+  standalone: false
 })
 export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
 
@@ -222,7 +222,7 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
     this.typeControl.valueChanges.subscribe(value => {
       this.privateSubstanceAmount.type = value;
     });
-    this.averageControl.setValue(this.privateSubstanceAmount.average.toString());
+    this.averageControl.setValue(this.privateSubstanceAmount.average?.toString());
     this.averageControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.averageControl.setValue('');
@@ -231,7 +231,7 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
       }
       this.privateSubstanceAmount.average = parseInt(value);
     });
-    this.lowControl.setValue(this.privateSubstanceAmount.low.toString());
+    this.lowControl.setValue(this.privateSubstanceAmount.low?.toString());
     this.lowControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.lowControl.setValue('');
@@ -240,7 +240,7 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
       }
       this.privateSubstanceAmount.low = parseInt(value);
     });
-    this.highControl.setValue(this.privateSubstanceAmount.high.toString());
+    this.highControl.setValue(this.privateSubstanceAmount.high?.toString());
     this.highControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.highControl.setValue('');
@@ -249,7 +249,7 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
       }
       this.privateSubstanceAmount.high = parseInt(value);
     });
-    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit.toString());
+    this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit?.toString());
     this.lowLimitControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.lowLimitControl.setValue('');
@@ -258,7 +258,7 @@ export class Ssg4mCriticalParameterFormComponent implements OnInit, OnDestroy {
       }
       this.privateSubstanceAmount.lowLimit = parseInt(value);
     });
-    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit.toString());
+    this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit?.toString());
     this.highLimitControl.valueChanges.subscribe(value => {
       if (value === null) {
         this.highLimitControl.setValue('');

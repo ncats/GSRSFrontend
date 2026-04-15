@@ -82,13 +82,13 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
     if (this.substance?.version) {
       this.versionControl.setValue(this.substance.version.toString());
     }
+    this.getSubtypeRefs(this.substance);
 
     this.canEdit=await this.authService.canEditData();
     this.canRestoreVersions = await this.authService.hasSpecificPrivilege("Restore Previous Versions");
     this.isEditable =this.canEdit
         && this.substance.substanceClass != null
         && (formSections[this.substance.substanceClass.toLowerCase()] != null || formSections[this.substance.substanceClass] != null);
-    this.getSubtypeRefs(this.substance);
     const theJSON = JSON.stringify(this.substance);
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHref = uri;

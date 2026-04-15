@@ -372,7 +372,7 @@ export class SubstanceNamesComponent extends SubstanceCardBaseFilteredList<Subst
     this.gaService.sendEvent(this.analyticsEventCategory, 'button', 'references view');
 
     const dialogRef = this.dialog.open(templateRef, {
-      minWidth: '40%',
+      minWidth: '80%',
       maxWidth: '90%'
     });
     this.overlayContainer.style.zIndex = '1002';

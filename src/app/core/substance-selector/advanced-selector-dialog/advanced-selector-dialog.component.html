@@ -48,33 +48,25 @@
 
               <div *ngIf="searchType === 'substructure'">
                 <div>
-                  <button
-                    mat-button
-                    mat-flat-button
-                    (click)="standardize('ADD_HYDROGENS')"
-                  >
+                  <button matButton (click)="standardize('ADD_HYDROGENS')">
                     Add Explicit Hydrogens
                   </button>
                 </div>
                 <div>
-                  <button
-                    mat-button
-                    mat-flat-button
-                    (click)="standardize('STEREO_FLATTEN')"
-                  >
+                  <button matButton (click)="standardize('STEREO_FLATTEN')">
                     Remove Stereochemistry Bonds
                   </button>
                 </div>
               </div>
               <div class="similarity-cutoff" *ngIf="showSimilarityCutoff">
                 <div>Similarity cutoff (tanimoto)</div>
-                <mat-slider
-                  min=".40"
-                  max="1"
-                  step="0.01"
-                  [value]="similarityCutoff"
-                  (input)="searchCutoffChanged($event)"
-                ></mat-slider>
+                <mat-slider min=".40" max="1" step="0.01">
+                  <input
+                    matSliderThumb
+                    [value]="similarityCutoff"
+                    (input)="searchCutoffChanged($event)"
+                  />
+                </mat-slider>
                 <div>{{ similarityCutoff }}</div>
               </div>
             </div>
@@ -118,7 +110,7 @@
         </div>
 
         <div *ngIf="!nameTotalSubstances || nameTotalSubstances < 1">
-          <h4>Get Structure From Name</h4>
+          <h4 class="search-title">Get Structure From Name</h4>
           <app-name-resolver
             (structureSelected)="nameResolved($event)"
           ></app-name-resolver>
@@ -177,7 +169,7 @@
             </div>
           </mat-card-title>
 
-          <mat-card-content>
+          <mat-card-content class="card-content">
             <div class="substance-content">
               <div class="structure-container">
                 <div *ngIf="substance.structure">
@@ -335,7 +327,7 @@
           </div>
         </mat-card-title>
 
-        <mat-card-content>
+        <mat-card-content class="card-content">
           <div class="substance-content">
             <div class="structure-container">
               <div *ngIf="substance.structure">

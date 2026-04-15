@@ -2,7 +2,8 @@ import { SubstanceCardFilter } from './substance-cards-filter.model';
 import { SubstanceDetail } from '../substance/substance.model';
 import { SubstanceCardFilterParameters } from '../config/config.model';
 import { getEvaluatedProperty } from './substance-cards-utils';
-import { Observable } from 'rxjs';
+import { of, from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AuthService} from '@gsrs-core/auth/auth.service';
 import {HttpClient} from '@angular/common/http';
 
@@ -213,24 +214,17 @@ export function substanceRelationshipsFilter(
     });
 }
 
-  export function credentialsFilter(
-    substance: SubstanceDetail,
-    filter: SubstanceCardFilterParameters,
-    http: HttpClient,
-    auth: AuthService
-  ): Observable<boolean> {
-    return new Observable(observer => {
+export function credentialsFilter(substance: SubstanceDetail,
+  filter: SubstanceCardFilterParameters,
+  http: HttpClient,
+  auth: AuthService): Observable<boolean> {
+  if (!filter.propertyToCheck) return of(false);
 
-      let isApproved = false;
-      if (filter.propertyToCheck != null) {
-        if (auth.hasSpecificPrivilege(filter.propertyToCheck)) {
-          isApproved = true;
-        }
-      }
-      observer.next(isApproved);
-      observer.complete();
-    });
+  return from(Promise.resolve(auth.hasSpecificPrivilege(filter.propertyToCheck))).pipe(
+    map((r: boolean) => !!r)
+  );
 }
+
 
 export function groupFilter(
     substance: SubstanceDetail,
@@ -250,4 +244,3 @@ export function groupFilter(
       observer.complete();
     });
 }
-

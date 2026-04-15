@@ -29,7 +29,8 @@
     padding: 0 10px 8px 0;
   }
 
-  .source-type, .citation{
+  .source-type,
+  .citation {
     flex-grow: 1;
     padding-right: 15px;
   }
@@ -53,7 +54,6 @@
   width: 90%;
 }
 
-
 .spinner {
   height: 20px;
   width: 20px;
@@ -69,13 +69,11 @@
   height: 20px;
   width: 20px;
   margin-right: 5px;
-
 }
 
 .progress-spinner {
   margin: auto;
 }
-
 
 .mat-progress-spinner {
   height: 20px !important;
@@ -90,4 +88,8 @@
     height: 20px !important;
     width: 20px !important;
   }
+}
+
+.citation {
+  font-size: 14px;
 }
