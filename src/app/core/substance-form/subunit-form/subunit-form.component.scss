@@ -11,6 +11,11 @@
 .sequence-textarea {
   font-size: 14px;
   letter-spacing: 2px;
+  font-family: monospace;
+  overflow: hidden;
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .show {
@@ -66,6 +71,7 @@
 
 .section-units-container {
   display: flex;
+  min-width: calc(10 * 15.5px);
 
   .section-unit {
     /*flex-grow: 1;*/

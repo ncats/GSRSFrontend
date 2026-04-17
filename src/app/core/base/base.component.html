@@ -117,7 +117,7 @@
       Browse Substances
     </button>
   </div>
-  <div *ngIf="this.loadedComponents">
+  <div *ngIf="this.loadedComponents && showBrowseOther">
     <button
       class="top-button extra-browse"
       mat-button
@@ -329,7 +329,7 @@
         class="user"
         *ngIf="auth && auth.identifier"
         matTooltip="{{ auth.identifier }}"
-        >{{ auth.identifier }}</span
+        >{{ auth.identifier.length > 9 ? (auth.identifier | slice:0:9) + '…' : auth.identifier }}</span
       >
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
@@ -360,7 +360,7 @@
       <a
         [routerLink]="['/registrars']"
         class="add-at-low-res"
-        *ngIf="canRegister"
+        *ngIf="canRegister && !showRegistrars"
         mat-menu-item
       >
         <span>Registrars</span>
@@ -370,7 +370,7 @@
       </button>
     </mat-menu>
   </div>
-  <div class="classic-view-container" *ngIf="auth && auth.identifier">
+  <div class="classic-view-container" *ngIf="auth && auth.identifier && showRegistrars">
     <a
       class="top-button hide-at-low-res"
       mat-button

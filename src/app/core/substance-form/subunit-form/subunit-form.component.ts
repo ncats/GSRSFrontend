@@ -258,11 +258,18 @@ window.open( url, '_blank');
       setTimeout(() => {
         const textArea = document.getElementsByClassName('sequence-textarea');
         [].forEach.call(textArea, function (area) {
-          area.style.height = (area.scrollHeight + 10) + 'px';
+          area.style.height = 'auto';
+          area.style.height = area.scrollHeight + 'px';
         });
       });
     }
   }
+  autoResize(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
   change(event): void {
     if (this.toggle[this.subunit.subunitIndex] === false) {
       event.target.value = this.subunit.sequence;
