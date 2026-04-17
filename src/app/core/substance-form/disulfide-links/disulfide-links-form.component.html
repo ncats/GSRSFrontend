@@ -19,6 +19,7 @@
           [compareWith]="compareSites"
           (selectionChange)="updateSuggestions($event.value, index)"
           class="site-select"
+          [panelWidth]="null"
         >
           <mat-option *ngFor="let cys of cysteine" [value]="cys">
             {{ cys.subunitIndex }}_{{ cys.residueIndex }}
