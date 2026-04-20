@@ -67,6 +67,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
+  isPfdaVersion: boolean = false;
   customToolbarComponent: string = "";
   canRegister = false;
   registerNav: Array<NavItem>;
@@ -99,6 +100,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     private wildCardService: WildcardService,
     private breakpointObserver: BreakpointObserver,
   ) {
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion === true;
     this.customToolbarComponent = this.configService.configData.customToolbarComponent;
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
