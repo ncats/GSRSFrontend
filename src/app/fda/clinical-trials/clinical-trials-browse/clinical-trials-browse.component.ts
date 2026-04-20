@@ -117,8 +117,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
-    const columns = ['trialNumber', 'title', 'lastUpdated'];
-    if (this.canEdit) { columns.unshift('edit'); }
+    const columns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
     if (this.canDelete) { columns.push('delete'); }
     this.displayedColumns = columns;
     this.searchTypes = [
