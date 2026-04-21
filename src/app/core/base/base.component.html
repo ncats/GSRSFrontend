@@ -364,7 +364,7 @@
         *ngIf="canRegister && !showRegistrars"
         mat-menu-item
       >
-        <span>Registrars</span>
+        <span>Registrar Dashboard</span>
       </a>
       <button mat-menu-item (click)="logout()">
         <span>Logout</span>
@@ -385,7 +385,7 @@
       [routerLink]="['/registrars']"
       *ngIf="canRegister"
     >
-      <span style="font-size: 16px">Registrars</span>
+      <span class="registrar-dashboard-label">Registrar<br>Dashboard</span>
     </a>
   </div>
 </mat-toolbar>
