@@ -14,7 +14,7 @@ export class CanRegisterSubstanceForm implements CanActivate {
   ) {}
 
   canActivate(
-    route: ActivatedRouteSnapshot,
+    _route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | (boolean | UrlTree) {
     return new Observable(observer => {
@@ -24,14 +24,13 @@ export class CanRegisterSubstanceForm implements CanActivate {
       } else {
         this.authService.getAuth().subscribe(auth => {
           if (auth) {
-            this.authService.hasAnyRolesAsync('DataEntry', 'SuperDataEntry').subscribe(response => {
-              if (response) {
+            this.authService.hasSpecificPrivilege('Create').then(canCreate => {
+              if (canCreate) {
                 observer.next(true);
-                observer.complete();
               } else {
                 observer.next(this.router.parseUrl('/browse-substance'));
-                observer.complete();
               }
+              observer.complete();
             });
           } else {
             const navigationExtras: NavigationExtras = {

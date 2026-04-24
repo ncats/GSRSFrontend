@@ -9,18 +9,22 @@ export class CsrfTokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // CSRF token request needed in pFDA version only
-    if (['GET', 'HEAD'].includes(request.method)
-      || !(this.configService.configData?.isPfdaVersion)) {
+    if (['GET', 'HEAD'].includes(request.method)) {
       return next.handle(request);
     }
 
-    return from(this.fetchCsrfToken()).pipe(
-      switchMap((token: string) => {
-        const modifiedRequest = this.addCsrfToken(request, token);
-        return next.handle(modifiedRequest);
-      })
-    );
+    if (this.configService.configData?.isPfdaVersion) {
+      return from(this.fetchCsrfToken()).pipe(
+        switchMap((token: string) => {
+          return next.handle(this.addCsrfToken(request, token));
+        })
+      );
+    }
+
+    // Non-pFDA: read CSRF token from HTML meta tag
+    const metaTag: HTMLMetaElement | null = document.querySelector('meta[name=csrf-token]');
+    const csrfToken = metaTag?.content || 'CSRF-TOKEN-NOT-PARSED';
+    return next.handle(this.addCsrfToken(request, csrfToken));
   }
 
   private fetchCsrfToken(): Promise<string> {
