@@ -56,7 +56,7 @@
       "emaSmsSubstanceDefinition": {
         "enabled": true,
         "title": "Download European Medicines Agency Substance Definition FHIR message",
-        "buttonName": "Download EMA FHIR SD"
+        "buttonName": "Download EMA FHIR Subst. Def."
       }
     }
   },
