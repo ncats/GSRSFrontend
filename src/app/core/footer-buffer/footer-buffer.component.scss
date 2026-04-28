@@ -1,0 +1,9 @@
+/* ncats branch, used so that footer does not impede scrolling */
+/* ncats branch, after testing set to 200px, and remove green border */
+
+.footer-buffer{ 
+    height: 200px;
+    height: 225px;
+    clear: both;
+    border: 1px solid green;
+}

@@ -403,7 +403,7 @@
 
 <!--Simplified actions-component-->
 <ng-template #simplifiedActionsComponent>
-  <div class="top-fixed small-top-fixed">
+  <div [ngClass]="['top-fixed ', 'small-top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']" *ngIf = "!featuresOnly">
     <div class="actions-container small-actions-container">
       <button
         mat-flat-button

@@ -123,7 +123,9 @@ import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/impo
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 
 // ncats branch begin 
+import { FooterBufferComponent } from './footer-buffer/footer-buffer.component';
 import { FooterComponent } from './footer/footer.component';
+
 // ncats branch end 
 
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
@@ -171,6 +173,7 @@ import { MatDividerModule } from '@angular/material/divider';
     UserQueryListDialogComponent,
     ListCreateDialogComponent,
     ImportScrubberComponent,
+    FooterBufferComponent,
     FooterComponent
   ],
   imports: [
