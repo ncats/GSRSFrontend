@@ -1467,8 +1467,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     const json = this.substanceFormService.cleanSubstance();
     const time = new Date().getTime();
 
-    this.substanceFormService.regenUUID();
-    json.uuid = this.substanceFormService.cleanSubstance().uuid;
+    // Always generate a fresh UUID for the draft copy — do NOT mutate the live substance,
+    // otherwise the save logic will treat a new substance as an existing one (PUT vs POST).
+    // A new UUID on every save ensures no two drafts share the same UUID.
+    json.uuid = this.utilsService.newUUID();
 
     const uuid = json.uuid ? json.uuid : 'register';
     const type = json.substanceClass;
