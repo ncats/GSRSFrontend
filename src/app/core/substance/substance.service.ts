@@ -887,7 +887,8 @@ export class SubstanceService extends BaseHttpService {
         delete (substance as any).$$tmpStructureId;
     }
 
-    const method = type === 'import' || !substance.uuid ? 'POST' : 'PUT';
+    // Use POST for new substances (no uuid OR no version), PUT for existing ones
+    const method = type === 'import' || !substance.uuid || !substance.version ? 'POST' : 'PUT';
     const options = { body: substance };
 
     const url = `${this.apiBaseUrl}substances?view=internal`;
@@ -915,10 +916,8 @@ export class SubstanceService extends BaseHttpService {
 
   saveSubstanceWithoutValidation(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances/novalid?view=internal`;
-    let method = 'PUT';
-    if (type && type === 'import') {
-      method = 'POST';
-    }
+    // Use POST for imports or new substances (no uuid or no version)
+    let method = (type === 'import' || !substance.uuid || !substance.version) ? 'POST' : 'PUT';
     const options = {
       body: substance
     };
