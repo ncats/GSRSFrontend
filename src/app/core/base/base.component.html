@@ -414,7 +414,9 @@
         <router-outlet></router-outlet>
         
         <!-- ncats branch begin --> 
-  <app-footer-buffer></app-footer-buffer>
+        <div *ngIf="showFooter" class="footer-wrapper">
+            <app-footer-buffer></app-footer-buffer>
+        </div>    
     </div>   <!-- ncats branch fragment ngClass.2 bottom -->
 
   </div>
