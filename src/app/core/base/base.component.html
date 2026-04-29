@@ -10,9 +10,10 @@
     <!-- ncats branch begin end -->
 <mat-toolbar
   class="mat-elevation-z3"
-  
+  color="primary"  
   *ngIf="
     showHeaderBar === 'true' &&
+    !isPfdaVersion &&
     (!customToolbarComponent || customToolbarComponent.length == 0)
   "
 >
@@ -44,14 +45,14 @@
       <span style="font-size: 16px">Menu &nbsp;</span
       ><mat-icon svgIcon="menu"></mat-icon>
     </button>
-    <mat-menu #nav="matMenu" (closed)="removeZindex()" class = "reg-a">
+    <mat-menu #nav="matMenu" (closed)="removeZindex()" class="reg-a">
       <ng-container *ngFor="let navItem of navItems">
         <a
           mat-menu-item
           [routerLink]="['/' + navItem.path]"
           *ngIf="navItem.path && !navItem.children"
         >
-          {{navItem.display}}
+          {{ navItem.display }}
         </a>
         <a
           mat-menu-item
@@ -59,19 +60,19 @@
           target="_blank"
           *ngIf="navItem.externalPath && !navItem.children"
         >
-          {{navItem.display}}
+          {{ navItem.display }}
         </a>
         <a
           mat-menu-item
           [href]="transformMailToPath(navItem)"
           *ngIf="navItem.mailToPath && !navItem.children"
         >
-          {{navItem.display}}
+          {{ navItem.display }}
         </a>
 
-        <ng-container *ngIf="navItem.children">
+        <ng-container *ngIf="navItem.children && (navItem.display.toUpperCase()!='REGISTER' || canRegister)">
           <a mat-menu-item [matMenuTriggerFor]="childrenMenu">
-            {{navItem.display}}
+            {{ navItem.display }}
           </a>
           <mat-menu
             #childrenMenu="matMenu"
@@ -85,21 +86,21 @@
                 [queryParams]="childNavItem.params || {}"
                 *ngIf="childNavItem.path"
               >
-                {{childNavItem.display}}
+                {{ childNavItem.display }}
               </a>
               <a
                 mat-menu-item
                 [href]="[childNavItem.href]"
                 *ngIf="childNavItem.href"
               >
-                {{childNavItem.display}}
+                {{ childNavItem.display }}
               </a>
               <a
                 mat-menu-item
                 [href]="transformMailToPath(childNavItem)"
                 *ngIf="childNavItem.mailToPath"
               >
-                {{childNavItem.display}}
+                {{ childNavItem.display }}
               </a>
             </ng-container>
             <a
@@ -117,7 +118,7 @@
       </a>
     </mat-menu>
   </span>
-  <div >
+  <div>
     <button
       class="top-button menu-button extra-item"
       mat-button
@@ -127,7 +128,7 @@
       Browse Substances
     </button>
   </div>
-  <div *ngIf = "this.loadedComponents">
+  <div *ngIf="this.loadedComponents && showBrowseOther">
     <button
       class="top-button extra-browse"
       mat-button
@@ -144,9 +145,9 @@
       *ngIf="loadedComponents"
     >
       <span style="font-size: 16px">Browse Other</span>
-         <mat-icon svgIcon="chevron_down"></mat-icon>
-         </button>
-         <mat-menu #browse="matMenu" (closed)="removeZindex()">
+      <mat-icon svgIcon="chevron_down"></mat-icon>
+    </button>
+    <mat-menu #browse="matMenu" (closed)="removeZindex()">
       <a
         mat-menu-item
         routerLink="/browse-applications"
@@ -194,19 +195,19 @@
           adverseEventShinyHomepageDisplay === true
         "
       >
-          Browse Adverse Events
-        </a>
+        Browse Adverse Events
+      </a>
       <a
         mat-menu-item
         routerLink="/browse-invitro-pharm"
         *ngIf="loadedComponents.invitropharmacology"
       >
-          Browse In Vitro Pharmacology
-        </a>
-      </mat-menu>
-      </div>
+        Browse In Vitro Pharmacology
+      </a>
+    </mat-menu>
+  </div>
 
-      <div>
+  <div>
     <button
       class="top-button extra-item"
       mat-button
@@ -223,8 +224,8 @@
       *ngIf="canRegister"
     >
       <span style="font-size: 16px">Register</span>
-          <mat-icon svgIcon="chevron_down"></mat-icon>
-        </button>
+      <mat-icon svgIcon="chevron_down"></mat-icon>
+    </button>
 
     <button
       class="top-button extra-item"
@@ -241,56 +242,56 @@
       aria-label="search menu"
     >
       <span style="font-size: 16px">Search</span>
-          <mat-icon svgIcon="chevron_down"></mat-icon>
-        </button>
+      <mat-icon svgIcon="chevron_down"></mat-icon>
+    </button>
   </div>
 
-     <div>
-     <mat-menu #reg="matMenu" (closed)="removeZindex()">
+  <div>
+    <mat-menu #reg="matMenu" (closed)="removeZindex()">
       <ng-container *ngFor="let navItem of registerNav">
         <a
           mat-menu-item
           [routerLink]="['/' + navItem.path]"
           *ngIf="navItem.path"
         >
-           {{navItem.display}}
-         </a>
+          {{ navItem.display }}
+        </a>
         <a
           mat-menu-item
           [href]="navItem.externalPath"
           target="_blank"
           *ngIf="navItem.externalPath"
         >
-           {{navItem.display}}
-         </a>
+          {{ navItem.display }}
+        </a>
       </ng-container>
       <a mat-menu-item (click)="importDialog()"> Import Substance </a>
-     </mat-menu>
-    </div>
+    </mat-menu>
+  </div>
 
-    <div>
-      <mat-menu #search="matMenu" (closed)="removeZindex()">
+  <div>
+    <mat-menu #search="matMenu" (closed)="removeZindex()">
       <ng-container *ngFor="let navItem of searchNav">
         <a
           mat-menu-item
           [routerLink]="['/' + navItem.path]"
           *ngIf="navItem.path"
         >
-            {{navItem.display}}
-          </a>
+          {{ navItem.display }}
+        </a>
         <a
           mat-menu-item
           [href]="navItem.externalPath"
           target="_blank"
           *ngIf="navItem.externalPath"
         >
-            {{navItem.display}}
-          </a>
+          {{ navItem.display }}
+        </a>
       </ng-container>
-       </mat-menu>
-    </div>
+    </mat-menu>
+  </div>
 
-    <span class="middle-fill"></span>
+  <span class="middle-fill"></span>
   <app-substance-text-search
     styling="header"
     class="top-search"
@@ -302,7 +303,7 @@
     (closed)="removeZindex()"
   >
   </app-substance-text-search>
-  <div>
+  <div class="user-section">
    <!-- ncats branch begin --> 
    <div *ngIf="showLoginButton">
     <button
@@ -323,8 +324,8 @@
           [matMenuTriggerFor]="accountMenu"
           (click)="increaseMenuZindex()"
         >
-        <mat-icon class="user-icon" svgIcon="account_circle" ></mat-icon>
-      </button>
+          <mat-icon class="user-icon" svgIcon="account_circle"></mat-icon>
+        </button>
         <button
           aria-label="User Account dropdown"
           class="user-button arrow-button test-class"
@@ -336,13 +337,13 @@
             class="user-icon icon-two"
             svgIcon="chevron_down"
           ></mat-icon>
-      </button>
+        </button>
       </div>
       <span
         class="user"
         *ngIf="auth && auth.identifier"
         matTooltip="{{ auth.identifier }}"
-        >{{ auth.identifier }}</span
+        >{{ auth.identifier.length > 9 ? (auth.identifier | slice:0:9) + '…' : auth.identifier }}</span
       >
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
@@ -373,17 +374,17 @@
       <a
         [routerLink]="['/registrars']"
         class="add-at-low-res"
-        *ngIf="canRegister"
+        *ngIf="canRegister && !showRegistrars"
         mat-menu-item
       >
-        <span>Registrars</span>
+        <span>Registrar Dashboard</span>
       </a>
       <button mat-menu-item (click)="logout()">
         <span>Logout</span>
       </button>
     </mat-menu>
   </div>
-  <div class="classic-view-container"  *ngIf="auth && auth.identifier">
+  <div class="classic-view-container" *ngIf="auth && auth.identifier && showRegistrars">
     <a
       class="top-button hide-at-low-res"
       mat-button
@@ -397,21 +398,16 @@
       [routerLink]="['/registrars']"
       *ngIf="canRegister"
     >
-      <span style="font-size: 16px">Registrars</span>
-  </a>
+      <span class="registrar-dashboard-label">Registrar<br>Dashboard</span>
+    </a>
   </div>
 </mat-toolbar>
-<div *ngIf="customToolbarComponent == 'precisionFDA'">
+<div *ngIf="isPfdaVersion">
   <app-pfda-toolbar></app-pfda-toolbar>
 </div>
-  <!-- ncats branch begin --> 
-  </div> 
-  <div [ngClass]="['base-main-wrapper', (showTopBanner) ? 'base-main-wrapper-with-top-banner': '']">
-        <!-- ncats branch end --> 
-        <app-main-notification></app-main-notification>
-        <app-session-expiration></app-session-expiration>
-        <app-loading></app-loading>
-        <router-outlet></router-outlet>
+<app-session-expiration></app-session-expiration>
+<app-loading></app-loading>
+<router-outlet></router-outlet>
         
         <!-- ncats branch begin --> 
         <div *ngIf="showFooter" class="footer-wrapper">

@@ -24,9 +24,13 @@ export class JsonDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
-    this.json = this.substanceFormService.cleanSubstance();
-   // this.json = this.cleanObject(substanceCopy);
+    // Use passed data if available, otherwise get from service
+    if (this.data && this.data.substance) {
+      this.json = this.data.substance;
+    } else {
+      // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
+      this.json = this.substanceFormService.cleanSubstance();
+    }
     const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.json)));
     this.downloadJsonHref = uri;
   }

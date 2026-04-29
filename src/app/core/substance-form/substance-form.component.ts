@@ -55,8 +55,8 @@ import { Location } from '@angular/common';
 import jp from 'jsonpath';
 
 @Component({
-  selector: 'app-substance-form',
-  templateUrl: './substance-form.component.html',
+    selector: 'app-substance-form',
+    templateUrl: './substance-form.component.html',
     styleUrls: ['./substance-form.component.scss'],
     standalone: false
 })
@@ -98,8 +98,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
+  isPfdaVersion: boolean = false;
   canUpdate: boolean;
-  canMakeAdvancedEdits: boolean;  
+  canMakeAdvancedEdits: boolean;
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -128,6 +129,8 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   previousState: number;
   useApprovalAPI = false;
     featuresOnly = false;
+  userCanChangeDefinitionVisibility = false;
+
   // ncats branch begin
   showTopBanner = false;
   // ncats branch end
@@ -217,7 +220,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
             this.isLoading = false;
             this.overlayContainer.style.zIndex = null;
           }, 1000);
-        } else if (response.uuid && response.uuid != 'register') {
+        } else if (this.id && response.uuid && response.uuid != 'register') {
           const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
           this.router.navigateByUrl(url, {state: {record: response.substance}});
         } else {
@@ -241,11 +244,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         if (keys[i].startsWith('gsrs-draft-')) {
           const entry = JSON.parse(localStorage.getItem(keys[i]));
           entry.key = keys[i];
-          if (this.id && entry.uuid === this.id) {
-            this.draftCount++;
-          } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
-            this.draftCount++;
-          }
+          this.draftCount++;
           this.drafts.push(entry);
 
         }
@@ -253,16 +252,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     });
   }
 
-
-  importDialog(): void {
-    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
-      width: '650px',
-      autoFocus: false
-
-    });
-    this.overlayContainer.style.zIndex = '1002';
-
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+  processImportedSubstance(response?: string): void {
       if (response) {
         //   this.overlayContainer.style.zIndex = null;
         this.loadingService.setLoading(true);
@@ -271,6 +261,12 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
 
         const read = JSON.parse(response);
+
+      if (read.substanceClass === 'specifiedSubstanceG4m') {
+        this.router.navigateByUrl('/substances-ssg4m/register?action=import&header=' + true, { state: { record: response } });
+        return;
+      }
+
         if (this.id && read.uuid && this.id === read.uuid) {
           this.substanceFormService.importSubstance(read, 'update');
           this.submissionMessage = null;
@@ -281,15 +277,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
             this.isLoading = false;
             this.overlayContainer.style.zIndex = null;
           }, 1000);
-          /*   } else {
-            if ( read.substanceClass === this.substanceClass) {
-              this.imported = true;
-              this.substanceFormService.importSubstance(read);
-              this.submissionMessage = null;
-              this.validationMessages = [];
-              this.showSubmissionMessages = false;
-              this.loadingService.setLoading(false);
-              this.isLoading = false;*/
         } else {
           setTimeout(() => {
             this.overlayContainer.style.zIndex = null;
@@ -300,8 +287,17 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
           }, 1000);
         }
       }
-      // }
+  }
+
+  importDialog(): void {
+    const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
+      width: '650px',
+      autoFocus: false
+
     });
+    this.overlayContainer.style.zIndex = '1002';
+
+    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => this.processImportedSubstance(response));
 
   }
 
@@ -327,23 +323,13 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     }
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
-    }
-    // ncats branch begin 
-    if(this.configService.configData.showTopBanner === undefined) {
-      this.showTopBanner = false;
-    } else {
-      if(this.configService.configData.showTopBanner === false) { 
-        this.showTopBanner = false;
-      } else {
-        this.showTopBanner = true;
-      }
-    }
-    // ncats branch end 
-
+    }  
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion;
     this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
     this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
     this.userCanMakePublic = await this.authService.hasSpecificPrivilege('Make Records Public');
+    this.userCanChangeDefinitionVisibility = await this.authService.hasSpecificPrivilege('Change Definition Visibility');
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
@@ -359,6 +345,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       .subscribe(params => {
 
         const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+        if (action && action === 'pfda-file-import') {
+          this.importFromUriParam();
+        }
 
         if (params['id']) {
 
@@ -409,8 +398,10 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
                 this.substanceFormService.loadSubstance(response.substanceClass, response).pipe(take(1)).subscribe(() => {
                   if(this.simplifiedForm) {
                     this.setFormSections(formSections['chemicalSimplified']);
+                    console.log("sormSection1", this.formSections)
                   } else {
                     this.setFormSections(formSections[response.substanceClass]);
+                    console.log("sormSection2", this.formSections)
                   }
                   this.isLoading = false;
                   this.loadingService.setLoading(false);
@@ -480,6 +471,35 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     });
   }
 
+  // Load file from URI (as passed in file-uri URL parameter) and try to import it into a submission form
+  private importFromUriParam() {
+    const fileUri = this.activatedRoute.snapshot.queryParams['file-uri'] || null;
+    if (!fileUri) {
+      this.isLoading = false;
+      this.loadingService.setLoading(false);
+      return this.mainNotificationService.setErrorNotification('File URI was not specified');
+    }
+    this.mainNotificationService.setSuccessNotification('Loading file...', 0);
+    fetch(fileUri).then((response) => {
+      if (response.status === 200) {
+        response.json().then(responseJson => {
+          this.mainNotificationService.setSuccessNotification('Processing imported substance...');
+          this.processImportedSubstance(JSON.stringify(responseJson));
+        }).catch(reason => {
+          this.mainNotificationService.setErrorNotification(`Error while parsing imported file: ${reason.message}`);
+        })
+      } else {
+        const errMsg = response.status === 401 ? `Your session expired. Please login and try again.` : `Error while loading file: ${response.status}`;
+        this.mainNotificationService.setErrorNotification(errMsg);
+      }
+    }).catch(reason => {
+      this.mainNotificationService.setErrorNotification(`Error while importing file: ${reason.message}`);
+    })
+    this.isLoading = false;
+    this.loadingService.setLoading(false);
+    return;
+  }
+
   isBase64(str) {
     let base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
     let result = decodeURIComponent(str);
@@ -513,13 +533,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       if (keys[i].startsWith('gsrs-draft-')) {
         const entry = JSON.parse(localStorage.getItem(keys[i]));
         entry.key = keys[i];
-        if (this.id && entry.uuid === this.id) {
-          temp++;
-          // this.draftCount++;
-        } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
-          temp++;
-          //  this.draftCount++;
-        }
+        temp++;
         this.drafts.push(entry);
 
       }
@@ -585,75 +599,75 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
    * Load dynamic components into their ViewContainerRefs
    */
   private loadDynamicComponents(): void {
-        const total = this.formSections.length;
+    const total = this.formSections.length;
 
-          this.loadingService.setLoading(true);
-          const startTime = new Date();
+    this.loadingService.setLoading(true);
+    const startTime = new Date();
     let finished = 0;
 
     console.log(`[Dynamic Loader] Starting to load ${total} components...`);
 
-          this.dynamicComponents.forEach((cRef, index) => {
-            this.dynamicComponentLoader
-              .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
-              .subscribe(componentFactory => {
-                this.loadingService.setLoading(true);
+    this.dynamicComponents.forEach((cRef, index) => {
+      this.dynamicComponentLoader
+        .getComponentFactory<any>(this.formSections[index].dynamicComponentName)
+        .subscribe(componentFactory => {
+          this.loadingService.setLoading(true);
           cRef.clear();
-                this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
-                this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
+          this.formSections[index].dynamicComponentRef = cRef.createComponent(componentFactory);
+          this.formSections[index].matExpansionPanel = this.matExpansionPanels.find((item, panelIndex) => index === panelIndex);
 
-                this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
-                  this.formSections[index].menuLabel = label;
-                });
-
-                const hiddenStateSubscription =
-                this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
-                    this.formSections[index].isHidden = isHidden;
-                });
-                this.subscriptions.push(hiddenStateSubscription);
-
-                this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
-                  this.formSections[index].canAddItem = isList;
-                  if (isList) {
-                    const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
-                      this.formSections[index].matExpansionPanel.open();
-                      this.formSections[index].dynamicComponentRef.instance.addItem();
-                    });
-                    this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
-                      aieSubscription.unsubscribe();
-                    });
-                  }
-                });
-
-                this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
-                finished++;
-
-                if (finished >= total) {
-                  this.loadingService.setLoading(false);
-            console.log(`[Dynamic Loader] ✓ Successfully loaded all ${total} components`);
-                } else {
-                  const currentTime = new Date();
-                  if (currentTime.getTime() - startTime.getTime() > 12000) {
-                    if (confirm('There was a network error while fetching files, would you like to refresh?')) {
-                      window.location.reload();
-                    }
-                  }
-                }
-
-                  if (this.featuresOnly && this.formSections[index].dynamicComponentName !== 'substance-form-structure') {
-                this.formSections[index].isHidden = true;
-              }
-
-            setTimeout(() => {
-                  this.loadingService.setLoading(false);
-                  this.UNII = this.substanceFormService.getUNII();
-                }, 5);
-
-                if (!this.featuresOnly){
-                  this.updateHiddenFormSections();
-                }
-              });
+          this.formSections[index].dynamicComponentRef.instance.menuLabelUpdate.pipe(take(1)).subscribe(label => {
+            this.formSections[index].menuLabel = label;
           });
+
+          const hiddenStateSubscription =
+            this.formSections[index].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(isHidden => {
+              this.formSections[index].isHidden = isHidden;
+            });
+          this.subscriptions.push(hiddenStateSubscription);
+
+          this.formSections[index].dynamicComponentRef.instance.canAddItemUpdate.pipe(take(1)).subscribe(isList => {
+            this.formSections[index].canAddItem = isList;
+            if (isList) {
+              const aieSubscription = this.formSections[index].addItemEmitter.subscribe(() => {
+                this.formSections[index].matExpansionPanel.open();
+                this.formSections[index].dynamicComponentRef.instance.addItem();
+              });
+              this.formSections[index].dynamicComponentRef.instance.componentDestroyed.pipe(take(1)).subscribe(() => {
+                aieSubscription.unsubscribe();
+              });
+            }
+          });
+
+          this.formSections[index].dynamicComponentRef.changeDetectorRef.detectChanges();
+          finished++;
+
+          if (finished >= total) {
+            this.loadingService.setLoading(false);
+            console.log(`[Dynamic Loader] ✓ Successfully loaded all ${total} components`);
+          } else {
+            const currentTime = new Date();
+            if (currentTime.getTime() - startTime.getTime() > 12000) {
+              if (confirm('There was a network error while fetching files, would you like to refresh?')) {
+                window.location.reload();
+              }
+            }
+          }
+
+          if (this.featuresOnly && this.formSections[index].dynamicComponentName !== 'substance-form-structure') {
+            this.formSections[index].isHidden = true;
+          }
+
+          setTimeout(() => {
+            this.loadingService.setLoading(false);
+            this.UNII = this.substanceFormService.getUNII();
+          }, 5);
+
+          if (!this.featuresOnly) {
+            this.updateHiddenFormSections();
+          }
+        });
+    });
   }
 
   openedChange(event: any) {
@@ -1123,6 +1137,21 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     })
   }
 
+  getSubmitButtonText(): string {
+    const parts = [];
+    if (this.validationMessages && this.validationMessages.length > 0) {
+      parts.push('Dismiss all');
+    }
+    if (!this.authService.getUser()) {
+      parts.push('Login');
+    }
+    parts.push('Submit');
+
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0];
+    return parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1];
+  }
+
   submit(): void {
     this.isLoading = true;
     this.approving = false;
@@ -1187,7 +1216,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       messageType: 'ERROR',
       message: 'Unknown Server Error'
     };
-    if (error && error.error && error.error.message) {
+    if (error && error.type === 'AUTH') {
+      message.message = `Authentication Error: ${error.message}`;
+    } else if (error && error.error && error.error.message) {
       message.message = 'Server Error ' + (error.status + ': ' || ': ') + error.error.message;
     } else if (error && error.error && (typeof error.error) === 'string') {
       message.message = 'Server Error ' + (error.status + ': ' || '') + error.error;
@@ -1325,7 +1356,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
 
     const refSet = {};
 
-    const refHolders2 =  jp.query(old, '$..[?(@.references)]');
+    const refHolders2 = jp.query(old, '$..[?(@.references)]');
     for (let i = 0; i < refHolders2.length; i++) {
       const refs = refHolders2[i].references;
       for (let j = 0; j < refs.length; j++) {
@@ -1439,6 +1470,11 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   saveDraft(auto?: boolean) {
     const json = this.substanceFormService.cleanSubstance();
     const time = new Date().getTime();
+
+    // Always generate a fresh UUID for the draft copy — do NOT mutate the live substance,
+    // otherwise the save logic will treat a new substance as an existing one (PUT vs POST).
+    // A new UUID on every save ensures no two drafts share the same UUID.
+    json.uuid = this.utilsService.newUUID();
 
     const uuid = json.uuid ? json.uuid : 'register';
     const type = json.substanceClass;

@@ -40,10 +40,10 @@ import {
 //import { CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_PROVIDER } from '@angular/cdk/overlay/overlay-directives';
 
 @Component({
-    selector: 'app-invitro-pharmacology-form',
-    templateUrl: './invitro-pharmacology-form.component.html',
-    styleUrls: ['./invitro-pharmacology-form.component.scss'],
-    standalone: false
+  selector: 'app-invitro-pharmacology-form',
+  templateUrl: './invitro-pharmacology-form.component.html',
+  styleUrls: ['./invitro-pharmacology-form.component.scss'],
+  standalone: false
 })
 export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
@@ -208,8 +208,6 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
               const response = JSON.parse(record);
               if (response) {
 
-                // this.scrub(response);
-
                 // Get All Assay Sets
                 this.getAllAssaySets();
 
@@ -339,11 +337,7 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       if (response) {
         this.existingAssaySetList = response;
       }
-
-      //  this.loadingService.setLoading(false);
-      //  this.isLoading = false;
     }, error => {
-      // this.loadingService.setLoading(false);
       // this.isLoading = false;
       this.loadingService.setLoading(false);
       this.handleRecordRetrivalError();
@@ -614,14 +608,14 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
               // Test Agent Concentration must be a number
               if (screening.invitroAssayResult.testAgentConcentration) {
                 if (this.isNumber(screening.invitroAssayResult.testAgentConcentration) === false) {
-                  this.setValidationMessage('Test Agent Concentration must be a number in row ' + (indexAssay+1));
+                  this.setValidationMessage('Test Agent Concentration must be a number in row ' + (indexAssay + 1));
                 }
               }
 
               // Result Value must be a number
               if (screening.invitroAssayResult.resultValue) {
                 if (this.isNumber(screening.invitroAssayResult.resultValue) === false) {
-                  this.setValidationMessage('Result Value must be a number in row ' + (indexAssay+1));
+                  this.setValidationMessage('Result Value must be a number in row ' + (indexAssay + 1));
                 }
               }
 
@@ -667,14 +661,15 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
   }
 
   private handleRecordRetrivalError() {
+    console.log("In 'Register In Vitro Pharmacology Screening' page, there was an error in retrieving data from the server.");
     const notification: AppNotification = {
-      message: 'The In Vitro pharmacology record you\'re trying to edit doesn\'t exist.',
+      message: 'There was an error in retrieving data from the server.',
       type: NotificationType.error,
       milisecondsToShow: 4000
     };
     this.mainNotificationService.setNotification(notification);
     setTimeout(() => {
-      this.router.navigate(['/invitro-pharm/register']);
+      // this.router.navigate(['/invitro-pharm/register']);
       this.invitroPharmacologyService.loadAssay();
     }, 5000);
   }
@@ -767,8 +762,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
 
   openModalSave(template: TemplateRef<any>) {
     const dialogRef = this.dialog.open(template, {
-      minWidth: '50%',
-      maxWidth: '50%'
+      width: '60vw',
+      height: '30vh',
     });
 
     this.overlayContainer.style.zIndex = '1002';
@@ -1218,13 +1213,13 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
       // > 60                     - 10 in the high    Summary
 
       if (assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue < 30) {
-        assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueLow = 10;
+            assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueLow = 10;
       } else if ((assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue >= 30)
         && (assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue <= 60)) {
-        assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueAverage = 10;
+            assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueAverage = 10;
       } else if (assay.invitroAssayScreenings[lastScreeningIndex].invitroAssayResult.resultValue > 60) {
-        assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueHigh = 10;
-      }
+            assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.resultValueHigh = 10;
+          }
 
       assay.invitroAssayScreenings[lastScreeningIndex].invitroSummary.isFromResult = true;
     });
@@ -1258,7 +1253,8 @@ export class InvitroPharmacologyFormComponent implements OnInit, OnDestroy {
         //  this.ingredientNameMessage = 'Add Substance Key Type in Config';
         //} else {
         // KEY RESOLVER
-        if (this.substanceKeyTypeForInvitroPharmacologyConfig === 'UUID' || this.substanceKeyTypeForInvitroPharmacologyConfig === 'APPROVAL_ID') {
+        if (this.substanceKeyTypeForInvitroPharmacologyConfig === 'UUID' || this.substanceKeyTypeForInvitroPharmacologyConfig === 'APPROVAL_ID'
+          || this.substanceKeyTypeForInvitroPharmacologyConfig === 'UNII') {
           this.assayResultInfo.invitroTestAgent.testAgentSubstanceKey = this.generalService.getSubstanceKeyByRelatedSubstanceResolver(relatedSubstance, this.substanceKeyTypeForInvitroPharmacologyConfig);
         } else if (this.substanceKeyTypeForInvitroPharmacologyConfig === 'BDNUM') {
           this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {

@@ -56,56 +56,56 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     let loaded = false;
 
-    setInterval(() => {
-      if (window['schemeUtil'] && !loaded) {
-        loaded = true;
-        //setup viz stuff
-        //TODO: make more configurable and standardized
-        console.log("About to configure the scheme view");
-        window['schemeUtil'].debug = false;
+    // setInterval(() => {
+    //   if (window['schemeUtil'] && !loaded) {
+    //     loaded = true;
+    //     //setup viz stuff
+    //     //TODO: make more configurable and standardized
+    //     console.log("About to configure the scheme view");
+    //     window['schemeUtil'].debug = false;
 
-        window['schemeUtil'].maxContinuousSteps = 1;
-        window['schemeUtil'].maxTextLen = 30;
-        window['schemeUtil'].BREAK_GAP = 300;
-        window['schemeUtil'].maxTitleTextLen = 100;
+    //     window['schemeUtil'].maxContinuousSteps = 1;
+    //     window['schemeUtil'].maxTextLen = 30;
+    //     window['schemeUtil'].BREAK_GAP = 300;
+    //     window['schemeUtil'].maxTitleTextLen = 100;
 
-        const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
-        const httpp = this.http;
-        window['schemeUtil'].apiBaseURL = url;
+    //     const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/'}api/v1/`;
+    //     const httpp = this.http;
+    //     window['schemeUtil'].apiBaseURL = url;
 
-        //allow resolution of svgs
-        window['schemeUtil'].urlResolver = (u, cb) => {
-          httpp.get(u, { responseType: 'text' }).subscribe(svg => {
-            cb(svg);
-          }, error => {
-            cb("ERROR");
-          });
-        };
-        //TODO:
-        window['schemeUtil'].onClickReaction = (d) => {
-          //Can we add a popup dialog that would show the specific step here?
-          let pindex = d.processIndex;
-          let sindex = d.stepIndex;
-          let siteIndex = d.siteIndex;
-          if (typeof siteIndex === "undefined") {
-            siteIndex = 0;
-          }
-          this.showStepViewDialog(pindex, siteIndex, sindex);
+    //     //allow resolution of svgs
+    //     window['schemeUtil'].urlResolver = (u, cb) => {
+    //       httpp.get(u, { responseType: 'text' }).subscribe(svg => {
+    //         cb(svg);
+    //       }, error => {
+    //         cb("ERROR");
+    //       });
+    //     };
+    //     //TODO:
+    //     window['schemeUtil'].onClickReaction = (d) => {
+    //       //Can we add a popup dialog that would show the specific step here?
+    //       let pindex = d.processIndex;
+    //       let sindex = d.stepIndex;
+    //       let siteIndex = d.siteIndex;
+    //       if (typeof siteIndex === "undefined") {
+    //         siteIndex = 0;
+    //       }
+    //       this.showStepViewDialog(pindex, siteIndex, sindex);
 
-          //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
-          //maybe in the future it should instead be a side window, I don't know.
-        };
+    //       //I just want to show a dialog that shows the step/stage component rendered in a popup for now.
+    //       //maybe in the future it should instead be a side window, I don't know.
+    //     };
 
-        //TODO:
-        window['schemeUtil'].onClickMaterial = (d) => {
-          this.openImageModal(d.refuuid, d.name, d.bottomText);
-        };
+    //     //TODO:
+    //     window['schemeUtil'].onClickMaterial = (d) => {
+    //       this.openImageModal(d.refuuid, d.name, d.bottomText);
+    //     };
 
-        if (window['schemeUtil'].executeWhenLoaded) {
-          window['schemeUtil'].executeWhenLoaded();
-        }
-      }
-    }, 100);
+    //     if (window['schemeUtil'].executeWhenLoaded) {
+    //       window['schemeUtil'].executeWhenLoaded();
+    //     }
+    //   }
+    // }, 100);
 
     // Get the parameter from URL and set the tab to either form view, step view, or scheme view.
     this.showView = this.activatedRoute.snapshot.queryParams['view'] || 'form';
@@ -208,28 +208,28 @@ export class SubstanceFormSsg4mProcessCardComponent extends SubstanceCardBaseFil
 
   onSelectedIndexChange(tabIndex: number) {
     this.tabSelectedIndex = tabIndex;
-    if (this.tabSelectedIndex === 2) {
-      document.querySelector("#scheme-viz-view").className = "";
-      //This is a hacky placeholder way to force viz
-      //TODO finish this
-      const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
+    // if (this.tabSelectedIndex === 2) {
+    //   document.querySelector("#scheme-viz-view").className = "";
+    //   //This is a hacky placeholder way to force viz
+    //   //TODO finish this
+    //   const ssgjs = JSON.stringify(this.substanceFormService.cleanSubstance());
 
-      console.log("About to load the scheme view");
-      if (window['schemeUtil']) {
-        if (window['schemeUtil'].debug) {
-          window['schemeUtil'].executeWhenLoaded = (() => {
-            console.log("About to render the scheme view");
-            window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
-            window['schemeUtil'].executeWhenLoaded = null;
-          });
-        } else {
-          console.log("About to render the scheme view");
-          window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
-        }
-      }
-    } else {
-      document.querySelector("#scheme-viz-view").className = "hidden";
-    }
+    //   console.log("About to load the scheme view");
+    //   if (window['schemeUtil']) {
+    //     if (window['schemeUtil'].debug) {
+    //       window['schemeUtil'].executeWhenLoaded = (() => {
+    //         console.log("About to render the scheme view");
+    //         window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    //         window['schemeUtil'].executeWhenLoaded = null;
+    //       });
+    //     } else {
+    //       console.log("About to render the scheme view");
+    //       window['schemeUtil'].renderScheme(window['schemeUtil'].makeDisplayGraph(JSON.parse(ssgjs)), "#scheme-viz-view");
+    //     }
+    //   }
+    // } else {
+    //   document.querySelector("#scheme-viz-view").className = "hidden";
+    // }
   }
 
   tabSelectedIndexOutChange(tabIndex: number) {

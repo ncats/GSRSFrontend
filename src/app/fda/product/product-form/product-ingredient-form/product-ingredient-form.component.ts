@@ -255,8 +255,9 @@ export class ProductIngredientFormComponent implements OnInit {
             alert('There is no Substance Key Type configuration found in the frontend config file: substance.linking.keyType.productKeyType:"UUID". Unable to add Ingredient Name when saving this record.');
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
-            // KEY RESOLVER
-            if (this.substanceKeyTypeForProductConfig === 'UUID' || this.substanceKeyTypeForProductConfig === 'APPROVAL_ID') {
+            // KEY RESOLVER (Get Subtance by Substance Key Type: UUID, APPROVAL_ID, UNII, and BDNUM)
+            if (this.substanceKeyTypeForProductConfig === 'UUID' || this.substanceKeyTypeForProductConfig === 'APPROVAL_ID' ||
+              this.substanceKeyTypeForProductConfig === 'UNII') {
               this.ingredient.substanceKey = this.generalService.getSubstanceKeyByRelatedSubstanceResolver(relatedSubstance, this.substanceKeyTypeForProductConfig);
             } else if (this.substanceKeyTypeForProductConfig === 'BDNUM') {
               this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {
@@ -342,7 +343,8 @@ export class ProductIngredientFormComponent implements OnInit {
             this.ingredientNameMessage = 'Add Substance Key Type in Config';
           } else {
             // KEY RESOLVER
-            if (this.substanceKeyTypeForProductConfig === 'UUID' || this.substanceKeyTypeForProductConfig === 'APPROVAL_ID') {
+            if (this.substanceKeyTypeForProductConfig === 'UUID' || this.substanceKeyTypeForProductConfig === 'APPROVAL_ID' ||
+              this.substanceKeyTypeForProductConfig === 'UNII') {
               this.ingredient.basisOfStrengthSubstanceKey = this.generalService.getSubstanceKeyByRelatedSubstanceResolver(relatedSubstance, this.substanceKeyTypeForProductConfig);
             } else if (this.substanceKeyTypeForProductConfig === 'BDNUM') {
               this.generalService.getCodeBdnumBySubstanceUuid(relatedSubstance.refuuid).subscribe(response => {

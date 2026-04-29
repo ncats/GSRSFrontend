@@ -25,7 +25,7 @@ import {Subject, Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
 import { AdminService } from '@gsrs-core/admin/admin.service';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { toCanvas } from 'html-to-image';
 import { ConfigService } from '@gsrs-core/config';
 import { DatePipe } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -356,10 +356,14 @@ export class SubstanceDetailsComponent implements OnInit, AfterViewInit, OnDestr
   generatePDF() {
     const datepipe = new DatePipe('en-US');
     const date = new Date();
-    const formattedDate = datepipe.transform(date, 'dd-MMM-YYYY');
+    const formattedDate = datepipe.transform(date, 'dd-MMM-yyyy');
     const data = document.getElementById('substancePdfContent');
     var pageNum = 1;
-    html2canvas(data, { useCORS: true, logging : true, scrollY: 0,allowTaint : false }).then((canvas) => {
+    // 1x1 transparent GIF — prevents cross-origin image fetch failures from
+    // rejecting the entire toCanvas() promise (html-to-image returns imagePlaceholder
+    // on CORS errors; an empty string causes onerror → promise rejection).
+    const transparentPlaceholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    toCanvas(data, { pixelRatio: 1, skipFonts: true, imagePlaceholder: transparentPlaceholder }).then((canvas) => {
       const image = { type: 'png', quality: 0.5 };
       const margin = [0.5, 0.75];
       var imgWidth = 8.5;

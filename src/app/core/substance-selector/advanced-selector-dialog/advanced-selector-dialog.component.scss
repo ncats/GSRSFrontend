@@ -7,7 +7,8 @@
 }
 
 .search-radio {
-  padding: 5px;
+  --mdc-radio-state-layer-size: 32px;
+  margin-bottom: -6px;
 }
 
 .radio-label {
@@ -60,10 +61,6 @@
   padding: 65px 5px 0 5px;
 }
 
-.sort {
-  margin-right: 25px;
-}
-
 .mat-card-title {
   white-space: normal;
 
@@ -83,6 +80,10 @@
 
 .tile-title {
   height: 19px;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: red;
 }
 
 ::ng-deep .mat-paginator-range-label {
@@ -118,13 +119,19 @@
   margin-top: 15px;
 }
 
+.editor-container {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .tile {
   height: 305px;
   margin: 10px;
   padding: 10px;
-  width: calc(25% - 20px);
-  min-width: 200px;
-  max-width: 230px;
+  width: calc(25% - 20px) !important;
+  min-width: 200px !important;
+  max-width: 230px !important;
   align-content: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -325,7 +332,7 @@
     }
   }
 
-  // .page-selector display:none moved to global _angular-15-mdc-fixes.scss
+  // .page-selector display:none moved to global _material-overrides.scss
 
   .full-paginator {
     min-width: 500px !important;
@@ -472,8 +479,8 @@
 }
 
 .sort {
-  margin: auto;
-  margin-bottom: -7px;
+  margin-right: 25px;
+  align-self: flex-end;
 }
 
 .advanced {
@@ -555,7 +562,7 @@
   }
 }
 
-// Page label and page selector styles moved to global _angular-15-mdc-fixes.scss
+// Page label and page selector styles moved to global _material-overrides.scss
 // Note: This component previously used color: rgba(0, 0, 0, 0.54) for .page-label,
 // now uses var(--dark-label-color) from global styles
 
@@ -662,4 +669,12 @@ mat-paginator {
   ::ng-deep .mat-button-wrapper {
     padding: 0;
   }
+}
+
+.search-title {
+  margin-bottom: 0;
+}
+
+.card-content {
+  padding: 0 !important;
 }

@@ -1,6 +1,8 @@
 <div mat-dialog-header>
   <div class="form-row head">
-    <div class="title">Saved Drafts</div>
+    <div class="title" *ngIf="formState == FormState.DRAFT_LIST">Saved Drafts</div>
+    <div class="title" *ngIf="formState == FormState.VALIDATION_RESULTS">Drafts Validation</div>
+    <div class="title" *ngIf="formState == FormState.SUBMISSION">Submission Results</div>
     <span class="middle-fill"></span>
     <button
       mat-icon-button
@@ -12,136 +14,211 @@
     </button>
   </div>
 </div>
-<mat-dialog-content>
-  <table
-    mat-table
-    matSort
-    [dataSource]="filtered"
-    (matSortChange)="sortData($event)"
-    *ngIf="filtered.length > 0"
-  >
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef>Delete</th>
-      <td mat-cell *matCellDef="let draft">
-        <button
-          mat-icon-button
-          matTooltip="Delete draft"
-          (click)="deleteDraft(draft)"
-        >
-          <mat-icon svgIcon="delete_forever"></mat-icon>
-        </button>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="type">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let draft">{{ draft.type }}</td>
-    </ng-container>
-    <ng-container matColumnDef="name">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let draft">{{ draft.name }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="date">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Date Saved</th>
-      <td mat-cell *matCellDef="let draft">
-        <span>{{ draft.date | date : "medium" }} </span
-        ><span *ngIf="draft.auto" style="margin-left: 8px"
-          ><b>[AUTOSAVE]</b></span
-        ><span
-          ><br />
-          {{ draft.fromNow }}</span
-        >
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="uuid">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>UUID</th>
-      <td mat-cell *matCellDef="let draft">{{ draft.uuid }}</td>
-    </ng-container>
-    <ng-container matColumnDef="load">
-      <th mat-header-cell *matHeaderCellDef>Use</th>
-      <td mat-cell *matCellDef="let draft">
-        <button mat-button (click)="useDraft(draft)">Load Draft</button>
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-  <div
-    class="form-row"
-    *ngIf="filtered.length == 0"
-    style="padding: 50px; font-size: 17px"
-  >
-    No drafts were found for these conditions under local storage. Substance
-    drafts are stored in this browser's cache, so using an incognito tab or
-    clearing cache will clear or not allow access to drafts. You can save and
-    load stored record drafts using the buttons below.
-  </div>
-</mat-dialog-content>
-<div mat-dialog-actions>
-  <div class="form-row">
-    <div class="checkbox" *ngIf="data.uuid" style="padding: 10px">
-      <mat-checkbox
-        [ngModel]="onlyCurrent"
-        (change)="filterToggle('current')"
-        matTooltip="selected"
-      >
-        Show only current record
-      </mat-checkbox>
-    </div>
-
-    <div class="checkbox" style="padding: 10px">
-      <mat-checkbox
-        [ngModel]="onlyRegister"
-        (change)="filterToggle('register')"
-        matTooltip="selected"
-      >
-        Show only new registrations
-      </mat-checkbox>
-    </div>
-  </div>
-
-  <div class="form-row buttons">
-    <a
-      style="margin-right: 10px"
-      mat-flat-button
-      color="primary"
-      [href]="downloadJsonHref"
-      download="{{ fileName }}.json"
-      matTooltip="Save a copy of all local drafts to a file"
+<div class="spinner-overlay" *ngIf="isLoading">
+  <mat-progress-spinner
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</div>
+<div *ngIf="formState == FormState.DRAFT_LIST">
+  <mat-dialog-content>
+    <table
+      mat-table
+      matSort
+      [dataSource]="filtered"
+      (matSortChange)="sortData($event)"
+      *ngIf="filtered.length > 0"
     >
-      <span>Save Backup</span>
-    </a>
-    <div class="file-row">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>Select</th>
+        <td mat-cell *matCellDef="let draft">
+          <mat-checkbox
+            [ngModel]="selectedKeys.includes(draft.key)"
+            (change)="toggleDraft(draft, $event.checked)"
+            matTooltip="Select for submission"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Delete</th>
+        <td mat-cell *matCellDef="let draft">
+          <button
+            mat-icon-button
+            matTooltip="Delete draft"
+            (click)="deleteDraft(draft)"
+          >
+            <mat-icon svgIcon="delete_forever"></mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let draft">{{ draft.type }}</td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let draft">{{ draft.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>Date Saved</th>
+        <td mat-cell *matCellDef="let draft">
+          <span>{{ draft.date | date : "medium" }} </span
+          ><span *ngIf="draft.auto" style="margin-left: 8px"
+            ><b>[AUTOSAVE]</b></span
+          ><span
+            ><br />
+            {{ draft.fromNow }}</span
+          >
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="uuid">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef>UUID</th>
+        <td mat-cell *matCellDef="let draft">{{ draft.uuid }}</td>
+      </ng-container>
+      <ng-container matColumnDef="load">
+        <th mat-header-cell *matHeaderCellDef>Use</th>
+        <td mat-cell *matCellDef="let draft">
+          <button mat-button (click)="useDraft(draft)">Load Draft</button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <div
+      class="form-row"
+      *ngIf="filtered.length == 0"
+      style="padding: 50px; font-size: 17px"
+    >
+      No drafts were found for these conditions under local storage. Substance
+      drafts are stored in this browser's cache, so using an incognito tab or
+      clearing cache will clear or not allow access to drafts. You can save and
+      load stored record drafts using the buttons below.
+    </div>
+  </mat-dialog-content>
+  <div mat-dialog-actions>
+    <div class="form-row">
+      <div class="checkbox" *ngIf="data.uuid" style="padding: 10px">
+        <mat-checkbox
+          [ngModel]="onlyCurrent"
+          (change)="filterToggle('current')"
+          matTooltip="selected"
+        >
+          Show only current record
+        </mat-checkbox>
+      </div>
+
+      <div class="checkbox" style="padding: 10px">
+        <mat-checkbox
+          [ngModel]="onlyRegister"
+          (change)="filterToggle('register')"
+          matTooltip="selected"
+        >
+          Show only new registrations
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <div class="form-row buttons">
+      <button
+        mat-flat-button
+        [disabled]="selectedKeys.length === 0"
+        color="primary"
+        (click)="validateSelected()"
+        matTooltip="Validate and Submit selected drafts"
+      >
+        <span>Validate and Submit selected</span>
+      </button>
+      <a
+        style="margin-right: 10px"
+        mat-flat-button
+        color="primary"
+        [href]="downloadJsonHref"
+        download="{{ fileName }}.json"
+        matTooltip="Save a copy of all local drafts to a file"
+      >
+        <span>Save Backup</span>
+      </a>
+      <div class="file-row">
+        <button
+          mat-flat-button
+          color="primary"
+          style="margin-right: 10px"
+          matTooltip="choose a local file of draft backups"
+          (click)="openInput()"
+        >
+          Load A Backup
+        </button>
+        <div class="file-name" [ngClass]="filename ? 'test' : 'italics'">
+          {{ filename ? filename : "no file chosen" }}
+        </div>
+        <input
+          id="fileInput"
+          hidden
+          type="file"
+          (change)="onFileSelect($event)"
+          name="file1"
+          accept=".json"
+        />
+      </div>
+
+      <span class="middle-fill"></span>
       <button
         mat-flat-button
         color="primary"
-        style="margin-right: 10px"
-        matTooltip="choose a local file of draft backups"
-        (click)="openInput()"
+        mat-dialog-close
+        (click)="close()"
       >
-        Load A Backup
+        Close
       </button>
-      <div class="file-name" [ngClass]="filename ? 'test' : 'italics'">
-        {{ filename ? filename : "no file chosen" }}
-      </div>
-      <input
-        id="fileInput"
-        hidden
-        type="file"
-        (change)="onFileSelect($event)"
-        name="file1"
-        accept=".json"
-      />
     </div>
+  </div>
+</div>
 
-    <span class="middle-fill"></span>
-    <button
-      mat-flat-button
-      color="primary"
-      mat-dialog-close
-      (click)="close()"
-    >
-      Close
+
+<div *ngIf="formState == FormState.VALIDATION_RESULTS">
+  <mat-dialog-content>
+    <div class="draft-block" *ngFor="let draft of validatedDrafts; let i=index">
+      <div>
+        <strong>Type:</strong> {{draft.json.type}}, <strong>Name:</strong> {{ draft.json.name ? draft.json.name : '-' }}
+        <em *ngIf="!draft.validationResult">This substance cannot be submitted</em>
+      </div>
+      <div class="message-row" *ngFor="let message of draft.validationMessages; index as i">
+        <span class="label" [ngClass]="{'label-error': message.messageType == 'ERROR' || message.messageType == 'SERVER ERROR', 'label-warning': message.messageType == 'WARNING', 'label-notice': message.messageType == 'NOTICE'}">
+          {{ message.messageType }}
+        </span>
+        <span>
+          {{ message.message }}
+          <span *ngFor="let link of message.links"><br/>
+                <a [href]="fixLink(link.href)" class="internal-link"
+                   target="_blank">{{ link.text }}</a>
+          </span>
+        </span>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <div class="form-row">
+    <button mat-flat-button [disabled]="!hasValidDrafts()" color="primary" (click)="submitValid()" matTooltip="Submit valid drafts">
+      <span>Submit valid drafts</span>
     </button>
   </div>
+</div>
+
+<div *ngIf="formState == FormState.SUBMISSION">
+  <mat-dialog-content>
+    <div class="draft-block" *ngFor="let draft of validatedDrafts; let i=index">
+      <div>
+        <strong>Type:</strong> {{draft.json.type}}, <strong>Name:</strong> {{ draft.json.name ? draft.json.name : '-' }}
+      </div>
+      <div class="message-row">
+        <span class="label label-error" *ngIf="draft.submitStatus == SubmissionStatus.CANNOT_BE_SUBMITTED || draft.submitStatus == SubmissionStatus.ERROR">ERROR</span>
+        <span class="label label-success" *ngIf="draft.submitStatus == SubmissionStatus.SUCCESS">SUCCESS</span>
+
+        <span *ngIf="draft.submitStatus == SubmissionStatus.CANNOT_BE_SUBMITTED">Could not be submitted due to validation errors</span>
+        <em *ngIf="draft.submitStatus == SubmissionStatus.IN_PROGRESS">Submission in progress</em>
+        <span *ngIf="draft.submitStatus == SubmissionStatus.SUCCESS"><em><a href="{{draft.fileUrl}}" target="_blank">View Substance</a></em></span>
+        <span *ngIf="draft.submitStatus == SubmissionStatus.ERROR">Error during submission process</span>
+      </div>
+    </div>
+  </mat-dialog-content>
 </div>

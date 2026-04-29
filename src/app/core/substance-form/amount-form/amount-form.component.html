@@ -37,9 +37,9 @@
       </div>
       <div *ngIf="privateSubstanceAmount.type === 'other'" class="custom">
         <mat-form-field>
+          <mat-label>Custom Value</mat-label>
           <input
             matInput
-            placeholder="Custom value"
             (focusout)="updateType($event.target)"
             name="custom"
           />

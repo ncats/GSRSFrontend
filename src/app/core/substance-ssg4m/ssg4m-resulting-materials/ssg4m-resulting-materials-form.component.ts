@@ -159,9 +159,34 @@ export class Ssg4mResultingMaterialsFormComponent implements OnInit, OnDestroy {
         approvalID: substance.approvalID
       };
       this.privateResultingMaterial.substanceName = relatedSubstance;
+      // Clear any draft-related fields when selecting from database
+      delete (this.privateResultingMaterial as any).$$tmpStructureId;
     }
     else {
       this.privateResultingMaterial.substanceName = {};
+    }
+  }
+
+  draftSubstanceSelected(event: any): void {
+    if (!event) {
+      return;
+    }
+
+    const { substance: substanceObj, primaryName, tmpStructureId } = event;
+
+    // Populate the resulting material with draft data
+    this.privateResultingMaterial.substanceName = {
+      refPname: primaryName,
+      name: primaryName,
+      refuuid: substanceObj?.uuid || "draft",
+      substanceClass: 'mention',
+      approvalID: substanceObj?.approvalID
+    };
+    this.privateResultingMaterial.verbatimName = primaryName;
+
+    // Store the temporary structure ID for rendering
+    if (tmpStructureId) {
+      (this.privateResultingMaterial as any).$$tmpStructureId = tmpStructureId;
     }
   }
 

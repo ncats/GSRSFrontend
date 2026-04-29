@@ -204,11 +204,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         if (keys[i].startsWith('gsrs-draft-')) {
           const entry = JSON.parse(localStorage.getItem(keys[i]));
           entry.key = keys[i];
-          if (this.id && entry.uuid === this.id) {
-            this.draftCount++;
-          } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
-            this.draftCount++;
-          }
+          this.draftCount++;
           this.drafts.push(entry);
 
         }
@@ -387,13 +383,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       if (keys[i].startsWith('gsrs-draft-')) {
         const entry = JSON.parse(localStorage.getItem(keys[i]));
         entry.key = keys[i];
-        if (this.id && entry.uuid === this.id) {
-          temp++;
-          // this.draftCount++;
-        } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
-          temp++;
-          //  this.draftCount++;
-        }
+        temp++;
         this.drafts.push(entry);
 
       }

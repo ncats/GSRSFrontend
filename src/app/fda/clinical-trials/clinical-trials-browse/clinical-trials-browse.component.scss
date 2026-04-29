@@ -32,7 +32,7 @@
   margin-bottom: 10px !important;
 }
 
-// Page selector form field styles moved to global _angular-15-mdc-fixes.scss
+// Page selector form field styles moved to global _material-overrides.scss
 // (Note: This component previously used padding: 0 0 5px 0, now uses 10px 0 0 0 from global)
 
 .clinical-trials-browse-filter-form {
@@ -151,7 +151,7 @@ table td.mat-cell {
   }
 }
 
-// Page label and page selector styles moved to global _angular-15-mdc-fixes.scss
+// Page label and page selector styles moved to global _material-overrides.scss
 
 @media (max-width: 1100px) {
   .controls-container,
@@ -184,7 +184,7 @@ table td.mat-cell {
     }
   }
 
-  // .page-selector display:none moved to global _angular-15-mdc-fixes.scss
+  // .page-selector display:none moved to global _material-overrides.scss
 
   .full-paginator {
     min-width: 500px !important;
@@ -295,4 +295,8 @@ table td.mat-cell {
       }
     }
   }
+}
+
+::ng-deep .clinical-trials-browse-filter-form-searchTerm .mat-mdc-form-field-infix {
+  padding-bottom: 8px !important;
 }

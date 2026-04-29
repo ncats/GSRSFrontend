@@ -1,12 +1,12 @@
 <div class="code-form-container">
   <div *ngIf="mod.$$deletedCode" class="notification-backdrop">
     Deleted&nbsp;
-    <button mat-icon-button matTooltip="Undo" (click)="undoDelete()">
+    <button matIconButton matTooltip="Undo" (click)="undoDelete()">
       <mat-icon svgIcon="undo"></mat-icon>
     </button>
   </div>
   <div class="delete-container">
-    <button mat-icon-button matTooltip="Delete code" (click)="deleteCode()">
+    <button matIconButton matTooltip="Delete code" (click)="deleteCode()">
       <mat-icon svgIcon="delete_forever"></mat-icon>
     </button>
   </div>
@@ -44,7 +44,7 @@
     <div class="form-row">
       <div class="amount">
         <div class="label amt-label">Amount</div>
-        <button mat-icon-button matTooltip="add" (click)="openAmountDialog()">
+        <button matIconButton matTooltip="add" (click)="openAmountDialog()">
           <mat-icon svgIcon="add_circle_outline"></mat-icon>
         </button>
         <div class="amount-display">

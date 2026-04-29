@@ -5,9 +5,23 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { UtilsService } from '@gsrs-core/utils';
 import { Sort } from '@angular/material/sort';
 import { DomSanitizer } from '@angular/platform-browser';
-import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { ValidationMessage } from '@gsrs-core/substance-form/substance-form.model'
+
+enum SubmissionStatus {
+  NONE,
+  CANNOT_BE_SUBMITTED,
+  IN_PROGRESS,
+  SUCCESS,
+  ERROR
+}
+
+enum FormState {
+  DRAFT_LIST,
+  VALIDATION_RESULTS,
+  SUBMISSION
+}
 
 @Component({
     selector: 'app-substance-drafts',
@@ -17,23 +31,28 @@ import * as moment from 'moment';
 })
 export class SubstanceDraftsComponent implements OnInit {
   draft: SubstanceDraft;
-  displayedColumns: string[] = ['delete', 'type', 'name', 'uuid', 'date', 'load'];
+  displayedColumns: string[] = ['select', 'delete', 'type', 'name', 'uuid', 'date', 'load'];
 
   json: any;
   values: Array<any>;
   filtered: Array<any>;
+  selectedKeys: Array<string> = [];
   onlyRegister = false;
   onlyCurrent = false;
   downloadJsonHref: any;
   fileName: string;
-  filename: string;  
-  uploadForm: FormGroup;
+  filename: string;
   view = 'edit';
   file: any;
   uuid: string;
-  
+
+  formState: FormState = FormState.DRAFT_LIST;
+  isLoading: boolean = false;
+  validatedDrafts: Array<any> = [];
+
   constructor(
     private substanceFormService: SubstanceFormService,
+    private substanceService: SubstanceService,
     public dialogRef: MatDialogRef<SubstanceDraftsComponent>,
     private utilsService: UtilsService,
     private sanitizer: DomSanitizer,
@@ -50,13 +69,11 @@ export class SubstanceDraftsComponent implements OnInit {
       this.uuid = this.json.uuid;
 
     }
-    
+
     this.fetchDrafts();
     const time = new Date().getTime();
     this.fileName = 'gsrs-drafts-' + time;
     this.download();
-
-    
   }
 
 
@@ -89,11 +106,12 @@ export class SubstanceDraftsComponent implements OnInit {
 
     this.filtered = this.values;
     if (this.onlyCurrent) {
+      const isNewRegistration = !this.data || !this.data.uuid;
       this.filtered = this.filtered.filter(obj => {
         if(this.uuid) {
-          return obj.uuid == this.uuid;
+          return obj.uuid == this.uuid || (isNewRegistration && obj.uuid === 'register');
         } else if (this.json && this.json.uuid){
-          return obj.uuid == this.json.uuid;
+          return obj.uuid == this.json.uuid || (isNewRegistration && obj.uuid === 'register');
         } else {
           return false;
         }
@@ -110,7 +128,6 @@ export class SubstanceDraftsComponent implements OnInit {
 
 
   useDraft(index) {
-   
     this.dialogRef.close(index);
   }
 
@@ -127,15 +144,209 @@ export class SubstanceDraftsComponent implements OnInit {
     });
   }
 
+  toggleDraft(draft: any, checked: boolean): void {
+    if (!this.selectedKeys.includes(draft.key) && checked) {
+      this.selectedKeys.push(draft.key);
+    } else if (this.selectedKeys.includes(draft.key) && !checked) {
+      this.selectedKeys = this.selectedKeys.filter(key => key !== draft.key);
+    }
+  }
+
+  processValidationMessages(substanceCopy, results): void {
+    if (results.validationMessages) {
+      for (let i = 0; i < substanceCopy.references.length; i++) {
+        const ref = substanceCopy.references[i];
+        if (ref.docType !== 'SYSTEM') {
+          if ((!ref.citation || ref.citation === '') || (!ref.docType || ref.docType === '')) {
+            const invalidReferenceMessage: ValidationMessage = {
+              actionType: 'frontEnd',
+              appliedChange: false,
+              links: [],
+              message: 'All references require a non-empty source type and text/citation value',
+              messageType: 'WARNING',
+              suggestedChange: true
+            };
+            results.validationMessages.push(invalidReferenceMessage);
+            break;
+          }
+        }
+      }
+      if (substanceCopy.properties) {
+        for (let i = 0; i < substanceCopy.properties.length; i++) {
+          const prop = substanceCopy.properties[i];
+          if (!prop.propertyType || !prop.name) {
+            const invalidPropertyMessage: ValidationMessage = {
+              actionType: 'frontEnd',
+              appliedChange: false,
+              links: [],
+              message: 'Property #' + (i + 1) + ' requires a non-empty name and type',
+              messageType: 'ERROR',
+              suggestedChange: true
+            };
+            results.validationMessages.push(invalidPropertyMessage);
+            results.valid = false;
+          }
+        }
+      }
+      if (substanceCopy.relationships) {
+        for (let i = 0; i < substanceCopy.relationships.length; i++) {
+          const relationship = substanceCopy.relationships[i];
+          if (!relationship.relatedSubstance || !relationship.type || relationship.type === '') {
+            const invalidRelationshipMessage: ValidationMessage = {
+              actionType: 'frontEnd',
+              appliedChange: false,
+              links: [],
+              message: 'Relationship  #' + (i + 1) + ' requires a non-empty related substance and type',
+              messageType: 'ERROR',
+              suggestedChange: true
+            };
+            results.validationMessages.push(invalidRelationshipMessage);
+            results.valid = false;
+          }
+        }
+      }
+      if (substanceCopy.polymer && substanceCopy.polymer.monomers) {
+        for (let i = 0; i < substanceCopy.polymer.monomers.length; i++) {
+          const prop = substanceCopy.polymer.monomers[i];
+          if (!prop.monomerSubstance || (typeof prop.monomerSubstance === 'object' && Object.keys(prop.monomerSubstance).length === 0)) {
+            const invalidPropertyMessage: ValidationMessage = {
+              actionType: 'frontEnd',
+              appliedChange: false,
+              links: [],
+              message: 'Monomer #' + (i + 1) + ' requires a selected substance',
+              messageType: 'ERROR',
+              suggestedChange: true
+            };
+            results.validationMessages.push(invalidPropertyMessage);
+            results.valid = false;
+          }
+        }
+      }
+      if (substanceCopy.modifications && substanceCopy.modifications.physicalModifications) {
+        for (let i = 0; i < substanceCopy.modifications.physicalModifications.length; i++) {
+          const prop = substanceCopy.modifications.physicalModifications[i];
+          let present = false;
+          if (prop && prop.parameters) {
+            prop.parameters.forEach(param => {
+              if (param.parameterName) {
+                present = true;
+              }
+            });
+          }
+
+          if (!prop.physicalModificationRole && !present) {
+            const invalidPropertyMessage: ValidationMessage = {
+              actionType: 'frontEnd',
+              appliedChange: false,
+              links: [],
+              message: 'Physical Modification #' + (i + 1) + ' requires a modification role or valid parameter',
+              messageType: 'ERROR',
+              suggestedChange: true
+            };
+            results.validationMessages.push(invalidPropertyMessage);
+            results.valid = false;
+          }
+        }
+      }
+    }
+  }
+
+  validateSelected(): void {
+    this.formState = FormState.VALIDATION_RESULTS;
+    this.isLoading = true;
+    this.validatedDrafts = [];
+    this.selectedKeys.forEach(key => {
+      const draft = JSON.parse(localStorage.getItem(key));
+      const validatedDraft = {
+        key: key,
+        json: draft,
+        validationMessages: [],
+        validationResult: false,
+        submitStatus: SubmissionStatus.NONE,
+        fileUrl: undefined
+      }
+
+      this.substanceService.validateSubstance(draft.substance).subscribe(results => {
+
+        this.processValidationMessages(draft.substance, results);
+        validatedDraft.validationMessages = results.validationMessages.filter(
+          message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING' || message.messageType.toUpperCase() === 'NOTICE'
+        );
+        validatedDraft.validationResult = results.valid;
+        this.validatedDrafts.push(validatedDraft);
+
+        if (this.validatedDrafts.length === this.selectedKeys.length) {
+          this.isLoading = false;
+        }
+      }, error => {
+
+        validatedDraft.validationMessages.push({
+          messageType: 'SERVER ERROR',
+          message: error.error?.message
+
+        })
+
+        this.validatedDrafts.push(validatedDraft);
+        if (this.validatedDrafts.length === this.selectedKeys.length) {
+          this.isLoading = false;
+        }
+      });
+    })
+  }
+
+  submitValid() {
+    this.formState = FormState.SUBMISSION;
+    this.isLoading = true;
+    let completedCount = 0;
+    const submittableDrafts = this.validatedDrafts.filter(draft => draft.validationResult);
+    this.validatedDrafts.forEach(draft => {
+      if (!draft.validationResult) {
+        draft.submitStatus = SubmissionStatus.CANNOT_BE_SUBMITTED;
+      } else {
+        draft.submitStatus = SubmissionStatus.IN_PROGRESS;
+        const result = {
+          isSuccessfull: false,
+          validationMessages: [],
+          serverError: undefined
+        }
+        this.substanceService.saveSubstance(draft.json.substance, 'import').subscribe(substance => {
+          draft.submitStatus = SubmissionStatus.SUCCESS;
+          draft.fileUrl = substance.fileUrl;
+          completedCount++;
+          if (completedCount === submittableDrafts.length) {
+            this.isLoading = false;
+          }
+        }, error => {
+          draft.submitStatus = SubmissionStatus.ERROR;
+          result.isSuccessfull = false;
+          if (error && error.error && error.error.validationMessages) {
+            result.validationMessages = error.error.validationMessages;
+          } else {
+            result.serverError = error;
+          }
+          completedCount++;
+          if (completedCount === submittableDrafts.length) {
+            this.isLoading = false;
+          }
+        });
+      }
+    })
+  }
+
+
+  fixLink(link: string) {
+    return this.substanceService.oldLinkFix(link);
+  }
+
   deleteDraft(draft: any): void {
-   localStorage.removeItem(draft.key);
-   this.filtered = this.filtered.filter(function( obj ) {
-        return obj.key !== draft.key;
+    localStorage.removeItem(draft.key);
+    this.filtered = this.filtered.filter(function( obj ) {
+      return obj.key !== draft.key;
     });
 
-   this.values = this.values.filter(function( obj ) {
-    return obj.key !== draft.key;
-});
+    this.values = this.values.filter(function( obj ) {
+      return obj.key !== draft.key;
+    });
 
   }
 
@@ -157,7 +368,7 @@ export class SubstanceDraftsComponent implements OnInit {
      this.values = [];
       let keys = Object.keys(localStorage);
       let i = keys.length;
-  
+
       while ( i-- ) {
         if (keys[i].startsWith('gsrs-draft-')){
           const entry = JSON.parse(localStorage.getItem(keys[i]));
@@ -169,13 +380,8 @@ export class SubstanceDraftsComponent implements OnInit {
       }
       this.filtered = this.values.sort((a, b) => {
         return b.date - a.date;
-    });;
-
-      if (this.json && this.json.uuid) {
-        this.filterToggle('substance');
-      } else {
-        this.filterToggle('register');
-      }
+      });
+      this.selectedKeys = [];
   }
 
 
@@ -207,11 +413,17 @@ export class SubstanceDraftsComponent implements OnInit {
 
   }
 
+  hasValidDrafts(): boolean {
+    return this.validatedDrafts.some(draft => draft.validationResult)
+  }
+
 
   close() {
     this.dialogRef.close();
   }
-  
+
+  public readonly SubmissionStatus = SubmissionStatus
+  public readonly FormState = FormState
 }
 
 
@@ -222,7 +434,7 @@ export interface SubstanceDraft {
   uuid: any;
   date: string;
   type: string;
-  name?: string; 
+  name?: string;
   substance: any;
   auto?: boolean;
   file?: any;

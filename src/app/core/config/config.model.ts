@@ -41,8 +41,11 @@ export interface Config {
     advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
+    isPfdaVersion?: boolean;
     customToolbarComponent?: string;
+    ssg4mExportSvg?: boolean;
     disableSessionRefresh?: boolean;
+    sessionRefreshOnActiveUserOnly?: boolean;
     sessionExpirationWarning?: SessionExpirationWarning;
     disableReferenceDocumentUpload?: boolean;
     externalSiteWarning?: ExternalSiteWarning;
@@ -110,6 +113,7 @@ export interface Config {
     registerApplicationCenterNotAllowed?: Array<string>;
     phpIdUrl?: string;
     rxNormUrl?: string;
+    roleSortingConfig?: roleSortConfig;
 }
 
 export interface StagingAreaSettings {
@@ -202,4 +206,8 @@ export interface DownloadAsPDF {
     buttonName?:string;
     companyName?:string;
     proprietaryNote?:string;
+}
+
+export interface roleSortConfig {
+  [key: string]: number;
 }

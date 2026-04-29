@@ -55,26 +55,26 @@
       }
     }
   },
-  "enablePDFDownload":{
-    "enablePDFDownload" : true,
-    "buttonName":"Print to PDF",
-    "companyName" : "",
-    "proprietaryNote":""
+  "enablePDFDownload": {
+    "enablePDFDownload": true,
+    "buttonName": "Print to PDF",
+    "companyName": "",
+    "proprietaryNote": ""
   },
   "elementLabelDisplay": {
     "labels": {
       "substance_names_name": {
-          "displayNameTitle": "Display Name",
-          "displayNameShortTitle":"DN",
-          "preferredTitle": "Additional Listing Name",
-          "preferredShortTitle": "AL"
+        "displayNameTitle": "Display Name",
+        "displayNameShortTitle": "DN",
+        "preferredTitle": "Additional Listing Name",
+        "preferredShortTitle": "AL"
       }
     }
   },
   "bulkSearch": {
     "entities": [
       {
-        "name":"substances",
+        "name": "substances",
         "title": "Substances"
       },
       {
@@ -118,7 +118,7 @@
     { "name": "products", "active": true, "hasEntities": true },
     { "name": "ssg4m", "active": true, "hasEntities": true },
     { "name": "substances", "active": true, "hasEntities": true }
-   ],
+  ],
   "usefulLinks": [
     {
       "title": "GSRSFind Excel tools",
@@ -1351,7 +1351,7 @@
           "kind": "contact-us",
           "display": "Email GSRS Support",
           "mailToPath": "mailto:%s",
-          "queryParams": {"subject" : "Support request"},
+          "queryParams": { "subject": "Support request" },
           "order": 30
         }
       ]
@@ -1361,7 +1361,7 @@
       "kind": "contact-us",
       "display": "Contact Us",
       "mailToPath": "mailto:%s",
-      "queryParams": {"subject" : "Support request"},
+      "queryParams": { "subject": "Support request" },
       "order": 2000
     }
   ],

@@ -11,6 +11,8 @@ export class SequenceAlignmentComponent implements OnInit {
   @Input() alignmentArray: Alignment;
   alignment: Alignment;
   text: string;
+  targetSitesText: string;
+  alignmentBodyText: string;
   constructor() { }
 
   ngOnInit() {
@@ -30,7 +32,14 @@ export class SequenceAlignmentComponent implements OnInit {
         this.text += 'matched:  = ' + this.alignment.score.toString() + ' \n';
       }
       if (this.alignment.score) {
-        this.text += this.alignment.alignment;
+        const alignStr = this.alignment.alignment || '';
+        const targetMatch = alignStr.match(/^(Target Sites:[^\n]*\n?)([\s\S]*)$/m);
+        if (targetMatch) {
+          this.targetSitesText = targetMatch[1];
+          this.alignmentBodyText = targetMatch[2];
+        } else {
+          this.alignmentBodyText = alignStr;
+        }
       }
     }
   }

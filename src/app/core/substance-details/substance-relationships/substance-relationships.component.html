@@ -33,12 +33,12 @@
       <th mat-header-cell *matHeaderCellDef > Details </th>
       <td mat-cell *matCellDef="let relationship">
           <button mat-raised-button color="primary" (click)="openModal(detailTemplate)" [disabled]="
-          (!relationship.mediatorSubstance || !relationship.mediatorSubstance.name) 
+          (!relationship.mediatorSubstance || !relationship.mediatorSubstance.name)
           && !(relationship.qualification)
           && !(relationship.interactionType)
           && !(relationship.comments)
           && (!relationship.amount || !relationship.amount.nonNumericValue)"
-          [ngClass] = "((!relationship.mediatorSubstance || !relationship.mediatorSubstance.name) 
+          [ngClass] = "((!relationship.mediatorSubstance || !relationship.mediatorSubstance.name)
           && !(relationship.qualification)
           && !(relationship.interactionType)
           && !(relationship.comments)

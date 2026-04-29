@@ -42,22 +42,28 @@ export class SubstanceFormDisulfideLinksCardComponent extends SubstanceCardBaseF
   }
 
   ngAfterViewInit() {
-    const disulfideLinksSubscription = this.substanceFormDisulfideLinksService.substanceDisulfideLinks.subscribe(disulfideLinks => {
-      this.disulfideLinks = disulfideLinks;
-      this.countCysteine();
-    });
+    // setTimeout defers subscriptions until after the service's unload/init setTimeout callbacks
+    // have fired. This prevents subscribing to a propertyEmitter that is about to be completed
+    // and replaced by unloadSubstance(), which would leave the component with a dead subscription.
+    setTimeout(() => {
+      const disulfideLinksSubscription = this.substanceFormDisulfideLinksService.substanceDisulfideLinks.subscribe(disulfideLinks => {
+        this.disulfideLinks = disulfideLinks;
+        this.countCysteine();
+      });
+      this.subscriptions.push(disulfideLinksSubscription);
 
-    this.subscriptions.push(disulfideLinksSubscription);
-    const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
-      this.subunits = subunits;
-      this.countCysteine();
+      const subunitsSubscription = this.substanceFormService.substanceSubunits.subscribe(subunits => {
+        this.subunits = subunits;
+        this.countCysteine();
+      });
+      this.subscriptions.push(subunitsSubscription);
+
+      const cysteineSubscription = this.substanceFormDisulfideLinksService.substanceCysteineSites.subscribe(cysteine => {
+        this.cysteine = cysteine;
+        this.countCysteine();
+      });
+      this.subscriptions.push(cysteineSubscription);
     });
-    this.subscriptions.push(subunitsSubscription);
-    const cysteineSubscription = this.substanceFormDisulfideLinksService.substanceCysteineSites.subscribe(cysteine => {
-      this.cysteine = cysteine;
-      this.countCysteine();
-    });
-    this.subscriptions.push(cysteineSubscription);
   }
 
   ngOnDestroy() {

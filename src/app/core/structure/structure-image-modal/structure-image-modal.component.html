@@ -68,7 +68,7 @@
 
   </div>
 
-  <div *ngIf = "showSubstanceSelector" class = "button-row">
+  <div *ngIf = "showSubstanceSelector && !isDraft" class = "button-row">
       <a mat-button color="primary"  class = "modal-button" target = "_blank" (click) = "gotoDetails()">Substance Details <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
       <a mat-button color="primary" class = "modal-button"  (click) = "gotoEdit()">Substance Edit <mat-icon matListIcon svgIcon="open_in_new" class = "middle-button icon-super"></mat-icon></a>
       <span class = "middle-fill"></span>

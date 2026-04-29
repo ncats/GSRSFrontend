@@ -34,10 +34,10 @@ import { InvitroAssayInformation, InvitroAssayScreening } from '../model/invitro
 import { invitroPharmacologySearchSortValues } from './invitro-pharmacology-search-sort-values';
 
 @Component({
-    selector: 'app-invitro-pharmacology-browse',
-    templateUrl: './invitro-pharmacology-browse.component.html',
-    styleUrls: ['./invitro-pharmacology-browse.component.scss'],
-    standalone: false
+  selector: 'app-invitro-pharmacology-browse',
+  templateUrl: './invitro-pharmacology-browse.component.html',
+  styleUrls: ['./invitro-pharmacology-browse.component.scss'],
+  standalone: false
 })
 export class InvitroPharmacologyBrowseComponent implements OnInit {
 
@@ -225,7 +225,7 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
       this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
     }
 
-    this.order = this.activatedRoute.snapshot.queryParams['order'] || 'root_modifiedDate';
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_modifiedDate';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
 
@@ -512,9 +512,9 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               referenceSourceTypeNumber = referenceSourceType + ' ' + referenceSource;
               assayObj.referenceSourceTypeNumber = referenceSourceTypeNumber;
             } // if invitroReference exists
+            */
 
-
-          /* Invitro Test Agent Object exists */
+            /* Invitro Test Agent Object exists */
             if (screening.invitroAssayResultInformation.invitroTestAgent) {
               assayObj.testAgent = screening.invitroAssayResultInformation.invitroTestAgent.testAgent;
               assayObj.testAgentSubstanceKey = screening.invitroAssayResultInformation.invitroTestAgent.testAgentSubstanceKey;
@@ -772,37 +772,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
                       }
                       referenceSourceTypeNumber = referenceSourceType + ' ' + referenceSourceId;
 
-                      /*
-                      if (reference.sourceType) {
-                        referenceSourceType = reference.sourceType;
-                      }
-                      if (reference.sourceId) {
-                        referenceSourceId = reference.sourceId;
-                      }
-                      referenceSourceTypeAndId = referenceSourceType + ' ' + referenceSourceId;
-                      */
-
-                      /* Invitro Reference Object exists */
-                      /*
-
-                      let referenceSourceType = '';
-                      let referenceSource = '';
-                      if (screening.invitroAssayResultInformation.invitroReference) {
-                        if (screening.invitroAssayResultInformation.invitroReference.referenceSourceType) {
-                          referenceSourceType = screening.invitroAssayResultInformation.invitroReference.referenceSourceType;
-                        }
-                        if (screening.invitroAssayResultInformation.invitroReference.referenceSource) {
-                          referenceSource = screening.invitroAssayResultInformation.invitroReference.referenceSource;
-                        }
-
-                        referenceSourceTypeNumber = referenceSourceType + ' ' + referenceSource;
-                        assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
-                        */
-
-                      // let referenceSourceTypeNumber = this.getReferenceFields(screening);
-                      //assaySummary.referenceSourceTypeNumber = referenceSourceTypeNumber;
-
-
                       // Get the index if the value exists in the key 'referenceSourceTypeNumber'
                       const sourceFoundIndex = this.browseByReferenceList.findIndex(record => record.referenceSourceTypeNumber === referenceSourceTypeNumber);
 
@@ -874,11 +843,6 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
               testAgentConcentrationUnits = result.testAgentConcentrationUnits;
               resultValue = result.resultValue;
               resultValueUnits = result.resultValueUnits;
-
-              // Invitro Summary
-              // if (result.invitroSummary) {
-              //    assaySummary.relationshipType = result.invitroSummary.relationshipType;
-              //  }
             }
           });
 
@@ -964,13 +928,13 @@ export class InvitroPharmacologyBrowseComponent implements OnInit {
     // if percentInhibition/resultValue < 30, then IC50 > Test Agent Concentration
     // if percentInhibition/resultValue between 30 and 60, then IC50 approx. = Test Agent Concentration
     // if percentInhibition/resultValue above 60, then IC50 < Test Agent Concentration
-    if (resultValue) {
+      if (resultValue) {
       if (resultValue < 30) {
-        calculateIC50Value = resultType + ' > ' + testAgentConcentration;
+            calculateIC50Value = resultType + ' > ' + testAgentConcentration;
       } else if (resultValue >= 30 && resultValue <= 60) {
-        calculateIC50Value = resultType + ' approx. = ' + testAgentConcentration;
+            calculateIC50Value = resultType + ' approx. = ' + testAgentConcentration;
       } else if (resultValue > 60) {
-        calculateIC50Value = resultType + ' < ' + testAgentConcentration;
+            calculateIC50Value = resultType + ' < ' + testAgentConcentration;
       }
     }
 

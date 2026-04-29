@@ -1,39 +1,56 @@
-import { Component, OnInit, ViewEncapsulation, HostListener, OnDestroy, AfterViewInit } from '@angular/core';
-import { Router, Event, NavigationExtras, ActivatedRoute, NavigationStart, ResolveEnd, ParamMap } from '@angular/router';
-import { Environment } from '../../../environments/environment.model';
-import { AuthService } from '../auth/auth.service';
-import { Auth } from '../auth/auth.model';
-import { SessionExpirationComponent } from '../auth/session-expiration/session-expiration.component'
-import { ConfigService } from '../config/config.service';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { LoadingService } from '../loading/loading.service';
-import { HighlightedSearchActionComponent } from '../highlighted-search-action/highlighted-search-action.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
-import { Observable, Subscription } from 'rxjs';
-import { UserProfileComponent } from '@gsrs-core/auth/user-profile/user-profile.component';
-import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
-import { NavItem, LoadedComponents } from '../config/config.model';
-import { UtilsService } from '@gsrs-core/utils';
-import { take } from 'rxjs/operators';
-import * as moment from 'moment';
-import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
-import { WildcardService } from '@gsrs-core/utils/wildcard.service';
-import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
+import {
+  Component,
+  OnInit,
+  ViewEncapsulation,
+  HostListener,
+  OnDestroy,
+} from "@angular/core";
+import { BreakpointObserver } from "@angular/cdk/layout";
+import {
+  Router,
+  Event,
+  NavigationExtras,
+  ActivatedRoute,
+  NavigationStart,
+  ResolveEnd,
+  ParamMap,
+} from "@angular/router";
+import { Environment } from "../../../environments/environment.model";
+import { AuthService } from "../auth/auth.service";
+import { Auth } from "../auth/auth.model";
+import { SessionExpirationComponent } from "../auth/session-expiration/session-expiration.component";
+import { ConfigService } from "../config/config.service";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { LoadingService } from "../loading/loading.service";
+import { HighlightedSearchActionComponent } from "../highlighted-search-action/highlighted-search-action.component";
+import { MatDialog } from "@angular/material/dialog";
+import {
+  MatBottomSheet,
+  MatBottomSheetRef,
+} from "@angular/material/bottom-sheet";
+import { Observable, Subscription } from "rxjs";
+import { UserProfileComponent } from "@gsrs-core/auth/user-profile/user-profile.component";
+import { SubstanceTextSearchService } from "@gsrs-core/substance-text-search/substance-text-search.service";
+import { NavItem, LoadedComponents } from "../config/config.model";
+import { UtilsService } from "@gsrs-core/utils";
+import { take } from "rxjs/operators";
+import * as moment from "moment";
+import { SubstanceEditImportDialogComponent } from "@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component";
+import { WildcardService } from "@gsrs-core/utils/wildcard.service";
+import { SubstanceDraftsComponent } from "@gsrs-core/substance-form/substance-drafts/substance-drafts.component";
 import {sprintf} from "sprintf-js";
-import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
-import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component';
-import { FooterComponent } from '@gsrs-core/footer/footer.component';
+import { BulkSearchService } from "@gsrs-core/bulk-search/service/bulk-search.service";
+import { UserQueryListDialogComponent } from "@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component";
 
 @Component({
-  selector: 'app-base',
-  templateUrl: './base.component.html',
-  styleUrls: ['./base.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  standalone: false
+  selector: "app-base",
+  templateUrl: "./base.component.html",
+  styleUrls: ["./base.component.scss"],
+    encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class BaseComponent implements OnInit, OnDestroy {
-  mainPathSegment = '';
+  mainPathSegment = "";
   logoSrcPath: string;
   auth?: Auth;
   environment: Environment;
@@ -45,13 +62,13 @@ export class BaseComponent implements OnInit, OnDestroy {
   canUserImportData: boolean = false;
   canManageCVs: boolean = false;
   contactEmail: string;
-  contactEmailAlt: string;
   version?: string;
-  versionTooltipMessage = '';
+  versionTooltipMessage = "";
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
-  customToolbarComponent: string = '';
+  isPfdaVersion: boolean = false;
+  customToolbarComponent: string = "";
   canRegister = false;
   registerNav: Array<NavItem>;
   searchNav: Array<NavItem>;
@@ -65,12 +82,18 @@ export class BaseComponent implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
   private wildCardText: string;
   private classicLinkQueryParams = {};
-  showHeaderBar = 'true';
+  showHeaderBar = "true";
+  showRegistrars = true;
+  showBrowseOther = true;
+
+  // ncats branch begin
+  contactEmailAlt: string;
   bannerText: string = "This repository is under review for potential modification in compliance with Administration directives.";
   showTopBanner: boolean;
   showFooter: boolean;
   showLogin: boolean;
   showLoginButton: boolean;
+  // ncats branch end
 
   constructor(
     private router: Router,
@@ -83,19 +106,21 @@ export class BaseComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private substanceTextSearchService: SubstanceTextSearchService,
     private utilsService: UtilsService,
-    private wildCardService: WildcardService
+    private wildCardService: WildcardService,
+    private breakpointObserver: BreakpointObserver,
   ) {
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion === true;
     this.customToolbarComponent = this.configService.configData.customToolbarComponent;
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
     });
   }
 
-  @HostListener('document:mouseup', ['$event'])
-  @HostListener('document:keyup', ['$event'])
+  @HostListener("document:mouseup", ["$event"])
+  @HostListener("document:keyup", ["$event"])
   // @HostListener('document:selectionchange', ['$event'])
   onKeyUp(event: Event) {
-    let text = '';
+    let text = "";
     let selection: Selection;
     let range: Range;
     let selectionStart: number;
@@ -105,9 +130,10 @@ export class BaseComponent implements OnInit, OnDestroy {
     if (activeEl != null) {
       const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
       if (
-        (activeElTagName === 'textarea') || (activeElTagName === 'input' &&
-          /^(?:text|search|password|tel|url)$/i.test(activeEl.type)) &&
-        (typeof activeEl.selectionStart === 'number')
+        activeElTagName === "textarea" ||
+        (activeElTagName === "input" &&
+          /^(?:text|search|password|tel|url)$/i.test(activeEl.type) &&
+          typeof activeEl.selectionStart === "number")
       ) {
         selectionStart = activeEl.selectionStart;
         selectionEnd = activeEl.selectionEnd;
@@ -130,20 +156,29 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.showHeaderBar = this.activatedRoute.snapshot.queryParams['header'] || 'true';
+    const breakpointSub = this.breakpointObserver
+      .observe(['(min-width: 1611px)', '(min-width: 1501px)'])
+      .subscribe(result => {
+        this.showRegistrars = result.breakpoints['(min-width: 1611px)'];
+        this.showBrowseOther = result.breakpoints['(min-width: 1501px)'];
+      });
+    this.subscriptions.push(breakpointSub);
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams["header"] || "true";
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
-    this.classicLinkQueryParamsString = '';
+    this.classicLinkQueryParamsString = "";
     this.contactEmail = this.configService.configData.contactEmail || null;
+
+    // ncats branch
     this.contactEmailAlt = this.configService.configData.contactEmailAlt || null;
     
     this.navItems = this.configService.configData.navItems || null;
 
     // CRITICAL: Subscribe to auth FIRST, before any await calls that might fail
     // This ensures UI updates reactively when auth state changes
-    const authSubscription = this.authService.getAuth().subscribe(auth => {
+    const authSubscription = this.authService.getAuth().subscribe((auth) => {
       this.auth = auth;
       // Re-check privileges when auth changes
       if (auth) {
@@ -157,7 +192,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     });
     this.subscriptions.push(authSubscription);
 
-  let notempty = false;
+    let notempty = false;
     if (this.loadedComponents) {
       if (this.loadedComponents.applications) {
         notempty = true;
@@ -184,16 +219,22 @@ export class BaseComponent implements OnInit, OnDestroy {
     //  TODO: remove it and test that the component works.
     this.baseDomain = this.configService.configData.apiUrlDomain;
 
-    this.utilsService.getBuildInfo().pipe(take(1)).subscribe(buildInfo => {
-      this.version = this.configService.configData.version || buildInfo.version;
+    this.utilsService
+      .getBuildInfo()
+      .pipe(take(1))
+      .subscribe((buildInfo) => {
+        this.version =
+          this.configService.configData.version || buildInfo.version;
       this.versionTooltipMessage = `V${this.version}`;
-      this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format('ddd MMM D YYYY HH:mm:ss z')}`;
+        this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format("ddd MMM D YYYY HH:mm:ss z")}`;
     });
-    this.navItems.forEach(item => {
-      if (item.display === 'Register') {
+    let okToRegister: boolean = await this.authService.canEditData();
+    
+    this.navItems.forEach((item) => {
+      if (item.display === "Register" && okToRegister) {
         this.registerNav = item.children;
       }
-      if (item.display === 'Search') {
+      if (item.display === "Search") {
         this.searchNav = item.children;
       }
     });
@@ -202,7 +243,9 @@ export class BaseComponent implements OnInit, OnDestroy {
         if (this.navItems[i].children) {
         for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
           if (this.navItems[i].children[j].component) {
-            if (!this.loadedComponents[this.navItems[i].children[j].component]) {
+              if (
+                !this.loadedComponents[this.navItems[i].children[j].component]
+              ) {
               this.navItems[i].children.splice(j, 1);
           }
         }
@@ -211,45 +254,58 @@ export class BaseComponent implements OnInit, OnDestroy {
     if (this.navItems[i].component) {
       if (!this.loadedComponents[this.navItems[i].component]) {
         this.navItems.splice(i, 1);
-
     }
   }
   }
-}
+}    
+    
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
-    let urlPath = this.router.routerState.snapshot.url.split('?')[0];
+    let urlPath = this.router.routerState.snapshot.url.split("?")[0];
     this.setClassicLinkPath(urlPath.substring(1));
 
-    if (this.activatedRoute.snapshot.queryParamMap.has('search')) {
-      this.searchValue = this.activatedRoute.snapshot.queryParamMap.get('search');
-      this.setClassicLinkQueryParams(this.activatedRoute.snapshot.queryParamMap);
+    if (this.activatedRoute.snapshot.queryParamMap.has("search")) {
+      this.searchValue =
+        this.activatedRoute.snapshot.queryParamMap.get("search");
+      this.setClassicLinkQueryParams(
+        this.activatedRoute.snapshot.queryParamMap,
+      );
     }
 
-    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
-      this.searchValue = params.get('search');
+    const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(
+      (params) => {
+        this.searchValue = params.get("search");
       this.setClassicLinkQueryParams(params);
-    });
+      },
+    );
     this.subscriptions.push(paramsSubscription);
 
-    const authSubscription2 = this.authService.checkAuth().subscribe(_auth => {
-    }, error => {
-      if (error.status === 403 && (this.router.url.split('?')[0] !== '/login' && this.router.url.split('?')[0] !== '/unauthorized')) {
+    const authSubscription2 = this.authService.checkAuth().subscribe(
+      (_auth) => {},
+      (error) => {
+        if (
+          error.status === 403 &&
+          this.router.url.split("?")[0] !== "/login" &&
+          this.router.url.split("?")[0] !== "/unauthorized"
+        ) {
         this.loadingService.setLoading(false);
-        this.router.navigate(['/unauthorized']);
+          this.router.navigate(["/unauthorized"]);
       }
-    });
-      this.subscriptions.push(authSubscription2);
+      },
+    );
+    this.subscriptions.push(authSubscription2);
 
     this.environment = this.configService.environment;
     this.appId = this.environment.appId;
 
-    this.logoSrcPath = `${this.environment.baseHref || ''}assets/images/gsrs-logo.svg`;
+    this.logoSrcPath = `${this.environment.baseHref || ""}assets/images/gsrs-logo.svg`;
 
     const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof ResolveEnd) {
-        this.mainPathSegment = this.getMainPathSegmentFromUrl(event.url.substring(1));
-        urlPath = event.url.split('?')[0];
+        this.mainPathSegment = this.getMainPathSegmentFromUrl(
+          event.url.substring(1),
+        );
+        urlPath = event.url.split("?")[0];
         this.setClassicLinkPath(urlPath.substring(1));
       }
 
@@ -261,18 +317,23 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.subscriptions.push(routerSubscription);
 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.mainPathSegment = this.getMainPathSegmentFromUrl(this.router.routerState.snapshot.url.substring(1));
+    this.mainPathSegment = this.getMainPathSegmentFromUrl(
+      this.router.routerState.snapshot.url.substring(1),
+    );
 
-    this.substanceTextSearchService.registerSearchComponent('main-substance-search');
-    const cleanSearchSubscription = this.substanceTextSearchService.setSearchComponentValueEvent('main-substance-search')
-    .subscribe(value => {
+    this.substanceTextSearchService.registerSearchComponent(
+      "main-substance-search",
+    );
+    const cleanSearchSubscription = this.substanceTextSearchService
+      .setSearchComponentValueEvent("main-substance-search")
+      .subscribe((value) => {
       this.searchValue = value;
     });
     this.subscriptions.push(cleanSearchSubscription);
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
+    this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
     clearTimeout(this.bottomSheetOpenTimer);
@@ -280,19 +341,19 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   getMainPathSegmentFromUrl(url: string): string {
-    const path = url.split('?')[0];
-    const mainPathPart = path.split('/')[0];
+    const path = url.split("?")[0];
+    const mainPathPart = path.split("/")[0];
     return mainPathPart;
   }
 
   routeToLogin(): void {
     const navigationExtras: NavigationExtras = {
       queryParams: {
-        path: this.router.url
-      }
+        path: this.router.url,
+      },
     };
 
-    this.router.navigate(['/login'], navigationExtras);
+    this.router.navigate(["/login"], navigationExtras);
   }
 
   // ncats branch begin
@@ -354,15 +415,14 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   navigateToSearchResults(searchTerm: string) {
-
     const navigationExtras: NavigationExtras = {
-      queryParams: searchTerm ? { search: searchTerm } : null
+      queryParams: searchTerm ? { search: searchTerm } : null,
     };
-    this.router.navigate(['/browse-substance'], navigationExtras);
+    this.router.navigate(["/browse-substance"], navigationExtras);
   }
 
   increaseMenuZindex(): void {
-    this.overlayContainer.style.zIndex = '1001';
+    this.overlayContainer.style.zIndex = "1001";
   }
 
   removeZindex(): void {
@@ -370,11 +430,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   openSearchBottomSheet(searchTerm: string): Observable<void> {
-
-    return new Observable(observer => {
-
+    return new Observable((observer) => {
       if (searchTerm) {
-
         clearTimeout(this.bottomSheetCloseTimer);
 
         if (this.bottomSheetRef != null) {
@@ -382,13 +439,18 @@ export class BaseComponent implements OnInit, OnDestroy {
           this.bottomSheetRef = null;
         }
 
-        this.bottomSheetRef = this.bottomSheet.open(HighlightedSearchActionComponent, {
+        this.bottomSheetRef = this.bottomSheet.open(
+          HighlightedSearchActionComponent,
+          {
           data: { searchTerm: searchTerm },
           hasBackdrop: false,
-          closeOnNavigation: true
-        });
+            closeOnNavigation: true,
+          },
+        );
 
-        const openedSubscription = this.bottomSheetRef.afterOpened().subscribe(() => {
+        const openedSubscription = this.bottomSheetRef
+          .afterOpened()
+          .subscribe(() => {
           observer.next();
           openedSubscription.unsubscribe();
         });
@@ -399,7 +461,9 @@ export class BaseComponent implements OnInit, OnDestroy {
             observer.complete();
           }
         }, 5000);
-        const dismissedSubscription = this.bottomSheetRef.afterDismissed().subscribe(() => {
+        const dismissedSubscription = this.bottomSheetRef
+          .afterDismissed()
+          .subscribe(() => {
           clearTimeout(this.bottomSheetCloseTimer);
           this.bottomSheetRef = null;
           observer.complete();
@@ -414,14 +478,16 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   transformMailToPath(item: NavItem) {
     if(item?.kind && item?.mailToPath) {
-      let subject ='';
-      let email ='';
-      if(item.kind==='contact-us') {
+      let subject = "";
+      let email = "";
+      if (item.kind === "contact-us") {
         email = this.contactEmail;
       }
+      // ncats branch begin
       if(item.kind==='contact-us-alt') {
         email = this.contactEmailAlt;
       }
+      // ncats branch end
 
       if(item?.queryParams) {
         if(item?.queryParams?.subject) {
@@ -429,30 +495,30 @@ export class BaseComponent implements OnInit, OnDestroy {
         }
       }
       const part1 = sprintf(item.mailToPath, email);
-      let part2 ='';
+      let part2 = "";
       if(subject) {
-        part2 = 'subject='+subject;
+        part2 = "subject=" + subject;
       }
-      return part1+'?'+part2;
+      return part1 + "?" + part2;
     }
-    return '';
+    return "";
   }
 
   setClassicLinkPath(path: string): void {
     const basePath = this.clasicBaseHref;
 
     const pathDictionary = {
-      '/home': '',
-      '/browse-substance': 'substances',
-      '/structure-search': 'structure',
-      '/sequence-search': 'sequence',
-      '/substances/register': 'wizard',
-      '/admin': 'admin'
+      "/home": "",
+      "/browse-substance": "substances",
+      "/structure-search": "structure",
+      "/sequence-search": "sequence",
+      "/substances/register": "wizard",
+      "/admin": "admin",
     };
 
-    const pathParts = path.split('/');
+    const pathParts = path.split("/");
 
-    let pathKey = '';
+    let pathKey = "";
     pathParts.forEach((part, index) => {
       if (index < 2) {
         pathKey += `/${part}`;
@@ -460,31 +526,37 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.setClassicLinkQueryParams(null, { kind: part });
       }
     });
-    this.classicLinkPath = `${basePath}${pathDictionary[pathKey] || ''}`;
+    this.classicLinkPath = `${basePath}${pathDictionary[pathKey] || ""}`;
   }
 
-  setClassicLinkQueryParams(paramMap?: ParamMap, params?: { [queryParam: string]: string }): void {
-
+  setClassicLinkQueryParams(
+    paramMap?: ParamMap,
+    params?: { [queryParam: string]: string },
+  ): void {
     if (paramMap != null) {
       const paramsDict = {};
-      paramsDict['q'] = paramMap.get('search')
-        || paramMap.get('structure_search')
-        || paramMap.get('sequence_search')
-        || paramMap.get('structure');
+      paramsDict["q"] =
+        paramMap.get("search") ||
+        paramMap.get("structure_search") ||
+        paramMap.get("sequence_search") ||
+        paramMap.get("structure");
 
-      if (paramMap.get('sequence_search')) {
-        paramsDict['type'] = 'sequence';
-        paramsDict['identity'] = paramMap.get('cutoff');
-        paramsDict['identityType'] = paramMap.get('type');
-      } else if (paramMap.get('structure_search') || paramMap.get('structure')) {
-        paramsDict['cutoff'] = paramMap.get('cutoff');
-        paramsDict['type'] = paramMap.get('type');
+      if (paramMap.get("sequence_search")) {
+        paramsDict["type"] = "sequence";
+        paramsDict["identity"] = paramMap.get("cutoff");
+        paramsDict["identityType"] = paramMap.get("type");
+      } else if (
+        paramMap.get("structure_search") ||
+        paramMap.get("structure")
+      ) {
+        paramsDict["cutoff"] = paramMap.get("cutoff");
+        paramsDict["type"] = paramMap.get("type");
       }
 
-      paramsDict['id'] = paramMap.get('sequence');
-      paramsDict['seqType'] = paramMap.get('seq_type');
+      paramsDict["id"] = paramMap.get("sequence");
+      paramsDict["seqType"] = paramMap.get("seq_type");
 
-      Object.keys(paramsDict).forEach(key => {
+      Object.keys(paramsDict).forEach((key) => {
         if (paramsDict[key] != null) {
           this.classicLinkQueryParams[key] = paramsDict[key];
         }
@@ -492,14 +564,14 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
 
     if (params != null) {
-      Object.keys(params).forEach(key => {
+      Object.keys(params).forEach((key) => {
         this.classicLinkQueryParams[key] = params[key];
       });
     }
 
-    let queryParamsString = '';
+    let queryParamsString = "";
     Object.keys(this.classicLinkQueryParams).forEach((key, index) => {
-      const separator = index && '&' || '?';
+      const separator = (index && "&") || "?";
       queryParamsString += `${separator}${key}=${this.classicLinkQueryParams[key]}`;
     });
 
@@ -509,47 +581,55 @@ export class BaseComponent implements OnInit, OnDestroy {
   openProfile(): void {
     const dialogRef = this.dialog.open(UserProfileComponent, {
       data: {},
-      width: '800px'
+      width: "800px",
     });
-    this.overlayContainer.style.zIndex = '1002';
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+    this.overlayContainer.style.zIndex = "1002";
+    const dialogSubscription = dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((response) => {
       this.overlayContainer.style.zIndex = null;
     });
   }
 
   importDialog(): void {
     const dialogRef = this.dialog.open(SubstanceEditImportDialogComponent, {
-      width: '650px',
-      autoFocus: false
-
+      width: "650px",
+      autoFocus: false,
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+    const dialogSubscription = dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((response) => {
       if (response) {
         this.overlayContainer.style.zIndex = null;
-        this.router.onSameUrlNavigation = 'reload';
-        this.router.navigateByUrl('/substances/register?action=import', { state: { record: response } });
+          this.router.onSameUrlNavigation = "reload";
+          this.router.navigateByUrl("/substances/register?action=import", {
+            state: { record: response },
+          });
       }
     });
-
   }
 
   viewLists(list?: string): void {
-    let data = {view: 'all'};
+    let data = { view: "all" };
     if (list) {
-      data.view = 'single';
-      data['activeName'] = list.split(':')[1];
+      data.view = "single";
+      data["activeName"] = list.split(":")[1];
     }
     const dialogRef = this.dialog.open(UserQueryListDialogComponent, {
-      width: '850px',
+      width: "850px",
       autoFocus: false,
-      data: data
-
+      data: data,
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    const dialogSubscription = dialogRef.afterClosed().pipe(take(1)).subscribe(response => {
+    const dialogSubscription = dialogRef
+      .afterClosed()
+      .pipe(take(1))
+      .subscribe((response) => {
       if (response) {
         this.overlayContainer.style.zIndex = null;
       }
@@ -559,46 +639,53 @@ export class BaseComponent implements OnInit, OnDestroy {
   logout() {
     this.authService.logout();
     setTimeout(() => {
-      if (this.configService.configData && this.configService.configData.logoutRedirectUrl){
+      if (
+        this.configService.configData &&
+        this.configService.configData.logoutRedirectUrl
+      ) {
         window.location.href = this.configService.configData.logoutRedirectUrl;
       } else {
-        this.router.navigate(['/home']);
+        this.router.navigate(["/home"]);
       }
     }, 1200);
   }
 
   viewDrafts(): void {
     const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
-      maxHeight: '85%',
-      width: '70%',
-      data: {view: 'user'}
+      maxHeight: "85%",
+      width: "70%",
+      data: { view: "user" },
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-   dialogRef.afterClosed().subscribe(response => {
+    dialogRef.afterClosed().subscribe((response) => {
       this.overlayContainer.style.zIndex = null;
-
 
       if (response) {
            this.loadingService.setLoading(true);
 
           const read = response.substance;
 
-          if (response.uuid && response.uuid != 'register'){
-           const url = '/substances/' + response.uuid + '/edit?action=import&source=draft';
-          this.router.navigateByUrl(url, { state: { record: response.substance } });
+        if (response.uuid && response.uuid != "register") {
+          const url =
+            "/substances/" + response.uuid + "/edit?action=import&source=draft";
+          this.router.navigateByUrl(url, {
+            state: { record: response.substance },
+          });
          } else {
            setTimeout(() => {
           //   this.overlayContainer.style.zIndex = null;
-             this.router.onSameUrlNavigation = 'reload';
-             let url = '/substances/register/' + response.substance.substanceClass + '?action=import'
-            this.router.navigateByUrl(url, { state: { record: response.substance } });
-
+            this.router.onSameUrlNavigation = "reload";
+            let url =
+              "/substances/register/" +
+              response.substance.substanceClass +
+              "?action=import";
+            this.router.navigateByUrl(url, {
+              state: { record: response.substance },
+            });
            }, 500);
          }
           }
-
-
     });
   }
 
@@ -608,10 +695,13 @@ export class BaseComponent implements OnInit, OnDestroy {
    */
   private async updatePrivileges(): Promise<void> {
     try {
-      this.canConfigureSystem = await this.authService.hasSpecificPrivilege('Configure System');
-      this.canUserImportData = await this.authService.hasSpecificPrivilege('Import Data');
+      this.canConfigureSystem =
+        await this.authService.hasSpecificPrivilege("Configure System");
+      this.canUserImportData =
+        await this.authService.hasSpecificPrivilege("Import Data");
       this.canRegister = await this.authService.canEditData();
-      this.canManageCVs = await this.authService.hasSpecificPrivilege('Manage CVs');
+      this.canManageCVs =
+        await this.authService.hasSpecificPrivilege("Manage CVs");
     } catch (e) {
       // Not authenticated or error - all privileges default to false
       this.canConfigureSystem = false;
@@ -620,5 +710,4 @@ export class BaseComponent implements OnInit, OnDestroy {
       this.canManageCVs = false;
     }
   }
-
 }

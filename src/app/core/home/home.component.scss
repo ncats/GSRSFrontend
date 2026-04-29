@@ -1,7 +1,3 @@
-::ng-deep .mat-grid-tile-content {
-  align-items: normal !important;
-}
-
 .middle-content-container {
   display: flex;
   justify-content: center;
@@ -93,7 +89,6 @@
 }
 
 .temprow {
-  width: 45%;
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -162,6 +157,7 @@
 .resource-desc {
   padding-left: 15px;
   padding-bottom: 10px;
+  font-size: 16px;
 }
 
 .panel-header {
@@ -272,6 +268,12 @@ mat-list-item {
   padding-top: 10px;
 }
 
+.home-contents {
+  ::ng-deep p {
+    font-size: 16px;
+  }
+}
+
 .flex-row {
   display: flex;
   width: 100%;
@@ -323,7 +325,7 @@ mat-list-item {
 }
 
 .test {
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -350,13 +352,30 @@ mat-list-item {
   margin: auto;
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 15px;
+
+  .useful-card-wrapper {
+    flex: 0 0 calc(50% - 8px);
+    box-sizing: border-box;
+    display: flex;
+  }
 
   mat-card,
   .mat-card,
   .mat-mdc-card {
     width: 100%;
     box-sizing: border-box;
-    margin: 10px 5px;
+    margin: 0;
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .useful-cards .useful-card-wrapper {
+    flex: 0 0 100%;
   }
 }
 
@@ -372,6 +391,7 @@ mat-list-item {
   display: flex;
   padding: 5px;
   margin: auto;
+  font-size: 16px;
 }
 
 .entry:hover {
@@ -782,7 +802,7 @@ mat-list-item {
     }
   }
 
-  // .page-selector display:none moved to global _angular-15-mdc-fixes.scss
+  // .page-selector display:none moved to global _material-overrides.scss
 
   .full-paginator {
     min-width: 500px !important;
@@ -989,7 +1009,7 @@ mat-list-item {
   }
 }
 
-// Page label and page selector styles moved to global _angular-15-mdc-fixes.scss
+// Page label and page selector styles moved to global _material-overrides.scss
 :host ::ng-deep .mat-paginator-range-label {
   margin: 0 5px 0 5px !important;
 }
@@ -1022,6 +1042,12 @@ mat-paginator {
   color: var(--regular-black-color);
 }
 
+@media (max-width: 1099px) {
+  .resource-desc {
+    font-size: 14px;
+  }
+}
+
 :host ::ng-deep mat-card app-substance-text-search {
   .search-button,
   .close-button,
@@ -1030,4 +1056,16 @@ mat-paginator {
       fill: black !important;
     }
   }
+}
+
+.mat-mdc-dialog-content.button-modal {
+  padding: 0;
+}
+
+.modal-button {
+  letter-spacing: normal;
+}
+
+.mat-mdc-dialog-actions.button-actions {
+  padding: 8px 0 !important;
 }

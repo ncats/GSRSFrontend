@@ -1,23 +1,29 @@
-import { Component, OnInit, ViewChild, AfterViewInit, HostListener, OnDestroy } from '@angular/core';
-import { GoogleAnalyticsService } from '../google-analytics/google-analytics.service';
-import { ConfigService, LoadedComponents } from '@gsrs-core/config';
-import { Environment } from 'src/environments/environment.model';
-import { AuthService } from '@gsrs-core/auth';
-import { Router, NavigationExtras } from '@angular/router';
-import { SubstanceService } from '@gsrs-core/substance';
-import { take } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSidenav } from '@angular/material/sidenav';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { UtilsService } from '@gsrs-core/utils';
-import { UsefulLink } from '../config/config.model';
-
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  HostListener,
+  OnDestroy,
+} from "@angular/core";
+import { GoogleAnalyticsService } from "../google-analytics/google-analytics.service";
+import { ConfigService, LoadedComponents } from "@gsrs-core/config";
+import { Environment } from "src/environments/environment.model";
+import { AuthService } from "@gsrs-core/auth";
+import { Router, NavigationExtras } from "@angular/router";
+import { SubstanceService } from "@gsrs-core/substance";
+import { take } from "rxjs/operators";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSidenav } from "@angular/material/sidenav";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { UtilsService } from "@gsrs-core/utils";
+import { UsefulLink } from "../config/config.model";
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss'],
-    standalone: false
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.scss"],
+  standalone: false,
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   environment: Environment;
@@ -29,23 +35,20 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   imageLoc: any;
   appId: string;
   customLinks: Array<any>;
-  total: string;
+  total: number;
   isCollapsed = true;
   hasBackdrop = false;
   bannerMessage?: string;
   usefulLinks?: Array<UsefulLink>;
-  
-  
+
   // these may be necessary due to a strange quirk
   // of angular and ngif
   searchValue: string;
   loadedComponents: LoadedComponents;
-  
-  
+
   private overlayContainer: HTMLElement;
   private resizeTimeout: any;
-  @ViewChild('matSideNavInstance', { static: true }) matSideNav: MatSidenav;
-
+  @ViewChild("matSideNavInstance", { static: true }) matSideNav: MatSidenav;
 
   browseAll: string;
   application: string;
@@ -55,6 +58,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   // Config for Adverse Event on Shiny Server
   adverseEventShinyHomepageDisplay = false;
   adverseEventShinyHomepageURL: string;
+  canRegister: boolean = false;
 
   constructor(
     private gaService: GoogleAnalyticsService,
@@ -65,34 +69,24 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     private dialog: MatDialog,
     private overlayContainerService: OverlayContainer,
     public utilsService: UtilsService,
-
   ) {
     this.contactEmail = this.configService.configData.contactEmail;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.environment = this.configService.environment;
-    this.application = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_application.png`;
-    this.browseAll = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_browseall.png`;
-    this.chemicon = `${this.configService.environment.baseHref || ''}assets/icons/home/icon_registersubstance.png`;
+    this.application = `${this.configService.environment.baseHref || ""}assets/icons/home/icon_application.png`;
+    this.browseAll = `${this.configService.environment.baseHref || ""}assets/icons/home/icon_browseall.png`;
+    this.chemicon = `${this.configService.environment.baseHref || ""}assets/icons/home/icon_registersubstance.png`;
 
     this.appId = this.configService.environment.appId;
     this.bannerMessage = this.configService.configData.bannerMessage || null;
     this.usefulLinks = this.configService.configData.usefulLinks || [];
     this.homeHeader = this.configService.configData.homeHeader || null;
     this.homeContents = this.configService.configData.homeContents || null;
-    this.loadedComponents = this.configService.configData.loadedComponents || null;
-    // this code cause memory errors in the build process
-    /*let notempty = false;
-    for (const property in this.loadedComponents) {
-      if (this.loadedComponents[property] === true) {
-        notempty = true;
-      }
-    }
-    if (!notempty) {
-      this.loadedComponents = null;
-    }*/
+    this.loadedComponents =
+      this.configService.configData.loadedComponents || null;
 
     let notempty = false;
     if (this.loadedComponents) {
@@ -113,111 +107,113 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    this.imageLoc = `${this.environment.baseHref || ''}assets/images/home/`;
-
+    this.imageLoc = `${this.environment.baseHref || ""}assets/images/home/`;
 
     this.gaService.sendPageView(`Home`);
     this.baseDomain = this.configService.configData.apiUrlDomain;
     this.customLinks = this.configService.configData.homeDynamicLinks || [];
-    this.customLinks.forEach (link => {
+    this.customLinks.forEach((link) => {
       link.total = 0;
       const searchStr = `${link.facetName}:${link.facetValue}`;
-      this.substanceService.searchSingleFacetSimpleCount(link.facetName, link.facetValue).pipe(take(1)).subscribe( response => {
-        if (response){
-        link.total = Number(response.total);
-        } else {
-          link.total = 0;
-        }
-      });
+      this.substanceService
+        .searchSingleFacetSimpleCount(link.facetName, link.facetValue)
+        .pipe(take(1))
+        .subscribe((response) => {
+          if (response) {
+            link.total = Number(response.total);
+          } else {
+            link.total = 0;
+          }
+        });
     });
-    this.substanceService.getRecordCount().subscribe( response => {
-      this.total = response;
+    this.substanceService.getRecordCount().subscribe((response) => {
+      this.total = parseInt(response);
     });
-   // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
-   this.isClosedWelcomeMessage = false;
+    // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
+    this.isClosedWelcomeMessage = false;
 
     this.getAdverseEventShinyConfig();
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
+    this.canRegister = await this.authService.canEditData();
   }
 
-ngAfterViewInit(){
-  this.processResponsiveness();
-  const openSubscription = this.matSideNav.openedStart.subscribe(() => {
-    this.utilsService.handleMatSidenavOpen(1100);
-  });
-  const closeSubscription = this.matSideNav.closedStart.subscribe(() => {
-    this.utilsService.handleMatSidenavClose();
-  });
-
-}
-
-ngOnDestroy() {
-  clearTimeout(this.resizeTimeout);
-}
-
-@HostListener('window:resize', ['$event'])
-onResize() {
-  // Debounce resize handler to avoid measuring during animation
-  clearTimeout(this.resizeTimeout);
-  this.resizeTimeout = setTimeout(() => {
+  ngAfterViewInit() {
     this.processResponsiveness();
-  }, 150);
-}
-
-private processResponsiveness = () => {
-  if (window) {
-    if (window.innerWidth < 1100) {
-      this.matSideNav.close();
-      this.isCollapsed = true;
-      this.hasBackdrop = true;
-    } else {
-      this.matSideNav.open();
-      this.hasBackdrop = false;
-    }
+    const openSubscription = this.matSideNav.openedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavOpen(1100);
+    });
+    const closeSubscription = this.matSideNav.closedStart.subscribe(() => {
+      this.utilsService.handleMatSidenavClose();
+    });
   }
-}
+
+  ngOnDestroy() {
+    clearTimeout(this.resizeTimeout);
+  }
+
+  @HostListener("window:resize", ["$event"])
+  onResize() {
+    // Debounce resize handler to avoid measuring during animation
+    clearTimeout(this.resizeTimeout);
+    this.resizeTimeout = setTimeout(() => {
+      this.processResponsiveness();
+    }, 150);
+  }
+
+  private processResponsiveness = () => {
+    if (window) {
+      if (window.innerWidth < 1100) {
+        this.matSideNav.close();
+        this.isCollapsed = true;
+        this.hasBackdrop = true;
+      } else {
+        this.matSideNav.open();
+        this.hasBackdrop = false;
+      }
+    }
+  };
   openSideNav() {
-    this.gaService.sendEvent('substancesFiltering', 'button:sidenav', 'open');
+    this.gaService.sendEvent("substancesFiltering", "button:sidenav", "open");
     this.matSideNav.open();
   }
 
   routeToCustom(link) {
     const navigationExtras: NavigationExtras = {
-      queryParams: { 'facets': link.facetName + '*' + link.facetValue + '.true' }
+      queryParams: { facets: link.facetName + "*" + link.facetValue + ".true" },
     };
-    this.router.navigate(['/browse-substance'], navigationExtras);
+    this.router.navigate(["/browse-substance"], navigationExtras);
   }
 
   closeWelcomeMessage(): void {
     this.isClosedWelcomeMessage = true;
-    localStorage.setItem('isClosedWelcomeMessage', this.isClosedWelcomeMessage.toString());
+    localStorage.setItem(
+      "isClosedWelcomeMessage",
+      this.isClosedWelcomeMessage.toString(),
+    );
   }
 
   browseSubstances(): void {
-    this.router.navigate(['/browse-substance']);
+    this.router.navigate(["/browse-substance"]);
   }
 
-  openModal(templateRef, tile:UsefulLink) {
-
+  openModal(templateRef, tile: UsefulLink) {
     const dialogRef = this.dialog.open(templateRef, {
-      height: '200px',
-      width: '400px',
+      width: "400px",
       data: {
         href: tile.href,
-        templateDescription: tile.templateDescription
-      }
+        templateDescription: tile.templateDescription,
+      },
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.overlayContainer.style.zIndex = null;
     });
   }
 
-
   increaseMenuZindex(): void {
-    this.overlayContainer.style.zIndex = '1001';
+    this.overlayContainer.style.zIndex = "1001";
   }
 
   removeZindex(): void {
@@ -229,23 +225,30 @@ private processResponsiveness = () => {
   }
 
   navigateToSearchResults(searchTerm: string) {
-
     const navigationExtras: NavigationExtras = {
-      queryParams: searchTerm ? { 'search': searchTerm } : null
+      queryParams: searchTerm ? { search: searchTerm } : null,
     };
 
-    this.router.navigate(['/browse-substance'], navigationExtras);
+    this.router.navigate(["/browse-substance"], navigationExtras);
   }
 
   getAdverseEventShinyConfig(): void {
     if (this.configService.configData) {
-      if (this.configService.configData.adverseEventShinyHomepageDisplay && this.configService.configData.adverseEventShinyHomepageDisplay !== null) {
-        this.adverseEventShinyHomepageDisplay = JSON.parse(this.configService.configData.adverseEventShinyHomepageDisplay);
+      if (
+        this.configService.configData.adverseEventShinyHomepageDisplay &&
+        this.configService.configData.adverseEventShinyHomepageDisplay !== null
+      ) {
+        this.adverseEventShinyHomepageDisplay = JSON.parse(
+          this.configService.configData.adverseEventShinyHomepageDisplay,
+        );
       }
-      if (this.configService.configData.adverseEventShinyHomepageURL && this.configService.configData.adverseEventShinyHomepageURL !== null) {
-        this.adverseEventShinyHomepageURL = this.configService.configData.adverseEventShinyHomepageURL;
+      if (
+        this.configService.configData.adverseEventShinyHomepageURL &&
+        this.configService.configData.adverseEventShinyHomepageURL !== null
+      ) {
+        this.adverseEventShinyHomepageURL =
+          this.configService.configData.adverseEventShinyHomepageURL;
       }
     }
   }
-
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
-import { BehaviorSubject, interval, Observable, Observer, Subject, throwError } from 'rxjs';
+import { BehaviorSubject, concatMap, filter, interval, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import { BaseHttpService } from '../base/base-http.service';
 import {
@@ -26,6 +26,8 @@ import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
 
+import { stringify } from 'querystring';
+import { AuthService } from "@gsrs-core/auth";
 class CustomEncoder implements HttpParameterCodec {
   encodeKey(key: string): string {
     return encodeURIComponent(key);
@@ -57,6 +59,7 @@ export class SubstanceService extends BaseHttpService {
   tempObject: any;
   constructor(
     public http: HttpClient,
+    private authService: AuthService,
     public configService: ConfigService,
     private sanitizer: DomSanitizer,
     private utilsService: UtilsService,
@@ -879,23 +882,42 @@ export class SubstanceService extends BaseHttpService {
   }
 
   saveSubstance(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
-    const url = `${this.apiBaseUrl}substances?view=internal`;
-    let method = substance.uuid ? 'PUT' : 'POST';
-    if (type && type === 'import') {
-      method = 'POST';
+    // Remove temporary structure ID if present (created when loading draft into G4SSM form)
+    if (substance && (substance as any).$$tmpStructureId) {
+        delete (substance as any).$$tmpStructureId;
     }
-    const options = {
-      body: substance
-    };
-    return this.http.request(method, url, options);
+
+    // Use POST for new substances (no uuid OR no version), PUT for existing ones
+    const method = type === 'import' || !substance.uuid || !substance.version ? 'POST' : 'PUT';
+    const options = { body: substance };
+
+    const url = `${this.apiBaseUrl}substances?view=internal`;
+    if (!this.configService.configData.isPfdaVersion) {
+      return this.http.request(method, url, options);
+    } else {
+      return this.authService.getAuth().pipe(
+        concatMap(auth =>
+          auth
+            ? this.http.request(method, url, options)
+            : this.authService.pfdaLogin().pipe(
+              concatMap(success =>
+                success
+                  ? this.http.request(method, url, options)
+                  : throwError(() => ({
+                    type: 'AUTH',
+                    message: 'Authentication failed',
+                  }))
+              )
+            )
+        )
+      );
+    }
   }
 
   saveSubstanceWithoutValidation(substance: SubstanceDetail, type?: string): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances/novalid?view=internal`;
-    let method = 'PUT';
-    if (type && type === 'import') {
-      method = 'POST';
-    }
+    // Use POST for imports or new substances (no uuid or no version)
+    let method = (type === 'import' || !substance.uuid || !substance.version) ? 'POST' : 'PUT';
     const options = {
       body: substance
     };

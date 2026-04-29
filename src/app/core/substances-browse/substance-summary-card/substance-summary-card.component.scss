@@ -1,3 +1,7 @@
+.select-list {
+  --floating-label-font-size: 16px;
+}
+
 // Angular Material 15 MDC card support
 .mat-mdc-card {
     max-width: 1228px;
@@ -18,6 +22,12 @@
 
 .button-wrapper {
     max-width: 170px;
+}
+
+.summary-button {
+    --mdc-icon-button-state-layer-size: 36px;
+    width: 36px;
+    height: 36px;
 }
 
 .mat-button {

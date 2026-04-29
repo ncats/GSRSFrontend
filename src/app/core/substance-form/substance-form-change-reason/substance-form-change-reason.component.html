@@ -1,9 +1,11 @@
 <mat-form-field class="full-width-textarea">
-    <textarea matInput
-              [placeholder]="placeholderText()"
-              [formControl]="changeReasonControl"
-              rows="3"
-              maxlength="2000">
-    </textarea>
-    <mat-hint class="hint">{{ hintText() }}</mat-hint>
+  <mat-label>{{ placeholderText() }}</mat-label>
+  <textarea
+    matInput
+    [formControl]="changeReasonControl"
+    rows="3"
+    maxlength="2000"
+  >
+  </textarea>
+  <mat-hint class="hint">{{ hintText() }}</mat-hint>
 </mat-form-field>

@@ -3,7 +3,7 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif !important; /* Ketcher CSS dynamically injects body font-family; !important is needed to override it */
   font-size: 14px;
   letter-spacing: normal;
 }
@@ -51,14 +51,15 @@ button:hover {
   }
 }
 
-.mat-progress-bar-background {
-  fill: whitesmoke !important;
-}
+// MDC progress bar track color: --mat-progress-bar-track-color (replaces dead .mat-progress-bar-background SVG fill)
 
-// Support both legacy and MDC buttons
-.mat-button,
-.mat-mdc-button {
-  color: var(--link-color);
+// Material v20 runtime rule: .mat-mdc-button { color: var(--mat-button-text-label-text-color, var(--mat-sys-primary)) }
+// --mat-sys-primary is an M3 token not defined in this M2 theme, so the chain falls to black.
+// Fix: set the correct token that Material reads. Scoped to buttons without color="" attribute
+// so color="primary" / color="warn" buttons keep their themed colors.
+.mat-mdc-button:not([color]),
+a.mat-mdc-button:not([color]) {
+  --mat-button-text-label-text-color: var(--link-color);
 }
 
 // Support both legacy and MDC form fields

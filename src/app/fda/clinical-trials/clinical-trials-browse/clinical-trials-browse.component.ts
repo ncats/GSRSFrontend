@@ -63,6 +63,7 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
   private subscriptions: Array<Subscription> = [];
   dataSource = new MatTableDataSource<ClinicalTrial>([]);
   canDelete: boolean = false;
+  canEdit: boolean = false;
   showExactMatches = false;
   private isComponentInit = false;
 
@@ -114,16 +115,11 @@ export class ClinicalTrialsBrowseComponent implements OnInit, AfterViewInit, OnD
     }
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
+    this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.canDelete = await this.authService.hasSpecificPrivilege('Delete Lower Level Items');
-    const authSubscription = this.authService.getAuth().subscribe(auth => {
-
-      // testing
-      if (this.canDelete) {
-       this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated', 'delete'];
-      } else {
-         this.displayedColumns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
-      }
-    });
+    const columns = ['edit', 'trialNumber', 'title', 'lastUpdated'];
+    if (this.canDelete) { columns.push('delete'); }
+    this.displayedColumns = columns;
     this.searchTypes = [
       {'title': 'All', 'value': 'all'},
       {'title': 'Title', 'value': 'title'},
