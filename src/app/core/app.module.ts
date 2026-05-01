@@ -123,7 +123,8 @@ import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/impo
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
 
 // ncats branch begin 
-import { FooterBufferComponent } from './footer-buffer/footer-buffer.component';
+import { TopContentSpacerComponent } from './spacers/top-content-spacer.component';
+import { BottomContentSpacerComponent } from './spacers/bottom-content-spacer.component';
 import { FooterComponent } from './footer/footer.component';
 
 // ncats branch end 
@@ -133,6 +134,7 @@ import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity
 import { FileSelectModule } from './file-select/file-select.module';
 import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamine-standalone.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { TopBannerComponent } from './misc/top-banner.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -173,7 +175,9 @@ import { MatDividerModule } from '@angular/material/divider';
     UserQueryListDialogComponent,
     ListCreateDialogComponent,
     ImportScrubberComponent,
-    FooterBufferComponent,
+    TopBannerComponent,
+    TopContentSpacerComponent,
+    BottomContentSpacerComponent,
     FooterComponent
   ],
   imports: [

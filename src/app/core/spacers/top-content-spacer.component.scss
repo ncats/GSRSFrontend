@@ -1,0 +1,9 @@
+/* ncats branch, used in base component to allow 
+space above all content pages */
+
+.top-content-spacer { 
+    height: 100px;
+    clear: both;
+    width: 100%;
+    border: 1px solid blue;
+}

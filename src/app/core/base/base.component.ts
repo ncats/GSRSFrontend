@@ -88,7 +88,6 @@ export class BaseComponent implements OnInit, OnDestroy {
 
   // ncats branch begin
   contactEmailAlt: string;
-  bannerText: string = "This repository is under review for potential modification in compliance with Administration directives.";
   showTopBanner: boolean;
   showFooter: boolean;
   showLogin: boolean;
@@ -360,10 +359,6 @@ export class BaseComponent implements OnInit, OnDestroy {
  
   ngAfterViewInit() {
  
-    if(this.configService.configData.bannerText) {
-      this.bannerText = this.configService.configData.bannerText;
-    }
-
     if(this.configService.configData.showTopBanner === undefined) {
       this.showTopBanner = false;
     } else {

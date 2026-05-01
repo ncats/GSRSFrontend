@@ -132,7 +132,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   userCanChangeDefinitionVisibility = false;
 
   // ncats branch begin
-  showTopBanner = false;
+  showTopBanner = true;
   // ncats branch end
 
   constructor(
@@ -324,6 +324,18 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }  
+
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+
+    
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;
     this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");

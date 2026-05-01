@@ -1,8 +1,7 @@
 <!-- ncats branch begin (2 open divs) -->
 <div class="base-page-wrapper">
-  <div *ngIf = "showTopBanner"> 
-    <div class = "top-banner">{{bannerText}}</div>
-
+  <div *ngIf = "showTopBanner" class="top-banner"> 
+    <app-top-banner></app-top-banner>
   </div>
 
   <div [ngClass]="['base-menu-wrapper', (showTopBanner) ? 'base-menu-wrapper-with-top-banner': '']">
@@ -405,21 +404,32 @@
 <div *ngIf="isPfdaVersion">
   <app-pfda-toolbar></app-pfda-toolbar>
 </div>
+
+<div id="hello" [ngClass]="['base-main-wrapper', (showTopBanner) ? 'base-main-wrapper-with-top-banner': '']">
+
 <app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
+
+<!-- <div *ngIf = "showTopBanner"> 
+    <app-top-content-spacer></app-top-content-spacer>
+</div> -->
+
+<!-- <div style="height: 92px; clear: both;">&nbsp;</div> -->
+
 <router-outlet></router-outlet>
         
-        <!-- ncats branch begin --> 
-        <div *ngIf="showFooter" class="footer-wrapper">
-            <app-footer-buffer></app-footer-buffer>
-        </div>    
-    </div>   <!-- ncats branch fragment ngClass.2 bottom -->
-
+  <!-- ncats branch begin --> 
+  <div *ngIf="showFooter">
+      <app-bottom-content-spacer></app-bottom-content-spacer>
   </div>
+</div>
+</div>   <!-- ncats branch fragment ngClass.2 bottom -->
 
+</div>
 
 <div *ngIf="showFooter" class="footer-wrapper">
   <app-footer></app-footer>
 </div>
  <!-- ncats branch end --> 
 
+f
