@@ -256,7 +256,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     }
   }
   }
-}    
+}
     
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 

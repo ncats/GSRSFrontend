@@ -8,8 +8,8 @@
  
     <!-- ncats branch begin end -->
 <mat-toolbar
-  class="mat-elevation-z3"
-  color="primary"  
+  class="mat-elevation-z3"  
+  color="primary"
   *ngIf="
     showHeaderBar === 'true' &&
     !isPfdaVersion &&
@@ -405,16 +405,23 @@
   <app-pfda-toolbar></app-pfda-toolbar>
 </div>
 
-<div id="hello" [ngClass]="['base-main-wrapper', (showTopBanner) ? 'base-main-wrapper-with-top-banner': '']">
+<div [ngClass]="['base-main-wrapper', (showTopBanner) ? 'base-main-wrapper-with-top-banner': '']">
 
 <app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
 
-<!-- <div *ngIf = "showTopBanner"> 
+<!--
+
+ncats branch begin, probably not needed.
+
+<div *ngIf = "showTopBanner"> 
     <app-top-content-spacer></app-top-content-spacer>
 </div> -->
 
-<!-- <div style="height: 92px; clear: both;">&nbsp;</div> -->
+<!-- <div style="height: 92px; clear: both;">&nbsp;</div>
+
+ncats branch end
+ -->
 
 <router-outlet></router-outlet>
         
@@ -432,4 +439,4 @@
 </div>
  <!-- ncats branch end --> 
 
-f
+

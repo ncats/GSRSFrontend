@@ -1,6 +1,6 @@
 {
   "deprecated_customToolbarComponent": "precisionFDA",
-  "isPfdaVersion": true,
+  "_isPfdaVersion": true,
   "apiBaseUrl": "http://localhost:8081/ginas/app/",
   "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/",
   "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",

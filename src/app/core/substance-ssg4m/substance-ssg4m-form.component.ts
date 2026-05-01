@@ -61,7 +61,7 @@ import jp from 'jsonpath';
   selector: "app-substance-ssg4m-form",
   templateUrl: "./substance-ssg4m-form.component.html",
   styleUrls: ["./substance-ssg4m-form.component.scss"],
-    standalone: false
+  standalone: false
 })
 export class SubstanceSsg4ManufactureFormComponent
   implements OnInit, AfterViewInit, OnDestroy
@@ -130,14 +130,15 @@ export class SubstanceSsg4ManufactureFormComponent
   configSettingReferences = false;
   private submitSubscription: any = null;
   ssg4mExportSvg: boolean;
+  
+  // ncats branch
+  showTopBanner: boolean;
 
   private jsLibScriptUrls = [
     `${environment.baseHref || ""}assets/pathway/cola.min.js`,
     `${environment.baseHref || ""}assets/pathway/d3v4.js`,
     `${environment.baseHref || ""}assets/pathway/pathwayviz.js`,
   ];
-  showTopBanner: boolean; /* ncats branch change begin/end */
-
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -194,29 +195,29 @@ export class SubstanceSsg4ManufactureFormComponent
     const routeSubscription = this.activatedRoute.params.subscribe((params) => {
       if (params["id"]) {
         const id = params["id"];
-          if (id !== this.id) {
-            this.id = id;
-            this.gaService.sendPageView(`Substance Edit`);
+        if (id !== this.id) {
+          this.id = id;
+          this.gaService.sendPageView(`Substance Edit`);
           this.titleService.setTitle(
             "Edit - Specified Substance Group 4 Manufacturing",
           );
           const newType =
             this.activatedRoute.snapshot.queryParamMap.get("switch") || null;
-            if (newType) {
-              this.getSsg4mDetails(newType);
-            } else {
-              this.getSsg4mDetails();
-            }
-          } // if Id
+          if (newType) {
+            this.getSsg4mDetails(newType);
+          } else {
+            this.getSsg4mDetails();
+          }
+        } // if Id
       } else if (this.activatedRoute.snapshot.queryParams["action"]) {
         // import in new register form
         const actionParam =
           this.activatedRoute.snapshot.queryParams["action"] || null;
         if (actionParam && actionParam === "import" && window.history.state) {
-            const record = window.history.state.record;
+          const record = window.history.state.record;
           if (record && this.jsonValid(record)) {
-              const responseImport = JSON.parse(record);
-              if (responseImport) {
+            const responseImport = JSON.parse(record);
+            if (responseImport) {
               this.substanceFormService
                 .loadSubstance(this.substanceClass, responseImport)
                 .pipe(take(1))
@@ -242,8 +243,8 @@ export class SubstanceSsg4ManufactureFormComponent
                           ].dynamicComponentRef.instance.menuLabelUpdate
                             .pipe(take(1))
                             .subscribe((label) => {
-                            this.formSections[index].menuLabel = label;
-                          });
+                              this.formSections[index].menuLabel = label;
+                            });
                           const hiddenStateSubscription = this.formSections[
                             index
                           ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
@@ -257,8 +258,8 @@ export class SubstanceSsg4ManufactureFormComponent
                           ].dynamicComponentRef.instance.canAddItemUpdate
                             .pipe(take(1))
                             .subscribe((isList) => {
-                            this.formSections[index].canAddItem = isList;
-                            if (isList) {
+                              this.formSections[index].canAddItem = isList;
+                              if (isList) {
                                 const aieSubscription = this.formSections[
                                   index
                                 ].addItemEmitter.subscribe(() => {
@@ -268,33 +269,33 @@ export class SubstanceSsg4ManufactureFormComponent
                                   this.formSections[
                                     index
                                   ].dynamicComponentRef.instance.addItem();
-                              });
+                                });
                                 this.formSections[
                                   index
                                 ].dynamicComponentRef.instance.componentDestroyed
                                   .pipe(take(1))
                                   .subscribe(() => {
-                                aieSubscription.unsubscribe();
-                              });
-                            }
-                          });
+                                    aieSubscription.unsubscribe();
+                                  });
+                              }
+                            });
                           this.formSections[
                             index
                           ].dynamicComponentRef.changeDetectorRef.detectChanges();
                         });
                     });
                   });
-                });  // load Substance in Import on new Register page
-              }
+                }); // load Substance in Import on new Register page
             }
           }
+        }
 
-          this.loadingService.setLoading(false);
-          this.isLoading = false;
+        this.loadingService.setLoading(false);
+        this.isLoading = false;
 
-          // this.imported = true;
-          // this.getDetailsFromImport(record.record);
-          /* }  else {
+        // this.imported = true;
+        // this.getDetailsFromImport(record.record);
+        /* }  else {
               this.copy = this.activatedRoute.snapshot.queryParams['copy'] || null;
               if (this.copy) {
                 const copyType = this.activatedRoute.snapshot.queryParams['copyType'] || null;
@@ -303,12 +304,12 @@ export class SubstanceSsg4ManufactureFormComponent
               } */
       } else {
         // new record
-          setTimeout(() => {
-            this.gaService.sendPageView(`Substance Register`);
+        setTimeout(() => {
+          this.gaService.sendPageView(`Substance Register`);
           this.subClass =
             this.activatedRoute.snapshot.params["type"] ||
             "specifiedSubstanceG4m";
-            this.substanceClass = this.subClass;
+          this.substanceClass = this.subClass;
           this.titleService.setTitle(
             "Register - Specified Substance Group 4 Manufacturing",
           );
@@ -320,9 +321,9 @@ export class SubstanceSsg4ManufactureFormComponent
               this.loadingService.setLoading(false);
               this.isLoading = false;
             });
-          });
-        } //else
-      });
+        });
+      } //else
+    });
     this.subscriptions.push(routeSubscription);
     const routerSubscription = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
@@ -362,18 +363,18 @@ export class SubstanceSsg4ManufactureFormComponent
 
   ngAfterViewInit(): void {
     const subscription = this.dynamicComponents.changes.subscribe(() => {
-        const total = this.formSections.length;
-        let finished = 0;
-        if (!this.forceChange) {
-          this.loadingService.setLoading(true);
-          const startTime = new Date();
-          this.dynamicComponents.forEach((cRef, index) => {
-            this.dynamicComponentLoader
+      const total = this.formSections.length;
+      let finished = 0;
+      if (!this.forceChange) {
+        this.loadingService.setLoading(true);
+        const startTime = new Date();
+        this.dynamicComponents.forEach((cRef, index) => {
+          this.dynamicComponentLoader
             .getComponentFactory<any>(
               this.formSections[index].dynamicComponentName,
             )
             .subscribe((componentFactory) => {
-                this.loadingService.setLoading(true);
+              this.loadingService.setLoading(true);
               this.formSections[index].dynamicComponentRef =
                 cRef.createComponent(componentFactory);
               this.formSections[index].matExpansionPanel =
@@ -391,10 +392,10 @@ export class SubstanceSsg4ManufactureFormComponent
                 index
               ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
                 (isHidden) => {
-                    this.formSections[index].isHidden = isHidden;
+                  this.formSections[index].isHidden = isHidden;
                 },
               );
-                this.subscriptions.push(hiddenStateSubscription);
+              this.subscriptions.push(hiddenStateSubscription);
               this.formSections[
                 index
               ].dynamicComponentRef.instance.canAddItemUpdate
@@ -415,38 +416,38 @@ export class SubstanceSsg4ManufactureFormComponent
                     ].dynamicComponentRef.instance.componentDestroyed
                       .pipe(take(1))
                       .subscribe(() => {
-                      aieSubscription.unsubscribe();
-                    });
+                        aieSubscription.unsubscribe();
+                      });
                   }
                 });
               this.formSections[
                 index
               ].dynamicComponentRef.changeDetectorRef.detectChanges();
-                finished++;
-                if (finished >= total) {
-                  this.loadingService.setLoading(false);
-                } else {
-                  const currentTime = new Date();
-                  if (currentTime.getTime() - startTime.getTime() > 12000) {
+              finished++;
+              if (finished >= total) {
+                this.loadingService.setLoading(false);
+              } else {
+                const currentTime = new Date();
+                if (currentTime.getTime() - startTime.getTime() > 12000) {
                   if (
                     confirm(
                       "There was a network error while fetching files, would you like to refresh?",
                     )
                   ) {
-                      window.location.reload();
-                    }
+                    window.location.reload();
                   }
                 }
-                setTimeout(() => {
-                  this.loadingService.setLoading(false);
-                  //  this.UNII = this.substanceSsg4mService.getUNII();
-                }, 5);
-              });
-          });
-          // this.loadingService.setLoading(false);
-        }
-        subscription.unsubscribe();
-      });
+              }
+              setTimeout(() => {
+                this.loadingService.setLoading(false);
+                //  this.UNII = this.substanceSsg4mService.getUNII();
+              }, 5);
+            });
+        });
+        // this.loadingService.setLoading(false);
+      }
+      subscription.unsubscribe();
+    });
   }
 
   private setFormSections(sectionNames: Array<string> = []): void {
@@ -586,14 +587,14 @@ export class SubstanceSsg4ManufactureFormComponent
       .afterClosed()
       .pipe(take(1))
       .subscribe((response) => {
-      if (response) {
-        this.loadingService.setLoading(true);
-        this.overlayContainer.style.zIndex = null;
+        if (response) {
+          this.loadingService.setLoading(true);
+          this.overlayContainer.style.zIndex = null;
 
-        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
-        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
+          // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
+          // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
 
-        /* const read = JSON.parse(response);
+          /* const read = JSON.parse(response);
          if (this.id && read.uuid && this.id === read.uuid) {
            this.substanceFormService.importSubstance(read, 'update');
            this.submissionMessage = null;
@@ -611,10 +612,10 @@ export class SubstanceSsg4ManufactureFormComponent
            this.loadingService.setLoading(false);
            this.isLoading = false;
          } else {*/
-        setTimeout(() => {
+          setTimeout(() => {
             this.router.onSameUrlNavigation = "reload";
-          this.loadingService.setLoading(false);
-          if (this.id) {
+            this.loadingService.setLoading(false);
+            if (this.id) {
               this.router.navigateByUrl(
                 "/substances-ssg4m/" +
                   this.id +
@@ -629,12 +630,12 @@ export class SubstanceSsg4ManufactureFormComponent
                   this.showHeaderBar,
                 { state: { record: response } },
               );
-          }
-        }, 1000);
-      }
-      // }
-      // }
-    });
+            }
+          }, 1000);
+        }
+        // }
+        // }
+      });
   }
 
   test() {
@@ -770,56 +771,56 @@ export class SubstanceSsg4ManufactureFormComponent
       .pipe(take(1))
       .subscribe(
         (responseCheck) => {
-      if (responseCheck) {
-        if (responseCheck["status"]) {
+          if (responseCheck) {
+            if (responseCheck["status"]) {
               if (responseCheck["status"] === "OK") {
-            this.microserviceStatusUp = true;
+                this.microserviceStatusUp = true;
+              }
+            }
+          } else {
+            this.microserviceStatusUp = false;
           }
-        }
-      } else {
-        this.microserviceStatusUp = false;
-      }
         },
         (error) => {
-      // if it is authentication issue or status is 0, reload the current page
+          // if it is authentication issue or status is 0, reload the current page
 
-      // These lines did not work. Commenting out right now. Caused forever refresh loop.
-      // if (error.status === 0) {
-      //  window.location.reload();
-      // }
+          // These lines did not work. Commenting out right now. Caused forever refresh loop.
+          // if (error.status === 0) {
+          //  window.location.reload();
+          // }
 
-      if (error.status === 0) {
-        console.log("Error Status is 0");
-        let totalNumberRefresh = 2;
+          if (error.status === 0) {
+            console.log("Error Status is 0");
+            let totalNumberRefresh = 2;
             let preventRefresh = parseInt(
               new URLSearchParams(window.location.search).get("refreshcount"),
             );
-        // if parameter 'refreshcount' is NOT found in the URL, add refreshcount in the URL.
-        // refresh n/totalNumberRefresh times
+            // if parameter 'refreshcount' is NOT found in the URL, add refreshcount in the URL.
+            // refresh n/totalNumberRefresh times
             if (
               !preventRefresh ||
               (preventRefresh && Number(preventRefresh) < totalNumberRefresh)
             ) {
-          let url = window.location.href;
-          // if question mark '?' found in the URL, add/append '&', otherwise add/append '?' in the URL
+              let url = window.location.href;
+              // if question mark '?' found in the URL, add/append '&', otherwise add/append '?' in the URL
               if (!preventRefresh) {
                 // not found preventRefresh in URL
-            preventRefresh = 1;
+                preventRefresh = 1;
                 if (url.indexOf("?") > -1) {
                   url += "&refreshcount=" + preventRefresh;
-            } else {
+                } else {
                   url += "?refreshcount=" + preventRefresh;
-            }
+                }
               } else {
                 // found refreshcount in the URL
                 let currentCountUrl = "refreshcount=" + preventRefresh;
-            // add 1 to current count
-            preventRefresh = preventRefresh + 1;
+                // add 1 to current count
+                preventRefresh = preventRefresh + 1;
                 let newCounturl = "refreshcount=" + preventRefresh;
-            // replace 'refreshcount=1' to 'refreshcount=2'
-            url = url.replace(currentCountUrl, newCounturl);
-          }
-          // Display error message to users that the page will refresh n number of times.
+                // replace 'refreshcount=1' to 'refreshcount=2'
+                url = url.replace(currentCountUrl, newCounturl);
+              }
+              // Display error message to users that the page will refresh n number of times.
               this.errorMessage =
                 "There was a connection problem loading the page. Automatically refreshing " +
                 preventRefresh +
@@ -827,22 +828,22 @@ export class SubstanceSsg4ManufactureFormComponent
                 totalNumberRefresh +
                 " times ...<br><br>";
 
-          setTimeout(() => {
-            window.location.href = url;
-          }, 2000);
-        }
-      }
+              setTimeout(() => {
+                window.location.href = url;
+              }, 2000);
+            }
+          }
 
-      this.microserviceStatusUp = false;
-      if (!this.errorMessage) {
+          this.microserviceStatusUp = false;
+          if (!this.errorMessage) {
             this.errorMessage = "";
-      }
+          }
           this.errorMessage =
             this.errorMessage +
             "Unable to load the data for Record ID " +
             this.id +
             "<br><br>";
-      if (error && error.error && error.error.message) {
+          if (error && error.error && error.error.message) {
             this.errorMessage =
               this.errorMessage +
               "Server Error " +
@@ -854,7 +855,7 @@ export class SubstanceSsg4ManufactureFormComponent
               "<br>Server Error " +
               (error.status + ": " || "") +
               error.error;
-      } else if (error && error.message) {
+          } else if (error && error.message) {
             this.errorMessage =
               this.errorMessage +
               "<br>Server Error " +
@@ -870,7 +871,7 @@ export class SubstanceSsg4ManufactureFormComponent
             this.errorMessage =
               this.errorMessage +
               "There could be an authentication issue. <br>-Make sure that you are logged into the GSRS website.<br>-Clear your browser cache.<br>-Reload your SSG4 page or Appian";
-      }
+          }
         },
       );
   }
@@ -887,37 +888,37 @@ export class SubstanceSsg4ManufactureFormComponent
       .pipe(take(1))
       .subscribe(
         (response) => {
-      /*if (response._name) {
+          /*if (response._name) {
         this.titleService.setTitle('Edit - ' + response._name);
       }*/
-      if (response) {
-        // Check for import in URL
+          if (response) {
+            // Check for import in URL
             const action =
               this.activatedRoute.snapshot.queryParams["action"] || null;
-        let substanceSsg4mFromDb: SubstanceDetail;
+            let substanceSsg4mFromDb: SubstanceDetail;
 
-        this.ssg4mSyntheticPathway = response;
+            this.ssg4mSyntheticPathway = response;
 
             if (action && action === "import" && window.history.state) {
-          // this.gaService.sendPageView(`Substance Import`);
-          const record = window.history.state.record;
-          // this.imported = true;
-          // this.getDetailsFromImport(record.record);
+              // this.gaService.sendPageView(`Substance Import`);
+              const record = window.history.state.record;
+              // this.imported = true;
+              // this.getDetailsFromImport(record.record);
               if (record && this.jsonValid(record)) {
-            const responseImport = JSON.parse(record);
-            if (responseImport) {
+                const responseImport = JSON.parse(record);
+                if (responseImport) {
                   this.substanceFormService
                     .loadSubstance(this.substanceClass, responseImport)
                     .pipe(take(1))
                     .subscribe(() => {
-                // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-                this.setFormSections(formSections[this.substanceClass]);
-              });
-            }
-          }
+                      // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+                      this.setFormSections(formSections[this.substanceClass]);
+                    });
+                }
+              }
             } else if (response.sbmsnDataText) {
               // If JSON form data found into the database, load into the form
-          substanceSsg4mFromDb = JSON.parse(response.sbmsnDataText);
+              substanceSsg4mFromDb = JSON.parse(response.sbmsnDataText);
 
               this.substanceFormService
                 .loadSubstance(
@@ -926,33 +927,33 @@ export class SubstanceSsg4ManufactureFormComponent
                 )
                 .pipe(take(1))
                 .subscribe(() => {
-            this.setFormSections(formSections[this.substanceClass]);
-          });
+                  this.setFormSections(formSections[this.substanceClass]);
+                });
             } else if (!response.sbmsnDataText) {
               // AS NEW FORM, If JSON form data NOT found into the database, Load the Form as a new Form
               this.substanceFormService
                 .loadSubstance(this.substanceClass)
                 .pipe(take(1))
                 .subscribe(() => {
-            // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-            this.setFormSections(formSections[this.substanceClass]);
-          });
-        }
-      } else if (response === null) {
+                  // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
+                  this.setFormSections(formSections[this.substanceClass]);
+                });
+            }
+          } else if (response === null) {
             this.errorMessage =
               "There is no data found in the database for ID: " + this.id;
-      }
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
+          }
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
         },
         (error) => {
           // Getting Error while getting Record
-      if (this.microserviceStatusUp === false) {
-      }
+          if (this.microserviceStatusUp === false) {
+          }
           this.gaService.sendException("getSsg4mDetails: error from API call");
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      //  this.handleSubstanceRetrivalError();
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          //  this.handleSubstanceRetrivalError();
         },
       );
   }
@@ -978,13 +979,13 @@ export class SubstanceSsg4ManufactureFormComponent
         .pipe(take(1))
         .subscribe(
           () => {
-        // this.substanceSsg4mService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
-        this.setFormSections(formSections[response.substanceClass]);
-        if (!same) {
-          setTimeout(() => {
-            this.forceChange = true;
-            this.dynamicComponents.forEach((cRef, index) => {
-              this.dynamicComponentLoader
+            // this.substanceSsg4mService.loadSubstance(response.substanceClass, response, 'import').pipe(take(1)).subscribe(() => {
+            this.setFormSections(formSections[response.substanceClass]);
+            if (!same) {
+              setTimeout(() => {
+                this.forceChange = true;
+                this.dynamicComponents.forEach((cRef, index) => {
+                  this.dynamicComponentLoader
                     .getComponentFactory<any>(
                       this.formSections[index].dynamicComponentName,
                     )
@@ -1000,52 +1001,52 @@ export class SubstanceSsg4ManufactureFormComponent
                       ].dynamicComponentRef.instance.menuLabelUpdate
                         .pipe(take(1))
                         .subscribe((label) => {
-                    this.formSections[index].menuLabel = label;
-                  });
+                          this.formSections[index].menuLabel = label;
+                        });
                       const hiddenStateSubscription = this.formSections[
                         index
                       ].dynamicComponentRef.instance.hiddenStateUpdate.subscribe(
                         (isHidden) => {
-                      this.formSections[index].isHidden = isHidden;
+                          this.formSections[index].isHidden = isHidden;
                         },
                       );
-                  this.subscriptions.push(hiddenStateSubscription);
+                      this.subscriptions.push(hiddenStateSubscription);
                       this.formSections[
                         index
                       ].dynamicComponentRef.instance.canAddItemUpdate
                         .pipe(take(1))
                         .subscribe((isList) => {
-                    this.formSections[index].canAddItem = isList;
-                    if (isList) {
+                          this.formSections[index].canAddItem = isList;
+                          if (isList) {
                             const aieSubscription = this.formSections[
                               index
                             ].addItemEmitter.subscribe(() => {
-                        this.formSections[index].matExpansionPanel.open();
+                              this.formSections[index].matExpansionPanel.open();
                               this.formSections[
                                 index
                               ].dynamicComponentRef.instance.addItem();
-                      });
+                            });
                             this.formSections[
                               index
                             ].dynamicComponentRef.instance.componentDestroyed
                               .pipe(take(1))
                               .subscribe(() => {
-                        aieSubscription.unsubscribe();
-                      });
-                    }
-                  });
+                                aieSubscription.unsubscribe();
+                              });
+                          }
+                        });
                       this.formSections[
                         index
                       ].dynamicComponentRef.changeDetectorRef.detectChanges();
+                    });
                 });
-            });
 
-            this.canApprove = false;
-          });
-        }
+                this.canApprove = false;
+              });
+            }
           },
           (error) => {
-        this.loadingService.setLoading(false);
+            this.loadingService.setLoading(false);
           },
         );
     } else {
@@ -1062,33 +1063,33 @@ export class SubstanceSsg4ManufactureFormComponent
       .pipe(take(1))
       .subscribe(
         (response) => {
-      if (response) {
-        this.substanceClass = response.substanceClass;
-        this.status = response.status;
-        delete response.uuid;
-        if (response._name) {
-          delete response._name;
-        }
-        this.scrub(response, type);
+          if (response) {
+            this.substanceClass = response.substanceClass;
+            this.status = response.status;
+            delete response.uuid;
+            if (response._name) {
+              delete response._name;
+            }
+            this.scrub(response, type);
             this.substanceSsg4mService
               .loadSubstance(response.substanceClass, response)
               .pipe(take(1))
               .subscribe(() => {
-          this.setFormSections(formSections[response.substanceClass]);
-          this.loadingService.setLoading(false);
-          this.isLoading = false;
-        });
-      } else {
-        this.handleSubstanceRetrivalError();
-      }
+                this.setFormSections(formSections[response.substanceClass]);
+                this.loadingService.setLoading(false);
+                this.isLoading = false;
+              });
+          } else {
+            this.handleSubstanceRetrivalError();
+          }
         },
         (error) => {
           this.gaService.sendException(
             "getSubstanceDetails: error from API call",
           );
-      this.loadingService.setLoading(false);
-      this.isLoading = false;
-      this.handleSubstanceRetrivalError();
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+          this.handleSubstanceRetrivalError();
         },
       );
   }
@@ -1107,10 +1108,10 @@ export class SubstanceSsg4ManufactureFormComponent
         .loadSubstance(this.subClass)
         .pipe(take(1))
         .subscribe(() => {
-        this.setFormSections(formSections.chemical);
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
-      });
+          this.setFormSections(formSections.chemical);
+          this.loadingService.setLoading(false);
+          this.isLoading = false;
+        });
     }, 5000);
   }
 
@@ -1461,9 +1462,9 @@ export class SubstanceSsg4ManufactureFormComponent
     let jsonValue = JSON.stringify(this.json);
 
     // Initialize pathway object if new record
-      if (this.ssg4mSyntheticPathway == null) {
-        this.ssg4mSyntheticPathway = {};
-      }
+    if (this.ssg4mSyntheticPathway == null) {
+      this.ssg4mSyntheticPathway = {};
+    }
 
     // Process and validate local drafts referenced by this form
     const hasValidationErrors = await this.processLocalDrafts(jsonValue);
@@ -1471,11 +1472,11 @@ export class SubstanceSsg4ManufactureFormComponent
       return;
     }
 
-      setTimeout(() => {
-        if (this.isSavedSuccessful === false) {
+    setTimeout(() => {
+      if (this.isSavedSuccessful === false) {
         this.saveDelayedMessage =
           "Hmm ... this seems to be taking longer than normal, there may be network issues. <br>Click here to cancel and continue working on the form. We suggest you save a local copy of the JSON.";
-        }
+      }
     }, 8000);
 
     // Export step view as SVG; default disabled
@@ -1503,8 +1504,8 @@ export class SubstanceSsg4ManufactureFormComponent
     }
 
     if (this.validationMessages && this.validationMessages.length > 0) {
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
+      this.loadingService.setLoading(false);
+      this.isLoading = false;
       this.validationResult = false;
       this.showSubmissionMessages = true;
       return true;
@@ -1668,9 +1669,9 @@ export class SubstanceSsg4ManufactureFormComponent
   private handleSaveSuccess(response: any): void {
     this.loadingService.setLoading(false);
     this.isLoading = false;
-        this.validationMessages = null;
-        this.showSubmissionMessages = false;
-        this.validationResult = false;
+    this.validationMessages = null;
+    this.showSubmissionMessages = false;
+    this.validationResult = false;
 
     const isSuccessful =
       response &&
@@ -1681,51 +1682,51 @@ export class SubstanceSsg4ManufactureFormComponent
       return;
     }
 
-          if (response.synthPathwaySkey) {
-            this.id = response.synthPathwaySkey.toString();
-          }
+    if (response.synthPathwaySkey) {
+      this.id = response.synthPathwaySkey.toString();
+    }
 
-          this.isSavedSuccessful = true;
+    this.isSavedSuccessful = true;
 
     // Handle UI messaging based on whether cancel was clicked
-          if (this.isCancelBtnClicked === true && this.isSavedSuccessful === true) {
+    if (this.isCancelBtnClicked === true && this.isSavedSuccessful === true) {
       this.saveDelayedMessage =
         " Network communication restored, click here to refresh with saved version.";
     } else {
-            this.saveDelayedMessage = "";
-            this.isCancelBtnClicked = false;
+      this.saveDelayedMessage = "";
+      this.isCancelBtnClicked = false;
       this.openSuccessDialog(
         undefined,
         this.configService.configData.isPfdaVersion ? response.fileUrl : null,
       );
-          }
-        }
+    }
+  }
 
   private handleSaveError(error: SubstanceFormResults): void {
-        this.loadingService.setLoading(false);
-        this.isLoading = false;
+    this.loadingService.setLoading(false);
+    this.isLoading = false;
     this.saveDelayedMessage =
       " Network communication restored, RECORD HAS NOT BEEN SAVED. Please resave the record.";
 
-        this.showSubmissionMessages = true;
-        this.submissionMessage = null;
+    this.showSubmissionMessages = true;
+    this.submissionMessage = null;
 
-        if (error.validationMessages && error.validationMessages.length) {
-          this.validationResult = error.isSuccessfull;
+    if (error.validationMessages && error.validationMessages.length) {
+      this.validationResult = error.isSuccessfull;
       this.validationMessages = error.validationMessages.filter(
         (message) =>
           message.messageType.toUpperCase() === "ERROR" ||
           message.messageType.toUpperCase() === "WARNING",
       );
-          this.showSubmissionMessages = true;
-        } else {
+      this.showSubmissionMessages = true;
+    } else {
       this.submissionMessage = "There was a problem with your submission";
-          this.addServerError(error.serverError);
-          setTimeout(() => {
-            this.showSubmissionMessages = false;
-            this.submissionMessage = null;
-          }, 8000);
-        }
+      this.addServerError(error.serverError);
+      setTimeout(() => {
+        this.showSubmissionMessages = false;
+        this.submissionMessage = null;
+      }, 8000);
+    }
   }
 
   cancelSubmit() {
@@ -1966,10 +1967,10 @@ export class SubstanceSsg4ManufactureFormComponent
       .afterClosed()
       .pipe(take(1))
       .subscribe((response?: "continue") => {
-      this.substanceSsg4mService.bypassUpdateCheck();
+        this.substanceSsg4mService.bypassUpdateCheck();
         if (response === "continue") {
-        // Refresh the current page, this will not cause record locking issue
-        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          // Refresh the current page, this will not cause record locking issue
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = "reload";
           if (this.showHeaderBar && this.showHeaderBar === "false") {
             const route =
@@ -1977,20 +1978,20 @@ export class SubstanceSsg4ManufactureFormComponent
               this.id +
               "/edit?header=" +
               this.showHeaderBar;
-          this.router.navigateByUrl(route);
-        } else {
+            this.router.navigateByUrl(route);
+          } else {
             this.router.navigate(["/substances-ssg4m", this.id, "edit"]);
-        }
+          }
 
-        // } else if (response === 'browse') {
-        //  this.router.navigate(['/browse-substance']);
-        //  } else if (response === 'home') {
-        //   this.router.navigate(['/home']);
-        //  } else {
-        this.showSubmissionMessages = true;
-        this.validationResult = false;
+          // } else if (response === 'browse') {
+          //  this.router.navigate(['/browse-substance']);
+          //  } else if (response === 'home') {
+          //   this.router.navigate(['/home']);
+          //  } else {
+          this.showSubmissionMessages = true;
+          this.validationResult = false;
           this.submissionMessage = "";
-        /*
+          /*
         setTimeout(() => {
           this.showSubmissionMessages = false;
           this.submissionMessage = '';
@@ -2002,8 +2003,8 @@ export class SubstanceSsg4ManufactureFormComponent
         } else if (response === "viewInPfda") {
           // View the submitted substance file in the user's precisionFDA home
           window.location.assign(fileUrl);
-      }
-    });
+        }
+      });
     this.subscriptions.push(dialogSubscription);
   }
 

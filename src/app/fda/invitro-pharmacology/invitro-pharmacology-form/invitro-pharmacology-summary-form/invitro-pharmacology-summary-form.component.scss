@@ -19,7 +19,6 @@
   margin: 0 auto;
   overflow: hidden;
   padding-top: 110px;
-  margin-bottom: 200px; /* ncats branch begin/end */
 }
 
 .scrollable-container {
@@ -121,7 +120,7 @@
 .headerstyle {
   border-radius: 6px 6px 0px 0px;
   border: 1px solid var(--blue-color);
-  background-color: var(--table-th-border-color);  /*--primary-title-color*/
+  background-color: var(--table-th-border-color); /*--primary-title-color*/
   border-bottom: none;
   padding-left: 10px;
   height: 50px;
@@ -195,7 +194,7 @@
 }
 
 .col-6-4 {
-  width: calc((100% - 20px) / (6/4));
+  width: calc((100% - 20px) / (6 / 4));
   margin-right: 20px;
 }
 
@@ -204,7 +203,7 @@
 }
 
 .col-6-5 {
-  width: calc((100% - 10px) / (6/5));
+  width: calc((100% - 10px) / (6 / 5));
   margin-right: 10px;
 }
 
@@ -213,7 +212,7 @@
 }
 
 .col-5-more {
-  width: calc((100% + 100px) / (6/5));
+  width: calc((100% + 100px) / (6 / 5));
   margin-right: 10px;
 }
 
@@ -653,7 +652,7 @@ hr {
   max-width: 1140px;
 }
 
-.mat-form-field-style> {
+.mat-form-field-style > {
   /* OVERWRITE MATERIAL INPUT FIELDS */
   .mat-form-field-infix {
     color: var(--regular-blue-color);

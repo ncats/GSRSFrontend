@@ -100,7 +100,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   feature: string;
   isPfdaVersion: boolean = false;
   canUpdate: boolean;
-  canMakeAdvancedEdits: boolean;
+  canMakeAdvancedEdits: boolean;  
   messageField: string;
   uuid: string;
   substanceClass: string;
@@ -244,7 +244,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         if (keys[i].startsWith('gsrs-draft-')) {
           const entry = JSON.parse(localStorage.getItem(keys[i]));
           entry.key = keys[i];
-          this.draftCount++;
+            this.draftCount++;
           this.drafts.push(entry);
 
         }
@@ -325,6 +325,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }  
 
+// ncats branch begin
     if(this.configService.configData.showTopBanner === undefined) {
       this.showTopBanner = false;
     } else {
@@ -334,6 +335,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         this.showTopBanner = true;
       }
     }
+// ncats branch end
 
     
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;
@@ -545,7 +547,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       if (keys[i].startsWith('gsrs-draft-')) {
         const entry = JSON.parse(localStorage.getItem(keys[i]));
         entry.key = keys[i];
-        temp++;
+          temp++;
         this.drafts.push(entry);
 
       }
