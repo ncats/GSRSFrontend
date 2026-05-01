@@ -1,5 +1,46 @@
 @use "../../../styles/variables" as *;
 
+/* ncats branch begin */
+.base-page-wrapper {
+  width: 100%;
+  display: inline;
+  position: fixed;
+  top: 0px;
+}
+
+.base-menu-wrapper {
+  width: 100%;
+  display: inline;
+
+  position: fixed;
+  top: 0px;
+}
+
+.base-menu-wrapper-with-top-banner mat-toolbar{
+  top: 32px !important; 
+}
+
+.base-main-wrapper {
+  overflow: scroll;
+  height:100%;
+  width: 100%;
+  display: inline;
+  position: fixed;
+  top: 64px;
+}
+
+.base-main-wrapper-with-top-banner {
+  top: 102px !important; 
+}
+
+.base-main-notification-wrapper {
+  width: 100%;
+  display: inline;
+  position: fixed;
+
+}
+/* ncats branch end */
+
 .version {
   color: var(--version-text-color);
   font-size: 10pt;
@@ -252,3 +293,5 @@ button.mat-mdc-button.top-button {
     display: none !important;
   }
 }
+
+

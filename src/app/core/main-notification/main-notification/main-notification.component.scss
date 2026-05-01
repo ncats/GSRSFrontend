@@ -1,5 +1,11 @@
 @use '@angular/material' as mat;
 
+/* ncats branch begin */
+.with-top-banner {
+    top: 92px !important;
+  }
+/* ncats branch end */
+  
 .main-notification {
     width: 100%;
     text-align: center;

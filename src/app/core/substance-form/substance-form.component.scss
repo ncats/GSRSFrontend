@@ -69,6 +69,10 @@
   z-index: 1001;
 }
 
+.top-fixed-with-top-banner {
+  top: 92px !important;
+} 
+
 .cdk-overlay-pane {
   z-index: 1005;
 }
@@ -114,6 +118,7 @@ mat-select-panel {
 .form-content-container {
   overflow: hidden;
   padding-top: 121px;
+  margin-bottom: 200px;   /* ncats branch begin/end */
 }
 
 .small-form-content-container {
@@ -229,7 +234,7 @@ mat-select-panel {
 }
 
 .small-mat-expansion-panel-spacing {
-  margin: 10px;
+    margin: 10px;
 }
 
 .hide-show-messages {

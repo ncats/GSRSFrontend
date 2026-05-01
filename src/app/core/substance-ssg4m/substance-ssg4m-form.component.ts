@@ -130,6 +130,9 @@ export class SubstanceSsg4ManufactureFormComponent
   configSettingReferences = false;
   private submitSubscription: any = null;
   ssg4mExportSvg: boolean;
+  
+  // ncats branch
+  showTopBanner: boolean;
 
   private jsLibScriptUrls = [
     `${environment.baseHref || ""}assets/pathway/cola.min.js`,
@@ -173,6 +176,19 @@ export class SubstanceSsg4ManufactureFormComponent
       // Get 'showRegisterEditTitle' value from config
       this.showRegisterEditTitle = this.configSsg4Form.showRegisterEditTitle;
     }
+
+    // ncats branch begin
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+    // ncats branch end
+
 
     this.substanceClass = "specifiedSubstanceG4m";
 

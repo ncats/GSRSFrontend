@@ -1,0 +1,46 @@
+
+
+
+
+.top-banner-text{ 
+    font-size: 16px;
+    font-weight: 600;
+    width: 900px !important;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media screen and (max-width: 768px) {
+.top-banner-text{ 
+    width: 300px !important;    
+}}
+
+.top-banner {
+    width:100%;
+    padding: 5px;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align: center;
+    align-content: center;
+    color: #4793d1;
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    z-index: 1001;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+}
+.top-banner:hover {
+    max-height: 70px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    white-space: wrap;   
+}
+
+.top-banner:hover .top-banner-text {
+    width: 100% !important;
+
+}

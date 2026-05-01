@@ -2,7 +2,7 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  /*top: 64px; */
+  top: 64px; /* ncats branch change begin/end */
   width: 100%;
   background-color: var(--regular-white-color);
   align-items: center;
@@ -12,9 +12,11 @@
   justify-content: flex-end;
 }
 
-.top-fixed-top {
-  top: 64px;
+/* ncats branch change begin */
+.top-fixed-with-top-banner {
+  top: 92px;
 }
+/* ncats branch change end */
 
 .zindex2000 {
   z-index: 2000;
@@ -38,6 +40,7 @@
   overflow: hidden;
   margin-top: -100;
   padding-top: 0;
+  margin-bottom: 200px; /* ncats branch change begin/end */
 }
 
 .cards-container {

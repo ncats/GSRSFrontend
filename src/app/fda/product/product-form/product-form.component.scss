@@ -14,9 +14,14 @@
   z-index: 1001;
 }
 
+.top-fixed-with-top-banner {
+  top: 92px;
+} 
+
 .form-content-container {
   overflow: hidden;
   padding-top: 110px;
+  margin-bottom: 200px;
 }
 
 .scrollable-container {

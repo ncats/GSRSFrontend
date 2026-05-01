@@ -121,11 +121,20 @@ import { UserQueryListDialogComponent } from '@gsrs-core/bulk-search/user-query-
 import { ListCreateDialogComponent } from '@gsrs-core/substances-browse/list-create-dialog/list-create-dialog.component';
 import { ImportScrubberComponent } from '@gsrs-core/admin/import-management/import-scrubber/import-scrubber.component';
 import { PrivacyStatementModule } from './privacy-statement/privacy-statement.module';
+
+// ncats branch begin 
+import { TopContentSpacerComponent } from './spacers/top-content-spacer.component';
+import { BottomContentSpacerComponent } from './spacers/bottom-content-spacer.component';
+import { FooterComponent } from './footer/footer.component';
+
+// ncats branch end 
+
 import { CsrfTokenInterceptor } from '@gsrs-core/auth/csrf-token.interceptor';
 import { CrossEntitySearchModule } from '../fda/cross-entity-search/cross-entity-search.module';
 import { FileSelectModule } from './file-select/file-select.module';
 import { NitrosamineStandaloneModule } from './nitrosamine-standalone/nitrosamine-standalone.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { TopBannerComponent } from './misc/top-banner.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -165,8 +174,11 @@ import { MatDividerModule } from '@angular/material/divider';
     MergeActionDialogComponent,
     UserQueryListDialogComponent,
     ListCreateDialogComponent,
-    ImportScrubberComponent
-
+    ImportScrubberComponent,
+    TopBannerComponent,
+    TopContentSpacerComponent,
+    BottomContentSpacerComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

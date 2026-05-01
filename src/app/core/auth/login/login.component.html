@@ -1,5 +1,6 @@
 <div class="login-container">
-  <mat-card class="login-card" *ngIf="isLoaded">
+  <!-- ncats branch -->
+  <mat-card class="login-card" *ngIf="isLoaded && showLogin">
     <mat-card-title> Login </mat-card-title>
     <mat-card-content class="login-card-content">
       <form class="login-form" [formGroup]="loginForm">
@@ -33,7 +34,7 @@
       </button>
     </mat-card-actions>
   </mat-card>
-
+  
   <br />
   <div
     *ngIf="loadedComponents && loadedComponents.userRegistration"

@@ -319,6 +319,7 @@ textarea {
 
 .collapsed {
   width: 0;
+  height: 0; /* ncats branch begin/end  */
   overflow: hidden;
 }
 

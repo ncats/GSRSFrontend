@@ -14,7 +14,8 @@
 </div>
 
 <div *ngIf="!simplifiedForm; else simplifiedActionsComponent">
-  <div class="top-fixed" *ngIf="!featuresOnly">
+   <!-- ncats branch addition make class dynamic -->
+  <div [ngClass]="['top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']" *ngIf = "!featuresOnly">
     <div class="actions-container">
       <button mat-flat-button color="primary" (click)="saveDraft()">
         Save Draft
@@ -202,6 +203,7 @@
           </div>
         </ng-template>
 
+
         <div class="changeClass advanced" *ngIf="feature === 'changeClass'">
           <mat-form-field>
             <mat-label>New Class</mat-label>
@@ -265,7 +267,7 @@
       <mat-accordion multi="true">
         <mat-expansion-panel
           #expansionPanel
-          [class.small-mat-expansion-panel-spacing]="simplifiedForm"
+                             [class.small-mat-expansion-panel-spacing]="simplifiedForm"
           [expanded]="
             expandedComponents.indexOf(section.dynamicComponentName) > -1
           "
@@ -275,7 +277,7 @@
             last as isLast;
             trackBy: trackBySection
           "
-          [id]="section.dynamicComponentName"
+                             [id]="section.dynamicComponentName"
           [ngClass]="{ hidden: section.isHidden }"
         >
           <mat-expansion-panel-header>
@@ -287,7 +289,7 @@
                   mat-flat-button
                   color="primary"
                   id="Add new {{ section.menuLabel }}"
-                  (click)="section.addItem(); $event.stopPropagation()"
+                        (click)="section.addItem(); $event.stopPropagation()"
                   matTooltip="Add new {{ section.menuLabel }}"
                 >
                   Add {{ section.menuLabel }}
@@ -316,7 +318,7 @@
       {{ submissionMessage }}
     </div>
     <div *ngIf="validationMessages">
-      <span *ngIf="validationMessages.length > 0">
+      <span *ngIf=" validationMessages.length > 0">
         <div class="submission-message" *ngIf="!serverError && !approving">
           Please correct or dismiss the following errors and submit again:
         </div>
@@ -346,18 +348,18 @@
                   >{{ link.text }}</a
                 ></span
               >
-            </div>
-          </span>
-          <span class="validation-dismiss">
+          </div>
+        </span>
+        <span class="validation-dismiss">
             <button
               mat-icon-button
               matTooltip="Dismiss"
               *ngIf="message.messageType != 'ERROR' && !approving"
               (click)="dismissValidationMessage(i)"
             >
-              <mat-icon svgIcon="cancel"></mat-icon>
-            </button>
-          </span>
+            <mat-icon svgIcon="cancel"></mat-icon>
+          </button>
+        </span>
         </div>
       </span>
       <div class="dismiss-container">
@@ -388,7 +390,7 @@
           "
         >
           Confirm Approval
-        </button>
+              </button>
       </div>
     </div>
   </div>
@@ -396,7 +398,7 @@
 
 <!--Simplified actions-component-->
 <ng-template #simplifiedActionsComponent>
-  <div class="top-fixed small-top-fixed">
+  <div [ngClass]="['top-fixed ', 'small-top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']" *ngIf = "!featuresOnly">
     <div class="actions-container small-actions-container">
       <button
         mat-flat-button
@@ -436,7 +438,7 @@
         mat-flat-button
         class="hide-show-messages small-button"
         (click)="toggleValidation()"
-        [disabled]="isLoading"
+              [disabled]="isLoading"
         *ngIf="validationMessages && validationMessages.length > 0"
       >
         {{ showSubmissionMessages ? "Hide" : "Show" }} messages

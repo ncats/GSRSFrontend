@@ -1,5 +1,14 @@
+<!-- ncats branch begin (2 open divs) -->
+<div class="base-page-wrapper">
+  <div *ngIf = "showTopBanner" class="top-banner"> 
+    <app-top-banner></app-top-banner>
+  </div>
+
+  <div [ngClass]="['base-menu-wrapper', (showTopBanner) ? 'base-menu-wrapper-with-top-banner': '']">
+ 
+    <!-- ncats branch begin end -->
 <mat-toolbar
-  class="mat-elevation-z3"
+  class="mat-elevation-z3"  
   color="primary"
   *ngIf="
     showHeaderBar === 'true' &&
@@ -294,6 +303,8 @@
   >
   </app-substance-text-search>
   <div class="user-section">
+   <!-- ncats branch begin --> 
+   <div *ngIf="showLoginButton">
     <button
       mat-button
       class="login-link"
@@ -302,6 +313,7 @@
     >
       Login
     </button>
+   </div>    <!-- ncats branch end --> 
     <div class="logged-in" *ngIf="auth">
       <div class="user-actions">
         <button
@@ -392,6 +404,39 @@
 <div *ngIf="isPfdaVersion">
   <app-pfda-toolbar></app-pfda-toolbar>
 </div>
+
+<div [ngClass]="['base-main-wrapper', (showTopBanner) ? 'base-main-wrapper-with-top-banner': '']">
+
 <app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
+
+<!--
+
+ncats branch begin, probably not needed.
+
+<div *ngIf = "showTopBanner"> 
+    <app-top-content-spacer></app-top-content-spacer>
+</div> -->
+
+<!-- <div style="height: 92px; clear: both;">&nbsp;</div>
+
+ncats branch end
+ -->
+
 <router-outlet></router-outlet>
+        
+  <!-- ncats branch begin --> 
+  <div *ngIf="showFooter">
+      <app-bottom-content-spacer></app-bottom-content-spacer>
+  </div>
+</div>
+</div>   <!-- ncats branch fragment ngClass.2 bottom -->
+
+</div>
+
+<div *ngIf="showFooter" class="footer-wrapper">
+  <app-footer></app-footer>
+</div>
+ <!-- ncats branch end --> 
+
+

@@ -40,8 +40,8 @@ import { SubstanceSsg2FormService } from './substance-ssg2-form.service';
 import jp from 'jsonpath';
 
 @Component({
-    selector: 'app-substance-ssg2-form',
-    templateUrl: './substance-ssg2-form.component.html',
+  selector: 'app-substance-ssg2-form',
+  templateUrl: './substance-ssg2-form.component.html',
     styleUrls: ['./substance-ssg2-form.component.scss'],
     standalone: false
 })
@@ -98,6 +98,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
   UNII: string;
   approvalType = 'lastEditedBy';
   previousState: number;
+  showTopBanner: boolean; // ncats branch begin/end
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -276,6 +277,18 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     if (this.configService.configData && this.configService.configData.autoSaveWait) {
       this.autoSaveWait = this.configService.configData.autoSaveWait;
     }
+    // ncats branch begin
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+    // ncats branch end
+
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;
     const routeSubscription = this.activatedRoute
@@ -998,29 +1011,29 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
     delete old['changeReason'];
 
 
-    const refSet = {};
+      const refSet = {};
 
     const refHolders2 = jp.query(old, '$..[?(@.references)]');
-    for (let i = 0; i < refHolders2.length; i++) {
-      const refs = refHolders2[i].references;
-      for (let j = 0; j < refs.length; j++) {
-        const or = refs[j];
-        if (typeof or === 'object') { continue; }
-        refSet[or] = true;
-      }
-    }
-
-    const nrefs = _.chain(old.references)
-      .filter(function (ref) {
-        if (refSet[ref.uuid]) {
-          return true;
-        } else {
-          return false;
+      for (let i = 0; i < refHolders2.length; i++) {
+        const refs = refHolders2[i].references;
+        for (let j = 0; j < refs.length; j++) {
+          const or = refs[j];
+          if (typeof or === 'object') { continue; }
+          refSet[or] = true;
         }
-      })
-      .value();
+      }
 
-    old.references = nrefs;
+      const nrefs = _.chain(old.references)
+        .filter(function (ref) {
+          if (refSet[ref.uuid]) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .value();
+
+      old.references = nrefs;
 
     return old;
   }

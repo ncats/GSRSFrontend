@@ -38,7 +38,7 @@ import * as moment from "moment";
 import { SubstanceEditImportDialogComponent } from "@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component";
 import { WildcardService } from "@gsrs-core/utils/wildcard.service";
 import { SubstanceDraftsComponent } from "@gsrs-core/substance-form/substance-drafts/substance-drafts.component";
-import { sprintf } from "sprintf-js";
+import {sprintf} from "sprintf-js";
 import { BulkSearchService } from "@gsrs-core/bulk-search/service/bulk-search.service";
 import { UserQueryListDialogComponent } from "@gsrs-core/bulk-search/user-query-list-dialog/user-query-list-dialog.component";
 
@@ -46,7 +46,7 @@ import { UserQueryListDialogComponent } from "@gsrs-core/bulk-search/user-query-
   selector: "app-base",
   templateUrl: "./base.component.html",
   styleUrls: ["./base.component.scss"],
-  encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
 export class BaseComponent implements OnInit, OnDestroy {
@@ -85,6 +85,14 @@ export class BaseComponent implements OnInit, OnDestroy {
   showHeaderBar = "true";
   showRegistrars = true;
   showBrowseOther = true;
+
+  // ncats branch begin
+  contactEmailAlt: string;
+  showTopBanner: boolean;
+  showFooter: boolean;
+  showLogin: boolean;
+  showLoginButton: boolean;
+  // ncats branch end
 
   constructor(
     private router: Router,
@@ -161,6 +169,10 @@ export class BaseComponent implements OnInit, OnDestroy {
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
     this.classicLinkQueryParamsString = "";
     this.contactEmail = this.configService.configData.contactEmail || null;
+
+    // ncats branch
+    this.contactEmailAlt = this.configService.configData.contactEmailAlt || null;
+    
     this.navItems = this.configService.configData.navItems || null;
 
     // CRITICAL: Subscribe to auth FIRST, before any await calls that might fail
@@ -212,9 +224,9 @@ export class BaseComponent implements OnInit, OnDestroy {
       .subscribe((buildInfo) => {
         this.version =
           this.configService.configData.version || buildInfo.version;
-        this.versionTooltipMessage = `V${this.version}`;
+      this.versionTooltipMessage = `V${this.version}`;
         this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format("ddd MMM D YYYY HH:mm:ss z")}`;
-      });
+    });
     let okToRegister: boolean = await this.authService.canEditData();
     
     this.navItems.forEach((item) => {
@@ -226,25 +238,25 @@ export class BaseComponent implements OnInit, OnDestroy {
       }
     });
     if (this.loadedComponents) {
-      for (let i = this.navItems.length - 1; i >= 0; i--) {
+      for(let i = this.navItems.length - 1; i >= 0; i--) {
         if (this.navItems[i].children) {
-          for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
-            if (this.navItems[i].children[j].component) {
+        for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
+          if (this.navItems[i].children[j].component) {
               if (
                 !this.loadedComponents[this.navItems[i].children[j].component]
               ) {
-                this.navItems[i].children.splice(j, 1);
-              }
-            }
+              this.navItems[i].children.splice(j, 1);
           }
         }
-        if (this.navItems[i].component) {
-          if (!this.loadedComponents[this.navItems[i].component]) {
-            this.navItems.splice(i, 1);
-          }
         }
-      }
     }
+    if (this.navItems[i].component) {
+      if (!this.loadedComponents[this.navItems[i].component]) {
+        this.navItems.splice(i, 1);
+    }
+  }
+  }
+}
     
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
@@ -262,7 +274,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     const paramsSubscription = this.activatedRoute.queryParamMap.subscribe(
       (params) => {
         this.searchValue = params.get("search");
-        this.setClassicLinkQueryParams(params);
+      this.setClassicLinkQueryParams(params);
       },
     );
     this.subscriptions.push(paramsSubscription);
@@ -275,9 +287,9 @@ export class BaseComponent implements OnInit, OnDestroy {
           this.router.url.split("?")[0] !== "/login" &&
           this.router.url.split("?")[0] !== "/unauthorized"
         ) {
-          this.loadingService.setLoading(false);
+        this.loadingService.setLoading(false);
           this.router.navigate(["/unauthorized"]);
-        }
+      }
       },
     );
     this.subscriptions.push(authSubscription2);
@@ -314,8 +326,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     const cleanSearchSubscription = this.substanceTextSearchService
       .setSearchComponentValueEvent("main-substance-search")
       .subscribe((value) => {
-        this.searchValue = value;
-      });
+      this.searchValue = value;
+    });
     this.subscriptions.push(cleanSearchSubscription);
   }
 
@@ -342,6 +354,55 @@ export class BaseComponent implements OnInit, OnDestroy {
 
     this.router.navigate(["/login"], navigationExtras);
   }
+
+  // ncats branch begin
+ 
+  ngAfterViewInit() {
+ 
+    if(this.configService.configData.showTopBanner === undefined) {
+      this.showTopBanner = false;
+    } else {
+      if(this.configService.configData.showTopBanner === false) { 
+        this.showTopBanner = false;
+      } else {
+        this.showTopBanner = true;
+      }
+    }
+
+    if(this.configService.configData.showLoginButton === undefined) {
+      this.showLoginButton = true;
+    } else {
+      if(this.configService.configData.showLoginButton === false) { 
+        this.showLoginButton = false;
+      } else {
+        this.showLoginButton = true;
+      }
+    }
+
+    if(this.configService.configData.showLogin === undefined) {
+      this.showLogin = true;
+    } else {
+      if(this.configService.configData.showLogin === false) { 
+        this.showLogin = false;
+      } else {
+        this.showLogin = true;
+      }
+    }
+
+    if(this.configService.configData.showFooter === undefined) {
+      this.showFooter = false;
+    } else {
+      if(this.configService.configData.showFooter === false) { 
+        this.showFooter = false;
+      } else {
+        this.showFooter = true;
+      }
+    }
+
+
+  }
+
+  // ncats branch end 
 
   processSubstanceSearch(searchValue: string) {
     this.wildCardService.getTopSearchBoxText(searchValue);
@@ -376,8 +437,8 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.bottomSheetRef = this.bottomSheet.open(
           HighlightedSearchActionComponent,
           {
-            data: { searchTerm: searchTerm },
-            hasBackdrop: false,
+          data: { searchTerm: searchTerm },
+          hasBackdrop: false,
             closeOnNavigation: true,
           },
         );
@@ -385,9 +446,9 @@ export class BaseComponent implements OnInit, OnDestroy {
         const openedSubscription = this.bottomSheetRef
           .afterOpened()
           .subscribe(() => {
-            observer.next();
-            openedSubscription.unsubscribe();
-          });
+          observer.next();
+          openedSubscription.unsubscribe();
+        });
         this.bottomSheetCloseTimer = setTimeout(() => {
           if (this.bottomSheetRef != null) {
             this.bottomSheetRef.dismiss();
@@ -398,11 +459,11 @@ export class BaseComponent implements OnInit, OnDestroy {
         const dismissedSubscription = this.bottomSheetRef
           .afterDismissed()
           .subscribe(() => {
-            clearTimeout(this.bottomSheetCloseTimer);
-            this.bottomSheetRef = null;
-            observer.complete();
-            dismissedSubscription.unsubscribe();
-          });
+          clearTimeout(this.bottomSheetCloseTimer);
+          this.bottomSheetRef = null;
+          observer.complete();
+          dismissedSubscription.unsubscribe();
+        });
       } else {
         observer.error();
         observer.complete();
@@ -411,20 +472,26 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   transformMailToPath(item: NavItem) {
-    if (item?.kind && item?.mailToPath) {
+    if(item?.kind && item?.mailToPath) {
       let subject = "";
       let email = "";
       if (item.kind === "contact-us") {
         email = this.contactEmail;
       }
-      if (item?.queryParams) {
-        if (item?.queryParams?.subject) {
+      // ncats branch begin
+      if(item.kind==='contact-us-alt') {
+        email = this.contactEmailAlt;
+      }
+      // ncats branch end
+
+      if(item?.queryParams) {
+        if(item?.queryParams?.subject) {
           subject = item.queryParams.subject;
         }
       }
       const part1 = sprintf(item.mailToPath, email);
       let part2 = "";
-      if (subject) {
+      if(subject) {
         part2 = "subject=" + subject;
       }
       return part1 + "?" + part2;
@@ -516,8 +583,8 @@ export class BaseComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(take(1))
       .subscribe((response) => {
-        this.overlayContainer.style.zIndex = null;
-      });
+      this.overlayContainer.style.zIndex = null;
+    });
   }
 
   importDialog(): void {
@@ -531,14 +598,14 @@ export class BaseComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(take(1))
       .subscribe((response) => {
-        if (response) {
-          this.overlayContainer.style.zIndex = null;
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
           this.router.onSameUrlNavigation = "reload";
           this.router.navigateByUrl("/substances/register?action=import", {
             state: { record: response },
           });
-        }
-      });
+      }
+    });
   }
 
   viewLists(list?: string): void {
@@ -558,10 +625,10 @@ export class BaseComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(take(1))
       .subscribe((response) => {
-        if (response) {
-          this.overlayContainer.style.zIndex = null;
-        }
-      });
+      if (response) {
+        this.overlayContainer.style.zIndex = null;
+      }
+    });
   }
 
   logout() {
@@ -590,9 +657,9 @@ export class BaseComponent implements OnInit, OnDestroy {
       this.overlayContainer.style.zIndex = null;
 
       if (response) {
-        this.loadingService.setLoading(true);
+           this.loadingService.setLoading(true);
 
-        const read = response.substance;
+          const read = response.substance;
 
         if (response.uuid && response.uuid != "register") {
           const url =
@@ -600,9 +667,9 @@ export class BaseComponent implements OnInit, OnDestroy {
           this.router.navigateByUrl(url, {
             state: { record: response.substance },
           });
-        } else {
-          setTimeout(() => {
-            //   this.overlayContainer.style.zIndex = null;
+         } else {
+           setTimeout(() => {
+          //   this.overlayContainer.style.zIndex = null;
             this.router.onSameUrlNavigation = "reload";
             let url =
               "/substances/register/" +
@@ -611,9 +678,9 @@ export class BaseComponent implements OnInit, OnDestroy {
             this.router.navigateByUrl(url, {
               state: { record: response.substance },
             });
-          }, 500);
-        }
-      }
+           }, 500);
+         }
+          }
     });
   }
 

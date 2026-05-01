@@ -1,4 +1,4 @@
-<div class="main-notification hidden" #notification>
-  <a class="close-link" (click)="removeNotification()">Close</a>
+<!-- ncats branch change to dynamic class --> 
+  <div [ngClass]="['main-notification hidden', showTopBanner ? 'with-top-banner' : '']" #notification>
   {{notificationMessage}}
 </div>
