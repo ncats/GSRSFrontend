@@ -36,6 +36,7 @@ export class SubstanceHierarchyComponent implements OnInit {
       'expandable': false,
       'value': {
         'refuuid': this.uuid,
+        'refPname': this.name,
         'name': this.name,
         'approvalID': this.approvalID || ''
       },
