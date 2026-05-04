@@ -53,8 +53,8 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
     this.adminService.fetchJob(this.currentService, this.job.id).pipe(take(1)).subscribe({
       next: response => {
         this.job = response;
-        if (!this.job.running && this.job.lastFinished) {
-          const duration = moment.duration((this.job.lastFinished - this.job.lastStarted!));
+        if (!this.job.running && this.job.lastFinished && this.job.lastStarted) {
+          const duration = moment.duration((this.job.lastFinished - this.job.lastStarted));
           let timestring = '';
           if ( duration.years() !== 0) {
             timestring += duration.years() + (duration.years() > 1 ? ' years, ' : ' year, ');
@@ -74,7 +74,7 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
           if ( duration.seconds() !== 0) {
             timestring += duration.seconds() + (duration.seconds() > 1 ? ' sec' : ' sec');
           } else if (timestring === '') {
-            timestring = (this.job.lastFinished - this.job.lastStarted!) + ' ms';
+            timestring = (this.job.lastFinished - this.job.lastStarted) + ' ms';
           }
           this.job.lastDurationHuman = timestring;
         }
@@ -100,8 +100,8 @@ export class ScheduledJobComponent implements OnInit, OnDestroy {
   }
 
   untilNextRun() {
-    const date = new Date();
-    return this.job.nextRun! - date.getTime();
+    if (!this.job.nextRun) { return Number.MAX_SAFE_INTEGER; }
+    return this.job.nextRun - new Date().getTime();
   }
 
   stopMonitor() {
