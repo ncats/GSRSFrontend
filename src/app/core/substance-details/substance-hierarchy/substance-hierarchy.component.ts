@@ -22,19 +22,19 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
     super();
   }
 
-  uuid: string;
-  name: string;
+  uuid!: string;
+  name!: string;
   approvalID?: string;
   treeControl = new NestedTreeControl<any>(node => node.children);
   dataSource = new MatTreeNestedDataSource<any>();
-  selfNode: HierarchyNode;
-  activeNode: any;
+  selfNode!: HierarchyNode;
+  activeNode!: any;
   canEdit: boolean = false;
   hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
 
   async ngOnInit() {
-    this.uuid = this.substance.uuid;
-    this.name = this.substance._nameHTML;
+    this.uuid = this.substance.uuid!;
+    this.name = this.substance._nameHTML!
     this.selfNode = {
       'id': 0,
       'type': 'ROOT',
@@ -42,15 +42,15 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
       'expandable': false,
       'value': {
         'refuuid': this.uuid,
+        'refPname': this.name,
         'name': this.name,
         'approvalID': this.approvalID || ''
       },
       'relationship': ''
     };
-      this.substanceService.getHierarchy(this.uuid).subscribe(resp => {
-        this.loadHierarchy(resp);
-      }, error => {
-       this.loadHierarchy([this.selfNode]);
+      this.substanceService.getHierarchy(this.uuid).subscribe({
+        next: resp => this.loadHierarchy(resp),
+        error: () => this.loadHierarchy([this.selfNode])
       });
       this.canEdit = await this.authService.hasSpecificPrivilege('Edit')
   }
@@ -75,10 +75,10 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
     this.activeNode = this.dataSource.data[0];
   }
 
-    formatHierarchy(data: any): HierarchyNode {
+    formatHierarchy(data: any): HierarchyNode[] {
     let lastID = '';
     let lastProp = '';
-    const parentRemap = [];
+    const parentRemap: [number, number][] = [];
 
     for (let i = (data.length - 1); i >= 0; i--) {
       if (data[i].depth === 0) {
@@ -113,7 +113,7 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
         data[i].relationship += '{SUBCONCEPT} ';
       } else if (data[i].type.includes('IS G1SS CONSTITUENT OF')) {
         data[i].relationship += '{G1SS} ';
-      } else if ((data[i].type.length > 8 ) && (data[i].relationship = '')) {
+      } else if ((data[i].type.length > 8 ) && (data[i].relationship === '')) {
         data[i].relationship += ' {' + data[i].type + '} ';
       }
 
@@ -123,7 +123,7 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
       lastProp = data[i].type;
     }
     // further remove self referential relationships with both salt and moiety relationship.
-    data.sort(function(a, b) {
+    data.sort(function(a: any, b: any) {
       const textA = a.refuuid.toUpperCase();
       const textB = b.refuuid.toUpperCase();
       if (textA === textB) {
@@ -149,7 +149,7 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
         }
       }
     }
-    data.sort(function(a, b) {
+    data.sort(function(a: any, b: any) {
       return a.id - b.id;
     });
 
@@ -163,10 +163,11 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
     return data;
   }
 
-  list_to_tree(list) {
-    const map = {}, roots = [];
-    let node, i;
-    for (i = 0; i < list.length; i += 1) {
+  list_to_tree(list: any[]): HierarchyNode[] {
+    const map: Record<number, number> = {};
+    const roots: HierarchyNode[] = [];
+    let node: any;
+    for (let i = 0; i < list.length; i += 1) {
       map[list[i].id] = i;
       list[i].children = [];
       if (i === 0) {
@@ -178,7 +179,7 @@ export class SubstanceHierarchyComponent extends SubstanceCardBase implements On
         list[i].order = 'odd';
       }
     }
-    for (i = 0; i < list.length; i += 1) {
+    for (let i = 0; i < list.length; i += 1) {
       node = list[i];
       if (node.parent !== '#') {
         list[map[node.parent]].children.push(node);

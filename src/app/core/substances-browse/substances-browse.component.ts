@@ -96,6 +96,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   // Initialized before any lifecycle hook so the first template render uses the correct state.
   // This prevents mat-sidenav-content from flashing at full width before the sidenav opens.
   readonly initialSidenavOpen = typeof window !== 'undefined' && window.innerWidth >= 1100;
+  isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
   hasBackdrop = false;
   view = 'cards';
   private resizeTimeout: any;
@@ -1201,6 +1202,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private processResponsiveness = () => {
     if (window) {
+      this.isMobile = window.innerWidth <= 600;
       if (window.innerWidth < 1100) {
         this.matSideNav.close();
         this.isCollapsed = true;
