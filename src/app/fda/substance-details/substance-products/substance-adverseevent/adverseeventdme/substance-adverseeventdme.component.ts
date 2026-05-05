@@ -15,16 +15,17 @@ import { Subscription } from 'rxjs';
 import { adverseEventDmeSearchSortValues } from '../../../../adverse-event/adverse-events-dme-browse/adverse-events-dme-search-sort-values';
 
 @Component({
-    selector: 'app-substance-adverseeventdme',
-    templateUrl: './substance-adverseeventdme.component.html',
-    styleUrls: ['./substance-adverseeventdme.component.scss'],
-    standalone: false
+  selector: 'app-substance-adverseeventdme',
+  templateUrl: './substance-adverseeventdme.component.html',
+  styleUrls: ['./substance-adverseeventdme.component.scss'],
+  standalone: false
 })
 
 export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
 
   @Output() countAdvDmeOut: EventEmitter<number> = new EventEmitter<number>();
 
+  localBdnum: string;
   adverseEventCount = 0;
   order = '$root_dmeCount';
   ascDescDir = 'desc';
@@ -56,11 +57,15 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
 
   async ngOnInit() {
     this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+
+    /* Commenting right now. Will remove later after everything works */
+    /*
     if (this.bdnum) {
       this.getAdverseEventDme();
       // this.getSubstanceAdverseEventDme();
       this.adverseEventDmeListExportUrl();
     }
+    */
   }
 
   ngOnDestroy(): void {
@@ -69,11 +74,22 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
     });
   }
 
+  @Input()
+  set bdnum(setBdnum: string) {
+    this.localBdnum = setBdnum;
+
+    if (this.localBdnum) {
+      this.getAdverseEventDme();
+
+      this.adverseEventDmeListExportUrl();
+    }
+  }
+
   getAdverseEventDme(pageEvent?: PageEvent) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
-    const privateSearch = 'root_substanceKey:' + this.bdnum;
+    const privateSearch = 'root_substanceKey:' + this.localBdnum;
     const subscription = this.adverseEventService.getAdverseEventDme(
       this.order,
       skip,
@@ -134,9 +150,9 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
       const url = this.getApiExportUrl(this.etag, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-        //  height: '215x',
+          //  height: '215x',
           width: '700px',
-          data: { 'extension': extension, 'type': 'substanceAdverseEventDme','entity': 'adverseeventdme', 'hideOptionButtons': true }
+          data: { 'extension': extension, 'type': 'substanceAdverseEventDme', 'entity': 'adverseeventdme', 'hideOptionButtons': true }
         });
         // this.overlayContainer.style.zIndex = '1002';
         dialogReference.afterClosed().subscribe(response => {
@@ -147,7 +163,7 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {
@@ -168,8 +184,8 @@ export class SubstanceAdverseEventDmeComponent extends SubstanceDetailsBaseTable
   }
 
   adverseEventDmeListExportUrl() {
-    if (this.bdnum != null) {
-      this.exportUrl = this.adverseEventService.getAdverseEventDmeListExportUrl(this.bdnum);
+    if (this.localBdnum != null) {
+      this.exportUrl = this.adverseEventService.getAdverseEventDmeListExportUrl(this.localBdnum);
     }
   }
 
