@@ -6,7 +6,6 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormConstituentsService } from './substance-form-constituents.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { EventEmitter } from 'stream';
 
 @Component({
     selector: 'app-substance-form-constituents-card',
