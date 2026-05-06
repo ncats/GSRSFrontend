@@ -39,6 +39,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { BaseComponent } from './base/base.component';
 import { PfdaToolbarComponent } from './base/pfda-toolbar/pfda-toolbar.component';
+import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
 import { RegistrarsComponent } from './registrars/registrars.component';
 import { SubstancesBrowseComponent } from './substances-browse/substances-browse.component';
@@ -253,7 +254,8 @@ import { TopBannerComponent } from './misc/top-banner.component';
     PrivacyStatementModule,
     CrossEntitySearchModule,
     NitrosamineStandaloneModule,
-    MatDividerModule
+    MatDividerModule,
+    HeaderComponent,
   ],
   providers: [
     {

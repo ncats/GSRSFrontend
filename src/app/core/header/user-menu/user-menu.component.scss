@@ -1,0 +1,118 @@
+.user-section {
+  position: relative;
+}
+
+.login-link {
+  color: white !important;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.user {
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: var(--regular-white-color);
+  white-space: nowrap;
+}
+
+.arrow-button {
+  margin-left: -13px !important;
+  height: 25px !important;
+  width: 25px !important;
+}
+
+.user-button {
+  margin-bottom: -5px;
+
+  ::ng-deep mat-icon {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+
+  ::ng-deep svg {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+
+  mat-icon {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+
+  svg {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+}
+
+.icon-two {
+  height: 24px !important;
+  margin-left: 4px;
+  width: 24px !important;
+
+  svg {
+    height: 25px !important;
+    width: 25px !important;
+  }
+}
+
+.logged-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .user-actions {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+
+    .user-button.mat-mdc-icon-button {
+      --mat-icon-button-icon-size: 30px;
+      color: var(--regular-white-color);
+
+      ::ng-deep .mat-icon {
+        color: var(--regular-white-color);
+        height: 30px !important;
+        width: 30px !important;
+      }
+
+      ::ng-deep svg {
+        fill: var(--regular-white-color);
+        height: 30px !important;
+        width: 30px !important;
+      }
+    }
+  }
+
+  .mat-icon,
+  user-icon {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+    line-height: unset;
+    color: white;
+  }
+
+  ::ng-deep svg {
+    height: 30px;
+    width: 30px;
+    margin-bottom: -10px;
+  }
+}
+
+.logged-in .user-actions .mat-icon {
+  height: 30px;
+  width: 30px;
+  margin-bottom: -10px;
+}
+
+.mat-icon .user-icon {
+  height: 30px;
+  width: 30px;
+  margin-bottom: -10px;
+}

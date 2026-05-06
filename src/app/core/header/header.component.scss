@@ -1,0 +1,94 @@
+@use "../../../styles/variables" as *;
+
+.version {
+  color: var(--version-text-color);
+  font-size: 10pt;
+  line-height: 10px;
+  text-align: right;
+  padding-top: 4px;
+  margin-right: -5px;
+  margin-bottom: -4px;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 160px;
+  margin-right: 20px;
+}
+
+.logo {
+  height: 35px;
+  margin-right: 20px;
+
+  img {
+    height: 100%;
+    width: auto;
+  }
+}
+
+.tooltiptest {
+  z-index: 9999 !important;
+  background: #b71c1c;
+}
+
+button.mat-mdc-button.top-button {
+  --button-icon-svg-size: 100%;
+  font-size: 16px;
+  color: white;
+  padding-right: 10px;
+  margin-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+::ng-deep button.mat-mdc-button.top-button:hover {
+  background-color: rgb(71, 147, 209) !important;
+}
+
+.middle-fill {
+  flex: 1 1 auto;
+}
+
+.top-search {
+  flex-grow: 1;
+  max-width: 600px;
+}
+
+@media (min-width: $nav-breaking-point) {
+  .top-search {
+    min-width: 500px;
+  }
+}
+
+::ng-deep .transparent-background {
+  background-color: transparent;
+}
+
+.classic-view-container {
+  padding-left: 15px;
+}
+
+.registrar-dashboard-label {
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  display: inline-block;
+}
+
+.extra-item {
+  display: inline-block;
+}
+
+// hides Register/Search/Browse buttons below 1350px (only hamburger menu visible)
+@media (max-width: 1350px) {
+  .extra-item {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1650px) {
+  .extra-item-2 {
+    display: none !important;
+  }
+}

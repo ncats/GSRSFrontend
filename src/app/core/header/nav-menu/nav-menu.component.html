@@ -1,0 +1,53 @@
+<span class="nav-small">
+  <button
+    class="top-button"
+    mat-button
+    mat-primary-button
+    style="color: white; padding-top: 10px; padding-bottom: 10px"
+    [matMenuTriggerFor]="nav"
+    (click)="increaseMenuZindex()"
+    aria-label="main menu"
+  >
+    <span style="font-size: 16px">Menu &nbsp;</span
+    ><mat-icon svgIcon="menu"></mat-icon>
+  </button>
+  <mat-menu #nav="matMenu" (closed)="removeZindex()" class="reg-a">
+    @for (navItem of navItems(); track navItem.display) {
+      @if (navItem.path && !navItem.children) {
+        <a mat-menu-item [routerLink]="['/' + navItem.path]">{{ navItem.display }}</a>
+      }
+      @if (navItem.externalPath && !navItem.children) {
+        <a mat-menu-item [href]="navItem.externalPath" target="_blank">{{ navItem.display }}</a>
+      }
+      @if (navItem.mailToPath && !navItem.children) {
+        <a mat-menu-item [href]="transformMailToPath(navItem)">{{ navItem.display }}</a>
+      }
+      @if (navItem.children && (navItem.display.toUpperCase() !== 'REGISTER' || canRegister())) {
+        <a mat-menu-item [matMenuTriggerFor]="childrenMenu">{{ navItem.display }}</a>
+        <mat-menu #childrenMenu="matMenu" [overlapTrigger]="false" xPosition="after">
+          @for (childNavItem of navItem.children; track childNavItem.display) {
+            @if (childNavItem.path) {
+              <a
+                mat-menu-item
+                [routerLink]="['/' + childNavItem.path]"
+                [queryParams]="childNavItem.params || {}"
+              >{{ childNavItem.display }}</a>
+            }
+            @if (childNavItem.href) {
+              <a mat-menu-item [href]="childNavItem.href">{{ childNavItem.display }}</a>
+            }
+            @if (childNavItem.mailToPath) {
+              <a mat-menu-item [href]="transformMailToPath(childNavItem)">{{ childNavItem.display }}</a>
+            }
+          }
+          @if (navItem.display === 'Register') {
+            <a mat-menu-item (click)="importDialog()">Import Substance</a>
+          }
+        </mat-menu>
+      }
+    }
+    @if (canConfigureSystem()) {
+      <a mat-menu-item routerLink="/admin">Admin Panel</a>
+    }
+  </mat-menu>
+</span>

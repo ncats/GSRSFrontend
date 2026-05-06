@@ -1,76 +1,63 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MainNotificationService } from '../main-notification.service';
-import { AppNotification, NotificationType } from '../notification.model';
-import { Subscription } from 'rxjs';
-/* ncats branch begin */
-import { ConfigService } from '@gsrs-core/config/config.service';
-/* ncats branch end */
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { NgClass } from "@angular/common";
+import { MainNotificationService } from "../main-notification.service";
+import { AppNotification, NotificationType } from "../notification.model";
+import { ConfigService } from "@gsrs-core/config/config.service";
 
 @Component({
-    selector: 'app-main-notification',
-    templateUrl: './main-notification.component.html',
-    styleUrls: ['./main-notification.component.scss'],
-    standalone: false
+  selector: "app-main-notification",
+  imports: [NgClass],
+  templateUrl: "./main-notification.component.html",
+  styleUrl: "./main-notification.component.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainNotificationComponent implements OnInit, OnDestroy {
-  @ViewChild('notification', { static: true }) appNotification: { nativeElement: HTMLElement };
-  private notificationTimer: any;
-  private notifcationType: NotificationType;
-  public notificationMessage: string;
-  private subscriptions: Array<Subscription> = [];
+export class MainNotificationComponent {
+  private notificationService = inject(MainNotificationService);
+  private configService = inject(ConfigService);
+  private destroyRef = inject(DestroyRef);
 
-  /* ncats branch begin */
-  public showTopBanner:boolean;
-  /* ncats branch end */
+  private isVisible = signal(false);
+  private notificationType = signal<NotificationType>(NotificationType.default);
+  notificationMessage = signal("");
 
-  constructor(
-    private notificationService: MainNotificationService,
-    // ncats branch addition
-    private configService: ConfigService
-  ) { }
+  private showTopBanner = this.configService.configData.showTopBanner === true;
 
-  ngOnInit() {
+  protected readonly classes = computed(() => ({
+    hidden: !this.isVisible(),
+    showing: this.isVisible(),
+    'with-top-banner': this.showTopBanner,
+    default: this.notificationType() === NotificationType.default,
+    success: this.notificationType() === NotificationType.success,
+    error: this.notificationType() === NotificationType.error,
+  }));
 
-    /* ncats branch begin */
-    if(this.configService.configData.showTopBanner === undefined) {
-      this.showTopBanner = false;
-    } else {
-      if(this.configService.configData.showTopBanner === false) { 
-        this.showTopBanner = false;
-      } else {
-        this.showTopBanner = true;
-      }
-    }
-    /* ncats branch end */
+  private notificationTimer: ReturnType<typeof setTimeout> | null = null;
 
-    this.appNotification.nativeElement.classList.add('hidden');
-    const subscription = this.notificationService.notificationEvent.subscribe(notification => {
-      this.setNotification(notification);
+  constructor() {
+    this.notificationService.notificationEvent
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((notification) => this.setNotification(notification));
+
+    this.destroyRef.onDestroy(() => {
+      if (this.notificationTimer !== null) clearTimeout(this.notificationTimer);
     });
-    this.subscriptions.push(subscription);
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
-    clearTimeout(this.notificationTimer);
   }
 
   // If notification.milisecondsToShow === 0, the notification is permanent (until closed by user)
   setNotification(notification: AppNotification): void {
-    this.notifcationType = notification.type || NotificationType.default;
-    this.notificationMessage = notification.message;
-    this.appNotification.nativeElement.classList.remove('hidden');
-    this.appNotification.nativeElement.classList.add(NotificationType[this.notifcationType]);
-    this.appNotification.nativeElement.classList.add('showing');
+    this.notificationType.set(notification.type ?? NotificationType.default);
+    this.notificationMessage.set(notification.message);
+    this.isVisible.set(true);
+
     if (notification.milisecondsToShow === 0) {
-      if (this.notificationTimer != null) {
+      if (this.notificationTimer !== null) {
         clearTimeout(this.notificationTimer);
+        this.notificationTimer = null;
       }
-      this.notificationTimer = null;
-    } else  {
-      const timeout = notification.milisecondsToShow || 5000;
+    } else {
+      const timeout = notification.milisecondsToShow ?? 5000;
+      if (this.notificationTimer !== null) clearTimeout(this.notificationTimer);
       this.notificationTimer = setTimeout(() => {
         this.removeNotification();
         this.notificationTimer = null;
@@ -79,11 +66,10 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
   }
 
   removeNotification(): void {
-    if (this.notificationTimer != null) {
+    if (this.notificationTimer !== null) {
       clearTimeout(this.notificationTimer);
+      this.notificationTimer = null;
     }
-    this.appNotification.nativeElement.classList.remove('showing');
-    this.appNotification.nativeElement.classList.add('hidden');
-    this.appNotification.nativeElement.classList.remove(NotificationType[this.notifcationType]);
+    this.isVisible.set(false);
   }
 }
