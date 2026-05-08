@@ -20,7 +20,6 @@ import { OverlayContainer } from "@angular/cdk/overlay";
 import { StructureExportComponent } from "@gsrs-core/structure/structure-export/structure-export.component";
 import { Title } from "@angular/platform-browser";
 import * as _ from "lodash";
-import { pipeline } from "stream";
 import { take } from "rxjs";
 import { StructureEditorComponent } from "@gsrs-core/structure-editor";
 

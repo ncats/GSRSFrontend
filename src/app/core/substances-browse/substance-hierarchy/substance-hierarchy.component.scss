@@ -1,3 +1,5 @@
+@use "../../../../styles/variables" as *;
+
 .mat-tree-node {
   min-height:30px !important;
 }
@@ -136,4 +138,26 @@ margin-bottom: 5px;
 
 .current-record {
   font-weight:bold;
+}
+
+@media (max-width: $breakpoint-tablet) {
+  .title {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .hierarchy-link {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .right-container {
+    max-width: 120px;
+    flex-shrink: 0;
+  }
+
+  .filler {
+    display: none;
+  }
 }

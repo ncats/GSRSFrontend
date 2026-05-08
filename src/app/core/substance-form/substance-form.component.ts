@@ -47,7 +47,6 @@ import {FragmentWizardComponent} from '@gsrs-core/admin/fragment-wizard/fragment
 import {SubstanceDraftsComponent} from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 import {UtilsService} from '@gsrs-core/utils';
 import {ungzip, deflate, inflate} from 'pako';
-import {Buffer} from 'buffer';
 import {AdminService} from '@gsrs-core/admin/admin.service';
 import {MatButtonToggleChange} from "@angular/material/button-toggle";
 import {tr} from "cronstrue/dist/i18n/locales/tr";
@@ -517,8 +516,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
 
   gunzip(t): string {
 
-    const gezipedData = Buffer.from(t, 'base64')
-    const gzipedDataArray = Uint8Array.from(gezipedData);
+    const gzipedDataArray = Uint8Array.from(atob(t), c => c.charCodeAt(0));
     const ungzipedData = ungzip(gzipedDataArray);
     return new TextDecoder().decode(ungzipedData);
   }

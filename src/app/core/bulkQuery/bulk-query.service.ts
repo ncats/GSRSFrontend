@@ -23,7 +23,6 @@ import { ValidationResults} from '@gsrs-core/substance-form/substance-form.model
 import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
-import { stringify } from 'querystring';
 
 export class BulkQueryService extends BaseHttpService {
     constructor(

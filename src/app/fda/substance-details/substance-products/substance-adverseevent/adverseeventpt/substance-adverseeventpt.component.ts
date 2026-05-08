@@ -16,16 +16,17 @@ import { Subscription } from 'rxjs';
 import { adverseEventPtSearchSortValues } from '../../../../adverse-event/adverse-events-pt-browse/adverse-events-pt-search-sort-values';
 
 @Component({
-    selector: 'app-substance-adverseeventpt',
-    templateUrl: './substance-adverseeventpt.component.html',
-    styleUrls: ['./substance-adverseeventpt.component.scss'],
-    standalone: false
+  selector: 'app-substance-adverseeventpt',
+  templateUrl: './substance-adverseeventpt.component.html',
+  styleUrls: ['./substance-adverseeventpt.component.scss'],
+  standalone: false
 })
 
 export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
   @Input() substanceName: string;
   @Output() countAdvPtOut: EventEmitter<number> = new EventEmitter<number>();
 
+  localBdnum: string;
   adverseEventCount = 0;
   order = '$root_ptCount';
   ascDescDir = 'desc';
@@ -61,7 +62,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     'prr'
   ];
 
-  canExport:boolean = false;
+  canExport: boolean = false;
 
   constructor(
     private router: Router,
@@ -78,7 +79,32 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   async ngOnInit() {
     this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
 
+    /* Commenting right now. Will remove later after everything works */
+    /*
     if (this.bdnum) {
+      this.getAdverseEventPt();
+
+      // FAERS DASHBOARD
+      this.getFaersDashboardUrl();
+      this.getFaersDashboardRecordByName();
+
+      this.adverseEventPtListExportUrl();
+      this.getAdverseEventShinyConfig();
+    }
+    */
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
+
+  @Input()
+  set bdnum(setBdnum: string) {
+    this.localBdnum = setBdnum;
+
+    if (this.localBdnum) {
       this.getAdverseEventPt();
 
       // FAERS DASHBOARD
@@ -90,17 +116,11 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
     }
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
-  }
-
   getAdverseEventPt(pageEvent?: PageEvent) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true;  // Start progress spinner
     const skip = this.page * this.pageSize;
-    const privateSearch = 'root_substanceKey:' + this.bdnum;
+    const privateSearch = 'root_substanceKey:' + this.localBdnum;
     const subscription = this.adverseEventService.getAdverseEventPt(
       this.order,
       skip,
@@ -140,8 +160,8 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
   */
 
   adverseEventPtListExportUrl() {
-    if (this.bdnum != null) {
-      this.exportUrl = this.adverseEventService.getAdverseEventPtListExportUrl(this.bdnum);
+    if (this.localBdnum != null) {
+      this.exportUrl = this.adverseEventService.getAdverseEventPtListExportUrl(this.localBdnum);
     }
   }
 
@@ -167,7 +187,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
       const url = this.getApiExportUrl(this.etag, extension);
       if (this.authService.getUser() !== '') {
         const dialogReference = this.dialog.open(ExportDialogComponent, {
-         // height: '215x',
+          // height: '215x',
           width: '700px',
           data: { 'extension': extension, 'type': 'substanceAdverseEventPt', 'entity': 'adverseeventpt', 'hideOptionButtons': true }
         });
@@ -180,7 +200,7 @@ export class SubstanceAdverseEventPtComponent extends SubstanceDetailsBaseTableD
             this.loadingService.setLoading(true);
             const fullname = name + '.' + extension;
             this.authService.startUserDownload(url, this.privateExport, fullname, id).subscribe(response => {
-           // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
               this.loadingService.setLoading(false);
               const navigationExtras: NavigationExtras = {
                 queryParams: {

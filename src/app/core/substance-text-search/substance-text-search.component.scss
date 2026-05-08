@@ -240,6 +240,7 @@ form:not(.header) {
       .close-button {
         display: inline-block !important;
         width: auto;
+        padding-left: 0;
       }
     }
   }
@@ -299,6 +300,14 @@ form:not(.header) {
       mat-form-field {
         max-width: 0;
       }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-mobile-sm) {
+  .active-search {
+    &.search-container {
+      padding-right: 90px;
     }
   }
 }

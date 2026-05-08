@@ -18,8 +18,16 @@
   font-size: 10px;
 }
 
+.font14px {
+  font-size: 14px;
+}
+
 .font15px {
   font-size: 15px;
+}
+
+.margintopneg10px {
+  margin-top: -10px;
 }
 
 .margintop10px {
@@ -70,13 +78,18 @@ marginleft50px {
   border: 1px solid var(--regular-grey-color);
 }
 
-.width120px {
-  width: 120px;
+.width140px {
+  width: 140px;
   display: block;
 }
 
 .width200px {
   width: 200px;
+  display: block;
+}
+
+.width260px {
+  width: 260px;
   display: block;
 }
 

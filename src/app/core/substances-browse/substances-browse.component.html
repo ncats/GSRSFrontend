@@ -727,6 +727,7 @@
             [pageSizeOptions]="[5, 10, 50, 100]"
             (page)="changePage($event)"
             [showFirstLastButtons]="true"
+            [hidePageSize]="isMobile"
           >
           </mat-paginator>
 
@@ -1327,6 +1328,7 @@
               [pageSize]="pageSize"
               [pageSizeOptions]="[5, 10, 50, 100]"
               (page)="changePage($event)"
+              [hidePageSize]="isMobile"
             >
             </mat-paginator>
           </div>

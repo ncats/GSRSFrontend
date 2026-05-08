@@ -1,1 +1,9 @@
 $nav-breaking-point: 990px;
+
+// Responsive breakpoints
+$breakpoint-mobile-sm: 480px;   // small phones (iPhone SE, etc.)
+$breakpoint-mobile: 600px;      // mobile
+$breakpoint-tablet: 768px;      // tablet / small laptop
+$breakpoint-desktop-sm: 1100px; // compact desktop
+$breakpoint-desktop-md: 1350px; // medium desktop
+$breakpoint-desktop-lg: 1750px; // large desktop / wide monitor

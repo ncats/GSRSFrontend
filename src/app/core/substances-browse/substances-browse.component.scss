@@ -1,3 +1,5 @@
+@use "../../../styles/variables" as *;
+
 ::ng-deep .mat-expansion-panel-content > .mat-expansion-panel-body {
   padding: 0 12px 10px;
 }
@@ -427,7 +429,7 @@
 .menu-checkbox:hover {
   background-color: var(--regular-white-color);
 }
-@media (max-width: 1750px) {
+@media (max-width: $breakpoint-desktop-lg) {
   .full-paginator {
     width: 100%;
     align-content: center;
@@ -447,7 +449,7 @@
   }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: $breakpoint-desktop-sm) {
   .controls-container,
   .search-parameters {
     padding-left: 30px;
@@ -466,7 +468,7 @@
   }
 }
 
-@media (max-width: 730px) {
+@media (max-width: $breakpoint-tablet) {
   .mat-card-title,
   .mat-mdc-card-title {
     flex-direction: column;
@@ -480,7 +482,7 @@
   // .page-selector display:none moved to global _material-overrides.scss
 
   .full-paginator {
-    min-width: 500px !important;
+    min-width: 0 !important;
   }
   .substance-data {
     flex-direction: column;
@@ -540,7 +542,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $breakpoint-mobile) {
   .substance-content {
     flex-direction: column;
 
@@ -549,14 +551,85 @@
     }
   }
 
+  .full-paginator {
+    min-width: 0 !important;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .wildcard-div {
+    width: 85%;
+    margin: 10px 0;
+
+    mat-form-field {
+      flex: 1 1 auto;
+    }
+  }
+
+  .middle-fill {
+    display: none;
+  }
+
+  .export {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+
+    button {
+      width: 100%;
+      margin-left: 0 !important;
+    }
+  }
+
+  .divflex {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 30px;
+
+    button {
+      width: 100%;
+      margin-left: 0 !important;
+    }
+  }
+
+  mat-paginator {
+    width: 100%;
+    margin-bottom: 20px;
+
+    ::ng-deep .mat-mdc-paginator-container {
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0;
+      min-height: unset;
+    }
+
+    ::ng-deep .mat-mdc-paginator-page-size {
+      margin-right: 0;
+    }
+
+    ::ng-deep .mat-mdc-paginator-range-actions {
+      justify-content: center;
+
+      .mat-mdc-icon-button {
+        width: 44px;
+        height: 44px;
+        line-height: 44px;
+      }
+    }
+
+    ::ng-deep .mat-mdc-paginator-range-label {
+      margin: 0 4px;
+      font-size: 14px;
+    }
+  }
+
   .controls-container {
     ::ng-deep {
       .mat-paginator-range-l.references-link {
         display: inline-flex;
         vertical-align: middle;
-      }
-      abel {
-        margin: 0 3px 0 0;
       }
 
       .mat-paginator-page-size-select {
@@ -583,19 +656,6 @@
   }
 }
 
-@media (max-width: 505px) {
-  .full-paginator {
-    min-width: 0px !important;
-  }
-  .controls-container {
-    ::ng-deep {
-      .mat-paginator-page-size-label {
-        display: none;
-      }
-    }
-  }
-}
-
 .zoom:hover {
   cursor: zoom-in;
 }
@@ -615,6 +675,11 @@
   // margin-bottom: -7px;
   ::ng-deep .mat-mdc-form-field-infix {
     padding-bottom: 10px;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 94%;
+    margin: 0;
   }
 }
 
