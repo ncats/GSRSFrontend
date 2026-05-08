@@ -19,9 +19,6 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification'
 import { SubstanceEditImportDialogComponent } from '@gsrs-core/substance-edit-import-dialog/substance-edit-import-dialog.component';
 import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-// ncats branch begin 
-import { ConfigService } from '@gsrs-core/config';
-// ncats branch end 
 
 import jp from 'jsonpath';
 import * as defiant from '@gsrs-core/../../../node_modules/defiant.js/dist/defiant.min.js';
@@ -78,7 +75,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
   serverError: boolean;
   canDelete: boolean = false;
   canCreate: boolean = false;
-  showTopBanner = false;
 
   constructor(
     private productService: ProductService,
@@ -93,8 +89,7 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private dialog: MatDialog,
     private titleService: Title,
-    private sanitizer: DomSanitizer,
-    private configService: ConfigService) { }
+    private sanitizer: DomSanitizer) { }
 
   async ngOnInit() {
     this.canDelete = await this.authService.hasSpecificPrivilege("Delete Lower Level Items");
@@ -103,16 +98,6 @@ export class ProductFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.username = this.authService.getUser();
 
-
-    if(this.configService.configData.showTopBanner === undefined) {
-      this.showTopBanner = false;
-    } else {
-      if(this.configService.configData.showTopBanner === false) { 
-        this.showTopBanner = false;
-      } else {
-        this.showTopBanner = true;
-      }
-    }
 
     const routeSubscription = this.activatedRoute
       .params

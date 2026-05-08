@@ -7,12 +7,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }
 .hide {
-  display: none!important;
+  display: none !important;
 }
 .center-screen {
   z-index: 2;
@@ -48,37 +48,35 @@
   cursor: pointer;
 }
 .top-fixed {
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    top: 64px;
-    width: 100%;
-    background-color: white;
-    align-items: center;
-    justify-content: center;
-    box-shadow:     0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12);
-    z-index: 1001;
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  width: 100%;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0px 3px 3px -2px rgba(0, 0, 0, 0.2),
+    0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
 }
-/* ncats branch begin */
-.top-fixed-with-top-banner {
-  top: 92px;
-} 
-/* ncats branch end */
 
 .cdk-overlay-pane {
   z-index: 1005;
 }
-mat-select-panel{
+mat-select-panel {
   z-index: 1005;
 }
 
-.admin-functions, .changeClass {
+.admin-functions,
+.changeClass {
   margin-bottom: -15px;
   margin-left: 30px;
   margin-right: 5px;
   margin-top: -10px;
   color: #4793d1;
-
 
   ::ng-deep .mat-form-field-wrapper {
     padding-bottom: 20px !important;
@@ -91,7 +89,7 @@ mat-select-panel{
 .advanced-features {
   z-index: 2000 !important;
 
-  display:flex;
+  display: flex;
   flex-direction: row;
   padding-left: 10px;
 }
@@ -100,39 +98,32 @@ mat-select-panel{
 }
 
 .form-content-container {
-    // position: fixed;
-    // top: 121px;
-    // right: 0;
-    // bottom: 0;
-    // left: 0;
-    overflow: hidden;
-    padding-top: 121px;
-    margin-bottom: 200px; /* ncats branch begin/end */
-  }
+  overflow: hidden;
+}
 
 .actions-container {
-    max-width: 1128px;
-    width: 100%;
-    background-color: white;
-    padding: 10px;
-    display: flex;
+  max-width: 1128px;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  display: flex;
 }
 
 .mat-accordion {
-    width: 100%;
-    max-width: 1020px;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 1020px;
+  box-sizing: border-box;
 }
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 .validation-body {
-  max-width:95%;
-   display:flex;
-   max-width: 960px;
-word-break: break-word;
+  max-width: 95%;
+  display: flex;
+  max-width: 960px;
+  word-break: break-word;
 }
 
 .validation-dismiss {
@@ -169,13 +160,12 @@ word-break: break-word;
     display: flex;
     padding: 5px 0;
 
-
     .message-type {
       text-transform: uppercase;
       font-weight: 500;
       margin-right: 20px;
-      padding:10px;
-      border-radius:3px;
+      padding: 10px;
+      border-radius: 3px;
       height: 40px;
       min-width: 95px;
     }
@@ -188,19 +178,16 @@ word-break: break-word;
   .warning-message {
     color: #8a6d3b;
     background-color: #fcf8e3;
-
   }
-
 
   .error-message {
     color: #a94442;
     background-color: #f2dede;
   }
-
 }
 
-.validate-button{
-  margin-left:15px;
+.validate-button {
+  margin-left: 15px;
 }
 
 .mat-expansion-panel-header-title {
@@ -245,39 +232,38 @@ word-break: break-word;
 }
 
 .fontsize20px {
-font-size: 20px;
+  font-size: 20px;
 }
 
 .padtop90px {
-padding-top: 90px;
 }
 
 .padleft25px {
-padding-left: 25px;
+  padding-left: 25px;
 }
 
 .bordergray {
-border: 1px solid green;
+  border: 1px solid green;
 }
 
 .borderblue {
-border: 1px solid #007CBA;
+  border: 1px solid #007cba;
 }
 
 .fontbold {
-font-weight: bold;
+  font-weight: bold;
 }
 
 /* FDA COLOR BLUE CODE Hex: #007CBA */
 .colorbluefda {
-color: #007CBA;
+  color: #007cba;
 }
 
-::ng-deep .custom-menu{
-margin-top: -12px;
-/*z-index: 4000;*/
+::ng-deep .custom-menu {
+  margin-top: -12px;
+  /*z-index: 4000;*/
 }
 
 .mat-menu-item {
-color: #007CBA !important;
+  color: #007cba !important;
 }

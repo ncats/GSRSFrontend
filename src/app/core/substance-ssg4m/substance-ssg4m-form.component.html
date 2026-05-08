@@ -1,7 +1,7 @@
 <!-- ncats branch change begin --> 
-<div class="main-container" [ngClass]="['top-fixed', showTopBanner ? 'top-fixed-with-top-banner': '']">
+<div class="main-container top-fixed">
     <!-- is syntax on showHeaderBar correct? --> 
-    <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', 'top-fixed-with-top-banner': showTopBanner , zindex2000 : saveDelayedMessage}">
+    <div class="top-fixed" [ngClass]="{'top-fixed-top': showHeaderBar === 'true', zindex2000 : saveDelayedMessage}">
 <!-- ncats branch change end --> 
     <div class="actions-container">
 

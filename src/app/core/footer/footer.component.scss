@@ -1,13 +1,10 @@
-.content-container { 
+.content-container {
     width: 100%;
-    bottom: 0px;
-    position: fixed;
     height: 100px;
     background: #4793d1;
     color: #fff;
     padding: 10px;
-    overflow: scroll;
-    border: 1px solid red;
+    overflow: hidden;
 }
 
 .footer-row { 

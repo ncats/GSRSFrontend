@@ -3,17 +3,14 @@
   --gsrs-sidenav-width: 315px;
 }
 
-/* ncats branch begin */
 .mat-drawer-container.mat-sidenav-container {
-    /* let .base-main-container set top */
+    position: absolute;
+    top: 0;
     left: 0;
     right: 0;
-    /* why? */
-    // bottom: 0;
-    margin-bottom: 200px;
+    bottom: 0;
     background-color: var(--regular-transparent-color);
 }
-/* ncats branch end */
 
 mat-sidenav {
   // Tell Angular Material the exact width via its CSS variable
@@ -46,10 +43,11 @@ mat-sidenav {
 }
 
 .expand-sidenav {
-    position: fixed;
-    left: 0;
-    top: 80px;
+    position: sticky;
+    top: 16px;
     z-index: 10000;
+    display: block;
+    width: fit-content;
     background-color: var(--regular-white-color);
     border: none;
     border-top-right-radius: 25%;

@@ -1,53 +1,50 @@
 .download-container {
-    margin-top: 80px;
+  // margin-top: 80px;
 }
 
 .form-row {
-    width: 100%;
-    margin-top:20px;
-
+  width: 100%;
+  margin-top: 20px;
 }
 
 .download-header {
-    margin-left: 100px;
+  margin-left: 100px;
 }
-
 
 .job-container {
-    padding:10px;
-    margin: 20px;
-    border: 1px solid var(--border-color);
+  padding: 10px;
+  margin: 20px;
+  border: 1px solid var(--border-color);
 }
 
-
 .spinner {
-    height: 40px;
-    width: 40px;
+  height: 40px;
+  width: 40px;
 }
 
 .loading-container {
-    height: 90%;
-    width: 100%;
-    align-content: center;
-    padding:50px;
+  height: 90%;
+  width: 100%;
+  align-content: center;
+  padding: 50px;
 }
 
 .progress-spinner {
-    margin: auto;
+  margin: auto;
 }
 
 .deleted {
-    margin: auto;
-    padding: 5px;
+  margin: auto;
+  padding: 5px;
 }
 
 .all-button {
-    max-width: 1228px;
-    margin: auto;
-    padding-top: 20px;
+  max-width: 1228px;
+  margin: auto;
+  padding-top: 20px;
 }
 
 .a-link {
-    text-decoration:none;
-    color: var(--link-color);
-  }
+  text-decoration: none;
+  color: var(--link-color);
+}

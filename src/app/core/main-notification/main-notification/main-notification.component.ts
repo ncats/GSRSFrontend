@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NgClass } from "@angular/common";
 import { MainNotificationService } from "../main-notification.service";
 import { AppNotification, NotificationType } from "../notification.model";
-import { ConfigService } from "@gsrs-core/config/config.service";
 
 @Component({
   selector: "app-main-notification",
@@ -14,19 +13,15 @@ import { ConfigService } from "@gsrs-core/config/config.service";
 })
 export class MainNotificationComponent {
   private notificationService = inject(MainNotificationService);
-  private configService = inject(ConfigService);
   private destroyRef = inject(DestroyRef);
 
   private isVisible = signal(false);
   private notificationType = signal<NotificationType>(NotificationType.default);
   notificationMessage = signal("");
 
-  private showTopBanner = this.configService.configData.showTopBanner === true;
-
   protected readonly classes = computed(() => ({
     hidden: !this.isVisible(),
     showing: this.isVisible(),
-    'with-top-banner': this.showTopBanner,
     default: this.notificationType() === NotificationType.default,
     success: this.notificationType() === NotificationType.success,
     error: this.notificationType() === NotificationType.error,

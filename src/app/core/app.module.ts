@@ -125,7 +125,6 @@ import { PrivacyStatementModule } from './privacy-statement/privacy-statement.mo
 
 // ncats branch begin 
 import { TopContentSpacerComponent } from './spacers/top-content-spacer.component';
-import { BottomContentSpacerComponent } from './spacers/bottom-content-spacer.component';
 import { FooterComponent } from './footer/footer.component';
 
 // ncats branch end 
@@ -178,11 +177,10 @@ import { TopBannerComponent } from './misc/top-banner.component';
     ImportScrubberComponent,
     TopBannerComponent,
     TopContentSpacerComponent,
-    BottomContentSpacerComponent,
-    FooterComponent
   ],
   imports: [
     BrowserModule,
+    FooterComponent,
     RouterModule,
     AppRoutingModule,
     BrowserAnimationsModule,

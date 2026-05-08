@@ -1,32 +1,27 @@
-<!-- ncats branch begin (2 open divs) -->
-<div class="base-page-wrapper">
-  @if (showTopBanner) {
-    <app-top-banner />
-  }
-
-  <div class="base-menu-wrapper" [class.base-menu-wrapper-with-top-banner]="showTopBanner">
-    <!-- ncats branch begin end -->
+<!-- ncats branch begin -->
+<div class="app-shell">
+  <div class="app-shell-header">
+    @if (showTopBanner) {
+      <app-top-banner />
+    }
     @if (!isPfdaVersion) {
       <app-header />
     } @else {
       <app-pfda-toolbar />
     }
-
-    <div class="base-main-wrapper" [class.base-main-wrapper-with-top-banner]="showTopBanner">
-      <app-session-expiration />
-      <app-loading />
-      <router-outlet />
-
-      <!-- ncats branch begin -->
-      @if (showFooter) {
-        <app-bottom-content-spacer />
-      }
-    </div>
   </div>
-  <!-- ncats branch fragment ngClass.2 bottom -->
-</div>
 
-@if (showFooter) {
-  <app-footer />
-}
+  <div class="app-shell-body">
+    <app-main-notification />
+    <app-session-expiration />
+    <app-loading />
+    <div class="app-shell-page">
+      <router-outlet />
+    </div>
+
+    @if (showFooter) {
+      <app-footer />
+    }
+  </div>
+</div>
 <!-- ncats branch end -->

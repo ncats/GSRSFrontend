@@ -1,67 +1,63 @@
 .query-content-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 65px 5px 0 5px;
-   
-    margin-bottom: 400px; /* ncats branch begin/end */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+
+  margin-bottom: 400px; /* ncats branch begin/end */
 }
 
 .mat-mdc-card {
-    margin-top: 15px;
-    box-sizing: border-box;
-    max-width: 1170px;
-    overflow-y: auto;
+  margin-top: 15px;
+  box-sizing: border-box;
+  max-width: 1170px;
+  overflow-y: auto;
 }
 
 .mat-mdc-radio-group {
-    margin-top: 5px;
-    margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .mat-mdc-radio-button {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .editor-container {
-    width: 920px;
-    min-height: 460px;
+  width: 920px;
+  min-height: 460px;
 }
-
-.query-actions {   
-
-    button {
-        float: right;
-        display: block;
-    }
-}
-
 
 .query-actions {
-    flex-direction: row;
-    width: 100%;
+  button {
+    float: right;
+    display: block;
+  }
+}
 
+.query-actions {
+  flex-direction: row;
+  width: 100%;
 }
 .two {
-    width: auto;
-    display: flex;
-    flex-direction: column;
+  width: auto;
+  display: flex;
+  flex-direction: column;
 }
 .three {
-    width: auto;
-    display: flex;
-    flex-direction: column;
+  width: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-
-@media(max-width: 1175px) { }
-
-@media(max-width: 970px) {
-
-    .editor-container, .query-actions {
-        width: 100%;
-    }
+@media (max-width: 1175px) {
 }
 
+@media (max-width: 970px) {
+  .editor-container,
+  .query-actions {
+    width: 100%;
+  }
+}

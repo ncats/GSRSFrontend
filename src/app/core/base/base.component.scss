@@ -1,38 +1,28 @@
-/* ncats branch begin */
-.base-page-wrapper {
-  width: 100%;
-  display: inline;
-  position: fixed;
-  top: 0px;
-}
-
-.base-menu-wrapper {
-  width: 100%;
-  display: inline;
-  position: fixed;
-  top: 0px;
-}
-
-.base-menu-wrapper-with-top-banner mat-toolbar {
-  top: 32px !important;
-}
-
-.base-main-wrapper {
-  overflow: scroll;
+.app-shell {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  width: 100%;
-  display: inline;
-  position: fixed;
-  top: 64px;
 }
 
-.base-main-wrapper-with-top-banner {
-  top: 102px !important;
+.app-shell-header {
+  position: relative;
+  flex-shrink: 0;
+  z-index: 1001;
 }
 
-.base-main-notification-wrapper {
-  width: 100%;
-  display: inline;
-  position: fixed;
+.app-shell-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
-/* ncats branch end */
+
+.app-shell-page {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  position: relative;
+}

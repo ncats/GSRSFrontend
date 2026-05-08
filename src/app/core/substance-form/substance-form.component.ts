@@ -131,10 +131,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     featuresOnly = false;
   userCanChangeDefinitionVisibility = false;
 
-  // ncats branch begin
-  showTopBanner = true;
-  // ncats branch end
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private substanceService: SubstanceService,
@@ -325,17 +321,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }  
 
-// ncats branch begin
-    if(this.configService.configData.showTopBanner === undefined) {
-      this.showTopBanner = false;
-    } else {
-      if(this.configService.configData.showTopBanner === false) { 
-        this.showTopBanner = false;
-      } else {
-        this.showTopBanner = true;
-      }
-    }
-// ncats branch end
 
     
     this.isPfdaVersion = this.configService.configData.isPfdaVersion;

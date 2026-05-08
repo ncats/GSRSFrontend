@@ -33,7 +33,7 @@
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "disableJSDraw": false,
   "restApiPrefix": "/ginas/app",
-  "showTopBanner": true, 
+  "showTopBanner": true,
   "authenticateAs": {
     "apiUsername": null,
     "apiPassword": null,
@@ -43,8 +43,8 @@
   "stagingArea": {
     "mergeAction": false
   },
-    
-"userRegistration": {
+
+  "userRegistration": {
     "configurations": {
       "emailForm": {
         "active": false,
@@ -89,13 +89,7 @@
     ]
   },
   "filteredDuplicationCodes": ["BDNUM", "FDA UNII"],
-  "typeaheadFields": [
-    "Standardized_Name",
-    "Display_Name",
-    "CAS",
-    "Name",
-    "Approval_ID"
-  ],
+  "typeaheadFields": ["Standardized_Name", "Display_Name", "CAS", "Name", "Approval_ID"],
   "loadedComponents": {
     "applications": true,
     "products": true,

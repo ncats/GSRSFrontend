@@ -55,23 +55,20 @@
 }
 
 .top-fixed {
-  position: fixed;
+  position: sticky;
   display: flex;
   flex-direction: column;
-  top: 64px;
+  top: 0;
   width: 100%;
   background-color: var(--regular-white-color);
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 3px 3px -2px var(--box-shadow-color),
+  box-shadow:
+    0px 3px 3px -2px var(--box-shadow-color),
     0px 3px 4px 0px var(--box-shadow-color-2),
     0px 1px 8px 0px var(--box-shadow-color-3);
   z-index: 1001;
 }
-
-.top-fixed-with-top-banner {
-  top: 92px !important;
-} 
 
 .cdk-overlay-pane {
   z-index: 1005;
@@ -117,13 +114,11 @@ mat-select-panel {
 
 .form-content-container {
   overflow: hidden;
-  padding-top: 121px;
-  margin-bottom: 200px;   /* ncats branch begin/end */
 }
 
 .small-form-content-container {
   overflow: hidden;
-  padding-top: 90px;
+  // padding-top: 90px;
 }
 
 .actions-container {
@@ -234,7 +229,7 @@ mat-select-panel {
 }
 
 .small-mat-expansion-panel-spacing {
-    margin: 10px;
+  margin: 10px;
 }
 
 .hide-show-messages {
