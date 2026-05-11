@@ -55,11 +55,9 @@ export class EditorImplementation implements Editor {
     getMolfile(): Observable<any> {
         return new Observable<any>(observer => {
         if (this.ketcher && this.ketcher != null) {
-            this.ketcher.getMolfile('v2000').then(result => { 
-                let mfile = result;
-                
-                observer.next(mfile);
-            
+            this.ketcher.getMolfile('v2000').then(result => {
+                observer.next(result);
+
         });
             
            
@@ -155,25 +153,25 @@ export class EditorImplementation implements Editor {
         return new Observable<string>(observer => {
             if (this.jsdraw != null) {
                 this.jsdraw.options.ondatachange = () => {
-                    this.getMolfile().pipe(take(1)).subscribe(result => { 
+                    this.getMolfile().pipe(take(1)).subscribe(result => {
                         observer.next(result);
                     });
                 };
             } else if (this.ketcher != null) {
-              this.ketcher.editor.subscribe('change',  operations => { 
+              this.ketcher.editor.subscribe('change',  operations => {
                     if(!(operations.length == 1 && operations[0].operation == 'Load canvas')){
-                        this.ketcher.getMolfile('v2000').then(result => { 
+                        this.ketcher.getMolfile('v2000').then(result => {
                             observer.next(result);
                         });
                     } else {
-                        this.getMolfile().pipe(take(1)).subscribe(result => { 
+                        this.getMolfile().pipe(take(1)).subscribe(result => {
                             observer.next(result);
                         });
                     }
-                    
-                    
+
+
                  });
-                
+
             }
             else {
                 observer.next(null);
