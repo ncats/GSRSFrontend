@@ -25,7 +25,7 @@ export class BrowseOtherMenuComponent {
   private overlayContainer = this.overlayContainerService.getContainerElement();
 
   loadedComponents = this.configService.configData.loadedComponents || null;
-  adverseEventShinyHomepageDisplay = this.configService.configData.adverseEventShinyHomepageDisplay;
+  adverseEventShinyHomepageDisplay = this.configService.configData.adverseEventShinyHomepageDisplay === 'true';
   adverseEventShinyHomepageURL = this.configService.configData.adverseEventShinyHomepageURL;
 
   showBrowseOther = toSignal(
