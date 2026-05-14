@@ -308,7 +308,6 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               if (this.facetsConfig[facetKey].length
                 && (facetKey === 'default'
                   || (facetKey === 'admin' && isAdmin)
-                  || (facetKey !== 'admin' && this.authService.hasRoles(facetKey))
                   || (facetKey === 'staging' && this.calledFrom === 'staging'))) {
                 this.facetsConfig[facetKey].forEach(facet => {
                   for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
