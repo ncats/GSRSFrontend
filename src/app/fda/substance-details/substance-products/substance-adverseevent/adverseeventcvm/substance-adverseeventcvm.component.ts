@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Output, Input, EventEmitter } from "@angular/core";
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { Sort } from "@angular/material/sort";
@@ -22,10 +22,10 @@ import { adverseEventCvmSearchSortValues } from "../../../../adverse-event/adver
 })
 export class SubstanceAdverseEventCvmComponent
   extends SubstanceDetailsBaseTableDisplay
-  implements OnInit
-{
+  implements OnInit {
   @Output() countAdvCvmOut: EventEmitter<number> = new EventEmitter<number>();
 
+  localBdnum: string;
   adverseEventCount = 0;
   order = "$root_aeCount";
   ascDescDir = "desc";
@@ -60,11 +60,14 @@ export class SubstanceAdverseEventCvmComponent
 
   async ngOnInit() {
     this.canExport = await this.authService.hasSpecificPrivilege("Export Data");
+    /* Commenting right now. Will remove later after everything works */
+    /*
     if (this.bdnum) {
       this.getAdverseEventCvm();
       // this.getSubstanceAdverseEventCvm();
       this.adverseEventCvmListExportUrl();
     }
+    */
   }
 
   ngOnDestroy(): void {
@@ -73,11 +76,22 @@ export class SubstanceAdverseEventCvmComponent
     });
   }
 
+  @Input()
+  set bdnum(setBdnum: string) {
+    this.localBdnum = setBdnum;
+
+    if (this.localBdnum) {
+      this.getAdverseEventCvm();
+ 
+      this.adverseEventCvmListExportUrl();
+    }
+  }
+
   getAdverseEventCvm(pageEvent?: PageEvent) {
     this.setPageEvent(pageEvent);
     this.showSpinner = true; // Start progress spinner
     const skip = this.page * this.pageSize;
-    const privateSearch = "root_substanceKey:" + this.bdnum;
+    const privateSearch = "root_substanceKey:" + this.localBdnum;
     const subscription = this.adverseEventService
       .getAdverseEventCvm(
         this.order,
@@ -176,9 +190,9 @@ export class SubstanceAdverseEventCvmComponent
   }
 
   adverseEventCvmListExportUrl() {
-    if (this.bdnum != null) {
+    if (this.localBdnum != null) {
       this.exportUrl = this.adverseEventService.getAdverseEventCvmListExportUrl(
-        this.bdnum
+        this.localBdnum
       );
     }
   }

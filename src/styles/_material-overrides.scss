@@ -540,6 +540,11 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
+// Ensure CDK overlay (tooltips, menus, dialogs) always renders above the fixed toolbar (z-index: 1001)
+.cdk-overlay-container {
+  z-index: 1002;
+}
+
 // Fix for nested menu positioning in Angular Material 19 MDC
 // Ensure the CDK overlay positioning works correctly
 .cdk-overlay-connected-position-bounding-box {
@@ -1099,9 +1104,10 @@ app-loading .mat-mdc-progress-spinner {
 // ============================================================================
 
 // Tablet/Mobile: Hide most navigation buttons at 1350px, show only Logo, Menu, Search, and Login
+// Note: scoped to :not(.pfda-toolbar) to avoid hiding pfda-toolbar buttons
 @media (max-width: 1350px) {
-  .mat-toolbar,
-  .mat-mdc-toolbar {
+  .mat-toolbar:not(.pfda-toolbar),
+  .mat-mdc-toolbar:not(.pfda-toolbar) {
     // Logo container - always visible
     > .logo-container {
       display: flex !important;

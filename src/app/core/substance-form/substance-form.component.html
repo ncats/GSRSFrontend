@@ -58,7 +58,7 @@
         ></mat-icon>
       </button>
       <div
-        *ngIf="canMakeAdvancedEdits === true || canUpdate === true"
+        *ngIf="isPfdaVersion === true || canMakeAdvancedEdits === true || canUpdate === true"
         class="advanced-features"
       >
         <div class="admin-functions">
@@ -116,7 +116,7 @@
                   Switch primary and alt definitions
                 </mat-option>
               </ng-container>
-              <ng-container *ngIf="canUpdate === true">
+              <ng-container *ngIf="isPfdaVersion === true || canUpdate === true">
                 <mat-option
                   value="glyco"
                   [disabled]="substanceClass !== 'protein'"
@@ -369,12 +369,7 @@
           (click)="submit()"
           [disabled]="isLoading || this.validationResult === false"
         >
-          {{
-            validationMessages && validationMessages.length > 0
-              ? "Dismiss All and "
-              : ""
-          }}
-          Submit
+          {{ getSubmitButtonText() }}
         </button>
         <button
           mat-flat-button

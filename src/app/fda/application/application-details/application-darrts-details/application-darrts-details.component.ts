@@ -9,7 +9,6 @@ import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { UtilsService } from '../../../../core/utils/utils.service';
 // import { AuthService } from '@gsrs-core/auth/auth.service';
 import { ApplicationDetailsBaseComponent } from '../application-details-base.component';
-import { element } from 'protractor';
 
 @Component({
     selector: 'app-application-darrts-details',

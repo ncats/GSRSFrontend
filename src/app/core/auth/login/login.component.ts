@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.loadingService.setLoading(false);
       if (auth) {
         const route = this.activatedRoute.snapshot.queryParamMap.get('path') || '/browse-substance';
-        this.router.navigate([route]);
+        this.router.navigateByUrl(route);
       } else {
         this.isLoaded = true;
         this.isLoading = false;
@@ -97,7 +97,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loadingService.setLoading(false);
         if (auth) {
           const route = this.activatedRoute.snapshot.queryParamMap.get('path') || '/browse-substance';
-          this.router.navigate([route]);
+          this.router.navigateByUrl(route);
         } else {
           this.isLoading = false;
         }

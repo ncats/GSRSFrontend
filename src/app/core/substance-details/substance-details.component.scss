@@ -1,3 +1,5 @@
+@use "../../../styles/variables" as *;
+
 .side-nav-content {
   display: flex;
   box-sizing: border-box;
@@ -35,7 +37,7 @@ mat-sidenav.substance-sidenav.mat-drawer {
   min-width: 315px !important;
   max-width: 315px !important;
   flex: 0 0 315px !important;
-  box-sizing: border-box; // CRITICAL: Include padding in width calculation
+  box-sizing: border-box;
 }
 
 // Legacy fallback (lower specificity)
@@ -52,8 +54,8 @@ mat-sidenav.substance-sidenav.mat-drawer {
   flex-direction: column;
 }
 
-:host ::ng-deep .substance-nav-list 
-  .mat-mdc-list-item 
+:host ::ng-deep .substance-nav-list
+  .mat-mdc-list-item
   .mdc-list-item__primary-text {
   color: #000;
 }
@@ -86,8 +88,8 @@ mat-sidenav.substance-sidenav.mat-drawer {
 
 .approvalIDColor {
   color: var(--pink-span-color);
-  margin-bottom: 0px !important;
-  margin-top: 0px !important;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
 }
 
 .chip {
@@ -112,21 +114,36 @@ mat-panel-title {
   }
 }
 
-@media (max-width: 1100px) {
+// ─── Responsive ──────────────────────────────────────────────────────────────
+
+@media (max-width: $breakpoint-desktop-sm) {
   .title-container {
     padding-left: 25px;
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: $breakpoint-tablet) {
+  // Allow expansion panel headers to grow so long section titles wrap fully
+  ::ng-deep .mat-expansion-panel-header {
+    height: auto !important;
+    min-height: 48px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  mat-panel-title h2 {
+    white-space: normal;
+    margin: 0;
+  }
+}
+
+@media (max-width: $breakpoint-mobile) {
   .title-container {
     h1 {
       word-break: break-all;
     }
   }
-}
 
-@media (max-width: 603px) {
   ::ng-deep .mat-paginator-range-label {
     margin-left: 10px;
     margin-right: 10px;

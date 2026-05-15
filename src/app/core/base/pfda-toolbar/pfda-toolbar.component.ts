@@ -5,7 +5,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { AuthService } from '../../auth/auth.service';
 import { SubstanceTextSearchService } from '@gsrs-core/substance-text-search/substance-text-search.service';
 import { Auth } from '../../auth/auth.model';
-import { Subscription } from 'rxjs';
+import { concatMap, Subscription } from 'rxjs';
 import { NavItem } from '@gsrs-core/config';
 
 @Component({
@@ -16,6 +16,7 @@ import { NavItem } from '@gsrs-core/config';
 })
 export class PfdaToolbarComponent implements OnInit {
   pfdaBaseUrl: string;
+  supportEmail: string;
   logoSrcPath: string;
   homeIconPath: string;
   auth?: Auth;
@@ -41,9 +42,10 @@ export class PfdaToolbarComponent implements OnInit {
   ngOnInit() {
     this.pfdaBaseUrl = this.configService.configData.pfdaBaseUrl || '/';
 
-    const baseHref = this.configService.environment.baseHref || '/'
+    const baseHref = this.configService.environment.baseHref || '/ginas/app/beta/';
     this.logoSrcPath = `${baseHref}assets/images/pfda/pfda-logo.png`;
     this.homeIconPath = `${baseHref}assets/images/pfda/home.svg`;
+    this.supportEmail = this.configService.configData.contactEmail || 'fda-srs@fda.hhs.gov';
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
@@ -87,5 +89,16 @@ export class PfdaToolbarComponent implements OnInit {
 
   removeZindex(): void {
     this.overlayContainer.style.zIndex = null;
+  }
+
+  login(): void {
+    this.authService.pfdaLogin().pipe(
+      concatMap(success => {
+        return this.authService.getAuth();
+      })).subscribe();
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

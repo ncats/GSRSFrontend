@@ -1,33 +1,44 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { SubstanceDetail, SubstanceName, SubstanceNameOrg } from '../../substance/substance.model';
-import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
-import { FormControl, Validators } from '@angular/forms';
-import { MatRadioChange } from '@angular/material/radio';
-import { UtilsService } from '../../utils/utils.service';
-import { Subscription } from 'rxjs';
-import {NameResolverDialogComponent} from '@gsrs-core/name-resolver/name-resolver-dialog.component';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {MatDialog} from '@angular/material/dialog';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import { SubstanceFormNamesService } from '@gsrs-core/substance-form/names/substance-form-names.service';
-import { AuthService } from '@gsrs-core/auth';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from "@angular/core";
+import {
+  SubstanceDetail,
+  SubstanceName,
+  SubstanceNameOrg,
+} from "../../substance/substance.model";
+import { ControlledVocabularyService } from "../../controlled-vocabulary/controlled-vocabulary.service";
+import { FormControl, Validators } from "@angular/forms";
+import { MatRadioChange } from "@angular/material/radio";
+import { UtilsService } from "../../utils/utils.service";
+import { Subscription } from "rxjs";
+import { NameResolverDialogComponent } from "@gsrs-core/name-resolver/name-resolver-dialog.component";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { MatDialog } from "@angular/material/dialog";
+import { SubstanceFormService } from "@gsrs-core/substance-form/substance-form.service";
+import { SubstanceFormNamesService } from "@gsrs-core/substance-form/names/substance-form-names.service";
+import { AuthService } from "@gsrs-core/auth";
 
 @Component({
-    selector: 'app-name-form',
-    templateUrl: './name-form.component.html',
-    styleUrls: ['./name-form.component.scss'],
-    standalone: false
+  selector: "app-name-form",
+  templateUrl: "./name-form.component.html",
+  styleUrls: ["./name-form.component.scss"],
+  standalone: false,
 })
 export class NameFormComponent implements OnInit, OnDestroy {
   private privateName: SubstanceName;
   @Output() priorityUpdate = new EventEmitter<SubstanceName>();
   @Output() nameDeleted = new EventEmitter<SubstanceName>();
-  nameControl = new FormControl('');
-  nameTypeControl = new FormControl('');
+  nameControl = new FormControl("");
+  nameTypeControl = new FormControl("");
   deleteTimer: any;
   private subscriptions: Array<Subscription> = [];
   overlayContainer: HTMLElement;
-  substanceType = '';
+  substanceType = "";
   viewFull = true;
   showStd = false;
   canChangeDisplayName: boolean = false;
@@ -41,22 +52,26 @@ export class NameFormComponent implements OnInit, OnDestroy {
     private overlayContainerService: OverlayContainer,
     private nameFormService: SubstanceFormNamesService,
     private authService: AuthService,
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-    const definition = this.substanceFormService.definition.subscribe(def => {
+    const definition = this.substanceFormService.definition.subscribe((def) => {
       this.substanceType = def.substanceClass;
     });
     definition.unsubscribe();
-    
-    this.canChangeDisplayName = await this.authService.hasSpecificPrivilege("Change Display Name for Approved");
-    
-    this.substanceStatus = this.substanceFormService.getSubstanceStatus().toUpperCase();
+
+    this.canChangeDisplayName = await this.authService.hasSpecificPrivilege(
+      "Change Display Name for Approved",
+    );
+
+    this.substanceStatus = this.substanceFormService
+      .getSubstanceStatus()
+      .toUpperCase();
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
+    this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
   }
@@ -64,7 +79,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   @Input()
   set show(val: boolean) {
     if (val != null) {
-     this.viewFull = val;
+      this.viewFull = val;
     }
   }
 
@@ -75,7 +90,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   @Input()
   set standardized(val: boolean) {
     if (val != null) {
-     this.showStd = val;
+      this.showStd = val;
     }
   }
 
@@ -87,11 +102,14 @@ export class NameFormComponent implements OnInit, OnDestroy {
   set name(name: SubstanceName) {
     if (name != null) {
       this.privateName = name;
-      if (!this.privateName.languages || this.privateName.languages.length === 0) {
-        this.privateName.languages = ['en'];
+      if (
+        !this.privateName.languages ||
+        this.privateName.languages.length === 0
+      ) {
+        this.privateName.languages = ["en"];
       }
       if (!this.privateName.type) {
-        this.privateName.type = 'cn';
+        this.privateName.type = "cn";
       }
     }
   }
@@ -101,7 +119,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   }
 
   priorityUpdated(event: MatRadioChange) {
-    this.privateName.displayName = (event.value === 'true');
+    this.privateName.displayName = event.value === "true";
     this.priorityUpdate.emit(this.privateName);
   }
 
@@ -124,9 +142,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   deleteName(): void {
     this.privateName.$$deletedCode = this.utilsService.newUUID();
 
-    if (!this.privateName.name
-      && !this.privateName.type
-    ) {
+    if (!this.privateName.name && !this.privateName.type) {
       this.deleteTimer = setTimeout(() => {
         this.nameDeleted.emit(this.privateName);
       }, 2000);
@@ -140,17 +156,26 @@ export class NameFormComponent implements OnInit, OnDestroy {
 
   resolve(): void {
     const dialogRef = this.dialog.open(NameResolverDialogComponent, {
-      height: 'auto',
-      width: '800px',
-      data: {'name': this.privateName.name}
+      height: "auto",
+      width: "800px",
+      data: { name: this.privateName.name },
     });
-    this.overlayContainer.style.zIndex = '1002';
-    dialogRef.afterClosed().subscribe((molfile?: string) => {
-      this.overlayContainer.style.zIndex = null;
-      if (molfile != null && molfile !== '') {
-        this.substanceFormService.resolvedName(molfile);
-      }
-    }, () => {});
+    this.overlayContainer.style.zIndex = "1002";
+    dialogRef.afterClosed().subscribe(
+      (molfile?: string) => {
+        this.overlayContainer.style.zIndex = null;
+        if (molfile != null && molfile !== "") {
+          this.substanceFormService.resolvedName(molfile);
+        }
+      },
+      () => {},
+    );
+  }
+
+  autoResize(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
   }
 
   getNameOrgs(name: SubstanceName): Array<SubstanceNameOrg> {
@@ -161,7 +186,7 @@ export class NameFormComponent implements OnInit, OnDestroy {
   }
 
   preventNewLine(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
     }
   }

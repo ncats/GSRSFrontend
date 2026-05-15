@@ -96,6 +96,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
   // Initialized before any lifecycle hook so the first template render uses the correct state.
   // This prevents mat-sidenav-content from flashing at full width before the sidenav opens.
   readonly initialSidenavOpen = typeof window !== 'undefined' && window.innerWidth >= 1100;
+  isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
   hasBackdrop = false;
   view = 'cards';
   private resizeTimeout: any;
@@ -264,7 +265,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
     this.smiles = this.activatedRoute.snapshot.queryParams['smiles'] || '';
     // the sort order should be set to default (similarity) for structure searches, last edited for all others
     this.order = this.activatedRoute.snapshot.queryParams['order'] ||
-      (this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '' ? 'default' : '$root_lastEdited');
+    (this.privateStructureSearchTerm && this.privateStructureSearchTerm !== '' ? 'default' : '$root_lastEdited');
     this.view = this.activatedRoute.snapshot.queryParams['view'] || 'cards';
     this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
     const deprecated = this.activatedRoute.snapshot.queryParams['showDeprecated'];
@@ -1201,6 +1202,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
 
   private processResponsiveness = () => {
     if (window) {
+      this.isMobile = window.innerWidth <= 600;
       if (window.innerWidth < 1100) {
         this.matSideNav.close();
         this.isCollapsed = true;
@@ -1498,7 +1500,7 @@ export class SubstancesBrowseComponent implements OnInit, AfterViewInit, OnDestr
           } else {
             this.idLists = [];
           }
-        }  // pagingResponse   
+        }  // pagingResponse
       }, error => {
         console.log('Error during search substance');
       }, () => {

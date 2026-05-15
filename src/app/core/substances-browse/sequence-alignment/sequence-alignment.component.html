@@ -3,8 +3,10 @@
     <span class = "subunit">Subunit {{alignmentArray.subunitIndex}}</span>
     <span class = "alignment-id">{{alignmentArray.id}}</span>
   </div>
-  <pre class = "alignment-input" *ngIf = "text" [innerText]="text">
-
-  </pre>
+  <div class="alignment-input" *ngIf="text || targetSitesText || alignmentBodyText">
+    <pre class="alignment-stats" *ngIf="text" [innerText]="text"></pre>
+    <pre class="alignment-target-sites" *ngIf="targetSitesText" [innerText]="targetSitesText"></pre>
+    <pre class="alignment-body" *ngIf="alignmentBodyText" [innerText]="alignmentBodyText"></pre>
+  </div>
 
 </div>

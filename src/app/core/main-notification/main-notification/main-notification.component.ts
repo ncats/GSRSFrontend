@@ -35,20 +35,28 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
     clearTimeout(this.notificationTimer);
   }
 
+  // If notification.milisecondsToShow === 0, the notification is permanent (until closed by user)
   setNotification(notification: AppNotification): void {
     this.notifcationType = notification.type || NotificationType.default;
     this.notificationMessage = notification.message;
     this.appNotification.nativeElement.classList.remove('hidden');
     this.appNotification.nativeElement.classList.add(NotificationType[this.notifcationType]);
     this.appNotification.nativeElement.classList.add('showing');
-    const timeout = notification.milisecondsToShow || 5000;
-    this.notificationTimer = setTimeout(() => {
-      this.removeNotification(notification.type);
+    if (notification.milisecondsToShow === 0) {
+      if (this.notificationTimer != null) {
+        clearTimeout(this.notificationTimer);
+      }
       this.notificationTimer = null;
-    }, timeout);
+    } else  {
+      const timeout = notification.milisecondsToShow || 5000;
+      this.notificationTimer = setTimeout(() => {
+        this.removeNotification();
+        this.notificationTimer = null;
+      }, timeout);
+    }
   }
 
-  removeNotification(notificationType: NotificationType): void {
+  removeNotification(): void {
     if (this.notificationTimer != null) {
       clearTimeout(this.notificationTimer);
     }
@@ -56,5 +64,4 @@ export class MainNotificationComponent implements OnInit, OnDestroy {
     this.appNotification.nativeElement.classList.add('hidden');
     this.appNotification.nativeElement.classList.remove(NotificationType[this.notifcationType]);
   }
-
 }

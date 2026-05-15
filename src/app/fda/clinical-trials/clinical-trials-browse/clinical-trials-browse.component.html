@@ -124,14 +124,14 @@
           <td mat-cell *matCellDef="let element">
             <a
               class="clinical-trials-browse-edit1"
-              title="Edit in this tab"
+              [title]="canEdit ? 'Edit in this tab' : 'View in this tab'"
               [routerLink]="['/edit-clinical-trial', element.trialNumber]"
               [queryParams]="{}"
-              >Edit</a
+              >{{ canEdit ? 'Edit' : 'View' }}</a
             >&nbsp;<a
               class="clinical-trials-browse-edit2"
               target="_blank"
-              title="Edit in new tab"
+              [title]="canEdit ? 'Edit in new tab' : 'View in new tab'"
               [href]="'edit-clinical-trial/' + element.trialNumber"
               >+</a
             >

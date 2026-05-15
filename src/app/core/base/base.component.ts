@@ -5,6 +5,7 @@ import {
   HostListener,
   OnDestroy,
 } from "@angular/core";
+import { BreakpointObserver } from "@angular/cdk/layout";
 import {
   Router,
   Event,
@@ -66,6 +67,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
+  isPfdaVersion: boolean = false;
   customToolbarComponent: string = "";
   canRegister = false;
   registerNav: Array<NavItem>;
@@ -81,6 +83,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   private wildCardText: string;
   private classicLinkQueryParams = {};
   showHeaderBar = "true";
+  showRegistrars = true;
+  showBrowseOther = true;
 
   constructor(
     private router: Router,
@@ -94,7 +98,9 @@ export class BaseComponent implements OnInit, OnDestroy {
     private substanceTextSearchService: SubstanceTextSearchService,
     private utilsService: UtilsService,
     private wildCardService: WildcardService,
+    private breakpointObserver: BreakpointObserver,
   ) {
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion === true;
     this.customToolbarComponent = this.configService.configData.customToolbarComponent;
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
@@ -141,6 +147,13 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    const breakpointSub = this.breakpointObserver
+      .observe(['(min-width: 1611px)', '(min-width: 1501px)'])
+      .subscribe(result => {
+        this.showRegistrars = result.breakpoints['(min-width: 1611px)'];
+        this.showBrowseOther = result.breakpoints['(min-width: 1501px)'];
+      });
+    this.subscriptions.push(breakpointSub);
     this.showHeaderBar = this.activatedRoute.snapshot.queryParams["header"] || "true";
     this.loadedComponents = this.configService.configData.loadedComponents || null;
 

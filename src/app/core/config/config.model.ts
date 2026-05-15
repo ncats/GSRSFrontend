@@ -38,8 +38,11 @@ export interface Config {
     advancedSearchFacetDisplay?: boolean;
     facetDisplay?: Array<any>;
     relationshipsVisualizationUri?: string;
+    isPfdaVersion?: boolean;
     customToolbarComponent?: string;
+    ssg4mExportSvg?: boolean;
     disableSessionRefresh?: boolean;
+    sessionRefreshOnActiveUserOnly?: boolean;
     sessionExpirationWarning?: SessionExpirationWarning;
     disableReferenceDocumentUpload?: boolean;
     externalSiteWarning?: ExternalSiteWarning;
@@ -211,4 +214,3 @@ export interface DownloadAsPDF {
 export interface roleSortConfig {
   [key: string]: number;
 }
-

@@ -14,7 +14,14 @@ export class SubstanceDetailsBaseTableDisplay
   public results: Array<any> = [];
   exportUrl: string;
 
-  @Input() bdnum: string;
+  @Input()
+  private _bdnum: string;
+  public get bdnum(): string {
+    return this._bdnum;
+  }
+  public set bdnum(value: string) {
+    this._bdnum = value;
+  }
 
   constructor(
     public gaService: GoogleAnalyticsService,
