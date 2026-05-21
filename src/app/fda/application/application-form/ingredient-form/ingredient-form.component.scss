@@ -258,10 +258,11 @@ legend.border {
 }
 
 ::ng-deep
+  .related-substance
   .related-substance-border
   .search-form-field
   .mat-mdc-form-field-infix {
-  padding-top: 24px;
+  padding-top: 24px !important;
   padding-bottom: 8px;
 }
 
