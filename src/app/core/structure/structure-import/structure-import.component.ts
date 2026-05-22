@@ -37,7 +37,7 @@ export class StructureImportComponent implements OnInit {
           this.dialogRef.close(response);
         } else {
           this.messageClass = 'error';
-          this.message = 'You need to enter a valid molfile or smiles';
+          this.message = 'Please enter a valid v2000 molfile or smiles';
           this.gaService.sendException('wrong structure data imported');
         }
 
