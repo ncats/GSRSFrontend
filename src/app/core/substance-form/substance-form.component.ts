@@ -29,7 +29,7 @@ import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-di
 import * as _ from 'lodash';
 import {Title} from '@angular/platform-browser';
 import {AuthService} from '@gsrs-core/auth';
-import {take, map} from 'rxjs/operators';
+import {take, map, filter} from 'rxjs/operators';
 import {MatExpansionPanel} from '@angular/material/expansion';
 import {SubmitSuccessDialogComponent} from './submit-success-dialog/submit-success-dialog.component';
 import {
@@ -457,7 +457,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       });
     });
     this.subscriptions.push(definitionSubscription);
-    this.authService.getAuth().pipe(take(1)).subscribe(auth => {
+    this.authService.getAuth().pipe(filter(auth => auth != null), take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
