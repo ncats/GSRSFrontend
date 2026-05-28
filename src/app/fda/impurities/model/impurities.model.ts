@@ -85,6 +85,7 @@ export interface ImpuritiesTesting {
   impuritiesElutionSolventList?: Array<ImpuritiesElutionSolvent>;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
+  impuritiesAnalysisList?: ImpuritiesAnalysis
 }
 
 export interface ImpuritiesElutionSolvent {
@@ -179,7 +180,25 @@ export interface ImpuritiesUnspecified {
   identityCriteriaList?: Array<IdentityCriteria>;
 }
 
-export interface ImpuritiesResidualSolventsTest {    //new 3.1
+export interface ImpuritiesAnalysis {
+  id?: number;
+  samples?: string;
+  description?: string;
+  resultFormula?: string;
+  resultRU?: string;
+  resultRS?: string;
+  resultCS?: string;
+  resultCU?: string;
+  resultP?: string;
+  resultF?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesResidualSolventsTest {
   id?: number;
   sourceType?: string;
   source?: string;
@@ -214,7 +233,7 @@ export interface ImpuritiesResidualSolvents {
   internalVersion?: number;
 }
 
-export interface ImpuritiesInorganicTest {    //new 3.1
+export interface ImpuritiesInorganicTest {
   id?: number;
   sourceType?: string;
   source?: string;
