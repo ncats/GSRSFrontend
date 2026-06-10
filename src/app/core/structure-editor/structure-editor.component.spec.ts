@@ -1,3 +1,5 @@
+import { resolveStructureEditorPreference } from './structure-editor.component';
+
 /*import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditorImplementation } from './structure-editor-implementation.model';
 import { StructureEditorComponent } from './structure-editor.component';
@@ -7,6 +9,19 @@ import { environment } from '../../environments/environment';
 import { JSDraw, JSDrawOptions } from 'jsdraw-wrapper';*/
 
 describe('StructureEditorComponent', () => {
+  it('restores JSDraw when it was the last enabled editor used', () => {
+    expect(resolveStructureEditorPreference('jsdraw', 'ketcher', true, true)).toBe('jsdraw');
+  });
+
+  it('restores Ketcher when it was the last enabled editor used', () => {
+    expect(resolveStructureEditorPreference('ketcher', 'jsdraw', true, true)).toBe('ketcher');
+  });
+
+  it('does not restore a disabled editor', () => {
+    expect(resolveStructureEditorPreference('jsdraw', 'jsdraw', false, true)).toBe('ketcher');
+    expect(resolveStructureEditorPreference('ketcher', 'ketcher', true, false)).toBe('jsdraw');
+  });
+
 /*  let component: StructureEditorComponent;
   let fixture: ComponentFixture<StructureEditorComponent>;
 
