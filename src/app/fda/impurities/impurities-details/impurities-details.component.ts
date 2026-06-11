@@ -1,24 +1,31 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SafeUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
-import { MatTableDataSource } from '@angular/material/table';
+import * as _ from 'lodash';
+
+/* GSRS Core */
 import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { UtilsService } from '../../../core/utils/utils.service';
 import { LoadingService } from '@gsrs-core/loading';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
 import { MainNotificationService } from '@gsrs-core/main-notification';
-import { ImpuritiesService } from '../service/impurities.service';
+
+/* GSRS Impurities */
 import { GeneralService } from '../../service/general.service';
+import { ImpuritiesService } from '../service/impurities.service';
 import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
 
+import * as moment from 'moment';
+
 @Component({
-    selector: 'app-impurities-details',
-    templateUrl: './impurities-details.component.html',
-    styleUrls: ['./impurities-details.component.scss'],
-    standalone: false
+  selector: 'app-impurities-details',
+  templateUrl: './impurities-details.component.html',
+  styleUrls: ['./impurities-details.component.scss'],
+  standalone: false
 })
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
@@ -35,10 +42,13 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   updateApplicationUrl: string;
   message = '';
   subRelationship: any;
+  downloadJsonHref: any;
+  jsonFileName: string;
   private subscriptions: Array<Subscription> = [];
   displayedColumnsRow: string[][] = [];
 
   constructor(
+    private sanitizer: DomSanitizer,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
@@ -214,6 +224,25 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
   getSafeStructureImgUrl(structureId: string, size: number = 150): SafeUrl {
     return this.utilsService.getSafeStructureImgUrl(structureId, size, true);
+  }
+
+  saveJSON(): void {
+    // apply the same cleaning to remove deleted objects and return what will be sent to the server on validation / submission
+    let json = this.cleanImpurities();
+
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(json)));
+    this.downloadJsonHref = uri;
+
+    const date = new Date();
+    this.jsonFileName = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+  }
+
+  cleanImpurities(): any {
+    const copiedImpurities = _.cloneDeep(this.impurities);
+
+   // delete copiedImpurities._dateTypeDate;
+
+    return copiedImpurities;
   }
 
 }

@@ -6,19 +6,35 @@
       <mat-card class="bordergray">
         <mat-card-title>
           <div class="divflex">
-            <div class="width300px">
+
+            <div class="width350px">
               Impurities Details&nbsp;&nbsp;&nbsp;&nbsp;
+
               <!-- Edit GSRS record button -->
               <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank" *ngIf="canEdit"
                 matTooltip='Edit GSRS Impurities Record'>
                 <mat-icon svgIcon="edit"></mat-icon>
               </a>
+
               <!-- Copy Impurities -->
               <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copy:impurities.id}"
                 matTooltip='copy Impurities to new registration form' *ngIf="canEdit">
                 <mat-icon svgIcon="file_copy"></mat-icon>
               </a>
+
+              <!--
+              <div class="margintopneg10px">
+                <!- - Download Json - ->
+                <span *ngIf="impurities && impurities.id">
+                  <a button mat-icon-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
+                    download="{{jsonFilename}}.json" matTooltip='Download JSON'>
+                    <mat-icon svgIcon="get_app"></mat-icon>
+                  </a>&nbsp;
+                </span>
+              </div>
+              -->
             </div>
+
             <div class="width60percent margintop10px font11px">
               <span class="colorgray">Created By:</span> {{impurities.createdBy}}&nbsp;&nbsp;&nbsp;
               <span class="colorgray">Create
@@ -235,7 +251,7 @@
                             Test:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.test}}
+                            <div class="font15px colororange"><b>{{impTest.test}}</b></div>
                           </div>
                         </div>
                         <div class="row-property">
@@ -249,14 +265,15 @@
                       </div>
 
                       <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            System:
+                        <div class="row-property-3">
+                          <div class="row-property-key-3">
+                            Buffer:
                           </div>
-                          <div class="row-property-value">
-                            {{impTest.system}}
+                          <div class="row-property-value-3">
+                            {{impTest.buffer}}
                           </div>
                         </div>
+                        <!--
                         <div class="row-property">
                           <div class="row-property-key">
                             Mode:
@@ -265,120 +282,7 @@
                             {{impTest.mode}}
                           </div>
                         </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Column Packing Type:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.columnPackingType}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Column Packing Size:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.columnPackingSize}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Column Size:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.columnSize}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Column Temperature:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.columnTemperature}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Detection Type:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.detectionType}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Detection Details:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.detectionDetails}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Injection Volume Amount:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.injectionVolumeAmount}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Flow Rate:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.flowRate}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Diluent:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.diluent}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Comments:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.comments}}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Suitability Requirements Resolution:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.suitabilityReqResolution}}
-                          </div>
-                        </div>
-                        <div class="row-property">
-                          <div class="row-property-key">
-                            Suitability Requirements Relative Standard Deviation:
-                          </div>
-                          <div class="row-property-value">
-                            {{impTest.suitabilityReqRelStandardDeviation}}
-                          </div>
-                        </div>
+                        -->
                       </div>
 
                       <div class="row">
@@ -489,6 +393,24 @@
                       </div> <!-- if impuritiesSolutionTableList-->
                       <!-- Mobile Phase END -->
 
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Diluent:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.diluent}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Standard Solution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.standardSolution}}
+                          </div>
+                        </div>
+                      </div>
 
                       <div class="row">
                         <div class="row-property">
@@ -512,12 +434,13 @@
                       <div class="row">
                         <div class="row-property">
                           <div class="row-property-key">
-                            Standard Solution:
+                            Sensitivity Solution:
                           </div>
                           <div class="row-property-value">
-                            {{impTest.standardSolution}}
+                            {{impTest.sensitivitySolution}}
                           </div>
                         </div>
+
                         <div class="row-property">
                           <div class="row-property-key">
                             Other Solution:
@@ -527,6 +450,282 @@
                           </div>
                         </div>
                       </div>
+
+                      <div class="margintop20px"><b>System</b></div>
+                      <br>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            System:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.system}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Mode:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.mode}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Detection Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.detectionType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Detection Details:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.detectionDetails}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Detector Wavelength:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.detectorWavelength}}
+                          </div>
+                        </div>
+
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Autosampler Temperature:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.autosamplerTemperature}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Size:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnSize}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Packing Size:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnPackingSize}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Temperature:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnTemperature}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Column Packing Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.columnPackingType}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Flow Rate:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.flowRate}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Injection Volume Amount:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.injectionVolumeAmount}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Comments:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.comments}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="margintop20px"><b>System Suitability</b>
+                        <br><br>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            System Suitability Sample:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.systemSuitabilitySample}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="margintop20px"><b>System Suitability Requirements</b>
+                        <br><br>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Resolution:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.suitabilityReqResolution}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Relative Standard Deviation:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.suitabilityReqRelStandardDeviation}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Trailing Factor:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.systemSuitabilityReqTailingFactor}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Signal To Noise Ratio:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.systemSuitabilitySignalToNoiseRatio}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Impurities Analysis List Begin -->
+                      <div class="details-container margintop30px">
+                        <mat-card class="bordergray">
+                          <mat-card-title class="title2">
+                            Analysis ({{impTest.impuritiesAnalysisList.length}})
+                          </mat-card-title>
+                          <mat-card-content>
+
+                            <div *ngFor="let x of impTest.impuritiesAnalysisList; let i = index">
+                              <table>
+                                <tr>
+                                  <td><b>Samples:</b> {{x.samples}}</td>
+                                </tr>
+
+                                <tr>
+                                  <td class="marginright10px"><b>Description:</b>
+                                    {{x.description}}
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td>
+                                    <div class="margintop10px marginleft90px">Result
+                                      = {{x.resultFormula}}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td>
+                                    <div class="margintop10px">R<sub>u</sub>
+                                      &nbsp;&nbsp;&nbsp;
+                                      = {{x.formulaRU}}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td>
+                                    <div class="margintop10px">R<sub>s</sub>
+                                      &nbsp;&nbsp;&nbsp;
+                                      = {{x.formulaRS}}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td>
+                                    <div class="margintop10px">C<sub>s</sub>
+                                      &nbsp;&nbsp;&nbsp;
+                                      = {{x.formulaCS}}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr>
+                                  <td>
+                                    <div class="margintop10px">C<sub>u</sub>
+                                      &nbsp;&nbsp;&nbsp;
+                                      = {{x.formulaCU}}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr *ngIf="x.formulaP">
+                                  <td>
+                                    <div class="margintop10px">P
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                      = {{x.formulaP}}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                                <tr *ngIf="x.formulaF">
+                                  <td>
+                                    <div class="margintop10px">F
+                                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                      = {{x.formulaF}}
+                                    </div>
+                                  </td>
+                                </tr>
+
+                              </table>
+                            </div>
+
+                          </mat-card-content>
+                        </mat-card>
+                      </div>
+                      <!-- Impurities Analysis List End -->
 
 
                       <!-- Impurities Details List Begin -->

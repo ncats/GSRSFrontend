@@ -39,9 +39,9 @@ export interface ImpuritiesSubstance {
   _parentSubstanceUuid?: string;
   impuritiesTestList?: Array<ImpuritiesTesting>;
   impuritiesResidualSolventsTestList?: Array<ImpuritiesResidualSolventsTest>;  //new 3.1
- // impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>; //new 3.1, need to remove this for 3.1
+  // impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>; //new 3.1, need to remove this for 3.1
   impuritiesInorganicTestList?: Array<ImpuritiesInorganicTest>;  //new 3.1
- // impuritiesInorganicList?: Array<ImpuritiesInorganic>;  //new 3.1, need to remove this for 3.1
+  // impuritiesInorganicList?: Array<ImpuritiesInorganic>;  //new 3.1, need to remove this for 3.1
 }
 
 export interface ImpuritiesTesting {
@@ -49,25 +49,32 @@ export interface ImpuritiesTesting {
   sourceType?: string;
   source?: string;
   sourceId?: string;
+  buffer?: string;
+  solutionADescription?: string;
+  solutionBDescription?: string;
   system?: string;
   mode?: string;
   detectionType?: string;
+  detectorWavelength?: string;
   detectionDetails?: string;
   columnPackingType?: string;
   columnPackingSize?: string;
   columnSize?: string;
   columnTemperature?: string;
+  autosamplerTemperature?: string;
   flowRate?: string;
   injectionVolumeAmount?: string;
   diluent?: string;
+  systemSuitabilitySolution?: string;
   standardSolution?: string;
   sampleSolution?: string;
-  systemSuitabilitySolution?: string;
+  sensitivitySolution?: string;
   otherSolution?: string;
-  solutionADescription?: string;
-  solutionBDescription?: string;
-  suitabilityReqResolution?: string;
-  suitabilityReqRelStandardDeviation?: string;
+  systemSuitabilitySample?: string;
+  systemSuitabilityReqResolution?: string;
+  systemSuitabilityReqRelStandardDeviation?: string;
+  systemSuitabilityReqTailingFactor?: string;
+  systemSuitabilitySignalToNoiseRatio?: string;
   elutionType?: string;
   elutionSolvent?: string;
   elutionSolventId?: string;
@@ -85,7 +92,7 @@ export interface ImpuritiesTesting {
   impuritiesElutionSolventList?: Array<ImpuritiesElutionSolvent>;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
-  impuritiesAnalysisList?: ImpuritiesAnalysis
+  impuritiesAnalysisList?: Array<ImpuritiesAnalysis>;
 }
 
 export interface ImpuritiesElutionSolvent {
@@ -185,12 +192,12 @@ export interface ImpuritiesAnalysis {
   samples?: string;
   description?: string;
   resultFormula?: string;
-  resultRU?: string;
-  resultRS?: string;
-  resultCS?: string;
-  resultCU?: string;
-  resultP?: string;
-  resultF?: string;
+  formulaRU?: string;
+  formulaRS?: string;
+  formulaCS?: string;
+  formulaCU?: string;
+  formulaP?: string;
+  formulaF?: string;
   createdBy?: string;
   createDate?: number;
   modifiedBy?: string;

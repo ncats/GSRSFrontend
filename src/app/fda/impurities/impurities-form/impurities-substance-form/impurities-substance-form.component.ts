@@ -177,23 +177,6 @@ export class ImpuritiesSubstanceFormComponent implements OnInit {
     this.impuritiesService.addNewInorganicTest(this.impuritiesSubstanceIndex);
   }
 
-
-  /* remove in 3.1
-  addNewImpuritiesResidualSolvents(event: Event) {
-    event.stopPropagation();
-
-    this.impuritiesService.addNewImpuritiesResidualSolvents(this.impuritiesSubstanceIndex);
-  }
-  */
-
-  /*  remove in 3.1
-  addNewImpuritiesInorganic(event: Event) {
-    event.stopPropagation();
-
-    this.impuritiesService.addNewImpuritiesInorganic(this.impuritiesSubstanceIndex);
-  }
-  */
-
   confirmDeleteImpuritiesSubstance() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: { message: 'Are you sure you want to delele Substance ' + (this.impuritiesSubstanceIndex + 1) + '?' }

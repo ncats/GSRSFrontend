@@ -118,16 +118,16 @@
 }
 
 .row-property-key-3 {
-  min-width: 40%;
-  max-width: 40%;
+  min-width: 20%;
+  max-width: 20%;
   padding: 6px;
   font-size: 12px;
   font-weight: 600;
 }
 
 .row-property-value-3 {
-  min-width: 60%;
-  max-width: 60%;
+  min-width: 80%;
+  max-width: 80%;
   padding: 6px;
   font-size: 12px;
   word-wrap: break-word;
@@ -164,6 +164,18 @@
   border-bottom: none;
   height: 35px;
   background-color: var(--light-yellow-color);
+}
+
+.marginleft5px {
+  margin-left: 5px;
+}
+
+.marginleft90px {
+  margin-left: 90px;
+}
+
+.marginright10px {
+  margin-right: 10px;
 }
 
 .margintopneg10px {
@@ -242,6 +254,10 @@
   font-size: 14px;
 }
 
+.font15px {
+  font-size: 15px;
+}
+
 .font16px {
   font-size: 16px;
 }
@@ -310,9 +326,9 @@
   max-width: 300px;
 }
 
-.width300px {
-  width: 300px;
-  max-width: 300px;
+.width350px {
+  width: 350px;
+  max-width: 350px;
 }
 
 .width45percent {
