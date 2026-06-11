@@ -403,21 +403,27 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     return skt;
   }
 
+  private afterEditorIsVisible(callback: () => void): void {
+    window.requestAnimationFrame(callback);
+  }
+
   toggleEditor() {
     if (this.structureEditor === 'ketcher') {
-      this.getSketcher().activated = true;
       this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
         this.structureEditor = 'jsdraw';
         this.editor = new EditorImplementation(null, this.jsdraw);
 
         // Use the normalized molfile for JSDraw display.
         this.structureService.interpretStructure(Response).subscribe(resp => {
-          this.editorOnLoad.emit(this.editor);
           this.editorSwitched.emit(this.structureEditor);
-          this.jsdraw.setMolfile(resp.structure.molfile);
-
           sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
           document.getElementById("root").style.display = "none";
+
+          this.afterEditorIsVisible(() => {
+            this.editor.setMolecule(resp.structure.molfile);
+            this.getSketcher().activated = true;
+            this.editorOnLoad.emit(this.editor);
+          });
         });
       });
     } else {
@@ -429,19 +435,19 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         this.ketcherLoaded = true;
       }
 
-      this.editor.getMolfile().pipe(take(1)).subscribe(_Response => {
+      this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
         this.structureEditor = 'ketcher';
         this.editor = new EditorImplementation(this.ketcher);
 
-        // editorOnLoad reloads Ketcher from the saved editor molfile.
-        this.editorOnLoad.emit(this.editor);
         this.editorSwitched.emit(this.structureEditor);
-
         sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
-      });
+        document.getElementById("root").style.display = "";
 
-      this.structureEditor = 'ketcher';
-      document.getElementById("root").style.display = "";
+        this.afterEditorIsVisible(() => {
+          this.editor.setMolecule(Response);
+          this.editorOnLoad.emit(this.editor);
+        });
+      });
     }
   }
 

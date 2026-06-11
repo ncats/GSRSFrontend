@@ -1,4 +1,9 @@
-import { resolveStructureEditorPreference } from './structure-editor.component';
+import { of } from 'rxjs';
+import { EditorImplementation } from './structure-editor-implementation.model';
+import {
+  resolveStructureEditorPreference,
+  StructureEditorComponent,
+} from './structure-editor.component';
 
 /*import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditorImplementation } from './structure-editor-implementation.model';
@@ -20,6 +25,79 @@ describe('StructureEditorComponent', () => {
   it('does not restore a disabled editor', () => {
     expect(resolveStructureEditorPreference('jsdraw', 'jsdraw', false, true)).toBe('ketcher');
     expect(resolveStructureEditorPreference('ketcher', 'ketcher', true, false)).toBe('jsdraw');
+  });
+
+  it('loads the current JSDraw molfile after Ketcher is visible', () => {
+    const component = Object.create(StructureEditorComponent.prototype) as StructureEditorComponent;
+    const currentMolfile = 'blank JSDraw molfile';
+    const destinationEditor = {
+      setMolecule: jasmine.createSpy('setMolecule'),
+    };
+    const sourceEditor = {
+      getMolfile: () => of(currentMolfile),
+    };
+
+    component.structureEditor = 'jsdraw';
+    component.editor = sourceEditor as any;
+    component.ketcherLoaded = true;
+    (component as any).ketcher = {};
+    (component as any).jsdraw = { activated: true };
+    component.editorOnLoad = { emit: jasmine.createSpy('editorOnLoad') } as any;
+    component.editorSwitched = { emit: jasmine.createSpy('editorSwitched') } as any;
+    spyOn(component, 'getSketcher').and.returnValue((component as any).jsdraw);
+    spyOn(EditorImplementation.prototype, 'setMolecule').and.callFake(
+      destinationEditor.setMolecule,
+    );
+    spyOn(document, 'getElementById').and.returnValue({ style: {} } as HTMLElement);
+    const animationFrame = spyOn(window, 'requestAnimationFrame').and.callFake(() => 1);
+
+    component.toggleEditor();
+
+    expect(component.structureEditor).toBe('ketcher');
+    expect(destinationEditor.setMolecule).not.toHaveBeenCalled();
+
+    animationFrame.calls.mostRecent().args[0](0);
+
+    expect(destinationEditor.setMolecule).toHaveBeenCalledWith(currentMolfile);
+    expect(component.editorOnLoad.emit).toHaveBeenCalled();
+  });
+
+  it('loads and activates JSDraw after it is visible', () => {
+    const component = Object.create(StructureEditorComponent.prototype) as StructureEditorComponent;
+    const currentMolfile = 'Ketcher molfile';
+    const normalizedMolfile = 'normalized JSDraw molfile';
+    const destinationEditor = {
+      setMolecule: jasmine.createSpy('setMolecule'),
+    };
+
+    component.structureEditor = 'ketcher';
+    component.editor = { getMolfile: () => of(currentMolfile) } as any;
+    (component as any).jsdraw = { activated: false };
+    (component as any).structureService = {
+      interpretStructure: jasmine.createSpy('interpretStructure').and.returnValue(of({
+        structure: { molfile: normalizedMolfile },
+      })),
+    };
+    component.editorOnLoad = { emit: jasmine.createSpy('editorOnLoad') } as any;
+    component.editorSwitched = { emit: jasmine.createSpy('editorSwitched') } as any;
+    spyOn(component, 'getSketcher').and.returnValue((component as any).jsdraw);
+    spyOn(EditorImplementation.prototype, 'setMolecule').and.callFake(
+      destinationEditor.setMolecule,
+    );
+    spyOn(document, 'getElementById').and.returnValue({ style: {} } as HTMLElement);
+    const animationFrame = spyOn(window, 'requestAnimationFrame').and.callFake(() => 1);
+
+    component.toggleEditor();
+
+    expect(component.structureEditor).toBe('jsdraw');
+    expect((component as any).jsdraw.activated).toBe(false);
+    expect(destinationEditor.setMolecule).not.toHaveBeenCalled();
+
+    animationFrame.calls.mostRecent().args[0](0);
+
+    expect(destinationEditor.setMolecule).toHaveBeenCalledWith(normalizedMolfile);
+    expect((component as any).jsdraw.activated).toBe(true);
+    expect(component.editorOnLoad.emit).toHaveBeenCalled();
   });
 
 /*  let component: StructureEditorComponent;
