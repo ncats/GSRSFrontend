@@ -7,7 +7,7 @@
 <div class="flex-row center-content" *ngIf="structure">
   
   <div class="structure-image-container">
-    <img class="structure-img" appSubstanceImage [entityId]="structure.id" size="400">
+    <img class="structure-img" appSubstanceImage [entityId]="substance.uuid" size="400" [version]="substance.version">
   </div>
   
 </div>
