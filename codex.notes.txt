@@ -1,0 +1,30 @@
+• Fixed the remaining hang.
+
+  There were two separate issues:
+
+  1. Angular needed to serve under /ginas/app/ui/
+      - angular.json:214: added baseHref
+      - package.json:23: added --serve-path=/ginas/app/ui/
+
+  2. Spring Cloud Gateway MVC was hanging while proxying to Angular’s dev server through Java HttpClient
+      - /Users/welscha2/Documents/d/fda/gsrs3/ci/gsrs-ci/gateway/src/main/resources/gateway-env.conf:39: changed frontend URI to http://127.0.0.1:4200
+      - /Users/welscha2/Documents/d/fda/gsrs3/ci/gsrs-ci/gateway/src/main/java/gsrs/ncats/gateway/GatewayRestClientConfiguration.java:14: forces
+        SimpleClientHttpRequestFactory
+
+      - /Users/welscha2/Documents/d/fda/gsrs3/ci/gsrs-ci/gateway/src/main/java/gsrs/ncats/gateway/BodylessGatewayRequestFilter.java:22: prevents
+        bodyless GET/HEAD-style requests from being treated as streaming bodies
+
+  Verification now passes through the gateway:
+
+  http://localhost:8081/ginas/app/ui/                  200
+  http://localhost:8081/ginas/app/ui/runtime.js        200
+  http://localhost:8081/ginas/app/ui/main.js           200
+  http://localhost:8081/ginas/app/ui/assets/data/config.json  200
+
+  The proxied index also contains:
+
+  <base href="/ginas/app/ui/">
+
+  The gateway is currently running on port 8081 from the Maven session I restarted. Existing unrelated dirty files were left alone, including package-
+  lock.json, src/index.html, and ../substances/roles_config.json.
+
