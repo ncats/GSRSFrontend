@@ -385,6 +385,8 @@ export interface SubstanceStructure extends SubstanceBase {
   properties?: any;
   links?: any;
   _formulaHTML?: string;
+  _inchi?: string;
+  _inchiKey?: string;
 }
 
 export interface SubstanceMoiety extends SubstanceStructure {

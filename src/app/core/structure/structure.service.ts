@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ConfigService } from '../config/config.service';
-import { Observable, timeout, BehaviorSubject, Subject, tap} from 'rxjs';
+import { Observable, timeout, BehaviorSubject, Subject, map} from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubstanceDetail, SubstanceStructure, SubstanceMoiety } from '../substance/substance.model';
 import { ResolverResponse } from './structure-post-response.model';
-import { InterpretStructureResponse } from './structure-post-response.model';
+import { InterpretStructureResponse, StructureIdentifiers } from './structure-post-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -113,6 +113,15 @@ export class StructureService {
   interpretStructure(mol: string, mode?: string, standardize?: string ): Observable<InterpretStructureResponse> {
     const url = `${this.configService.configData.apiBaseUrl}api/v1/substances/interpretStructure?mode=${mode ? mode:''}&standardize=${(standardize ? standardize:'')}&appendNNOFeatures=true`;
     return this.http.post<InterpretStructureResponse>(url, mol);
+  }
+
+  getIdentifiersFromStructure(mol: string): Observable<StructureIdentifiers> {
+    return this.interpretStructure(mol).pipe(
+      map(response => ({
+        inchi: response.structure._inchi || '',
+        inchiKey: response.structure._inchiKey || ''
+      }))
+    );
   }
 
   molvec(file: any): Observable<any> {

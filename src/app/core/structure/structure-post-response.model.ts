@@ -11,6 +11,11 @@ export interface InterpretStructureResponse {
     featureList?: any;
 }
 
+export interface StructureIdentifiers {
+  inchi: string;
+  inchiKey: string;
+}
+
 export interface ResolverResponse {
   source: string;
   results: SubstanceStructure;

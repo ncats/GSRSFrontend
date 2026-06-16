@@ -59,18 +59,7 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
           this.structure.id = this.substance.uuid;
         }
         if (this.structure.smiles) {
-          this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.inchiKey = inchi.replace(/\"/g, '');
-          });
-          const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.inchi = inchi.replace(/\"/g, '');
-            if(this.inchi.indexOf('|') > -1){
-              this.inchi = this.inchi.replace(/\|/g, "<br style = 'height:5px;'/>");
-              this.inchiNote = true;
-            } else {
-              this.inchiNote = false;
-            }
-          });
+          this.loadInchi(this.structure.molfile);
         }
         this.structure.formula = this.structureService.formatFormula(this.structure);
 
@@ -119,21 +108,8 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     if ( !this.structure || this.structure.id !== this.substance.structure.id ||
       this.structure.molfile !== this.substance.structure.molfile) {
         this.getSysNames();
-        if (this.structure.smiles) {
-          const inchiSub = this.structureService.getInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.inchiKey = inchi.replace(/\"/g, '');
-          });
-          const otherInchiSub = this.structureService.getOtherInchi(this.substance.uuid).pipe(take(1)).subscribe(inchi => {
-            this.inchi = inchi.replace(/\"/g, '');
-            this.inchi = "asdlkfjsoidfjeiungedddddughsdkjfjnsdklfjnnsdlkfbsdkjf|shdkfjhb ssdfiuhdu jfsd;; sdhkjfshadflhadf| sdjkfhasdofhauisdhfoashudf";
-
-            if(this.inchi.indexOf('|') > -1){
-              this.inchi = this.inchi.replace(/\|/g, "<br style = 'height:5px;'/>");
-              this.inchiNote = true;
-            } else {
-              this.inchiNote = false;
-            }
-          });
+        if (this.substance.structure.smiles) {
+          this.loadInchi(this.substance.structure.molfile);
         }
         this.structure = this.substance.structure;
     const theJSON = this.structure.molfile;
@@ -142,6 +118,26 @@ export class StructureDetailsComponent extends SubstanceCardBase implements OnIn
     }
 
   });
+  }
+
+  private loadInchi(molfile: string): void {
+    if (!molfile) {
+      this.inchi = '';
+      this.inchiKey = '';
+      this.inchiNote = false;
+      return;
+    }
+
+    this.structureService.getIdentifiersFromStructure(molfile).pipe(take(1)).subscribe(identifiers => {
+      this.inchiKey = identifiers.inchiKey;
+      this.inchi = identifiers.inchi;
+      if (this.inchi.indexOf('|') > -1) {
+        this.inchi = this.inchi.replace(/\|/g, "<br style = 'height:5px;'/>");
+        this.inchiNote = true;
+      } else {
+        this.inchiNote = false;
+      }
+    });
   }
 
   toggleReferences() {
