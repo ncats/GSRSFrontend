@@ -237,11 +237,13 @@
       </app-substance-adverseeventcvm>
     </mat-tab>
 
+    <!--
     <mat-tab label="Impurities Specs ({{impuritiesCount}})" *ngIf="loadedComponents && loadedComponents.impurities">
       <app-substance-impurities [substanceUuid]="substance.uuid" (countImpuritiesOut)="getImpuritiesCount($event)"
         [substanceName]="substanceName">
       </app-substance-impurities>
     </mat-tab>
+    -->
 
     <mat-tab label="SSG4 Manufacturing ({{ssg4mCount}})" *ngIf="loadedComponents && loadedComponents.ssg4m">
       <app-substance-ssg4m [substanceUuid]="substance.uuid" (countSsg4mOut)="getSsg4mCount($event)"

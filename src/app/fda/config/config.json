@@ -208,7 +208,7 @@
     },
     {
       "card": "fda-substance-product",
-      "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In Vitro Pharmacology",
+      "title": "Products, Applications, Clinical Trials, Adverse Events, SSG4 Manufacturing, In Vitro Pharmacology",
       "filters": [
         {}
       ]
@@ -712,6 +712,10 @@
           "propertyToCheck": "Restore Previous Versions"
         }
       ]
+    },
+    {
+      "card": "substance-impurities",
+      "title": "Impurities Specifications"
     }
   ],
   "facets": {

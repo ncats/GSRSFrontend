@@ -448,5 +448,11 @@ export const dynamicComponentManifests: LazyLoadedComponentManifest[] = [
         path: 'substance-form-ssg2-overview',
         loadChildren: () => import('./substance-ssg2/ssg2-overview-form/ssg2-overview-form.module')
             .then(m => m.Ssg2OverviewFormModule)
+    },
+    {
+        componentId: 'substance-impurities',
+        path: 'substance-impurities',
+        loadChildren: () => import('../fda/substance-details/substance-impurities/substance-impurities.module')
+            .then(m => m.SubstanceImpuritiesModule)
     }
 ];
