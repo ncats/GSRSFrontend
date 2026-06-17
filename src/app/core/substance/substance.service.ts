@@ -806,8 +806,26 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<Array<SubstanceEdit>>(url, { withCredentials: true });
   }
 
+  adjustBackendUrlWithRestPrefix(searchFragment: string, restPrefix: string, url: string) {
+    // Consider instead to decompose and recompose the url in case search
+    // terms appear in query params, etc.
+    // Consider making global function that can be used 
+    // in lots of places
+    if (!restPrefix) { return url; }
+    if (!searchFragment) { return url; }
+    const _restPrefix = restPrefix.trim();
+    const _searchFragment = searchFragment.trim();
+    if( _restPrefix.trim().length == 0) { return url}
+    if( _searchFragment.trim().length == 0) { return url}
+    if (url.indexOf(_restPrefix) > -1) { return  url; }
+    if (!(url.indexOf(_searchFragment) > -1)) { return  url; }
+    url = url.replace(_searchFragment, _restPrefix + _searchFragment);
+    return url;
+  }
+
   getSubstanceDetails(id: string, version?: string | number): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
+    const restApiPrefix = this.configService.configData.restApiPrefix || '';
     let params = new HttpParams();
     params = params.append('view', 'internal');
     const options = {
@@ -816,17 +834,16 @@ export class SubstanceService extends BaseHttpService {
     if (version !== undefined && version !== null) {
       const v = String(version);
       const editurl = `${this.apiBaseUrl}substances(${id})/@edits`;
-
       return this.http.get<any[]>(editurl, { withCredentials: true }).pipe(
         switchMap((response: any[]) => {
           const match = (response ?? []).find(resp => String(resp?.version) === v);
-
           if(!match?.oldValue) {
             return throwError(() => new Error(
               `No @edits entry found for version=${v} on substance(${id}).`
             ));
           }
-          return this.http.get<SubstanceDetail>(match.oldValue, options);
+          const _matchOldValue = this.adjustBackendUrlWithRestPrefix('/api/v1/', restApiPrefix, match.oldValue);
+          return this.http.get<SubstanceDetail>(_matchOldValue, options);
         }));
 
     } else {

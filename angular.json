@@ -212,7 +212,6 @@
               ]
             },
             "fda.local": {
-              "baseHref": "/ginas/app/ui/",
               "assets": [
                 {
                   "glob": "**/*",
