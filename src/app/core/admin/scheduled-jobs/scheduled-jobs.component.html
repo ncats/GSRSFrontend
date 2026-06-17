@@ -1,6 +1,7 @@
 <div *ngIf = "loading === false">
     <div>
         <mat-form-field>
+            <!-- example select box __GK__  -->
           <mat-label style="width: 100%;">Service</mat-label>
           <mat-select [(ngModel)]="currentService" (selectionChange)="onServiceSelectionChange($event)">
                 <mat-option *ngFor="let option of services" [value]="option">

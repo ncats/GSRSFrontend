@@ -68,10 +68,21 @@ export class AdminService extends BaseHttpService {
     return this.http.get< ScheduledJob >(job).pipe(retry(2), catchError(err => throwError(err)));
   }
 
+    public getEnvironmentHealth(serviceContext:string): Observable< any > {
+      //const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      let url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/health/info`;
+      url = url.replace('/api/v1/health/info', `/service/`+ serviceContext + `/api/v1/health/info`);
 
-    public getEnvironmentHealth(): Observable< any > {
-      const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
-      return this.http.get< any >(`${url}health/info`);
+      const result = this.http.get< any >(url, { observe: 'response' }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      return of(error);
+    }));
+  
+
+//http://localhost:8081/ginas/app/service/clinical-trials/api/v1/health/info
+
+     // const url = `${(this.configService.configData && this.configService.configData.apiBaseUrl) || '/' }api/v1/`;
+      return result;
 
     }
 
