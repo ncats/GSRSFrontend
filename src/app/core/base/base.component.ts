@@ -5,6 +5,7 @@ import {
   HostListener,
   OnDestroy,
 } from "@angular/core";
+import { BreakpointObserver } from "@angular/cdk/layout";
 import {
   Router,
   Event,
@@ -66,6 +67,7 @@ export class BaseComponent implements OnInit, OnDestroy {
   appId: string;
   clasicBaseHref: string;
   navItems: Array<NavItem>;
+  isPfdaVersion: boolean = false;
   customToolbarComponent: string = "";
   canRegister = false;
   registerNav: Array<NavItem>;
@@ -81,6 +83,8 @@ export class BaseComponent implements OnInit, OnDestroy {
   private wildCardText: string;
   private classicLinkQueryParams = {};
   showHeaderBar = "true";
+  showRegistrars = true;
+  showBrowseOther = true;
 
   constructor(
     private router: Router,
@@ -94,9 +98,10 @@ export class BaseComponent implements OnInit, OnDestroy {
     private substanceTextSearchService: SubstanceTextSearchService,
     private utilsService: UtilsService,
     private wildCardService: WildcardService,
+    private breakpointObserver: BreakpointObserver,
   ) {
-    this.customToolbarComponent =
-      this.configService.configData.customToolbarComponent;
+    this.isPfdaVersion = this.configService.configData.isPfdaVersion === true;
+    this.customToolbarComponent = this.configService.configData.customToolbarComponent;
     this.wildCardService.wildCardObservable.subscribe((data) => {
       this.wildCardText = data;
     });
@@ -111,8 +116,7 @@ export class BaseComponent implements OnInit, OnDestroy {
     let range: Range;
     let selectionStart: number;
     let selectionEnd: number;
-    const activeEl: HTMLInputElement =
-      document.activeElement as HTMLInputElement;
+    const activeEl: HTMLInputElement = document.activeElement as HTMLInputElement;
 
     if (activeEl != null) {
       const activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
@@ -143,10 +147,15 @@ export class BaseComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.showHeaderBar =
-      this.activatedRoute.snapshot.queryParams["header"] || "true";
-    this.loadedComponents =
-      this.configService.configData.loadedComponents || null;
+    const breakpointSub = this.breakpointObserver
+      .observe(['(min-width: 1611px)', '(min-width: 1501px)'])
+      .subscribe(result => {
+        this.showRegistrars = result.breakpoints['(min-width: 1611px)'];
+        this.showBrowseOther = result.breakpoints['(min-width: 1501px)'];
+      });
+    this.subscriptions.push(breakpointSub);
+    this.showHeaderBar = this.activatedRoute.snapshot.queryParams["header"] || "true";
+    this.loadedComponents = this.configService.configData.loadedComponents || null;
 
     this.classicLinkPath = this.configService.environment.clasicBaseHref;
     this.clasicBaseHref = this.configService.environment.clasicBaseHref;
@@ -207,36 +216,36 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.versionTooltipMessage += ` built on ${moment(new Date(buildInfo.buildTime)).utc().format("ddd MMM D YYYY HH:mm:ss z")}`;
       });
     let okToRegister: boolean = await this.authService.canEditData();
-    if (okToRegister) {
-      this.navItems.forEach((item) => {
-        if (item.display === "Register") {
-          this.registerNav = item.children;
-        }
-        if (item.display === "Search") {
-          this.searchNav = item.children;
-        }
-      });
-      if (this.loadedComponents) {
-        for (let i = this.navItems.length - 1; i >= 0; i--) {
-          if (this.navItems[i].children) {
-            for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
-              if (this.navItems[i].children[j].component) {
-                if (
-                  !this.loadedComponents[this.navItems[i].children[j].component]
-                ) {
-                  this.navItems[i].children.splice(j, 1);
-                }
+    
+    this.navItems.forEach((item) => {
+      if (item.display === "Register" && okToRegister) {
+        this.registerNav = item.children;
+      }
+      if (item.display === "Search") {
+        this.searchNav = item.children;
+      }
+    });
+    if (this.loadedComponents) {
+      for (let i = this.navItems.length - 1; i >= 0; i--) {
+        if (this.navItems[i].children) {
+          for (let j = this.navItems[i].children.length - 1; j >= 0; j--) {
+            if (this.navItems[i].children[j].component) {
+              if (
+                !this.loadedComponents[this.navItems[i].children[j].component]
+              ) {
+                this.navItems[i].children.splice(j, 1);
               }
             }
           }
-          if (this.navItems[i].component) {
-            if (!this.loadedComponents[this.navItems[i].component]) {
-              this.navItems.splice(i, 1);
-            }
+        }
+        if (this.navItems[i].component) {
+          if (!this.loadedComponents[this.navItems[i].component]) {
+            this.navItems.splice(i, 1);
           }
         }
       }
     }
+    
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
     let urlPath = this.router.routerState.snapshot.url.split("?")[0];

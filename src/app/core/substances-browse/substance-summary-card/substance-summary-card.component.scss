@@ -1,225 +1,262 @@
+@use "../../../../styles/variables" as *;
+
 .select-list {
   --floating-label-font-size: 16px;
 }
 
 // Angular Material 15 MDC card support
 .mat-mdc-card {
-    max-width: 1228px;
-    margin-bottom: 20px;
-    width: 100%;
-    box-sizing: border-box;
+  max-width: 1228px;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mat-card {
-    max-width: 1228px;
-    margin-bottom: 20px;
+  max-width: 1228px;
+  margin-bottom: 20px;
 }
 
-.mat-card, .mat-mdc-card, .controls-container {
-    width: 100%;
-    box-sizing: border-box;
+.mat-card,
+.mat-mdc-card,
+.controls-container {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .button-wrapper {
-    max-width: 170px;
+  max-width: 170px;
+
+  @media (max-width: $breakpoint-tablet) {
+    max-width: none;
+    display: flex;
+    flex-wrap: nowrap;
+    margin-bottom: 20px;
+  }
 }
 
 .summary-button {
-    --mdc-icon-button-state-layer-size: 36px;
-    width: 36px;
-    height: 36px;
+  --mdc-icon-button-state-layer-size: 36px;
+  width: 36px;
+  height: 36px;
 }
 
 .mat-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 .loading-label {
-    font-weight: bold;
-min-width: 100px;
+  font-weight: bold;
+  min-width: 100px;
 }
 
 .spinner {
-    height: 24px;
-    width: 24px;
-    margin-left: 10px;
+  height: 24px;
+  width: 24px;
+  margin-left: 10px;
   margin-right: 10px;
-    margin-top: -5px;
-margin-bottom: 5px;
+  margin-top: -5px;
+  margin-bottom: 5px;
 }
-
-
 
 .name-loading {
-    display: flex;
-    width: 300px;
+  display: flex;
+  width: 300px;
 }
 .show-more {
-    text-decoration: underline;
-    color: var(--link-primary-color);
-    cursor: pointer;
+  text-decoration: underline;
+  color: var(--link-primary-color);
+  cursor: pointer;
 }
 
 // Angular Material 15 MDC card title
 .mat-mdc-card-title {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    white-space: normal;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  white-space: normal;
 
-    .substance-name {
-        color: var(--link-primary-color);
-        padding-right: 10px;
-    }
+  .substance-name {
+    color: var(--link-primary-color);
+    padding-right: 10px;
+  }
 
-    .approval {
-        font-size: 16px;
-        color: var(--pink-span-color);
-    }
+  .approval {
+    font-size: 16px;
+    color: var(--pink-span-color);
+  }
 }
 
 .mat-card-title {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    white-space: nowrap;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .moreLink {
-    color: var(--link-primary-color);
-    font-weight: 600;
-    padding-left: 10px;
-    font-size: 15px;
+  color: var(--link-primary-color);
+  font-weight: 600;
+  padding-left: 10px;
+  font-size: 15px;
 }
 
 .mat-card-title {
-    white-space: normal;
+  white-space: normal;
 
-    .substance-name {
-        color: var(--link-primary-color);
-        padding-right: 10px;
-    }
+  .substance-name {
+    color: var(--link-primary-color);
+    padding-right: 10px;
+  }
 
-      .approval {
-        font-size: 16px;
-        color: var(--pink-span-color);
-      }
-
+  .approval {
+    font-size: 16px;
+    color: var(--pink-span-color);
+  }
 }
 
 .substance-content {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .tile .structure-container {
-    width:100%;
-    padding-right:0px;
+  width: 100%;
+  padding-right: 0px;
 }
 
 .structure-container {
-    padding-right: 10px;
+  padding-right: 10px;
 }
 
 // Angular Material 15 MDC card content
 .mat-mdc-card-content {
-    .mat-chip-list-container {
-        margin-left: -10px;
-        margin-bottom: 10px;
-    }
+  .mat-chip-list-container {
+    margin-left: -10px;
+    margin-bottom: 10px;
+  }
 }
 
 .mat-card-content {
-
-    .mat-chip-list-container {
-        margin-left: -10px;
-        margin-bottom: 10px;
-    }
+  .mat-chip-list-container {
+    margin-left: -10px;
+    margin-bottom: 10px;
+  }
 }
 
 .tile .image-thumbnail {
-    margin:auto;
-    margin-bottom:20px;
-    height:175px;
-    width:175px;
+  margin: auto;
+  margin-bottom: 20px;
+  height: 175px;
+  width: 175px;
 }
 
-.image-thumbnail{
-    height:150px;
-    width:150px;
+.image-thumbnail {
+  height: 150px;
+  width: 150px;
 }
 
-.zoom:hover{
-    cursor:zoom-in;
+.zoom:hover {
+  cursor: zoom-in;
 }
 
 .substance-data {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 
-    &:not(:last-child) {
-        margin-bottom: 15px;
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+
+  .label {
+    font-weight: bold;
+    min-width: 100px;
+  }
+}
+
+.icon-align {
+  margin-top: -10px;
+  vertical-align: bottom;
+}
+
+.ext-link {
+  color: var(--link-primary-color);
+  text-decoration-style: unset;
+}
+
+@media (max-width: $breakpoint-tablet) {
+  .mat-card-title,
+  .mat-mdc-card-title {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .substance-name {
+      margin-bottom: 10px;
     }
+  }
+
+  .substance-data {
+    flex-direction: column;
 
     .label {
-        font-weight: bold;
-        min-width: 100px;
-    }
-}
-
-.icon-align{
-    margin-top: -10px;
-    vertical-align: bottom;
-}
-
-.ext-link{
-    color: var(--link-primary-color);
-    text-decoration-style: unset;
-}
-
-@media(max-width: 700px) {
-    .mat-card-title,
-    .mat-mdc-card-title {
-        flex-direction: column;
-        align-items: flex-start;
-
-        .substance-name {
-            margin-bottom: 10px;
-        }
+      margin-bottom: 10px;
     }
 
+    .value,
+    .code-system {
+      padding-left: 20px;
+    }
+  }
+
+  .substance-info,
+  .right-aligned {
     .substance-data {
-        flex-direction: column;
+      flex-direction: row;
 
-        .label {
-            margin-bottom: 10px;
-        }
+      .label {
+        margin-bottom: 0;
+      }
 
-        .value, .code-system {
-            padding-left: 20px;
-        }
+      .value {
+        padding-left: 8px;
+      }
     }
+  }
 }
 
 .lock-icon {
-    color: var(--lock-icon-color);
+  color: var(--lock-icon-color);
 }
 
-@media(max-width: 600px) {
+@media (max-width: $breakpoint-mobile) {
+  .substance-content {
+    flex-direction: column;
 
-    .substance-content {
-        flex-direction: column;
-
-        .image-thumbnail {
-            margin: 0 auto;
-        }
+    .image-thumbnail {
+      margin: 0 auto;
     }
+  }
+
+  .substance-info {
+    text-align: left;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .right-aligned {
+    text-align: left;
+    margin-left: 0;
+  }
+
+  .inxight-container {
+    text-align: left;
+  }
 }
 
 .definition {
@@ -228,7 +265,7 @@ margin-bottom: 5px;
 
 .similarity {
   padding-left: 10px;
-  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   color: var(--pink-span-color);
 }
 
@@ -237,25 +274,25 @@ margin-bottom: 5px;
 }
 
 .inxight-container {
-    text-align: right;
-    padding-bottom: 15px;
+  text-align: right;
+  padding-bottom: 15px;
 }
 
 .small-icon {
-    height:20px;
-    width: 20px;
-    padding-bottom: 5px;
-    vertical-align: middle;
+  height: 20px;
+  width: 20px;
+  padding-bottom: 5px;
+  vertical-align: middle;
 }
 
 .match-context {
-    display: block;
-    font-size: small;
-    color: var(--regular-green-color);
-    margin-top: 8px;
-    margin-bottom: 8px;
+  display: block;
+  font-size: small;
+  color: var(--regular-green-color);
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 ::ng-deep .mat-mdc-form-field-infix {
-    padding-bottom: 0;
+  padding-bottom: 0;
 }

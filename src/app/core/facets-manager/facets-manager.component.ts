@@ -297,7 +297,8 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
         this.facetsAuthSubscription.unsubscribe();
         this.facetsAuthSubscription = null;
       }
-      this.facetsAuthSubscription = this.authService.getAuth().subscribe(auth => {
+      this.facetsAuthSubscription = this.authService.getAuth().subscribe(async auth => {
+        const isAdmin = auth ? await this.authService.hasSpecificPrivilege('Configure System') : false;
         const facetsCopy = this.privateRawFacets.slice();
         const newFacets = [];
         let facetKeys = Object.keys(this.facetsConfig) || [];
@@ -305,7 +306,9 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
           if (this._facetDisplayType === 'default' || this.calledFrom === 'staging') {
             facetKeys.forEach(facetKey => {
               if (this.facetsConfig[facetKey].length
-                && (facetKey === 'default' || this.authService.hasRoles(facetKey) || (facetKey === 'staging' && this.calledFrom === 'staging'))) {
+                && (facetKey === 'default'
+                  || (facetKey === 'admin' && isAdmin)
+                  || (facetKey === 'staging' && this.calledFrom === 'staging'))) {
                 this.facetsConfig[facetKey].forEach(facet => {
                   for (let facetIndex = 0; facetIndex < facetsCopy.length; facetIndex++) {
                     this.toggle[facetIndex] = true;
@@ -402,6 +405,12 @@ export class FacetsManagerComponent implements OnInit, OnDestroy, AfterViewInit 
               newFacets.push(facetsCopy[facetIndex]);
             }
           }
+        }
+
+        // Filter out admin-only facets for non-admin users
+        if (this.facetsConfig['admin'] && !isAdmin) {
+          const adminFacetNames = new Set(this.facetsConfig['admin']);
+          newFacets.splice(0, newFacets.length, ...newFacets.filter(f => !adminFacetNames.has(f.name)));
         }
 
         // Set any facets being used to filter results to the top of the facet display

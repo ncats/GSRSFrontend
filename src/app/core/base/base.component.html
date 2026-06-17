@@ -1,8 +1,9 @@
 <mat-toolbar
   class="mat-elevation-z3"
-  
+  color="primary"
   *ngIf="
     showHeaderBar === 'true' &&
+    !isPfdaVersion &&
     (!customToolbarComponent || customToolbarComponent.length == 0)
   "
 >
@@ -117,7 +118,7 @@
       Browse Substances
     </button>
   </div>
-  <div *ngIf="this.loadedComponents">
+  <div *ngIf="this.loadedComponents && showBrowseOther">
     <button
       class="top-button extra-browse"
       mat-button
@@ -329,7 +330,7 @@
         class="user"
         *ngIf="auth && auth.identifier"
         matTooltip="{{ auth.identifier }}"
-        >{{ auth.identifier }}</span
+        >{{ auth.identifier.length > 9 ? (auth.identifier | slice:0:9) + '…' : auth.identifier }}</span
       >
     </div>
     <mat-menu #accountMenu="matMenu" (closed)="removeZindex()">
@@ -360,17 +361,17 @@
       <a
         [routerLink]="['/registrars']"
         class="add-at-low-res"
-        *ngIf="canRegister"
+        *ngIf="canRegister && !showRegistrars"
         mat-menu-item
       >
-        <span>Registrars</span>
+        <span>Registrar Dashboard</span>
       </a>
       <button mat-menu-item (click)="logout()">
         <span>Logout</span>
       </button>
     </mat-menu>
   </div>
-  <div class="classic-view-container" *ngIf="auth && auth.identifier">
+  <div class="classic-view-container" *ngIf="auth && auth.identifier && showRegistrars">
     <a
       class="top-button hide-at-low-res"
       mat-button
@@ -384,14 +385,13 @@
       [routerLink]="['/registrars']"
       *ngIf="canRegister"
     >
-      <span style="font-size: 16px">Registrars</span>
+      <span class="registrar-dashboard-label">Registrar<br>Dashboard</span>
     </a>
   </div>
 </mat-toolbar>
-<div *ngIf="customToolbarComponent == 'precisionFDA'">
+<div *ngIf="isPfdaVersion">
   <app-pfda-toolbar></app-pfda-toolbar>
 </div>
-<app-main-notification></app-main-notification>
 <app-session-expiration></app-session-expiration>
 <app-loading></app-loading>
 <router-outlet></router-outlet>

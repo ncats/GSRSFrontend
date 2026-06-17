@@ -26,11 +26,13 @@
       >
         <app-substance-selector
           (selectionUpdated)="relatedSubstanceUpdated($event)"
+          (draftSelected)="draftSubstanceSelected($event)"
           eventCategory="substanceRelationshipRelatedSub"
           placeholder="Search by Name/CAS RN/UNII/BDNUM"
           header=""
           [subuuid]="relatedSubstanceUuid"
           [showMorelinks]="true"
+          [showDraftOption]="true"
         >
         </app-substance-selector>
       </div>

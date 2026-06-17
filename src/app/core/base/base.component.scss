@@ -25,6 +25,7 @@
   font-size: 12px;
   letter-spacing: 0.4px;
   color: var(--regular-white-color);
+  white-space: nowrap;
 }
 .arrow-button {
   margin-left: -13px !important;
@@ -217,6 +218,13 @@ button.mat-mdc-button.top-button {
   padding-left: 15px;
 }
 
+.registrar-dashboard-label {
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  display: inline-block;
+}
+
 // @media(max-width: $nav-breaking-point) {
 //   .nav-big {
 //     display: none;
@@ -232,37 +240,10 @@ button.mat-mdc-button.top-button {
   display: inline-block;
 }
 
-// hides extra browse (for half 1920 to save space)
-@media (max-width: 1500px) {
-  .extra-browse {
-    display: none !important;
-  }
-}
-
 // hides all but main menu
 @media (max-width: 1350px) {
   .extra-item {
     display: none !important;
-  }
-}
-
-@media (max-width: 1610px) {
-  .add-at-low-res {
-    display: inline !important;
-  }
-
-  .hide-at-low-res {
-    display: none !important;
-  }
-}
-
-@media (min-width: 1610px) {
-  .add-at-low-res {
-    display: none !important;
-  }
-
-  .hide-at-low-res {
-    display: inline-block;
   }
 }
 

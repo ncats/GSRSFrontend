@@ -540,6 +540,11 @@ button.mat-mdc-menu-item[ng-reflect-menu],
   }
 }
 
+// Ensure CDK overlay (tooltips, menus, dialogs) always renders above the fixed toolbar (z-index: 1001)
+.cdk-overlay-container {
+  z-index: 1002;
+}
+
 // Fix for nested menu positioning in Angular Material 19 MDC
 // Ensure the CDK overlay positioning works correctly
 .cdk-overlay-connected-position-bounding-box {
@@ -821,6 +826,8 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 
 .mat-mdc-dialog-container {
   --mat-dialog-supporting-text-color: black;
+  --mat-dialog-container-max-width: none;
+  max-width: none !important;
 
   .mdc-dialog__surface {
     border-radius: 4px;
@@ -846,6 +853,22 @@ button.mat-mdc-menu-item[ng-reflect-menu],
     height: unset !important;
     max-height: 90vh !important;
     overflow-y: auto !important;
+  }
+}
+
+// Show Molfile dialog — needs to fill the 90% height passed in dialog.open()
+// The global fit-content rule on mat-mdc-dialog-inner-container collapses it otherwise.
+.show-molfile-dialog {
+  .mat-mdc-dialog-inner-container,
+  .mdc-dialog__surface {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .mat-mdc-dialog-content {
+    flex: 1 !important;
+    max-height: none !important;
   }
 }
 
@@ -883,6 +906,7 @@ button.mat-mdc-menu-item[ng-reflect-menu],
 .mat-mdc-dialog-inner-container {
   height: fit-content !important;
   max-height: 90vh !important;
+  max-width: none !important;
   overflow-y: auto !important;
 }
 
@@ -1080,9 +1104,10 @@ app-loading .mat-mdc-progress-spinner {
 // ============================================================================
 
 // Tablet/Mobile: Hide most navigation buttons at 1350px, show only Logo, Menu, Search, and Login
+// Note: scoped to :not(.pfda-toolbar) to avoid hiding pfda-toolbar buttons
 @media (max-width: 1350px) {
-  .mat-toolbar,
-  .mat-mdc-toolbar {
+  .mat-toolbar:not(.pfda-toolbar),
+  .mat-mdc-toolbar:not(.pfda-toolbar) {
     // Logo container - always visible
     > .logo-container {
       display: flex !important;
@@ -1313,10 +1338,12 @@ button.export-button {
     0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
-// Override MDC ripple behavior if it interferes with existing styles
+// Override MDC ripple behavior if it interferes with existing styles.
+// NOTE: .mat-ripple is intentionally excluded — MatRipple directive adds that class
+// to its HOST element (e.g. the pagination <button> itself), so pointer-events: none
+// on it would make interactive elements unclickable (e.g. mat-tab-header pagination arrows).
 .mat-mdc-button-ripple,
 .mat-mdc-icon-button-ripple,
-.mat-ripple,
 .mat-mdc-button-persistent-ripple {
   position: absolute;
   pointer-events: none;

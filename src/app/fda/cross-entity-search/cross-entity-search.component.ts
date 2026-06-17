@@ -23,7 +23,6 @@ import { AppNotification, NotificationType } from '@gsrs-core/main-notification/
 import { Facet, FacetUpdateEvent } from '../../core/facets-manager/facet.model';
 import { FacetParam } from '@gsrs-core/facets-manager';
 import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
-import { exitCode } from 'process';
 
 @Component({
     selector: 'app-cross-entity-search',

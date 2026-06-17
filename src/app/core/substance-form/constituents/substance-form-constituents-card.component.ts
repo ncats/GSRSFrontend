@@ -6,7 +6,6 @@ import {GoogleAnalyticsService} from '@gsrs-core/google-analytics';
 import { SubstanceCardBaseFilteredList, SubstanceCardBaseList} from '@gsrs-core/substance-form/base-classes/substance-form-base-filtered-list';
 import { SubstanceFormConstituentsService } from './substance-form-constituents.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { EventEmitter } from 'stream';
 
 @Component({
     selector: 'app-substance-form-constituents-card',
@@ -79,7 +78,7 @@ export class SubstanceFormConstituentsCardComponent extends SubstanceCardBaseFil
     this.formulationPercent = 0;
     this.components = 0;
     this.constituents.forEach(constituent => {
-        if(constituent && constituent.amount && constituent.amount.type === "WEIGHT PERCENT" 
+        if(constituent && constituent.amount && constituent.amount.type === "WEIGHT PERCENT"
           && constituent.amount.units === "%" && constituent.amount.average) {
             this.formulationPercent = parseFloat(this.formulationPercent.toString()) + parseFloat(constituent.amount.average.toString());
             this.components++;

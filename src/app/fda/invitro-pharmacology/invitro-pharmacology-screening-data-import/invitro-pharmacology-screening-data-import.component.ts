@@ -84,7 +84,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   submitMessage = '';
   resultMessage = '';
   disableValidateButton = "true";
-  disableImportButton = "false";
+  disableImportButton = "true";
 
   isExcelDataLoaded = false;
   canUpdate: boolean = false;
@@ -656,7 +656,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         let testDateNum = this.replaceUndefinedValue(element["Test Date (mm/dd/yyyy)"]);
         element["testAgentConcentration"] = this.replaceUndefinedValue(element["Test Agent Concentration"]);
         element["testAgentConcentrationUnits"] = this.replaceUndefinedValue(element["Test Agent Concentration Units"]);
-        element["resultValue"] = this.replaceUndefinedValue(element["Result Value"]);
+        element["resultValue"] = this.replaceUndefinedValue(element["Result Value (Average)"]);
         element["resultValueUnits"] = this.replaceUndefinedValue(element["Result Value Units"]);
         element["ligandSubstrateConcentration"] = this.replaceUndefinedValue(element["Ligand/Substrate Concentration"]);
         element["ligandSubstrateConcentrationUnits"] = this.replaceUndefinedValue(element["Ligand/Substrate Concentration Units"]);
@@ -707,7 +707,8 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
         delete element["Test Date (mm/dd/yyyy)"];
         delete element["Test Agent Concentration"];
         delete element["Test Agent Concentration Units"];
-        delete element["Result Value"];
+        delete element["Result Value (Average)"];
+        delete element["Result Value IC50"];
         delete element["Result Value Units"];
         delete element["Ligand/Substrate Concentration"];
         delete element["Ligand/Substrate Concentration Units"];
@@ -976,6 +977,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   validate() {
     this.assayToSaveAllList = [];
     this.assayToSaveList = [];
+    this.firstAssayRemainingScreening = [];
     this.savedResultInfo = null;
 
     this.resultMessage = 'Checking Assays in the database...';
@@ -1061,6 +1063,10 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   }
 
   importAssayJSONIntoDatabase() {
+    const dialogRef = this.dialog.open(this.progressDialogTemplateRef, {
+      width: '500px',
+      disableClose: false // Prevent user from closing it while the process is running,if set to true
+    });
 
     this.combineAssaysAndScreenings();
 
@@ -1068,7 +1074,7 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
   }
 
   importFirstScreeningResult() {
-
+    this.progressMessage = 'Preparing to save assays...';
     let assayApiUrlList: any = [];
 
     const params = new HttpParams();
@@ -1135,27 +1141,38 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
               // return list of array of the result
               resultList.forEach((result) => {
                 if (result.id) {
+
+                  this.progressMessage = "Saved 1 of " + this.assayToSaveList.length;
+
                   savedCount = savedCount + 1;
 
                   if (result.invitroAssayScreenings && result.invitroAssayScreenings.length > 0) {
                     if (result.invitroAssayScreenings[result.invitroAssayScreenings.length - 1].invitroAssayResultInformation) {
                       if (result.invitroAssayScreenings[result.invitroAssayScreenings.length - 1].invitroAssayResultInformation.id) {
                         this.savedResultInfo = result.invitroAssayScreenings[result.invitroAssayScreenings.length - 1].invitroAssayResultInformation;
-                      
-                      
+
                         let newAssay = _.clone(result);
-                       
-                         if (this.firstAssayRemainingScreening != null && this.firstAssayRemainingScreening.length > 0) {
-                            this.firstAssayRemainingScreening.forEach(screening => {
-                              if (screening) {
-                                screening.invitroAssayResultInformation = this.savedResultInfo;
 
-                                newAssay.invitroAssayScreenings.push(screening);
+                        if (this.firstAssayRemainingScreening != null && this.firstAssayRemainingScreening.length > 0) {
+                          this.firstAssayRemainingScreening.forEach(screening => {
+                            if (screening) {
+                              if (!screening.invitroAssayResultInformation || !screening.invitroAssayResultInformation.id) {
+                                screening.invitroAssayResultInformation = JSON.parse(JSON.stringify(this.savedResultInfo));
                               }
-                            });
+                              newAssay.invitroAssayScreenings.push(screening);
+                            }
+                          });
 
-                            this.assayToSaveList[0] = newAssay;
-                         }
+                          this.assayToSaveList[0] = newAssay;
+
+                        } else {
+                          // remove the first Assay from the list
+                          // Only one screening in First Assay, so remove it from the lists
+                          // Removes first item
+                          if (this.assayToSaveList && this.assayToSaveList.length > 0) {
+                            this.assayToSaveList.shift();
+                          }
+                        }
                       }
                     }
                   }
@@ -1196,54 +1213,24 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     };
 
     // This will hold the result information from the first saved assay for final navigation.
-
     // Initialize state and open the dialog immediately ---
-    this.savedCount = 0;
-    this.totalAssays = this.assayToSaveList.length;
-    this.progressMessage = 'Preparing to save assays...';
     this.isComplete = false;
     this.isError = false;
     let assayReadyToSave: InvitroAssayInformation;
 
-    const dialogRef = this.dialog.open(this.progressDialogTemplateRef, {
-      width: '500px',
-      disableClose: true // Prevent user from closing it while the process is running.
-    });
-
-    // --- B. Start the sequential save stream using RxJS ---
+    // Start the sequential save stream using RxJS ---
     from(this.assayToSaveList).pipe(
       // 'concatMap' ensures each assay is processed one by one, waiting for the previous save to complete.
       concatMap((assayToSave, index) => {
-        // Update the dialog message before each save attempt.
-        this.progressMessage = `Saving assay ${index + 1} of ${this.totalAssays}...`;
 
         assayReadyToSave = _.cloneDeep(assayToSave);
-        // }
 
-        // Check if index is 0
-        const isFirstAssay = (index === 0);
-
-        // Prepare the payload based on whether it's the first assay or a subsequent one.
-        if (isFirstAssay) {
-
-          const indexToKeep = assayReadyToSave.invitroAssayScreenings.findIndex(screening => !screening.id);
-
-          // Check if a screening to keep was found.
-          if (indexToKeep > -1) {
-            // Keep the first screening without an ID, and remove the rest of screening that do not have Ids.
-            assayReadyToSave.invitroAssayScreenings.splice(indexToKeep, 1);
-          }
-
-        }
-
-        // Assign savedResultInfo
         assayReadyToSave.invitroAssayScreenings.forEach((screening, indexScreening) => {
           if (screening) {
-            if (screening.invitroAssayResultInformation == null) {
-              screening.invitroAssayResultInformation = {};
-              screening.invitroAssayResultInformation = this.savedResultInfo;
-            }
-            if (screening.invitroAssayResultInformation && !screening.invitroAssayResultInformation.id) {
+            if (!screening.id) {
+              if (!screening.invitroAssayResultInformation || !screening.invitroAssayResultInformation.id) {
+                screening.invitroAssayResultInformation = this.savedResultInfo;
+              }
             }
           }
         });
@@ -1261,14 +1248,22 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
             initialState.lastCheckedAssayId = savedAssay.externalAssayId; // ADDED: Update the ID in our state
             initialState.cachedAssay = _.cloneDeep(savedAssay); // Cache the new assay
 
-            this.savedCount = index + 1; // Update the count for the dialog.
-
+            let savedAssayCount = index + 1;
+            if (this.firstAssayRemainingScreening && this.firstAssayRemainingScreening.length > 0) {
+              savedAssayCount = index + 2;
+            }
+            this.progressMessage = "Saved " + savedAssayCount + " of " + this.assayToSaveList.length;
           })
         );  // return
       })
     ).subscribe({
       // 'next' is handled by tap, so this can be empty. It's called after each successful save.
-      next: () => { },
+      next: (savedAssay) => { 
+
+        if (savedAssay) {
+           this.savedResultInfo = savedAssay.invitroAssayScreenings[savedAssay.invitroAssayScreenings.length - 1].invitroAssayResultInformation;
+        }
+      },
 
       // --- C. Handle any error in the stream ---
       error: err => {
@@ -1280,16 +1275,16 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
       // --- D. Handle successful completion of the entire stream ---
       complete: () => {
         this.isComplete = true;
-        this.progressMessage = 'All assays have been imported successfully!';
+        this.progressMessage = 'All Assays have been imported successfully!';
 
+        this.close();
         // Wait for the user to close the completed dialog before navigating.
-        dialogRef.afterClosed().subscribe(() => {
-          console.log('Navigating to edit page...');
-          this.invitroPharmacologyService.bypassUpdateCheck();
-          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-          this.router.onSameUrlNavigation = 'reload';
-          this.router.navigate(['/invitro-pharm/', this.savedResultInfo.id, 'edit']);
-        });
+        // dialogRef.afterClosed().subscribe(() => {
+        this.invitroPharmacologyService.bypassUpdateCheck();
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate(['/invitro-pharm/', this.savedResultInfo.id, 'edit']);
+        // });
       }
     });
   }
@@ -1314,6 +1309,10 @@ export class InvitroPharmacologyScreeningDataImportComponent implements OnInit {
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
+  }
+
+  close() {
+    this.dialog.closeAll();
   }
 
   isNumber(str: any): boolean {

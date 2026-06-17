@@ -504,10 +504,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         if (this.enableJSDraw) {
           this.ketcher.editor.event.change.handlers.push({
             f: (c) => {
-              this.ketcher.getMolfile().then(result => {
-                let mfile = [null];
-                mfile[0] = result;
-                this.getSketcher().setFile(mfile[0], "mol");
+              this.ketcher.getMolfile('v2000').then((result: string) => {
+                this.getSketcher().setFile(result, "mol");
               })
             }
           });

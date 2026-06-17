@@ -150,7 +150,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   saveImpurities(): Observable<Impurities> {
-    const url = this.apiBaseUrl + `impurities`;
+    const url = this.apiBaseUrlWithEntityContext;
     const params = new HttpParams();
     const options = {
       params: params,
@@ -181,7 +181,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   validateImpur(): Observable<ValidationResults> {
-    const url = `${this.configService.configData.apiBaseUrl}api/v1/impurities/@validate`;
+    const url = this.apiBaseUrlWithEntityContext + '@validate';
     return this.http.post(url, this.impurities);
   }
 

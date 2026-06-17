@@ -25,7 +25,7 @@ import { JsonDialogComponent } from '@gsrs-core/substance-form/json-dialog/json-
 import * as _ from 'lodash';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '@gsrs-core/auth';
-import { take, map } from 'rxjs/operators';
+import { take, map, filter } from 'rxjs/operators';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { SubmitSuccessDialogComponent } from '../substance-form/submit-success-dialog/submit-success-dialog.component';
 import { MergeConceptDialogComponent } from '@gsrs-core/substance-form/merge-concept-dialog/merge-concept-dialog.component';
@@ -203,11 +203,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
         if (keys[i].startsWith('gsrs-draft-')) {
           const entry = JSON.parse(localStorage.getItem(keys[i]));
           entry.key = keys[i];
-          if (this.id && entry.uuid === this.id) {
-            this.draftCount++;
-          } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
-            this.draftCount++;
-          }
+          this.draftCount++;
           this.drafts.push(entry);
 
         }
@@ -355,7 +351,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       });
     });
     this.subscriptions.push(definitionSubscription);
-    this.authService.getAuth().pipe(take(1)).subscribe(auth => {
+    this.authService.getAuth().pipe(filter(auth => auth != null), take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
@@ -374,13 +370,7 @@ export class SubstanceSsg2FormComponent implements OnInit, AfterViewInit, OnDest
       if (keys[i].startsWith('gsrs-draft-')) {
         const entry = JSON.parse(localStorage.getItem(keys[i]));
         entry.key = keys[i];
-        if (this.id && entry.uuid === this.id) {
-          temp++;
-          // this.draftCount++;
-        } else if (!this.id && entry.type === (this.activatedRoute.snapshot.params['type']) && entry.uuid === 'register') {
-          temp++;
-          //  this.draftCount++;
-        }
+        temp++;
         this.drafts.push(entry);
 
       }

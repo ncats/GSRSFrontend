@@ -10,7 +10,6 @@ import {Sort} from '@angular/material/sort';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {UtilsService} from '@gsrs-core/utils';
 import { FormControl } from '@angular/forms';
-import { throws } from 'assert';
 import { I } from '@angular/cdk/keycodes';
 import { ConfigService } from '@gsrs-core/config';
 

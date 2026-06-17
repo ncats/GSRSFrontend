@@ -16,7 +16,8 @@
     <div class="flex-container marginleftneg7px padbottom10px">
 
       <!-- Left Side -->
-      <div class="width25percent textaligncenter"  *ngIf="configSettingsDisplay['relatedSubstanceUnii'] || (configSettingsDisplay['relatedSubstanceUnii'] === undefined && true)">
+      <div class="width25percent textaligncenter"
+        *ngIf="configSettingsDisplay['relatedSubstanceUnii'] || (configSettingsDisplay['relatedSubstanceUnii'] === undefined && true)">
         <app-substance-selector class="textaligncenter" (selectionUpdated)="relatedSubstanceUpdated($event)"
           eventCategory="substanceRelationshipRelatedSub" placeholder="Substance Name" [hideImage]="false"
           header="Related Substance" [subuuid]="impuritiesInorganic.relatedSubstanceUuid" [showMorelinks]=true>
@@ -30,34 +31,37 @@
       <div class="flex-item width75percent padleft20px padright20px">
 
         <div class="form-row">
-          <app-cv-input class="col-3-1"  *ngIf="configSettingsDisplay['testType'] || (configSettingsDisplay['testType'] === undefined && true)"
-          domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType"
-            [model]="impuritiesInorganic.testType" (valueChange)="impuritiesInorganic.testType = $event">
+          <app-cv-input class="col-3-1"
+            *ngIf="configSettingsDisplay['testType'] || (configSettingsDisplay['testType'] === undefined && true)"
+            domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType" [model]="impuritiesInorganic.testType"
+            (valueChange)="impuritiesInorganic.testType = $event">
           </app-cv-input>
 
-          <app-cv-input class="col-3-1" 
-          *ngIf="configSettingsDisplay['limitType'] || (configSettingsDisplay['limitType'] === undefined && true)"
-          domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType"
-            [model]="impuritiesInorganic.limitType" (valueChange)="impuritiesInorganic.limitType = $event">
+          <app-cv-input class="col-3-1"
+            *ngIf="configSettingsDisplay['limitType'] || (configSettingsDisplay['limitType'] === undefined && true)"
+            domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType" [model]="impuritiesInorganic.limitType"
+            (valueChange)="impuritiesInorganic.limitType = $event">
           </app-cv-input>
 
           <mat-form-field class="col-3-1"
-          *ngIf="configSettingsDisplay['limitValue'] || (configSettingsDisplay['limitValue'] === undefined && true)">
-            <input matInput placeholder="Limit Value" [(ngModel)]="impuritiesInorganic.limitValue" name="limitValue" />
+            *ngIf="configSettingsDisplay['limitValue'] || (configSettingsDisplay['limitValue'] === undefined && true)">
+            <mat-label>Limit Value</mat-label>
+            <input matInput [(ngModel)]="impuritiesInorganic.limitValue" name="limitValue" />
           </mat-form-field>
 
         </div>
 
         <div class="form-row">
-          <app-cv-input class="col-3-1" 
-          *ngIf="configSettingsDisplay['unit'] || (configSettingsDisplay['unit'] === undefined && true)"
-          domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesInorganic.unit"
+          <app-cv-input class="col-3-1"
+            *ngIf="configSettingsDisplay['unit'] || (configSettingsDisplay['unit'] === undefined && true)"
+            domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesInorganic.unit"
             (valueChange)="impuritiesInorganic.unit = $event">
           </app-cv-input>
 
           <mat-form-field class="col-3-2"
-          *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
-            <textarea matInput placeholder="Comments" [(ngModel)]="impuritiesInorganic.comments" name="comments"
+            *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
+            <mat-label>Comments</mat-label>
+            <textarea matInput [(ngModel)]="impuritiesInorganic.comments" name="comments"
               rows="1"></textarea>
           </mat-form-field>
         </div>

@@ -4,7 +4,7 @@
     <div class="padtop10px">
       <b>Adverse Event PT</b>
     </div>
-    <div class="marginleft50px padleft25px padtopneg50px width120px" *ngIf="totalRecords > 0">
+    <div class="margintopneg10px marginleft50px padleft25px padtopneg50px width140px" *ngIf="totalRecords > 0">
       <!-- Export Button -->
       <span class="export" *ngIf="canExport && adverseEventCount > 0">
         <button matTooltip="Export Search Results" mat-button mat-raised-button (click)="export()"
@@ -12,11 +12,12 @@
           <mat-icon svgIcon="get_app"></mat-icon> Export
         </button>
       </span>
+      <br>
     </div>
-    <div class="marginleft50px padleft25px width200px" *ngIf="adverseEventShinySubstanceNameDisplay === true">
+    <div class="padleft25px width260px" *ngIf="adverseEventShinySubstanceNameDisplay === true">
       <a href="{{adverseEventShinySubstanceNameURLWithParam}}" target="_blank">
-        <button mat-icon-button color="accent" aria-label="Analysis by Substance Name on Shiny Server">
-          <mat-icon>analytics</mat-icon><span class="colororange">Analysis by Substance</span>
+        <button mat-icon-button color="accent" class="width200px margintopneg10px" matTooltip="Analysis by Substance Name on Shiny Server">
+          <mat-icon>analytics</mat-icon><span class="colororange font14px"><b>Analysis by Substance</b></span>
         </button>
       </a>
     </div>

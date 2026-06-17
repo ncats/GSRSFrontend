@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   imageLoc: any;
   appId: string;
   customLinks: Array<any>;
-  total: string;
+  total: number;
   isCollapsed = true;
   hasBackdrop = false;
   bannerMessage?: string;
@@ -127,7 +127,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     });
     this.substanceService.getRecordCount().subscribe((response) => {
-      this.total = response;
+      this.total = parseInt(response);
     });
     // this.isClosedWelcomeMessage = localStorage.getItem('isClosedWelcomeMessage') === 'false';
     this.isClosedWelcomeMessage = false;

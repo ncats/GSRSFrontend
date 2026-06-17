@@ -2,9 +2,9 @@
   "version": "3.2.0-SNAPSHOT",
   "contactEmail": "GSRSSupport@fda.hhs.gov",
   "displayMatchApplication": "true",
-  "adverseEventShinyHomepageDisplay": "true",
-  "adverseEventShinySubstanceNameDisplay": "true",
-  "adverseEventShinyAdverseEventDisplay": "true",
+  "adverseEventShinyHomepageDisplay": "false",
+  "adverseEventShinySubstanceNameDisplay": "false",
+  "adverseEventShinyAdverseEventDisplay": "false",
   "FAERSDashboardAdverseEventUrl": "https://fis.fda.gov/sense/app/95239e26-e0be-42d9-a960-9a5f7f1c25ee/sheet/45beeb74-30ab-46be-8267-5756582633b4/state/analysis",
   "dailyMedUrl": "https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query=",
   "phpIdUrl": "https://phpidpublish.who-umc.org/search?phpid=",
@@ -19,8 +19,7 @@
   "polymerDisclaimer": "Please do not consider GSRS to be an expert system when registering polymer substances.",
   "disableJSDraw": false,
   "registerApplicationCenterNotAllowed": ["CDER", "CBER"],
-  "apiBaseUrl": "http://localhost:8080",
-  "formerApiBaseUrl" : "http://localhost:8081/ginas/app/",
+  "apiBaseUrl": "http://localhost:8081/ginas/app/",
   "gsrsHomeBaseUrl": "http://localhost:8081/ginas/app/ui/",
   "apiSSG4mBaseUrl": "http://localhost:8081/ginas/app/",
   "occasionalApiBasePath": "/ginas/app",
@@ -46,42 +45,39 @@
       }
     }
   },
-  "enablePDFDownload":{
-    "enablePDFDownload" : true,
-    "buttonName":"Print to PDF",
-    "companyName" : "",
-    "proprietaryNote":""
+  "enablePDFDownload": {
+    "enablePDFDownload": true,
+    "buttonName": "Print to PDF",
+    "companyName": "",
+    "proprietaryNote": ""
   },
   "elementLabelDisplay": {
     "labels": {
       "substance_names_name": {
-          "displayNameTitle": "Display Name",
-          "displayNameShortTitle":"DN",
-          "preferredTitle": "Additional Listing Name",
-          "preferredShortTitle": "AL"
+        "displayNameTitle": "Display Name",
+        "displayNameShortTitle": "DN",
+        "preferredTitle": "Additional Listing Name",
+        "preferredShortTitle": "AL"
       }
     }
   },
   "bulkSearch": {
     "entities": [
       {
-        "name":"substances",
+        "name": "substances",
         "title": "Substances"
       },
       {
-        "name":"products",
+        "name": "products",
         "title": "Products"
       },
       {
-        "name":"applications",
+        "name": "applications",
         "title": "Applications"
       }
     ]
   },
-  "filteredDuplicationCodes": [
-    "BDNUM",
-    "FDA UNII"
-  ],
+  "filteredDuplicationCodes": ["BDNUM", "FDA UNII"],
   "typeaheadFields": [
     "Standardized_Name",
     "Display_Name",
@@ -108,11 +104,11 @@
     { "name": "frontend", "active": true, "hasEntities": false },
     { "name": "gateway", "active": true, "hasEntities": false },
     { "name": "impurities", "active": true, "hasEntities": true },
-    { "name": "invitro-pharmacology", "active":true, "hasEntities": true },
+    { "name": "invitro-pharmacology", "active": true, "hasEntities": true },
     { "name": "products", "active": true, "hasEntities": true },
     { "name": "ssg4m", "active": true, "hasEntities": true },
     { "name": "substances", "active": true, "hasEntities": true }
-   ],
+  ],
   "usefulLinks": [
     {
       "title": "GSRSFind Excel tools",
@@ -160,9 +156,7 @@
     {
       "card": "fda-substance-product",
       "title": "Products, Applications, Clinical Trials, Adverse Events, Impurities Specs, SSG4 Manufacturing, In Vitro Pharmacology",
-      "filters": [
-        {}
-      ]
+      "filters": [{}]
     },
     {
       "card": "substance-primary-definition",
@@ -799,11 +793,7 @@
         },
         {
           "category": "User Data",
-          "facets": [
-            "Record Created By",
-            "Approved By",
-            "root_lastEditedBy"
-          ]
+          "facets": ["Record Created By", "Approved By", "root_lastEditedBy"]
         },
         {
           "category": "CMC Data",
@@ -1192,13 +1182,7 @@
       ]
     }
   },
-  "codeSystemOrder": [
-    "BDNUM",
-    "CAS",
-    "WHO-ATC",
-    "EVMPD",
-    "NCI"
-  ],
+  "codeSystemOrder": ["BDNUM", "CAS", "WHO-ATC", "EVMPD", "NCI"],
   "homeHeader": "Global Substance Registration System - GSRS",
   "homeContents": "<p>The primary goal of the Global Substance Registration System (GSRS) program is the production of software to assist agencies in registering and documenting information about substances found in medicines and other regulated products. GSRS provides common identifiers including FDA UNIIs for all substances used in regulated products. It utilizes definitions of substances  globally-consistent with ISO 11238 and DTS 19844 including active substances under clinical investigation.\n\n</p><p>\n\n<img src='assets/icons/home/fda.logo.h77px.png' alt='' title='Food and Drug Administration' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n\n<img src='assets/icons/home/ncats.logo.h77px.png' alt='' title='National Center for Advancing Translational Science' />\n\n</p><p>Many organizations contribute to the GSRS project including the Food and Drug Administration (FDA) and the National Center for Advancing Translational Science (NCATS). For more information about GSRS, code and public data, please consult <a href='https://gsrs.ncats.nih.gov/'>https://gsrs.ncats.nih.gov/</a>.</p>\n\n<p>",
   "relationshipsVisualizationUri": "/ginas/app/beta/substanceRelationshipVisualizer/index.html?uuid=",
@@ -1357,7 +1341,7 @@
           "kind": "contact-us",
           "display": "Email GSRS Support",
           "mailToPath": "mailto:%s",
-          "queryParams": {"subject" : "Support request"},
+          "queryParams": { "subject": "Support request" },
           "order": 30
         }
       ]
@@ -1367,7 +1351,7 @@
       "kind": "contact-us",
       "display": "Contact Us",
       "mailToPath": "mailto:%s",
-      "queryParams": {"subject" : "Support request"},
+      "queryParams": { "subject": "Support request" },
       "order": 2000
     }
   ],
@@ -1379,13 +1363,13 @@
     "root_codes_CAS",
     "root_codes_ECHA"
   ],
-  "roleSortConfig" : [
-	{"roleName" : "null", "numericValue": 0},
-	{"roleName" : "ADMIN", "numericValue": 100},
-	{"roleName" : "APPROVER", "numericValue": 80},
-	{"roleName" : "DATAENTRY", "numericValue": 50},
-	{"roleName" : "QUERY", "numericValue": 10}
-  ],
+  "roleSortingConfig": {
+    "NULL": 0,
+    "ADMIN": 100,
+    "APPROVER": 80,
+    "DATAENTRY": 50,
+    "QUERY": 10
+  },
   "homeDynamicLinks": [
     {
       "display": "Chemicals",

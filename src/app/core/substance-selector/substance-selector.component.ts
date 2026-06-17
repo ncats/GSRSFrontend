@@ -1,14 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
-import { SubstanceService } from "../substance/substance.service";
-import { SubstanceSummary } from "../substance/substance.model";
-import { ConfigService } from "@gsrs-core/config";
-import { MatDialog } from "@angular/material/dialog";
-import { OverlayContainer } from "@angular/cdk/overlay";
-import { AdvancedSelectorDialogComponent } from "@gsrs-core/substance-selector/advanced-selector-dialog/advanced-selector-dialog.component";
-import { StructureImageModalComponent } from "@gsrs-core/structure";
-import { SubstanceFormService } from "@gsrs-core/substance-form/substance-form.service";
-import { Router } from "@angular/router";
-import { ScrollToService } from "@gsrs-core/scroll-to/scroll-to.service";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { SubstanceService } from '../substance/substance.service';
+import { SubstanceSummary, SubstanceDetail } from '../substance/substance.model';
+import { ConfigService } from '@gsrs-core/config';
+import { MatDialog } from '@angular/material/dialog';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { AdvancedSelectorDialogComponent } from '@gsrs-core/substance-selector/advanced-selector-dialog/advanced-selector-dialog.component';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { Router } from '@angular/router';
+import { ScrollToService } from '@gsrs-core/scroll-to/scroll-to.service';
+import { SubstanceDraftsComponent } from '@gsrs-core/substance-form/substance-drafts/substance-drafts.component';
 
 @Component({
   selector: "app-substance-selector",
@@ -20,6 +21,7 @@ export class SubstanceSelectorComponent implements OnInit {
   selectedSubstance?: SubstanceSummary;
   @Input() eventCategory: string;
   @Output() selectionUpdated = new EventEmitter<SubstanceSummary>();
+  @Output() draftSelected = new EventEmitter<any>();
   @Input() placeholder = "Search";
   @Input() label = "";
   @Input() hintMessage = "";
@@ -27,6 +29,7 @@ export class SubstanceSelectorComponent implements OnInit {
   @Input() name?: string;
   @Input() hideImage?: boolean;
   @Input() showMorelinks? = false;
+  @Input() showDraftOption? = false;
   errorMessage: string;
   showOptions: boolean;
   previousSubstance: SubstanceSummary;
@@ -53,6 +56,7 @@ export class SubstanceSelectorComponent implements OnInit {
     public scrollToService: ScrollToService,
     private dialog: MatDialog,
     private router: Router,
+    private structureService: StructureService
   ) {}
 
   StoreSelection() {
@@ -187,21 +191,27 @@ export class SubstanceSelectorComponent implements OnInit {
     let molfile: string;
     let substance = this.selectedSubstance;
 
+    // For draft substances, use the temporary structure ID
+    const structureId = (substance as any).$$tmpStructureId || substance.uuid;
+    const isDraft = (substance as any).$$tmpStructureId ? true : false;
+
     if (substance.substanceClass === "chemical") {
       data = {
-        structure: substance.uuid,
+        structure: structureId,
         smiles: substance.structure.smiles,
         uuid: substance.uuid,
         names: substance.names,
         component: "substanceSelector",
+        isDraft: isDraft
       };
       molfile = substance.structure.molfile;
     } else {
       data = {
-        structure: substance.uuid,
+        structure: structureId,
         names: substance.names,
         component: "substanceSelector",
         uuid: substance.uuid,
+        isDraft: isDraft
       };
       if (substance.polymer) {
         molfile = substance.polymer.idealizedStructure.molfile;
@@ -284,4 +294,131 @@ export class SubstanceSelectorComponent implements OnInit {
     }
     window.open(url, "_blank");
   }
+
+  selectDraft(): void {
+    const dialogRef = this.dialog.open(SubstanceDraftsComponent, {
+      maxHeight: '85%',
+      width: '70%',
+      data: {}
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(response => {
+      this.overlayContainer.style.zIndex = null;
+
+      if (response === null || response === undefined) {
+        return;
+      }
+
+      // dialog may return either an index (number) or the draft object.
+      let draftObj: any = null;
+      if (typeof response === 'number') {
+        const comp = dialogRef.componentInstance as any;
+        if (comp) {
+          if (comp.filtered && comp.filtered[response]) {
+            draftObj = comp.filtered[response];
+          } else if (comp.values && comp.values[response]) {
+            draftObj = comp.values[response];
+          }
+        }
+      } else if (response && response.substance) {
+        draftObj = response;
+      } else {
+        draftObj = response;
+      }
+
+      if (!draftObj) {
+        return;
+      }
+
+      const substanceObj: SubstanceDetail = draftObj.substance || draftObj;
+
+      // Determine a primary name for the draft substance
+      const primaryName =
+        substanceObj._name ||
+        (substanceObj.names && substanceObj.names.length > 0
+          ? substanceObj.names[0].name
+          : null) ||
+        draftObj.name ||
+        null;
+
+      // If the draft contains a structure (molfile or smiles), interpret it on the server
+      // to obtain a temporary structure id that can be rendered via the same image API.
+      const mol =
+        substanceObj.structure && substanceObj.structure.molfile
+          ? substanceObj.structure.molfile
+          : substanceObj.structure && substanceObj.structure.smiles
+          ? substanceObj.structure.smiles
+          : null;
+
+      if (mol) {
+        this.structureService.interpretStructure(mol).subscribe(
+          (interpretResponse) => {
+            if (interpretResponse && interpretResponse.structure && interpretResponse.structure.id) {
+              const tmpId = interpretResponse.structure.id;
+              (substanceObj as any).$$tmpStructureId = tmpId;
+
+              // Also update localStorage so processLocalDrafts can find and match the draft
+              this.updateDraftInLocalStorage(draftObj, tmpId);
+            }
+            this.emitDraftSelection(draftObj, substanceObj, primaryName);
+          },
+          (err) => {
+            // on error, still emit the draft selection without the structure id
+            console.log('Error interpreting draft structure: ', err);
+            this.emitDraftSelection(draftObj, substanceObj, primaryName);
+          }
+        );
+      } else {
+        this.emitDraftSelection(draftObj, substanceObj, primaryName);
+      }
+    });
+  }
+
+  private updateDraftInLocalStorage(draftObj: any, tmpStructureId: string): void {
+    try {
+      // Update the draft object with the temp structure id
+      if (draftObj.substance) {
+        draftObj.substance.$$tmpStructureId = tmpStructureId;
+      } else {
+        (draftObj as any).$$tmpStructureId = tmpStructureId;
+      }
+
+      // Persist back to localStorage if the draft has a key
+      const draftKey = draftObj.key || draftObj.file;
+      if (draftKey && draftKey.startsWith('gsrs-draft-')) {
+        localStorage.setItem(draftKey, JSON.stringify(draftObj));
+      }
+    } catch (e) {
+      // Ignore storage errors
+      console.log('Error updating draft: ', e);
+    }
+  }
+
+  private emitDraftSelection(draftObj: any, substanceObj: SubstanceDetail, primaryName: string): void {
+    const tmpStructureId = (substanceObj as any).$$tmpStructureId || null;
+
+    // Set selectedSubstance so the template can render the draft
+    this.selectedSubstance = {
+      _name: primaryName,
+      uuid: substanceObj?.uuid,
+      approvalID: substanceObj?.approvalID
+    } as SubstanceSummary;
+
+    // Attach the temp structure id for rendering
+    if (tmpStructureId) {
+      (this.selectedSubstance as any).$$tmpStructureId = tmpStructureId;
+    }
+
+    // Emit the draft selection with all relevant data for the parent component to handle
+    this.draftSelected.emit({
+      draft: draftObj,
+      substance: substanceObj,
+      primaryName: primaryName,
+      tmpStructureId: tmpStructureId
+    });
+  }
+
+
 }

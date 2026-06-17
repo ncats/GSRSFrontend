@@ -48,10 +48,10 @@
 }
 
 .title {
-   font-size: 24px;
-   font-weight: 600px;
-   font-family: Arial, Helvetica, sans-serif;
-   /*padding-left: 70px; */
+  font-size: 24px;
+  font-weight: 600px;
+  font-family: Arial, Helvetica, sans-serif;
+  /*padding-left: 70px; */
 }
 
 .titleblue {
@@ -92,7 +92,8 @@
 .headerstyle {
   border-radius: 6px 6px 0px 0px;
   border: 1px solid var(--blue-color);
-  background-color: var(--table-th-border-color);  /*--primary-title-color*/
+  background-color: var(--table-th-border-color);
+  /*--primary-title-color*/
   border-bottom: none;
   padding-left: 10px;
   height: 50px;
@@ -186,7 +187,8 @@
   width: 100%;
 }
 
-.col-2 {  /* 2 columns in one row */
+.col-2 {
+  /* 2 columns in one row */
   width: calc((100% - 30px * 1) / 2);
   margin-right: 25px;
 }
@@ -195,7 +197,8 @@
   margin-right: 0px;
 }
 
-.col-3-1 {  /* 3 columns in one row */
+.col-3-1 {
+  /* 3 columns in one row */
   width: calc((100% - 25px * 2) / 3);
   margin-right: 30px;
 }
@@ -213,7 +216,8 @@
   margin-right: 0px;
 }
 
-.col-4-1 {  /* 4 columns in one row */
+.col-4-1 {
+  /* 4 columns in one row */
   width: calc((100% - 25px * 3) / 4);
   margin-right: 25px;
 }
@@ -222,7 +226,8 @@
   margin-right: 0px;
 }
 
-.col-5-1 {  /* 5 columns in one row */
+.col-5-1 {
+  /* 5 columns in one row */
   width: calc((100% - 25px * 3) / 4);
   margin-right: 30px;
 }
@@ -231,7 +236,8 @@
   margin-right: 0px;
 }
 
-.col-6-1 {  /* 6 columns in one row  */
+.col-6-1 {
+  /* 6 columns in one row  */
   width: calc((100% - 30px * 5) / 6);
   margin-right: 30px;
 }
@@ -240,7 +246,8 @@
   margin-right: 0px;
 }
 
-.col-7-1 {  /* 7 columns in one row  */
+.col-7-1 {
+  /* 7 columns in one row  */
   width: calc((100% - 30px * 6) / 7);
   margin-right: 30px;
 }
@@ -255,7 +262,7 @@
 }
 
 .actions-container {
-  max-width: 1028px;
+  max-width: 1100px;
   width: 100%;
   background-color: var(--regular-white-color);
   padding: 10px;
@@ -679,7 +686,7 @@ hr {
   max-width: 1140px;
 }
 
-.mat-form-field-style > {
+.mat-form-field-style {
 
   /* OVERWRITE MATERIAL INPUT FIELDS */
   .mat-form-field-infix {
@@ -705,12 +712,12 @@ hr {
 
   /*Focused: change color of underline*/
   .mat-form-field-ripple {
-    background-color: var(--mat-form-field-focused-color) !important;;
+    background-color: var(--mat-form-field-focused-color) !important;
+    ;
   }
 
-  .mat-form-field-disabled .mat-form-field-underline
-  {
-    background-image: linear-gradient( to right, var(--img-linear-gradient-start-color) 0, var(--textarea-dark-border-color) 10%, var(--img-linear-gradient-color) 0 ) !important;
+  .mat-form-field-disabled .mat-form-field-underline {
+    background-image: linear-gradient(to right, var(--img-linear-gradient-start-color) 0, var(--textarea-dark-border-color) 10%, var(--img-linear-gradient-color) 0) !important;
     background-size: 1px 100% !important;
     background-repeat: repeat-x !important;
     cursor: not-allowed;
@@ -725,9 +732,12 @@ hr {
   }
 }
 
-.mat-expansion-indicator
-{
-   pointer-events: visiblefill !important;
+.mat-expansion-indicator {
+  pointer-events: visiblefill !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  flex: unset;
 }
 
 .panel-style {
@@ -764,7 +774,8 @@ fieldset.border {
   margin-bottom: 50px;
   border-bottom: none;
   border-radius: 8px;
-  min-width: 0;  /* override the default value of min-content */
+  min-width: 0;
+  /* override the default value of min-content */
   -webkit-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
   -moz-box-shadow: 3px 6px 11px 1px var(--fieldset-box-shadow-color);
   box-shadow: 3px 4px 5px 1px var(--fieldset-box-shadow-color);
@@ -786,6 +797,7 @@ legend.border {
     background: var(--mustard-color);
     color: var(--regular-white-color);
   }
+
   .mat-badge-medium .mat-badge-above .mat-badge-top .mat-badge-content {
     top: unset;
     right: unset;
@@ -827,8 +839,8 @@ legend.border {
       text-transform: uppercase;
       font-weight: 500;
       margin-right: 20px;
-      padding:10px;
-      border-radius:3px;
+      padding: 10px;
+      border-radius: 3px;
     }
   }
 
@@ -859,7 +871,8 @@ table.tableStyle {
   border-collapse: collapse;
 }
 
-table.tableStyle td, table.tableStyle th {
+table.tableStyle td,
+table.tableStyle th {
   border: 1px solid var(--table-th-border-color);
   /*padding: 3px 2px;*/
 }
@@ -878,7 +891,8 @@ table.tableStyle tr:nth-child(even) {
 }
 
 table.tableStyle thead {
-  background: var(--table-thead-bg-color); /* Header background */
+  background: var(--table-thead-bg-color);
+  /* Header background */
   border-bottom: 1px solid var(--table-thead-border-color);
 }
 
@@ -911,11 +925,12 @@ table.tableStyle tfoot .links {
   text-align: right;
 }
 
-table.tableStyle tfoot .links a{
+table.tableStyle tfoot .links a {
   display: inline-block;
   background: var(--secondary-blue-color);
   color: var(--white-color);
   padding: 2px 8px;
   border-radius: 5px;
 }
+
 /* Table Style End */

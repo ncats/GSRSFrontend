@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { ConfigService } from '@gsrs-core/config';
 
 @Component({
     selector: 'app-substance-edit-import-dialog',
@@ -15,15 +17,21 @@ export class SubstanceEditImportDialogComponent implements OnInit {
   record: any;
   filename: string;
   pastedJSON: string;
-  uploaded = false;
+  pastedUrl: string;
   title = 'Substance Import';
   entity = 'Substance';
 
+  currentTab: number = 0;
+  urlImportEnabled: boolean = false;
+
   constructor(
     private router: Router,
+    private configService: ConfigService,
     public dialogRef: MatDialogRef<SubstanceEditImportDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {
+    this.urlImportEnabled = this.configService.configData.isPfdaVersion;
+  }
 
   ngOnInit() {
     if (this.data) {
@@ -60,33 +68,72 @@ export class SubstanceEditImportDialogComponent implements OnInit {
         }
       };
       reader.readAsText(event.target.files[0]);
-      this.uploaded = true;
     }
   }
 
-  useFile() {
-    if (!this.uploaded && this.pastedJSON) {
+  importSubstance() {
+    if (this.currentTab === 0) {
+      // Nothing
+      this.dialogRef.close(this.record);
+    } else if (this.currentTab === 1) {
       const read = JSON.parse(this.pastedJSON);
-      // If there is no substanceClass field in Substance JSON data
       if (!read['substanceClass']) {
-        // if JSON data is from non-substance entity, read the json from the textbox
-        if (read['id']) {
-          this.loaded = true;
-          this.record = this.pastedJSON;
-          this.message = '';
-        } else {
-          this.message = 'Error: Invalid JSON format';
-          this.loaded = false;
-        }
+        this.message = 'Error: Invalid JSON format';
+        this.loaded = false;
       } else {
         this.loaded = true;
         this.record = this.pastedJSON;
         this.message = '';
+        this.dialogRef.close(this.record);
       }
+    } else if (this.currentTab === 2) {
+      fetch(`/reverse-proxy?url=${this.pastedUrl}`).then(r => {
+        if (r.status !== 200) {
+          r.json().then(data => {
+            this.message = data.message ? data.message : 'Error while loading given URL';
+          }).catch(_e => {
+            this.message = 'Error while loading given URL';
+          })
+        } else {
+          const json = r.text().then(data => {
+            try {
+              JSON.parse(data);
+              this.record = data;
+              this.dialogRef.close(this.record);
+            } catch (_e) {
+              this.message = 'Error: The URL does not point to a valid JSON file'
+            }
+          });
+        }
+      }).catch(e => {
+        this.message = `Error: ${e.message}`;
+      })
     }
-    this.dialogRef.close(this.record);
   }
 
+  // Is this method still used anywhere?
+  // useFile() {
+  //   if (!this.uploaded && this.pastedJSON) {
+  //     const read = JSON.parse(this.pastedJSON);
+  //     // If there is no substanceClass field in Substance JSON data
+  //     if (!read['substanceClass']) {
+  //       // if JSON data is from non-substance entity, read the json from the textbox
+  //       if (read['id']) {
+  //         this.loaded = true;
+  //         this.record = this.pastedJSON;
+  //         this.message = '';
+  //       } else {
+  //         this.message = 'Error: Invalid JSON format';
+  //         this.loaded = false;
+  //       }
+  //     } else {
+  //       this.loaded = true;
+  //       this.record = this.pastedJSON;
+  //       this.message = '';
+  //     }
+  //
+  //   }
+  // }
 
   checkLoaded() {
     this.loaded = true;
@@ -95,6 +142,17 @@ export class SubstanceEditImportDialogComponent implements OnInit {
       this.message = '';
     } catch (e) {
       this.message = 'Error: Invalid JSON format in pasted string';
+      this.loaded = false;
+    }
+  }
+
+  checkUrl() {
+    try {
+      new URL(this.pastedUrl);
+      this.loaded = true;
+      this.message = '';
+    } catch (_e) {
+      this.message = 'Invalid URL';
       this.loaded = false;
     }
   }
@@ -113,4 +171,15 @@ export class SubstanceEditImportDialogComponent implements OnInit {
     return true;
   }
 
+  tabChanged(tabChangeEvent: MatTabChangeEvent) {
+    if (this.currentTab !== tabChangeEvent.index) {
+      this.currentTab = tabChangeEvent.index;
+      this.message = '';
+      this.loaded = false;
+      this.record = '';
+      this.pastedJSON = '';
+      this.pastedUrl = '';
+      this.filename = '';
+    }
+  }
 }

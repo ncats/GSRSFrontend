@@ -161,8 +161,17 @@ export class UserEditDialogComponent implements OnInit {
   });
   }
 
+  private isValidEmail(email: string): boolean {
+    if (!email || email.trim() === '') return true; // email is optional
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  }
+
   saveChanges(): void {
-    if (this.changePassword && this.newPassword !== '' ) {
+    if (this.user.user.email && !this.isValidEmail(this.user.user.email)) {
+      this.isError = true;
+      this.message = 'Email format is incorrect';
+      return;
+    } else if (this.changePassword && this.newPassword !== '' ) {
       this.isError = true;
       this.message = 'Cancel or submit new password to save other changes';
     } else if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
@@ -225,13 +234,18 @@ export class UserEditDialogComponent implements OnInit {
       this.message = 'Unable to edit user';
       if (error.error) {
         this.isError = true;
-        this.message = error;
+        this.message = error.error.message || error.message || 'Unable to edit user';
       }
     });
   }
 
   addUser(): void {
     this.isError = false;
+    if (this.user.user.email && !this.isValidEmail(this.user.user.email)) {
+      this.isError = true;
+      this.message = 'Email format is incorrect';
+      return;
+    }
     if (this.newPassword === this.newPasswordConfirm) {
       if(!this.selectedRole || this.selectedRole===null || this.selectedRole.length ===0){
         this.message = "Please select a role for this user";
@@ -360,7 +374,7 @@ export class UserEditDialogComponent implements OnInit {
   }
 
   private getRoleNumericValue(roleName: string): number {
-    if(!roleName || roleName === null || roleName.length ==- 0 ) return 
+    if(!roleName || roleName === null || roleName.length === 0 ) return
     (this.configService.configData.roleSortingConfig && this.configService.configData.roleSortingConfig["null"] != null )
     ? this.configService.configData.roleSortingConfig["null"] : 0;
 

@@ -32,12 +32,12 @@ export class StructureImportComponent implements OnInit {
       this.isLoading = true;
       this.structureService.interpretStructure(this.importTextControl.value).subscribe(response => {
         this.isLoading = false;
-        if (response && response.structure && response.structure.molfile) {
+        if (response && response.structure && response.structure.molfile && response.structure.smiles) {
           this.gaService.sendEvent('structureImport', 'button:import', 'file imported');
           this.dialogRef.close(response);
         } else {
           this.messageClass = 'error';
-          this.message = 'You need to enter a valid molfile or smiles';
+          this.message = 'Please enter a valid v2000 molfile or smiles';
           this.gaService.sendException('wrong structure data imported');
         }
 

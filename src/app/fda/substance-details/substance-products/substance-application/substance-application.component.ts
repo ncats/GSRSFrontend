@@ -17,13 +17,14 @@ import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
 import { applicationSearchSortValues } from '../../../application/applications-browse/application-search-sort-values';
 
 @Component({
-    selector: 'app-substance-application',
-    templateUrl: './substance-application.component.html',
-    styleUrls: ['./substance-application.component.scss'],
-    standalone: false
+  selector: 'app-substance-application',
+  templateUrl: './substance-application.component.html',
+  styleUrls: ['./substance-application.component.scss'],
+  standalone: false
 })
 
 export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisplay implements OnInit {
+  localBdnum: string;
   application: any;
   applicationCount = 0;
   totalApplication = 0;
@@ -73,6 +74,8 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
     this.canUpdate = await this.authService.hasSpecificPrivilege('Edit')
 
+    /* Commenting right now. Will remove later after everything works */
+    /*
     if (this.bdnum) {
       this.getApplicationCenterList();
 
@@ -80,10 +83,24 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
         + this.bdnum;
       this.getApplicationBySubstanceKeyCenter(null, 'initial');
     }
+    */
+  }
+
+  @Input()
+  set bdnum(setBdnum: string) {
+    this.localBdnum = setBdnum;
+
+     if (this.localBdnum) {
+      this.getApplicationCenterList();
+
+      this.privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
+        + this.localBdnum;
+      this.getApplicationBySubstanceKeyCenter(null, 'initial');
+    }
   }
 
   getApplicationCenterList(): void {
-    this.applicationService.getApplicationCenterList(this.bdnum).subscribe(results => {
+    this.applicationService.getApplicationCenterList(this.localBdnum).subscribe(results => {
       this.centerListOriginal = results;
       this.centerList = results;
       if (this.centerList && this.centerList.length > 0) {
@@ -113,29 +130,29 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
     if ($event) {
       const evt: any = $event.tab;
       const textLabel: string = evt.textLabel;
-      
+
       // Extract center and table information from the tab label
       if (textLabel != null) {
         this.loadingStatus = 'Loading data...';
-        
+
         // Parse the tab label to extract center (before space) and fromTable (after space)
         const index = textLabel.indexOf(' ');
         this.center = textLabel.slice(0, index);
         this.fromTable = textLabel.slice(index + 1, textLabel.length);
       }
-  
+
       // Clear existing results before loading new data
       this.paged = [];
-  
+
       // Build search query with substance key, center, and source table parameters
       this.privateSearch = 'root_applicationProductList_applicationIngredientList_substanceKey:'
-        + this.bdnum + ' AND root_center:' + this.center + ' AND root_fromTable: ' + this.fromTable;
-  
+        + this.localBdnum + ' AND root_center:' + this.center + ' AND root_fromTable: ' + this.fromTable;
+
       // Fetch application data based on the constructed search criteria
       this.getApplicationBySubstanceKeyCenter();
     }
   }
-  
+
   // GSRS 3.0
   getApplicationBySubstanceKeyCenter(pageEvent?: PageEvent, searchType?: string) {
     this.setPageEvent(pageEvent);
@@ -245,8 +262,8 @@ export class SubstanceApplicationComponent extends SubstanceDetailsBaseTableDisp
   }
 
   applicationListExportUrl() {
-    if (this.bdnum != null) {
-      this.exportUrl = this.applicationService.getApplicationListExportUrl(this.bdnum);
+    if (this.localBdnum != null) {
+      this.exportUrl = this.applicationService.getApplicationListExportUrl(this.localBdnum);
     }
   }
 

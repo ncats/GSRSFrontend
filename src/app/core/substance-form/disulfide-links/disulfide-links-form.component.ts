@@ -1,34 +1,39 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Link, Site} from '@gsrs-core/substance';
-import { SubstanceFormDisulfideLinksService } from './substance-form-disulfide-links.service';
-import {UtilsService} from '@gsrs-core/utils';
-import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
-import {MatDialog} from '@angular/material/dialog';
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {Subscription} from 'rxjs';
-import {SubstanceFormService} from '@gsrs-core/substance-form/substance-form.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from "@angular/core";
+import { Link, Site } from "@gsrs-core/substance";
+import { SubstanceFormDisulfideLinksService } from "./substance-form-disulfide-links.service";
+import { UtilsService } from "@gsrs-core/utils";
+import { ControlledVocabularyService } from "@gsrs-core/controlled-vocabulary";
+import { MatDialog } from "@angular/material/dialog";
+import { OverlayContainer } from "@angular/cdk/overlay";
+import { Subscription } from "rxjs";
+import { SubstanceFormService } from "@gsrs-core/substance-form/substance-form.service";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { SubunitSelectorDialogComponent } from "@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component";
 
 @Component({
-    selector: 'app-disulfide-links-form',
-    templateUrl: './disulfide-links-form.component.html',
-    styleUrls: ['./disulfide-links-form.component.scss'],
-    standalone: false
+  selector: "app-disulfide-links-form",
+  templateUrl: "./disulfide-links-form.component.html",
+  styleUrls: ["./disulfide-links-form.component.scss"],
+  standalone: false,
 })
-export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDestroy {
-
+export class DisulfideLinksFormComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   private privateLink: Link;
   public cysteine: Array<Site> = [];
   @Output() linkDeleted = new EventEmitter<Link>();
   deleteTimer: any;
   testForm = new FormGroup({
-    site0: new FormControl('', [
-      Validators.required
-    ]),
-    site1: new FormControl('', [
-      Validators.required
-    ]),
+    site0: new FormControl<Site | null>(null, [Validators.required]),
+    site1: new FormControl<Site | null>(null, [Validators.required]),
   });
   private subscriptions: Array<Subscription> = [];
   private overlayContainer: HTMLElement;
@@ -39,29 +44,32 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
     private substanceFormService: SubstanceFormService,
-    private substanceFormDisulfideLinksService: SubstanceFormDisulfideLinksService
-  ) { }
+    private substanceFormDisulfideLinksService: SubstanceFormDisulfideLinksService,
+  ) {}
 
   ngOnInit() {
     if (this.privateLink.sites) {
-      this.testForm.controls['site0'].setValue(this.privateLink.sites[0].toString());
-      this.testForm.controls['site1'].setValue(this.privateLink.sites[1].toString());
+      this.testForm.controls["site0"].setValue(this.privateLink.sites[0]);
+      this.testForm.controls["site1"].setValue(this.privateLink.sites[1]);
     } else {
       this.privateLink.sites = [{}, {}];
     }
     this.overlayContainer = this.overlayContainerService.getContainerElement();
   }
-    ngAfterViewInit() {
-      setTimeout(() => {
-        const cysteineSubscription = this.substanceFormDisulfideLinksService.substanceCysteineSites.subscribe(cysteine => {
-          this.cysteine = cysteine;
-        });
-        this.subscriptions.push(cysteineSubscription);
-      });
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const cysteineSubscription =
+        this.substanceFormDisulfideLinksService.substanceCysteineSites.subscribe(
+          (cysteine) => {
+            this.cysteine = cysteine;
+          },
+        );
+      this.subscriptions.push(cysteineSubscription);
+    });
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
+    this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
   }
@@ -76,14 +84,14 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
   }
 
   deleteLink(): void {
-    if (confirm('Are you sure you want to delete links?')) {
-    this.privateLink.$$deletedCode = this.utilsService.newUUID();
-   // if (!this.privateLink) {
+    if (confirm("Are you sure you want to delete links?")) {
+      this.privateLink.$$deletedCode = this.utilsService.newUUID();
+      // if (!this.privateLink) {
       this.deleteTimer = setTimeout(() => {
         this.linkDeleted.emit(this.link);
       }, 1000);
-    // }
-    this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
+      // }
+      this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
     }
   }
 
@@ -98,8 +106,11 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
   }
 
   updateSuggestions(value: Site, pos: number): void {
-    this.cysteine = this.cysteine.filter(function(r) {
-      return (r.residueIndex !== value.residueIndex) || (r.subunitIndex !== value.subunitIndex);
+    this.cysteine = this.cysteine.filter(function (r) {
+      return (
+        r.residueIndex !== value.residueIndex ||
+        r.subunitIndex !== value.subunitIndex
+      );
     });
     if (this.privateLink.sites[pos] !== value) {
       if (this.privateLink.sites[pos].residueIndex) {
@@ -109,7 +120,7 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
       this.substanceFormDisulfideLinksService.updateCysteine(this.cysteine);
     } else {
     }
-    this.testForm.controls['site' + pos].setValue(value);
+    this.testForm.controls["site" + pos].setValue(value);
   }
 
   openDialog(): void {
@@ -118,28 +129,28 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
       sentSites = [];
     }
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
-      data: {'card': 'disulfide', 'link': sentSites},
-      width: '1040px',
-      panelClass: 'subunit-dialog'
+      data: { card: "disulfide", link: sentSites },
+      width: "1040px",
+      panelClass: "subunit-dialog",
     });
-    this.overlayContainer.style.zIndex = '1002';
+    this.overlayContainer.style.zIndex = "1002";
 
-    const dialogSubscription = dialogRef.afterClosed().subscribe(newLinks => {
+    const dialogSubscription = dialogRef.afterClosed().subscribe((newLinks) => {
       this.overlayContainer.style.zIndex = null;
       if (newLinks) {
         if (newLinks[0] && newLinks[0].subunitIndex) {
           this.privateLink.sites[0] = newLinks[0];
-          this.testForm.controls['site0'].setValue(this.privateLink.sites[0].toString());
+          this.testForm.controls["site0"].setValue(this.privateLink.sites[0]);
         } else {
           this.privateLink.sites[0] = {};
-          this.testForm.controls['site0'].reset();
+          this.testForm.controls["site0"].reset();
         }
         if (newLinks[1] && newLinks[1].subunitIndex) {
           this.privateLink.sites[1] = newLinks[1];
-          this.testForm.controls['site1'].setValue(this.privateLink.sites[1].toString());
+          this.testForm.controls["site1"].setValue(this.privateLink.sites[1]);
         } else {
           this.privateLink.sites[1] = {};
-          this.testForm.controls['site1'].reset();
+          this.testForm.controls["site1"].reset();
         }
       }
       this.substanceFormDisulfideLinksService.emitDisulfideLinkUpdate();
@@ -147,4 +158,13 @@ export class DisulfideLinksFormComponent implements OnInit, AfterViewInit, OnDes
     this.subscriptions.push(dialogSubscription);
   }
 
+  compareSites = (a: Site | null, b: Site | null): boolean => {
+    if (!a || !b) {
+      return a === b;
+    }
+
+    return (
+      a.subunitIndex === b.subunitIndex && a.residueIndex === b.residueIndex
+    );
+  };
 }

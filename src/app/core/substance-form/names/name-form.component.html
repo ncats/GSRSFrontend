@@ -15,7 +15,7 @@
         <mat-icon svgIcon="delete_forever"></mat-icon>
       </button>
     </div>
-    <div class="radio-container column-radio" *ngIf="canChangeDisplayName || substanceStatus !== 'APPROVED'">
+    <div class="radio-container column-radio" >
       <mat-radio-button name="priorityName" value="true" [checked]="name.displayName" (change)="priorityUpdated($event)"
         matTooltip="{{ 'displayNameTitle' | elementLabel : 'substance_names_name' }}">
         {{ 'displayNameShortTitle' | elementLabel : 'substance_names_name' }}
@@ -41,6 +41,7 @@
         required
         name="name"
         (keypress)="preventNewLine($event)"
+        (input)="autoResize($event)"
       ></textarea>
       <!-- <input matInput placeholder="Name" [(ngModel)]="name.name" required name="name" /> -->
     </mat-form-field>
