@@ -3,7 +3,7 @@ import { baseEnvironment } from 'src/environments';
 export const environment = baseEnvironment;
 environment.appId = 'fda';
 environment.clasicBaseHref = '/ginas/app/';
-environment.baseHref = '';
+environment.baseHref = '/ginas/app/ui/';
 
 environment.appId = 'fda';
 environment.isAnalyticsPrivate = true;

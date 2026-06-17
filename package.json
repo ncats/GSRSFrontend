@@ -21,7 +21,7 @@
     "start:fda:dev": "npm run process-dojo && ng serve --configuration=fda.dev --sourceMap=true",
     "start:fda:local": "npm run process-dojo && ng serve --configuration=fda.local",
     "_start:fda:local3x": "npm run process-dojo && ng serve --host 0.0.0.0 --serve-path=/ginas/app/ui/ --configuration=fda.local",
-    "start:fda:local3x": "npm run process-dojo && ng serve --host 0.0.0.0 --serve-path=/ui/ --configuration=fda.local",
+    "start:fda:local3x": "npm run process-dojo && ng serve --host 0.0.0.0 --serve-path=/ginas/app/ui/ --configuration=fda.local3x",
 
     "start:fda:pre-prod": "npm run process-dojo && ng serve --configuration=fda.pre-prod --sourceMap=true",
     "start:fda:prod": "npm run process-dojo && ng serve --configuration=fda.prod --sourceMap=true",
