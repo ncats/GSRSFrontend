@@ -235,6 +235,32 @@
                   "with": "src/environments/environment.fda.local.ts"
                 }
               ]
+            },
+            "fda.local3x": {
+              "baseHref": "/ginas/app/ui/",
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/app/core/assets/",
+                  "output": "/assets/"
+                },
+                {
+                  "glob": "config.json",
+                  "input": "src/app/fda/config/",
+                  "output": "/assets/data/"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/app/fda/assets",
+                  "output": "/assets/"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.fda.local3x.ts"
+                }
+              ]
             }
           }
         },
@@ -249,6 +275,9 @@
             },
             "fda.local": {
               "buildTarget": "gsrs-client:build:fda.local"
+            },
+            "fda.local3x": {
+              "buildTarget": "gsrs-client:build:fda.local3x"
             },
             "fda.pre-prod": {
               "buildTarget": "gsrs-client:build:fda.pre-prod"
