@@ -65,7 +65,7 @@
     "ng-multiselect-dropdown": "^1.0.0",
     "ngx-json-viewer": "^3.2.1",
     "ngx-moment": "^6.0.2",
-    "ngx-schema-form": "^2.14.1",
+    "ngx-schema-form": "2.14.1",
     "pako": "^2.1.0",
     "primeng": "^20.3.0",
     "reflect-metadata": "0.1.13",
