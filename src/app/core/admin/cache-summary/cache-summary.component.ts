@@ -31,9 +31,10 @@ export class CacheSummaryComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
-    let activeAndHasEntitiesServices = _.filter(this.configService.configData?.services || [], { 'active': true, 'hasEntities': true });
-    this.services = _.map(activeAndHasEntitiesServices, "name",).sort();
+     
+    let activeServices = _.filter(this.configService.configData?.services || [], { 'active': true, 'hasEntities': true }); // for now the gsrs starter is not a dependency of non-entity services, so we will only show those that have entities.  This will be changed in the future.
+    
+    this.services = _.map(activeServices, "name",).sort();
     //this.loading = true;
     // setTimeout(() => {
     //   this.adminService.fetchJobs(this.currentService).pipe(take(1)).subscribe( resp => {
