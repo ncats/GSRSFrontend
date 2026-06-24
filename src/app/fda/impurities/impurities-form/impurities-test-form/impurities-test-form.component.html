@@ -45,13 +45,12 @@
     </div>
 
     <div class="form-row">
-      <mat-form-field class="col-2-1" *ngIf="
+      <app-cv-input class="col-2-1" *ngIf="
           configSettingsDisplay['test'] ||
           (configSettingsDisplay['test'] === undefined && true)
-        ">
-        <mat-label>Test</mat-label>
-        <input matInput [(ngModel)]="impuritiesTest.test" name="test" />
-      </mat-form-field>
+        " domain="IMPURITIES_TEST" title="Test" name="test"
+        [model]="impuritiesTest.test" (valueChange)="impuritiesTest.test = $event">
+      </app-cv-input>
 
       <app-cv-input class="col-2-1" *ngIf="
           configSettingsDisplay['testType'] ||
@@ -273,7 +272,7 @@
     </div> <!-- form-row -->
 
     <div class="form-row">
-       <mat-form-field class="col-1" *ngIf="
+      <mat-form-field class="col-1" *ngIf="
           configSettingsDisplay['sensitivitySolution'] ||
           (configSettingsDisplay['sensitivitySolution'] === undefined && true)
         ">
