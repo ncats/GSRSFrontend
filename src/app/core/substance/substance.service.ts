@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams, HttpClientJsonpModule, HttpParameterCodec } from '@angular/common/http';
 import { BehaviorSubject, concatMap, filter, interval, Observable, Observer, Subject, throwError } from 'rxjs';
 import { ConfigService } from '../config/config.service';
@@ -25,9 +25,12 @@ import {Facet, FacetQueryResponse} from '@gsrs-core/facets-manager';
 import { StructuralUnit } from '@gsrs-core/substance';
 import {HierarchyNode} from '@gsrs-core/substances-browse/substance-hierarchy/hierarchy.model';
 import { SubstanceDependenciesImageNode } from '@gsrs-core/substance-details/substance-dependencies-image/substance-dependencies-image.model';
-
 import { AuthService } from "@gsrs-core/auth";
+import { SubstancesBrowseComponent } from '@gsrs-core/substances-browse/substances-browse.component';
+
 class CustomEncoder implements HttpParameterCodec {
+
+
   encodeKey(key: string): string {
     return encodeURIComponent(key);
   }
@@ -61,7 +64,7 @@ export class SubstanceService extends BaseHttpService {
     private authService: AuthService,
     public configService: ConfigService,
     private sanitizer: DomSanitizer,
-    private utilsService: UtilsService,
+    private utilsService: UtilsService
   ) {
     super(configService);
   }
@@ -806,23 +809,6 @@ export class SubstanceService extends BaseHttpService {
     return this.http.get<Array<SubstanceEdit>>(url, { withCredentials: true });
   }
 
-  adjustBackendUrlWithRestPrefix(searchFragment: string, restPrefix: string, url: string) {
-    // Consider instead to decompose and recompose the url in case search
-    // terms appear in query params, etc.
-    // Consider making global function that can be used 
-    // in lots of places
-    if (!restPrefix) { return url; }
-    if (!searchFragment) { return url; }
-    const _restPrefix = restPrefix.trim();
-    const _searchFragment = searchFragment.trim();
-    if( _restPrefix.trim().length == 0) { return url}
-    if( _searchFragment.trim().length == 0) { return url}
-    if (url.indexOf(_restPrefix) > -1) { return  url; }
-    if (!(url.indexOf(_searchFragment) > -1)) { return  url; }
-    url = url.replace(_searchFragment, _restPrefix + _searchFragment);
-    return url;
-  }
-
   getSubstanceDetails(id: string, version?: string | number): Observable<SubstanceDetail> {
     const url = `${this.apiBaseUrl}substances(${id})`;
     const restApiPrefix = this.configService.configData.restApiPrefix || '';
@@ -842,7 +828,9 @@ export class SubstanceService extends BaseHttpService {
               `No @edits entry found for version=${v} on substance(${id}).`
             ));
           }
-          const _matchOldValue = this.adjustBackendUrlWithRestPrefix('/api/v1/', restApiPrefix, match.oldValue);
+          // /api/v1/substances
+          // /ginas/app/api/v1/substances
+          const _matchOldValue = this.utilsService.adjustBackendUrlWithRestApiPrefix('/api/v1', restApiPrefix, match.oldValue);
           return this.http.get<SubstanceDetail>(_matchOldValue, options);
         }));
 
@@ -1116,6 +1104,7 @@ export class SubstanceService extends BaseHttpService {
       search = 'substances';
     }
     const url = `${this.configService.configData.apiBaseUrl}api/v1/${search}/export/${etag}`;
+    console.log("this is the url:"  + url);
     return this.http.get< any>(url);
   }
 
