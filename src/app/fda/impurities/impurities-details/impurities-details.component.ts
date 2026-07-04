@@ -15,10 +15,10 @@ import { GeneralService } from '../../service/general.service';
 import { Impurities, ImpuritiesSolutionTable } from '../model/impurities.model';
 
 @Component({
-    selector: 'app-impurities-details',
-    templateUrl: './impurities-details.component.html',
-    styleUrls: ['./impurities-details.component.scss'],
-    standalone: false
+  selector: 'app-impurities-details',
+  templateUrl: './impurities-details.component.html',
+  styleUrls: ['./impurities-details.component.scss'],
+  standalone: false
 })
 export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
 
@@ -33,6 +33,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   flagIconSrcPath: string;
   canEdit: boolean = false;
   updateApplicationUrl: string;
+  title: string;
   message = '';
   subRelationship: any;
   private subscriptions: Array<Subscription> = [];
@@ -57,9 +58,22 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
     this.canEdit = await this.authService.hasSpecificPrivilege('Edit');
     this.id = this.activatedRoute.snapshot.params['id'];
     if (this.id != null) {
+      this.title = "Impurities Details";
+
       this.getImpurities();
     } else {
-      this.handleSubstanceRetrivalError();
+      const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+
+      if (action && action === 'import' && window.history.state) { // IMPORT IMPURITIES
+        this.title = "Impurities Import From File";
+
+        const record = window.history.state.record;
+        const response = JSON.parse(record);
+        if (response) {
+          this.impurities = response;
+        }
+      }
+      //this.handleSubstanceRetrivalError();
     }
     this.loadingService.setLoading(false);
   }
@@ -73,7 +87,7 @@ export class ImpuritiesDetailsComponent implements OnInit, OnDestroy {
   }
 
   getImpurities(): void {
-    const getImpuritiesSubscribe = this.impuritiesService.getImpurities(this.id).subscribe(response => {
+    const getImpuritiesSubscribe = this.impuritiesService.getImpuritiesDetails(this.id).subscribe(response => {
       this.impurities = response;
       if (Object.keys(this.impurities).length > 0) {
 

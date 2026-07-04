@@ -1,0 +1,1306 @@
+
+import { Component, OnInit, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Location, LocationStrategy } from '@angular/common';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import * as _ from 'lodash';
+import * as moment from 'moment';
+import { Sort } from '@angular/material/sort';
+import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { take } from 'rxjs/operators';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+
+/* GSRS Core Imports */
+import { AuthService } from '@gsrs-core/auth/auth.service';
+import { ConfigService } from '@gsrs-core/config';
+import { LoadingService } from '@gsrs-core/loading';
+import { UtilsService } from '@gsrs-core/utils/utils.service';
+import { MainNotificationService } from '@gsrs-core/main-notification';
+import { GoogleAnalyticsService } from '../../../../app/core/google-analytics/google-analytics.service';
+import { environment } from '../../../../environments/environment';
+import { AppNotification, NotificationType } from '@gsrs-core/main-notification';
+import { NarrowSearchSuggestion } from '@gsrs-core/utils';
+import { Facet, FacetParam, FacetsManagerService, FacetUpdateEvent } from '@gsrs-core/facets-manager';
+import { DisplayFacet } from '@gsrs-core/facets-manager/display-facet';
+import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
+import { StructureImageModalComponent, StructureService } from '@gsrs-core/structure';
+import { JsonDialogFdaComponent } from '../../json-dialog-fda/json-dialog-fda.component';
+
+/* GSRS Impurities Imports */
+import { BulkSearchService } from '@gsrs-core/bulk-search/service/bulk-search.service';
+import { GeneralService } from '../../service/general.service';
+import { ImpuritiesService } from '../service/impurities.service';
+import { Impurities } from '../model/impurities.model';
+import { impuritiesSearchSortValues } from '../impurities-search-sort-values';
+import jp from 'jsonpath';
+
+@Component({
+  selector: 'app-impurities-browse',
+  templateUrl: './impurities-browse.component.html',
+  styleUrl: './impurities-browse.component.scss',
+  standalone: false
+})
+export class ImpuritiesBrowseComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  private ACTIVE_INGREDIENT_UPPERCASE = 'ACTIVE INGREDIENT';
+  private ACTIVE_INGREDIENT_LOWERCASE = 'Active Ingredient';
+
+  public impuritiesList: Array<Impurities>;
+  public sortValues = impuritiesSearchSortValues;
+  public narrowSearchSuggestions?: { [matchType: string]: Array<NarrowSearchSuggestion> } = {};
+  private subscriptions: Array<Subscription> = [];
+  private overlayContainer: HTMLElement;
+  public dataSource = [];
+
+  public privateSearchTerm?: string;
+  public _searchTerm?: string;
+  private searchTermHash: number;
+
+  view = 'cards';
+
+  order: string;
+  totalImpurities: number;
+
+  hasBackdrop = false;
+  pageIndex: number;
+  pageSize: number;
+  jumpToValue: string;
+
+  isLoading = true;
+  isError = false;
+
+  appType: string;
+  appNumber: string;
+  clinicalTrialApplication: Array<any>;
+  exportUrl: string;
+  private isComponentInit = false;
+  privateExport = false;
+  disableExport = false;
+
+  isLoggedIn = false;
+  canUpdate: boolean = false;
+  canExport: boolean = false;
+  canCreate: boolean = false;
+
+  etag = '';
+  environment: any;
+
+  matchTypes?: Array<string> = [];
+  narrowSearchSuggestionsCount = 0;
+  previousState: Array<string> = [];
+
+  searchValue: string;
+  isSearchEditable = false;
+  lastPage: number;
+  invalidPage = false;
+  iconSrcPath = '';
+  phpIdIconSrcPath = '';
+  dailyMedUrlConfig = '';
+  downloadJsonHref: any;
+  jsonFileName: string;
+  tabSelectedIndex = 0;
+  fdim = 10;
+
+  showMoreLessActiveIngredArray: Array<boolean> = [];
+  showMoreLessOtherIngredArray: Array<boolean> = [];
+
+  // Cross Entity Search
+  thisEntity: string = "products";
+  subEntity = null;
+  subEntitySearchTerm = null;
+  showCrossEntitySearch = false;
+  searchOnIdentifiers = false;
+  bulkSearchPanelOpen = false;
+  isSearchFinished = false;
+  iterations = 0;
+  bulkSearchStatusKey: string;
+  searchStatusUrl: string;
+  subEntitySearchHash: string;
+  editSubEntitySearchHash: any;
+  bulkSearchQueryId?: string;
+  searchEntity?: string;
+  idLists: Array<string> = [];
+  secondIdLists: Array<string> = [];
+  subEntityDisplayFacets: Array<DisplayFacet> = [];
+
+  ascDescDir = 'desc';
+  public displayedColumns: string[] = [
+    'viewDetails',
+    'productCode',
+    'productName',
+    'ingredientName',
+    'labelerName',
+    'provenance',
+    'country',
+    'status',
+    'productNameType',
+    'applicationNumber'
+  ];
+
+  // needed for facets
+  private privateFacetParams: FacetParam;
+  rawFacets: Array<Facet>;
+  isFacetsParamsInit = false;
+  exportOptions: Array<any>;
+  public displayFacets: Array<DisplayFacet> = [];
+
+  constructor(
+    public bulkSearchService: BulkSearchService,
+    public impuritiesService: ImpuritiesService,
+    private authService: AuthService,
+    private facetManagerService: FacetsManagerService,
+    public configService: ConfigService,
+    private loadingService: LoadingService,
+    private notificationService: MainNotificationService,
+    public gaService: GoogleAnalyticsService,
+    private overlayContainerService: OverlayContainer,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private location: Location,
+    private locationStrategy: LocationStrategy,
+    private sanitizer: DomSanitizer,
+    private utilsService: UtilsService,
+    private generalService: GeneralService,
+    private dialog: MatDialog,
+    private titleService: Title) { }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    setTimeout(() => {
+      if (this.router.url === this.previousState[0]) {
+        this.ngOnInit();
+      }
+    }, 50);
+  }
+
+  async ngOnInit() {
+    this.facetManagerService.registerGetFacetsHandler(this.impuritiesService.getImpuritiesFacets);
+
+    // Get Daily Med Url from Configuration
+    this.dailyMedUrlConfig = this.generalService.getDailyMedUrlConfig();
+
+    // get config value for 'crossEntitySearch'. if it is true show dropdown 'Show Facet For'
+    this.showCrossEntitySearch = this.configService.configData.showCrossEntitySearchDropdown || false;
+
+    this.titleService.setTitle(`Impurities Browser`);
+
+    this.pageSize = 10;
+    this.pageIndex = 0;
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+
+    this.privateSearchTerm = this.activatedRoute.snapshot.queryParams['search'] || '';
+
+    if (this.privateSearchTerm) {
+      this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+      this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    }
+
+    this.order = this.activatedRoute.snapshot.queryParams['order'] || '$root_lastModifiedDate';
+    this.pageSize = parseInt(this.activatedRoute.snapshot.queryParams['pageSize'], null) || 10;
+    this.pageIndex = parseInt(this.activatedRoute.snapshot.queryParams['pageIndex'], null) || 0;
+    this.bulkSearchQueryId = this.activatedRoute.snapshot.queryParams['bulkQID'] || '';
+    this.searchEntity = this.activatedRoute.snapshot.queryParams['searchEntity'] || '';
+
+    // For Cross Entity/Sub Entity Search
+    this.subEntitySearchHash = this.activatedRoute.snapshot.queryParams['subentity-hash'];
+
+    this.overlayContainer = this.overlayContainerService.getContainerElement();
+
+    const authSubscription = this.authService.getAuth().subscribe(auth => {
+      if (auth) {
+        this.isLoggedIn = true;
+      }
+    });
+    this.subscriptions.push(authSubscription);
+
+    // Get dailymed Icon
+    this.iconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_dailymed.png`;
+
+    this.phpIdIconSrcPath = `${this.configService.environment.baseHref || ''}assets/icons/fda/icon_phpid.png`;
+
+    // if cross entity search is performed, show the facets selected for Cross Entity/Sub Entity Search
+    if (this.subEntitySearchHash) {
+      // this.subEntityfacetDisplay();
+    }
+
+    this.isComponentInit = true;
+    this.loadComponent();
+
+    this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
+    this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
+    this.canCreate = await this.authService.hasSpecificPrivilege('Create');
+  }
+
+  ngAfterViewInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
+    this.facetManagerService.unregisterFacetSearchHandler();
+  }
+
+  private loadComponent(): void {
+    if (this.isFacetsParamsInit && this.isComponentInit) {
+      this.searchImpurities();
+    }
+  }
+
+  searchImpurities() {
+    this.loadingService.setLoading(true);
+    const skip = this.pageIndex * this.pageSize;
+    this.iterations = 0;
+
+    const subscription = this.impuritiesService.getImpurities(
+      this.order,
+      skip,
+      this.pageSize,
+      this.privateSearchTerm,
+      this.privateFacetParams,
+      this.fdim,
+      this.bulkSearchQueryId,
+      this.searchOnIdentifiers
+    )
+      .subscribe(pagingResponse => {
+        this.isError = false;
+        this.isError = false;
+        // Get Bulk Search Status Key and url. The hostname for bulk search result can be different for non-substance entity
+        this.bulkSearchStatusKey = pagingResponse.statusKey;
+        this.searchStatusUrl = pagingResponse.searchStatusUrl;
+
+        // if Bulk Search is not finished
+        if (pagingResponse.finished) {
+          this.isSearchFinished = true;
+        }
+
+        // if it is Bulk Search
+        if (this.bulkSearchQueryId && this.iterations === 0) {
+          this.iterations++;
+
+          this.impuritiesList = pagingResponse.content;
+          this.dataSource = this.impuritiesList;
+        } else {
+          this.impuritiesList = pagingResponse.content;
+          this.dataSource = this.impuritiesList;
+        }
+
+        this.totalImpurities = pagingResponse.total;
+        this.etag = pagingResponse.etag;
+
+        if (pagingResponse.total % this.pageSize === 0) {
+          this.lastPage = (pagingResponse.total / this.pageSize);
+        } else {
+          this.lastPage = Math.floor(pagingResponse.total / this.pageSize + 1);
+        }
+        // Set Facets from paging response
+        if (pagingResponse.facets && pagingResponse.facets.length > 0) {
+          this.rawFacets = pagingResponse.facets;
+        }
+
+        // Narrow Suggest Search Begin
+        this.narrowSearchSuggestions = {};
+        this.matchTypes = [];
+        this.narrowSearchSuggestionsCount = 0;
+        if (pagingResponse.narrowSearchSuggestions && pagingResponse.narrowSearchSuggestions.length) {
+          pagingResponse.narrowSearchSuggestions.forEach(suggestion => {
+            if (this.narrowSearchSuggestions[suggestion.matchType] == null) {
+              this.narrowSearchSuggestions[suggestion.matchType] = [];
+              if (suggestion.matchType === 'WORD') {
+                this.matchTypes.unshift(suggestion.matchType);
+              } else {
+                this.matchTypes.push(suggestion.matchType);
+              }
+            }
+            this.narrowSearchSuggestions[suggestion.matchType].push(suggestion);
+            this.narrowSearchSuggestionsCount++;
+          });
+        }
+        this.matchTypes.sort();
+        // Narrow Suggest Search End
+
+        // Get Substance Name for each substance Uuid
+        this.getSubstanceBySubstanceUuid();
+
+        // Get Substance Name for Impurities Details
+        this.getSubstanceByImpuritiesDetails();
+
+        /*
+        // Get PhPID Url if Product Code Type is PhPID
+        this.getPhpIdUrlforProductCode();
+
+        // Get RxNorm Url if Product Code Type is RxNorm
+        this.getRxNormUrlforProductCode();
+
+        // Get Application Type and Application Number Url to go to Browse Application page.
+        this.getApplicationNumberTypeUrl();
+
+        this.getIngredientStrengthDisplay();
+
+        // Sort Product Codes by ascending alphabetically
+        this.sortProductCodes();
+        */
+
+        // Get list of Export extension options such as .xlsx, .txt
+        this.impuritiesService.getExportOptions(this.etag).subscribe(response => {
+          this.exportOptions = response;
+        });
+
+        // Stop the spinner
+        if (this.bulkSearchQueryId && this.iterations === 1) {
+          this.isLoading = false;
+          this.loadingService.setLoading(this.isLoading);
+        }
+
+      }, error => {
+        console.log('error');
+        const notification: AppNotification = {
+          message: 'There was an error trying to retrieve Products. Please refresh and try again.',
+          type: NotificationType.error,
+          milisecondsToShow: 6000
+        };
+        this.isError = true;
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+        this.notificationService.setNotification(notification);
+      }, () => {
+        subscription.unsubscribe();
+        this.isLoading = false;
+        this.loadingService.setLoading(this.isLoading);
+      });
+  }
+
+  setSearchTermValue() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.searchImpurities();
+  }
+
+  resetSearch() {
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = '';
+    this.bulkSearchQueryId = null;
+    this.subEntitySearchHash = '';
+    this.isSearchFinished = false;
+
+    this.searchImpurities();
+  }
+
+  customPage(event: any): void {
+    if (this.validatePageInput(event)) {
+      this.invalidPage = false;
+      const newpage = Number(event.target.value) - 1;
+      this.pageIndex = newpage;
+      this.gaService.sendEvent('impuritiesContent', 'select:page-number', 'pager', newpage);
+      this.populateUrlQueryParameters();
+      this.searchImpurities();
+    }
+  }
+
+  validatePageInput(event: any): boolean {
+    if (event && event.target) {
+      const newpage = Number(event.target.value);
+      if (!isNaN(Number(newpage))) {
+        if ((Number.isInteger(newpage)) && (newpage <= this.lastPage) && (newpage > 0)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  editAdvancedSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'Browse Product search term' :
+      `${this.privateSearchTerm}`;
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {
+        'g-search-hash': this.searchTermHash
+      }
+    };
+
+    this.router.navigate(['/advanced-search'], navigationExtras);
+  }
+
+  // for facets
+  facetsParamsUpdated(facetsUpdateEvent: FacetUpdateEvent): void {
+
+    this.pageIndex = 0;
+    this.privateFacetParams = facetsUpdateEvent.facetParam;
+    this.displayFacets = facetsUpdateEvent.displayFacets;
+    if (!this.isFacetsParamsInit) {
+      // Defer to avoid ExpressionChangedAfterItHasBeenCheckedError
+      Promise.resolve().then(() => {
+        this.isFacetsParamsInit = true;
+        this.loadComponent();
+      });
+    } else {
+      this.searchImpurities();
+    }
+  }
+
+  // for facets
+  facetsLoaded(numFacetsLoaded: number) {
+  }
+
+  sortData(sort: Sort) {
+    // Check if a valid column is selected for sorting
+    if (sort.active) {
+      // Get the index of the column being sorted from the displayedColumns array
+      const orderIndex = this.displayedColumns.indexOf(sort.active).toString();
+
+      // Store the current sort direction (ascending or descending)
+      this.ascDescDir = sort.direction;
+
+      // Iterate through predefined sort configurations to find matching sort criteria
+      this.sortValues.forEach(sortValue => {
+        // Verify that the sort configuration has both column and direction defined
+        if (sortValue.displayedColumns && sortValue.direction) {
+          // Match the current column and direction with predefined sort values
+          // to determine the appropriate sort order value for the API/backend
+          if (this.displayedColumns[orderIndex] === sortValue.displayedColumns &&
+            this.ascDescDir === sortValue.direction) {
+            // Set the order value that will be used in the search/filter request
+            this.order = sortValue.value;
+          }
+        }
+      });
+
+      // Trigger a new search with the updated sort parameters
+      // Search Applications
+      this.searchImpurities();
+    }
+
+    // Exit the function (explicit return for clarity)
+    return;
+  }
+
+  updateView(event): void {
+    this.view = event.value;
+  }
+
+  changePage(pageEvent: PageEvent) {
+    let eventAction;
+    let eventValue;
+
+    if (this.pageSize !== pageEvent.pageSize) {
+      eventAction = 'select:page-size';
+      eventValue = pageEvent.pageSize;
+    } else if (this.pageIndex !== pageEvent.pageIndex) {
+      eventAction = 'icon-button:page-number';
+      eventValue = pageEvent.pageIndex + 1;
+    }
+
+    this.pageSize = pageEvent.pageSize;
+    this.pageIndex = pageEvent.pageIndex;
+    this.populateUrlQueryParameters();
+    this.searchImpurities();
+  }
+
+  clearFilters(): void {
+    // for facets
+    this.displayFacets.forEach(displayFacet => {
+      displayFacet.removeFacet(displayFacet.type, displayFacet.bool, displayFacet.val);
+    });
+
+    if (this.bulkSearchQueryId) {
+      this.clearBulkSearch();
+    } else {
+      this.clearSearch();
+    }
+
+    this.facetManagerService.clearSelections();
+  }
+
+  clearSearch(): void {
+    const eventLabel = environment.isAnalyticsPrivate ? 'search term' : this.privateSearchTerm;
+    this.gaService.sendEvent('impuritiesFiltering', 'icon-button:clear-search', eventLabel);
+
+    this.pageIndex = 0;
+    this.pageSize = 10;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+    this.isSearchFinished = false;
+
+    this.populateUrlQueryParameters();
+
+    this.searchImpurities();
+  }
+
+  clearBulkSearch(): void {
+    this.order = '$root_lastModifiedDate';
+    this.pageSize = 10;
+    this.pageIndex = 0;
+    this.privateSearchTerm = '';
+    this.searchValue = '';
+
+    this.bulkSearchQueryId = null;
+    this.bulkSearchStatusKey = '';
+    this.searchEntity = '';
+    this.subEntitySearchHash = '';
+    this.isSearchFinished = false;
+    this.subEntityDisplayFacets = [];
+
+    this.populateUrlQueryParameters();
+
+    // Reset bulk search and do regular search
+    this.searchImpurities();
+  }
+
+  refreshBulkSearch() {
+    this.searchImpurities();
+
+  }
+
+  populateUrlQueryParameters(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {}
+    };
+    //navigationExtras.queryParams['searchTerm'] = this.privateSearchTerm;
+    navigationExtras.queryParams['search'] = this.privateSearchTerm;
+    navigationExtras.queryParams['pageSize'] = this.pageSize;
+    navigationExtras.queryParams['pageIndex'] = this.pageIndex;
+    navigationExtras.queryParams['skip'] = this.pageIndex * this.pageSize;
+
+    navigationExtras.queryParams['bulkQID'] = this.bulkSearchQueryId;
+    navigationExtras.queryParams['searchEntity'] = this.searchEntity;
+    navigationExtras.queryParams['subentity-hash'] = this.subEntitySearchHash;
+
+    this.previousState.push(this.router.url);
+    const urlTree = this.router.createUrlTree([], {
+      // queryParams: navigationExtras.queryParams,
+      queryParams: {},
+      queryParamsHandling: 'merge',
+      preserveFragment: true
+    });
+    this.location.go(urlTree.toString());
+  }
+
+  get searchTerm(): string {
+    return this.privateSearchTerm;
+  }
+
+  get facetParams(): FacetParam | { showAllMatchOption?: boolean } {
+    return this.privateFacetParams;
+  }
+
+  restricSearh(searchTerm: string): void {
+    this.privateSearchTerm = searchTerm;
+    this.searchTermHash = this.utilsService.hashCode(this.privateSearchTerm);
+    this.isSearchEditable = localStorage.getItem(this.searchTermHash.toString()) != null;
+    this.populateUrlQueryParameters();
+    this.searchImpurities();
+    // this.substanceTextSearchService.setSearchValue('main-substance-search', this.privateSearchTerm);
+  }
+
+  /*
+  getApplicationNumberTypeUrl() {
+    this.impurities.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        if ((prov.applicationType) && (prov.applicationNumber)) {
+          let truncateAppType = this.truncateBeforeNumber(prov.applicationNumber);
+          let truncateAppNum = this.truncateAfterAlpha(prov.applicationNumber);
+          if (prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH FINAL' && prov.applicationType.toUpperCase() !== 'OTC MONOGRAPH NOT FINAL') {
+            prov._applicationUrl = 'root_appType:"^' + prov.applicationType + '$" AND root_appNumber:"^' + prov.applicationNumber + '$"';
+          }
+        }
+      });
+    });
+  }
+  */
+
+  truncateBeforeNumber(str: string): string {
+    // Use search() with a regular expression to find the index of the first digit
+    const firstDigitIndex = str.search(/[0-9]/);
+
+    // If a digit is found,slice the string up to that index
+    if (firstDigitIndex !== -1) {
+      return str.slice(0, firstDigitIndex);
+    }
+
+    // If no digit is found, return the original string
+    return str;
+  }
+
+  truncateAfterAlpha(str: string): string {
+    // Use search() with a regular expression to find the index of the first digit
+    const firstDigitIndex = str.search(/[0-9]/);
+
+    // Get Number, If a digit is found, slice number
+    if (firstDigitIndex !== -1) {
+      return str.slice(firstDigitIndex, str.length);
+    }
+
+    // If no digit is found, return the original string
+    return str;
+  }
+
+  /*
+  sortProductCodes() {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        // Sort by Product Code Type, such as NDC CODE 
+        prov.productCodes.sort((a, b) => (a.productCodeType < b.productCodeType ? -1 : 1));
+      });
+    });
+  }
+
+  getDailyMedUrlforProductCode(): void {
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'NDC CODE', show Daily Med link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'ndc code') {
+                prodCode._dailyMedUrl = this.dailyMedUrlConfig + prodCode.productCode;
+              }
+            }
+          }
+
+        });
+      });
+    });
+  }
+
+  getPhpIdUrlforProductCode(): void {
+    let phpIdUrlConfig = this.generalService.getPhpIdUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'PHPID', show PhpID link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'phpid') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (phpIdUrlConfig) {
+                  prodCode._phpIdUrl = phpIdUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getRxNormUrlforProductCode(): void {
+    let rxNormUrlConfig = this.generalService.getRxNormUrlConfig();
+
+    this.products.forEach((product, indexProd) => {
+      product.productProvenances.forEach((prov, indexProv) => {
+        prov.productCodes.forEach(prodCode => {
+
+          // if Product Code Type is 'RxNorm', show RxNorm link on the browse Product page.
+          if (prodCode) {
+            if (prodCode.productCode) {
+              if (prodCode.productCodeType && prodCode.productCodeType.trim().toLowerCase() === 'rxcui') {
+                // If phpId Url exists in the frontend config, get the url and concatenate PhpId code
+                if (rxNormUrlConfig) {
+                  prodCode._rxNormUrl = rxNormUrlConfig + prodCode.productCode;
+                }
+              }
+            }
+          }
+        });
+      });
+    });
+  }
+
+  getIngredientStrengthDisplay() {
+    this.products.forEach((product, indexProd) => {
+      product.productManufactureItems.forEach((elementManuItem, indexManuItem) => {
+
+        elementManuItem.productLots.forEach((elementLot, indexLot) => {
+          elementLot.productIngredients.forEach((elementIngred, indexIngred) => {
+
+            // Display Strength details in readable format
+            if (elementIngred.originalNumeratorNumber && elementIngred.originalNumeratorUnit) {
+              elementIngred._ingredientStrengthDisplay = elementIngred.originalNumeratorNumber + ' '
+                + elementIngred.originalNumeratorUnit.toLowerCase();
+
+              if (elementIngred.originalDenominatorNumber && elementIngred.originalDenominatorUnit) {
+
+                // if Denominator Number is '1' and Denominator Unit is '1', do not display these values
+                if ((elementIngred.originalDenominatorUnit == '1') && (elementIngred.originalDenominatorNumber == '1')) {
+                  // Do something here
+                } else {
+                  elementIngred._ingredientStrengthDisplay = elementIngred._ingredientStrengthDisplay
+                    + ' per ' + elementIngred.originalDenominatorNumber + ' '
+                    + elementIngred.originalDenominatorUnit;
+                }
+              }
+            }
+          }); // ingredient loop
+        }); // product lot loop
+      }); // product manufacture Items loop            
+    }); // product loop
+  }
+  */
+
+  getSubstanceBySubstanceUuid(): void {
+
+    this.impuritiesList.forEach((impurities, indexImpurities) => {
+
+      // Set to []
+      //  impurities._activeIngredients = [];
+      //  impurities._otherIngredients = [];
+
+      // Hide/Show
+      // this.showMoreLessActiveIngredArray[indexProd] = true;
+      // this.showMoreLessOtherIngredArray[indexProd] = true;
+
+      impurities.impuritiesSubstanceList.forEach((elementSubItem, indexSub) => {
+
+        // elementSubItem.impuritiesTestList.forEach((elementTest, indexTest) => {
+        //   elementTest.impuritiesDetailsList.forEach((elementDetails, indexDetails) => {
+
+        // if Substance Uuid exists, get Substance UUID for the substance
+        if (elementSubItem.substanceUuid != null) {
+
+          const substanceSubscription = this.generalService.getSubstanceByAnyId(elementSubItem.substanceUuid).subscribe(response => {
+
+            if (response) {
+
+              elementSubItem._ingredientName = response._name;
+
+              /*
+             // Substance Type, convert from 'Chemical' to 'C', and for other types also
+             if (response.substanceClass) {
+               let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.class === response.substanceClass);
+               if (subClassIndex > -1) {
+                 elementIngred._substanceClass = this.generalService.substanceClassArray[subClassIndex].shortDisplay;
+               }
+             }
+
+             // if Ingredient Type exists
+             if (elementIngred.ingredientType) {
+
+               // Active Ingredient Count
+               if (elementIngred.ingredientType == this.ACTIVE_INGREDIENT_UPPERCASE
+                 || elementIngred.ingredientType == this.ACTIVE_INGREDIENT_LOWERCASE) {
+
+                 // Store Active Ingredient in an Array
+                 product._activeIngredients.push(elementIngred);
+               }
+               // Inactive and Other Ingredient Count
+               else if (elementIngred.ingredientType != this.ACTIVE_INGREDIENT_UPPERCASE
+                 && elementIngred.ingredientType != this.ACTIVE_INGREDIENT_LOWERCASE) {
+
+                 // Store Active Ingredient in an Array
+                 product._otherIngredients.push(elementIngred);
+               }
+             } // if Ingredient Type exists
+             else {
+               // if there is no Ingredient Type
+               product._otherIngredients.push(elementIngred);
+             } 
+             */
+            } // response 
+          });
+          this.subscriptions.push(substanceSubscription);
+
+        } // substanceUuid exists
+
+        //   }); // loop impuritiesDetailsList
+        //  }); // loop impuritiesTestList
+      }); // loop impuritiesSubstanceList
+    });  // loop impuritiesList
+  }
+
+  getSubstanceByImpuritiesDetails(): void {
+
+    this.impuritiesList.forEach((impurities, indexImpurities) => {
+
+      // Set to []
+      //  impurities._activeIngredients = [];
+      //  impurities._otherIngredients = [];
+
+      // Hide/Show
+      // this.showMoreLessActiveIngredArray[indexProd] = true;
+      // this.showMoreLessOtherIngredArray[indexProd] = true;
+
+      impurities.impuritiesSubstanceList.forEach((elementSubItem, indexSub) => {
+
+        elementSubItem.impuritiesTestList.forEach((elementTest, indexTest) => {
+          elementTest.impuritiesDetailsList.forEach((elementDetails, indexDetails) => {
+
+            // if Substance Uuid exists, get Substance UUID for the substance
+            if (elementDetails.relatedSubstanceUuid != null) {
+
+              const substanceSubscription = this.generalService.getSubstanceByAnyId(elementDetails.relatedSubstanceUuid).subscribe(response => {
+
+                if (response) {
+                  elementDetails._ingredientName = response._name;
+
+                  /*
+                 // Substance Type, convert from 'Chemical' to 'C', and for other types also
+                 if (response.substanceClass) {
+                   let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.class === response.substanceClass);
+                   if (subClassIndex > -1) {
+                     elementIngred._substanceClass = this.generalService.substanceClassArray[subClassIndex].shortDisplay;
+                   }
+                 }
+
+                 // if Ingredient Type exists
+                 if (elementIngred.ingredientType) {
+
+                   // Active Ingredient Count
+                   if (elementIngred.ingredientType == this.ACTIVE_INGREDIENT_UPPERCASE
+                     || elementIngred.ingredientType == this.ACTIVE_INGREDIENT_LOWERCASE) {
+
+                     // Store Active Ingredient in an Array
+                     product._activeIngredients.push(elementIngred);
+                   }
+                   // Inactive and Other Ingredient Count
+                   else if (elementIngred.ingredientType != this.ACTIVE_INGREDIENT_UPPERCASE
+                     && elementIngred.ingredientType != this.ACTIVE_INGREDIENT_LOWERCASE) {
+
+                     // Store Active Ingredient in an Array
+                     product._otherIngredients.push(elementIngred);
+                   }
+                 } // if Ingredient Type exists
+                 else {
+                   // if there is no Ingredient Type
+                   product._otherIngredients.push(elementIngred);
+                 } 
+                 */
+                } // response 
+              });
+              this.subscriptions.push(substanceSubscription);
+
+            } // substanceUuid exists
+
+          }); // loop impuritiesDetailsList
+        }); // loop impuritiesTestList
+      }); // loop impuritiesSubstanceList
+    });  // loop impuritiesList
+  }
+
+  /*
+  getSubstanceClass(substanceClass: string): string {
+    if (substanceClass) {
+      let subClassIndex = this.generalService.substanceClassArray.findIndex(subClass => subClass.shortDisplay === substanceClass);
+      if (subClassIndex > -1) {
+        return "The Substance Type is " + this.generalService.substanceClassArray[subClassIndex].longDisplay;
+      }
+    } 
+    return "";
+  }
+  */
+  export(extension: string) {
+    if (this.etag) {
+      // const extension = 'xlsx';
+      const url1 = this.getApiExportUrl(this.etag, extension);
+      if (this.authService.getUser() !== '') {
+        const dialogReference = this.dialog.open(ExportDialogComponent, {
+          // height: '215x',
+          width: '700px',
+          data: { 'extension': extension, 'type': 'BrowseImpurities', 'entity': 'impurities', 'hideOptionButtons': true }
+        });
+        // this.overlayContainer.style.zIndex = '1002';
+        dialogReference.afterClosed().subscribe(response => {
+          // this.overlayContainer.style.zIndex = null;
+          const name = response.name;
+          const id = response.id;
+          if (name && name !== '') {
+            this.loadingService.setLoading(true);
+            const fullname = name + '.' + extension;
+            this.authService.startUserDownload(url1, this.privateExport, fullname, id).subscribe(response => {
+              // this.authService.startUserDownload(url, this.privateExport, fullname).subscribe(response => {
+              this.loadingService.setLoading(false);
+              const navigationExtras: NavigationExtras = {
+                queryParams: {
+                  totalSub: this.totalImpurities
+                }
+              };
+              const params = { 'total': this.totalImpurities };
+              this.router.navigate(['/user-downloads/', response.id]);
+            }, error => this.loadingService.setLoading(false));
+          }
+        });
+      }
+    }
+  }
+
+  getApiExportUrl(etag: string, extension: string): string {
+    return this.impuritiesService.getApiExportUrl(etag, extension);
+  }
+
+  isNumber(str: any): boolean {
+    if (str) {
+      const num = Number(str);
+      const nan = isNaN(num);
+      return !nan;
+    }
+    return false;
+  }
+
+  openImageModal(subUuid: string, displayName?: string, approvalID?: string): void {
+    let data: any;
+    data = {
+      structure: subUuid,
+      uuid: subUuid,
+      approvalID: approvalID,
+      displayName: displayName
+    };
+
+    const dialogRef = this.dialog.open(StructureImageModalComponent, {
+      height: '90%',
+      width: '650px',
+      panelClass: 'structure-image-panel',
+      data: data
+    });
+
+    this.overlayContainer.style.zIndex = '1002';
+
+    const subscription = dialogRef.afterClosed().subscribe(() => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    }, () => {
+      this.overlayContainer.style.zIndex = null;
+      subscription.unsubscribe();
+    });
+  }
+
+  getAppTypeNumberUrl(applicationType: string, applicationNumber: string): string {
+    let appUrl = 'browse-applications?search=root_appType:\"^' + applicationType + '$\" AND root_appNumber:\"^' + applicationNumber + '$\"';
+    return appUrl;
+  }
+
+  processSubstanceSearch(searchValue: string) {
+    this.privateSearchTerm = searchValue;
+    this.setSearchTermValue();
+  }
+
+  /*
+  getProductNameWithDisplayName(productIndex: number, productProvenanceIndex: number, productProvenanceNameIndex: number) {
+    const productNameObj = this.products[productIndex].productProvenances[productProvenanceIndex].productNames[productProvenanceNameIndex];
+    this.products.forEach(product => {
+      if (product) {
+
+      }
+    });
+  }
+  */
+
+  showJSON(impuritiesIndex: number): void {
+    const date = new Date();
+    let jsonFilename = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+
+    const copyImpurities = _.cloneDeep(this.impuritiesList[impuritiesIndex]);
+    let cleanImpurities = this.scrub(copyImpurities);
+
+    let data = { jsonData: cleanImpurities, jsonFilename: jsonFilename };
+
+    const dialogRef = this.dialog.open(JsonDialogFdaComponent, {
+      width: '90%',
+      height: '90%',
+      data: data
+    });
+
+    const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
+    });
+    this.subscriptions.push(dialogSubscription);
+  }
+
+  saveJSON(impuritiesIndex: number): void {
+    const copyImpurities = _.cloneDeep(this.impuritiesList[impuritiesIndex]);
+    let cleanImpurities = this.scrub(copyImpurities);
+
+    const uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(cleanImpurities)));
+    this.downloadJsonHref = uri;
+
+    const date = new Date();
+    this.jsonFileName = 'impurities_' + moment(date).format('MMM-DD-YYYY_H-mm-ss');
+  }
+
+  increaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = '1002';
+  }
+
+  decreaseOverlayZindex(): void {
+    this.overlayContainer.style.zIndex = null;
+  }
+
+  /*
+
+  toggleShowMoreLessActiveIngredArray(indexProd) {
+    this.showMoreLessActiveIngredArray[indexProd] = !this.showMoreLessActiveIngredArray[indexProd];
+  }
+
+  toggleShowMoreLessOtherIngredArray(indexProd) {
+    this.showMoreLessOtherIngredArray[indexProd] = !this.showMoreLessOtherIngredArray[indexProd];
+  }
+  */
+
+  tabSelectedUpdated(event: MatTabChangeEvent) {
+    if (event) {
+      //this.tabSelectedIndex = event.index;
+    }
+  }
+
+  tabTestSelectedUpdated(event: MatTabChangeEvent) {
+    if (event) {
+      //this.tabSelectedIndex = event.index;
+    }
+  }
+
+  scrub(oldraw: any): any {
+    const old = oldraw;
+
+    const ingredientNameHolders = jp.query(old, '$..[?(@._ingredientName)]');
+    for (let i = 0; i < ingredientNameHolders.length; i++) {
+      if (ingredientNameHolders[i]._ingredientName) {
+        delete ingredientNameHolders[i]._ingredientName;
+      }
+    }
+
+    //delete old['_activeIngredients'];
+    //delete old['_otherIngredients'];
+
+    return old;
+  }
+
+  createQueryTextWithIds(idListForSearch: Array<string>, entity: string, rootId: boolean = false): string {
+    let queryText = '';
+
+    idListForSearch.forEach((id, index) => {
+      if (id) {
+        if (index > 0) {
+          queryText = queryText + '\n';
+        }
+        if (entity && entity === 'substances') {
+          queryText = queryText + 'root_uuid:"' + id + '"';
+        } else {
+          if (rootId) {
+            queryText = queryText + 'root_id:"' + id + '"';
+          } else {
+            queryText = queryText + 'entity_link_substances:"' + id + '"';
+          }
+        }
+      }
+    });
+
+    return queryText;
+  }
+
+  /*
+getBulkQuery(substanceIdLists: Array<string>, entity: string) {
+  let queryText = this.createQueryTextWithIds(substanceIdLists, entity);
+
+  if (queryText) {
+    this.bulkSearchService.postOrPutBulkQuery(entity, queryText).subscribe(result => {
+      if (result) {
+        if (result.id) {
+          this.forwardToSubstance(result.id);
+        }
+      }
+    });
+  }
+}
+
+showAllSubstances() {
+  this.getSearchIdsOnly(true, "all substances");
+}
+ 
+forwardToSubstance(bulkQID: number) {
+
+  let currentUrl = this.location.path();
+  alert('Current URL:' + currentUrl);
+
+  // store values in array to retreive later from localStorage
+  let item = {
+    'allSubFromProductUrl': currentUrl
+  };
+
+  // Store current url in cookies
+  const searchItemHash = this.utilsService.hashCode();
+
+  // Store parameters in local storage
+  localStorage.setItem(searchItemHash.toString(), JSON.stringify(item));
+
+  const navigationExtras: NavigationExtras = {
+    queryParams: {}
+  };
+
+  if (bulkQID > 0) {
+    navigationExtras.queryParams['bulkQID'] = bulkQID;
+  }
+
+  if (searchItemHash) {
+    navigationExtras.queryParams['allSubFromProd-hash'] = searchItemHash;
+  }
+
+  this.router.navigate(['/browse-substance'], navigationExtras);
+}
+ 
+// Need this for Cross Entity Search. Return all the IDs only for the current search
+getSearchIdsOnly(doPerformSearch: boolean = true, searchType?: string) {
+  if (doPerformSearch) {
+    let idListsTemp: Array<string> = [];
+
+    let order = null;
+    let top = 10;
+    let skip = 0;
+    let fdim = 1000000;
+    let bulkQID = null;
+    let searchOnIdentifiers = false;
+    let view = 'key';
+    // let viewfield = 'facet';
+    let facetlabel = 'Substance UUID';
+    let viewfield = null;
+
+    const subscription = this.productService.getProductFacetWithSearchCriteria(
+      facetlabel,
+      this.privateFacetParams,
+      this.privateSearchTerm,
+      fdim
+    ).subscribe(response => {
+      if (response) {
+        if (response.content && response.content.length > 0) {
+          // *** For Cross Entity Search get lists of Substance UUID ***
+          response.content.forEach((facet, index) => {
+            if (facet) {
+              if (facet.label) {
+                idListsTemp.push(facet.label);
+              }
+            }
+            // Copy after the last record
+            if (response.content.length == index + 1) {
+
+              if (searchType && searchType === 'all substances') {
+                this.getBulkQuery(idListsTemp, 'substances',);
+              } else {
+                // Get Search Product Ids for Cross Entity Search
+                this.getSearchProductIds(idListsTemp);
+              }
+
+              // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+              // this.idLists = idListsTemp;
+            }
+          }); // forEach    
+
+        } // if content 
+        else {
+          this.idLists = [];
+        }
+      } // response
+      else {
+        this.idLists = [];
+      }
+
+    }, error => {
+      console.log('Error during search product');
+    }, () => {
+      this.subscriptions.push(subscription);
+    }
+    ); // response
+
+  } // if doPerformSearch == true
+}
+
+getSearchProductIds(substanceUuids?: any) {
+  let idListsTemp: Array<string> = [];
+
+  let order = null;
+  let top = 1000000;
+  let skip = 0;
+  let fdim = 10;
+  let bulkQID = null;
+  let searchOnIdentifiers = false;
+  let view = 'key';
+  // let viewfield = 'facet';
+  //let facetlabel = 'Substance UUID';
+  let facetlabel = null;
+  let viewfield = 'id';
+  let simpleSearchOnly: boolean = true;
+
+  // Get Product records that have Ingredients
+  this.privateFacetParams['Has Ingredients'] = { 'params': { 'Has Ingredients': true }, 'isAllMatch': false };
+
+  const prodSubscription = this.productService.getProducts(
+    order,
+    skip,
+    top,
+    this.privateSearchTerm,
+    this.privateFacetParams,
+    fdim,
+    bulkQID,
+    searchOnIdentifiers,
+    view,
+    viewfield,
+    facetlabel,
+    simpleSearchOnly
+  ).subscribe(pagingResponse => {
+    if (pagingResponse.content) {
+      let results: any = pagingResponse.content;
+
+      // Loop through each product record and get product id
+      if (results.length > 0) {
+        results.forEach((productId, index) => {
+          // for Cross Entity Search, add Product Ids in the temporary list
+          idListsTemp.push(productId);
+
+          // Copy after the last record
+          if (results.length == index + 1) {
+
+            this.idLists = substanceUuids;
+            this.secondIdLists = idListsTemp;
+            // For Cross Entity Search, copy idListTemp to idList after the loop so that change detection happens only once
+            //  this.idLists = idListsTemp;
+          }
+        }); // forEach
+      } else {
+        //this.idLists = [];
+      }
+    }  // pagingResponse   
+  }, error => {
+    console.log('Error during search substance');
+  }, () => {
+    this.subscriptions.push(prodSubscription);
+  }
+
+  ); // pagingResponse
+}
+
+subEntityfacetDisplay() {
+  // if (hashcode is found on the url)
+  if (this.subEntitySearchHash) {
+    // Get Sub-entity facet values from local Storage to display on Browse Substance page
+    const searchParams = localStorage.getItem(this.subEntitySearchHash);
+
+    if (searchParams) {
+      const searchParamItems = JSON.parse(searchParams);
+      if (searchParamItems) {
+        this.subEntity = searchParamItems['subEntityDisplay'];
+        this.subEntityDisplayFacets = searchParamItems['subEntityDisplayFacets'];
+      }
+    }
+  }
+}
+
+editSubEntitySearch(): void {
+  if (this.subEntitySearchHash) {
+    let randomInteger = Math.floor(Math.random() * 100000000);
+
+    // Using random number to create different value, so it will trigger change Detection for Input
+    this.editSubEntitySearchHash = this.subEntitySearchHash + '_' + randomInteger;
+  }
+}
+*/
+}

@@ -1180,6 +1180,30 @@
         "root_modifiedDate",
         "Record Last Edited By"
       ]
+    },
+     "impurities": {
+      "default": [
+      "Source",
+      "Source Type",
+      "Source ID",
+      "Spec Type",
+      "Product Substance ID",
+      "Ingredient Approval ID",
+      "Ingredient Name (Preferred)",
+      "Ingredient Name",
+      "Impurities",
+      "Test",
+      "Test Type",
+      "System",
+      "Elution Type",
+      "Type"
+      ],
+      "admin": [
+        "root_creationDate",
+        "Record Created By",
+        "root_lastModifiedDate",
+        "Record Last Edited By"
+      ]
     }
   },
   "codeSystemOrder": ["BDNUM", "CAS", "WHO-ATC", "EVMPD", "NCI"],
@@ -1223,6 +1247,12 @@
       "order": 15
     },
     {
+      "component": "impurities",
+      "display": "Browse Impurities",
+      "path": "browse-impurities",
+      "order": 16
+    },
+    {
       "display": "Register",
       "children": [
         {
@@ -1254,6 +1284,12 @@
           "display": "Impurities",
           "path": "impurities/register",
           "order": 220
+        },
+        {
+          "component": "impurities",
+          "display": "Impurities Import",
+          "path": "impurities/import",
+          "order": 221
         },
         {
           "component": "invitropharmacology",

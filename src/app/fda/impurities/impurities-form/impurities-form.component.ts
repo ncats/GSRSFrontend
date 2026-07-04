@@ -107,25 +107,29 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
     const routeSubscription = this.activatedRoute
       .params
       .subscribe(params => {
-        if (params['id']) {
+        if (params['id']) {  // EDIT EXISTING IMPURITIES RECORD
           const id = params['id'];
-          this.title = 'Update Impurity';
+          
           if (id !== this.id) {
             this.id = id;
+
             this.gaService.sendPageView(`Impurity Edit`);
             this.titleService.setTitle(`Update Impurities`);
+            
             this.getImpurities();
           }
-        } else { //Copy Impurities to register form
+        } else { // ELSE: IMPORT, COPY, and NEW REGISTER
           this.title = 'Register Impurities';
+          
           const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+          
           this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
-          if (action && action === 'import' && window.history.state) {
+          
+          if (action && action === 'import' && window.history.state) { // IMPORT IMPURITIES
+
             this.gaService.sendPageView(`Impurities Import`);
+
             const record = window.history.state.record;
-            // this.imported = true;
-            // this.getDetailsFromImport(record.record);
-            // if ((record) && this.jsonValid(record)) {
             const response = JSON.parse(record);
             if (response) {
               // scrub ids and audit information before saving in import json
@@ -137,21 +141,20 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
               this.loadingService.setLoading(false);
               this.isLoading = false;
             }
-            //this.substanceFormService.loadSubstance(this.substanceClass, responseImport).pipe(take(1)).subscribe(() => {
-            // this.substanceSsg4mService.loadSubstance(this.subClass).pipe(take(1)).subscribe(() => {
-            // this.setFormSections(formSections[this.substanceClass]);
-            // });
-            //  }
-            //  }
-          } else if (this.id) { //copy
+
+          } else if (this.id) { // COPY IMPURITIES TO NEW REGISTER
+          
             this.getImpurities('copy');
             this.gaService.sendPageView(`Impurities Register`);
-          } else {
+          
+          } else { // NEW REGISTER 
             setTimeout(() => {
               this.gaService.sendPageView(`Impurities Register`);
               this.titleService.setTitle(`Register Impurities`);
+
               this.impuritiesService.loadImpurities();
               this.impurities = this.impuritiesService.impurities;
+
               this.loadingService.setLoading(false);
               this.isLoading = false;
             });
@@ -162,7 +165,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.applicationService.unloadSubstance();
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
@@ -236,7 +238,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   getImpurities(newType?: string): void {
     if (this.id != null) {
       const id = this.id.toString();
-      const getImpuritySubscribe = this.impuritiesService.getImpurities(id).subscribe(response => {
+      const getImpuritySubscribe = this.impuritiesService.getImpuritiesDetails(id).subscribe(response => {
         if (response) {
 
           // before copying existing impurities, delete the id
@@ -515,7 +517,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           const id = response.id;
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
-          //  this.router.navigate(['/impuritiesDetails', id, 'edit']);
           this.router.navigate(['/impurities', id]);
         }
       }, 4000);
@@ -600,7 +601,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       data: data
     });
 
-    //   this.overlayContainer.style.zIndex = '1002';
     const dialogSubscription = dialogRef.afterClosed().subscribe(response => {
     });
     this.subscriptions.push(dialogSubscription);
@@ -635,27 +635,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         this.loadingService.setLoading(true);
         this.overlayContainer.style.zIndex = null;
 
-        // attempting to reload a substance without a router refresh has proven to cause issues with the relationship dropdowns
-        // There are probably other components affected. There is an issue with subscriptions likely due to some OnInit not firing
-
-        /* const read = JSON.parse(response);
-         if (this.id && read.uuid && this.id === read.uuid) {
-           this.substanceFormService.importSubstance(read, 'update');
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {
-         if ( read.substanceClass === this.substanceClass) {
-           this.imported = true;
-           this.substanceFormService.importSubstance(read);
-           this.submissionMessage = null;
-           this.validationMessages = [];
-           this.showSubmissionMessages = false;
-           this.loadingService.setLoading(false);
-           this.isLoading = false;
-         } else {*/
         setTimeout(() => {
           this.router.onSameUrlNavigation = 'reload';
           this.loadingService.setLoading(false);
@@ -665,8 +644,6 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
           }
         }, 1000);
       }
-      // }
-      // }
     });
   }
 

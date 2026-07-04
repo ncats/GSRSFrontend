@@ -1,0 +1,137 @@
+<div>
+  <div class="top-fixed bordergray">
+
+    <div class="actions-container">
+
+      <!-- Show JSON button -->
+
+      <button mat-flat-button color="primary" (click)="downloadJson()">
+        Download PDF to JSON
+      </button>&nbsp;&nbsp;&nbsp;
+
+
+      <!-- Save JSON button -->
+      <!--
+      <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
+        download="{{ jsonFileName }}.json">
+        <span>Export JSON</span> </a>&nbsp;&nbsp;&nbsp;
+      -->
+
+      <!-- Do not show 'Import JSON' button when in Update Impurities page -->
+      <!--
+      <span *ngIf="impurities && !impurities.id">
+        <button mat-flat-button color="primary" (click)="importJSON()">
+          Import JSON
+        </button>
+      </span>
+      -->
+
+      <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
+        *ngIf="validationMessages && validationMessages.length > 0">
+        {{ showSubmissionMessages ? "Hide" : "Show" }} messages
+        <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
+      </button>
+      <span class="middle-fill"></span>
+
+    </div> <!-- class=action-container -->
+
+    <!-- Validation Message Display -->
+    <div [ngClass]="{
+        'submission-messages': true,
+        collapsed: !showSubmissionMessages,
+        expanded: showSubmissionMessages,
+      }">
+      <div class="submission-message" *ngIf="submissionMessage">
+        {{ submissionMessage }}
+      </div>
+
+      <!-- Validation Message Display and Submit Button -->
+      <div *ngIf="validationMessages">
+        <span *ngIf="validationMessages.length > 0">
+          <div class="submission-message" *ngIf="!serverError && !approving">
+            Please correct or dismiss the following errors and submit again:
+          </div>
+          <div class="validation-message" *ngFor="let message of validationMessages; index as i">
+            <div class="message-type" [ngClass]="
+                message.messageType == 'ERROR'
+                  ? 'error-message'
+                  : 'warning-message'
+              ">
+              {{ message.messageType }}
+            </div>
+            <div class="message">
+              {{ message.message
+              }}<span *ngFor="let link of message.links"><br /><a [href]="link.href" target="_blank">{{
+                  link.text
+                  }}</a></span>
+            </div>
+            <button mat-icon-button matTooltip="Dismiss" *ngIf="message.messageType != 'ERROR' && !approving"
+              (click)="dismissValidationMessage(i)">
+              <mat-icon svgIcon="cancel"></mat-icon>
+            </button>
+          </div>
+        </span>
+
+        <div class="dismiss-container">
+          <span class="middle-fill"></span>
+          <button mat-flat-button color="primary" (click)="submit()"
+            [disabled]="isLoading || this.validationResult === false">
+            {{
+            validationMessages && validationMessages.length > 0
+            ? "Dismiss All and "
+            : ""
+            }}
+            Submit
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <!-- Validation Message and Submit Button END -->
+  </div> <!-- class=top-fixed -->
+
+  <!-- Display Form Fields -->
+
+  <div class="form-content-container mat-form-field-style">
+    <div class="scrollable-container">
+      <div class="cards-container">
+
+        <div class="">
+          <div class="title_box">
+            <div class="title">
+              Import Impurities
+            </div>
+
+          </div> <!-- title_box-->
+
+          <mat-card class="bordergray">
+            <mat-card-content>
+              <b>Select an Pdf file to Import Impurities data into Database:</b>&nbsp;&nbsp;
+
+              <!-- Import EXCEL DATA and convert to JSON -->
+              <input type="file" (change)="onFileChange($event)" />
+
+              <!-- SHOW PDF TO JSON RESULTS -->
+              <div>
+                <br><br><br>
+                <div><b>PDF to JSON Results</b>
+                  <br><br>
+                </div>
+
+                {{jsonResult}}
+
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+          <br />
+          <br />
+
+        </div>
+
+      </div> <!-- class=cards-container -->
+    </div> <!-- class=scrollable-container -->
+  </div> <!-- class=form-content-container -->
+
+</div>
+<br /><br /><br />

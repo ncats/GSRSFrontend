@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+
+/* GSRS Core Imports */
 import { ConfigService } from '@gsrs-core/config';
 import { BaseHttpService } from '@gsrs-core/base';
 import { PagingResponse } from '@gsrs-core/utils';
 import { UtilsService } from '@gsrs-core/utils/utils.service';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
+import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestions-group.model';
+
+/* GSRS Impurities Imports */
 import {
   Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting, ImpuritiesElutionSolvent,
   ImpuritiesSolution, ImpuritiesSolutionTable, ImpuritiesUnspecified, ImpuritiesResidualSolventsTest, ImpuritiesResidualSolvents, ImpuritiesInorganicTest,
@@ -38,6 +43,122 @@ export class ImpuritiesService extends BaseHttpService {
     // Initialize fields that depend on configService
     this.apiBaseUrlWithEntityContext = this.configService.configData.apiBaseUrl + 'api/v1/impurities' + '/';
   }
+
+  /* IMPURITIES BROWSER FUNCTIONS BEGIN */
+  getImpurities(
+    order: string,
+    skip: number = 0,
+    top: number = 10,
+    searchTerm?: string,
+    facets?: FacetParam,
+    fdim: number = 10,
+    bulkQID?: string,
+    searchOnIdentifiers?: boolean,
+    view?: string,
+    viewfield?: string,
+    facetlabel?: string,
+    simpleSearchOnly?: boolean
+  ): Observable<PagingResponse<Impurities>> {
+    return new Observable(observer => {
+
+      if (bulkQID != null && bulkQID.toString() != '') {
+        // Perform bulk search
+        /*this.productBulkSearch(
+          searchTerm,
+          bulkQID,
+          searchOnIdentifiers,
+          this.entity,
+          top,
+          facets,
+          order,
+          skip
+        ).subscribe(response => {
+          observer.next(response);
+        }, error => {
+          observer.error(error);
+        }, () => {
+          observer.complete();
+        }); */
+
+      } else {
+        const url = this.apiBaseUrlWithEntityContext + 'search';
+
+        let params = new FacetHttpParams();
+
+        params = params.append('skip', skip.toString());
+        params = params.append('top', top.toString());
+        params = params.append('fdim', fdim.toString());
+
+        if (view) {
+          params = params.append('view', view); // setting view=key or full, faster result
+        }
+
+        if (viewfield) {
+          params = params.append('viewfield', viewfield); // setting viewfield=id or facet, faster result
+        }
+
+        if (facetlabel) {
+          params = params.append('facetlabel', facetlabel); // setting facetlabel=FDA UNII, faster result, no content
+        }
+
+        if (simpleSearchOnly) {
+          params = params.append('simpleSearchOnly', simpleSearchOnly.toString()); // if setting simpleSearchOnly=true, do not return facets
+        }
+
+        if (searchTerm) {
+          params = params.append('q', searchTerm);
+        }
+
+        params = params.appendFacetParams(facets);
+
+        if (order) {
+          params = params.append('order', order);
+        }
+
+        const options = {
+          params: params
+        };
+
+        // Return Product search results
+        return this.http.get<PagingResponse<Impurities>>(url, options).subscribe(
+          response => {
+            if (response) {
+              observer.next(response);
+              observer.complete();
+            }
+          }, error => {
+            observer.error(error);
+            observer.complete();
+          });
+      } // else search
+
+    });  // Observable(observer) 
+  }
+
+  // This function is called when doing text search on the facet
+  getImpuritiesFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
+    let url: string;
+    if (searchTerm) {
+      url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+    } else if (nextUrl != null) {
+      url = nextUrl;
+    } else {
+      url = facet._self;
+    }
+    return this.http.get<FacetQueryResponse>(url);
+  }
+
+  getProductSearchSuggestions(searchTerm: string): Observable<SubstanceSuggestionsGroup> {
+    return this.http.get<SubstanceSuggestionsGroup>(this.apiBaseUrlWithEntityContext + 'suggest?q=' + searchTerm);
+  }
+
+  getExportOptions(etag: string): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + `export/${etag}`;
+    return this.http.get<any>(url);
+  }
+
+  /* IMPURITIES BROWSER FUNCTIONS END */
+  /***************************************************** */
 
   get isImpuritiesUpdated(): boolean {
     const impuritiestring = JSON.stringify(this.impurities);
@@ -139,7 +260,7 @@ export class ImpuritiesService extends BaseHttpService {
     }
   }
 
-  getImpurities(id: string): Observable<any> {
+  getImpuritiesDetails(id: string): Observable<any> {
     const url = this.apiBaseUrlWithEntityContext + `${id}`;
     return this.http.get<Impurities>(url)
       .pipe(

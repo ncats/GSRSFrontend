@@ -67,6 +67,7 @@
     "ngx-moment": "^6.0.2",
     "ngx-schema-form": "2.14.1",
     "pako": "^2.1.0",
+    "pdfjs-dist": "^6.0.227",
     "primeng": "^20.3.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.1",

@@ -1,0 +1,551 @@
+<br><br><br>
+<mat-sidenav-container>
+
+  <mat-sidenav mode="side" opened>
+
+    <!-- DISPLAY FACETS -->
+    <app-facets-manager (facetsParamsUpdated)="facetsParamsUpdated($event)" (facetsLoaded)="facetsLoaded($event)"
+      [rawFacets]="rawFacets" configName="impurities" includeFacetSearch="true">
+    </app-facets-manager>
+
+  </mat-sidenav>
+
+  <!-- Browse Impurities Content -->
+  <mat-sidenav-content>
+    <div class="side-nav-content">
+
+      <!-- BULK SEARCH RESULTS BEGIN -->
+      <div class="marginbottom20px" *ngIf="bulkSearchQueryId && bulkSearchStatusKey">
+        <mat-expansion-panel [expanded]="bulkSearchPanelOpen" (opened)="bulkSearchPanelOpen = true"
+          (closed)="bulkSearchPanelOpen = false"
+          style="max-width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
+
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0; else noCrossEntitySearch">
+                Cross Entity Bulk Search Summary&nbsp;(Full Results)
+              </div>
+              <ng-template #noCrossEntitySearch>
+                <div>Bulk Search Summary (Full Results)</div>
+              </ng-template>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div *ngIf="bulkSearchQueryId" style="margin-top: 10px; text-align: center">
+            <app-bulk-search-results-summary showTitle=false loadSummaries=true context="impurities"
+              [key]="bulkSearchStatusKey" [isCollapsed]="isBulkSearchCollapsed" [searchStatusUrl]="searchStatusUrl">
+            </app-bulk-search-results-summary>
+          </div>
+        </mat-expansion-panel>
+      </div>
+      <!-- Bulk Search END -->
+
+      <!-- Display this message if Bulk Search is not finished -->
+      <div class="marginbottom20px" *ngIf="((bulkSearchQueryId && iterations > 0) && !isSearchFinished)">
+        <div><b>Getting more Impurities records ... This page will refresh automatically once complete.</b>
+          &nbsp;&nbsp;
+          <button class="sub-search-ref-btn" color="primary" (click)="refreshBulkSearch()">Refresh Search</button>
+        </div>
+      </div>
+      <!-- BULK SEARCH STATUS Message END -->
+
+
+      <!-- NARROW SEARCH SUGGESTIONS BEGIN -->
+      <div class="narrow-search-suggestions-container"
+        *ngIf="matchTypes && matchTypes.length > 0; else filterParameters">
+        <div class="flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions" style="margin:auto; background-color: white;">
+            <div>
+              Would you like to restrict this search to a field?
+            </div>&nbsp;
+            <button mat-flat-button color="primary" [matMenuTriggerFor]="searchSuggestions" style="padding-right: 5px;"
+              (menuOpened)="increaseOverlayZindex()" (menuClosed)="decreaseOverlayZindex()">
+              <span>Fields </span>&nbsp;
+              {{narrowSearchSuggestionsCount}}
+              <mat-icon svgIcon="drop_down"></mat-icon>
+            </button>
+            <button mat-flat-button color="primary" (click)="clearFilters()">
+              <span>RESET</span>
+            </button>
+            <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <mat-menu class="search-suggestions-container" #searchSuggestions="matMenu">
+              <div class="narrow-search-dropdown" *ngFor="let matchType of matchTypes">
+                <div *ngIf="((matchType) && (matchType === 'WORD' || matchType === 'FULL'))">
+                  <div class="match-type">
+                    {{matchType == 'WORD' ? 'Contains Match' : 'Exact Match'}}
+                  </div>
+                  <button mat-menu-item *ngFor="let suggestion of narrowSearchSuggestions[matchType]"
+                    (click)="restricSearh(suggestion.luceneQuery)">
+                    <div class="suggestion-display">
+                      {{suggestion.displayField}}
+                    </div>
+                    <div class="suggestion-count">
+                      {{suggestion.count}}
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </mat-menu>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div class="mat-elevation-z2 narrow-search-suggestions"
+            style="margin:auto; background-color: white; margin-top: 12px; ">
+            For more options use the <a routerLink="/advanced-search" style="padding-left: 6px;"> Advanced Search</a>
+          </div>
+        </div>
+      </div>
+      <!-- Narrow Search Suggestion End -->
+
+      <!-- FILTER Parameters Begin -->
+      <ng-template #filterParameters>
+        <div class="search-parameters">
+          <div class="mat-elevation-z2 selected-parameter" *ngIf="searchTerm">
+            <div>
+              <span class="capitalized font-medium-bold no-break">Search Query:</span>&nbsp;
+              <span>{{searchTerm}}</span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button color="primary" *ngIf="isSearchEditable" (click)="editAdvancedSearch()">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="clearSearch()">
+                <mat-icon svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Display Facets selection -->
+          <div class="mat-elevation-z2 selected-parameter" *ngFor="let facet of displayFacets">
+            <div class='selected-container'>
+              <span class="capitalized font-medium-bold selected-label">
+                <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                {{facet.type}}:
+              </span>
+              <span class="no-break selected-value">
+                {{facet.val}}
+              </span>
+            </div>
+            <div class="actions-container">
+              <button mat-icon-button class="display-button" color="primary"
+                (click)="facet.removeFacet(facet.type, facet.bool, facet.val)">
+                <mat-icon class="display-icon" svgIcon="delete_forever"></mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <button class="reset-facets-button" mat-raised-button color="primary" (click)="clearFilters()"
+            matTooltip="Clear All Search Criteria"
+            *ngIf="(displayFacets && displayFacets.length > 0) || searchTerm || (subEntityDisplayFacets && subEntityDisplayFacets.length > 0)">
+            <span>RESET</span>
+          </button>
+        </div>
+
+        <!-- Cross Entity/Sub-Entity Search selected Facets BEGIN -->
+        <div class="margintop10px" *ngIf="subEntityDisplayFacets && subEntityDisplayFacets.length > 0">
+          <fieldset class="fieldset-crosssearch">
+            <legend class="legend-crosssearch">Cross Entity Criteria : <b>{{subEntity}}</b></legend>
+
+            <div class="search-parameters">
+              <div class="marginleftneg10px">
+                <div class="mat-elevation-z2 selected-parameter marginright10px"
+                  *ngFor="let facet of subEntityDisplayFacets">
+                  <div class='selected-parameter-crosssearch'>
+                    <span class="selected-label">
+                      <mat-icon class="not-icon" svgIcon="not_interested" *ngIf="!facet.bool"></mat-icon>
+                      {{facet.type}}:
+                    </span>
+                    <span class="no-break selected-value">
+                      {{facet.val}}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Edit button -->
+
+              </div>
+            </div> <!-- class=search-parameters -->
+          </fieldset>
+        </div>
+        <!-- CROSS ENTITY SEARCH - FACET SELECTED DISPLAY END -->
+
+      </ng-template>
+      <!-- FILTER Parameters END -->
+
+
+      <!-- Title, Export, Pagination -->
+      <div class="controls-container">
+
+        <div class="title-container">
+          <span class="main-title">Browse Impurities</span>
+        </div>
+
+        <!-- Table, Full, and Title Views -->
+        <mat-button-toggle-group [value]="view" (change)="updateView($event)">
+          <mat-button-toggle value="table" matTooltip="Table View">
+            <mat-icon svgIcon="list"></mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle value="cards" matTooltip="Full View">
+            <mat-icon svgIcon="view_stream"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <!-- Sort By -->
+        <mat-form-field class="sort">
+          <mat-label>Sort By</mat-label>
+          <mat-select (selectionChange)="searchImpurities()" [(ngModel)]="order">
+            <mat-option *ngFor="let option of sortValues" [value]="option.value">
+              {{option.display}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Export Product Button -->
+        <div class="export" *ngIf="canExport">
+          <mat-menu #exportMenu="matMenu">
+            <a mat-menu-item *ngFor="let option of exportOptions" (click)="export(option.extension)">
+              {{option.displayname}}
+            </a>
+          </mat-menu>
+
+          <div class="export ">
+            <button *ngIf="isLoggedIn && exportOptions && exportOptions.length > 0" matTooltip="Export Search Results"
+              mat-raised-button class="export-button" [matMenuTriggerFor]="exportMenu">
+              <mat-icon svgIcon="get_app"></mat-icon> Export
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="break"></div>
+        <!-- Pagination -->
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalImpurities" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
+
+      </div> <!-- class=controls-container -->
+
+      <div class="search-text">
+        <!-- *** Search Any Text (TYPE AHEAD) *** -->
+        <app-impurities-text-search class="top-search" placeholder="Search Any Text" styling="homePage"
+          [searchValue]="searchValue" (searchPerformed)="processSubstanceSearch($event)"
+          eventCategory="impuritiesSearch">
+        </app-impurities-text-search>
+
+        <!--
+        <div>
+          <button class="margintop10px marginleft80px" mat-raised-button color="primary" (click)="showAllSubstances()"
+            matTooltip="Show All Substances associated with these Product records">
+            <span>Show All Substances</span>
+          </button>
+        </div>
+        -->
+      </div>
+
+      <!-- ******** Display Content Details ******** -->
+      <div [ngClass]="view">
+
+        <!-- **************************************************************** -->
+        <!-- **************************************************************** -->
+        <!-- TABLE VIEW BEGIN TO DISPLAY DATA IN BROWSER                      -->
+        <!-- **************************************************************** -->
+
+        <div class="table-view">
+          <div class="responsive">
+
+
+          </div> <!-- class=responsive-->
+        </div> <!-- class=table-view -->
+        <!-- TABLE VIEW END -->
+
+
+        <!-- **************************************************************** -->
+        <!-- **************************************************************** -->
+        <!-- CARD VIEW BEGIN -->
+        <!-- **************************************************************** -->
+
+        <div class="cards-view" *ngIf="impuritiesList && impuritiesList.length; else noRecordProduct">
+
+          <!-- FIRST MAT-CARD  -->
+          <mat-card *ngFor="let impurities of impuritiesList; let indexImpurities = index">
+            <mat-card-content class="margintopneg15">
+
+              <div class="divflex marginleftneg10px margintop10px">
+
+                <div>
+                  &nbsp;&nbsp;&nbsp;
+                  <a class="substance-name" [routerLink]="['/impurities', impurities.id]" target="_blank">
+                    <span class="font18px"><b>View Details</b></span>
+                  </a>
+                </div>
+
+                <!-- ***** BUTTONS BEGIN ***** -->
+
+                <!-- Edit GSRS record button -->
+                <div class="" *ngIf="canUpdate">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <a [routerLink]="['/impurities', impurities.id, 'edit']" target="_blank"
+                    matTooltip='Edit GSRS Impurities Record'>
+                    <mat-icon class="margintopneg10px" svgIcon="edit"></mat-icon>
+                  </a>
+                </div>
+
+                <div class="margintopneg10" *ngIf="canUpdate">
+                  <!-- Show Json -->
+                  <span *ngIf="impurities && impurities.id">
+                    <a button mat-icon-button color="primary" (click)="showJSON(indexImpurities)"
+                      matTooltip='Show JSON'>
+                      <mat-icon>article</mat-icon>
+                    </a>&nbsp;
+                  </span>
+                </div>
+
+                <!-- Download Json For this record -->
+                <div class="margintopneg10" *ngIf="canUpdate">
+                  <span *ngIf="impurities && impurities.id">
+                    <a button mat-icon-button color="primary" [href]="downloadJsonHref"
+                      (click)="saveJSON(indexImpurities)" download="{{jsonFileName}}.json" matTooltip='Download JSON'>
+                      <mat-icon class="" svgIcon="get_app"></mat-icon>
+                    </a>
+                  </span>
+                </div>
+
+                <div class="margintopneg10" *ngIf="canCreate">
+                  <!-- Copy Impurities to New Register -->
+                  <a mat-icon-button [routerLink]="['/impurities/register']" [queryParams]="{copyId:impurities.id}"
+                    matTooltip='copy this Impurities to new Impurities registration form' *ngIf="canCreate">
+                    <mat-icon class="margintopneg10px" svgIcon="file_copy"></mat-icon>
+                  </a>
+                </div>
+                <div>
+                  <span>
+                    <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"
+                      *ngIf="canUpdate">
+                    </mat-icon>
+                  </span>
+                </div>
+                <!-- ***** BUTTONS END ***** -->
+
+                <div class="marginleft130px font15px">
+                  <span class="colorlightblue">Source:</span>&nbsp;
+                  <span class="colorlightpurple"><b>{{impurities.source}}</b></span>
+                </div>
+
+                <div class="marginleft130px font15px">
+                  <span class="colorlightblue">Source Type:</span>&nbsp;
+                  <span class="colorblue"><b>{{impurities.sourceType}}</b></span>
+                </div>
+
+              </div> <!-- class=divflex-->
+
+              <!-- GROUP BY PROVENANCE BEGIN -->
+
+              <mat-tab-group class="margintop15px" (selectedTabChange)="tabSelectedUpdated($event)">
+
+                <!-- ######################################################################## -->
+                <!-- MAT-TAB: SUBSTANCE BEGIN - Display data in each tab for each Provenance -->
+                <!-- #########################################################################-->
+
+                <mat-tab class="margintopneg10"
+                  *ngFor="let impSubstance of impurities.impuritiesSubstanceList; let indexSub = index">
+
+                  <ng-template mat-tab-label>
+                    <span class="font12px colorlightblue">Substance:</span>&nbsp;
+                    <span class="font16px">
+
+                      <div *ngIf="impSubstance._ingredientName">
+                        <a [routerLink]="['/substances', impSubstance.substanceUuid]" target="_blank"><span
+                            class="colororange font16px fontbold"><b>{{impSubstance._ingredientName}}</b></span>
+                        </a>
+                      </div>
+
+                    </span>
+                  </ng-template>
+
+                  <!-- MAT GROUP/TAB for Impurities TEST-->
+                  <mat-tab-group class="margintop15px" (selectedTabChange)="tabTestSelectedUpdated($event)">
+
+
+                    <!-- **** MAT-TAB: IMPURITIES TEST BEGIN - Display data in each tab for each Test -->
+                    <mat-tab class="margintopneg10"
+                      *ngFor="let impTest of impSubstance.impuritiesTestList; let indexTest = index">
+
+                      <ng-template mat-tab-label class="padtop15px">
+                        <span class="font13px"></span>&nbsp;
+                        <span>
+                          <span class="font15px colorlightblue">{{impTest.test}}</span>
+                          <div class="font12px">Impurities <b>({{impTest.impuritiesDetailsList.length}})</b></div>
+                        </span>
+
+                      </ng-template>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Test Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.testType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            System:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.system}}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row margintop10px">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Impurities:
+                            <span class="badge">{{impTest.impuritiesDetailsList.length}}</span>
+                          </div>
+                          <div class="row-property-value">
+
+                            <!-- Impurities Details -->
+                            <div *ngIf="impTest.impuritiesDetailsList.length > 0; else noImpDetails">
+                              <ol class="olstyle">
+                                <div *ngFor="let impDetails of impTest.impuritiesDetailsList; let i = index">
+                                  <div class="divflex">
+                                    <li>
+                                      <div class="marginbottom5px">
+                                        <div *ngIf="impDetails.relatedSubstanceUuid">
+                                          <a [routerLink]="['/substances', impDetails.relatedSubstanceUuid]"
+                                            target="_blank">
+                                            <span class="colorlightblue font14px">
+                                              {{impDetails._ingredientName}}
+                                            </span>
+                                          </a>
+                                        </div>
+                                        <span class="font12px">Impurity Type: {{impDetails.impurityType}}</span>
+                                      </div>
+                                    </li>
+                                  </div>
+                                </div>
+                              </ol>
+                            </div> <!-- loop impuritiesDetailsList -->
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Elution Type:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.elutionType}}
+                          </div>
+                        </div>
+                        <div class="row-property">
+                          <div class="row-property-key">
+                            Diluent:
+                          </div>
+                          <div class="row-property-value">
+                            {{impTest.diluent}}
+                          </div>
+                        </div>
+                      </div>
+
+                    </mat-tab>
+                  </mat-tab-group> <!-- impuritiesTestList -->
+
+                </mat-tab>
+              </mat-tab-group> <!-- impuritiesSubstanceList -->
+
+              <!-- Display Audit Details BEGIN -->
+              <div class="row margintopneg30" *ngIf="isLoggedIn">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Created Date:
+                  </div>
+                  <div class="row-property-value">
+                    {{impurities.creationDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Last Modified:
+                  </div>
+                  <div class="row-property-value">
+                    {{impurities.lastModifiedDate|date: 'MM/dd/yyyy hh:mm:ss a'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="isLoggedIn">
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Created By:
+                  </div>
+                  <div class="row-property-value">
+                    {{impurities.createdBy}}
+                  </div>
+                </div>
+                <div class="row-property">
+                  <div class="row-property-key">
+                    Last Modified By:
+                  </div>
+                  <div class="row-property-value">
+                    {{impurities.modifiedBy}}
+                  </div>
+                </div>
+              </div>
+              <!-- Audit Details END -->
+
+            </mat-card-content>
+          </mat-card>
+          <!-- FIRST MAT-CARD END -->
+
+
+        </div> <!-- class=cards -->
+      </div> <!-- [ngClass]=view -->
+
+
+      <!-- Pagination at the bottom of the page -->
+      <div class="controls-container">
+        <div class="full-paginator">
+          <mat-paginator #paginator [length]="totalImpurities" [pageIndex]="pageIndex" [pageSize]="pageSize"
+            [pageSizeOptions]="[5, 10, 50, 100]" [showFirstLastButtons]="true" (page)="changePage($event)">
+          </mat-paginator>
+
+          <div class="page-selector">
+            <span class="page-label">Page: </span>
+            <mat-form-field class="page-input" [ngClass]="{'bad-page':invalidPage}">
+              <input matInput matTooltip="Type a page and press enter" [ngClass]="{'bad-page':invalidPage}"
+                [value]="pageIndex + 1" #pagenum (keydown.enter)="customPage($event)"
+                (input)="validatePageInput($event)? invalidPage = false: invalidPage = true"
+                (focusout)="pagenum.value = pageIndex + 1; invalidPage = false">
+            </mat-form-field>
+            <span class="page-label"> of {{lastPage}}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noRecordProduct>
+
+      </ng-template>
+
+    </div> <!-- class=side-nav-content -->
+  </mat-sidenav-content>
+</mat-sidenav-container>
