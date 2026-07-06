@@ -10,15 +10,15 @@ import {SubstanceService} from '@gsrs-core/substance/substance.service';
 import {FormControl, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {formSections} from '@gsrs-core/substance-form/form-sections.constant';
-import {Subject, of, Subscription} from 'rxjs';
+import {Subject, take as rxjsTake, Subscription, } from 'rxjs';
 import {ControlledVocabularyService} from '@gsrs-core/controlled-vocabulary';
 import { SubstanceClassPipe } from '../../utils/substance-class.pipe';
-import {ConfigService} from '@gsrs-core/config';
-import { catchError } from 'rxjs/operators';
+import {ConfigService, DownloadList} from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading';
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { SubstanceHistoryDialogComponent } from '@gsrs-core/substance-history-dialog/substance-history-dialog.component';
+import { take } from 'lodash';
 
 @Component({
     selector: 'app-substance-overview',
@@ -30,6 +30,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   references: string[] = [];
   showDef = false;
   downloadJsonHref: any;
+  downloadJsonEuSmsFhirHref: any;
   defIcon = 'drop_down';
   latestVersion: number;
   canEdit: boolean;
@@ -53,7 +54,7 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
   @Output("downloadPDF") downloadPDF: EventEmitter<any> = new EventEmitter();
   enablePDFDownloadOption = false;
   pdfDownloadBtnName = "Download PDF";
-
+  downloadList: DownloadList;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -132,9 +133,51 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.enablePDFDownloadOption = this.configService.configData.enablePDFDownload.enablePDFDownload;
       this.pdfDownloadBtnName = this.configService.configData.enablePDFDownload.buttonName
     }
+
+    if(this.configService.configData && this.configService.configData.downloadList ){
+      this.downloadList = this.configService.configData.downloadList      
+    }
   }
 
-    ngOnDestroy() {
+
+getDownloadButtonName(type: string): string {    
+    if (type === undefined || type.trim() === "") { return ""; }
+    const _default: string = type;
+    const root = this.downloadList;
+    if (root === undefined ) { return _default }
+    if (!root.downloads ) { return _default; }
+    const d = root.downloads[type];
+    if (d && d.buttonName) { return d.buttonName; }
+    return _default;   
+}
+
+getDownloadTitle(type: string): string {    
+    if (type === undefined || type.trim() === "") { return ""; }
+    const _default: string = type;
+    const root = this.downloadList;
+    if (root === undefined ) { return _default }
+    if (!root.downloads ) { return _default; }
+    const d = root.downloads[type];
+    if (d && d.title) { return d.title; }
+    return _default;   
+}
+
+
+
+  allowDownload(type: string): boolean {
+    if (type === undefined || type.trim() === "") { return false; }
+    const root = this.downloadList;
+    if (root === undefined ) { return false; }
+    if (root.disableAll === true) { return false; }
+    if (!root.downloads ) { return false; }
+    const d = root.downloads[type];
+    // console.log("download object for type: " + type + " is: " + JSON.stringify(d));
+    if (d && d.enabled === true) { return true; }
+    return false;   
+  }
+
+
+  ngOnDestroy() {
       this.subscriptions.forEach(subscription => {
         subscription.unsubscribe();
       });
@@ -146,9 +189,28 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
       this.getVersion();
     });
     this.subscriptions.push(subSubscription);
-
   }
 
+    downloadEmaSmsFhirRecordAction1(id: string, endpointFunction: string, filename: string): void {
+      this.downloadEmaSmsFhirRecordAction2(endpointFunction, id, filename); 
+    };
+
+    downloadEmaSmsFhirRecordAction2(id: string, endpointFunction: string, filename: string): void {
+      this.substanceService.getSubstanceEmaSmsFhirRecord(id, endpointFunction)
+      .pipe(rxjsTake(1)).subscribe(response => {
+        const dataType = 'JSON';
+        const downloadLink = document.createElement('a');
+        const blob = new Blob([JSON.stringify(response.body)], { type: dataType });
+        downloadLink.href = window.URL.createObjectURL(
+          blob  
+        );
+        downloadLink.setAttribute('download', filename);
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+      });
+  }
+
+  
   getDefAccess() {
     if (this.substance.structurallyDiverse) {
      this.defAccess =  this.substance.structurallyDiverse.access;
@@ -255,7 +317,6 @@ export class SubstanceOverviewComponent extends SubstanceCardBase implements OnI
         this.router.navigate(['/substances/' + this.substance.uuid + '/']);
       }
     });
-
   }
 
   downloadPDFSummary(){

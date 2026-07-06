@@ -45,7 +45,22 @@
       }
     }
   },
-  "enablePDFDownload": {
+  "downloadList": {
+    "disableAll": false,
+    "downloads": {
+      "emaSmsSimpleRecord": {
+        "enabled": false,
+        "title": "Download European Medicines Agency Simple FHIR message",
+        "buttonName": "Download EMA FHIR Simple"
+      },
+      "emaSmsSubstanceDefinition": {
+        "enabled": false,
+        "title": "Download European Medicines Agency Substance Definition FHIR message",
+        "buttonName": "Download EMA FHIR Subst. Def."
+      }
+    }
+  },
+  "enablePDFDownload":{
     "enablePDFDownload": true,
     "buttonName": "Print to PDF",
     "companyName": "",
