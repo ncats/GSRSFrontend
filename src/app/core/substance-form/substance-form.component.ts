@@ -86,6 +86,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   submissionMessage: string;
   validationMessages: Array<ValidationMessage>;
   validationResult = true;
+  private validationAttempt = 0;
   private subscriptions: Array<Subscription> = [];
   copy: string;
   private overlayContainer: HTMLElement;
@@ -1054,6 +1055,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
   validate(validationType?: string): void {
+    const validationAttempt = ++this.validationAttempt;
     if (validationType && validationType === 'approval') {
       this.approving = true;
     } else {
@@ -1064,14 +1066,23 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
 
     this.isLoading = true;
     this.serverError = false;
+    this.submissionMessage = null;
+    this.validationMessages = null;
+    this.validationResult = null;
+    this.showSubmissionMessages = false;
     this.loadingService.setLoading(true);
     let stagingID = null;
     if (this.activatedRoute.snapshot.queryParams['stagingID']) {
       stagingID = this.activatedRoute.snapshot.queryParams['stagingID'];
     }
     this.substanceFormService.validateSubstance(stagingID).pipe(take(1)).subscribe(results => {
-      this.submissionMessage = null;
-      this.validationMessages = results.validationMessages.filter(
+      if (validationAttempt !== this.validationAttempt) {
+        return;
+      }
+      const validationMessages = Array.isArray(results.validationMessages)
+        ? results.validationMessages
+        : [];
+      this.validationMessages = validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING' || message.messageType.toUpperCase() === 'NOTICE');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
@@ -1084,6 +1095,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
       }
     }, error => {
+      if (validationAttempt !== this.validationAttempt) {
+        return;
+      }
       this.addServerError(error);
       this.loadingService.setLoading(false);
       this.isLoading = false;

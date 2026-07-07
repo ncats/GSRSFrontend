@@ -24,6 +24,26 @@ import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JSDraw, Ketcher } from './structure.editor.model';
 
+export type StructureEditorName = 'jsdraw' | 'ketcher';
+
+export function resolveStructureEditorPreference(
+  preference: string | null,
+  defaultEditor: string,
+  enableJSDraw: boolean,
+  enableKetcher: boolean,
+): StructureEditorName {
+  if (!enableKetcher) {
+    return 'jsdraw';
+  }
+  if (!enableJSDraw) {
+    return 'ketcher';
+  }
+  if (preference === 'jsdraw' || preference === 'ketcher') {
+    return preference;
+  }
+  return defaultEditor === 'jsdraw' ? 'jsdraw' : 'ketcher';
+}
+
 @Component({
     selector: 'app-structure-editor',
     templateUrl: './structure-editor.component.html',
@@ -137,11 +157,8 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   @Input() setMolecule(structure: any) {
-    if (this.structureEditor === "ketcher") {
-      this.structureService.interpretStructure(structure).subscribe(resp => {
-        this.ketcher.setMolecule(resp.structure.molfile);        
-      });
-    } else {
+    // Use the editor wrapper so Ketcher isotope handling is applied consistently.
+    if (this.editor) {
       this.editor.setMolecule(structure);
     }
   }
@@ -226,39 +243,19 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       window.addEventListener('drop', this.preventDrag);
       window.addEventListener('paste', this.checkPaste);
 
-      this.structureEditor = environment.structureEditor;
-      let pref = sessionStorage.getItem('gsrsStructureEditor');
-      // if JSDraw is enabled
-      if (pref && this.enableJSDraw) {
-        if (pref === 'ketcher') {
-          this.structureEditor = 'ketcher';
-        } else if (pref === 'jsdraw') {
-          this.structureEditor = 'jsdraw';
-        }
-      } else if (!this.enableJSDraw) {
-        this.structureEditor = 'ketcher';
-      }
-
       // if JSDraw is NOT Enable or is disable
       if (this.configService && this.configService.configData && this.configService.configData.disableJSDraw) {
         this.enableJSDraw = false;
-        this.structureEditor = 'ketcher';
-        if (this.firstload && this.structureEditor === 'ketcher') {
-          document.getElementById("root").style.display = "";
-          this.waitForKetcherFirstLoad();
-          this.firstload = false;
-
-        } else if (this.firstload) {
-          this.firstload = false;
-        }
       } else if (this.configService && this.configService.configData && this.configService.configData.disableKetcher) {
         this.enableKetcher = !this.configService.configData.disableKetcher;
-
-        if (!this.enableKetcher) {
-          this.structureEditor = 'jsdraw';
-        }
       }
 
+      this.structureEditor = resolveStructureEditorPreference(
+        sessionStorage.getItem('gsrsStructureEditor'),
+        environment.structureEditor,
+        this.enableJSDraw,
+        this.enableKetcher,
+      );
       this.editorSwitched.emit(this.structureEditor);
 
       if (!window['JSDraw'] && this.enableJSDraw) {
@@ -339,28 +336,18 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     if (isPlatformBrowser(this.platformId)) {
 
-      this.structureEditor = 'ketcher';
-
       if (this.configService && this.configService.configData && this.configService.configData.disableJSDraw) {
         this.enableJSDraw = false;
-        this.structureEditor = 'ketcher';
-
-        if (this.firstload && this.structureEditor === 'ketcher') {
-          document.getElementById("root").style.display = "";
-          this.waitForKetcherFirstLoad();
-          this.firstload = false;
-
-        } else if (this.firstload) {
-          this.firstload = false;
-        }
       } else if (this.configService && this.configService.configData && this.configService.configData.disableKetcher) {
         this.enableKetcher = !this.configService.configData.disableKetcher;
-
-        if (!this.enableKetcher) {
-          this.structureEditor = 'jsdraw';
-        }
       }
 
+      this.structureEditor = resolveStructureEditorPreference(
+        sessionStorage.getItem('gsrsStructureEditor'),
+        environment.structureEditor,
+        this.enableJSDraw,
+        this.enableKetcher,
+      );
       this.editorSwitched.emit(this.structureEditor);
 
       for (let i = 0; i < this.ketcherUrls.length; i++) {
@@ -377,9 +364,12 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       document.getElementsByTagName('head')[0].appendChild(node2);
 
 
-      this.getSketcher().activated = false;
+      const sketcher = this.getSketcher();
+      if (sketcher) {
+        sketcher.activated = this.structureEditor === 'jsdraw';
+      }
 
-      sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
+      sessionStorage.setItem('gsrsStructureEditor', this.structureEditor);
       if (!this.ketcherLoaded) {
         this.ketcher = window['ketcher'];
         this.ketcherLoaded = true;
@@ -413,21 +403,27 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     return skt;
   }
 
+  private afterEditorIsVisible(callback: () => void): void {
+    window.requestAnimationFrame(callback);
+  }
+
   toggleEditor() {
     if (this.structureEditor === 'ketcher') {
-      this.getSketcher().activated = true;
       this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
         this.structureEditor = 'jsdraw';
-        //  this.editor = new EditorImplementation(this.ketcher, this.jsdraw, 'jsdraw');
         this.editor = new EditorImplementation(null, this.jsdraw);
 
+        // Use the normalized molfile for JSDraw display.
         this.structureService.interpretStructure(Response).subscribe(resp => {
-          this.editorOnLoad.emit(this.editor);
           this.editorSwitched.emit(this.structureEditor);
-          this.jsdraw.setMolfile(resp.structure.molfile);
-
           sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
           document.getElementById("root").style.display = "none";
+
+          this.afterEditorIsVisible(() => {
+            this.editor.setMolecule(resp.structure.molfile);
+            this.getSketcher().activated = true;
+            this.editorOnLoad.emit(this.editor);
+          });
         });
       });
     } else {
@@ -437,24 +433,21 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       if (!this.ketcherLoaded) {
         this.ketcher = window['ketcher'];
         this.ketcherLoaded = true;
-
       }
 
       this.editor.getMolfile().pipe(take(1)).subscribe(Response => {
         this.structureEditor = 'ketcher';
-        // this.editor = new EditorImplementation(this.ketcher, this.jsdraw, 'ketcher');
         this.editor = new EditorImplementation(this.ketcher);
-        this.structureService.interpretStructure(Response).subscribe(resp => {
-          this.editorOnLoad.emit(this.editor);
-          this.editorSwitched.emit(this.structureEditor);
-          this.ketcher.setMolecule(resp.structure.molfile);
 
-        });
+        this.editorSwitched.emit(this.structureEditor);
         sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
-      });
+        document.getElementById("root").style.display = "";
 
-      this.structureEditor = 'ketcher';
-      document.getElementById("root").style.display = "";
+        this.afterEditorIsVisible(() => {
+          this.editor.setMolecule(Response);
+          this.editorOnLoad.emit(this.editor);
+        });
+      });
     }
   }
 
@@ -472,6 +465,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       this.firstload = false;
 
     } else if (this.firstload) {
+      // Keep JSDraw as the preferred editor for this session.
+      if (this.enableJSDraw) {
+        sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
+      }
       this.firstload = false;
     }
 
@@ -503,10 +500,16 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
          });*/
         if (this.enableJSDraw) {
           this.ketcher.editor.event.change.handlers.push({
-            f: (c) => {
-              this.ketcher.getMolfile('v2000').then((result: string) => {
-                this.getSketcher().setFile(result, "mol");
-              })
+            f: (c: Array<{ operation: string }>) => {
+              const isLoadCanvas = Array.isArray(c) &&
+                c.some((op: { operation: string }) => op.operation === 'Load canvas');
+              // Mirror user edits to the JSDraw sidebar after isotope handling.
+              if (!isLoadCanvas && this.editor) {
+                this.editor.getMolfile().pipe(take(1)).subscribe((result: string) => {
+                  const jsdraw = this.getSketcher();
+                  if (jsdraw) { jsdraw.setFile(result, 'mol'); }
+                });
+              }
             }
           });
         }
