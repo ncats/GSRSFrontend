@@ -7,6 +7,8 @@ import {
   formatIsoLines,
   consolidateIsoLines,
   restoreMissingIsoEntries,
+  convertLegacyIsotopeSymbols,
+  adjustFormulaForIsotopicHydrogen,
 } from './molfile-isotope.util';
 
 // Molfile with three separate M  ISO lines.
@@ -347,5 +349,76 @@ describe('Toggle regression: JSDraw→Ketcher does not strip isotopes', () => {
 
     const repaired = restoreMissingIsoEntries(lastTrustedIsoMolfile, ketcherStrippedOutput);
     expect(getIsoEntries(repaired).length).toBe(3);
+  });
+});
+
+describe('convertLegacyIsotopeSymbols', () => {
+  const JSDRAW_DEUTERIUM_MOL = `
+  JSDraw 0709261200 2D
+
+  5  4  0  0  0  0            999 V2000
+    0.0000    0.0000    0.0000 C   0  0
+    1.0000    0.0000    0.0000 Cl  0  0
+   -1.0000    0.0000    0.0000 Cl  0  0
+    0.0000    1.0000    0.0000 Cl  0  0
+    0.0000   -1.0000    0.0000 D   0  0
+  1  2  1  0  0  0  0
+  1  3  1  0  0  0  0
+  1  4  1  0  0  0  0
+  1  5  1  0  0  0  0
+M  END`;
+
+  it('converts legacy D atom symbols to H atoms with M ISO mass 2', () => {
+    const converted = convertLegacyIsotopeSymbols(JSDRAW_DEUTERIUM_MOL);
+    expect(getAtomElements(converted)[4]).toBe('H');
+    expect(getIsoEntries(converted)).toEqual([
+      jasmine.objectContaining({ atomIndex: 5, isotope: 2, element: 'H' }),
+    ]);
+  });
+});
+
+describe('adjustFormulaForIsotopicHydrogen', () => {
+  const HEAVY_WATER_MOL = `
+  Ketcher 0709261200 2D 1   1.00000     0.00000     0
+
+  3  2  0  0  0  0            999 V2000
+    0.0000    0.0000    0.0000 O   0  0
+   -1.0000    0.0000    0.0000 H   0  0
+    1.0000    0.0000    0.0000 H   0  0
+  1  2  1  0  0  0  0
+  1  3  1  0  0  0  0
+M  ISO  2   2   2   3   2
+M  END`;
+
+  const DEUTERATED_CHLOROFORM_MOL = `
+  Ketcher 0709261200 2D 1   1.00000     0.00000     0
+
+  5  4  0  0  0  0            999 V2000
+    0.0000    0.0000    0.0000 C   0  0
+    1.0000    0.0000    0.0000 Cl  0  0
+   -1.0000    0.0000    0.0000 Cl  0  0
+    0.0000    1.0000    0.0000 Cl  0  0
+    0.0000   -1.0000    0.0000 H   0  0
+  1  2  1  0  0  0  0
+  1  3  1  0  0  0  0
+  1  4  1  0  0  0  0
+  1  5  1  0  0  0  0
+M  ISO  1   5   2
+M  END`;
+
+  it('converts backend H2O formula to D2O for explicit deuterium atoms', () => {
+    expect(adjustFormulaForIsotopicHydrogen(HEAVY_WATER_MOL, 'H2O')).toBe('D2O');
+  });
+
+  it('converts CHCl3 to CDCl3 for deuterated chloroform', () => {
+    expect(adjustFormulaForIsotopicHydrogen(DEUTERATED_CHLOROFORM_MOL, 'CHCl3')).toBe('CDCl3');
+  });
+
+  it('leaves formulas unchanged when there are no deuterium or tritium isotope records', () => {
+    expect(adjustFormulaForIsotopicHydrogen(BENZENE_MOL, 'C6H6')).toBe('C6H6');
+  });
+
+  it('leaves non-simple formulas unchanged', () => {
+    expect(adjustFormulaForIsotopicHydrogen(HEAVY_WATER_MOL, 'H2O.Na')).toBe('H2O.Na');
   });
 });
