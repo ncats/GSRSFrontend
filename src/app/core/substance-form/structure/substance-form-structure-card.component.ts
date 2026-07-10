@@ -22,6 +22,7 @@ import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { MatTableDataSource } from '@angular/material/table';
 import { NitrosamineDisplayDialogComponent } from './nitrosamine-display-dialog/nitrosamine-display-dialog.component';
+import { adjustFormulaForIsotopicHydrogen } from '@gsrs-core/structure-editor/molfile-isotope.util';
 
 @Component({
     selector: 'app-substance-form-structure-card',
@@ -246,6 +247,11 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
   processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
+      structurePostResponse.structure.formula = adjustFormulaForIsotopicHydrogen(
+        this.structure?.molfile,
+        structurePostResponse.structure.formula,
+      );
+
       let customSort = (array: any[]): any[] => {
         return array.sort((a, b) => {
           return this.featureSort(a, b);
@@ -335,6 +341,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.overlayContainer.style.zIndex = null;
       if (response != null) {
         if (response && response.structure && response.structure.molfile) {
+          // Keep structure.molfile in sync so a later editor toggle doesn't
+          // re-push stale data over the freshly imported structure.
+          this.structure.molfile = response.structure.molfile;
           this.structureEditorComponent.setMolecule(response.structure.molfile);
         }
         this.processStructurePostResponse(response);

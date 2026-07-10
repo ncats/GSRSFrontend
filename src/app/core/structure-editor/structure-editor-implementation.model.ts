@@ -1,6 +1,6 @@
 import { Editor, JSDraw, Ketcher } from './structure.editor.model';
 import { Observable, from, take } from 'rxjs';
-import { consolidateIsoLines, restoreMissingIsoEntries, getIsoEntries, getCounts } from './molfile-isotope.util';
+import { consolidateIsoLines, restoreMissingIsoEntries, getIsoEntries, getCounts, convertLegacyIsotopeSymbols } from './molfile-isotope.util';
 
 export class EditorImplementation implements Editor {
     private ketcher?: Ketcher;
@@ -29,7 +29,7 @@ export class EditorImplementation implements Editor {
         this.jsdraw = undefined;
         setTimeout(() => {
             const chargeLine = this.getMCharge();
-            mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
+            mfile = convertLegacyIsotopeSymbols(mfile);
 
             if (mfile.indexOf('M  CHG') < 0 && chargeLine != null) {
                 const lines = mfile.split('\n');
@@ -55,7 +55,7 @@ export class EditorImplementation implements Editor {
             } else if (this.jsdraw != null) {
                 const chargeLine = this.getMCharge();
                 let mfile = this.jsdraw.getMolfile();
-                mfile = mfile.replace(/0.0000[ ]D[ ][ ][ ]/g, '0.0000 H   ');
+                mfile = convertLegacyIsotopeSymbols(mfile);
 
                 if (mfile.indexOf('M  CHG') < 0 && chargeLine != null) {
                     const lines = mfile.split('\n');
