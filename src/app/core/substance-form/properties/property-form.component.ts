@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { SubstanceProperty, SubstanceSummary, SubstanceRelated, SubstanceParameter } from '../../substance/substance.model';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { SubstanceProperty, SubstanceSummary, SubstanceRelated, SubstanceParameter, SubstanceDetail } from '../../substance/substance.model';
 import { ControlledVocabularyService } from '../../controlled-vocabulary/controlled-vocabulary.service';
 import { VocabularyTerm } from '../../controlled-vocabulary/vocabulary.model';
-import { FormControl, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
 import { PropertyParameterDialogComponent } from '../property-parameter-dialog/property-parameter-dialog.component';
 import { UtilsService } from '../../utils/utils.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {SubunitSelectorDialogComponent} from '@gsrs-core/substance-form/subunit-selector-dialog/subunit-selector-dialog.component';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
+import { PropertyParameterReuseDialog } from './property-parameter-reuse/property-parameter-reuse-dialog';
+import {Subscription} from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-property-form',
@@ -17,7 +17,7 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
     styleUrls: ['./property-form.component.scss'],
     standalone: false
 })
-export class PropertyFormComponent implements OnInit {
+export class PropertyFormComponent implements OnInit, OnDestroy {
   deleteTimer: any;
   private privateProperty: SubstanceProperty;
   referencedSubstanceUuid: string;
@@ -26,18 +26,27 @@ export class PropertyFormComponent implements OnInit {
   propertyTypeList: Array<VocabularyTerm> = [];
   private overlayContainer: HTMLElement;
   _nonNumeric: string;
+  private fullSubstance: SubstanceDetail;
+  private subscriptions: Array<Subscription> = [];
 
   constructor(
     private cvService: ControlledVocabularyService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
     private overlayContainerService: OverlayContainer,
-    private substanceFormService: SubstanceFormService
-  ) { }
+    private substanceFormService: SubstanceFormService,
+   
+  ) { 
+   
+  }
 
   ngOnInit() {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
-  }
+    const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
+      this.fullSubstance = substance;
+    });
+    this.subscriptions.push(substanceSubscription);
+}
 
   @Input()
   set property(property: SubstanceProperty) {
@@ -50,6 +59,12 @@ export class PropertyFormComponent implements OnInit {
       this._nonNumeric = this.property.value.nonNumericValue;
     }
   }
+
+  /*@Input()
+  set substanceSetter(substance: SubstanceDetail) {
+    this.fullSubstance = substance;
+    console.log(`setter received substance with UUID ${substance == null ? "null" : substance.uuid}`);
+  }*/
 
   get property(): SubstanceProperty {
     return this.privateProperty;
@@ -128,6 +143,31 @@ export class PropertyFormComponent implements OnInit {
     });
   }
 
+  openPropertyParameterForReuse(parameter?: SubstanceParameter): void {
+
+    const dialogRef = this.dialog.open(PropertyParameterReuseDialog, {
+      data: this.fullSubstance,
+      height: '300px',
+      width: '1200px'
+    });
+    this.overlayContainer.style.zIndex = '1002';
+
+    dialogRef.afterClosed().subscribe(newParameter => {
+      this.overlayContainer.style.zIndex = null;
+      if (newParameter != null) {
+        if (this.property.parameters == null) {
+          this.property.parameters = [];
+        }
+        /*if (isNew) {
+          this.property.parameters.unshift(newParameter);
+        } else {
+          Object.keys(newParameter).forEach(key => {
+            parameter[key] = newParameter[key];
+          });
+        }*/
+      }
+    });
+  }
   openFeatureDialog() {
     const feature = {'name': this.property.name, 'siteRange': this.property.value.nonNumericValue};
     const dialogRef = this.dialog.open(SubunitSelectorDialogComponent, {
@@ -162,5 +202,10 @@ export class PropertyFormComponent implements OnInit {
     return vocab;
   }
 
-
+  ngOnDestroy() {
+    console.log('in ngOnDestroy');
+    this.subscriptions.forEach(subscription => {
+      subscription.unsubscribe();
+    });
+  }
 }

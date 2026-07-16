@@ -94,7 +94,13 @@
             (click)="openPropertyParameter()"
             matTooltip="Add parameter"
           >
-            <mat-icon svgIcon="add_circle_outline"></mat-icon>
+           <mat-icon svgIcon="add_circle_outline"></mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            (click)="openPropertyParameterForReuse()"
+            matTooltip="Reuse parameter" >
+            <mat-icon svgIcon="outline-file_copy"></mat-icon>
           </button>
         </h4>
         <mat-list *ngIf="property.parameters">

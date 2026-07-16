@@ -87,6 +87,7 @@ import { ElementLabelDisplayModule } from '@gsrs-core/utils/element-label-displa
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ReferenceFormComponent } from './references/reference-form.component';
 import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
+import { PropertyParameterReuseDialog } from './properties/property-parameter-reuse/property-parameter-reuse-dialog';
 
 @NgModule({
   imports: [
@@ -155,7 +156,8 @@ import { FileSelectModule } from '@gsrs-core/file-select/file-select.module';
     DefinitionSwitchDialogComponent,
     PreviousReferencesDialogComponent,
     CopyDisulfideDialogComponent,
-    SubstanceDraftsComponent
+    SubstanceDraftsComponent,
+    PropertyParameterReuseDialog
   ],
   exports: [
     SubstanceFormComponent,

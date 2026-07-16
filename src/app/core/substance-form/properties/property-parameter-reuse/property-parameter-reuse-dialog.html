@@ -1,0 +1,57 @@
+<div>Please select one parameter to reuse:</div>
+<div class="form-row parameters" *ngFor="let parameter of parametersForReuse; index as index">
+  <span>
+    Parameter {{ index}}
+  </span>
+         <span>{{ parameter.name }}</span>
+            <span *ngIf="parameter.value != null">
+  <span>
+    &nbsp;
+    {{ parameter.value.type }}
+  </span>
+
+  <span *ngIf="parameter.value.average">
+    &nbsp;- &nbsp;
+    {{ parameter.value.average }}
+    &nbsp;
+    {{ parameter.value.units }}
+  </span>
+
+  <span *ngIf="parameter.value.low || parameter.value.high">
+    <span *ngIf="!parameter.value.average">
+      &nbsp; -
+    </span>
+
+    &nbsp; [
+
+    <span *ngIf="!parameter.value.high">></span>
+    <span *ngIf="!parameter.value.low"><</span>
+
+    <span *ngIf="parameter.value.low">
+      {{ parameter.value.low }}
+    </span>
+
+    <span *ngIf="parameter.value.low && parameter.value.high">
+      &nbsp;to&nbsp;
+    </span>
+
+    <span *ngIf="parameter.value.high">
+      {{ parameter.value.high }}
+    </span>
+
+    ]
+
+    <span *ngIf="!parameter.value.average">
+      &nbsp;
+      {{ parameter.value.units }}
+      &nbsp; (average)
+    </span>
+  </span>
+</span>
+
+<span>
+  <button mat-icon-button matTooltip="Use this parameter"
+          (click)="useThisParameter()"></button>
+</span>
+
+</div>
