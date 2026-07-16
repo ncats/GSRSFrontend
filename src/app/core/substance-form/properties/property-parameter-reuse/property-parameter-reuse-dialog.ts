@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { SubstanceProperty, SubstanceDetail, SubstanceParameter } from '../../../substance/substance.model';
 import { VocabularyTerm } from '../../../controlled-vocabulary/vocabulary.model';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
 @Component({
