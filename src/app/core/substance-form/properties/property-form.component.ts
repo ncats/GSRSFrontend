@@ -10,6 +10,7 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { PropertyParameterReuseDialog } from './property-parameter-reuse/property-parameter-reuse-dialog';
 import {Subscription} from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { utils } from 'xlsx';
 
 @Component({
     selector: 'app-property-form',
@@ -60,11 +61,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  /*@Input()
-  set substanceSetter(substance: SubstanceDetail) {
-    this.fullSubstance = substance;
-    console.log(`setter received substance with UUID ${substance == null ? "null" : substance.uuid}`);
-  }*/
 
   get property(): SubstanceProperty {
     return this.privateProperty;
@@ -152,19 +148,30 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     });
     this.overlayContainer.style.zIndex = '1002';
 
+    let isNew: boolean = true;
     dialogRef.afterClosed().subscribe(newParameter => {
       this.overlayContainer.style.zIndex = null;
       if (newParameter != null) {
         if (this.property.parameters == null) {
           this.property.parameters = [];
         }
-        /*if (isNew) {
-          this.property.parameters.unshift(newParameter);
+
+        const serializedParameter = JSON.stringify(newParameter);
+        console.log(`serializedParamter: ${serializedParameter}`);
+
+        const readyParameter = JSON.parse(serializedParameter);
+        readyParameter.uuid = this.utilsService.newUUID();
+        if( readyParameter.value ) {
+          readyParameter.value.uuid = this.utilsService.newUUID();
+          console.log(`reassigned amount UUID as ${readyParameter.value.uuid}`);
+        }
+        if (isNew) {
+          this.property.parameters.unshift(readyParameter);
         } else {
-          Object.keys(newParameter).forEach(key => {
-            parameter[key] = newParameter[key];
+          Object.keys(readyParameter).forEach(key => {
+            parameter[key] = readyParameter[key];
           });
-        }*/
+        }
       }
     });
   }

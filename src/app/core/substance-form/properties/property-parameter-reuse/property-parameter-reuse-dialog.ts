@@ -3,6 +3,7 @@ import { SubstanceProperty, SubstanceDetail, SubstanceParameter } from '../../..
 import { VocabularyTerm } from '../../../controlled-vocabulary/vocabulary.model';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { Subscription } from 'rxjs';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'property-parameter-reuse',
@@ -22,7 +23,8 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    private substanceFormService: SubstanceFormService
+    private substanceFormService: SubstanceFormService,
+    public dialogRef: MatDialogRef<PropertyParameterReuseDialog>,
   ) { }
 
   ngOnInit() {
@@ -45,20 +47,25 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
     console.log(`parametersForReuse contains ${this.parametersForReuse.length}`);
   }
   
-   @Input()
+  @Input()
   set substanceSetter(substance: SubstanceDetail) {
     this.substance = substance;
     console.log(`reuse received substance with UUID ${substance.uuid}`);
   }
 
 
-  useThisParameter(paramNum: number): void {
+  useThisParameter(parameter: SubstanceParameter, paramNum: number): void {
     console.log('use parameter ' + paramNum);
+    this.dialogRef.close(parameter);
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(subscription => {
       subscription.unsubscribe();
     });
+  }
+
+  cancel(): void {
+    this.dialogRef.close();
   }
 }
