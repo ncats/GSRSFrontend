@@ -15,7 +15,7 @@ import { SubstanceSuggestionsGroup } from '@gsrs-core/utils/substance-suggestion
 /* GSRS Impurities Imports */
 import {
   Impurities, ImpuritiesSubstance, ImpuritiesDetails, ImpuritiesTesting, ImpuritiesElutionSolvent,
-  ImpuritiesSolution, ImpuritiesSolutionTable, ImpuritiesUnspecified, ImpuritiesResidualSolventsTest, ImpuritiesResidualSolvents, ImpuritiesInorganicTest,
+  ImpuritiesSolution, ImpuritiesSolutionTable, ImpuritiesAnalysis, ImpuritiesUnspecified, ImpuritiesResidualSolventsTest, ImpuritiesResidualSolvents, ImpuritiesInorganicTest,
   ImpuritiesInorganic, ImpuritiesTotal, ValidationResults, IdentityCriteria
 } from '../model/impurities.model';
 
@@ -139,7 +139,7 @@ export class ImpuritiesService extends BaseHttpService {
   getImpuritiesFacets(facet: Facet, searchTerm?: string, nextUrl?: string): Observable<FacetQueryResponse> {
     let url: string;
     if (searchTerm) {
-      url = `${this.configService.configData.apiBaseUrl}api/v1/products/search/@facets?wait=false&kind=gov.hhs.gsrs.products.product.models.Product&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
+      url = `${this.configService.configData.apiBaseUrl}api/v1/impurities/search/@facets?wait=false&kind=gov.hhs.gsrs.impurities.models.Impurities&skip=0&fdim=200&sideway=true&field=${facet.name.replace(' ', '+')}&top=14448&fskip=0&fetch=100&termfilter=SubstanceDeprecated%3Afalse&order=%24lastEdited&ffilter=${searchTerm}`;
     } else if (nextUrl != null) {
       url = nextUrl;
     } else {
@@ -317,7 +317,7 @@ export class ImpuritiesService extends BaseHttpService {
   }
 
   addNewTest(impuritiesSubstanceIndex: number): void {
-    const newTest: ImpuritiesTesting = { impuritiesElutionSolventList: [], impuritiesSolutionList: [], impuritiesSolutionTableList: [], impuritiesDetailsList: [], impuritiesUnspecifiedList: [] };
+    const newTest: ImpuritiesTesting = { impuritiesElutionSolventList: [], impuritiesSolutionList: [], impuritiesSolutionTableList: [], impuritiesAnalysisList: [], impuritiesDetailsList: [], impuritiesUnspecifiedList: [] };
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList.unshift(newTest);
   }
 
@@ -340,6 +340,13 @@ export class ImpuritiesService extends BaseHttpService {
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
       .impuritiesTestList[impuritiesTestIndex]
       .impuritiesSolutionTableList.push(newSolutionTable);
+  }
+
+  addNewImpuritiesAnalysis(impuritiesSubstanceIndex: number, impuritiesTestIndex: number): void {
+    const newImpuritiesAnalysis: ImpuritiesAnalysis = {};
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex]
+      .impuritiesTestList[impuritiesTestIndex]
+      .impuritiesAnalysisList.unshift(newImpuritiesAnalysis);
   }
 
   addNewImpuritiesDetails(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, impuritiesDetails: ImpuritiesDetails): void {
@@ -421,6 +428,11 @@ export class ImpuritiesService extends BaseHttpService {
   deleteImpuritiesElutionSolvent(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, elutionIndex: number): void {
     this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
       .impuritiesElutionSolventList.splice(elutionIndex, 1);
+  }
+
+  deleteImpuritiesAnalysis(impuritiesSubstanceIndex: number, impuritiesTestIndex: number, analysisIndex: number): void {
+    this.impurities.impuritiesSubstanceList[impuritiesSubstanceIndex].impuritiesTestList[impuritiesTestIndex]
+      .impuritiesAnalysisList.splice(analysisIndex, 1);
   }
 
   deleteImpuritiesResdiualSolventTest(impuritiesSubstanceIndex: number, residualSolventsTestIndex: number): void {
@@ -571,21 +583,18 @@ export class ImpuritiesService extends BaseHttpService {
     );
   }
 
-  /*
-  getSubstanceDetailsBySubstanceId(
-    substanceId: string
-  ): Observable<any> {
-    const url = this.baseUrl + 'getSubstanceDetailsBySubstanceId?substanceId=' + substanceId;
-    return this.http.get<any>(url).pipe(
-      map(results => {
-        return results;
-      })
-    );
-  }
-  */
-
   getImpuritiesListExportUrl(substanceId: string): string {
     return this.baseUrl + 'impuritiesListExport?substanceId=' + substanceId;
+  }
+
+  getImpuritiesLists(): Observable<any> {
+    const url = this.apiBaseUrlWithEntityContext + 'getImpuritiesLists';
+    return this.http.get<any>(url)
+      .pipe(
+        map(result => {
+          return result;
+        })
+      );
   }
 
 } // class

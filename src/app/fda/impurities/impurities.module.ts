@@ -56,11 +56,16 @@ import { ImpuritiesTotalFormComponent } from './impurities-form/impurities-total
 import { ImpuritiesImportComponent } from './impurities-import/impurities-import.component';
 import { ImpuritiesDetailsComponent } from './impurities-details/impurities-details.component';
 import { ImpuritiesBrowseComponent } from './impurities-browse/impurities-browse.component';
+import { ImpuritiesListsComponent } from './impurities-lists/impurities-lists.component';
 
 const impurityRoutes: Routes = [
-   {
+  {
     path: 'browse-impurities',
     component: ImpuritiesBrowseComponent
+  },
+  {
+    path: 'impurities/lists',
+    component: ImpuritiesListsComponent,
   },
   {
     path: 'impurities/import',
@@ -104,7 +109,8 @@ const impurityRoutes: Routes = [
     ImpuritiesTotalFormComponent,
     ImpuritiesImportComponent,
     ImpuritiesDetailsComponent,
-    ImpuritiesBrowseComponent
+    ImpuritiesBrowseComponent,
+    ImpuritiesListsComponent
   ],
   exports: [
     ImpuritiesImportComponent

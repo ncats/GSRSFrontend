@@ -2,14 +2,18 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
+/* GSRS Core */
 import { ConfigService } from '@gsrs-core/config';
 import { AuthService } from '@gsrs-core/auth/auth.service';
 import { LoadingService } from '@gsrs-core/loading';
+import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
+
+/* GSRS Impurities */
 import { GeneralService } from '../../../service/general.service';
 import { ImpuritiesService } from '../../service/impurities.service';
 import { ImpuritiesTesting, ImpuritiesDetails, ImpuritiesSolutionTable } from '../../model/impurities.model';
-import { ConfirmDialogComponent } from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-impurities-test-form',
@@ -223,6 +227,26 @@ export class ImpuritiesTestFormComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource(this.impuritiesService.impurities.impuritiesSubstanceList[this.impuritiesSubstanceIndex]
       .impuritiesTestList[this.impuritiesTestIndex]
       .impuritiesSolutionTableList);
+  }
+
+  addNewImpuritiesAnalysis() {
+     this.impuritiesService.addNewImpuritiesAnalysis(this.impuritiesSubstanceIndex, this.impuritiesTestIndex);
+  }
+
+  confirmDeleteImpuritiesAnalysis(analysisIndex: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: 'Are you sure you want to delele Analysis row ' + (analysisIndex + 1) + '?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result === true) {
+        this.deleteImpuritiesAnalysis(analysisIndex);
+      }
+    });
+  }
+
+  deleteImpuritiesAnalysis(analysisIndex: number) {
+    this.impuritiesService.deleteImpuritiesAnalysis(this.impuritiesSubstanceIndex, this.impuritiesTestIndex, analysisIndex);
   }
 
   addNewImpuritiesDetails() {

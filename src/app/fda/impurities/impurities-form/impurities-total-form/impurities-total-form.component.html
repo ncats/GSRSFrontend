@@ -1,72 +1,47 @@
 <div class="form-row">
-  <mat-form-field
-    class="col-3-1"
-    *ngIf="
-      configSettingsDisplay['testType'] ||
-      (configSettingsDisplay['testType'] === undefined && true)
-    "
-  >
-    <mat-label>Test Type</mat-label>
-    <input matInput [(ngModel)]="impuritiesTotal.testType" name="testType" />
-  </mat-form-field>
 
-  <app-cv-input
-    class="col-5-1"
-    *ngIf="
-      configSettingsDisplay['limitType'] ||
-      (configSettingsDisplay['limitType'] === undefined && true)
-    "
-    domain="IMPURITIES_LIMIT_TYPE"
-    title="Limit Type"
-    name="limitType"
-    [model]="impuritiesTotal.limitType"
-    (valueChange)="impuritiesTotal.limitType = $event"
-  >
+  <app-cv-input class="col-6-1" *ngIf="
+          configSettingsDisplay['testType'] ||
+          (configSettingsDisplay['testType'] === undefined && true)
+        " domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType" [model]="impuritiesTotal.testType"
+    (valueChange)="impuritiesTotal.testType = $event">
   </app-cv-input>
 
-  <mat-form-field
-    class="col-5-1"
-    *ngIf="
+  <app-cv-input class="col-6-1" *ngIf="
+      configSettingsDisplay['limitType'] ||
+      (configSettingsDisplay['limitType'] === undefined && true)
+    " domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType" [model]="impuritiesTotal.limitType"
+    (valueChange)="impuritiesTotal.limitType = $event">
+  </app-cv-input>
+
+  <mat-form-field class="col-6-1" *ngIf="
       configSettingsDisplay['limitValue'] ||
       (configSettingsDisplay['limitValue'] === undefined && true)
-    "
-  >
+    ">
     <mat-label>Limit Value</mat-label>
-    <input
-      matInput
-      [(ngModel)]="impuritiesTotal.limitValue"
-      name="limitValue"
-    />
+    <input matInput [(ngModel)]="impuritiesTotal.limitValue" name="limitValue" />
   </mat-form-field>
 
-  <mat-form-field
-    class="col-5-1"
-    *ngIf="
+  <mat-form-field class="col-6-1" *ngIf="
       configSettingsDisplay['amountValue'] ||
       (configSettingsDisplay['amountValue'] === undefined && true)
-    "
-  >
+    ">
     <mat-label>Amount Value</mat-label>
-    <input
-      matInput
-      [(ngModel)]="impuritiesTotal.amountValue"
-      name="amountValue"
-    />
+    <input matInput [(ngModel)]="impuritiesTotal.amountValue" name="amountValue" />
   </mat-form-field>
 
-  <mat-form-field
-    class="col-5-1"
-    *ngIf="
+  <app-cv-input class="col-6-1" *ngIf="
+              configSettingsDisplay['unit'] ||
+              (configSettingsDisplay['unit'] === undefined && true)
+            " domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesTotal.unit"
+    (valueChange)="impuritiesTotal.unit = $event">
+  </app-cv-input>
+
+  <mat-form-field class="col-6-1" *ngIf="
       configSettingsDisplay['comments'] ||
       (configSettingsDisplay['comments'] === undefined && true)
-    "
-  >
+    ">
     <mat-label>Comments</mat-label>
-    <textarea
-      matInput
-      [(ngModel)]="impuritiesTotal.comments"
-      name="comments"
-      rows="1"
-    ></textarea>
+    <textarea matInput [(ngModel)]="impuritiesTotal.comments" name="comments" rows="1"></textarea>
   </mat-form-field>
 </div>

@@ -57,6 +57,7 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   substanceId = null;
   id?: number;
   isDisableData = false;
+  isImportFromFile = false;
   username = null;
   title = null;
   submitDateMessage = '';
@@ -109,25 +110,26 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
       .subscribe(params => {
         if (params['id']) {  // EDIT EXISTING IMPURITIES RECORD
           const id = params['id'];
-          
+
           if (id !== this.id) {
             this.id = id;
 
             this.gaService.sendPageView(`Impurity Edit`);
             this.titleService.setTitle(`Update Impurities`);
-            
+
             this.getImpurities();
           }
         } else { // ELSE: IMPORT, COPY, and NEW REGISTER
           this.title = 'Register Impurities';
-          
-          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
-          
-          this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
-          
-          if (action && action === 'import' && window.history.state) { // IMPORT IMPURITIES
 
-            this.gaService.sendPageView(`Impurities Import`);
+          const action = this.activatedRoute.snapshot.queryParams['action'] || null;
+
+          this.id = this.activatedRoute.snapshot.queryParams['copy'] || null;
+
+          if (action && action === 'import' && window.history.state) {
+            // IMPORT IMPURITIES
+            this.title = 'Import Impurities';
+            this.isImportFromFile = true;
 
             const record = window.history.state.record;
             const response = JSON.parse(record);
@@ -138,15 +140,20 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
               this.impuritiesService.loadImpurities(response);
               this.impurities = this.impuritiesService.impurities;
 
+              // Load 'Date Type Date' value to on the DatePicker Input textbox
+              if (this.impurities.dateTypeDate) {
+                this.dateTypeDate = new Date(this.impurities.dateTypeDate);
+              }
+              
               this.loadingService.setLoading(false);
               this.isLoading = false;
             }
 
           } else if (this.id) { // COPY IMPURITIES TO NEW REGISTER
-          
+
             this.getImpurities('copy');
             this.gaService.sendPageView(`Impurities Register`);
-          
+
           } else { // NEW REGISTER 
             setTimeout(() => {
               this.gaService.sendPageView(`Impurities Register`);
@@ -315,6 +322,26 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
   validateClient(): void {
     this.validationMessages = [];
     this.validationResult = true;
+
+    // Validate Source
+    if (!this.impurities.source) {
+      this.setValidationMessage('Source is required in Overview Section');
+    }
+
+    // Validate Source Type
+    if (!this.impurities.sourceType) {
+      this.setValidationMessage('Source Type is required in Overview Section');
+    }
+
+    // Validate Product/Substance Name
+    if (!this.impurities.type) {
+      this.setValidationMessage('Type is required in Overview Section');
+    }
+
+    // Validate Product/Substance Name
+    if (!this.impurities.productSubstanceName) {
+      this.setValidationMessage('Product/Substance Name is required in Overview Section');
+    }
 
     // Date Type Date field should be valid date
     if (this.impurities.dateTypeDate) {
@@ -645,6 +672,25 @@ export class ImpuritiesFormComponent implements OnInit, OnDestroy {
         }, 1000);
       }
     });
+  }
+
+  previewImpurities() {
+    /*
+    const recordData = encodeURIComponent(JSON.stringify(this.impurities));
+
+    const baseUrl = window.location.href.replace(this.router.url, '');
+
+    let url = baseUrl + this.router.serializeUrl(
+        this.router.createUrlTree(['/impurities'], {
+        queryParams: { action: 'import', record: recordData }
+      })
+    );
+
+    window.open(url, '_blank');
+    */
+    let imp = JSON.stringify(this.impurities);
+
+    this.router.navigateByUrl('/impurities?action=import', { state: { record: imp } });
   }
 
   changeDateTypeDate(event: MatDatepickerInputEvent<Date>): void {

@@ -25,7 +25,7 @@
         {{ showSubmissionMessages ? "Hide" : "Show" }} messages
         <mat-icon [svgIcon]="showSubmissionMessages ? 'chevron_up' : 'chevron_down'"></mat-icon>
       </button>
-      
+
       <span class="middle-fill"></span>
 
       <!-- Register and View Impurities buttons -->
@@ -124,20 +124,27 @@
               {{ title }}
             </div>
 
+            <div *ngIf="isImportFromFile">
+              <button mat-flat-button color="primary" (click)="previewImpurities()">
+                Preview
+              </button>
+            </div>
+
             <div class="font11px" *ngIf="impurities.id">
               <br />
               <div class="font11px">
-                <span class="colorgray">Created By:</span>
+
+                <span class="colorgray" *ngIf="impurities.createdBy">Created By:</span>
                 {{ impurities.createdBy }}&nbsp;&nbsp;&nbsp;
-                <span class="colorgray">Create Date:</span>
-                {{
-                impurities.creationDate | date: "MM/dd/yyyy hh:mm:ss a"
-                }}&nbsp;&nbsp;&nbsp; <span class="colorgray">Modified By:</span>
+
+                <span class="colorgray" *ngIf="impurities.creationDate">Create Date:</span>
+                {{ impurities.creationDate | date: "MM/dd/yyyy hh:mm:ss a"}}&nbsp;&nbsp;&nbsp;
+
+                <span class="colorgray" *ngIf="impurities.modifiedBy">Modified By:</span>
                 {{ impurities.modifiedBy }}&nbsp;&nbsp;&nbsp;
-                <span class="colorgray">Modify Date:</span>
-                {{
-                impurities.lastModifiedDate | date: "MM/dd/yyyy hh:mm:ss a"
-                }}
+
+                <span class="colorgray" *ngIf="impurities.lastModifiedDate">Modify Date:</span>
+                {{impurities.lastModifiedDate | date: "MM/dd/yyyy hh:mm:ss a"}}
               </div>
             </div>
 
@@ -157,7 +164,7 @@
                 <app-cv-input class="col-6-1" *ngIf="
                     configSettingsDisplay['source'] ||
                     (configSettingsDisplay['source'] === undefined && true)
-                  " domain="IMPURITIES_SOURCE" title="Source" name="source" [model]="impurities.source"
+                  " domain="IMPURITIES_SOURCE" title="Source" name="source" [model]="impurities.source" required="true"
                   (valueChange)="impurities.source = $event">
                 </app-cv-input>
 
@@ -165,7 +172,7 @@
                     configSettingsDisplay['sourceType'] ||
                     (configSettingsDisplay['sourceType'] === undefined && true)
                   " domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType"
-                  [model]="impurities.sourceType" (valueChange)="impurities.sourceType = $event">
+                  [model]="impurities.sourceType" required="true" (valueChange)="impurities.sourceType = $event">
                 </app-cv-input>
 
                 <mat-form-field class="col-6-1" *ngIf="
@@ -179,16 +186,9 @@
                 <app-cv-input class="col-6-1" *ngIf="
                     configSettingsDisplay['type'] ||
                     (configSettingsDisplay['type'] === undefined && true)
-                  " domain="IMPURITIES_TYPE" title="Type" name="type" [model]="impurities.type"
+                  " domain="IMPURITIES_TYPE" title="Type" name="type" [model]="impurities.type" required="true"
                   (valueChange)="impurities.type = $event">
                 </app-cv-input>
-
-                <mat-form-field class="col-6-1" *ngIf="
-                    configSettingsDisplay['productId'] ||
-                    (configSettingsDisplay['productId'] === undefined && true)
-                  "><mat-label>Product ID</mat-label>
-                  <input matInput [(ngModel)]="impurities.productId" name="productId" />
-                </mat-form-field>
 
                 <app-cv-input class="col-6-1" *ngIf="
                     configSettingsDisplay['specType'] ||
@@ -196,11 +196,8 @@
                   " domain="IMPURITIES_SPEC_TYPE" title="Spec Type" name="specType" [model]="impurities.specType"
                   (valueChange)="impurities.specType = $event">
                 </app-cv-input>
-              </div>
 
-              <!-- Second Row -->
-              <div class="form-row">
-                <mat-form-field class="col-6-2" *ngIf="
+                <mat-form-field class="col-6-1" *ngIf="
                     configSettingsDisplay['submitterName'] ||
                     (configSettingsDisplay['submitterName'] === undefined &&
                       true)
@@ -209,14 +206,25 @@
                   <input matInput [(ngModel)]="impurities.submitterName" name="submitterName" />
                 </mat-form-field>
 
-                <mat-form-field class="col-6-2" *ngIf="
+              </div>
+
+              <!-- Second Row -->
+              <div class="form-row">
+                <mat-form-field class="col-6-3" *ngIf="
                     configSettingsDisplay['productSubstanceName'] ||
                     (configSettingsDisplay['productSubstanceName'] ===
                       undefined &&
                       true)
                   ">
-                  <mat-label>Product/Substance Name</mat-label>
+                  <mat-label>Product/Substance Name *</mat-label>
                   <input matInput [(ngModel)]="impurities.productSubstanceName" name="companyProductName" />
+                </mat-form-field>
+
+                <mat-form-field class="col-6-1" *ngIf="
+                    configSettingsDisplay['productId'] ||
+                    (configSettingsDisplay['productId'] === undefined && true)
+                  "><mat-label>Product/Substance ID</mat-label>
+                  <input matInput [(ngModel)]="impurities.productId" name="productId" />
                 </mat-form-field>
 
                 <app-cv-input class="col-6-1" *ngIf="
@@ -226,12 +234,12 @@
                   (valueChange)="impurities.dateType = $event">
                 </app-cv-input>
 
-                <mat-form-field class="col-5" *ngIf="
+                <mat-form-field class="col-6-1" *ngIf="
                     configSettingsDisplay['dateTypeDate'] ||
                     (configSettingsDisplay['dateTypeDate'] === undefined &&
                       true)
                   ">
-                  <mat-label>Date Type Date</mat-label>
+                  <mat-label>Date Type Date <span class="font10px">(mm/dd/yyyy)</span></mat-label>
                   <input matInput [matDatepicker]="pickerDateTypeDate" [(ngModel)]="dateTypeDate"
                     placeholder="(mm/dd/yyyy)" (dateChange)="changeDateTypeDate($event)" />
                   <mat-datepicker-toggle matSuffix [for]="pickerDateTypeDate"></mat-datepicker-toggle>

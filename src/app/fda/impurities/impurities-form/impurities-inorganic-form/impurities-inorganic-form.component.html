@@ -1,7 +1,7 @@
 <br>
 <div class="divflex height30px">
   <div class="tabStyle">
-    <div class="tabStyleHeader">Inorganic&nbsp;{{(impuritiesInorganicIndex+1)}}</div>
+    <div class="tabStyleHeader">Inorganic/Residue on Ignition&nbsp;{{(impuritiesInorganicIndex+1)}}</div>
   </div>
   <div class="padleft105px margintopneg10px">
     <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesInorganic()"
@@ -32,12 +32,6 @@
 
         <div class="form-row">
           <app-cv-input class="col-3-1"
-            *ngIf="configSettingsDisplay['testType'] || (configSettingsDisplay['testType'] === undefined && true)"
-            domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType" [model]="impuritiesInorganic.testType"
-            (valueChange)="impuritiesInorganic.testType = $event">
-          </app-cv-input>
-
-          <app-cv-input class="col-3-1"
             *ngIf="configSettingsDisplay['limitType'] || (configSettingsDisplay['limitType'] === undefined && true)"
             domain="IMPURITIES_LIMIT_TYPE" title="Limit Type" name="limitType" [model]="impuritiesInorganic.limitType"
             (valueChange)="impuritiesInorganic.limitType = $event">
@@ -49,20 +43,25 @@
             <input matInput [(ngModel)]="impuritiesInorganic.limitValue" name="limitValue" />
           </mat-form-field>
 
-        </div>
-
-        <div class="form-row">
           <app-cv-input class="col-3-1"
             *ngIf="configSettingsDisplay['unit'] || (configSettingsDisplay['unit'] === undefined && true)"
             domain="PROD_UNIT" title="Unit" name="unit" [model]="impuritiesInorganic.unit"
             (valueChange)="impuritiesInorganic.unit = $event">
           </app-cv-input>
 
+        </div>
+
+        <div class="form-row">
+          <app-cv-input class="col-3-1"
+            *ngIf="configSettingsDisplay['testType'] || (configSettingsDisplay['testType'] === undefined && true)"
+            domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType" [model]="impuritiesInorganic.testType"
+            (valueChange)="impuritiesInorganic.testType = $event">
+          </app-cv-input>
+
           <mat-form-field class="col-3-2"
             *ngIf="configSettingsDisplay['comments'] || (configSettingsDisplay['comments'] === undefined && true)">
             <mat-label>Comments</mat-label>
-            <textarea matInput [(ngModel)]="impuritiesInorganic.comments" name="comments"
-              rows="1"></textarea>
+            <textarea matInput [(ngModel)]="impuritiesInorganic.comments" name="comments" rows="1"></textarea>
           </mat-form-field>
         </div>
 

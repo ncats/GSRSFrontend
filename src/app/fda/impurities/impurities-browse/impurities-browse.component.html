@@ -247,14 +247,15 @@
           eventCategory="impuritiesSearch">
         </app-impurities-text-search>
 
-        <!--
-        <div>
-          <button class="margintop10px marginleft80px" mat-raised-button color="primary" (click)="showAllSubstances()"
-            matTooltip="Show All Substances associated with these Product records">
-            <span>Show All Substances</span>
-          </button>
+        <!-- Link to All Impurities page -->
+        <div class="marginleft40px margintop10px">
+          <a mat-flat-button class="bordergray" color="primary" [routerLink]="['/impurities/lists']" target="_blank"
+            matTooltip='Opens in a new window'>
+            View All Impurities Lists
+            <mat-icon class="small-icon" svgIcon="open_in_new" matTooltip="opens in new window"></mat-icon>
+          </a>
         </div>
-        -->
+
       </div>
 
       <!-- ******** Display Content Details ******** -->

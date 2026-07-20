@@ -1,30 +1,8 @@
 <div>
   <div class="top-fixed bordergray">
 
+    <!--
     <div class="actions-container">
-
-      <!-- Show JSON button -->
-
-      <button mat-flat-button color="primary" (click)="downloadJson()">
-        Download PDF to JSON
-      </button>&nbsp;&nbsp;&nbsp;
-
-
-      <!-- Save JSON button -->
-      <!--
-      <a mat-flat-button color="primary" [href]="downloadJsonHref" (click)="saveJSON()"
-        download="{{ jsonFileName }}.json">
-        <span>Export JSON</span> </a>&nbsp;&nbsp;&nbsp;
-      -->
-
-      <!-- Do not show 'Import JSON' button when in Update Impurities page -->
-      <!--
-      <span *ngIf="impurities && !impurities.id">
-        <button mat-flat-button color="primary" (click)="importJSON()">
-          Import JSON
-        </button>
-      </span>
-      -->
 
       <button mat-flat-button class="hide-show-messages" (click)="toggleValidation()" [disabled]="isLoading"
         *ngIf="validationMessages && validationMessages.length > 0">
@@ -33,9 +11,10 @@
       </button>
       <span class="middle-fill"></span>
 
-    </div> <!-- class=action-container -->
+    </div>  --> <!-- class=action-container -->
 
     <!-- Validation Message Display -->
+    <!--
     <div [ngClass]="{
         'submission-messages': true,
         collapsed: !showSubmissionMessages,
@@ -44,8 +23,9 @@
       <div class="submission-message" *ngIf="submissionMessage">
         {{ submissionMessage }}
       </div>
-
-      <!-- Validation Message Display and Submit Button -->
+      -->
+    <!-- Validation Message Display and Submit Button -->
+    <!--
       <div *ngIf="validationMessages">
         <span *ngIf="validationMessages.length > 0">
           <div class="submission-message" *ngIf="!serverError && !approving">
@@ -87,13 +67,11 @@
       </div>
 
     </div>
+    -->
     <!-- Validation Message and Submit Button END -->
   </div> <!-- class=top-fixed -->
 
-  <!-- Display Form Fields -->
-
-  <div class="form-content-container mat-form-field-style">
-    <div class="scrollable-container">
+    <div class="margintop50px scrollable-container">
       <div class="cards-container">
 
         <div class="">
@@ -104,24 +82,16 @@
 
           </div> <!-- title_box-->
 
-          <mat-card class="bordergray">
+          <mat-card class="margintop20px">
             <mat-card-content>
-              <b>Select an Pdf file to Import Impurities data into Database:</b>&nbsp;&nbsp;
+              <b>Select PDF (USP or EP) file to Import Impurities data into Database:</b>&nbsp;&nbsp;
 
               <!-- Import EXCEL DATA and convert to JSON -->
               <input type="file" (change)="onFileChange($event)" />
 
-              <!-- SHOW PDF TO JSON RESULTS -->
-              <div>
-                <br><br><br>
-                <div><b>PDF to JSON Results</b>
-                  <br><br>
-                </div>
-
-                {{jsonResult}}
-
-              </div>
-
+              <br />
+              <br />
+              <br>
             </mat-card-content>
           </mat-card>
           <br />
@@ -131,7 +101,6 @@
 
       </div> <!-- class=cards-container -->
     </div> <!-- class=scrollable-container -->
-  </div> <!-- class=form-content-container -->
 
 </div>
 <br /><br /><br />

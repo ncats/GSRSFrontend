@@ -9,21 +9,21 @@ import { ConfigService } from '@gsrs-core/config';
 import { LoadingService } from '@gsrs-core/loading/loading.service';
 import { AuthService } from '@gsrs-core/auth';
 import { GoogleAnalyticsService } from '@gsrs-core/google-analytics';
-import { ImpuritiesService } from '../../../impurities/service/impurities.service';
-import { GeneralService } from '../../../service/general.service';
+import { ImpuritiesService } from '../../impurities/service/impurities.service';
+import { GeneralService } from '../../service/general.service';
 import { SubstanceCardBaseFilteredList } from '@gsrs-core/substance-details';
-import { SubstanceDetailsBaseTableDisplay } from '../substance-details-base-table-display';
-import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../../impurities/model/impurities.model';
+import { SubstanceDetailsBaseTableDisplay } from '../substance-products/substance-details-base-table-display';
+import { Impurities, ImpuritiesTesting, ImpuritiesDetails, IdentityCriteria } from '../../impurities/model/impurities.model';
 import { Facet } from '@gsrs-core/facets-manager';
 import { FacetParam, FacetHttpParams, FacetQueryResponse } from '@gsrs-core/facets-manager';
 import { ExportDialogComponent } from '@gsrs-core/substances-browse/export-dialog/export-dialog.component';
-import { impuritiesSearchSortValues } from '../../../impurities/impurities-search-sort-values';
+import { impuritiesSearchSortValues } from '../../impurities/impurities-search-sort-values';
 
 @Component({
-    selector: 'app-substance-impurities',
-    templateUrl: './substance-impurities.component.html',
-    styleUrls: ['./substance-impurities.component.scss'],
-    standalone: false
+  selector: 'app-substance-impurities',
+  templateUrl: './substance-impurities.component.html',
+  styleUrls: ['./substance-impurities.component.scss'],
+  standalone: false
 })
 export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDisplay implements OnInit, OnDestroy {
 
@@ -59,8 +59,8 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
     'relatedSubstance'
   ];
 
-  canUpdate:boolean = false;
-  canExport:boolean = false;
+  canUpdate: boolean = false;
+  canExport: boolean = false;
 
   constructor(
     private router: Router,
@@ -77,8 +77,9 @@ export class SubstanceImpuritiesComponent extends SubstanceDetailsBaseTableDispl
   async ngOnInit() {
     this.canUpdate = await this.authService.hasSpecificPrivilege('Edit');
     this.canExport = await this.authService.hasSpecificPrivilege('Export Data');
-    
-    if (this.substanceUuid) {
+
+    if (this.substance && this.substance.uuid) {
+      this.substanceUuid = this.substance.uuid;
       this.getImpuritiesBySubstanceUuid();
       this.impuritiesListExportUrl();
     }

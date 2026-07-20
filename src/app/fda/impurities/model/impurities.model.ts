@@ -1,13 +1,13 @@
 export interface Impurities {
   id?: number;
-  sourceType?: string;
   source?: string;
+  sourceType?: string;
   sourceId?: string;
   type?: string;
   specType?: string;
-  productSubstanceName?: string;
   submitterName?: string;
   productId?: string;
+  productSubstanceName?: string;
   dateType?: string;
   dateTypeDate?: string;
   createdBy?: string;
@@ -38,10 +38,8 @@ export interface ImpuritiesSubstance {
   _parentSubstanceName?: string;
   _parentSubstanceUuid?: string;
   impuritiesTestList?: Array<ImpuritiesTesting>;
-  impuritiesResidualSolventsTestList?: Array<ImpuritiesResidualSolventsTest>;  //new 3.1
- // impuritiesResidualSolventsList?: Array<ImpuritiesResidualSolvents>; //new 3.1, need to remove this for 3.1
-  impuritiesInorganicTestList?: Array<ImpuritiesInorganicTest>;  //new 3.1
- // impuritiesInorganicList?: Array<ImpuritiesInorganic>;  //new 3.1, need to remove this for 3.1
+  impuritiesResidualSolventsTestList?: Array<ImpuritiesResidualSolventsTest>;
+  impuritiesInorganicTestList?: Array<ImpuritiesInorganicTest>;
 }
 
 export interface ImpuritiesTesting {
@@ -49,25 +47,32 @@ export interface ImpuritiesTesting {
   sourceType?: string;
   source?: string;
   sourceId?: string;
+  buffer?: string;
+  solutionADescription?: string;
+  solutionBDescription?: string;
   system?: string;
   mode?: string;
   detectionType?: string;
+  detectorWavelength?: string;
   detectionDetails?: string;
   columnPackingType?: string;
   columnPackingSize?: string;
   columnSize?: string;
   columnTemperature?: string;
+  autosamplerTemperature?: string;
   flowRate?: string;
   injectionVolumeAmount?: string;
   diluent?: string;
+  systemSuitabilitySolution?: string;
   standardSolution?: string;
   sampleSolution?: string;
-  systemSuitabilitySolution?: string;
+  sensitivitySolution?: string;
   otherSolution?: string;
-  solutionADescription?: string;
-  solutionBDescription?: string;
-  suitabilityReqResolution?: string;
-  suitabilityReqRelStandardDeviation?: string;
+  systemSuitabilitySample?: string;
+  systemSuitabilityReqResolution?: string;
+  systemSuitabilityReqRelStandardDeviation?: string;
+  systemSuitabilityReqTailingFactor?: string;
+  systemSuitabilitySignalToNoiseRatio?: string;
   elutionType?: string;
   elutionSolvent?: string;
   elutionSolventId?: string;
@@ -85,6 +90,7 @@ export interface ImpuritiesTesting {
   impuritiesElutionSolventList?: Array<ImpuritiesElutionSolvent>;
   impuritiesDetailsList?: Array<ImpuritiesDetails>;
   impuritiesUnspecifiedList?: Array<ImpuritiesUnspecified>;
+  impuritiesAnalysisList?: Array<ImpuritiesAnalysis>;
 }
 
 export interface ImpuritiesElutionSolvent {
@@ -179,7 +185,25 @@ export interface ImpuritiesUnspecified {
   identityCriteriaList?: Array<IdentityCriteria>;
 }
 
-export interface ImpuritiesResidualSolventsTest {    //new 3.1
+export interface ImpuritiesAnalysis {
+  id?: number;
+  samples?: string;
+  description?: string;
+  resultFormula?: string;
+  formulaRU?: string;
+  formulaRS?: string;
+  formulaCS?: string;
+  formulaCU?: string;
+  formulaP?: string;
+  formulaF?: string;
+  createdBy?: string;
+  createDate?: number;
+  modifiedBy?: string;
+  modifyDate?: number;
+  internalVersion?: number;
+}
+
+export interface ImpuritiesResidualSolventsTest {
   id?: number;
   sourceType?: string;
   source?: string;
@@ -214,7 +238,7 @@ export interface ImpuritiesResidualSolvents {
   internalVersion?: number;
 }
 
-export interface ImpuritiesInorganicTest {    //new 3.1
+export interface ImpuritiesInorganicTest {
   id?: number;
   sourceType?: string;
   source?: string;
@@ -235,7 +259,7 @@ export interface ImpuritiesInorganic {
   id?: number;
   relatedSubstanceUuid?: string;
   testType?: string;
-  limitValue?: number;
+  limitValue?: string;
   limitType?: string;
   unit?: string;
   comments?: string;
@@ -252,8 +276,9 @@ export interface ImpuritiesTotal {
   id?: number;
   testType?: string;
   limitValue?: string;
-  limitType?: number;
+  limitType?: string;
   amountValue?: string;
+  unit?: string;
   comments?: string;
   createdBy?: string;
   createDate?: number;

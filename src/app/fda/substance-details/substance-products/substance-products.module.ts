@@ -19,7 +19,6 @@ import { SubstanceAdverseEventPtComponent } from './substance-adverseevent/adver
 import { SubstanceAdverseEventDmeComponent } from './substance-adverseevent/adverseeventdme/substance-adverseeventdme.component';
 import { SubstanceAdverseEventCvmComponent } from './substance-adverseevent/adverseeventcvm/substance-adverseeventcvm.component';
 import { SubstanceClinicalTrialsEuropeComponent } from './substance-clinical-trials-eu/substance-clinical-trials-eu.component';
-import { SubstanceImpuritiesComponent } from './substance-impurities/substance-impurities.component';
 import { SubstanceSsg4mComponent } from './substance-ssg4m/substance-ssg4m.component';
 import { SubstanceInvitroPharmacologyComponent } from './substance-invitro-pharmacology/substance-invitro-pharmacology.component';
 import { SubstanceInvitroPharmacologySummaryComponent } from './substance-invitro-pharmacology-summary/substance-invitro-pharmacology-summary.component';
@@ -49,7 +48,6 @@ import { SubstanceInvitroPharmacologySummaryComponent } from './substance-invitr
     SubstanceAdverseEventDmeComponent,
     SubstanceAdverseEventCvmComponent,
     SubstanceClinicalTrialsEuropeComponent,
-    SubstanceImpuritiesComponent,
     SubstanceSsg4mComponent,
     SubstanceInvitroPharmacologyComponent,
     SubstanceInvitroPharmacologySummaryComponent
