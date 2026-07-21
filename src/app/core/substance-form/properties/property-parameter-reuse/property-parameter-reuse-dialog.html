@@ -1,16 +1,19 @@
 <div><h3>Please select one parameter to reuse:</h3></div>
-<div class="form-row parameters" *ngFor="let parameter of parametersForReuse; index as index">
-  <span>
-    Parameter {{ index+1}}
-  </span>
-         <span>{{ parameter.name }}</span>
-            <span *ngIf="parameter.value != null">
-  <span>
-    &nbsp;
-    {{ parameter.value.type }}
-  </span>
-
-  <span *ngIf="parameter.value.average">
+<table >
+  <tr class="form-row parameters">
+    <th>Num</th>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Value</th>
+    <th>Select</th>
+  </tr>
+<tr class="form-row parameters" *ngFor="let parameter of parametersForReuse; index as index">
+<td>Parameter {{ index+1}}</td>
+<td>{{ parameter.name }}</td>
+<td>{{ parameter.value.type }}</td>
+<td> <!--*ngif="parameter.value"-->
+  <span>Value</span>
+  <span > <!--*ngIf="parameter.value.average"-->
     &nbsp;- &nbsp;
     {{ parameter.value.average }}
     &nbsp;
@@ -47,12 +50,17 @@
       &nbsp; (average)
     </span>
   </span>
-  <span>
-  <button mat-icon-button matTooltip="Use this parameter"
-    (click)="useThisParameter(parameter, index)"> <span class="selection-text">Use {{ index+1 }} </span></button>
-  </span>
-</span>
+</td>
+<td>
+<button mat-icon-button matTooltip="Use this parameter"
+    (click)="useThisParameter(parameter, index)"> <span class="selection-text">Use {{ index+1 }} </span>
+  </button>
+</td>
+</tr>
+</table>
 
-</div>
+<hr>
+
+
 <br/>
 <button mat-button (click)="cancel()">Cancel</button>

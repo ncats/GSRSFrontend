@@ -14,7 +14,7 @@ export class AmountFormComponent implements OnInit {
   private privateSubstanceAmount: SubstanceAmount;
   amountTypeList: Array<VocabularyTerm> = [];
   amountUnitList: Array<VocabularyTerm> = [];
-  typeControl = new FormControl('', Validators.required);
+  typeControl = new FormControl('');
   averageControl = new FormControl('');
   lowControl = new FormControl('');
   highControl = new FormControl('');

@@ -35,11 +35,47 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       if( substance && substance != null ) {
         this.substance = substance;
-        this.substance.properties?.forEach(pr=>{
-          pr.parameters?.forEach(p=>{
-            this.parametersForReuse.push(p);
-          })
-        })
+        this.substance.properties?.forEach(pr => {
+          pr.parameters?.forEach(p => {
+            const isNumeric = p.value?.average !== undefined || p.value?.units !== undefined;
+            const isNonNumeric = p.value?.nonNumericValue !== undefined;
+
+            const exists = this.parametersForReuse.some(existing => {
+              if (existing.name !== p.name || existing.type !== p.type) {
+                return false;
+              }
+
+              const existingIsNumeric =
+                existing.value?.average !== undefined || existing.value?.units !== undefined;
+              const existingIsNonNumeric =
+                existing.value?.nonNumericValue !== undefined;
+
+              if (isNumeric) {
+                return (
+                  existingIsNumeric &&
+                  existing.value?.average === p.value?.average &&
+                  existing.value?.units === p.value?.units
+                );
+              }
+
+              if (isNonNumeric) {
+                return (
+                  existingIsNonNumeric &&
+                  existing.value?.nonNumericValue === p.value?.nonNumericValue
+                );
+              }
+
+              return (
+                !existingIsNumeric &&
+                !existingIsNonNumeric
+              );
+            });
+
+            if (!exists) {
+              this.parametersForReuse.push(p);
+            }
+          });
+        });
         this.substanceFormService.resetState();
       }
     });
