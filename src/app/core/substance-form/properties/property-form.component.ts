@@ -29,6 +29,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   _nonNumeric: string;
   private fullSubstance: SubstanceDetail;
   private subscriptions: Array<Subscription> = [];
+  hasParameters: boolean = false;
 
   constructor(
     private cvService: ControlledVocabularyService,
@@ -45,6 +46,10 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       this.fullSubstance = substance;
+      this.hasParameters = ( substance.properties != null) && substance.properties.some(pr=>{
+        return pr.parameters && pr.parameters.length >0
+      });
+      console.log(`hasParameters is ${this.hasParameters} based on substance ${substance.uuid}`);
     });
     this.subscriptions.push(substanceSubscription);
 }
