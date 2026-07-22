@@ -23,6 +23,7 @@ import { MolvecModalComponent } from './molvec-modal/molvec-modal/molvec-modal.c
 import { MatDialog } from '@angular/material/dialog';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { JSDraw, Ketcher } from './structure.editor.model';
+import { Subscription } from 'rxjs';
 
 export type StructureEditorName = 'jsdraw' | 'ketcher';
 
@@ -77,6 +78,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
   disclaimerMessage: string;
   pageKetcherIsOpen: string;
   private overlayContainer: HTMLElement;
+  private reloadKetcherSubscription: Subscription;
 
   @ViewChild('structure_canvas', { static: false }) myCanvas: ElementRef;
   public context: CanvasRenderingContext2D;
@@ -108,6 +110,10 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     window.removeEventListener('dragover', this.preventDrag);
     window.removeEventListener('paste', this.checkPaste);
     (<HTMLCanvasElement>this.myCanvas.nativeElement).removeEventListener('click', this.listener);
+
+    if (this.reloadKetcherSubscription) {
+      this.reloadKetcherSubscription.unsubscribe();
+    }
 
     this.destroyExistingKetcherInstance();
 
@@ -154,6 +160,15 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     if (test) {
       // test.addEventListener('click', this.click);
     }
+
+    // Angular guarantees this component's view and child views (including
+    // ncats-ketcher-wrapper's #root) are attached by this point, so it's safe here
+    // (unlike ngOnInit, where reloadKetcher$ can replay synchronously before #root exists).
+    this.reloadKetcherSubscription = this.structureService.reloadKetcher$.subscribe((reloadKetcher) => {
+      if (reloadKetcher === true) {
+        this.createDivRootElement();
+      }
+    });
   }
 
   @Input() setMolecule(structure: any) {
@@ -217,14 +232,6 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.structureService.pageKetcherIsOpen$.subscribe((pageKetcherIsOpen) => {
       if (pageKetcherIsOpen) {
         this.pageKetcherIsOpen = pageKetcherIsOpen;
-      }
-    });
-
-    this.structureService.reloadKetcher$.subscribe((reloadKetcher) => {
-      if (reloadKetcher === true) {
-        if (this.calledFromComponent && this.calledFromComponent === 'registerSubstance') {
-          this.createDivRootElement();
-        }
       }
     });
 
@@ -296,6 +303,24 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       node2.href = `${environment.baseHref || ''}assets/ketcher/static/css/main.3fc9c0f8.css`;
       node2.rel = "stylesheet";
       document.getElementsByTagName('head')[0].appendChild(node2);
+    }
+  }
+
+  private getKetcherRootEl(): HTMLElement | null {
+    return document.getElementById('root');
+  }
+
+  private showKetcherRoot(): void {
+    const el = this.getKetcherRootEl();
+    if (el) {
+      el.style.display = '';
+    }
+  }
+
+  private hideKetcherRoot(): void {
+    const el = this.getKetcherRootEl();
+    if (el) {
+      el.style.display = 'none';
     }
   }
 
@@ -377,7 +402,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       }
 
       if (this.firstload && this.structureEditor === 'ketcher') {
-        document.getElementById("root").style.display = "";
+        this.showKetcherRoot();
         this.waitForKetcherFirstLoad();
         this.firstload = false;
 
@@ -417,7 +442,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         this.structureService.interpretStructure(Response).subscribe(resp => {
           this.editorSwitched.emit(this.structureEditor);
           sessionStorage.setItem('gsrsStructureEditor', 'jsdraw');
-          document.getElementById("root").style.display = "none";
+          this.hideKetcherRoot();
 
           this.afterEditorIsVisible(() => {
             this.editor.setMolecule(resp.structure.molfile);
@@ -441,7 +466,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
 
         this.editorSwitched.emit(this.structureEditor);
         sessionStorage.setItem('gsrsStructureEditor', 'ketcher');
-        document.getElementById("root").style.display = "";
+        this.showKetcherRoot();
 
         this.afterEditorIsVisible(() => {
           this.editor.setMolecule(Response);
@@ -460,7 +485,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
     this.editorSwitched.emit(this.structureEditor);
 
     if (this.firstload && this.structureEditor === 'ketcher') {
-      document.getElementById("root").style.display = "";
+      this.showKetcherRoot();
       this.waitForKetcherFirstLoad();
       this.firstload = false;
 
@@ -484,7 +509,7 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
       setTimeout(() => {
         this.ketcher = window['ketcher'];
         this.ketcherLoaded = true;
-        document.getElementById("root").style.display = "";
+        this.showKetcherRoot();
         this.editor = new EditorImplementation(this.ketcher);
         this.editorOnLoad.emit(this.editor);
         this.editorSwitched.emit(this.structureEditor);
