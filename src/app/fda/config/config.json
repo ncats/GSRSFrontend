@@ -60,7 +60,7 @@
       }
     }
   },
-  "enablePDFDownload":{
+  "enablePDFDownload": {
     "enablePDFDownload": true,
     "buttonName": "Print to PDF",
     "companyName": "",
