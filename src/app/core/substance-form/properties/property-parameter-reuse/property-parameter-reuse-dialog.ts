@@ -28,8 +28,6 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    console.log('PropertyParameterReuseDialog, going to set up parameters array');
-    console.log(`substance ID: ${this.substance != null ? this.substance.uuid: "[no substance]"} `);
     this.parametersForReuse = [];
     
     const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
@@ -80,18 +78,15 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(substanceSubscription);
-    console.log(`parametersForReuse contains ${this.parametersForReuse.length}`);
   }
   
   @Input()
   set substanceSetter(substance: SubstanceDetail) {
     this.substance = substance;
-    console.log(`reuse received substance with UUID ${substance.uuid}`);
   }
 
 
   useThisParameter(parameter: SubstanceParameter, paramNum: number): void {
-    console.log('use parameter ' + paramNum);
     this.dialogRef.close(parameter);
   }
 

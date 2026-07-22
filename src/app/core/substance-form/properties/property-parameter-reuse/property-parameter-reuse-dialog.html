@@ -1,5 +1,5 @@
-<div><h3>Please select one parameter to reuse:</h3></div>
-<table >
+<div><h3 class="table-title">Please select one parameter to reuse:</h3></div>
+<table class="parameter-table" mat-table>
   <tr class="form-row parameters">
     <th>Num</th>
     <th>Name</th>
@@ -8,50 +8,159 @@
     <th>Select</th>
   </tr>
 <tr class="form-row parameters" *ngFor="let parameter of parametersForReuse; index as index">
-<td>Parameter {{ index+1}}</td>
-<td>{{ parameter.name }}</td>
-<td>{{ parameter.value.type }}</td>
-<td> <!--*ngif="parameter.value"-->
-  <span>Value</span>
-  <span > <!--*ngIf="parameter.value.average"-->
-    &nbsp;- &nbsp;
-    {{ parameter.value.average }}
-    &nbsp;
-    {{ parameter.value.units }}
-  </span>
-
-  <span *ngIf="parameter.value.low || parameter.value.high">
-    <span *ngIf="!parameter.value.average">
-      &nbsp; -
-    </span>
-
-    &nbsp; [
-
-    <span *ngIf="!parameter.value.high">></span>
-    <span *ngIf="!parameter.value.low"><</span>
-
-    <span *ngIf="parameter.value.low">
-      {{ parameter.value.low }}
-    </span>
-
-    <span *ngIf="parameter.value.low && parameter.value.high">
-      &nbsp;to&nbsp;
-    </span>
-
-    <span *ngIf="parameter.value.high">
-      {{ parameter.value.high }}
-    </span>
-
-    ]
-
-    <span *ngIf="!parameter.value.average">
-      &nbsp;
-      {{ parameter.value.units }}
-      &nbsp; (average)
-    </span>
-  </span>
+<td class="parameter-dataCell">Parameter {{ index+1}}</td>
+<td class="parameter-dataCell">{{ parameter.name }}</td>
+<td class="parameter-dataCell">{{ parameter.value.type }}</td>
+<td class="parameter-dataCell">
+  <span *ngIf="parameter.value != null">
+              <span>
+                &nbsp;
+                {{ parameter.value.type }}
+              </span>
+              <span
+                *ngIf="
+                  parameter.value.average != null &&
+                  parameter.value.average != ''
+                "
+              >
+                &nbsp;- &nbsp;
+                {{ parameter.value.average }}
+                &nbsp;
+                {{ parameter.value.units }}
+              </span>
+              <span
+                *ngIf="
+                  (parameter.value.low != null && parameter.value.low != '') ||
+                  (parameter.value.high != null && parameter.value.high != '')
+                "
+              >
+                <span
+                  *ngIf="
+                    parameter.value.average == null ||
+                    parameter.value.average == ''
+                  "
+                >
+                  &nbsp; -
+                </span>
+                &nbsp; [
+                <span
+                  *ngIf="
+                    parameter.value.high == null || parameter.value.high == ''
+                  "
+                >
+                  >
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.low == null || parameter.value.low == ''
+                  "
+                >
+                  <
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.low != null && parameter.value.low != ''
+                  "
+                >
+                  {{ parameter.value.low }}
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.low != null &&
+                    parameter.value.low != '' &&
+                    parameter.value.high != null &&
+                    parameter.value.high != ''
+                  "
+                >
+                  &nbsp;to&nbsp;
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.high != null && parameter.value.high != ''
+                  "
+                >
+                  {{ parameter.value.high }}
+                </span>
+                ]
+                <span
+                  *ngIf="
+                    parameter.value.average == null ||
+                    parameter.value.average == ''
+                  "
+                >
+                  &nbsp;
+                  {{ parameter.value.units }}
+                  &nbsp; (average)
+                </span>
+              </span>
+              <span
+                *ngIf="
+                  parameter.value.average != null &&
+                  parameter.value.average != ''
+                "
+              >
+                &nbsp; (average)
+              </span>
+              <span
+                *ngIf="
+                  (parameter.value.lowLimit != null &&
+                    parameter.value.lowLimit != '') ||
+                  (parameter.value.highLimit != null &&
+                    parameter.value.highLimit != '')
+                "
+              >
+                &nbsp;- &nbsp; [
+                <span
+                  *ngIf="
+                    parameter.value.highLimit == null ||
+                    parameter.value.highLimit == ''
+                  "
+                >
+                  >
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.lowLimit == null ||
+                    parameter.value.lowLimit == ''
+                  "
+                >
+                  <
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.lowLimit != null &&
+                    parameter.value.lowLimit != ''
+                  "
+                >
+                  {{ parameter.value.lowLimit }}
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.lowLimit != null &&
+                    parameter.value.lowLimit != '' &&
+                    parameter.value.highLimit != null &&
+                    parameter.value.highLimit != ''
+                  "
+                >
+                  &nbsp;to&nbsp;
+                </span>
+                <span
+                  *ngIf="
+                    parameter.value.highLimit != null &&
+                    parameter.value.highLimit != ''
+                  "
+                >
+                  {{ parameter.value.highLimit }}
+                </span>
+                ] &nbsp;(limits)
+              </span>
+              <span *ngIf="parameter.value.nonNumericValue">
+                &nbsp;-&nbsp;
+                {{ parameter.value.nonNumericValue }}
+              </span>
+            </span>
 </td>
-<td>
+<td class="parameter-dataCell">
 <button mat-icon-button matTooltip="Use this parameter"
     (click)="useThisParameter(parameter, index)"> <span class="selection-text">Use {{ index+1 }} </span>
   </button>
