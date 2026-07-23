@@ -543,7 +543,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
     if (structure) {
       let decode = decodeURIComponent(structure);
-      setTimeout(() => {
+      // Wait until the substance is loaded before importing, otherwise this can
+      // race with loadSubstance() (called async in ngOnInit) and get silently dropped.
+      this.substanceFormService.ready().subscribe(() => {
         this.setStructureFromUrl(decode, 'molfile');
       });
     }

@@ -760,7 +760,7 @@
         <!-- ONLY SHOW these buttons if it is not a Bulk Search -->
         <div class="divflex" *ngIf="!bulkSearchQueryId">
           <!-- Button: Show All Applications -->
-          <div>
+          <div *ngIf="loadedComponents && loadedComponents.applications">
             <button
               class="marginleft20px"
               mat-raised-button
@@ -773,7 +773,7 @@
           </div>
 
           <!-- Button: Show All Products -->
-          <div>
+          <div *ngIf="loadedComponents && loadedComponents.products">
             <button
               class="marginleft20px"
               mat-raised-button

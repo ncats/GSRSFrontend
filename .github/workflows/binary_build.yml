@@ -2,6 +2,7 @@ name: Build & Publish Frontend Binaries
 on:
   release:
     types: [published] # Triggers when a release is published
+  workflow_dispatch:
     inputs:
       npm_build_string:
         description: "NPM build script to run (e.g. build:fda:prod)"
@@ -18,7 +19,7 @@ on:
       node_version:
         description: "Node.js version"
         required: true
-        default: "18.x"
+        default: "20.19.0"
 #  push:
 #    branches:
 #      - feature/deployable_binary_build
@@ -39,15 +40,15 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x #${{ inputs.node_version }}
+          node-version: ${{ github.event.inputs.node_version || '20.19.0' }}
 
       - name: Run build.sh
-        working-directory: ${{ inputs.frontend_dir }}
+        working-directory: ${{ github.event.inputs.frontend_dir || '.' }}
         run: bash build.sh
 
       - name: Run NPM build
-        working-directory: ${{ inputs.frontend_dir }}
-        run: npm run build:fda:prod
+        working-directory: ${{ github.event.inputs.frontend_dir || '.' }}
+        run: npm run ${{ github.event.inputs.npm_build_string || 'build:fda:prod' }}
       #${{ inputs.npm_build_string }}
 
       - name: Zip dist into deployable_binaries.zip
