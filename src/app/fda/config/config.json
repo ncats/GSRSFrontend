@@ -142,7 +142,7 @@
     {
       "title": "GSRS Data Dictionary",
       "description": " The GSRS Data Dictionary is a comprehensive spreadsheet of all properties of the substance object used by GSRS. You will find descriptions,  relative paths, data types, and more for every property present in the GSRS substance model.",
-      "href": "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_07-24-26.xlsx",
+      "href": "https://gsrs.ncats.nih.gov/downloads/GSRS_data_dictionary_all_entities_2026-07-24.xlsx",
       "imageFile": "dictionary.png",
       "templateDescription": "Click to download GSRS Data Dictionary.xlsx"
     }
