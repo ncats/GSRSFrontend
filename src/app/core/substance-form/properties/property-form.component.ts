@@ -10,7 +10,6 @@ import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.s
 import { PropertyParameterReuseDialog } from './property-parameter-reuse/property-parameter-reuse-dialog';
 import {Subscription} from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { utils } from 'xlsx';
 
 @Component({
     selector: 'app-property-form',
@@ -140,6 +139,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
             parameter[key] = newParameter[key];
           });
         }
+        this.hasParameters = this.property.parameters.length > 0;
       }
     });
   }

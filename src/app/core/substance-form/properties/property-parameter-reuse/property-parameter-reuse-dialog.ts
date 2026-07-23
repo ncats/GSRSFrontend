@@ -4,6 +4,7 @@ import { VocabularyTerm } from '../../../controlled-vocabulary/vocabulary.model'
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { Subscription } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { inject } from '@angular/core';
 
 @Component({
     selector: 'property-parameter-reuse',
@@ -23,6 +24,7 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
 
   constructor(
+    @inject(MAT_DIALOG_DATA) public data: SubstanceDetail,
     private substanceFormService: SubstanceFormService,
     public dialogRef: MatDialogRef<PropertyParameterReuseDialog>,
   ) { }
@@ -30,54 +32,16 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
   ngOnInit() {
     this.parametersForReuse = [];
     
-    const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
+    this.substance = this.data;
+    this.assignParametersForReuse();
+    /*const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
       if( substance && substance != null ) {
         this.substance = substance;
-        this.substance.properties?.forEach(pr => {
-          pr.parameters?.forEach(p => {
-            const isNumeric = p.value?.average !== undefined || p.value?.units !== undefined;
-            const isNonNumeric = p.value?.nonNumericValue !== undefined;
-
-            const exists = this.parametersForReuse.some(existing => {
-              if (existing.name !== p.name || existing.type !== p.type) {
-                return false;
-              }
-
-              const existingIsNumeric =
-                existing.value?.average !== undefined || existing.value?.units !== undefined;
-              const existingIsNonNumeric =
-                existing.value?.nonNumericValue !== undefined;
-
-              if (isNumeric) {
-                return (
-                  existingIsNumeric &&
-                  existing.value?.average === p.value?.average &&
-                  existing.value?.units === p.value?.units
-                );
-              }
-
-              if (isNonNumeric) {
-                return (
-                  existingIsNonNumeric &&
-                  existing.value?.nonNumericValue === p.value?.nonNumericValue
-                );
-              }
-
-              return (
-                !existingIsNumeric &&
-                !existingIsNonNumeric
-              );
-            });
-
-            if (!exists) {
-              this.parametersForReuse.push(p);
-            }
-          });
-        });
+        
         this.substanceFormService.resetState();
       }
     });
-    this.subscriptions.push(substanceSubscription);
+    this.subscriptions.push(substanceSubscription);*/
   }
   
   @Input()
@@ -99,4 +63,48 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
   cancel(): void {
     this.dialogRef.close();
   }
+  
+  assignParametersForReuse(): void {
+    this.substance.properties?.forEach(pr => {
+      pr.parameters?.forEach(p => {
+        const isNumeric = p.value?.average !== undefined || p.value?.units !== undefined;
+        const isNonNumeric = p.value?.nonNumericValue !== undefined;
+
+        const exists = this.parametersForReuse.some(existing => {
+          if (existing.name !== p.name || existing.type !== p.type) {
+            return false;
+          }
+
+          const existingIsNumeric =
+            existing.value?.average !== undefined || existing.value?.units !== undefined;
+          const existingIsNonNumeric =
+            existing.value?.nonNumericValue !== undefined;
+
+          if (isNumeric) {
+            return (
+              existingIsNumeric &&
+              existing.value?.average === p.value?.average &&
+              existing.value?.units === p.value?.units
+            );
+          }
+
+          if (isNonNumeric) {
+            return (
+              existingIsNonNumeric &&
+              existing.value?.nonNumericValue === p.value?.nonNumericValue
+            );
+          }
+
+          return (
+            !existingIsNumeric &&
+            !existingIsNonNumeric
+          );
+        });
+
+        if (!exists) {
+          this.parametersForReuse.push(p);
+        }
+      });
+    });
+  } 
 }
