@@ -169,6 +169,14 @@ export class StructureEditorComponent implements OnInit, AfterViewInit, OnDestro
         this.createDivRootElement();
       }
     });
+
+    // Reveal/initialize Ketcher on its own instead of waiting for jsDrawOnLoad().
+    
+    if (this.firstload && this.structureEditor === 'ketcher') {
+      this.showKetcherRoot();
+      this.waitForKetcherFirstLoad();
+      this.firstload = false;
+    }
   }
 
   @Input() setMolecule(structure: any) {
