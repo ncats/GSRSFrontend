@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Inject } from '@angular/core';
 import { SubstanceProperty, SubstanceDetail, SubstanceParameter } from '../../../substance/substance.model';
 import { VocabularyTerm } from '../../../controlled-vocabulary/vocabulary.model';
 import { SubstanceFormService } from '@gsrs-core/substance-form/substance-form.service';
 import { Subscription } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { inject } from '@angular/core';
 
 @Component({
     selector: 'property-parameter-reuse',
@@ -24,24 +23,17 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
   private subscriptions: Array<Subscription> = [];
 
   constructor(
-    @inject(MAT_DIALOG_DATA) public data: SubstanceDetail,
+    @Inject(MAT_DIALOG_DATA) public data: SubstanceDetail,
     private substanceFormService: SubstanceFormService,
-    public dialogRef: MatDialogRef<PropertyParameterReuseDialog>,
-  ) { }
+    public dialogRef: MatDialogRef<PropertyParameterReuseDialog>
+  ) { 
+    this.substance = data;
+  }
 
   ngOnInit() {
     this.parametersForReuse = [];
-    
-    this.substance = this.data;
     this.assignParametersForReuse();
-    /*const substanceSubscription = this.substanceFormService.substance.subscribe(substance => {
-      if( substance && substance != null ) {
-        this.substance = substance;
-        
-        this.substanceFormService.resetState();
-      }
-    });
-    this.subscriptions.push(substanceSubscription);*/
+    console.log(`in ongOnIit, parametersForReuse.len: ${this.parametersForReuse.length}`);
   }
   
   @Input()
@@ -63,10 +55,11 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
   cancel(): void {
     this.dialogRef.close();
   }
-  
+
   assignParametersForReuse(): void {
     this.substance.properties?.forEach(pr => {
       pr.parameters?.forEach(p => {
+        console.log(`in assignParametersForReuse looking at p ${JSON.stringify(p)}`);
         const isNumeric = p.value?.average !== undefined || p.value?.units !== undefined;
         const isNonNumeric = p.value?.nonNumericValue !== undefined;
 
@@ -102,9 +95,11 @@ export class PropertyParameterReuseDialog implements OnInit, OnDestroy {
         });
 
         if (!exists) {
+          console.log('adding one parameter to parametersForReuse');
           this.parametersForReuse.push(p);
         }
       });
     });
+    
   } 
 }
