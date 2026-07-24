@@ -22,6 +22,7 @@ import { take } from 'rxjs/operators';
 import { ConfigService } from '@gsrs-core/config';
 import { MatTableDataSource } from '@angular/material/table';
 import { NitrosamineDisplayDialogComponent } from './nitrosamine-display-dialog/nitrosamine-display-dialog.component';
+import { adjustFormulaForIsotopicHydrogen } from '@gsrs-core/structure-editor/molfile-isotope.util';
 
 @Component({
     selector: 'app-substance-form-structure-card',
@@ -35,8 +36,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   userMessage: string;
   userMessageTimer: any;
   substanceType: string;
-  smiles: string;
-  mol: string;
+  smiles: string | null = null;
+  mol: string | null = null;
   features: Array<any>;
   isInitializing = true;
   private overlayContainer: HTMLElement;
@@ -63,6 +64,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   ];
   showNitrosamineButton = false;
   @ViewChild(StructureEditorComponent) structureEditorComponent!: StructureEditorComponent;
+
+  // Replaced when the editor changes to avoid duplicate handlers.
+  private structureUpdatedSub: Subscription | null = null;
 
   constructor(
     private substanceFormService: SubstanceFormService,
@@ -158,20 +162,23 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(subscription => {
-      subscription.unsubscribe();
-    });
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.structureUpdatedSub?.unsubscribe();
   }
 
   editorOnLoad(editor: Editor): void {
     this.loadingService.setLoading(false);
     this.structureEditor = editor;
     this.loadStructure();
-    this.structureEditor.structureUpdated().subscribe(molfile => {
+
+    // Replace the previous editor subscription when toggling editors.
+    this.structureUpdatedSub?.unsubscribe();
+    this.structureUpdatedSub = this.structureEditor.structureUpdated().subscribe(molfile => {
       this.updateStructureForm(molfile);
-      this.smiles = this.structure && this.structure.smiles || null;
-      this.mol = this.structure && this.structure.molfile || null;
+      this.smiles = (this.structure && this.structure.smiles) || null;
+      this.mol    = (this.structure && this.structure.molfile) || null;
     });
+
     this.isInitializing = false;
   }
 
@@ -193,14 +200,12 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
     if (this.structure && this.structureEditor && this.structure.molfile) {
       this.isInitializing = true;
       this.structureEditor.setMolecule(this.structure.molfile);
-      this.smiles = this.structure.smiles;
-      this.mol = this.structure.molfile;
-           // imported structures from search results require a second structure refresh to display stereochemistry and other calculated fields
-     if ( this.activatedRoute && this.activatedRoute.snapshot.queryParams && this.activatedRoute.snapshot.queryParams['importStructure']) {
-      setTimeout(()=>{
-        this.updateStructureForm(this.structure.molfile), 1000
-      });
-     }
+      this.smiles = this.structure.smiles ?? null;
+      this.mol = this.structure.molfile ?? null;
+      // Refresh imported structures after the editor finishes loading.
+      if (this.activatedRoute?.snapshot?.queryParams?.['importStructure']) {
+        setTimeout(() => { this.updateStructureForm(this.structure.molfile!); }, 1000);
+      }
       this.isInitializing = false;
     }
   }
@@ -211,15 +216,17 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
   }
 
   updateStructureForm(molfile: string): void {
-    if (!this.isInitializing) {
-      this.structure.molfile = molfile;
-      this.structureService.interpretStructure(molfile).subscribe(response => {
-        this.processStructurePostResponse(response);
-        this.structure.molfile = molfile;
-        this.smiles = response.structure.smiles;
+    if (this.isInitializing) { return; }
 
-      });
-    }
+    // The editor wrapper has already handled Ketcher isotope corrections.
+    this.structure.molfile = molfile;
+
+    this.structureService.interpretStructure(molfile).subscribe(response => {
+      this.processStructurePostResponse(response);
+      // Keep the editor molfile because server normalization may remove isotope data.
+      this.structure.molfile = molfile;
+      this.smiles = response.structure.smiles ?? null;
+    });
   }
 
    featureSort(a: any, b: any): number {
@@ -240,6 +247,11 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
 
   processStructurePostResponse(structurePostResponse?: InterpretStructureResponse): void {
     if (structurePostResponse && structurePostResponse.structure) {
+      structurePostResponse.structure.formula = adjustFormulaForIsotopicHydrogen(
+        this.structure?.molfile,
+        structurePostResponse.structure.formula,
+      );
+
       let customSort = (array: any[]): any[] => {
         return array.sort((a, b) => {
           return this.featureSort(a, b);
@@ -291,8 +303,8 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       if (this.substanceType === 'polymer' ||
         this.structure['hash'] !== structurePostResponse.structure['hash'] ||
         this.structure['charge'] !== structurePostResponse.structure['charge']) {
-        this.smiles = structurePostResponse.structure.smiles;
-        this.mol = structurePostResponse.structure.molfile;
+        this.smiles = structurePostResponse.structure.smiles ?? null;
+        this.mol = structurePostResponse.structure.molfile ?? null;
         // this is sometimes overly ambitious
         Object.keys(structurePostResponse.structure).forEach(key => {
           // we don't want to do this with molfile, we want to trust the editor
@@ -329,6 +341,9 @@ export class SubstanceFormStructureCardComponent extends SubstanceFormBase imple
       this.overlayContainer.style.zIndex = null;
       if (response != null) {
         if (response && response.structure && response.structure.molfile) {
+          // Keep structure.molfile in sync so a later editor toggle doesn't
+          // re-push stale data over the freshly imported structure.
+          this.structure.molfile = response.structure.molfile;
           this.structureEditorComponent.setMolecule(response.structure.molfile);
         }
         this.processStructurePostResponse(response);

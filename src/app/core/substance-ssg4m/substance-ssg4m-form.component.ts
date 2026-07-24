@@ -89,8 +89,6 @@ export class SubstanceSsg4ManufactureFormComponent
   definition: SubstanceFormDefinition;
   user: string;
   feature: string;
-  isAdmin: boolean;
-  isUpdater: boolean;
   isAuthenticated: boolean;
   messageField: string;
   errorMessage: string;
@@ -162,8 +160,6 @@ export class SubstanceSsg4ManufactureFormComponent
     this.showFormReadOnly =
       this.activatedRoute.snapshot.queryParams["readonly"] || "false";
     this.loadingService.setLoading(true);
-    this.isAdmin = this.authService.hasRoles("admin");
-    this.isUpdater = this.authService.hasAnyRoles("Updater", "SuperUpdater");
     this.isAuthenticated = this.authService.getUser() !== "";
     this.overlayContainer = this.overlayContainerService.getContainerElement();
     this.imported = false;

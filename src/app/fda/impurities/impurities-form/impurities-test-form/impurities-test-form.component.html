@@ -6,22 +6,13 @@
 
   <div class="divflex padleft185px margintopneg10px">
     <div class="maringright10px">
-      <button
-        class="padtop9px"
-        mat-icon-button
-        [ngStyle]="{ color: 'blue' }"
-        (click)="copyImpuritiesTest()"
-        matTooltip="Copy this Test to New Test"
-      >
+      <button class="padtop9px" mat-icon-button [ngStyle]="{ color: 'blue' }" (click)="copyImpuritiesTest()"
+        matTooltip="Copy this Test to New Test">
         <mat-icon>file_copy</mat-icon>
       </button>
     </div>
-    <button
-      mat-icon-button
-      color="primary"
-      (click)="confirmDeleteImpuritiesTest()"
-      matTooltip="Delete Test {{ impuritiesTestIndex + 1 }}"
-    >
+    <button mat-icon-button color="primary" (click)="confirmDeleteImpuritiesTest()"
+      matTooltip="Delete Test {{ impuritiesTestIndex + 1 }}">
       <mat-icon>delete_forever</mat-icon>
     </button>
   </div>
@@ -30,408 +21,233 @@
 <mat-card class="borderblue">
   <mat-card-content>
     <div class="form-row">
-      <app-cv-input
-        class="col-4-1"
-        *ngIf="
+      <app-cv-input class="col-4-1" *ngIf="
           configSettingsDisplay['specType'] ||
           (configSettingsDisplay['specType'] === undefined && true)
-        "
-        domain="IMPURITIES_SOURCE_TYPE"
-        title="Source Type"
-        name="sourceType"
-        [model]="impuritiesTest.sourceType"
-        (valueChange)="impuritiesTest.sourceType = $event"
-      >
+        " domain="IMPURITIES_SOURCE_TYPE" title="Source Type" name="sourceType" [model]="impuritiesTest.sourceType"
+        (valueChange)="impuritiesTest.sourceType = $event">
       </app-cv-input>
 
-      <app-cv-input
-        class="col-4-1"
-        *ngIf="
+      <app-cv-input class="col-4-1" *ngIf="
           configSettingsDisplay['source'] ||
           (configSettingsDisplay['source'] === undefined && true)
-        "
-        domain="IMPURITIES_SOURCE"
-        title="Source"
-        name="source"
-        [model]="impuritiesTest.source"
-        (valueChange)="impuritiesTest.source = $event"
-      >
+        " domain="IMPURITIES_SOURCE" title="Source" name="source" [model]="impuritiesTest.source"
+        (valueChange)="impuritiesTest.source = $event">
       </app-cv-input>
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['sourceId'] ||
           (configSettingsDisplay['sourceId'] === undefined && true)
-        "
-      >
+        ">
         <mat-label>Source ID</mat-label>
         <input matInput [(ngModel)]="impuritiesTest.sourceId" name="sourceId" />
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['test'] ||
           (configSettingsDisplay['test'] === undefined && true)
-        "
-      >
+        ">
         <mat-label>Test</mat-label>
         <input matInput [(ngModel)]="impuritiesTest.test" name="test" />
       </mat-form-field>
 
-      <app-cv-input
-        class="col-4-1"
-        *ngIf="
+      <app-cv-input class="col-4-1" *ngIf="
           configSettingsDisplay['testType'] ||
           (configSettingsDisplay['testType'] === undefined && true)
-        "
-        domain="IMPURITIES_TEST_TYPE"
-        title="Test Type"
-        name="testType"
-        [model]="impuritiesTest.testType"
-        (valueChange)="impuritiesTest.testType = $event"
-      >
+        " domain="IMPURITIES_TEST_TYPE" title="Test Type" name="testType" [model]="impuritiesTest.testType"
+        (valueChange)="impuritiesTest.testType = $event">
       </app-cv-input>
 
-      <mat-form-field
-        class="col-4-1"
-        *ngIf="
+      <mat-form-field class="col-4-1" *ngIf="
           configSettingsDisplay['flowRate'] ||
           (configSettingsDisplay['flowRate'] === undefined && true)
-        "
-      >
+        ">
         <mat-label>Flow Rate</mat-label>
         <input matInput [(ngModel)]="impuritiesTest.flowRate" name="flowRate" />
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <app-cv-input
-        class="col-4-1"
-        *ngIf="
+      <app-cv-input class="col-4-1" *ngIf="
           configSettingsDisplay['columnPackingType'] ||
           (configSettingsDisplay['columnPackingType'] === undefined && true)
-        "
-        domain="IMPURITIES_COLUMN_PACKING_TYPE"
-        title="Column Packing Type"
-        name="columnPackingType"
-        [model]="impuritiesTest.columnPackingType"
-        (valueChange)="impuritiesTest.columnPackingType = $event"
-      >
+        " domain="IMPURITIES_COLUMN_PACKING_TYPE" title="Column Packing Type" name="columnPackingType"
+        [model]="impuritiesTest.columnPackingType" (valueChange)="impuritiesTest.columnPackingType = $event">
       </app-cv-input>
 
-      <mat-form-field
-        class="col-4-1"
-        *ngIf="
+      <mat-form-field class="col-4-1" *ngIf="
           configSettingsDisplay['columnPackingSize'] ||
           (configSettingsDisplay['columnPackingSize'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Column Packing Size"
-          [(ngModel)]="impuritiesTest.columnPackingSize"
-          name="columnPackingSize"
-          row="1"
-        ></textarea>
+        ">
+        <mat-label>Column Packing Size</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.columnPackingSize" name="columnPackingSize" row="1"></textarea>
       </mat-form-field>
 
-      <mat-form-field
-        class="col-4-1"
-        *ngIf="
+      <mat-form-field class="col-4-1" *ngIf="
           configSettingsDisplay['columnSize'] ||
           (configSettingsDisplay['columnSize'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Column Size"
-          [(ngModel)]="impuritiesTest.columnSize"
-          name="columnSize"
-          row="1"
-        ></textarea>
+        ">
+        <mat-label>Column Size</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.columnSize" name="columnSize" row="1"></textarea>
       </mat-form-field>
 
-      <mat-form-field
-        class="col-4-1"
-        *ngIf="
+      <mat-form-field class="col-4-1" *ngIf="
           configSettingsDisplay['columnTemperature'] ||
           (configSettingsDisplay['columnTemperature'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Column Temperature"
-          [(ngModel)]="impuritiesTest.columnTemperature"
-          name="columnTemperature"
-          row="1"
-        ></textarea>
+        ">
+        <mat-label>Column Temperature</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.columnTemperature" name="columnTemperature" row="1"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['injectionVolumeAmount'] ||
           (configSettingsDisplay['injectionVolumeAmount'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Injection Volume Amount"
-          [(ngModel)]="impuritiesTest.injectionVolumeAmount"
-          name="injectionVolumeAmount"
-          row="1"
-        ></textarea>
+        ">
+        <mat-label>Injection Volume Amount</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.injectionVolumeAmount" name="injectionVolumeAmount"
+          row="1"></textarea>
       </mat-form-field>
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['diluent'] ||
           (configSettingsDisplay['diluent'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Diluent"
-          [(ngModel)]="impuritiesTest.diluent"
-          name="diluent"
-          row="1"
-        ></textarea>
+        ">
+        <mat-label>Diluent</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.diluent" name="diluent" row="1"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <app-cv-input
-        class="col-4-1"
-        *ngIf="
+      <app-cv-input class="col-4-1" *ngIf="
           configSettingsDisplay['system'] ||
           (configSettingsDisplay['system'] === undefined && true)
-        "
-        domain="IMPURITIES_SYSTEM"
-        title="System"
-        name="system"
-        [model]="impuritiesTest.system"
-        (valueChange)="impuritiesTest.system = $event"
-      >
+        " domain="IMPURITIES_SYSTEM" title="System" name="system" [model]="impuritiesTest.system"
+        (valueChange)="impuritiesTest.system = $event">
       </app-cv-input>
 
-      <app-cv-input
-        class="col-4-1"
-        *ngIf="
+      <app-cv-input class="col-4-1" *ngIf="
           configSettingsDisplay['mode'] ||
           (configSettingsDisplay['mode'] === undefined && true)
-        "
-        domain="IMPURITIES_MODE"
-        title="Mode"
-        name="mode"
-        [model]="impuritiesTest.mode"
-        (valueChange)="impuritiesTest.mode = $event"
-      >
+        " domain="IMPURITIES_MODE" title="Mode" name="mode" [model]="impuritiesTest.mode"
+        (valueChange)="impuritiesTest.mode = $event">
       </app-cv-input>
 
-      <app-cv-input
-        class="col-4-1"
-        *ngIf="
+      <app-cv-input class="col-4-1" *ngIf="
           configSettingsDisplay['detectionType'] ||
           (configSettingsDisplay['detectionType'] === undefined && true)
-        "
-        domain="IMPURITIES_DETECTION_TYPE"
-        title="Detection Type"
-        name="detectionType"
-        [model]="impuritiesTest.detectionType"
-        (valueChange)="impuritiesTest.detectionType = $event"
-      >
+        " domain="IMPURITIES_DETECTION_TYPE" title="Detection Type" name="detectionType"
+        [model]="impuritiesTest.detectionType" (valueChange)="impuritiesTest.detectionType = $event">
       </app-cv-input>
 
-      <mat-form-field
-        class="col-4-1"
-        *ngIf="
+      <mat-form-field class="col-4-1" *ngIf="
           configSettingsDisplay['detectionDetails'] ||
           (configSettingsDisplay['detectionDetails'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Detection Details"
-          [(ngModel)]="impuritiesTest.detectionDetails"
-          name="detectionDetails"
-          row="1"
-        ></textarea>
+        ">
+        <mat-label>Detection Details</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.detectionDetails" name="detectionDetails" row="1"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['suitabilityReqResolution'] ||
           (configSettingsDisplay['suitabilityReqResolution'] === undefined &&
             true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Suitability Requirements Resolution"
-          [(ngModel)]="impuritiesTest.suitabilityReqResolution"
-          name="suitabilityReqResolution"
-        ></textarea>
+        ">
+        <mat-label>Suitability Requirements Resolution</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.suitabilityReqResolution"
+          name="suitabilityReqResolution"></textarea>
       </mat-form-field>
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['suitabilityReqRelStandardDeviation'] ||
           (configSettingsDisplay['suitabilityReqRelStandardDeviation'] ===
             undefined &&
             true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Suitability Requirements Relative Standard Deviation"
-          [(ngModel)]="impuritiesTest.suitabilityReqRelStandardDeviation"
-          name="suitabilityReqRelStandardDeviation"
-        ></textarea>
+        ">
+        <mat-label>Suitability Requirements Relative Standard Deviation</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.suitabilityReqRelStandardDeviation"
+          name="suitabilityReqRelStandardDeviation"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['testDescription'] ||
           (configSettingsDisplay['testDescription'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Test Description"
-          [(ngModel)]="impuritiesTest.testDescription"
-          name="testDescription"
-        ></textarea>
+        ">
+        <mat-label>Test Description</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.testDescription" name="testDescription"></textarea>
       </mat-form-field>
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['comments'] ||
           (configSettingsDisplay['comments'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Comments"
-          [(ngModel)]="impuritiesTest.comments"
-          name="comments"
-        ></textarea>
+        ">
+        <mat-label>Comments</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.comments" name="comments"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['sampleSolution'] ||
           (configSettingsDisplay['sampleSolution'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Sample Solution"
-          [(ngModel)]="impuritiesTest.sampleSolution"
-          name="sampleSolution"
-        ></textarea>
+        ">
+        <mat-label>Sample Solution</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.sampleSolution" name="sampleSolution"></textarea>
       </mat-form-field>
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['systemSuitabilitySolution'] ||
           (configSettingsDisplay['systemSuitabilitySolution'] === undefined &&
             true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="System Suitability Solution"
-          [(ngModel)]="impuritiesTest.systemSuitabilitySolution"
-          name="systemSuitabilitySolution"
-        ></textarea>
+        ">
+        <mat-label>System Suitability Solution</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.systemSuitabilitySolution"
+          name="systemSuitabilitySolution"></textarea>
       </mat-form-field>
     </div>
 
     <div class="form-row">
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['standardSolution'] ||
           (configSettingsDisplay['standardSolution'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Standard Solution"
-          [(ngModel)]="impuritiesTest.standardSolution"
-          name="standardSolution"
-        ></textarea>
+        ">
+        <mat-label>Standard Solution</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.standardSolution" name="standardSolution"></textarea>
       </mat-form-field>
 
-      <mat-form-field
-        class="col-2-1"
-        *ngIf="
+      <mat-form-field class="col-2-1" *ngIf="
           configSettingsDisplay['otherSolution'] ||
           (configSettingsDisplay['otherSolution'] === undefined && true)
-        "
-      >
-        <textarea
-          matInput
-          placeholder="Other Solution"
-          [(ngModel)]="impuritiesTest.otherSolution"
-          name="otherSolution"
-        ></textarea>
+        ">
+        <mat-label>Other Solution</mat-label>
+        <textarea matInput [(ngModel)]="impuritiesTest.otherSolution" name="otherSolution"></textarea>
       </mat-form-field>
     </div>
 
     <!-- Elution Type and Solutions -->
     <div class="form-row">
-      <div
-        class="divflex"
-        *ngIf="
+      <div class="divflex" *ngIf="
           configSettingsDisplay['elutionType'] ||
           (configSettingsDisplay['elutionType'] === undefined && true)
-        "
-      >
+        ">
         <div class="width280px">
-          <app-cv-input
-            class="padright20px"
-            domain="IMPURITIES_ELUTION_TYPE"
-            title="Elution Type"
-            name="elutionType"
-            [model]="impuritiesTest.elutionType"
-            (valueChange)="impuritiesTest.elutionType = $event"
-          >
+          <app-cv-input class="padright20px" domain="IMPURITIES_ELUTION_TYPE" title="Elution Type" name="elutionType"
+            [model]="impuritiesTest.elutionType" (valueChange)="impuritiesTest.elutionType = $event">
           </app-cv-input>
         </div>
 
-        <div
-          class="marginleft20px"
-          *ngIf="
+        <div class="marginleft20px" *ngIf="
             configSettingsDisplay['solutionDescription'] ||
             (configSettingsDisplay['solutionDescription'] === undefined && true)
-          "
-        >
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="addNewSolution()"
-            matTooltip="Add New Solution"
-          >
+          ">
+          <button mat-raised-button color="primary" (click)="addNewSolution()" matTooltip="Add New Solution">
             <mat-icon svgIcon="add_circle_outline"></mat-icon>Add New Solution
           </button>
         </div>
@@ -439,40 +255,24 @@
     </div>
     <!-- form-row -->
 
-    <div
-      class=""
-      *ngFor="
+    <div class="" *ngFor="
         let impuritiesSolution of impuritiesTest.impuritiesSolutionList;
         let solutionIndex = index
-      "
-    >
-      <div
-        class="form-row"
-        *ngIf="
+      ">
+      <div class="form-row" *ngIf="
           configSettingsDisplay['solutionDescription'] ||
           (configSettingsDisplay['solutionDescription'] === undefined && true)
-        "
-      >
+        ">
         <mat-form-field class="col-1">
-          <mat-label
-            >Solution {{ impuritiesSolution.solutionLetter }}</mat-label
-          >
-          <textarea
-            matInput
-            [(ngModel)]="impuritiesSolution.solutionDescription"
-            name="solutionDescription"
-            row="1"
-          ></textarea>
+          <mat-label>Solution {{ impuritiesSolution.solutionLetter }}</mat-label>
+          <textarea matInput [(ngModel)]="impuritiesSolution.solutionDescription" name="solutionDescription"
+            row="1"></textarea>
         </mat-form-field>
 
         <!-- Delete Solution Row -->
-        <button
-          class="marginleft5px"
-          mat-icon-button
-          color="primary"
+        <button class="marginleft5px" mat-icon-button color="primary"
           (click)="confirmDeleteImpuritiesSolution(solutionIndex)"
-          matTooltip="Delete Solution {{ getLetter(solutionIndex) }}"
-        >
+          matTooltip="Delete Solution {{ getLetter(solutionIndex) }}">
           <mat-icon>delete_forever</mat-icon>
         </button>
       </div>
@@ -482,20 +282,16 @@
 
     <!-- Only Show Mobile Phase Table when Eution Type is 'Isocratic' or 'Gradient' and
          at least one Solution is added aboved -->
-    <div
-      *ngIf="
+    <div *ngIf="
         impuritiesTest.elutionType &&
         (impuritiesTest.elutionType.toUpperCase() === ELUTION_TYPE_ISOCRATIC ||
           impuritiesTest.elutionType.toUpperCase() === ELUTION_TYPE_GRADIENT) &&
         impuritiesTest.impuritiesSolutionList.length > 0
-      "
-    >
-      <div
-        *ngIf="
+      ">
+      <div *ngIf="
           configSettingsDisplay['mobilePhase'] ||
           (configSettingsDisplay['mobilePhase'] === undefined && true)
-        "
-      >
+        ">
         <div class="divflex margintop30px">
           <div>
             <span class="font16px"><b>Mobile Phase</b></span>
@@ -504,12 +300,8 @@
           <div class="width40px">&nbsp;</div>
 
           <div class="marginleft50px">
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="addNewSolutionTableDetails()"
-              matTooltip="Add New Solution Table Details"
-            >
+            <button mat-raised-button color="primary" (click)="addNewSolutionTableDetails()"
+              matTooltip="Add New Solution Table Details">
               <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Row
             </button>
           </div>
@@ -524,161 +316,63 @@
         <br />
         <div class="bordergray">
           <table class="marginleft15px" mat-table [dataSource]="dataSource">
-            <span
-              *ngFor="let columnName of displayedColumns; let colIndex = index"
-            >
+            <span *ngFor="let columnName of displayedColumns; let colIndex = index">
               <ng-container matColumnDef="{{ columnName }}">
                 <th class="padleft50px" mat-header-cell *matHeaderCellDef>
                   {{ columnName }}
                 </th>
-                <td
-                  class="padleft50px"
-                  mat-cell
-                  *matCellDef="let row; let indexRow = index"
-                >
+                <td class="padleft50px" mat-cell *matCellDef="let row; let indexRow = index">
                   <div *ngIf="columnName == 'Time (min)'">
                     <!-- Delete button -->
-                    <button
-                      class="marginleftneg50px"
-                      mat-icon-button
-                      color="primary"
+                    <button class="marginleftneg50px" mat-icon-button color="primary"
                       (click)="confirmDeleteImpuritiesSolutionTable(indexRow)"
-                      matTooltip="Delete Mobile Phase Row {{ indexRow + 1 }}"
-                    >
+                      matTooltip="Delete Mobile Phase Row {{ indexRow + 1 }}">
                       <mat-icon>delete_forever</mat-icon>
                     </button>
 
-                    <mat-form-field
-                      class="width60px"
-                      *ngIf="columnName == 'Time (min)'"
-                    >
-                      <input
-                        matInput
-                        placeholder=""
-                        [(ngModel)]="row.solutionTime"
-                        name="solutionTime"
-                      />
+                    <mat-form-field class="width60px" *ngIf="columnName == 'Time (min)'">
+                      <input matInput placeholder="" [(ngModel)]="row.solutionTime" name="solutionTime" />
                     </mat-form-field>
                   </div>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution A (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionAPercent"
-                      name="solutionAPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution A (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionAPercent" name="solutionAPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution B (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionBPercent"
-                      name="solutionBPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution B (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionBPercent" name="solutionBPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution C (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionCPercent"
-                      name="solutionCPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution C (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionCPercent" name="solutionCPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution D (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionDPercent"
-                      name="solutionDPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution D (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionDPercent" name="solutionDPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution E (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionEPercent"
-                      name="solutionEPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution E (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionEPercent" name="solutionEPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution F (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionFPercent"
-                      name="solutionFPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution F (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionFPercent" name="solutionFPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution G (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionGPercent"
-                      name="solutionGPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution G (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionGPercent" name="solutionGPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution H (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionHPercent"
-                      name="solutionHPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution H (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionHPercent" name="solutionHPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution I (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionIPercent"
-                      name="solutionIPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution I (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionIPercent" name="solutionIPercent" />
                   </mat-form-field>
 
-                  <mat-form-field
-                    class="width60px"
-                    *ngIf="columnName == 'Solution J (%)'"
-                  >
-                    <input
-                      matInput
-                      placeholder=""
-                      [(ngModel)]="row.solutionJPercent"
-                      name="solutionJPercent"
-                    />
+                  <mat-form-field class="width60px" *ngIf="columnName == 'Solution J (%)'">
+                    <input matInput placeholder="" [(ngModel)]="row.solutionJPercent" name="solutionJPercent" />
                   </mat-form-field>
                 </td>
               </ng-container>
@@ -696,81 +390,50 @@
     <!-- IMPURITIES DETAILS LIST BEGIN -->
     <div class="divflex margintop30px">
       <div class="titleblue">
-        <span
-          matBadge="{{ impuritiesTest.impuritiesDetailsList.length }}"
-          matBadgeColor="accent"
-          matBadgeSize="medium"
-          matBadgeOverlap="false"
-        >
+        <span matBadge="{{ impuritiesTest.impuritiesDetailsList.length }}" matBadgeColor="accent" matBadgeSize="medium"
+          matBadgeOverlap="false">
           <span class="titleblue"><b>Impurities</b></span>
         </span>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="addNewImpuritiesDetails()"
-          matTooltip="Add New Impurities"
-        >
+        <button mat-raised-button color="primary" (click)="addNewImpuritiesDetails()" matTooltip="Add New Impurities">
           <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Impurities
         </button>
       </div>
     </div>
 
-    <div
-      class="marginbottom10px"
-      *ngFor="
+    <div class="marginbottom10px" *ngFor="
         let impuritiesDetails of impuritiesTest.impuritiesDetailsList;
         let impuritiesDetailsIndex = index
-      "
-    >
-      <app-impurities-details-form
-        [impuritiesDetails]="impuritiesDetails"
-        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-        [impuritiesDetailsIndex]="impuritiesDetailsIndex"
-        [impuritiesTestIndex]="impuritiesTestIndex"
-        [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid"
-        [showAdvancedSettings]="showAdvancedSettings"
-      >
+      ">
+      <app-impurities-details-form [impuritiesDetails]="impuritiesDetails"
+        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex" [impuritiesDetailsIndex]="impuritiesDetailsIndex"
+        [impuritiesTestIndex]="impuritiesTestIndex" [relatedSubstanceUuid]="impuritiesDetails.relatedSubstanceUuid"
+        [showAdvancedSettings]="showAdvancedSettings">
       </app-impurities-details-form>
     </div>
     <!-- IMPURITIES DETAILS LIST END -->
 
     <br /><br />
     <!-- IMPURITIES UNSPECIFIED LIST BEGIN -->
-    <span
-      matBadge="{{ impuritiesTest.impuritiesUnspecifiedList.length }}"
-      matBadgeColor="accent"
-      matBadgeSize="medium"
-      matBadgeOverlap="false"
-    >
+    <span matBadge="{{ impuritiesTest.impuritiesUnspecifiedList.length }}" matBadgeColor="accent" matBadgeSize="medium"
+      matBadgeOverlap="false">
       <span class="titleblue"><b>Unspecified Impurities</b></span>
     </span>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="addNewImpuritiesUnspecified()"
-      matTooltip="Add New Unspecified Impurities"
-    >
+    <button mat-raised-button color="primary" (click)="addNewImpuritiesUnspecified()"
+      matTooltip="Add New Unspecified Impurities">
       <mat-icon svgIcon="add_circle_outline"></mat-icon>Add Unspecified
       Impurities
     </button>
 
     <br />
-    <div
-      class="marginbottom10px"
-      *ngFor="
+    <div class="marginbottom10px" *ngFor="
         let impuritiesUnspecified of impuritiesTest.impuritiesUnspecifiedList;
         let impuritiesUnspecifiedIndex = index
-      "
-    >
-      <app-impurities-unspecified-form
-        [impuritiesUnspecified]="impuritiesUnspecified"
-        [impuritiesUnspecifiedIndex]="impuritiesUnspecifiedIndex"
-        [impuritiesTestIndex]="impuritiesTestIndex"
-        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex"
-        [showAdvancedSettings]="showAdvancedSettings"
-      >
+      ">
+      <app-impurities-unspecified-form [impuritiesUnspecified]="impuritiesUnspecified"
+        [impuritiesUnspecifiedIndex]="impuritiesUnspecifiedIndex" [impuritiesTestIndex]="impuritiesTestIndex"
+        [impuritiesSubstanceIndex]="impuritiesSubstanceIndex" [showAdvancedSettings]="showAdvancedSettings">
       </app-impurities-unspecified-form>
     </div>
     <!-- IMPURITIES UNSPECIFIED LIST END -->

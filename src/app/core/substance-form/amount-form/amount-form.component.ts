@@ -59,7 +59,7 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.averageControl.setValue('');
       }
-      this.privateSubstanceAmount.average = parseInt(value);
+      this.privateSubstanceAmount.average = parseFloat(value);
     });
     this.lowControl.setValue(this.privateSubstanceAmount.low?.toString() || '');
     this.lowControl.valueChanges.subscribe(value => {
@@ -72,7 +72,7 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.lowControl.setValue('');
       }
-      this.privateSubstanceAmount.low = parseInt(value);
+      this.privateSubstanceAmount.low = parseFloat(value);
     });
     this.highControl.setValue(this.privateSubstanceAmount.high?.toString() || '');
     this.highControl.valueChanges.subscribe(value => {
@@ -85,7 +85,7 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.highControl.setValue('');
       }
-      this.privateSubstanceAmount.high = parseInt(value);
+      this.privateSubstanceAmount.high = parseFloat(value);
     });
     this.lowLimitControl.setValue(this.privateSubstanceAmount.lowLimit?.toString() || '');
     this.lowLimitControl.valueChanges.subscribe(value => {
@@ -97,7 +97,7 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.lowLimitControl.setValue('');
       }
-      this.privateSubstanceAmount.lowLimit = parseInt(value);
+      this.privateSubstanceAmount.lowLimit = parseFloat(value);
     });
     this.highLimitControl.setValue(this.privateSubstanceAmount.highLimit?.toString() || '');
     this.highLimitControl.valueChanges.subscribe(value => {
@@ -109,7 +109,7 @@ export class AmountFormComponent implements OnInit {
       } else {
         this.highLimitControl.setValue('');
       }
-      this.privateSubstanceAmount.highLimit = parseInt(value);
+      this.privateSubstanceAmount.highLimit = parseFloat(value);
     });
     this.unitsControl.setValue(this.privateSubstanceAmount.units);
     this.unitsControl.valueChanges.subscribe(value => {

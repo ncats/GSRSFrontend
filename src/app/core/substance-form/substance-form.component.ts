@@ -29,7 +29,7 @@ import {JsonDialogComponent} from '@gsrs-core/substance-form/json-dialog/json-di
 import * as _ from 'lodash';
 import {Title} from '@angular/platform-browser';
 import {AuthService} from '@gsrs-core/auth';
-import {take, map} from 'rxjs/operators';
+import {take, map, filter} from 'rxjs/operators';
 import {MatExpansionPanel} from '@angular/material/expansion';
 import {SubmitSuccessDialogComponent} from './submit-success-dialog/submit-success-dialog.component';
 import {
@@ -86,6 +86,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   submissionMessage: string;
   validationMessages: Array<ValidationMessage>;
   validationResult = true;
+  private validationAttempt = 0;
   private subscriptions: Array<Subscription> = [];
   copy: string;
   private overlayContainer: HTMLElement;
@@ -460,7 +461,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
       });
     });
     this.subscriptions.push(definitionSubscription);
-    this.authService.getAuth().pipe(take(1)).subscribe(auth => {
+    this.authService.getAuth().pipe(filter(auth => auth != null), take(1)).subscribe(auth => {
       this.user = auth.identifier;
       setTimeout(() => {
         this.canApprove = this.canBeApproved();
@@ -545,7 +546,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     const structure = this.activatedRoute.snapshot.queryParams['importStructure'] || null;
     if (structure) {
       let decode = decodeURIComponent(structure);
-      setTimeout(() => {
+      // Wait until the substance is loaded before importing, otherwise this can
+      // race with loadSubstance() (called async in ngOnInit) and get silently dropped.
+      this.substanceFormService.ready().subscribe(() => {
         this.setStructureFromUrl(decode, 'molfile');
       });
     }
@@ -1057,6 +1060,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   }
 
   validate(validationType?: string): void {
+    const validationAttempt = ++this.validationAttempt;
     if (validationType && validationType === 'approval') {
       this.approving = true;
     } else {
@@ -1067,14 +1071,23 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
 
     this.isLoading = true;
     this.serverError = false;
+    this.submissionMessage = null;
+    this.validationMessages = null;
+    this.validationResult = null;
+    this.showSubmissionMessages = false;
     this.loadingService.setLoading(true);
     let stagingID = null;
     if (this.activatedRoute.snapshot.queryParams['stagingID']) {
       stagingID = this.activatedRoute.snapshot.queryParams['stagingID'];
     }
     this.substanceFormService.validateSubstance(stagingID).pipe(take(1)).subscribe(results => {
-      this.submissionMessage = null;
-      this.validationMessages = results.validationMessages.filter(
+      if (validationAttempt !== this.validationAttempt) {
+        return;
+      }
+      const validationMessages = Array.isArray(results.validationMessages)
+        ? results.validationMessages
+        : [];
+      this.validationMessages = validationMessages.filter(
         message => message.messageType.toUpperCase() === 'ERROR' || message.messageType.toUpperCase() === 'WARNING' || message.messageType.toUpperCase() === 'NOTICE');
       this.validationResult = results.valid;
       this.showSubmissionMessages = true;
@@ -1087,6 +1100,9 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
         this.submissionMessage = 'Are you sure you\'d like to approve this substance?';
       }
     }, error => {
+      if (validationAttempt !== this.validationAttempt) {
+        return;
+      }
       this.addServerError(error);
       this.loadingService.setLoading(false);
       this.isLoading = false;
