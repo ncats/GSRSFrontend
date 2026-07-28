@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { ConfigService } from '../../config/config.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
@@ -14,7 +14,7 @@ import { NavItem } from '@gsrs-core/config';
     styleUrls: ['./pfda-toolbar.component.scss'],
     standalone: false
 })
-export class PfdaToolbarComponent implements OnInit {
+export class PfdaToolbarComponent implements OnInit, OnDestroy {
   pfdaBaseUrl: string;
   supportEmail: string;
   logoSrcPath: string;
@@ -43,9 +43,10 @@ export class PfdaToolbarComponent implements OnInit {
     this.pfdaBaseUrl = this.configService.configData.pfdaBaseUrl || '/';
 
     const baseHref = this.configService.environment.baseHref || '/ginas/app/beta/';
-    this.logoSrcPath = `${baseHref}assets/images/pfda/pfda-logo.png`;
+    const logoFileName = this.configService.configData.pfdaLogoFileName || 'pfda-logo.png';
+    this.logoSrcPath = `${baseHref}assets/images/pfda/${logoFileName}`;
     this.homeIconPath = `${baseHref}assets/images/pfda/home.svg`;
-    this.supportEmail = this.configService.configData.contactEmail || 'fda-srs@fda.hhs.gov';
+    this.supportEmail = this.configService.configData.contactEmail || 'trsc@dnanexus.com';
 
     this.overlayContainer = this.overlayContainerService.getContainerElement();
 
@@ -100,5 +101,9 @@ export class PfdaToolbarComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

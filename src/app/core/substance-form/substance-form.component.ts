@@ -101,6 +101,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   canUpdate: boolean;
   canMakeAdvancedEdits: boolean;
   messageField: string;
+  isPfdaVersion: boolean = false;
   uuid: string;
   substanceClass: string;
   drafts: Array<any>;
