@@ -101,7 +101,6 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
   canUpdate: boolean;
   canMakeAdvancedEdits: boolean;
   messageField: string;
-  isPfdaVersion: boolean = false;
   uuid: string;
   substanceClass: string;
   drafts: Array<any>;
@@ -320,7 +319,7 @@ export class SubstanceFormComponent implements OnInit, AfterViewInit, AfterViewC
     if (this.configService.configData && this.configService.configData.useApprovalAPI) {
       this.useApprovalAPI = this.configService.configData.useApprovalAPI;
     }
-    this.isPfdaVersion = this.configService.configData.isPfdaVersion;
+    this.isPfdaVersion = this.configService.configData?.isPfdaVersion ?? false;
     this.canUpdate = await this.authService.hasSpecificPrivilege("Edit");
     this.canMakeAdvancedEdits = await this.authService.hasSpecificPrivilege("Edit Public Data");
     this.userCanApprove = await this.authService.hasSpecificPrivilege("Approve Records");
