@@ -1064,6 +1064,19 @@ app-loading .mat-mdc-progress-spinner {
   }
 }
 
+// The pFDA toolbar hosts the CSS-hover `.gsrs-dropdown`, which is painted inside the
+// toolbar's own stacking context. The toolbar must therefore outrank fixed page headers
+// such as the substance form `.top-fixed` (z-index: 1001), otherwise the dropdown is
+// hidden behind them. The generic single-row rule above has the same specificity as the
+// component's `.pfda-toolbar` style, so which one wins depends on stylesheet order: in
+// `ng serve` the component style is injected last and wins, but in production
+// `inlineCritical` relocates styles.css so the generic rule wins and drops the toolbar
+// back to 1001. Winning on specificity here makes the outcome build-independent.
+.mat-toolbar.pfda-toolbar,
+.mat-mdc-toolbar.pfda-toolbar {
+  z-index: 1002;
+}
+
 // Fix toolbar row heights to match Angular 14
 .mat-toolbar-row,
 .mat-mdc-toolbar-row {
