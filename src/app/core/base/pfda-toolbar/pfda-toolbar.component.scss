@@ -20,8 +20,9 @@ $screenMedium: 1045px;
 	height: auto;
 	// Must beat the global `.mat-toolbar:not(.mat-toolbar-multiple-rows)` rule (z-index: 1001),
 	// which otherwise ties with the substance form `.top-fixed` header and pushes the
-	// `.gsrs-dropdown` behind it. See also the `.mat-toolbar.pfda-toolbar` rule in
-	// styles/_material-overrides.scss, which enforces the same value by specificity.
+	// `.gsrs-dropdown` behind it. `!important` is required because production builds move
+	// styles.css after the component styles Angular injects into <head>. See the matching
+	// `.mat-toolbar.pfda-toolbar` rule in styles/_material-overrides.scss.
 	z-index: 1002 !important;
 
 	a {
