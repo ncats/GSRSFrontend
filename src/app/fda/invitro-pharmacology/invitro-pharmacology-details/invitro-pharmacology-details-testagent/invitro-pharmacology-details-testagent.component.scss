@@ -74,27 +74,27 @@
 }
 
 .headerstyle {
-  border: 1px solid var(--blue-color);
+  border: 1px solid var(--accent-primary-strong);
   border-bottom: none;
   height: 35px;
-  background-color: var(--light-orange-color);
-  color: black;
+  background-color: var(--accent-warm-soft);
+  color: var(--feedback-neutral-text);
   font-weight: 700;
 }
 
 .headerstyle2 {
-  border: 1px solid var(--blue-color);
+  border: 1px solid var(--accent-primary-strong);
   border-bottom: none;
   height: 35px;
   background-color: var(--table-th-border-color);    /*--primary-title-color*/
-  color: #FFFFFF;
+  color: var(--surface-base);
   font-weight: 700;
 }
 
 .headerstyle3 {
   background: #C7C7C7;
-  background: linear-gradient(270deg, #C7C7C7, #FFFFFF);
-  border: 1px solid var(--blue-color);
+  background: linear-gradient(270deg, #C7C7C7, var(--surface-base));
+  border: 1px solid var(--accent-primary-strong);
   border-bottom: none;
   height: 35px;
   border-radius: 15px 15px 0px 0px;
@@ -104,11 +104,11 @@
 }
 
 .headerstyle4 {
-  border: 1px solid var(--blue-color);
+  border: 1px solid var(--accent-primary-strong);
   border-bottom: none;
   height: 35px;
-  background-color: #ddefdd;
-  color: black;
+  background-color: var(--feedback-success-bg);
+  color: var(--feedback-neutral-text);
   font-weight: 700;
 }
 
@@ -340,31 +340,31 @@
 }
 
 .colorwhite {
-  color: var(--regular-white-color);
+  color: var(--surface-card);
 }
 
 .colorblack {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorblue {
-  color: var(--regular-blue-color);
+.text-info {
+  color: var(--accent-info);
 }
 
 .colororange {
-  color: var(--orange-color);
+  color: var(--accent-warm);
 }
 
 .colorgreen {
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
 }
 
 .colororange {
-  color: var(--orange-color);
+  color: var(--accent-warm);
 }
 
 .width30px {
@@ -466,19 +466,19 @@
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .borderorange {
-  border: 1px solid var(--regular-orangered-color);
+  border: 1px solid var(--accent-alert);
 }
 
 .bordergraydotted {
-  border-bottom: 1px dotted var(--regular-grey-color);
+  border-bottom: 1px dotted var(--text-tertiary);
 }
 
 .backgroundblue {
-  background-color: var(--regular-blue-color);
+  background-color: var(--accent-info);
 }
 
 .backgroundlightorange {
@@ -486,7 +486,7 @@
 }
 
 fieldset.border {
-  border: solid 2px var(--fieldset-red-border-color)!important;
+  border: solid 2px var(--fieldset-error-border)!important;
   padding: 0 10px 10px 10px;
   border-bottom: none;
 }
@@ -496,17 +496,17 @@ legend.border {
   border: none;
   border-bottom: none;
   font-size: 14px;
-  color: var(--legend-red-border-color);
+  color: var(--legend-error-border);
   font-family: Verdana;
   font-weight: bold;
   padding: 10px;
   margin-bottom: 0px;
-  border: 2px solid var(--regular-orangered-color);
-  background-color: var(--legend-bg-color);
+  border: 2px solid var(--accent-alert);
+  background-color: var(--legend-info-bg);
 }
 
 fieldset.border2 {
-  border: solid 1px var(--pale-border-color) !important;
+  border: solid 1px var(--border-soft) !important;
   padding: 3px 10px 8px 10px;
   border-bottom: none;
 }
@@ -516,7 +516,7 @@ legend.border2 {
   border: none;
   border-bottom: none;
   font-size: 10px;
-  color: var(--legend-blue-border-color);
+  color: var(--legend-info-border);
   font-family: Verdana;
   font-weight: bold;
   margin-bottom:0px;
@@ -554,7 +554,7 @@ table.tableStyle {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   text-align: left;
   border-collapse: collapse;
-  border: 1px solid var(--secondary-blue-color);
+  border: 1px solid var(--accent-secondary);
   background-color: var(--table-bg-color);
 }
 
@@ -581,10 +581,10 @@ table.tableStyle thead {
 table.tableStyle th {
   font-size: 13px;
   font-weight: 700;
-  color: black;
+  color: var(--feedback-neutral-text);
   padding: 10px 10px;
   border-left: 1px solid var(--table-th-border-color-2);
-  background: var(--regular-offwhite-color);
+  background: var(--surface-subtle);
 }
 
 table.tableStyle thead th:first-child {
@@ -594,7 +594,7 @@ table.tableStyle thead th:first-child {
 table.tableStyle tfoot {
   font-size: 14px;
   font-weight: bold;
-  color: var(--white-color);
+  color: var(--surface-base);
   background: var(--table-th-border-color-2);
   border-top: 2px solid var(--table-thead-border-color);
 }
@@ -609,8 +609,8 @@ table.tableStyle tfoot .links {
 
 table.tableStyle tfoot .links a{
   display: inline-block;
-  background: var(--secondary-blue-color);
-  color: var(--white-color);
+  background: var(--accent-secondary);
+  color: var(--surface-base);
   padding: 2px 8px;
   border-radius: 5px;
 }
@@ -665,7 +665,7 @@ ol {
 @media(max-width: 918px) {
   .product-property {
         width: 100%;
-        border:1px solid var(--regular-red-color);
+        border:1px solid var(--accent-warning);
   }
 
   .row {

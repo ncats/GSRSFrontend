@@ -87,7 +87,7 @@
 
   .approval {
     font-size: 16px;
-    color: var(--pink-span-color);
+    color: var(--feedback-error-text);
   }
 }
 
@@ -117,7 +117,7 @@
 
   .approval {
     font-size: 16px;
-    color: var(--pink-span-color);
+    color: var(--feedback-error-text);
   }
 }
 
@@ -231,7 +231,7 @@
 }
 
 .lock-icon {
-  color: var(--lock-icon-color);
+  color: var(--icon-locked);
 }
 
 @media (max-width: $breakpoint-mobile) {
@@ -266,7 +266,7 @@
 .similarity {
   padding-left: 10px;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-  color: var(--pink-span-color);
+  color: var(--feedback-error-text);
 }
 
 .similarity-label {
@@ -288,7 +288,7 @@
 .match-context {
   display: block;
   font-size: small;
-  color: var(--regular-green-color);
+  color: var(--accent-positive);
   margin-top: 8px;
   margin-bottom: 8px;
 }

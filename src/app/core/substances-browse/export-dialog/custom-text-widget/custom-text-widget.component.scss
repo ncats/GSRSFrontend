@@ -19,8 +19,8 @@
   }
 
   .array-remove-button {
-    color: #4793d1;
-    background-color: white;
+    color: var(--primary-color);
+    background-color: var(--surface-card);
     display: inline-block;
     white-space: nowrap;
     text-decoration: none;
@@ -36,8 +36,8 @@
   }
 
   .array-add-button {
-    background-color: #4793d1;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--surface-card);
     display: inline-block;
     white-space: nowrap;
     text-decoration: none;

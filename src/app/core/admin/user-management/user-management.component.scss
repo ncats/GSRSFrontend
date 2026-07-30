@@ -42,13 +42,13 @@
 }
 .dropdown-content a {
   font-size: 12px;
-  color: var(--regular-black-color);
+  color: var(--text-strong);
   display: block;
   padding: 12px 16px;
   width: 170px;
 }
 .dropdown-content a:hover {
-  background-color: var(--lightgray-color);
+  background-color: var(--surface-light);
 }
 .show {
   display: block !important;

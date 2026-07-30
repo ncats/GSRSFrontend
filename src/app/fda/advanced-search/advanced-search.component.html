@@ -19,7 +19,7 @@
 
   <!-- Display Message -->
   <div class="margintop5px marginbottom20px marginleft10px" *ngIf="message">
-    <span class="colorred font14px">{{message}}</span>
+    <span class="text-danger font14px">{{message}}</span>
   </div>
 
   <!-- Search Button -->
@@ -141,7 +141,7 @@
   <mat-expansion-panel [expanded]="false" class="margintop10px width100percent" *ngIf="advancedSearchFacetDisplay">
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <div class="colorgray"><b>Filter by <span class="colororange">
+        <div class="text-muted"><b>Filter by <span class="colororange">
               {{category}}</span> Facets({{numFacetsLoaded}})</b>
         </div>
       </mat-panel-title>
@@ -196,7 +196,7 @@
         (opened)="panelOpened()">
         <mat-expansion-panel-header class="">
           <mat-panel-title class="margintop12px">
-            AND Search Structure <span class="colorgray" *ngIf="isStrcuturePanelOpen == true">&nbsp;(At least one search
+            AND Search Structure <span class="text-muted" *ngIf="isStrcuturePanelOpen == true">&nbsp;(At least one search
               value needs to be entered above, along with structure)</span>
           </mat-panel-title>
           <mat-panel-description class="marginleft25px">

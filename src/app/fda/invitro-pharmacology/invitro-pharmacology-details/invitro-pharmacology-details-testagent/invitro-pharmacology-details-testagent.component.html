@@ -6,7 +6,7 @@
     <div class="divflex">
       <div class="margintop20px font22px">
         <b>All In Vitro Pharmacology Assays
-          <span class="colorblue">({{allAssaysList.length}})
+          <span class="text-info">({{allAssaysList.length}})
           </span>
         </b>
       </div>
@@ -245,7 +245,7 @@
     <div class="divflex">
       <div class="margintop20px font22px">
         <b>All In Vitro Pharmacology Test Agents
-          <span class="colorblue">({{allScreeningTestAgents.length}})
+          <span class="text-info">({{allScreeningTestAgents.length}})
           </span>
         </b>
       </div>
@@ -266,7 +266,7 @@
 
       <div class="divflex">
         <div><b>{{(index+1)}}.&nbsp;&nbsp;Test Agent:
-            <span class="colorblue font18px">
+            <span class="text-info font18px">
               <span *ngIf="screen.testAgentSubstanceKey; else noTestAgentTestAgentSubKey">
                 <a [routerLink]="['/substances', screen.testAgentSubstanceKey]" target="_blank"
                   matTooltip="Go to Substance Details page">

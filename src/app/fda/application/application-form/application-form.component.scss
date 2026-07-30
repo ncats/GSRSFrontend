@@ -4,7 +4,7 @@
   flex-direction: column;
   top: 64px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   align-items: center;
   justify-content: center;
   box-shadow:
@@ -133,7 +133,7 @@
 .actions-container {
   max-width: 1200px;
   min-width: 1200px;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   padding: 10px;
   display: flex;
 }
@@ -153,7 +153,7 @@
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   display: flex;
   flex-direction: column;
 
@@ -243,11 +243,11 @@
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .bordergreen {
-  border: 1px solid var(--regular-green-color);
+  border: 1px solid var(--accent-positive);
 }
 
 .width40px {
@@ -258,12 +258,12 @@
   width: 50px;
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .font11px {
@@ -288,7 +288,7 @@
 
 .disabledfield {
   cursor: not-allowed;
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 /* CV INPUT OVERWRITE WIDTH */
@@ -303,6 +303,6 @@
 }
 
 .errortext {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
   font-size: 11px;
 }

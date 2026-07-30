@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   padding: 0px 5px 0 5px;
-  border: 1px solid var(--grey-border-color-rgb);
+  border: 1px solid var(--border-subtle-rgb);
   margin-left: 150px;
   margin-right: 150px;
 }
@@ -117,14 +117,14 @@
 
 .titletab {
   font-size: 14px;
-  color: var(--deep-blue-color-rgb);
+  color: var(--accent-deep-rgb);
   padding: 10px 0px 5px 10px;
 }
 
 .titlequery {
   font-size: 20px;
   font-weight: bold;
-  color: var(--deep-blue-color-rgb);
+  color: var(--accent-deep-rgb);
   padding: 10px 0px 5px 10px;
 }
 
@@ -140,8 +140,8 @@
   font-size: 14px;
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
 .colormaroon {
@@ -149,23 +149,23 @@
 }
 
 .colororange {
-  color: var(--orange-color-rgb);
+  color: var(--accent-warm-rgb);
 }
 
 .colorblack {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
 .colorlightgray {
-  color: var(--regular-lightgray-color);
+  color: var(--surface-muted);
 }
 
 .colorwhite {
-  color: var(--regular-white-color);
+  color: var(--surface-card);
 }
 
 .margintopneg80px {
@@ -313,12 +313,12 @@
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .borderbottomdash {
   border-bottom-style: dotted;
-  border-bottom-color: var(--pale-border-color-rgb-2);
+  border-bottom-color: var(--border-soft-rgb-2);
 }
 
 /*
@@ -350,20 +350,20 @@
 
 /* label style */
 .mat-tab-label{
-  background: var(--pale-border-color-rgb-3);
-  color:  var(--red-label-color);
+  background: var(--border-soft-rgb-3);
+  color:  var(--feedback-mandatory);
   min-width: 60px!important;
 
 }
 
 :host ::ng-deep .mat-tab-label-active {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
   font-weight: bold;
-  background-color: var(--pale-border-color-rgb-3);
+  background-color: var(--border-soft-rgb-3);
 }
 
 :host ::ng-deep .mat-ink-bar {
-  background-color: var(--primary-color, --orange-color-rgb) !important;
+  background-color: var(--primary-color, --accent-warm-rgb) !important;
   height: 2px;
 }
 
@@ -417,7 +417,7 @@
 
       button {
           width: auto;
-          border: 1px solid var(--regular-green-color);
+          border: 1px solid var(--accent-positive);
       }
   }
 }
@@ -548,7 +548,7 @@ panel-style {
   align-items: flex-start;
   padding-left: 15px;
   margin-left: 10px;
-  border-left: 1px solid var(--textarea-light-border-color);
+  border-left: 1px solid var(--input-border-soft);
 
   .mat-slider-horizontal {
     width: 100%;

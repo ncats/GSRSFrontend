@@ -15,17 +15,17 @@
 
         & > a {
             font-size: 16px;
-            color: var(--nav-item-a-color);
+            color: var(--nav-link-color);
             padding-bottom: 7px;
             transition: all 150ms linear;
             text-decoration: none;
             outline: none;
 
             &:hover, &.active {
-                color: var(--regular-white-color);
+                color: var(--surface-card);
                 cursor: pointer;
                 padding-bottom: 5px;
-                border-bottom: 2px solid var(--regular-white-color);
+                border-bottom: 2px solid var(--surface-card);
                 text-decoration: none;
             }
         }
@@ -47,6 +47,6 @@
 
 .substance-suggestion-field {
     padding: 8px 6px;
-    color: var(--gray-color);
+    color: var(--text-disabled);
     overflow: hidden;
 }

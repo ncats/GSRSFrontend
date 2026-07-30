@@ -32,21 +32,21 @@
 
 
 .invalid > * {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 
 .invalid ::ng-deep .mat-form-field-label {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 .invalid ::ng-deep .mat-select-arrow {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 .invalid-note {
   margin-bottom: 18px;
   font-style: italic;
   font-size: 14px;
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }

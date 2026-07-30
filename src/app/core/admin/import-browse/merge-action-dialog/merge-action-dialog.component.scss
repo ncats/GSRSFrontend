@@ -55,9 +55,9 @@ margin: auto;
 }
 
 .mat-warn {
-    color: var(--regular-red-color);
-  background-color: white;
-  border: 1px solid var(--regular-red-color);
+    color: var(--accent-warning);
+  background-color: var(--surface-card);
+  border: 1px solid var(--accent-warning);
 }
 
 
@@ -114,8 +114,8 @@ display: inline-block;
 
 
 ::ng-deep .array-remove-button {
-    color: #4793d1;
-    background-color: white;
+    color: var(--primary-color);
+    background-color: var(--surface-card);
     display: inline-block;
     white-space: nowrap;
     text-decoration: none;
@@ -131,8 +131,8 @@ display: inline-block;
   }
 
   ::ng-deep .array-add-button {
-    background-color: #4793d1;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--surface-card);
     display: inline-block;
     white-space: nowrap;
     text-decoration: none;

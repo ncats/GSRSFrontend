@@ -15,7 +15,7 @@
 
 // Border utility
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 // Tooltip
@@ -32,7 +32,7 @@
 
 
 body {
- background-color: var(--body-bg-color);
+ background-color: var(--app-body-bg);
 }
 .name-value {
     display: flex;
@@ -64,7 +64,7 @@ body {
 }
 
 .grey-font {
-  color: var(--regular-grey-color);
+  color: var(--text-tertiary);
 }
 
 .capitalized {
@@ -95,7 +95,7 @@ body {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--text-strong);
     border-radius: 4px;
   }
 
@@ -159,26 +159,26 @@ body {
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
-  color: var(--tabstyle-bg-img-start-color);
+  color: var(--tab-gradient-start);
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  background-color: var(--light-grey-color);
+  background-color: var(--text-soft);
   border-radius: 10px;
 }
 
 .black-pill, .gray-pill, .blue-pill {
-  color: var(--regular-white-color);
+  color: var(--surface-card);
   padding: 1px 7px;
   border-radius: 11px;
 }
 
 .black-pill {
-  background-color: var(--regular-black-color);
+  background-color: var(--text-strong);
 }
 
 .gray-pill {
-  background-color: var(--regular-grey-color);
+  background-color: var(--text-tertiary);
 }
 
 .blue-pill {
@@ -277,7 +277,7 @@ body {
 textarea {
   box-sizing: border-box;
   width: 100%;
-  border: solid 1.5px var(--textarea-dark-border-color);
+  border: solid 1.5px var(--input-border-strong);
   border-radius: 3px;
   padding: 10px;
 
@@ -309,7 +309,7 @@ textarea {
 }
 
 .loading-overlay-backdrop {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--loading-overlay-bg);
 }
 
 .notification-backdrop {
@@ -320,12 +320,12 @@ textarea {
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: var(--notif-backdrop-bg-color);
+  background-color: var(--overlay-modal-bg);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: var(--notif-backdrop-color);
+  color: var(--overlay-modal-text);
 }
 
 .hidden {

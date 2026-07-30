@@ -17,7 +17,7 @@ form {
 
   // Placeholder color
   ::ng-deep .mat-mdc-input-element::placeholder {
-    color: #666;
+    color: var(--overlay-modal-text);
     opacity: 1;
     font:
       400 14px / 20px Roboto,
@@ -58,10 +58,10 @@ form.header {
   .search-button,
   .close-button,
   .activate-search-button {
-    color: white;
+    color: var(--surface-card);
 
     ::ng-deep .mat-icon svg {
-      fill: white;
+      fill: var(--surface-card);
     }
   }
 }
@@ -70,10 +70,10 @@ form:not(.header) {
   .search-button,
   .close-button,
   .activate-search-button {
-    color: black;
+    color: var(--feedback-neutral-text);
 
     ::ng-deep .mat-icon svg {
-      fill: black;
+      fill: var(--feedback-neutral-text);
     }
   }
 }
@@ -82,19 +82,19 @@ form:not(.header) {
 .search-form-field.header {
   .mat-input-element {
     font-size: 20px;
-    color: white;
+    color: var(--surface-card);
   }
 
   // MDC input text
   ::ng-deep .mat-mdc-input-element {
-    color: white !important;
+    color: var(--surface-card) !important;
     // font-size: 16px !important;
     font-weight: 500 !important;
-    caret-color: white !important;
+    caret-color: var(--surface-card) !important;
   }
 
   ::ng-deep .mat-mdc-input-element::placeholder {
-    color: white !important;
+    color: var(--surface-card) !important;
     opacity: 1;
     font:
       500 20px / 32px Roboto,
@@ -105,29 +105,29 @@ form:not(.header) {
   }
 
   ::ng-deep .mat-mdc-floating-label {
-    color: #ffffffcc !important;
+    color: var(--overlay-modal-bg) !important;
   }
 
   // Inactive underline
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::before {
-    border-bottom-color: rgba(255, 255, 255, 0.6) !important;
+    border-bottom-color: var(--surface-base) !important;
   }
 
   // Active/focused underline
   ::ng-deep .mat-mdc-text-field-wrapper .mdc-line-ripple::after {
-    border-bottom-color: white !important;
+    border-bottom-color: var(--surface-card) !important;
   }
 
   // Ensure focus state is visible
   ::ng-deep .mdc-text-field--focused .mdc-line-ripple::after {
     opacity: 1 !important;
-    border-bottom-color: white !important;
+    border-bottom-color: var(--surface-card) !important;
   }
 }
 
 .substance-suggestion-field {
   padding: 8px 6px;
-  color: var(--regular-white-color);
+  color: var(--surface-card);
   overflow: hidden;
 }
 
@@ -135,7 +135,7 @@ form:not(.header) {
   padding: 5px;
   border-radius: 5px;
   background-color: var(--link-primary-color);
-  color: var(--regular-white-color);
+  color: var(--surface-card);
 }
 
 .suggestion-styling {
@@ -164,10 +164,10 @@ form:not(.header) {
 // .search-button,
 // .close-button,
 // .activate-search-button {
-//   color: var(--regular-white-color);
+//   color: var(--surface-card);
 
 //   ::ng-deep .mat-icon {
-//     color: var(--regular-white-color);
+//     color: var(--surface-card);
 
 //     svg {
 //       fill: currentColor;
@@ -259,7 +259,7 @@ form:not(.header) {
       height: 48px;
       padding-right: 0px;
       padding-left: 0px;
-      background-color: var(--regular-white-color);
+      background-color: var(--surface-card);
       overflow: hidden;
       mat-form-field {
         width: 100% !important;

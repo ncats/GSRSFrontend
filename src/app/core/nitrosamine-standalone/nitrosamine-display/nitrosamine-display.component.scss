@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 20px;
     padding: 20px;
-    background-color: #f5f5f5;
+    background-color: var(--table-bg-color-2);
 }
 .container {
     max-width: 1200px;
@@ -28,12 +28,12 @@ body {
     gap: 58px;
 }
 .box {
-    border: 2px solid #333;
+    border: 2px solid var(--divider-strong);
     padding: 15px;
     width: 300px;
     text-align: center;
     justify-content: center;
-    background-color: white;
+    background-color: var(--surface-card);
     border-radius: 8px;
     transition: all 0.3s ease;
     position: relative;
@@ -54,7 +54,7 @@ body {
 .arrow-down {
     width: 2px;
     height: 20px;
-    background-color: #333;
+    background-color: var(--divider-strong);
     position: relative;
 }
 .arrow-down::after {
@@ -66,12 +66,12 @@ body {
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 8px solid #333;
+    border-top: 8px solid var(--divider-strong);
 }
 .arrow-right {
     width: 70px;
     height: 2px;
-    background-color: #333;
+    background-color: var(--divider-strong);
     position: absolute;
     right: -70px;
     top: 50%;
@@ -85,12 +85,12 @@ body {
     height: 0;
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-left: 8px solid #333;
+    border-left: 8px solid var(--divider-strong);
 }
 .highlight {
     background-color: #fff3cd;
     border-color: #0cc20c91;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    box-shadow: 0 0 10px var(--box-shadow-color);
 }
 // .highlight-path {  //alternative style to highlight path on the flowchart
 //     background-color: #e6f7ff !important;
@@ -100,14 +100,14 @@ body {
 // }
 .highlight-path {
     background-color:  #005293; //#1a237e;
-    color: white;
+    color: var(--surface-card);
     border-color: #FECC00; //#0d47a1;
     border-width: 0.5cap;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
     //font-weight: bold;
 }
 .highlight-path .yes-no-label {
-    color: #000000;
+    color: var(--text-shadow-color);
 }
 .box-with-arrow {
     position: relative;
@@ -118,7 +118,7 @@ body {
 .yes-no-label {
     position: absolute;
     font-size: 14px;
-    color: #000000;
+    color: var(--text-shadow-color);
     z-index: 2;
     font-weight: bold;
 }
@@ -134,11 +134,11 @@ body {
     z-index: 2;
 }
 .input-form {
-    background: white;
+    background: var(--surface-card);
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 30px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px var(--border-color);
 }
 .form-group {
     margin-bottom: 15px;
@@ -151,13 +151,13 @@ body {
 .form-group input[type="text"] {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--surface-divider);
     border-radius: 4px;
     font-family: monospace;
 }
 .form-group button {
     background-color: #1a237e;
-    color: white;
+    color: var(--surface-card);
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -170,7 +170,7 @@ body {
 .results-panel {
     margin-top: 15px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--surface-divider);
     border-radius: 4px;
     display: none;
 }
@@ -185,25 +185,25 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin: 15px 0;
-    background-color: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background-color: var(--surface-card);
+    box-shadow: 0 1px 3px var(--border-color);
 }
 
 .details-table th,
 .details-table td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--surface-divider);
 }
 
 .details-table th {
-    background-color: #f8f9fa;
+    background-color: var(--row-zebra-stripe);
     font-weight: bold;
     color: #495057;
 }
 
 .details-table tr:hover {
-    background-color: #f5f5f5;
+    background-color: var(--table-bg-color-2);
 }
 
 .details-table tr:last-child td {
@@ -221,7 +221,7 @@ body {
 
 .warning-banner {
     background-color: #1a237e;
-    color: white;
+    color: var(--surface-card);
     padding: 10px;
     margin-bottom: 15px;
     border-radius: 4px;
@@ -230,7 +230,7 @@ body {
 
 .multiple-nitrosamine-banner {
     background-color: #dc3545;
-    color: white;
+    color: var(--surface-card);
     padding: 10px;
     margin-bottom: 15px;
     border-radius: 4px;
@@ -244,7 +244,7 @@ body {
 
 .most-potent-note {
     font-style: italic;
-    color: #666;
+    color: var(--overlay-modal-text);
     margin-top: 5px;
 }
 
@@ -265,7 +265,7 @@ body {
     color: #4caf50 !important;
 }
 .box:hover, .result-box:hover {
-    background-color: #f0f0f0;
+    background-color: var(--surface-light);
     transform: translateY(-2px);
     transition: all 0.2s ease;
 }

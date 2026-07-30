@@ -1,22 +1,56 @@
-/* app-loading.css */
+/* app-loading.css
+ *
+ * The loading component renders a top progress bar and a centered spinner
+ * when the app is busy. The spinner has a transparent background so it
+ * floats over the page (or over the CDK overlay backdrop when a dialog is
+ * loading). The spinner's track and arc colors are themed via variables.
+ */
 
 /* Top loading bar (old + MDC) */
-// :host ::ng-deep .mat-progress-bar,
-// :host ::ng-deep .mat-mdc-progress-bar {
-//   z-index: 1003;
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-// }
+::ng-deep .mat-progress-bar,
+::ng-deep .mat-mdc-progress-bar {
+  z-index: 1003;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
 
-// /* Centered spinner (old + MDC) */
-// :host ::ng-deep .mat-progress-spinner,
-// :host ::ng-deep .mat-mdc-progress-spinner {
-//   z-index: 1003;
-//   position: fixed;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   display: block;
-// }
+/* Centered spinner (old + MDC)
+ * - fixed position at viewport center
+ * - transparent background so the spinner floats over the page (or over
+ *   the CDK overlay backdrop when a dialog is loading)
+ */
+::ng-deep .mat-progress-spinner,
+::ng-deep .mat-mdc-progress-spinner {
+  z-index: 1003;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+
+  /* Transparent surface so the spinner does not look like a card.
+   * The --loading-overlay-bg variable controls the translucent
+   * tint applied behind the spinner, matching the CDK overlay backdrop. */
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* The track (background ring) of the spinner SVG — was black by default.
+ * Make it a soft neutral grey so it pairs with the white surface. */
+::ng-deep .mat-progress-spinner circle,
+::ng-deep .mat-mdc-progress-spinner circle {
+  stroke: var(--spinner-track-color);
+}
+
+/* The active arc color — pulled from the brand theme so it matches buttons. */
+::ng-deep .mat-progress-spinner[mode='indeterminate'] circle,
+::ng-deep .mat-mdc-progress-spinner[mode='indeterminate'] circle {
+  stroke: var(--spinner-stroke-color);
+}

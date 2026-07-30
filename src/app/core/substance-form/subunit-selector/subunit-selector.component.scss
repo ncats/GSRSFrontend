@@ -120,12 +120,12 @@
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: var(--notif-backdrop-bg-color);
+  background-color: var(--overlay-modal-bg);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: var(--notif-backdrop-color);
+  color: var(--overlay-modal-text);
 }
 
 .form-row {
@@ -185,53 +185,53 @@
 }
 
 .disulfide {
-  color: var(--regular-white-color);
-  background-color: var(--disulfide-color);
+  color: var(--surface-card);
+  background-color: var(--chem-disulfide-bond);
 }
 
 .other {
-  color: var(--regular-white-color);
-  background-color: var(--regular-darkslateblue-color);
+  color: var(--surface-card);
+  background-color: var(--accent-deep-primary);
 }
 
 .glycosylation {
-  color: var(--regular-white-color);
-  background-color: var(--glycosylation-color);
+  color: var(--surface-card);
+  background-color: var(--chem-glycosylation-bond);
 }
 
 .N-Glycosylation {
-  color: var(--regular-white-color);
-  background-color: var(--n-glycosylation-color);
+  color: var(--surface-card);
+  background-color: var(--chem-glycosylation-n-link);
 }
 
 .C-Glycosylation {
-  color: var(--regular-white-color);
-  background-color: var(--regular-grey-color);
+  color: var(--surface-card);
+  background-color: var(--text-tertiary);
 }
 
 .O-Glycosylation {
-  color: var(--regular-white-color);
-  background-color: var(--o-glycosylation-color);
+  color: var(--surface-card);
+  background-color: var(--chem-glycosylation-o-link);
 }
 
 .feature {
-  border-top: 1px solid var(--regular-magenta-color);
-  border-bottom: 1px solid var(--regular-magenta-color);
+  border-top: 1px solid var(--accent-vivid);
+  border-bottom: 1px solid var(--accent-vivid);
 }
 
 .modification {
-  color: var(--regular-white-color);
-  background-color: var(--regular-darkgreen-color);
+  color: var(--surface-card);
+  background-color: var(--accent-positive-strong);
 }
 
 .chosen {
-  color: var(--regular-black-color) !important;
-  background-color: var(--regular-turquoise-color) !important;
+  color: var(--text-strong) !important;
+  background-color: var(--accent-cool) !important;
 }
 
 .new-disulfide {
-  color: var(--regular-black-color) !important;
-  background-color: var(--regular-lightskyblue-color) !important;
+  color: var(--text-strong) !important;
+  background-color: var(--accent-sky) !important;
 }
 
 .selectedSite {
@@ -346,12 +346,12 @@
 }
 
 .cys {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
   font-weight: 500;
 }
 
 .unavailable {
-  color: var(--regular-lightgray-color) !important;
+  color: var(--surface-muted) !important;
 }
 
 .invalid_blink {
@@ -364,16 +364,16 @@
 }
 
 .invalid {
-  border: solid var(--regular-red-color);
-  color: var(--regular-red-color);
+  border: solid var(--accent-warning);
+  color: var(--accent-warning);
 }
 
 .valid {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
 }
 
 .invalid-cysteine {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 .last-section {
   flex-basis: 0 !important;

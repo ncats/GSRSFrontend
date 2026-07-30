@@ -11,7 +11,7 @@
   padding-right: 0.5em;
 }
 .clinical-trials-browse-del {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
   cursor: pointer;
 }
 
@@ -23,7 +23,7 @@
   margin-bottom: 30px;
 
   .mat-mdc-paginator {
-    background-color: white !important ;
+    background-color: var(--surface-card) !important ;
     --mat-paginator-container-background-color: white;
   }
 }
@@ -80,7 +80,7 @@ table td.mat-cell {
   top: 15px;
 }
 .clinical-trials-browse-button-cell .mat-button-wrapper {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }
 
 .clinical-trials-browse-wrapper mat-expansion-panel-header {
@@ -94,7 +94,7 @@ table td.mat-cell {
   .mat-expansion-panel-header[aria-disabled="true"],
 .clinical-trials-browse-wrapper
   .mat-expansion-panel-header[aria-disabled="false"] {
-  color: var(--regular-black-color);
+  color: var(--text-strong);
 }
 
 .clinical-trials-browse-wrapper
@@ -146,7 +146,7 @@ table td.mat-cell {
 
   .selected-parameter {
     padding-right: 5px;
-    background-color: var(--regular-white-color);
+    background-color: var(--surface-card);
     font-size: 14px;
   }
 }
@@ -157,12 +157,12 @@ table td.mat-cell {
   .controls-container,
   .search-parameters {
     padding-left: 30px;
-    border: 5px solid var(--regular-magenta-color);
+    border: 5px solid var(--accent-vivid);
   }
 
   .controls-container {
     flex-wrap: wrap;
-    border: 5px solid var(--regular-yellow-color);
+    border: 5px solid var(--highlight-main);
   }
 
   .side-nav-content {
@@ -188,7 +188,7 @@ table td.mat-cell {
 
   .full-paginator {
     min-width: 500px !important;
-    border: 1px solid var(--regular-grey-color);
+    border: 1px solid var(--text-tertiary);
   }
 
   .substance-data {
@@ -220,7 +220,7 @@ table td.mat-cell {
 }
 
 .lock-icon {
-  color: #f0ad4e;
+  color: var(--icon-locked);
 }
 
 .help-icon .mat-icon {
@@ -285,7 +285,7 @@ table td.mat-cell {
 @media (max-width: 505px) {
   .full-paginator {
     min-width: 0px !important;
-    border: 1px solid var(--regular-grey-color);
+    border: 1px solid var(--text-tertiary);
   }
 
   .controls-container {

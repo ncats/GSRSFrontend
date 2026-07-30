@@ -4,7 +4,7 @@
   flex-direction: column;
   top: 64px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   align-items: center;
   justify-content: center;
   box-shadow: 0px 3px 3px -2px var(--box-shadow-color), 0px 3px 4px 0px var(--box-shadow-color-2), 0px 1px 8px 0px var(--box-shadow-color-3);
@@ -204,7 +204,7 @@
 .actions-container {
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   padding: 10px;
   display: flex;
 }
@@ -224,7 +224,7 @@
   transition: all 500ms ease-out;
   max-width: 1028px;
   width: 100%;
-  background-color: var(--regular-white-color);
+  background-color: var(--surface-card);
   display: flex;
   flex-direction: column;
 
@@ -349,7 +349,7 @@
 }
 
 .bordergray {
-  border: 1px solid var(--regular-grey-color);
+  border: 1px solid var(--text-tertiary);
 }
 
 .padbottom10px {
@@ -357,11 +357,11 @@
 }
 
 .bordergreen {
-  border: 1px solid var(--regular-green-color);
+  border: 1px solid var(--accent-positive);
 }
 
 .borderbottom {
-  border-bottom: 2px solid var(--regular-blue-color);
+  border-bottom: 2px solid var(--accent-info);
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -388,20 +388,20 @@
   width: 75%;
 }
 
-.colorgray {
-  color: var(--regular-grey-color);
+.text-muted {
+  color: var(--text-tertiary);
 }
 
-.colorred {
-  color: var(--regular-red-color);
+.text-danger {
+  color: var(--accent-warning);
 }
 
-.colorblue {
-  color: var(--regular-blue-color);
+.text-info {
+  color: var(--accent-info);
 }
 
 .colororange {
-  color: var(--burnt-orange-color);
+  color: var(--accent-warm-strong);
 }
 
 .font11px {
@@ -430,7 +430,7 @@
 
 .disabledfield { 
   cursor: not-allowed;
-  color: var(--regular-red-color); 
+  color: var(--accent-warning); 
 } 
 
 /* CV INPUT OVERWRITE WIDTH */
@@ -445,7 +445,7 @@
 }
 
 .errortext {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
   font-size: 11px;
 }
 
@@ -456,9 +456,9 @@
 .tabStyle {
   width: 180px;
   height: 30px;
-  border: 1px solid var(--regular-grey-color);
-  background: var(--tabstyle-bg-color);
-  background-image: linear-gradient(to bottom, var(--tabstyle-bg-img-start-color), var(--tabstyle-bg-img-end-color));
+  border: 1px solid var(--text-tertiary);
+  background: var(--tab-active-bg);
+  background-image: linear-gradient(to bottom, var(--tab-gradient-start), var(--tab-gradient-end));
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topleft: 5px;

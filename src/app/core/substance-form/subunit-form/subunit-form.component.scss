@@ -114,12 +114,12 @@ textarea.sequence-textarea {
   left: 0;
   display: flex;
   z-index: 10;
-  background-color: var(--notif-backdrop-bg-color);
+  background-color: var(--overlay-modal-bg);
   justify-content: center;
   align-items: center;
   font-size: 30px;
   font-weight: bold;
-  color: var(--notif-backdrop-color);
+  color: var(--overlay-modal-text);
 }
 
 .form-row {
@@ -156,49 +156,49 @@ textarea.sequence-textarea {
 }
 
 .glycosylation{
-  color:var(--regular-white-color);
-  background-color:var(--regular-darkgreen-color);
+  color:var(--surface-card);
+  background-color:var(--accent-positive-strong);
 }
 
 .disulfide{
-  color:white;
-  background-color: #cca300;
+  color:var(--surface-card);
+  background-color: var(--chem-disulfide-bond);
 }
 
 .other{
-  color:var(--regular-white-color);
-  background-color:var(--regular-darkslateblue-color);
+  color:var(--surface-card);
+  background-color:var(--accent-deep-primary);
 }
 
 .glycosylation{
-  color:white;
-  background-color:#608000;
+  color:var(--surface-card);
+  background-color:var(--chem-glycosylation-bond);
 }
 
 .N-Glycosylation{
-  color:white;
-  background-color:#0066cc;
+  color:var(--surface-card);
+  background-color:var(--chem-glycosylation-n-link);
 }
 
 .C-Glycosylation{
-  color:white;
+  color:var(--surface-card);
   background-color:GRAY;
 }
 
 .O-Glycosylation{
-  color:white;
+  color:var(--surface-card);
   //background-color:darkgoldenrod;
-  background-color:#ff6666;
+  background-color:var(--chem-glycosylation-o-link);
 }
 
 .feature{
-  border-top:1px solid var(--regular-magenta-color);
-  border-bottom: 1px solid var(--regular-magenta-color);
+  border-top:1px solid var(--accent-vivid);
+  border-bottom: 1px solid var(--accent-vivid);
 }
 
 .modification{
-  color:var(--regular-white-color);
-  background-color:var(--regular-darkolivegreen-color);
+  color:var(--surface-card);
+  background-color:var(--accent-natural);
 }
 
 .selectedSite{
@@ -246,5 +246,5 @@ textarea.sequence-textarea {
 }
 
 .error {
-  color: var(--regular-red-color);
+  color: var(--accent-warning);
 }

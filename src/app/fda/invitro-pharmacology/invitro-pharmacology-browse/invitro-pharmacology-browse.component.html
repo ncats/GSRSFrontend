@@ -312,7 +312,7 @@
                           Assay ID:
                         </div>
                         <div class="row-property-value">
-                          <span class="colorblue font17px fontbold">{{assay.assayId}}</span>
+                          <span class="text-info font17px fontbold">{{assay.assayId}}</span>
                         </div>
                       </div>
                       <div class="row-property">
@@ -607,7 +607,7 @@
                               </a>
                             </div>
                             <ng-template #noTargetNameSubUuid>
-                              <span class="colorblue font17px fontbold">
+                              <span class="text-info font17px fontbold">
                                 {{assayTar.targetName}}
                               </span>
                             </ng-template>
@@ -895,7 +895,7 @@
                         <b>Test Agent:</b>
                       </div>
                       <div class="marginleft20px">
-                        <span class="colorblue font20px fontbold">
+                        <span class="text-info font20px fontbold">
                           <span *ngIf="testAgt.testAgentSubstanceKey; else noTestAgentTestAgentSubKey">
                             <a [routerLink]="['/substances', testAgt.testAgentSubstanceKey]" target="_blank"
                               matTooltip="Go to Substance Details page">
@@ -1320,7 +1320,7 @@
                           Reference Source Type and Id:
                         </div>
                         <div class="row-property-value-two">
-                          <span class="colorblue font20px fontbold"> {{app.referenceSourceTypeNumber}}
+                          <span class="text-info font20px fontbold"> {{app.referenceSourceTypeNumber}}
                           </span>
                         </div>
                       </div>
@@ -1551,7 +1551,7 @@
       <ng-template #noRecordInvitro>
         <!-- No In Vitro Pharmacology data Found. -->
         <!--
-      <div class="padleft10px colorred">
+      <div class="padleft10px text-danger">
         <br>
         No in Vitro pharmacology records found. Please re-index in Vitro pharmacology entity to see the records here.
       </div>
