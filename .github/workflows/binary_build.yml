@@ -19,7 +19,7 @@ on:
       node_version:
         description: "Node.js version"
         required: true
-        default: "20.19.0"
+        default: "24.19.0"
 #  push:
 #    branches:
 #      - feature/deployable_binary_build
@@ -40,7 +40,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ github.event.inputs.node_version || '20.19.0' }}
+          node-version: ${{ github.event.inputs.node_version || '24.19.0' }}
 
       - name: Run build.sh
         working-directory: ${{ github.event.inputs.frontend_dir || '.' }}

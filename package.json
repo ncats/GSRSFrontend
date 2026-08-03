@@ -1,6 +1,9 @@
 {
   "name": "gsrs-client",
   "version": "0.0.0",
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
   "scripts": {
     "ng": "ng",
     "test-script": "mkdirp src/app/core/assets/dojo && cpx-fixed \"lib/dojo-custom-jsdraw/dojo/**/*\" src/app/core/assets/dojo -u",
